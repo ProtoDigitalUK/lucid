@@ -5,7 +5,7 @@ import cors from "cors";
 import { log } from "console-log-colors";
 import path from "path";
 //  Routes
-import registerRoutes from "./routes/index";
+import registerRoutes from "@routes/index";
 
 interface StartOptions {
   port: number;
@@ -44,11 +44,9 @@ const start: Start = async ({ port = 8393, origin = "*" }) => {
   // Error handling
   app.use((req: Request, res: Response) => {
     const error = new Error("Not Found");
-    error.status = 404;
-    res.status(error.status || 500).json({
+    res.status(500).json({
       error: {
         message: error.message,
-        status: error.status,
       },
     });
   });

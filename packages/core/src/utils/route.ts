@@ -1,7 +1,7 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import z from "zod";
 // Middleware
-import validate from "../middleware/validate";
+import validate from "@middleware/validate";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,

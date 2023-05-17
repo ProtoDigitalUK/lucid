@@ -1,3 +1,6 @@
 import headlessCore from "headless-core";
 
-headlessCore.start();
+headlessCore.start({
+  port: 8393,
+  origin: "*",
+});

@@ -1,3 +1,4 @@
+import type { Controller } from "../../../types/index.js";
 import z from "zod";
 
 export const body = z.undefined();

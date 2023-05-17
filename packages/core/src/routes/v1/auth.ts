@@ -1,7 +1,7 @@
 import { Router } from "express";
-import r from "../../utils/route";
+import r from "@utils/route";
 // Controller
-import me, { params } from "../../controllers/auth/me";
+import me, { params } from "@controllers/auth/me";
 // Middleware
 
 // ------------------------------------
