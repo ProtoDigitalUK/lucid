@@ -16,4 +16,11 @@ const getHealth: Controller<typeof params, typeof body, typeof query> = (
   });
 };
 
-export default getHealth;
+export default {
+  schema: {
+    body,
+    query,
+    params,
+  },
+  controller: getHealth,
+};

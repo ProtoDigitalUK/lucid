@@ -10,7 +10,8 @@ const router = Router();
 r(router, {
   method: "get",
   path: "/",
-  controller: getHealth,
+  schema: getHealth.schema,
+  controller: getHealth.controller,
 });
 
 export default router;
