@@ -2,7 +2,6 @@ import { Router } from "express";
 import r from "@utils/route";
 // Controller
 import getHealth from "@controllers/health/get-health";
-// Middleware
 
 // ------------------------------------
 // Router

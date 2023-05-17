@@ -11,7 +11,8 @@
     "lint": "eslint --fix ./src/*.ts"
   },
   "files": [
-    "dist/**"
+    "dist/**",
+    "cms/**"
   ],
   "author": "",
   "license": "ISC",

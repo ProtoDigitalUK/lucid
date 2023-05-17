@@ -1,4 +1,3 @@
-import type { Controller } from "../../../types/index.js";
 import z from "zod";
 
 export const body = z.undefined();
@@ -11,8 +10,8 @@ const getHealth: Controller<typeof params, typeof body, typeof query> = (
 ) => {
   res.status(200).json({
     health: {
-      api: 100,
-      db: 200,
+      api: "ok",
+      db: "ok",
     },
   });
 };
