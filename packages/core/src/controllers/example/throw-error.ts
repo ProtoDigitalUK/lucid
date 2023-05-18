@@ -1,10 +1,15 @@
 import z from "zod";
+// Utils
+import { LucidError } from "@utils/error-handler";
 // Data
 import sampleData from "@data/sample.json";
 
 // --------------------------------------------------
 // Schema
-const body = z.object({});
+const body = z.object({
+  name: z.string().min(2),
+  active: z.boolean(),
+});
 const query = z.object({
   include: z.string().optional(),
   exclude: z.string().optional(),
@@ -16,20 +21,23 @@ const query = z.object({
     .optional(),
   sort: z.string().optional(),
 });
-const params = z.object({
-  id: z.string(),
-});
+const params = z.object({});
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<typeof params, typeof body, typeof query> = async (
+const throwError: Controller<typeof params, typeof body, typeof query> = async (
   req,
   res,
   next
 ) => {
   try {
-    const { id } = req.params;
-    const data = sampleData.find((item) => item.id.toString() === id);
+    const data = sampleData.find((item) => item.id.toString() === "1");
+    throw new LucidError({
+      type: "standard",
+      name: "Test Error",
+      message: "This is a test error",
+      status: 500,
+    });
 
     res.status(200).json({
       data: data,
@@ -48,5 +56,5 @@ export default {
     query,
     params,
   },
-  controller: getSingle,
+  controller: throwError,
 };

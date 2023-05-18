@@ -1,9 +1,15 @@
 import http from "http";
-import express, { Response, Request } from "express";
+import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { log } from "console-log-colors";
 import path from "path";
+// Utils
+import {
+  errorLogger,
+  errorResponder,
+  invalidPathHandler,
+} from "@utils/error-handler";
 //  Routes
 import registerRoutes from "@routes/index";
 
@@ -42,14 +48,9 @@ const start: Start = async ({ port = 8393, origin = "*" }) => {
 
   // ------------------------------------
   // Error handling
-  app.use((req: Request, res: Response) => {
-    const error = new Error("Not Found");
-    res.status(500).json({
-      error: {
-        message: error.message,
-      },
-    });
-  });
+  app.use(errorLogger);
+  app.use(errorResponder);
+  app.use(invalidPathHandler);
 
   // ------------------------------------
   // Start server

@@ -1,19 +1,24 @@
 import z from "zod";
 
-export const body = z.undefined();
-export const query = z.undefined();
-export const params = z.undefined();
+export const body = z.object({});
+export const query = z.object({});
+export const params = z.object({});
 
-const getHealth: Controller<typeof params, typeof body, typeof query> = (
+const getHealth: Controller<typeof params, typeof body, typeof query> = async (
   req,
-  res
+  res,
+  next
 ) => {
-  res.status(200).json({
-    health: {
-      api: "ok",
-      db: "ok",
-    },
-  });
+  try {
+    res.status(200).json({
+      health: {
+        api: "ok",
+        db: "ok",
+      },
+    });
+  } catch (error) {
+    next(error as Error);
+  }
 };
 
 export default {
