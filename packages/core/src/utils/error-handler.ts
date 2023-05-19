@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import z from "zod";
 import { red } from "console-log-colors";
 
@@ -6,14 +6,14 @@ const DEFAULT_ERROR = {
   name: "Error",
   message: "Something went wrong",
   status: 500,
-  data: null,
+  errors: null,
 };
 
 // ------------------------------------
 // Build/Decode Error
 class LucidError extends Error {
   status: number;
-  data: ErrorData[] | null = DEFAULT_ERROR.data;
+  errors: ErrorResult | null = null;
   constructor(data: LucidErrorData) {
     super(data.message || DEFAULT_ERROR.message);
 
@@ -21,10 +21,10 @@ class LucidError extends Error {
       case "validation": {
         this.name = "Validation Error";
         this.status = 400;
-        this.#formatZodError(data.zod as z.ZodError);
+        this.#formatZodErrors(data.zod?.issues || []);
         break;
       }
-      case "standard": {
+      case "basic": {
         this.name = data.name || DEFAULT_ERROR.name;
         this.status = data.status || DEFAULT_ERROR.status;
         break;
@@ -36,30 +36,27 @@ class LucidError extends Error {
       }
     }
   }
-  #formatZodError(error: z.ZodError) {
-    const errors = error.issues.map((issue): ErrorData => {
-      const { path, message, code } = issue;
-      let type: ErrorData["type"] = "body";
-      switch (path[0]) {
-        case "query":
-          type = "query";
-          break;
-        case "params":
-          type = "params";
-          break;
-        case "body":
-          type = "body";
-          break;
+  #formatZodErrors(error: z.ZodIssue[]) {
+    const result: ErrorResult = {};
+
+    for (const item of error) {
+      let current = result;
+      for (const key of item.path) {
+        if (typeof key === "number") {
+          // @ts-ignore
+          current = current.children || (current.children = []);
+          // @ts-ignore
+          current = current[key] || (current[key] = {});
+        } else {
+          // @ts-ignore
+          current = current[key] || (current[key] = {});
+        }
       }
-      return {
-        type: type,
-        field: path[path.length - 1].toString(),
-        path: path,
-        code: code,
-        message: message,
-      };
-    });
-    this.data = errors;
+      current.code = item.code;
+      current.message = item.message;
+    }
+
+    this.errors = result || null;
   }
 }
 
@@ -69,14 +66,14 @@ const decodeError = (error: Error) => {
       name: error.name,
       message: error.message,
       status: error.status,
-      data: error.data,
+      errors: error.errors,
     };
   }
   return {
     name: DEFAULT_ERROR.name,
     message: error.message,
     status: DEFAULT_ERROR.status,
-    data: DEFAULT_ERROR.data,
+    errors: DEFAULT_ERROR.errors,
   };
 };
 
@@ -88,13 +85,13 @@ const errorLogger = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, message, status, data } = decodeError(error);
+  const { name, message, status } = decodeError(error);
 
   console.error(
     red(
       `[${new Date().toISOString()}] ${req.method} ${
         req.path
-      } - ${name} ${message} ${status} ${data}
+      } - ${name} ${message} ${status}
       `
     )
   );
@@ -107,12 +104,12 @@ const errorResponder = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, message, status, data } = decodeError(error);
+  const { name, message, status, errors } = decodeError(error);
   res.status(status).send({
     name,
     message,
     status,
-    data,
+    errors,
   });
 };
 

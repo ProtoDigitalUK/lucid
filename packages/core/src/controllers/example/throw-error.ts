@@ -9,6 +9,11 @@ import sampleData from "@data/sample.json";
 const body = z.object({
   name: z.string().min(2),
   active: z.boolean(),
+  items: z.array(z.object({ id: z.string(), name: z.string() })).length(3),
+  person: z.object({
+    name: z.string().min(2),
+    age: z.number().min(18),
+  }),
 });
 const query = z.object({
   include: z.string().optional(),
@@ -33,7 +38,7 @@ const throwError: Controller<typeof params, typeof body, typeof query> = async (
   try {
     const data = sampleData.find((item) => item.id.toString() === "1");
     throw new LucidError({
-      type: "standard",
+      type: "basic",
       name: "Test Error",
       message: "This is a test error",
       status: 500,

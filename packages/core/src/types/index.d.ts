@@ -13,19 +13,17 @@ declare global {
   // --------------------------------------------------
   // Error Handling
   interface LucidErrorData {
-    type: "validation" | "standard";
+    type: "validation" | "basic";
 
     name?: string;
     message?: string;
     status?: number;
     zod?: z.ZodError;
   }
-
-  interface ErrorData {
-    type: "query" | "params" | "body";
-    field: string;
-    path: Array<string | number>;
-    code: string;
-    message: string;
+  interface ErrorResult {
+    code?: string;
+    message?: string;
+    children?: Array<undefined | ErrorResult>;
+    [key: string]: Array<undefined | ErrorResult> | string | undefined;
   }
 }
