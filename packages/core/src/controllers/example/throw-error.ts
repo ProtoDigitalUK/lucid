@@ -1,8 +1,6 @@
 import z from "zod";
 // Utils
 import { LucidError } from "@utils/error-handler";
-// Data
-import sampleData from "@data/sample.json";
 
 // --------------------------------------------------
 // Schema
@@ -36,17 +34,11 @@ const throwError: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const data = sampleData.find((item) => item.id.toString() === "1");
     throw new LucidError({
       type: "basic",
       name: "Test Error",
       message: "This is a test error",
       status: 500,
-    });
-
-    res.status(200).json({
-      data: data,
-      query: req.query,
     });
   } catch (error) {
     next(error as Error);

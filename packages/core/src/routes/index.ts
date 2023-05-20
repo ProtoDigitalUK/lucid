@@ -1,6 +1,6 @@
-import auth from "@routes/v1/auth";
-import health from "@routes/v1/health";
-import example from "@routes/v1/example";
+import auth from "@routes/v1/auth.routes";
+import health from "@routes/v1/health.routes";
+import example from "@routes/v1/example.routes";
 
 const initRoutes = (app: any) => {
   // Version 1

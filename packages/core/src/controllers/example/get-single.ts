@@ -1,5 +1,6 @@
 import z from "zod";
 import sql from "@db/db";
+import buildSchema from "@utils/build-schema";
 // Data
 import sampleData from "@data/sample.json";
 

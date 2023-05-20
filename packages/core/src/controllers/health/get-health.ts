@@ -1,9 +1,13 @@
 import z from "zod";
 
+// --------------------------------------------------
+// Schema
 export const body = z.object({});
 export const query = z.object({});
 export const params = z.object({});
 
+// --------------------------------------------------
+// Controller
 const getHealth: Controller<typeof params, typeof body, typeof query> = async (
   req,
   res,
@@ -21,6 +25,8 @@ const getHealth: Controller<typeof params, typeof body, typeof query> = async (
   }
 };
 
+// --------------------------------------------------
+// Export
 export default {
   schema: {
     body,
