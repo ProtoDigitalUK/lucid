@@ -33,3 +33,14 @@ lucid.start({
   content_types: ContentTypes,
 });
 ```
+
+## Logging In
+
+After starting the server, you can login by going to `/login`. Use the following credentials:
+
+```
+username: admin
+password: admin
+```
+
+After logging in for the first time, you will be prompted to change your password, email and optionally your username.
