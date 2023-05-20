@@ -6,10 +6,16 @@ const body = z.object({});
 const query = z.object({
   include: z.string().optional(),
   exclude: z.string().optional(),
-  filter: z.object({}).optional(),
+  filter: z
+    .object({
+      search: z.string().optional(),
+      active: z.enum(["-1", "1"]).optional(),
+    })
+    .optional(),
   sort: z.string().optional(),
 });
 const params = z.object({});
+
 // --------------------------------------------------
 // Controller
 const getHealth: Controller<typeof params, typeof body, typeof query> = async (

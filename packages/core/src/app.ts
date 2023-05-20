@@ -1,19 +1,18 @@
-require("dotenv").config();
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { log } from "console-log-colors";
 import path from "path";
-// Utils
+// internal
+import Config, { type ConfigT } from "@db/models/Config";
+import launchSteps from "@services/app/launch-steps";
+import migrateDB from "@db/migration";
+import initRoutes from "@routes/index";
 import {
   errorLogger,
   errorResponder,
   invalidPathHandler,
 } from "@utils/error-handler";
-//  Initialise
-import migrateDB from "@db/migration";
-import initRoutes from "@routes/index";
-import Config, { type ConfigT } from "@utils/config";
 
 const app = async (config: ConfigT) => {
   const app = express();
@@ -37,12 +36,18 @@ const app = async (config: ConfigT) => {
     })
   );
   app.use(morgan("dev"));
-  log.yellow("Middleware initialised");
+  log.yellow("Middleware configured");
 
   // ------------------------------------
   // Initialise database
   log.white("----------------------------------------------------");
   await migrateDB();
+
+  // ------------------------------------
+  // Launch steps
+  log.white("----------------------------------------------------");
+  await launchSteps();
+  log.yellow("Launch steps ran");
 
   // ------------------------------------
   // Routes

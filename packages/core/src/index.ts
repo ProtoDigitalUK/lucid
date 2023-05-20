@@ -1,7 +1,7 @@
 require("dotenv").config();
 import http from "http";
 import { log } from "console-log-colors";
-import { type ConfigT } from "@utils/config";
+import { type ConfigT } from "@db/models/Config";
 import app from "./app";
 
 const start = async (config: ConfigT) => {

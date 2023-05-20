@@ -9,6 +9,7 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/dev.ts",
     "lint": "eslint --fix ./src/*.ts",
     "test": "jest --silent --coverage --detectOpenHandles",
+    "clear-db": "ts-node ./clear-db.ts",
     "build:clean": "rimraf dist",
     "build:copy": "copyfiles -f src/db/migrations/*.sql dist/db/migrations",
     "build:ts": "tsc && tsc-alias",
@@ -42,6 +43,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "argon2": "^0.30.3",
     "console-log-colors": "^0.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
-import sql from "@db/db";
 import { green } from "console-log-colors";
+import { RuntimeError } from "@utils/error-handler";
 // Models
 import Migration from "@db/models/Migration";
 
@@ -35,25 +35,30 @@ const getOutstandingMigrations = async () => {
 };
 
 const migrate = async () => {
-  const outstandingMigrations = await getOutstandingMigrations();
+  try {
+    const outstandingMigrations = await getOutstandingMigrations();
 
-  if (outstandingMigrations.length === 0) {
-    console.log(green("No outstanding migrations, database is up to date"));
-    return;
-  }
+    if (outstandingMigrations.length === 0) {
+      console.log(green("No outstanding migrations, database is up to date"));
+      return;
+    }
 
-  console.log(
-    green(
-      `Found ${outstandingMigrations.length} outstanding migrations, running...`
-    )
-  );
+    console.log(
+      green(
+        `Found ${outstandingMigrations.length} outstanding migrations, running...`
+      )
+    );
 
-  for (const migration of outstandingMigrations) {
-    console.log(green(`- running migration ${migration.file}`));
-    await sql.begin(async (sql) => {
-      await sql.unsafe(migration.sql);
-      await sql`INSERT INTO migrations (file) VALUES (${migration.file})`;
-    });
+    for (const migration of outstandingMigrations) {
+      console.log(green(`- running migration ${migration.file}`));
+      await Migration.create({
+        file: migration.file,
+        rawSql: migration.sql,
+      });
+    }
+  } catch (err) {
+    new RuntimeError((err as Error).message);
+    process.exit(1);
   }
 };
 

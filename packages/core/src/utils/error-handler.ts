@@ -1,3 +1,11 @@
+/*
+  When to use LucidError:
+    - When the error is being thrown from a route or middleware
+
+  When to use RuntimeError:
+    - When the error is being thorwn internall and outside of a request. Eg: in a migration or launch step
+*/
+
 import { Request, Response, NextFunction } from "express";
 import z from "zod";
 import { red, bgRed } from "console-log-colors";
@@ -10,22 +18,27 @@ const DEFAULT_ERROR = {
 };
 
 interface LucidErrorData {
-  type: "validation" | "basic" | "internal";
+  type: "validation" | "basic";
 
   name?: string;
   message?: string;
   status?: number;
   zod?: z.ZodError;
+  errors?: ErrorResult;
 }
 interface ErrorResult {
   code?: string;
   message?: string;
   children?: Array<undefined | ErrorResult>;
-  [key: string]: Array<undefined | ErrorResult> | string | undefined;
+  [key: string]:
+    | Array<undefined | ErrorResult>
+    | string
+    | undefined
+    | ErrorResult;
 }
 
 // ------------------------------------
-// Build/Decode Error
+// Error Classes
 class LucidError extends Error {
   status: number;
   errors: ErrorResult | null = null;
@@ -42,14 +55,14 @@ class LucidError extends Error {
       case "basic": {
         this.name = data.name || DEFAULT_ERROR.name;
         this.status = data.status || DEFAULT_ERROR.status;
+        this.errors = data.errors || DEFAULT_ERROR.errors;
         break;
       }
-      case "internal": {
-        this.#internal(data.message || DEFAULT_ERROR.message);
-      }
+
       default: {
         this.name = DEFAULT_ERROR.name;
         this.status = DEFAULT_ERROR.status;
+        this.errors = data.errors || DEFAULT_ERROR.errors;
         break;
       }
     }
@@ -76,11 +89,17 @@ class LucidError extends Error {
 
     this.errors = result || null;
   }
-  #internal(message: string) {
-    console.error(bgRed(`[INTERNAL ERROR] ${message}`));
+}
+
+class RuntimeError extends Error {
+  constructor(message: string) {
+    super(message);
+    console.error(bgRed(`[RUNTIME ERROR] ${message}`));
   }
 }
 
+// ------------------------------------
+// Util Functions
 const decodeError = (error: Error) => {
   if (error instanceof LucidError) {
     return {
@@ -95,6 +114,12 @@ const decodeError = (error: Error) => {
     message: error.message,
     status: DEFAULT_ERROR.status,
     errors: DEFAULT_ERROR.errors,
+  };
+};
+
+const modelErrors = (error: ErrorResult): ErrorResult => {
+  return {
+    body: error,
   };
 };
 
@@ -144,4 +169,11 @@ const invalidPathHandler = (
   res.send("invalid path");
 };
 
-export { LucidError, errorLogger, errorResponder, invalidPathHandler };
+export {
+  LucidError,
+  RuntimeError,
+  modelErrors,
+  errorLogger,
+  errorResponder,
+  invalidPathHandler,
+};
