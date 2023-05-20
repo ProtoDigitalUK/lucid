@@ -1,8 +1,8 @@
-# Lucid CMS
+# Lucid
 
 > IN ACTIVE DEVELOPMENT
 
-Lucid CMS is a headless content management system built from the ground up to be fast, secure, and easy to use for both developers and users. We take a component-based approach to building pages, which we call bricks, allowing you to create reusable bricks that can be used across multiple pages.
+Lucid is a headless content management system built from the ground up to be fast, secure, and easy to use for both developers and users. We take a component-based approach to building pages, which we call bricks, allowing you to create reusable bricks that can be used across multiple pages.
 
 These bricks are defined in the Lucid config using the `BrickBuilder`, this enables you to create bricks with a range of custom fields, including wysiwyg editors, images, repeaters, and more.
 
