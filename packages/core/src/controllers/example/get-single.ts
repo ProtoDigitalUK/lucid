@@ -1,4 +1,5 @@
 import z from "zod";
+import sql from "@db/db";
 // Data
 import sampleData from "@data/sample.json";
 
@@ -31,7 +32,11 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
     const { id } = req.params;
     const data = sampleData.find((item) => item.id.toString() === id);
 
+    let userId = `22f0c1b3-6ded-46d2-8ce4-61e23fd14f8a`;
+    const results = await sql`SELECT * FROM users WHERE id = ${userId}`;
+
     res.status(200).json({
+      queryResults: results,
       data: data,
       query: req.query,
     });

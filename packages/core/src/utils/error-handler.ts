@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction, query } from "express";
+import { Request, Response, NextFunction } from "express";
 import z from "zod";
-import { red } from "console-log-colors";
+import { red, bgRed } from "console-log-colors";
 
 const DEFAULT_ERROR = {
   name: "Error",
@@ -8,6 +8,21 @@ const DEFAULT_ERROR = {
   status: 500,
   errors: null,
 };
+
+interface LucidErrorData {
+  type: "validation" | "basic" | "internal";
+
+  name?: string;
+  message?: string;
+  status?: number;
+  zod?: z.ZodError;
+}
+interface ErrorResult {
+  code?: string;
+  message?: string;
+  children?: Array<undefined | ErrorResult>;
+  [key: string]: Array<undefined | ErrorResult> | string | undefined;
+}
 
 // ------------------------------------
 // Build/Decode Error
@@ -28,6 +43,9 @@ class LucidError extends Error {
         this.name = data.name || DEFAULT_ERROR.name;
         this.status = data.status || DEFAULT_ERROR.status;
         break;
+      }
+      case "internal": {
+        this.#internal(data.message || DEFAULT_ERROR.message);
       }
       default: {
         this.name = DEFAULT_ERROR.name;
@@ -57,6 +75,9 @@ class LucidError extends Error {
     }
 
     this.errors = result || null;
+  }
+  #internal(message: string) {
+    console.error(bgRed(`[INTERNAL ERROR] ${message}`));
   }
 }
 

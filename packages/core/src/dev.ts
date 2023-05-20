@@ -1,6 +1,7 @@
 import headlessCore from "./index";
 
 headlessCore.start({
-	port: 8393,
-	origin: "*",
+  port: 8393,
+  origin: "*",
+  database_url: process.env.DATABASE_URL as string,
 });

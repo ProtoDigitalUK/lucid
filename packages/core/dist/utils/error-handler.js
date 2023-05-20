@@ -4,7 +4,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _LucidError_instances, _LucidError_formatZodErrors;
+var _LucidError_instances, _LucidError_formatZodErrors, _LucidError_internal;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.invalidPathHandler = exports.errorResponder = exports.errorLogger = exports.LucidError = void 0;
 const console_log_colors_1 = require("console-log-colors");
@@ -30,6 +30,9 @@ class LucidError extends Error {
                 this.name = data.name || DEFAULT_ERROR.name;
                 this.status = data.status || DEFAULT_ERROR.status;
                 break;
+            }
+            case "internal": {
+                __classPrivateFieldGet(this, _LucidError_instances, "m", _LucidError_internal).call(this, data.message || DEFAULT_ERROR.message);
             }
             default: {
                 this.name = DEFAULT_ERROR.name;
@@ -57,6 +60,8 @@ _LucidError_instances = new WeakSet(), _LucidError_formatZodErrors = function _L
         current.message = item.message;
     }
     this.errors = result || null;
+}, _LucidError_internal = function _LucidError_internal(message) {
+    console.error((0, console_log_colors_1.bgRed)(`[INTERNAL ERROR] ${message}`));
 };
 const decodeError = (error) => {
     if (error instanceof LucidError) {

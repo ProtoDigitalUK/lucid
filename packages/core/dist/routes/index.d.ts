@@ -1,3 +1,3 @@
-declare const registerRoutes: (app: any) => void;
-export default registerRoutes;
+declare const initRoutes: (app: any) => void;
+export default initRoutes;
 //# sourceMappingURL=index.d.ts.map

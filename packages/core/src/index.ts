@@ -1,3 +1,4 @@
+require("dotenv").config();
 import http from "http";
 import express from "express";
 import morgan from "morgan";
@@ -10,40 +11,51 @@ import {
   errorResponder,
   invalidPathHandler,
 } from "@utils/error-handler";
-//  Routes
-import registerRoutes from "@routes/index";
+//  Initialise
+import migrateDB from "@db/migration";
+import initRoutes from "@routes/index";
+import Config, { type ConfigT } from "@utils/config";
 
-interface StartOptions {
-  port: number;
-  origin?: string;
-}
-type Start = (options: StartOptions) => Promise<void>;
+type Start = (config: ConfigT) => Promise<void>;
 
-const start: Start = async ({ port = 8393, origin = "*" }) => {
-  log.white("----------------------------------------------------");
+const start: Start = async (config) => {
   const app = express();
   const server = http.createServer(app);
 
   // ------------------------------------
+  // Config
+  log.white("----------------------------------------------------");
+  await Config.validate(config);
+  await Config.set(config);
+  log.yellow("Config initialised");
+
+  // ------------------------------------
   // Server wide middleware
+  log.white("----------------------------------------------------");
   app.use(express.json());
   app.use(
     cors({
-      origin: origin,
+      origin: config.origin,
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   );
   app.use(morgan("dev"));
+  log.yellow("Middleware initialised");
+
+  // ------------------------------------
+  // Initialise database
+  log.white("----------------------------------------------------");
+  await migrateDB();
 
   // ------------------------------------
   // Routes
+  log.white("----------------------------------------------------");
   app.use(
     "/",
     express.static(path.join(__dirname, "../cms"), { extensions: ["html"] })
   );
-  registerRoutes(app);
-
+  initRoutes(app);
   log.yellow("Routes initialised");
 
   // ------------------------------------
@@ -54,10 +66,10 @@ const start: Start = async ({ port = 8393, origin = "*" }) => {
 
   // ------------------------------------
   // Start server
-  server.listen(port, () => {
+  server.listen(config.port, () => {
     log.white("----------------------------------------------------");
-    log.yellow(`CMS started at: http://localhost:${port}`);
-    log.yellow(`API started at: http://localhost:${port}/api`);
+    log.yellow(`CMS started at: http://localhost:${config.port}`);
+    log.yellow(`API started at: http://localhost:${config.port}/api`);
     log.white("----------------------------------------------------");
   });
 };

@@ -1,0 +1,1 @@
+{"version":3,"file":"Migration.js","sourceRoot":"","sources":["../../../src/db/models/Migration.ts"],"names":[],"mappings":";;;;;AAAA,gDAAyB;AAQzB,MAAqB,SAAS;IAC5B,gBAAe,CAAC;IAChB,MAAM,CAAC,KAAK,CAAC,GAAG;QACd,IAAI;YACF,MAAM,UAAU,GAAG,MAAM,IAAA,YAAG,EAAc,0BAA0B,CAAC;YACrE,OAAO,UAAU,CAAC;SACnB;QAAC,OAAO,GAAG,EAAE;YAEZ,OAAO,EAAE,CAAC;SACX;IACH,CAAC;CACF;AAXD,4BAWC"}
