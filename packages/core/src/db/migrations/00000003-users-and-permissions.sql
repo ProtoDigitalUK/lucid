@@ -12,10 +12,9 @@ CREATE TABLE IF NOT EXISTS lucid_users (
 
 -- PERMISSIONS TABLE
 CREATE TABLE IF NOT EXISTS lucid_permissions (
-  user_id UUID REFERENCES lucid_users(id) ON DELETE CASCADE,
- 
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  permission TEXT NOT NULL,
+  user_id UUID UNIQUE NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
+  permissions TEXT[] NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

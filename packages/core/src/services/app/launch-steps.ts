@@ -1,9 +1,11 @@
 import { RuntimeError } from "@utils/error-handler";
 // Models
 import User from "@db/models/User";
-import Option from "@db/models/Options";
+import Option from "@db/models/Option";
+import Permission from "@db/models/Permission";
 
 const createFixOptions = async () => {
+  // this is only created if the option doesnt exist, if it does it will already be true and locked
   await Option.create({
     name: "initial_user_created",
     value: true,
@@ -21,13 +23,13 @@ const createInitialAdmin = async () => {
   if (typeof res.option_value === "boolean" && res.option_value) return;
 
   try {
-    await User.register({
+    const user = await User.register({
       email: "admin@example.com",
       username: "admin",
       password: "admin",
     });
     // Add permissions to the user
-
+    await Permission.set(user.id, "admin");
     await Option.patchByName({
       name: "initial_user_created",
       value: true,
