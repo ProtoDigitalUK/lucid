@@ -12,13 +12,10 @@ const query = zod_1.default.object({
     sort: zod_1.default.string().optional(),
 });
 const params = zod_1.default.object({});
-const getHealth = async (req, res, next) => {
+const boilerplate = async (req, res, next) => {
     try {
         res.status(200).json({
-            health: {
-                api: "ok",
-                db: "ok",
-            },
+            message: "Hello World!",
         });
     }
     catch (error) {
@@ -31,6 +28,6 @@ exports.default = {
         query,
         params,
     },
-    controller: getHealth,
+    controller: boilerplate,
 };
-//# sourceMappingURL=get-health.js.map
+//# sourceMappingURL=boilerplate.js.map

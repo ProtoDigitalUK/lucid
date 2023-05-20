@@ -1,1 +1,1 @@
-{"version":3,"file":"get-health.d.ts","sourceRoot":"","sources":["../../../src/controllers/health/get-health.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;AAEpB,eAAO,MAAM,IAAI,gDAAe,CAAC;AACjC,eAAO,MAAM,KAAK,gDAAe,CAAC;AAClC,eAAO,MAAM,MAAM,gDAAe,CAAC;;;;;;;;;AAmBnC,wBAOE"}
+{"version":3,"file":"get-health.d.ts","sourceRoot":"","sources":["../../../src/controllers/health/get-health.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAiCpB,wBAOE"}

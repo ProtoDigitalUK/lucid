@@ -38,4 +38,4 @@ declare const _default: {
     }>>;
 };
 export default _default;
-//# sourceMappingURL=get-health.d.ts.map
+//# sourceMappingURL=boilerplate.d.ts.map

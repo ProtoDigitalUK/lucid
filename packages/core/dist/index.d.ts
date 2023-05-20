@@ -1,7 +1,9 @@
-import { type ConfigT } from "./utils/config";
-type Start = (config: ConfigT) => Promise<void>;
-declare const exportObject: {
-    start: Start;
+declare const _default: {
+    start: (config: {
+        port: number;
+        database_url: string;
+        origin?: string | undefined;
+    }) => Promise<void>;
 };
-export default exportObject;
+export default _default;
 //# sourceMappingURL=index.d.ts.map

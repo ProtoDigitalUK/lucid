@@ -10,19 +10,17 @@ const query = z.object({
   sort: z.string().optional(),
 });
 const params = z.object({});
+
 // --------------------------------------------------
 // Controller
-const getHealth: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const boilerplate: Controller<
+  typeof params,
+  typeof body,
+  typeof query
+> = async (req, res, next) => {
   try {
     res.status(200).json({
-      health: {
-        api: "ok",
-        db: "ok",
-      },
+      message: "Hello World!",
     });
   } catch (error) {
     next(error as Error);
@@ -37,5 +35,5 @@ export default {
     query,
     params,
   },
-  controller: getHealth,
+  controller: boilerplate,
 };

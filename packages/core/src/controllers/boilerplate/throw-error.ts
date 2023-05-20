@@ -1,4 +1,6 @@
 import z from "zod";
+// Utils
+import { LucidError } from "@utils/error-handler";
 
 // --------------------------------------------------
 // Schema
@@ -10,19 +12,20 @@ const query = z.object({
   sort: z.string().optional(),
 });
 const params = z.object({});
+
 // --------------------------------------------------
 // Controller
-const getHealth: Controller<typeof params, typeof body, typeof query> = async (
+const throwError: Controller<typeof params, typeof body, typeof query> = async (
   req,
   res,
   next
 ) => {
   try {
-    res.status(200).json({
-      health: {
-        api: "ok",
-        db: "ok",
-      },
+    throw new LucidError({
+      type: "basic",
+      name: "Test Error",
+      message: "This is a test error",
+      status: 500,
     });
   } catch (error) {
     next(error as Error);
@@ -37,5 +40,5 @@ export default {
     query,
     params,
   },
-  controller: getHealth,
+  controller: throwError,
 };

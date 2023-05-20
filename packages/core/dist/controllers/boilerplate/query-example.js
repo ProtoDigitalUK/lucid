@@ -8,17 +8,19 @@ const body = zod_1.default.object({});
 const query = zod_1.default.object({
     include: zod_1.default.string().optional(),
     exclude: zod_1.default.string().optional(),
-    filter: zod_1.default.object({}).optional(),
+    filter: zod_1.default
+        .object({
+        search: zod_1.default.string().optional(),
+        active: zod_1.default.enum(["-1", "1"]).optional(),
+    })
+        .optional(),
     sort: zod_1.default.string().optional(),
 });
 const params = zod_1.default.object({});
-const getHealth = async (req, res, next) => {
+const queryExample = async (req, res, next) => {
     try {
         res.status(200).json({
-            health: {
-                api: "ok",
-                db: "ok",
-            },
+            message: "Hello World!",
         });
     }
     catch (error) {
@@ -31,6 +33,6 @@ exports.default = {
         query,
         params,
     },
-    controller: getHealth,
+    controller: queryExample,
 };
-//# sourceMappingURL=get-health.js.map
+//# sourceMappingURL=query-example.js.map
