@@ -1,6 +1,6 @@
-import headlessCore from "./index";
+import lucid from "./index";
 
-headlessCore.start({
+lucid.start({
   port: 8393,
   origin: "*",
   database_url: process.env.DATABASE_URL as string,
