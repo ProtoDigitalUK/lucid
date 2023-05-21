@@ -2,10 +2,13 @@ import sql from "@db/db";
 
 // -------------------------------------------
 // Types
-interface CreateMigrationT {
+
+type MigrationAll = () => Promise<MigrationT[]>;
+
+type MigrationCreate = (data: {
   file: string;
   rawSql: string;
-}
+}) => Promise<void>;
 
 // -------------------------------------------
 // Migration
@@ -18,7 +21,7 @@ export type MigrationT = {
 export default class Migration {
   // -------------------------------------------
   // Public
-  static all = async () => {
+  static all: MigrationAll = async () => {
     try {
       const migrations = await sql<
         MigrationT[]
@@ -29,7 +32,7 @@ export default class Migration {
       return [];
     }
   };
-  static create = async (data: CreateMigrationT) => {
+  static create: MigrationCreate = async (data) => {
     const { file, rawSql } = data;
     await sql.begin(async (sql) => {
       await sql.unsafe(rawSql);

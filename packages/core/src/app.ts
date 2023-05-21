@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { log } from "console-log-colors";
 import path from "path";
+import cookieParser from "cookie-parser";
 // internal
 import Config, { type ConfigT } from "@db/models/Config";
 import launchSteps from "@services/app/launch-steps";
@@ -36,6 +37,7 @@ const app = async (config: ConfigT) => {
     })
   );
   app.use(morgan("dev"));
+  app.use(cookieParser());
   log.yellow("Middleware configured");
 
   // ------------------------------------

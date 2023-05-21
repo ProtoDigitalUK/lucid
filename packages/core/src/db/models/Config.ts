@@ -1,4 +1,6 @@
 /*
+  TODO: If this becomes a bottleneck, use hybrid approach where config is first looked up from app.get, 
+  TODO: ...and if the app is not present, then read from file
   Unique case for now where model also contains validation, normally this would be handled in a middleware or controller
 */
 
@@ -10,35 +12,48 @@ import z from "zod";
 // Config
 const configSchema = z.object({
   port: z.number(),
-  database_url: z.string(),
   origin: z.string().optional(),
+  environment: z.enum(["development", "production"]),
+  database_url: z.string(),
+  secret: z.string(),
 });
 
 export type ConfigT = z.infer<typeof configSchema>;
 
+type ConfigValidate = (config: ConfigT) => Promise<void>;
+type ConfigSet = (config: ConfigT) => Promise<void>;
+type ConfigGet = () => ConfigT;
+
 export default class Config {
   // -------------------------------------------
   // Public
-  static validate = async (config: ConfigT) => {
+  static validate: ConfigValidate = async (config) => {
+    // TODO: Format errors for better readability
     await configSchema.parseAsync(config);
   };
-  static set = async (config: ConfigT) => {
+  static set: ConfigSet = async (config) => {
     await fs.ensureDir(path.join(__dirname, "../../temp"));
     await fs.writeFile(
       path.join(__dirname, "../../temp/config.json"),
       JSON.stringify(config, null, 2)
     );
   };
-  static get = () => {
+  static get: ConfigGet = () => {
     const config = fs.readFileSync(
       path.join(__dirname, "../../../temp/config.json"),
       "utf-8"
     );
-    return JSON.parse(config) as ConfigT;
+    return JSON.parse(config);
   };
   // getters
   static get database_url() {
     return Config.get().database_url;
+  }
+  static get secret() {
+    return Config.get().secret;
+  }
+  static get environment() {
+    return Config.get().environment;
   }
   // -------------------------------------------
   // Util Methods

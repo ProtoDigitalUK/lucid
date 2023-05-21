@@ -1,10 +1,14 @@
 import sql from "@db/db";
-// import { LucidError, modelErrors } from "@utils/error-handler";
 
 // -------------------------------------------
 // Types
 type PermissionNames = "manage_users" | "manage_content" | "manage_settings";
 type PermissionRoles = "admin" | "editor";
+
+type PermissionSet = (
+  user_id: string,
+  role: PermissionRoles
+) => Promise<PermissionT>;
 
 // -------------------------------------------
 // User
@@ -19,23 +23,27 @@ export type PermissionT = {
 export default class Permission {
   // -------------------------------------------
   // Methods
-  static set = async (user_id: string, role: PermissionRoles) => {
+  static set: PermissionSet = async (user_id, role) => {
     const permissions = Permission.rolePermissions(role);
 
     const [permission]: [PermissionT?] = await sql`
         SELECT * FROM lucid_permissions WHERE user_id = ${user_id}
         `;
     if (!permission) {
-      await sql`
+      const [permRes]: [PermissionT] = await sql`
         INSERT INTO lucid_permissions (user_id, permissions)
-        VALUES (${user_id}, ${permissions})
+        VALUES (${user_id}, ${permissions}) 
+        RETURNING *
         `;
+      return permRes;
     } else {
-      await sql`
+      const [permRes]: [PermissionT] = await sql`
         UPDATE lucid_permissions
         SET permissions = ${permissions}
-        WHERE user_id = ${user_id}
+        WHERE user_id = ${user_id} 
+        RETURNING *
         `;
+      return permRes;
     }
   };
   // -------------------------------------------

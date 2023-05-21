@@ -18,7 +18,7 @@ const DEFAULT_ERROR = {
 };
 
 interface LucidErrorData {
-  type: "validation" | "basic";
+  type: "validation" | "basic" | "authorisation";
 
   name?: string;
   message?: string;
@@ -58,7 +58,11 @@ class LucidError extends Error {
         this.errors = data.errors || DEFAULT_ERROR.errors;
         break;
       }
-
+      case "authorisation": {
+        this.name = "Authorisation Error";
+        this.status = 401;
+        break;
+      }
       default: {
         this.name = DEFAULT_ERROR.name;
         this.status = DEFAULT_ERROR.status;

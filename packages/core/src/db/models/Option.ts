@@ -7,22 +7,32 @@ type OptionNames = "initial_user_created";
 type OptionTypes = "boolean" | "string" | "number" | "json";
 type OptionValue = boolean | number | string | object | Array<any>;
 
-interface OptionPatchByName {
+type OptionGetByName = (name: OptionNames) => Promise<OptionT>;
+
+type OptionPatchByName = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
   locked: boolean;
-}
-interface OptionCreate {
+}) => Promise<OptionT>;
+
+type OptionCreate = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
   locked: boolean;
-}
+}) => Promise<OptionT>;
+
+type OptionCreateOrPatchByName = (data: {
+  name: OptionNames;
+  value: OptionValue;
+  type: OptionTypes;
+  locked: boolean;
+}) => Promise<OptionT>;
 
 // -------------------------------------------
 // User
-export type OptionsT = {
+export type OptionT = {
   id: string;
   option_name: OptionNames;
   option_value: OptionValue;
@@ -35,8 +45,8 @@ export type OptionsT = {
 export default class Option {
   // -------------------------------------------
   // Methods
-  static getByName = async (name: OptionNames) => {
-    const [option]: [OptionsT?] = await sql`
+  static getByName: OptionGetByName = async (name) => {
+    const [option]: [OptionT?] = await sql`
         SELECT * FROM lucid_options WHERE option_name = ${name}
         `;
 
@@ -57,10 +67,10 @@ export default class Option {
 
     return Option.convertToType(option);
   };
-  static patchByName = async (data: OptionPatchByName) => {
+  static patchByName: OptionPatchByName = async (data) => {
     const value = Option.convertToString(data.value, data.type);
 
-    const [option]: [OptionsT?] = await sql`
+    const [option]: [OptionT?] = await sql`
         UPDATE lucid_options 
         SET option_value = ${value},
             type = ${data.type},
@@ -87,15 +97,15 @@ export default class Option {
 
     return Option.convertToType(option);
   };
-  static create = async (data: OptionCreate) => {
+  static create: OptionCreate = async (data) => {
     const value = Option.convertToString(data.value, data.type);
 
-    const [optionExisting]: [OptionsT?] =
+    const [optionExisting]: [OptionT?] =
       await sql`SELECT * FROM lucid_options WHERE option_name = ${data.name}`;
 
     if (optionExisting) return Option.convertToType(optionExisting);
 
-    const [option]: [OptionsT?] = await sql`
+    const [option]: [OptionT?] = await sql`
         INSERT INTO lucid_options
         (option_name, option_value, type, locked)
         VALUES
@@ -114,7 +124,7 @@ export default class Option {
 
     return Option.convertToType(option);
   };
-  static createOrPatch = async (data: OptionPatchByName) => {
+  static createOrPatch: OptionCreateOrPatchByName = async (data) => {
     try {
       // try to patch
       const option = await Option.patchByName(data);
@@ -127,7 +137,7 @@ export default class Option {
   };
   // -------------------------------------------
   // Util Methods
-  static convertToType = (option: OptionsT) => {
+  static convertToType = (option: OptionT) => {
     switch (option.type) {
       case "boolean":
         option.option_value = option.option_value === "true" ? true : false;
