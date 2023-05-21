@@ -7,28 +7,28 @@ type OptionNames = "initial_user_created";
 type OptionTypes = "boolean" | "string" | "number" | "json";
 type OptionValue = boolean | number | string | object | Array<any>;
 
-type OptionGetByName = (name: OptionNames) => Promise<OptionT>;
+type OptionGetByName = (name: OptionNames) => Promise<OptionT[]>;
 
 type OptionPatchByName = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
   locked: boolean;
-}) => Promise<OptionT>;
+}) => Promise<OptionT[]>;
 
 type OptionCreate = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
   locked: boolean;
-}) => Promise<OptionT>;
+}) => Promise<OptionT[]>;
 
 type OptionCreateOrPatchByName = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
   locked: boolean;
-}) => Promise<OptionT>;
+}) => Promise<OptionT[]>;
 
 // -------------------------------------------
 // User
@@ -46,11 +46,11 @@ export default class Option {
   // -------------------------------------------
   // Methods
   static getByName: OptionGetByName = async (name) => {
-    const [option]: [OptionT?] = await sql`
+    const option = await sql<OptionT[]>`
         SELECT * FROM lucid_options WHERE option_name = ${name}
         `;
 
-    if (!option) {
+    if (option.length === 0) {
       throw new LucidError({
         type: "basic",
         name: "Option Not Found",
@@ -70,7 +70,7 @@ export default class Option {
   static patchByName: OptionPatchByName = async (data) => {
     const value = Option.convertToString(data.value, data.type);
 
-    const [option]: [OptionT?] = await sql`
+    const option = await sql<OptionT[]>`
         UPDATE lucid_options 
         SET option_value = ${value},
             type = ${data.type},
@@ -80,11 +80,11 @@ export default class Option {
         AND locked = false
         RETURNING *`;
 
-    if (!option) {
+    if (option.length === 0) {
       throw new LucidError({
         type: "basic",
         name: "Option Not Found",
-        message: "There was an error finding the option.",
+        message: "There was an error patching the option.",
         status: 500,
         errors: modelErrors({
           option_name: {
@@ -100,12 +100,13 @@ export default class Option {
   static create: OptionCreate = async (data) => {
     const value = Option.convertToString(data.value, data.type);
 
-    const [optionExisting]: [OptionT?] =
-      await sql`SELECT * FROM lucid_options WHERE option_name = ${data.name}`;
+    const optionExisting = await sql<
+      OptionT[]
+    >`SELECT * FROM lucid_options WHERE option_name = ${data.name}`;
 
-    if (optionExisting) return Option.convertToType(optionExisting);
+    if (optionExisting.length > 0) return Option.convertToType(optionExisting);
 
-    const [option]: [OptionT?] = await sql`
+    const option = await sql<OptionT[]>`
         INSERT INTO lucid_options
         (option_name, option_value, type, locked)
         VALUES
@@ -113,7 +114,7 @@ export default class Option {
         RETURNING *
         `;
 
-    if (!option) {
+    if (option.length === 0) {
       throw new LucidError({
         type: "basic",
         name: "Option Not Created",
@@ -137,23 +138,24 @@ export default class Option {
   };
   // -------------------------------------------
   // Util Methods
-  static convertToType = (option: OptionT) => {
-    switch (option.type) {
-      case "boolean":
-        option.option_value = option.option_value === "true" ? true : false;
-        break;
-      case "number":
-        option.option_value = parseInt(option.option_value as string);
-        break;
-      case "json":
-        option.option_value = JSON.parse(option.option_value as string);
-        break;
-      default:
-        option.option_value;
-        break;
-    }
-
-    return option;
+  static convertToType = (options: OptionT[]): OptionT[] => {
+    return options.map((option) => {
+      switch (option.type) {
+        case "boolean":
+          option.option_value = option.option_value === "true" ? true : false;
+          break;
+        case "number":
+          option.option_value = parseInt(option.option_value as string);
+          break;
+        case "json":
+          option.option_value = JSON.parse(option.option_value as string);
+          break;
+        default:
+          option.option_value;
+          break;
+      }
+      return option;
+    });
   };
   static convertToString = (value: OptionValue, type: OptionTypes) => {
     switch (type) {

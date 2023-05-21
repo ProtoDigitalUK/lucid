@@ -11,7 +11,7 @@ type UserRegister = (data: {
   username: string;
   password: string;
   account_reset?: boolean;
-}) => Promise<UserT>;
+}) => Promise<UserT[]>;
 
 type UserAccountReset = (
   id: string,
@@ -20,11 +20,11 @@ type UserAccountReset = (
     password: string;
     username?: string;
   }
-) => Promise<UserT>;
+) => Promise<UserT[]>;
 
-type UserGetById = (id: string) => Promise<UserT>;
+type UserGetById = (id: string) => Promise<UserT[]>;
 
-type UserLogin = (username: string, password: string) => Promise<UserT>;
+type UserLogin = (username: string, password: string) => Promise<UserT[]>;
 
 // -------------------------------------------
 // User
@@ -60,13 +60,13 @@ export default class User {
     }) as typeof data;
 
     // create user
-    const [user]: [UserT] = await sql`
+    const user = await sql<UserT[]>`
         INSERT INTO lucid_users
         ${sql(updateData)}
         RETURNING *
         `;
 
-    if (!user) {
+    if (user.length === 0) {
       throw new LucidError({
         type: "basic",
         name: "User Not Created",
@@ -75,6 +75,7 @@ export default class User {
       });
     }
 
+    delete user[0].password;
     return user;
   };
   static accountReset: UserAccountReset = async (id, data) => {
@@ -82,7 +83,7 @@ export default class User {
 
     const user = await User.getById(id);
 
-    if (!user.account_reset) {
+    if (!user[0].account_reset) {
       throw new LucidError({
         type: "basic",
         name: "Account Reset Not Allowed",
@@ -112,7 +113,7 @@ export default class User {
       account_reset: boolean;
     };
 
-    const [updatedUser]: [UserT?] = await sql`
+    const updatedUser = await sql<UserT[]>`
         UPDATE lucid_users
         SET
         ${sql(updateData)}
@@ -120,7 +121,7 @@ export default class User {
         RETURNING *
         `;
 
-    if (!updatedUser) {
+    if (updatedUser.length === 0) {
       throw new LucidError({
         type: "basic",
         name: "User Not Updated",
@@ -129,13 +130,14 @@ export default class User {
       });
     }
 
+    delete updatedUser[0].password;
     return updatedUser;
   };
   static getById: UserGetById = async (id) => {
-    const [user]: [UserT?] = await sql`
+    const user = await sql<UserT[]>`
         SELECT * FROM lucid_users WHERE id = ${id}
         `;
-    if (!user) {
+    if (user.length === 0) {
       throw new LucidError({
         type: "basic",
         name: "User Not Found",
@@ -150,17 +152,18 @@ export default class User {
       });
     }
 
+    delete user[0].password;
     return user;
   };
   static login: UserLogin = async (username, password) => {
     // double submit cooki - csrf protection
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
 
-    const [user]: [UserT?] = await sql`
+    const user = await sql<UserT[]>`
         SELECT * FROM lucid_users WHERE username = ${username}
         `;
 
-    if (!user || !user.password) {
+    if (user.length === 0 || !user[0].password) {
       throw new LucidError({
         type: "basic",
         name: "User Not Found",
@@ -169,7 +172,7 @@ export default class User {
       });
     }
 
-    const passwordValid = await argon2.verify(user.password, password);
+    const passwordValid = await argon2.verify(user[0].password, password);
 
     if (!passwordValid) {
       throw new LucidError({
@@ -180,16 +183,16 @@ export default class User {
       });
     }
 
-    delete user.password;
+    delete user[0].password;
     return user;
   };
   // -------------------------------------------
   // Util Methods
   static checkIfUserExistsAlready = async (email: string, username: string) => {
-    const [withEmail]: [User?] = await sql`
+    const withEmail = await sql<UserT[]>`
         SELECT * FROM lucid_users WHERE email = ${email}
         `;
-    if (withEmail) {
+    if (withEmail.length > 0) {
       throw new LucidError({
         type: "basic",
         name: "User Already Exists",
@@ -204,10 +207,10 @@ export default class User {
       });
     }
 
-    const [withUsername]: [User?] = await sql`
+    const withUsername = await sql<UserT[]>`
         SELECT * FROM lucid_users WHERE username = ${username}
         `;
-    if (withUsername) {
+    if (withUsername.length > 0) {
       throw new LucidError({
         type: "basic",
         name: "User Already Exists",

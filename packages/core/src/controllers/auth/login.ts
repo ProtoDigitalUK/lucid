@@ -22,7 +22,7 @@ const login: Controller<typeof params, typeof body, typeof query> = async (
 ) => {
   try {
     const user = await User.login(req.body.username, req.body.password);
-    generateJWT(res, user);
+    generateJWT(res, user[0]);
 
     res.status(200).json({
       data: user,

@@ -8,7 +8,7 @@ type PermissionRoles = "admin" | "editor";
 type PermissionSet = (
   user_id: string,
   role: PermissionRoles
-) => Promise<PermissionT>;
+) => Promise<PermissionT[]>;
 
 // -------------------------------------------
 // User
@@ -26,18 +26,18 @@ export default class Permission {
   static set: PermissionSet = async (user_id, role) => {
     const permissions = Permission.rolePermissions(role);
 
-    const [permission]: [PermissionT?] = await sql`
+    const permission = await sql<PermissionT[]>`
         SELECT * FROM lucid_permissions WHERE user_id = ${user_id}
         `;
-    if (!permission) {
-      const [permRes]: [PermissionT] = await sql`
+    if (permission.length === 0) {
+      const permRes = await sql<PermissionT[]>`
         INSERT INTO lucid_permissions (user_id, permissions)
         VALUES (${user_id}, ${permissions}) 
         RETURNING *
         `;
       return permRes;
     } else {
-      const [permRes]: [PermissionT] = await sql`
+      const permRes = await sql<PermissionT[]>`
         UPDATE lucid_permissions
         SET permissions = ${permissions}
         WHERE user_id = ${user_id} 
