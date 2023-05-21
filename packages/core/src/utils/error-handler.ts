@@ -14,15 +14,17 @@ const DEFAULT_ERROR = {
   name: "Error",
   message: "Something went wrong",
   status: 500,
+  code: null,
   errors: null,
 };
 
 interface LucidErrorData {
-  type: "validation" | "basic" | "authorisation";
+  type: "validation" | "basic" | "forbidden" | "authorisation";
 
   name?: string;
   message?: string;
   status?: number;
+  code?: "csrf";
   zod?: z.ZodError;
   errors?: ErrorResult;
 }
@@ -40,6 +42,7 @@ interface ErrorResult {
 // ------------------------------------
 // Error Classes
 class LucidError extends Error {
+  code: LucidErrorData["code"] | null = null;
   status: number;
   errors: ErrorResult | null = null;
   constructor(data: LucidErrorData) {
@@ -61,6 +64,13 @@ class LucidError extends Error {
       case "authorisation": {
         this.name = "Authorisation Error";
         this.status = 401;
+        break;
+      }
+      case "forbidden": {
+        this.name = "Forbidden";
+        this.status = 403;
+        this.code = data.code || DEFAULT_ERROR.code;
+        this.errors = data.errors || DEFAULT_ERROR.errors;
         break;
       }
       default: {
@@ -111,6 +121,7 @@ const decodeError = (error: Error) => {
       message: error.message,
       status: error.status,
       errors: error.errors,
+      code: error.code,
     };
   }
   return {
@@ -118,6 +129,7 @@ const decodeError = (error: Error) => {
     message: error.message,
     status: DEFAULT_ERROR.status,
     errors: DEFAULT_ERROR.errors,
+    code: DEFAULT_ERROR.code,
   };
 };
 
@@ -135,13 +147,13 @@ const errorLogger = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, message, status } = decodeError(error);
+  const { name, message, status, code } = decodeError(error);
 
   console.error(
     red(
       `[${new Date().toISOString()}] ${req.method} ${
         req.path
-      } - ${name} ${message} ${status}
+      } - ${status} : ${code} - ${name} : ${message} 
       `
     )
   );
@@ -154,13 +166,19 @@ const errorResponder = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, message, status, errors } = decodeError(error);
-  res.status(status).send({
-    name,
-    message,
-    status,
-    errors,
-  });
+  const { name, message, status, errors, code } = decodeError(error);
+
+  const response = Object.fromEntries(
+    Object.entries({
+      code,
+      status,
+      name,
+      message,
+      errors,
+    }).filter(([_, value]) => value !== null)
+  );
+
+  res.status(status).send(response);
 };
 
 const invalidPathHandler = (

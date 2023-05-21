@@ -2,6 +2,8 @@ import { Router } from "express";
 import z from "zod";
 // Middleware
 import validate from "@middleware/validate";
+import authenticate from "@middleware/authenticate";
+import authoriseCSRF from "@middleware/authorise-csrf";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,
@@ -12,6 +14,8 @@ type Route = <
   props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;
+    authenticate?: boolean;
+    authoriseCSRF?: boolean;
     schema?: {
       params?: z.ZodTypeAny;
       query?: z.ZodTypeAny;
@@ -27,6 +31,16 @@ const route: Route = (router, props) => {
   // ------------------------------------
   // Assign middleware
   const middleware = [];
+
+  // set middleware for authorisation (CSRF)
+  if (props.authoriseCSRF) {
+    middleware.push(authoriseCSRF);
+  }
+
+  // set middleware for authentication
+  if (props.authenticate) {
+    middleware.push(authenticate);
+  }
 
   // set middleware for validation
   if (props.schema?.params || props.schema?.query || props.schema?.body) {

@@ -1,13 +1,13 @@
-import { Request } from "express";
-import { LucidError } from "@utils/error-handler";
+import { Request, Response } from "express";
 import Config from "@db/models/Config";
 
-export const generateCSRFToken = (req: Request) => {
+export const generateCSRFToken = (res: Response) => {
   // create a random string for CSRF token
   const token = crypto.getRandomValues(new Uint8Array(32)).join("");
 
   // store the CSRF token a httpOnly cookie,
-  req.cookies.set("CSRF", token, {
+  res.cookie("_csrf", token, {
+    maxAge: 86400000 * 7,
     httpOnly: true,
     secure: Config.environment === "production",
     sameSite: "strict",
@@ -17,22 +17,15 @@ export const generateCSRFToken = (req: Request) => {
 };
 
 export const verifyCSRFToken = (req: Request) => {
-  const { CSRF } = req.cookies;
-  const { CSRF: CSRFHeader } = req.headers;
+  const { _csrf } = req.cookies;
+  const { _csrf: CSRFHeader } = req.headers;
 
-  if (!CSRF || !CSRFHeader) {
-    throw new LucidError({
-      type: "authorisation",
-      message: "CSRF token missing",
-    });
-  }
-
-  if (CSRF !== CSRFHeader) {
-    throw new LucidError({
-      type: "authorisation",
-      message: "CSRF token mismatch",
-    });
-  }
+  if (!_csrf || !CSRFHeader) return false;
+  if (_csrf !== CSRFHeader) return false;
 
   return true;
+};
+
+export const clearCSRFToken = (res: Response) => {
+  res.clearCookie("_csrf");
 };

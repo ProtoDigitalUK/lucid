@@ -2,6 +2,16 @@ import { Request, Response } from "express";
 import z from "zod";
 
 declare global {
+  namespace Express {
+    interface Request {
+      auth: {
+        id: string;
+        email: string;
+        username: string;
+      };
+    }
+  }
+
   // --------------------------------------------------
   // Controller
   type Controller<ParamsT, BodyT, QueryT> = (

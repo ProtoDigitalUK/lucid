@@ -1,54 +1,54 @@
-import { Request } from "express";
+import { Response, Request } from "express";
 import jwt from "jsonwebtoken";
-import { LucidError } from "@utils/error-handler";
 import Config from "@db/models/Config";
 import { UserT } from "@db/models/User";
 
-interface JWTData {
-  id: string;
-  email: string;
-  username: string;
-}
-
-const generateJWT = (req: Request, user: UserT) => {
+export const generateJWT = (res: Response, user: UserT) => {
   const { id, email, username } = user;
 
-  const payload: JWTData = {
+  const payload: Request["auth"] = {
     id,
     email,
     username,
   };
 
-  const token = jwt.sign(payload, Config.secret, {
+  const token = jwt.sign(payload, Config.secret_key, {
     expiresIn: "7d",
   });
 
-  req.cookies.set("JWT", token, {
+  res.cookie("_jwt", token, {
+    maxAge: 86400000 * 7,
     httpOnly: true,
     secure: Config.environment === "production",
     sameSite: "strict",
   });
 };
 
-const verifyJWT = (req: Request) => {
-  const { JWT } = req.cookies;
-
-  if (!JWT) {
-    throw new LucidError({
-      type: "authorisation",
-      message: "JWT token missing",
-    });
-  }
-
+export const verifyJWT = (req: Request) => {
   try {
-    const decoded = jwt.verify(JWT, Config.secret);
-    return decoded as JWTData;
+    const { _jwt } = req.cookies;
+
+    if (!_jwt) {
+      return {
+        sucess: false,
+        data: null,
+      };
+    }
+
+    const decoded = jwt.verify(_jwt, Config.secret_key);
+
+    return {
+      sucess: true,
+      data: decoded as Request["auth"],
+    };
   } catch (err) {
-    throw new LucidError({
-      type: "authorisation",
-      message: "JWT token invalid",
-    });
+    return {
+      sucess: false,
+      data: null,
+    };
   }
 };
 
-export { generateJWT, verifyJWT };
+export const clearJWT = (res: Response) => {
+  res.clearCookie("_jwt");
+};

@@ -14,8 +14,7 @@ const configSchema = z.object({
   port: z.number(),
   origin: z.string().optional(),
   environment: z.enum(["development", "production"]),
-  database_url: z.string(),
-  secret: z.string(),
+  secret_key: z.string(),
 });
 
 export type ConfigT = z.infer<typeof configSchema>;
@@ -32,9 +31,10 @@ export default class Config {
     await configSchema.parseAsync(config);
   };
   static set: ConfigSet = async (config) => {
-    await fs.ensureDir(path.join(__dirname, "../../temp"));
+    await fs.ensureDir(path.join(__dirname, "../../../temp"));
+
     await fs.writeFile(
-      path.join(__dirname, "../../temp/config.json"),
+      path.join(__dirname, "../../../temp/config.json"),
       JSON.stringify(config, null, 2)
     );
   };
@@ -46,11 +46,8 @@ export default class Config {
     return JSON.parse(config);
   };
   // getters
-  static get database_url() {
-    return Config.get().database_url;
-  }
-  static get secret() {
-    return Config.get().secret;
+  static get secret_key() {
+    return Config.get().secret_key;
   }
   static get environment() {
     return Config.get().environment;

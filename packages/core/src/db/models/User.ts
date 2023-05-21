@@ -5,6 +5,7 @@ import { LucidError, modelErrors } from "@utils/error-handler";
 
 // -------------------------------------------
 // Types
+
 type UserRegister = (data: {
   email: string;
   username: string;
@@ -23,7 +24,7 @@ type UserAccountReset = (
 
 type UserGetById = (id: string) => Promise<UserT>;
 
-type UserLogin = (email: string, password: string) => Promise<UserT>;
+type UserLogin = (username: string, password: string) => Promise<UserT>;
 
 // -------------------------------------------
 // User
@@ -33,7 +34,7 @@ export type UserT = {
   username: string;
   first_name: string | null;
   last_name: string | null;
-  password: string;
+  password?: string;
   account_reset: boolean;
   created_at: string;
   updated_at: string;
@@ -151,14 +152,15 @@ export default class User {
 
     return user;
   };
-  static login: UserLogin = async (email, password) => {
+  static login: UserLogin = async (username, password) => {
     // double submit cooki - csrf protection
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
 
     const [user]: [UserT?] = await sql`
-        SELECT * FROM lucid_users WHERE email = ${email}
+        SELECT * FROM lucid_users WHERE username = ${username}
         `;
-    if (!user) {
+
+    if (!user || !user.password) {
       throw new LucidError({
         type: "basic",
         name: "User Not Found",
@@ -178,6 +180,7 @@ export default class User {
       });
     }
 
+    delete user.password;
     return user;
   };
   // -------------------------------------------
