@@ -1,6 +1,7 @@
 import postgres from "postgres";
+import Config from "@db/models/Config";
 
-const sql = postgres(process.env.LUCID_DATABASE_URL as string, {
+const sql = postgres(Config.database_url, {
   ssl: {
     rejectUnauthorized: false,
   },

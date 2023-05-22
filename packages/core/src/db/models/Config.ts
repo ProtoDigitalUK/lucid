@@ -52,6 +52,9 @@ export default class Config {
   static get environment() {
     return Config.get().environment;
   }
+  static get database_url() {
+    return process.env.LUCID_DATABASE_URL as string;
+  }
   // -------------------------------------------
   // Util Methods
 }
