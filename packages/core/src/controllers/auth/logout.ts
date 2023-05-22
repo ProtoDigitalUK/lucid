@@ -1,5 +1,6 @@
 import z from "zod";
 // Services
+import buildResponse from "@services/controllers/build-response";
 import { clearJWT } from "@services/auth/jwt";
 import { clearCSRFToken } from "@services/auth/csrf";
 
@@ -20,9 +21,7 @@ const logout: Controller<typeof params, typeof body, typeof query> = async (
     clearJWT(res);
     clearCSRFToken(res);
 
-    res.status(200).json({
-      data: {},
-    });
+    res.status(200).json(buildResponse(req, { data: [] }));
   } catch (error) {
     next(error as Error);
   }

@@ -1,4 +1,6 @@
 import z from "zod";
+// Services
+import buildResponse from "@services/controllers/build-response";
 
 // --------------------------------------------------
 // Schema
@@ -19,9 +21,13 @@ const boilerplate: Controller<
   typeof query
 > = async (req, res, next) => {
   try {
-    res.status(200).json({
-      message: "Hello World!",
-    });
+    res.status(200).json(
+      buildResponse(req, {
+        data: {
+          message: "Hello World!",
+        },
+      })
+    );
   } catch (error) {
     next(error as Error);
   }

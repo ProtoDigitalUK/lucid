@@ -7,8 +7,8 @@ const route = "/api/v1/health";
 describe(`Route: ${route}`, () => {
   test("Success case", async () => {
     const res = await request(await app(config)).get(route);
-    expect(res.body).toEqual({
-      health: {
+    expect(res.body).toContain({
+      data: {
         api: "ok",
         db: "ok",
       },

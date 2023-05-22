@@ -1,4 +1,6 @@
 import z from "zod";
+// Services
+import buildResponse from "@services/controllers/build-response";
 // Models
 import User from "@db/models/User";
 
@@ -18,9 +20,11 @@ const getAuthenticatedUser: Controller<
   try {
     const user = await User.getById(req.auth.id);
 
-    res.status(200).json({
-      data: user,
-    });
+    res.status(200).json(
+      buildResponse(req, {
+        data: user,
+      })
+    );
   } catch (error) {
     next(error as Error);
   }

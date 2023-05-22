@@ -1,5 +1,6 @@
 import z from "zod";
-// Serives
+// Services
+import buildResponse from "@services/controllers/build-response";
 import { generateCSRFToken } from "@services/auth/csrf";
 
 // --------------------------------------------------
@@ -18,9 +19,15 @@ const getCSRF: Controller<typeof params, typeof body, typeof query> = async (
   try {
     const token = generateCSRFToken(res);
 
-    res.status(200).json({
-      data: token,
-    });
+    res.status(200).json(
+      buildResponse(req, {
+        data: [
+          {
+            csrfToken: token,
+          },
+        ],
+      })
+    );
   } catch (error) {
     next(error as Error);
   }

@@ -1,4 +1,6 @@
 import z from "zod";
+// Services
+import buildResponse from "@services/controllers/build-response";
 
 // --------------------------------------------------
 // Schema
@@ -24,12 +26,14 @@ const getHealth: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    res.status(200).json({
-      health: {
-        api: "ok",
-        db: "ok",
-      },
-    });
+    res.status(200).json(
+      buildResponse(req, {
+        data: {
+          api: "ok",
+          db: "ok",
+        },
+      })
+    );
   } catch (error) {
     next(error as Error);
   }
