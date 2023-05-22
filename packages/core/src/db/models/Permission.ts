@@ -1,4 +1,5 @@
 import sql from "@db/db";
+import { LucidError } from "@utils/error-handler";
 
 // -------------------------------------------
 // Types
@@ -8,7 +9,7 @@ type PermissionRoles = "admin" | "editor";
 type PermissionSet = (
   user_id: string,
   role: PermissionRoles
-) => Promise<PermissionT[]>;
+) => Promise<PermissionT>;
 
 // -------------------------------------------
 // User
@@ -26,23 +27,39 @@ export default class Permission {
   static set: PermissionSet = async (user_id, role) => {
     const permissions = Permission.rolePermissions(role);
 
-    const permission = await sql<PermissionT[]>`
+    const [permission]: [PermissionT?] = await sql`
         SELECT * FROM lucid_permissions WHERE user_id = ${user_id}
         `;
-    if (permission.length === 0) {
-      const permRes = await sql<PermissionT[]>`
+    if (!permission) {
+      const [permRes]: [PermissionT?] = await sql`
         INSERT INTO lucid_permissions (user_id, permissions)
         VALUES (${user_id}, ${permissions}) 
         RETURNING *
         `;
+      if (!permRes) {
+        throw new LucidError({
+          type: "basic",
+          name: "Permission Error",
+          message: "There was an error setting the permissions.",
+          status: 500,
+        });
+      }
       return permRes;
     } else {
-      const permRes = await sql<PermissionT[]>`
+      const [permRes]: [PermissionT?] = await sql`
         UPDATE lucid_permissions
         SET permissions = ${permissions}
         WHERE user_id = ${user_id} 
         RETURNING *
         `;
+      if (!permRes) {
+        throw new LucidError({
+          type: "basic",
+          name: "Permission Error",
+          message: "There was an error setting the permissions.",
+          status: 500,
+        });
+      }
       return permRes;
     }
   };

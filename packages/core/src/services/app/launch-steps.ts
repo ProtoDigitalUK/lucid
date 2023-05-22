@@ -20,7 +20,7 @@ const createFixOptions = async () => {
 */
 const createInitialAdmin = async () => {
   const res = await Option.getByName("initial_user_created");
-  if (typeof res[0].option_value === "boolean" && res[0].option_value) return;
+  if (typeof res.option_value === "boolean" && res.option_value) return;
 
   try {
     const user = await User.register({
@@ -29,7 +29,7 @@ const createInitialAdmin = async () => {
       password: "admin",
     });
     // Add permissions to the user
-    await Permission.set(user[0].id, "admin");
+    await Permission.set(user.id, "admin");
     await Option.patchByName({
       name: "initial_user_created",
       value: true,

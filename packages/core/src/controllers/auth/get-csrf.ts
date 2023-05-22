@@ -21,11 +21,9 @@ const getCSRF: Controller<typeof params, typeof body, typeof query> = async (
 
     res.status(200).json(
       buildResponse(req, {
-        data: [
-          {
-            csrfToken: token,
-          },
-        ],
+        data: {
+          _csrf: token,
+        },
       })
     );
   } catch (error) {
