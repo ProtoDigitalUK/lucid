@@ -3,6 +3,8 @@ import z from "zod";
 type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT extends z.ZodTypeAny>(router: Router, props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;
+    authenticate?: boolean;
+    authoriseCSRF?: boolean;
     schema?: {
         params?: z.ZodTypeAny;
         query?: z.ZodTypeAny;

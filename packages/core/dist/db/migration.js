@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
-const db_1 = __importDefault(require("./db"));
 const console_log_colors_1 = require("console-log-colors");
-const Migration_1 = __importDefault(require("./models/Migration"));
+const error_handler_1 = require("@utils/error-handler");
+const Migration_1 = __importDefault(require("@db/models/Migration"));
 const getOutstandingMigrations = async () => {
     const migrationFiles = await fs_extra_1.default.readdir(path_1.default.join(__dirname, "./migrations"));
     const migrations = await Migration_1.default.all();
@@ -29,18 +29,24 @@ const getOutstandingMigrations = async () => {
     return outstandingMigrations;
 };
 const migrate = async () => {
-    const outstandingMigrations = await getOutstandingMigrations();
-    if (outstandingMigrations.length === 0) {
-        console.log((0, console_log_colors_1.green)("No outstanding migrations, database is up to date"));
-        return;
+    try {
+        const outstandingMigrations = await getOutstandingMigrations();
+        if (outstandingMigrations.length === 0) {
+            console.log((0, console_log_colors_1.green)("No outstanding migrations, database is up to date"));
+            return;
+        }
+        console.log((0, console_log_colors_1.green)(`Found ${outstandingMigrations.length} outstanding migrations, running...`));
+        for (const migration of outstandingMigrations) {
+            console.log((0, console_log_colors_1.green)(`- running migration ${migration.file}`));
+            await Migration_1.default.create({
+                file: migration.file,
+                rawSql: migration.sql,
+            });
+        }
     }
-    console.log((0, console_log_colors_1.green)(`Found ${outstandingMigrations.length} outstanding migrations, running...`));
-    for (const migration of outstandingMigrations) {
-        console.log((0, console_log_colors_1.green)(`- running migration ${migration.file}`));
-        await db_1.default.begin(async (sql) => {
-            await sql.unsafe(migration.sql);
-            await sql `INSERT INTO migrations (file) VALUES (${migration.file})`;
-        });
+    catch (err) {
+        new error_handler_1.RuntimeError(err.message);
+        process.exit(1);
     }
 };
 exports.default = migrate;

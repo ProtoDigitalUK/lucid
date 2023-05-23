@@ -55,7 +55,8 @@
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "postgres": "^3.3.4",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "@lucid/brick-builder": "*"
   },
   "volta": {
     "node": "20.1.0"

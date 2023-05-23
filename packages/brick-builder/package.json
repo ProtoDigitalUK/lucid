@@ -1,0 +1,12 @@
+{
+  "name": "@lucid/brick-builder",
+  "version": "0.0.0",
+  "private": false,
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "temp-dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/index.ts"
+  },
+  "author": "",
+  "license": "ISC"
+}

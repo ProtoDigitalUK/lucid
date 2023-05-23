@@ -3,6 +3,8 @@ import http from "http";
 import { log } from "console-log-colors";
 import { type ConfigT } from "@db/models/Config";
 import app from "./app";
+// Internal packages
+import BrickBuilder from "@lucid/brick-builder";
 
 const start = async (config: ConfigT) => {
   const server = http.createServer(await app(config));
@@ -17,4 +19,5 @@ const start = async (config: ConfigT) => {
   });
 };
 
-export default { start };
+export { BrickBuilder };
+export default start;

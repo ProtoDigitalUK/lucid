@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_handler_1 = require("../utils/error-handler");
+const error_handler_1 = require("@utils/error-handler");
 const validate = (schema) => async (req, res, next) => {
     try {
         const parseData = {};

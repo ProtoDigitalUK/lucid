@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
-const error_handler_1 = require("../../utils/error-handler");
+const error_handler_1 = require("@utils/error-handler");
 const body = zod_1.default.object({});
 const query = zod_1.default.object({
     include: zod_1.default.string().optional(),

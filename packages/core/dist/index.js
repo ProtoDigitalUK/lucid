@@ -7,6 +7,7 @@ require("dotenv").config();
 const http_1 = __importDefault(require("http"));
 const console_log_colors_1 = require("console-log-colors");
 const app_1 = __importDefault(require("./app"));
+const brick_builder_1 = __importDefault(require("@lucid/brick-builder"));
 const start = async (config) => {
     const server = http_1.default.createServer(await (0, app_1.default)(config));
     server.listen(config.port, () => {
@@ -16,5 +17,5 @@ const start = async (config) => {
         console_log_colors_1.log.white("----------------------------------------------------");
     });
 };
-exports.default = { start };
+exports.default = { start, BrickBuilder: brick_builder_1.default };
 //# sourceMappingURL=index.js.map

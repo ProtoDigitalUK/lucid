@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const dev_1 = require("../../../dev");
-const app_1 = __importDefault(require("../../../app"));
+const dev_1 = require("@root/dev");
+const app_1 = __importDefault(require("@root/app"));
 const route = "/api/v1/example/boilerplate";
 describe(`Route: ${route}`, () => {
     test("Success case", async () => {

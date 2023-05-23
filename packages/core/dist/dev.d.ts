@@ -1,6 +1,7 @@
 export declare const config: {
     port: number;
     origin: string;
-    database_url: string;
+    environment: "development" | "production";
+    secret_key: string;
 };
 //# sourceMappingURL=dev.d.ts.map
