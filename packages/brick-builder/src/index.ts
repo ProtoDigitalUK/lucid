@@ -17,6 +17,8 @@ type FieldTypes =
   | "textarea"
   | "json";
 
+type BrickBuilderT = InstanceType<typeof BrickBuilder>;
+
 // Custom Fields
 interface CustomField {
   type: FieldTypes;
@@ -213,8 +215,9 @@ const BrickBuilder = class BrickBuilder {
   }
   // ------------------------------------
   // External Methods
-  public validateBrick() {
+  public validateBrickData(data: any) {
     // TODO: add route to verify data added against brick to its field configs
+    return true;
   }
   // ------------------------------------
   // Private Methods
@@ -292,4 +295,5 @@ const BrickBuilder = class BrickBuilder {
 
 // console.log(bannerBrick.fieldTree);
 
+export { BrickBuilderT, CustomField };
 export default BrickBuilder;

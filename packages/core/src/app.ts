@@ -22,7 +22,7 @@ const app = async (config: ConfigT) => {
   // Config
   log.white("----------------------------------------------------");
   await Config.validate(config);
-  await Config.set(config);
+  await Config.set(app, config);
   log.yellow("Config initialised");
 
   // ------------------------------------

@@ -1,12 +1,10 @@
-/*
-  TODO: If this becomes a bottleneck, use hybrid approach where config is first looked up from app.get, 
-  TODO: ...and if the app is not present, then read from file
-  Unique case for now where model also contains validation, normally this would be handled in a middleware or controller
-*/
-
 import fs from "fs-extra";
 import path from "path";
 import z from "zod";
+import { Express } from "express";
+import { RuntimeError } from "@utils/error-handler";
+// Internal packages
+import { BrickBuilderT } from "@lucid/brick-builder";
 
 // -------------------------------------------
 // Config
@@ -15,12 +13,19 @@ const configSchema = z.object({
   origin: z.string().optional(),
   environment: z.enum(["development", "production"]),
   secret_key: z.string(),
+  bricks: z.array(z.any()).optional(),
 });
 
-export type ConfigT = z.infer<typeof configSchema>;
+export type ConfigT = {
+  port: number;
+  origin?: string;
+  environment: "development" | "production";
+  secret_key: string;
+  bricks?: BrickBuilderT[];
+};
 
 type ConfigValidate = (config: ConfigT) => Promise<void>;
-type ConfigSet = (config: ConfigT) => Promise<void>;
+type ConfigSet = (app: Express, config: ConfigT) => Promise<void>;
 type ConfigGet = () => ConfigT;
 
 export default class Config {
@@ -29,8 +34,21 @@ export default class Config {
   static validate: ConfigValidate = async (config) => {
     // TODO: Format errors for better readability
     await configSchema.parseAsync(config);
+
+    // Validate brick keys for duplicates, data is validated in BrickBuilder already
+    if (!config.bricks) return;
+    const brickKeys = config.bricks.map((brick) => brick.key);
+    const uniqueBrickKeys = [...new Set(brickKeys)];
+    if (brickKeys.length !== uniqueBrickKeys.length) {
+      throw new RuntimeError("Brick keys must be unique");
+    }
   };
-  static set: ConfigSet = async (config) => {
+  static set: ConfigSet = async (app, config) => {
+    // set bricks in the app
+    app.set("bricks", config.bricks);
+
+    delete config.bricks;
+
     await fs.ensureDir(path.join(__dirname, "../../../temp"));
 
     await fs.writeFile(
