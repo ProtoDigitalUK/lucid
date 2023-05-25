@@ -5,17 +5,7 @@ import buildResponse from "@services/controllers/build-response";
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({
-  include: z.string().optional(),
-  exclude: z.string().optional(),
-  filter: z
-    .object({
-      search: z.string().optional(),
-      active: z.enum(["-1", "1"]).optional(),
-    })
-    .optional(),
-  sort: z.string().optional(),
-});
+const query = z.object({});
 const params = z.object({});
 
 // --------------------------------------------------

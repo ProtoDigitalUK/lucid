@@ -7,8 +7,21 @@ import BrickConfig from "@db/models/BrickConfig";
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({});
+const query = z.object({
+  include: z.array(z.enum(["fields"])),
+  exclude: z.undefined(),
+  filter: z.object({
+    s: z.string(),
+  }),
+  sort: z.array(
+    z.object({
+      key: z.enum(["id", "name"]),
+      value: z.enum(["asc", "desc"]),
+    })
+  ),
+});
 const params = z.object({});
+// query
 
 // --------------------------------------------------
 // Controller

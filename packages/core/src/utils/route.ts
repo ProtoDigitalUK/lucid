@@ -17,9 +17,9 @@ type Route = <
     authenticate?: boolean;
     authoriseCSRF?: boolean;
     schema?: {
-      params?: z.ZodTypeAny;
-      query?: z.ZodTypeAny;
-      body?: z.ZodTypeAny;
+      params?: ParamsT;
+      body?: BodyT;
+      query?: QueryT;
     };
     controller: Controller<ParamsT, BodyT, QueryT>;
   }
@@ -43,8 +43,16 @@ const route: Route = (router, props) => {
   }
 
   // set middleware for validation
-  if (props.schema?.params || props.schema?.query || props.schema?.body) {
-    middleware.push(validate(z.object({ ...props.schema })));
+  if (props.schema?.params || props.schema?.body || props.schema?.query) {
+    middleware.push(
+      validate(
+        z.object({
+          params: props.schema?.params ?? z.object({}),
+          query: props.schema?.query ?? z.object({}),
+          body: props.schema?.body ?? z.object({}),
+        })
+      )
+    );
   }
 
   switch (method) {

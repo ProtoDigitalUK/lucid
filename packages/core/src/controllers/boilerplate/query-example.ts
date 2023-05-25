@@ -6,15 +6,17 @@ import buildResponse from "@services/controllers/build-response";
 // Schema
 const body = z.object({});
 const query = z.object({
-  include: z.string().optional(),
-  exclude: z.string().optional(),
-  filter: z
-    .object({
-      search: z.string().optional(),
-      active: z.enum(["-1", "1"]).optional(),
+  include: z.array(z.enum(["fields"])),
+  exclude: z.undefined(),
+  filter: z.object({
+    s: z.string(),
+  }),
+  sort: z.array(
+    z.object({
+      key: z.enum(["id", "name"]),
+      value: z.enum(["asc", "desc"]),
     })
-    .optional(),
-  sort: z.string().optional(),
+  ),
 });
 const params = z.object({});
 

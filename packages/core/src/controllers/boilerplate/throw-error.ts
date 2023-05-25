@@ -5,12 +5,7 @@ import { LucidError } from "@utils/error-handler";
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({
-  include: z.string().optional(),
-  exclude: z.string().optional(),
-  filter: z.object({}).optional(),
-  sort: z.string().optional(),
-});
+const query = z.object({});
 const params = z.object({});
 
 // --------------------------------------------------
