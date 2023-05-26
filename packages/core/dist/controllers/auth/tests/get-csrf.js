@@ -4,18 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const dev_1 = require("@root/dev");
-const app_1 = __importDefault(require("@root/app"));
-const route = "/api/v1/health";
+const dev_1 = require("../../../dev");
+const app_1 = __importDefault(require("../../../app"));
+const route = "/api/v1/example/boilerplate";
 describe(`Route: ${route}`, () => {
     test("Success case", async () => {
         const res = await (0, supertest_1.default)(await (0, app_1.default)(dev_1.config)).get(route);
-        expect(res.body).toContain({
+        expect(res.body).toMatchObject({
             data: {
-                api: "ok",
-                db: "ok",
+                _csrf: expect.any(String),
             },
+            path: expect.any(String),
         });
     });
 });
-//# sourceMappingURL=get-health.test.js.map
+//# sourceMappingURL=get-csrf.js.map

@@ -3,11 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BrickBuilder = void 0;
 require("dotenv").config();
 const http_1 = __importDefault(require("http"));
 const console_log_colors_1 = require("console-log-colors");
 const app_1 = __importDefault(require("./app"));
 const brick_builder_1 = __importDefault(require("@lucid/brick-builder"));
+exports.BrickBuilder = brick_builder_1.default;
 const start = async (config) => {
     const server = http_1.default.createServer(await (0, app_1.default)(config));
     server.listen(config.port, () => {
@@ -17,5 +19,5 @@ const start = async (config) => {
         console_log_colors_1.log.white("----------------------------------------------------");
     });
 };
-exports.default = { start, BrickBuilder: brick_builder_1.default };
+exports.default = start;
 //# sourceMappingURL=index.js.map

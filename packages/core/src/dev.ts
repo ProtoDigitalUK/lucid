@@ -1,3 +1,4 @@
+import { type ConfigT } from "@db/models/Config";
 import lucid, { BrickBuilder } from "./index";
 
 // ----------------------------------------------
@@ -51,10 +52,12 @@ const introBrick = new BrickBuilder("intro")
 
 // ----------------------------------------------
 // Start Lucid
-lucid({
+export const config = {
   port: 8393,
   origin: "*",
   environment: "development",
   secret_key: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
   bricks: [bannerBrick, introBrick],
-});
+} as ConfigT;
+
+lucid(config);

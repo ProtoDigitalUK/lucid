@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { UserT } from "@db/models/User";
+import { UserT } from "../../db/models/User";
 export declare const generateJWT: (res: Response, user: UserT) => void;
 export declare const verifyJWT: (req: Request) => {
     sucess: boolean;

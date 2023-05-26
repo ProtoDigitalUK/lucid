@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_handler_1 = require("@utils/error-handler");
-const User_1 = __importDefault(require("@db/models/User"));
-const Option_1 = __importDefault(require("@db/models/Option"));
-const Permission_1 = __importDefault(require("@db/models/Permission"));
+const error_handler_1 = require("../../utils/error-handler");
+const User_1 = __importDefault(require("../../db/models/User"));
+const Option_1 = __importDefault(require("../../db/models/Option"));
+const Permission_1 = __importDefault(require("../../db/models/Permission"));
 const createFixOptions = async () => {
     await Option_1.default.create({
         name: "initial_user_created",

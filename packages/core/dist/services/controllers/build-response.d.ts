@@ -1,5 +1,5 @@
 import { Request } from "express";
-type BuildResponseT = (req: Request, props: {
+type BuildResponseT = (req: Request, params: {
     data: Array<any> | {
         [key: string]: any;
     };

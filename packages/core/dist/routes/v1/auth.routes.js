@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const route_1 = __importDefault(require("@utils/route"));
-const login_1 = __importDefault(require("@controllers/auth/login"));
-const logout_1 = __importDefault(require("@controllers/auth/logout"));
-const get_authenticated_user_1 = __importDefault(require("@controllers/auth/get-authenticated-user"));
-const get_csrf_1 = __importDefault(require("@controllers/auth/get-csrf"));
+const route_1 = __importDefault(require("../../utils/route"));
+const login_1 = __importDefault(require("../../controllers/auth/login"));
+const logout_1 = __importDefault(require("../../controllers/auth/logout"));
+const get_authenticated_user_1 = __importDefault(require("../../controllers/auth/get-authenticated-user"));
+const get_csrf_1 = __importDefault(require("../../controllers/auth/get-csrf"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",

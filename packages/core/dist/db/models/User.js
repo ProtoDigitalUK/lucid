@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
-const db_1 = __importDefault(require("@db/db"));
-const omit_undedefined_keys_1 = __importDefault(require("@utils/omit-undedefined-keys"));
-const error_handler_1 = require("@utils/error-handler");
+const db_1 = __importDefault(require("../db"));
+const omit_undedefined_keys_1 = __importDefault(require("../../utils/omit-undedefined-keys"));
+const error_handler_1 = require("../../utils/error-handler");
 class User {
 }
 _a = User;

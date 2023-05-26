@@ -1,11 +1,6 @@
-declare const _default: {
-    start: (config: {
-        port: number;
-        environment: "development" | "production";
-        secret_key: string;
-        origin?: string | undefined;
-    }) => Promise<void>;
-    BrickBuilder: () => void;
-};
-export default _default;
+import { type ConfigT } from "./db/models/Config";
+import BrickBuilder from "@lucid/brick-builder";
+declare const start: (config: ConfigT) => Promise<void>;
+export { BrickBuilder };
+export default start;
 //# sourceMappingURL=index.d.ts.map

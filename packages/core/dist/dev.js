@@ -25,12 +25,57 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
 const index_1 = __importStar(require("./index"));
+const bannerBrick = new index_1.BrickBuilder("banner")
+    .addTab({
+    key: "content_tab",
+})
+    .addText({
+    key: "title",
+    description: "The title of the banner",
+    validate: (value) => {
+        const v = value;
+        if (v.length > 10) {
+            return "Title must be less than 10 characters";
+        }
+        return "";
+    },
+})
+    .addWysiwyg({
+    key: "intro",
+})
+    .addRepeater({
+    key: "social_links",
+})
+    .addText({
+    key: "social_title",
+})
+    .addText({
+    key: "social_url",
+})
+    .endRepeater()
+    .addTab({
+    key: "config_tab",
+})
+    .addCheckbox({
+    key: "fullwidth",
+    description: "Make the banner fullwidth",
+});
+const introBrick = new index_1.BrickBuilder("intro")
+    .addTab({
+    key: "content_tab",
+})
+    .addText({
+    key: "title",
+})
+    .addWysiwyg({
+    key: "intro",
+});
 exports.config = {
     port: 8393,
     origin: "*",
     environment: "development",
     secret_key: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
+    bricks: [bannerBrick, introBrick],
 };
-console.log((0, index_1.BrickBuilder)());
-index_1.default.start(exports.config);
+(0, index_1.default)(exports.config);
 //# sourceMappingURL=dev.js.map

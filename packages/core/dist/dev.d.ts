@@ -1,7 +1,3 @@
-export declare const config: {
-    port: number;
-    origin: string;
-    environment: "development" | "production";
-    secret_key: string;
-};
+import { type ConfigT } from "./db/models/Config";
+export declare const config: ConfigT;
 //# sourceMappingURL=dev.d.ts.map

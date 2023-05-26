@@ -4,18 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
-const build_response_1 = __importDefault(require("@services/controllers/build-response"));
+const build_response_1 = __importDefault(require("../../services/controllers/build-response"));
 const body = zod_1.default.object({});
 const query = zod_1.default.object({
-    include: zod_1.default.string().optional(),
-    exclude: zod_1.default.string().optional(),
-    filter: zod_1.default
-        .object({
-        search: zod_1.default.string().optional(),
-        active: zod_1.default.enum(["-1", "1"]).optional(),
-    })
-        .optional(),
-    sort: zod_1.default.string().optional(),
+    include: zod_1.default.array(zod_1.default.enum(["fields"])),
+    exclude: zod_1.default.undefined(),
+    filter: zod_1.default.object({
+        s: zod_1.default.string(),
+    }),
+    sort: zod_1.default.array(zod_1.default.object({
+        key: zod_1.default.enum(["id", "name"]),
+        value: zod_1.default.enum(["asc", "desc"]),
+    })),
+    page: zod_1.default.string().optional(),
+    per_page: zod_1.default.string().optional(),
 });
 const params = zod_1.default.object({});
 const queryExample = async (req, res, next) => {

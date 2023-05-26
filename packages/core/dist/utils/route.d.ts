@@ -6,9 +6,9 @@ type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT e
     authenticate?: boolean;
     authoriseCSRF?: boolean;
     schema?: {
-        params?: z.ZodTypeAny;
-        query?: z.ZodTypeAny;
-        body?: z.ZodTypeAny;
+        params?: ParamsT;
+        body?: BodyT;
+        query?: QueryT;
     };
     controller: Controller<ParamsT, BodyT, QueryT>;
 }) => Router;
