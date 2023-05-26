@@ -9,6 +9,8 @@ const querySchema = z.object({
   exclude: z.string().optional(),
   filter: z.object({}).optional(),
   sort: z.string().optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
 });
 
 // ------------------------------------
@@ -62,6 +64,36 @@ const buildSort = (query: z.infer<typeof querySchema>) => {
 
   return sort;
 };
+const buildPage = (query: z.infer<typeof querySchema>) => {
+  let page: string | undefined = undefined;
+
+  // check if it can be converted to number
+  if (query.page) {
+    const pageInt = parseInt(query.page);
+    if (!isNaN(pageInt)) {
+      page = pageInt.toString();
+    } else {
+      page = "1";
+    }
+  }
+
+  return page;
+};
+const buildPerPage = (query: z.infer<typeof querySchema>) => {
+  let per_page: string | undefined = undefined;
+
+  // check if it can be converted to number
+  if (query.per_page) {
+    const per_pageInt = parseInt(query.per_page);
+    if (!isNaN(per_pageInt)) {
+      per_page = per_pageInt.toString();
+    } else {
+      per_page = "10";
+    }
+  }
+
+  return per_page;
+};
 
 // ------------------------------------
 // Validate Middleware
@@ -76,6 +108,8 @@ const validate =
           exclude?: any;
           filter?: any;
           sort?: any;
+          page?: any;
+          per_page?: any;
         };
         params?: any;
       } = {};
@@ -87,6 +121,8 @@ const validate =
         exclude: buildExclude(req.query),
         filter: buildFilter(req.query),
         sort: buildSort(req.query),
+        page: buildPage(req.query),
+        per_page: buildPerPage(req.query),
       };
 
       if (Object.keys(parseData).length === 0) return next();

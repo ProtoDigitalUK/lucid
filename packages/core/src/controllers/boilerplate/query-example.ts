@@ -17,6 +17,8 @@ const query = z.object({
       value: z.enum(["asc", "desc"]),
     })
   ),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
 });
 const params = z.object({});
 

@@ -4,7 +4,7 @@ import { Request } from "express";
 // Types
 type BuildResponseT = (
   req: Request,
-  props: {
+  params: {
     data: Array<any> | { [key: string]: any };
   }
 ) => ResponseBody;

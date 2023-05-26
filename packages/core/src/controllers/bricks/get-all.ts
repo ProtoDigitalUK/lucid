@@ -11,7 +11,6 @@ type Includes = "fields";
 const body = z.object({});
 const query = z.object({
   include: z.array(z.enum(["fields"])).optional(),
-  exclude: z.undefined(),
   filter: z
     .object({
       s: z.string(),
