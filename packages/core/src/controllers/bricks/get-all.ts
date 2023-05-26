@@ -6,19 +6,25 @@ import BrickConfig from "@db/models/BrickConfig";
 
 // --------------------------------------------------
 // Schema
+type Includes = "fields";
+
 const body = z.object({});
 const query = z.object({
-  include: z.array(z.enum(["fields"])),
+  include: z.array(z.enum(["fields"])).optional(),
   exclude: z.undefined(),
-  filter: z.object({
-    s: z.string(),
-  }),
-  sort: z.array(
-    z.object({
-      key: z.enum(["id", "name"]),
-      value: z.enum(["asc", "desc"]),
+  filter: z
+    .object({
+      s: z.string(),
     })
-  ),
+    .optional(),
+  sort: z
+    .array(
+      z.object({
+        key: z.enum(["name"]),
+        value: z.enum(["asc", "desc"]),
+      })
+    )
+    .optional(),
 });
 const params = z.object({});
 // query
@@ -31,7 +37,7 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const bricks = await BrickConfig.getAll(req);
+    const bricks = await BrickConfig.getAll(req, req.query);
 
     res.status(200).json(
       buildResponse(req, {

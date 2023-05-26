@@ -56,5 +56,5 @@ lucid({
   origin: "*",
   environment: "development",
   secret_key: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
-  bricks: [bannerBrick],
+  bricks: [bannerBrick, introBrick],
 });
