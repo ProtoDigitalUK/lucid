@@ -37,7 +37,7 @@ const app = async (config: ConfigT) => {
     })
   );
   app.use(morgan("dev"));
-  app.use(cookieParser(Config.secret_key));
+  app.use(cookieParser(Config.secretKey));
   log.yellow("Middleware configured");
 
   // ------------------------------------

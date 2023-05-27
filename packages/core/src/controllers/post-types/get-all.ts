@@ -2,27 +2,12 @@ import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import BrickConfig from "@db/models/BrickConfig";
+import PostType from "@db/models/PostType";
 
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({
-  include: z.array(z.enum(["fields"])).optional(),
-  filter: z
-    .object({
-      s: z.string(),
-    })
-    .optional(),
-  sort: z
-    .array(
-      z.object({
-        key: z.enum(["name"]),
-        value: z.enum(["asc", "desc"]),
-      })
-    )
-    .optional(),
-});
+const query = z.object({});
 const params = z.object({});
 // query
 
@@ -34,11 +19,11 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const bricks = await BrickConfig.getAll(req, req.query);
+    const postTypes = await PostType.getAll();
 
     res.status(200).json(
       buildResponse(req, {
-        data: bricks,
+        data: postTypes,
       })
     );
   } catch (error) {
