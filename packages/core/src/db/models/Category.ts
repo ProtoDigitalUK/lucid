@@ -6,7 +6,7 @@ import QueryBuilder from "@services/models/QueryBuilder";
 
 // -------------------------------------------
 // Types
-interface QueryParams extends ModelQueryParams {
+interface QueryParamsGetMultiple extends ModelQueryParams {
   filter?: {
     post_type_id?: string;
     title?: string;
@@ -59,7 +59,8 @@ export default class Category {
   // -------------------------------------------
   // Methods
   static getMultiple: CategoryGetMultiple = async (req) => {
-    const { filter, sort, page, per_page } = req.query as QueryParams;
+    const { filter, sort, page, per_page } =
+      req.query as QueryParamsGetMultiple;
 
     // Build Query Data and Query
     const QueryB = new QueryBuilder({

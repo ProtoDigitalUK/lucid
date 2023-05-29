@@ -69,12 +69,18 @@ const buildLinks = (
     prev: null,
   };
 
+  // TODO: check why count is a string - should be a number
+  if (parseInt(count as unknown as string) === 0) {
+    return links;
+  }
+
   // Set First
   url.searchParams.delete("page");
   links.first = url.toString();
 
   // Set Last
-  url.searchParams.set("page", String(totalPages));
+  if (page !== String(totalPages))
+    url.searchParams.set("page", String(totalPages));
   links.last = url.toString();
 
   // Set Next
@@ -106,7 +112,11 @@ const buildResponse: BuildResponseT = (req, params) => {
     per_page: Number(params.pagination?.per_page) || null,
     total: Number(params.pagination?.count) || null,
     last_page: params.pagination
-      ? Math.ceil(params.pagination?.count / Number(params.pagination.per_page))
+      ? Math.ceil(
+          params.pagination?.count / Number(params.pagination.per_page)
+        ) ||
+        Number(params.pagination?.page) ||
+        null
       : null,
   };
   let links = buildLinks(req, params);

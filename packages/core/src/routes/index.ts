@@ -3,6 +3,7 @@ import health from "@routes/v1/health.routes";
 import bricks from "@routes/v1/bricks.routes";
 import postTypes from "@routes/v1/post-types.routes";
 import categories from "@routes/v1/categories.routes";
+import pages from "@routes/v1/pages.routes";
 
 const initRoutes = (app: any) => {
   // Version 1
@@ -11,6 +12,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/bricks", bricks);
   app.use("/api/v1/post-types", postTypes);
   app.use("/api/v1/categories", categories);
+  app.use("/api/v1/pages", pages);
 };
 
 export default initRoutes;

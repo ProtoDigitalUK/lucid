@@ -16,13 +16,16 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   parent_id INTEGER REFERENCES lucid_pages(id) ON DELETE SET NULL,
 
   title TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
+  slug TEXT NOT NULL,
+  full_slug TEXT NOT NULL, -- kept unqiue in code
+  homepage BOOLEAN DEFAULT FALSE,
   excerpt TEXT,
   
   published BOOLEAN DEFAULT FALSE,
   published_at TIMESTAMP,
   published_by UUID REFERENCES lucid_users(id) ON DELETE SET NULL,
 
+  created_by UUID REFERENCES lucid_users(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

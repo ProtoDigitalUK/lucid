@@ -19,8 +19,6 @@ const authenticate = async (
       });
     }
 
-    console.log(authenticateJWT.data.id);
-
     const user = await client.query({
       text: `SELECT * FROM lucid_users WHERE id = $1`,
       values: [authenticateJWT.data.id],

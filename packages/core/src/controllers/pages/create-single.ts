@@ -2,15 +2,19 @@ import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import Category from "@db/models/Category";
+import Page from "@db/models/Page";
 
 // --------------------------------------------------
 // Schema
 const body = z.object({
-  post_type_id: z.number().int(),
-  title: z.string(),
+  title: z.string().min(2),
   slug: z.string().min(2).toLowerCase(),
-  description: z.string().optional(),
+  post_type_id: z.number(),
+  homepage: z.boolean().optional(),
+  excerpt: z.string().optional(),
+  published: z.boolean().optional(),
+  parent_id: z.number().optional(),
+  category_ids: z.array(z.number()).optional(),
 });
 const query = z.object({});
 const params = z.object({});
@@ -23,16 +27,20 @@ const createSingle: Controller<
   typeof query
 > = async (req, res, next) => {
   try {
-    const category = await Category.create({
-      post_type_id: req.body.post_type_id,
+    const page = await Page.create(req, {
       title: req.body.title,
       slug: req.body.slug,
-      description: req.body.description,
+      post_type_id: req.body.post_type_id,
+      homepage: req.body.homepage,
+      excerpt: req.body.excerpt,
+      published: req.body.published,
+      parent_id: req.body.parent_id,
+      category_ids: req.body.category_ids,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: category,
+        data: page,
       })
     );
   } catch (error) {

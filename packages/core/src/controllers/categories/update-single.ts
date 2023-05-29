@@ -8,7 +8,7 @@ import Category from "@db/models/Category";
 // Schema
 const body = z.object({
   title: z.string().optional(),
-  slug: z.string().min(4).toLowerCase().optional(),
+  slug: z.string().min(2).toLowerCase().optional(),
   description: z.string().optional(),
 });
 const query = z.object({});
