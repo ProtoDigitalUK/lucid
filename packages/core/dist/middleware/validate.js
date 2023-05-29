@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
+const constants_1 = __importDefault(require("../constants"));
 const error_handler_1 = require("../utils/error-handler");
 const querySchema = zod_1.default.object({
     include: zod_1.default.string().optional(),
@@ -15,7 +16,17 @@ const querySchema = zod_1.default.object({
 });
 const buildFilter = (query) => {
     let filter = undefined;
-    filter = query.filter;
+    Array.from(Object.entries(query.filter || {})).forEach(([key, value]) => {
+        const v = value;
+        if (!filter)
+            filter = {};
+        if (v.includes(",")) {
+            filter[key] = v.split(",");
+        }
+        else {
+            filter[key] = v;
+        }
+    });
     return filter;
 };
 const buildInclude = (query) => {
@@ -67,7 +78,7 @@ const buildPerPage = (query) => {
             per_page = per_pageInt.toString();
         }
         else {
-            per_page = "10";
+            per_page = constants_1.default.pagination.per_page;
         }
     }
     return per_page;

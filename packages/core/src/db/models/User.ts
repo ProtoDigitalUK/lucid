@@ -1,6 +1,5 @@
 import argon2 from "argon2";
-import sql from "@db/db";
-import omitUndefinedKeys from "@utils/omit-undedefined-keys";
+import client from "@db/db";
 import { LucidError, modelErrors } from "@utils/error-handler";
 
 // -------------------------------------------
@@ -52,21 +51,12 @@ export default class User {
     // hash password
     const hashedPassword = await argon2.hash(password);
 
-    const updateData = omitUndefinedKeys({
-      email,
-      username,
-      password: hashedPassword,
-      account_reset,
+    const user = await client.query<UserT>({
+      text: `INSERT INTO lucid_users (email, username, password, account_reset) VALUES ($1, $2, $3, $4) RETURNING *`,
+      values: [email, username, hashedPassword, account_reset || false],
     });
 
-    // create user
-    const [user]: [UserT?] = await sql`
-        INSERT INTO lucid_users
-        ${sql(updateData)}
-        RETURNING *
-        `;
-
-    if (!user) {
+    if (!user.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "User Not Created",
@@ -75,8 +65,8 @@ export default class User {
       });
     }
 
-    delete user.password;
-    return user;
+    delete user.rows[0].password;
+    return user.rows[0];
   };
   static accountReset: UserAccountReset = async (id, data) => {
     const { email, username, password } = data;
@@ -101,27 +91,12 @@ export default class User {
     // hash password
     const hashedPassword = await argon2.hash(password);
 
-    const updateData = omitUndefinedKeys({
-      email,
-      username,
-      password: hashedPassword,
-      account_reset: false,
-    }) as {
-      email: string;
-      username: string;
-      password: string;
-      account_reset: boolean;
-    };
+    const updatedUser = await client.query<UserT>({
+      text: `UPDATE lucid_users SET email = $1, username = $2, password = $3, account_reset = $4 WHERE id = $5 RETURNING *`,
+      values: [email, username, hashedPassword, false, id],
+    });
 
-    const [updatedUser]: [UserT?] = await sql`
-        UPDATE lucid_users
-        SET
-        ${sql(updateData)}
-        WHERE id = ${id}
-        RETURNING *
-        `;
-
-    if (!updatedUser) {
+    if (!updatedUser.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "User Not Updated",
@@ -130,14 +105,16 @@ export default class User {
       });
     }
 
-    delete updatedUser.password;
-    return updatedUser;
+    delete updatedUser.rows[0].password;
+    return updatedUser.rows[0];
   };
   static getById: UserGetById = async (id) => {
-    const [user]: [UserT?] = await sql`
-        SELECT * FROM lucid_users WHERE id = ${id}
-        `;
-    if (!user) {
+    const user = await client.query<UserT>({
+      text: `SELECT * FROM lucid_users WHERE id = $1`,
+      values: [id],
+    });
+
+    if (!user.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "User Not Found",
@@ -152,18 +129,18 @@ export default class User {
       });
     }
 
-    delete user.password;
-    return user;
+    delete user.rows[0].password;
+    return user.rows[0];
   };
   static login: UserLogin = async (username, password) => {
     // double submit cooki - csrf protection
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
+    const user = await client.query<UserT>({
+      text: `SELECT * FROM lucid_users WHERE username = $1`,
+      values: [username],
+    });
 
-    const [user]: [UserT?] = await sql`
-        SELECT * FROM lucid_users WHERE username = ${username}
-        `;
-
-    if (!user || !user.password) {
+    if (!user.rows[0] || !user.rows[0].password) {
       throw new LucidError({
         type: "basic",
         name: "User Not Found",
@@ -172,7 +149,7 @@ export default class User {
       });
     }
 
-    const passwordValid = await argon2.verify(user.password, password);
+    const passwordValid = await argon2.verify(user.rows[0].password, password);
 
     if (!passwordValid) {
       throw new LucidError({
@@ -183,40 +160,28 @@ export default class User {
       });
     }
 
-    delete user.password;
-    return user;
+    delete user.rows[0].password;
+    return user.rows[0];
   };
   // -------------------------------------------
   // Util Methods
   static checkIfUserExistsAlready = async (email: string, username: string) => {
-    const [withEmail]: [UserT?] = await sql`
-        SELECT * FROM lucid_users WHERE email = ${email}
-        `;
-    if (withEmail) {
+    const userExists = await client.query<UserT>({
+      text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
+      values: [email, username],
+    });
+
+    if (userExists.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "User Already Exists",
-        message: "A user with that email already exists.",
+        message: "A user with that email or username already exists.",
         status: 400,
         errors: modelErrors({
           email: {
             code: "email_already_exists",
             message: "A user with that email already exists.",
           },
-        }),
-      });
-    }
-
-    const [withUsername]: [UserT?] = await sql`
-        SELECT * FROM lucid_users WHERE username = ${username}
-        `;
-    if (withUsername) {
-      throw new LucidError({
-        type: "basic",
-        name: "User Already Exists",
-        message: "A user with that username already exists.",
-        status: 400,
-        errors: modelErrors({
           username: {
             code: "username_already_exists",
             message: "A user with that username already exists.",

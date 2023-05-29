@@ -1,10 +1,13 @@
-import postgres from "postgres";
-import Config from "@db/models/Config";
+import { Client } from "pg";
+import Config from "./models/Config";
 
-const sql = postgres(Config.databaseUrl, {
+const client = new Client({
+  connectionString: Config.databaseUrl,
   ssl: {
     rejectUnauthorized: false,
   },
 });
 
-export default sql;
+client.connect();
+
+export default client;

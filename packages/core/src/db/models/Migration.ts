@@ -1,4 +1,4 @@
-import sql from "@db/db";
+import client from "@db/db";
 
 // -------------------------------------------
 // Types
@@ -23,10 +23,10 @@ export default class Migration {
   // Public
   static all: MigrationAll = async () => {
     try {
-      const migrations = await sql<
-        MigrationT[]
-      >`SELECT * FROM lucid_migrations`;
-      return migrations;
+      const migrations = await client.query<MigrationT>(
+        `SELECT * FROM lucid_migrations`
+      );
+      return migrations.rows;
     } catch (err) {
       // as this is never used within the app, we dont throw an error to the request
       return [];
@@ -34,9 +34,12 @@ export default class Migration {
   };
   static create: MigrationCreate = async (data) => {
     const { file, rawSql } = data;
-    await sql.begin(async (sql) => {
-      await sql.unsafe(rawSql);
-      await sql`INSERT INTO lucid_migrations (file) VALUES (${file})`;
+    await client.query({
+      text: rawSql,
+    });
+    await client.query({
+      text: `INSERT INTO lucid_migrations (file) VALUES ($1)`,
+      values: [file],
     });
   };
   // -------------------------------------------

@@ -6,16 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const dev_1 = require("../../../dev");
 const app_1 = __importDefault(require("../../../app"));
-const route = "/api/v1/example/boilerplate";
+const route = "/api/v1/auth/csrf";
 describe(`Route: ${route}`, () => {
     test("Success case", async () => {
-        const res = await (0, supertest_1.default)(await (0, app_1.default)(dev_1.config)).get(route);
+        const appinstance = await (0, app_1.default)(dev_1.config);
+        const res = await (0, supertest_1.default)(appinstance).get(route);
+        expect(res.status).toBe(200);
         expect(res.body).toMatchObject({
             data: {
                 _csrf: expect.any(String),
             },
-            path: expect.any(String),
+            meta: {
+                path: expect.any(String),
+            },
         });
     });
 });
-//# sourceMappingURL=get-csrf.js.map
+//# sourceMappingURL=get-csrf.test.js.map

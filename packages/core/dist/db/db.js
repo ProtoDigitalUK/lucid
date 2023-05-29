@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const postgres_1 = __importDefault(require("postgres"));
+const pg_1 = require("pg");
 const Config_1 = __importDefault(require("./models/Config"));
-const sql = (0, postgres_1.default)(Config_1.default.database_url, {
+const client = new pg_1.Client({
+    connectionString: Config_1.default.databaseUrl,
     ssl: {
         rejectUnauthorized: false,
     },
 });
-exports.default = sql;
+client.connect();
+exports.default = client;
 //# sourceMappingURL=db.js.map

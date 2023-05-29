@@ -11,16 +11,16 @@ class Permission {
 _a = Permission;
 Permission.set = async (user_id, role) => {
     const permissions = Permission.rolePermissions(role);
-    const [permission] = await (0, db_1.default) `
-        SELECT * FROM lucid_permissions WHERE user_id = ${user_id}
-        `;
-    if (!permission) {
-        const [permRes] = await (0, db_1.default) `
-        INSERT INTO lucid_permissions (user_id, permissions)
-        VALUES (${user_id}, ${permissions}) 
-        RETURNING *
-        `;
-        if (!permRes) {
+    const permission = await db_1.default.query({
+        text: `SELECT * FROM lucid_permissions WHERE user_id = $1`,
+        values: [user_id],
+    });
+    if (!permission.rows[0]) {
+        const permRes = await db_1.default.query({
+            text: `INSERT INTO lucid_permissions (user_id, permissions) VALUES ($1, $2) RETURNING *`,
+            values: [user_id, permissions],
+        });
+        if (!permRes.rows[0]) {
             throw new error_handler_1.LucidError({
                 type: "basic",
                 name: "Permission Error",
@@ -28,16 +28,14 @@ Permission.set = async (user_id, role) => {
                 status: 500,
             });
         }
-        return permRes;
+        return permRes.rows[0];
     }
     else {
-        const [permRes] = await (0, db_1.default) `
-        UPDATE lucid_permissions
-        SET permissions = ${permissions}
-        WHERE user_id = ${user_id} 
-        RETURNING *
-        `;
-        if (!permRes) {
+        const permRes = await db_1.default.query({
+            text: `UPDATE lucid_permissions SET permissions = $1 WHERE user_id = $2 RETURNING *`,
+            values: [permissions, user_id],
+        });
+        if (!permRes.rows[0]) {
             throw new error_handler_1.LucidError({
                 type: "basic",
                 name: "Permission Error",
@@ -45,7 +43,7 @@ Permission.set = async (user_id, role) => {
                 status: 500,
             });
         }
-        return permRes;
+        return permRes.rows[0];
     }
 };
 Permission.rolePermissions = (role) => {

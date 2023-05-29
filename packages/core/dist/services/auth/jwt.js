@@ -13,7 +13,7 @@ const generateJWT = (res, user) => {
         email,
         username,
     };
-    const token = jsonwebtoken_1.default.sign(payload, Config_1.default.secret_key, {
+    const token = jsonwebtoken_1.default.sign(payload, Config_1.default.secretKey, {
         expiresIn: "7d",
     });
     res.cookie("_jwt", token, {
@@ -33,7 +33,7 @@ const verifyJWT = (req) => {
                 data: null,
             };
         }
-        const decoded = jsonwebtoken_1.default.verify(_jwt, Config_1.default.secret_key);
+        const decoded = jsonwebtoken_1.default.verify(_jwt, Config_1.default.secretKey);
         return {
             sucess: true,
             data: decoded,

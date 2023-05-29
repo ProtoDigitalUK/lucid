@@ -13,23 +13,25 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/login",
-    authoriseCSRF: true,
+    middleware: {
+        authoriseCSRF: true,
+    },
     schema: login_1.default.schema,
     controller: login_1.default.controller,
 });
 (0, route_1.default)(router, {
     method: "get",
     path: "/logout",
-    authenticate: false,
-    authoriseCSRF: false,
     schema: logout_1.default.schema,
     controller: logout_1.default.controller,
 });
 (0, route_1.default)(router, {
     method: "get",
     path: "/me",
-    authenticate: true,
-    authoriseCSRF: true,
+    middleware: {
+        authenticate: true,
+        authoriseCSRF: true,
+    },
     schema: get_authenticated_user_1.default.schema,
     controller: get_authenticated_user_1.default.controller,
 });

@@ -1,4 +1,4 @@
-import sql from "@db/db";
+import client from "@db/db";
 import { LucidError } from "@utils/error-handler";
 
 // -------------------------------------------
@@ -27,16 +27,18 @@ export default class Permission {
   static set: PermissionSet = async (user_id, role) => {
     const permissions = Permission.rolePermissions(role);
 
-    const [permission]: [PermissionT?] = await sql`
-        SELECT * FROM lucid_permissions WHERE user_id = ${user_id}
-        `;
-    if (!permission) {
-      const [permRes]: [PermissionT?] = await sql`
-        INSERT INTO lucid_permissions (user_id, permissions)
-        VALUES (${user_id}, ${permissions}) 
-        RETURNING *
-        `;
-      if (!permRes) {
+    const permission = await client.query<PermissionT>({
+      text: `SELECT * FROM lucid_permissions WHERE user_id = $1`,
+      values: [user_id],
+    });
+
+    if (!permission.rows[0]) {
+      const permRes = await client.query<PermissionT>({
+        text: `INSERT INTO lucid_permissions (user_id, permissions) VALUES ($1, $2) RETURNING *`,
+        values: [user_id, permissions],
+      });
+
+      if (!permRes.rows[0]) {
         throw new LucidError({
           type: "basic",
           name: "Permission Error",
@@ -44,15 +46,14 @@ export default class Permission {
           status: 500,
         });
       }
-      return permRes;
+      return permRes.rows[0];
     } else {
-      const [permRes]: [PermissionT?] = await sql`
-        UPDATE lucid_permissions
-        SET permissions = ${permissions}
-        WHERE user_id = ${user_id} 
-        RETURNING *
-        `;
-      if (!permRes) {
+      const permRes = await client.query<PermissionT>({
+        text: `UPDATE lucid_permissions SET permissions = $1 WHERE user_id = $2 RETURNING *`,
+        values: [permissions, user_id],
+      });
+
+      if (!permRes.rows[0]) {
         throw new LucidError({
           type: "basic",
           name: "Permission Error",
@@ -60,7 +61,7 @@ export default class Permission {
           status: 500,
         });
       }
-      return permRes;
+      return permRes.rows[0];
     }
   };
   // -------------------------------------------

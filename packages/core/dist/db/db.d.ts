@@ -1,4 +1,4 @@
-import postgres from "postgres";
-declare const sql: postgres.Sql<{}>;
-export default sql;
+import { Client } from "pg";
+declare const client: Client;
+export default client;
 //# sourceMappingURL=db.d.ts.map

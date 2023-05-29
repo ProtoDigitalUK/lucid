@@ -28,7 +28,7 @@ const app = async (config) => {
         allowedHeaders: ["Content-Type", "Authorization"],
     }));
     app.use((0, morgan_1.default)("dev"));
-    app.use((0, cookie_parser_1.default)(Config_1.default.secret_key));
+    app.use((0, cookie_parser_1.default)(Config_1.default.secretKey));
     console_log_colors_1.log.yellow("Middleware configured");
     console_log_colors_1.log.white("----------------------------------------------------");
     await (0, migration_1.default)();

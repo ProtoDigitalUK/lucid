@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
-interface QueryParams {
+interface QueryParams extends ModelQueryParams {
     include?: Array<"fields">;
     exclude?: Array<string>;
     filter?: {

@@ -1,4 +1,4 @@
-import client from "@db/pg";
+import client from "@db/db";
 import { Request } from "express";
 import { LucidError, modelErrors } from "@utils/error-handler";
 // Serivces

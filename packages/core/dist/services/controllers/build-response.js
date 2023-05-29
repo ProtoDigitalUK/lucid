@@ -6,9 +6,20 @@ const getPath = (req) => {
     const originalUrl = req.originalUrl;
     return `${protocol}://${host}${originalUrl}`;
 };
+const buildPaginationMeta = (pagination) => {
+    if (!pagination)
+        return undefined;
+    return {
+        current_page: pagination.page,
+        last_page: Math.ceil(pagination.count / Number(pagination.per_page)),
+        per_page: pagination.per_page,
+        total: pagination.count,
+    };
+};
 const buildResponse = (req, params) => {
     let meta = {
         path: getPath(req),
+        pagination: buildPaginationMeta(params.pagination),
     };
     let links = undefined;
     return {

@@ -6,7 +6,6 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const db_1 = __importDefault(require("../db"));
-const omit_undedefined_keys_1 = __importDefault(require("../../utils/omit-undedefined-keys"));
 const error_handler_1 = require("../../utils/error-handler");
 class User {
 }
@@ -15,18 +14,11 @@ User.register = async (data) => {
     const { email, username, password, account_reset } = data;
     await User.checkIfUserExistsAlready(email, username);
     const hashedPassword = await argon2_1.default.hash(password);
-    const updateData = (0, omit_undedefined_keys_1.default)({
-        email,
-        username,
-        password: hashedPassword,
-        account_reset,
+    const user = await db_1.default.query({
+        text: `INSERT INTO lucid_users (email, username, password, account_reset) VALUES ($1, $2, $3, $4) RETURNING *`,
+        values: [email, username, hashedPassword, account_reset || false],
     });
-    const [user] = await (0, db_1.default) `
-        INSERT INTO lucid_users
-        ${(0, db_1.default)(updateData)}
-        RETURNING *
-        `;
-    if (!user) {
+    if (!user.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Not Created",
@@ -34,8 +26,8 @@ User.register = async (data) => {
             status: 500,
         });
     }
-    delete user.password;
-    return user;
+    delete user.rows[0].password;
+    return user.rows[0];
 };
 User.accountReset = async (id, data) => {
     const { email, username, password } = data;
@@ -55,20 +47,11 @@ User.accountReset = async (id, data) => {
         });
     }
     const hashedPassword = await argon2_1.default.hash(password);
-    const updateData = (0, omit_undedefined_keys_1.default)({
-        email,
-        username,
-        password: hashedPassword,
-        account_reset: false,
+    const updatedUser = await db_1.default.query({
+        text: `UPDATE lucid_users SET email = $1, username = $2, password = $3, account_reset = $4 WHERE id = $5 RETURNING *`,
+        values: [email, username, hashedPassword, false, id],
     });
-    const [updatedUser] = await (0, db_1.default) `
-        UPDATE lucid_users
-        SET
-        ${(0, db_1.default)(updateData)}
-        WHERE id = ${id}
-        RETURNING *
-        `;
-    if (!updatedUser) {
+    if (!updatedUser.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Not Updated",
@@ -76,14 +59,15 @@ User.accountReset = async (id, data) => {
             status: 500,
         });
     }
-    delete updatedUser.password;
-    return updatedUser;
+    delete updatedUser.rows[0].password;
+    return updatedUser.rows[0];
 };
 User.getById = async (id) => {
-    const [user] = await (0, db_1.default) `
-        SELECT * FROM lucid_users WHERE id = ${id}
-        `;
-    if (!user) {
+    const user = await db_1.default.query({
+        text: `SELECT * FROM lucid_users WHERE id = $1`,
+        values: [id],
+    });
+    if (!user.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Not Found",
@@ -97,14 +81,15 @@ User.getById = async (id) => {
             }),
         });
     }
-    delete user.password;
-    return user;
+    delete user.rows[0].password;
+    return user.rows[0];
 };
 User.login = async (username, password) => {
-    const [user] = await (0, db_1.default) `
-        SELECT * FROM lucid_users WHERE username = ${username}
-        `;
-    if (!user || !user.password) {
+    const user = await db_1.default.query({
+        text: `SELECT * FROM lucid_users WHERE username = $1`,
+        values: [username],
+    });
+    if (!user.rows[0] || !user.rows[0].password) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Not Found",
@@ -112,7 +97,7 @@ User.login = async (username, password) => {
             status: 500,
         });
     }
-    const passwordValid = await argon2_1.default.verify(user.password, password);
+    const passwordValid = await argon2_1.default.verify(user.rows[0].password, password);
     if (!passwordValid) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -121,37 +106,25 @@ User.login = async (username, password) => {
             status: 500,
         });
     }
-    delete user.password;
-    return user;
+    delete user.rows[0].password;
+    return user.rows[0];
 };
 User.checkIfUserExistsAlready = async (email, username) => {
-    const [withEmail] = await (0, db_1.default) `
-        SELECT * FROM lucid_users WHERE email = ${email}
-        `;
-    if (withEmail) {
+    const userExists = await db_1.default.query({
+        text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
+        values: [email, username],
+    });
+    if (userExists.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Already Exists",
-            message: "A user with that email already exists.",
+            message: "A user with that email or username already exists.",
             status: 400,
             errors: (0, error_handler_1.modelErrors)({
                 email: {
                     code: "email_already_exists",
                     message: "A user with that email already exists.",
                 },
-            }),
-        });
-    }
-    const [withUsername] = await (0, db_1.default) `
-        SELECT * FROM lucid_users WHERE username = ${username}
-        `;
-    if (withUsername) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "User Already Exists",
-            message: "A user with that username already exists.",
-            status: 400,
-            errors: (0, error_handler_1.modelErrors)({
                 username: {
                     code: "username_already_exists",
                     message: "A user with that username already exists.",

@@ -13,7 +13,6 @@ const configSchema = z.object({
   origin: z.string().optional(),
   environment: z.enum(["development", "production"]),
   secretKey: z.string(),
-  connectionString: z.string(),
   postTypes: z.array(
     z.object({
       key: z.string().refine((key) => key !== "page"),
@@ -29,7 +28,6 @@ export type ConfigT = {
   origin?: string;
   environment: "development" | "production";
   secretKey: string;
-  connectionString: string;
   postTypes: Array<{
     key: string;
     name: string;
@@ -86,9 +84,6 @@ export default class Config {
   }
   static get databaseUrl() {
     return process.env.LUCID_database_url as string;
-  }
-  static get connectionString() {
-    return Config.get().connectionString;
   }
   static get postTypes() {
     return Config.get().postTypes;

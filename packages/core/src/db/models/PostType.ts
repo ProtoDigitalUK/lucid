@@ -1,4 +1,4 @@
-import sql from "@db/db";
+import client from "@db/db";
 import { LucidError } from "@utils/error-handler";
 // Models
 import Config from "./Config";
@@ -27,20 +27,23 @@ export default class PostType {
       ...configPostTypes.map((postType) => postType.key),
     ];
 
-    const postTypes = await sql<PostTypeT[]>`
-        SELECT * FROM lucid_post_types WHERE key in ${sql([returnKeys])}
-        `;
+    const postTypes = await client.query<PostTypeT>({
+      text: `SELECT * FROM lucid_post_types WHERE key = ANY($1)`,
+      values: [returnKeys],
+    });
 
-    return postTypes;
+    return postTypes.rows;
   };
   static createOrUpdate: PostTypeCreateOrUpdate = async (postType) => {
-    const [res]: [PostTypeT?] = await sql`
-        INSERT INTO lucid_post_types (key, name, singular_name)
-        VALUES (${postType.key}, ${postType.name}, ${postType.singular_name})
-        ON CONFLICT (key) DO UPDATE SET name = ${postType.name}, singular_name = ${postType.singular_name}
-        RETURNING *
-        `;
-    if (!res) {
+    const res = await client.query<PostTypeT>({
+      text: `INSERT INTO lucid_post_types (key, name, singular_name)
+          VALUES ($1, $2, $3)
+          ON CONFLICT (key) DO UPDATE SET name = $2, singular_name = $3
+          RETURNING *`,
+      values: [postType.key, postType.name, postType.singular_name],
+    });
+
+    if (!res.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "Post Type Error",
@@ -49,7 +52,7 @@ export default class PostType {
       });
     }
 
-    return res;
+    return res.rows[0];
   };
   // -------------------------------------------
   // Util Methods

@@ -57,7 +57,6 @@ export const config = {
   origin: "*",
   environment: "development",
   secretKey: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
-  connectionString: process.env.LUCID_DATABASE_URL,
   postTypes: [
     {
       key: "blog",

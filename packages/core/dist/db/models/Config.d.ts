@@ -4,7 +4,12 @@ export type ConfigT = {
     port: number;
     origin?: string;
     environment: "development" | "production";
-    secret_key: string;
+    secretKey: string;
+    postTypes: Array<{
+        key: string;
+        name: string;
+        singularName: string;
+    }>;
     bricks?: BrickBuilderT[];
 };
 type ConfigValidate = (config: ConfigT) => Promise<void>;
@@ -14,9 +19,14 @@ export default class Config {
     static validate: ConfigValidate;
     static set: ConfigSet;
     static get: ConfigGet;
-    static get secret_key(): string;
+    static get secretKey(): string;
     static get environment(): "development" | "production";
-    static get database_url(): string;
+    static get databaseUrl(): string;
+    static get postTypes(): {
+        key: string;
+        name: string;
+        singularName: string;
+    }[];
 }
 export {};
 //# sourceMappingURL=Config.d.ts.map

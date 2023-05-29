@@ -74,7 +74,14 @@ exports.config = {
     port: 8393,
     origin: "*",
     environment: "development",
-    secret_key: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
+    secretKey: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
+    postTypes: [
+        {
+            key: "blog",
+            name: "Blogs",
+            singularName: "Blog",
+        },
+    ],
     bricks: [bannerBrick, introBrick],
 };
 (0, index_1.default)(exports.config);

@@ -1,4 +1,4 @@
-import sql from "@db/db";
+import client from "@db/db";
 import { LucidError, modelErrors } from "@utils/error-handler";
 
 // -------------------------------------------
@@ -46,11 +46,12 @@ export default class Option {
   // -------------------------------------------
   // Methods
   static getByName: OptionGetByName = async (name) => {
-    const [option]: [OptionT?] = await sql`
-        SELECT * FROM lucid_options WHERE option_name = ${name}
-        `;
+    const options = await client.query<OptionT>({
+      text: `SELECT * FROM lucid_options WHERE option_name = $1`,
+      values: [name],
+    });
 
-    if (!option) {
+    if (!options.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "Option Not Found",
@@ -65,22 +66,17 @@ export default class Option {
       });
     }
 
-    return Option.convertToType(option);
+    return Option.convertToType(options.rows[0]);
   };
   static patchByName: OptionPatchByName = async (data) => {
     const value = Option.convertToString(data.value, data.type);
 
-    const [option]: [OptionT?] = await sql`
-        UPDATE lucid_options 
-        SET option_value = ${value},
-            type = ${data.type},
-            updated_at = NOW(),
-            locked = ${data.locked || false}
-        WHERE option_name = ${data.name} 
-        AND locked = false
-        RETURNING *`;
+    const options = await client.query<OptionT>({
+      text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW(), locked = $3 WHERE option_name = $4 AND locked = false RETURNING *`,
+      values: [value, data.type, data.locked || false, data.name],
+    });
 
-    if (!option) {
+    if (!options.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "Option Not Found",
@@ -95,25 +91,25 @@ export default class Option {
       });
     }
 
-    return Option.convertToType(option);
+    return Option.convertToType(options.rows[0]);
   };
   static create: OptionCreate = async (data) => {
     const value = Option.convertToString(data.value, data.type);
 
-    const [optionExisting]: [OptionT?] =
-      await sql`SELECT * FROM lucid_options WHERE option_name = ${data.name}`;
+    const optionExisting = await client.query<OptionT>({
+      text: `SELECT * FROM lucid_options WHERE option_name = $1`,
+      values: [data.name],
+    });
 
-    if (optionExisting) return Option.convertToType(optionExisting);
+    if (optionExisting.rows[0])
+      return Option.convertToType(optionExisting.rows[0]);
 
-    const [option]: [OptionT?] = await sql`
-        INSERT INTO lucid_options
-        (option_name, option_value, type, locked)
-        VALUES
-        (${data.name}, ${value}, ${data.type}, ${data.locked || false})
-        RETURNING *
-        `;
+    const option = await client.query<OptionT>({
+      text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,
+      values: [data.name, value, data.type, data.locked || false],
+    });
 
-    if (!option) {
+    if (!option.rows[0]) {
       throw new LucidError({
         type: "basic",
         name: "Option Not Created",
@@ -122,7 +118,7 @@ export default class Option {
       });
     }
 
-    return Option.convertToType(option);
+    return Option.convertToType(option.rows[0]);
   };
   static createOrPatch: OptionCreateOrPatchByName = async (data) => {
     try {

@@ -10,10 +10,11 @@ class Option {
 }
 _a = Option;
 Option.getByName = async (name) => {
-    const [option] = await (0, db_1.default) `
-        SELECT * FROM lucid_options WHERE option_name = ${name}
-        `;
-    if (!option) {
+    const options = await db_1.default.query({
+        text: `SELECT * FROM lucid_options WHERE option_name = $1`,
+        values: [name],
+    });
+    if (!options.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Option Not Found",
@@ -27,20 +28,15 @@ Option.getByName = async (name) => {
             }),
         });
     }
-    return Option.convertToType(option);
+    return Option.convertToType(options.rows[0]);
 };
 Option.patchByName = async (data) => {
     const value = Option.convertToString(data.value, data.type);
-    const [option] = await (0, db_1.default) `
-        UPDATE lucid_options 
-        SET option_value = ${value},
-            type = ${data.type},
-            updated_at = NOW(),
-            locked = ${data.locked || false}
-        WHERE option_name = ${data.name} 
-        AND locked = false
-        RETURNING *`;
-    if (!option) {
+    const options = await db_1.default.query({
+        text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW(), locked = $3 WHERE option_name = $4 AND locked = false RETURNING *`,
+        values: [value, data.type, data.locked || false, data.name],
+    });
+    if (!options.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Option Not Found",
@@ -54,21 +50,21 @@ Option.patchByName = async (data) => {
             }),
         });
     }
-    return Option.convertToType(option);
+    return Option.convertToType(options.rows[0]);
 };
 Option.create = async (data) => {
     const value = Option.convertToString(data.value, data.type);
-    const [optionExisting] = await (0, db_1.default) `SELECT * FROM lucid_options WHERE option_name = ${data.name}`;
-    if (optionExisting)
-        return Option.convertToType(optionExisting);
-    const [option] = await (0, db_1.default) `
-        INSERT INTO lucid_options
-        (option_name, option_value, type, locked)
-        VALUES
-        (${data.name}, ${value}, ${data.type}, ${data.locked || false})
-        RETURNING *
-        `;
-    if (!option) {
+    const optionExisting = await db_1.default.query({
+        text: `SELECT * FROM lucid_options WHERE option_name = $1`,
+        values: [data.name],
+    });
+    if (optionExisting.rows[0])
+        return Option.convertToType(optionExisting.rows[0]);
+    const option = await db_1.default.query({
+        text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,
+        values: [data.name, value, data.type, data.locked || false],
+    });
+    if (!option.rows[0]) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Option Not Created",
@@ -76,7 +72,7 @@ Option.create = async (data) => {
             status: 500,
         });
     }
-    return Option.convertToType(option);
+    return Option.convertToType(option.rows[0]);
 };
 Option.createOrPatch = async (data) => {
     try {

@@ -12,18 +12,26 @@ const configSchema = zod_1.default.object({
     port: zod_1.default.number(),
     origin: zod_1.default.string().optional(),
     environment: zod_1.default.enum(["development", "production"]),
-    secret_key: zod_1.default.string(),
+    secretKey: zod_1.default.string(),
+    postTypes: zod_1.default.array(zod_1.default.object({
+        key: zod_1.default.string().refine((key) => key !== "page"),
+        name: zod_1.default.string().refine((name) => name !== "Pages"),
+        singularName: zod_1.default.string().refine((name) => name !== "Page"),
+    })),
     bricks: zod_1.default.array(zod_1.default.any()).optional(),
 });
 class Config {
-    static get secret_key() {
-        return Config.get().secret_key;
+    static get secretKey() {
+        return Config.get().secretKey;
     }
     static get environment() {
         return Config.get().environment;
     }
-    static get database_url() {
-        return process.env.LUCID_DATABASE_URL;
+    static get databaseUrl() {
+        return process.env.LUCID_database_url;
+    }
+    static get postTypes() {
+        return Config.get().postTypes;
     }
 }
 _a = Config;

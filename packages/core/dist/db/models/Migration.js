@@ -10,8 +10,8 @@ class Migration {
 _a = Migration;
 Migration.all = async () => {
     try {
-        const migrations = await (0, db_1.default) `SELECT * FROM lucid_migrations`;
-        return migrations;
+        const migrations = await db_1.default.query(`SELECT * FROM lucid_migrations`);
+        return migrations.rows;
     }
     catch (err) {
         return [];
@@ -19,9 +19,12 @@ Migration.all = async () => {
 };
 Migration.create = async (data) => {
     const { file, rawSql } = data;
-    await db_1.default.begin(async (sql) => {
-        await sql.unsafe(rawSql);
-        await sql `INSERT INTO lucid_migrations (file) VALUES (${file})`;
+    await db_1.default.query({
+        text: rawSql,
+    });
+    await db_1.default.query({
+        text: `INSERT INTO lucid_migrations (file) VALUES ($1)`,
+        values: [file],
     });
 };
 exports.default = Migration;
