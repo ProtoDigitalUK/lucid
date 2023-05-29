@@ -363,7 +363,7 @@
 			"name": "Categories",
 			"item": [
 				{
-					"name": "Get Multiple (needs adding)",
+					"name": "Get Multiple",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -374,7 +374,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/categories?filter[post_type_id]=1",
+							"raw": "{{BASE_URL}}/api/v1/categories",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -386,7 +386,28 @@
 							"query": [
 								{
 									"key": "filter[post_type_id]",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "title,-created_at",
+									"disabled": true
+								},
+								{
+									"key": "filter[title]",
+									"value": "News",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
 								}
 							]
 						}
@@ -394,7 +415,33 @@
 					"response": []
 				},
 				{
-					"name": "Create Single (needs adding)",
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/categories/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -406,7 +453,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"post_type_id\": 1,\n    \"title\": \"\",\n    \"slug\": \"\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"post_type_id\": 1,\n    \"title\": \"Informative\",\n    \"slug\": \"informative\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -428,7 +475,7 @@
 					"response": []
 				},
 				{
-					"name": "Update Single (needs adding)",
+					"name": "Update Single",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -440,7 +487,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"post_type_id\": 1,\n    \"title\": \"\",\n    \"slug\": \"\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"title\": \"Staff\",\n    \"slug\": \"staff\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -448,7 +495,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/categories/12",
+							"raw": "{{BASE_URL}}/api/v1/categories/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -456,14 +503,14 @@
 								"api",
 								"v1",
 								"categories",
-								"12"
+								"3"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Single (needs adding)",
+					"name": "Delete Single",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -483,7 +530,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/categories/12",
+							"raw": "{{BASE_URL}}/api/v1/categories/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -491,7 +538,7 @@
 								"api",
 								"v1",
 								"categories",
-								"12"
+								"1"
 							]
 						}
 					},
@@ -514,7 +561,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/bricks?include=fields",
+							"raw": "{{BASE_URL}}/api/v1/bricks",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -526,7 +573,8 @@
 							"query": [
 								{
 									"key": "include",
-									"value": "fields"
+									"value": "fields",
+									"disabled": true
 								},
 								{
 									"key": "filter[s]",
@@ -577,7 +625,10 @@
 			"name": "Post Types",
 			"item": [
 				{
-					"name": "Get All (needs adding)",
+					"name": "Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -587,6 +638,10 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/post-types",
 							"host": [
