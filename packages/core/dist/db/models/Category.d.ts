@@ -1,4 +1,5 @@
 import { Request } from "express";
+type CategoryGetSingle = (id: number) => Promise<CategoryT>;
 type CategoryGetMultiple = (req: Request) => Promise<{
     data: CategoryT[];
     count: number;
@@ -9,6 +10,12 @@ type CategoryCreate = (data: {
     slug: string;
     description?: string;
 }) => Promise<CategoryT>;
+type CategoryUpdate = (id: number, data: {
+    title?: string;
+    slug?: string;
+    description?: string;
+}) => Promise<CategoryT>;
+type CategoryDelete = (id: number) => Promise<CategoryT>;
 export type CategoryT = {
     id: number;
     post_type_id: number;
@@ -20,8 +27,11 @@ export type CategoryT = {
 };
 export default class Category {
     static getMultiple: CategoryGetMultiple;
+    static getSingle: CategoryGetSingle;
     static create: CategoryCreate;
-    static isSlugUniqueInPostType: (post_type_id: number, slug: string) => Promise<boolean>;
+    static update: CategoryUpdate;
+    static delete: CategoryDelete;
+    static isSlugUniqueInPostType: (post_type_id: number, slug: string, ignore_id?: number) => Promise<boolean>;
 }
 export {};
 //# sourceMappingURL=Category.d.ts.map

@@ -54,6 +54,27 @@ Category.getMultiple = async (req) => {
         count: count.rows[0].count,
     };
 };
+Category.getSingle = async (id) => {
+    const category = await db_1.default.query({
+        text: "SELECT * FROM lucid_categories WHERE id = $1",
+        values: [id],
+    });
+    if (!category.rows[0]) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Category Not Found",
+            message: "Category not found.",
+            status: 404,
+            errors: (0, error_handler_1.modelErrors)({
+                id: {
+                    code: "not_found",
+                    message: "Category not found.",
+                },
+            }),
+        });
+    }
+    return category.rows[0];
+};
 Category.create = async (data) => {
     const isSlugUnique = await Category.isSlugUniqueInPostType(data.post_type_id, data.slug);
     if (!isSlugUnique) {
@@ -86,11 +107,65 @@ Category.create = async (data) => {
     }
     return category;
 };
-Category.isSlugUniqueInPostType = async (post_type_id, slug) => {
+Category.update = async (id, data) => {
+    const currentCategory = await Category.getSingle(id);
+    if (data.slug) {
+        const isSlugUnique = await Category.isSlugUniqueInPostType(currentCategory.post_type_id, data.slug, id);
+        if (!isSlugUnique) {
+            throw new error_handler_1.LucidError({
+                type: "basic",
+                name: "Category Not Updated",
+                message: "Please provide a unique slug within this post type.",
+                status: 400,
+                errors: (0, error_handler_1.modelErrors)({
+                    slug: {
+                        code: "not_unique",
+                        message: "Please provide a unique slug within this post type.",
+                    },
+                }),
+            });
+        }
+    }
+    const category = await db_1.default.query({
+        name: "update-category",
+        text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 RETURNING *`,
+        values: [data.title, data.slug, data.description, id],
+    });
+    if (!category.rows[0]) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Category Not Updated",
+            message: "There was an error updating the category.",
+            status: 500,
+        });
+    }
+    return category.rows[0];
+};
+Category.delete = async (id) => {
+    const category = await db_1.default.query({
+        name: "delete-category",
+        text: `DELETE FROM lucid_categories WHERE id = $1 RETURNING *`,
+        values: [id],
+    });
+    if (!category.rows[0]) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Category Not Deleted",
+            message: "There was an error deleting the category.",
+            status: 500,
+        });
+    }
+    return category.rows[0];
+};
+Category.isSlugUniqueInPostType = async (post_type_id, slug, ignore_id) => {
+    const values = [post_type_id, slug];
+    if (ignore_id) {
+        values.push(ignore_id);
+    }
     const res = await db_1.default.query({
         name: "is-slug-unique-in-post-type",
-        text: `SELECT * FROM lucid_categories WHERE post_type_id = $1 AND slug = $2`,
-        values: [post_type_id, slug],
+        text: `SELECT * FROM lucid_categories WHERE post_type_id = $1 AND slug = $2 ${ignore_id ? "AND id != $3" : ""}`,
+        values: values,
     });
     const category = res.rows[0];
     if (category) {

@@ -7,24 +7,24 @@ import Category from "@db/models/Category";
 // --------------------------------------------------
 // Schema
 const body = z.object({
-  post_type_id: z.number().int(),
-  title: z.string(),
-  slug: z.string().min(4).toLowerCase(),
+  title: z.string().optional(),
+  slug: z.string().min(4).toLowerCase().optional(),
   description: z.string().optional(),
 });
 const query = z.object({});
-const params = z.object({});
+const params = z.object({
+  id: z.string(),
+});
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const updateSingle: Controller<
   typeof params,
   typeof body,
   typeof query
 > = async (req, res, next) => {
   try {
-    const category = await Category.create({
-      post_type_id: req.body.post_type_id,
+    const category = await Category.update(parseInt(req.params.id), {
       title: req.body.title,
       slug: req.body.slug,
       description: req.body.description,
@@ -48,5 +48,5 @@ export default {
     query,
     params,
   },
-  controller: createSingle,
+  controller: updateSingle,
 };

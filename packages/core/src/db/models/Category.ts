@@ -19,6 +19,8 @@ interface QueryParams extends ModelQueryParams {
   per_page?: string;
 }
 
+type CategoryGetSingle = (id: number) => Promise<CategoryT>;
+
 type CategoryGetMultiple = (req: Request) => Promise<{
   data: CategoryT[];
   count: number;
@@ -29,6 +31,17 @@ type CategoryCreate = (data: {
   slug: string;
   description?: string;
 }) => Promise<CategoryT>;
+
+type CategoryUpdate = (
+  id: number,
+  data: {
+    title?: string;
+    slug?: string;
+    description?: string;
+  }
+) => Promise<CategoryT>;
+
+type CategoryDelete = (id: number) => Promise<CategoryT>;
 
 // -------------------------------------------
 // User
@@ -95,6 +108,29 @@ export default class Category {
       count: count.rows[0].count,
     };
   };
+  static getSingle: CategoryGetSingle = async (id) => {
+    const category = await client.query<CategoryT>({
+      text: "SELECT * FROM lucid_categories WHERE id = $1",
+      values: [id],
+    });
+
+    if (!category.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Category Not Found",
+        message: "Category not found.",
+        status: 404,
+        errors: modelErrors({
+          id: {
+            code: "not_found",
+            message: "Category not found.",
+          },
+        }),
+      });
+    }
+
+    return category.rows[0];
+  };
   static create: CategoryCreate = async (data) => {
     // check if slug is unique in post type
     const isSlugUnique = await Category.isSlugUniqueInPostType(
@@ -133,16 +169,84 @@ export default class Category {
 
     return category;
   };
+  static update: CategoryUpdate = async (id, data) => {
+    // Check if category exists
+    const currentCategory = await Category.getSingle(id);
+
+    if (data.slug) {
+      const isSlugUnique = await Category.isSlugUniqueInPostType(
+        currentCategory.post_type_id,
+        data.slug,
+        id
+      );
+      if (!isSlugUnique) {
+        throw new LucidError({
+          type: "basic",
+          name: "Category Not Updated",
+          message: "Please provide a unique slug within this post type.",
+          status: 400,
+          errors: modelErrors({
+            slug: {
+              code: "not_unique",
+              message: "Please provide a unique slug within this post type.",
+            },
+          }),
+        });
+      }
+    }
+
+    const category = await client.query<CategoryT>({
+      name: "update-category",
+      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 RETURNING *`,
+      values: [data.title, data.slug, data.description, id],
+    });
+    if (!category.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Category Not Updated",
+        message: "There was an error updating the category.",
+        status: 500,
+      });
+    }
+
+    return category.rows[0];
+  };
+  static delete: CategoryDelete = async (id) => {
+    const category = await client.query<CategoryT>({
+      name: "delete-category",
+      text: `DELETE FROM lucid_categories WHERE id = $1 RETURNING *`,
+      values: [id],
+    });
+
+    if (!category.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Category Not Deleted",
+        message: "There was an error deleting the category.",
+        status: 500,
+      });
+    }
+
+    return category.rows[0];
+  };
   // -------------------------------------------
   // Util Methods
   static isSlugUniqueInPostType = async (
     post_type_id: number,
-    slug: string
+    slug: string,
+    ignore_id?: number
   ): Promise<boolean> => {
+    const values = [post_type_id, slug];
+    if (ignore_id) {
+      values.push(ignore_id);
+    }
+
     const res = await client.query<CategoryT>({
       name: "is-slug-unique-in-post-type",
-      text: `SELECT * FROM lucid_categories WHERE post_type_id = $1 AND slug = $2`,
-      values: [post_type_id, slug],
+      text: `SELECT * FROM lucid_categories WHERE post_type_id = $1 AND slug = $2 ${
+        ignore_id ? "AND id != $3" : ""
+      }`,
+      values: values,
     });
     const category = res.rows[0];
     if (category) {
