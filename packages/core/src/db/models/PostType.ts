@@ -22,8 +22,10 @@ export default class PostType {
   // Methods
   static getAll: PostTypeGetAll = async () => {
     const configPostTypes = Config.postTypes;
-    const returnKeys = configPostTypes.map((postType) => postType.key);
-    returnKeys.push("page");
+    const returnKeys = [
+      "page",
+      ...configPostTypes.map((postType) => postType.key),
+    ];
 
     const postTypes = await sql<PostTypeT[]>`
         SELECT * FROM lucid_post_types WHERE key in ${sql([returnKeys])}

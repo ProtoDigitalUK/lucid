@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import z from "zod";
 
 declare global {
-  // define response type for controller express res.json
-
   namespace Express {
     interface Request {
       auth: {
@@ -44,5 +42,21 @@ declare global {
       to?: number;
       total?: number;
     };
+  }
+
+  // --------------------------------------------------
+  // Model
+  interface ModelQueryParams {
+    include?: Array<string>;
+    exclude?: Array<string>;
+    filter?: {
+      [key: string]: string | Array<string>;
+    };
+    sort?: Array<{
+      key: string;
+      value: "asc" | "desc";
+    }>;
+    page?: string;
+    per_page?: string;
   }
 }

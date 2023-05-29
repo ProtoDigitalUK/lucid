@@ -10,8 +10,10 @@ const router = Router();
 r(router, {
   method: "get",
   path: "/",
-  authenticate: true,
-  authoriseCSRF: true,
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
   schema: getAll.schema,
   controller: getAll.controller,
 });

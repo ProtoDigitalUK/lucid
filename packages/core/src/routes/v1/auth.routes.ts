@@ -13,7 +13,9 @@ const router = Router();
 r(router, {
   method: "get",
   path: "/login",
-  authoriseCSRF: true,
+  middleware: {
+    authoriseCSRF: true,
+  },
   schema: login.schema,
   controller: login.controller,
 });
@@ -21,8 +23,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/logout",
-  authenticate: false,
-  authoriseCSRF: false,
   schema: logout.schema,
   controller: logout.controller,
 });
@@ -30,8 +30,10 @@ r(router, {
 r(router, {
   method: "get",
   path: "/me",
-  authenticate: true,
-  authoriseCSRF: true,
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
   schema: getAuthenticatedUser.schema,
   controller: getAuthenticatedUser.controller,
 });

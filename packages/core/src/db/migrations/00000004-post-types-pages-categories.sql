@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS lucid_post_types (
   singular_name TEXT NOT NULL
 );
 
+INSERT INTO lucid_post_types (key, name, singular_name) VALUES ('page', 'Pages', 'Page');
+
 -- PAGES TABLE
 CREATE TABLE IF NOT EXISTS lucid_pages (
   id SERIAL PRIMARY KEY,
@@ -31,7 +33,7 @@ CREATE TABLE IF NOT EXISTS lucid_categories (
   post_type_id INTEGER NOT NULL REFERENCES lucid_post_types(id) ON DELETE CASCADE,
 
   title TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
+  slug TEXT NOT NULL,  -- unique per post type
   description TEXT,
 
   created_at TIMESTAMP DEFAULT NOW(),

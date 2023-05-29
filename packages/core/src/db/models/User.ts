@@ -57,7 +57,7 @@ export default class User {
       username,
       password: hashedPassword,
       account_reset,
-    }) as typeof data;
+    });
 
     // create user
     const [user]: [UserT?] = await sql`

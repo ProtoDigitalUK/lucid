@@ -2,42 +2,50 @@ import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import BrickConfig from "@db/models/BrickConfig";
+import Category from "@db/models/Category";
 
 // --------------------------------------------------
 // Schema
 const body = z.object({});
 const query = z.object({
-  include: z.array(z.enum(["fields"])).optional(),
   filter: z
     .object({
-      s: z.string(),
+      post_type_id: z.union([z.string(), z.array(z.string())]).optional(),
+      title: z.string().optional(),
     })
     .optional(),
   sort: z
     .array(
       z.object({
-        key: z.enum(["name"]),
+        key: z.enum(["title", "created_at"]),
         value: z.enum(["asc", "desc"]),
       })
     )
     .optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
 });
 const params = z.object({});
+// query
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getMultiple: Controller<
+  typeof params,
+  typeof body,
+  typeof query
+> = async (req, res, next) => {
   try {
-    const bricks = await BrickConfig.getAll(req, req.query);
+    const categories = await Category.getMultiple(req);
 
     res.status(200).json(
       buildResponse(req, {
-        data: bricks,
+        data: categories.data,
+        pagination: {
+          count: categories.count,
+          page: req.query.page as string,
+          per_page: req.query.per_page as string,
+        },
       })
     );
   } catch (error) {
@@ -53,5 +61,5 @@ export default {
     query,
     params,
   },
-  controller: getAll,
+  controller: getMultiple,
 };

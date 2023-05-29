@@ -4,6 +4,7 @@ import z from "zod";
 import validate from "@middleware/validate";
 import authenticate from "@middleware/authenticate";
 import authoriseCSRF from "@middleware/authorise-csrf";
+import paginated from "@middleware/paginated";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,
@@ -14,8 +15,11 @@ type Route = <
   props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;
-    authenticate?: boolean;
-    authoriseCSRF?: boolean;
+    middleware?: {
+      authenticate?: boolean;
+      authoriseCSRF?: boolean;
+      paginated?: boolean;
+    };
     schema?: {
       params?: ParamsT;
       body?: BodyT;
@@ -33,12 +37,12 @@ const route: Route = (router, props) => {
   const middleware = [];
 
   // set middleware for authorisation (CSRF)
-  if (props.authoriseCSRF) {
+  if (props.middleware?.authoriseCSRF) {
     middleware.push(authoriseCSRF);
   }
 
   // set middleware for authentication
-  if (props.authenticate) {
+  if (props.middleware?.authenticate) {
     middleware.push(authenticate);
   }
 
@@ -53,6 +57,11 @@ const route: Route = (router, props) => {
         })
       )
     );
+  }
+
+  // set middleware for pagination
+  if (props.middleware?.paginated) {
+    middleware.push(paginated);
   }
 
   switch (method) {

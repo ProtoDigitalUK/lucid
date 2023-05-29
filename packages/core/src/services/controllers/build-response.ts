@@ -2,11 +2,18 @@ import { Request } from "express";
 
 // --------------------------------------------------
 // Types
+interface BuildResponseParams {
+  data: Array<any> | { [key: string]: any };
+  pagination?: {
+    count: number;
+    page: string;
+    per_page: string;
+  };
+}
+
 type BuildResponseT = (
   req: Request,
-  params: {
-    data: Array<any> | { [key: string]: any };
-  }
+  params: BuildResponseParams
 ) => ResponseBody;
 
 // --------------------------------------------------
@@ -18,16 +25,25 @@ const getPath = (req: Request) => {
 
   return `${protocol}://${host}${originalUrl}`;
 };
+const buildPaginationMeta = (pagination: BuildResponseParams["pagination"]) => {
+  if (!pagination) return undefined;
+
+  return {
+    current_page: pagination.page,
+    last_page: Math.ceil(pagination.count / Number(pagination.per_page)),
+    per_page: pagination.per_page,
+    total: pagination.count,
+  };
+};
 
 // --------------------------------------------------
 // Main
 const buildResponse: BuildResponseT = (req, params) => {
   let meta = {
     path: getPath(req),
+    pagination: buildPaginationMeta(params.pagination),
   };
   let links = undefined;
-
-  // TODO: once we get to a route that needs to be paginated, update props and logic here to add the correct meta and links
 
   return {
     data: params.data,

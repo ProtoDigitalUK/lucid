@@ -1,8 +1,8 @@
 import { Router } from "express";
 import r from "@utils/route";
 // Controller
-import getAll from "@controllers/bricks/get-all";
-import getSingle from "@controllers/bricks/get-single";
+import getMultiple from "@controllers/categories/get-multiple";
+import createSingle from "@controllers/categories/create-single";
 
 // ------------------------------------
 // Router
@@ -14,20 +14,21 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
+    paginated: true,
   },
-  schema: getAll.schema,
-  controller: getAll.controller,
+  schema: getMultiple.schema,
+  controller: getMultiple.controller,
 });
 
 r(router, {
-  method: "get",
-  path: "/:key",
+  method: "post",
+  path: "/",
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
   },
-  schema: getSingle.schema,
-  controller: getSingle.controller,
+  schema: createSingle.schema,
+  controller: createSingle.controller,
 });
 
 export default router;

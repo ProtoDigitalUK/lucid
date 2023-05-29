@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import z, { AnyZodObject } from "zod";
+import constants from "@root/constants";
 // Utils
 import { LucidError } from "@utils/error-handler";
 // ------------------------------------
@@ -18,11 +19,19 @@ const querySchema = z.object({
 const buildFilter = (query: z.infer<typeof querySchema>) => {
   let filter:
     | {
-        [key: string]: string;
+        [key: string]: string | Array<string>;
       }
     | undefined = undefined;
 
-  filter = query.filter;
+  Array.from(Object.entries(query.filter || {})).forEach(([key, value]) => {
+    const v = value as string;
+    if (!filter) filter = {};
+    if (v.includes(",")) {
+      filter[key] = v.split(",");
+    } else {
+      filter[key] = v;
+    }
+  });
 
   return filter;
 };
@@ -88,7 +97,7 @@ const buildPerPage = (query: z.infer<typeof querySchema>) => {
     if (!isNaN(per_pageInt)) {
       per_page = per_pageInt.toString();
     } else {
-      per_page = "10";
+      per_page = constants.pagination.per_page;
     }
   }
 

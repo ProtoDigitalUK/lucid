@@ -52,18 +52,9 @@ const createInitialAdmin = async () => {
     Store config post types in the database, remove duplicates from config and add new page type
 */
 const createPostTypes = async () => {
-  const allPostTypes = [
-    {
-      key: "page",
-      name: "Pages",
-      singularName: "Page",
-    },
-    ...Config.postTypes,
-  ];
-
+  const allPostTypes = Config.postTypes;
   const uniqueKeys = new Set();
 
-  uniqueKeys.add("page"); // out default page type
   allPostTypes.forEach((type) => {
     uniqueKeys.add(type.key);
   });

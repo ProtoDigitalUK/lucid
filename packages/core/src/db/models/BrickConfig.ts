@@ -6,7 +6,7 @@ import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 
 // -------------------------------------------
 // Types
-interface QueryParams {
+interface QueryParams extends ModelQueryParams {
   include?: Array<"fields">;
   exclude?: Array<string>;
   filter?: {
