@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import client from "@db/db";
 // Services
-import { verifyJWT } from "@services/auth/jwt";
+import { verifyJWT, clearJWT } from "@services/auth/jwt";
 // Utils
 import { LucidError } from "@utils/error-handler";
 
@@ -12,6 +13,23 @@ const authenticate = async (
   try {
     const authenticateJWT = verifyJWT(req);
     if (!authenticateJWT.sucess || !authenticateJWT.data) {
+      throw new LucidError({
+        type: "authorisation",
+        message: "You are not authorised to perform this action",
+      });
+    }
+
+    console.log(authenticateJWT.data.id);
+
+    const user = await client.query({
+      text: `SELECT * FROM lucid_users WHERE id = $1`,
+      values: [authenticateJWT.data.id],
+    });
+
+    if (!user.rows[0]) {
+      // clear cookie
+      clearJWT(res);
+      // throw error
       throw new LucidError({
         type: "authorisation",
         message: "You are not authorised to perform this action",
