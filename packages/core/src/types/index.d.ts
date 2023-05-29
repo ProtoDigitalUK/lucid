@@ -23,24 +23,24 @@ declare global {
   interface ResponseBody {
     data: Array<any> | { [key: string]: any };
     links?: {
-      first: string;
-      last: string;
-      next: string;
-      prev: string;
+      first: string | null;
+      last: string | null;
+      next: string | null;
+      prev: string | null;
     };
     meta: {
-      current_page?: number;
-      from?: number;
-      last_page?: number;
       links?: Array<{
         active: boolean;
         label: string;
         url: string | null;
+        page: number;
       }>;
       path: string;
-      per_page?: number;
-      to?: number;
-      total?: number;
+
+      current_page?: number | null;
+      last_page?: number | null;
+      per_page?: number | null;
+      total?: number | null;
     };
   }
 
