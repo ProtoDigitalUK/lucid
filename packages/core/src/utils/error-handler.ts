@@ -147,16 +147,9 @@ const errorLogger = (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, message, status, code } = decodeError(error);
+  // const { name, message, status, code } = decodeError(error);
 
-  console.error(
-    red(
-      `[${new Date().toISOString()}] ${req.method} ${
-        req.path
-      } - ${status} : ${code} - ${name} : ${message} 
-      `
-    )
-  );
+  console.error(error);
   next(error);
 };
 

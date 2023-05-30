@@ -25,6 +25,8 @@ interface QueryBuilderConfig {
           | "@>";
         type: "int" | "string" | "boolean";
         columnType: "array" | "standard";
+        table?: string;
+        exclude?: boolean;
       };
     };
   };
@@ -96,14 +98,18 @@ export default class QueryBuilder {
         ? this.config.filter.meta[key]
         : undefined;
 
+      if (meta?.exclude) continue;
+
       const columnType = meta?.columnType || "standard";
+
+      const keyV = meta?.table ? `${meta?.table}.${key}` : key;
 
       switch (columnType) {
         // -------------------------------------------
         // Column Type Array
         case "array": {
           filterClauses.push(
-            `${key} ${meta?.operator || "@>"} $${this.values.length + 1}::${
+            `${keyV} ${meta?.operator || "@>"} $${this.values.length + 1}::${
               meta?.type || "int"
             }[]`
           );
@@ -117,7 +123,7 @@ export default class QueryBuilder {
         default: {
           if (Array.isArray(value)) {
             filterClauses.push(
-              `${key} = ANY($${this.values.length + 1}::${
+              `${keyV} = ANY($${this.values.length + 1}::${
                 meta?.type || "int"
               }[])`
             );
@@ -126,7 +132,7 @@ export default class QueryBuilder {
           }
           // Is Single Value
           filterClauses.push(
-            `${key} ${meta?.operator || "="} $${this.values.length + 1}`
+            `${keyV} ${meta?.operator || "="} $${this.values.length + 1}`
           );
           this.values.push(this.#parseSingleValue(value));
           break;

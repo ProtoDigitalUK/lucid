@@ -14,7 +14,7 @@ const body = z.object({
   excerpt: z.string().optional(),
   published: z.boolean().optional(),
   parent_id: z.number().optional(),
-  categories: z.array(z.number()).optional(),
+  category_ids: z.array(z.number()).optional(),
 });
 const query = z.object({});
 const params = z.object({});
@@ -35,7 +35,7 @@ const createSingle: Controller<
       excerpt: req.body.excerpt,
       published: req.body.published,
       parent_id: req.body.parent_id,
-      categories: req.body.categories,
+      category_ids: req.body.category_ids,
     });
 
     res.status(200).json(
