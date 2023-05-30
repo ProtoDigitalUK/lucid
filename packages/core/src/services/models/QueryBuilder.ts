@@ -20,8 +20,10 @@ interface QueryBuilderConfig {
           | "SIMILAR TO"
           | "~"
           | "~*"
-          | "BETWEEN";
+          | "BETWEEN"
+          | "IN";
         type: "int" | "string" | "boolean";
+        exclude?: boolean;
       };
     };
   };
@@ -92,6 +94,8 @@ export default class QueryBuilder {
       const meta = this.config.filter.meta
         ? this.config.filter.meta[key]
         : undefined;
+
+      if (meta?.exclude) continue;
 
       if (Array.isArray(value)) {
         filterClauses.push(

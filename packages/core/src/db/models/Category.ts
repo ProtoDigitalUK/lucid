@@ -8,7 +8,7 @@ import QueryBuilder from "@services/models/QueryBuilder";
 // Types
 interface QueryParamsGetMultiple extends ModelQueryParams {
   filter?: {
-    post_type_id?: string;
+    post_type_id?: Array<string>;
     title?: string;
   };
   sort?: Array<{

@@ -3,13 +3,19 @@ import { Request } from "express";
 import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
 import { CategoryT } from "@db/models/Category";
+import PageCategory from "@db/models/PageCategory";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
 
 // -------------------------------------------
 // Types
 interface QueryParamsGetMultiple extends ModelQueryParams {
-  filter?: {};
+  filter?: {
+    post_type_id?: string;
+    title?: string;
+    slug?: string;
+    category_id?: Array<string>;
+  };
   sort?: Array<{
     key: "created_at";
     value: "asc" | "desc";
@@ -86,18 +92,57 @@ export default class Page {
         "updated_at",
       ],
       exclude: undefined,
-      filter: undefined,
+      filter: {
+        data: filter,
+        meta: {
+          post_type_id: {
+            operator: "=",
+            type: "int",
+          },
+          title: {
+            operator: "ILIKE",
+            type: "string",
+          },
+          slug: {
+            operator: "ILIKE",
+            type: "string",
+          },
+          category_id: {
+            operator: "=",
+            type: "int",
+            exclude: true,
+          },
+        },
+      },
       sort: sort,
       page: page,
       per_page: per_page,
     });
     const { select, where, order, pagination } = QueryB.query;
 
-    // Get Categories
+    console.log(where);
+    console.log(QueryB.values);
+
+    // Get Pages
+    // TODO: add join for categories
+    // TODO: add join for post_type
+    // TODO: add join for bricks
     const pages = await client.query<PageT>({
-      text: `SELECT ${select} FROM lucid_pages ${where} ${order} ${pagination}`,
+      text: `SELECT 
+          ${select},
+          ARRAY_AGG(lucid_page_categories.category_id) AS category_ids
+        FROM 
+          lucid_pages
+        LEFT JOIN
+          lucid_page_categories ON lucid_pages.id = lucid_page_categories.page_id 
+        ${where}
+        GROUP BY lucid_pages.id
+        ${order}
+        ${pagination}`,
       values: QueryB.values,
     });
+
+    // AND lucid_page_categories.category_id IN (2)
 
     const count = await client.query<{ count: number }>({
       text: `SELECT COUNT(*) FROM lucid_pages ${where}`,
@@ -128,7 +173,7 @@ export default class Page {
 
     // Create page
     const page = await client.query<PageT>({
-      text: ` INSERT INTO lucid_pages (title, slug, full_slug, homepage, post_type_id, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      text: `INSERT INTO lucid_pages (title, slug, full_slug, homepage, post_type_id, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       values: [
         data.title,
         slug,
@@ -151,8 +196,15 @@ export default class Page {
       });
     }
 
-    // TODO: Add categories
-    // TODO: Add bricks
+    if (data.category_ids) {
+      await PageCategory.create({
+        page_id: page.rows[0].id,
+        category_ids: data.category_ids,
+        post_type_id: data.post_type_id,
+      });
+    }
+
+    // TODO: Add bricks via brick model
 
     // Reset homepages
     if (data.homepage) {
@@ -167,14 +219,14 @@ export default class Page {
     const values: Array<any> = [slug];
     if (parent_id) values.push(parent_id);
     const slugCount = await client.query<{ count: number }>({
-      text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 ${
+      // where slug is like, slug-example, slug-example-1, slug-example-2
+      text: `SELECT COUNT(*) FROM lucid_pages WHERE slug ~ '^${slug}-\\d+$' OR slug = $1 ${
         parent_id ? `AND parent_id = $2` : `AND parent_id IS NULL`
       }`,
       values: values,
     });
-    if (slugCount.rows[0].count >= 1) {
+    if (slugCount.rows[0].count >= 1)
       return `${slug}-${slugCount.rows[0].count}`;
-    }
     return slug;
   };
   static checkParentNotHomepage = async (parent_id: number | null) => {
