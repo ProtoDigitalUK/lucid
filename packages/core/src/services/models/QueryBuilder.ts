@@ -21,9 +21,10 @@ interface QueryBuilderConfig {
           | "~"
           | "~*"
           | "BETWEEN"
-          | "IN";
+          | "IN"
+          | "@>";
         type: "int" | "string" | "boolean";
-        exclude?: boolean;
+        columnType: "array" | "standard";
       };
     };
   };
@@ -95,20 +96,42 @@ export default class QueryBuilder {
         ? this.config.filter.meta[key]
         : undefined;
 
-      if (meta?.exclude) continue;
+      const columnType = meta?.columnType || "standard";
 
-      if (Array.isArray(value)) {
-        filterClauses.push(
-          `${key} = ANY($${this.values.length + 1}::${meta?.type || "int"}[])`
-        );
-        this.values.push(this.#parseArrayValues(value));
-        continue;
+      switch (columnType) {
+        // -------------------------------------------
+        // Column Type Array
+        case "array": {
+          filterClauses.push(
+            `${key} ${meta?.operator || "@>"} $${this.values.length + 1}::${
+              meta?.type || "int"
+            }[]`
+          );
+          this.values.push(
+            this.#parseArrayValues(Array.isArray(value) ? value : [value])
+          );
+          break;
+        }
+        // -------------------------------------------
+        // Column Type Standard
+        default: {
+          if (Array.isArray(value)) {
+            filterClauses.push(
+              `${key} = ANY($${this.values.length + 1}::${
+                meta?.type || "int"
+              }[])`
+            );
+            this.values.push(this.#parseArrayValues(value));
+            break;
+          }
+          // Is Single Value
+          filterClauses.push(
+            `${key} ${meta?.operator || "="} $${this.values.length + 1}`
+          );
+          this.values.push(this.#parseSingleValue(value));
+          break;
+        }
       }
-
-      filterClauses.push(
-        `${key} ${meta?.operator || "="} $${this.values.length + 1}`
-      );
-      this.values.push(this.#parseSingleValue(value));
     }
 
     this.query.where =

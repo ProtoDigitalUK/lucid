@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   full_slug TEXT NOT NULL, -- kept unqiue in code
   homepage BOOLEAN DEFAULT FALSE,
   excerpt TEXT,
+  categories INTEGER[],
   
   published BOOLEAN DEFAULT FALSE,
   published_at TIMESTAMP,
@@ -42,11 +43,3 @@ CREATE TABLE IF NOT EXISTS lucid_categories (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
-
--- PAGE CATEGORIES TABLE
-CREATE TABLE IF NOT EXISTS lucid_page_categories (
-  page_id INTEGER NOT NULL REFERENCES lucid_pages(id) ON DELETE CASCADE,
-  category_id INTEGER NOT NULL REFERENCES lucid_categories(id) ON DELETE CASCADE,
-  PRIMARY KEY (page_id, category_id)
-);
-
