@@ -123,11 +123,7 @@ export default class Page {
     });
     const { select, where, order, pagination } = QueryB.query;
 
-    console.log(where);
-    console.log(QueryB.values);
-
     // Get Pages
-    // TODO: add join for categories
     // TODO: add join for post_type
     // TODO: add join for bricks
     const pages = await client.query<PageT>({
