@@ -1,3 +1,5 @@
+import { ConfigT } from "./services/Config";
+export type { ConfigT as Config };
 declare const _default: {
     start: () => Promise<void>;
 };

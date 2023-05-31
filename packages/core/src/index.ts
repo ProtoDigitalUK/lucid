@@ -1,9 +1,11 @@
 require("dotenv").config();
 import http from "http";
 import { log } from "console-log-colors";
-import Config from "@services/Config";
+import Config, { ConfigT } from "@services/Config";
 import app from "./app";
 
+// ------------------------------------
+// Start server
 const start = async () => {
   const server = http.createServer(await app());
 
@@ -16,6 +18,10 @@ const start = async () => {
     log.white("----------------------------------------------------");
   });
 };
+
+// ------------------------------------
+// Export
+export type { ConfigT as Config };
 
 export default {
   start,
