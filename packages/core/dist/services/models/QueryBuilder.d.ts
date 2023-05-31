@@ -7,8 +7,11 @@ interface QueryBuilderConfig {
         };
         meta?: {
             [key: string]: {
-                operator: "=" | "!=" | "<" | ">" | "<=" | ">=" | "||" | "LIKE" | "ILIKE" | "SIMILAR TO" | "~" | "~*" | "BETWEEN";
+                operator: "=" | "!=" | "<" | ">" | "<=" | ">=" | "||" | "LIKE" | "ILIKE" | "SIMILAR TO" | "~" | "~*" | "BETWEEN" | "IN" | "@>";
                 type: "int" | "string" | "boolean";
+                columnType: "array" | "standard";
+                table?: string;
+                exclude?: boolean;
             };
         };
     };

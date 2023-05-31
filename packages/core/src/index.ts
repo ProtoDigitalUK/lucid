@@ -1,23 +1,22 @@
 require("dotenv").config();
 import http from "http";
 import { log } from "console-log-colors";
-import { type ConfigT } from "@db/models/Config";
+import Config from "@services/Config";
 import app from "./app";
-// Internal packages
-import BrickBuilder from "@lucid/brick-builder";
 
-const start = async (config: ConfigT) => {
-  const server = http.createServer(await app(config));
+const start = async () => {
+  const server = http.createServer(await app());
 
   // ------------------------------------
   // Start server
-  server.listen(config.port, () => {
+  server.listen(Config.get().port, () => {
     log.white("----------------------------------------------------");
-    log.yellow(`CMS started at: http://localhost:${config.port}`);
-    log.yellow(`API started at: http://localhost:${config.port}/api`);
+    log.yellow(`CMS started at: http://localhost:${Config.get().port}`);
+    log.yellow(`API started at: http://localhost:${Config.get().port}/api`);
     log.white("----------------------------------------------------");
   });
 };
 
-export { BrickBuilder };
-export default start;
+export default {
+  start,
+};

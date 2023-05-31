@@ -1,7 +1,7 @@
 import client from "@db/db";
 import { LucidError } from "@utils/error-handler";
 // Models
-import Config from "./Config";
+import Config from "@services/Config";
 
 // -------------------------------------------
 // Types

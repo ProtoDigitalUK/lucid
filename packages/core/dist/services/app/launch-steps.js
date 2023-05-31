@@ -8,7 +8,7 @@ const User_1 = __importDefault(require("../../db/models/User"));
 const Option_1 = __importDefault(require("../../db/models/Option"));
 const Permission_1 = __importDefault(require("../../db/models/Permission"));
 const PostType_1 = __importDefault(require("../../db/models/PostType"));
-const Config_1 = __importDefault(require("../../db/models/Config"));
+const Config_1 = __importDefault(require("../Config"));
 const createFixOptions = async () => {
     await Option_1.default.create({
         name: "initial_user_created",

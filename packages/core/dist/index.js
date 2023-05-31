@@ -3,21 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BrickBuilder = void 0;
 require("dotenv").config();
 const http_1 = __importDefault(require("http"));
 const console_log_colors_1 = require("console-log-colors");
+const Config_1 = __importDefault(require("./services/Config"));
 const app_1 = __importDefault(require("./app"));
-const brick_builder_1 = __importDefault(require("@lucid/brick-builder"));
-exports.BrickBuilder = brick_builder_1.default;
-const start = async (config) => {
-    const server = http_1.default.createServer(await (0, app_1.default)(config));
-    server.listen(config.port, () => {
+const start = async () => {
+    const server = http_1.default.createServer(await (0, app_1.default)());
+    server.listen(Config_1.default.get().port, () => {
         console_log_colors_1.log.white("----------------------------------------------------");
-        console_log_colors_1.log.yellow(`CMS started at: http://localhost:${config.port}`);
-        console_log_colors_1.log.yellow(`API started at: http://localhost:${config.port}/api`);
+        console_log_colors_1.log.yellow(`CMS started at: http://localhost:${Config_1.default.get().port}`);
+        console_log_colors_1.log.yellow(`API started at: http://localhost:${Config_1.default.get().port}/api`);
         console_log_colors_1.log.white("----------------------------------------------------");
     });
 };
-exports.default = start;
+exports.default = {
+    start,
+};
 //# sourceMappingURL=index.js.map

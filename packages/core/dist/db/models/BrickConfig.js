@@ -6,6 +6,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const fuse_js_1 = __importDefault(require("fuse.js"));
 const error_handler_1 = require("../../utils/error-handler");
+const Config_1 = __importDefault(require("../../services/Config"));
 class BrickConfig {
 }
 _a = BrickConfig;
@@ -63,7 +64,7 @@ BrickConfig.validData = async (req, data) => {
     return validatedData;
 };
 BrickConfig.getBrickConfig = (req) => {
-    const brickInstances = req.app.get("bricks");
+    const brickInstances = Config_1.default.get().bricks;
     if (!brickInstances) {
         return [];
     }

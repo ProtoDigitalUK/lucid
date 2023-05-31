@@ -1,3 +1,2 @@
-import { type ConfigT } from "./db/models/Config";
-export declare const config: ConfigT;
+export {};
 //# sourceMappingURL=dev.d.ts.map

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const pg_1 = require("pg");
-const Config_1 = __importDefault(require("./models/Config"));
+const Config_1 = __importDefault(require("../services/Config"));
 const client = new pg_1.Client({
     connectionString: Config_1.default.databaseUrl,
     ssl: {

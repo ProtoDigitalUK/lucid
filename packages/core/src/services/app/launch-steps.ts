@@ -4,7 +4,7 @@ import User from "@db/models/User";
 import Option from "@db/models/Option";
 import Permission from "@db/models/Permission";
 import PostType from "@db/models/PostType";
-import Config from "@db/models/Config";
+import Config from "@services/Config";
 
 const createFixOptions = async () => {
   // this is only created if the option doesnt exist, if it does it will already be true and locked

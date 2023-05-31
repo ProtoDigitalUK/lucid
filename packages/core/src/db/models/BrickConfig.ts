@@ -1,6 +1,7 @@
 import Fuse from "fuse.js";
 import { Request } from "express";
 import { LucidError } from "@utils/error-handler";
+import Config from "@services/Config";
 // Internal packages
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 
@@ -108,7 +109,7 @@ export default class BrickConfig {
   // -------------------------------------------
   // Util Methods
   static getBrickConfig = (req: Request): BrickBuilderT[] => {
-    const brickInstances = req.app.get("bricks") as BrickBuilderT[];
+    const brickInstances = Config.get().bricks;
 
     if (!brickInstances) {
       return [];

@@ -5,7 +5,7 @@ import { log } from "console-log-colors";
 import path from "path";
 import cookieParser from "cookie-parser";
 // internal
-import Config, { type ConfigT } from "@db/models/Config";
+import Config from "@services/Config";
 import launchSteps from "@services/app/launch-steps";
 import migrateDB from "@db/migration";
 import initRoutes from "@routes/index";
@@ -15,15 +15,8 @@ import {
   invalidPathHandler,
 } from "@utils/error-handler";
 
-const app = async (config: ConfigT) => {
+const app = async () => {
   const app = express();
-
-  // ------------------------------------
-  // Config
-  log.white("----------------------------------------------------");
-  await Config.validate(config);
-  await Config.set(app, config);
-  log.yellow("Config initialised");
 
   // ------------------------------------
   // Server wide middleware
@@ -31,13 +24,13 @@ const app = async (config: ConfigT) => {
   app.use(express.json());
   app.use(
     cors({
-      origin: config.origin,
+      origin: Config.get().origin,
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   );
   app.use(morgan("dev"));
-  app.use(cookieParser(Config.secretKey));
+  app.use(cookieParser(Config.get().secretKey));
   log.yellow("Middleware configured");
 
   // ------------------------------------

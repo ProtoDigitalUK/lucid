@@ -1,6 +1,5 @@
-import { type ConfigT } from "./db/models/Config";
-import BrickBuilder from "@lucid/brick-builder";
-declare const start: (config: ConfigT) => Promise<void>;
-export { BrickBuilder };
-export default start;
+declare const _default: {
+    start: () => Promise<void>;
+};
+export default _default;
 //# sourceMappingURL=index.d.ts.map

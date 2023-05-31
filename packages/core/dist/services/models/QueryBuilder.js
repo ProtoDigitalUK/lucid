@@ -66,13 +66,27 @@ _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _Q
         const meta = this.config.filter.meta
             ? this.config.filter.meta[key]
             : undefined;
-        if (Array.isArray(value)) {
-            filterClauses.push(`${key} = ANY($${this.values.length + 1}::${meta?.type || "int"}[])`);
-            this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseArrayValues).call(this, value));
+        if (meta?.exclude)
             continue;
+        const columnType = meta?.columnType || "standard";
+        const keyV = meta?.table ? `${meta?.table}.${key}` : key;
+        switch (columnType) {
+            case "array": {
+                filterClauses.push(`${keyV} ${meta?.operator || "@>"} $${this.values.length + 1}::${meta?.type || "int"}[]`);
+                this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseArrayValues).call(this, Array.isArray(value) ? value : [value]));
+                break;
+            }
+            default: {
+                if (Array.isArray(value)) {
+                    filterClauses.push(`${keyV} = ANY($${this.values.length + 1}::${meta?.type || "int"}[])`);
+                    this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseArrayValues).call(this, value));
+                    break;
+                }
+                filterClauses.push(`${keyV} ${meta?.operator || "="} $${this.values.length + 1}`);
+                this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseSingleValue).call(this, value));
+                break;
+            }
         }
-        filterClauses.push(`${key} ${meta?.operator || "="} $${this.values.length + 1}`);
-        this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseSingleValue).call(this, value));
     }
     this.query.where =
         filterClauses.length > 0 ? "WHERE " + filterClauses.join(" AND ") : "";

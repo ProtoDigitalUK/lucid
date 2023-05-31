@@ -106,9 +106,7 @@ const modelErrors = (error) => {
 };
 exports.modelErrors = modelErrors;
 const errorLogger = (error, req, res, next) => {
-    const { name, message, status, code } = decodeError(error);
-    console.error((0, console_log_colors_1.red)(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${status} : ${code} - ${name} : ${message} 
-      `));
+    console.error(error);
     next(error);
 };
 exports.errorLogger = errorLogger;

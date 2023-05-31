@@ -6,7 +6,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
-const Config_1 = __importDefault(require("./Config"));
+const Config_1 = __importDefault(require("../../services/Config"));
 class PostType {
 }
 _a = PostType;

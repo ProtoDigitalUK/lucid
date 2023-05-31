@@ -20,7 +20,7 @@ const authenticate = async (
     }
 
     const user = await client.query({
-      text: `SELECT * FROM lucid_users WHERE id = $1`,
+      text: `SELECT id FROM lucid_users WHERE id = $1`,
       values: [authenticateJWT.data.id],
     });
 

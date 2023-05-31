@@ -29,10 +29,12 @@ Category.getMultiple = async (req) => {
                 post_type_id: {
                     operator: "=",
                     type: "int",
+                    columnType: "standard",
                 },
                 title: {
                     operator: "ILIKE",
                     type: "string",
+                    columnType: "standard",
                 },
             },
         },

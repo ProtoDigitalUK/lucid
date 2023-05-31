@@ -1,9 +1,9 @@
-import { Express } from "express";
 import { BrickBuilderT } from "@lucid/brick-builder";
 export type ConfigT = {
     port: number;
     origin?: string;
     environment: "development" | "production";
+    databaseUrl: string;
     secretKey: string;
     postTypes: Array<{
         key: string;
@@ -12,13 +12,12 @@ export type ConfigT = {
     }>;
     bricks?: BrickBuilderT[];
 };
-type ConfigValidate = (config: ConfigT) => Promise<void>;
-type ConfigSet = (app: Express, config: ConfigT) => Promise<void>;
-type ConfigGet = () => ConfigT;
 export default class Config {
-    static validate: ConfigValidate;
-    static set: ConfigSet;
-    static get: ConfigGet;
+    private static _configCache;
+    static buildConfig: (config: ConfigT) => ConfigT;
+    static validate: (config: ConfigT) => void;
+    static findPath: (cwd: string) => string;
+    static get: () => ConfigT;
     static get secretKey(): string;
     static get environment(): "development" | "production";
     static get databaseUrl(): string;
@@ -28,5 +27,4 @@ export default class Config {
         singularName: string;
     }[];
 }
-export {};
 //# sourceMappingURL=Config.d.ts.map

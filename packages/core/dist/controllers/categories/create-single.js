@@ -9,7 +9,7 @@ const Category_1 = __importDefault(require("../../db/models/Category"));
 const body = zod_1.default.object({
     post_type_id: zod_1.default.number().int(),
     title: zod_1.default.string(),
-    slug: zod_1.default.string().min(4).toLowerCase(),
+    slug: zod_1.default.string().min(2).toLowerCase(),
     description: zod_1.default.string().optional(),
 });
 const query = zod_1.default.object({});

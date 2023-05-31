@@ -8,7 +8,7 @@ const build_response_1 = __importDefault(require("../../services/controllers/bui
 const Category_1 = __importDefault(require("../../db/models/Category"));
 const body = zod_1.default.object({
     title: zod_1.default.string().optional(),
-    slug: zod_1.default.string().min(4).toLowerCase().optional(),
+    slug: zod_1.default.string().min(2).toLowerCase().optional(),
     description: zod_1.default.string().optional(),
 });
 const query = zod_1.default.object({});
