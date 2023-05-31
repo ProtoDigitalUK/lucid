@@ -14,8 +14,7 @@ export type ConfigT = {
 };
 export default class Config {
     private static _configCache;
-    static buildConfig: (config: ConfigT) => ConfigT;
-    static validate: (config: ConfigT) => void;
+    static validate: () => void;
     static findPath: (cwd: string) => string;
     static get: () => ConfigT;
     static get secretKey(): string;

@@ -42,13 +42,9 @@ export default class Config {
   private static _configCache: ConfigT | null = null;
   // -------------------------------------------
   // Public
-  static buildConfig = (config: ConfigT) => {
-    console.log("buildConfig");
-    // validate config
-    Config.validate(config);
-    return config;
-  };
-  public static validate = (config: ConfigT): void => {
+  public static validate = (): void => {
+    const config = Config.get();
+
     // TODO: Format errors for better readability
     configSchema.parse(config);
 

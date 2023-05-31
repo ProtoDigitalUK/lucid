@@ -35,12 +35,8 @@ class Config {
     }
 }
 Config._configCache = null;
-Config.buildConfig = (config) => {
-    console.log("buildConfig");
-    Config.validate(config);
-    return config;
-};
-Config.validate = (config) => {
+Config.validate = () => {
+    const config = Config.get();
     configSchema.parse(config);
     if (!config.bricks)
         return;

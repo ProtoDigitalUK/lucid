@@ -16,6 +16,7 @@ const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/error-handler");
 const app = async () => {
     const app = (0, express_1.default)();
+    Config_1.default.validate();
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use(express_1.default.json());
     app.use((0, cors_1.default)({

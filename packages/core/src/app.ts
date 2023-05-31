@@ -19,6 +19,10 @@ const app = async () => {
   const app = express();
 
   // ------------------------------------
+  // Config
+  Config.validate();
+
+  // ------------------------------------
   // Server wide middleware
   log.white("----------------------------------------------------");
   app.use(express.json());

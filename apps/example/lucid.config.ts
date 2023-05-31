@@ -1,5 +1,4 @@
 import BrickBuilder from "@lucid/brick-builder";
-import ConfigNew from "@lucid/core/dist/services/Config";
 
 // ----------------------------------------------
 // Define Bricks
@@ -50,7 +49,7 @@ const introBrick = new BrickBuilder("intro")
     key: "intro",
   });
 
-export default ConfigNew.buildConfig({
+export default {
   databaseUrl: process.env.LUCID_database_url as string,
   port: 8393,
   origin: "*",
@@ -64,4 +63,4 @@ export default ConfigNew.buildConfig({
     },
   ],
   bricks: [bannerBrick, introBrick],
-});
+};
