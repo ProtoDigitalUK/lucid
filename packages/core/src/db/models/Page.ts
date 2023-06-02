@@ -1,9 +1,10 @@
 import client from "@db/db";
-import { Request, query } from "express";
+import { Request } from "express";
 import { LucidError } from "@utils/error-handler";
 // Models
 import { CategoryT } from "@db/models/Category";
-import PageCategory from "./PageCategory";
+import PageCategory from "@db/models/PageCategory";
+import Collection from "@db/models/Collection";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
 
@@ -11,7 +12,7 @@ import QueryBuilder from "@services/models/QueryBuilder";
 // Types
 interface QueryParamsGetMultiple extends ModelQueryParams {
   filter?: {
-    post_type_id?: string;
+    collection_key?: string;
     title?: string;
     slug?: string;
     category_id?: string | Array<string>;
@@ -34,7 +35,7 @@ type PageCreate = (
   data: {
     title: string;
     slug: string;
-    post_type_id: number;
+    collection_key: string;
     homepage?: boolean;
     excerpt?: string;
     published?: boolean;
@@ -47,8 +48,8 @@ type PageCreate = (
 // User
 export type PageT = {
   id: number;
-  post_type_id: number;
   parent_id: number | null;
+  collection_key: string;
 
   title: string;
   slug: string;
@@ -77,7 +78,7 @@ export default class Page {
     const QueryB = new QueryBuilder({
       columns: [
         "id",
-        "post_type_id",
+        "collection_key",
         "parent_id",
         "title",
         "slug",
@@ -95,9 +96,9 @@ export default class Page {
       filter: {
         data: filter,
         meta: {
-          post_type_id: {
+          collection_key: {
             operator: "=",
-            type: "int",
+            type: "string",
             columnType: "standard",
           },
           title: {
@@ -160,13 +161,34 @@ export default class Page {
     };
   };
   static create: PageCreate = async (req, data) => {
+    // -------------------------------------------
+    // Values
+    // Set parent id to null if homepage as homepage has to be root level
+    const parentId = data.homepage ? null : data.parent_id || null;
+
+    // -------------------------------------------
+    // Checks
+    // Check if the collection exists and is the correct type
+    const collectionFound = await Collection.findCollection(
+      data.collection_key,
+      "multiple"
+    );
+    if (!collectionFound) {
+      throw new LucidError({
+        type: "basic",
+        name: "Collection not found",
+        message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+        status: 404,
+      });
+    }
+
     // Check if the the parent_id is the homepage
     await Page.checkParentNotHomepage(data.parent_id || null);
 
-    // Set parent id to null if homepage as homepage has to be root level
-    const parentId = data.homepage ? null : data.parent_id || null;
-    // Check if the parent is the same page type
-    if (parentId) await Page.checkParentIsSameType(parentId, data.post_type_id);
+    // Check if the parent is in the same collection
+    if (parentId) {
+      await Page.isParentSameCollection(parentId, data.collection_key);
+    }
     // Check if slug is unique
     const slug = await Page.slugUnique(data.slug, parentId);
     // Generate full slug
@@ -176,15 +198,16 @@ export default class Page {
       data.homepage || false
     );
 
+    // -------------------------------------------
     // Create page
     const page = await client.query<PageT>({
-      text: `INSERT INTO lucid_pages (title, slug, full_slug, homepage, post_type_id, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      text: `INSERT INTO lucid_pages (title, slug, full_slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       values: [
         data.title,
         slug,
         fullSlug,
         data.homepage || false,
-        data.post_type_id,
+        data.collection_key,
         data.excerpt || null,
         data.published || false,
         parentId,
@@ -205,7 +228,7 @@ export default class Page {
       await PageCategory.create({
         page_id: page.rows[0].id,
         category_ids: data.category_ids,
-        post_type_id: data.post_type_id,
+        collection_key: data.collection_key,
       });
     }
 
@@ -254,21 +277,22 @@ export default class Page {
       });
     }
   };
-  static checkParentIsSameType = async (
+  static isParentSameCollection = async (
     parent_id: number,
-    post_type_id: number
+    collection_key: string
   ) => {
-    const parent = await client.query<{ post_type_id: number }>({
-      text: `SELECT post_type_id FROM lucid_pages WHERE id = $1`,
+    // Check if the parent is apart of the same collection
+    const parent = await client.query<{ collection_key: string }>({
+      text: `SELECT collection_key FROM lucid_pages WHERE id = $1`,
       values: [parent_id],
     });
 
-    if (parent.rows[0].post_type_id !== post_type_id) {
+    if (parent.rows[0].collection_key !== collection_key) {
       throw new LucidError({
         type: "basic",
-        name: "Parent Type Mismatch",
+        name: "Parent Collection Mismatch",
         message:
-          "The parent page must be the same page type as the page you are creating!",
+          "The parent page must be in the same collection as the page you are creating!",
         status: 400,
       });
     }

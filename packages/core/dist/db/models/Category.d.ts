@@ -5,7 +5,7 @@ type CategoryGetMultiple = (req: Request) => Promise<{
     count: number;
 }>;
 type CategoryCreate = (data: {
-    post_type_id: number;
+    collection_key: string;
     title: string;
     slug: string;
     description?: string;
@@ -18,7 +18,7 @@ type CategoryUpdate = (id: number, data: {
 type CategoryDelete = (id: number) => Promise<CategoryT>;
 export type CategoryT = {
     id: number;
-    post_type_id: number;
+    collection_key: string;
     title: string;
     slug: string;
     description: string | null;
@@ -31,7 +31,7 @@ export default class Category {
     static create: CategoryCreate;
     static update: CategoryUpdate;
     static delete: CategoryDelete;
-    static isSlugUniqueInPostType: (post_type_id: number, slug: string, ignore_id?: number) => Promise<boolean>;
+    static isSlugUniqueInPostType: (collection_key: string, slug: string, ignore_id?: number) => Promise<boolean>;
 }
 export {};
 //# sourceMappingURL=Category.d.ts.map

@@ -7,7 +7,7 @@ import Category from "@db/models/Category";
 // --------------------------------------------------
 // Schema
 const body = z.object({
-  post_type_id: z.number().int(),
+  collection_key: z.string(),
   title: z.string(),
   slug: z.string().min(2).toLowerCase(),
   description: z.string().optional(),
@@ -24,7 +24,7 @@ const createSingle: Controller<
 > = async (req, res, next) => {
   try {
     const category = await Category.create({
-      post_type_id: req.body.post_type_id,
+      collection_key: req.body.collection_key,
       title: req.body.title,
       slug: req.body.slug,
       description: req.body.description,

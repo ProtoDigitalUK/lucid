@@ -2,7 +2,7 @@ import z from "zod";
 
 // ------------------------------------
 // Types & Interfaces
-interface BricConfig {}
+interface BrickConfig {}
 
 type FieldTypes =
   | "tab"
@@ -103,7 +103,9 @@ const BrickBuilder = class BrickBuilder {
   key: string;
   title: string;
   fields: Map<string, CustomField> = new Map();
-  constructor(key: string, config?: BricConfig) {
+  repeaterStack: string[] = [];
+  maxRepeaterDepth: number = 5;
+  constructor(key: string, config?: BrickConfig) {
     this.key = key;
     this.title = this.#keyToTitle(key);
   }
@@ -118,22 +120,38 @@ const BrickBuilder = class BrickBuilder {
     return this;
   }
   public endRepeater() {
+    // pop the last added repeater from the stack
+    const key = this.repeaterStack.pop();
+
+    if (!key) {
+      throw new Error("No open repeater to end.");
+    }
+
     const fields = Array.from(this.fields.values());
-    let lastRepeaterIndex = 0;
+    let selectedRepeaterIndex = 0;
     let repeaterKey = "";
-    // get last repeater index from map
+
+    // find the selected repeater
     for (let i = 0; i < fields.length; i++) {
-      if (fields[i].type === "repeater") {
-        lastRepeaterIndex = i;
+      if (fields[i].type === "repeater" && fields[i].key === key) {
+        selectedRepeaterIndex = i;
         repeaterKey = fields[i].key;
+        break;
       }
     }
 
-    const fieldsAfterLastRepeater = fields.slice(lastRepeaterIndex + 1);
+    if (!repeaterKey) {
+      throw new Error(`Repeater with key "${key}" does not exist.`);
+    }
+
+    const fieldsAfterSelectedRepeater = fields.slice(selectedRepeaterIndex + 1);
     const repeater = this.fields.get(repeaterKey);
     if (repeater) {
-      repeater.fields = fieldsAfterLastRepeater;
-      fieldsAfterLastRepeater.map((field) => {
+      // filter out tab fields
+      repeater.fields = fieldsAfterSelectedRepeater.filter(
+        (field) => field.type !== "tab"
+      );
+      fieldsAfterSelectedRepeater.map((field) => {
         this.fields.delete(field.key);
       });
     }
@@ -164,7 +182,15 @@ const BrickBuilder = class BrickBuilder {
   }
   public addRepeater(config: RepeaterConfig) {
     this.#checkKeyDuplication(config.key);
+    // check the current depth of nested repeaters
+    if (this.repeaterStack.length >= this.maxRepeaterDepth) {
+      throw new Error(
+        `Maximum repeater depth of ${this.maxRepeaterDepth} exceeded.`
+      );
+    }
     this.#addToFields("repeater", config);
+    // whenever a new repeater is added, push it to the repeater stack
+    this.repeaterStack.push(config.key);
     return this;
   }
   public addNumber(config: NumberConfig) {
@@ -197,21 +223,29 @@ const BrickBuilder = class BrickBuilder {
   get fieldTree() {
     // everything between two tabs should get removed and added to the tab fields array
     const fields = Array.from(this.fields.values());
-    const fieldTree = fields.reduce((acc, field) => {
-      if (field.type === "tab") {
-        acc.push(field);
-      } else {
-        const lastTab = acc[acc.length - 1];
-        if (lastTab) {
-          if (!lastTab.fields) {
-            lastTab.fields = [];
-          }
-          lastTab.fields.push(field);
+
+    let result: Array<CustomField> = [];
+    let currentTab: CustomField | null = null;
+
+    fields.forEach((item) => {
+      if (item.type === "tab") {
+        if (currentTab) {
+          result.push(currentTab);
         }
+        currentTab = { ...item, fields: [] };
+      } else if (currentTab) {
+        if (!currentTab.fields) currentTab.fields = [];
+        currentTab.fields.push(item);
+      } else {
+        result.push(item);
       }
-      return acc;
-    }, [] as Array<CustomField>);
-    return fieldTree;
+    });
+
+    if (currentTab) {
+      result.push(currentTab);
+    }
+
+    return result;
   }
   // ------------------------------------
   // External Methods
@@ -223,9 +257,13 @@ const BrickBuilder = class BrickBuilder {
   // Private Methods
   #keyToTitle(key: string) {
     if (typeof key !== "string") return key;
-    return key.replace(/-/g, " ").replace(/\w\S*/g, (w) => {
-      return w.replace(/^\w/, (c) => c.toUpperCase());
-    });
+
+    const title = key
+      .split(/[-_]/g) // split on hyphen or underscore
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // capitalize each word
+      .join(" "); // rejoin words with space
+
+    return title;
   }
   #addToFields(type: FieldTypes, config: FieldConfigs) {
     const noUndefinedConfig = Object.keys(config).reduce((acc, key) => {
@@ -259,7 +297,7 @@ const BrickBuilder = class BrickBuilder {
 
 // const bannerBrick = new BrickBuilder("banner")
 //   .addTab({
-//     key: "general",
+//     key: "content_tab",
 //   })
 //   .addText({
 //     key: "title",
@@ -293,6 +331,7 @@ const BrickBuilder = class BrickBuilder {
 //     description: "The title of the banner",
 //   });
 
+// // @ts-ignore
 // console.log(bannerBrick.fieldTree);
 
 export { BrickBuilderT, CustomField };

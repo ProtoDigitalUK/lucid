@@ -3,8 +3,6 @@ import { RuntimeError } from "@utils/error-handler";
 import User from "@db/models/User";
 import Option from "@db/models/Option";
 import Permission from "@db/models/Permission";
-import PostType from "@db/models/PostType";
-import Config from "@services/Config";
 
 const createFixOptions = async () => {
   // this is only created if the option doesnt exist, if it does it will already be true and locked
@@ -48,35 +46,11 @@ const createInitialAdmin = async () => {
   }
 };
 
-/*
-    Store config post types in the database, remove duplicates from config and add new page type
-*/
-const createPostTypes = async () => {
-  const allPostTypes = Config.postTypes;
-  const uniqueKeys = new Set();
-
-  allPostTypes.forEach((type) => {
-    uniqueKeys.add(type.key);
-  });
-
-  Array.from(uniqueKeys).forEach((key) => {
-    const configType = allPostTypes.find((type) => type.key === key);
-    if (!configType) return;
-
-    PostType.createOrUpdate({
-      key: configType.key,
-      name: configType.name,
-      singular_name: configType.singularName,
-    });
-  });
-};
-
 // Run all launch steps
 const launchSteps = async () => {
   try {
     await createFixOptions();
     await createInitialAdmin();
-    await createPostTypes();
   } catch (err) {
     new RuntimeError((err as Error).message);
   }

@@ -10,7 +10,7 @@ const body = z.object({});
 const query = z.object({
   filter: z
     .object({
-      post_type_id: z.union([z.string(), z.array(z.string())]).optional(),
+      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
       title: z.string().optional(),
       slug: z.string().optional(),
       category_id: z.union([z.string(), z.array(z.string())]).optional(),

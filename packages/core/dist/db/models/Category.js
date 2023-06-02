@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
 const QueryBuilder_1 = __importDefault(require("../../services/models/QueryBuilder"));
+const Collection_1 = __importDefault(require("../models/Collection"));
 class Category {
 }
 _a = Category;
@@ -15,7 +16,7 @@ Category.getMultiple = async (req) => {
     const QueryB = new QueryBuilder_1.default({
         columns: [
             "id",
-            "post_type_id",
+            "collection_key",
             "title",
             "slug",
             "description",
@@ -26,9 +27,9 @@ Category.getMultiple = async (req) => {
         filter: {
             data: filter,
             meta: {
-                post_type_id: {
+                collection_key: {
                     operator: "=",
-                    type: "int",
+                    type: "string",
                     columnType: "standard",
                 },
                 title: {
@@ -78,7 +79,16 @@ Category.getSingle = async (id) => {
     return category.rows[0];
 };
 Category.create = async (data) => {
-    const isSlugUnique = await Category.isSlugUniqueInPostType(data.post_type_id, data.slug);
+    const collectionFound = await Collection_1.default.findCollection(data.collection_key, "multiple");
+    if (!collectionFound) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Collection not found",
+            message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+            status: 404,
+        });
+    }
+    const isSlugUnique = await Category.isSlugUniqueInPostType(data.collection_key, data.slug);
     if (!isSlugUnique) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -95,8 +105,8 @@ Category.create = async (data) => {
     }
     const res = await db_1.default.query({
         name: "create-category",
-        text: `INSERT INTO lucid_categories(post_type_id, title, slug, description) VALUES($1, $2, $3, $4) RETURNING *`,
-        values: [data.post_type_id, data.title, data.slug, data.description],
+        text: `INSERT INTO lucid_categories(collection_key, title, slug, description) VALUES($1, $2, $3, $4) RETURNING *`,
+        values: [data.collection_key, data.title, data.slug, data.description],
     });
     const category = res.rows[0];
     if (!category) {
@@ -112,7 +122,7 @@ Category.create = async (data) => {
 Category.update = async (id, data) => {
     const currentCategory = await Category.getSingle(id);
     if (data.slug) {
-        const isSlugUnique = await Category.isSlugUniqueInPostType(currentCategory.post_type_id, data.slug, id);
+        const isSlugUnique = await Category.isSlugUniqueInPostType(currentCategory.collection_key, data.slug, id);
         if (!isSlugUnique) {
             throw new error_handler_1.LucidError({
                 type: "basic",
@@ -159,14 +169,14 @@ Category.delete = async (id) => {
     }
     return category.rows[0];
 };
-Category.isSlugUniqueInPostType = async (post_type_id, slug, ignore_id) => {
-    const values = [post_type_id, slug];
+Category.isSlugUniqueInPostType = async (collection_key, slug, ignore_id) => {
+    const values = [collection_key, slug];
     if (ignore_id) {
         values.push(ignore_id);
     }
     const res = await db_1.default.query({
         name: "is-slug-unique-in-post-type",
-        text: `SELECT * FROM lucid_categories WHERE post_type_id = $1 AND slug = $2 ${ignore_id ? "AND id != $3" : ""}`,
+        text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 ${ignore_id ? "AND id != $3" : ""}`,
         values: values,
     });
     const category = res.rows[0];

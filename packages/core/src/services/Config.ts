@@ -4,6 +4,7 @@ import z from "zod";
 import { RuntimeError } from "@utils/error-handler";
 // Internal packages
 import { BrickBuilderT } from "@lucid/brick-builder";
+import { CollectionBuilderT } from "@lucid/collection-builder";
 
 // -------------------------------------------
 // Config
@@ -13,13 +14,7 @@ const configSchema = z.object({
   environment: z.enum(["development", "production"]),
   databaseUrl: z.string(),
   secretKey: z.string(),
-  postTypes: z.array(
-    z.object({
-      key: z.string().refine((key) => key !== "page"),
-      name: z.string().refine((name) => name !== "Pages"),
-      singularName: z.string().refine((name) => name !== "Page"),
-    })
-  ),
+  collections: z.array(z.any()).optional(),
   bricks: z.array(z.any()).optional(),
 });
 
@@ -29,11 +24,7 @@ export type ConfigT = {
   environment: "development" | "production";
   databaseUrl: string;
   secretKey: string;
-  postTypes: Array<{
-    key: string;
-    name: string;
-    singularName: string;
-  }>;
+  collections?: CollectionBuilderT[];
   bricks?: BrickBuilderT[];
 };
 
@@ -48,15 +39,8 @@ export default class Config {
     // TODO: Format errors for better readability
     configSchema.parse(config);
 
-    // Validate brick keys for duplicates, data is validated in BrickBuilder already
-    if (!config.bricks) return;
-    const brickKeys = config.bricks.map((brick) => brick.key);
-    const uniqueBrickKeys = [...new Set(brickKeys)];
-    if (brickKeys.length !== uniqueBrickKeys.length) {
-      throw new RuntimeError(
-        "Each brick key must be unique, found duplicates in lucid.config.ts/js."
-      );
-    }
+    Config.#validateBricks(config);
+    Config.#validateCollections(config);
   };
   public static findPath = (cwd: string): string => {
     // if specified, use the specified path
@@ -127,7 +111,28 @@ export default class Config {
   static get databaseUrl() {
     return Config.get().databaseUrl;
   }
-  static get postTypes() {
-    return Config.get().postTypes;
+  // -------------------------------------------
+  // Private
+  static #validateBricks(config: ConfigT) {
+    if (!config.bricks) return;
+    const brickKeys = config.bricks.map((brick) => brick.key);
+    const uniqueBrickKeys = [...new Set(brickKeys)];
+    if (brickKeys.length !== uniqueBrickKeys.length) {
+      throw new RuntimeError(
+        "Each brick key must be unique, found duplicates in lucid.config.ts/js."
+      );
+    }
+  }
+  static #validateCollections(config: ConfigT) {
+    if (!config.collections) return;
+    const collectionKeys = config.collections.map(
+      (collection) => collection.key
+    );
+    const uniqueCollectionKeys = [...new Set(collectionKeys)];
+    if (collectionKeys.length !== uniqueCollectionKeys.length) {
+      throw new RuntimeError(
+        "Each collection key must be unique, found duplicates in lucid.config.ts/js."
+      );
+    }
   }
 }

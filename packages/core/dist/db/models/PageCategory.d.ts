@@ -1,7 +1,7 @@
 type PageCategoryCreate = (data: {
     page_id: number;
     category_ids: Array<number>;
-    post_type_id: number;
+    collection_key: string;
 }) => Promise<Array<PageCategoryT>>;
 export type PageCategoryT = {
     page_id: number;
@@ -10,7 +10,7 @@ export type PageCategoryT = {
 };
 export default class PageCategory {
     static create: PageCategoryCreate;
-    static checkCategoryPostType: (category_ids: Array<number>, post_type_id: number) => Promise<void>;
+    static checkCategoryPostType: (category_ids: Array<number>, collection_key: string) => Promise<void>;
 }
 export {};
 //# sourceMappingURL=PageCategory.d.ts.map

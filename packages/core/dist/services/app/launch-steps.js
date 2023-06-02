@@ -7,8 +7,6 @@ const error_handler_1 = require("../../utils/error-handler");
 const User_1 = __importDefault(require("../../db/models/User"));
 const Option_1 = __importDefault(require("../../db/models/Option"));
 const Permission_1 = __importDefault(require("../../db/models/Permission"));
-const PostType_1 = __importDefault(require("../../db/models/PostType"));
-const Config_1 = __importDefault(require("../Config"));
 const createFixOptions = async () => {
     await Option_1.default.create({
         name: "initial_user_created",
@@ -44,28 +42,10 @@ const createInitialAdmin = async () => {
         });
     }
 };
-const createPostTypes = async () => {
-    const allPostTypes = Config_1.default.postTypes;
-    const uniqueKeys = new Set();
-    allPostTypes.forEach((type) => {
-        uniqueKeys.add(type.key);
-    });
-    Array.from(uniqueKeys).forEach((key) => {
-        const configType = allPostTypes.find((type) => type.key === key);
-        if (!configType)
-            return;
-        PostType_1.default.createOrUpdate({
-            key: configType.key,
-            name: configType.name,
-            singular_name: configType.singularName,
-        });
-    });
-};
 const launchSteps = async () => {
     try {
         await createFixOptions();
         await createInitialAdmin();
-        await createPostTypes();
     }
     catch (err) {
         new error_handler_1.RuntimeError(err.message);

@@ -5,11 +5,14 @@ declare const _default: {
         query: z.ZodObject<{
             include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
             filter: z.ZodOptional<z.ZodObject<{
-                s: z.ZodString;
+                s: z.ZodOptional<z.ZodString>;
+                collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
             }, "strip", z.ZodTypeAny, {
-                s: string;
+                s?: string | undefined;
+                collection_key?: string | string[] | undefined;
             }, {
-                s: string;
+                s?: string | undefined;
+                collection_key?: string | string[] | undefined;
             }>>;
             sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 key: z.ZodEnum<["name"]>;
@@ -24,7 +27,8 @@ declare const _default: {
         }, "strip", z.ZodTypeAny, {
             include?: "fields"[] | undefined;
             filter?: {
-                s: string;
+                s?: string | undefined;
+                collection_key?: string | string[] | undefined;
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
@@ -33,7 +37,8 @@ declare const _default: {
         }, {
             include?: "fields"[] | undefined;
             filter?: {
-                s: string;
+                s?: string | undefined;
+                collection_key?: string | string[] | undefined;
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
@@ -45,11 +50,14 @@ declare const _default: {
     controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
         include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
         filter: z.ZodOptional<z.ZodObject<{
-            s: z.ZodString;
+            s: z.ZodOptional<z.ZodString>;
+            collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
         }, "strip", z.ZodTypeAny, {
-            s: string;
+            s?: string | undefined;
+            collection_key?: string | string[] | undefined;
         }, {
-            s: string;
+            s?: string | undefined;
+            collection_key?: string | string[] | undefined;
         }>>;
         sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
             key: z.ZodEnum<["name"]>;
@@ -64,7 +72,8 @@ declare const _default: {
     }, "strip", z.ZodTypeAny, {
         include?: "fields"[] | undefined;
         filter?: {
-            s: string;
+            s?: string | undefined;
+            collection_key?: string | string[] | undefined;
         } | undefined;
         sort?: {
             value: "desc" | "asc";
@@ -73,7 +82,8 @@ declare const _default: {
     }, {
         include?: "fields"[] | undefined;
         filter?: {
-            s: string;
+            s?: string | undefined;
+            collection_key?: string | string[] | undefined;
         } | undefined;
         sort?: {
             value: "desc" | "asc";

@@ -18,8 +18,5 @@
   ],
   "volta": {
     "node": "20.1.0"
-  },
-  "dependencies": {
-    "fuse.js": "^6.6.2"
   }
 }

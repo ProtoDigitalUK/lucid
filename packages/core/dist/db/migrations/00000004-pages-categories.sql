@@ -1,19 +1,8 @@
--- POST TYPES TABLE
-CREATE TABLE IF NOT EXISTS lucid_post_types (
-  id SERIAL PRIMARY KEY,
-
-  key TEXT UNIQUE NOT NULL,
-  name TEXT NOT NULL,
-  singular_name TEXT NOT NULL
-);
-
-INSERT INTO lucid_post_types (key, name, singular_name) VALUES ('page', 'Pages', 'Page');
-
--- PAGES TABLE
+-- PAGES TABLE - used for multiple collections
 CREATE TABLE IF NOT EXISTS lucid_pages (
   id SERIAL PRIMARY KEY,
-  post_type_id INTEGER NOT NULL REFERENCES lucid_post_types(id) ON DELETE CASCADE,
   parent_id INTEGER REFERENCES lucid_pages(id) ON DELETE SET NULL,
+  collection_key TEXT NOT NULL,
 
   title TEXT NOT NULL,
   slug TEXT NOT NULL,
@@ -30,13 +19,26 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+-- GROUP TABLE - used for single collections to show custom settings, footer, header pages etc
+CREATE TABLE IF NOT EXISTS lucid_groups (
+  id SERIAL PRIMARY KEY,
+  collection_key TEXT NOT NULL,
+
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
 -- CATEGORIES TABLE
 CREATE TABLE IF NOT EXISTS lucid_categories (
   id SERIAL PRIMARY KEY,
-  post_type_id INTEGER NOT NULL REFERENCES lucid_post_types(id) ON DELETE CASCADE,
+  collection_key TEXT NOT NULL,
 
   title TEXT NOT NULL,
-  slug TEXT NOT NULL,  -- unique per post type
+  slug TEXT NOT NULL,  -- unique collection_key
   description TEXT,
 
   created_at TIMESTAMP DEFAULT NOW(),

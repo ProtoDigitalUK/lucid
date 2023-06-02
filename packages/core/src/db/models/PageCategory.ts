@@ -7,7 +7,7 @@ import { LucidError, modelErrors } from "@utils/error-handler";
 type PageCategoryCreate = (data: {
   page_id: number;
   category_ids: Array<number>;
-  post_type_id: number;
+  collection_key: string;
 }) => Promise<Array<PageCategoryT>>;
 
 // -------------------------------------------
@@ -22,9 +22,9 @@ export default class PageCategory {
   // -------------------------------------------
   // Methods
   static create: PageCategoryCreate = async (data) => {
-    const { page_id, category_ids, post_type_id } = data;
+    const { page_id, category_ids, collection_key } = data;
 
-    await PageCategory.checkCategoryPostType(category_ids, post_type_id);
+    await PageCategory.checkCategoryPostType(category_ids, collection_key);
 
     const categories = await client.query<PageCategoryT>({
       text: `INSERT INTO lucid_page_categories (page_id, category_id) SELECT $1, id FROM lucid_categories WHERE id = ANY($2) RETURNING *`,
@@ -46,11 +46,11 @@ export default class PageCategory {
   // Util Methods
   static checkCategoryPostType = async (
     category_ids: Array<number>,
-    post_type_id: number
+    collection_key: string
   ) => {
     const res = await client.query<{ id: number }>({
-      text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND post_type_id = $2`,
-      values: [category_ids, post_type_id],
+      text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND collection_key = $2`,
+      values: [category_ids, collection_key],
     });
 
     if (res.rows.length !== category_ids.length) {
@@ -64,9 +64,9 @@ export default class PageCategory {
             code: "not_found",
             message: "Category not found.",
           },
-          post_type_id: {
+          collection_key: {
             code: "not_found",
-            message: "Post type not found.",
+            message: "Collection key not found.",
           },
         }),
       });

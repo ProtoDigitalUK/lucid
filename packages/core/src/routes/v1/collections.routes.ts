@@ -1,7 +1,7 @@
 import { Router } from "express";
 import r from "@utils/route";
 // Controller
-import getAll from "@controllers/post-types/get-all";
+import getAll from "@controllers/collections/get-all";
 
 // ------------------------------------
 // Router

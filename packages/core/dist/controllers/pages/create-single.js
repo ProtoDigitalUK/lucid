@@ -9,7 +9,7 @@ const Page_1 = __importDefault(require("../../db/models/Page"));
 const body = zod_1.default.object({
     title: zod_1.default.string().min(2),
     slug: zod_1.default.string().min(2).toLowerCase(),
-    post_type_id: zod_1.default.number(),
+    collection_key: zod_1.default.string(),
     homepage: zod_1.default.boolean().optional(),
     excerpt: zod_1.default.string().optional(),
     published: zod_1.default.boolean().optional(),
@@ -23,7 +23,7 @@ const createSingle = async (req, res, next) => {
         const page = await Page_1.default.create(req, {
             title: req.body.title,
             slug: req.body.slug,
-            post_type_id: req.body.post_type_id,
+            collection_key: req.body.collection_key,
             homepage: req.body.homepage,
             excerpt: req.body.excerpt,
             published: req.body.published,

@@ -7,7 +7,7 @@ type PageGetMultiple = (req: Request) => Promise<{
 type PageCreate = (req: Request, data: {
     title: string;
     slug: string;
-    post_type_id: number;
+    collection_key: string;
     homepage?: boolean;
     excerpt?: string;
     published?: boolean;
@@ -16,8 +16,8 @@ type PageCreate = (req: Request, data: {
 }) => Promise<PageT>;
 export type PageT = {
     id: number;
-    post_type_id: number;
     parent_id: number | null;
+    collection_key: string;
     title: string;
     slug: string;
     full_slug: string;
@@ -36,7 +36,7 @@ export default class Page {
     static create: PageCreate;
     static slugUnique: (slug: string, parent_id: number | null) => Promise<string>;
     static checkParentNotHomepage: (parent_id: number | null) => Promise<void>;
-    static checkParentIsSameType: (parent_id: number, post_type_id: number) => Promise<void>;
+    static isParentSameCollection: (parent_id: number, collection_key: string) => Promise<void>;
     static resetHomepages: (current: number) => Promise<void>;
     static computeFullSlug: (slug: string, parent_id: number | null, homepage: boolean) => Promise<string>;
 }

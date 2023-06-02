@@ -13,7 +13,7 @@ const params = zod_1.default.object({
 });
 const getSingle = async (req, res, next) => {
     try {
-        const brick = await BrickConfig_1.default.getSingle(req, req.params.key);
+        const brick = await BrickConfig_1.default.getSingle(req.params.key);
         res.status(200).json((0, build_response_1.default)(req, {
             data: brick,
         }));

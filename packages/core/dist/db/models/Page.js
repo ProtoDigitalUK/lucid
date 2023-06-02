@@ -6,7 +6,8 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
-const PageCategory_1 = __importDefault(require("./PageCategory"));
+const PageCategory_1 = __importDefault(require("../models/PageCategory"));
+const Collection_1 = __importDefault(require("../models/Collection"));
 const QueryBuilder_1 = __importDefault(require("../../services/models/QueryBuilder"));
 class Page {
 }
@@ -16,7 +17,7 @@ Page.getMultiple = async (req) => {
     const QueryB = new QueryBuilder_1.default({
         columns: [
             "id",
-            "post_type_id",
+            "collection_key",
             "parent_id",
             "title",
             "slug",
@@ -34,9 +35,9 @@ Page.getMultiple = async (req) => {
         filter: {
             data: filter,
             meta: {
-                post_type_id: {
+                collection_key: {
                     operator: "=",
-                    type: "int",
+                    type: "string",
                     columnType: "standard",
                 },
                 title: {
@@ -93,20 +94,30 @@ Page.getMultiple = async (req) => {
     };
 };
 Page.create = async (req, data) => {
-    await Page.checkParentNotHomepage(data.parent_id || null);
     const parentId = data.homepage ? null : data.parent_id || null;
-    if (parentId)
-        await Page.checkParentIsSameType(parentId, data.post_type_id);
+    const collectionFound = await Collection_1.default.findCollection(data.collection_key, "multiple");
+    if (!collectionFound) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Collection not found",
+            message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+            status: 404,
+        });
+    }
+    await Page.checkParentNotHomepage(data.parent_id || null);
+    if (parentId) {
+        await Page.isParentSameCollection(parentId, data.collection_key);
+    }
     const slug = await Page.slugUnique(data.slug, parentId);
     const fullSlug = await Page.computeFullSlug(slug, parentId, data.homepage || false);
     const page = await db_1.default.query({
-        text: `INSERT INTO lucid_pages (title, slug, full_slug, homepage, post_type_id, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+        text: `INSERT INTO lucid_pages (title, slug, full_slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         values: [
             data.title,
             slug,
             fullSlug,
             data.homepage || false,
-            data.post_type_id,
+            data.collection_key,
             data.excerpt || null,
             data.published || false,
             parentId,
@@ -125,7 +136,7 @@ Page.create = async (req, data) => {
         await PageCategory_1.default.create({
             page_id: page.rows[0].id,
             category_ids: data.category_ids,
-            post_type_id: data.post_type_id,
+            collection_key: data.collection_key,
         });
     }
     if (data.homepage) {
@@ -164,16 +175,16 @@ Page.checkParentNotHomepage = async (parent_id) => {
         });
     }
 };
-Page.checkParentIsSameType = async (parent_id, post_type_id) => {
+Page.isParentSameCollection = async (parent_id, collection_key) => {
     const parent = await db_1.default.query({
-        text: `SELECT post_type_id FROM lucid_pages WHERE id = $1`,
+        text: `SELECT collection_key FROM lucid_pages WHERE id = $1`,
         values: [parent_id],
     });
-    if (parent.rows[0].post_type_id !== post_type_id) {
+    if (parent.rows[0].collection_key !== collection_key) {
         throw new error_handler_1.LucidError({
             type: "basic",
-            name: "Parent Type Mismatch",
-            message: "The parent page must be the same page type as the page you are creating!",
+            name: "Parent Collection Mismatch",
+            message: "The parent page must be in the same collection as the page you are creating!",
             status: 400,
         });
     }

@@ -20,7 +20,7 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const brick = await BrickConfig.getSingle(req, req.params.key);
+    const brick = await BrickConfig.getSingle(req.params.key);
 
     res.status(200).json(
       buildResponse(req, {

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const route_1 = __importDefault(require("../../utils/route"));
-const get_all_1 = __importDefault(require("../../controllers/post-types/get-all"));
+const get_all_1 = __importDefault(require("../../controllers/collections/get-all"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
@@ -18,4 +18,4 @@ const router = (0, express_1.Router)();
     controller: get_all_1.default.controller,
 });
 exports.default = router;
-//# sourceMappingURL=post-types.routes.js.map
+//# sourceMappingURL=collections.routes.js.map
