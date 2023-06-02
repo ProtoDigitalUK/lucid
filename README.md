@@ -24,23 +24,23 @@ npm install @lucid/core @lucid/brick-builder @lucid/collection-builder
 
 ```ts
 import { type Config } from "@lucid/core";
+import { banner, intro, defaultMeta } from "./src/bricks";
+import { pages, settings } from "./src/collections";
 
-// ------------------------------------
-// Config
-const config: ConfigT = {
+const config: Config = {
   databaseUrl: process.env.LUCID_database_url as string,
   port: 8393,
   origin: "*",
   environment: "development",
-  secretKey: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
-  collections: [pageCollection, settingsCollection],
-  bricks: [bannerBrick, introBrick, defaultMetaBrick],
+  secretKey: process.env.SECRET_KEY as string,
+  collections: [pages, settings],
+  bricks: [banner, intro, defaultMeta],
 };
 
 export default config;
 ```
 
-> Check the example app for a more detailed showcase: [example](https://github.com/WillYallop/Lucid/tree/master/apps/example/lucid.config.ts)
+> Check the example app: [example](https://github.com/WillYallop/Lucid/tree/master/apps/example/lucid.config.ts)
 
 ## Logging In
 
