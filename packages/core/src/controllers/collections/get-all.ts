@@ -2,14 +2,19 @@ import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import PostType from "@db/models/PostType";
+import Collection from "@db/models/Collection";
 
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({});
+const query = z.object({
+  filter: z
+    .object({
+      type: z.enum(["single", "multiple"]),
+    })
+    .optional(),
+});
 const params = z.object({});
-// query
 
 // --------------------------------------------------
 // Controller
@@ -19,11 +24,11 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const postTypes = await PostType.getAll();
+    const collections = await Collection.getAll(req.query);
 
     res.status(200).json(
       buildResponse(req, {
-        data: postTypes,
+        data: collections,
       })
     );
   } catch (error) {

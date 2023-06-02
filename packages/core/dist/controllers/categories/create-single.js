@@ -7,7 +7,7 @@ const zod_1 = __importDefault(require("zod"));
 const build_response_1 = __importDefault(require("../../services/controllers/build-response"));
 const Category_1 = __importDefault(require("../../db/models/Category"));
 const body = zod_1.default.object({
-    post_type_id: zod_1.default.number().int(),
+    collection_key: zod_1.default.string(),
     title: zod_1.default.string(),
     slug: zod_1.default.string().min(2).toLowerCase(),
     description: zod_1.default.string().optional(),
@@ -17,7 +17,7 @@ const params = zod_1.default.object({});
 const createSingle = async (req, res, next) => {
     try {
         const category = await Category_1.default.create({
-            post_type_id: req.body.post_type_id,
+            collection_key: req.body.collection_key,
             title: req.body.title,
             slug: req.body.slug,
             description: req.body.description,

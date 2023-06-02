@@ -4,13 +4,13 @@ declare const _default: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         query: z.ZodObject<{
             filter: z.ZodOptional<z.ZodObject<{
-                post_type_id: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
+                collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
                 title: z.ZodOptional<z.ZodString>;
             }, "strip", z.ZodTypeAny, {
-                post_type_id?: string | string[] | undefined;
+                collection_key?: string | string[] | undefined;
                 title?: string | undefined;
             }, {
-                post_type_id?: string | string[] | undefined;
+                collection_key?: string | string[] | undefined;
                 title?: string | undefined;
             }>>;
             sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -27,7 +27,7 @@ declare const _default: {
             per_page: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             filter?: {
-                post_type_id?: string | string[] | undefined;
+                collection_key?: string | string[] | undefined;
                 title?: string | undefined;
             } | undefined;
             sort?: {
@@ -38,7 +38,7 @@ declare const _default: {
             per_page?: string | undefined;
         }, {
             filter?: {
-                post_type_id?: string | string[] | undefined;
+                collection_key?: string | string[] | undefined;
                 title?: string | undefined;
             } | undefined;
             sort?: {
@@ -52,13 +52,13 @@ declare const _default: {
     };
     controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
         filter: z.ZodOptional<z.ZodObject<{
-            post_type_id: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
+            collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
             title: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
-            post_type_id?: string | string[] | undefined;
+            collection_key?: string | string[] | undefined;
             title?: string | undefined;
         }, {
-            post_type_id?: string | string[] | undefined;
+            collection_key?: string | string[] | undefined;
             title?: string | undefined;
         }>>;
         sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -75,7 +75,7 @@ declare const _default: {
         per_page: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         filter?: {
-            post_type_id?: string | string[] | undefined;
+            collection_key?: string | string[] | undefined;
             title?: string | undefined;
         } | undefined;
         sort?: {
@@ -86,7 +86,7 @@ declare const _default: {
         per_page?: string | undefined;
     }, {
         filter?: {
-            post_type_id?: string | string[] | undefined;
+            collection_key?: string | string[] | undefined;
             title?: string | undefined;
         } | undefined;
         sort?: {

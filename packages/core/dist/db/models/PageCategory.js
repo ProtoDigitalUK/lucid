@@ -10,8 +10,8 @@ class PageCategory {
 }
 _a = PageCategory;
 PageCategory.create = async (data) => {
-    const { page_id, category_ids, post_type_id } = data;
-    await PageCategory.checkCategoryPostType(category_ids, post_type_id);
+    const { page_id, category_ids, collection_key } = data;
+    await PageCategory.checkCategoryPostType(category_ids, collection_key);
     const categories = await db_1.default.query({
         text: `INSERT INTO lucid_page_categories (page_id, category_id) SELECT $1, id FROM lucid_categories WHERE id = ANY($2) RETURNING *`,
         values: [page_id, category_ids],
@@ -26,10 +26,10 @@ PageCategory.create = async (data) => {
     }
     return categories.rows;
 };
-PageCategory.checkCategoryPostType = async (category_ids, post_type_id) => {
+PageCategory.checkCategoryPostType = async (category_ids, collection_key) => {
     const res = await db_1.default.query({
-        text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND post_type_id = $2`,
-        values: [category_ids, post_type_id],
+        text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND collection_key = $2`,
+        values: [category_ids, collection_key],
     });
     if (res.rows.length !== category_ids.length) {
         throw new error_handler_1.LucidError({
@@ -42,9 +42,9 @@ PageCategory.checkCategoryPostType = async (category_ids, post_type_id) => {
                     code: "not_found",
                     message: "Category not found.",
                 },
-                post_type_id: {
+                collection_key: {
                     code: "not_found",
-                    message: "Post type not found.",
+                    message: "Collection key not found.",
                 },
             }),
         });

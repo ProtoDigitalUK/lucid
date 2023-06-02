@@ -1,7 +1,8 @@
 import Fuse from "fuse.js";
-import { Request } from "express";
 import { LucidError } from "@utils/error-handler";
 import Config from "@services/Config";
+// Models
+import Collection from "./Collection";
 // Internal packages
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 
@@ -9,9 +10,9 @@ import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 // Types
 interface QueryParams extends ModelQueryParams {
   include?: Array<"fields">;
-  exclude?: Array<string>;
   filter?: {
     s?: string;
+    collection_key?: Array<string> | string;
   };
   sort?: Array<{
     key: "name";
@@ -19,18 +20,12 @@ interface QueryParams extends ModelQueryParams {
   }>;
 }
 
-type BrickConfigGetAll = (
-  req: Request,
-  query: QueryParams
-) => Promise<BrickConfigT[]>;
-type BrickConfigGetSingle = (
-  req: Request,
-  key: string
-) => Promise<BrickConfigT>;
-type BrickConfigValidData = (req: Request, data: any) => Promise<boolean>;
+type BrickConfigGetAll = (query: QueryParams) => Promise<BrickConfigT[]>;
+type BrickConfigGetSingle = (key: string) => Promise<BrickConfigT>;
+type BrickConfigValidData = (data: any) => Promise<boolean>;
 
 // -------------------------------------------
-// User
+// Brick Config
 export type BrickConfigT = {
   key: string;
   title: string;
@@ -40,8 +35,8 @@ export type BrickConfigT = {
 export default class BrickConfig {
   // -------------------------------------------
   // Methods
-  static getSingle: BrickConfigGetSingle = async (req, key) => {
-    const brickInstance = BrickConfig.getBrickConfig(req);
+  static getSingle: BrickConfigGetSingle = async (key) => {
+    const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) {
       throw new LucidError({
         type: "basic",
@@ -65,22 +60,25 @@ export default class BrickConfig {
 
     return brickData;
   };
-  static getAll: BrickConfigGetAll = async (req, query) => {
-    const brickInstance = BrickConfig.getBrickConfig(req);
+  static getAll: BrickConfigGetAll = async (query) => {
+    const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) return [];
 
     const bricks = await Promise.all(
       brickInstance.map((brick) => BrickConfig.getBrickData(brick, query))
     );
 
-    const filteredBricks = BrickConfig.filterBricks(query.filter, bricks);
-    const sortedBricks = BrickConfig.sortBricks(query.sort, filteredBricks);
+    const filteredBricks = await BrickConfig.#filterBricks(
+      query.filter,
+      bricks
+    );
+    const sortedBricks = BrickConfig.#sortBricks(query.sort, filteredBricks);
 
     return sortedBricks;
   };
   // TODO: Return to this method once page builder is implemented and we need to validate single brick data
-  static validData: BrickConfigValidData = async (req, data) => {
-    const brickInstances = BrickConfig.getBrickConfig(req);
+  static validData: BrickConfigValidData = async (data) => {
+    const brickInstances = BrickConfig.getBrickConfig();
     if (!brickInstances) {
       throw new LucidError({
         type: "basic",
@@ -108,7 +106,7 @@ export default class BrickConfig {
   };
   // -------------------------------------------
   // Util Methods
-  static getBrickConfig = (req: Request): BrickBuilderT[] => {
+  static getBrickConfig = (): BrickBuilderT[] => {
     const brickInstances = Config.get().bricks;
 
     if (!brickInstances) {
@@ -130,15 +128,13 @@ export default class BrickConfig {
 
     // Include fields
     if (query.include?.includes("fields")) data.fields = instance.fieldTree;
-    // Exclude fields
-    // if (query.exclude?.includes("fields")) delete data.fields;
 
     return data;
   };
 
   // -------------------------------------------
   // Query Methods
-  static searcBricks = (
+  static #searcBricks = (
     query: string,
     bricks: BrickConfigT[]
   ): BrickConfigT[] => {
@@ -153,24 +149,55 @@ export default class BrickConfig {
 
     return searchResults.map((r) => r.item);
   };
-  static filterBricks = (
+  static #filterBricks = async (
     filter: QueryParams["filter"],
     bricks: BrickConfigT[]
-  ): BrickConfigT[] => {
+  ): Promise<BrickConfigT[]> => {
     if (!filter) return bricks;
 
     let filteredBricks = [...bricks];
 
     // Run each possible filter
-    Object.keys(filter).forEach((f) => {
+    const keys = Object.keys(filter);
+    if (!keys.length) return filteredBricks;
+
+    // get collections
+    const collections = await Collection.getAll({});
+
+    keys.forEach((f) => {
       switch (f) {
         case "s":
           const searchQuery = filter[f];
           if (searchQuery)
-            filteredBricks = BrickConfig.searcBricks(
+            filteredBricks = BrickConfig.#searcBricks(
               searchQuery,
               filteredBricks
             );
+          break;
+        case "collection_key":
+          let collectionKeys = filter[f];
+          if (collectionKeys) {
+            // Get all collections
+            const permittedBricks: Array<string> = [];
+
+            // If single collection key, convert to array
+            if (!Array.isArray(collectionKeys)) {
+              collectionKeys = [collectionKeys];
+            }
+
+            // Get all bricks from permitted collections
+            collectionKeys.forEach((key) => {
+              const collection = collections.find((c) => c.key === key);
+              if (collection) {
+                permittedBricks.push(...collection.bricks);
+              }
+            });
+
+            // Filter bricks
+            filteredBricks = filteredBricks.filter((b) =>
+              permittedBricks.includes(b.key)
+            );
+          }
           break;
         default:
           break;
@@ -179,7 +206,7 @@ export default class BrickConfig {
 
     return filteredBricks;
   };
-  static sortBricks = (
+  static #sortBricks = (
     sort: QueryParams["sort"],
     bricks: BrickConfigT[]
   ): BrickConfigT[] => {

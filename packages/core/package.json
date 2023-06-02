@@ -19,8 +19,7 @@
     "dist/**",
     "cms/**"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "William Yallop",
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
@@ -48,6 +47,7 @@
   },
   "dependencies": {
     "@lucid/brick-builder": "*",
+    "@lucid/collection-builder": "*",
     "argon2": "^0.30.3",
     "console-log-colors": "^0.4.0",
     "cookie-parser": "^1.4.6",
@@ -56,6 +56,7 @@
     "express": "^4.18.2",
     "find-up": "^6.3.0",
     "fs-extra": "^11.1.1",
+    "fuse.js": "^6.6.2",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "pg": "^8.11.0",

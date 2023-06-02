@@ -9,7 +9,7 @@ import Page from "@db/models/Page";
 const body = z.object({
   title: z.string().min(2),
   slug: z.string().min(2).toLowerCase(),
-  post_type_id: z.number(),
+  collection_key: z.string(),
   homepage: z.boolean().optional(),
   excerpt: z.string().optional(),
   published: z.boolean().optional(),
@@ -30,7 +30,7 @@ const createSingle: Controller<
     const page = await Page.create(req, {
       title: req.body.title,
       slug: req.body.slug,
-      post_type_id: req.body.post_type_id,
+      collection_key: req.body.collection_key,
       homepage: req.body.homepage,
       excerpt: req.body.excerpt,
       published: req.body.published,

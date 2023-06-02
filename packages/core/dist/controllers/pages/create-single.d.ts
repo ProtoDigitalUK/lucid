@@ -4,15 +4,15 @@ declare const _default: {
         body: z.ZodObject<{
             title: z.ZodString;
             slug: z.ZodString;
-            post_type_id: z.ZodNumber;
+            collection_key: z.ZodString;
             homepage: z.ZodOptional<z.ZodBoolean>;
             excerpt: z.ZodOptional<z.ZodString>;
             published: z.ZodOptional<z.ZodBoolean>;
             parent_id: z.ZodOptional<z.ZodNumber>;
             category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
         }, "strip", z.ZodTypeAny, {
+            collection_key: string;
             title: string;
-            post_type_id: number;
             slug: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
@@ -20,8 +20,8 @@ declare const _default: {
             parent_id?: number | undefined;
             category_ids?: number[] | undefined;
         }, {
+            collection_key: string;
             title: string;
-            post_type_id: number;
             slug: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
@@ -35,15 +35,15 @@ declare const _default: {
     controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
         title: z.ZodString;
         slug: z.ZodString;
-        post_type_id: z.ZodNumber;
+        collection_key: z.ZodString;
         homepage: z.ZodOptional<z.ZodBoolean>;
         excerpt: z.ZodOptional<z.ZodString>;
         published: z.ZodOptional<z.ZodBoolean>;
         parent_id: z.ZodOptional<z.ZodNumber>;
         category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
     }, "strip", z.ZodTypeAny, {
+        collection_key: string;
         title: string;
-        post_type_id: number;
         slug: string;
         homepage?: boolean | undefined;
         excerpt?: string | undefined;
@@ -51,8 +51,8 @@ declare const _default: {
         parent_id?: number | undefined;
         category_ids?: number[] | undefined;
     }, {
+        collection_key: string;
         title: string;
-        post_type_id: number;
         slug: string;
         homepage?: boolean | undefined;
         excerpt?: string | undefined;

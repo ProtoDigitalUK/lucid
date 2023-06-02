@@ -3,12 +3,14 @@ import { Request } from "express";
 import { LucidError, modelErrors } from "@utils/error-handler";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
+// Models
+import Collection from "@db/models/Collection";
 
 // -------------------------------------------
 // Types
 interface QueryParamsGetMultiple extends ModelQueryParams {
   filter?: {
-    post_type_id?: Array<string>;
+    collection_key?: Array<string>;
     title?: string;
   };
   sort?: Array<{
@@ -26,7 +28,7 @@ type CategoryGetMultiple = (req: Request) => Promise<{
   count: number;
 }>;
 type CategoryCreate = (data: {
-  post_type_id: number;
+  collection_key: string;
   title: string;
   slug: string;
   description?: string;
@@ -47,7 +49,7 @@ type CategoryDelete = (id: number) => Promise<CategoryT>;
 // User
 export type CategoryT = {
   id: number;
-  post_type_id: number;
+  collection_key: string;
   title: string;
   slug: string;
   description: string | null;
@@ -66,7 +68,7 @@ export default class Category {
     const QueryB = new QueryBuilder({
       columns: [
         "id",
-        "post_type_id",
+        "collection_key",
         "title",
         "slug",
         "description",
@@ -77,9 +79,9 @@ export default class Category {
       filter: {
         data: filter,
         meta: {
-          post_type_id: {
+          collection_key: {
             operator: "=",
-            type: "int",
+            type: "string",
             columnType: "standard",
           },
           title: {
@@ -135,9 +137,24 @@ export default class Category {
     return category.rows[0];
   };
   static create: CategoryCreate = async (data) => {
+    // -------------------------------------------
+    // Checks
+    const collectionFound = await Collection.findCollection(
+      data.collection_key,
+      "multiple"
+    );
+    if (!collectionFound) {
+      throw new LucidError({
+        type: "basic",
+        name: "Collection not found",
+        message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+        status: 404,
+      });
+    }
+
     // check if slug is unique in post type
     const isSlugUnique = await Category.isSlugUniqueInPostType(
-      data.post_type_id,
+      data.collection_key,
       data.slug
     );
     if (!isSlugUnique) {
@@ -157,8 +174,8 @@ export default class Category {
 
     const res = await client.query<CategoryT>({
       name: "create-category",
-      text: `INSERT INTO lucid_categories(post_type_id, title, slug, description) VALUES($1, $2, $3, $4) RETURNING *`,
-      values: [data.post_type_id, data.title, data.slug, data.description],
+      text: `INSERT INTO lucid_categories(collection_key, title, slug, description) VALUES($1, $2, $3, $4) RETURNING *`,
+      values: [data.collection_key, data.title, data.slug, data.description],
     });
     const category = res.rows[0];
     if (!category) {
@@ -178,7 +195,7 @@ export default class Category {
 
     if (data.slug) {
       const isSlugUnique = await Category.isSlugUniqueInPostType(
-        currentCategory.post_type_id,
+        currentCategory.collection_key,
         data.slug,
         id
       );
@@ -235,18 +252,18 @@ export default class Category {
   // -------------------------------------------
   // Util Methods
   static isSlugUniqueInPostType = async (
-    post_type_id: number,
+    collection_key: string,
     slug: string,
     ignore_id?: number
   ): Promise<boolean> => {
-    const values = [post_type_id, slug];
+    const values: Array<string | number> = [collection_key, slug];
     if (ignore_id) {
       values.push(ignore_id);
     }
 
     const res = await client.query<CategoryT>({
       name: "is-slug-unique-in-post-type",
-      text: `SELECT * FROM lucid_categories WHERE post_type_id = $1 AND slug = $2 ${
+      text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 ${
         ignore_id ? "AND id != $3" : ""
       }`,
       values: values,

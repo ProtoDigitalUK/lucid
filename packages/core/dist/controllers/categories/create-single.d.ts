@@ -2,18 +2,18 @@ import z from "zod";
 declare const _default: {
     schema: {
         body: z.ZodObject<{
-            post_type_id: z.ZodNumber;
+            collection_key: z.ZodString;
             title: z.ZodString;
             slug: z.ZodString;
             description: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            collection_key: string;
             title: string;
-            post_type_id: number;
             slug: string;
             description?: string | undefined;
         }, {
+            collection_key: string;
             title: string;
-            post_type_id: number;
             slug: string;
             description?: string | undefined;
         }>;
@@ -21,18 +21,18 @@ declare const _default: {
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
     };
     controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
-        post_type_id: z.ZodNumber;
+        collection_key: z.ZodString;
         title: z.ZodString;
         slug: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        collection_key: string;
         title: string;
-        post_type_id: number;
         slug: string;
         description?: string | undefined;
     }, {
+        collection_key: string;
         title: string;
-        post_type_id: number;
         slug: string;
         description?: string | undefined;
     }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;

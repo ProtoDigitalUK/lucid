@@ -10,7 +10,7 @@ const body = zod_1.default.object({});
 const query = zod_1.default.object({
     filter: zod_1.default
         .object({
-        post_type_id: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
+        collection_key: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
         title: zod_1.default.string().optional(),
         slug: zod_1.default.string().optional(),
         category_id: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),

@@ -1,7 +1,13 @@
 "use strict";
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a, _Config_validateBricks, _Config_validateCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
@@ -13,11 +19,7 @@ const configSchema = zod_1.default.object({
     environment: zod_1.default.enum(["development", "production"]),
     databaseUrl: zod_1.default.string(),
     secretKey: zod_1.default.string(),
-    postTypes: zod_1.default.array(zod_1.default.object({
-        key: zod_1.default.string().refine((key) => key !== "page"),
-        name: zod_1.default.string().refine((name) => name !== "Pages"),
-        singularName: zod_1.default.string().refine((name) => name !== "Page"),
-    })),
+    collections: zod_1.default.array(zod_1.default.any()).optional(),
     bricks: zod_1.default.array(zod_1.default.any()).optional(),
 });
 class Config {
@@ -30,14 +32,8 @@ class Config {
     static get databaseUrl() {
         return Config.get().databaseUrl;
     }
-    static get postTypes() {
-        return Config.get().postTypes;
-    }
 }
-Config._configCache = null;
-Config.validate = () => {
-    const config = Config.get();
-    configSchema.parse(config);
+_a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
     if (!config.bricks)
         return;
     const brickKeys = config.bricks.map((brick) => brick.key);
@@ -45,6 +41,21 @@ Config.validate = () => {
     if (brickKeys.length !== uniqueBrickKeys.length) {
         throw new error_handler_1.RuntimeError("Each brick key must be unique, found duplicates in lucid.config.ts/js.");
     }
+}, _Config_validateCollections = function _Config_validateCollections(config) {
+    if (!config.collections)
+        return;
+    const collectionKeys = config.collections.map((collection) => collection.key);
+    const uniqueCollectionKeys = [...new Set(collectionKeys)];
+    if (collectionKeys.length !== uniqueCollectionKeys.length) {
+        throw new error_handler_1.RuntimeError("Each collection key must be unique, found duplicates in lucid.config.ts/js.");
+    }
+};
+Config._configCache = null;
+Config.validate = () => {
+    const config = Config.get();
+    configSchema.parse(config);
+    __classPrivateFieldGet(Config, _a, "m", _Config_validateBricks).call(Config, config);
+    __classPrivateFieldGet(Config, _a, "m", _Config_validateCollections).call(Config, config);
 };
 Config.findPath = (cwd) => {
     if (process.env.LUCID_CONFIG_PATH) {

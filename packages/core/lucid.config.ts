@@ -1,5 +1,8 @@
+import { ConfigT } from "./src/services/Config";
 import BrickBuilder from "@lucid/brick-builder";
+import CollectionBuilder from "@lucid/collection-builder";
 
+// ------------------------------------
 // Define Bricks
 const bannerBrick = new BrickBuilder("banner")
   .addTab({
@@ -48,18 +51,46 @@ const introBrick = new BrickBuilder("intro")
     key: "intro",
   });
 
-export default {
+const defaultMetaBrick = new BrickBuilder("default_meta")
+  .addText({
+    key: "meta_title",
+    title: "Meta Title",
+  })
+  .addText({
+    key: "meta_description",
+    title: "Meta Description",
+  });
+
+// ------------------------------------
+// Define Collections
+const pageCollection = new CollectionBuilder("page", {
+  config: {
+    type: "multiple",
+    title: "Pages",
+    singular: "Page",
+    description: "Pages are used to create static content on your website.",
+    bricks: ["banner", "intro"],
+  },
+});
+
+const settingsCollection = new CollectionBuilder("settings", {
+  config: {
+    type: "single",
+    title: "Settings",
+    singular: "Setting",
+    description: "Settings are used to configure your website.",
+    bricks: ["default_meta"],
+  },
+});
+
+const config: ConfigT = {
   databaseUrl: process.env.LUCID_database_url as string,
   port: 8393,
   origin: "*",
   environment: "development",
   secretKey: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
-  postTypes: [
-    {
-      key: "blog",
-      name: "Blogs",
-      singularName: "Blog",
-    },
-  ],
-  bricks: [bannerBrick, introBrick],
+  collections: [pageCollection, settingsCollection],
+  bricks: [bannerBrick, introBrick, defaultMetaBrick],
 };
+
+export default config;

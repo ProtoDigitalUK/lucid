@@ -11,7 +11,8 @@ const query = z.object({
   include: z.array(z.enum(["fields"])).optional(),
   filter: z
     .object({
-      s: z.string(),
+      s: z.string().optional(),
+      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
     })
     .optional(),
   sort: z
@@ -33,7 +34,7 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const bricks = await BrickConfig.getAll(req, req.query);
+    const bricks = await BrickConfig.getAll(req.query);
 
     res.status(200).json(
       buildResponse(req, {
