@@ -141,13 +141,13 @@ export default class Category {
     // Checks
     const collectionFound = await Collection.findCollection(
       data.collection_key,
-      "multiple"
+      "pages"
     );
     if (!collectionFound) {
       throw new LucidError({
         type: "basic",
         name: "Collection not found",
-        message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+        message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
         status: 404,
       });
     }

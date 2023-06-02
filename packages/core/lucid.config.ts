@@ -65,7 +65,7 @@ const defaultMetaBrick = new BrickBuilder("default_meta")
 // Define Collections
 const pageCollection = new CollectionBuilder("page", {
   config: {
-    type: "multiple",
+    type: "pages",
     title: "Pages",
     singular: "Page",
     description: "Pages are used to create static content on your website.",
@@ -75,7 +75,7 @@ const pageCollection = new CollectionBuilder("page", {
 
 const settingsCollection = new CollectionBuilder("settings", {
   config: {
-    type: "single",
+    type: "group",
     title: "Settings",
     singular: "Setting",
     description: "Settings are used to configure your website.",

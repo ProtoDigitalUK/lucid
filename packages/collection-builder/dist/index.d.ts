@@ -1,6 +1,6 @@
 interface CollectionOptions {
     config: {
-        type: "single" | "multiple";
+        type: "pages" | "group";
         title: string;
         singular: string;
         description: string | undefined;

@@ -6,9 +6,8 @@ CollectionBuilder is a JavaScript library designed for Lucid CMS. It simplifies 
 
 ## Features
 
-- Define "single" or "multiple" collections.
-- Single collections represent standalone pages or groups, while multiple collections create a new section in the CMS where users can createe individual pages.
-- Assign "bricks" (building blocks for the CMS) to each collection. For multiple collections, these bricks represent the allowed components within the page builder. For single collections, these bricks form a group where users can enter data.
+- Define "pages" or "group" collections.
+- Group collections represent a single page that contains a group of fixed bricks, while page collections represent a group of pages that can be created and edited by users and contain a variable number of bricks in any order.
 - Collection configuration is validated using Zod, ensuring consistent and error-free setup.
 
 ## Usage
@@ -16,7 +15,7 @@ CollectionBuilder is a JavaScript library designed for Lucid CMS. It simplifies 
 ```typescript
 const pageCollection = new CollectionBuilder("page", {
   config: {
-    type: "multiple",
+    type: "pages",
     title: "Pages",
     singular: "Page",
     description: "Pages are used to create static content on your website.",
@@ -26,7 +25,7 @@ const pageCollection = new CollectionBuilder("page", {
 
 const settingsCollection = new CollectionBuilder("settings", {
   config: {
-    type: "single",
+    type: "group",
     title: "Settings",
     singular: "Setting",
     description: "Settings are used to configure your website.",

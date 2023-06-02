@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
 const CollectionOptionsSchema = zod_1.default.object({
     config: zod_1.default.object({
-        type: zod_1.default.enum(["single", "multiple"]),
+        type: zod_1.default.enum(["pages", "group"]),
         title: zod_1.default.string(),
         singular: zod_1.default.string(),
         description: zod_1.default.string().optional(),

@@ -56,7 +56,7 @@ export type PageT = {
   full_slug: string;
   homepage: boolean;
   excerpt: string | null;
-  categories?: Array<CategoryT>;
+  categories?: Array<CategoryT> | null;
 
   published: boolean;
   published_at: string | null;
@@ -155,6 +155,11 @@ export default class Page {
       values: QueryB.countValues,
     });
 
+    // format pages
+    pages.rows.forEach((page) => {
+      page = Page.#formatPageData(page);
+    });
+
     return {
       data: pages.rows,
       count: count.rows[0].count,
@@ -171,28 +176,28 @@ export default class Page {
     // Check if the collection exists and is the correct type
     const collectionFound = await Collection.findCollection(
       data.collection_key,
-      "multiple"
+      "pages"
     );
     if (!collectionFound) {
       throw new LucidError({
         type: "basic",
         name: "Collection not found",
-        message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+        message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
         status: 404,
       });
     }
 
     // Check if the the parent_id is the homepage
-    await Page.checkParentNotHomepage(data.parent_id || null);
+    await Page.#checkParentNotHomepage(data.parent_id || null);
 
     // Check if the parent is in the same collection
     if (parentId) {
-      await Page.isParentSameCollection(parentId, data.collection_key);
+      await Page.#isParentSameCollection(parentId, data.collection_key);
     }
     // Check if slug is unique
-    const slug = await Page.slugUnique(data.slug, parentId);
+    const slug = await Page.#slugUnique(data.slug, parentId);
     // Generate full slug
-    const fullSlug = await Page.computeFullSlug(
+    const fullSlug = await Page.#computeFullSlug(
       slug,
       parentId,
       data.homepage || false
@@ -236,14 +241,14 @@ export default class Page {
 
     // Reset homepages
     if (data.homepage) {
-      await Page.resetHomepages(page.rows[0].id);
+      await Page.#resetHomepages(page.rows[0].id);
     }
 
     return page.rows[0];
   };
   // -------------------------------------------
   // Util Methods
-  static slugUnique = async (slug: string, parent_id: number | null) => {
+  static #slugUnique = async (slug: string, parent_id: number | null) => {
     const values: Array<any> = [slug];
     if (parent_id) values.push(parent_id);
     const slugCount = await client.query<{ count: number }>({
@@ -257,7 +262,7 @@ export default class Page {
       return `${slug}-${slugCount.rows[0].count}`;
     return slug;
   };
-  static checkParentNotHomepage = async (parent_id: number | null) => {
+  static #checkParentNotHomepage = async (parent_id: number | null) => {
     if (!parent_id) return;
     const values: Array<any> = [];
     if (parent_id) values.push(parent_id);
@@ -277,7 +282,7 @@ export default class Page {
       });
     }
   };
-  static isParentSameCollection = async (
+  static #isParentSameCollection = async (
     parent_id: number,
     collection_key: string
   ) => {
@@ -297,14 +302,14 @@ export default class Page {
       });
     }
   };
-  static resetHomepages = async (current: number) => {
+  static #resetHomepages = async (current: number) => {
     // reset homepage, set its parent to null and its full slug to its slug
     await client.query({
       text: `UPDATE lucid_pages SET homepage = false, parent_id = null, full_slug = \'/\' || slug WHERE homepage = true AND id != $1`,
       values: [current],
     });
   };
-  static computeFullSlug = async (
+  static #computeFullSlug = async (
     slug: string,
     parent_id: number | null,
     homepage: boolean
@@ -328,5 +333,11 @@ export default class Page {
     await getParent(parent_id);
 
     return `/${fullSlug}${slug}`;
+  };
+  static #formatPageData = (data: PageT) => {
+    if (data.categories)
+      data.categories = data.categories[0] === null ? [] : data.categories;
+
+    return data;
   };
 }

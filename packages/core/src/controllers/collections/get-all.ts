@@ -10,7 +10,7 @@ const body = z.object({});
 const query = z.object({
   filter: z
     .object({
-      type: z.enum(["single", "multiple"]),
+      type: z.enum(["pages", "group"]),
     })
     .optional(),
 });

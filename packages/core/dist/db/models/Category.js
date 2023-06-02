@@ -79,12 +79,12 @@ Category.getSingle = async (id) => {
     return category.rows[0];
 };
 Category.create = async (data) => {
-    const collectionFound = await Collection_1.default.findCollection(data.collection_key, "multiple");
+    const collectionFound = await Collection_1.default.findCollection(data.collection_key, "pages");
     if (!collectionFound) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Collection not found",
-            message: `Collection with key "${data.collection_key}" and of type "multiple" not found`,
+            message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
             status: 404,
         });
     }

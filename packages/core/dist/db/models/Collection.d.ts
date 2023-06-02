@@ -11,7 +11,7 @@ export type CollectionT = {
     title: string;
     singular: string;
     description: string | null;
-    type: "single" | "multiple";
+    type: "pages" | "group";
     bricks: Array<string>;
 };
 export default class Collection {

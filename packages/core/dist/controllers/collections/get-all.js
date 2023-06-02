@@ -10,7 +10,7 @@ const body = zod_1.default.object({});
 const query = zod_1.default.object({
     filter: zod_1.default
         .object({
-        type: zod_1.default.enum(["single", "multiple"]),
+        type: zod_1.default.enum(["pages", "group"]),
     })
         .optional(),
 });

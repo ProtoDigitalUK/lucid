@@ -4,38 +4,38 @@ declare const _default: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         query: z.ZodObject<{
             filter: z.ZodOptional<z.ZodObject<{
-                type: z.ZodEnum<["single", "multiple"]>;
+                type: z.ZodEnum<["pages", "group"]>;
             }, "strip", z.ZodTypeAny, {
-                type: "single" | "multiple";
+                type: "group" | "pages";
             }, {
-                type: "single" | "multiple";
+                type: "group" | "pages";
             }>>;
         }, "strip", z.ZodTypeAny, {
             filter?: {
-                type: "single" | "multiple";
+                type: "group" | "pages";
             } | undefined;
         }, {
             filter?: {
-                type: "single" | "multiple";
+                type: "group" | "pages";
             } | undefined;
         }>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
     };
     controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
         filter: z.ZodOptional<z.ZodObject<{
-            type: z.ZodEnum<["single", "multiple"]>;
+            type: z.ZodEnum<["pages", "group"]>;
         }, "strip", z.ZodTypeAny, {
-            type: "single" | "multiple";
+            type: "group" | "pages";
         }, {
-            type: "single" | "multiple";
+            type: "group" | "pages";
         }>>;
     }, "strip", z.ZodTypeAny, {
         filter?: {
-            type: "single" | "multiple";
+            type: "group" | "pages";
         } | undefined;
     }, {
         filter?: {
-            type: "single" | "multiple";
+            type: "group" | "pages";
         } | undefined;
     }>>;
 };
