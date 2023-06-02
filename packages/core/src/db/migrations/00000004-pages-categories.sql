@@ -1,4 +1,4 @@
--- PAGES TABLE - used for multiple collections
+-- PAGES TABLE - collection pages type
 CREATE TABLE IF NOT EXISTS lucid_pages (
   id SERIAL PRIMARY KEY,
   parent_id INTEGER REFERENCES lucid_pages(id) ON DELETE SET NULL,
@@ -19,14 +19,10 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- GROUP TABLE - used for single collections to show custom settings, footer, header pages etc
+-- GROUP TABLE - collection group type, is used as a intermediary table for the collections bricks
 CREATE TABLE IF NOT EXISTS lucid_groups (
   id SERIAL PRIMARY KEY,
-  collection_key TEXT NOT NULL,
-
-  name TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
-  description TEXT,
+  collection_key TEXT UNIQUE NOT NULL,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
