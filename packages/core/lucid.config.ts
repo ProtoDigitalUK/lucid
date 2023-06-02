@@ -88,7 +88,7 @@ const config: ConfigT = {
   port: 8393,
   origin: "*",
   environment: "development",
-  secretKey: "f3b2e4b00b1a4b1e9b0a8b0a9b1e0b1a",
+  secretKey: process.env.SECRET_KEY as string,
   collections: [pageCollection, settingsCollection],
   bricks: [bannerBrick, introBrick, defaultMetaBrick],
 };

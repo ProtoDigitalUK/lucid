@@ -23,54 +23,7 @@ npm install @lucid/core @lucid/brick-builder @lucid/collection-builder
 ## lucid.config.ts/js
 
 ```ts
-import BrickBuilder from "@lucid/brick-builder";
-import CollectionBuilder from "@lucid/collection-builder";
 import { type Config } from "@lucid/core";
-
-// ------------------------------------
-// Bricks
-const introBrick = new BrickBuilder("intro")
-  .addTab({
-    key: "content_tab",
-  })
-  .addText({
-    key: "title",
-  })
-  .addWysiwyg({
-    key: "intro",
-  });
-
-const defaultMetaBrick = new BrickBuilder("default_meta")
-  .addText({
-    key: "meta_title",
-    title: "Meta Title",
-  })
-  .addText({
-    key: "meta_description",
-    title: "Meta Description",
-  });
-
-// ------------------------------------
-// Collections
-const pageCollection = new CollectionBuilder("page", {
-  config: {
-    type: "multiple",
-    title: "Pages",
-    singular: "Page",
-    description: "Pages are used to create static content on your website.",
-    bricks: ["intro"],
-  },
-});
-
-const settingsCollection = new CollectionBuilder("settings", {
-  config: {
-    type: "single",
-    title: "Settings",
-    singular: "Setting",
-    description: "Settings are used to configure your website.",
-    bricks: ["default_meta"],
-  },
-});
 
 // ------------------------------------
 // Config
@@ -86,6 +39,8 @@ const config: ConfigT = {
 
 export default config;
 ```
+
+> Check the example app for a more detailed showcase: [example](https://github.com/WillYallop/Lucid/tree/master/apps/example/lucid.config.ts)
 
 ## Logging In
 
