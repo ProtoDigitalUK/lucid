@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import Config from "@services/Config";
+import Config from "@db/models/Config";
 
 const client = new Client({
   connectionString: Config.databaseUrl,

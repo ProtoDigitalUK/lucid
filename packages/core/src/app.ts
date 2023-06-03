@@ -5,7 +5,7 @@ import { log } from "console-log-colors";
 import path from "path";
 import cookieParser from "cookie-parser";
 // internal
-import Config from "@services/Config";
+import Config from "@db/models/Config";
 import launchSteps from "@services/app/launch-steps";
 import migrateDB from "@db/migration";
 import initRoutes from "@routes/index";

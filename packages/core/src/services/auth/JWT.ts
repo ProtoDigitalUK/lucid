@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import jwt from "jsonwebtoken";
-import Config from "@services/Config";
+import Config from "@db/models/Config";
 import { UserT } from "@db/models/User";
 
 export const generateJWT = (res: Response, user: UserT) => {

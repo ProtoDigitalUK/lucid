@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Config from "@services/Config";
+import Config from "@db/models/Config";
 
 export const generateCSRFToken = (res: Response) => {
   // create a random string for CSRF token

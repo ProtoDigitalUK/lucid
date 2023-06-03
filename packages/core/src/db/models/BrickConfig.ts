@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
 import { LucidError } from "@utils/error-handler";
-import Config from "@services/Config";
+import Config from "@db/models/Config";
 // Models
 import Collection from "./Collection";
 // Internal packages

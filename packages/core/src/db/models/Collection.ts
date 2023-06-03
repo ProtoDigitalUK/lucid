@@ -1,7 +1,6 @@
-import { LucidError } from "@utils/error-handler";
 import { CollectionBuilderT } from "@lucid/collection-builder";
 // Models
-import Config from "@services/Config";
+import Config from "@db/models/Config";
 // Serivces
 
 // -------------------------------------------
