@@ -9,6 +9,7 @@ const paths = {
   "@utils/*": ["./src/utils/*"],
   "@data/*": ["./src/data/*"],
   "@db/*": ["./src/db/*"],
+  "@schemas/*": ["./src/schemas/*"],
   "@root/*": ["./src/*"],
 };
 

@@ -1,33 +1,22 @@
+import z from "zod";
 import client from "@db/db";
 import { LucidError } from "@utils/error-handler";
 import BrickBuilder, { FieldTypes } from "@lucid/brick-builder";
+// Schema
+import { BrickSchema, FieldSchema } from "@schemas/bricks";
 
 // -------------------------------------------
 // Types
-
-interface BrickFieldCreateData {
-  id?: number;
-  parent_repeater?: number;
-  group_position?: number;
-  key: string;
-  type: FieldTypes;
-  value: any;
-  items?: Array<BrickFieldCreateData>;
-}
-
-export interface BrickDataCreateData {
-  id?: number;
-  key: string;
-  order: number;
-  fields?: Array<BrickFieldCreateData>;
-}
+export type BrickFieldObject = z.infer<typeof FieldSchema>;
+export type BrickObject = z.infer<typeof BrickSchema>;
 
 // Methods
 type BrickDataCreateOrUpdate = (
+  brick: BrickObject,
+  order: number,
   type: "page" | "group",
-  referenceId: number,
-  data: BrickDataCreateData
-) => Promise<void>;
+  referenceId: number
+) => Promise<number>;
 
 type BrickDataDeleteUnused = (
   type: "page" | "group",
@@ -68,9 +57,10 @@ export default class BrickData {
   // -------------------------------------------
   // Methods
   static createOrUpdate: BrickDataCreateOrUpdate = async (
+    brick,
+    order,
     type,
-    referenceId,
-    data
+    referenceId
   ) => {
     // Using the brickbuilder, validate the data type against the custom field type, along with the key to see if it exists
     // BrickBuilder.validateBrickData(data);
@@ -80,14 +70,14 @@ export default class BrickData {
     const promises = [];
 
     // Create the page brick record
-    const brickId = data.id
-      ? await BrickData.#updateSinglePageBrick(data)
-      : await BrickData.#createSinglePageBrick(type, referenceId, data);
+    const brickId = brick.id
+      ? await BrickData.#updateSinglePageBrick(order, brick)
+      : await BrickData.#createSinglePageBrick(type, referenceId, order, brick);
 
     // for each field, create or update the field, if its a repeater, create or update the repeater and items
-    if (!data.fields) return;
+    if (!brick.fields) return brickId;
 
-    for (const field of data.fields) {
+    for (const field of brick.fields) {
       if (field.type === "tab") continue;
 
       if (field.type === "repeater")
@@ -96,6 +86,8 @@ export default class BrickData {
     }
 
     await Promise.all(promises);
+
+    return brickId;
   };
   static deleteUnused: BrickDataDeleteUnused = async (
     type,
@@ -139,17 +131,20 @@ export default class BrickData {
   static #createSinglePageBrick = async (
     type: "page" | "group",
     referenceId: number,
-    data: BrickDataCreateData
+    order: number,
+    brick: BrickObject
   ) => {
     const referenceKey = type === "page" ? "page_id" : "group_id";
 
-    const brickRes = await client.query(
+    const brickRes = await client.query<{
+      id: number;
+    }>(
       `INSERT INTO 
         lucid_page_bricks (brick_key, ${referenceKey}, brick_order) 
       VALUES 
         ($1, $2, $3)
       RETURNING id`,
-      [data.key, referenceId, data.order]
+      [brick.key, referenceId, order]
     );
 
     if (!brickRes.rows[0]) {
@@ -163,8 +158,10 @@ export default class BrickData {
 
     return brickRes.rows[0].id;
   };
-  static #updateSinglePageBrick = async (data: BrickDataCreateData) => {
-    const brickRes = await client.query(
+  static #updateSinglePageBrick = async (order: number, brick: BrickObject) => {
+    const brickRes = await client.query<{
+      id: number;
+    }>(
       `UPDATE 
         lucid_page_bricks 
       SET 
@@ -172,7 +169,7 @@ export default class BrickData {
       WHERE 
         id = $2
       RETURNING id`,
-      [data.order, data.id]
+      [order, brick.id]
     );
 
     if (!brickRes.rows[0]) {
@@ -190,14 +187,7 @@ export default class BrickData {
   // Fields
   static #createOrUpdateField = async (
     brickId: number,
-    data: {
-      id?: BrickFieldCreateData["id"];
-      key: BrickFieldCreateData["key"];
-      type: BrickFieldCreateData["type"];
-      value: BrickFieldCreateData["value"];
-      parent_repeater?: BrickFieldCreateData["parent_repeater"];
-      group_position?: BrickFieldCreateData["group_position"];
-    }
+    data: BrickFieldObject
   ) => {
     let fieldId;
 
@@ -316,7 +306,7 @@ export default class BrickData {
   // Repeater Field
   static #createOrUpdateRepeater = async (
     brickId: number,
-    data: BrickFieldCreateData
+    data: BrickFieldObject
   ) => {
     let repeaterId;
 
@@ -394,7 +384,7 @@ export default class BrickData {
   };
   // -------------------------------------------
   // Utils
-  static #valueKey = (type: BrickFieldCreateData["type"]) => {
+  static #valueKey = (type: BrickFieldObject["type"]) => {
     switch (type) {
       case "text":
         return "text_value";

@@ -9,7 +9,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _BrickBuilder_instances, _BrickBuilder_keyToTitle, _BrickBuilder_addToFields, _BrickBuilder_checkKeyDuplication, _a;
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FieldTypesEnum = void 0;
 const zod_1 = __importDefault(require("zod"));
+var FieldTypesEnum;
+(function (FieldTypesEnum) {
+    FieldTypesEnum["Tab"] = "tab";
+    FieldTypesEnum["Text"] = "text";
+    FieldTypesEnum["Wysiwyg"] = "wysiwyg";
+    FieldTypesEnum["Image"] = "image";
+    FieldTypesEnum["File"] = "file";
+    FieldTypesEnum["Repeater"] = "repeater";
+    FieldTypesEnum["Number"] = "number";
+    FieldTypesEnum["Checkbox"] = "checkbox";
+    FieldTypesEnum["Select"] = "select";
+    FieldTypesEnum["Textarea"] = "textarea";
+    FieldTypesEnum["JSON"] = "json";
+})(FieldTypesEnum || (exports.FieldTypesEnum = FieldTypesEnum = {}));
 const baseCustomFieldSchema = zod_1.default.object({
     type: zod_1.default.string(),
     key: zod_1.default.string(),

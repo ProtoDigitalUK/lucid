@@ -1,6 +1,19 @@
 interface BrickConfig {
 }
 type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json";
+declare enum FieldTypesEnum {
+    Tab = "tab",
+    Text = "text",
+    Wysiwyg = "wysiwyg",
+    Image = "image",
+    File = "file",
+    Repeater = "repeater",
+    Number = "number",
+    Checkbox = "checkbox",
+    Select = "select",
+    Textarea = "textarea",
+    JSON = "json"
+}
 type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 interface CustomField {
     type: FieldTypes;
@@ -78,6 +91,6 @@ declare const BrickBuilder: {
     };
     validateBrickData(data: any): boolean;
 };
-export { BrickBuilderT, CustomField, FieldTypes };
+export { BrickBuilderT, CustomField, FieldTypes, FieldTypesEnum };
 export default BrickBuilder;
 //# sourceMappingURL=index.d.ts.map

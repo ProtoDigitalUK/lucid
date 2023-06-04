@@ -1,4 +1,6 @@
 import z from "zod";
+// Schema
+import { BrickSchema } from "@schemas/bricks";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
@@ -7,7 +9,7 @@ import Page from "@db/models/Page";
 // --------------------------------------------------
 // Schema
 const body = z.object({
-  bricks: z.array(z.any()).optional(),
+  bricks: z.array(BrickSchema).optional(),
 });
 const query = z.object({});
 const params = z.object({

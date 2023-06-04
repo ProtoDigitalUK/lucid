@@ -17,6 +17,20 @@ type FieldTypes =
   | "textarea"
   | "json";
 
+enum FieldTypesEnum {
+  Tab = "tab",
+  Text = "text",
+  Wysiwyg = "wysiwyg",
+  Image = "image",
+  File = "file",
+  Repeater = "repeater",
+  Number = "number",
+  Checkbox = "checkbox",
+  Select = "select",
+  Textarea = "textarea",
+  JSON = "json",
+}
+
 type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 
 // Custom Fields
@@ -334,5 +348,5 @@ const BrickBuilder = class BrickBuilder {
 // // @ts-ignore
 // console.log(bannerBrick.fieldTree);
 
-export { BrickBuilderT, CustomField, FieldTypes };
+export { BrickBuilderT, CustomField, FieldTypes, FieldTypesEnum };
 export default BrickBuilder;

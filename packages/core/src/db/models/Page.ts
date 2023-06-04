@@ -5,10 +5,7 @@ import { LucidError } from "@utils/error-handler";
 import { CategoryT } from "@db/models/Category";
 import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
-import BrickData, {
-  BrickDataT,
-  BrickDataCreateData,
-} from "@db/models/BrickData";
+import BrickData, { BrickObject } from "@db/models/BrickData";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
 
@@ -52,7 +49,7 @@ type PageCreate = (
 type PageUpdate = (
   id: string,
   data: {
-    bricks?: Array<BrickDataCreateData>;
+    bricks?: Array<BrickObject>;
   },
   req: Request
 ) => Promise<PageT>;
@@ -265,20 +262,15 @@ export default class Page {
     // -------------------------------------------
     // Update/Create Bricks
     const brickPromises =
-      data.bricks?.map((brick) =>
-        BrickData.createOrUpdate("page", pageId, brick)
+      data.bricks?.map((brick, index) =>
+        BrickData.createOrUpdate(brick, index, "page", pageId)
       ) || [];
-
-    await Promise.all(brickPromises);
+    const pageBricksIds = await Promise.all(brickPromises);
 
     // -------------------------------------------
     // Delete unused bricks
     if (data.bricks) {
-      await BrickData.deleteUnused(
-        "page",
-        pageId,
-        data.bricks.map((b) => b.id)
-      );
+      await BrickData.deleteUnused("page", pageId, pageBricksIds);
     }
 
     return {
