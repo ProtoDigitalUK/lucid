@@ -11,7 +11,7 @@ var _a, _BrickConfig_searcBricks, _BrickConfig_filterBricks, _BrickConfig_sortBr
 Object.defineProperty(exports, "__esModule", { value: true });
 const fuse_js_1 = __importDefault(require("fuse.js"));
 const error_handler_1 = require("../../utils/error-handler");
-const Config_1 = __importDefault(require("../../services/Config"));
+const Config_1 = __importDefault(require("../models/Config"));
 const Collection_1 = __importDefault(require("./Collection"));
 class BrickConfig {
 }
@@ -46,28 +46,6 @@ BrickConfig.getAll = async (query) => {
     const filteredBricks = await __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_filterBricks).call(BrickConfig, query.filter, bricks);
     const sortedBricks = __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_sortBricks).call(BrickConfig, query.sort, filteredBricks);
     return sortedBricks;
-};
-BrickConfig.validData = async (data) => {
-    const brickInstances = BrickConfig.getBrickConfig();
-    if (!brickInstances) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Brick not found",
-            message: "We could not find the brick you are looking for.",
-            status: 404,
-        });
-    }
-    const brickInst = brickInstances.find((b) => b.key === data.key);
-    if (!brickInst) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Brick not found",
-            message: "We could not find the brick you are looking for.",
-            status: 404,
-        });
-    }
-    const validatedData = brickInst.validateBrickData(data);
-    return validatedData;
 };
 BrickConfig.getBrickConfig = () => {
     const brickInstances = Config_1.default.get().bricks;

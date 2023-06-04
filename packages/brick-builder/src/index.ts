@@ -6,10 +6,10 @@ interface BrickConfig {}
 
 type FieldTypes =
   | "tab"
-  | "group"
   | "text"
   | "wysiwyg"
   | "image"
+  | "file"
   | "repeater"
   | "number"
   | "checkbox"
@@ -249,7 +249,7 @@ const BrickBuilder = class BrickBuilder {
   }
   // ------------------------------------
   // External Methods
-  public validateBrickData(data: any) {
+  public static validateBrickData(data: any) {
     // TODO: add route to verify data added against brick to its field configs
     return true;
   }
@@ -334,5 +334,5 @@ const BrickBuilder = class BrickBuilder {
 // // @ts-ignore
 // console.log(bannerBrick.fieldTree);
 
-export { BrickBuilderT, CustomField };
+export { BrickBuilderT, CustomField, FieldTypes };
 export default BrickBuilder;

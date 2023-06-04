@@ -5,6 +5,10 @@ import { LucidError } from "@utils/error-handler";
 import { CategoryT } from "@db/models/Category";
 import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
+import BrickData, {
+  BrickDataT,
+  BrickDataCreateData,
+} from "@db/models/BrickData";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
 
@@ -25,13 +29,13 @@ interface QueryParamsGetMultiple extends ModelQueryParams {
   per_page?: string;
 }
 
+// Methods
 type PageGetMultiple = (req: Request) => Promise<{
   data: PageT[];
   count: number;
 }>;
 
 type PageCreate = (
-  req: Request,
   data: {
     title: string;
     slug: string;
@@ -41,7 +45,16 @@ type PageCreate = (
     published?: boolean;
     parent_id?: number;
     category_ids?: Array<number>;
-  }
+  },
+  req: Request
+) => Promise<PageT>;
+
+type PageUpdate = (
+  id: string,
+  data: {
+    bricks?: Array<BrickDataCreateData>;
+  },
+  req: Request
 ) => Promise<PageT>;
 
 // -------------------------------------------
@@ -165,7 +178,7 @@ export default class Page {
       count: count.rows[0].count,
     };
   };
-  static create: PageCreate = async (req, data) => {
+  static create: PageCreate = async (data, req) => {
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
@@ -245,6 +258,32 @@ export default class Page {
     }
 
     return page.rows[0];
+  };
+  static update: PageUpdate = async (id, data, req) => {
+    const pageId = parseInt(id);
+
+    // -------------------------------------------
+    // Update/Create Bricks
+    const brickPromises =
+      data.bricks?.map((brick) =>
+        BrickData.createOrUpdate("page", pageId, brick)
+      ) || [];
+
+    await Promise.all(brickPromises);
+
+    // -------------------------------------------
+    // Delete unused bricks
+    if (data.bricks) {
+      await BrickData.deleteUnused(
+        "page",
+        pageId,
+        data.bricks.map((b) => b.id)
+      );
+    }
+
+    return {
+      created: true,
+    } as any;
   };
   // -------------------------------------------
   // Util Methods

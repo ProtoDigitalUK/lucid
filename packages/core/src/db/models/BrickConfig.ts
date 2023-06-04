@@ -22,7 +22,6 @@ interface QueryParams extends ModelQueryParams {
 
 type BrickConfigGetAll = (query: QueryParams) => Promise<BrickConfigT[]>;
 type BrickConfigGetSingle = (key: string) => Promise<BrickConfigT>;
-type BrickConfigValidData = (data: any) => Promise<boolean>;
 
 // -------------------------------------------
 // Brick Config
@@ -75,34 +74,6 @@ export default class BrickConfig {
     const sortedBricks = BrickConfig.#sortBricks(query.sort, filteredBricks);
 
     return sortedBricks;
-  };
-  // TODO: Return to this method once page builder is implemented and we need to validate single brick data
-  static validData: BrickConfigValidData = async (data) => {
-    const brickInstances = BrickConfig.getBrickConfig();
-    if (!brickInstances) {
-      throw new LucidError({
-        type: "basic",
-        name: "Brick not found",
-        message: "We could not find the brick you are looking for.",
-        status: 404,
-      });
-    }
-
-    // Find single brick instance
-    const brickInst = brickInstances.find((b) => b.key === data.key);
-    if (!brickInst) {
-      throw new LucidError({
-        type: "basic",
-        name: "Brick not found",
-        message: "We could not find the brick you are looking for.",
-        status: 404,
-      });
-    }
-
-    // Validate data
-    const validatedData = brickInst.validateBrickData(data);
-
-    return validatedData;
   };
   // -------------------------------------------
   // Util Methods

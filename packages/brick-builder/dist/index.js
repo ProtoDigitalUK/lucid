@@ -165,7 +165,7 @@ const BrickBuilder = (_a = class BrickBuilder {
         }
         // ------------------------------------
         // External Methods
-        validateBrickData(data) {
+        static validateBrickData(data) {
             // TODO: add route to verify data added against brick to its field configs
             return true;
         }

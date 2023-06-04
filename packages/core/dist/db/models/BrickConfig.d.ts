@@ -12,7 +12,6 @@ interface QueryParams extends ModelQueryParams {
 }
 type BrickConfigGetAll = (query: QueryParams) => Promise<BrickConfigT[]>;
 type BrickConfigGetSingle = (key: string) => Promise<BrickConfigT>;
-type BrickConfigValidData = (data: any) => Promise<boolean>;
 export type BrickConfigT = {
     key: string;
     title: string;
@@ -22,7 +21,6 @@ export default class BrickConfig {
     #private;
     static getSingle: BrickConfigGetSingle;
     static getAll: BrickConfigGetAll;
-    static validData: BrickConfigValidData;
     static getBrickConfig: () => BrickBuilderT[];
     static getBrickData: (instance: BrickBuilderT, query?: QueryParams) => BrickConfigT;
 }

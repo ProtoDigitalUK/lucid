@@ -20,7 +20,7 @@ const query = zod_1.default.object({});
 const params = zod_1.default.object({});
 const createSingle = async (req, res, next) => {
     try {
-        const page = await Page_1.default.create(req, {
+        const page = await Page_1.default.create({
             title: req.body.title,
             slug: req.body.slug,
             collection_key: req.body.collection_key,
@@ -29,7 +29,7 @@ const createSingle = async (req, res, next) => {
             published: req.body.published,
             parent_id: req.body.parent_id,
             category_ids: req.body.category_ids,
-        });
+        }, req);
         res.status(200).json((0, build_response_1.default)(req, {
             data: page,
         }));

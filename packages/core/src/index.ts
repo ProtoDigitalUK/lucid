@@ -1,7 +1,7 @@
 require("dotenv").config();
 import http from "http";
 import { log } from "console-log-colors";
-import Config, { ConfigT } from "@services/Config";
+import Config, { ConfigT } from "@db/models/Config";
 import app from "./app";
 
 // ------------------------------------

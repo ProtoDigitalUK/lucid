@@ -7,36 +7,25 @@ import Page from "@db/models/Page";
 // --------------------------------------------------
 // Schema
 const body = z.object({
-  title: z.string().min(2),
-  slug: z.string().min(2).toLowerCase(),
-  collection_key: z.string(),
-  homepage: z.boolean().optional(),
-  excerpt: z.string().optional(),
-  published: z.boolean().optional(),
-  parent_id: z.number().optional(),
-  category_ids: z.array(z.number()).optional(),
+  bricks: z.array(z.any()).optional(),
 });
 const query = z.object({});
-const params = z.object({});
+const params = z.object({
+  id: z.string(),
+});
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const updateSingle: Controller<
   typeof params,
   typeof body,
   typeof query
 > = async (req, res, next) => {
   try {
-    const page = await Page.create(
+    const page = await Page.update(
+      req.params.id,
       {
-        title: req.body.title,
-        slug: req.body.slug,
-        collection_key: req.body.collection_key,
-        homepage: req.body.homepage,
-        excerpt: req.body.excerpt,
-        published: req.body.published,
-        parent_id: req.body.parent_id,
-        category_ids: req.body.category_ids,
+        bricks: req.body.bricks,
       },
       req
     );
@@ -59,5 +48,5 @@ export default {
     query,
     params,
   },
-  controller: createSingle,
+  controller: updateSingle,
 };

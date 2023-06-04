@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.clearJWT = exports.verifyJWT = exports.generateJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const Config_1 = __importDefault(require("../Config"));
+const Config_1 = __importDefault(require("../../db/models/Config"));
 const generateJWT = (res, user) => {
     const { id, email, username } = user;
     const payload = {

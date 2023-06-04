@@ -1,6 +1,6 @@
 interface BrickConfig {
 }
-type FieldTypes = "tab" | "group" | "text" | "wysiwyg" | "image" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json";
+type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json";
 type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 interface CustomField {
     type: FieldTypes;
@@ -72,12 +72,12 @@ declare const BrickBuilder: {
         addTextarea(config: TextareaConfig): any;
         addJSON(config: JSONConfig): any;
         readonly fieldTree: CustomField[];
-        validateBrickData(data: any): boolean;
         "__#1@#keyToTitle"(key: string): string;
         "__#1@#addToFields"(type: FieldTypes, config: FieldConfigs): void;
         "__#1@#checkKeyDuplication"(key: string): void;
     };
+    validateBrickData(data: any): boolean;
 };
-export { BrickBuilderT, CustomField };
+export { BrickBuilderT, CustomField, FieldTypes };
 export default BrickBuilder;
 //# sourceMappingURL=index.d.ts.map
