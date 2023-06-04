@@ -31,11 +31,33 @@ const baseCustomFieldSchema = zod_1.default.object({
     title: zod_1.default.string(),
     description: zod_1.default.string().optional(),
     placeholder: zod_1.default.string().optional(),
-    required: zod_1.default.boolean().optional(),
-    min: zod_1.default.number().optional(),
-    max: zod_1.default.number().optional(),
-    validate: zod_1.default.function().optional(),
-    pattern: zod_1.default.string().optional(),
+    options: zod_1.default
+        .array(zod_1.default.object({
+        label: zod_1.default.string(),
+        value: zod_1.default.string(),
+    }))
+        .optional(),
+    validation: zod_1.default
+        .object({
+        zod: zod_1.default.any().optional(),
+        required: zod_1.default.boolean().optional(),
+        min: zod_1.default.number().optional(),
+        max: zod_1.default.number().optional(),
+        extensions: zod_1.default.array(zod_1.default.string()).optional(),
+        width: zod_1.default
+            .object({
+            min: zod_1.default.number().optional(),
+            max: zod_1.default.number().optional(),
+        })
+            .optional(),
+        height: zod_1.default
+            .object({
+            min: zod_1.default.number().optional(),
+            max: zod_1.default.number().optional(),
+        })
+            .optional(),
+    })
+        .optional(),
 });
 const customFieldSchemaObject = baseCustomFieldSchema.extend({
     fields: zod_1.default.lazy(() => customFieldSchemaObject.array().optional()),
@@ -178,11 +200,100 @@ const BrickBuilder = (_a = class BrickBuilder {
             }
             return result;
         }
+        get flatFields() {
+            const fields = [];
+            const fieldArray = Array.from(this.fields.values());
+            const getFields = (field) => {
+                fields.push(field);
+                if (field.type === "repeater") {
+                    field.fields?.forEach((item) => {
+                        getFields(item);
+                    });
+                }
+            };
+            fieldArray.forEach((field) => {
+                getFields(field);
+            });
+            return fields;
+        }
         // ------------------------------------
-        // External Methods
-        static validateBrickData(data) {
-            // TODO: add route to verify data added against brick to its field configs
-            return true;
+        // Field Type Validation
+        validateTextType({ type, key, value, }) {
+            const field = this.flatFields.find((item) => item.key === key);
+            if (!field) {
+                return {
+                    valid: false,
+                    message: `Field with key "${key}" does not exist.`,
+                };
+            }
+            // Check if field type is text
+            const typeValidation = this.validateType(type, field.type);
+            if (!typeValidation.valid) {
+                return typeValidation;
+            }
+            // Check if value is a string
+            if (typeof value !== "string") {
+                return {
+                    valid: false,
+                    message: "Value must be a string.",
+                };
+            }
+            // Check if field is required
+            if (field.validation?.required) {
+                const requiredValidation = this.validateRequired(value);
+                if (!requiredValidation.valid) {
+                    return requiredValidation;
+                }
+            }
+            // run zod validation
+            if (field.validation?.zod) {
+                const zodValidation = this.validateZodSchema(field.validation.zod, value);
+                if (!zodValidation.valid) {
+                    return zodValidation;
+                }
+            }
+            return {
+                valid: true,
+            };
+        }
+        // ------------------------------------
+        // Validation Util
+        validateRequired(value) {
+            if (value === undefined || value === null || value === "") {
+                return {
+                    valid: false,
+                    message: "This field is required.",
+                };
+            }
+            return {
+                valid: true,
+            };
+        }
+        validateType(providedType, type) {
+            if (providedType !== type) {
+                return {
+                    valid: false,
+                    message: `Field type must be "${type}".`,
+                };
+            }
+            return {
+                valid: true,
+            };
+        }
+        validateZodSchema(schema, value) {
+            try {
+                schema.parse(value);
+                return {
+                    valid: true,
+                };
+            }
+            catch (error) {
+                const err = error;
+                return {
+                    valid: false,
+                    message: err.issues[0].message,
+                };
+            }
         }
     },
     _BrickBuilder_instances = new WeakSet(),
@@ -221,4 +332,44 @@ const BrickBuilder = (_a = class BrickBuilder {
         }
     },
     _a);
+const bannerBrick = new BrickBuilder("banner")
+    .addTab({
+    key: "content_tab",
+})
+    .addText({
+    key: "title",
+    description: "The title of the banner",
+    validation: {
+        zod: zod_1.default.string().min(3).max(10),
+    },
+})
+    .addWysiwyg({
+    key: "description",
+})
+    .addRepeater({
+    key: "links",
+    validation: {
+        max: 3,
+    },
+})
+    .addText({
+    key: "image_alt",
+    validation: {
+        zod: zod_1.default.string().min(3).max(10),
+    },
+})
+    .addImage({
+    key: "image",
+})
+    .endRepeater()
+    .addWysiwyg({
+    key: "description_last",
+})
+    .addTab({
+    key: "general-2",
+})
+    .addText({
+    key: "title-2",
+    description: "The title of the banner",
+});
 exports.default = BrickBuilder;

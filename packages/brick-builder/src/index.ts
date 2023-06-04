@@ -36,16 +36,32 @@ type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 // Custom Fields
 interface CustomField {
   type: FieldTypes;
-  key: string;
-  title: string;
-  description?: string;
-  placeholder?: string;
-  required?: boolean;
-  min?: number;
-  max?: number;
-  validate?: (value: string | number | boolean) => string;
-  pattern?: string;
+  key: CustomFieldConfig["key"];
+  title: CustomFieldConfig["title"];
+  description?: CustomFieldConfig["description"];
+  placeholder?: CustomFieldConfig["placeholder"];
   fields?: Array<CustomField>;
+
+  options?: Array<{
+    label: string;
+    value: string;
+  }>;
+  // Validation
+  validation?: {
+    zod?: z.ZodType<any>;
+    required?: boolean;
+    min?: number;
+    max?: number;
+    extensions?: string[];
+    width?: {
+      min?: number;
+      max?: number;
+    };
+    height?: {
+      min?: number;
+      max?: number;
+    };
+  };
 }
 
 const baseCustomFieldSchema = z.object({
@@ -54,11 +70,36 @@ const baseCustomFieldSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   placeholder: z.string().optional(),
-  required: z.boolean().optional(),
-  min: z.number().optional(),
-  max: z.number().optional(),
-  validate: z.function().optional(),
-  pattern: z.string().optional(),
+
+  options: z
+    .array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    )
+    .optional(),
+  validation: z
+    .object({
+      zod: z.any().optional(),
+      required: z.boolean().optional(),
+      min: z.number().optional(),
+      max: z.number().optional(),
+      extensions: z.array(z.string()).optional(),
+      width: z
+        .object({
+          min: z.number().optional(),
+          max: z.number().optional(),
+        })
+        .optional(),
+      height: z
+        .object({
+          min: z.number().optional(),
+          max: z.number().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 });
 type Fields = z.infer<typeof baseCustomFieldSchema> & {
   fields?: Fields[];
@@ -71,34 +112,81 @@ const customFieldSchemaObject: z.ZodType<Fields> = baseCustomFieldSchema.extend(
 // const customFieldSchema = customFieldSchemaObject.array();
 
 // ------------------------------------
+// Validate
+interface ValidationResponse {
+  valid: boolean;
+  message?: string;
+}
+
+// ------------------------------------
 // Custom Fields Config
 interface CustomFieldConfig {
   key: string;
   title?: string;
   description?: string;
   placeholder?: string;
-  required?: boolean;
-  min?: number;
-  max?: number;
-  validate?: (value: string | number | boolean) => string;
-  pattern?: string;
+  validation?: {
+    required?: boolean;
+  };
 }
 
 // text field
 interface TabConfig extends CustomFieldConfig {}
 interface TextConfig extends CustomFieldConfig {
-  pattern?: string;
+  validation?: {
+    required?: boolean;
+    zod?: z.ZodType<any>;
+  };
 }
-interface WysiwygConfig extends CustomFieldConfig {}
-interface ImageConfig extends CustomFieldConfig {}
-interface RepeaterConfig extends CustomFieldConfig {}
-interface NumberConfig extends CustomFieldConfig {}
+interface WysiwygConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    zod?: z.ZodType<any>;
+  };
+}
+interface ImageConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    extensions?: string[];
+    width?: {
+      min?: number;
+      max?: number;
+    };
+    height?: {
+      min?: number;
+      max?: number;
+    };
+  };
+}
+interface RepeaterConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    min?: number;
+    max?: number;
+  };
+}
+interface NumberConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    zod?: z.ZodType<any>;
+  };
+}
 interface CheckboxConfig extends CustomFieldConfig {}
 interface SelectConfig extends CustomFieldConfig {
   options: Array<{ label: string; value: string }>;
 }
-interface TextareaConfig extends CustomFieldConfig {}
-interface JSONConfig extends CustomFieldConfig {}
+interface TextareaConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    zod?: z.ZodType<any>;
+  };
+}
+interface JSONConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    zod?: z.ZodType<any>;
+  };
+}
 
 type FieldConfigs =
   | TabConfig
@@ -261,11 +349,114 @@ const BrickBuilder = class BrickBuilder {
 
     return result;
   }
+  get flatFields() {
+    const fields: CustomField[] = [];
+
+    const fieldArray = Array.from(this.fields.values());
+    const getFields = (field: CustomField) => {
+      fields.push(field);
+      if (field.type === "repeater") {
+        field.fields?.forEach((item) => {
+          getFields(item);
+        });
+      }
+    };
+
+    fieldArray.forEach((field) => {
+      getFields(field);
+    });
+
+    return fields;
+  }
   // ------------------------------------
-  // External Methods
-  public static validateBrickData(data: any) {
-    // TODO: add route to verify data added against brick to its field configs
-    return true;
+  // Field Type Validation
+  validateTextType({
+    type,
+    key,
+    value,
+  }: {
+    type: string;
+    key: string;
+    value: string;
+  }): ValidationResponse {
+    const field = this.flatFields.find((item) => item.key === key);
+    if (!field) {
+      return {
+        valid: false,
+        message: `Field with key "${key}" does not exist.`,
+      };
+    }
+    // Check if field type is text
+    const typeValidation = this.validateType(type, field.type);
+    if (!typeValidation.valid) {
+      return typeValidation;
+    }
+
+    // Check if value is a string
+    if (typeof value !== "string") {
+      return {
+        valid: false,
+        message: "Value must be a string.",
+      };
+    }
+
+    // Check if field is required
+    if (field.validation?.required) {
+      const requiredValidation = this.validateRequired(value);
+      if (!requiredValidation.valid) {
+        return requiredValidation;
+      }
+    }
+
+    // run zod validation
+    if (field.validation?.zod) {
+      const zodValidation = this.validateZodSchema(field.validation.zod, value);
+      if (!zodValidation.valid) {
+        return zodValidation;
+      }
+    }
+
+    return {
+      valid: true,
+    };
+  }
+  // ------------------------------------
+  // Validation Util
+  validateRequired(value: any): ValidationResponse {
+    if (value === undefined || value === null || value === "") {
+      return {
+        valid: false,
+        message: "This field is required.",
+      };
+    }
+    return {
+      valid: true,
+    };
+  }
+  validateType(providedType: string, type: FieldTypes): ValidationResponse {
+    if (providedType !== type) {
+      return {
+        valid: false,
+        message: `Field type must be "${type}".`,
+      };
+    }
+    return {
+      valid: true,
+    };
+  }
+  validateZodSchema(schema: z.ZodSchema<any>, value: any): ValidationResponse {
+    try {
+      schema.parse(value);
+      return {
+        valid: true,
+      };
+    } catch (error) {
+      const err = error as z.ZodError;
+      return {
+        valid: false,
+        message: err.issues[0].message,
+      };
+    }
   }
   // ------------------------------------
   // Private Methods
@@ -309,44 +500,56 @@ const BrickBuilder = class BrickBuilder {
   }
 };
 
-// const bannerBrick = new BrickBuilder("banner")
-//   .addTab({
-//     key: "content_tab",
-//   })
-//   .addText({
-//     key: "title",
-//     description: "The title of the banner",
-//     validate: (value) => {
-//       const v = value as string;
-//       if (v.length > 10) {
-//         return "Title must be less than 10 characters";
-//       }
-//       return "";
-//     },
-//   })
-//   .addWysiwyg({
-//     key: "description",
-//   })
-//   .addRepeater({
-//     key: "links",
-//   })
-//   .addImage({
-//     key: "image",
-//   })
-//   .endRepeater()
-//   .addWysiwyg({
-//     key: "description_last",
-//   })
-//   .addTab({
-//     key: "general-2",
-//   })
-//   .addText({
-//     key: "title-2",
-//     description: "The title of the banner",
-//   });
+const bannerBrick = new BrickBuilder("banner")
+  .addTab({
+    key: "content_tab",
+  })
+  .addText({
+    key: "title",
+    description: "The title of the banner",
+    validation: {
+      zod: z.string().min(3).max(10),
+    },
+  })
+  .addWysiwyg({
+    key: "description",
+  })
+  .addRepeater({
+    key: "links",
+    validation: {
+      max: 3,
+    },
+  })
+  .addText({
+    key: "image_alt",
+    validation: {
+      zod: z.string().min(3).max(10),
+    },
+  })
+  .addImage({
+    key: "image",
+  })
+  .endRepeater()
+  .addWysiwyg({
+    key: "description_last",
+  })
+  .addTab({
+    key: "general-2",
+  })
+  .addText({
+    key: "title-2",
+    description: "The title of the banner",
+  });
 
 // // @ts-ignore
-// console.log(bannerBrick.fieldTree);
+// console.log(bannerBrick.fieldTree[0].fields);
+
+// const valid = bannerBrick.validateTextType({
+//   type: "text",
+//   key: "image_alt",
+//   value: "hello",
+// });
+// console.log(valid);
 
 export { BrickBuilderT, CustomField, FieldTypes, FieldTypesEnum };
 export default BrickBuilder;
