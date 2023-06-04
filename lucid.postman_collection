@@ -292,7 +292,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   1\n    // ]\n    // \"bricks\": [\n    //     {\n    //         \"key\": \"banner\",\n    //         \"fields\": {\n    //             \"title\": {\n    //                 \"type\": \"text\",\n    //                 \"value\": \"\"\n    //             },\n    //             \"socials\": {\n    //                 \"type\": \"repeater\",\n    //                 \"items\": [\n    //                     {\n    //                         \"title\": {\n    //                             \"type\": \"text\",\n    //                             \"value\": \"\"\n    //                         },\n    //                         \"content\": {\n    //                             \"type\": \"wysiwyg\",\n    //                             \"value\": \"\"\n    //                         }\n    //                     },\n    //                     {\n    //                         \"title\": {\n    //                             \"type\": \"text\",\n    //                             \"value\": \"\"\n    //                         },\n    //                         \"content\": {\n    //                             \"type\": \"wysiwyg\",\n    //                             \"value\": \"\"\n    //                         }\n    //                     }\n    //                 ]\n    //             }\n    //         }\n    //     }\n    // ]\n}",
+							"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   1\n    // ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -326,7 +326,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"\",\n    \"slug\": \"\",\n    \"parent_id\": \"\",\n    \"post_type\": 1,\n    \"category_ids\": [],\n    \"bricks\": [\n        {\n            \"key\": \"banner\",\n            \"fields\": {\n                \"title\": {\n                    \"type\": \"text\",\n                    \"value\": \"\"\n                },\n                \"socials\": {\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            \"title\": {\n                                \"type\": \"text\",\n                                \"value\": \"\"\n                            },\n                            \"content\": {\n                                \"type\": \"wysiwyg\",\n                                \"value\": \"\"\n                            }\n                        },\n                        {\n                            \"title\": {\n                                \"type\": \"text\",\n                                \"value\": \"\"\n                            },\n                            \"content\": {\n                                \"type\": \"wysiwyg\",\n                                \"value\": \"\"\n                            }\n                        }\n                    ]\n                }\n            }\n        }\n    ]\n}",
+							"raw": "{\n    // \"title\": \"\",\n    // \"slug\": \"\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ]\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"\"\n                },\n                {\n                    // \"id\": 1,\n                    \"key\": \"images\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"content\",\n                            \"type\": \"wysiwyg\",\n                            \"value\": \"\"\n                        },\n                        {\n                            // \"id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        },\n                        {\n                            // \"id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"content\",\n                            \"type\": \"wysiwyg\",\n                            \"value\": \"\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,14 +334,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/pages",
+							"raw": "{{BASE_URL}}/api/v1/pages/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"pages"
+								"pages",
+								"1"
 							]
 						}
 					},
