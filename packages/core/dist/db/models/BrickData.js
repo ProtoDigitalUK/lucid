@@ -14,14 +14,14 @@ const error_handler_1 = require("../../utils/error-handler");
 class BrickData {
 }
 _a = BrickData;
-BrickData.createOrUpdate = async (type, referenceId, data) => {
+BrickData.createOrUpdate = async (brick, order, type, referenceId) => {
     const promises = [];
-    const brickId = data.id
-        ? await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_updateSinglePageBrick).call(BrickData, data)
-        : await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_createSinglePageBrick).call(BrickData, type, referenceId, data);
-    if (!data.fields)
-        return;
-    for (const field of data.fields) {
+    const brickId = brick.id
+        ? await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_updateSinglePageBrick).call(BrickData, order, brick)
+        : await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_createSinglePageBrick).call(BrickData, type, referenceId, order, brick);
+    if (!brick.fields)
+        return brickId;
+    for (const field of brick.fields) {
         if (field.type === "tab")
             continue;
         if (field.type === "repeater")
@@ -30,6 +30,7 @@ BrickData.createOrUpdate = async (type, referenceId, data) => {
             promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_createOrUpdateField).call(BrickData, brickId, field));
     }
     await Promise.all(promises);
+    return brickId;
 };
 BrickData.deleteUnused = async (type, referenceId, brickIds) => {
     const referenceKey = type === "page" ? "page_id" : "group_id";
@@ -54,13 +55,13 @@ BrickData.deleteUnused = async (type, referenceId, brickIds) => {
         });
     }
 };
-_BrickData_createSinglePageBrick = { value: async (type, referenceId, data) => {
+_BrickData_createSinglePageBrick = { value: async (type, referenceId, order, brick) => {
         const referenceKey = type === "page" ? "page_id" : "group_id";
         const brickRes = await db_1.default.query(`INSERT INTO 
         lucid_page_bricks (brick_key, ${referenceKey}, brick_order) 
       VALUES 
         ($1, $2, $3)
-      RETURNING id`, [data.key, referenceId, data.order]);
+      RETURNING id`, [brick.key, referenceId, order]);
         if (!brickRes.rows[0]) {
             throw new error_handler_1.LucidError({
                 type: "basic",
@@ -71,14 +72,14 @@ _BrickData_createSinglePageBrick = { value: async (type, referenceId, data) => {
         }
         return brickRes.rows[0].id;
     } };
-_BrickData_updateSinglePageBrick = { value: async (data) => {
+_BrickData_updateSinglePageBrick = { value: async (order, brick) => {
         const brickRes = await db_1.default.query(`UPDATE 
         lucid_page_bricks 
       SET 
         brick_order = $1
       WHERE 
         id = $2
-      RETURNING id`, [data.order, data.id]);
+      RETURNING id`, [order, brick.id]);
         if (!brickRes.rows[0]) {
             throw new error_handler_1.LucidError({
                 type: "basic",

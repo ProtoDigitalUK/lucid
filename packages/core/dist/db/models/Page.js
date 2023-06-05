@@ -155,10 +155,10 @@ Page.create = async (data, req) => {
 };
 Page.update = async (id, data, req) => {
     const pageId = parseInt(id);
-    const brickPromises = data.bricks?.map((brick) => BrickData_1.default.createOrUpdate("page", pageId, brick)) || [];
-    await Promise.all(brickPromises);
+    const brickPromises = data.bricks?.map((brick, index) => BrickData_1.default.createOrUpdate(brick, index, "page", pageId)) || [];
+    const pageBricksIds = await Promise.all(brickPromises);
     if (data.bricks) {
-        await BrickData_1.default.deleteUnused("page", pageId, data.bricks.map((b) => b.id));
+        await BrickData_1.default.deleteUnused("page", pageId, pageBricksIds);
     }
     return {
         created: true,

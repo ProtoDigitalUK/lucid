@@ -1,7 +1,7 @@
 import z from "zod";
 interface BrickConfig {
 }
-type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json";
+type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json" | "colour" | "datetime";
 declare enum FieldTypesEnum {
     Tab = "tab",
     Text = "text",
@@ -30,8 +30,6 @@ interface CustomField {
     validation?: {
         zod?: z.ZodType<any>;
         required?: boolean;
-        min?: number;
-        max?: number;
         extensions?: string[];
         width?: {
             min?: number;
@@ -87,8 +85,6 @@ interface ImageConfig extends CustomFieldConfig {
 interface RepeaterConfig extends CustomFieldConfig {
     validation?: {
         required?: boolean;
-        min?: number;
-        max?: number;
     };
 }
 interface NumberConfig extends CustomFieldConfig {
@@ -139,7 +135,57 @@ declare const BrickBuilder: {
         addJSON(config: JSONConfig): any;
         readonly fieldTree: CustomField[];
         readonly flatFields: CustomField[];
+        fieldValidation({ type, key, value, }: {
+            type: string;
+            key: string;
+            value: any;
+        }): ValidationResponse;
         validateTextType({ type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateNumberType({ type, key, value, }: {
+            type: string;
+            key: string;
+            value: number;
+        }): ValidationResponse;
+        validateCheckboxType({ type, key, value, }: {
+            type: string;
+            key: string;
+            value: boolean;
+        }): ValidationResponse;
+        validateTextareaType({ type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateSelectType(field: CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateWysiwygType(field: CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateImageType(field: CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateFileType(field: CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateColourType(field: CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): ValidationResponse;
+        validateDatetimeType(field: CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;

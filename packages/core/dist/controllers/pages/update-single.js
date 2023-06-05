@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
+const bricks_1 = require("../../schemas/bricks");
 const build_response_1 = __importDefault(require("../../services/controllers/build-response"));
 const Page_1 = __importDefault(require("../../db/models/Page"));
 const body = zod_1.default.object({
-    bricks: zod_1.default.array(zod_1.default.any()).optional(),
+    bricks: zod_1.default.array(bricks_1.BrickSchema).optional(),
 });
 const query = zod_1.default.object({});
 const params = zod_1.default.object({

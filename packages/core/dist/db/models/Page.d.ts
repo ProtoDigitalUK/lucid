@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { CategoryT } from "../models/Category";
-import { BrickDataCreateData } from "../models/BrickData";
+import { BrickObject } from "../models/BrickData";
 type PageGetMultiple = (req: Request) => Promise<{
     data: PageT[];
     count: number;
@@ -16,7 +16,7 @@ type PageCreate = (data: {
     category_ids?: Array<number>;
 }, req: Request) => Promise<PageT>;
 type PageUpdate = (id: string, data: {
-    bricks?: Array<BrickDataCreateData>;
+    bricks?: Array<BrickObject>;
 }, req: Request) => Promise<PageT>;
 export type PageT = {
     id: number;

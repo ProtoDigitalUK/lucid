@@ -1,20 +1,9 @@
+import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
-interface BrickFieldCreateData {
-    id?: number;
-    parent_repeater?: number;
-    group_position?: number;
-    key: string;
-    type: FieldTypes;
-    value: any;
-    items?: Array<BrickFieldCreateData>;
-}
-export interface BrickDataCreateData {
-    id?: number;
-    key: string;
-    order: number;
-    fields?: Array<BrickFieldCreateData>;
-}
-type BrickDataCreateOrUpdate = (type: "page" | "group", referenceId: number, data: BrickDataCreateData) => Promise<void>;
+import { BrickSchema, FieldSchema } from "../../schemas/bricks";
+export type BrickFieldObject = z.infer<typeof FieldSchema>;
+export type BrickObject = z.infer<typeof BrickSchema>;
+type BrickDataCreateOrUpdate = (brick: BrickObject, order: number, type: "page" | "group", referenceId: number) => Promise<number>;
 type BrickDataDeleteUnused = (type: "page" | "group", referenceId: number, brickIds: Array<number | undefined>) => Promise<void>;
 export type BrickDataT = {
     id: number;

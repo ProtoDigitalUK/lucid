@@ -38,6 +38,7 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
+    validateBricks: true,
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,

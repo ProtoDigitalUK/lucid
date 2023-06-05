@@ -1,4 +1,5 @@
-import { ConfigT } from "./src/services/Config";
+import z from "zod";
+import { ConfigT } from "./src/db/models/Config";
 import BrickBuilder from "@lucid/brick-builder";
 import CollectionBuilder from "@lucid/collection-builder";
 
@@ -11,12 +12,9 @@ const bannerBrick = new BrickBuilder("banner")
   .addText({
     key: "title",
     description: "The title of the banner",
-    validate: (value) => {
-      const v = value as string;
-      if (v.length > 10) {
-        return "Title must be less than 10 characters";
-      }
-      return "";
+    validation: {
+      required: true,
+      zod: z.string().min(3).max(100),
     },
   })
   .addWysiwyg({
