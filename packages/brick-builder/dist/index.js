@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _BrickBuilder_instances, _BrickBuilder_keyToTitle, _BrickBuilder_addToFields, _BrickBuilder_checkKeyDuplication, _a;
+var _BrickBuilder_instances, _BrickBuilder_validateSelectType, _BrickBuilder_validateWysiwygType, _BrickBuilder_validateImageType, _BrickBuilder_validateFileType, _BrickBuilder_validateDatetimeType, _BrickBuilder_validateLinkTarget, _BrickBuilder_validateRequired, _BrickBuilder_validateType, _BrickBuilder_validateZodSchema, _BrickBuilder_validateIsString, _BrickBuilder_validateIsNumber, _BrickBuilder_validateIsBoolean, _BrickBuilder_keyToTitle, _BrickBuilder_addToFields, _BrickBuilder_checkKeyDuplication, _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldTypesEnum = void 0;
 const zod_1 = __importDefault(require("zod"));
@@ -25,6 +25,10 @@ var FieldTypesEnum;
     FieldTypesEnum["Select"] = "select";
     FieldTypesEnum["Textarea"] = "textarea";
     FieldTypesEnum["JSON"] = "json";
+    FieldTypesEnum["Colour"] = "colour";
+    FieldTypesEnum["Datetime"] = "datetime";
+    FieldTypesEnum["Pagelink"] = "pagelink";
+    FieldTypesEnum["Link"] = "link";
 })(FieldTypesEnum || (exports.FieldTypesEnum = FieldTypesEnum = {}));
 const baseCustomFieldSchema = zod_1.default.object({
     type: zod_1.default.string(),
@@ -171,7 +175,31 @@ const BrickBuilder = (_a = class BrickBuilder {
             __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "json", config);
             return this;
         }
-        // TODO: add more custom fields for datetime, file, colour
+        addFile(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "file", config);
+            return this;
+        }
+        addColour(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "colour", config);
+            return this;
+        }
+        addDateTime(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "datetime", config);
+            return this;
+        }
+        addPageLink(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "pagelink", config);
+            return this;
+        }
+        addLink(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "link", config);
+            return this;
+        }
         // ------------------------------------
         // Getters
         get fieldTree() {
@@ -218,7 +246,7 @@ const BrickBuilder = (_a = class BrickBuilder {
         }
         // ------------------------------------
         // Field Type Validation
-        fieldValidation({ type, key, value, }) {
+        fieldValidation({ type, key, value, secondaryValue, }) {
             const field = this.flatFields.find((item) => item.key === key);
             if (!field) {
                 return {
@@ -227,71 +255,68 @@ const BrickBuilder = (_a = class BrickBuilder {
                 };
             }
             // Check if field type is text
-            const typeValidation = this.validateType(type, field.type);
+            const typeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateType).call(this, type, field.type);
             if (!typeValidation.valid) {
                 return typeValidation;
             }
             // Check if field is required
             if (field.validation?.required) {
-                const requiredValidation = this.validateRequired(value);
+                const requiredValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateRequired).call(this, value);
                 if (!requiredValidation.valid) {
                     return requiredValidation;
                 }
             }
             // run zod validation
             if (field.validation?.zod && field.type !== "wysiwyg") {
-                const zodValidation = this.validateZodSchema(field.validation.zod, value);
+                const zodValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateZodSchema).call(this, field.validation.zod, value);
                 if (!zodValidation.valid) {
                     return zodValidation;
                 }
             }
+            // Validate string
+            if (field.type === "text" ||
+                field.type === "textarea" ||
+                field.type === "colour" ||
+                field.type === "datetime" ||
+                field.type === "link" ||
+                field.type === "pagelink" ||
+                field.type === "wysiwyg" ||
+                field.type === "select") {
+                const stringValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsString).call(this, {
+                    type,
+                    key,
+                    value,
+                });
+                if (!stringValidation.valid) {
+                    return stringValidation;
+                }
+            }
+            // Validate number
+            if (field.type === "number") {
+                const numberValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsNumber).call(this, {
+                    type,
+                    key,
+                    value,
+                });
+                if (!numberValidation.valid) {
+                    return numberValidation;
+                }
+            }
+            // Validate boolean
+            if (field.type === "checkbox") {
+                const checkboxValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsBoolean).call(this, {
+                    type,
+                    key,
+                    value,
+                });
+                if (!checkboxValidation.valid) {
+                    return checkboxValidation;
+                }
+            }
+            // Field specific validation
             switch (field.type) {
-                case "text": {
-                    const textTypeValidation = this.validateTextType({
-                        type,
-                        key,
-                        value,
-                    });
-                    if (!textTypeValidation.valid) {
-                        return textTypeValidation;
-                    }
-                    break;
-                }
-                case "number": {
-                    const numberTypeValidation = this.validateNumberType({
-                        type,
-                        key,
-                        value,
-                    });
-                    if (!numberTypeValidation.valid) {
-                        return numberTypeValidation;
-                    }
-                    break;
-                }
-                case "checkbox": {
-                    const checkboxTypeValidation = this.validateCheckboxType({
-                        type,
-                        key,
-                        value,
-                    });
-                    if (!checkboxTypeValidation.valid) {
-                        return checkboxTypeValidation;
-                    }
-                    break;
-                }
-                case "textarea": {
-                    const textareaTypeValidation = this.validateTextareaType({
-                        type,
-                        key,
-                        value,
-                    });
-                    if (!textareaTypeValidation.valid) {
-                        return textareaTypeValidation;
-                    }
-                    break;
-                }
                 case "select": {
-                    const selectTypeValidation = this.validateSelectType(field, {
+                    const selectTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateSelectType).call(this, field, {
                         type,
                         key,
                         value,
@@ -302,7 +327,7 @@ const BrickBuilder = (_a = class BrickBuilder {
                     break;
                 }
                 case "wysiwyg": {
-                    const wysiwygTypeValidation = this.validateWysiwygType(field, {
+                    const wysiwygTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateWysiwygType).call(this, field, {
                         type,
                         key,
                         value,
@@ -313,7 +338,7 @@ const BrickBuilder = (_a = class BrickBuilder {
                     break;
                 }
                 case "image": {
-                    const imageTypeValidation = this.validateImageType(field, {
+                    const imageTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateImageType).call(this, field, {
                         type,
                         key,
                         value,
@@ -324,7 +349,7 @@ const BrickBuilder = (_a = class BrickBuilder {
                     break;
                 }
                 case "file": {
-                    const fileTypeValidation = this.validateFileType(field, {
+                    const fileTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateFileType).call(this, field, {
                         type,
                         key,
                         value,
@@ -334,19 +359,8 @@ const BrickBuilder = (_a = class BrickBuilder {
                     }
                     break;
                 }
-                case "colour": {
-                    const colourTypeValidation = this.validateColourType(field, {
-                        type,
-                        key,
-                        value,
-                    });
-                    if (!colourTypeValidation.valid) {
-                        return colourTypeValidation;
-                    }
-                    break;
-                }
                 case "datetime": {
-                    const datetimeTypeValidation = this.validateDatetimeType(field, {
+                    const datetimeTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateDatetimeType).call(this, {
                         type,
                         key,
                         value,
@@ -356,173 +370,163 @@ const BrickBuilder = (_a = class BrickBuilder {
                     }
                     break;
                 }
-                case "json": {
+                case "link" || "pagelink": {
+                    if (secondaryValue) {
+                        const tagetValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateLinkTarget).call(this, {
+                            type,
+                            key,
+                            value: secondaryValue,
+                        });
+                        if (!tagetValidation.valid) {
+                            return tagetValidation;
+                        }
+                    }
                     break;
                 }
-                case "repeater": {
-                    break;
-                }
-                case "tab": {
-                    break;
-                }
             }
             return {
                 valid: true,
             };
-        }
-        // ------------------------------------
-        validateTextType({ type, key, value, }) {
-            if (typeof value !== "string") {
-                return {
-                    valid: false,
-                    message: "Value must be a string.",
-                };
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateNumberType({ type, key, value, }) {
-            if (typeof value !== "number") {
-                return {
-                    valid: false,
-                    message: "Value must be a number.",
-                };
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateCheckboxType({ type, key, value, }) {
-            if (typeof value !== "boolean") {
-                return {
-                    valid: false,
-                    message: "Value must be a boolean.",
-                };
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateTextareaType({ type, key, value, }) {
-            if (typeof value !== "string") {
-                return {
-                    valid: false,
-                    message: "Value must be a string.",
-                };
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateSelectType(field, { type, key, value, }) {
-            if (typeof value !== "string") {
-                return {
-                    valid: false,
-                    message: "Value must be a string.",
-                };
-            }
-            // Check if value is in the options
-            if (field.options) {
-                const optionValues = field.options.map((option) => option.value);
-                if (!optionValues.includes(value)) {
-                    return {
-                        valid: false,
-                        message: "Value must be one of the provided options.",
-                    };
-                }
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateWysiwygType(field, { type, key, value, }) {
-            if (typeof value !== "string") {
-                return {
-                    valid: false,
-                    message: "Value must be a string.",
-                };
-            }
-            const sanitizedValue = (0, sanitize_html_1.default)(value, {
-                allowedTags: [],
-                allowedAttributes: {},
-            });
-            // run zod validation
-            if (field.validation?.zod) {
-                const zodValidation = this.validateZodSchema(field.validation.zod, sanitizedValue);
-                if (!zodValidation.valid) {
-                    return zodValidation;
-                }
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateImageType(field, { type, key, value, }) {
-            // TODO: add validation for extensions and max/min size
-            return {
-                valid: true,
-            };
-        }
-        validateFileType(field, { type, key, value, }) {
-            // TODO: add validation for extensions
-            return {
-                valid: true,
-            };
-        }
-        validateColourType(field, { type, key, value, }) {
-            // TODO: add validation for color format
-            return {
-                valid: true,
-            };
-        }
-        validateDatetimeType(field, { type, key, value, }) {
-            // TODO: add validation for format
-            return {
-                valid: true,
-            };
-        }
-        // ------------------------------------
-        // Validation Util
-        validateRequired(value) {
-            if (value === undefined || value === null || value === "") {
-                return {
-                    valid: false,
-                    message: "This field is required.",
-                };
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateType(providedType, type) {
-            if (providedType !== type) {
-                return {
-                    valid: false,
-                    message: `Field type must be "${type}".`,
-                };
-            }
-            return {
-                valid: true,
-            };
-        }
-        validateZodSchema(schema, value) {
-            try {
-                schema.parse(value);
-                return {
-                    valid: true,
-                };
-            }
-            catch (error) {
-                const err = error;
-                return {
-                    valid: false,
-                    message: err.issues[0].message,
-                };
-            }
         }
     },
     _BrickBuilder_instances = new WeakSet(),
+    _BrickBuilder_validateSelectType = function _BrickBuilder_validateSelectType(field, { type, key, value, }) {
+        // Check if value is in the options
+        if (field.options) {
+            const optionValues = field.options.map((option) => option.value);
+            if (!optionValues.includes(value)) {
+                return {
+                    valid: false,
+                    message: "Value must be one of the provided options.",
+                };
+            }
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateWysiwygType = function _BrickBuilder_validateWysiwygType(field, { type, key, value, }) {
+        const sanitizedValue = (0, sanitize_html_1.default)(value, {
+            allowedTags: [],
+            allowedAttributes: {},
+        });
+        // run zod validation
+        if (field.validation?.zod) {
+            const zodValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateZodSchema).call(this, field.validation.zod, sanitizedValue);
+            if (!zodValidation.valid) {
+                return zodValidation;
+            }
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateImageType = function _BrickBuilder_validateImageType(field, { type, key, value, }) {
+        // TODO: add validation for extensions and max/min size
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateFileType = function _BrickBuilder_validateFileType(field, { type, key, value, }) {
+        // TODO: add validation for extensions
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateDatetimeType = function _BrickBuilder_validateDatetimeType({ type, key, value, }) {
+        const date = new Date(value);
+        if (isNaN(date.getTime())) {
+            return {
+                valid: false,
+                message: "Value must be a valid date.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateLinkTarget = function _BrickBuilder_validateLinkTarget({ type, key, value, }) {
+        const allowedValues = ["_self", "_blank"];
+        if (!allowedValues.includes(value)) {
+            return {
+                valid: false,
+                message: "Value must be _self or _blank.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateRequired = function _BrickBuilder_validateRequired(value) {
+        if (value === undefined || value === null || value === "") {
+            return {
+                valid: false,
+                message: "This field is required.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateType = function _BrickBuilder_validateType(providedType, type) {
+        if (providedType !== type) {
+            return {
+                valid: false,
+                message: `Field type must be "${type}".`,
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateZodSchema = function _BrickBuilder_validateZodSchema(schema, value) {
+        try {
+            schema.parse(value);
+            return {
+                valid: true,
+            };
+        }
+        catch (error) {
+            const err = error;
+            return {
+                valid: false,
+                message: err.issues[0].message,
+            };
+        }
+    },
+    _BrickBuilder_validateIsString = function _BrickBuilder_validateIsString(value) {
+        if (typeof value !== "string") {
+            return {
+                valid: false,
+                message: "Value must be a string.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateIsNumber = function _BrickBuilder_validateIsNumber(value) {
+        if (typeof value !== "number") {
+            return {
+                valid: false,
+                message: "Value must be a number.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateIsBoolean = function _BrickBuilder_validateIsBoolean(value) {
+        if (typeof value !== "boolean") {
+            return {
+                valid: false,
+                message: "Value must be a boolean.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
     _BrickBuilder_keyToTitle = function _BrickBuilder_keyToTitle(key) {
         if (typeof key !== "string")
             return key;

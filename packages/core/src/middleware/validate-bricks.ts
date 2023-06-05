@@ -75,7 +75,7 @@ const buildErrorObject = (brickErrors: Array<BrickErrors>) => {
 };
 
 // ------------------------------------
-// Validate Middleware
+// Validate Bricks Middleware
 const validateBricks = async (
   req: Request,
   res: Response,

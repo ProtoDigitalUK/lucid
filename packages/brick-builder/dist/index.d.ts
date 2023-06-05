@@ -1,7 +1,7 @@
 import z from "zod";
 interface BrickConfig {
 }
-type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json" | "colour" | "datetime";
+type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json" | "colour" | "datetime" | "pagelink" | "link";
 declare enum FieldTypesEnum {
     Tab = "tab",
     Text = "text",
@@ -13,7 +13,11 @@ declare enum FieldTypesEnum {
     Checkbox = "checkbox",
     Select = "select",
     Textarea = "textarea",
-    JSON = "json"
+    JSON = "json",
+    Colour = "colour",
+    Datetime = "datetime",
+    Pagelink = "pagelink",
+    Link = "link"
 }
 type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 interface CustomField {
@@ -113,7 +117,33 @@ interface JSONConfig extends CustomFieldConfig {
         zod?: z.ZodType<any>;
     };
 }
-type FieldConfigs = TabConfig | TextConfig | WysiwygConfig | ImageConfig | NumberConfig | CheckboxConfig | SelectConfig | TextareaConfig | JSONConfig;
+interface FileConfig extends CustomFieldConfig {
+    validation?: {
+        required?: boolean;
+        extensions?: string[];
+    };
+}
+interface ColourConfig extends CustomFieldConfig {
+    validation?: {
+        required?: boolean;
+    };
+}
+interface DateTimeConfig extends CustomFieldConfig {
+    validation?: {
+        required?: boolean;
+    };
+}
+interface PageLinkConfig extends CustomFieldConfig {
+    validation?: {
+        required?: boolean;
+    };
+}
+interface LinkConfig extends CustomFieldConfig {
+    validation?: {
+        required?: boolean;
+    };
+}
+type FieldConfigs = TabConfig | TextConfig | WysiwygConfig | ImageConfig | NumberConfig | CheckboxConfig | SelectConfig | TextareaConfig | JSONConfig | FileConfig | ColourConfig | DateTimeConfig | PageLinkConfig;
 declare const BrickBuilder: {
     new (key: string, config?: BrickConfig): {
         key: string;
@@ -133,66 +163,55 @@ declare const BrickBuilder: {
         addSelect(config: SelectConfig): any;
         addTextarea(config: TextareaConfig): any;
         addJSON(config: JSONConfig): any;
+        addFile(config: FileConfig): any;
+        addColour(config: ColourConfig): any;
+        addDateTime(config: DateTimeConfig): any;
+        addPageLink(config: PageLinkConfig): any;
+        addLink(config: LinkConfig): any;
         readonly fieldTree: CustomField[];
         readonly flatFields: CustomField[];
-        fieldValidation({ type, key, value, }: {
+        fieldValidation({ type, key, value, secondaryValue, }: {
             type: string;
             key: string;
             value: any;
+            secondaryValue?: any;
         }): ValidationResponse;
-        validateTextType({ type, key, value, }: {
+        "__#1@#validateSelectType"(field: CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): ValidationResponse;
-        validateNumberType({ type, key, value, }: {
-            type: string;
-            key: string;
-            value: number;
-        }): ValidationResponse;
-        validateCheckboxType({ type, key, value, }: {
-            type: string;
-            key: string;
-            value: boolean;
-        }): ValidationResponse;
-        validateTextareaType({ type, key, value, }: {
+        "__#1@#validateWysiwygType"(field: CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): ValidationResponse;
-        validateSelectType(field: CustomField, { type, key, value, }: {
+        "__#1@#validateImageType"(field: CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): ValidationResponse;
-        validateWysiwygType(field: CustomField, { type, key, value, }: {
+        "__#1@#validateFileType"(field: CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): ValidationResponse;
-        validateImageType(field: CustomField, { type, key, value, }: {
+        "__#1@#validateDatetimeType"({ type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): ValidationResponse;
-        validateFileType(field: CustomField, { type, key, value, }: {
+        "__#1@#validateLinkTarget"({ type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): ValidationResponse;
-        validateColourType(field: CustomField, { type, key, value, }: {
-            type: string;
-            key: string;
-            value: string;
-        }): ValidationResponse;
-        validateDatetimeType(field: CustomField, { type, key, value, }: {
-            type: string;
-            key: string;
-            value: string;
-        }): ValidationResponse;
-        validateRequired(value: any): ValidationResponse;
-        validateType(providedType: string, type: FieldTypes): ValidationResponse;
-        validateZodSchema(schema: z.ZodSchema<any>, value: any): ValidationResponse;
+        "__#1@#validateRequired"(value: any): ValidationResponse;
+        "__#1@#validateType"(providedType: string, type: FieldTypes): ValidationResponse;
+        "__#1@#validateZodSchema"(schema: z.ZodSchema<any>, value: any): ValidationResponse;
+        "__#1@#validateIsString"(value: any): ValidationResponse;
+        "__#1@#validateIsNumber"(value: any): ValidationResponse;
+        "__#1@#validateIsBoolean"(value: any): ValidationResponse;
         "__#1@#keyToTitle"(key: string): string;
         "__#1@#addToFields"(type: FieldTypes, config: FieldConfigs): void;
         "__#1@#checkKeyDuplication"(key: string): void;

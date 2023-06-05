@@ -18,7 +18,9 @@ type FieldTypes =
   | "textarea"
   | "json"
   | "colour"
-  | "datetime";
+  | "datetime"
+  | "pagelink"
+  | "link";
 
 enum FieldTypesEnum {
   Tab = "tab",
@@ -32,6 +34,10 @@ enum FieldTypesEnum {
   Select = "select",
   Textarea = "textarea",
   JSON = "json",
+  Colour = "colour",
+  Datetime = "datetime",
+  Pagelink = "pagelink",
+  Link = "link",
 }
 
 type BrickBuilderT = InstanceType<typeof BrickBuilder>;
@@ -184,6 +190,32 @@ interface JSONConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
+interface FileConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+    extensions?: string[];
+  };
+}
+interface ColourConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+  };
+}
+interface DateTimeConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+  };
+}
+interface PageLinkConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+  };
+}
+interface LinkConfig extends CustomFieldConfig {
+  validation?: {
+    required?: boolean;
+  };
+}
 
 type FieldConfigs =
   | TabConfig
@@ -194,7 +226,11 @@ type FieldConfigs =
   | CheckboxConfig
   | SelectConfig
   | TextareaConfig
-  | JSONConfig;
+  | JSONConfig
+  | FileConfig
+  | ColourConfig
+  | DateTimeConfig
+  | PageLinkConfig;
 
 // ------------------------------------
 // BrickBuilder
@@ -317,7 +353,31 @@ const BrickBuilder = class BrickBuilder {
     this.#addToFields("json", config);
     return this;
   }
-  // TODO: add more custom fields for datetime, file, colour
+  public addFile(config: FileConfig) {
+    this.#checkKeyDuplication(config.key);
+    this.#addToFields("file", config);
+    return this;
+  }
+  public addColour(config: ColourConfig) {
+    this.#checkKeyDuplication(config.key);
+    this.#addToFields("colour", config);
+    return this;
+  }
+  public addDateTime(config: DateTimeConfig) {
+    this.#checkKeyDuplication(config.key);
+    this.#addToFields("datetime", config);
+    return this;
+  }
+  public addPageLink(config: PageLinkConfig) {
+    this.#checkKeyDuplication(config.key);
+    this.#addToFields("pagelink", config);
+    return this;
+  }
+  public addLink(config: LinkConfig) {
+    this.#checkKeyDuplication(config.key);
+    this.#addToFields("link", config);
+    return this;
+  }
   // ------------------------------------
   // Getters
   get fieldTree() {
@@ -372,10 +432,12 @@ const BrickBuilder = class BrickBuilder {
     type,
     key,
     value,
+    secondaryValue,
   }: {
     type: string;
     key: string;
     value: any;
+    secondaryValue?: any;
   }): ValidationResponse {
     const field = this.flatFields.find((item) => item.key === key);
     if (!field) {
@@ -385,14 +447,14 @@ const BrickBuilder = class BrickBuilder {
       };
     }
     // Check if field type is text
-    const typeValidation = this.validateType(type, field.type);
+    const typeValidation = this.#validateType(type, field.type);
     if (!typeValidation.valid) {
       return typeValidation;
     }
 
     // Check if field is required
     if (field.validation?.required) {
-      const requiredValidation = this.validateRequired(value);
+      const requiredValidation = this.#validateRequired(value);
       if (!requiredValidation.valid) {
         return requiredValidation;
       }
@@ -400,59 +462,64 @@ const BrickBuilder = class BrickBuilder {
 
     // run zod validation
     if (field.validation?.zod && field.type !== "wysiwyg") {
-      const zodValidation = this.validateZodSchema(field.validation.zod, value);
+      const zodValidation = this.#validateZodSchema(
+        field.validation.zod,
+        value
+      );
       if (!zodValidation.valid) {
         return zodValidation;
       }
     }
 
+    // Validate string
+    if (
+      field.type === "text" ||
+      field.type === "textarea" ||
+      field.type === "colour" ||
+      field.type === "datetime" ||
+      field.type === "link" ||
+      field.type === "pagelink" ||
+      field.type === "wysiwyg" ||
+      field.type === "select"
+    ) {
+      const stringValidation = this.#validateIsString({
+        type,
+        key,
+        value,
+      });
+      if (!stringValidation.valid) {
+        return stringValidation;
+      }
+    }
+
+    // Validate number
+    if (field.type === "number") {
+      const numberValidation = this.#validateIsNumber({
+        type,
+        key,
+        value,
+      });
+      if (!numberValidation.valid) {
+        return numberValidation;
+      }
+    }
+
+    // Validate boolean
+    if (field.type === "checkbox") {
+      const checkboxValidation = this.#validateIsBoolean({
+        type,
+        key,
+        value,
+      });
+      if (!checkboxValidation.valid) {
+        return checkboxValidation;
+      }
+    }
+
+    // Field specific validation
     switch (field.type) {
-      case "text": {
-        const textTypeValidation = this.validateTextType({
-          type,
-          key,
-          value,
-        });
-        if (!textTypeValidation.valid) {
-          return textTypeValidation;
-        }
-        break;
-      }
-      case "number": {
-        const numberTypeValidation = this.validateNumberType({
-          type,
-          key,
-          value,
-        });
-        if (!numberTypeValidation.valid) {
-          return numberTypeValidation;
-        }
-        break;
-      }
-      case "checkbox": {
-        const checkboxTypeValidation = this.validateCheckboxType({
-          type,
-          key,
-          value,
-        });
-        if (!checkboxTypeValidation.valid) {
-          return checkboxTypeValidation;
-        }
-        break;
-      }
-      case "textarea": {
-        const textareaTypeValidation = this.validateTextareaType({
-          type,
-          key,
-          value,
-        });
-        if (!textareaTypeValidation.valid) {
-          return textareaTypeValidation;
-        }
-        break;
-      }
       case "select": {
-        const selectTypeValidation = this.validateSelectType(field, {
+        const selectTypeValidation = this.#validateSelectType(field, {
           type,
           key,
           value,
@@ -463,7 +530,7 @@ const BrickBuilder = class BrickBuilder {
         break;
       }
       case "wysiwyg": {
-        const wysiwygTypeValidation = this.validateWysiwygType(field, {
+        const wysiwygTypeValidation = this.#validateWysiwygType(field, {
           type,
           key,
           value,
@@ -474,7 +541,7 @@ const BrickBuilder = class BrickBuilder {
         break;
       }
       case "image": {
-        const imageTypeValidation = this.validateImageType(field, {
+        const imageTypeValidation = this.#validateImageType(field, {
           type,
           key,
           value,
@@ -485,7 +552,7 @@ const BrickBuilder = class BrickBuilder {
         break;
       }
       case "file": {
-        const fileTypeValidation = this.validateFileType(field, {
+        const fileTypeValidation = this.#validateFileType(field, {
           type,
           key,
           value,
@@ -495,19 +562,8 @@ const BrickBuilder = class BrickBuilder {
         }
         break;
       }
-      case "colour": {
-        const colourTypeValidation = this.validateColourType(field, {
-          type,
-          key,
-          value,
-        });
-        if (!colourTypeValidation.valid) {
-          return colourTypeValidation;
-        }
-        break;
-      }
       case "datetime": {
-        const datetimeTypeValidation = this.validateDatetimeType(field, {
+        const datetimeTypeValidation = this.#validateDatetimeType({
           type,
           key,
           value,
@@ -517,102 +573,27 @@ const BrickBuilder = class BrickBuilder {
         }
         break;
       }
-      case "json": {
-        break;
-      }
-      case "repeater": {
-        break;
-      }
-      case "tab": {
+      case "link" || "pagelink": {
+        if (secondaryValue) {
+          const tagetValidation = this.#validateLinkTarget({
+            type,
+            key,
+            value: secondaryValue,
+          });
+          if (!tagetValidation.valid) {
+            return tagetValidation;
+          }
+        }
         break;
       }
     }
+
     return {
       valid: true,
     };
   }
   // ------------------------------------
-  validateTextType({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: string;
-  }): ValidationResponse {
-    if (typeof value !== "string") {
-      return {
-        valid: false,
-        message: "Value must be a string.",
-      };
-    }
-
-    return {
-      valid: true,
-    };
-  }
-  validateNumberType({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: number;
-  }): ValidationResponse {
-    if (typeof value !== "number") {
-      return {
-        valid: false,
-        message: "Value must be a number.",
-      };
-    }
-
-    return {
-      valid: true,
-    };
-  }
-  validateCheckboxType({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: boolean;
-  }): ValidationResponse {
-    if (typeof value !== "boolean") {
-      return {
-        valid: false,
-        message: "Value must be a boolean.",
-      };
-    }
-
-    return {
-      valid: true,
-    };
-  }
-  validateTextareaType({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: string;
-  }): ValidationResponse {
-    if (typeof value !== "string") {
-      return {
-        valid: false,
-        message: "Value must be a string.",
-      };
-    }
-
-    return {
-      valid: true,
-    };
-  }
-  validateSelectType(
+  #validateSelectType(
     field: CustomField,
     {
       type,
@@ -624,13 +605,6 @@ const BrickBuilder = class BrickBuilder {
       value: string;
     }
   ): ValidationResponse {
-    if (typeof value !== "string") {
-      return {
-        valid: false,
-        message: "Value must be a string.",
-      };
-    }
-
     // Check if value is in the options
     if (field.options) {
       const optionValues = field.options.map((option) => option.value);
@@ -646,7 +620,7 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  validateWysiwygType(
+  #validateWysiwygType(
     field: CustomField,
     {
       type,
@@ -658,13 +632,6 @@ const BrickBuilder = class BrickBuilder {
       value: string;
     }
   ): ValidationResponse {
-    if (typeof value !== "string") {
-      return {
-        valid: false,
-        message: "Value must be a string.",
-      };
-    }
-
     const sanitizedValue = sanitizeHtml(value, {
       allowedTags: [],
       allowedAttributes: {},
@@ -672,7 +639,7 @@ const BrickBuilder = class BrickBuilder {
 
     // run zod validation
     if (field.validation?.zod) {
-      const zodValidation = this.validateZodSchema(
+      const zodValidation = this.#validateZodSchema(
         field.validation.zod,
         sanitizedValue
       );
@@ -685,7 +652,7 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  validateImageType(
+  #validateImageType(
     field: CustomField,
     {
       type,
@@ -702,7 +669,7 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  validateFileType(
+  #validateFileType(
     field: CustomField,
     {
       type,
@@ -719,43 +686,49 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  validateColourType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
+  #validateDatetimeType({
+    type,
+    key,
+    value,
+  }: {
+    type: string;
+    key: string;
+    value: string;
+  }): ValidationResponse {
+    const date = new Date(value);
+    if (isNaN(date.getTime())) {
+      return {
+        valid: false,
+        message: "Value must be a valid date.",
+      };
     }
-  ): ValidationResponse {
-    // TODO: add validation for color format
     return {
       valid: true,
     };
   }
-  validateDatetimeType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
+  #validateLinkTarget({
+    type,
+    key,
+    value,
+  }: {
+    type: string;
+    key: string;
+    value: string;
+  }): ValidationResponse {
+    const allowedValues = ["_self", "_blank"];
+    if (!allowedValues.includes(value)) {
+      return {
+        valid: false,
+        message: "Value must be _self or _blank.",
+      };
     }
-  ): ValidationResponse {
-    // TODO: add validation for format
     return {
       valid: true,
     };
   }
   // ------------------------------------
   // Validation Util
-  validateRequired(value: any): ValidationResponse {
+  #validateRequired(value: any): ValidationResponse {
     if (value === undefined || value === null || value === "") {
       return {
         valid: false,
@@ -766,7 +739,7 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  validateType(providedType: string, type: FieldTypes): ValidationResponse {
+  #validateType(providedType: string, type: FieldTypes): ValidationResponse {
     if (providedType !== type) {
       return {
         valid: false,
@@ -777,7 +750,7 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  validateZodSchema(schema: z.ZodSchema<any>, value: any): ValidationResponse {
+  #validateZodSchema(schema: z.ZodSchema<any>, value: any): ValidationResponse {
     try {
       schema.parse(value);
       return {
@@ -790,6 +763,39 @@ const BrickBuilder = class BrickBuilder {
         message: err.issues[0].message,
       };
     }
+  }
+  #validateIsString(value: any): ValidationResponse {
+    if (typeof value !== "string") {
+      return {
+        valid: false,
+        message: "Value must be a string.",
+      };
+    }
+    return {
+      valid: true,
+    };
+  }
+  #validateIsNumber(value: any): ValidationResponse {
+    if (typeof value !== "number") {
+      return {
+        valid: false,
+        message: "Value must be a number.",
+      };
+    }
+    return {
+      valid: true,
+    };
+  }
+  #validateIsBoolean(value: any): ValidationResponse {
+    if (typeof value !== "boolean") {
+      return {
+        valid: false,
+        message: "Value must be a boolean.",
+      };
+    }
+    return {
+      valid: true,
+    };
   }
   // ------------------------------------
   // Private Methods
