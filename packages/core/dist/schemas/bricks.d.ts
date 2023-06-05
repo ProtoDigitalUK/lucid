@@ -7,6 +7,7 @@ declare const baseFieldSchema: z.ZodObject<{
     key: z.ZodString;
     type: z.ZodNativeEnum<typeof FieldTypesEnum>;
     value: z.ZodAny;
+    target: z.ZodOptional<z.ZodAny>;
 }, "strip", z.ZodTypeAny, {
     type: FieldTypesEnum;
     key: string;
@@ -14,6 +15,7 @@ declare const baseFieldSchema: z.ZodObject<{
     parent_repeater?: number | undefined;
     group_position?: number | undefined;
     value?: any;
+    target?: any;
 }, {
     type: FieldTypesEnum;
     key: string;
@@ -21,6 +23,7 @@ declare const baseFieldSchema: z.ZodObject<{
     parent_repeater?: number | undefined;
     group_position?: number | undefined;
     value?: any;
+    target?: any;
 }>;
 type Field = z.infer<typeof baseFieldSchema> & {
     items?: Field[];

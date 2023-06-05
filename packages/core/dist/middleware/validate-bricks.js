@@ -16,6 +16,7 @@ const flattenBricksFields = (fields) => {
             key: brick.key,
             type: brick.type,
             value: brick.value,
+            target: brick.target,
             group_position: brick.group_position,
         };
         Object.keys(flatBrick).forEach((key) => flatBrick[key] === undefined && delete flatBrick[key]);
@@ -49,6 +50,7 @@ const validateBricks = async (req, res, next) => {
         const builderInstances = BrickConfig_1.default.getBrickConfig();
         const bodyBricks = req.body.bricks;
         const errors = [];
+        let hasErrors = false;
         for (let i = 0; i < bodyBricks.length; i++) {
             const brick = bodyBricks[i];
             const brickErrors = {
@@ -67,21 +69,34 @@ const validateBricks = async (req, res, next) => {
             const flatFields = flattenBricksFields(brick.fields);
             for (let j = 0; j < flatFields.length; j++) {
                 const field = flatFields[j];
+                let secondaryValue = undefined;
+                switch (field.type) {
+                    case "link": {
+                        secondaryValue = field.target;
+                        break;
+                    }
+                    case "pagelink": {
+                        secondaryValue = field.target;
+                        break;
+                    }
+                }
                 const err = instance.fieldValidation({
                     key: field.key,
                     value: field.value,
                     type: field.type,
+                    secondaryValue,
                 });
                 if (err.valid === false) {
                     brickErrors.errors.push({
                         key: errorKey(field.key, field.group_position),
                         message: err.message,
                     });
+                    hasErrors = true;
                 }
             }
             errors.push(brickErrors);
         }
-        if (errors.length > 0) {
+        if (hasErrors) {
             throw new error_handler_1.LucidError({
                 type: "basic",
                 name: "Validation Error",

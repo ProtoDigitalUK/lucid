@@ -478,27 +478,18 @@ const BrickBuilder = class BrickBuilder {
       field.type === "colour" ||
       field.type === "datetime" ||
       field.type === "link" ||
-      field.type === "pagelink" ||
       field.type === "wysiwyg" ||
       field.type === "select"
     ) {
-      const stringValidation = this.#validateIsString({
-        type,
-        key,
-        value,
-      });
+      const stringValidation = this.#validateIsString(value);
       if (!stringValidation.valid) {
         return stringValidation;
       }
     }
 
     // Validate number
-    if (field.type === "number") {
-      const numberValidation = this.#validateIsNumber({
-        type,
-        key,
-        value,
-      });
+    if (field.type === "number" || field.type === "pagelink") {
+      const numberValidation = this.#validateIsNumber(value);
       if (!numberValidation.valid) {
         return numberValidation;
       }
@@ -506,11 +497,7 @@ const BrickBuilder = class BrickBuilder {
 
     // Validate boolean
     if (field.type === "checkbox") {
-      const checkboxValidation = this.#validateIsBoolean({
-        type,
-        key,
-        value,
-      });
+      const checkboxValidation = this.#validateIsBoolean(value);
       if (!checkboxValidation.valid) {
         return checkboxValidation;
       }
@@ -573,13 +560,18 @@ const BrickBuilder = class BrickBuilder {
         }
         break;
       }
-      case "link" || "pagelink": {
+      case "link": {
         if (secondaryValue) {
-          const tagetValidation = this.#validateLinkTarget({
-            type,
-            key,
-            value: secondaryValue,
-          });
+          const tagetValidation = this.#validateLinkTarget(secondaryValue);
+          if (!tagetValidation.valid) {
+            return tagetValidation;
+          }
+        }
+        break;
+      }
+      case "pagelink": {
+        if (secondaryValue) {
+          const tagetValidation = this.#validateLinkTarget(secondaryValue);
           if (!tagetValidation.valid) {
             return tagetValidation;
           }
@@ -706,20 +698,12 @@ const BrickBuilder = class BrickBuilder {
       valid: true,
     };
   }
-  #validateLinkTarget({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: string;
-  }): ValidationResponse {
+  #validateLinkTarget(value: string): ValidationResponse {
     const allowedValues = ["_self", "_blank"];
     if (!allowedValues.includes(value)) {
       return {
         valid: false,
-        message: "Value must be _self or _blank.",
+        message: "Target must be _self or _blank.",
       };
     }
     return {

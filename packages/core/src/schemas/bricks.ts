@@ -12,6 +12,7 @@ const baseFieldSchema = z.object({
   key: z.string(),
   type: FieldTypesSchema,
   value: z.any(),
+  target: z.any().optional(),
 });
 
 type Field = z.infer<typeof baseFieldSchema> & {

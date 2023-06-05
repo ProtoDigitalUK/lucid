@@ -17,6 +17,18 @@ const bannerBrick = new BrickBuilder("banner")
       zod: z.string().min(3).max(100),
     },
   })
+  .addLink({
+    key: "link",
+  })
+  .addPageLink({
+    key: "page_link",
+  })
+  .addColour({
+    key: "colour",
+  })
+  .addDateTime({
+    key: "date",
+  })
   .addWysiwyg({
     key: "intro",
   })

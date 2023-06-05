@@ -21,10 +21,9 @@ export type BrickDataT = {
         text_value?: string;
         int_value?: number;
         bool_value?: boolean;
-        datetime_value?: string;
         json_value?: any;
-        image_value?: string;
-        file_value?: string;
+        media_value?: string;
+        page_link_id?: number;
         items?: Array<BrickDataT["fields"]>;
     }>;
 };

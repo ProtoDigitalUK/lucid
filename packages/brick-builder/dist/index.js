@@ -279,36 +279,23 @@ const BrickBuilder = (_a = class BrickBuilder {
                 field.type === "colour" ||
                 field.type === "datetime" ||
                 field.type === "link" ||
-                field.type === "pagelink" ||
                 field.type === "wysiwyg" ||
                 field.type === "select") {
-                const stringValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsString).call(this, {
-                    type,
-                    key,
-                    value,
-                });
+                const stringValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsString).call(this, value);
                 if (!stringValidation.valid) {
                     return stringValidation;
                 }
             }
             // Validate number
-            if (field.type === "number") {
-                const numberValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsNumber).call(this, {
-                    type,
-                    key,
-                    value,
-                });
+            if (field.type === "number" || field.type === "pagelink") {
+                const numberValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsNumber).call(this, value);
                 if (!numberValidation.valid) {
                     return numberValidation;
                 }
             }
             // Validate boolean
             if (field.type === "checkbox") {
-                const checkboxValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsBoolean).call(this, {
-                    type,
-                    key,
-                    value,
-                });
+                const checkboxValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsBoolean).call(this, value);
                 if (!checkboxValidation.valid) {
                     return checkboxValidation;
                 }
@@ -370,13 +357,18 @@ const BrickBuilder = (_a = class BrickBuilder {
                     }
                     break;
                 }
-                case "link" || "pagelink": {
+                case "link": {
                     if (secondaryValue) {
-                        const tagetValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateLinkTarget).call(this, {
-                            type,
-                            key,
-                            value: secondaryValue,
-                        });
+                        const tagetValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateLinkTarget).call(this, secondaryValue);
+                        if (!tagetValidation.valid) {
+                            return tagetValidation;
+                        }
+                    }
+                    break;
+                }
+                case "pagelink": {
+                    if (secondaryValue) {
+                        const tagetValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateLinkTarget).call(this, secondaryValue);
                         if (!tagetValidation.valid) {
                             return tagetValidation;
                         }
@@ -445,12 +437,12 @@ const BrickBuilder = (_a = class BrickBuilder {
             valid: true,
         };
     },
-    _BrickBuilder_validateLinkTarget = function _BrickBuilder_validateLinkTarget({ type, key, value, }) {
+    _BrickBuilder_validateLinkTarget = function _BrickBuilder_validateLinkTarget(value) {
         const allowedValues = ["_self", "_blank"];
         if (!allowedValues.includes(value)) {
             return {
                 valid: false,
-                message: "Value must be _self or _blank.",
+                message: "Target must be _self or _blank.",
             };
         }
         return {

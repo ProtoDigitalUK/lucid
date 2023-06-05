@@ -61,10 +61,6 @@ export default class BrickData {
     type,
     referenceId
   ) => {
-    // Using the brickbuilder, validate the data type against the custom field type, along with the key to see if it exists
-    // BrickBuilder.validateBrickData(data);
-    // TODO: implement this
-
     // Create or update the page brick record
     const promises = [];
 
@@ -80,8 +76,8 @@ export default class BrickData {
       if (field.type === "tab") continue;
 
       if (field.type === "repeater")
-        promises.push(BrickData.#createOrUpdateRepeater(brickId, field));
-      else promises.push(BrickData.#createOrUpdateField(brickId, field));
+        promises.push(BrickData.#upsertRepeater(brickId, field));
+      else promises.push(BrickData.#upsertField(brickId, field));
     }
 
     await Promise.all(promises);
@@ -184,15 +180,27 @@ export default class BrickData {
   };
   // -------------------------------------------
   // Fields
-  static #createOrUpdateField = async (
-    brickId: number,
-    data: BrickFieldObject
-  ) => {
+  static #upsertField = async (brickId: number, data: BrickFieldObject) => {
     let fieldId;
 
     // Check if id exists. If it does, update, else create.
     if (data.id) {
-      fieldId = await BrickData.#standardFieldUpsert(brickId, data, "update");
+      const { columns, aliases, values } =
+        BrickData.#fieldTypeSpecificQueryData(brickId, data, "update");
+
+      // Generate the SET part of the update statement
+      const setStatements = columns
+        .map((column, i) => `${column} = ${aliases[i]}`)
+        .join(", ");
+
+      const fieldRes = await client.query({
+        text: `UPDATE lucid_fields SET ${setStatements} WHERE id = $${
+          aliases.length + 1
+        } RETURNING id`,
+        values: [...values, data.id],
+      });
+
+      fieldId = fieldRes.rows[0].id;
     } else {
       // Check if the field already exists
       const fieldExists = await BrickData.#checkFieldExists(
@@ -211,7 +219,27 @@ export default class BrickData {
         });
       }
 
-      fieldId = await BrickData.#standardFieldUpsert(brickId, data, "create");
+      // Create the field
+      const { columns, aliases, values } =
+        BrickData.#fieldTypeSpecificQueryData(brickId, data, "create");
+
+      const fieldRes = await client.query({
+        text: `INSERT INTO lucid_fields (${columns.join(
+          ", "
+        )}) VALUES (${aliases.join(", ")}) RETURNING id`,
+        values: values,
+      });
+
+      if (!fieldRes.rows[0]) {
+        throw new LucidError({
+          type: "basic",
+          name: "Field Create Error",
+          message: `Could not create field "${data.key}" for brick "${brickId}".`,
+          status: 500,
+        });
+      }
+
+      fieldId = fieldRes.rows[0].id;
     }
 
     return fieldId;
@@ -249,78 +277,118 @@ export default class BrickData {
     return res.rows[0].exists;
   };
   // Custom field type specific functions
-  static #standardFieldUpsert = async (
+  static #fieldTypeSpecificQueryData = (
     brickId: number,
     data: BrickFieldObject,
     mode: "create" | "update"
   ) => {
-    let fieldId;
-    if (mode === "create") {
-      // Create the field
-      const { columns, aliases, values } = BrickData.#generateFieldData(
-        [
-          "page_brick_id",
-          "key",
-          "type",
-          BrickData.#valueKey(data.type),
-          "parent_repeater",
-          "group_position",
-        ],
-        [
-          brickId,
-          data.key,
-          data.type,
-          data.value,
-          data.parent_repeater,
-          data.group_position,
-        ]
-      );
-
-      const fieldRes = await client.query({
-        text: `INSERT INTO lucid_fields (${columns.join(
-          ", "
-        )}) VALUES (${aliases.join(", ")}) RETURNING id`,
-        values: values,
-      });
-
-      if (!fieldRes.rows[0]) {
-        throw new LucidError({
-          type: "basic",
-          name: "Field Create Error",
-          message: `Could not create field "${data.key}" for brick "${brickId}".`,
-          status: 500,
-        });
+    switch (data.type) {
+      case "link": {
+        if (mode === "create") {
+          return BrickData.#generateQueryData(
+            [
+              "page_brick_id",
+              "key",
+              "type",
+              "text_value",
+              "json_value",
+              "parent_repeater",
+              "group_position",
+            ],
+            [
+              brickId,
+              data.key,
+              data.type,
+              data.value,
+              {
+                target: data.target,
+              },
+              data.parent_repeater,
+              data.group_position,
+            ]
+          );
+        } else {
+          return BrickData.#generateQueryData(
+            ["text_value", "json_value", "group_position"],
+            [
+              data.value,
+              {
+                target: data.target,
+              },
+              data.group_position,
+            ]
+          );
+        }
       }
-
-      fieldId = fieldRes.rows[0].id;
-    } else {
-      const { columns, aliases, values } = BrickData.#generateFieldData(
-        [BrickData.#valueKey(data.type), "group_position"],
-        [data.value, data.group_position]
-      );
-
-      // Generate the SET part of the update statement
-      const setStatements = columns
-        .map((column, i) => `${column} = ${aliases[i]}`)
-        .join(", ");
-
-      const fieldRes = await client.query({
-        text: `UPDATE lucid_fields SET ${setStatements} WHERE id = $${
-          aliases.length + 1
-        } RETURNING id`,
-        values: [...values, data.id],
-      });
-
-      fieldId = fieldRes.rows[0].id;
+      case "pagelink": {
+        if (mode === "create") {
+          return BrickData.#generateQueryData(
+            [
+              "page_brick_id",
+              "key",
+              "type",
+              "page_link_id",
+              "json_value",
+              "parent_repeater",
+              "group_position",
+            ],
+            [
+              brickId,
+              data.key,
+              data.type,
+              data.value,
+              {
+                target: data.target,
+              },
+              data.parent_repeater,
+              data.group_position,
+            ]
+          );
+        } else {
+          return BrickData.#generateQueryData(
+            ["page_link_id", "json_value", "group_position"],
+            [
+              data.value,
+              {
+                target: data.target,
+              },
+              data.group_position,
+            ]
+          );
+        }
+      }
+      default: {
+        if (mode === "create") {
+          return BrickData.#generateQueryData(
+            [
+              "page_brick_id",
+              "key",
+              "type",
+              BrickData.#valueKey(data.type),
+              "parent_repeater",
+              "group_position",
+            ],
+            [
+              brickId,
+              data.key,
+              data.type,
+              data.value,
+              data.parent_repeater,
+              data.group_position,
+            ]
+          );
+        } else {
+          return BrickData.#generateQueryData(
+            [BrickData.#valueKey(data.type), "group_position"],
+            [data.value, data.group_position]
+          );
+        }
+      }
     }
-    return fieldId;
   };
   // -------------------------------------------
   // Repeater Field
-  static #createOrUpdateRepeater = async (
-    brickId: number,
-    data: BrickFieldObject
-  ) => {
+  static #upsertRepeater = async (brickId: number, data: BrickFieldObject) => {
     let repeaterId;
 
     // Check if id exists. If it does, update, else create.
@@ -349,7 +417,7 @@ export default class BrickData {
         });
       }
 
-      const { columns, aliases, values } = BrickData.#generateFieldData(
+      const { columns, aliases, values } = BrickData.#generateQueryData(
         ["page_brick_id", "key", "type", "parent_repeater", "group_position"],
         [
           brickId,
@@ -385,12 +453,12 @@ export default class BrickData {
 
       // If its a repeater, recursively call this function
       if (item.type === "repeater") {
-        promises.push(BrickData.#createOrUpdateRepeater(brickId, item));
+        promises.push(BrickData.#upsertRepeater(brickId, item));
         continue;
       }
 
       // Update the field
-      promises.push(BrickData.#createOrUpdateField(brickId, item));
+      promises.push(BrickData.#upsertField(brickId, item));
     }
 
     await Promise.all(promises);
@@ -429,7 +497,7 @@ export default class BrickData {
         return "text_value";
     }
   };
-  static #generateFieldData = (
+  static #generateQueryData = (
     columns: string[],
     values: (any | undefined)[]
   ) => {

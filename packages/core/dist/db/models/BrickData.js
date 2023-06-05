@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _BrickData_createSinglePageBrick, _BrickData_updateSinglePageBrick, _BrickData_createOrUpdateField, _BrickData_checkFieldExists, _BrickData_createOrUpdateRepeater, _BrickData_valueKey, _BrickData_generateFieldData;
+var _a, _BrickData_createSinglePageBrick, _BrickData_updateSinglePageBrick, _BrickData_upsertField, _BrickData_checkFieldExists, _BrickData_fieldTypeSpecificQueryData, _BrickData_upsertRepeater, _BrickData_valueKey, _BrickData_generateQueryData;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
@@ -25,9 +25,9 @@ BrickData.createOrUpdate = async (brick, order, type, referenceId) => {
         if (field.type === "tab")
             continue;
         if (field.type === "repeater")
-            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_createOrUpdateRepeater).call(BrickData, brickId, field));
+            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertRepeater).call(BrickData, brickId, field));
         else
-            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_createOrUpdateField).call(BrickData, brickId, field));
+            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertField).call(BrickData, brickId, field));
     }
     await Promise.all(promises);
     return brickId;
@@ -90,10 +90,10 @@ _BrickData_updateSinglePageBrick = { value: async (order, brick) => {
         }
         return brickRes.rows[0].id;
     } };
-_BrickData_createOrUpdateField = { value: async (brickId, data) => {
+_BrickData_upsertField = { value: async (brickId, data) => {
         let fieldId;
         if (data.id) {
-            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateFieldData).call(BrickData, [__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"], [data.value, data.group_position]);
+            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brickId, data, "update");
             const setStatements = columns
                 .map((column, i) => `${column} = ${aliases[i]}`)
                 .join(", ");
@@ -113,21 +113,7 @@ _BrickData_createOrUpdateField = { value: async (brickId, data) => {
                     status: 409,
                 });
             }
-            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateFieldData).call(BrickData, [
-                "page_brick_id",
-                "key",
-                "type",
-                __classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type),
-                "parent_repeater",
-                "group_position",
-            ], [
-                brickId,
-                data.key,
-                data.type,
-                data.value,
-                data.parent_repeater,
-                data.group_position,
-            ]);
+            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brickId, data, "create");
             const fieldRes = await db_1.default.query({
                 text: `INSERT INTO lucid_fields (${columns.join(", ")}) VALUES (${aliases.join(", ")}) RETURNING id`,
                 values: values,
@@ -162,7 +148,97 @@ _BrickData_checkFieldExists = { value: async (brickId, key, type, parent_repeate
         });
         return res.rows[0].exists;
     } };
-_BrickData_createOrUpdateRepeater = { value: async (brickId, data) => {
+_BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
+        switch (data.type) {
+            case "link": {
+                if (mode === "create") {
+                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [
+                        "page_brick_id",
+                        "key",
+                        "type",
+                        "text_value",
+                        "json_value",
+                        "parent_repeater",
+                        "group_position",
+                    ], [
+                        brickId,
+                        data.key,
+                        data.type,
+                        data.value,
+                        {
+                            target: data.target,
+                        },
+                        data.parent_repeater,
+                        data.group_position,
+                    ]);
+                }
+                else {
+                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, ["text_value", "json_value", "group_position"], [
+                        data.value,
+                        {
+                            target: data.target,
+                        },
+                        data.group_position,
+                    ]);
+                }
+            }
+            case "pagelink": {
+                if (mode === "create") {
+                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [
+                        "page_brick_id",
+                        "key",
+                        "type",
+                        "page_link_id",
+                        "json_value",
+                        "parent_repeater",
+                        "group_position",
+                    ], [
+                        brickId,
+                        data.key,
+                        data.type,
+                        data.value,
+                        {
+                            target: data.target,
+                        },
+                        data.parent_repeater,
+                        data.group_position,
+                    ]);
+                }
+                else {
+                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, ["page_link_id", "json_value", "group_position"], [
+                        data.value,
+                        {
+                            target: data.target,
+                        },
+                        data.group_position,
+                    ]);
+                }
+            }
+            default: {
+                if (mode === "create") {
+                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [
+                        "page_brick_id",
+                        "key",
+                        "type",
+                        __classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type),
+                        "parent_repeater",
+                        "group_position",
+                    ], [
+                        brickId,
+                        data.key,
+                        data.type,
+                        data.value,
+                        data.parent_repeater,
+                        data.group_position,
+                    ]);
+                }
+                else {
+                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"], [data.value, data.group_position]);
+                }
+            }
+        }
+    } };
+_BrickData_upsertRepeater = { value: async (brickId, data) => {
         let repeaterId;
         if (data.id && data.group_position !== undefined) {
             const repeaterRes = await db_1.default.query({
@@ -181,7 +257,7 @@ _BrickData_createOrUpdateRepeater = { value: async (brickId, data) => {
                     status: 409,
                 });
             }
-            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateFieldData).call(BrickData, ["page_brick_id", "key", "type", "parent_repeater", "group_position"], [
+            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, ["page_brick_id", "key", "type", "parent_repeater", "group_position"], [
                 brickId,
                 data.key,
                 data.type,
@@ -203,10 +279,10 @@ _BrickData_createOrUpdateRepeater = { value: async (brickId, data) => {
                 continue;
             item.parent_repeater = repeaterId;
             if (item.type === "repeater") {
-                promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_createOrUpdateRepeater).call(BrickData, brickId, item));
+                promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertRepeater).call(BrickData, brickId, item));
                 continue;
             }
-            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_createOrUpdateField).call(BrickData, brickId, item));
+            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertField).call(BrickData, brickId, item));
         }
         await Promise.all(promises);
     } };
@@ -217,9 +293,9 @@ _BrickData_valueKey = { value: (type) => {
             case "wysiwyg":
                 return "text_value";
             case "image":
-                return "image_value";
+                return "media_value";
             case "file":
-                return "file_value";
+                return "media_value";
             case "number":
                 return "int_value";
             case "checkbox":
@@ -230,11 +306,19 @@ _BrickData_valueKey = { value: (type) => {
                 return "text_value";
             case "json":
                 return "json_value";
+            case "pagelink":
+                return "page_link_id";
+            case "link":
+                return "text_value";
+            case "datetime":
+                return "text_value";
+            case "colour":
+                return "text_value";
             default:
                 return "text_value";
         }
     } };
-_BrickData_generateFieldData = { value: (columns, values) => {
+_BrickData_generateQueryData = { value: (columns, values) => {
         if (columns.length !== values.length) {
             throw new Error("Columns and values arrays must have the same length");
         }

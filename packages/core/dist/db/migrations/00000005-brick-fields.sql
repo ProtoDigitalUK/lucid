@@ -19,8 +19,7 @@ CREATE TABLE IF NOT EXISTS lucid_fields (
     text_value TEXT,
     int_value INT,
     bool_value BOOLEAN,
-    datetime_value TIMESTAMP,
     json_value JSONB,
-    image_value TEXT, -- this will be a reference to the image in the file system at some point
-    file_value TEXT -- this will be a reference to the file in the file system at some point
+    page_link_id INT REFERENCES lucid_pages(id) ON DELETE SET NULL,
+    media_value TEXT -- this will be a reference to the media in the file system at some point
 );

@@ -14,6 +14,7 @@ const baseFieldSchema = zod_1.default.object({
     key: zod_1.default.string(),
     type: FieldTypesSchema,
     value: zod_1.default.any(),
+    target: zod_1.default.any().optional(),
 });
 exports.FieldSchema = baseFieldSchema.extend({
     items: zod_1.default.lazy(() => exports.FieldSchema.array().optional()),

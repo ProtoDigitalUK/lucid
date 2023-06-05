@@ -30,6 +30,7 @@ const flattenBricksFields = (
       key: brick.key,
       type: brick.type,
       value: brick.value,
+      target: brick.target,
       group_position: brick.group_position,
     };
 
@@ -86,6 +87,7 @@ const validateBricks = async (
     const bodyBricks = req.body.bricks as BrickObject[];
 
     const errors: BrickErrors[] = [];
+    let hasErrors = false;
 
     for (let i = 0; i < bodyBricks.length; i++) {
       const brick = bodyBricks[i];
@@ -110,23 +112,38 @@ const validateBricks = async (
       for (let j = 0; j < flatFields.length; j++) {
         const field = flatFields[j];
 
+        // Set the secondary value
+        let secondaryValue: any = undefined;
+        switch (field.type) {
+          case "link": {
+            secondaryValue = field.target;
+            break;
+          }
+          case "pagelink": {
+            secondaryValue = field.target;
+            break;
+          }
+        }
+
         const err = instance.fieldValidation({
           key: field.key,
           value: field.value,
           type: field.type,
+          secondaryValue,
         });
         if (err.valid === false) {
           brickErrors.errors.push({
             key: errorKey(field.key, field.group_position),
             message: err.message,
           });
+          hasErrors = true;
         }
       }
 
       errors.push(brickErrors);
     }
 
-    if (errors.length > 0) {
+    if (hasErrors) {
       throw new LucidError({
         type: "basic",
         name: "Validation Error",

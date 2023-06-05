@@ -201,11 +201,7 @@ declare const BrickBuilder: {
             key: string;
             value: string;
         }): ValidationResponse;
-        "__#1@#validateLinkTarget"({ type, key, value, }: {
-            type: string;
-            key: string;
-            value: string;
-        }): ValidationResponse;
+        "__#1@#validateLinkTarget"(value: string): ValidationResponse;
         "__#1@#validateRequired"(value: any): ValidationResponse;
         "__#1@#validateType"(providedType: string, type: FieldTypes): ValidationResponse;
         "__#1@#validateZodSchema"(schema: z.ZodSchema<any>, value: any): ValidationResponse;
