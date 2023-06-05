@@ -44,10 +44,9 @@ export type BrickDataT = {
     text_value?: string;
     int_value?: number;
     bool_value?: boolean;
-    datetime_value?: string;
     json_value?: any;
-    image_value?: string;
-    file_value?: string;
+    media_value?: string;
+    page_link_id?: number;
 
     items?: Array<BrickDataT["fields"]>;
   }>;
@@ -193,24 +192,7 @@ export default class BrickData {
 
     // Check if id exists. If it does, update, else create.
     if (data.id) {
-      const { columns, aliases, values } = BrickData.#generateFieldData(
-        [BrickData.#valueKey(data.type), "group_position"],
-        [data.value, data.group_position]
-      );
-
-      // Generate the SET part of the update statement
-      const setStatements = columns
-        .map((column, i) => `${column} = ${aliases[i]}`)
-        .join(", ");
-
-      const fieldRes = await client.query({
-        text: `UPDATE lucid_fields SET ${setStatements} WHERE id = $${
-          aliases.length + 1
-        } RETURNING id`,
-        values: [...values, data.id],
-      });
-
-      fieldId = fieldRes.rows[0].id;
+      fieldId = await BrickData.#standardFieldUpsert(brickId, data, "update");
     } else {
       // Check if the field already exists
       const fieldExists = await BrickData.#checkFieldExists(
@@ -229,6 +211,51 @@ export default class BrickData {
         });
       }
 
+      fieldId = await BrickData.#standardFieldUpsert(brickId, data, "create");
+    }
+
+    return fieldId;
+  };
+  static #checkFieldExists = async (
+    brickId: number,
+    key: string,
+    type: string,
+    parent_repeater?: number,
+    group_position?: number
+  ) => {
+    let queryText =
+      "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE page_brick_id = $1 AND key = $2 AND type = $3";
+    let queryValues = [brickId, key, type];
+
+    // If parent repeater is provided, add it to the query
+    if (parent_repeater !== undefined) {
+      queryText += " AND parent_repeater = $4";
+      queryValues.push(parent_repeater);
+    }
+
+    // If group_position is provided, add it to the query
+    if (group_position !== undefined) {
+      queryText += " AND group_position = $5";
+      queryValues.push(group_position);
+    }
+
+    queryText += ")";
+
+    const res = await client.query<{ exists: boolean }>({
+      text: queryText,
+      values: queryValues,
+    });
+
+    return res.rows[0].exists;
+  };
+  // Custom field type specific functions
+  static #standardFieldUpsert = async (
+    brickId: number,
+    data: BrickFieldObject,
+    mode: "create" | "update"
+  ) => {
+    let fieldId;
+    if (mode === "create") {
       // Create the field
       const { columns, aliases, values } = BrickData.#generateFieldData(
         [
@@ -266,41 +293,27 @@ export default class BrickData {
       }
 
       fieldId = fieldRes.rows[0].id;
-    }
+    } else {
+      const { columns, aliases, values } = BrickData.#generateFieldData(
+        [BrickData.#valueKey(data.type), "group_position"],
+        [data.value, data.group_position]
+      );
 
+      // Generate the SET part of the update statement
+      const setStatements = columns
+        .map((column, i) => `${column} = ${aliases[i]}`)
+        .join(", ");
+
+      const fieldRes = await client.query({
+        text: `UPDATE lucid_fields SET ${setStatements} WHERE id = $${
+          aliases.length + 1
+        } RETURNING id`,
+        values: [...values, data.id],
+      });
+
+      fieldId = fieldRes.rows[0].id;
+    }
     return fieldId;
-  };
-  static #checkFieldExists = async (
-    brickId: number,
-    key: string,
-    type: string,
-    parent_repeater?: number,
-    group_position?: number
-  ) => {
-    let queryText =
-      "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE page_brick_id = $1 AND key = $2 AND type = $3";
-    let queryValues = [brickId, key, type];
-
-    // If parent repeater is provided, add it to the query
-    if (parent_repeater !== undefined) {
-      queryText += " AND parent_repeater = $4";
-      queryValues.push(parent_repeater);
-    }
-
-    // If group_position is provided, add it to the query
-    if (group_position !== undefined) {
-      queryText += " AND group_position = $5";
-      queryValues.push(group_position);
-    }
-
-    queryText += ")";
-
-    const res = await client.query<{ exists: boolean }>({
-      text: queryText,
-      values: queryValues,
-    });
-
-    return res.rows[0].exists;
   };
   // -------------------------------------------
   // Repeater Field
@@ -391,9 +404,9 @@ export default class BrickData {
       case "wysiwyg":
         return "text_value";
       case "image":
-        return "image_value";
+        return "media_value";
       case "file":
-        return "file_value";
+        return "media_value";
       case "number":
         return "int_value";
       case "checkbox":
@@ -404,6 +417,14 @@ export default class BrickData {
         return "text_value";
       case "json":
         return "json_value";
+      case "pagelink":
+        return "page_link_id";
+      case "link":
+        return "text_value";
+      case "datetime":
+        return "text_value";
+      case "colour":
+        return "text_value";
       default:
         return "text_value";
     }
