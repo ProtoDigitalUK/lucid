@@ -36,6 +36,8 @@ const baseCustomFieldSchema = zod_1.default.object({
     title: zod_1.default.string(),
     description: zod_1.default.string().optional(),
     placeholder: zod_1.default.string().optional(),
+    // boolean or string
+    default: zod_1.default.union([zod_1.default.boolean(), zod_1.default.string()]).optional(),
     options: zod_1.default
         .array(zod_1.default.object({
         label: zod_1.default.string(),

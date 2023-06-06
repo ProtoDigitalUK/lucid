@@ -12,6 +12,8 @@ const bannerBrick = new BrickBuilder("banner")
   .addText({
     key: "title",
     description: "The title of the banner",
+    default: "Banner Title",
+    placeholder: "Enter a title",
     validation: {
       required: true,
       zod: z.string().min(3).max(100),
@@ -48,6 +50,7 @@ const bannerBrick = new BrickBuilder("banner")
   .addCheckbox({
     key: "fullwidth",
     description: "Make the banner fullwidth",
+    default: true,
   });
 
 const introBrick = new BrickBuilder("intro")

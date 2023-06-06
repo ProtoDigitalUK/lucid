@@ -25,8 +25,9 @@ interface CustomField {
     key: CustomFieldConfig["key"];
     title: CustomFieldConfig["title"];
     description?: CustomFieldConfig["description"];
-    placeholder?: CustomFieldConfig["placeholder"];
+    placeholder?: string;
     fields?: Array<CustomField>;
+    default?: string | boolean;
     options?: Array<{
         label: string;
         value: string;
@@ -53,7 +54,6 @@ interface CustomFieldConfig {
     key: string;
     title?: string;
     description?: string;
-    placeholder?: string;
     validation?: {
         required?: boolean;
     };
@@ -61,12 +61,16 @@ interface CustomFieldConfig {
 interface TabConfig extends CustomFieldConfig {
 }
 interface TextConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
         zod?: z.ZodType<any>;
     };
 }
 interface WysiwygConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
         zod?: z.ZodType<any>;
@@ -92,26 +96,35 @@ interface RepeaterConfig extends CustomFieldConfig {
     };
 }
 interface NumberConfig extends CustomFieldConfig {
+    default?: number;
+    placeholder?: string;
     validation?: {
         required?: boolean;
         zod?: z.ZodType<any>;
     };
 }
 interface CheckboxConfig extends CustomFieldConfig {
+    default?: boolean;
 }
 interface SelectConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     options: Array<{
         label: string;
         value: string;
     }>;
 }
 interface TextareaConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
         zod?: z.ZodType<any>;
     };
 }
 interface JSONConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
         zod?: z.ZodType<any>;
@@ -124,11 +137,15 @@ interface FileConfig extends CustomFieldConfig {
     };
 }
 interface ColourConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
     };
 }
 interface DateTimeConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
     };
@@ -139,6 +156,8 @@ interface PageLinkConfig extends CustomFieldConfig {
     };
 }
 interface LinkConfig extends CustomFieldConfig {
+    default?: string;
+    placeholder?: string;
     validation?: {
         required?: boolean;
     };
