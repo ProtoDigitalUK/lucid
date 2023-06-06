@@ -32,6 +32,8 @@ type PageGetMultiple = (req: Request) => Promise<{
   count: number;
 }>;
 
+type PageGetSingle = (id: string, req: Request) => Promise<PageT>;
+
 type PageCreate = (
   data: {
     title: string;
@@ -67,6 +69,7 @@ export type PageT = {
   homepage: boolean;
   excerpt: string | null;
   categories?: Array<CategoryT> | null;
+  bricks?: Array<BrickData> | null;
 
   published: boolean;
   published_at: string | null;
@@ -136,7 +139,7 @@ export default class Page {
     const { select, where, order, pagination } = QueryB.query;
 
     // Get Pages
-    // TODO: add join for post_type
+    // TODO: add join for collection
     // TODO: add join for bricks
     const pages = await client.query<PageT>({
       text: `SELECT
@@ -174,6 +177,45 @@ export default class Page {
       data: pages.rows,
       count: count.rows[0].count,
     };
+  };
+  static getSingle: PageGetSingle = async (id, req) => {
+    const page = await client.query<PageT>({
+      text: `SELECT
+          id,
+          collection_key,
+          parent_id,
+          title,
+          slug,
+          full_slug,
+          homepage,
+          excerpt,
+          published,
+          published_at,
+          published_by,
+          created_by,
+          created_at,
+          updated_at
+        FROM
+          lucid_pages
+        WHERE
+          id = $1`,
+      values: [id],
+    });
+
+    if (page.rows.length === 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "Page not found",
+        message: `Page with id "${id}" not found`,
+        status: 404,
+      });
+    }
+
+    const pageBricks = await BrickData.getAll("page", page.rows[0].id);
+
+    page.rows[0].bricks = pageBricks;
+
+    return Page.#formatPageData(page.rows[0]);
   };
   static create: PageCreate = async (data, req) => {
     // -------------------------------------------

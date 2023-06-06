@@ -1,7 +1,9 @@
 import z from "zod";
 import client from "@db/db";
 import { LucidError } from "@utils/error-handler";
-import BrickBuilder, { FieldTypes } from "@lucid/brick-builder";
+import { FieldTypes } from "@lucid/brick-builder";
+// Services
+import formatResponse from "@services/bricks/format-response";
 // Schema
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
 
@@ -18,6 +20,11 @@ type BrickDataCreateOrUpdate = (
   referenceId: number
 ) => Promise<number>;
 
+type BrickDataGetAll = (
+  type: "page" | "group",
+  referenceId: number
+) => Promise<Array<any>>;
+
 type BrickDataDeleteUnused = (
   type: "page" | "group",
   referenceId: number,
@@ -26,30 +33,33 @@ type BrickDataDeleteUnused = (
 
 // -------------------------------------------
 // Page Brick
-export type BrickDataT = {
+export type BrickFieldsT = {
+  // Page brick info
   id: number;
   brick_key: string;
-  page_id?: number;
-  group_id?: number;
+  page_id: number | null;
+  group_id: number | null;
   brick_order: number;
-  fields?: Array<{
-    id: number;
-    page_brick_id: number;
-    parent_repeater: number | null;
 
-    key: string;
-    type: FieldTypes;
-    group_position?: number;
+  // Fields info
+  fields_id: number;
+  page_brick_id: number;
+  parent_repeater: number | null;
+  key: string;
+  type: FieldTypes;
+  group_position: number | null;
 
-    text_value?: string;
-    int_value?: number;
-    bool_value?: boolean;
-    json_value?: any;
-    media_value?: string;
-    page_link_id?: number;
+  text_value: string | null;
+  int_value: number | null;
+  bool_value: boolean | null;
+  json_value: any | null;
 
-    items?: Array<BrickDataT["fields"]>;
-  }>;
+  media_id: number | null;
+
+  page_link_id: number | null;
+  linked_page_title: string | null;
+  linked_page_slug: string | null;
+  linked_page_full_slug: string | null;
 };
 
 export default class BrickData {
@@ -83,6 +93,39 @@ export default class BrickData {
     await Promise.all(promises);
 
     return brickId;
+  };
+  static getAll: BrickDataGetAll = async (type, referenceId) => {
+    // fetch all lucid_page_bricks for the given page/group id and order by brick_order
+    // join all lucid_fields in flat structure, making sure to join page_link_id or media_id if applicable
+    const referenceKey = type === "page" ? "page_id" : "group_id";
+
+    const brickFields = await client.query<BrickFieldsT>(
+      `SELECT 
+        lucid_page_bricks.*,
+        lucid_fields.*,
+        lucid_pages.title as linked_page_title,
+        lucid_pages.slug as linked_page_slug,
+        lucid_pages.full_slug as linked_page_full_slug
+      FROM 
+        lucid_page_bricks
+      LEFT JOIN 
+        lucid_fields
+      ON 
+        lucid_page_bricks.id = lucid_fields.page_brick_id
+      LEFT JOIN 
+        lucid_pages
+      ON 
+        lucid_fields.page_link_id = lucid_pages.id
+      WHERE 
+        lucid_page_bricks.${referenceKey} = $1
+      ORDER BY 
+        lucid_page_bricks.brick_order`,
+      [referenceId]
+    );
+
+    if (!brickFields.rows[0]) return [];
+
+    return formatResponse(brickFields.rows) as any;
   };
   static deleteUnused: BrickDataDeleteUnused = async (
     type,
@@ -184,7 +227,7 @@ export default class BrickData {
     let fieldId;
 
     // Check if id exists. If it does, update, else create.
-    if (data.id) {
+    if (data.fields_id) {
       const { columns, aliases, values } =
         BrickData.#fieldTypeSpecificQueryData(brickId, data, "update");
 
@@ -193,14 +236,16 @@ export default class BrickData {
         .map((column, i) => `${column} = ${aliases[i]}`)
         .join(", ");
 
-      const fieldRes = await client.query({
-        text: `UPDATE lucid_fields SET ${setStatements} WHERE id = $${
+      const fieldRes = await client.query<{
+        fields_id: number;
+      }>({
+        text: `UPDATE lucid_fields SET ${setStatements} WHERE fields_id = $${
           aliases.length + 1
-        } RETURNING id`,
-        values: [...values, data.id],
+        } RETURNING fields_id`,
+        values: [...values, data.fields_id],
       });
 
-      fieldId = fieldRes.rows[0].id;
+      fieldId = fieldRes.rows[0].fields_id;
     } else {
       // Check if the field already exists
       const fieldExists = await BrickData.#checkFieldExists(
@@ -223,10 +268,12 @@ export default class BrickData {
       const { columns, aliases, values } =
         BrickData.#fieldTypeSpecificQueryData(brickId, data, "create");
 
-      const fieldRes = await client.query({
+      const fieldRes = await client.query<{
+        fields_id: number;
+      }>({
         text: `INSERT INTO lucid_fields (${columns.join(
           ", "
-        )}) VALUES (${aliases.join(", ")}) RETURNING id`,
+        )}) VALUES (${aliases.join(", ")}) RETURNING fields_id`,
         values: values,
       });
 
@@ -239,7 +286,7 @@ export default class BrickData {
         });
       }
 
-      fieldId = fieldRes.rows[0].id;
+      fieldId = fieldRes.rows[0].fields_id;
     }
 
     return fieldId;
@@ -392,13 +439,13 @@ export default class BrickData {
     let repeaterId;
 
     // Check if id exists. If it does, update, else create.
-    if (data.id && data.group_position !== undefined) {
-      const repeaterRes = await client.query<{ id: number }>({
-        text: `UPDATE lucid_fields SET group_position = $1 WHERE id = $2 RETURNING id`,
-        values: [data.group_position, data.id],
+    if (data.fields_id && data.group_position !== undefined) {
+      const repeaterRes = await client.query<{ fields_id: number }>({
+        text: `UPDATE lucid_fields SET group_position = $1 WHERE fields_id = $2 RETURNING fields_id`,
+        values: [data.group_position, data.fields_id],
       });
 
-      repeaterId = repeaterRes.rows[0].id;
+      repeaterId = repeaterRes.rows[0].fields_id;
     } else {
       const repeaterExists = await BrickData.#checkFieldExists(
         brickId,
@@ -428,14 +475,14 @@ export default class BrickData {
         ]
       );
 
-      const repeaterRes = await client.query<{ id: number }>({
+      const repeaterRes = await client.query<{ fields_id: number }>({
         text: `INSERT INTO lucid_fields (${columns.join(
           ", "
-        )}) VALUES (${aliases.join(", ")}) RETURNING id`,
+        )}) VALUES (${aliases.join(", ")}) RETURNING fields_id`,
         values: values,
       });
 
-      repeaterId = repeaterRes.rows[0].id;
+      repeaterId = repeaterRes.rows[0].fields_id;
     }
 
     // If it has no items, return
@@ -472,9 +519,9 @@ export default class BrickData {
       case "wysiwyg":
         return "text_value";
       case "image":
-        return "media_value";
+        return "media_id";
       case "file":
-        return "media_value";
+        return "media_id";
       case "number":
         return "int_value";
       case "checkbox":

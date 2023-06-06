@@ -3,6 +3,7 @@ import r from "@utils/route";
 // Controller
 import createSingle from "@controllers/pages/create-single";
 import getMultiple from "@controllers/pages/get-multiple";
+import getSingle from "@controllers/pages/get-single";
 import updateSingle from "@controllers/pages/update-single";
 
 // ------------------------------------
@@ -30,6 +31,17 @@ r(router, {
   },
   schema: getMultiple.schema,
   controller: getMultiple.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/:id",
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: getSingle.schema,
+  controller: getSingle.controller,
 });
 
 r(router, {

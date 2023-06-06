@@ -6,7 +6,7 @@ const FieldTypesSchema = z.nativeEnum(FieldTypesEnum);
 // ------------------------------------
 // CREATE & UPDATE BRICKS / FIELDS
 const baseFieldSchema = z.object({
-  id: z.number().optional(),
+  fields_id: z.number().optional(),
   parent_repeater: z.number().optional(),
   group_position: z.number().optional(),
   key: z.string(),

@@ -36,6 +36,9 @@ const bannerBrick = new BrickBuilder("banner")
   })
   .addRepeater({
     key: "social_links",
+    validation: {
+      max: 5,
+    },
   })
   .addText({
     key: "social_title",
