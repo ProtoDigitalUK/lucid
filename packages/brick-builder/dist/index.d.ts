@@ -188,6 +188,7 @@ declare const BrickBuilder: {
         addPageLink(config: PageLinkConfig): any;
         addLink(config: LinkConfig): any;
         readonly fieldTree: CustomField[];
+        readonly basicFieldTree: CustomField[];
         readonly flatFields: CustomField[];
         fieldValidation({ type, key, value, secondaryValue, }: {
             type: string;

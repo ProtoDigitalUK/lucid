@@ -102,6 +102,41 @@ Page.getMultiple = async (req) => {
         count: count.rows[0].count,
     };
 };
+Page.getSingle = async (id, req) => {
+    const page = await db_1.default.query({
+        text: `SELECT
+          id,
+          collection_key,
+          parent_id,
+          title,
+          slug,
+          full_slug,
+          homepage,
+          excerpt,
+          published,
+          published_at,
+          published_by,
+          created_by,
+          created_at,
+          updated_at
+        FROM
+          lucid_pages
+        WHERE
+          id = $1`,
+        values: [id],
+    });
+    if (page.rows.length === 0) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Page not found",
+            message: `Page with id "${id}" not found`,
+            status: 404,
+        });
+    }
+    const pageBricks = await BrickData_1.default.getAll("page", page.rows[0].id);
+    page.rows[0].bricks = pageBricks;
+    return __classPrivateFieldGet(Page, _a, "f", _Page_formatPageData).call(Page, page.rows[0]);
+};
 Page.create = async (data, req) => {
     const parentId = data.homepage ? null : data.parent_id || null;
     const collectionFound = await Collection_1.default.findCollection(data.collection_key, "pages");

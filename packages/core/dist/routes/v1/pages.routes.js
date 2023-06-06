@@ -7,6 +7,7 @@ const express_1 = require("express");
 const route_1 = __importDefault(require("../../utils/route"));
 const create_single_1 = __importDefault(require("../../controllers/pages/create-single"));
 const get_multiple_1 = __importDefault(require("../../controllers/pages/get-multiple"));
+const get_single_1 = __importDefault(require("../../controllers/pages/get-single"));
 const update_single_1 = __importDefault(require("../../controllers/pages/update-single"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
@@ -29,6 +30,16 @@ const router = (0, express_1.Router)();
     },
     schema: get_multiple_1.default.schema,
     controller: get_multiple_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "get",
+    path: "/:id",
+    middleware: {
+        authenticate: true,
+        authoriseCSRF: true,
+    },
+    schema: get_single_1.default.schema,
+    controller: get_single_1.default.controller,
 });
 (0, route_1.default)(router, {
     method: "patch",

@@ -8,7 +8,7 @@ const zod_1 = __importDefault(require("zod"));
 const brick_builder_1 = require("@lucid/brick-builder");
 const FieldTypesSchema = zod_1.default.nativeEnum(brick_builder_1.FieldTypesEnum);
 const baseFieldSchema = zod_1.default.object({
-    id: zod_1.default.number().optional(),
+    fields_id: zod_1.default.number().optional(),
     parent_repeater: zod_1.default.number().optional(),
     group_position: zod_1.default.number().optional(),
     key: zod_1.default.string(),

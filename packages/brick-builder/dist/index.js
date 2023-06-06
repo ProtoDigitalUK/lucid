@@ -230,6 +230,16 @@ const BrickBuilder = (_a = class BrickBuilder {
             }
             return result;
         }
+        get basicFieldTree() {
+            const fieldArray = Array.from(this.fields.values());
+            // return fields minus tab
+            fieldArray.forEach((field) => {
+                if (field.type === "tab") {
+                    fieldArray.splice(fieldArray.indexOf(field), 1);
+                }
+            });
+            return fieldArray;
+        }
         get flatFields() {
             const fields = [];
             const fieldArray = Array.from(this.fields.values());

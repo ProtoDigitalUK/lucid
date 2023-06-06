@@ -1,7 +1,7 @@
 import z from "zod";
 import { FieldTypesEnum } from "@lucid/brick-builder";
 declare const baseFieldSchema: z.ZodObject<{
-    id: z.ZodOptional<z.ZodNumber>;
+    fields_id: z.ZodOptional<z.ZodNumber>;
     parent_repeater: z.ZodOptional<z.ZodNumber>;
     group_position: z.ZodOptional<z.ZodNumber>;
     key: z.ZodString;
@@ -11,7 +11,7 @@ declare const baseFieldSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     type: FieldTypesEnum;
     key: string;
-    id?: number | undefined;
+    fields_id?: number | undefined;
     parent_repeater?: number | undefined;
     group_position?: number | undefined;
     value?: any;
@@ -19,7 +19,7 @@ declare const baseFieldSchema: z.ZodObject<{
 }, {
     type: FieldTypesEnum;
     key: string;
-    id?: number | undefined;
+    fields_id?: number | undefined;
     parent_repeater?: number | undefined;
     group_position?: number | undefined;
     value?: any;

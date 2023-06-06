@@ -1,10 +1,11 @@
 import { Request } from "express";
 import { CategoryT } from "../models/Category";
-import { BrickObject } from "../models/BrickData";
+import BrickData, { BrickObject } from "../models/BrickData";
 type PageGetMultiple = (req: Request) => Promise<{
     data: PageT[];
     count: number;
 }>;
+type PageGetSingle = (id: string, req: Request) => Promise<PageT>;
 type PageCreate = (data: {
     title: string;
     slug: string;
@@ -28,6 +29,7 @@ export type PageT = {
     homepage: boolean;
     excerpt: string | null;
     categories?: Array<CategoryT> | null;
+    bricks?: Array<BrickData> | null;
     published: boolean;
     published_at: string | null;
     published_by: number | null;
@@ -38,6 +40,7 @@ export type PageT = {
 export default class Page {
     #private;
     static getMultiple: PageGetMultiple;
+    static getSingle: PageGetSingle;
     static create: PageCreate;
     static update: PageUpdate;
 }

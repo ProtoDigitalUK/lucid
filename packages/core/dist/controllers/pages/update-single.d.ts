@@ -8,7 +8,7 @@ declare const _default: {
                 fields: z.ZodOptional<z.ZodArray<z.ZodType<{
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -17,7 +17,7 @@ declare const _default: {
                     items?: ({
                         type: import("../../../../brick-builder/dist").FieldTypesEnum;
                         key: string;
-                        id?: number | undefined;
+                        fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
                         value?: any;
@@ -26,7 +26,7 @@ declare const _default: {
                 }, z.ZodTypeDef, {
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -35,7 +35,7 @@ declare const _default: {
                     items?: ({
                         type: import("../../../../brick-builder/dist").FieldTypesEnum;
                         key: string;
-                        id?: number | undefined;
+                        fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
                         value?: any;
@@ -48,7 +48,7 @@ declare const _default: {
                 fields?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -57,7 +57,7 @@ declare const _default: {
                     items?: ({
                         type: import("../../../../brick-builder/dist").FieldTypesEnum;
                         key: string;
-                        id?: number | undefined;
+                        fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
                         value?: any;
@@ -70,7 +70,7 @@ declare const _default: {
                 fields?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -79,7 +79,7 @@ declare const _default: {
                     items?: ({
                         type: import("../../../../brick-builder/dist").FieldTypesEnum;
                         key: string;
-                        id?: number | undefined;
+                        fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
                         value?: any;
@@ -94,7 +94,7 @@ declare const _default: {
                 fields?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -103,7 +103,7 @@ declare const _default: {
                     items?: ({
                         type: import("../../../../brick-builder/dist").FieldTypesEnum;
                         key: string;
-                        id?: number | undefined;
+                        fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
                         value?: any;
@@ -118,7 +118,7 @@ declare const _default: {
                 fields?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -127,7 +127,7 @@ declare const _default: {
                     items?: ({
                         type: import("../../../../brick-builder/dist").FieldTypesEnum;
                         key: string;
-                        id?: number | undefined;
+                        fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
                         value?: any;
@@ -158,7 +158,7 @@ declare const _default: {
             fields: z.ZodOptional<z.ZodArray<z.ZodType<{
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
-                id?: number | undefined;
+                fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
                 value?: any;
@@ -167,7 +167,7 @@ declare const _default: {
                 items?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -176,7 +176,7 @@ declare const _default: {
             }, z.ZodTypeDef, {
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
-                id?: number | undefined;
+                fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
                 value?: any;
@@ -185,7 +185,7 @@ declare const _default: {
                 items?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -198,7 +198,7 @@ declare const _default: {
             fields?: ({
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
-                id?: number | undefined;
+                fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
                 value?: any;
@@ -207,7 +207,7 @@ declare const _default: {
                 items?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -220,7 +220,7 @@ declare const _default: {
             fields?: ({
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
-                id?: number | undefined;
+                fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
                 value?: any;
@@ -229,7 +229,7 @@ declare const _default: {
                 items?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -244,7 +244,7 @@ declare const _default: {
             fields?: ({
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
-                id?: number | undefined;
+                fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
                 value?: any;
@@ -253,7 +253,7 @@ declare const _default: {
                 items?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;
@@ -268,7 +268,7 @@ declare const _default: {
             fields?: ({
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
-                id?: number | undefined;
+                fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
                 value?: any;
@@ -277,7 +277,7 @@ declare const _default: {
                 items?: ({
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
-                    id?: number | undefined;
+                    fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
                     value?: any;

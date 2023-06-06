@@ -3,7 +3,7 @@ import client from "@db/db";
 import { LucidError } from "@utils/error-handler";
 import { FieldTypes } from "@lucid/brick-builder";
 // Services
-import formatResponse from "@services/bricks/format-response";
+import formatBricks from "@services/bricks/format-bricks";
 // Schema
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
 
@@ -11,6 +11,11 @@ import { BrickSchema, FieldSchema } from "@schemas/bricks";
 // Types
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
+
+// Json interfaces
+interface LinkJsonT {
+  target: "_blank" | "_self";
+}
 
 // Methods
 type BrickDataCreateOrUpdate = (
@@ -52,7 +57,7 @@ export type BrickFieldsT = {
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;
-  json_value: any | null;
+  json_value: LinkJsonT | any | null;
 
   media_id: number | null;
 
@@ -125,7 +130,7 @@ export default class BrickData {
 
     if (!brickFields.rows[0]) return [];
 
-    return formatResponse(brickFields.rows) as any;
+    return formatBricks(brickFields.rows) as any;
   };
   static deleteUnused: BrickDataDeleteUnused = async (
     type,

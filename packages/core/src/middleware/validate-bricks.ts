@@ -24,8 +24,8 @@ const flattenBricksFields = (
   if (!fields) return flatFields;
 
   for (let brick of fields) {
-    let flatBrick = {
-      id: brick.id,
+    let flatBrick: BrickFieldObject = {
+      fields_id: brick.fields_id,
       parent_repeater: brick.parent_repeater,
       key: brick.key,
       type: brick.type,
