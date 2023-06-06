@@ -8,6 +8,7 @@ const validate_1 = __importDefault(require("../middleware/validate"));
 const authenticate_1 = __importDefault(require("../middleware/authenticate"));
 const authorise_csrf_1 = __importDefault(require("../middleware/authorise-csrf"));
 const paginated_1 = __importDefault(require("../middleware/paginated"));
+const validate_bricks_1 = __importDefault(require("../middleware/validate-bricks"));
 const route = (router, props) => {
     const { method, path, controller } = props;
     const middleware = [];
@@ -23,6 +24,9 @@ const route = (router, props) => {
             query: props.schema?.query ?? zod_1.default.object({}),
             body: props.schema?.body ?? zod_1.default.object({}),
         })));
+    }
+    if (props.middleware?.validateBricks) {
+        middleware.push(validate_bricks_1.default);
     }
     if (props.middleware?.paginated) {
         middleware.push(paginated_1.default);

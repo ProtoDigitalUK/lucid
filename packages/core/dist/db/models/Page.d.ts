@@ -1,10 +1,12 @@
 import { Request } from "express";
 import { CategoryT } from "../models/Category";
+import BrickData, { BrickObject } from "../models/BrickData";
 type PageGetMultiple = (req: Request) => Promise<{
     data: PageT[];
     count: number;
 }>;
-type PageCreate = (req: Request, data: {
+type PageGetSingle = (id: string, req: Request) => Promise<PageT>;
+type PageCreate = (data: {
     title: string;
     slug: string;
     collection_key: string;
@@ -13,7 +15,10 @@ type PageCreate = (req: Request, data: {
     published?: boolean;
     parent_id?: number;
     category_ids?: Array<number>;
-}) => Promise<PageT>;
+}, req: Request) => Promise<PageT>;
+type PageUpdate = (id: string, data: {
+    bricks?: Array<BrickObject>;
+}, req: Request) => Promise<PageT>;
 export type PageT = {
     id: number;
     parent_id: number | null;
@@ -23,7 +28,8 @@ export type PageT = {
     full_slug: string;
     homepage: boolean;
     excerpt: string | null;
-    categories?: Array<CategoryT>;
+    categories?: Array<CategoryT> | null;
+    bricks?: Array<BrickData> | null;
     published: boolean;
     published_at: string | null;
     published_by: number | null;
@@ -32,13 +38,11 @@ export type PageT = {
     updated_at: string;
 };
 export default class Page {
+    #private;
     static getMultiple: PageGetMultiple;
+    static getSingle: PageGetSingle;
     static create: PageCreate;
-    static slugUnique: (slug: string, parent_id: number | null) => Promise<string>;
-    static checkParentNotHomepage: (parent_id: number | null) => Promise<void>;
-    static isParentSameCollection: (parent_id: number, collection_key: string) => Promise<void>;
-    static resetHomepages: (current: number) => Promise<void>;
-    static computeFullSlug: (slug: string, parent_id: number | null, homepage: boolean) => Promise<string>;
+    static update: PageUpdate;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

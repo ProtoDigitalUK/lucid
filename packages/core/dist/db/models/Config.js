@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const zod_1 = __importDefault(require("zod"));
-const error_handler_1 = require("../utils/error-handler");
+const error_handler_1 = require("../../utils/error-handler");
 const configSchema = zod_1.default.object({
     port: zod_1.default.number(),
     origin: zod_1.default.string().optional(),

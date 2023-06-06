@@ -1,4 +1,4 @@
-import { ConfigT } from "./services/Config";
+import { ConfigT } from "./db/models/Config";
 export type { ConfigT as Config };
 declare const _default: {
     start: () => Promise<void>;

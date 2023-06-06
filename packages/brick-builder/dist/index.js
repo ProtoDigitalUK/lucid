@@ -7,20 +7,62 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _BrickBuilder_instances, _BrickBuilder_keyToTitle, _BrickBuilder_addToFields, _BrickBuilder_checkKeyDuplication, _a;
+var _BrickBuilder_instances, _BrickBuilder_validateSelectType, _BrickBuilder_validateWysiwygType, _BrickBuilder_validateImageType, _BrickBuilder_validateFileType, _BrickBuilder_validateDatetimeType, _BrickBuilder_validateLinkTarget, _BrickBuilder_validateRequired, _BrickBuilder_validateType, _BrickBuilder_validateZodSchema, _BrickBuilder_validateIsString, _BrickBuilder_validateIsNumber, _BrickBuilder_validateIsBoolean, _BrickBuilder_keyToTitle, _BrickBuilder_addToFields, _BrickBuilder_checkKeyDuplication, _a;
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FieldTypesEnum = void 0;
 const zod_1 = __importDefault(require("zod"));
+const sanitize_html_1 = __importDefault(require("sanitize-html"));
+var FieldTypesEnum;
+(function (FieldTypesEnum) {
+    FieldTypesEnum["Tab"] = "tab";
+    FieldTypesEnum["Text"] = "text";
+    FieldTypesEnum["Wysiwyg"] = "wysiwyg";
+    FieldTypesEnum["Image"] = "image";
+    FieldTypesEnum["File"] = "file";
+    FieldTypesEnum["Repeater"] = "repeater";
+    FieldTypesEnum["Number"] = "number";
+    FieldTypesEnum["Checkbox"] = "checkbox";
+    FieldTypesEnum["Select"] = "select";
+    FieldTypesEnum["Textarea"] = "textarea";
+    FieldTypesEnum["JSON"] = "json";
+    FieldTypesEnum["Colour"] = "colour";
+    FieldTypesEnum["Datetime"] = "datetime";
+    FieldTypesEnum["Pagelink"] = "pagelink";
+    FieldTypesEnum["Link"] = "link";
+})(FieldTypesEnum || (exports.FieldTypesEnum = FieldTypesEnum = {}));
 const baseCustomFieldSchema = zod_1.default.object({
     type: zod_1.default.string(),
     key: zod_1.default.string(),
     title: zod_1.default.string(),
     description: zod_1.default.string().optional(),
     placeholder: zod_1.default.string().optional(),
-    required: zod_1.default.boolean().optional(),
-    min: zod_1.default.number().optional(),
-    max: zod_1.default.number().optional(),
-    validate: zod_1.default.function().optional(),
-    pattern: zod_1.default.string().optional(),
+    // boolean or string
+    default: zod_1.default.union([zod_1.default.boolean(), zod_1.default.string()]).optional(),
+    options: zod_1.default
+        .array(zod_1.default.object({
+        label: zod_1.default.string(),
+        value: zod_1.default.string(),
+    }))
+        .optional(),
+    validation: zod_1.default
+        .object({
+        zod: zod_1.default.any().optional(),
+        required: zod_1.default.boolean().optional(),
+        extensions: zod_1.default.array(zod_1.default.string()).optional(),
+        width: zod_1.default
+            .object({
+            min: zod_1.default.number().optional(),
+            max: zod_1.default.number().optional(),
+        })
+            .optional(),
+        height: zod_1.default
+            .object({
+            min: zod_1.default.number().optional(),
+            max: zod_1.default.number().optional(),
+        })
+            .optional(),
+    })
+        .optional(),
 });
 const customFieldSchemaObject = baseCustomFieldSchema.extend({
     fields: zod_1.default.lazy(() => customFieldSchemaObject.array().optional()),
@@ -135,6 +177,31 @@ const BrickBuilder = (_a = class BrickBuilder {
             __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "json", config);
             return this;
         }
+        addFile(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "file", config);
+            return this;
+        }
+        addColour(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "colour", config);
+            return this;
+        }
+        addDateTime(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "datetime", config);
+            return this;
+        }
+        addPageLink(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "pagelink", config);
+            return this;
+        }
+        addLink(config) {
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_checkKeyDuplication).call(this, config.key);
+            __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_addToFields).call(this, "link", config);
+            return this;
+        }
         // ------------------------------------
         // Getters
         get fieldTree() {
@@ -163,14 +230,307 @@ const BrickBuilder = (_a = class BrickBuilder {
             }
             return result;
         }
+        get basicFieldTree() {
+            const fieldArray = Array.from(this.fields.values());
+            // return fields minus tab
+            fieldArray.forEach((field) => {
+                if (field.type === "tab") {
+                    fieldArray.splice(fieldArray.indexOf(field), 1);
+                }
+            });
+            return fieldArray;
+        }
+        get flatFields() {
+            const fields = [];
+            const fieldArray = Array.from(this.fields.values());
+            const getFields = (field) => {
+                fields.push(field);
+                if (field.type === "repeater") {
+                    field.fields?.forEach((item) => {
+                        getFields(item);
+                    });
+                }
+            };
+            fieldArray.forEach((field) => {
+                getFields(field);
+            });
+            return fields;
+        }
         // ------------------------------------
-        // External Methods
-        validateBrickData(data) {
-            // TODO: add route to verify data added against brick to its field configs
-            return true;
+        // Field Type Validation
+        fieldValidation({ type, key, value, secondaryValue, }) {
+            const field = this.flatFields.find((item) => item.key === key);
+            if (!field) {
+                return {
+                    valid: false,
+                    message: `Field with key "${key}" does not exist.`,
+                };
+            }
+            // Check if field type is text
+            const typeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateType).call(this, type, field.type);
+            if (!typeValidation.valid) {
+                return typeValidation;
+            }
+            // Check if field is required
+            if (field.validation?.required) {
+                const requiredValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateRequired).call(this, value);
+                if (!requiredValidation.valid) {
+                    return requiredValidation;
+                }
+            }
+            // run zod validation
+            if (field.validation?.zod && field.type !== "wysiwyg") {
+                const zodValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateZodSchema).call(this, field.validation.zod, value);
+                if (!zodValidation.valid) {
+                    return zodValidation;
+                }
+            }
+            // Validate string
+            if (field.type === "text" ||
+                field.type === "textarea" ||
+                field.type === "colour" ||
+                field.type === "datetime" ||
+                field.type === "link" ||
+                field.type === "wysiwyg" ||
+                field.type === "select") {
+                const stringValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsString).call(this, value);
+                if (!stringValidation.valid) {
+                    return stringValidation;
+                }
+            }
+            // Validate number
+            if (field.type === "number" || field.type === "pagelink") {
+                const numberValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsNumber).call(this, value);
+                if (!numberValidation.valid) {
+                    return numberValidation;
+                }
+            }
+            // Validate boolean
+            if (field.type === "checkbox") {
+                const checkboxValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateIsBoolean).call(this, value);
+                if (!checkboxValidation.valid) {
+                    return checkboxValidation;
+                }
+            }
+            // Field specific validation
+            switch (field.type) {
+                case "select": {
+                    const selectTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateSelectType).call(this, field, {
+                        type,
+                        key,
+                        value,
+                    });
+                    if (!selectTypeValidation.valid) {
+                        return selectTypeValidation;
+                    }
+                    break;
+                }
+                case "wysiwyg": {
+                    const wysiwygTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateWysiwygType).call(this, field, {
+                        type,
+                        key,
+                        value,
+                    });
+                    if (!wysiwygTypeValidation.valid) {
+                        return wysiwygTypeValidation;
+                    }
+                    break;
+                }
+                case "image": {
+                    const imageTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateImageType).call(this, field, {
+                        type,
+                        key,
+                        value,
+                    });
+                    if (!imageTypeValidation.valid) {
+                        return imageTypeValidation;
+                    }
+                    break;
+                }
+                case "file": {
+                    const fileTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateFileType).call(this, field, {
+                        type,
+                        key,
+                        value,
+                    });
+                    if (!fileTypeValidation.valid) {
+                        return fileTypeValidation;
+                    }
+                    break;
+                }
+                case "datetime": {
+                    const datetimeTypeValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateDatetimeType).call(this, {
+                        type,
+                        key,
+                        value,
+                    });
+                    if (!datetimeTypeValidation.valid) {
+                        return datetimeTypeValidation;
+                    }
+                    break;
+                }
+                case "link": {
+                    if (secondaryValue) {
+                        const tagetValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateLinkTarget).call(this, secondaryValue);
+                        if (!tagetValidation.valid) {
+                            return tagetValidation;
+                        }
+                    }
+                    break;
+                }
+                case "pagelink": {
+                    if (secondaryValue) {
+                        const tagetValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateLinkTarget).call(this, secondaryValue);
+                        if (!tagetValidation.valid) {
+                            return tagetValidation;
+                        }
+                    }
+                    break;
+                }
+            }
+            return {
+                valid: true,
+            };
         }
     },
     _BrickBuilder_instances = new WeakSet(),
+    _BrickBuilder_validateSelectType = function _BrickBuilder_validateSelectType(field, { type, key, value, }) {
+        // Check if value is in the options
+        if (field.options) {
+            const optionValues = field.options.map((option) => option.value);
+            if (!optionValues.includes(value)) {
+                return {
+                    valid: false,
+                    message: "Value must be one of the provided options.",
+                };
+            }
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateWysiwygType = function _BrickBuilder_validateWysiwygType(field, { type, key, value, }) {
+        const sanitizedValue = (0, sanitize_html_1.default)(value, {
+            allowedTags: [],
+            allowedAttributes: {},
+        });
+        // run zod validation
+        if (field.validation?.zod) {
+            const zodValidation = __classPrivateFieldGet(this, _BrickBuilder_instances, "m", _BrickBuilder_validateZodSchema).call(this, field.validation.zod, sanitizedValue);
+            if (!zodValidation.valid) {
+                return zodValidation;
+            }
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateImageType = function _BrickBuilder_validateImageType(field, { type, key, value, }) {
+        // TODO: add validation for extensions and max/min size
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateFileType = function _BrickBuilder_validateFileType(field, { type, key, value, }) {
+        // TODO: add validation for extensions
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateDatetimeType = function _BrickBuilder_validateDatetimeType({ type, key, value, }) {
+        const date = new Date(value);
+        if (isNaN(date.getTime())) {
+            return {
+                valid: false,
+                message: "Value must be a valid date.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateLinkTarget = function _BrickBuilder_validateLinkTarget(value) {
+        const allowedValues = ["_self", "_blank"];
+        if (!allowedValues.includes(value)) {
+            return {
+                valid: false,
+                message: "Target must be _self or _blank.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateRequired = function _BrickBuilder_validateRequired(value) {
+        if (value === undefined || value === null || value === "") {
+            return {
+                valid: false,
+                message: "This field is required.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateType = function _BrickBuilder_validateType(providedType, type) {
+        if (providedType !== type) {
+            return {
+                valid: false,
+                message: `Field type must be "${type}".`,
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateZodSchema = function _BrickBuilder_validateZodSchema(schema, value) {
+        try {
+            schema.parse(value);
+            return {
+                valid: true,
+            };
+        }
+        catch (error) {
+            const err = error;
+            return {
+                valid: false,
+                message: err.issues[0].message,
+            };
+        }
+    },
+    _BrickBuilder_validateIsString = function _BrickBuilder_validateIsString(value) {
+        if (typeof value !== "string") {
+            return {
+                valid: false,
+                message: "Value must be a string.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateIsNumber = function _BrickBuilder_validateIsNumber(value) {
+        if (typeof value !== "number") {
+            return {
+                valid: false,
+                message: "Value must be a number.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
+    _BrickBuilder_validateIsBoolean = function _BrickBuilder_validateIsBoolean(value) {
+        if (typeof value !== "boolean") {
+            return {
+                valid: false,
+                message: "Value must be a boolean.",
+            };
+        }
+        return {
+            valid: true,
+        };
+    },
     _BrickBuilder_keyToTitle = function _BrickBuilder_keyToTitle(key) {
         if (typeof key !== "string")
             return key;

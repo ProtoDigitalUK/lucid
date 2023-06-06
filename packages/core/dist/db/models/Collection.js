@@ -9,7 +9,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a, _Collection_filterCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
-const Config_1 = __importDefault(require("../../services/Config"));
+const Config_1 = __importDefault(require("../models/Config"));
 class Collection {
 }
 _a = Collection;

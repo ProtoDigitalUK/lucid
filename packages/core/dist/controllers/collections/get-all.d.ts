@@ -6,17 +6,17 @@ declare const _default: {
             filter: z.ZodOptional<z.ZodObject<{
                 type: z.ZodEnum<["pages", "group"]>;
             }, "strip", z.ZodTypeAny, {
-                type: "group" | "pages";
+                type: "pages" | "group";
             }, {
-                type: "group" | "pages";
+                type: "pages" | "group";
             }>>;
         }, "strip", z.ZodTypeAny, {
             filter?: {
-                type: "group" | "pages";
+                type: "pages" | "group";
             } | undefined;
         }, {
             filter?: {
-                type: "group" | "pages";
+                type: "pages" | "group";
             } | undefined;
         }>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
@@ -25,17 +25,17 @@ declare const _default: {
         filter: z.ZodOptional<z.ZodObject<{
             type: z.ZodEnum<["pages", "group"]>;
         }, "strip", z.ZodTypeAny, {
-            type: "group" | "pages";
+            type: "pages" | "group";
         }, {
-            type: "group" | "pages";
+            type: "pages" | "group";
         }>>;
     }, "strip", z.ZodTypeAny, {
         filter?: {
-            type: "group" | "pages";
+            type: "pages" | "group";
         } | undefined;
     }, {
         filter?: {
-            type: "group" | "pages";
+            type: "pages" | "group";
         } | undefined;
     }>>;
 };

@@ -5,6 +5,7 @@ import validate from "@middleware/validate";
 import authenticate from "@middleware/authenticate";
 import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
+import validateBricks from "@middleware/validate-bricks";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,
@@ -19,6 +20,7 @@ type Route = <
       authenticate?: boolean;
       authoriseCSRF?: boolean;
       paginated?: boolean;
+      validateBricks?: boolean;
     };
     schema?: {
       params?: ParamsT;
@@ -57,6 +59,11 @@ const route: Route = (router, props) => {
         })
       )
     );
+  }
+
+  // set middleware for brick validation
+  if (props.middleware?.validateBricks) {
+    middleware.push(validateBricks);
   }
 
   // set middleware for pagination

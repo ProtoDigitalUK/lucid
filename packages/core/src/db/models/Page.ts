@@ -5,6 +5,7 @@ import { LucidError } from "@utils/error-handler";
 import { CategoryT } from "@db/models/Category";
 import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
+import BrickData, { BrickObject } from "@db/models/BrickData";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
 
@@ -25,13 +26,15 @@ interface QueryParamsGetMultiple extends ModelQueryParams {
   per_page?: string;
 }
 
+// Methods
 type PageGetMultiple = (req: Request) => Promise<{
   data: PageT[];
   count: number;
 }>;
 
+type PageGetSingle = (id: string, req: Request) => Promise<PageT>;
+
 type PageCreate = (
-  req: Request,
   data: {
     title: string;
     slug: string;
@@ -41,7 +44,16 @@ type PageCreate = (
     published?: boolean;
     parent_id?: number;
     category_ids?: Array<number>;
-  }
+  },
+  req: Request
+) => Promise<PageT>;
+
+type PageUpdate = (
+  id: string,
+  data: {
+    bricks?: Array<BrickObject>;
+  },
+  req: Request
 ) => Promise<PageT>;
 
 // -------------------------------------------
@@ -57,6 +69,7 @@ export type PageT = {
   homepage: boolean;
   excerpt: string | null;
   categories?: Array<CategoryT> | null;
+  bricks?: Array<BrickData> | null;
 
   published: boolean;
   published_at: string | null;
@@ -126,7 +139,7 @@ export default class Page {
     const { select, where, order, pagination } = QueryB.query;
 
     // Get Pages
-    // TODO: add join for post_type
+    // TODO: add join for collection
     // TODO: add join for bricks
     const pages = await client.query<PageT>({
       text: `SELECT
@@ -165,7 +178,46 @@ export default class Page {
       count: count.rows[0].count,
     };
   };
-  static create: PageCreate = async (req, data) => {
+  static getSingle: PageGetSingle = async (id, req) => {
+    const page = await client.query<PageT>({
+      text: `SELECT
+          id,
+          collection_key,
+          parent_id,
+          title,
+          slug,
+          full_slug,
+          homepage,
+          excerpt,
+          published,
+          published_at,
+          published_by,
+          created_by,
+          created_at,
+          updated_at
+        FROM
+          lucid_pages
+        WHERE
+          id = $1`,
+      values: [id],
+    });
+
+    if (page.rows.length === 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "Page not found",
+        message: `Page with id "${id}" not found`,
+        status: 404,
+      });
+    }
+
+    const pageBricks = await BrickData.getAll("page", page.rows[0].id);
+
+    page.rows[0].bricks = pageBricks;
+
+    return Page.#formatPageData(page.rows[0]);
+  };
+  static create: PageCreate = async (data, req) => {
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
@@ -245,6 +297,27 @@ export default class Page {
     }
 
     return page.rows[0];
+  };
+  static update: PageUpdate = async (id, data, req) => {
+    const pageId = parseInt(id);
+
+    // -------------------------------------------
+    // Update/Create Bricks
+    const brickPromises =
+      data.bricks?.map((brick, index) =>
+        BrickData.createOrUpdate(brick, index, "page", pageId)
+      ) || [];
+    const pageBricksIds = await Promise.all(brickPromises);
+
+    // -------------------------------------------
+    // Delete unused bricks
+    if (data.bricks) {
+      await BrickData.deleteUnused("page", pageId, pageBricksIds);
+    }
+
+    return {
+      created: true,
+    } as any;
   };
   // -------------------------------------------
   // Util Methods

@@ -27,16 +27,19 @@ const createSingle: Controller<
   typeof query
 > = async (req, res, next) => {
   try {
-    const page = await Page.create(req, {
-      title: req.body.title,
-      slug: req.body.slug,
-      collection_key: req.body.collection_key,
-      homepage: req.body.homepage,
-      excerpt: req.body.excerpt,
-      published: req.body.published,
-      parent_id: req.body.parent_id,
-      category_ids: req.body.category_ids,
-    });
+    const page = await Page.create(
+      {
+        title: req.body.title,
+        slug: req.body.slug,
+        collection_key: req.body.collection_key,
+        homepage: req.body.homepage,
+        excerpt: req.body.excerpt,
+        published: req.body.published,
+        parent_id: req.body.parent_id,
+        category_ids: req.body.category_ids,
+      },
+      req
+    );
 
     res.status(200).json(
       buildResponse(req, {
