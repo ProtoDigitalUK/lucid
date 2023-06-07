@@ -274,6 +274,13 @@
 								"v1",
 								"pages",
 								"1"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "bricks",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -292,7 +299,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   1\n    // ]\n}",
+							"raw": "{\n    \"title\": \"New Homepage\",\n    \"slug\": \"new-homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   1\n    // ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -326,7 +333,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // \"title\": \"\",\n    // \"slug\": \"\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ]\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                {\n                    \"key\": \"page_link\",\n                    \"type\": \"pagelink\",\n                    \"value\": 1,\n                    \"target\": \"_self\"\n                },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            // \"id\": 1,\n            \"key\": \"intro\"\n        }\n    ]\n}",
+							"raw": "{\n    // \"title\": \"\",\n    \"slug\": \"about-us\"\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ]\n    // \"bricks\": [\n    //     {\n    //         // \"id\": 1,\n    //         \"key\": \"banner\",\n    //         \"fields\": [\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"title\",\n    //                 \"type\": \"text\",\n    //                 \"value\": \"Title\"\n    //             },\n    //             {\n    //                 \"key\": \"link\",\n    //                 \"type\": \"link\",\n    //                 \"value\": \"https://example.com\",\n    //                 \"target\": \"_blank\"\n    //             },\n    //             {\n    //                 \"key\": \"page_link\",\n    //                 \"type\": \"pagelink\",\n    //                 \"value\": 1,\n    //                 \"target\": \"_self\"\n    //             },\n    //             {\n    //                 \"key\": \"colour\",\n    //                 \"type\": \"colour\",\n    //                 \"value\": \"#FFFFFF\"\n    //             },\n    //             {\n    //                 \"key\": \"date\",\n    //                 \"type\": \"datetime\",\n    //                 \"value\": \"10/02/1999\"\n    //             },\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"social_links\",\n    //                 \"type\": \"repeater\",\n    //                 \"items\": [\n    //                     {\n    //                         // \"fields_id\": 1,\n    //                         // \"parent_repeater\": 1,\n    //                         \"group_position\": 1,\n    //                         \"key\": \"social_title\",\n    //                         \"type\": \"text\",\n    //                         \"value\": \"Title 1\"\n    //                     },\n    //                     {\n    //                         // \"fields_id\": 1,\n    //                         // \"parent_repeater\": 1,\n    //                         \"group_position\": 2,\n    //                         \"key\": \"social_title\",\n    //                         \"type\": \"text\",\n    //                         \"value\": \"Title 2\"\n    //                     }\n    //                 ]\n    //             }\n    //         ]\n    //     },\n    //     {\n    //         // \"id\": 1,\n    //         \"key\": \"intro\"\n    //     }\n    // ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,7 +341,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/pages/1",
+							"raw": "{{BASE_URL}}/api/v1/pages/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -342,7 +349,7 @@
 								"api",
 								"v1",
 								"pages",
-								"1"
+								"2"
 							]
 						}
 					},
