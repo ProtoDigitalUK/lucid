@@ -17,6 +17,13 @@ type PageCreate = (data: {
     category_ids?: Array<number>;
 }, req: Request) => Promise<PageT>;
 type PageUpdate = (id: string, data: {
+    title?: string;
+    slug?: string;
+    homepage?: boolean;
+    parent_id?: number;
+    category_ids?: Array<number>;
+    published?: boolean;
+    excerpt?: string;
     bricks?: Array<BrickObject>;
 }, req: Request) => Promise<PageT>;
 export type PageT = {

@@ -7,7 +7,9 @@ const zod_1 = __importDefault(require("zod"));
 const build_response_1 = __importDefault(require("../../services/controllers/build-response"));
 const Page_1 = __importDefault(require("../../db/models/Page"));
 const body = zod_1.default.object({});
-const query = zod_1.default.object({});
+const query = zod_1.default.object({
+    include: zod_1.default.array(zod_1.default.enum(["bricks"])).optional(),
+});
 const params = zod_1.default.object({
     id: zod_1.default.string(),
 });

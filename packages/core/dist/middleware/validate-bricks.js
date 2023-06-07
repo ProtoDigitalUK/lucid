@@ -48,7 +48,7 @@ const buildErrorObject = (brickErrors) => {
 const validateBricks = async (req, res, next) => {
     try {
         const builderInstances = BrickConfig_1.default.getBrickConfig();
-        const bodyBricks = req.body.bricks;
+        const bodyBricks = req.body.bricks || [];
         const errors = [];
         let hasErrors = false;
         for (let i = 0; i < bodyBricks.length; i++) {
