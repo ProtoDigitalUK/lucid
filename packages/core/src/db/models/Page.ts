@@ -1,5 +1,6 @@
 import client from "@db/db";
 import { Request } from "express";
+import slugify from "slugify";
 import { LucidError } from "@utils/error-handler";
 // Models
 import { CategoryT } from "@db/models/Category";
@@ -8,6 +9,7 @@ import Collection from "@db/models/Collection";
 import BrickData, { BrickObject } from "@db/models/BrickData";
 // Serivces
 import QueryBuilder from "@services/models/QueryBuilder";
+import formatPage from "@services/pages/format-page";
 
 // -------------------------------------------
 // Types
@@ -24,6 +26,10 @@ interface QueryParamsGetMultiple extends ModelQueryParams {
   }>;
   page?: string;
   per_page?: string;
+}
+
+interface QueryParamsGetSingle extends ModelQueryParams {
+  include?: Array<"bricks">;
 }
 
 // Methods
@@ -51,6 +57,13 @@ type PageCreate = (
 type PageUpdate = (
   id: string,
   data: {
+    title?: string;
+    slug?: string;
+    homepage?: boolean;
+    parent_id?: number;
+    category_ids?: Array<number>;
+    published?: boolean;
+    excerpt?: string;
     bricks?: Array<BrickObject>;
   },
   req: Request
@@ -140,7 +153,6 @@ export default class Page {
 
     // Get Pages
     // TODO: add join for collection
-    // TODO: add join for bricks
     const pages = await client.query<PageT>({
       text: `SELECT
           ${select},
@@ -170,7 +182,7 @@ export default class Page {
 
     // format pages
     pages.rows.forEach((page) => {
-      page = Page.#formatPageData(page);
+      page = formatPage(page);
     });
 
     return {
@@ -179,6 +191,8 @@ export default class Page {
     };
   };
   static getSingle: PageGetSingle = async (id, req) => {
+    const { include } = req.query as QueryParamsGetSingle;
+
     const page = await client.query<PageT>({
       text: `SELECT
           id,
@@ -211,11 +225,12 @@ export default class Page {
       });
     }
 
-    const pageBricks = await BrickData.getAll("page", page.rows[0].id);
+    if (include && include.includes("bricks")) {
+      const pageBricks = await BrickData.getAll("page", page.rows[0].id);
+      page.rows[0].bricks = pageBricks;
+    }
 
-    page.rows[0].bricks = pageBricks;
-
-    return Page.#formatPageData(page.rows[0]);
+    return formatPage(page.rows[0]);
   };
   static create: PageCreate = async (data, req) => {
     // -------------------------------------------
@@ -247,10 +262,8 @@ export default class Page {
       await Page.#isParentSameCollection(parentId, data.collection_key);
     }
     // Check if slug is unique
-    const slug = await Page.#slugUnique(data.slug, parentId);
-    // Generate full slug
-    const fullSlug = await Page.#computeFullSlug(
-      slug,
+    const slug = await Page.#slugUnique(
+      data.slug,
       parentId,
       data.homepage || false
     );
@@ -258,11 +271,10 @@ export default class Page {
     // -------------------------------------------
     // Create page
     const page = await client.query<PageT>({
-      text: `INSERT INTO lucid_pages (title, slug, full_slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      text: `INSERT INTO lucid_pages (title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
       values: [
         data.title,
         slug,
-        fullSlug,
         data.homepage || false,
         data.collection_key,
         data.excerpt || null,
@@ -296,10 +308,114 @@ export default class Page {
       await Page.#resetHomepages(page.rows[0].id);
     }
 
-    return page.rows[0];
+    return formatPage(page.rows[0]);
   };
   static update: PageUpdate = async (id, data, req) => {
     const pageId = parseInt(id);
+
+    // -------------------------------------------
+    // Values
+    const currentPageRes = await client.query<PageT>({
+      text: `SELECT
+          id,
+          parent_id,
+          collection_key,
+          title,
+          slug,
+          homepage,
+          excerpt,
+          published
+        FROM
+          lucid_pages
+        WHERE
+          id = $1`,
+      values: [id],
+    });
+    const currentPage = currentPageRes.rows[0];
+    if (!currentPage) {
+      throw new LucidError({
+        type: "basic",
+        name: "Page not found",
+        message: `Page with id "${id}" not found`,
+        status: 404,
+      });
+    }
+
+    // Set parent id to null if homepage as homepage has to be root level
+    const parentId = data.homepage ? null : data.parent_id || null;
+
+    let newValues: any = {};
+
+    // -------------------------------------------
+    // Checks
+
+    // Check if the the parent_id is the homepage
+    await Page.#checkParentNotHomepage(data.parent_id || null);
+
+    // Check if the parent is in the same collection
+    if (parentId) {
+      await Page.#isParentSameCollection(parentId, currentPage.collection_key);
+    }
+    if (data.slug) {
+      // Check if slug is unique
+      newValues.slug = await Page.#slugUnique(
+        data.slug,
+        parentId,
+        data.homepage || false
+      );
+    }
+    if (data.title) {
+      newValues.title = data.title;
+    }
+    if (data.excerpt) {
+      newValues.excerpt = data.excerpt;
+    }
+    if (data.published) {
+      newValues.published = data.published;
+      newValues.published_at = data.published ? new Date() : null;
+      newValues.published_by = data.published ? req.auth.id : null;
+    }
+    if (parentId) {
+      newValues.parent_id = parentId;
+    }
+    if (data.homepage) {
+      newValues.homepage = data.homepage;
+    }
+
+    if (Object.keys(newValues).length === 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "No data to update",
+        message: `No data to update`,
+        status: 400,
+      });
+    }
+
+    newValues.updated_at = new Date();
+
+    // -------------------------------------------
+    // Update page
+    const page = await client.query<PageT>({
+      text: `UPDATE lucid_pages SET ${Object.keys(newValues)
+        .map((key, index) => `${key} = $${index + 1}`)
+        .join(", ")} WHERE id = $${
+        Object.keys(newValues).length + 1
+      } RETURNING *`,
+      values: [...Object.values(newValues), pageId],
+    });
+
+    if (!page.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Page Not Updated",
+        message: "There was an error updating the page",
+        status: 500,
+      });
+    }
+
+    // -------------------------------------------
+    // Update categories
+    // TODO: add categories via category model, remove unlisted categories
 
     // -------------------------------------------
     // Update/Create Bricks
@@ -315,15 +431,26 @@ export default class Page {
       await BrickData.deleteUnused("page", pageId, pageBricksIds);
     }
 
-    return {
-      created: true,
-    } as any;
+    return formatPage(page.rows[0]);
   };
   // -------------------------------------------
   // Util Methods
-  static #slugUnique = async (slug: string, parent_id: number | null) => {
+  static #slugUnique = async (
+    slug: string,
+    parent_id: number | null,
+    homepage: boolean
+  ) => {
+    // For homepage, return "/"
+    if (homepage) {
+      return "/";
+    }
+
+    // Sanitize slug with slugify
+    slug = slugify(slug, { lower: true, strict: true });
+
     const values: Array<any> = [slug];
     if (parent_id) values.push(parent_id);
+
     const slugCount = await client.query<{ count: number }>({
       // where slug is like, slug-example, slug-example-1, slug-example-2
       text: `SELECT COUNT(*) FROM lucid_pages WHERE slug ~ '^${slug}-\\d+$' OR slug = $1 ${
@@ -331,9 +458,12 @@ export default class Page {
       }`,
       values: values,
     });
-    if (slugCount.rows[0].count >= 1)
+
+    if (slugCount.rows[0].count >= 1) {
       return `${slug}-${slugCount.rows[0].count}`;
-    return slug;
+    } else {
+      return slug;
+    }
   };
   static #checkParentNotHomepage = async (parent_id: number | null) => {
     if (!parent_id) return;
@@ -376,41 +506,27 @@ export default class Page {
     }
   };
   static #resetHomepages = async (current: number) => {
-    // reset homepage, set its parent to null and its full slug to its slug
-    await client.query({
-      text: `UPDATE lucid_pages SET homepage = false, parent_id = null, full_slug = \'/\' || slug WHERE homepage = true AND id != $1`,
+    // reset homepage, set its parent to null and its full slug to slugified title
+    const result = await client.query({
+      text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1`,
       values: [current],
     });
-  };
-  static #computeFullSlug = async (
-    slug: string,
-    parent_id: number | null,
-    homepage: boolean
-  ) => {
-    if (homepage) return "/";
-    if (!parent_id) return `/${slug}`;
 
-    let fullSlug = "";
-
-    // recursivly get parent slugs
-    const getParent = async (id: number) => {
-      const parent = await client.query<{ slug: string; parent_id: number }>({
-        text: `SELECT slug, parent_id FROM lucid_pages WHERE id = $1`,
-        values: [id],
+    for (const row of result.rows) {
+      let newSlug = slugify(row.title, { lower: true, strict: true });
+      const slugExists = await client.query({
+        text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2`,
+        values: [newSlug, row.id],
       });
-      if (parent.rows[0].parent_id) {
-        await getParent(parent.rows[0].parent_id);
+
+      if (slugExists.rows[0].count > 0) {
+        newSlug += `-${row.id}`;
       }
-      fullSlug = `${parent.rows[0].slug}/${fullSlug}`;
-    };
-    await getParent(parent_id);
 
-    return `/${fullSlug}${slug}`;
-  };
-  static #formatPageData = (data: PageT) => {
-    if (data.categories)
-      data.categories = data.categories[0] === null ? [] : data.categories;
-
-    return data;
+      await client.query({
+        text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
+        values: [row.id, newSlug],
+      });
+    }
   };
 }

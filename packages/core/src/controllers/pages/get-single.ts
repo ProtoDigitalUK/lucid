@@ -7,7 +7,9 @@ import Page from "@db/models/Page";
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({});
+const query = z.object({
+  include: z.array(z.enum(["bricks"])).optional(),
+});
 const params = z.object({
   id: z.string(),
 });

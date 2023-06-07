@@ -9,6 +9,13 @@ import Page from "@db/models/Page";
 // --------------------------------------------------
 // Schema
 const body = z.object({
+  title: z.string().optional(),
+  slug: z.string().optional(),
+  homepage: z.boolean().optional(),
+  parent_id: z.number().optional(),
+  category_ids: z.array(z.number()).optional(),
+  published: z.boolean().optional(),
+  excerpt: z.string().optional(),
   bricks: z.array(BrickSchema).optional(),
 });
 const query = z.object({});
@@ -27,6 +34,13 @@ const updateSingle: Controller<
     const page = await Page.update(
       req.params.id,
       {
+        title: req.body.title,
+        slug: req.body.slug,
+        homepage: req.body.homepage,
+        parent_id: req.body.parent_id,
+        category_ids: req.body.category_ids,
+        published: req.body.published,
+        excerpt: req.body.excerpt,
         bricks: req.body.bricks,
       },
       req
