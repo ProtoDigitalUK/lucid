@@ -1,7 +1,9 @@
 import z from "zod";
 import client from "@db/db";
-import { LucidError } from "@utils/error-handler";
 import { FieldTypes } from "@lucid/brick-builder";
+// Utils
+import { LucidError } from "@utils/error-handler";
+import { generateQueryData } from "@utils/query-helpers";
 // Services
 import formatBricks from "@services/bricks/format-bricks";
 // Schema
@@ -337,7 +339,7 @@ export default class BrickData {
     switch (data.type) {
       case "link": {
         if (mode === "create") {
-          return BrickData.#generateQueryData(
+          return BrickData.generateQueryData(
             [
               "page_brick_id",
               "key",
@@ -360,7 +362,7 @@ export default class BrickData {
             ]
           );
         } else {
-          return BrickData.#generateQueryData(
+          return BrickData.generateQueryData(
             ["text_value", "json_value", "group_position"],
             [
               data.value,
@@ -374,7 +376,7 @@ export default class BrickData {
       }
       case "pagelink": {
         if (mode === "create") {
-          return BrickData.#generateQueryData(
+          return BrickData.generateQueryData(
             [
               "page_brick_id",
               "key",
@@ -397,7 +399,7 @@ export default class BrickData {
             ]
           );
         } else {
-          return BrickData.#generateQueryData(
+          return BrickData.generateQueryData(
             ["page_link_id", "json_value", "group_position"],
             [
               data.value,
@@ -411,7 +413,7 @@ export default class BrickData {
       }
       default: {
         if (mode === "create") {
-          return BrickData.#generateQueryData(
+          return BrickData.generateQueryData(
             [
               "page_brick_id",
               "key",
@@ -430,7 +432,7 @@ export default class BrickData {
             ]
           );
         } else {
-          return BrickData.#generateQueryData(
+          return BrickData.generateQueryData(
             [BrickData.#valueKey(data.type), "group_position"],
             [data.value, data.group_position]
           );
@@ -469,7 +471,7 @@ export default class BrickData {
         });
       }
 
-      const { columns, aliases, values } = BrickData.#generateQueryData(
+      const { columns, aliases, values } = BrickData.generateQueryData(
         ["page_brick_id", "key", "type", "parent_repeater", "group_position"],
         [
           brickId,
@@ -549,7 +551,7 @@ export default class BrickData {
         return "text_value";
     }
   };
-  static #generateQueryData = (
+  static generateQueryData = (
     columns: string[],
     values: (any | undefined)[]
   ) => {
