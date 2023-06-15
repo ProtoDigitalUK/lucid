@@ -6,14 +6,14 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
-const QueryBuilder_1 = __importDefault(require("../../services/models/QueryBuilder"));
 const Collection_1 = __importDefault(require("../models/Collection"));
+const query_helpers_1 = require("../../utils/query-helpers");
 class Category {
 }
 _a = Category;
 Category.getMultiple = async (req) => {
     const { filter, sort, page, per_page } = req.query;
-    const QueryB = new QueryBuilder_1.default({
+    const QueryB = new query_helpers_1.QueryBuilder({
         columns: [
             "id",
             "collection_key",

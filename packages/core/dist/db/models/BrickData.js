@@ -7,10 +7,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _BrickData_createSinglePageBrick, _BrickData_updateSinglePageBrick, _BrickData_upsertField, _BrickData_checkFieldExists, _BrickData_fieldTypeSpecificQueryData, _BrickData_upsertRepeater, _BrickData_valueKey, _BrickData_generateQueryData;
+var _a, _BrickData_createSinglePageBrick, _BrickData_updateSinglePageBrick, _BrickData_upsertField, _BrickData_checkFieldExists, _BrickData_fieldTypeSpecificQueryData, _BrickData_upsertRepeater, _BrickData_valueKey;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
+const query_helpers_1 = require("../../utils/query-helpers");
 const format_bricks_1 = __importDefault(require("../../services/bricks/format-bricks"));
 class BrickData {
 }
@@ -121,12 +122,9 @@ _BrickData_upsertField = { value: async (brickId, data) => {
         let fieldId;
         if (data.fields_id) {
             const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brickId, data, "update");
-            const setStatements = columns
-                .map((column, i) => `${column} = ${aliases[i]}`)
-                .join(", ");
             const fieldRes = await db_1.default.query({
-                text: `UPDATE lucid_fields SET ${setStatements} WHERE fields_id = $${aliases.length + 1} RETURNING fields_id`,
-                values: [...values, data.fields_id],
+                text: `UPDATE lucid_fields SET ${columns.formatted.update} WHERE fields_id = $${aliases.value.length + 1} RETURNING fields_id`,
+                values: [...values.value, data.fields_id],
             });
             fieldId = fieldRes.rows[0].fields_id;
         }
@@ -142,8 +140,8 @@ _BrickData_upsertField = { value: async (brickId, data) => {
             }
             const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brickId, data, "create");
             const fieldRes = await db_1.default.query({
-                text: `INSERT INTO lucid_fields (${columns.join(", ")}) VALUES (${aliases.join(", ")}) RETURNING fields_id`,
-                values: values,
+                text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
+                values: values.value,
             });
             if (!fieldRes.rows[0]) {
                 throw new error_handler_1.LucidError({
@@ -179,7 +177,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
         switch (data.type) {
             case "link": {
                 if (mode === "create") {
-                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [
+                    return (0, query_helpers_1.queryDataFormat)([
                         "page_brick_id",
                         "key",
                         "type",
@@ -200,7 +198,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
                     ]);
                 }
                 else {
-                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, ["text_value", "json_value", "group_position"], [
+                    return (0, query_helpers_1.queryDataFormat)(["text_value", "json_value", "group_position"], [
                         data.value,
                         {
                             target: data.target,
@@ -211,7 +209,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
             }
             case "pagelink": {
                 if (mode === "create") {
-                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [
+                    return (0, query_helpers_1.queryDataFormat)([
                         "page_brick_id",
                         "key",
                         "type",
@@ -232,7 +230,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
                     ]);
                 }
                 else {
-                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, ["page_link_id", "json_value", "group_position"], [
+                    return (0, query_helpers_1.queryDataFormat)(["page_link_id", "json_value", "group_position"], [
                         data.value,
                         {
                             target: data.target,
@@ -243,7 +241,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
             }
             default: {
                 if (mode === "create") {
-                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [
+                    return (0, query_helpers_1.queryDataFormat)([
                         "page_brick_id",
                         "key",
                         "type",
@@ -260,7 +258,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brickId, data, mode) => {
                     ]);
                 }
                 else {
-                    return __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, [__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"], [data.value, data.group_position]);
+                    return (0, query_helpers_1.queryDataFormat)([__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"], [data.value, data.group_position]);
                 }
             }
         }
@@ -284,7 +282,7 @@ _BrickData_upsertRepeater = { value: async (brickId, data) => {
                     status: 409,
                 });
             }
-            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_generateQueryData).call(BrickData, ["page_brick_id", "key", "type", "parent_repeater", "group_position"], [
+            const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["page_brick_id", "key", "type", "parent_repeater", "group_position"], [
                 brickId,
                 data.key,
                 data.type,
@@ -292,8 +290,8 @@ _BrickData_upsertRepeater = { value: async (brickId, data) => {
                 data.group_position,
             ]);
             const repeaterRes = await db_1.default.query({
-                text: `INSERT INTO lucid_fields (${columns.join(", ")}) VALUES (${aliases.join(", ")}) RETURNING fields_id`,
-                values: values,
+                text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
+                values: values.value,
             });
             repeaterId = repeaterRes.rows[0].fields_id;
         }
@@ -344,22 +342,6 @@ _BrickData_valueKey = { value: (type) => {
             default:
                 return "text_value";
         }
-    } };
-_BrickData_generateQueryData = { value: (columns, values) => {
-        if (columns.length !== values.length) {
-            throw new Error("Columns and values arrays must have the same length");
-        }
-        const filteredData = columns
-            .map((col, i) => ({ col, val: values[i] }))
-            .filter((data) => data.val !== undefined);
-        const keys = filteredData.map((data) => data.col);
-        const realValues = filteredData.map((data) => data.val);
-        const aliases = realValues.map((_, i) => `$${i + 1}`);
-        return {
-            columns: keys,
-            aliases: aliases,
-            values: realValues,
-        };
     } };
 exports.default = BrickData;
 //# sourceMappingURL=BrickData.js.map

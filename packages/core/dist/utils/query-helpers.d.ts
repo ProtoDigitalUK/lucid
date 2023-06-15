@@ -1,3 +1,26 @@
+export declare const queryDataFormat: (columns: string[], values: (any | undefined)[], conditional?: {
+    hasValues?: {
+        [key: string]: string | number | boolean | (string | number | boolean)[];
+    } | undefined;
+} | undefined) => {
+    columns: {
+        value: string[];
+        formatted: {
+            insert: string;
+            update: string;
+        };
+    };
+    aliases: {
+        value: string[];
+        formatted: {
+            insert: string;
+            update: string;
+        };
+    };
+    values: {
+        value: any[];
+    };
+};
 interface QueryBuilderConfig {
     columns: string[];
     exclude?: string[];
@@ -22,7 +45,7 @@ interface QueryBuilderConfig {
     page?: string;
     per_page?: string;
 }
-export default class QueryBuilder {
+export declare class QueryBuilder {
     #private;
     config: QueryBuilderConfig;
     query: {
@@ -36,4 +59,4 @@ export default class QueryBuilder {
     get countValues(): (string | number | boolean | (string | number | boolean)[])[];
 }
 export {};
-//# sourceMappingURL=QueryBuilder.d.ts.map
+//# sourceMappingURL=query-helpers.d.ts.map

@@ -15,14 +15,14 @@ const error_handler_1 = require("../../utils/error-handler");
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
 const Collection_1 = __importDefault(require("../models/Collection"));
 const BrickData_1 = __importDefault(require("../models/BrickData"));
-const QueryBuilder_1 = __importDefault(require("../../services/models/QueryBuilder"));
 const format_page_1 = __importDefault(require("../../services/pages/format-page"));
+const query_helpers_1 = require("../../utils/query-helpers");
 class Page {
 }
 _a = Page;
 Page.getMultiple = async (req) => {
     const { filter, sort, page, per_page } = req.query;
-    const QueryB = new QueryBuilder_1.default({
+    const QueryB = new query_helpers_1.QueryBuilder({
         columns: [
             "id",
             "collection_key",
@@ -143,7 +143,7 @@ Page.getSingle = async (id, req) => {
     return (0, format_page_1.default)(page.rows[0]);
 };
 Page.create = async (data, req) => {
-    const parentId = data.homepage ? null : data.parent_id || null;
+    const parentId = data.homepage ? undefined : data.parent_id || undefined;
     const collectionFound = await Collection_1.default.findCollection(data.collection_key, "pages");
     if (!collectionFound) {
         throw new error_handler_1.LucidError({
@@ -157,7 +157,7 @@ Page.create = async (data, req) => {
     if (parentId) {
         await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, parentId, data.collection_key);
     }
-    const slug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, data.slug, parentId, data.homepage || false);
+    const slug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, data.slug, data.homepage || false, parentId);
     const page = await db_1.default.query({
         text: `INSERT INTO lucid_pages (title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
         values: [
@@ -218,46 +218,41 @@ Page.update = async (id, data, req) => {
             status: 404,
         });
     }
-    const parentId = data.homepage ? null : data.parent_id || null;
-    let newValues = {};
+    const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, data.parent_id || null);
     if (parentId) {
         await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, parentId, currentPage.collection_key);
     }
+    let newSlug = undefined;
     if (data.slug) {
-        newValues.slug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, data.slug, parentId, data.homepage || false);
+        newSlug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, data.slug, data.homepage || false, parentId);
     }
-    if (data.title) {
-        newValues.title = data.title;
-    }
-    if (data.excerpt) {
-        newValues.excerpt = data.excerpt;
-    }
-    if (data.published) {
-        newValues.published = data.published;
-        newValues.published_at = data.published ? new Date() : null;
-        newValues.published_by = data.published ? req.auth.id : null;
-    }
-    if (parentId) {
-        newValues.parent_id = parentId;
-    }
-    if (data.homepage) {
-        newValues.homepage = data.homepage;
-    }
-    if (Object.keys(newValues).length === 0) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "No data to update",
-            message: `No data to update`,
-            status: 400,
-        });
-    }
-    newValues.updated_at = new Date();
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)([
+        "title",
+        "slug",
+        "excerpt",
+        "published",
+        "published_at",
+        "published_by",
+        "parent_id",
+        "homepage",
+    ], [
+        data.title,
+        newSlug,
+        data.excerpt,
+        data.published,
+        data.published ? new Date() : null,
+        data.published ? req.auth.id : null,
+        parentId,
+        data.homepage,
+    ], {
+        hasValues: {
+            updated_at: new Date().toISOString(),
+        },
+    });
     const page = await db_1.default.query({
-        text: `UPDATE lucid_pages SET ${Object.keys(newValues)
-            .map((key, index) => `${key} = $${index + 1}`)
-            .join(", ")} WHERE id = $${Object.keys(newValues).length + 1} RETURNING *`,
-        values: [...Object.values(newValues), pageId],
+        text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
+        values: [...values.value, pageId],
     });
     if (!page.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -274,7 +269,7 @@ Page.update = async (id, data, req) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-_Page_slugUnique = { value: async (slug, parent_id, homepage) => {
+_Page_slugUnique = { value: async (slug, homepage, parent_id) => {
         if (homepage) {
             return "/";
         }

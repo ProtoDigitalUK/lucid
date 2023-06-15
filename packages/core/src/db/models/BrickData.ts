@@ -3,7 +3,7 @@ import client from "@db/db";
 import { FieldTypes } from "@lucid/brick-builder";
 // Utils
 import { LucidError } from "@utils/error-handler";
-import { generateQueryData } from "@utils/query-helpers";
+import { queryDataFormat } from "@utils/query-helpers";
 // Services
 import formatBricks from "@services/bricks/format-bricks";
 // Schema
@@ -239,17 +239,14 @@ export default class BrickData {
         BrickData.#fieldTypeSpecificQueryData(brickId, data, "update");
 
       // Generate the SET part of the update statement
-      const setStatements = columns
-        .map((column, i) => `${column} = ${aliases[i]}`)
-        .join(", ");
 
       const fieldRes = await client.query<{
         fields_id: number;
       }>({
-        text: `UPDATE lucid_fields SET ${setStatements} WHERE fields_id = $${
-          aliases.length + 1
-        } RETURNING fields_id`,
-        values: [...values, data.fields_id],
+        text: `UPDATE lucid_fields SET ${
+          columns.formatted.update
+        } WHERE fields_id = $${aliases.value.length + 1} RETURNING fields_id`,
+        values: [...values.value, data.fields_id],
       });
 
       fieldId = fieldRes.rows[0].fields_id;
@@ -278,10 +275,8 @@ export default class BrickData {
       const fieldRes = await client.query<{
         fields_id: number;
       }>({
-        text: `INSERT INTO lucid_fields (${columns.join(
-          ", "
-        )}) VALUES (${aliases.join(", ")}) RETURNING fields_id`,
-        values: values,
+        text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
+        values: values.value,
       });
 
       if (!fieldRes.rows[0]) {
@@ -339,7 +334,7 @@ export default class BrickData {
     switch (data.type) {
       case "link": {
         if (mode === "create") {
-          return BrickData.generateQueryData(
+          return queryDataFormat(
             [
               "page_brick_id",
               "key",
@@ -362,7 +357,7 @@ export default class BrickData {
             ]
           );
         } else {
-          return BrickData.generateQueryData(
+          return queryDataFormat(
             ["text_value", "json_value", "group_position"],
             [
               data.value,
@@ -376,7 +371,7 @@ export default class BrickData {
       }
       case "pagelink": {
         if (mode === "create") {
-          return BrickData.generateQueryData(
+          return queryDataFormat(
             [
               "page_brick_id",
               "key",
@@ -399,7 +394,7 @@ export default class BrickData {
             ]
           );
         } else {
-          return BrickData.generateQueryData(
+          return queryDataFormat(
             ["page_link_id", "json_value", "group_position"],
             [
               data.value,
@@ -413,7 +408,7 @@ export default class BrickData {
       }
       default: {
         if (mode === "create") {
-          return BrickData.generateQueryData(
+          return queryDataFormat(
             [
               "page_brick_id",
               "key",
@@ -432,7 +427,7 @@ export default class BrickData {
             ]
           );
         } else {
-          return BrickData.generateQueryData(
+          return queryDataFormat(
             [BrickData.#valueKey(data.type), "group_position"],
             [data.value, data.group_position]
           );
@@ -471,7 +466,7 @@ export default class BrickData {
         });
       }
 
-      const { columns, aliases, values } = BrickData.generateQueryData(
+      const { columns, aliases, values } = queryDataFormat(
         ["page_brick_id", "key", "type", "parent_repeater", "group_position"],
         [
           brickId,
@@ -483,10 +478,8 @@ export default class BrickData {
       );
 
       const repeaterRes = await client.query<{ fields_id: number }>({
-        text: `INSERT INTO lucid_fields (${columns.join(
-          ", "
-        )}) VALUES (${aliases.join(", ")}) RETURNING fields_id`,
-        values: values,
+        text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
+        values: values.value,
       });
 
       repeaterId = repeaterRes.rows[0].fields_id;
@@ -550,29 +543,5 @@ export default class BrickData {
       default:
         return "text_value";
     }
-  };
-  static generateQueryData = (
-    columns: string[],
-    values: (any | undefined)[]
-  ) => {
-    // Ensure columns and values have the same length
-    if (columns.length !== values.length) {
-      throw new Error("Columns and values arrays must have the same length");
-    }
-
-    // Filter out undefined values and their corresponding columns
-    const filteredData = columns
-      .map((col, i) => ({ col, val: values[i] }))
-      .filter((data) => data.val !== undefined);
-
-    const keys = filteredData.map((data) => data.col);
-    const realValues = filteredData.map((data) => data.val);
-    const aliases = realValues.map((_, i) => `$${i + 1}`);
-
-    return {
-      columns: keys,
-      aliases: aliases,
-      values: realValues,
-    };
   };
 }

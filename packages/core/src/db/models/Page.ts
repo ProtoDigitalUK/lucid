@@ -8,8 +8,9 @@ import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
 import BrickData, { BrickObject } from "@db/models/BrickData";
 // Serivces
-import QueryBuilder from "@services/models/QueryBuilder";
 import formatPage from "@services/pages/format-page";
+// Utils
+import { queryDataFormat, QueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -236,7 +237,7 @@ export default class Page {
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
-    const parentId = data.homepage ? null : data.parent_id || null;
+    const parentId = data.homepage ? undefined : data.parent_id || undefined;
 
     // -------------------------------------------
     // Checks
@@ -264,8 +265,8 @@ export default class Page {
     // Check if slug is unique
     const slug = await Page.#slugUnique(
       data.slug,
-      parentId,
-      data.homepage || false
+      data.homepage || false,
+      parentId
     );
 
     // -------------------------------------------
@@ -314,7 +315,7 @@ export default class Page {
     const pageId = parseInt(id);
 
     // -------------------------------------------
-    // Values
+    // Checks
     const currentPageRes = await client.query<PageT>({
       text: `SELECT
           id,
@@ -342,66 +343,63 @@ export default class Page {
     }
 
     // Set parent id to null if homepage as homepage has to be root level
-    const parentId = data.homepage ? null : data.parent_id || null;
-
-    let newValues: any = {};
-
-    // -------------------------------------------
-    // Checks
+    const parentId = data.homepage ? undefined : data.parent_id || undefined;
 
     // Check if the the parent_id is the homepage
     await Page.#checkParentNotHomepage(data.parent_id || null);
-
     // Check if the parent is in the same collection
     if (parentId) {
       await Page.#isParentSameCollection(parentId, currentPage.collection_key);
     }
+
+    // -------------------------------------------
+    // Set Data
+
+    let newSlug = undefined;
     if (data.slug) {
       // Check if slug is unique
-      newValues.slug = await Page.#slugUnique(
+      newSlug = await Page.#slugUnique(
         data.slug,
-        parentId,
-        data.homepage || false
+        data.homepage || false,
+        parentId
       );
     }
-    if (data.title) {
-      newValues.title = data.title;
-    }
-    if (data.excerpt) {
-      newValues.excerpt = data.excerpt;
-    }
-    if (data.published) {
-      newValues.published = data.published;
-      newValues.published_at = data.published ? new Date() : null;
-      newValues.published_by = data.published ? req.auth.id : null;
-    }
-    if (parentId) {
-      newValues.parent_id = parentId;
-    }
-    if (data.homepage) {
-      newValues.homepage = data.homepage;
-    }
 
-    if (Object.keys(newValues).length === 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "No data to update",
-        message: `No data to update`,
-        status: 400,
-      });
-    }
-
-    newValues.updated_at = new Date();
+    const { columns, aliases, values } = queryDataFormat(
+      [
+        "title",
+        "slug",
+        "excerpt",
+        "published",
+        "published_at",
+        "published_by",
+        "parent_id",
+        "homepage",
+      ],
+      [
+        data.title,
+        newSlug,
+        data.excerpt,
+        data.published,
+        data.published ? new Date() : null,
+        data.published ? req.auth.id : null,
+        parentId,
+        data.homepage,
+      ],
+      {
+        hasValues: {
+          updated_at: new Date().toISOString(),
+        },
+      }
+    );
 
     // -------------------------------------------
     // Update page
     const page = await client.query<PageT>({
-      text: `UPDATE lucid_pages SET ${Object.keys(newValues)
-        .map((key, index) => `${key} = $${index + 1}`)
-        .join(", ")} WHERE id = $${
-        Object.keys(newValues).length + 1
+      text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${
+        aliases.value.length + 1
       } RETURNING *`,
-      values: [...Object.values(newValues), pageId],
+      values: [...values.value, pageId],
     });
 
     if (!page.rows[0]) {
@@ -437,8 +435,8 @@ export default class Page {
   // Util Methods
   static #slugUnique = async (
     slug: string,
-    parent_id: number | null,
-    homepage: boolean
+    homepage: boolean,
+    parent_id?: number
   ) => {
     // For homepage, return "/"
     if (homepage) {

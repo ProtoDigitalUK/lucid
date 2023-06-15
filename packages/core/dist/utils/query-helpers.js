@@ -6,6 +6,58 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _QueryBuilder_instances, _QueryBuilder_buildSelect, _QueryBuilder_buildFilter, _QueryBuilder_buildOrder, _QueryBuilder_buildPagination, _QueryBuilder_parseArrayValues, _QueryBuilder_parseSingleValue;
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.QueryBuilder = exports.queryDataFormat = void 0;
+const error_handler_1 = require("./error-handler");
+const queryDataFormat = (columns, values, conditional) => {
+    if (columns.length !== values.length) {
+        throw new Error("Columns and values arrays must have the same length");
+    }
+    const filteredData = columns
+        .map((col, i) => ({ col, val: values[i] }))
+        .filter((data) => data.val !== undefined);
+    const c = filteredData.map((data) => data.col);
+    const v = filteredData.map((data) => data.val);
+    const a = v.map((_, i) => `$${i + 1}`);
+    if (conditional?.hasValues) {
+        if (c.length === 0) {
+            throw new error_handler_1.LucidError({
+                type: "basic",
+                name: "No data to update",
+                message: `No data to update`,
+                status: 400,
+            });
+        }
+        const hasValues = Object.entries(conditional.hasValues);
+        for (let i = 0; i < hasValues.length; i++) {
+            const [key, value] = hasValues[i];
+            if (value === undefined)
+                continue;
+            c.push(key);
+            v.push(value);
+            a.push(`$${a.length + 1}`);
+        }
+    }
+    return {
+        columns: {
+            value: c,
+            formatted: {
+                insert: c.join(", "),
+                update: c.map((col, i) => `${col} = ${a[i]}`).join(", "),
+            },
+        },
+        aliases: {
+            value: a,
+            formatted: {
+                insert: a.join(", "),
+                update: a.join(", "),
+            },
+        },
+        values: {
+            value: v,
+        },
+    };
+};
+exports.queryDataFormat = queryDataFormat;
 class QueryBuilder {
     constructor(config) {
         _QueryBuilder_instances.add(this);
@@ -32,7 +84,7 @@ class QueryBuilder {
         return this.values;
     }
 }
-exports.default = QueryBuilder;
+exports.QueryBuilder = QueryBuilder;
 _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _QueryBuilder_buildSelect() {
     if (!this.config.exclude) {
         this.config.columns.forEach((column, index) => {
@@ -126,4 +178,4 @@ _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _Q
         return v;
     }
 };
-//# sourceMappingURL=QueryBuilder.js.map
+//# sourceMappingURL=query-helpers.js.map

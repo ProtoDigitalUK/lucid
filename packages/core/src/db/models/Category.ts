@@ -1,10 +1,10 @@
 import client from "@db/db";
 import { Request } from "express";
 import { LucidError, modelErrors } from "@utils/error-handler";
-// Serivces
-import QueryBuilder from "@services/models/QueryBuilder";
 // Models
 import Collection from "@db/models/Collection";
+// Utils
+import { QueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
