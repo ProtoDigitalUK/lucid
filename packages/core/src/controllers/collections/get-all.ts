@@ -10,7 +10,8 @@ const body = z.object({});
 const query = z.object({
   filter: z
     .object({
-      type: z.enum(["pages", "group"]),
+      type: z.enum(["pages", "group"]).optional(),
+      environment_key: z.string().optional(),
     })
     .optional(),
 });

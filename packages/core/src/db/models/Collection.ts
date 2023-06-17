@@ -1,18 +1,26 @@
 import { CollectionBuilderT } from "@lucid/collection-builder";
 // Models
 import Config from "@db/models/Config";
-// Serivces
+import Environment from "@db/models/Environment";
+// Utils
+import { LucidError } from "@utils/error-handler";
 
 // -------------------------------------------
 // Types
 interface QueryParams extends ModelQueryParams {
   filter?: {
     type?: string;
+    environment_key?: string;
+    environment_collections?: Array<string>;
   };
 }
 
 type CollectionGetAll = (query: QueryParams) => Promise<CollectionT[]>;
-type CollectionVerifyType = (key: string, type: string) => Promise<boolean>;
+type CollectionVerifyType = (
+  key: string,
+  type: string,
+  environment_key: string
+) => Promise<void>;
 
 // -------------------------------------------
 // Collection
@@ -39,11 +47,34 @@ export default class Collection {
       )
     );
 
+    if (!query.filter) return collections;
+
+    if (query.filter.environment_key) {
+      const environment = await Environment.getSingle(
+        query.filter.environment_key
+      );
+      query.filter.environment_collections =
+        environment.assigned_collections || [];
+    }
+
     return Collection.#filterCollections(query.filter, collections);
   };
-  static findCollection: CollectionVerifyType = async (key, type) => {
+  static findCollection: CollectionVerifyType = async (
+    key,
+    type,
+    environment_key
+  ) => {
     const collectionInstances = Collection.getCollectionsConfig();
-    if (!collectionInstances) return false;
+    if (!collectionInstances) {
+      throw new LucidError({
+        type: "basic",
+        name: "Collection not found",
+        message: `Collection with key "${key}" and of type "${type}" under envrionment "${environment_key}" not found`,
+        status: 404,
+      });
+    }
+
+    const environment = await Environment.getSingle(environment_key);
 
     const collection = await Promise.all(
       collectionInstances.map((collection) =>
@@ -51,11 +82,22 @@ export default class Collection {
       )
     );
 
+    const assignedCollections = environment.assigned_collections || [];
+
     const found = collection.find((c) => {
-      return c.key === key && c.type === type;
+      return (
+        c.key === key && c.type === type && assignedCollections.includes(c.key)
+      );
     });
-    if (!found) return false;
-    return true;
+
+    if (!found) {
+      throw new LucidError({
+        type: "basic",
+        name: "Collection not found",
+        message: `Collection with key "${key}" and of type "${type}" under envrionment "${environment_key}" not found`,
+        status: 404,
+      });
+    }
   };
 
   // -------------------------------------------
@@ -97,6 +139,12 @@ export default class Collection {
         case "type":
           filtered = filtered.filter(
             (collection) => collection.type === filter.type
+          );
+          break;
+        case "environment_collections":
+          // only return collections that are assigned to the environment
+          filtered = filtered.filter((collection) =>
+            filter.environment_collections?.includes(collection.key)
           );
           break;
         default:

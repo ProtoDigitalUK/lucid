@@ -277,19 +277,12 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    // Check if the collection exists and is the correct type
-    const collectionFound = await Collection.findCollection(
+    // Check if the collection exists and is the correct type and the same environment
+    await Collection.findCollection(
       data.collection_key,
-      "pages"
+      "pages",
+      req.headers["lucid-environment"] as string
     );
-    if (!collectionFound) {
-      throw new LucidError({
-        type: "basic",
-        name: "Collection not found",
-        message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
-        status: 404,
-      });
-    }
 
     // Check if the the parent_id is the homepage
     await Page.#checkParentNotHomepage({

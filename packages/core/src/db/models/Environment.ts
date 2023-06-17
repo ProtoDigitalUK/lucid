@@ -11,9 +11,9 @@ type EnvironmentGetAll = () => Promise<EnvironmentT[]>;
 type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
 type EnvironmentUpsertSingle = (data: {
   key: string;
-  title?: string;
-  assigned_bricks?: string[];
-  assigned_collections?: string[];
+  title?: string | null;
+  assigned_bricks?: string[] | null;
+  assigned_collections?: string[] | null;
 }) => Promise<EnvironmentT>;
 
 // -------------------------------------------

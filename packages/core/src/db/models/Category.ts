@@ -1,9 +1,9 @@
 import client from "@db/db";
 import { Request } from "express";
-import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
 import Collection from "@db/models/Collection";
 // Utils
+import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
@@ -152,18 +152,11 @@ export default class Category {
   static create: CategoryCreate = async (data, req) => {
     // -------------------------------------------
     // Checks
-    const collectionFound = await Collection.findCollection(
+    await Collection.findCollection(
       data.collection_key,
-      "pages"
+      "pages",
+      req.headers["lucid-environment"] as string
     );
-    if (!collectionFound) {
-      throw new LucidError({
-        type: "basic",
-        name: "Collection not found",
-        message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
-        status: 404,
-      });
-    }
 
     // check if slug is unique in post type
     const isSlugUnique = await Category.isSlugUniqueInCollection({
