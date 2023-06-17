@@ -2,7 +2,7 @@ import client from "@db/db";
 // Models
 import Config from "@db/models/Config";
 // Utils
-import { LucidError } from "@utils/error-handler";
+import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
@@ -64,6 +64,62 @@ export default class Environment {
       ["key", "title", "assigned_bricks", "assigned_collections"],
       [data.key, data.title, data.assigned_bricks, data.assigned_collections]
     );
+
+    // Check assigned_brick keys against config
+    if (data.assigned_bricks) {
+      const brickInstances = Config.get().bricks || [];
+      const brickKeys = brickInstances.map((b) => b.key);
+
+      const invalidBricks = data.assigned_bricks.filter(
+        (b) => !brickKeys.includes(b)
+      );
+      if (invalidBricks.length > 0) {
+        throw new LucidError({
+          type: "basic",
+          name: "Invalid brick keys",
+          message: `Make sure all assigned_bricks are valid.`,
+          status: 400,
+          errors: modelErrors({
+            assigned_bricks: {
+              code: "invalid",
+              message: `Make sure all assigned_bricks are valid.`,
+              children: invalidBricks.map((b) => ({
+                code: "invalid",
+                message: `Brick with key "${b}" not found.`,
+              })),
+            },
+          }),
+        });
+      }
+    }
+
+    // Check assigned_collection keys against config
+    if (data.assigned_collections) {
+      const collectionInstances = Config.get().collections || [];
+      const collectionKeys = collectionInstances.map((c) => c.key);
+
+      const invalidCollections = data.assigned_collections.filter(
+        (c) => !collectionKeys.includes(c)
+      );
+      if (invalidCollections.length > 0) {
+        throw new LucidError({
+          type: "basic",
+          name: "Invalid collection keys",
+          message: `Make sure all assigned_collections are valid.`,
+          status: 400,
+          errors: modelErrors({
+            assigned_collections: {
+              code: "invalid",
+              message: `Make sure all assigned_collections are valid.`,
+              children: invalidCollections.map((c) => ({
+                code: "invalid",
+                message: `Collection with key "${c}" not found.`,
+              })),
+            },
+          }),
+        });
+      }
+    }
 
     // Create or update environment
     const environments = await client.query<EnvironmentT>({
