@@ -1,9 +1,15 @@
 import { RuntimeError } from "@utils/error-handler";
 // Models
+import Config from "@db/models/Config";
+import Environment from "@db/models/Environment";
 import User from "@db/models/User";
 import Option from "@db/models/Option";
 import Permission from "@db/models/Permission";
 
+/*
+    Lucid stores an options table in the database to control certain aspects of the application,
+     if they are not set or become out of sync, we can use this to fix them.
+*/
 const createFixOptions = async () => {
   // this is only created if the option doesnt exist, if it does it will already be true and locked
   await Option.create({
@@ -46,11 +52,29 @@ const createInitialAdmin = async () => {
   }
 };
 
+/*
+    Sync the environments from the lucid.config.ts file with the database.
+*/
+const syncEnvironments = async () => {
+  const syncPromise = [];
+  const environments = Config.environments;
+  for (const env of environments) {
+    syncPromise.push(
+      Environment.upsertSingle({
+        key: env.key,
+        title: env.title,
+      })
+    );
+  }
+  await Promise.all(syncPromise);
+};
+
 // Run all launch steps
 const launchSteps = async () => {
   try {
     await createFixOptions();
     await createInitialAdmin();
+    await syncEnvironments();
   } catch (err) {
     new RuntimeError((err as Error).message);
   }
