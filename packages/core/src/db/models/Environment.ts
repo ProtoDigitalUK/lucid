@@ -19,7 +19,6 @@ type EnvironmentUpsertSingle = (data: {
 // -------------------------------------------
 // User
 export type EnvironmentT = {
-  id: number;
   key: string;
   title: string;
   assigned_bricks: string[];
