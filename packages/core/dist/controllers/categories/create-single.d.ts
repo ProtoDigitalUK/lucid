@@ -7,13 +7,13 @@ declare const _default: {
             slug: z.ZodString;
             description: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
-            collection_key: string;
             title: string;
+            collection_key: string;
             slug: string;
             description?: string | undefined;
         }, {
-            collection_key: string;
             title: string;
+            collection_key: string;
             slug: string;
             description?: string | undefined;
         }>;
@@ -26,13 +26,13 @@ declare const _default: {
         slug: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        collection_key: string;
         title: string;
+        collection_key: string;
         slug: string;
         description?: string | undefined;
     }, {
-        collection_key: string;
         title: string;
+        collection_key: string;
         slug: string;
         description?: string | undefined;
     }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;

@@ -9,6 +9,7 @@ const authenticate_1 = __importDefault(require("../middleware/authenticate"));
 const authorise_csrf_1 = __importDefault(require("../middleware/authorise-csrf"));
 const paginated_1 = __importDefault(require("../middleware/paginated"));
 const validate_bricks_1 = __importDefault(require("../middleware/validate-bricks"));
+const validate_environment_1 = __importDefault(require("../middleware/validate-environment"));
 const route = (router, props) => {
     const { method, path, controller } = props;
     const middleware = [];
@@ -30,6 +31,9 @@ const route = (router, props) => {
     }
     if (props.middleware?.paginated) {
         middleware.push(paginated_1.default);
+    }
+    if (props.middleware?.validateEnvironment) {
+        middleware.push(validate_environment_1.default);
     }
     switch (method) {
         case "get":

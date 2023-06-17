@@ -26,6 +26,51 @@ PageCategory.create = async (data) => {
     }
     return categories.rows;
 };
+PageCategory.delete = async (data) => {
+    const { page_id, category_ids } = data;
+    const deleteCategories = await db_1.default.query({
+        text: `DELETE FROM lucid_page_categories WHERE page_id = $1 AND category_id = ANY($2) RETURNING *`,
+        values: [page_id, category_ids],
+    });
+    if (deleteCategories.rowCount !== category_ids.length) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Page Category Not Deleted",
+            message: "There was an error deleting the page category.",
+            status: 500,
+        });
+    }
+    return deleteCategories.rows;
+};
+PageCategory.update = async (data) => {
+    const { page_id, category_ids, collection_key } = data;
+    const pageCategoriesRes = await db_1.default.query({
+        text: `SELECT * FROM lucid_page_categories WHERE page_id = $1`,
+        values: [page_id],
+    });
+    const categoriesToAdd = category_ids.filter((id) => !pageCategoriesRes.rows.find((pageCategory) => pageCategory.category_id === id));
+    const categoriesToRemove = pageCategoriesRes.rows.filter((pageCategory) => !category_ids.includes(pageCategory.category_id));
+    const updatePromise = [];
+    if (categoriesToAdd.length > 0) {
+        updatePromise.push(PageCategory.create({
+            page_id,
+            category_ids: categoriesToAdd,
+            collection_key,
+        }));
+    }
+    if (categoriesToRemove.length > 0) {
+        updatePromise.push(PageCategory.delete({
+            page_id,
+            category_ids: categoriesToRemove.map((category) => category.category_id),
+        }));
+    }
+    const updateRes = await Promise.all(updatePromise);
+    const newPageCategories = pageCategoriesRes.rows.filter((pageCategory) => !categoriesToRemove.includes(pageCategory));
+    if (categoriesToAdd.length > 0) {
+        newPageCategories.push(...updateRes[0]);
+    }
+    return newPageCategories;
+};
 PageCategory.checkCategoryPostType = async (category_ids, collection_key) => {
     const res = await db_1.default.query({
         text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND collection_key = $2`,

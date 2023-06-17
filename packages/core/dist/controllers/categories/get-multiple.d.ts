@@ -17,10 +17,10 @@ declare const _default: {
                 key: z.ZodEnum<["title", "created_at"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "title" | "created_at";
             }, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "title" | "created_at";
             }>, "many">>;
             page: z.ZodOptional<z.ZodString>;
@@ -31,7 +31,7 @@ declare const _default: {
                 title?: string | undefined;
             } | undefined;
             sort?: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "title" | "created_at";
             }[] | undefined;
             page?: string | undefined;
@@ -42,7 +42,7 @@ declare const _default: {
                 title?: string | undefined;
             } | undefined;
             sort?: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "title" | "created_at";
             }[] | undefined;
             page?: string | undefined;
@@ -65,10 +65,10 @@ declare const _default: {
             key: z.ZodEnum<["title", "created_at"]>;
             value: z.ZodEnum<["asc", "desc"]>;
         }, "strip", z.ZodTypeAny, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "title" | "created_at";
         }, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "title" | "created_at";
         }>, "many">>;
         page: z.ZodOptional<z.ZodString>;
@@ -79,7 +79,7 @@ declare const _default: {
             title?: string | undefined;
         } | undefined;
         sort?: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "title" | "created_at";
         }[] | undefined;
         page?: string | undefined;
@@ -90,7 +90,7 @@ declare const _default: {
             title?: string | undefined;
         } | undefined;
         sort?: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "title" | "created_at";
         }[] | undefined;
         page?: string | undefined;

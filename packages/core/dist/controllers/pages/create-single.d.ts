@@ -11,8 +11,8 @@ declare const _default: {
             parent_id: z.ZodOptional<z.ZodNumber>;
             category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
         }, "strip", z.ZodTypeAny, {
-            collection_key: string;
             title: string;
+            collection_key: string;
             slug: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
@@ -20,8 +20,8 @@ declare const _default: {
             parent_id?: number | undefined;
             category_ids?: number[] | undefined;
         }, {
-            collection_key: string;
             title: string;
+            collection_key: string;
             slug: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
@@ -42,8 +42,8 @@ declare const _default: {
         parent_id: z.ZodOptional<z.ZodNumber>;
         category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
     }, "strip", z.ZodTypeAny, {
-        collection_key: string;
         title: string;
+        collection_key: string;
         slug: string;
         homepage?: boolean | undefined;
         excerpt?: string | undefined;
@@ -51,8 +51,8 @@ declare const _default: {
         parent_id?: number | undefined;
         category_ids?: number[] | undefined;
     }, {
-        collection_key: string;
         title: string;
+        collection_key: string;
         slug: string;
         homepage?: boolean | undefined;
         excerpt?: string | undefined;

@@ -8,6 +8,7 @@ export declare const queryDataFormat: (columns: string[], values: (any | undefin
         formatted: {
             insert: string;
             update: string;
+            doUpdate: string;
         };
     };
     aliases: {
@@ -21,7 +22,7 @@ export declare const queryDataFormat: (columns: string[], values: (any | undefin
         value: any[];
     };
 };
-interface QueryBuilderConfig {
+interface SelectQueryBuilderConfig {
     columns: string[];
     exclude?: string[];
     filter?: {
@@ -45,9 +46,9 @@ interface QueryBuilderConfig {
     page?: string;
     per_page?: string;
 }
-export declare class QueryBuilder {
+export declare class SelectQueryBuilder {
     #private;
-    config: QueryBuilderConfig;
+    config: SelectQueryBuilderConfig;
     query: {
         select: string;
         where: string;
@@ -55,7 +56,7 @@ export declare class QueryBuilder {
         pagination: string;
     };
     values: Array<string | number | boolean | Array<string | number | boolean>>;
-    constructor(config: QueryBuilderConfig);
+    constructor(config: SelectQueryBuilderConfig);
     get countValues(): (string | number | boolean | (string | number | boolean)[])[];
 }
 export {};

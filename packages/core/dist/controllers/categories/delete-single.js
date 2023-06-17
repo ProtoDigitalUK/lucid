@@ -13,7 +13,7 @@ const params = zod_1.default.object({
 });
 const deleteSingle = async (req, res, next) => {
     try {
-        const category = await Category_1.default.delete(parseInt(req.params.id));
+        const category = await Category_1.default.delete(parseInt(req.params.id), req);
         res.status(200).json((0, build_response_1.default)(req, {
             data: category,
         }));

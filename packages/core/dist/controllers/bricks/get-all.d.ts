@@ -7,21 +7,24 @@ declare const _default: {
             filter: z.ZodOptional<z.ZodObject<{
                 s: z.ZodOptional<z.ZodString>;
                 collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
+                environment_key: z.ZodOptional<z.ZodString>;
             }, "strip", z.ZodTypeAny, {
                 s?: string | undefined;
                 collection_key?: string | string[] | undefined;
+                environment_key?: string | undefined;
             }, {
                 s?: string | undefined;
                 collection_key?: string | string[] | undefined;
+                environment_key?: string | undefined;
             }>>;
             sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 key: z.ZodEnum<["name"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name";
             }, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name";
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
@@ -29,9 +32,10 @@ declare const _default: {
             filter?: {
                 s?: string | undefined;
                 collection_key?: string | string[] | undefined;
+                environment_key?: string | undefined;
             } | undefined;
             sort?: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name";
             }[] | undefined;
         }, {
@@ -39,9 +43,10 @@ declare const _default: {
             filter?: {
                 s?: string | undefined;
                 collection_key?: string | string[] | undefined;
+                environment_key?: string | undefined;
             } | undefined;
             sort?: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name";
             }[] | undefined;
         }>;
@@ -52,21 +57,24 @@ declare const _default: {
         filter: z.ZodOptional<z.ZodObject<{
             s: z.ZodOptional<z.ZodString>;
             collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
+            environment_key: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             s?: string | undefined;
             collection_key?: string | string[] | undefined;
+            environment_key?: string | undefined;
         }, {
             s?: string | undefined;
             collection_key?: string | string[] | undefined;
+            environment_key?: string | undefined;
         }>>;
         sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
             key: z.ZodEnum<["name"]>;
             value: z.ZodEnum<["asc", "desc"]>;
         }, "strip", z.ZodTypeAny, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name";
         }, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name";
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
@@ -74,9 +82,10 @@ declare const _default: {
         filter?: {
             s?: string | undefined;
             collection_key?: string | string[] | undefined;
+            environment_key?: string | undefined;
         } | undefined;
         sort?: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name";
         }[] | undefined;
     }, {
@@ -84,9 +93,10 @@ declare const _default: {
         filter?: {
             s?: string | undefined;
             collection_key?: string | string[] | undefined;
+            environment_key?: string | undefined;
         } | undefined;
         sort?: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name";
         }[] | undefined;
     }>>;

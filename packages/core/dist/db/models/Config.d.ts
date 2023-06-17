@@ -3,9 +3,13 @@ import { CollectionBuilderT } from "@lucid/collection-builder";
 export type ConfigT = {
     port: number;
     origin?: string;
-    environment: "development" | "production";
+    mode: "development" | "production";
     databaseUrl: string;
     secretKey: string;
+    environments: Array<{
+        title: string;
+        key: string;
+    }>;
     collections?: CollectionBuilderT[];
     bricks?: BrickBuilderT[];
 };
@@ -16,7 +20,11 @@ export default class Config {
     static findPath: (cwd: string) => string;
     static get: () => ConfigT;
     static get secretKey(): string;
-    static get environment(): "development" | "production";
+    static get mode(): "development" | "production";
     static get databaseUrl(): string;
+    static get environments(): {
+        title: string;
+        key: string;
+    }[];
 }
 //# sourceMappingURL=Config.d.ts.map

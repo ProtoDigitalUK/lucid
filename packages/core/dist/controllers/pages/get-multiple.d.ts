@@ -23,10 +23,10 @@ declare const _default: {
                 key: z.ZodEnum<["created_at"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "created_at";
             }, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "created_at";
             }>, "many">>;
             page: z.ZodOptional<z.ZodString>;
@@ -39,7 +39,7 @@ declare const _default: {
                 category_id?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "created_at";
             }[] | undefined;
             page?: string | undefined;
@@ -52,7 +52,7 @@ declare const _default: {
                 category_id?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "created_at";
             }[] | undefined;
             page?: string | undefined;
@@ -81,10 +81,10 @@ declare const _default: {
             key: z.ZodEnum<["created_at"]>;
             value: z.ZodEnum<["asc", "desc"]>;
         }, "strip", z.ZodTypeAny, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "created_at";
         }, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "created_at";
         }>, "many">>;
         page: z.ZodOptional<z.ZodString>;
@@ -97,7 +97,7 @@ declare const _default: {
             category_id?: string | string[] | undefined;
         } | undefined;
         sort?: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "created_at";
         }[] | undefined;
         page?: string | undefined;
@@ -110,7 +110,7 @@ declare const _default: {
             category_id?: string | string[] | undefined;
         } | undefined;
         sort?: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "created_at";
         }[] | undefined;
         page?: string | undefined;

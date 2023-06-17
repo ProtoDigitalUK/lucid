@@ -16,7 +16,7 @@ const error_handler_1 = require("../../utils/error-handler");
 const configSchema = zod_1.default.object({
     port: zod_1.default.number(),
     origin: zod_1.default.string().optional(),
-    environment: zod_1.default.enum(["development", "production"]),
+    mode: zod_1.default.enum(["development", "production"]),
     databaseUrl: zod_1.default.string(),
     secretKey: zod_1.default.string(),
     collections: zod_1.default.array(zod_1.default.any()).optional(),
@@ -26,11 +26,14 @@ class Config {
     static get secretKey() {
         return Config.get().secretKey;
     }
-    static get environment() {
-        return Config.get().environment;
+    static get mode() {
+        return Config.get().mode;
     }
     static get databaseUrl() {
         return Config.get().databaseUrl;
+    }
+    static get environments() {
+        return Config.get().environments;
     }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {

@@ -16,17 +16,17 @@ declare const _default: {
                 key: z.ZodEnum<["id", "name"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name" | "id";
             }, {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name" | "id";
             }>, "many">;
             page: z.ZodOptional<z.ZodString>;
             per_page: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             sort: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name" | "id";
             }[];
             filter: {
@@ -38,7 +38,7 @@ declare const _default: {
             per_page?: string | undefined;
         }, {
             sort: {
-                value: "desc" | "asc";
+                value: "asc" | "desc";
                 key: "name" | "id";
             }[];
             filter: {
@@ -65,17 +65,17 @@ declare const _default: {
             key: z.ZodEnum<["id", "name"]>;
             value: z.ZodEnum<["asc", "desc"]>;
         }, "strip", z.ZodTypeAny, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name" | "id";
         }, {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name" | "id";
         }>, "many">;
         page: z.ZodOptional<z.ZodString>;
         per_page: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         sort: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name" | "id";
         }[];
         filter: {
@@ -87,7 +87,7 @@ declare const _default: {
         per_page?: string | undefined;
     }, {
         sort: {
-            value: "desc" | "asc";
+            value: "asc" | "desc";
             key: "name" | "id";
         }[];
         filter: {

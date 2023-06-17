@@ -1,13 +1,14 @@
 import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
+import { CollectionT } from "./Collection";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
 interface LinkJsonT {
     target: "_blank" | "_self";
 }
 type BrickDataCreateOrUpdate = (brick: BrickObject, order: number, type: "page" | "group", referenceId: number) => Promise<number>;
-type BrickDataGetAll = (type: "page" | "group", referenceId: number) => Promise<Array<any>>;
+type BrickDataGetAll = (type: "page" | "group", referenceId: number, environment_key: string, collection: CollectionT) => Promise<Array<any>>;
 type BrickDataDeleteUnused = (type: "page" | "group", referenceId: number, brickIds: Array<number | undefined>) => Promise<void>;
 export type BrickFieldsT = {
     id: number;

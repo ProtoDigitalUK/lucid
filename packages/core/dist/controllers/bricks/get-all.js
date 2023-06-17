@@ -13,6 +13,7 @@ const query = zod_1.default.object({
         .object({
         s: zod_1.default.string().optional(),
         collection_key: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
+        environment_key: zod_1.default.string().optional(),
     })
         .optional(),
     sort: zod_1.default
@@ -25,7 +26,7 @@ const query = zod_1.default.object({
 const params = zod_1.default.object({});
 const getAll = async (req, res, next) => {
     try {
-        const bricks = await BrickConfig_1.default.getAll(req.query);
+        const bricks = await BrickConfig_1.default.getAll(req.query, req.headers["lucid-environment"]);
         res.status(200).json((0, build_response_1.default)(req, {
             data: bricks,
         }));

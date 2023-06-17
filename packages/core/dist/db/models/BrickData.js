@@ -34,7 +34,7 @@ BrickData.createOrUpdate = async (brick, order, type, referenceId) => {
     await Promise.all(promises);
     return brickId;
 };
-BrickData.getAll = async (type, referenceId) => {
+BrickData.getAll = async (type, referenceId, environment_key, collection) => {
     const referenceKey = type === "page" ? "page_id" : "group_id";
     const brickFields = await db_1.default.query(`SELECT 
         lucid_page_bricks.*,
@@ -58,7 +58,7 @@ BrickData.getAll = async (type, referenceId) => {
         lucid_page_bricks.brick_order`, [referenceId]);
     if (!brickFields.rows[0])
         return [];
-    return (0, format_bricks_1.default)(brickFields.rows);
+    return await (0, format_bricks_1.default)(brickFields.rows, environment_key, collection);
 };
 BrickData.deleteUnused = async (type, referenceId, brickIds) => {
     const referenceKey = type === "page" ? "page_id" : "group_id";

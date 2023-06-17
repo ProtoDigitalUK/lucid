@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const BrickConfig_1 = __importDefault(require("../../db/models/BrickConfig"));
+const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const specificFieldValues = (type, builderField, field) => {
     let value = null;
     let meta = null;
@@ -141,11 +142,19 @@ const buildBrickStructure = (brickFields) => {
     });
     return brickStructure;
 };
-const formatBricks = (brickFields) => {
+const formatBricks = async (brickFields, envrionment_key, collection) => {
     const builderInstances = BrickConfig_1.default.getBrickConfig();
     if (!builderInstances)
         return [];
-    const brickStructure = buildBrickStructure(brickFields);
+    const environment = await Environment_1.default.getSingle(envrionment_key);
+    if (!environment)
+        return [];
+    const brickStructure = buildBrickStructure(brickFields).filter((brick) => {
+        const instance = builderInstances.find((b) => b.key === brick.key);
+        const allowed = (environment.assigned_bricks || [])?.includes(brick.key);
+        const inCollection = collection.bricks.includes(brick.key);
+        return instance && allowed && inCollection;
+    });
     brickStructure.forEach((brick) => {
         const instance = builderInstances.find((b) => b.key === brick.key);
         if (!instance)

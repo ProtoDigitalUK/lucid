@@ -10,7 +10,7 @@ const generateCSRFToken = (res) => {
     res.cookie("_csrf", token, {
         maxAge: 86400000 * 7,
         httpOnly: true,
-        secure: Config_1.default.environment === "production",
+        secure: Config_1.default.mode === "production",
         sameSite: "strict",
     });
     return token;

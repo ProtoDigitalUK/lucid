@@ -2,10 +2,12 @@ import { CollectionBuilderT } from "@lucid/collection-builder";
 interface QueryParams extends ModelQueryParams {
     filter?: {
         type?: string;
+        environment_key?: string;
+        environment_collections?: Array<string>;
     };
 }
 type CollectionGetAll = (query: QueryParams) => Promise<CollectionT[]>;
-type CollectionVerifyType = (key: string, type: string) => Promise<boolean>;
+type CollectionVerifyType = (key: string, type: string, environment_key: string) => Promise<CollectionT>;
 export type CollectionT = {
     key: string;
     title: string;
@@ -17,7 +19,7 @@ export type CollectionT = {
 export default class Collection {
     #private;
     static getAll: CollectionGetAll;
-    static findCollection: CollectionVerifyType;
+    static getSingle: CollectionVerifyType;
     static getCollectionsConfig: () => CollectionBuilderT[];
     static getCollectionData: (instance: CollectionBuilderT) => CollectionT;
 }

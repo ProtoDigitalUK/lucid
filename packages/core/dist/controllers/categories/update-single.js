@@ -21,7 +21,7 @@ const updateSingle = async (req, res, next) => {
             title: req.body.title,
             slug: req.body.slug,
             description: req.body.description,
-        });
+        }, req);
         res.status(200).json((0, build_response_1.default)(req, {
             data: category,
         }));

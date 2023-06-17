@@ -18,6 +18,7 @@ const router = (0, express_1.Router)();
         authenticate: true,
         authoriseCSRF: true,
         paginated: true,
+        validateEnvironment: true,
     },
     schema: get_multiple_1.default.schema,
     controller: get_multiple_1.default.controller,
@@ -28,6 +29,7 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
+        validateEnvironment: true,
     },
     schema: get_single_1.default.schema,
     controller: get_single_1.default.controller,
@@ -38,6 +40,7 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
+        validateEnvironment: true,
     },
     schema: create_single_1.default.schema,
     controller: create_single_1.default.controller,
@@ -48,6 +51,7 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
+        validateEnvironment: true,
     },
     schema: update_single_1.default.schema,
     controller: update_single_1.default.controller,
@@ -58,6 +62,7 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
+        validateEnvironment: true,
     },
     schema: delete_single_1.default.schema,
     controller: delete_single_1.default.controller,

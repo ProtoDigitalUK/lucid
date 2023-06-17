@@ -8,6 +8,7 @@ type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT e
         authoriseCSRF?: boolean;
         paginated?: boolean;
         validateBricks?: boolean;
+        validateEnvironment?: boolean;
     };
     schema?: {
         params?: ParamsT;

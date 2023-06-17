@@ -4,9 +4,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _QueryBuilder_instances, _QueryBuilder_buildSelect, _QueryBuilder_buildFilter, _QueryBuilder_buildOrder, _QueryBuilder_buildPagination, _QueryBuilder_parseArrayValues, _QueryBuilder_parseSingleValue;
+var _SelectQueryBuilder_instances, _SelectQueryBuilder_buildSelect, _SelectQueryBuilder_buildFilter, _SelectQueryBuilder_buildOrder, _SelectQueryBuilder_buildPagination, _SelectQueryBuilder_parseArrayValues, _SelectQueryBuilder_parseSingleValue;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QueryBuilder = exports.queryDataFormat = void 0;
+exports.SelectQueryBuilder = exports.queryDataFormat = void 0;
 const error_handler_1 = require("./error-handler");
 const queryDataFormat = (columns, values, conditional) => {
     if (columns.length !== values.length) {
@@ -43,6 +43,7 @@ const queryDataFormat = (columns, values, conditional) => {
             formatted: {
                 insert: c.join(", "),
                 update: c.map((col, i) => `${col} = ${a[i]}`).join(", "),
+                doUpdate: c.map((col, i) => `${col} = EXCLUDED.${col}`).join(", "),
             },
         },
         aliases: {
@@ -58,9 +59,9 @@ const queryDataFormat = (columns, values, conditional) => {
     };
 };
 exports.queryDataFormat = queryDataFormat;
-class QueryBuilder {
+class SelectQueryBuilder {
     constructor(config) {
-        _QueryBuilder_instances.add(this);
+        _SelectQueryBuilder_instances.add(this);
         this.config = {
             columns: [],
         };
@@ -72,10 +73,10 @@ class QueryBuilder {
         };
         this.values = [];
         this.config = config;
-        __classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_buildSelect).call(this);
-        __classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_buildFilter).call(this);
-        __classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_buildOrder).call(this);
-        __classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_buildPagination).call(this);
+        __classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_buildSelect).call(this);
+        __classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_buildFilter).call(this);
+        __classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_buildOrder).call(this);
+        __classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_buildPagination).call(this);
     }
     get countValues() {
         if (this.query.pagination) {
@@ -84,8 +85,8 @@ class QueryBuilder {
         return this.values;
     }
 }
-exports.QueryBuilder = QueryBuilder;
-_QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _QueryBuilder_buildSelect() {
+exports.SelectQueryBuilder = SelectQueryBuilder;
+_SelectQueryBuilder_instances = new WeakSet(), _SelectQueryBuilder_buildSelect = function _SelectQueryBuilder_buildSelect() {
     if (!this.config.exclude) {
         this.config.columns.forEach((column, index) => {
             this.query.select += `${column}${index < this.config.columns.length - 1 ? ", " : ""}`;
@@ -98,7 +99,7 @@ _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _Q
             this.query.select += `${column}${index < this.config.columns.length - 1 ? ", " : ""}`;
         });
     }
-}, _QueryBuilder_buildFilter = function _QueryBuilder_buildFilter() {
+}, _SelectQueryBuilder_buildFilter = function _SelectQueryBuilder_buildFilter() {
     const filterClauses = [];
     if (!this.config.filter?.data) {
         this.query.where = "";
@@ -125,24 +126,24 @@ _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _Q
         switch (columnType) {
             case "array": {
                 filterClauses.push(`${keyV} ${meta?.operator || "@>"} $${this.values.length + 1}::${meta?.type || "int"}[]`);
-                this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseArrayValues).call(this, Array.isArray(value) ? value : [value]));
+                this.values.push(__classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_parseArrayValues).call(this, Array.isArray(value) ? value : [value]));
                 break;
             }
             default: {
                 if (Array.isArray(value)) {
                     filterClauses.push(`${keyV} = ANY($${this.values.length + 1}::${meta?.type || "int"}[])`);
-                    this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseArrayValues).call(this, value));
+                    this.values.push(__classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_parseArrayValues).call(this, value));
                     break;
                 }
                 filterClauses.push(`${keyV} ${meta?.operator || "="} $${this.values.length + 1}`);
-                this.values.push(__classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseSingleValue).call(this, value));
+                this.values.push(__classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_parseSingleValue).call(this, value));
                 break;
             }
         }
     }
     this.query.where =
         filterClauses.length > 0 ? "WHERE " + filterClauses.join(" AND ") : "";
-}, _QueryBuilder_buildOrder = function _QueryBuilder_buildOrder() {
+}, _SelectQueryBuilder_buildOrder = function _SelectQueryBuilder_buildOrder() {
     if (!this.config.sort)
         return;
     let query = "";
@@ -150,7 +151,7 @@ _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _Q
         query += `${sort.key} ${sort.value.toUpperCase()}${index < (this.config.sort?.length || 0) - 1 ? ", " : ""}`;
     });
     this.query.order = `ORDER BY ${query}`;
-}, _QueryBuilder_buildPagination = function _QueryBuilder_buildPagination() {
+}, _SelectQueryBuilder_buildPagination = function _SelectQueryBuilder_buildPagination() {
     if (!this.config.page || !this.config.per_page)
         return;
     if (this.config.per_page === "-1")
@@ -160,11 +161,11 @@ _QueryBuilder_instances = new WeakSet(), _QueryBuilder_buildSelect = function _Q
     this.values.push(Number(this.config.per_page));
     this.query.pagination += ` OFFSET $${this.values.length + 1}`;
     this.values.push(offset);
-}, _QueryBuilder_parseArrayValues = function _QueryBuilder_parseArrayValues(arr) {
+}, _SelectQueryBuilder_parseArrayValues = function _SelectQueryBuilder_parseArrayValues(arr) {
     return arr.map((v) => {
-        return __classPrivateFieldGet(this, _QueryBuilder_instances, "m", _QueryBuilder_parseSingleValue).call(this, v);
+        return __classPrivateFieldGet(this, _SelectQueryBuilder_instances, "m", _SelectQueryBuilder_parseSingleValue).call(this, v);
     });
-}, _QueryBuilder_parseSingleValue = function _QueryBuilder_parseSingleValue(v) {
+}, _SelectQueryBuilder_parseSingleValue = function _SelectQueryBuilder_parseSingleValue(v) {
     if (typeof v != "string")
         return v;
     if (v === "true")

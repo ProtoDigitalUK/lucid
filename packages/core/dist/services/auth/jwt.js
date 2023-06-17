@@ -19,7 +19,7 @@ const generateJWT = (res, user) => {
     res.cookie("_jwt", token, {
         maxAge: 86400000 * 7,
         httpOnly: true,
-        secure: Config_1.default.environment === "production",
+        secure: Config_1.default.mode === "production",
         sameSite: "strict",
     });
 };

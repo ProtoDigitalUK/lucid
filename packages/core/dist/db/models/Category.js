@@ -5,17 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
 const Collection_1 = __importDefault(require("../models/Collection"));
+const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
 class Category {
 }
 _a = Category;
 Category.getMultiple = async (req) => {
     const { filter, sort, page, per_page } = req.query;
-    const QueryB = new query_helpers_1.QueryBuilder({
+    const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
             "id",
+            "environment_key",
             "collection_key",
             "title",
             "slug",
@@ -25,7 +26,10 @@ Category.getMultiple = async (req) => {
         ],
         exclude: undefined,
         filter: {
-            data: filter,
+            data: {
+                ...filter,
+                environment_key: req.headers["lucid-environment"],
+            },
             meta: {
                 collection_key: {
                     operator: "=",
@@ -37,30 +41,34 @@ Category.getMultiple = async (req) => {
                     type: "string",
                     columnType: "standard",
                 },
+                environment_key: {
+                    operator: "=",
+                    type: "string",
+                    columnType: "standard",
+                },
             },
         },
         sort: sort,
         page: page,
         per_page: per_page,
     });
-    const { select, where, order, pagination } = QueryB.query;
     const categories = await db_1.default.query({
-        text: `SELECT ${select} FROM lucid_categories ${where} ${order} ${pagination}`,
-        values: QueryB.values,
+        text: `SELECT ${SelectQuery.query.select} FROM lucid_categories ${SelectQuery.query.where} ${SelectQuery.query.order} ${SelectQuery.query.pagination}`,
+        values: SelectQuery.values,
     });
     const count = await db_1.default.query({
-        text: `SELECT COUNT(*) FROM lucid_categories ${where}`,
-        values: QueryB.countValues,
+        text: `SELECT COUNT(*) FROM lucid_categories ${SelectQuery.query.where}`,
+        values: SelectQuery.countValues,
     });
     return {
         data: categories.rows,
         count: count.rows[0].count,
     };
 };
-Category.getSingle = async (id) => {
+Category.getSingle = async (id, req) => {
     const category = await db_1.default.query({
-        text: "SELECT * FROM lucid_categories WHERE id = $1",
-        values: [id],
+        text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
+        values: [id, req.headers["lucid-environment"]],
     });
     if (!category.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -78,17 +86,13 @@ Category.getSingle = async (id) => {
     }
     return category.rows[0];
 };
-Category.create = async (data) => {
-    const collectionFound = await Collection_1.default.findCollection(data.collection_key, "pages");
-    if (!collectionFound) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Collection not found",
-            message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
-            status: 404,
-        });
-    }
-    const isSlugUnique = await Category.isSlugUniqueInPostType(data.collection_key, data.slug);
+Category.create = async (data, req) => {
+    await Collection_1.default.getSingle(data.collection_key, "pages", req.headers["lucid-environment"]);
+    const isSlugUnique = await Category.isSlugUniqueInCollection({
+        collection_key: data.collection_key,
+        slug: data.slug,
+        environment_key: req.headers["lucid-environment"],
+    });
     if (!isSlugUnique) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -103,10 +107,17 @@ Category.create = async (data) => {
             }),
         });
     }
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["environment_key", "collection_key", "title", "slug", "description"], [
+        req.headers["lucid-environment"],
+        data.collection_key,
+        data.title,
+        data.slug,
+        data.description,
+    ]);
     const res = await db_1.default.query({
         name: "create-category",
-        text: `INSERT INTO lucid_categories(collection_key, title, slug, description) VALUES($1, $2, $3, $4) RETURNING *`,
-        values: [data.collection_key, data.title, data.slug, data.description],
+        text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+        values: values.value,
     });
     const category = res.rows[0];
     if (!category) {
@@ -119,10 +130,15 @@ Category.create = async (data) => {
     }
     return category;
 };
-Category.update = async (id, data) => {
-    const currentCategory = await Category.getSingle(id);
+Category.update = async (id, data, req) => {
+    const currentCategory = await Category.getSingle(id, req);
     if (data.slug) {
-        const isSlugUnique = await Category.isSlugUniqueInPostType(currentCategory.collection_key, data.slug, id);
+        const isSlugUnique = await Category.isSlugUniqueInCollection({
+            collection_key: currentCategory.collection_key,
+            slug: data.slug,
+            environment_key: req.headers["lucid-environment"],
+            ignore_id: id,
+        });
         if (!isSlugUnique) {
             throw new error_handler_1.LucidError({
                 type: "basic",
@@ -140,8 +156,14 @@ Category.update = async (id, data) => {
     }
     const category = await db_1.default.query({
         name: "update-category",
-        text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 RETURNING *`,
-        values: [data.title, data.slug, data.description, id],
+        text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
+        values: [
+            data.title,
+            data.slug,
+            data.description,
+            id,
+            req.headers["lucid-environment"],
+        ],
     });
     if (!category.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -153,11 +175,11 @@ Category.update = async (id, data) => {
     }
     return category.rows[0];
 };
-Category.delete = async (id) => {
+Category.delete = async (id, req) => {
     const category = await db_1.default.query({
         name: "delete-category",
-        text: `DELETE FROM lucid_categories WHERE id = $1 RETURNING *`,
-        values: [id],
+        text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
+        values: [id, req.headers["lucid-environment"]],
     });
     if (!category.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -169,14 +191,17 @@ Category.delete = async (id) => {
     }
     return category.rows[0];
 };
-Category.isSlugUniqueInPostType = async (collection_key, slug, ignore_id) => {
-    const values = [collection_key, slug];
-    if (ignore_id) {
-        values.push(ignore_id);
+Category.isSlugUniqueInCollection = async (data) => {
+    const values = [
+        data.collection_key,
+        data.slug,
+        data.environment_key,
+    ];
+    if (data.ignore_id) {
+        values.push(data.ignore_id);
     }
     const res = await db_1.default.query({
-        name: "is-slug-unique-in-post-type",
-        text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 ${ignore_id ? "AND id != $3" : ""}`,
+        text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 AND environment_key = $3 ${data.ignore_id ? "AND id != $4" : ""}`,
         values: values,
     });
     const category = res.rows[0];

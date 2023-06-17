@@ -13,10 +13,11 @@ const fuse_js_1 = __importDefault(require("fuse.js"));
 const error_handler_1 = require("../../utils/error-handler");
 const Config_1 = __importDefault(require("../models/Config"));
 const Collection_1 = __importDefault(require("./Collection"));
+const Environment_1 = __importDefault(require("../models/Environment"));
 class BrickConfig {
 }
 _a = BrickConfig;
-BrickConfig.getSingle = async (key) => {
+BrickConfig.getSingle = async (key, environment_key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) {
         throw new error_handler_1.LucidError({
@@ -35,15 +36,29 @@ BrickConfig.getSingle = async (key) => {
             status: 404,
         });
     }
+    const environment = await Environment_1.default.getSingle(environment_key);
+    if (!environment.assigned_bricks?.includes(brick.key)) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Brick not found",
+            message: "This brick is not assigned to this environment.",
+            status: 404,
+        });
+    }
     const brickData = BrickConfig.getBrickData(brick);
     return brickData;
 };
-BrickConfig.getAll = async (query) => {
+BrickConfig.getAll = async (query, environment_key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance)
         return [];
     const bricks = await Promise.all(brickInstance.map((brick) => BrickConfig.getBrickData(brick, query)));
-    const filteredBricks = await __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_filterBricks).call(BrickConfig, query.filter, bricks);
+    if (query.filter?.environment_key) {
+        const environment = await Environment_1.default.getSingle(query.filter.environment_key);
+        if (!query.filter.environment_bricks)
+            query.filter.environment_bricks = environment.assigned_bricks || [];
+    }
+    const filteredBricks = await __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_filterBricks).call(BrickConfig, query.filter, bricks, environment_key);
     const sortedBricks = __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_sortBricks).call(BrickConfig, query.sort, filteredBricks);
     return sortedBricks;
 };
@@ -77,14 +92,18 @@ _BrickConfig_searcBricks = { value: (query, bricks) => {
         const searchResults = fuse.search(query);
         return searchResults.map((r) => r.item);
     } };
-_BrickConfig_filterBricks = { value: async (filter, bricks) => {
+_BrickConfig_filterBricks = { value: async (filter, bricks, environment_key) => {
         if (!filter)
             return bricks;
         let filteredBricks = [...bricks];
         const keys = Object.keys(filter);
         if (!keys.length)
             return filteredBricks;
-        const collections = await Collection_1.default.getAll({});
+        const collections = await Collection_1.default.getAll({
+            filter: {
+                environment_key,
+            },
+        });
         keys.forEach((f) => {
             switch (f) {
                 case "s":
@@ -106,6 +125,12 @@ _BrickConfig_filterBricks = { value: async (filter, bricks) => {
                             }
                         });
                         filteredBricks = filteredBricks.filter((b) => permittedBricks.includes(b.key));
+                    }
+                    break;
+                case "environment_bricks":
+                    const environmentBricks = filter[f];
+                    if (environmentBricks) {
+                        filteredBricks = filteredBricks.filter((b) => environmentBricks.includes(b.key));
                     }
                     break;
                 default:

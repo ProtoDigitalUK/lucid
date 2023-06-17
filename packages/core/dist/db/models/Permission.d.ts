@@ -1,4 +1,4 @@
-type PermissionNames = "manage_users" | "manage_content" | "manage_settings";
+type PermissionNames = "manage_users" | "manage_content" | "manage_settings" | "manage_environments";
 type PermissionRoles = "admin" | "editor";
 type PermissionSet = (user_id: string, role: PermissionRoles) => Promise<PermissionT>;
 export type PermissionT = {

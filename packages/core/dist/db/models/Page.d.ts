@@ -1,5 +1,4 @@
 import { Request } from "express";
-import { CategoryT } from "../models/Category";
 import BrickData, { BrickObject } from "../models/BrickData";
 type PageGetMultiple = (req: Request) => Promise<{
     data: PageT[];
@@ -28,6 +27,7 @@ type PageUpdate = (id: string, data: {
 }, req: Request) => Promise<PageT>;
 export type PageT = {
     id: number;
+    environment_key: string;
     parent_id: number | null;
     collection_key: string;
     title: string;
@@ -35,7 +35,7 @@ export type PageT = {
     full_slug: string;
     homepage: boolean;
     excerpt: string | null;
-    categories?: Array<CategoryT> | null;
+    categories?: Array<number> | null;
     bricks?: Array<BrickData> | null;
     published: boolean;
     published_at: string | null;

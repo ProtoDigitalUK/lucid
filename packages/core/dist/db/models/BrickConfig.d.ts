@@ -4,14 +4,16 @@ interface QueryParams extends ModelQueryParams {
     filter?: {
         s?: string;
         collection_key?: Array<string> | string;
+        environment_key?: string;
+        environment_bricks?: Array<string>;
     };
     sort?: Array<{
         key: "name";
         value: "asc" | "desc";
     }>;
 }
-type BrickConfigGetAll = (query: QueryParams) => Promise<BrickConfigT[]>;
-type BrickConfigGetSingle = (key: string) => Promise<BrickConfigT>;
+type BrickConfigGetAll = (query: QueryParams, environment_key: string) => Promise<BrickConfigT[]>;
+type BrickConfigGetSingle = (key: string, environment_key: string) => Promise<BrickConfigT>;
 export type BrickConfigT = {
     key: string;
     title: string;
