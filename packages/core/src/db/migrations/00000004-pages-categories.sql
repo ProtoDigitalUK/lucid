@@ -1,6 +1,7 @@
 -- PAGES TABLE - collection pages type
 CREATE TABLE IF NOT EXISTS lucid_pages (
   id SERIAL PRIMARY KEY,
+  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
   parent_id INTEGER REFERENCES lucid_pages(id) ON DELETE SET NULL,
   collection_key TEXT NOT NULL,
 
@@ -62,7 +63,8 @@ FOR EACH ROW WHEN (OLD.slug IS DISTINCT FROM NEW.slug) EXECUTE PROCEDURE update_
 -- GROUP TABLE - collection group type, is used as a intermediary table for the collections bricks
 CREATE TABLE IF NOT EXISTS lucid_groups (
   id SERIAL PRIMARY KEY,
-  collection_key TEXT UNIQUE NOT NULL,
+  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
+  collection_key TEXT NOT NULL, -- unique to environment_key
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
@@ -71,10 +73,11 @@ CREATE TABLE IF NOT EXISTS lucid_groups (
 -- CATEGORIES TABLE
 CREATE TABLE IF NOT EXISTS lucid_categories (
   id SERIAL PRIMARY KEY,
+  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
   collection_key TEXT NOT NULL,
 
   title TEXT NOT NULL,
-  slug TEXT NOT NULL,  -- unique collection_key
+  slug TEXT NOT NULL,  -- unique to collection_key and environment_key
   description TEXT,
 
   created_at TIMESTAMP DEFAULT NOW(),

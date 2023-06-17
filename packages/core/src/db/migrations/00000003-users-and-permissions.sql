@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS lucid_users (
 );
 
 -- PERMISSIONS TABLE
+-- TODO: scope permissions to different environments
 CREATE TABLE IF NOT EXISTS lucid_permissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID UNIQUE NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,

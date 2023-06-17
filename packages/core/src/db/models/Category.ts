@@ -1,10 +1,10 @@
 import client from "@db/db";
 import { Request } from "express";
-import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
 import Collection from "@db/models/Collection";
 // Utils
-import { SelectQueryBuilder } from "@utils/query-helpers";
+import { LucidError, modelErrors } from "@utils/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -21,18 +21,21 @@ interface QueryParamsGetMultiple extends ModelQueryParams {
   per_page?: string;
 }
 
-type CategoryGetSingle = (id: number) => Promise<CategoryT>;
+type CategoryGetSingle = (id: number, req: Request) => Promise<CategoryT>;
 
 type CategoryGetMultiple = (req: Request) => Promise<{
   data: CategoryT[];
   count: number;
 }>;
-type CategoryCreate = (data: {
-  collection_key: string;
-  title: string;
-  slug: string;
-  description?: string;
-}) => Promise<CategoryT>;
+type CategoryCreate = (
+  data: {
+    collection_key: string;
+    title: string;
+    slug: string;
+    description?: string;
+  },
+  req: Request
+) => Promise<CategoryT>;
 
 type CategoryUpdate = (
   id: number,
@@ -40,15 +43,17 @@ type CategoryUpdate = (
     title?: string;
     slug?: string;
     description?: string;
-  }
+  },
+  req: Request
 ) => Promise<CategoryT>;
 
-type CategoryDelete = (id: number) => Promise<CategoryT>;
+type CategoryDelete = (id: number, req: Request) => Promise<CategoryT>;
 
 // -------------------------------------------
 // User
 export type CategoryT = {
   id: number;
+  environment_key: string;
   collection_key: string;
   title: string;
   slug: string;
@@ -68,6 +73,7 @@ export default class Category {
     const SelectQuery = new SelectQueryBuilder({
       columns: [
         "id",
+        "environment_key",
         "collection_key",
         "title",
         "slug",
@@ -77,7 +83,10 @@ export default class Category {
       ],
       exclude: undefined,
       filter: {
-        data: filter,
+        data: {
+          ...filter,
+          environment_key: req.headers["lucid-environment"] as string,
+        },
         meta: {
           collection_key: {
             operator: "=",
@@ -86,6 +95,11 @@ export default class Category {
           },
           title: {
             operator: "ILIKE",
+            type: "string",
+            columnType: "standard",
+          },
+          environment_key: {
+            operator: "=",
             type: "string",
             columnType: "standard",
           },
@@ -112,10 +126,10 @@ export default class Category {
       count: count.rows[0].count,
     };
   };
-  static getSingle: CategoryGetSingle = async (id) => {
+  static getSingle: CategoryGetSingle = async (id, req) => {
     const category = await client.query<CategoryT>({
-      text: "SELECT * FROM lucid_categories WHERE id = $1",
-      values: [id],
+      text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
+      values: [id, req.headers["lucid-environment"] as string],
     });
 
     if (!category.rows[0]) {
@@ -135,27 +149,21 @@ export default class Category {
 
     return category.rows[0];
   };
-  static create: CategoryCreate = async (data) => {
+  static create: CategoryCreate = async (data, req) => {
     // -------------------------------------------
     // Checks
-    const collectionFound = await Collection.findCollection(
+    await Collection.getSingle(
       data.collection_key,
-      "pages"
+      "pages",
+      req.headers["lucid-environment"] as string
     );
-    if (!collectionFound) {
-      throw new LucidError({
-        type: "basic",
-        name: "Collection not found",
-        message: `Collection with key "${data.collection_key}" and of type "pages" not found`,
-        status: 404,
-      });
-    }
 
     // check if slug is unique in post type
-    const isSlugUnique = await Category.isSlugUniqueInPostType(
-      data.collection_key,
-      data.slug
-    );
+    const isSlugUnique = await Category.isSlugUniqueInCollection({
+      collection_key: data.collection_key,
+      slug: data.slug,
+      environment_key: req.headers["lucid-environment"] as string,
+    });
     if (!isSlugUnique) {
       throw new LucidError({
         type: "basic",
@@ -171,10 +179,21 @@ export default class Category {
       });
     }
 
+    const { columns, aliases, values } = queryDataFormat(
+      ["environment_key", "collection_key", "title", "slug", "description"],
+      [
+        req.headers["lucid-environment"] as string,
+        data.collection_key,
+        data.title,
+        data.slug,
+        data.description,
+      ]
+    );
+
     const res = await client.query<CategoryT>({
       name: "create-category",
-      text: `INSERT INTO lucid_categories(collection_key, title, slug, description) VALUES($1, $2, $3, $4) RETURNING *`,
-      values: [data.collection_key, data.title, data.slug, data.description],
+      text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      values: values.value,
     });
     const category = res.rows[0];
     if (!category) {
@@ -188,16 +207,17 @@ export default class Category {
 
     return category;
   };
-  static update: CategoryUpdate = async (id, data) => {
+  static update: CategoryUpdate = async (id, data, req) => {
     // Check if category exists
-    const currentCategory = await Category.getSingle(id);
+    const currentCategory = await Category.getSingle(id, req);
 
     if (data.slug) {
-      const isSlugUnique = await Category.isSlugUniqueInPostType(
-        currentCategory.collection_key,
-        data.slug,
-        id
-      );
+      const isSlugUnique = await Category.isSlugUniqueInCollection({
+        collection_key: currentCategory.collection_key,
+        slug: data.slug,
+        environment_key: req.headers["lucid-environment"] as string,
+        ignore_id: id,
+      });
       if (!isSlugUnique) {
         throw new LucidError({
           type: "basic",
@@ -216,8 +236,14 @@ export default class Category {
 
     const category = await client.query<CategoryT>({
       name: "update-category",
-      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 RETURNING *`,
-      values: [data.title, data.slug, data.description, id],
+      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
+      values: [
+        data.title,
+        data.slug,
+        data.description,
+        id,
+        req.headers["lucid-environment"] as string,
+      ],
     });
     if (!category.rows[0]) {
       throw new LucidError({
@@ -230,11 +256,11 @@ export default class Category {
 
     return category.rows[0];
   };
-  static delete: CategoryDelete = async (id) => {
+  static delete: CategoryDelete = async (id, req) => {
     const category = await client.query<CategoryT>({
       name: "delete-category",
-      text: `DELETE FROM lucid_categories WHERE id = $1 RETURNING *`,
-      values: [id],
+      text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
+      values: [id, req.headers["lucid-environment"] as string],
     });
 
     if (!category.rows[0]) {
@@ -250,20 +276,24 @@ export default class Category {
   };
   // -------------------------------------------
   // Util Methods
-  static isSlugUniqueInPostType = async (
-    collection_key: string,
-    slug: string,
-    ignore_id?: number
-  ): Promise<boolean> => {
-    const values: Array<string | number> = [collection_key, slug];
-    if (ignore_id) {
-      values.push(ignore_id);
+  static isSlugUniqueInCollection = async (data: {
+    collection_key: string;
+    slug: string;
+    environment_key: string;
+    ignore_id?: number;
+  }): Promise<boolean> => {
+    const values: Array<string | number> = [
+      data.collection_key,
+      data.slug,
+      data.environment_key,
+    ];
+    if (data.ignore_id) {
+      values.push(data.ignore_id);
     }
 
     const res = await client.query<CategoryT>({
-      name: "is-slug-unique-in-post-type",
-      text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 ${
-        ignore_id ? "AND id != $3" : ""
+      text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 AND environment_key = $3 ${
+        data.ignore_id ? "AND id != $4" : ""
       }`,
       values: values,
     });

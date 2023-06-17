@@ -59,6 +59,7 @@ export const queryDataFormat = (
       formatted: {
         insert: c.join(", "),
         update: c.map((col, i) => `${col} = ${a[i]}`).join(", "),
+        doUpdate: c.map((col, i) => `${col} = EXCLUDED.${col}`).join(", "),
       },
     },
     aliases: {

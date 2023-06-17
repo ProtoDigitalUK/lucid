@@ -6,8 +6,18 @@ const config: Config = {
   databaseUrl: process.env.LUCID_database_url as string,
   port: 8393,
   origin: "*",
-  environment: "development",
+  mode: "development",
   secretKey: process.env.SECRET_KEY as string,
+  environments: [
+    {
+      title: "Production",
+      key: "production",
+    },
+    {
+      title: "Staging",
+      key: "staging",
+    },
+  ],
   collections: [pages, settings],
   bricks: [banner, intro, defaultMeta],
 };

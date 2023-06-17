@@ -1,41 +1,34 @@
 import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
-// Models
-import Category from "@db/models/Category";
 
 // --------------------------------------------------
 // Schema
-const body = z.object({
-  collection_key: z.string(),
-  title: z.string(),
-  slug: z.string().min(2).toLowerCase(),
-  description: z.string().optional(),
-});
+const body = z.object({});
 const query = z.object({});
-const params = z.object({});
+const params = z.object({
+  key: z.string(),
+});
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const migrateEnvironment: Controller<
   typeof params,
   typeof body,
   typeof query
 > = async (req, res, next) => {
   try {
-    const category = await Category.create(
-      {
-        collection_key: req.body.collection_key,
-        title: req.body.title,
-        slug: req.body.slug,
-        description: req.body.description,
-      },
-      req
-    );
+    /*
+      This route will migrate data from one envrionemnt to another.
+      This means deleting the target envrionments data,
+      then looking up all data that is scoped to the current envrionemnt and copying it over to the target envrionemnt.
+    */
 
     res.status(200).json(
       buildResponse(req, {
-        data: category,
+        data: {
+          message: "Environment migrated successfully",
+        },
       })
     );
   } catch (error) {
@@ -51,5 +44,5 @@ export default {
     query,
     params,
   },
-  controller: createSingle,
+  controller: migrateEnvironment,
 };

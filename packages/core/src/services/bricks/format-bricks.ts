@@ -1,6 +1,8 @@
 // Models
 import { BrickFieldsT } from "@db/models/BrickData";
 import BrickConfig from "@db/models/BrickConfig";
+import Environment from "@db/models/Environment";
+import { CollectionT } from "@db/models/Collection";
 // Internal packages
 import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
 
@@ -192,16 +194,30 @@ const buildBrickStructure = (brickFields: BrickFieldsT[]) => {
 
 // -------------------------------------------
 // Format response
-const formatBricks = (brickFields: BrickFieldsT[]) => {
+const formatBricks = async (
+  brickFields: BrickFieldsT[],
+  envrionment_key: string,
+  collection: CollectionT
+) => {
   // Get all config
   const builderInstances = BrickConfig.getBrickConfig();
   if (!builderInstances) return [];
 
+  const environment = await Environment.getSingle(envrionment_key);
+  if (!environment) return [];
+
   // Build the base brick structure
-  const brickStructure = buildBrickStructure(brickFields);
+  const brickStructure = buildBrickStructure(brickFields).filter((brick) => {
+    const instance = builderInstances.find((b) => b.key === brick.key);
+    const allowed = (environment.assigned_bricks || [])?.includes(brick.key);
+    const inCollection = collection.bricks.includes(brick.key);
+
+    return instance && allowed && inCollection;
+  });
+
   // Build the field tree
   brickStructure.forEach((brick) => {
-    // find brick instance
+    // If the brick doesn't have a corresponding builder instance, skip it
     const instance = builderInstances.find((b) => b.key === brick.key);
     if (!instance) return;
 

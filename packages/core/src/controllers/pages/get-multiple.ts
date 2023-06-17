@@ -28,7 +28,6 @@ const query = z.object({
   per_page: z.string().optional(),
 });
 const params = z.object({});
-// query
 
 // --------------------------------------------------
 // Controller

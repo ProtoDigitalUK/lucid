@@ -1,5 +1,4 @@
-import z from "zod";
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
 import BrickConfig from "@db/models/BrickConfig";

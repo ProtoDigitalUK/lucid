@@ -25,6 +25,7 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
+    validateEnvironment: true,
   },
   schema: getSingle.schema,
   controller: getSingle.controller,

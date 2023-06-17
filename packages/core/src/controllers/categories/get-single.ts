@@ -20,7 +20,7 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const category = await Category.getSingle(parseInt(req.params.id));
+    const category = await Category.getSingle(parseInt(req.params.id), req);
 
     res.status(200).json(
       buildResponse(req, {

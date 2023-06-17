@@ -13,6 +13,7 @@ const query = z.object({
     .object({
       s: z.string().optional(),
       collection_key: z.union([z.string(), z.array(z.string())]).optional(),
+      environment_key: z.string().optional(),
     })
     .optional(),
   sort: z
@@ -34,7 +35,10 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
   next
 ) => {
   try {
-    const bricks = await BrickConfig.getAll(req.query);
+    const bricks = await BrickConfig.getAll(
+      req.query,
+      req.headers["lucid-environment"] as string
+    );
 
     res.status(200).json(
       buildResponse(req, {

@@ -3,6 +3,7 @@ import { LucidError } from "@utils/error-handler";
 import Config from "@db/models/Config";
 // Models
 import Collection from "./Collection";
+import Environment from "@db/models/Environment";
 // Internal packages
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 
@@ -13,6 +14,8 @@ interface QueryParams extends ModelQueryParams {
   filter?: {
     s?: string;
     collection_key?: Array<string> | string;
+    environment_key?: string;
+    environment_bricks?: Array<string>;
   };
   sort?: Array<{
     key: "name";
@@ -20,8 +23,14 @@ interface QueryParams extends ModelQueryParams {
   }>;
 }
 
-type BrickConfigGetAll = (query: QueryParams) => Promise<BrickConfigT[]>;
-type BrickConfigGetSingle = (key: string) => Promise<BrickConfigT>;
+type BrickConfigGetAll = (
+  query: QueryParams,
+  environment_key: string
+) => Promise<BrickConfigT[]>;
+type BrickConfigGetSingle = (
+  key: string,
+  environment_key: string
+) => Promise<BrickConfigT>;
 
 // -------------------------------------------
 // Brick Config
@@ -34,7 +43,7 @@ export type BrickConfigT = {
 export default class BrickConfig {
   // -------------------------------------------
   // Methods
-  static getSingle: BrickConfigGetSingle = async (key) => {
+  static getSingle: BrickConfigGetSingle = async (key, environment_key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) {
       throw new LucidError({
@@ -55,11 +64,22 @@ export default class BrickConfig {
       });
     }
 
+    const environment = await Environment.getSingle(environment_key);
+
+    if (!environment.assigned_bricks?.includes(brick.key)) {
+      throw new LucidError({
+        type: "basic",
+        name: "Brick not found",
+        message: "This brick is not assigned to this environment.",
+        status: 404,
+      });
+    }
+
     const brickData = BrickConfig.getBrickData(brick);
 
     return brickData;
   };
-  static getAll: BrickConfigGetAll = async (query) => {
+  static getAll: BrickConfigGetAll = async (query, environment_key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) return [];
 
@@ -67,9 +87,18 @@ export default class BrickConfig {
       brickInstance.map((brick) => BrickConfig.getBrickData(brick, query))
     );
 
+    if (query.filter?.environment_key) {
+      const environment = await Environment.getSingle(
+        query.filter.environment_key
+      );
+      if (!query.filter.environment_bricks)
+        query.filter.environment_bricks = environment.assigned_bricks || [];
+    }
+
     const filteredBricks = await BrickConfig.#filterBricks(
       query.filter,
-      bricks
+      bricks,
+      environment_key
     );
     const sortedBricks = BrickConfig.#sortBricks(query.sort, filteredBricks);
 
@@ -122,7 +151,8 @@ export default class BrickConfig {
   };
   static #filterBricks = async (
     filter: QueryParams["filter"],
-    bricks: BrickConfigT[]
+    bricks: BrickConfigT[],
+    environment_key: string
   ): Promise<BrickConfigT[]> => {
     if (!filter) return bricks;
 
@@ -133,7 +163,11 @@ export default class BrickConfig {
     if (!keys.length) return filteredBricks;
 
     // get collections
-    const collections = await Collection.getAll({});
+    const collections = await Collection.getAll({
+      filter: {
+        environment_key,
+      },
+    });
 
     keys.forEach((f) => {
       switch (f) {
@@ -167,6 +201,15 @@ export default class BrickConfig {
             // Filter bricks
             filteredBricks = filteredBricks.filter((b) =>
               permittedBricks.includes(b.key)
+            );
+          }
+          break;
+        case "environment_bricks":
+          // only return bricks that are assigned to the environment
+          const environmentBricks = filter[f];
+          if (environmentBricks) {
+            filteredBricks = filteredBricks.filter((b) =>
+              environmentBricks.includes(b.key)
             );
           }
           break;

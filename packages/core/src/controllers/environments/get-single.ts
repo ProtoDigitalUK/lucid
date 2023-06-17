@@ -2,34 +2,29 @@ import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import Collection from "@db/models/Collection";
+import Environment from "@db/models/Environment";
 
 // --------------------------------------------------
 // Schema
 const body = z.object({});
-const query = z.object({
-  filter: z
-    .object({
-      type: z.enum(["pages", "group"]).optional(),
-      environment_key: z.string().optional(),
-    })
-    .optional(),
+const query = z.object({});
+const params = z.object({
+  key: z.string(),
 });
-const params = z.object({});
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<typeof params, typeof body, typeof query> = async (
+const getSingle: Controller<typeof params, typeof body, typeof query> = async (
   req,
   res,
   next
 ) => {
   try {
-    const collections = await Collection.getAll(req.query);
+    const environment = await Environment.getSingle(req.params.key);
 
     res.status(200).json(
       buildResponse(req, {
-        data: collections,
+        data: environment,
       })
     );
   } catch (error) {
@@ -45,5 +40,5 @@ export default {
     query,
     params,
   },
-  controller: getAll,
+  controller: getSingle,
 };
