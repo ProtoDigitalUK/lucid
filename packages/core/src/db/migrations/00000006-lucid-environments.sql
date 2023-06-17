@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS lucid_environments (
   key TEXT UNIQUE NOT NULL,
 
   title TEXT NOT NULL,
-  allowed_bricks TEXT[] NOT NULL
+  assigned_bricks TEXT[] NOT NULL
+  assigned_collections TEXT[] NOT NULL
 );

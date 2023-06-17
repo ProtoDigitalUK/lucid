@@ -1,10 +1,9 @@
 import client from "@db/db";
-import { Request } from "express";
 // Models
 import Config from "@db/models/Config";
 // Utils
 import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
+import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -13,7 +12,8 @@ type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
 type EnvironmentUpsertSingle = (data: {
   key: string;
   title?: string;
-  allowed_bricks?: string[];
+  assigned_bricks?: string[];
+  assigned_collections?: string[];
 }) => Promise<EnvironmentT>;
 
 // -------------------------------------------
@@ -22,7 +22,8 @@ export type EnvironmentT = {
   id: number;
   key: string;
   title: string;
-  allowed_bricks: string[];
+  assigned_bricks: string[];
+  assigned_collections: string[];
 };
 
 export default class Environment {
@@ -34,7 +35,7 @@ export default class Environment {
     const envKeys = environmentConfig.map((e) => e.key);
 
     const environments = await client.query<EnvironmentT>({
-      text: `SELECT * FROM environments WHERE key = ANY($1)`,
+      text: `SELECT * FROM lucid_environments WHERE key = ANY($1)`,
       values: [envKeys],
     });
 
@@ -42,7 +43,7 @@ export default class Environment {
   };
   static getSingle: EnvironmentGetSingle = async (key) => {
     const environment = await client.query<EnvironmentT>({
-      text: `SELECT * FROM environments WHERE key = $1`,
+      text: `SELECT * FROM lucid_environments WHERE key = $1`,
       values: [key],
     });
 
@@ -60,13 +61,13 @@ export default class Environment {
   static upsertSingle: EnvironmentUpsertSingle = async (data) => {
     // Create query from data
     const { columns, aliases, values } = queryDataFormat(
-      ["title", "allowed_bricks"],
-      [data.title, data.allowed_bricks]
+      ["title", "assigned_bricks", "assigned_collections"],
+      [data.title, data.assigned_bricks, data.assigned_collections]
     );
 
     // Create or update environment
     const environments = await client.query<EnvironmentT>({
-      text: `INSERT INTO environments (${columns.formatted.insert}) 
+      text: `INSERT INTO lucid_environments (${columns.formatted.insert}) 
         VALUES (${aliases.formatted.insert}) 
         ON CONFLICT (key) 
         DO UPDATE SET ${columns.formatted.doUpdate}
