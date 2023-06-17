@@ -16,6 +16,7 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
+    validateEnvironment: true,
   },
   schema: createSingle.schema,
   controller: createSingle.controller,
@@ -28,6 +29,7 @@ r(router, {
     authenticate: true,
     authoriseCSRF: true,
     paginated: true,
+    validateEnvironment: true,
   },
   schema: getMultiple.schema,
   controller: getMultiple.controller,
@@ -39,6 +41,7 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
+    validateEnvironment: true,
   },
   schema: getSingle.schema,
   controller: getSingle.controller,
@@ -51,6 +54,7 @@ r(router, {
     authenticate: true,
     authoriseCSRF: true,
     validateBricks: true,
+    validateEnvironment: true,
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,

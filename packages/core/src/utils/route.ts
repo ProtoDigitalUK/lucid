@@ -6,6 +6,7 @@ import authenticate from "@middleware/authenticate";
 import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
 import validateBricks from "@middleware/validate-bricks";
+import validateEnvironment from "@middleware/validate-environment";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,
@@ -21,6 +22,7 @@ type Route = <
       authoriseCSRF?: boolean;
       paginated?: boolean;
       validateBricks?: boolean;
+      validateEnvironment?: boolean;
     };
     schema?: {
       params?: ParamsT;
@@ -69,6 +71,11 @@ const route: Route = (router, props) => {
   // set middleware for pagination
   if (props.middleware?.paginated) {
     middleware.push(paginated);
+  }
+
+  // set middleware for environment validation
+  if (props.middleware?.validateEnvironment) {
+    middleware.push(validateEnvironment);
   }
 
   switch (method) {
