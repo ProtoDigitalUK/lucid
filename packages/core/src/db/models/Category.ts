@@ -152,7 +152,7 @@ export default class Category {
   static create: CategoryCreate = async (data, req) => {
     // -------------------------------------------
     // Checks
-    await Collection.findCollection(
+    await Collection.getSingle(
       data.collection_key,
       "pages",
       req.headers["lucid-environment"] as string

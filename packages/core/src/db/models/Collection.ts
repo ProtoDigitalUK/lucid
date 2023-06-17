@@ -20,7 +20,7 @@ type CollectionVerifyType = (
   key: string,
   type: string,
   environment_key: string
-) => Promise<void>;
+) => Promise<CollectionT>;
 
 // -------------------------------------------
 // Collection
@@ -59,7 +59,7 @@ export default class Collection {
 
     return Collection.#filterCollections(query.filter, collections);
   };
-  static findCollection: CollectionVerifyType = async (
+  static getSingle: CollectionVerifyType = async (
     key,
     type,
     environment_key
@@ -98,6 +98,8 @@ export default class Collection {
         status: 404,
       });
     }
+
+    return found;
   };
 
   // -------------------------------------------

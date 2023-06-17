@@ -263,7 +263,18 @@ export default class Page {
     }
 
     if (include && include.includes("bricks")) {
-      const pageBricks = await BrickData.getAll("page", page.rows[0].id);
+      const collection = await Collection.getSingle(
+        page.rows[0].collection_key,
+        "pages",
+        req.headers["lucid-environment"] as string
+      );
+
+      const pageBricks = await BrickData.getAll(
+        "page",
+        page.rows[0].id,
+        req.headers["lucid-environment"] as string,
+        collection
+      );
       page.rows[0].bricks = pageBricks;
     }
 
@@ -278,7 +289,7 @@ export default class Page {
     // -------------------------------------------
     // Checks
     // Check if the collection exists and is the correct type and the same environment
-    await Collection.findCollection(
+    await Collection.getSingle(
       data.collection_key,
       "pages",
       req.headers["lucid-environment"] as string

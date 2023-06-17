@@ -8,6 +8,8 @@ import { queryDataFormat } from "@utils/query-helpers";
 import formatBricks from "@services/bricks/format-bricks";
 // Schema
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
+// Models
+import { CollectionT } from "./Collection";
 
 // -------------------------------------------
 // Types
@@ -29,7 +31,9 @@ type BrickDataCreateOrUpdate = (
 
 type BrickDataGetAll = (
   type: "page" | "group",
-  referenceId: number
+  referenceId: number,
+  environment_key: string,
+  collection: CollectionT
 ) => Promise<Array<any>>;
 
 type BrickDataDeleteUnused = (
@@ -101,7 +105,12 @@ export default class BrickData {
 
     return brickId;
   };
-  static getAll: BrickDataGetAll = async (type, referenceId) => {
+  static getAll: BrickDataGetAll = async (
+    type,
+    referenceId,
+    environment_key,
+    collection
+  ) => {
     // fetch all lucid_page_bricks for the given page/group id and order by brick_order
     // join all lucid_fields in flat structure, making sure to join page_link_id or media_id if applicable
     const referenceKey = type === "page" ? "page_id" : "group_id";
@@ -132,7 +141,7 @@ export default class BrickData {
 
     if (!brickFields.rows[0]) return [];
 
-    return formatBricks(brickFields.rows) as any;
+    return await formatBricks(brickFields.rows, environment_key, collection);
   };
   static deleteUnused: BrickDataDeleteUnused = async (
     type,
