@@ -103,8 +103,18 @@ const config: ConfigT = {
   databaseUrl: process.env.LUCID_database_url as string,
   port: 8393,
   origin: "*",
-  environment: "development",
+  mode: "development",
   secretKey: process.env.SECRET_KEY as string,
+  environments: [
+    {
+      title: "Site Prod",
+      key: "site_prod",
+    },
+    {
+      title: "Site Stage",
+      key: "site_stage",
+    },
+  ],
   collections: [pageCollection, settingsCollection],
   bricks: [bannerBrick, introBrick, defaultMetaBrick],
 };

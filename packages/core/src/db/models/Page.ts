@@ -1,15 +1,14 @@
 import client from "@db/db";
 import { Request } from "express";
 import slugify from "slugify";
-import { LucidError } from "@utils/error-handler";
 // Models
-import { CategoryT } from "@db/models/Category";
 import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
 import BrickData, { BrickObject } from "@db/models/BrickData";
 // Serivces
 import formatPage from "@services/pages/format-page";
 // Utils
+import { LucidError } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
@@ -411,7 +410,6 @@ export default class Page {
 
     // -------------------------------------------
     // Update categories
-    // TODO: add categories via category model, remove unlisted categories
     if (data.category_ids) {
       const categories = await PageCategory.update({
         page_id: page.rows[0].id,

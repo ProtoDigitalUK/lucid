@@ -11,7 +11,7 @@ import { CollectionBuilderT } from "@lucid/collection-builder";
 const configSchema = z.object({
   port: z.number(),
   origin: z.string().optional(),
-  environment: z.enum(["development", "production"]),
+  mode: z.enum(["development", "production"]),
   databaseUrl: z.string(),
   secretKey: z.string(),
   collections: z.array(z.any()).optional(),
@@ -21,9 +21,13 @@ const configSchema = z.object({
 export type ConfigT = {
   port: number;
   origin?: string;
-  environment: "development" | "production";
+  mode: "development" | "production";
   databaseUrl: string;
   secretKey: string;
+  environments: Array<{
+    title: string;
+    key: string;
+  }>;
   collections?: CollectionBuilderT[];
   bricks?: BrickBuilderT[];
 };
@@ -105,11 +109,14 @@ export default class Config {
   static get secretKey() {
     return Config.get().secretKey;
   }
-  static get environment() {
-    return Config.get().environment;
+  static get mode() {
+    return Config.get().mode;
   }
   static get databaseUrl() {
     return Config.get().databaseUrl;
+  }
+  static get environments() {
+    return Config.get().environments;
   }
   // -------------------------------------------
   // Private
