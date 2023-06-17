@@ -4,6 +4,7 @@ import r from "@utils/route";
 import getAll from "@controllers/environments/get-all";
 import getSingle from "@controllers/environments/get-single";
 import updateSingle from "@controllers/environments/update-single";
+import migrateEnvrionment from "@controllers/environments/migrate-envrionment";
 
 // ------------------------------------
 // Router
@@ -41,6 +42,17 @@ r(router, {
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,
+});
+
+r(router, {
+  method: "post",
+  path: "/:key/migrate",
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: migrateEnvrionment.schema,
+  controller: migrateEnvrionment.controller,
 });
 
 export default router;
