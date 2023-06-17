@@ -10,7 +10,7 @@ import BrickData, { BrickObject } from "@db/models/BrickData";
 // Serivces
 import formatPage from "@services/pages/format-page";
 // Utils
-import { queryDataFormat, QueryBuilder } from "@utils/query-helpers";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -82,7 +82,7 @@ export type PageT = {
   full_slug: string;
   homepage: boolean;
   excerpt: string | null;
-  categories?: Array<CategoryT> | null;
+  categories?: Array<number> | null;
   bricks?: Array<BrickData> | null;
 
   published: boolean;
@@ -102,7 +102,7 @@ export default class Page {
       req.query as QueryParamsGetMultiple;
 
     // Build Query Data and Query
-    const QueryB = new QueryBuilder({
+    const SelectQuery = new SelectQueryBuilder({
       columns: [
         "id",
         "collection_key",
@@ -150,23 +150,21 @@ export default class Page {
       page: page,
       per_page: per_page,
     });
-    const { select, where, order, pagination } = QueryB.query;
 
     // Get Pages
-    // TODO: add join for collection
     const pages = await client.query<PageT>({
       text: `SELECT
-          ${select},
+          ${SelectQuery.query.select},
           COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
-        ${where}
+        ${SelectQuery.query.where}
         GROUP BY lucid_pages.id
-        ${order}
-        ${pagination}`,
-      values: QueryB.values,
+        ${SelectQuery.query.order}
+        ${SelectQuery.query.pagination}`,
+      values: SelectQuery.values,
     });
 
     const count = await client.query<{ count: number }>({
@@ -176,9 +174,9 @@ export default class Page {
           lucid_pages
         LEFT JOIN 
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
-        ${where}
+        ${SelectQuery.query.where}
         `,
-      values: QueryB.countValues,
+      values: SelectQuery.countValues,
     });
 
     // format pages
@@ -414,6 +412,16 @@ export default class Page {
     // -------------------------------------------
     // Update categories
     // TODO: add categories via category model, remove unlisted categories
+    if (data.category_ids) {
+      const categories = await PageCategory.update({
+        page_id: page.rows[0].id,
+        category_ids: data.category_ids,
+        collection_key: currentPage.collection_key,
+      });
+      page.rows[0].categories = categories.map(
+        (category) => category.category_id
+      );
+    }
 
     // -------------------------------------------
     // Update/Create Bricks

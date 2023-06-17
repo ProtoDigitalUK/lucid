@@ -77,7 +77,7 @@ export const queryDataFormat = (
 // -------------------------------------------
 // Builds a query string for a SELECT statement and generated WHERE, ORDER BY, and LIMIT clauses etc.
 
-interface QueryBuilderConfig {
+interface SelectQueryBuilderConfig {
   columns: string[];
   exclude?: string[];
   filter?: {
@@ -117,8 +117,8 @@ interface QueryBuilderConfig {
   per_page?: string;
 }
 
-export class QueryBuilder {
-  config: QueryBuilderConfig = {
+export class SelectQueryBuilder {
+  config: SelectQueryBuilderConfig = {
     columns: [],
   };
   query = {
@@ -129,7 +129,7 @@ export class QueryBuilder {
   };
   values: Array<string | number | boolean | Array<string | number | boolean>> =
     [];
-  constructor(config: QueryBuilderConfig) {
+  constructor(config: SelectQueryBuilderConfig) {
     this.config = config;
     this.#buildSelect();
     this.#buildFilter();

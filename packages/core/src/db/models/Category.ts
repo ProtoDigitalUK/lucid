@@ -4,7 +4,7 @@ import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
 import Collection from "@db/models/Collection";
 // Utils
-import { QueryBuilder } from "@utils/query-helpers";
+import { SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -65,7 +65,7 @@ export default class Category {
       req.query as QueryParamsGetMultiple;
 
     // Build Query Data and Query
-    const QueryB = new QueryBuilder({
+    const SelectQuery = new SelectQueryBuilder({
       columns: [
         "id",
         "collection_key",
@@ -95,17 +95,16 @@ export default class Category {
       page: page,
       per_page: per_page,
     });
-    const { select, where, order, pagination } = QueryB.query;
 
     // Get Categories
     const categories = await client.query<CategoryT>({
-      text: `SELECT ${select} FROM lucid_categories ${where} ${order} ${pagination}`,
-      values: QueryB.values,
+      text: `SELECT ${SelectQuery.query.select} FROM lucid_categories ${SelectQuery.query.where} ${SelectQuery.query.order} ${SelectQuery.query.pagination}`,
+      values: SelectQuery.values,
     });
 
     const count = await client.query<{ count: number }>({
-      text: `SELECT COUNT(*) FROM lucid_categories ${where}`,
-      values: QueryB.countValues,
+      text: `SELECT COUNT(*) FROM lucid_categories ${SelectQuery.query.where}`,
+      values: SelectQuery.countValues,
     });
 
     return {
