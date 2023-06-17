@@ -64,7 +64,7 @@ FOR EACH ROW WHEN (OLD.slug IS DISTINCT FROM NEW.slug) EXECUTE PROCEDURE update_
 CREATE TABLE IF NOT EXISTS lucid_groups (
   id SERIAL PRIMARY KEY,
   environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
-  collection_key TEXT UNIQUE NOT NULL,
+  collection_key TEXT NOT NULL, -- unique to environment_key
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS lucid_categories (
   collection_key TEXT NOT NULL,
 
   title TEXT NOT NULL,
-  slug TEXT NOT NULL,  -- unique collection_key
+  slug TEXT NOT NULL,  -- unique to collection_key and environment_key
   description TEXT,
 
   created_at TIMESTAMP DEFAULT NOW(),

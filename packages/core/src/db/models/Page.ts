@@ -73,6 +73,7 @@ type PageUpdate = (
 // User
 export type PageT = {
   id: number;
+  environment_key: string;
   parent_id: number | null;
   collection_key: string;
 
@@ -104,6 +105,7 @@ export default class Page {
     const SelectQuery = new SelectQueryBuilder({
       columns: [
         "id",
+        "environment_key",
         "collection_key",
         "parent_id",
         "title",
@@ -120,7 +122,10 @@ export default class Page {
       ],
       exclude: undefined,
       filter: {
-        data: filter,
+        data: {
+          ...filter,
+          environment_key: req.headers["lucid-environment"] as string,
+        },
         meta: {
           collection_key: {
             operator: "=",
@@ -142,6 +147,11 @@ export default class Page {
             type: "int",
             columnType: "standard",
             table: "lucid_page_categories",
+          },
+          environment_key: {
+            operator: "=",
+            type: "string",
+            columnType: "standard",
           },
         },
       },
@@ -191,27 +201,56 @@ export default class Page {
   static getSingle: PageGetSingle = async (id, req) => {
     const { include } = req.query as QueryParamsGetSingle;
 
+    // Build Query Data and Query
+    const SelectQuery = new SelectQueryBuilder({
+      columns: [
+        "id",
+        "environment_key",
+        "collection_key",
+        "parent_id",
+        "title",
+        "slug",
+        "full_slug",
+        "homepage",
+        "excerpt",
+        "published",
+        "published_at",
+        "published_by",
+        "created_by",
+        "created_at",
+        "updated_at",
+      ],
+      exclude: undefined,
+      filter: {
+        data: {
+          id: id,
+          environment_key: req.headers["lucid-environment"] as string,
+        },
+        meta: {
+          id: {
+            operator: "=",
+            type: "int",
+            columnType: "standard",
+          },
+          environment_key: {
+            operator: "=",
+            type: "string",
+            columnType: "standard",
+          },
+        },
+      },
+      sort: undefined,
+      page: undefined,
+      per_page: undefined,
+    });
+
     const page = await client.query<PageT>({
       text: `SELECT
-          id,
-          collection_key,
-          parent_id,
-          title,
-          slug,
-          full_slug,
-          homepage,
-          excerpt,
-          published,
-          published_at,
-          published_by,
-          created_by,
-          created_at,
-          updated_at
+        ${SelectQuery.query.select}
         FROM
           lucid_pages
-        WHERE
-          id = $1`,
-      values: [id],
+        ${SelectQuery.query.where}`,
+      values: SelectQuery.values,
     });
 
     if (page.rows.length === 0) {
@@ -253,24 +292,34 @@ export default class Page {
     }
 
     // Check if the the parent_id is the homepage
-    await Page.#checkParentNotHomepage(data.parent_id || null);
+    await Page.#checkParentNotHomepage({
+      parent_id: data.parent_id || null,
+      environment_key: req.headers["lucid-environment"] as string,
+    });
 
     // Check if the parent is in the same collection
     if (parentId) {
-      await Page.#isParentSameCollection(parentId, data.collection_key);
+      await Page.#isParentSameCollection({
+        parent_id: parentId,
+        collection_key: data.collection_key,
+        environment_key: req.headers["lucid-environment"] as string,
+      });
     }
     // Check if slug is unique
-    const slug = await Page.#slugUnique(
-      data.slug,
-      data.homepage || false,
-      parentId
-    );
+    const slug = await Page.#slugUnique({
+      slug: data.slug,
+      homepage: data.homepage || false,
+      environment_key: req.headers["lucid-environment"] as string,
+      collection_key: data.collection_key,
+      parent_id: parentId,
+    });
 
     // -------------------------------------------
     // Create page
     const page = await client.query<PageT>({
-      text: `INSERT INTO lucid_pages (title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       values: [
+        req.headers["lucid-environment"],
         data.title,
         slug,
         data.homepage || false,
@@ -299,11 +348,12 @@ export default class Page {
       });
     }
 
-    // TODO: Add bricks via brick model
-
     // Reset homepages
     if (data.homepage) {
-      await Page.#resetHomepages(page.rows[0].id);
+      await Page.#resetHomepages({
+        current: page.rows[0].id,
+        environment_key: req.headers["lucid-environment"] as string,
+      });
     }
 
     return formatPage(page.rows[0]);
@@ -343,10 +393,17 @@ export default class Page {
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
 
     // Check if the the parent_id is the homepage
-    await Page.#checkParentNotHomepage(data.parent_id || null);
+    await Page.#checkParentNotHomepage({
+      parent_id: data.parent_id || null,
+      environment_key: req.headers["lucid-environment"] as string,
+    });
     // Check if the parent is in the same collection
     if (parentId) {
-      await Page.#isParentSameCollection(parentId, currentPage.collection_key);
+      await Page.#isParentSameCollection({
+        parent_id: parentId,
+        collection_key: currentPage.collection_key,
+        environment_key: req.headers["lucid-environment"] as string,
+      });
     }
 
     // -------------------------------------------
@@ -355,11 +412,13 @@ export default class Page {
     let newSlug = undefined;
     if (data.slug) {
       // Check if slug is unique
-      newSlug = await Page.#slugUnique(
-        data.slug,
-        data.homepage || false,
-        parentId
-      );
+      newSlug = await Page.#slugUnique({
+        slug: data.slug,
+        homepage: data.homepage || false,
+        environment_key: req.headers["lucid-environment"] as string,
+        collection_key: currentPage.collection_key,
+        parent_id: parentId,
+      });
     }
 
     const { columns, aliases, values } = queryDataFormat(
@@ -439,45 +498,66 @@ export default class Page {
   };
   // -------------------------------------------
   // Util Methods
-  static #slugUnique = async (
-    slug: string,
-    homepage: boolean,
-    parent_id?: number
-  ) => {
+  static #slugUnique = async (data: {
+    slug: string;
+    homepage: boolean;
+    environment_key: string;
+    collection_key: string;
+    parent_id?: number;
+  }) => {
     // For homepage, return "/"
-    if (homepage) {
+    if (data.homepage) {
       return "/";
     }
 
     // Sanitize slug with slugify
-    slug = slugify(slug, { lower: true, strict: true });
+    data.slug = slugify(data.slug, { lower: true, strict: true });
 
-    const values: Array<any> = [slug];
-    if (parent_id) values.push(parent_id);
+    const values: Array<any> = [
+      data.slug,
+      data.collection_key,
+      data.environment_key,
+    ];
+    if (data.parent_id) values.push(data.parent_id);
 
     const slugCount = await client.query<{ count: number }>({
       // where slug is like, slug-example, slug-example-1, slug-example-2
-      text: `SELECT COUNT(*) FROM lucid_pages WHERE slug ~ '^${slug}-\\d+$' OR slug = $1 ${
-        parent_id ? `AND parent_id = $2` : `AND parent_id IS NULL`
-      }`,
+      text: `SELECT COUNT(*) 
+        FROM 
+          lucid_pages 
+        WHERE slug ~ '^${data.slug}-\\d+$' 
+        OR 
+          slug = $1
+        AND
+          collection_key = $2
+        AND
+          environment_key = $3
+        ${data.parent_id ? `AND parent_id = $4` : `AND parent_id IS NULL`}`,
       values: values,
     });
 
     if (slugCount.rows[0].count >= 1) {
-      return `${slug}-${slugCount.rows[0].count}`;
+      return `${data.slug}-${slugCount.rows[0].count}`;
     } else {
-      return slug;
+      return data.slug;
     }
   };
-  static #checkParentNotHomepage = async (parent_id: number | null) => {
-    if (!parent_id) return;
-    const values: Array<any> = [];
-    if (parent_id) values.push(parent_id);
+  static #checkParentNotHomepage = async (data: {
+    parent_id: number | null;
+    environment_key: string;
+  }) => {
+    if (!data.parent_id) return;
+    const values: Array<any> = [data.environment_key];
+    if (data.parent_id) values.push(data.parent_id);
 
     const parent = await client.query<{ homepage: boolean }>({
-      text: `SELECT homepage FROM lucid_pages ${
-        parent_id ? `WHERE id = $1` : `WHERE parent_id IS NULL`
-      }`,
+      text: `SELECT homepage 
+        FROM 
+          lucid_pages 
+        WHERE
+          environment_key = $1
+        AND 
+          id = $2`,
       values: values,
     });
     if (parent.rows[0].homepage) {
@@ -489,17 +569,27 @@ export default class Page {
       });
     }
   };
-  static #isParentSameCollection = async (
-    parent_id: number,
-    collection_key: string
-  ) => {
+  static #isParentSameCollection = async (data: {
+    parent_id: number;
+    collection_key: string;
+    environment_key: string;
+  }) => {
     // Check if the parent is apart of the same collection
     const parent = await client.query<{ collection_key: string }>({
-      text: `SELECT collection_key FROM lucid_pages WHERE id = $1`,
-      values: [parent_id],
+      text: `SELECT collection_key FROM lucid_pages WHERE id = $1 AND environment_key = $2`,
+      values: [data.parent_id, data.environment_key],
     });
 
-    if (parent.rows[0].collection_key !== collection_key) {
+    if (!parent.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Parent Not Found",
+        message: "The parent page could not be found!",
+        status: 404,
+      });
+    }
+
+    if (parent.rows[0].collection_key !== data.collection_key) {
       throw new LucidError({
         type: "basic",
         name: "Parent Collection Mismatch",
@@ -509,18 +599,21 @@ export default class Page {
       });
     }
   };
-  static #resetHomepages = async (current: number) => {
+  static #resetHomepages = async (data: {
+    current: number;
+    environment_key: string;
+  }) => {
     // reset homepage, set its parent to null and its full slug to slugified title
     const result = await client.query({
-      text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1`,
-      values: [current],
+      text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
+      values: [data.current, data.environment_key],
     });
 
     for (const row of result.rows) {
       let newSlug = slugify(row.title, { lower: true, strict: true });
       const slugExists = await client.query({
-        text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2`,
-        values: [newSlug, row.id],
+        text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
+        values: [newSlug, row.id, data.environment_key],
       });
 
       if (slugExists.rows[0].count > 0) {

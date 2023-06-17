@@ -23,12 +23,15 @@ const createSingle: Controller<
   typeof query
 > = async (req, res, next) => {
   try {
-    const category = await Category.create({
-      collection_key: req.body.collection_key,
-      title: req.body.title,
-      slug: req.body.slug,
-      description: req.body.description,
-    });
+    const category = await Category.create(
+      {
+        collection_key: req.body.collection_key,
+        title: req.body.title,
+        slug: req.body.slug,
+        description: req.body.description,
+      },
+      req
+    );
 
     res.status(200).json(
       buildResponse(req, {

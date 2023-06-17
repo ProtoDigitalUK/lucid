@@ -20,7 +20,7 @@ const deleteSingle: Controller<
   typeof query
 > = async (req, res, next) => {
   try {
-    const category = await Category.delete(parseInt(req.params.id));
+    const category = await Category.delete(parseInt(req.params.id), req);
 
     res.status(200).json(
       buildResponse(req, {
