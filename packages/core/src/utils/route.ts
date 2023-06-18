@@ -7,6 +7,7 @@ import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
 import validateBricks from "@middleware/validate-bricks";
 import validateEnvironment from "@middleware/validate-environment";
+import permissions from "@middleware/permissions";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,
@@ -17,6 +18,7 @@ type Route = <
   props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;
+    permissions?: Array<string>;
     middleware?: {
       authenticate?: boolean;
       authoriseCSRF?: boolean;
@@ -76,6 +78,11 @@ const route: Route = (router, props) => {
   // set middleware for environment validation
   if (props.middleware?.validateEnvironment) {
     middleware.push(validateEnvironment);
+  }
+
+  // set middleware for permissions
+  if (props.permissions) {
+    middleware.push(permissions(props.permissions));
   }
 
   switch (method) {

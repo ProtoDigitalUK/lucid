@@ -48,8 +48,6 @@ const validateEnvironment = async (
       });
     }
 
-    // TODO: add user permission check here for the environment
-
     return next();
   } catch (error) {
     return next(error);
