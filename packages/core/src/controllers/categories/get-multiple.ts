@@ -1,39 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Category from "@db/models/Category";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({
-  filter: z
-    .object({
-      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
-      title: z.string().optional(),
-    })
-    .optional(),
-  sort: z
-    .array(
-      z.object({
-        key: z.enum(["title", "created_at"]),
-        value: z.enum(["asc", "desc"]),
-      })
-    )
-    .optional(),
-  page: z.string().optional(),
-  per_page: z.string().optional(),
-});
-const params = z.object({});
-// query
+import categorySchema from "@schemas/categories";
 
 // --------------------------------------------------
 // Controller
 const getMultiple: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof categorySchema.getMultiple.params,
+  typeof categorySchema.getMultiple.body,
+  typeof categorySchema.getMultiple.query
 > = async (req, res, next) => {
   try {
     const categories = await Category.getMultiple(req);
@@ -56,10 +33,6 @@ const getMultiple: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: categorySchema.getMultiple,
   controller: getMultiple,
 };

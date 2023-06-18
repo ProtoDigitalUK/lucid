@@ -1,22 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Environment from "@db/models/Environment";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({});
+import environmentSchema from "@schemas/environments";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getAll: Controller<
+  typeof environmentSchema.getAll.params,
+  typeof environmentSchema.getAll.body,
+  typeof environmentSchema.getAll.query
+> = async (req, res, next) => {
   try {
     const environments = await Environment.getAll();
 
@@ -33,10 +28,6 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: environmentSchema.getAll,
   controller: getAll,
 };

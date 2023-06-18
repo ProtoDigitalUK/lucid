@@ -1,24 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import BrickConfig from "@db/models/BrickConfig";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({
-  key: z.string().nonempty(),
-});
+import bricksSchema from "@schemas/bricks";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getSingle: Controller<
+  typeof bricksSchema.getSingle.params,
+  typeof bricksSchema.getSingle.body,
+  typeof bricksSchema.getSingle.query
+> = async (req, res, next) => {
   try {
     const brick = await BrickConfig.getSingle(
       req.params.key,
@@ -38,10 +31,6 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: bricksSchema.getSingle,
   controller: getSingle,
 };

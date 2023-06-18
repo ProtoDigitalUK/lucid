@@ -1,23 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Category from "@db/models/Category";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({
-  id: z.string(),
-});
+import categorySchema from "@schemas/categories";
 
 // --------------------------------------------------
 // Controller
 const deleteSingle: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof categorySchema.deleteSingle.params,
+  typeof categorySchema.deleteSingle.body,
+  typeof categorySchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
     const category = await Category.delete(parseInt(req.params.id), req);
@@ -35,10 +28,6 @@ const deleteSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: categorySchema.deleteSingle,
   controller: deleteSingle,
 };

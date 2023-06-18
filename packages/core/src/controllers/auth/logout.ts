@@ -1,22 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 import { clearJWT } from "@services/auth/jwt";
 import { clearCSRFToken } from "@services/auth/csrf";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({});
+import authSchema from "@schemas/auth";
 
 // --------------------------------------------------
 // Controller
-const logout: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const logout: Controller<
+  typeof authSchema.logout.params,
+  typeof authSchema.logout.body,
+  typeof authSchema.logout.query
+> = async (req, res, next) => {
   try {
     clearJWT(res);
     clearCSRFToken(res);
@@ -36,10 +31,6 @@ const logout: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: authSchema.logout,
   controller: logout,
 };

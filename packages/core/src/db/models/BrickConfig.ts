@@ -1,3 +1,4 @@
+import z from "zod";
 import Fuse from "fuse.js";
 import { LucidError } from "@utils/error-handler";
 import Config from "@db/models/Config";
@@ -6,25 +7,13 @@ import Collection from "./Collection";
 import Environment from "@db/models/Environment";
 // Internal packages
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
+// Schema
+import bricksSchema from "@schemas/bricks";
 
 // -------------------------------------------
 // Types
-interface QueryParams extends ModelQueryParams {
-  include?: Array<"fields">;
-  filter?: {
-    s?: string;
-    collection_key?: Array<string> | string;
-    environment_key?: string;
-    environment_bricks?: Array<string>;
-  };
-  sort?: Array<{
-    key: "name";
-    value: "asc" | "desc";
-  }>;
-}
-
 type BrickConfigGetAll = (
-  query: QueryParams,
+  query: z.infer<typeof bricksSchema.getAll.query>,
   environment_key: string
 ) => Promise<BrickConfigT[]>;
 type BrickConfigGetSingle = (
@@ -83,7 +72,7 @@ export default class BrickConfig {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) return [];
 
-    const bricks = await Promise.all(
+    let bricks = await Promise.all(
       brickInstance.map((brick) => BrickConfig.getBrickData(brick, query))
     );
 
@@ -91,8 +80,11 @@ export default class BrickConfig {
       const environment = await Environment.getSingle(
         query.filter.environment_key
       );
-      if (!query.filter.environment_bricks)
-        query.filter.environment_bricks = environment.assigned_bricks || [];
+
+      bricks = BrickConfig.#filterEnvironmentBricks(
+        environment.assigned_bricks || [],
+        bricks
+      );
     }
 
     const filteredBricks = await BrickConfig.#filterBricks(
@@ -117,7 +109,7 @@ export default class BrickConfig {
   };
   static getBrickData = (
     instance: BrickBuilderT,
-    query?: QueryParams
+    query?: z.infer<typeof bricksSchema.getAll.query>
   ): BrickConfigT => {
     const data: BrickConfigT = {
       key: instance.key,
@@ -150,7 +142,7 @@ export default class BrickConfig {
     return searchResults.map((r) => r.item);
   };
   static #filterBricks = async (
-    filter: QueryParams["filter"],
+    filter: z.infer<typeof bricksSchema.getAll.query>["filter"],
     bricks: BrickConfigT[],
     environment_key: string
   ): Promise<BrickConfigT[]> => {
@@ -169,10 +161,10 @@ export default class BrickConfig {
       },
     });
 
-    keys.forEach((f) => {
+    Object.keys(filter).forEach((f) => {
       switch (f) {
         case "s":
-          const searchQuery = filter[f];
+          const searchQuery = filter.s;
           if (searchQuery)
             filteredBricks = BrickConfig.#searcBricks(
               searchQuery,
@@ -180,7 +172,7 @@ export default class BrickConfig {
             );
           break;
         case "collection_key":
-          let collectionKeys = filter[f];
+          let collectionKeys = filter.collection_key;
           if (collectionKeys) {
             // Get all collections
             const permittedBricks: Array<string> = [];
@@ -204,15 +196,6 @@ export default class BrickConfig {
             );
           }
           break;
-        case "environment_bricks":
-          // only return bricks that are assigned to the environment
-          const environmentBricks = filter[f];
-          if (environmentBricks) {
-            filteredBricks = filteredBricks.filter((b) =>
-              environmentBricks.includes(b.key)
-            );
-          }
-          break;
         default:
           break;
       }
@@ -221,7 +204,7 @@ export default class BrickConfig {
     return filteredBricks;
   };
   static #sortBricks = (
-    sort: QueryParams["sort"],
+    sort: z.infer<typeof bricksSchema.getAll.query>["sort"],
     bricks: BrickConfigT[]
   ): BrickConfigT[] => {
     if (!sort) return bricks;
@@ -245,5 +228,12 @@ export default class BrickConfig {
     });
 
     return sortedBricks;
+  };
+  static #filterEnvironmentBricks = (
+    environment_bricks: string[],
+    bricks: BrickConfigT[]
+  ): BrickConfigT[] => {
+    if (!environment_bricks) return bricks;
+    return bricks.filter((b) => environment_bricks.includes(b.key));
   };
 }

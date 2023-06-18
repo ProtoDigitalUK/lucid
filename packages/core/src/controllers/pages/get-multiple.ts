@@ -1,43 +1,22 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Page from "@db/models/Page";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({
-  filter: z
-    .object({
-      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
-      title: z.string().optional(),
-      slug: z.string().optional(),
-      category_id: z.union([z.string(), z.array(z.string())]).optional(),
-    })
-    .optional(),
-  sort: z
-    .array(
-      z.object({
-        key: z.enum(["created_at"]),
-        value: z.enum(["asc", "desc"]),
-      })
-    )
-    .optional(),
-  page: z.string().optional(),
-  per_page: z.string().optional(),
-});
-const params = z.object({});
+import pagesSchema from "@schemas/pages";
 
 // --------------------------------------------------
 // Controller
 const getMultiple: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof pagesSchema.getMultiple.params,
+  typeof pagesSchema.getMultiple.body,
+  typeof pagesSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const pages = await Page.getMultiple(req);
+    const pages = await Page.getMultiple(
+      req.query,
+      req.headers["lucid-environment"] as string
+    );
 
     res.status(200).json(
       buildResponse(req, {
@@ -57,10 +36,6 @@ const getMultiple: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: pagesSchema.getMultiple,
   controller: getMultiple,
 };

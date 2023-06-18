@@ -1,20 +1,15 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({});
+import healthSchema from "@schemas/health";
 
 // --------------------------------------------------
 // Controller
-const getHealth: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getHealth: Controller<
+  typeof healthSchema.getHealth.params,
+  typeof healthSchema.getHealth.body,
+  typeof healthSchema.getHealth.query
+> = async (req, res, next) => {
   try {
     res.status(200).json(
       buildResponse(req, {
@@ -32,10 +27,6 @@ const getHealth: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: healthSchema.getHealth,
   controller: getHealth,
 };

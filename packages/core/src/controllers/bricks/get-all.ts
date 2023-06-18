@@ -1,39 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import BrickConfig from "@db/models/BrickConfig";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({
-  include: z.array(z.enum(["fields"])).optional(),
-  filter: z
-    .object({
-      s: z.string().optional(),
-      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
-      environment_key: z.string().optional(),
-    })
-    .optional(),
-  sort: z
-    .array(
-      z.object({
-        key: z.enum(["name"]),
-        value: z.enum(["asc", "desc"]),
-      })
-    )
-    .optional(),
-});
-const params = z.object({});
+import bricksSchema from "@schemas/bricks";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getAll: Controller<
+  typeof bricksSchema.getAll.params,
+  typeof bricksSchema.getAll.body,
+  typeof bricksSchema.getAll.query
+> = async (req, res, next) => {
   try {
     const bricks = await BrickConfig.getAll(
       req.query,
@@ -53,10 +31,6 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: bricksSchema.getAll,
   controller: getAll,
 };

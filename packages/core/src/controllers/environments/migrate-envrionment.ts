@@ -1,21 +1,14 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({
-  key: z.string(),
-});
+import environmentSchema from "@schemas/environments";
 
 // --------------------------------------------------
 // Controller
 const migrateEnvironment: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof environmentSchema.migrateEnvironment.params,
+  typeof environmentSchema.migrateEnvironment.body,
+  typeof environmentSchema.migrateEnvironment.query
 > = async (req, res, next) => {
   try {
     /*
@@ -39,10 +32,6 @@ const migrateEnvironment: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: environmentSchema.migrateEnvironment,
   controller: migrateEnvironment,
 };

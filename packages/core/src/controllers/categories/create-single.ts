@@ -1,26 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Category from "@db/models/Category";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({
-  collection_key: z.string(),
-  title: z.string(),
-  slug: z.string().min(2).toLowerCase(),
-  description: z.string().optional(),
-});
-const query = z.object({});
-const params = z.object({});
+import categorySchema from "@schemas/categories";
 
 // --------------------------------------------------
 // Controller
 const createSingle: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof categorySchema.createSingle.params,
+  typeof categorySchema.createSingle.body,
+  typeof categorySchema.createSingle.query
 > = async (req, res, next) => {
   try {
     const category = await Category.create(
@@ -46,10 +36,6 @@ const createSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: categorySchema.createSingle,
   controller: createSingle,
 };

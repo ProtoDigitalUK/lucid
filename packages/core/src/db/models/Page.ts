@@ -1,3 +1,4 @@
+import z from "zod";
 import client from "@db/db";
 import { Request } from "express";
 import slugify from "slugify";
@@ -10,30 +11,21 @@ import formatPage from "@services/pages/format-page";
 // Utils
 import { LucidError } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
+// Schema
+import pagesSchema from "@schemas/pages";
 
 // -------------------------------------------
 // Types
-interface QueryParamsGetMultiple extends ModelQueryParams {
-  filter?: {
-    collection_key?: string;
-    title?: string;
-    slug?: string;
-    category_id?: string | Array<string>;
-  };
-  sort?: Array<{
-    key: "created_at";
-    value: "asc" | "desc";
-  }>;
-  page?: string;
-  per_page?: string;
-}
 
 interface QueryParamsGetSingle extends ModelQueryParams {
   include?: Array<"bricks">;
 }
 
 // Methods
-type PageGetMultiple = (req: Request) => Promise<{
+type PageGetMultiple = (
+  query: z.infer<typeof pagesSchema.getMultiple.query>,
+  environment_key: string
+) => Promise<{
   data: PageT[];
   count: number;
 }>;
@@ -97,9 +89,8 @@ export type PageT = {
 export default class Page {
   // -------------------------------------------
   // Methods
-  static getMultiple: PageGetMultiple = async (req) => {
-    const { filter, sort, page, per_page } =
-      req.query as QueryParamsGetMultiple;
+  static getMultiple: PageGetMultiple = async (query, environment_key) => {
+    const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
     const SelectQuery = new SelectQueryBuilder({
@@ -124,7 +115,7 @@ export default class Page {
       filter: {
         data: {
           ...filter,
-          environment_key: req.headers["lucid-environment"] as string,
+          environment_key: environment_key,
         },
         meta: {
           collection_key: {

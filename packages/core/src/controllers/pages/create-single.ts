@@ -1,30 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Page from "@db/models/Page";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({
-  title: z.string().min(2),
-  slug: z.string().min(2).toLowerCase(),
-  collection_key: z.string(),
-  homepage: z.boolean().optional(),
-  excerpt: z.string().optional(),
-  published: z.boolean().optional(),
-  parent_id: z.number().optional(),
-  category_ids: z.array(z.number()).optional(),
-});
-const query = z.object({});
-const params = z.object({});
+import pagesSchema from "@schemas/pages";
 
 // --------------------------------------------------
 // Controller
 const createSingle: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof pagesSchema.createSingle.params,
+  typeof pagesSchema.createSingle.body,
+  typeof pagesSchema.createSingle.query
 > = async (req, res, next) => {
   try {
     const page = await Page.create(
@@ -54,10 +40,6 @@ const createSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: pagesSchema.createSingle,
   controller: createSingle,
 };

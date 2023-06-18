@@ -1,21 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 import { generateCSRFToken } from "@services/auth/csrf";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({});
+import authSchema from "@schemas/auth";
 
 // --------------------------------------------------
 // Controller
-const getCSRF: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getCSRF: Controller<
+  typeof authSchema.getCSRF.params,
+  typeof authSchema.getCSRF.body,
+  typeof authSchema.getCSRF.query
+> = async (req, res, next) => {
   try {
     const token = generateCSRFToken(res);
 
@@ -34,10 +29,6 @@ const getCSRF: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: authSchema.getCSRF,
   controller: getCSRF,
 };

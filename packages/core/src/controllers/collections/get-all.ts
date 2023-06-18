@@ -1,29 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Collection from "@db/models/Collection";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({
-  filter: z
-    .object({
-      type: z.enum(["pages", "group"]).optional(),
-      environment_key: z.string().optional(),
-    })
-    .optional(),
-});
-const params = z.object({});
+import collectionSchema from "@schemas/collections";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getAll: Controller<
+  typeof collectionSchema.getAll.params,
+  typeof collectionSchema.getAll.body,
+  typeof collectionSchema.getAll.query
+> = async (req, res, next) => {
   try {
     const collections = await Collection.getAll(req.query);
 
@@ -40,10 +28,6 @@ const getAll: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: collectionSchema.getAll,
   controller: getAll,
 };

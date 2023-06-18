@@ -1,34 +1,16 @@
-import z from "zod";
-// Schema
-import { BrickSchema } from "@schemas/bricks";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Page from "@db/models/Page";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({
-  title: z.string().optional(),
-  slug: z.string().optional(),
-  homepage: z.boolean().optional(),
-  parent_id: z.number().optional(),
-  category_ids: z.array(z.number()).optional(),
-  published: z.boolean().optional(),
-  excerpt: z.string().optional(),
-  bricks: z.array(BrickSchema).optional(),
-});
-const query = z.object({});
-const params = z.object({
-  id: z.string(),
-});
+import pagesSchema from "@schemas/pages";
 
 // --------------------------------------------------
 // Controller
 const updateSingle: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof pagesSchema.updateSingle.params,
+  typeof pagesSchema.updateSingle.body,
+  typeof pagesSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
     const page = await Page.update(
@@ -59,10 +41,6 @@ const updateSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: pagesSchema.updateSingle,
   controller: updateSingle,
 };

@@ -1,26 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Page from "@db/models/Page";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({
-  include: z.array(z.enum(["bricks"])).optional(),
-});
-const params = z.object({
-  id: z.string(),
-});
+import pagesSchema from "@schemas/pages";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getSingle: Controller<
+  typeof pagesSchema.getSingle.params,
+  typeof pagesSchema.getSingle.body,
+  typeof pagesSchema.getSingle.query
+> = async (req, res, next) => {
   try {
     const page = await Page.getSingle(req.params.id, req);
 
@@ -37,10 +28,6 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: pagesSchema.getSingle,
   controller: getSingle,
 };

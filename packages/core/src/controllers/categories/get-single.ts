@@ -1,24 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Category from "@db/models/Category";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({
-  id: z.string(),
-});
+import categorySchema from "@schemas/categories";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getSingle: Controller<
+  typeof categorySchema.getSingle.params,
+  typeof categorySchema.getSingle.body,
+  typeof categorySchema.getSingle.query
+> = async (req, res, next) => {
   try {
     const category = await Category.getSingle(parseInt(req.params.id), req);
 
@@ -35,10 +28,6 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: categorySchema.getSingle,
   controller: getSingle,
 };

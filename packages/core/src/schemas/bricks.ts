@@ -28,3 +28,49 @@ export const BrickSchema = z.object({
   key: z.string(),
   fields: z.array(FieldSchema).optional(),
 });
+
+// ------------------------------------
+// GET ALL
+const getAllBody = z.object({});
+const getAllQuery = z.object({
+  include: z.array(z.enum(["fields"])).optional(),
+  filter: z
+    .object({
+      s: z.string().optional(),
+      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
+      environment_key: z.string().optional(),
+    })
+    .optional(),
+  sort: z
+    .array(
+      z.object({
+        key: z.enum(["name"]),
+        value: z.enum(["asc", "desc"]),
+      })
+    )
+    .optional(),
+});
+const getAllParams = z.object({});
+
+// ------------------------------------
+// GET SINGLE
+const getSingleBody = z.object({});
+const getSingleQuery = z.object({});
+const getSingleParams = z.object({
+  key: z.string().nonempty(),
+});
+
+// ------------------------------------
+// EXPORT
+export default {
+  getAll: {
+    body: getAllBody,
+    query: getAllQuery,
+    params: getAllParams,
+  },
+  getSingle: {
+    body: getSingleBody,
+    query: getSingleQuery,
+    params: getSingleParams,
+  },
+};

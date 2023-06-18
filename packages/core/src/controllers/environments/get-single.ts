@@ -1,24 +1,17 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Environment from "@db/models/Environment";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({
-  key: z.string(),
-});
+import environmentSchema from "@schemas/environments";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const getSingle: Controller<
+  typeof environmentSchema.getSingle.params,
+  typeof environmentSchema.getSingle.body,
+  typeof environmentSchema.getSingle.query
+> = async (req, res, next) => {
   try {
     const environment = await Environment.getSingle(req.params.key);
 
@@ -35,10 +28,6 @@ const getSingle: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: environmentSchema.getSingle,
   controller: getSingle,
 };

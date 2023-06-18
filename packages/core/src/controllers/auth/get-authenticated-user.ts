@@ -1,21 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import User from "@db/models/User";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({});
-const query = z.object({});
-const params = z.object({});
+import authSchema from "@schemas/auth";
 
 // --------------------------------------------------
 // Controller
 const getAuthenticatedUser: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof authSchema.getAuthenticatedUser.params,
+  typeof authSchema.getAuthenticatedUser.body,
+  typeof authSchema.getAuthenticatedUser.query
 > = async (req, res, next) => {
   try {
     const user = await User.getById(req.auth.id);
@@ -33,10 +28,6 @@ const getAuthenticatedUser: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: authSchema.getAuthenticatedUser,
   controller: getAuthenticatedUser,
 };

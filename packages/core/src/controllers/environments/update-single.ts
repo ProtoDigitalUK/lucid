@@ -1,26 +1,16 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
 import Environment from "@db/models/Environment";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({
-  assigned_bricks: z.array(z.string()).optional(),
-  assigned_collections: z.array(z.string()).optional(),
-});
-const query = z.object({});
-const params = z.object({
-  key: z.string(),
-});
+import environmentSchema from "@schemas/environments";
 
 // --------------------------------------------------
 // Controller
 const updateSingle: Controller<
-  typeof params,
-  typeof body,
-  typeof query
+  typeof environmentSchema.updateSingle.params,
+  typeof environmentSchema.updateSingle.body,
+  typeof environmentSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
     const environment = await Environment.upsertSingle({
@@ -41,10 +31,6 @@ const updateSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: environmentSchema.updateSingle,
   controller: updateSingle,
 };

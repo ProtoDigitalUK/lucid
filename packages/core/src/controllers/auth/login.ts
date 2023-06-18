@@ -1,26 +1,18 @@
-import z from "zod";
 // Services
 import buildResponse from "@services/controllers/build-response";
 import { generateJWT } from "@services/auth/jwt";
 // Models
 import User from "@db/models/User";
-
-// --------------------------------------------------
 // Schema
-const body = z.object({
-  username: z.string(),
-  password: z.string(),
-});
-const query = z.object({});
-const params = z.object({});
+import authSchema from "@schemas/auth";
 
 // --------------------------------------------------
 // Controller
-const login: Controller<typeof params, typeof body, typeof query> = async (
-  req,
-  res,
-  next
-) => {
+const login: Controller<
+  typeof authSchema.login.params,
+  typeof authSchema.login.body,
+  typeof authSchema.login.query
+> = async (req, res, next) => {
   try {
     const user = await User.login(req.body.username, req.body.password);
     generateJWT(res, user);
@@ -34,10 +26,6 @@ const login: Controller<typeof params, typeof body, typeof query> = async (
 // --------------------------------------------------
 // Export
 export default {
-  schema: {
-    body,
-    query,
-    params,
-  },
+  schema: authSchema.login,
   controller: login,
 };

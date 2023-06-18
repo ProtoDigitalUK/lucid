@@ -1,21 +1,18 @@
+import z from "zod";
 import { CollectionBuilderT } from "@lucid/collection-builder";
 // Models
 import Config from "@db/models/Config";
 import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/error-handler";
+// Schema
+import collectionSchema from "@schemas/collections";
 
 // -------------------------------------------
 // Types
-interface QueryParams extends ModelQueryParams {
-  filter?: {
-    type?: string;
-    environment_key?: string;
-    environment_collections?: Array<string>;
-  };
-}
-
-type CollectionGetAll = (query: QueryParams) => Promise<CollectionT[]>;
+type CollectionGetAll = (
+  query: z.infer<typeof collectionSchema.getAll.query>
+) => Promise<CollectionT[]>;
 type CollectionVerifyType = (
   key: string,
   type: string,
@@ -41,7 +38,7 @@ export default class Collection {
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances) return [];
 
-    const collections = await Promise.all(
+    let collections = await Promise.all(
       collectionInstances.map((collection) =>
         Collection.getCollectionData(collection)
       )
@@ -53,8 +50,10 @@ export default class Collection {
       const environment = await Environment.getSingle(
         query.filter.environment_key
       );
-      query.filter.environment_collections =
-        environment.assigned_collections || [];
+      collections = Collection.#filterEnvrionmentCollections(
+        environment.assigned_collections || [],
+        collections
+      );
     }
 
     return Collection.#filterCollections(query.filter, collections);
@@ -128,7 +127,7 @@ export default class Collection {
   // -------------------------------------------
   // Query Methods
   static #filterCollections = (
-    filter: QueryParams["filter"],
+    filter: z.infer<typeof collectionSchema.getAll.query>["filter"],
     collections: CollectionT[]
   ): CollectionT[] => {
     if (!filter) return collections;
@@ -143,17 +142,19 @@ export default class Collection {
             (collection) => collection.type === filter.type
           );
           break;
-        case "environment_collections":
-          // only return collections that are assigned to the environment
-          filtered = filtered.filter((collection) =>
-            filter.environment_collections?.includes(collection.key)
-          );
-          break;
         default:
           break;
       }
     });
 
     return filtered;
+  };
+  static #filterEnvrionmentCollections = (
+    environment_collections: string[],
+    collections: CollectionT[]
+  ) => {
+    return collections.filter((collection) =>
+      environment_collections.includes(collection.key)
+    );
   };
 }
