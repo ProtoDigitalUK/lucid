@@ -1,31 +1,30 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{
-            include: z.ZodOptional<z.ZodArray<z.ZodEnum<["bricks"]>, "many">>;
-        }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        query: import("zod").ZodObject<{
+            include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["bricks"]>, "many">>;
+        }, "strip", import("zod").ZodTypeAny, {
             include?: "bricks"[] | undefined;
         }, {
             include?: "bricks"[] | undefined;
         }>;
-        params: z.ZodObject<{
-            id: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
+        params: import("zod").ZodObject<{
+            id: import("zod").ZodString;
+        }, "strip", import("zod").ZodTypeAny, {
             id: string;
         }, {
             id: string;
         }>;
     };
-    controller: Controller<z.ZodObject<{
-        id: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{
+        id: import("zod").ZodString;
+    }, "strip", import("zod").ZodTypeAny, {
         id: string;
     }, {
         id: string;
-    }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
-        include: z.ZodOptional<z.ZodArray<z.ZodEnum<["bricks"]>, "many">>;
-    }, "strip", z.ZodTypeAny, {
+    }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
+        include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["bricks"]>, "many">>;
+    }, "strip", import("zod").ZodTypeAny, {
         include?: "bricks"[] | undefined;
     }, {
         include?: "bricks"[] | undefined;

@@ -1,11 +1,13 @@
-import { Request } from "express";
+import z from "zod";
 import BrickData, { BrickObject } from "../models/BrickData";
-type PageGetMultiple = (req: Request) => Promise<{
+import pagesSchema from "../../schemas/pages";
+type PageGetMultiple = (environment_key: string, query: z.infer<typeof pagesSchema.getMultiple.query>) => Promise<{
     data: PageT[];
     count: number;
 }>;
-type PageGetSingle = (id: string, req: Request) => Promise<PageT>;
-type PageCreate = (data: {
+type PageGetSingle = (environment_key: string, id: string, query: z.infer<typeof pagesSchema.getSingle.query>) => Promise<PageT>;
+type PageCreate = (authId: string, data: {
+    environment_key: string;
     title: string;
     slug: string;
     collection_key: string;
@@ -14,8 +16,8 @@ type PageCreate = (data: {
     published?: boolean;
     parent_id?: number;
     category_ids?: Array<number>;
-}, req: Request) => Promise<PageT>;
-type PageUpdate = (id: string, data: {
+}) => Promise<PageT>;
+type PageUpdate = (authId: string, environment_key: string, id: string, data: {
     title?: string;
     slug?: string;
     homepage?: boolean;
@@ -24,7 +26,7 @@ type PageUpdate = (id: string, data: {
     published?: boolean;
     excerpt?: string;
     bricks?: Array<BrickObject>;
-}, req: Request) => Promise<PageT>;
+}) => Promise<PageT>;
 export type PageT = {
     id: number;
     environment_key: string;

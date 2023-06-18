@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _BrickConfig_searcBricks, _BrickConfig_filterBricks, _BrickConfig_sortBricks;
+var _a, _BrickConfig_searcBricks, _BrickConfig_filterBricks, _BrickConfig_sortBricks, _BrickConfig_filterEnvironmentBricks;
 Object.defineProperty(exports, "__esModule", { value: true });
 const fuse_js_1 = __importDefault(require("fuse.js"));
 const error_handler_1 = require("../../utils/error-handler");
@@ -17,7 +17,7 @@ const Environment_1 = __importDefault(require("../models/Environment"));
 class BrickConfig {
 }
 _a = BrickConfig;
-BrickConfig.getSingle = async (key, environment_key) => {
+BrickConfig.getSingle = async (environment_key, key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) {
         throw new error_handler_1.LucidError({
@@ -48,15 +48,14 @@ BrickConfig.getSingle = async (key, environment_key) => {
     const brickData = BrickConfig.getBrickData(brick);
     return brickData;
 };
-BrickConfig.getAll = async (query, environment_key) => {
+BrickConfig.getAll = async (environment_key, query) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance)
         return [];
-    const bricks = await Promise.all(brickInstance.map((brick) => BrickConfig.getBrickData(brick, query)));
+    let bricks = await Promise.all(brickInstance.map((brick) => BrickConfig.getBrickData(brick, query)));
     if (query.filter?.environment_key) {
         const environment = await Environment_1.default.getSingle(query.filter.environment_key);
-        if (!query.filter.environment_bricks)
-            query.filter.environment_bricks = environment.assigned_bricks || [];
+        bricks = __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_filterEnvironmentBricks).call(BrickConfig, environment.assigned_bricks || [], bricks);
     }
     const filteredBricks = await __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_filterBricks).call(BrickConfig, query.filter, bricks, environment_key);
     const sortedBricks = __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_sortBricks).call(BrickConfig, query.sort, filteredBricks);
@@ -104,15 +103,15 @@ _BrickConfig_filterBricks = { value: async (filter, bricks, environment_key) => 
                 environment_key,
             },
         });
-        keys.forEach((f) => {
+        Object.keys(filter).forEach((f) => {
             switch (f) {
                 case "s":
-                    const searchQuery = filter[f];
+                    const searchQuery = filter.s;
                     if (searchQuery)
                         filteredBricks = __classPrivateFieldGet(BrickConfig, _a, "f", _BrickConfig_searcBricks).call(BrickConfig, searchQuery, filteredBricks);
                     break;
                 case "collection_key":
-                    let collectionKeys = filter[f];
+                    let collectionKeys = filter.collection_key;
                     if (collectionKeys) {
                         const permittedBricks = [];
                         if (!Array.isArray(collectionKeys)) {
@@ -125,12 +124,6 @@ _BrickConfig_filterBricks = { value: async (filter, bricks, environment_key) => 
                             }
                         });
                         filteredBricks = filteredBricks.filter((b) => permittedBricks.includes(b.key));
-                    }
-                    break;
-                case "environment_bricks":
-                    const environmentBricks = filter[f];
-                    if (environmentBricks) {
-                        filteredBricks = filteredBricks.filter((b) => environmentBricks.includes(b.key));
                     }
                     break;
                 default:
@@ -159,6 +152,11 @@ _BrickConfig_sortBricks = { value: (sort, bricks) => {
             });
         });
         return sortedBricks;
+    } };
+_BrickConfig_filterEnvironmentBricks = { value: (environment_bricks, bricks) => {
+        if (!environment_bricks)
+            return bricks;
+        return bricks.filter((b) => environment_bricks.includes(b.key));
     } };
 exports.default = BrickConfig;
 //# sourceMappingURL=BrickConfig.js.map

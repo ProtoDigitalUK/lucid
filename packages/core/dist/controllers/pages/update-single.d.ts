@@ -1,18 +1,17 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{
-            title: z.ZodOptional<z.ZodString>;
-            slug: z.ZodOptional<z.ZodString>;
-            homepage: z.ZodOptional<z.ZodBoolean>;
-            parent_id: z.ZodOptional<z.ZodNumber>;
-            category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
-            published: z.ZodOptional<z.ZodBoolean>;
-            excerpt: z.ZodOptional<z.ZodString>;
-            bricks: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                id: z.ZodOptional<z.ZodNumber>;
-                key: z.ZodString;
-                fields: z.ZodOptional<z.ZodArray<z.ZodType<{
+        body: import("zod").ZodObject<{
+            title: import("zod").ZodOptional<import("zod").ZodString>;
+            slug: import("zod").ZodOptional<import("zod").ZodString>;
+            homepage: import("zod").ZodOptional<import("zod").ZodBoolean>;
+            parent_id: import("zod").ZodOptional<import("zod").ZodNumber>;
+            category_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
+            published: import("zod").ZodOptional<import("zod").ZodBoolean>;
+            excerpt: import("zod").ZodOptional<import("zod").ZodString>;
+            bricks: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
+                id: import("zod").ZodOptional<import("zod").ZodNumber>;
+                key: import("zod").ZodString;
+                fields: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodType<{
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
                     fields_id?: number | undefined;
@@ -30,7 +29,7 @@ declare const _default: {
                         value?: any;
                         target?: any;
                     } & any)[] | undefined;
-                }, z.ZodTypeDef, {
+                }, import("zod").ZodTypeDef, {
                     type: import("../../../../brick-builder/dist").FieldTypesEnum;
                     key: string;
                     fields_id?: number | undefined;
@@ -49,7 +48,7 @@ declare const _default: {
                         target?: any;
                     } & any)[] | undefined;
                 }>, "many">>;
-            }, "strip", z.ZodTypeAny, {
+            }, "strip", import("zod").ZodTypeAny, {
                 key: string;
                 id?: number | undefined;
                 fields?: ({
@@ -94,7 +93,7 @@ declare const _default: {
                     } & any)[] | undefined;
                 })[] | undefined;
             }>, "many">>;
-        }, "strip", z.ZodTypeAny, {
+        }, "strip", import("zod").ZodTypeAny, {
             title?: string | undefined;
             slug?: string | undefined;
             homepage?: boolean | undefined;
@@ -157,33 +156,33 @@ declare const _default: {
                 })[] | undefined;
             }[] | undefined;
         }>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{
-            id: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
+        query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{
+            id: import("zod").ZodString;
+        }, "strip", import("zod").ZodTypeAny, {
             id: string;
         }, {
             id: string;
         }>;
     };
-    controller: Controller<z.ZodObject<{
-        id: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{
+        id: import("zod").ZodString;
+    }, "strip", import("zod").ZodTypeAny, {
         id: string;
     }, {
         id: string;
-    }>, z.ZodObject<{
-        title: z.ZodOptional<z.ZodString>;
-        slug: z.ZodOptional<z.ZodString>;
-        homepage: z.ZodOptional<z.ZodBoolean>;
-        parent_id: z.ZodOptional<z.ZodNumber>;
-        category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
-        published: z.ZodOptional<z.ZodBoolean>;
-        excerpt: z.ZodOptional<z.ZodString>;
-        bricks: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            id: z.ZodOptional<z.ZodNumber>;
-            key: z.ZodString;
-            fields: z.ZodOptional<z.ZodArray<z.ZodType<{
+    }>, import("zod").ZodObject<{
+        title: import("zod").ZodOptional<import("zod").ZodString>;
+        slug: import("zod").ZodOptional<import("zod").ZodString>;
+        homepage: import("zod").ZodOptional<import("zod").ZodBoolean>;
+        parent_id: import("zod").ZodOptional<import("zod").ZodNumber>;
+        category_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
+        published: import("zod").ZodOptional<import("zod").ZodBoolean>;
+        excerpt: import("zod").ZodOptional<import("zod").ZodString>;
+        bricks: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
+            id: import("zod").ZodOptional<import("zod").ZodNumber>;
+            key: import("zod").ZodString;
+            fields: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodType<{
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
                 fields_id?: number | undefined;
@@ -201,7 +200,7 @@ declare const _default: {
                     value?: any;
                     target?: any;
                 } & any)[] | undefined;
-            }, z.ZodTypeDef, {
+            }, import("zod").ZodTypeDef, {
                 type: import("../../../../brick-builder/dist").FieldTypesEnum;
                 key: string;
                 fields_id?: number | undefined;
@@ -220,7 +219,7 @@ declare const _default: {
                     target?: any;
                 } & any)[] | undefined;
             }>, "many">>;
-        }, "strip", z.ZodTypeAny, {
+        }, "strip", import("zod").ZodTypeAny, {
             key: string;
             id?: number | undefined;
             fields?: ({
@@ -265,7 +264,7 @@ declare const _default: {
                 } & any)[] | undefined;
             })[] | undefined;
         }>, "many">>;
-    }, "strip", z.ZodTypeAny, {
+    }, "strip", import("zod").ZodTypeAny, {
         title?: string | undefined;
         slug?: string | undefined;
         homepage?: boolean | undefined;
@@ -327,7 +326,7 @@ declare const _default: {
                 } & any)[] | undefined;
             })[] | undefined;
         }[] | undefined;
-    }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;
+    }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;
 //# sourceMappingURL=update-single.d.ts.map

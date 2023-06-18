@@ -1,14 +1,13 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{
-            include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
-            filter: z.ZodOptional<z.ZodObject<{
-                s: z.ZodOptional<z.ZodString>;
-                collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
-                environment_key: z.ZodOptional<z.ZodString>;
-            }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        query: import("zod").ZodObject<{
+            include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["fields"]>, "many">>;
+            filter: import("zod").ZodOptional<import("zod").ZodObject<{
+                s: import("zod").ZodOptional<import("zod").ZodString>;
+                collection_key: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
+                environment_key: import("zod").ZodOptional<import("zod").ZodString>;
+            }, "strip", import("zod").ZodTypeAny, {
                 s?: string | undefined;
                 collection_key?: string | string[] | undefined;
                 environment_key?: string | undefined;
@@ -17,17 +16,17 @@ declare const _default: {
                 collection_key?: string | string[] | undefined;
                 environment_key?: string | undefined;
             }>>;
-            sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                key: z.ZodEnum<["name"]>;
-                value: z.ZodEnum<["asc", "desc"]>;
-            }, "strip", z.ZodTypeAny, {
+            sort: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
+                key: import("zod").ZodEnum<["name"]>;
+                value: import("zod").ZodEnum<["asc", "desc"]>;
+            }, "strip", import("zod").ZodTypeAny, {
                 value: "asc" | "desc";
                 key: "name";
             }, {
                 value: "asc" | "desc";
                 key: "name";
             }>, "many">>;
-        }, "strip", z.ZodTypeAny, {
+        }, "strip", import("zod").ZodTypeAny, {
             include?: "fields"[] | undefined;
             filter?: {
                 s?: string | undefined;
@@ -50,15 +49,15 @@ declare const _default: {
                 key: "name";
             }[] | undefined;
         }>;
-        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
-    controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
-        include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
-        filter: z.ZodOptional<z.ZodObject<{
-            s: z.ZodOptional<z.ZodString>;
-            collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
-            environment_key: z.ZodOptional<z.ZodString>;
-        }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
+        include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["fields"]>, "many">>;
+        filter: import("zod").ZodOptional<import("zod").ZodObject<{
+            s: import("zod").ZodOptional<import("zod").ZodString>;
+            collection_key: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
+            environment_key: import("zod").ZodOptional<import("zod").ZodString>;
+        }, "strip", import("zod").ZodTypeAny, {
             s?: string | undefined;
             collection_key?: string | string[] | undefined;
             environment_key?: string | undefined;
@@ -67,17 +66,17 @@ declare const _default: {
             collection_key?: string | string[] | undefined;
             environment_key?: string | undefined;
         }>>;
-        sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            key: z.ZodEnum<["name"]>;
-            value: z.ZodEnum<["asc", "desc"]>;
-        }, "strip", z.ZodTypeAny, {
+        sort: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
+            key: import("zod").ZodEnum<["name"]>;
+            value: import("zod").ZodEnum<["asc", "desc"]>;
+        }, "strip", import("zod").ZodTypeAny, {
             value: "asc" | "desc";
             key: "name";
         }, {
             value: "asc" | "desc";
             key: "name";
         }>, "many">>;
-    }, "strip", z.ZodTypeAny, {
+    }, "strip", import("zod").ZodTypeAny, {
         include?: "fields"[] | undefined;
         filter?: {
             s?: string | undefined;

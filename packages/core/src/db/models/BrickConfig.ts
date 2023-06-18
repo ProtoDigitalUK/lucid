@@ -13,12 +13,12 @@ import bricksSchema from "@schemas/bricks";
 // -------------------------------------------
 // Types
 type BrickConfigGetAll = (
-  query: z.infer<typeof bricksSchema.getAll.query>,
-  environment_key: string
+  environment_key: string,
+  query: z.infer<typeof bricksSchema.getAll.query>
 ) => Promise<BrickConfigT[]>;
 type BrickConfigGetSingle = (
-  key: string,
-  environment_key: string
+  environment_key: string,
+  key: string
 ) => Promise<BrickConfigT>;
 
 // -------------------------------------------
@@ -32,7 +32,7 @@ export type BrickConfigT = {
 export default class BrickConfig {
   // -------------------------------------------
   // Methods
-  static getSingle: BrickConfigGetSingle = async (key, environment_key) => {
+  static getSingle: BrickConfigGetSingle = async (environment_key, key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) {
       throw new LucidError({
@@ -68,7 +68,7 @@ export default class BrickConfig {
 
     return brickData;
   };
-  static getAll: BrickConfigGetAll = async (query, environment_key) => {
+  static getAll: BrickConfigGetAll = async (environment_key, query) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) return [];
 

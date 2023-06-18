@@ -1,1 +1,1 @@
-{"version":3,"file":"logout.d.ts","sourceRoot":"","sources":["../../../src/controllers/auth/logout.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;;;;;;;;;AAqCpB,wBAOE"}
+{"version":3,"file":"logout.d.ts","sourceRoot":"","sources":["../../../src/controllers/auth/logout.ts"],"names":[],"mappings":";;;;;;;;AAgCA,wBAGE"}

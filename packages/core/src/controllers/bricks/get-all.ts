@@ -14,8 +14,8 @@ const getAll: Controller<
 > = async (req, res, next) => {
   try {
     const bricks = await BrickConfig.getAll(
-      req.query,
-      req.headers["lucid-environment"] as string
+      req.headers["lucid-environment"] as string,
+      req.query
     );
 
     res.status(200).json(

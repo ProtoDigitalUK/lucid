@@ -1,53 +1,49 @@
 import client from "@db/db";
-import { Request } from "express";
+import { z } from "zod";
 // Models
 import Collection from "@db/models/Collection";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
+// Schema
+import categorySchema from "@schemas/categories";
 
 // -------------------------------------------
 // Types
-interface QueryParamsGetMultiple extends ModelQueryParams {
-  filter?: {
-    collection_key?: Array<string>;
-    title?: string;
-  };
-  sort?: Array<{
-    key: "created_at" | "title";
-    value: "asc" | "desc";
-  }>;
-  page?: string;
-  per_page?: string;
-}
+type CategoryGetSingle = (
+  environment_key: string,
+  id: number
+) => Promise<CategoryT>;
 
-type CategoryGetSingle = (id: number, req: Request) => Promise<CategoryT>;
-
-type CategoryGetMultiple = (req: Request) => Promise<{
+type CategoryGetMultiple = (
+  environment_key: string,
+  query: z.infer<typeof categorySchema.getMultiple.query>
+) => Promise<{
   data: CategoryT[];
   count: number;
 }>;
-type CategoryCreate = (
-  data: {
-    collection_key: string;
-    title: string;
-    slug: string;
-    description?: string;
-  },
-  req: Request
-) => Promise<CategoryT>;
+type CategoryCreate = (data: {
+  environment_key: string;
+  collection_key: string;
+  title: string;
+  slug: string;
+  description?: string;
+}) => Promise<CategoryT>;
 
 type CategoryUpdate = (
+  environment_key: string,
   id: number,
   data: {
     title?: string;
     slug?: string;
     description?: string;
-  },
-  req: Request
+  }
 ) => Promise<CategoryT>;
 
-type CategoryDelete = (id: number, req: Request) => Promise<CategoryT>;
+type CategoryDelete = (
+  environment_key: string,
+  id: number
+) => Promise<CategoryT>;
 
 // -------------------------------------------
 // User
@@ -65,9 +61,8 @@ export type CategoryT = {
 export default class Category {
   // -------------------------------------------
   // Methods
-  static getMultiple: CategoryGetMultiple = async (req) => {
-    const { filter, sort, page, per_page } =
-      req.query as QueryParamsGetMultiple;
+  static getMultiple: CategoryGetMultiple = async (environment_key, query) => {
+    const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
     const SelectQuery = new SelectQueryBuilder({
@@ -85,7 +80,7 @@ export default class Category {
       filter: {
         data: {
           ...filter,
-          environment_key: req.headers["lucid-environment"] as string,
+          environment_key: environment_key,
         },
         meta: {
           collection_key: {
@@ -126,10 +121,10 @@ export default class Category {
       count: count.rows[0].count,
     };
   };
-  static getSingle: CategoryGetSingle = async (id, req) => {
+  static getSingle: CategoryGetSingle = async (environment_key, id) => {
     const category = await client.query<CategoryT>({
       text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
-      values: [id, req.headers["lucid-environment"] as string],
+      values: [id, environment_key],
     });
 
     if (!category.rows[0]) {
@@ -149,20 +144,20 @@ export default class Category {
 
     return category.rows[0];
   };
-  static create: CategoryCreate = async (data, req) => {
+  static create: CategoryCreate = async (data) => {
     // -------------------------------------------
     // Checks
     await Collection.getSingle(
       data.collection_key,
       "pages",
-      req.headers["lucid-environment"] as string
+      data.environment_key
     );
 
     // check if slug is unique in post type
     const isSlugUnique = await Category.isSlugUniqueInCollection({
       collection_key: data.collection_key,
       slug: data.slug,
-      environment_key: req.headers["lucid-environment"] as string,
+      environment_key: data.environment_key,
     });
     if (!isSlugUnique) {
       throw new LucidError({
@@ -182,7 +177,7 @@ export default class Category {
     const { columns, aliases, values } = queryDataFormat(
       ["environment_key", "collection_key", "title", "slug", "description"],
       [
-        req.headers["lucid-environment"] as string,
+        data.environment_key,
         data.collection_key,
         data.title,
         data.slug,
@@ -207,15 +202,15 @@ export default class Category {
 
     return category;
   };
-  static update: CategoryUpdate = async (id, data, req) => {
+  static update: CategoryUpdate = async (environment_key, id, data) => {
     // Check if category exists
-    const currentCategory = await Category.getSingle(id, req);
+    const currentCategory = await Category.getSingle(environment_key, id);
 
     if (data.slug) {
       const isSlugUnique = await Category.isSlugUniqueInCollection({
         collection_key: currentCategory.collection_key,
         slug: data.slug,
-        environment_key: req.headers["lucid-environment"] as string,
+        environment_key: environment_key,
         ignore_id: id,
       });
       if (!isSlugUnique) {
@@ -237,13 +232,7 @@ export default class Category {
     const category = await client.query<CategoryT>({
       name: "update-category",
       text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
-      values: [
-        data.title,
-        data.slug,
-        data.description,
-        id,
-        req.headers["lucid-environment"] as string,
-      ],
+      values: [data.title, data.slug, data.description, id, environment_key],
     });
     if (!category.rows[0]) {
       throw new LucidError({
@@ -256,11 +245,11 @@ export default class Category {
 
     return category.rows[0];
   };
-  static delete: CategoryDelete = async (id, req) => {
+  static delete: CategoryDelete = async (environment_key, id) => {
     const category = await client.query<CategoryT>({
       name: "delete-category",
       text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
-      values: [id, req.headers["lucid-environment"] as string],
+      values: [id, environment_key],
     });
 
     if (!category.rows[0]) {

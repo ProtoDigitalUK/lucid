@@ -1,6 +1,5 @@
 import z from "zod";
 import client from "@db/db";
-import { Request } from "express";
 import slugify from "slugify";
 // Models
 import PageCategory from "@db/models/PageCategory";
@@ -16,24 +15,24 @@ import pagesSchema from "@schemas/pages";
 
 // -------------------------------------------
 // Types
-
-interface QueryParamsGetSingle extends ModelQueryParams {
-  include?: Array<"bricks">;
-}
-
-// Methods
 type PageGetMultiple = (
-  query: z.infer<typeof pagesSchema.getMultiple.query>,
-  environment_key: string
+  environment_key: string,
+  query: z.infer<typeof pagesSchema.getMultiple.query>
 ) => Promise<{
   data: PageT[];
   count: number;
 }>;
 
-type PageGetSingle = (id: string, req: Request) => Promise<PageT>;
+type PageGetSingle = (
+  environment_key: string,
+  id: string,
+  query: z.infer<typeof pagesSchema.getSingle.query>
+) => Promise<PageT>;
 
 type PageCreate = (
+  authId: string,
   data: {
+    environment_key: string;
     title: string;
     slug: string;
     collection_key: string;
@@ -42,11 +41,12 @@ type PageCreate = (
     published?: boolean;
     parent_id?: number;
     category_ids?: Array<number>;
-  },
-  req: Request
+  }
 ) => Promise<PageT>;
 
 type PageUpdate = (
+  authId: string,
+  environment_key: string,
   id: string,
   data: {
     title?: string;
@@ -57,8 +57,7 @@ type PageUpdate = (
     published?: boolean;
     excerpt?: string;
     bricks?: Array<BrickObject>;
-  },
-  req: Request
+  }
 ) => Promise<PageT>;
 
 // -------------------------------------------
@@ -89,7 +88,7 @@ export type PageT = {
 export default class Page {
   // -------------------------------------------
   // Methods
-  static getMultiple: PageGetMultiple = async (query, environment_key) => {
+  static getMultiple: PageGetMultiple = async (environment_key, query) => {
     const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
@@ -189,8 +188,8 @@ export default class Page {
       count: count.rows[0].count,
     };
   };
-  static getSingle: PageGetSingle = async (id, req) => {
-    const { include } = req.query as QueryParamsGetSingle;
+  static getSingle: PageGetSingle = async (environment_key, id, query) => {
+    const { include } = query;
 
     // Build Query Data and Query
     const SelectQuery = new SelectQueryBuilder({
@@ -215,7 +214,7 @@ export default class Page {
       filter: {
         data: {
           id: id,
-          environment_key: req.headers["lucid-environment"] as string,
+          environment_key: environment_key,
         },
         meta: {
           id: {
@@ -257,13 +256,13 @@ export default class Page {
       const collection = await Collection.getSingle(
         page.rows[0].collection_key,
         "pages",
-        req.headers["lucid-environment"] as string
+        environment_key
       );
 
       const pageBricks = await BrickData.getAll(
         "page",
         page.rows[0].id,
-        req.headers["lucid-environment"] as string,
+        environment_key,
         collection
       );
       page.rows[0].bricks = pageBricks;
@@ -271,7 +270,7 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
-  static create: PageCreate = async (data, req) => {
+  static create: PageCreate = async (authId, data) => {
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
@@ -283,13 +282,13 @@ export default class Page {
     await Collection.getSingle(
       data.collection_key,
       "pages",
-      req.headers["lucid-environment"] as string
+      data.environment_key
     );
 
     // Check if the the parent_id is the homepage
     await Page.#checkParentNotHomepage({
       parent_id: data.parent_id || null,
-      environment_key: req.headers["lucid-environment"] as string,
+      environment_key: data.environment_key,
     });
 
     // Check if the parent is in the same collection
@@ -297,14 +296,14 @@ export default class Page {
       await Page.#isParentSameCollection({
         parent_id: parentId,
         collection_key: data.collection_key,
-        environment_key: req.headers["lucid-environment"] as string,
+        environment_key: data.environment_key,
       });
     }
     // Check if slug is unique
     const slug = await Page.#slugUnique({
       slug: data.slug,
       homepage: data.homepage || false,
-      environment_key: req.headers["lucid-environment"] as string,
+      environment_key: data.environment_key,
       collection_key: data.collection_key,
       parent_id: parentId,
     });
@@ -314,7 +313,7 @@ export default class Page {
     const page = await client.query<PageT>({
       text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       values: [
-        req.headers["lucid-environment"],
+        data.environment_key,
         data.title,
         slug,
         data.homepage || false,
@@ -322,7 +321,7 @@ export default class Page {
         data.excerpt || null,
         data.published || false,
         parentId,
-        req.auth.id,
+        authId,
       ],
     });
 
@@ -347,13 +346,13 @@ export default class Page {
     if (data.homepage) {
       await Page.#resetHomepages({
         current: page.rows[0].id,
-        environment_key: req.headers["lucid-environment"] as string,
+        environment_key: data.environment_key,
       });
     }
 
     return formatPage(page.rows[0]);
   };
-  static update: PageUpdate = async (id, data, req) => {
+  static update: PageUpdate = async (authId, environment_key, id, data) => {
     const pageId = parseInt(id);
 
     // -------------------------------------------
@@ -390,14 +389,14 @@ export default class Page {
     // Check if the the parent_id is the homepage
     await Page.#checkParentNotHomepage({
       parent_id: data.parent_id || null,
-      environment_key: req.headers["lucid-environment"] as string,
+      environment_key: environment_key,
     });
     // Check if the parent is in the same collection
     if (parentId) {
       await Page.#isParentSameCollection({
         parent_id: parentId,
         collection_key: currentPage.collection_key,
-        environment_key: req.headers["lucid-environment"] as string,
+        environment_key: environment_key,
       });
     }
 
@@ -410,7 +409,7 @@ export default class Page {
       newSlug = await Page.#slugUnique({
         slug: data.slug,
         homepage: data.homepage || false,
-        environment_key: req.headers["lucid-environment"] as string,
+        environment_key: environment_key,
         collection_key: currentPage.collection_key,
         parent_id: parentId,
       });
@@ -433,7 +432,7 @@ export default class Page {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? req.auth.id : null,
+        data.published ? authId : null,
         parentId,
         data.homepage,
       ],

@@ -3,12 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const zod_1 = __importDefault(require("zod"));
 const build_response_1 = __importDefault(require("../../services/controllers/build-response"));
 const Environment_1 = __importDefault(require("../../db/models/Environment"));
-const body = zod_1.default.object({});
-const query = zod_1.default.object({});
-const params = zod_1.default.object({});
+const environments_1 = __importDefault(require("../../schemas/environments"));
 const getAll = async (req, res, next) => {
     try {
         const environments = await Environment_1.default.getAll();
@@ -21,11 +18,7 @@ const getAll = async (req, res, next) => {
     }
 };
 exports.default = {
-    schema: {
-        body,
-        query,
-        params,
-    },
+    schema: environments_1.default.getAll,
     controller: getAll,
 };
 //# sourceMappingURL=get-all.js.map

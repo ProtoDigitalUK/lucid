@@ -1,41 +1,40 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{
-            assigned_bricks: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-            assigned_collections: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-        }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{
+            assigned_bricks: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
+            assigned_collections: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
+        }, "strip", import("zod").ZodTypeAny, {
             assigned_bricks?: string[] | undefined;
             assigned_collections?: string[] | undefined;
         }, {
             assigned_bricks?: string[] | undefined;
             assigned_collections?: string[] | undefined;
         }>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{
-            key: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
+        query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{
+            key: import("zod").ZodString;
+        }, "strip", import("zod").ZodTypeAny, {
             key: string;
         }, {
             key: string;
         }>;
     };
-    controller: Controller<z.ZodObject<{
-        key: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{
+        key: import("zod").ZodString;
+    }, "strip", import("zod").ZodTypeAny, {
         key: string;
     }, {
         key: string;
-    }>, z.ZodObject<{
-        assigned_bricks: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-        assigned_collections: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-    }, "strip", z.ZodTypeAny, {
+    }>, import("zod").ZodObject<{
+        assigned_bricks: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
+        assigned_collections: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
+    }, "strip", import("zod").ZodTypeAny, {
         assigned_bricks?: string[] | undefined;
         assigned_collections?: string[] | undefined;
     }, {
         assigned_bricks?: string[] | undefined;
         assigned_collections?: string[] | undefined;
-    }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;
+    }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;
 //# sourceMappingURL=update-single.d.ts.map

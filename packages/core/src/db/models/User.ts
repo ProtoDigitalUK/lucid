@@ -23,7 +23,10 @@ type UserAccountReset = (
 
 type UserGetById = (id: string) => Promise<UserT>;
 
-type UserLogin = (username: string, password: string) => Promise<UserT>;
+type UserLogin = (data: {
+  username: string;
+  password: string;
+}) => Promise<UserT>;
 
 // -------------------------------------------
 // User
@@ -132,12 +135,12 @@ export default class User {
     delete user.rows[0].password;
     return user.rows[0];
   };
-  static login: UserLogin = async (username, password) => {
+  static login: UserLogin = async (data) => {
     // double submit cooki - csrf protection
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
     const user = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE username = $1`,
-      values: [username],
+      values: [data.username],
     });
 
     if (!user.rows[0] || !user.rows[0].password) {
@@ -149,7 +152,10 @@ export default class User {
       });
     }
 
-    const passwordValid = await argon2.verify(user.rows[0].password, password);
+    const passwordValid = await argon2.verify(
+      user.rows[0].password,
+      data.password
+    );
 
     if (!passwordValid) {
       throw new LucidError({

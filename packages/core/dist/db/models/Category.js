@@ -11,8 +11,8 @@ const query_helpers_1 = require("../../utils/query-helpers");
 class Category {
 }
 _a = Category;
-Category.getMultiple = async (req) => {
-    const { filter, sort, page, per_page } = req.query;
+Category.getMultiple = async (environment_key, query) => {
+    const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
             "id",
@@ -28,7 +28,7 @@ Category.getMultiple = async (req) => {
         filter: {
             data: {
                 ...filter,
-                environment_key: req.headers["lucid-environment"],
+                environment_key: environment_key,
             },
             meta: {
                 collection_key: {
@@ -65,10 +65,10 @@ Category.getMultiple = async (req) => {
         count: count.rows[0].count,
     };
 };
-Category.getSingle = async (id, req) => {
+Category.getSingle = async (environment_key, id) => {
     const category = await db_1.default.query({
         text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
-        values: [id, req.headers["lucid-environment"]],
+        values: [id, environment_key],
     });
     if (!category.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -86,12 +86,12 @@ Category.getSingle = async (id, req) => {
     }
     return category.rows[0];
 };
-Category.create = async (data, req) => {
-    await Collection_1.default.getSingle(data.collection_key, "pages", req.headers["lucid-environment"]);
+Category.create = async (data) => {
+    await Collection_1.default.getSingle(data.collection_key, "pages", data.environment_key);
     const isSlugUnique = await Category.isSlugUniqueInCollection({
         collection_key: data.collection_key,
         slug: data.slug,
-        environment_key: req.headers["lucid-environment"],
+        environment_key: data.environment_key,
     });
     if (!isSlugUnique) {
         throw new error_handler_1.LucidError({
@@ -108,7 +108,7 @@ Category.create = async (data, req) => {
         });
     }
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["environment_key", "collection_key", "title", "slug", "description"], [
-        req.headers["lucid-environment"],
+        data.environment_key,
         data.collection_key,
         data.title,
         data.slug,
@@ -130,13 +130,13 @@ Category.create = async (data, req) => {
     }
     return category;
 };
-Category.update = async (id, data, req) => {
-    const currentCategory = await Category.getSingle(id, req);
+Category.update = async (environment_key, id, data) => {
+    const currentCategory = await Category.getSingle(environment_key, id);
     if (data.slug) {
         const isSlugUnique = await Category.isSlugUniqueInCollection({
             collection_key: currentCategory.collection_key,
             slug: data.slug,
-            environment_key: req.headers["lucid-environment"],
+            environment_key: environment_key,
             ignore_id: id,
         });
         if (!isSlugUnique) {
@@ -157,13 +157,7 @@ Category.update = async (id, data, req) => {
     const category = await db_1.default.query({
         name: "update-category",
         text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
-        values: [
-            data.title,
-            data.slug,
-            data.description,
-            id,
-            req.headers["lucid-environment"],
-        ],
+        values: [data.title, data.slug, data.description, id, environment_key],
     });
     if (!category.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -175,11 +169,11 @@ Category.update = async (id, data, req) => {
     }
     return category.rows[0];
 };
-Category.delete = async (id, req) => {
+Category.delete = async (environment_key, id) => {
     const category = await db_1.default.query({
         name: "delete-category",
         text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
-        values: [id, req.headers["lucid-environment"]],
+        values: [id, environment_key],
     });
     if (!category.rows[0]) {
         throw new error_handler_1.LucidError({

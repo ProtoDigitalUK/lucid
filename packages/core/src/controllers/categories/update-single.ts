@@ -14,13 +14,13 @@ const updateSingle: Controller<
 > = async (req, res, next) => {
   try {
     const category = await Category.update(
+      req.headers["lucid-environment"] as string,
       parseInt(req.params.id),
       {
         title: req.body.title,
         slug: req.body.slug,
         description: req.body.description,
-      },
-      req
+      }
     );
 
     res.status(200).json(

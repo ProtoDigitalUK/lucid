@@ -1,31 +1,30 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{
-            filter: z.ZodOptional<z.ZodObject<{
-                collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
-                title: z.ZodOptional<z.ZodString>;
-            }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        query: import("zod").ZodObject<{
+            filter: import("zod").ZodOptional<import("zod").ZodObject<{
+                collection_key: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
+                title: import("zod").ZodOptional<import("zod").ZodString>;
+            }, "strip", import("zod").ZodTypeAny, {
                 collection_key?: string | string[] | undefined;
                 title?: string | undefined;
             }, {
                 collection_key?: string | string[] | undefined;
                 title?: string | undefined;
             }>>;
-            sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                key: z.ZodEnum<["title", "created_at"]>;
-                value: z.ZodEnum<["asc", "desc"]>;
-            }, "strip", z.ZodTypeAny, {
+            sort: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
+                key: import("zod").ZodEnum<["title", "created_at"]>;
+                value: import("zod").ZodEnum<["asc", "desc"]>;
+            }, "strip", import("zod").ZodTypeAny, {
                 value: "asc" | "desc";
                 key: "title" | "created_at";
             }, {
                 value: "asc" | "desc";
                 key: "title" | "created_at";
             }>, "many">>;
-            page: z.ZodOptional<z.ZodString>;
-            per_page: z.ZodOptional<z.ZodString>;
-        }, "strip", z.ZodTypeAny, {
+            page: import("zod").ZodOptional<import("zod").ZodString>;
+            per_page: import("zod").ZodOptional<import("zod").ZodString>;
+        }, "strip", import("zod").ZodTypeAny, {
             filter?: {
                 collection_key?: string | string[] | undefined;
                 title?: string | undefined;
@@ -48,32 +47,32 @@ declare const _default: {
             page?: string | undefined;
             per_page?: string | undefined;
         }>;
-        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
-    controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
-        filter: z.ZodOptional<z.ZodObject<{
-            collection_key: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
-            title: z.ZodOptional<z.ZodString>;
-        }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
+        filter: import("zod").ZodOptional<import("zod").ZodObject<{
+            collection_key: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
+            title: import("zod").ZodOptional<import("zod").ZodString>;
+        }, "strip", import("zod").ZodTypeAny, {
             collection_key?: string | string[] | undefined;
             title?: string | undefined;
         }, {
             collection_key?: string | string[] | undefined;
             title?: string | undefined;
         }>>;
-        sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            key: z.ZodEnum<["title", "created_at"]>;
-            value: z.ZodEnum<["asc", "desc"]>;
-        }, "strip", z.ZodTypeAny, {
+        sort: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
+            key: import("zod").ZodEnum<["title", "created_at"]>;
+            value: import("zod").ZodEnum<["asc", "desc"]>;
+        }, "strip", import("zod").ZodTypeAny, {
             value: "asc" | "desc";
             key: "title" | "created_at";
         }, {
             value: "asc" | "desc";
             key: "title" | "created_at";
         }>, "many">>;
-        page: z.ZodOptional<z.ZodString>;
-        per_page: z.ZodOptional<z.ZodString>;
-    }, "strip", z.ZodTypeAny, {
+        page: import("zod").ZodOptional<import("zod").ZodString>;
+        per_page: import("zod").ZodOptional<import("zod").ZodString>;
+    }, "strip", import("zod").ZodTypeAny, {
         filter?: {
             collection_key?: string | string[] | undefined;
             title?: string | undefined;

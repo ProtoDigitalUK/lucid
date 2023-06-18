@@ -1,12 +1,7 @@
+import z from "zod";
 import { CollectionBuilderT } from "@lucid/collection-builder";
-interface QueryParams extends ModelQueryParams {
-    filter?: {
-        type?: string;
-        environment_key?: string;
-        environment_collections?: Array<string>;
-    };
-}
-type CollectionGetAll = (query: QueryParams) => Promise<CollectionT[]>;
+import collectionSchema from "../../schemas/collections";
+type CollectionGetAll = (query: z.infer<typeof collectionSchema.getAll.query>) => Promise<CollectionT[]>;
 type CollectionVerifyType = (key: string, type: string, environment_key: string) => Promise<CollectionT>;
 export type CollectionT = {
     key: string;

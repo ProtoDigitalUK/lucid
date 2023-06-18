@@ -14,8 +14,8 @@ const getSingle: Controller<
 > = async (req, res, next) => {
   try {
     const brick = await BrickConfig.getSingle(
-      req.params.key,
-      req.headers["lucid-environment"] as string
+      req.headers["lucid-environment"] as string,
+      req.params.key
     );
 
     res.status(200).json(

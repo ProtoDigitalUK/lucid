@@ -1,1 +1,1 @@
-{"version":3,"file":"get-csrf.d.ts","sourceRoot":"","sources":["../../../src/controllers/auth/get-csrf.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;;;;;;;;;AAmCpB,wBAOE"}
+{"version":3,"file":"get-csrf.d.ts","sourceRoot":"","sources":["../../../src/controllers/auth/get-csrf.ts"],"names":[],"mappings":";;;;;;;;AA8BA,wBAGE"}

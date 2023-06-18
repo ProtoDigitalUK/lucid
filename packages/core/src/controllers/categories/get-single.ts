@@ -13,7 +13,10 @@ const getSingle: Controller<
   typeof categorySchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await Category.getSingle(parseInt(req.params.id), req);
+    const category = await Category.getSingle(
+      req.headers["lucid-environment"] as string,
+      parseInt(req.params.id)
+    );
 
     res.status(200).json(
       buildResponse(req, {

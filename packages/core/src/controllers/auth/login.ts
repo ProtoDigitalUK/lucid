@@ -14,7 +14,10 @@ const login: Controller<
   typeof authSchema.login.query
 > = async (req, res, next) => {
   try {
-    const user = await User.login(req.body.username, req.body.password);
+    const user = await User.login({
+      username: req.body.username,
+      password: req.body.password,
+    });
     generateJWT(res, user);
 
     res.status(200).json(buildResponse(req, { data: user }));

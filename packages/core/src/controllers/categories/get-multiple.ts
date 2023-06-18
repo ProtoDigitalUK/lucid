@@ -13,7 +13,10 @@ const getMultiple: Controller<
   typeof categorySchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const categories = await Category.getMultiple(req);
+    const categories = await Category.getMultiple(
+      req.headers["lucid-environment"] as string,
+      req.query
+    );
 
     res.status(200).json(
       buildResponse(req, {

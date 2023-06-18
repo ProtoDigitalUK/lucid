@@ -1,11 +1,10 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{
-            title: z.ZodOptional<z.ZodString>;
-            slug: z.ZodOptional<z.ZodString>;
-            description: z.ZodOptional<z.ZodString>;
-        }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{
+            title: import("zod").ZodOptional<import("zod").ZodString>;
+            slug: import("zod").ZodOptional<import("zod").ZodString>;
+            description: import("zod").ZodOptional<import("zod").ZodString>;
+        }, "strip", import("zod").ZodTypeAny, {
             title?: string | undefined;
             slug?: string | undefined;
             description?: string | undefined;
@@ -14,26 +13,26 @@ declare const _default: {
             slug?: string | undefined;
             description?: string | undefined;
         }>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{
-            id: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
+        query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{
+            id: import("zod").ZodString;
+        }, "strip", import("zod").ZodTypeAny, {
             id: string;
         }, {
             id: string;
         }>;
     };
-    controller: Controller<z.ZodObject<{
-        id: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{
+        id: import("zod").ZodString;
+    }, "strip", import("zod").ZodTypeAny, {
         id: string;
     }, {
         id: string;
-    }>, z.ZodObject<{
-        title: z.ZodOptional<z.ZodString>;
-        slug: z.ZodOptional<z.ZodString>;
-        description: z.ZodOptional<z.ZodString>;
-    }, "strip", z.ZodTypeAny, {
+    }>, import("zod").ZodObject<{
+        title: import("zod").ZodOptional<import("zod").ZodString>;
+        slug: import("zod").ZodOptional<import("zod").ZodString>;
+        description: import("zod").ZodOptional<import("zod").ZodString>;
+    }, "strip", import("zod").ZodTypeAny, {
         title?: string | undefined;
         slug?: string | undefined;
         description?: string | undefined;
@@ -41,7 +40,7 @@ declare const _default: {
         title?: string | undefined;
         slug?: string | undefined;
         description?: string | undefined;
-    }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;
+    }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;
 //# sourceMappingURL=update-single.d.ts.map

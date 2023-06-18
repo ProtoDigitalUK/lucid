@@ -1,11 +1,10 @@
 import z from "zod";
 declare const _default: {
-    schema: {
+    getHealth: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
     };
-    controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;
 };
 export default _default;
-//# sourceMappingURL=throw-error.d.ts.map
+//# sourceMappingURL=health.d.ts.map

@@ -14,6 +14,8 @@ const updateSingle: Controller<
 > = async (req, res, next) => {
   try {
     const page = await Page.update(
+      req.auth.id,
+      req.headers["lucid-environment"] as string,
       req.params.id,
       {
         title: req.body.title,
@@ -24,8 +26,7 @@ const updateSingle: Controller<
         published: req.body.published,
         excerpt: req.body.excerpt,
         bricks: req.body.bricks,
-      },
-      req
+      }
     );
 
     res.status(200).json(

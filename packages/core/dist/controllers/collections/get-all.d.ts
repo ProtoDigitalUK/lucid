@@ -1,19 +1,18 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{
-            filter: z.ZodOptional<z.ZodObject<{
-                type: z.ZodOptional<z.ZodEnum<["pages", "group"]>>;
-                environment_key: z.ZodOptional<z.ZodString>;
-            }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        query: import("zod").ZodObject<{
+            filter: import("zod").ZodOptional<import("zod").ZodObject<{
+                type: import("zod").ZodOptional<import("zod").ZodEnum<["pages", "group"]>>;
+                environment_key: import("zod").ZodOptional<import("zod").ZodString>;
+            }, "strip", import("zod").ZodTypeAny, {
                 type?: "pages" | "group" | undefined;
                 environment_key?: string | undefined;
             }, {
                 type?: "pages" | "group" | undefined;
                 environment_key?: string | undefined;
             }>>;
-        }, "strip", z.ZodTypeAny, {
+        }, "strip", import("zod").ZodTypeAny, {
             filter?: {
                 type?: "pages" | "group" | undefined;
                 environment_key?: string | undefined;
@@ -24,20 +23,20 @@ declare const _default: {
                 environment_key?: string | undefined;
             } | undefined;
         }>;
-        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
-    controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
-        filter: z.ZodOptional<z.ZodObject<{
-            type: z.ZodOptional<z.ZodEnum<["pages", "group"]>>;
-            environment_key: z.ZodOptional<z.ZodString>;
-        }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
+        filter: import("zod").ZodOptional<import("zod").ZodObject<{
+            type: import("zod").ZodOptional<import("zod").ZodEnum<["pages", "group"]>>;
+            environment_key: import("zod").ZodOptional<import("zod").ZodString>;
+        }, "strip", import("zod").ZodTypeAny, {
             type?: "pages" | "group" | undefined;
             environment_key?: string | undefined;
         }, {
             type?: "pages" | "group" | undefined;
             environment_key?: string | undefined;
         }>>;
-    }, "strip", z.ZodTypeAny, {
+    }, "strip", import("zod").ZodTypeAny, {
         filter?: {
             type?: "pages" | "group" | undefined;
             environment_key?: string | undefined;

@@ -14,8 +14,8 @@ const getMultiple: Controller<
 > = async (req, res, next) => {
   try {
     const pages = await Page.getMultiple(
-      req.query,
-      req.headers["lucid-environment"] as string
+      req.headers["lucid-environment"] as string,
+      req.query
     );
 
     res.status(200).json(

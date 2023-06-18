@@ -13,7 +13,10 @@ const deleteSingle: Controller<
   typeof categorySchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await Category.delete(parseInt(req.params.id), req);
+    const category = await Category.delete(
+      req.headers["lucid-environment"] as string,
+      parseInt(req.params.id)
+    );
 
     res.status(200).json(
       buildResponse(req, {

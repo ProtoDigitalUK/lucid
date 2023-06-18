@@ -10,7 +10,10 @@ type UserAccountReset = (id: string, data: {
     username?: string;
 }) => Promise<UserT>;
 type UserGetById = (id: string) => Promise<UserT>;
-type UserLogin = (username: string, password: string) => Promise<UserT>;
+type UserLogin = (data: {
+    username: string;
+    password: string;
+}) => Promise<UserT>;
 export type UserT = {
     id: string;
     email: string;

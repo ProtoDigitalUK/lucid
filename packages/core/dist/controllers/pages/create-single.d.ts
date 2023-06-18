@@ -1,16 +1,15 @@
-import z from "zod";
 declare const _default: {
     schema: {
-        body: z.ZodObject<{
-            title: z.ZodString;
-            slug: z.ZodString;
-            collection_key: z.ZodString;
-            homepage: z.ZodOptional<z.ZodBoolean>;
-            excerpt: z.ZodOptional<z.ZodString>;
-            published: z.ZodOptional<z.ZodBoolean>;
-            parent_id: z.ZodOptional<z.ZodNumber>;
-            category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
-        }, "strip", z.ZodTypeAny, {
+        body: import("zod").ZodObject<{
+            title: import("zod").ZodString;
+            slug: import("zod").ZodString;
+            collection_key: import("zod").ZodString;
+            homepage: import("zod").ZodOptional<import("zod").ZodBoolean>;
+            excerpt: import("zod").ZodOptional<import("zod").ZodString>;
+            published: import("zod").ZodOptional<import("zod").ZodBoolean>;
+            parent_id: import("zod").ZodOptional<import("zod").ZodNumber>;
+            category_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
+        }, "strip", import("zod").ZodTypeAny, {
             title: string;
             collection_key: string;
             slug: string;
@@ -29,19 +28,19 @@ declare const _default: {
             parent_id?: number | undefined;
             category_ids?: number[] | undefined;
         }>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
+        params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
-    controller: Controller<z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>, z.ZodObject<{
-        title: z.ZodString;
-        slug: z.ZodString;
-        collection_key: z.ZodString;
-        homepage: z.ZodOptional<z.ZodBoolean>;
-        excerpt: z.ZodOptional<z.ZodString>;
-        published: z.ZodOptional<z.ZodBoolean>;
-        parent_id: z.ZodOptional<z.ZodNumber>;
-        category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
-    }, "strip", z.ZodTypeAny, {
+    controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
+        title: import("zod").ZodString;
+        slug: import("zod").ZodString;
+        collection_key: import("zod").ZodString;
+        homepage: import("zod").ZodOptional<import("zod").ZodBoolean>;
+        excerpt: import("zod").ZodOptional<import("zod").ZodString>;
+        published: import("zod").ZodOptional<import("zod").ZodBoolean>;
+        parent_id: import("zod").ZodOptional<import("zod").ZodNumber>;
+        category_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
+    }, "strip", import("zod").ZodTypeAny, {
         title: string;
         collection_key: string;
         slug: string;
@@ -59,7 +58,7 @@ declare const _default: {
         published?: boolean | undefined;
         parent_id?: number | undefined;
         category_ids?: number[] | undefined;
-    }>, z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>>;
+    }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;
 //# sourceMappingURL=create-single.d.ts.map

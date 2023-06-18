@@ -20,8 +20,8 @@ const query_helpers_1 = require("../../utils/query-helpers");
 class Page {
 }
 _a = Page;
-Page.getMultiple = async (req) => {
-    const { filter, sort, page, per_page } = req.query;
+Page.getMultiple = async (environment_key, query) => {
+    const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
             "id",
@@ -44,7 +44,7 @@ Page.getMultiple = async (req) => {
         filter: {
             data: {
                 ...filter,
-                environment_key: req.headers["lucid-environment"],
+                environment_key: environment_key,
             },
             meta: {
                 collection_key: {
@@ -112,8 +112,8 @@ Page.getMultiple = async (req) => {
         count: count.rows[0].count,
     };
 };
-Page.getSingle = async (id, req) => {
-    const { include } = req.query;
+Page.getSingle = async (environment_key, id, query) => {
+    const { include } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
             "id",
@@ -136,7 +136,7 @@ Page.getSingle = async (id, req) => {
         filter: {
             data: {
                 id: id,
-                environment_key: req.headers["lucid-environment"],
+                environment_key: environment_key,
             },
             meta: {
                 id: {
@@ -172,37 +172,37 @@ Page.getSingle = async (id, req) => {
         });
     }
     if (include && include.includes("bricks")) {
-        const collection = await Collection_1.default.getSingle(page.rows[0].collection_key, "pages", req.headers["lucid-environment"]);
-        const pageBricks = await BrickData_1.default.getAll("page", page.rows[0].id, req.headers["lucid-environment"], collection);
+        const collection = await Collection_1.default.getSingle(page.rows[0].collection_key, "pages", environment_key);
+        const pageBricks = await BrickData_1.default.getAll("page", page.rows[0].id, environment_key, collection);
         page.rows[0].bricks = pageBricks;
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.create = async (data, req) => {
+Page.create = async (authId, data) => {
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
-    await Collection_1.default.getSingle(data.collection_key, "pages", req.headers["lucid-environment"]);
+    await Collection_1.default.getSingle(data.collection_key, "pages", data.environment_key);
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
-        environment_key: req.headers["lucid-environment"],
+        environment_key: data.environment_key,
     });
     if (parentId) {
         await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, {
             parent_id: parentId,
             collection_key: data.collection_key,
-            environment_key: req.headers["lucid-environment"],
+            environment_key: data.environment_key,
         });
     }
     const slug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
         slug: data.slug,
         homepage: data.homepage || false,
-        environment_key: req.headers["lucid-environment"],
+        environment_key: data.environment_key,
         collection_key: data.collection_key,
         parent_id: parentId,
     });
     const page = await db_1.default.query({
         text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         values: [
-            req.headers["lucid-environment"],
+            data.environment_key,
             data.title,
             slug,
             data.homepage || false,
@@ -210,7 +210,7 @@ Page.create = async (data, req) => {
             data.excerpt || null,
             data.published || false,
             parentId,
-            req.auth.id,
+            authId,
         ],
     });
     if (!page.rows[0]) {
@@ -231,12 +231,12 @@ Page.create = async (data, req) => {
     if (data.homepage) {
         await __classPrivateFieldGet(Page, _a, "f", _Page_resetHomepages).call(Page, {
             current: page.rows[0].id,
-            environment_key: req.headers["lucid-environment"],
+            environment_key: data.environment_key,
         });
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.update = async (id, data, req) => {
+Page.update = async (authId, environment_key, id, data) => {
     const pageId = parseInt(id);
     const currentPageRes = await db_1.default.query({
         text: `SELECT
@@ -266,13 +266,13 @@ Page.update = async (id, data, req) => {
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
-        environment_key: req.headers["lucid-environment"],
+        environment_key: environment_key,
     });
     if (parentId) {
         await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, {
             parent_id: parentId,
             collection_key: currentPage.collection_key,
-            environment_key: req.headers["lucid-environment"],
+            environment_key: environment_key,
         });
     }
     let newSlug = undefined;
@@ -280,7 +280,7 @@ Page.update = async (id, data, req) => {
         newSlug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
             slug: data.slug,
             homepage: data.homepage || false,
-            environment_key: req.headers["lucid-environment"],
+            environment_key: environment_key,
             collection_key: currentPage.collection_key,
             parent_id: parentId,
         });
@@ -300,7 +300,7 @@ Page.update = async (id, data, req) => {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? req.auth.id : null,
+        data.published ? authId : null,
         parentId,
         data.homepage,
     ], {

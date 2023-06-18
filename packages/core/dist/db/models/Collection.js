@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Collection_filterCollections;
+var _a, _Collection_filterCollections, _Collection_filterEnvrionmentCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
@@ -19,13 +19,12 @@ Collection.getAll = async (query) => {
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances)
         return [];
-    const collections = await Promise.all(collectionInstances.map((collection) => Collection.getCollectionData(collection)));
+    let collections = await Promise.all(collectionInstances.map((collection) => Collection.getCollectionData(collection)));
     if (!query.filter)
         return collections;
     if (query.filter.environment_key) {
         const environment = await Environment_1.default.getSingle(query.filter.environment_key);
-        query.filter.environment_collections =
-            environment.assigned_collections || [];
+        collections = __classPrivateFieldGet(Collection, _a, "f", _Collection_filterEnvrionmentCollections).call(Collection, environment.assigned_collections || [], collections);
     }
     return __classPrivateFieldGet(Collection, _a, "f", _Collection_filterCollections).call(Collection, query.filter, collections);
 };
@@ -84,14 +83,14 @@ _Collection_filterCollections = { value: (filter, collections) => {
                 case "type":
                     filtered = filtered.filter((collection) => collection.type === filter.type);
                     break;
-                case "environment_collections":
-                    filtered = filtered.filter((collection) => filter.environment_collections?.includes(collection.key));
-                    break;
                 default:
                     break;
             }
         });
         return filtered;
+    } };
+_Collection_filterEnvrionmentCollections = { value: (environment_collections, collections) => {
+        return collections.filter((collection) => environment_collections.includes(collection.key));
     } };
 exports.default = Collection;
 //# sourceMappingURL=Collection.js.map

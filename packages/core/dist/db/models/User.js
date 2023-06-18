@@ -84,10 +84,10 @@ User.getById = async (id) => {
     delete user.rows[0].password;
     return user.rows[0];
 };
-User.login = async (username, password) => {
+User.login = async (data) => {
     const user = await db_1.default.query({
         text: `SELECT * FROM lucid_users WHERE username = $1`,
-        values: [username],
+        values: [data.username],
     });
     if (!user.rows[0] || !user.rows[0].password) {
         throw new error_handler_1.LucidError({
@@ -97,7 +97,7 @@ User.login = async (username, password) => {
             status: 500,
         });
     }
-    const passwordValid = await argon2_1.default.verify(user.rows[0].password, password);
+    const passwordValid = await argon2_1.default.verify(user.rows[0].password, data.password);
     if (!passwordValid) {
         throw new error_handler_1.LucidError({
             type: "basic",
