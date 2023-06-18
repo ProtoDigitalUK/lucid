@@ -30,7 +30,7 @@ type PageGetSingle = (
 ) => Promise<PageT>;
 
 type PageCreate = (
-  authId: string,
+  userId: string,
   data: {
     environment_key: string;
     title: string;
@@ -45,7 +45,7 @@ type PageCreate = (
 ) => Promise<PageT>;
 
 type PageUpdate = (
-  authId: string,
+  userId: string,
   environment_key: string,
   id: string,
   data: {
@@ -236,10 +236,14 @@ export default class Page {
 
     const page = await client.query<PageT>({
       text: `SELECT
-        ${SelectQuery.query.select}
+        ${SelectQuery.query.select},
+        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
-        ${SelectQuery.query.where}`,
+        LEFT JOIN
+          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        ${SelectQuery.query.where}
+        GROUP BY lucid_pages.id`,
       values: SelectQuery.values,
     });
 
@@ -270,7 +274,7 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
-  static create: PageCreate = async (authId, data) => {
+  static create: PageCreate = async (userId, data) => {
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
@@ -321,7 +325,7 @@ export default class Page {
         data.excerpt || null,
         data.published || false,
         parentId,
-        authId,
+        userId,
       ],
     });
 
@@ -352,7 +356,7 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
-  static update: PageUpdate = async (authId, environment_key, id, data) => {
+  static update: PageUpdate = async (userId, environment_key, id, data) => {
     const pageId = parseInt(id);
 
     // -------------------------------------------
@@ -432,7 +436,7 @@ export default class Page {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? authId : null,
+        data.published ? userId : null,
         parentId,
         data.homepage,
       ],
