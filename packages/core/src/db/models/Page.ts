@@ -60,6 +60,8 @@ type PageUpdate = (
   }
 ) => Promise<PageT>;
 
+type PageDelete = (environment_key: string, id: string) => Promise<PageT>;
+
 // -------------------------------------------
 // User
 export type PageT = {
@@ -361,31 +363,7 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    const currentPageRes = await client.query<PageT>({
-      text: `SELECT
-          id,
-          parent_id,
-          collection_key,
-          title,
-          slug,
-          homepage,
-          excerpt,
-          published
-        FROM
-          lucid_pages
-        WHERE
-          id = $1`,
-      values: [id],
-    });
-    const currentPage = currentPageRes.rows[0];
-    if (!currentPage) {
-      throw new LucidError({
-        type: "basic",
-        name: "Page not found",
-        message: `Page with id "${id}" not found`,
-        status: 404,
-      });
-    }
+    const currentPage = await Page.#pageExists(pageId, environment_key);
 
     // Set parent id to null if homepage as homepage has to be root level
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
@@ -494,8 +472,58 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
+  static delete: PageDelete = async (environment_key, id) => {
+    const pageId = parseInt(id);
+
+    // -------------------------------------------
+    // Checks
+    await Page.#pageExists(pageId, environment_key);
+
+    // -------------------------------------------
+    // Delete page
+    const page = await client.query<PageT>({
+      text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
+      values: [pageId],
+    });
+
+    if (!page.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Page Not Deleted",
+        message: "There was an error deleting the page",
+        status: 500,
+      });
+    }
+
+    return formatPage(page.rows[0]);
+  };
   // -------------------------------------------
   // Util Methods
+  static #pageExists = async (id: number, environment_key: string) => {
+    const page = await client.query<PageT>({
+      text: `SELECT
+          id,
+          collection_key
+        FROM
+          lucid_pages
+        WHERE
+          id = $1
+        AND
+          environment_key = $2`,
+      values: [id, environment_key],
+    });
+
+    if (!page.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Page not found",
+        message: `Page with id "${id}" not found in environment "${environment_key}"!`,
+        status: 404,
+      });
+    }
+
+    return page.rows[0];
+  };
   static #slugUnique = async (data: {
     slug: string;
     homepage: boolean;

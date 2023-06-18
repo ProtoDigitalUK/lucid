@@ -5,6 +5,7 @@ import createSingle from "@controllers/pages/create-single";
 import getMultiple from "@controllers/pages/get-multiple";
 import getSingle from "@controllers/pages/get-single";
 import updateSingle from "@controllers/pages/update-single";
+import deleteSingle from "@controllers/pages/delete-single";
 
 // ------------------------------------
 // Router
@@ -58,6 +59,18 @@ r(router, {
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/:id",
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: deleteSingle.schema,
+  controller: deleteSingle.controller,
 });
 
 export default router;
