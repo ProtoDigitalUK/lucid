@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Collection_filterCollections, _Collection_filterEnvrionmentCollections;
+var _a, _Collection_filterCollections, _Collection_filterEnvironmentCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
@@ -24,7 +24,7 @@ Collection.getAll = async (query) => {
         return collections;
     if (query.filter.environment_key) {
         const environment = await Environment_1.default.getSingle(query.filter.environment_key);
-        collections = __classPrivateFieldGet(Collection, _a, "f", _Collection_filterEnvrionmentCollections).call(Collection, environment.assigned_collections || [], collections);
+        collections = __classPrivateFieldGet(Collection, _a, "f", _Collection_filterEnvironmentCollections).call(Collection, environment.assigned_collections || [], collections);
     }
     return __classPrivateFieldGet(Collection, _a, "f", _Collection_filterCollections).call(Collection, query.filter, collections);
 };
@@ -34,7 +34,7 @@ Collection.getSingle = async (key, type, environment_key) => {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Collection not found",
-            message: `Collection with key "${key}" and of type "${type}" under envrionment "${environment_key}" not found`,
+            message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
             status: 404,
         });
     }
@@ -48,7 +48,7 @@ Collection.getSingle = async (key, type, environment_key) => {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Collection not found",
-            message: `Collection with key "${key}" and of type "${type}" under envrionment "${environment_key}" not found`,
+            message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
             status: 404,
         });
     }
@@ -89,7 +89,7 @@ _Collection_filterCollections = { value: (filter, collections) => {
         });
         return filtered;
     } };
-_Collection_filterEnvrionmentCollections = { value: (environment_collections, collections) => {
+_Collection_filterEnvironmentCollections = { value: (environment_collections, collections) => {
         return collections.filter((collection) => environment_collections.includes(collection.key));
     } };
 exports.default = Collection;

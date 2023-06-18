@@ -50,7 +50,7 @@ export default class Collection {
       const environment = await Environment.getSingle(
         query.filter.environment_key
       );
-      collections = Collection.#filterEnvrionmentCollections(
+      collections = Collection.#filterEnvironmentCollections(
         environment.assigned_collections || [],
         collections
       );
@@ -68,7 +68,7 @@ export default class Collection {
       throw new LucidError({
         type: "basic",
         name: "Collection not found",
-        message: `Collection with key "${key}" and of type "${type}" under envrionment "${environment_key}" not found`,
+        message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
         status: 404,
       });
     }
@@ -93,7 +93,7 @@ export default class Collection {
       throw new LucidError({
         type: "basic",
         name: "Collection not found",
-        message: `Collection with key "${key}" and of type "${type}" under envrionment "${environment_key}" not found`,
+        message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
         status: 404,
       });
     }
@@ -149,7 +149,7 @@ export default class Collection {
 
     return filtered;
   };
-  static #filterEnvrionmentCollections = (
+  static #filterEnvironmentCollections = (
     environment_collections: string[],
     collections: CollectionT[]
   ) => {

@@ -58,6 +58,11 @@ const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({
     id: zod_1.default.string(),
 });
+const deleteSingleBody = zod_1.default.object({});
+const deleteSingleQuery = zod_1.default.object({});
+const deleteSingleParams = zod_1.default.object({
+    id: zod_1.default.string(),
+});
 exports.default = {
     getMultiple: {
         body: getMultipleBody,
@@ -78,6 +83,11 @@ exports.default = {
         body: updateSingleBody,
         query: updateSingleQuery,
         params: updateSingleParams,
+    },
+    deleteSingle: {
+        body: deleteSingleBody,
+        query: deleteSingleQuery,
+        params: deleteSingleParams,
     },
 };
 //# sourceMappingURL=pages.js.map

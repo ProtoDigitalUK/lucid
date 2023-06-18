@@ -9,6 +9,7 @@ const create_single_1 = __importDefault(require("../../controllers/pages/create-
 const get_multiple_1 = __importDefault(require("../../controllers/pages/get-multiple"));
 const get_single_1 = __importDefault(require("../../controllers/pages/get-single"));
 const update_single_1 = __importDefault(require("../../controllers/pages/update-single"));
+const delete_single_1 = __importDefault(require("../../controllers/pages/delete-single"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "post",
@@ -55,6 +56,17 @@ const router = (0, express_1.Router)();
     },
     schema: update_single_1.default.schema,
     controller: update_single_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "delete",
+    path: "/:id",
+    middleware: {
+        authenticate: true,
+        authoriseCSRF: true,
+        validateEnvironment: true,
+    },
+    schema: delete_single_1.default.schema,
+    controller: delete_single_1.default.controller,
 });
 exports.default = router;
 //# sourceMappingURL=pages.routes.js.map

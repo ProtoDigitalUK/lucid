@@ -28,7 +28,7 @@ Environment.getSingle = async (key) => {
     if (environment.rows.length === 0) {
         throw new error_handler_1.LucidError({
             type: "basic",
-            name: "Envrionment not found",
+            name: "Environment not found",
             message: `Environment with key "${key}" not found`,
             status: 404,
         });

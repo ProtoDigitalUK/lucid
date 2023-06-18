@@ -49,7 +49,7 @@ export default class Environment {
     if (environment.rows.length === 0) {
       throw new LucidError({
         type: "basic",
-        name: "Envrionment not found",
+        name: "Environment not found",
         message: `Environment with key "${key}" not found`,
         status: 404,
       });

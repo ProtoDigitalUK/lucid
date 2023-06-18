@@ -1,14 +1,19 @@
-type GroupGetSingle = (collection_key: string) => Promise<GroupT>;
-type GroupCreateOrUpdate = (collection_key: string, bricks: any) => Promise<GroupT>;
+import BrickData, { BrickObject } from "../models/BrickData";
+type GroupGetSingle = (environment_key: string, collection_key: string) => Promise<GroupT>;
+type GroupUpdateSingle = (userId: string, environment_key: string, collection_key: string, bricks: Array<BrickObject>) => Promise<GroupT>;
 export type GroupT = {
     id: number;
+    environment_key: string;
     collection_key: string;
+    bricks?: Array<BrickData> | null;
     created_at: string;
     updated_at: string;
+    updated_by: string;
 };
 export default class Group {
+    #private;
     static getSingle: GroupGetSingle;
-    static createOrUpdate: GroupCreateOrUpdate;
+    static updateSingle: GroupUpdateSingle;
 }
 export {};
 //# sourceMappingURL=Group.d.ts.map

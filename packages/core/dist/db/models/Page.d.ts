@@ -6,7 +6,7 @@ type PageGetMultiple = (environment_key: string, query: z.infer<typeof pagesSche
     count: number;
 }>;
 type PageGetSingle = (environment_key: string, id: string, query: z.infer<typeof pagesSchema.getSingle.query>) => Promise<PageT>;
-type PageCreate = (authId: string, data: {
+type PageCreate = (userId: string, data: {
     environment_key: string;
     title: string;
     slug: string;
@@ -17,7 +17,7 @@ type PageCreate = (authId: string, data: {
     parent_id?: number;
     category_ids?: Array<number>;
 }) => Promise<PageT>;
-type PageUpdate = (authId: string, environment_key: string, id: string, data: {
+type PageUpdate = (userId: string, environment_key: string, id: string, data: {
     title?: string;
     slug?: string;
     homepage?: boolean;
@@ -27,6 +27,7 @@ type PageUpdate = (authId: string, environment_key: string, id: string, data: {
     excerpt?: string;
     bricks?: Array<BrickObject>;
 }) => Promise<PageT>;
+type PageDelete = (environment_key: string, id: string) => Promise<PageT>;
 export type PageT = {
     id: number;
     environment_key: string;
@@ -52,6 +53,7 @@ export default class Page {
     static getSingle: PageGetSingle;
     static create: PageCreate;
     static update: PageUpdate;
+    static delete: PageDelete;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

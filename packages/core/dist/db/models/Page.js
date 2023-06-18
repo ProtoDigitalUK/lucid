@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Page_slugUnique, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
+var _a, _Page_pageExists, _Page_slugUnique, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
@@ -157,10 +157,14 @@ Page.getSingle = async (environment_key, id, query) => {
     });
     const page = await db_1.default.query({
         text: `SELECT
-        ${SelectQuery.query.select}
+        ${SelectQuery.query.select},
+        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
-        ${SelectQuery.query.where}`,
+        LEFT JOIN
+          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        ${SelectQuery.query.where}
+        GROUP BY lucid_pages.id`,
         values: SelectQuery.values,
     });
     if (page.rows.length === 0) {
@@ -178,7 +182,7 @@ Page.getSingle = async (environment_key, id, query) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.create = async (authId, data) => {
+Page.create = async (userId, data) => {
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await Collection_1.default.getSingle(data.collection_key, "pages", data.environment_key);
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
@@ -210,7 +214,7 @@ Page.create = async (authId, data) => {
             data.excerpt || null,
             data.published || false,
             parentId,
-            authId,
+            userId,
         ],
     });
     if (!page.rows[0]) {
@@ -236,33 +240,9 @@ Page.create = async (authId, data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.update = async (authId, environment_key, id, data) => {
+Page.update = async (userId, environment_key, id, data) => {
     const pageId = parseInt(id);
-    const currentPageRes = await db_1.default.query({
-        text: `SELECT
-          id,
-          parent_id,
-          collection_key,
-          title,
-          slug,
-          homepage,
-          excerpt,
-          published
-        FROM
-          lucid_pages
-        WHERE
-          id = $1`,
-        values: [id],
-    });
-    const currentPage = currentPageRes.rows[0];
-    if (!currentPage) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Page not found",
-            message: `Page with id "${id}" not found`,
-            status: 404,
-        });
-    }
+    const currentPage = await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, environment_key);
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
@@ -300,7 +280,7 @@ Page.update = async (authId, environment_key, id, data) => {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? authId : null,
+        data.published ? userId : null,
         parentId,
         data.homepage,
     ], {
@@ -335,6 +315,46 @@ Page.update = async (authId, environment_key, id, data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
+Page.delete = async (environment_key, id) => {
+    const pageId = parseInt(id);
+    await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, environment_key);
+    const page = await db_1.default.query({
+        text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
+        values: [pageId],
+    });
+    if (!page.rows[0]) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Page Not Deleted",
+            message: "There was an error deleting the page",
+            status: 500,
+        });
+    }
+    return (0, format_page_1.default)(page.rows[0]);
+};
+_Page_pageExists = { value: async (id, environment_key) => {
+        const page = await db_1.default.query({
+            text: `SELECT
+          id,
+          collection_key
+        FROM
+          lucid_pages
+        WHERE
+          id = $1
+        AND
+          environment_key = $2`,
+            values: [id, environment_key],
+        });
+        if (!page.rows[0]) {
+            throw new error_handler_1.LucidError({
+                type: "basic",
+                name: "Page not found",
+                message: `Page with id "${id}" not found in environment "${environment_key}"!`,
+                status: 404,
+            });
+        }
+        return page.rows[0];
+    } };
 _Page_slugUnique = { value: async (data) => {
         if (data.homepage) {
             return "/";

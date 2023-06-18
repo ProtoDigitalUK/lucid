@@ -60,16 +60,6 @@ DROP TRIGGER IF EXISTS update_child_full_slug_trigger ON lucid_pages;
 CREATE TRIGGER update_child_full_slug_trigger AFTER UPDATE ON lucid_pages
 FOR EACH ROW WHEN (OLD.slug IS DISTINCT FROM NEW.slug) EXECUTE PROCEDURE update_child_full_slug();
 
--- GROUP TABLE - collection group type, is used as a intermediary table for the collections bricks
-CREATE TABLE IF NOT EXISTS lucid_groups (
-  id SERIAL PRIMARY KEY,
-  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
-  collection_key TEXT NOT NULL, -- unique to environment_key
-
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
 -- CATEGORIES TABLE
 CREATE TABLE IF NOT EXISTS lucid_categories (
   id SERIAL PRIMARY KEY,
@@ -89,4 +79,15 @@ CREATE TABLE IF NOT EXISTS lucid_page_categories (
   page_id INTEGER NOT NULL REFERENCES lucid_pages(id) ON DELETE CASCADE,
   category_id INTEGER NOT NULL REFERENCES lucid_categories(id) ON DELETE CASCADE,
   PRIMARY KEY (page_id, category_id)
+);
+
+-- GROUP TABLE - collection group type, is used as a intermediary table for the collections bricks
+CREATE TABLE IF NOT EXISTS lucid_groups (
+  id SERIAL PRIMARY KEY,
+  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
+  collection_key TEXT NOT NULL, -- unique to environment_key
+
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  updated_by UUID REFERENCES lucid_users(id) ON DELETE SET NULL
 );
