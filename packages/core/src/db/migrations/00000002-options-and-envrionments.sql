@@ -1,7 +1,6 @@
 -- SITE OPTIONS TABLE
 CREATE TABLE IF NOT EXISTS lucid_options (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  option_name TEXT UNIQUE NOT NULL,
+  option_name TEXT UNIQUE NOT NULL PRIMARY KEY,
   option_value TEXT NOT NULL,
   type TEXT NOT NULL,
   locked BOOLEAN DEFAULT false,

@@ -4,7 +4,6 @@ import Config from "@db/models/Config";
 import Environment from "@db/models/Environment";
 import User from "@db/models/User";
 import Option from "@db/models/Option";
-import Permission from "@db/models/Permission";
 
 /*
     Lucid stores an options table in the database to control certain aspects of the application,
@@ -29,13 +28,12 @@ const createInitialAdmin = async () => {
   if (typeof res.option_value === "boolean" && res.option_value) return;
 
   try {
-    const user = await User.register({
+    await User.register({
       email: "admin@example.com",
       username: "admin",
       password: "admin",
+      super_admin: true,
     });
-    // Add permissions to the user
-    await Permission.set(user.id, "admin");
     await Option.patchByName({
       name: "initial_user_created",
       value: true,

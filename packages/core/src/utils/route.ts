@@ -1,5 +1,7 @@
 import { Router } from "express";
 import z from "zod";
+// Models
+import { PermissionT } from "@db/models/RolePermission";
 // Middleware
 import validate from "@middleware/validate";
 import authenticate from "@middleware/authenticate";
@@ -18,7 +20,7 @@ type Route = <
   props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;
-    permissions?: Array<string>;
+    permissions?: Array<PermissionT>;
     middleware?: {
       authenticate?: boolean;
       authoriseCSRF?: boolean;

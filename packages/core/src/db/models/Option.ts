@@ -33,7 +33,6 @@ type OptionCreateOrPatchByName = (data: {
 // -------------------------------------------
 // User
 export type OptionT = {
-  id: string;
   option_name: OptionNames;
   option_value: OptionValue;
   type: OptionTypes;
@@ -101,8 +100,9 @@ export default class Option {
       values: [data.name],
     });
 
-    if (optionExisting.rows[0])
+    if (optionExisting.rows[0]) {
       return Option.convertToType(optionExisting.rows[0]);
+    }
 
     const option = await client.query<OptionT>({
       text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,

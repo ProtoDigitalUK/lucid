@@ -1,30 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
+// Models
+import { PermissionT } from "@db/models/RolePermission";
 
 // ------------------------------------
 // Validate Middleware
 const permissions =
-  (permissions: Array<string>) =>
+  (permissions: Array<PermissionT>) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const environment = req.headers["lucid-environment"];
-      if (!environment) {
-        throw new LucidError({
-          type: "basic",
-          name: "Validation Error",
-          message: "You must set the Lucid Environment header.",
-          status: 400,
-          errors: modelErrors({
-            "lucid-environment": {
-              code: "required",
-              message: "You must set the Lucid Environment header.",
-            },
-          }),
-        });
-      }
+      /*
+        Lookup the users role and permissions
+        Check if the user has the required permissions, if the permission is suffixed with :environment_key, 
+        replace the environment_key with the environment key from the request headers and check if the user has that permission.
 
-      // TODO: get the authenticated user's permissionss for the environment and compare them to the permissions required for the route
+        IE: read_content:environment_key -> read_content:prod_env
+      */
 
       return next();
     } catch (error) {

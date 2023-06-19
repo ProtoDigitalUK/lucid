@@ -10,6 +10,7 @@ const router = Router();
 r(router, {
   method: "get",
   path: "/",
+  permissions: ["create_user"],
   schema: getHealth.schema,
   controller: getHealth.controller,
 });

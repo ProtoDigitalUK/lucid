@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS lucid_users (
 CREATE TABLE IF NOT EXISTS lucid_roles (
   id SERIAL PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
-  
+
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -36,12 +36,11 @@ CREATE TABLE IF NOT EXISTS lucid_role_permissions (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- USER PERMISSIONS TABLE -- allows us to add user specific permissions outside of roles
-CREATE TABLE IF NOT EXISTS lucid_user_permissions (
+-- ROLE ENVIRONMENTS TABLE
+CREATE TABLE IF NOT EXISTS lucid_role_environments (
   id SERIAL PRIMARY KEY,
+  role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
   environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
-  user_id UUID NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
-  permissions TEXT[] NOT NULL,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
@@ -50,10 +49,9 @@ CREATE TABLE IF NOT EXISTS lucid_user_permissions (
 -- USER ROLES TABLE
 CREATE TABLE IF NOT EXISTS lucid_user_roles (
   id SERIAL PRIMARY KEY,
-  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
   role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
-  
+
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

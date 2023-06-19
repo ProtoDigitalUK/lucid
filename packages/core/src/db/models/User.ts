@@ -1,6 +1,8 @@
 import argon2 from "argon2";
 import client from "@db/db";
+// Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
+import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -10,6 +12,7 @@ type UserRegister = (data: {
   username: string;
   password: string;
   account_reset?: boolean;
+  super_admin?: boolean;
 }) => Promise<UserT>;
 
 type UserAccountReset = (
@@ -46,7 +49,7 @@ export default class User {
   // -------------------------------------------
   // Functions
   static register: UserRegister = async (data) => {
-    const { email, username, password, account_reset } = data;
+    const { email, username, password, account_reset, super_admin } = data;
 
     // check if user exists
     await User.checkIfUserExistsAlready(email, username);
@@ -54,9 +57,14 @@ export default class User {
     // hash password
     const hashedPassword = await argon2.hash(password);
 
+    const { columns, aliases, values } = queryDataFormat(
+      ["email", "username", "password", "account_reset", "super_admin"],
+      [email, username, hashedPassword, account_reset, super_admin]
+    );
+
     const user = await client.query<UserT>({
-      text: `INSERT INTO lucid_users (email, username, password, account_reset) VALUES ($1, $2, $3, $4) RETURNING *`,
-      values: [email, username, hashedPassword, account_reset || false],
+      text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      values: values.value,
     });
 
     if (!user.rows[0]) {
