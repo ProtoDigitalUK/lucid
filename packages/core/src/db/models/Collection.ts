@@ -33,7 +33,7 @@ export type CollectionT = {
 
 export default class Collection {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getAll: CollectionGetAll = async (query) => {
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances) return [];
@@ -102,7 +102,7 @@ export default class Collection {
   };
 
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static getCollectionsConfig = (): CollectionBuilderT[] => {
     const collectionInstances = Config.get().collections;
 
@@ -125,7 +125,7 @@ export default class Collection {
     return data;
   };
   // -------------------------------------------
-  // Query Methods
+  // Query Functions
   static #filterCollections = (
     filter: z.infer<typeof collectionSchema.getAll.query>["filter"],
     collections: CollectionT[]

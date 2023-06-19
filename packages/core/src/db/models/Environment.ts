@@ -27,7 +27,7 @@ export type EnvironmentT = {
 
 export default class Environment {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getAll: EnvironmentGetAll = async () => {
     // Current specific environment
     const environmentConfig = Config.environments;
@@ -142,5 +142,5 @@ export default class Environment {
     return environments.rows[0];
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
 }

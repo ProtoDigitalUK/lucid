@@ -44,7 +44,7 @@ export type OptionT = {
 
 export default class Option {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getByName: OptionGetByName = async (name) => {
     const options = await client.query<OptionT>({
       text: `SELECT * FROM lucid_options WHERE option_name = $1`,
@@ -132,7 +132,7 @@ export default class Option {
     }
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static convertToType = (option: OptionT): OptionT => {
     switch (option.type) {
       case "boolean":

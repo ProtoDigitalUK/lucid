@@ -92,7 +92,7 @@ export default class Config {
     return configPath;
   };
   // -------------------------------------------
-  // Util Methods
+  // Functions
   static get = (): ConfigT => {
     if (Config._configCache) {
       return Config._configCache;

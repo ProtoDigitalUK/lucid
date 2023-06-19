@@ -44,7 +44,7 @@ export type UserT = {
 
 export default class User {
   // -------------------------------------------
-  // Methods
+  // Functions
   static register: UserRegister = async (data) => {
     const { email, username, password, account_reset } = data;
 
@@ -170,7 +170,7 @@ export default class User {
     return user.rows[0];
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static checkIfUserExistsAlready = async (email: string, username: string) => {
     const userExists = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,

@@ -31,7 +31,7 @@ export type PageCategoryT = {
 
 export default class PageCategory {
   // -------------------------------------------
-  // Methods
+  // Functions
   static create: PageCategoryCreate = async (data) => {
     const { page_id, category_ids, collection_key } = data;
 
@@ -129,7 +129,7 @@ export default class PageCategory {
     return newPageCategories;
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static checkCategoryPostType = async (
     category_ids: Array<number>,
     collection_key: string

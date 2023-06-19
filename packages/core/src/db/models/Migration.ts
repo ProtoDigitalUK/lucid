@@ -43,5 +43,5 @@ export default class Migration {
     });
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
 }

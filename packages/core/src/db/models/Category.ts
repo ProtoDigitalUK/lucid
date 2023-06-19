@@ -60,7 +60,7 @@ export type CategoryT = {
 
 export default class Category {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getMultiple: CategoryGetMultiple = async (environment_key, query) => {
     const { filter, sort, page, per_page } = query;
 
@@ -264,7 +264,7 @@ export default class Category {
     return category.rows[0];
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static isSlugUniqueInCollection = async (data: {
     collection_key: string;
     slug: string;

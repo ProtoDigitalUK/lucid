@@ -31,7 +31,7 @@ export type BrickConfigT = {
 
 export default class BrickConfig {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getSingle: BrickConfigGetSingle = async (environment_key, key) => {
     const brickInstance = BrickConfig.getBrickConfig();
     if (!brickInstance) {
@@ -97,7 +97,7 @@ export default class BrickConfig {
     return sortedBricks;
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static getBrickConfig = (): BrickBuilderT[] => {
     const brickInstances = Config.get().bricks;
 
@@ -125,7 +125,7 @@ export default class BrickConfig {
   };
 
   // -------------------------------------------
-  // Query Methods
+  // Query Functions
   static #searcBricks = (
     query: string,
     bricks: BrickConfigT[]

@@ -27,7 +27,7 @@ export type PermissionT = {
 
 export default class Permission {
   // -------------------------------------------
-  // Methods
+  // Functions
   static set: PermissionSet = async (user_id, role) => {
     const permissions = Permission.rolePermissions(role);
 
@@ -69,7 +69,7 @@ export default class Permission {
     }
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static rolePermissions = (role: PermissionRoles) => {
     switch (role) {
       case "admin":

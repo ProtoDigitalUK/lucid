@@ -75,7 +75,7 @@ export type BrickFieldsT = {
 
 export default class BrickData {
   // -------------------------------------------
-  // Methods
+  // Functions
   static createOrUpdate: BrickDataCreateOrUpdate = async (
     brick,
     order,

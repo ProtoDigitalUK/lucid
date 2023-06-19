@@ -89,7 +89,7 @@ export type PageT = {
 
 export default class Page {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getMultiple: PageGetMultiple = async (environment_key, query) => {
     const { filter, sort, page, per_page } = query;
 
@@ -498,7 +498,7 @@ export default class Page {
     return formatPage(page.rows[0]);
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static #pageExists = async (id: number, environment_key: string) => {
     const page = await client.query<PageT>({
       text: `SELECT

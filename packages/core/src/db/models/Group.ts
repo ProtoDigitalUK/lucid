@@ -43,7 +43,7 @@ export type GroupT = {
 
 export default class Group {
   // -------------------------------------------
-  // Methods
+  // Functions
   static getSingle: GroupGetSingle = async (
     environment_key,
     collection_key
@@ -155,7 +155,7 @@ export default class Group {
     return updatedGroup.rows[0];
   };
   // -------------------------------------------
-  // Util Methods
+  // Util Functions
   static #getOrCreateGroup = async (
     environment_key: string,
     collection_key: string
