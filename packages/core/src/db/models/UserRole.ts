@@ -1,4 +1,5 @@
 import client from "@db/db";
+// Utils
 import { LucidError } from "@utils/error-handler";
 
 // -------------------------------------------

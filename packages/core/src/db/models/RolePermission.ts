@@ -35,7 +35,6 @@ export type EnvironmentPermissionT =
   | `read_menu`
   | `update_menu`
   | `delete_menu`
-  | "view_environment"
   | "update_environment"
   | "migrate_environment";
 
@@ -83,6 +82,7 @@ export default class RolePermission {
     );
     return permissionsData;
   };
+  static getPermissions = async (role_id: number) => {};
   // -------------------------------------------
   // Util Functions
   // -------------------------------------------
@@ -130,7 +130,6 @@ export default class RolePermission {
         `update_menu`,
         `delete_menu`,
         // Environment Management
-        "view_environment",
         "update_environment",
         "migrate_environment",
       ],

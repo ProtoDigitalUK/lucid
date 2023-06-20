@@ -4,7 +4,7 @@ import RolePermission, {
   PermissionT,
   EnvironmentPermissionT,
 } from "@db/models/RolePermission";
-import Environment from "@db/models/Environment";
+import Config from "@db/models/Config";
 // Schema
 import roleSchema from "@schemas/roles";
 // Utils
@@ -16,7 +16,7 @@ type SchemaPermissions = z.infer<
 
 const validatePermissions = async (permGroup: SchemaPermissions) => {
   const permissionSet = RolePermission.permissions;
-  const environments = await Environment.getAll();
+  const environments = Config.environments;
 
   // Data
   const validPermissions: Array<{

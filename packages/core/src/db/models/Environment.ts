@@ -7,7 +7,7 @@ import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
-type EnvironmentGetAll = () => Promise<EnvironmentT[]>;
+type EnvironmentGetAll = (userId: string) => Promise<EnvironmentT[]>;
 type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
 type EnvironmentUpsertSingle = (data: {
   key: string;
@@ -21,6 +21,7 @@ type EnvironmentUpsertSingle = (data: {
 export type EnvironmentT = {
   key: string;
   title: string | null;
+
   assigned_bricks: string[] | null;
   assigned_collections: string[] | null;
 };
@@ -28,13 +29,18 @@ export type EnvironmentT = {
 export default class Environment {
   // -------------------------------------------
   // Functions
-  static getAll: EnvironmentGetAll = async () => {
+  static getAll: EnvironmentGetAll = async (userId) => {
     // Current specific environment
     const environmentConfig = Config.environments;
     const envKeys = environmentConfig.map((e) => e.key);
 
+    // Get all environments
     const environments = await client.query<EnvironmentT>({
-      text: `SELECT * FROM lucid_environments WHERE key = ANY($1)`,
+      text: `SELECT *
+        FROM 
+          lucid_environments
+        WHERE 
+          key = ANY($1)`,
       values: [envKeys],
     });
 
