@@ -28,7 +28,7 @@ interface LucidErrorData {
   zod?: z.ZodError;
   errors?: ErrorResult;
 }
-interface ErrorResult {
+export interface ErrorResult {
   code?: string;
   message?: string;
   children?: Array<undefined | ErrorResult>;

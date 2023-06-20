@@ -31,16 +31,7 @@ CREATE TABLE IF NOT EXISTS lucid_role_permissions (
   id SERIAL PRIMARY KEY,
   role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
   permission TEXT NOT NULL,
-
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- ROLE ENVIRONMENTS TABLE
-CREATE TABLE IF NOT EXISTS lucid_role_environments (
-  id SERIAL PRIMARY KEY,
-  role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
-  environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
+  environment_key TEXT REFERENCES lucid_environments(key) ON DELETE SET NULL,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

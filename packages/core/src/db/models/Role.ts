@@ -1,20 +1,25 @@
+import z from "zod";
 import client from "@db/db";
-import constants from "@root/constants";
+// Schema
+import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
+// Models
+import RolePermission from "@db/models/RolePermission";
+// Services
+import validatePermissions from "@services/roles/validate-permissions";
 
 // -------------------------------------------
 // Types
-type RoleCreateSingle = (data: {
-  name: string;
-  permissions: Array<string>;
-}) => Promise<RoleT>;
+type RoleCreateSingle = (
+  data: z.infer<typeof roleSchema.createSingle.body>
+) => Promise<RoleT>;
 
 // -------------------------------------------
 // User
 export type RoleT = {
-  id: string;
+  id: number;
   environment_key: string;
   user_id: string;
   role_id: string;
@@ -25,31 +30,24 @@ export type RoleT = {
   updated_at: string;
 };
 
-export type RolePermissionT = {
-  id: string;
-  role_id: string;
-  permission: string;
-
-  created_at: string;
-  updated_at: string;
-};
-
 export default class Role {
   // -------------------------------------------
   // Functions
   static createSingle: RoleCreateSingle = async (data) => {
-    const roleRes = await client.query<RoleT>({
-      text: `INSERT INTO lucid_roles (name) VALUES ($1) RETURNING *`,
+    const { columns, aliases, values } = queryDataFormat(["name"], [data.name]);
+
+    const parsePermissions = await validatePermissions(data.permission_groups);
+
+    // check if role name is unique
+    const roleCheck = await client.query<RoleT>({
+      text: `SELECT * FROM lucid_roles WHERE name = $1`,
       values: [data.name],
     });
-
-    let role = roleRes.rows[0];
-
-    if (!role) {
+    if (roleCheck.rows.length > 0) {
       throw new LucidError({
         type: "basic",
         name: "Role Error",
-        message: "There was an error creating the role.",
+        message: "The role name must be unique.",
         status: 500,
         errors: modelErrors({
           name: {
@@ -60,10 +58,26 @@ export default class Role {
       });
     }
 
-    if (data.permissions.length > 0) {
-      const permissions = await Role.#addRolePermissions(
+    const roleRes = await client.query<RoleT>({
+      text: `INSERT INTO lucid_roles (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      values: values.value,
+    });
+
+    let role = roleRes.rows[0];
+
+    if (!role) {
+      throw new LucidError({
+        type: "basic",
+        name: "Role Error",
+        message: "There was an error creating the role.",
+        status: 500,
+      });
+    }
+
+    if (data.permission_groups.length > 0) {
+      const permissions = await RolePermission.upsertMultiple(
         role.id,
-        data.permissions
+        parsePermissions
       );
       role.permissions = permissions.map((perm) => perm.permission);
     }
@@ -72,29 +86,4 @@ export default class Role {
   };
   // -------------------------------------------
   // Util Functions
-  static #addRolePermissions = async (
-    role_id: string,
-    permissions: Array<string>
-  ) => {
-    const promiseRes = permissions.map(async (permission) => {
-      const permRes = await client.query<RolePermissionT>({
-        text: `INSERT INTO lucid_role_permissions (role_id, permission) VALUES ($1, $2) RETURNING *`,
-        values: [role_id, permission],
-      });
-
-      if (!permRes.rows[0]) {
-        throw new LucidError({
-          type: "basic",
-          name: "Role Error",
-          message: "There was an error creating the role permissions.",
-          status: 500,
-        });
-      }
-
-      return permRes.rows[0];
-    });
-
-    const res = await Promise.all(promiseRes);
-    return res;
-  };
 }

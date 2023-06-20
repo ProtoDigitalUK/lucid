@@ -17,7 +17,7 @@ const createSingle: Controller<
 
     const role = await Role.createSingle({
       name: req.body.name,
-      permissions: req.body.permissions,
+      permission_groups: req.body.permission_groups,
     });
 
     res.status(200).json(
