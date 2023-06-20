@@ -1,7 +1,4 @@
-import z from "zod";
 import client from "@db/db";
-// Schema
-import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
@@ -18,31 +15,34 @@ export type PermissionT =
   | "update_role"
   | "delete_role"
   | "assign_role"
-  | `create_content:environment_key=${string}`
-  | `read_content:environment_key=${string}`
-  | `update_content:environment_key=${string}`
-  | `delete_content:environment_key=${string}`
-  | `publish_content:environment_key=${string}`
-  | `unpublish_content:environment_key=${string}`
-  | `create_category:environment_key=${string}`
-  | `update_category:environment_key=${string}`
-  | `delete_category:environment_key=${string}`
-  | `create_menu:environment_key=${string}`
-  | `read_menu:environment_key=${string}`
-  | `update_menu:environment_key=${string}`
-  | `delete_menu:environment_key=${string}`
   | "create_media"
   | "read_media"
   | "update_media"
   | "delete_media"
-  | "update_environment"
-  | "migrate_environment"
   | "update_settings";
 
-type RolePermissionUpsertMultiple = (
+export type EnvironmentPermissionT =
+  | `create_content`
+  | `read_content`
+  | `update_content`
+  | `delete_content`
+  | `publish_content`
+  | `unpublish_content`
+  | `create_category`
+  | `update_category`
+  | `delete_category`
+  | `create_menu`
+  | `read_menu`
+  | `update_menu`
+  | `delete_menu`
+  | "view_environment"
+  | "update_environment"
+  | "migrate_environment";
+
+type RolePermissionCreateMultiple = (
   role_id: number,
   permissions: Array<{
-    permission: PermissionT;
+    permission: PermissionT | EnvironmentPermissionT;
     environment_key?: string;
   }>
 ) => Promise<RolePermissionT[]>;
@@ -61,57 +61,79 @@ export type RolePermissionT = {
 export default class RolePermission {
   // -------------------------------------------
   // Functions
-  static upsertMultiple: RolePermissionUpsertMultiple = async (
+  static createMultiple: RolePermissionCreateMultiple = async (
     role_id,
     permissions
   ) => {
-    console.log(permissions);
+    const permissionsPromise = permissions.map((permission) => {
+      const { columns, aliases, values } = queryDataFormat(
+        ["role_id", "permission", "environment_key"],
+        [role_id, permission.permission, permission.environment_key]
+      );
 
-    return [] as RolePermissionT[];
+      return client.query<RolePermissionT>({
+        text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+        values: values.value,
+      });
+    });
+
+    const permissionsRes = await Promise.all(permissionsPromise);
+    const permissionsData = permissionsRes.map(
+      (permission) => permission.rows[0]
+    );
+    return permissionsData;
   };
   // -------------------------------------------
   // Util Functions
   // -------------------------------------------
   // Getters
-  static get permissions(): PermissionT[] {
-    return [
-      // Users
-      "create_user",
-      "read_user",
-      "update_user",
-      "delete_user",
-      // Roles
-      "create_role",
-      "read_role",
-      "update_role",
-      "delete_role",
-      "assign_role",
-      // Content
-      `create_content:environment_key=`,
-      `read_content:environment_key=`,
-      `update_content:environment_key=`,
-      `delete_content:environment_key=`,
-      `publish_content:environment_key=`,
-      `unpublish_content:environment_key=`,
-      // Categories
-      `create_category:environment_key=`,
-      `update_category:environment_key=`,
-      `delete_category:environment_key=`,
-      // Menus
-      `create_menu:environment_key=`,
-      `read_menu:environment_key=`,
-      `update_menu:environment_key=`,
-      `delete_menu:environment_key=`,
-      // Media
-      "create_media",
-      "read_media",
-      "update_media",
-      "delete_media",
-      // Environment Management
-      "update_environment",
-      "migrate_environment",
-      // Settings
-      "update_settings",
-    ];
+  static get permissions(): {
+    global: PermissionT[];
+    environment: EnvironmentPermissionT[];
+  } {
+    return {
+      global: [
+        // Users
+        "create_user",
+        "read_user",
+        "update_user",
+        "delete_user",
+        // Roles
+        "create_role",
+        "read_role",
+        "update_role",
+        "delete_role",
+        "assign_role",
+        // Media
+        "create_media",
+        "read_media",
+        "update_media",
+        "delete_media",
+        // Settings
+        "update_settings",
+      ],
+      environment: [
+        // Content
+        `create_content`,
+        `read_content`,
+        `update_content`,
+        `delete_content`,
+        `publish_content`,
+        `unpublish_content`,
+        // Categories
+        `create_category`,
+        `update_category`,
+        `delete_category`,
+        // Menus
+        `create_menu`,
+        `read_menu`,
+        `update_menu`,
+        `delete_menu`,
+        // Environment Management
+        "view_environment",
+        "update_environment",
+        "migrate_environment",
+      ],
+    };
   }
 }

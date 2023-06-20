@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS lucid_role_permissions (
   id SERIAL PRIMARY KEY,
   role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
   permission TEXT NOT NULL,
-  environment_key TEXT REFERENCES lucid_environments(key) ON DELETE SET NULL,
+  environment_key TEXT REFERENCES lucid_environments(key) ON DELETE CASCADE,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

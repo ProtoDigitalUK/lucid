@@ -15,6 +15,7 @@ import validatePermissions from "@services/roles/validate-permissions";
 type RoleCreateSingle = (
   data: z.infer<typeof roleSchema.createSingle.body>
 ) => Promise<RoleT>;
+type RoleDeleteSingle = (id: number) => Promise<RoleT>;
 
 // -------------------------------------------
 // User
@@ -74,12 +75,32 @@ export default class Role {
       });
     }
 
-    if (data.permission_groups.length > 0) {
-      const permissions = await RolePermission.upsertMultiple(
-        role.id,
-        parsePermissions
-      );
-      role.permissions = permissions.map((perm) => perm.permission);
+    try {
+      if (data.permission_groups.length > 0) {
+        await RolePermission.createMultiple(role.id, parsePermissions);
+      }
+    } catch (error) {
+      await Role.deleteSingle(role.id);
+      throw error;
+    }
+
+    return role;
+  };
+  static deleteSingle: RoleDeleteSingle = async (id) => {
+    const roleRes = await client.query<RoleT>({
+      text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
+      values: [id],
+    });
+
+    let role = roleRes.rows[0];
+
+    if (!role) {
+      throw new LucidError({
+        type: "basic",
+        name: "Role Error",
+        message: "There was an error deleting the role.",
+        status: 500,
+      });
     }
 
     return role;
