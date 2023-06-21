@@ -35,6 +35,9 @@ r(router, {
 r(router, {
   method: "patch",
   path: "/:key",
+  permissions: {
+    global: ["update_environment"],
+  },
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
@@ -47,6 +50,9 @@ r(router, {
 r(router, {
   method: "post",
   path: "/:key/migrate",
+  permissions: {
+    global: ["migrate_environment"],
+  },
   middleware: {
     authenticate: true,
     authoriseCSRF: true,

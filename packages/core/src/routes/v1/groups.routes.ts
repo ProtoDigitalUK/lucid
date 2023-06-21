@@ -11,6 +11,9 @@ const router = Router();
 r(router, {
   method: "patch",
   path: "/:collection_key",
+  permissions: {
+    environments: ["update_content"],
+  },
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
@@ -24,6 +27,9 @@ r(router, {
 r(router, {
   method: "get",
   path: "/:collection_key",
+  permissions: {
+    environments: ["read_content"],
+  },
   middleware: {
     authenticate: false,
     authoriseCSRF: false,

@@ -25,8 +25,6 @@ const permissions =
     try {
       const environment = req.headers["lucid-environment"];
 
-      console.log("permissions", permissions);
-
       // Lookup the users role and permissions
       const user = await User.getById(req.auth.id);
       if (user.super_admin) return next();

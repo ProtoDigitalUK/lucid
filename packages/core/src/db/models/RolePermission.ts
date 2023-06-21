@@ -1,6 +1,5 @@
 import client from "@db/db";
 // Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
@@ -84,8 +83,6 @@ export default class RolePermission {
     return permissionsData;
   };
   static getPermissions = async (role_id: number) => {};
-  // -------------------------------------------
-  // Util Functions
   // -------------------------------------------
   // Getters
   static get permissions(): {
