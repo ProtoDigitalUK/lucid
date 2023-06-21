@@ -132,6 +132,4 @@ export default class UserRole {
     const formattedPermissions = formatPermissions(userPermissions.rows);
     return formattedPermissions;
   };
-  // -------------------------------------------
-  // Util Functions
 }

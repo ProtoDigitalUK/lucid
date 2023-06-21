@@ -177,16 +177,11 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text"
-							},
-							{
-								"key": "lucid-environment",
-								"value": "{{LUCID_ENVIRONMENT}}",
-								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Editor\",\r\n    \"permission_groups\": [\r\n        // {\r\n        //     \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\"]\r\n        // },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Admin\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -202,6 +197,42 @@
 								"api",
 								"v1",
 								"roles"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Editor\",\r\n    \"permission_groups\": [\r\n        // {\r\n        //     \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\"]\r\n        // },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"3"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -993,16 +1024,11 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text"
-							},
-							{
-								"key": "lucid-environment",
-								"value": "{{LUCID_ENVIRONMENT}}",
-								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"role_ids\": [2,1]\r\n}",
+							"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
