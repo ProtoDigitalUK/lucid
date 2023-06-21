@@ -1,9 +1,10 @@
 import { Router } from "express";
 import z from "zod";
+import { PermissionT } from "../db/models/RolePermission";
 type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT extends z.ZodTypeAny>(router: Router, props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;
-    permissions?: Array<string>;
+    permissions?: Array<PermissionT>;
     middleware?: {
         authenticate?: boolean;
         authoriseCSRF?: boolean;

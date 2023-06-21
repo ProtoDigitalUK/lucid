@@ -1,6 +1,6 @@
 import BrickData, { BrickObject } from "../models/BrickData";
 type GroupGetSingle = (environment_key: string, collection_key: string) => Promise<GroupT>;
-type GroupUpdateSingle = (userId: string, environment_key: string, collection_key: string, bricks: Array<BrickObject>) => Promise<GroupT>;
+type GroupUpdateSingle = (userId: number, environment_key: string, collection_key: string, bricks: Array<BrickObject>) => Promise<GroupT>;
 export type GroupT = {
     id: number;
     environment_key: string;

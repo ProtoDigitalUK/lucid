@@ -8,7 +8,6 @@ const Config_1 = __importDefault(require("../../db/models/Config"));
 const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const User_1 = __importDefault(require("../../db/models/User"));
 const Option_1 = __importDefault(require("../../db/models/Option"));
-const Permission_1 = __importDefault(require("../../db/models/Permission"));
 const createFixOptions = async () => {
     await Option_1.default.create({
         name: "initial_user_created",
@@ -22,12 +21,12 @@ const createInitialAdmin = async () => {
     if (typeof res.option_value === "boolean" && res.option_value)
         return;
     try {
-        const user = await User_1.default.register({
+        await User_1.default.register({
             email: "admin@example.com",
             username: "admin",
             password: "admin",
+            super_admin: true,
         });
-        await Permission_1.default.set(user.id, "admin");
         await Option_1.default.patchByName({
             name: "initial_user_created",
             value: true,

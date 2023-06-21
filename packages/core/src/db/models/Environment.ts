@@ -7,7 +7,7 @@ import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
-type EnvironmentGetAll = (userId: string) => Promise<EnvironmentT[]>;
+type EnvironmentGetAll = () => Promise<EnvironmentT[]>;
 type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
 type EnvironmentUpsertSingle = (data: {
   key: string;
@@ -29,7 +29,7 @@ export type EnvironmentT = {
 export default class Environment {
   // -------------------------------------------
   // Functions
-  static getAll: EnvironmentGetAll = async (userId) => {
+  static getAll: EnvironmentGetAll = async () => {
     // Current specific environment
     const environmentConfig = Config.environments;
     const envKeys = environmentConfig.map((e) => e.key);

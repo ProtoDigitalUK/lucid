@@ -1,6 +1,8 @@
 -- USERS TABLE
 CREATE TABLE IF NOT EXISTS lucid_users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id SERIAL PRIMARY KEY,
+
+  super_admin BOOLEAN DEFAULT FALSE, 
   email TEXT UNIQUE NOT NULL,
   username TEXT UNIQUE NOT NULL,
   first_name TEXT,
@@ -15,12 +17,32 @@ CREATE TABLE IF NOT EXISTS lucid_users (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- PERMISSIONS TABLE
--- TODO: scope permissions to different environments
-CREATE TABLE IF NOT EXISTS lucid_permissions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID UNIQUE NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
-  permissions TEXT[] NOT NULL,
+-- ROLES TABLE
+CREATE TABLE IF NOT EXISTS lucid_roles (
+  id SERIAL PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL,
+
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- ROLE PERMISSIONS TABLE
+CREATE TABLE IF NOT EXISTS lucid_role_permissions (
+  id SERIAL PRIMARY KEY,
+  role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
+  permission TEXT NOT NULL,
+  environment_key TEXT REFERENCES lucid_environments(key) ON DELETE CASCADE,
+
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- USER ROLES TABLE
+CREATE TABLE IF NOT EXISTS lucid_user_roles (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
+  role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
+
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );

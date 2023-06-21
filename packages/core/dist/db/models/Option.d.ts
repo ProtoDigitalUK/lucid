@@ -21,7 +21,6 @@ type OptionCreateOrPatchByName = (data: {
     locked: boolean;
 }) => Promise<OptionT>;
 export type OptionT = {
-    id: string;
     option_name: OptionNames;
     option_value: OptionValue;
     type: OptionTypes;

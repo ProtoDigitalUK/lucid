@@ -30,7 +30,7 @@ type PageGetSingle = (
 ) => Promise<PageT>;
 
 type PageCreate = (
-  userId: string,
+  userId: number,
   data: {
     environment_key: string;
     title: string;
@@ -45,7 +45,7 @@ type PageCreate = (
 ) => Promise<PageT>;
 
 type PageUpdate = (
-  userId: string,
+  userId: number,
   environment_key: string,
   id: string,
   data: {

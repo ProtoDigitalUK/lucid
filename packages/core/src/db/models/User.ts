@@ -3,6 +3,14 @@ import client from "@db/db";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
+// Models
+import UserRole from "@db/models/UserRole";
+import { EnvironmentPermissionT, PermissionT } from "@db/models/RolePermission";
+// Services
+import {
+  UserRoleRes,
+  UserEnvrionmentRes,
+} from "@services/users/format-permissions";
 
 // -------------------------------------------
 // Types
@@ -16,7 +24,7 @@ type UserRegister = (data: {
 }) => Promise<UserT>;
 
 type UserAccountReset = (
-  id: string,
+  id: number,
   data: {
     email: string;
     password: string;
@@ -24,23 +32,32 @@ type UserAccountReset = (
   }
 ) => Promise<UserT>;
 
-type UserGetById = (id: string) => Promise<UserT>;
+type UserGetById = (id: number) => Promise<UserT>;
 
 type UserLogin = (data: {
   username: string;
   password: string;
 }) => Promise<UserT>;
 
+type UserUpdateSingle = (id: number, data: {}) => Promise<UserT>;
+
 // -------------------------------------------
 // User
 export type UserT = {
-  id: string;
+  id: number;
   email: string;
   username: string;
   first_name: string | null;
   last_name: string | null;
   password?: string;
   account_reset: boolean;
+
+  roles?: UserRoleRes[];
+  permissions?: {
+    global: PermissionT[];
+    environments?: UserEnvrionmentRes[];
+  };
+
   created_at: string;
   updated_at: string;
 };
@@ -140,6 +157,13 @@ export default class User {
       });
     }
 
+    const permissionRes = await UserRole.getPermissions(user.rows[0].id);
+    user.rows[0].roles = permissionRes.roles;
+    user.rows[0].permissions = {
+      global: permissionRes.permissions,
+      environments: permissionRes.environments,
+    };
+
     delete user.rows[0].password;
     return user.rows[0];
   };
@@ -176,6 +200,9 @@ export default class User {
 
     delete user.rows[0].password;
     return user.rows[0];
+  };
+  static updateSingle: UserUpdateSingle = async (id, data) => {
+    return {} as UserT;
   };
   // -------------------------------------------
   // Util Functions

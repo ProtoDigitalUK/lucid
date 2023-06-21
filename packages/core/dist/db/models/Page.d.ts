@@ -6,7 +6,7 @@ type PageGetMultiple = (environment_key: string, query: z.infer<typeof pagesSche
     count: number;
 }>;
 type PageGetSingle = (environment_key: string, id: string, query: z.infer<typeof pagesSchema.getSingle.query>) => Promise<PageT>;
-type PageCreate = (userId: string, data: {
+type PageCreate = (userId: number, data: {
     environment_key: string;
     title: string;
     slug: string;
@@ -17,7 +17,7 @@ type PageCreate = (userId: string, data: {
     parent_id?: number;
     category_ids?: Array<number>;
 }) => Promise<PageT>;
-type PageUpdate = (userId: string, environment_key: string, id: string, data: {
+type PageUpdate = (userId: number, environment_key: string, id: string, data: {
     title?: string;
     slug?: string;
     homepage?: boolean;

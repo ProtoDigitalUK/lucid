@@ -7,16 +7,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
+const query_helpers_1 = require("../../utils/query-helpers");
+const UserRole_1 = __importDefault(require("../models/UserRole"));
 class User {
 }
 _a = User;
 User.register = async (data) => {
-    const { email, username, password, account_reset } = data;
+    const { email, username, password, account_reset, super_admin } = data;
     await User.checkIfUserExistsAlready(email, username);
     const hashedPassword = await argon2_1.default.hash(password);
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["email", "username", "password", "account_reset", "super_admin"], [email, username, hashedPassword, account_reset, super_admin]);
     const user = await db_1.default.query({
-        text: `INSERT INTO lucid_users (email, username, password, account_reset) VALUES ($1, $2, $3, $4) RETURNING *`,
-        values: [email, username, hashedPassword, account_reset || false],
+        text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+        values: values.value,
     });
     if (!user.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -81,6 +84,12 @@ User.getById = async (id) => {
             }),
         });
     }
+    const permissionRes = await UserRole_1.default.getPermissions(user.rows[0].id);
+    user.rows[0].roles = permissionRes.roles;
+    user.rows[0].permissions = {
+        global: permissionRes.permissions,
+        environments: permissionRes.environments,
+    };
     delete user.rows[0].password;
     return user.rows[0];
 };
@@ -108,6 +117,9 @@ User.login = async (data) => {
     }
     delete user.rows[0].password;
     return user.rows[0];
+};
+User.updateSingle = async (id, data) => {
+    return {};
 };
 User.checkIfUserExistsAlready = async (email, username) => {
     const userExists = await db_1.default.query({

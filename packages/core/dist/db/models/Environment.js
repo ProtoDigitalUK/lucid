@@ -15,7 +15,11 @@ Environment.getAll = async () => {
     const environmentConfig = Config_1.default.environments;
     const envKeys = environmentConfig.map((e) => e.key);
     const environments = await db_1.default.query({
-        text: `SELECT * FROM lucid_environments WHERE key = ANY($1)`,
+        text: `SELECT *
+        FROM 
+          lucid_environments
+        WHERE 
+          key = ANY($1)`,
         values: [envKeys],
     });
     return environments.rows;

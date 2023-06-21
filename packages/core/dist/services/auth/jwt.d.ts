@@ -7,7 +7,7 @@ export declare const verifyJWT: (req: Request) => {
 } | {
     sucess: boolean;
     data: {
-        id: string;
+        id: number;
         email: string;
         username: string;
     };

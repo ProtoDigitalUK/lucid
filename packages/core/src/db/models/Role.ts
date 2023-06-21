@@ -16,6 +16,7 @@ type RoleCreateSingle = (
   data: z.infer<typeof roleSchema.createSingle.body>
 ) => Promise<RoleT>;
 type RoleDeleteSingle = (id: number) => Promise<RoleT>;
+type RoleGetMultiple = (ids: number[]) => Promise<RoleT[]>;
 
 // -------------------------------------------
 // User
@@ -104,6 +105,25 @@ export default class Role {
     }
 
     return role;
+  };
+  static getMultiple: RoleGetMultiple = async (data) => {
+    const rolesRes = await client.query<RoleT>({
+      text: `SELECT * FROM lucid_roles WHERE id = ANY($1)`,
+      values: [data],
+    });
+
+    let roles = rolesRes.rows;
+
+    if (!roles) {
+      throw new LucidError({
+        type: "basic",
+        name: "Role Error",
+        message: "There was an error getting the roles.",
+        status: 500,
+      });
+    }
+
+    return roles;
   };
   // -------------------------------------------
   // Util Functions

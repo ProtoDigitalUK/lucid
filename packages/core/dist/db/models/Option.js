@@ -58,8 +58,9 @@ Option.create = async (data) => {
         text: `SELECT * FROM lucid_options WHERE option_name = $1`,
         values: [data.name],
     });
-    if (optionExisting.rows[0])
+    if (optionExisting.rows[0]) {
         return Option.convertToType(optionExisting.rows[0]);
+    }
     const option = await db_1.default.query({
         text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,
         values: [data.name, value, data.type, data.locked || false],

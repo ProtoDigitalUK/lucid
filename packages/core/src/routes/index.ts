@@ -7,6 +7,7 @@ import groups from "@routes/v1/groups.routes";
 import collections from "@routes/v1/collections.routes";
 import environments from "@routes/v1/environments.routes";
 import roles from "@routes/v1/roles.routes";
+import users from "@routes/v1/users.routes";
 
 const initRoutes = (app: any) => {
   // Version 1
@@ -19,6 +20,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/collections", collections);
   app.use("/api/v1/environments", environments);
   app.use("/api/v1/roles", roles);
+  app.use("/api/v1/users", users);
 };
 
 export default initRoutes;

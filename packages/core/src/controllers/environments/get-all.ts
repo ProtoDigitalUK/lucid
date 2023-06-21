@@ -13,7 +13,7 @@ const getAll: Controller<
   typeof environmentSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const environments = await Environment.getAll(req.auth.id);
+    const environments = await Environment.getAll();
 
     res.status(200).json(
       buildResponse(req, {

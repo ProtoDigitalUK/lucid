@@ -51,7 +51,8 @@ type RolePermissionCreateMultiple = (
 export type RolePermissionT = {
   id: number;
   role_id: string;
-  permission: string;
+  permission: PermissionT | EnvironmentPermissionT;
+  environment_key: string | null;
 
   created_at: string;
   updated_at: string;

@@ -1,6 +1,6 @@
 -- USERS TABLE
 CREATE TABLE IF NOT EXISTS lucid_users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id SERIAL PRIMARY KEY,
 
   super_admin BOOLEAN DEFAULT FALSE, 
   email TEXT UNIQUE NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS lucid_role_permissions (
 -- USER ROLES TABLE
 CREATE TABLE IF NOT EXISTS lucid_user_roles (
   id SERIAL PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
   role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
 
   created_at TIMESTAMP DEFAULT NOW(),

@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   
   published BOOLEAN DEFAULT FALSE,
   published_at TIMESTAMP,
-  published_by UUID REFERENCES lucid_users(id) ON DELETE SET NULL,
+  published_by INT REFERENCES lucid_users(id) ON DELETE SET NULL,
 
-  created_by UUID REFERENCES lucid_users(id) ON DELETE SET NULL,
+  created_by INT REFERENCES lucid_users(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -89,5 +89,5 @@ CREATE TABLE IF NOT EXISTS lucid_groups (
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
-  updated_by UUID REFERENCES lucid_users(id) ON DELETE SET NULL
+  updated_by INT REFERENCES lucid_users(id) ON DELETE SET NULL
 );

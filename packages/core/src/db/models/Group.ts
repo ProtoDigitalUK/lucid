@@ -21,7 +21,7 @@ type GroupGetSingle = (
 ) => Promise<GroupT>;
 
 type GroupUpdateSingle = (
-  userId: string,
+  userId: number,
   environment_key: string,
   collection_key: string,
   bricks: Array<BrickObject>
