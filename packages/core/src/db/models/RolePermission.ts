@@ -19,7 +19,9 @@ export type PermissionT =
   | "read_media"
   | "update_media"
   | "delete_media"
-  | "update_settings";
+  | "update_settings"
+  | "update_environment"
+  | "migrate_environment";
 
 export type EnvironmentPermissionT =
   | `create_content`
@@ -34,9 +36,7 @@ export type EnvironmentPermissionT =
   | `create_menu`
   | `read_menu`
   | `update_menu`
-  | `delete_menu`
-  | "update_environment"
-  | "migrate_environment";
+  | `delete_menu`;
 
 type RolePermissionCreateMultiple = (
   role_id: number,
@@ -112,6 +112,9 @@ export default class RolePermission {
         "delete_media",
         // Settings
         "update_settings",
+        // Environment Management
+        "update_environment",
+        "migrate_environment",
       ],
       environment: [
         // Content
@@ -130,9 +133,6 @@ export default class RolePermission {
         `read_menu`,
         `update_menu`,
         `delete_menu`,
-        // Environment Management
-        "update_environment",
-        "migrate_environment",
       ],
     };
   }

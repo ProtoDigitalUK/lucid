@@ -10,7 +10,9 @@ const router = Router();
 r(router, {
   method: "post",
   path: "/:id/roles",
-  permissions: ["assign_role"],
+  permissions: {
+    global: ["assign_role"],
+  },
   middleware: {
     authenticate: true,
     authoriseCSRF: true,

@@ -2,22 +2,60 @@ import { Request, Response, NextFunction } from "express";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
-import { PermissionT } from "@db/models/RolePermission";
+import { PermissionT, EnvironmentPermissionT } from "@db/models/RolePermission";
+import User from "@db/models/User";
+
+const throwPermissionError = () => {
+  throw new LucidError({
+    type: "basic",
+    name: "Permission Error",
+    message: "You do not have permission to access this resource",
+    status: 403,
+  });
+};
 
 // ------------------------------------
 // Validate Middleware
 const permissions =
-  (permissions: Array<PermissionT>) =>
+  (permissions: {
+    global?: PermissionT[];
+    environments?: EnvironmentPermissionT[];
+  }) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const environment = req.headers["lucid-environment"];
-      /*
-        Lookup the users role and permissions
-        Check if the user has the required permissions, if the permission is suffixed with :environment_key=, 
-        replace the environment_key with the environment key from the request headers and check if the user has that permission.
 
-        IE: read_content:environment_key= -> read_content:environment_key=prod_env
-      */
+      console.log("permissions", permissions);
+
+      // Lookup the users role and permissions
+      const user = await User.getById(req.auth.id);
+      if (user.super_admin) return next();
+
+      // No user permissions found
+      if (user.permissions === undefined) throwPermissionError();
+
+      // If the passed permission is a group type, check if the user has any of the permissions in the group
+      if (permissions.global) {
+        permissions.global.forEach((permission) => {
+          if (!user.permissions?.global.includes(permission))
+            throwPermissionError();
+        });
+      }
+
+      // If the passed permission is a envrionment type, check if the user has the permission in the current environment
+      if (permissions.environments) {
+        if (!environment) throwPermissionError();
+
+        const environmentPermissions = user.permissions?.environments?.find(
+          (env) => env.key === environment
+        );
+        if (!environmentPermissions) throwPermissionError();
+
+        permissions.environments.forEach((permission) => {
+          if (!environmentPermissions?.permissions.includes(permission))
+            throwPermissionError();
+        });
+      }
 
       return next();
     } catch (error) {
