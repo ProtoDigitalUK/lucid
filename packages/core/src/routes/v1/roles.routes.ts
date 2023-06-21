@@ -4,10 +4,41 @@ import r from "@utils/route";
 import createSingle from "@controllers/roles/create-single";
 import deleteSingle from "@controllers/roles/delete-single";
 import updateSingle from "@controllers/roles/update-single";
+import getMultiple from "@controllers/roles/get-multiple";
+import getSingle from "@controllers/roles/get-single";
 
 // ------------------------------------
 // Router
 const router = Router();
+
+r(router, {
+  method: "get",
+  path: "/",
+  permissions: {
+    global: ["read_role"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    paginated: true,
+  },
+  schema: getMultiple.schema,
+  controller: getMultiple.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/:id",
+  permissions: {
+    global: ["read_role"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: getSingle.schema,
+  controller: getSingle.controller,
+});
 
 r(router, {
   method: "post",

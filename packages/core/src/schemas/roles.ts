@@ -39,6 +39,38 @@ const deleteSingleParams = z.object({
 });
 
 // ------------------------------------
+// GET MULTIPLE
+const getMultipleQuery = z.object({
+  filter: z
+    .object({
+      name: z.string().optional(),
+      role_ids: z.union([z.string(), z.array(z.string())]).optional(),
+    })
+    .optional(),
+  sort: z
+    .array(
+      z.object({
+        key: z.enum(["created_at", "name"]),
+        value: z.enum(["asc", "desc"]),
+      })
+    )
+    .optional(),
+  include: z.array(z.enum(["permissions"])).optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
+});
+const getMultipleParams = z.object({});
+const getMultipleBody = z.object({});
+
+// ------------------------------------
+// GET SINGLE
+const getSingleQuery = z.object({});
+const getSingleParams = z.object({
+  id: z.string(),
+});
+const getSingleBody = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -55,5 +87,15 @@ export default {
     body: deleteSingleBody,
     query: deleteSingleQuery,
     params: deleteSingleParams,
+  },
+  getMultiple: {
+    body: getMultipleBody,
+    query: getMultipleQuery,
+    params: getMultipleParams,
+  },
+  getSingle: {
+    body: getSingleBody,
+    query: getSingleQuery,
+    params: getSingleParams,
   },
 };

@@ -152,7 +152,6 @@ export default class Page {
       per_page: per_page,
     });
 
-    // Get Pages
     const pages = await client.query<PageT>({
       text: `SELECT
           ${SelectQuery.query.select},

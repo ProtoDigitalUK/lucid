@@ -105,6 +105,7 @@ interface SelectQueryBuilderConfig {
           | "@>";
         type: "int" | "string" | "boolean";
         columnType: "array" | "standard";
+        key?: string;
         table?: string;
         exclude?: boolean;
       };
@@ -182,7 +183,8 @@ export class SelectQueryBuilder {
 
       const columnType = meta?.columnType || "standard";
 
-      const keyV = meta?.table ? `${meta?.table}.${key}` : key;
+      const baseKey = meta?.key || key;
+      const keyV = meta?.table ? `${meta?.table}.${baseKey}` : baseKey;
 
       switch (columnType) {
         // -------------------------------------------

@@ -58,8 +58,12 @@ export default class UserRole {
 
     // Add the new roles to the user
     if (newRoles.length > 0) {
-      const rolesRes = await Role.getMultiple(newRoles);
-      if (rolesRes.length !== newRoles.length) {
+      const rolesRes = await Role.getMultiple({
+        filter: {
+          role_ids: newRoles.map((role) => role.toString()),
+        },
+      });
+      if (rolesRes.count !== newRoles.length) {
         throw new LucidError({
           type: "basic",
           name: "Role Error",

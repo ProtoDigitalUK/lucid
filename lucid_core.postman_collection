@@ -169,6 +169,98 @@
 			"name": "Roles",
 			"item": [
 				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							},
+							{
+								"key": "lucid-environment",
+								"value": "{{LUCID_ENVIRONMENT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles?include=permissions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-name,created_at",
+									"disabled": true
+								},
+								{
+									"key": "filter[role_ids]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter[name]",
+									"value": "Admin",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "include",
+									"value": "permissions"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							},
+							{
+								"key": "lucid-environment",
+								"value": "{{LUCID_ENVIRONMENT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Single",
 					"request": {
 						"method": "POST",
@@ -334,6 +426,16 @@
 												},
 												{
 													"key": "filter[category_id]",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
 													"value": "1",
 													"disabled": true
 												}

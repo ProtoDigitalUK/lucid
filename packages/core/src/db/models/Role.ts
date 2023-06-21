@@ -4,9 +4,9 @@ import client from "@db/db";
 import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
-import { queryDataFormat } from "@utils/query-helpers";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Models
-import RolePermission from "@db/models/RolePermission";
+import RolePermission, { RolePermissionT } from "@db/models/RolePermission";
 // Services
 import validatePermissions from "@services/roles/validate-permissions";
 
@@ -16,11 +16,17 @@ type RoleCreateSingle = (
   data: z.infer<typeof roleSchema.createSingle.body>
 ) => Promise<RoleT>;
 type RoleDeleteSingle = (id: number) => Promise<RoleT>;
-type RoleGetMultiple = (ids: number[]) => Promise<RoleT[]>;
+type RoleGetMultiple = (
+  query: z.infer<typeof roleSchema.getMultiple.query>
+) => Promise<{
+  data: RoleT[];
+  count: number;
+}>;
 type RoleUpdateSingle = (
   id: number,
   data: z.infer<typeof roleSchema.updateSingle.body>
 ) => Promise<RoleT>;
+type RoleGetSingle = (id: number) => Promise<RoleT>;
 
 // -------------------------------------------
 // User
@@ -30,7 +36,11 @@ export type RoleT = {
   user_id: string;
   role_id: string;
 
-  permissions: string[];
+  permissions: {
+    id: RolePermissionT["id"];
+    permission: RolePermissionT["permission"];
+    environment_key: RolePermissionT["environment_key"];
+  }[];
 
   created_at: string;
   updated_at: string;
@@ -93,24 +103,82 @@ export default class Role {
 
     return role;
   };
-  static getMultiple: RoleGetMultiple = async (data) => {
-    const rolesRes = await client.query<RoleT>({
-      text: `SELECT * FROM lucid_roles WHERE id = ANY($1)`,
-      values: [data],
+  static getMultiple: RoleGetMultiple = async (query) => {
+    const { filter, sort, page, per_page, include } = query;
+
+    // Build Query Data and Query
+    const SelectQuery = new SelectQueryBuilder({
+      columns: [
+        "roles.id",
+        "roles.name",
+        "roles.created_at",
+        "roles.updated_at",
+      ],
+      exclude: undefined,
+      filter: {
+        data: filter,
+        meta: {
+          name: {
+            operator: "ILIKE",
+            type: "string",
+            columnType: "standard",
+          },
+          role_ids: {
+            key: "id",
+            operator: "=",
+            type: "int",
+            columnType: "standard",
+          },
+        },
+      },
+      sort: sort,
+      page: page,
+      per_page: per_page,
     });
 
-    let roles = rolesRes.rows;
+    const roles = await client.query<RoleT>({
+      text: `SELECT
+          ${SelectQuery.query.select}
+        FROM
+          lucid_roles as roles
+        ${SelectQuery.query.where}
+        ${SelectQuery.query.order}
+        ${SelectQuery.query.pagination}`,
+      values: SelectQuery.values,
+    });
 
-    if (!roles) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "There was an error getting the roles.",
-        status: 500,
+    const count = await client.query<{ count: number }>({
+      text: `SELECT 
+          COUNT(DISTINCT lucid_roles.id)
+        FROM
+          lucid_roles
+        ${SelectQuery.query.where}`,
+      values: SelectQuery.countValues,
+    });
+
+    if (include && include.includes("permissions")) {
+      const permissionsPromise = roles.rows.map((role) =>
+        RolePermission.getAll(role.id)
+      );
+      const permissions = await Promise.all(permissionsPromise);
+      roles.rows = roles.rows.map((role, index) => {
+        return {
+          ...role,
+          permissions: permissions[index].map((permission) => {
+            return {
+              id: permission.id,
+              permission: permission.permission,
+              environment_key: permission.environment_key,
+            };
+          }),
+        };
       });
     }
 
-    return roles;
+    return {
+      data: roles.rows,
+      count: count.rows[0].count,
+    };
   };
   static updateSingle: RoleUpdateSingle = async (id, data) => {
     const { columns, aliases, values } = queryDataFormat(["name"], [data.name]);
@@ -139,6 +207,39 @@ export default class Role {
     if (data.permission_groups.length > 0) {
       await RolePermission.deleteAll(id);
       await RolePermission.createMultiple(id, parsePermissions);
+    }
+
+    return role;
+  };
+  static getSingle: RoleGetSingle = async (id) => {
+    const roleRes = await client.query<RoleT>({
+      text: `SELECT 
+          roles.*,
+          json_agg(json_build_object(
+            'id', rp.id, 
+            'permission', rp.permission,
+            'environment_key', rp.environment_key
+          )) AS permissions
+        FROM
+          lucid_roles as roles
+        LEFT JOIN 
+          lucid_role_permissions as rp ON roles.id = rp.role_id
+        WHERE 
+          roles.id = $1
+        GROUP BY
+          roles.id`,
+      values: [id],
+    });
+
+    let role = roleRes.rows[0];
+
+    if (!role) {
+      throw new LucidError({
+        type: "basic",
+        name: "Role Error",
+        message: "There was an error getting the role.",
+        status: 500,
+      });
     }
 
     return role;
