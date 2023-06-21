@@ -17,6 +17,10 @@ type RoleCreateSingle = (
 ) => Promise<RoleT>;
 type RoleDeleteSingle = (id: number) => Promise<RoleT>;
 type RoleGetMultiple = (ids: number[]) => Promise<RoleT[]>;
+type RoleUpdateSingle = (
+  id: number,
+  data: z.infer<typeof roleSchema.updateSingle.body>
+) => Promise<RoleT>;
 
 // -------------------------------------------
 // User
@@ -41,24 +45,7 @@ export default class Role {
     const parsePermissions = await validatePermissions(data.permission_groups);
 
     // check if role name is unique
-    const roleCheck = await client.query<RoleT>({
-      text: `SELECT * FROM lucid_roles WHERE name = $1`,
-      values: [data.name],
-    });
-    if (roleCheck.rows.length > 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "The role name must be unique.",
-        status: 500,
-        errors: modelErrors({
-          name: {
-            code: "Not unique",
-            message: "The role name must be unique.",
-          },
-        }),
-      });
-    }
+    await Role.#roleNameUnique(data.name);
 
     const roleRes = await client.query<RoleT>({
       text: `INSERT INTO lucid_roles (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
@@ -76,13 +63,13 @@ export default class Role {
       });
     }
 
-    try {
-      if (data.permission_groups.length > 0) {
+    if (data.permission_groups.length > 0) {
+      try {
         await RolePermission.createMultiple(role.id, parsePermissions);
+      } catch (error) {
+        await Role.deleteSingle(role.id);
+        throw error;
       }
-    } catch (error) {
-      await Role.deleteSingle(role.id);
-      throw error;
     }
 
     return role;
@@ -125,6 +112,58 @@ export default class Role {
 
     return roles;
   };
+  static updateSingle: RoleUpdateSingle = async (id, data) => {
+    const { columns, aliases, values } = queryDataFormat(["name"], [data.name]);
+    const parsePermissions = await validatePermissions(data.permission_groups);
+
+    await Role.#roleNameUnique(data.name, id);
+
+    const roleRes = await client.query<RoleT>({
+      text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${
+        aliases.value.length + 1
+      } RETURNING *`,
+      values: [...values.value, id],
+    });
+
+    let role = roleRes.rows[0];
+
+    if (!role) {
+      throw new LucidError({
+        type: "basic",
+        name: "Role Error",
+        message: "There was an error updating the role.",
+        status: 500,
+      });
+    }
+
+    if (data.permission_groups.length > 0) {
+      await RolePermission.deleteAll(id);
+      await RolePermission.createMultiple(id, parsePermissions);
+    }
+
+    return role;
+  };
   // -------------------------------------------
   // Util Functions
+  static #roleNameUnique = async (name: string, id?: number) => {
+    const roleCheck = await client.query<RoleT>({
+      text: `SELECT * FROM lucid_roles WHERE name = $1 AND id != $2`,
+      values: [name, id],
+    });
+
+    if (roleCheck.rows.length > 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "Role Error",
+        message: "The role name must be unique.",
+        status: 500,
+        errors: modelErrors({
+          name: {
+            code: "Not unique",
+            message: "The role name must be unique.",
+          },
+        }),
+      });
+    }
+  };
 }

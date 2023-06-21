@@ -45,6 +45,14 @@ type RolePermissionCreateMultiple = (
   }>
 ) => Promise<RolePermissionT[]>;
 
+type RolePermissionDeleteMultiple = (
+  id: RolePermissionT["id"][]
+) => Promise<RolePermissionT[]>;
+
+type RolePermissionGetAll = (role_id: number) => Promise<RolePermissionT[]>;
+
+type RolePermissionDeleteAll = (role_id: number) => Promise<RolePermissionT[]>;
+
 // -------------------------------------------
 // User
 export type RolePermissionT = {
@@ -82,7 +90,34 @@ export default class RolePermission {
     );
     return permissionsData;
   };
-  static getPermissions = async (role_id: number) => {};
+  static deleteMultiple: RolePermissionDeleteMultiple = async (ids) => {
+    const permissionsPromise = ids.map((id) => {
+      return client.query<RolePermissionT>({
+        text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
+        values: [id],
+      });
+    });
+
+    const permissionsRes = await Promise.all(permissionsPromise);
+    const permissionsData = permissionsRes.map(
+      (permission) => permission.rows[0]
+    );
+    return permissionsData;
+  };
+  static deleteAll: RolePermissionDeleteAll = async (role_id) => {
+    const res = await client.query<RolePermissionT>({
+      text: `DELETE FROM lucid_role_permissions WHERE role_id = $1 RETURNING *`,
+      values: [role_id],
+    });
+    return res.rows;
+  };
+  static getAll: RolePermissionGetAll = async (role_id) => {
+    const res = await client.query<RolePermissionT>({
+      text: `SELECT * FROM lucid_role_permissions WHERE role_id = $1`,
+      values: [role_id],
+    });
+    return res.rows;
+  };
   // -------------------------------------------
   // Getters
   static get permissions(): {
