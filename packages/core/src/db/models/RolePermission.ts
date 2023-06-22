@@ -4,38 +4,55 @@ import { queryDataFormat } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
-export type PermissionT =
+type PermissionUsers =
   | "create_user"
   | "read_user"
   | "update_user"
-  | "delete_user"
+  | "delete_user";
+type PermissionRoles =
   | "create_role"
   | "read_role"
   | "update_role"
   | "delete_role"
-  | "assign_role"
+  | "assign_role";
+type PermissionMedia =
   | "create_media"
   | "read_media"
   | "update_media"
-  | "delete_media"
-  | "update_settings"
-  | "update_environment"
-  | "migrate_environment";
+  | "delete_media";
+type PermissionSettings = "update_settings";
+type PermissionEnvironment = "update_environment" | "migrate_environment";
+// env permissions
+type PermissionContent =
+  | "create_content"
+  | "read_content"
+  | "update_content"
+  | "delete_content"
+  | "publish_content"
+  | "unpublish_content";
+type PermissionCategory =
+  | "create_category"
+  | "read_category"
+  | "update_category"
+  | "delete_category";
+type PermissionMenu =
+  | "create_menu"
+  | "read_menu"
+  | "update_menu"
+  | "delete_menu";
+
+// Type Categories
+export type PermissionT =
+  | PermissionUsers
+  | PermissionRoles
+  | PermissionMedia
+  | PermissionSettings
+  | PermissionEnvironment;
 
 export type EnvironmentPermissionT =
-  | `create_content`
-  | `read_content`
-  | `update_content`
-  | `delete_content`
-  | `publish_content`
-  | `unpublish_content`
-  | `create_category`
-  | `update_category`
-  | `delete_category`
-  | `create_menu`
-  | `read_menu`
-  | `update_menu`
-  | `delete_menu`;
+  | PermissionContent
+  | PermissionCategory
+  | PermissionMenu;
 
 type RolePermissionCreateMultiple = (
   role_id: number,
@@ -118,54 +135,104 @@ export default class RolePermission {
     });
     return res.rows;
   };
+
   // -------------------------------------------
   // Getters
+  static get getValidPermissions() {
+    return {
+      global: {
+        users: {
+          title: "Users",
+          permissions: RolePermission.userPermissions,
+        },
+        roles: {
+          title: "Roles",
+          permissions: RolePermission.rolePermissions,
+        },
+        media: {
+          title: "Media",
+          permissions: RolePermission.mediaPermissions,
+        },
+        settings: {
+          title: "Settings",
+          permissions: RolePermission.settingsPermissions,
+        },
+        environment: {
+          title: "Environment",
+          permissions: RolePermission.environmentPermissions,
+        },
+      },
+      environment: {
+        content: {
+          title: "Content",
+          permissions: RolePermission.contentPermissions,
+        },
+        category: {
+          title: "Category",
+          permissions: RolePermission.categoryPermissions,
+        },
+        menu: {
+          title: "Menu",
+          permissions: RolePermission.menuPermissions,
+        },
+      },
+    };
+  }
   static get permissions(): {
     global: PermissionT[];
     environment: EnvironmentPermissionT[];
   } {
     return {
       global: [
-        // Users
-        "create_user",
-        "read_user",
-        "update_user",
-        "delete_user",
-        // Roles
-        "create_role",
-        "read_role",
-        "update_role",
-        "delete_role",
-        "assign_role",
-        // Media
-        "create_media",
-        "read_media",
-        "update_media",
-        "delete_media",
-        // Settings
-        "update_settings",
-        // Environment Management
-        "update_environment",
-        "migrate_environment",
+        ...RolePermission.userPermissions,
+        ...RolePermission.rolePermissions,
+        ...RolePermission.mediaPermissions,
+        ...RolePermission.settingsPermissions,
+        ...RolePermission.environmentPermissions,
       ],
       environment: [
-        // Content
-        `create_content`,
-        `read_content`,
-        `update_content`,
-        `delete_content`,
-        `publish_content`,
-        `unpublish_content`,
-        // Categories
-        `create_category`,
-        `update_category`,
-        `delete_category`,
-        // Menus
-        `create_menu`,
-        `read_menu`,
-        `update_menu`,
-        `delete_menu`,
+        ...RolePermission.contentPermissions,
+        ...RolePermission.categoryPermissions,
+        ...RolePermission.menuPermissions,
       ],
     };
+  }
+  // GET SUB PERMISSIONS
+  static get userPermissions(): PermissionUsers[] {
+    return ["create_user", "read_user", "update_user", "delete_user"];
+  }
+  static get rolePermissions(): PermissionRoles[] {
+    return [
+      "create_role",
+      "read_role",
+      "update_role",
+      "delete_role",
+      "assign_role",
+    ];
+  }
+  static get mediaPermissions(): PermissionMedia[] {
+    return ["create_media", "read_media", "update_media", "delete_media"];
+  }
+  static get settingsPermissions(): PermissionSettings[] {
+    return ["update_settings"];
+  }
+  static get environmentPermissions(): PermissionEnvironment[] {
+    return ["update_environment", "migrate_environment"];
+  }
+  static get contentPermissions(): PermissionContent[] {
+    return [
+      "create_content",
+      "read_content",
+      "update_content",
+      "delete_content",
+      "publish_content",
+      "unpublish_content",
+    ];
+  }
+  static get categoryPermissions(): PermissionCategory[] {
+    return ["create_category", "update_category", "delete_category"];
+  }
+  static get menuPermissions(): PermissionMenu[] {
+    return ["create_menu", "read_menu", "update_menu", "delete_menu"];
   }
 }
