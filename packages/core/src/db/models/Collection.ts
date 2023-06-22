@@ -3,104 +3,144 @@ import { CollectionBuilderT } from "@lucid/collection-builder";
 // Models
 import Config from "@db/models/Config";
 import Environment from "@db/models/Environment";
+import BrickConfig, { BrickConfigT } from "@db/models/BrickConfig";
 // Utils
 import { LucidError } from "@utils/error-handler";
 // Schema
 import collectionSchema from "@schemas/collections";
+// Internal packages
+import { CollectionConfigT } from "@lucid/collection-builder";
 
 // -------------------------------------------
 // Types
 type CollectionGetAll = (
-  query: z.infer<typeof collectionSchema.getAll.query>
-) => Promise<CollectionT[]>;
-type CollectionVerifyType = (
-  key: string,
-  type: string,
+  query: z.infer<typeof collectionSchema.getAll.query>,
   environment_key: string
+) => Promise<CollectionT[]>;
+
+type CollectionGetSingle = (
+  data_mode: "bricks" | "brick_config",
+  props: {
+    collection_key: CollectionConfigT["key"];
+    environment_key: string;
+    type?: CollectionConfigT["type"];
+  }
 ) => Promise<CollectionT>;
 
 // -------------------------------------------
 // Collection
 export type CollectionT = {
-  key: string;
+  key: CollectionConfigT["key"];
+  title: CollectionConfigT["title"];
+  singular: CollectionConfigT["singular"];
+  description: CollectionConfigT["description"];
+  type: CollectionConfigT["type"];
 
-  title: string;
-  singular: string;
-  description: string | null;
-  type: "pages" | "group";
-  bricks: CollectionBuilderT["config"]["bricks"];
+  bricks?: CollectionConfigT["bricks"]; // collection-builder brick config
+  brick_config?: BrickConfigT[]; // brick config merged with collection-builder brick config
 };
 
 export default class Collection {
   // -------------------------------------------
   // Functions
-  static getAll: CollectionGetAll = async (query) => {
+  static getAll: CollectionGetAll = async (query, environment_key) => {
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances) return [];
 
-    let collections = await Promise.all(
-      collectionInstances.map((collection) =>
-        Collection.getCollectionData(collection)
-      )
+    let collections = collectionInstances.map((collection) =>
+      Collection.getCollectionData(collection)
     );
 
-    if (!query.filter) return collections;
+    // Get data
+    const environment = await Environment.getSingle(environment_key);
 
-    if (query.filter.environment_key) {
-      const environment = await Environment.getSingle(
-        query.filter.environment_key
-      );
-      collections = Collection.#filterEnvironmentCollections(
-        environment.assigned_collections || [],
-        collections
-      );
-    }
+    // Filtered
+    collections = Collection.#filterEnvironmentCollections(
+      environment.assigned_collections || [],
+      collections
+    );
+    collections = Collection.#filterCollections(query.filter, collections);
 
-    return Collection.#filterCollections(query.filter, collections);
+    const collectionsRes = collections.map((collection) => {
+      const collectionData: CollectionT = {
+        key: collection.key,
+        title: collection.title,
+        singular: collection.singular,
+        description: collection.description,
+        type: collection.type,
+      };
+
+      if (query.include?.includes("brick_config")) {
+        const collectionBricks = BrickConfig.getAllAllowedBricks({
+          collection,
+          environment,
+        });
+        collectionData.brick_config = collectionBricks;
+      }
+
+      return collectionData;
+    });
+
+    return collectionsRes;
   };
-  static getSingle: CollectionVerifyType = async (
-    key,
-    type,
-    environment_key
-  ) => {
+  static getSingle: CollectionGetSingle = async (data_mode, props) => {
+    // Check access
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances) {
       throw new LucidError({
         type: "basic",
         name: "Collection not found",
-        message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
+        message: `Collection with key "${props.collection_key}" under environment "${props.environment_key}" not found`,
         status: 404,
       });
     }
 
-    const environment = await Environment.getSingle(environment_key);
+    const environment = await Environment.getSingle(props.environment_key);
 
-    const collection = await Promise.all(
-      collectionInstances.map((collection) =>
-        Collection.getCollectionData(collection)
-      )
+    const allCollections = collectionInstances.map((collection) =>
+      Collection.getCollectionData(collection)
     );
 
     const assignedCollections = environment.assigned_collections || [];
 
-    const found = collection.find((c) => {
-      return (
-        c.key === key && c.type === type && assignedCollections.includes(c.key)
-      );
-    });
+    let collection: CollectionT | undefined;
+    if (props.type) {
+      collection = allCollections.find((c) => {
+        return (
+          c.key === props.collection_key &&
+          c.type === props.type &&
+          assignedCollections.includes(c.key)
+        );
+      });
+    } else {
+      collection = allCollections.find((c) => {
+        return (
+          c.key === props.collection_key && assignedCollections.includes(c.key)
+        );
+      });
+    }
 
-    if (!found) {
+    if (!collection) {
       throw new LucidError({
         type: "basic",
         name: "Collection not found",
-        message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
+        message: `Collection with key "${props.collection_key}" and of type "${props.type}" under environment "${props.environment_key}" not found`,
         status: 404,
       });
     }
 
-    return found;
-  };
+    if (data_mode === "brick_config") {
+      const collectionBricks = BrickConfig.getAllAllowedBricks({
+        collection,
+        environment,
+      });
 
+      collection["brick_config"] = collectionBricks;
+      delete collection["bricks"];
+    }
+
+    return collection;
+  };
   // -------------------------------------------
   // Util Functions
   static getCollectionsConfig = (): CollectionBuilderT[] => {

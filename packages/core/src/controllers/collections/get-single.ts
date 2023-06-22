@@ -7,16 +7,16 @@ import collectionSchema from "@schemas/collections";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<
-  typeof collectionSchema.getAll.params,
-  typeof collectionSchema.getAll.body,
-  typeof collectionSchema.getAll.query
+const getSingle: Controller<
+  typeof collectionSchema.getSingle.params,
+  typeof collectionSchema.getSingle.body,
+  typeof collectionSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const collections = await Collection.getAll(
-      req.query,
-      req.headers["lucid-environment"] as string
-    );
+    const collections = await Collection.getSingle("brick_config", {
+      collection_key: req.params.collection_key,
+      environment_key: req.headers["lucid-environment"] as string,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -31,6 +31,6 @@ const getAll: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: collectionSchema.getAll,
-  controller: getAll,
+  schema: collectionSchema.getSingle,
+  controller: getSingle,
 };

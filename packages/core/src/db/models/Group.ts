@@ -48,12 +48,12 @@ export default class Group {
     environment_key,
     collection_key
   ) => {
-    // Get the bricks
-    const collection = await Collection.getSingle(
-      collection_key,
-      "group",
-      environment_key
-    );
+    // Checks if we have access to the collection
+    const collection = await Collection.getSingle("bricks", {
+      collection_key: collection_key,
+      environment_key: environment_key,
+      type: "group",
+    });
 
     // Build Query Data and Query
     const SelectQuery = new SelectQueryBuilder({
@@ -110,6 +110,7 @@ export default class Group {
 
     const pageBricks = await BrickData.getAll(
       "group",
+      "builder",
       group.rows[0].id,
       environment_key,
       collection
@@ -124,8 +125,12 @@ export default class Group {
     collection_key,
     bricks
   ) => {
-    // Get the bricks
-    await Collection.getSingle(collection_key, "group", environment_key);
+    // Used to check if we have access to the collection
+    await Collection.getSingle("bricks", {
+      collection_key: collection_key,
+      environment_key: environment_key,
+      type: "group",
+    });
 
     // Get the group
     const group = await Group.#getOrCreateGroup(

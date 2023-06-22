@@ -1,15 +1,24 @@
+interface CollectionConfigT {
+    key: string;
+    title: string;
+    singular: string;
+    description: string | null;
+    type: "pages" | "group";
+    bricks: Array<CollectionBrickT>;
+}
 interface CollectionOptions {
     config: {
         type: "pages" | "group";
         title: string;
         singular: string;
         description: string | undefined;
-        bricks: Array<{
-            key: string;
-            type: "builder" | "fixed";
-            position?: "standard" | "bottom" | "top" | "sidebar";
-        }>;
+        bricks: Array<CollectionBrickT>;
     };
+}
+interface CollectionBrickT {
+    key: string;
+    type: "builder" | "fixed";
+    position?: "standard" | "bottom" | "top" | "sidebar";
 }
 type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 declare const CollectionBuilder: {
@@ -21,6 +30,6 @@ declare const CollectionBuilder: {
         "__#1@#validateOptions": (options: CollectionOptions) => void;
     };
 };
-export { CollectionBuilderT };
+export { CollectionConfigT, CollectionBuilderT, CollectionBrickT };
 export default CollectionBuilder;
 //# sourceMappingURL=index.d.ts.map

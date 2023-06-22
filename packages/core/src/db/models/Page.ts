@@ -258,14 +258,15 @@ export default class Page {
     }
 
     if (include && include.includes("bricks")) {
-      const collection = await Collection.getSingle(
-        page.rows[0].collection_key,
-        "pages",
-        environment_key
-      );
+      const collection = await Collection.getSingle("bricks", {
+        collection_key: page.rows[0].collection_key,
+        environment_key: page.rows[0].environment_key,
+        type: "pages",
+      });
 
       const pageBricks = await BrickData.getAll(
         "page",
+        "builder",
         page.rows[0].id,
         environment_key,
         collection
@@ -283,12 +284,13 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    // Check if the collection exists and is the correct type and the same environment
-    await Collection.getSingle(
-      data.collection_key,
-      "pages",
-      data.environment_key
-    );
+
+    // Checks if we have access to the collection
+    await Collection.getSingle("bricks", {
+      collection_key: data.collection_key,
+      environment_key: data.environment_key,
+      type: "pages",
+    });
 
     // Check if the the parent_id is the homepage
     await Page.#checkParentNotHomepage({
@@ -383,7 +385,6 @@ export default class Page {
 
     // -------------------------------------------
     // Set Data
-
     let newSlug = undefined;
     if (data.slug) {
       // Check if slug is unique

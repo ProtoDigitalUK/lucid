@@ -5,6 +5,7 @@ import Environment from "@db/models/Environment";
 import { CollectionT } from "@db/models/Collection";
 // Internal packages
 import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
+import { CollectionBrickT } from "@lucid/collection-builder";
 
 interface BrickResponseT {
   id: number;
@@ -195,24 +196,29 @@ const buildBrickStructure = (brickFields: BrickFieldsT[]) => {
 // -------------------------------------------
 // Format response
 const formatBricks = async (
-  brickFields: BrickFieldsT[],
-  envrionment_key: string,
-  collection: CollectionT
+  brick_fields: BrickFieldsT[],
+  environment_key: string,
+  collection: CollectionT,
+  collection_brick_type: CollectionBrickT["type"]
 ) => {
   // Get all config
   const builderInstances = BrickConfig.getBrickConfig();
   if (!builderInstances) return [];
 
-  const environment = await Environment.getSingle(envrionment_key);
+  const environment = await Environment.getSingle(environment_key);
   if (!environment) return [];
 
   // Build the base brick structure
-  const brickStructure = buildBrickStructure(brickFields).filter((brick) => {
-    const instance = builderInstances.find((b) => b.key === brick.key);
-    const allowed = (environment.assigned_bricks || [])?.includes(brick.key);
-    const inCollection = collection.bricks.includes(brick.key);
-
-    return instance && allowed && inCollection;
+  const brickStructure = buildBrickStructure(brick_fields).filter((brick) => {
+    const allowed = BrickConfig.isBrickAllowed(
+      brick.key,
+      {
+        environment,
+        collection,
+      },
+      collection_brick_type
+    );
+    return allowed.allowed;
   });
 
   // Build the field tree
@@ -222,7 +228,7 @@ const formatBricks = async (
     if (!instance) return;
 
     // Build the field tree
-    brick.fields = buildFieldTree(brick.id, brickFields, instance);
+    brick.fields = buildFieldTree(brick.id, brick_fields, instance);
   });
 
   return brickStructure;

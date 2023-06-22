@@ -41,9 +41,7 @@ export default class Config {
     const config = Config.get();
 
     // TODO: Format errors for better readability
-    console.log("Validating config...");
     configSchema.parse(config);
-    console.log("Config validated successfully");
 
     Config.#validateBricks(config);
     Config.#validateCollections(config);

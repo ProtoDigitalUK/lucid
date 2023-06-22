@@ -370,6 +370,41 @@
 			]
 		},
 		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							},
+							{
+								"key": "lucid-environment",
+								"value": "{{LUCID_ENVIRONMENT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/permissions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Environments",
 			"item": [
 				{
@@ -461,7 +496,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages/3?include=bricks",
+											"raw": "{{BASE_URL}}/api/v1/pages/1?include=bricks",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -469,7 +504,7 @@
 												"api",
 												"v1",
 												"pages",
-												"3"
+												"1"
 											],
 											"query": [
 												{
@@ -538,7 +573,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\": \"Test Page\",\n    \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    \"category_ids\": [\n      1\n    ]\n    // \"bricks\": [\n    //     {\n    //         // \"id\": 1,\n    //         \"key\": \"banner\",\n    //         \"fields\": [\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"title\",\n    //                 \"type\": \"text\",\n    //                 \"value\": \"Title\"\n    //             },\n    //             {\n    //                 \"key\": \"link\",\n    //                 \"type\": \"link\",\n    //                 \"value\": \"https://example.com\",\n    //                 \"target\": \"_blank\"\n    //             },\n    //             // {\n    //             //     \"key\": \"page_link\",\n    //             //     \"type\": \"pagelink\",\n    //             //     \"value\": 1,\n    //             //     \"target\": \"_self\"\n    //             // },\n    //             {\n    //                 \"key\": \"colour\",\n    //                 \"type\": \"colour\",\n    //                 \"value\": \"#FFFFFF\"\n    //             },\n    //             {\n    //                 \"key\": \"date\",\n    //                 \"type\": \"datetime\",\n    //                 \"value\": \"10/02/1999\"\n    //             },\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"social_links\",\n    //                 \"type\": \"repeater\",\n    //                 \"items\": [\n    //                     {\n    //                         // \"fields_id\": 1,\n    //                         // \"parent_repeater\": 1,\n    //                         \"group_position\": 1,\n    //                         \"key\": \"social_title\",\n    //                         \"type\": \"text\",\n    //                         \"value\": \"Title 1\"\n    //                     },\n    //                     {\n    //                         // \"fields_id\": 1,\n    //                         // \"parent_repeater\": 1,\n    //                         \"group_position\": 2,\n    //                         \"key\": \"social_title\",\n    //                         \"type\": \"text\",\n    //                         \"value\": \"Title 2\"\n    //                     }\n    //                 ]\n    //             }\n    //         ]\n    //     },\n    //     {\n    //         // \"id\": 1,\n    //         \"key\": \"intro\"\n    //     }\n    // ]\n}",
+											"raw": "{\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                // {\n                //     \"key\": \"page_link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": 1,\n                //     \"target\": \"_self\"\n                // },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            // \"id\": 1,\n            \"key\": \"intro\"\n        }\n    ],\n    \"fixed_bricks\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -546,7 +581,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages/3",
+											"raw": "{{BASE_URL}}/api/v1/pages/1",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -554,7 +589,7 @@
 												"api",
 												"v1",
 												"pages",
-												"3"
+												"1"
 											]
 										}
 									},
@@ -654,7 +689,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 4,\n            \"key\": \"default_meta\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 7,\n                    \"key\": \"meta_title\",\n                    \"type\": \"text\",\n                    \"value\": \"Default Title 2\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"meta_description\",\n                    \"type\": \"text\",\n                    \"value\": \"Welcome to LUCID Headless CMS!\"\n                }\n            ]\n        }\n    ]\n}",
+											"raw": "{\n    \"fixed_bricks\": [\n        {\n            // \"id\": 4,\n            \"key\": \"default_meta\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 7,\n                    \"key\": \"meta_title\",\n                    \"type\": \"text\",\n                    \"value\": \"Default Title 2\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"meta_description\",\n                    \"type\": \"text\",\n                    \"value\": \"Welcome to LUCID Headless CMS!\"\n                }\n            ]\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -898,10 +933,15 @@
 										"key": "_csrf",
 										"value": "{{CSRF}}",
 										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections?filter[environment_key]=site_prod",
+									"raw": "{{BASE_URL}}/api/v1/collections?filter[type]=pages&include=brick_config",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -913,13 +953,44 @@
 									"query": [
 										{
 											"key": "filter[type]",
-											"value": "pages",
-											"disabled": true
+											"value": "pages"
 										},
 										{
-											"key": "filter[environment_key]",
-											"value": "site_prod"
+											"key": "include",
+											"value": "brick_config"
 										}
+									]
+								},
+								"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/page",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"page"
 									]
 								},
 								"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -996,7 +1067,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"]\r\n}",
+							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"intro\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1051,96 +1122,6 @@
 								"migrate"
 							]
 						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Bricks",
-			"item": [
-				{
-					"name": "Get All",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/bricks",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"bricks"
-							],
-							"query": [
-								{
-									"key": "include",
-									"value": "fields",
-									"disabled": true
-								},
-								{
-									"key": "filter[collection_key]",
-									"value": "page",
-									"disabled": true
-								},
-								{
-									"key": "filter[s]",
-									"value": "ban",
-									"disabled": true
-								},
-								{
-									"key": "sort",
-									"value": "-name",
-									"disabled": true
-								},
-								{
-									"key": "filter[environment_key]",
-									"value": "site_prod",
-									"disabled": true
-								}
-							]
-						},
-						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
-					},
-					"response": []
-				},
-				{
-					"name": "Get Single",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							},
-							{
-								"key": "lucid-environment",
-								"value": "{{LUCID_ENVIRONMENT}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/bricks/banner",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"bricks",
-								"banner"
-							]
-						},
-						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
 					},
 					"response": []
 				}
