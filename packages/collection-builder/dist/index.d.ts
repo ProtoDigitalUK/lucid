@@ -17,6 +17,7 @@ declare const CollectionBuilder: {
         key: string;
         config: CollectionOptions["config"];
         "__#1@#removeDuplicateBricks": () => void;
+        "__#1@#addBrickDefaults": () => void;
         "__#1@#validateOptions": (options: CollectionOptions) => void;
     };
 };

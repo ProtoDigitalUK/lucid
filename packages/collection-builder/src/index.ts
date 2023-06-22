@@ -6,7 +6,13 @@ const CollectionOptionsSchema = z.object({
     title: z.string(),
     singular: z.string(),
     description: z.string().optional(),
-    bricks: z.array(z.string()),
+    bricks: z.array(
+      z.object({
+        key: z.string(),
+        type: z.enum(["builder", "fixed"]),
+        position: z.enum(["standard", "bottom", "top", "sidebar"]).optional(),
+      })
+    ),
   }),
 });
 
@@ -39,6 +45,7 @@ const CollectionBuilder = class CollectionBuilder {
 
     this.#validateOptions(options);
     this.#removeDuplicateBricks();
+    this.#addBrickDefaults();
   }
   // ------------------------------------
   // Methods
@@ -62,6 +69,15 @@ const CollectionBuilder = class CollectionBuilder {
         ) === index
     );
     this.config.bricks = [...uniqueBuilderBricks, ...uniqueFixedBricks];
+  };
+  #addBrickDefaults = () => {
+    // add default position to fixed bricks
+    this.config.bricks = this.config.bricks.map((brick) => {
+      if (brick.type === "fixed" && !brick.position) {
+        brick.position = "standard";
+      }
+      return brick;
+    });
   };
 
   // ------------------------------------

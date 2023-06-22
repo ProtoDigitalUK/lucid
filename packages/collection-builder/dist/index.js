@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _CollectionBuilder_removeDuplicateBricks, _CollectionBuilder_validateOptions, _a;
+var _CollectionBuilder_removeDuplicateBricks, _CollectionBuilder_addBrickDefaults, _CollectionBuilder_validateOptions, _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
 const CollectionOptionsSchema = zod_1.default.object({
@@ -16,7 +16,11 @@ const CollectionOptionsSchema = zod_1.default.object({
         title: zod_1.default.string(),
         singular: zod_1.default.string(),
         description: zod_1.default.string().optional(),
-        bricks: zod_1.default.array(zod_1.default.string()),
+        bricks: zod_1.default.array(zod_1.default.object({
+            key: zod_1.default.string(),
+            type: zod_1.default.enum(["builder", "fixed"]),
+            position: zod_1.default.enum(["standard", "bottom", "top", "sidebar"]).optional(),
+        })),
     }),
 });
 // ------------------------------------
@@ -34,6 +38,15 @@ const CollectionBuilder = (_a = class CollectionBuilder {
                 // Remove duplicate fixed bricks
                 const uniqueFixedBricks = fixedBricks.filter((brick, index) => fixedBricks.findIndex((b) => b.key === brick.key && b.position === brick.position) === index);
                 this.config.bricks = [...uniqueBuilderBricks, ...uniqueFixedBricks];
+            });
+            _CollectionBuilder_addBrickDefaults.set(this, () => {
+                // add default position to fixed bricks
+                this.config.bricks = this.config.bricks.map((brick) => {
+                    if (brick.type === "fixed" && !brick.position) {
+                        brick.position = "standard";
+                    }
+                    return brick;
+                });
             });
             // ------------------------------------
             // Getters
@@ -54,9 +67,11 @@ const CollectionBuilder = (_a = class CollectionBuilder {
             this.config = options.config;
             __classPrivateFieldGet(this, _CollectionBuilder_validateOptions, "f").call(this, options);
             __classPrivateFieldGet(this, _CollectionBuilder_removeDuplicateBricks, "f").call(this);
+            __classPrivateFieldGet(this, _CollectionBuilder_addBrickDefaults, "f").call(this);
         }
     },
     _CollectionBuilder_removeDuplicateBricks = new WeakMap(),
+    _CollectionBuilder_addBrickDefaults = new WeakMap(),
     _CollectionBuilder_validateOptions = new WeakMap(),
     _a);
 exports.default = CollectionBuilder;
