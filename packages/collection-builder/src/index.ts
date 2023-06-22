@@ -18,7 +18,11 @@ interface CollectionOptions {
     title: string;
     singular: string;
     description: string | undefined;
-    bricks: string[];
+    bricks: Array<{
+      key: string;
+      type: "builder" | "fixed";
+      position?: "standard" | "bottom" | "top" | "sidebar";
+    }>;
   };
 }
 
@@ -34,9 +38,31 @@ const CollectionBuilder = class CollectionBuilder {
     this.config = options.config;
 
     this.#validateOptions(options);
+    this.#removeDuplicateBricks();
   }
   // ------------------------------------
   // Methods
+  #removeDuplicateBricks = () => {
+    const bricks = this.config.bricks;
+
+    const builderBricks = bricks.filter((brick) => brick.type === "builder");
+    const fixedBricks = bricks.filter((brick) => brick.type === "fixed");
+
+    // Remove duplicate builder bricks
+    const uniqueBuilderBricks = builderBricks.filter(
+      (brick, index) =>
+        builderBricks.findIndex((b) => b.key === brick.key) === index
+    );
+
+    // Remove duplicate fixed bricks
+    const uniqueFixedBricks = fixedBricks.filter(
+      (brick, index) =>
+        fixedBricks.findIndex(
+          (b) => b.key === brick.key && b.position === brick.position
+        ) === index
+    );
+    this.config.bricks = [...uniqueBuilderBricks, ...uniqueFixedBricks];
+  };
 
   // ------------------------------------
   // Getters

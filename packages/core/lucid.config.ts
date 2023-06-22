@@ -85,7 +85,21 @@ const pageCollection = new CollectionBuilder("page", {
     title: "Pages",
     singular: "Page",
     description: "Pages are used to create static content on your website.",
-    bricks: ["banner", "intro"],
+    bricks: [
+      {
+        key: "banner",
+        type: "builder",
+      },
+      {
+        key: "intro",
+        type: "builder",
+      },
+      {
+        key: "default_meta",
+        type: "fixed",
+        position: "bottom",
+      },
+    ],
   },
 });
 
@@ -95,7 +109,13 @@ const settingsCollection = new CollectionBuilder("settings", {
     title: "Settings",
     singular: "Setting",
     description: "Settings are used to configure your website.",
-    bricks: ["default_meta"],
+    bricks: [
+      {
+        key: "default_meta",
+        type: "fixed",
+        position: "standard",
+      },
+    ],
   },
 });
 

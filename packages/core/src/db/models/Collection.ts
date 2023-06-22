@@ -28,7 +28,7 @@ export type CollectionT = {
   singular: string;
   description: string | null;
   type: "pages" | "group";
-  bricks: Array<string>;
+  bricks: CollectionBuilderT["config"]["bricks"];
 };
 
 export default class Collection {
