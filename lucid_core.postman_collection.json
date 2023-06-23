@@ -925,6 +925,108 @@
 							]
 						},
 						{
+							"name": "Brick Config",
+							"item": [
+								{
+									"name": "Get All",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/brick-config/page/all",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"brick-config",
+												"page",
+												"all"
+											],
+											"query": [
+												{
+													"key": "include",
+													"value": "fields",
+													"disabled": true
+												}
+											]
+										},
+										"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+									},
+									"response": []
+								},
+								{
+									"name": "Get Single",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/brick-config/page/banner",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"brick-config",
+												"page",
+												"banner"
+											]
+										},
+										"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "Get All",
 							"request": {
 								"method": "GET",
@@ -1067,7 +1169,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"intro\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"]\r\n}",
+							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

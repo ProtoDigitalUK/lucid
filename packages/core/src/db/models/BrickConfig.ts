@@ -1,11 +1,13 @@
 import z from "zod";
 import Config from "@db/models/Config";
 // Models
-import { CollectionT } from "@db/models/Collection";
-import { EnvironmentT } from "@db/models/Environment";
+import Collection, { CollectionT } from "@db/models/Collection";
+import Environment, { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 import { CollectionBrickT } from "@lucid/collection-builder";
+// Utils
+import { LucidError } from "@utils/error-handler";
 // Schema
 import bricksSchema from "@schemas/bricks";
 
@@ -20,9 +22,24 @@ type BrickConfigIsBrickAllowed = (
   type?: CollectionBrickT["type"]
 ) => {
   allowed: boolean;
-  collectionBrick?: CollectionBrickT;
   brick?: BrickConfigT;
+  collection_meta?: {
+    type: CollectionBrickT["type"];
+    position: CollectionBrickT["position"];
+  };
 };
+
+type BrickConfigGetAll = (
+  collection_key: string,
+  environment_key: string,
+  query: z.infer<typeof bricksSchema.getAll.query>
+) => Promise<BrickConfigT[]>;
+
+type BrickConfigGetSingle = (
+  brick_key: string,
+  collection_key: string,
+  environment_key: string
+) => Promise<BrickConfigT>;
 
 type BrickConfigGetAllAllowedBricks = (data: {
   collection: CollectionT;
@@ -35,15 +52,61 @@ export type BrickConfigT = {
   key: string;
   title: string;
   fields?: CustomField[];
-  collection_meta?: {
-    type?: CollectionBrickT["type"];
-    position?: CollectionBrickT["position"];
-  };
 };
 
 export default class BrickConfig {
   // -------------------------------------------
   // Functions
+  static getSingle: BrickConfigGetSingle = async (
+    brick_key,
+    collection_key,
+    environment_key
+  ) => {
+    const allBricks = await BrickConfig.getAll(
+      collection_key,
+      environment_key,
+      {
+        include: ["fields"],
+      }
+    );
+
+    const brick = allBricks.find((b) => b.key === brick_key);
+    if (!brick) {
+      throw new LucidError({
+        type: "basic",
+        name: "Brick not found",
+        message: "We could not find the brick you are looking for.",
+        status: 404,
+      });
+    }
+
+    return brick;
+  };
+  static getAll: BrickConfigGetAll = async (
+    collection_key,
+    environment_key,
+    query
+  ) => {
+    // get collections
+    const collection = await Collection.getSingle("bricks", {
+      collection_key: collection_key,
+      environment_key: environment_key,
+    });
+    const environments = await Environment.getSingle(environment_key);
+
+    const allowedBricks = BrickConfig.getAllAllowedBricks({
+      collection: collection,
+      environment: environments,
+    });
+
+    if (!query.include?.includes("fields")) {
+      allowedBricks.forEach((brick) => {
+        delete brick.fields;
+      });
+    }
+
+    return allowedBricks;
+  };
   static isBrickAllowed: BrickConfigIsBrickAllowed = (key, data, type) => {
     // checks if the brick is allowed in the collection and environment and that there is config for it
     let allowed = false;
@@ -72,16 +135,16 @@ export default class BrickConfig {
         key: instance.key,
         title: instance.title,
         fields: instance.fieldTree,
-        collection_meta: {
-          type: collectionBrick?.type,
-          position: collectionBrick?.position,
-        },
       };
     }
 
     return {
       allowed: allowed,
       brick: brick,
+      collectionMeta: {
+        type: collectionBrick?.type,
+        position: collectionBrick?.position,
+      },
     };
   };
   static getAllAllowedBricks: BrickConfigGetAllAllowedBricks = (data) => {
