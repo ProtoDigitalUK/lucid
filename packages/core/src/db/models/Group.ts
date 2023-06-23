@@ -49,7 +49,7 @@ export default class Group {
     collection_key
   ) => {
     // Checks if we have access to the collection
-    const collection = await Collection.getSingle("bricks", {
+    const collection = await Collection.getSingle({
       collection_key: collection_key,
       environment_key: environment_key,
       type: "group",
@@ -126,7 +126,7 @@ export default class Group {
     bricks
   ) => {
     // Used to check if we have access to the collection
-    await Collection.getSingle("bricks", {
+    await Collection.getSingle({
       collection_key: collection_key,
       environment_key: environment_key,
       type: "group",

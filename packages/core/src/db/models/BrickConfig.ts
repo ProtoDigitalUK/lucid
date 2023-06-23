@@ -23,10 +23,7 @@ type BrickConfigIsBrickAllowed = (
 ) => {
   allowed: boolean;
   brick?: BrickConfigT;
-  collection_meta?: {
-    type: CollectionBrickT["type"];
-    position: CollectionBrickT["position"];
-  };
+  collectionBrick?: CollectionBrickT;
 };
 
 type BrickConfigGetAll = (
@@ -44,7 +41,10 @@ type BrickConfigGetSingle = (
 type BrickConfigGetAllAllowedBricks = (data: {
   collection: CollectionT;
   environment: EnvironmentT;
-}) => BrickConfigT[];
+}) => {
+  bricks: BrickConfigT[];
+  collectionBricks: CollectionBrickT[];
+};
 
 // -------------------------------------------
 // Brick Config
@@ -88,7 +88,7 @@ export default class BrickConfig {
     query
   ) => {
     // get collections
-    const collection = await Collection.getSingle("bricks", {
+    const collection = await Collection.getSingle({
       collection_key: collection_key,
       environment_key: environment_key,
     });
@@ -100,12 +100,12 @@ export default class BrickConfig {
     });
 
     if (!query.include?.includes("fields")) {
-      allowedBricks.forEach((brick) => {
+      allowedBricks.bricks.forEach((brick) => {
         delete brick.fields;
       });
     }
 
-    return allowedBricks;
+    return allowedBricks.bricks;
   };
   static isBrickAllowed: BrickConfigIsBrickAllowed = (key, data, type) => {
     // checks if the brick is allowed in the collection and environment and that there is config for it
@@ -141,14 +141,12 @@ export default class BrickConfig {
     return {
       allowed: allowed,
       brick: brick,
-      collectionMeta: {
-        type: collectionBrick?.type,
-        position: collectionBrick?.position,
-      },
+      collectionBrick: collectionBrick,
     };
   };
   static getAllAllowedBricks: BrickConfigGetAllAllowedBricks = (data) => {
     const allowedBricks: BrickConfigT[] = [];
+    const allowedCollectionBricks: CollectionBrickT[] = [];
     const brickConfigData = BrickConfig.getBrickConfig();
 
     for (const brick of brickConfigData) {
@@ -160,8 +158,14 @@ export default class BrickConfig {
       if (brickAllowed.allowed && brickAllowed.brick) {
         allowedBricks.push(brickAllowed.brick);
       }
+      if (brickAllowed.allowed && brickAllowed.collectionBrick) {
+        allowedCollectionBricks.push(brickAllowed.collectionBrick);
+      }
     }
-    return allowedBricks;
+    return {
+      bricks: allowedBricks,
+      collectionBricks: allowedCollectionBricks,
+    };
   };
   // -------------------------------------------
   // Util Functions

@@ -9,7 +9,7 @@ const getAllQuery = z.object({
       type: z.enum(["pages", "group"]).optional(),
     })
     .optional(),
-  include: z.array(z.enum(["brick_config"])).optional(),
+  include: z.array(z.enum(["bricks"])).optional(),
 });
 const getAllParams = z.object({});
 

@@ -18,14 +18,11 @@ type CollectionGetAll = (
   environment_key: string
 ) => Promise<CollectionT[]>;
 
-type CollectionGetSingle = (
-  data_mode: "bricks" | "brick_config",
-  props: {
-    collection_key: CollectionConfigT["key"];
-    environment_key: string;
-    type?: CollectionConfigT["type"];
-  }
-) => Promise<CollectionT>;
+type CollectionGetSingle = (props: {
+  collection_key: CollectionConfigT["key"];
+  environment_key: string;
+  type?: CollectionConfigT["type"];
+}) => Promise<CollectionT>;
 
 // -------------------------------------------
 // Collection
@@ -36,8 +33,7 @@ export type CollectionT = {
   description: CollectionConfigT["description"];
   type: CollectionConfigT["type"];
 
-  bricks?: CollectionConfigT["bricks"]; // collection-builder brick config
-  brick_config?: BrickConfigT[]; // brick config merged with collection-builder brick config
+  bricks?: CollectionConfigT["bricks"];
 };
 
 export default class Collection {
@@ -70,12 +66,12 @@ export default class Collection {
         type: collection.type,
       };
 
-      if (query.include?.includes("brick_config")) {
+      if (query.include?.includes("bricks")) {
         const collectionBricks = BrickConfig.getAllAllowedBricks({
           collection,
           environment,
         });
-        collectionData.brick_config = collectionBricks;
+        collectionData.bricks = collectionBricks.collectionBricks;
       }
 
       return collectionData;
@@ -83,7 +79,7 @@ export default class Collection {
 
     return collectionsRes;
   };
-  static getSingle: CollectionGetSingle = async (data_mode, props) => {
+  static getSingle: CollectionGetSingle = async (props) => {
     // Check access
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances) {
@@ -129,15 +125,11 @@ export default class Collection {
       });
     }
 
-    if (data_mode === "brick_config") {
-      const collectionBricks = BrickConfig.getAllAllowedBricks({
-        collection,
-        environment,
-      });
-
-      collection["brick_config"] = collectionBricks;
-      delete collection["bricks"];
-    }
+    const collectionBricks = BrickConfig.getAllAllowedBricks({
+      collection,
+      environment,
+    });
+    collection["bricks"] = collectionBricks.collectionBricks;
 
     return collection;
   };

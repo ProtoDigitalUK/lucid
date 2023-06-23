@@ -13,7 +13,7 @@ const getSingle: Controller<
   typeof collectionSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const collections = await Collection.getSingle("brick_config", {
+    const collections = await Collection.getSingle({
       collection_key: req.params.collection_key,
       environment_key: req.headers["lucid-environment"] as string,
     });

@@ -258,7 +258,7 @@ export default class Page {
     }
 
     if (include && include.includes("bricks")) {
-      const collection = await Collection.getSingle("bricks", {
+      const collection = await Collection.getSingle({
         collection_key: page.rows[0].collection_key,
         environment_key: page.rows[0].environment_key,
         type: "pages",
@@ -286,7 +286,7 @@ export default class Page {
     // Checks
 
     // Checks if we have access to the collection
-    await Collection.getSingle("bricks", {
+    await Collection.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "pages",
