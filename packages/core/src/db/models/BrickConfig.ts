@@ -21,7 +21,10 @@ type BrickConfigIsBrickAllowed = (data: {
 }) => {
   allowed: boolean;
   brick?: BrickConfigT;
-  collectionBrick?: CollectionBrickT;
+  collectionBrick?: {
+    builder?: CollectionBrickT;
+    fixed?: CollectionBrickT;
+  };
 };
 
 type BrickConfigGetAll = (
@@ -110,21 +113,28 @@ export default class BrickConfig {
     const envAssigned = (data.environment.assigned_bricks || [])?.includes(
       data.key
     );
-    let collectionBrick: CollectionBrickT | undefined;
+
+    let builderBrick: CollectionBrickT | undefined;
+    let fixedBrick: CollectionBrickT | undefined;
 
     if (!data.type) {
-      collectionBrick = data.collection.bricks?.find(
-        (b) =>
-          (b.key === data.key && b.type === "builder") || b.type === "fixed"
+      builderBrick = data.collection.bricks?.find(
+        (b) => b.key === data.key && b.type === "builder"
+      ) as CollectionBrickT | undefined;
+
+      fixedBrick = data.collection.bricks?.find(
+        (b) => b.key === data.key && b.type === "fixed"
       ) as CollectionBrickT | undefined;
     } else {
-      collectionBrick = data.collection.bricks?.find(
+      const brickF = data.collection.bricks?.find(
         (b) => b.key === data.key && b.type === data.type
       ) as CollectionBrickT | undefined;
+      if (data.type === "builder") builderBrick = brickF;
+      if (data.type === "fixed") fixedBrick = brickF;
     }
 
     // Set response data
-    if (instance && envAssigned && collectionBrick) allowed = true;
+    if (instance && envAssigned && (builderBrick || fixedBrick)) allowed = true;
 
     let brick: BrickConfigT | undefined;
     if (instance) {
@@ -138,7 +148,10 @@ export default class BrickConfig {
     return {
       allowed: allowed,
       brick: brick,
-      collectionBrick: collectionBrick,
+      collectionBrick: {
+        builder: builderBrick,
+        fixed: fixedBrick,
+      },
     };
   };
   static getAllAllowedBricks: BrickConfigGetAllAllowedBricks = (data) => {
@@ -157,7 +170,10 @@ export default class BrickConfig {
         allowedBricks.push(brickAllowed.brick);
       }
       if (brickAllowed.allowed && brickAllowed.collectionBrick) {
-        allowedCollectionBricks.push(brickAllowed.collectionBrick);
+        if (brickAllowed.collectionBrick.builder)
+          allowedCollectionBricks.push(brickAllowed.collectionBrick.builder);
+        if (brickAllowed.collectionBrick.fixed)
+          allowedCollectionBricks.push(brickAllowed.collectionBrick.fixed);
       }
     }
     return {

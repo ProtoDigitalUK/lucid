@@ -125,11 +125,12 @@ export default class BrickData {
     const promises = [];
 
     const allowed = BrickConfig.isBrickAllowed({
-      key: data.brick_type,
+      key: data.brick.key,
       type: data.brick_type,
       environment: data.environment,
       collection: data.collection,
     });
+
     if (!allowed.allowed) {
       throw new LucidError({
         type: "basic",
