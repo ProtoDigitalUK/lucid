@@ -151,7 +151,7 @@ export default class Collection {
     const collection = await Collection.getSingle({
       collection_key: props.collection_key,
       environment_key: props.environment_key,
-      type: "singlepage",
+      type: props.collection_type,
     });
 
     // -------------------------------------------
