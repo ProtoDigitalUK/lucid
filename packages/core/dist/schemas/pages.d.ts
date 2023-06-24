@@ -118,7 +118,92 @@ declare const _default: {
             category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
             published: z.ZodOptional<z.ZodBoolean>;
             excerpt: z.ZodOptional<z.ZodString>;
-            bricks: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            builder_bricks: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                id: z.ZodOptional<z.ZodNumber>;
+                key: z.ZodString;
+                fields: z.ZodOptional<z.ZodArray<z.ZodType<{
+                    type: import("../../../brick-builder/dist").FieldTypesEnum;
+                    key: string;
+                    fields_id?: number | undefined;
+                    parent_repeater?: number | undefined;
+                    group_position?: number | undefined;
+                    value?: any;
+                    target?: any;
+                } & {
+                    items?: ({
+                        type: import("../../../brick-builder/dist").FieldTypesEnum;
+                        key: string;
+                        fields_id?: number | undefined;
+                        parent_repeater?: number | undefined;
+                        group_position?: number | undefined;
+                        value?: any;
+                        target?: any;
+                    } & any)[] | undefined;
+                }, z.ZodTypeDef, {
+                    type: import("../../../brick-builder/dist").FieldTypesEnum;
+                    key: string;
+                    fields_id?: number | undefined;
+                    parent_repeater?: number | undefined;
+                    group_position?: number | undefined;
+                    value?: any;
+                    target?: any;
+                } & {
+                    items?: ({
+                        type: import("../../../brick-builder/dist").FieldTypesEnum;
+                        key: string;
+                        fields_id?: number | undefined;
+                        parent_repeater?: number | undefined;
+                        group_position?: number | undefined;
+                        value?: any;
+                        target?: any;
+                    } & any)[] | undefined;
+                }>, "many">>;
+            }, "strip", z.ZodTypeAny, {
+                key: string;
+                id?: number | undefined;
+                fields?: ({
+                    type: import("../../../brick-builder/dist").FieldTypesEnum;
+                    key: string;
+                    fields_id?: number | undefined;
+                    parent_repeater?: number | undefined;
+                    group_position?: number | undefined;
+                    value?: any;
+                    target?: any;
+                } & {
+                    items?: ({
+                        type: import("../../../brick-builder/dist").FieldTypesEnum;
+                        key: string;
+                        fields_id?: number | undefined;
+                        parent_repeater?: number | undefined;
+                        group_position?: number | undefined;
+                        value?: any;
+                        target?: any;
+                    } & any)[] | undefined;
+                })[] | undefined;
+            }, {
+                key: string;
+                id?: number | undefined;
+                fields?: ({
+                    type: import("../../../brick-builder/dist").FieldTypesEnum;
+                    key: string;
+                    fields_id?: number | undefined;
+                    parent_repeater?: number | undefined;
+                    group_position?: number | undefined;
+                    value?: any;
+                    target?: any;
+                } & {
+                    items?: ({
+                        type: import("../../../brick-builder/dist").FieldTypesEnum;
+                        key: string;
+                        fields_id?: number | undefined;
+                        parent_repeater?: number | undefined;
+                        group_position?: number | undefined;
+                        value?: any;
+                        target?: any;
+                    } & any)[] | undefined;
+                })[] | undefined;
+            }>, "many">>;
+            fixed_bricks: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 id: z.ZodOptional<z.ZodNumber>;
                 key: z.ZodString;
                 fields: z.ZodOptional<z.ZodArray<z.ZodType<{
@@ -211,7 +296,30 @@ declare const _default: {
             category_ids?: number[] | undefined;
             published?: boolean | undefined;
             excerpt?: string | undefined;
-            bricks?: {
+            builder_bricks?: {
+                key: string;
+                id?: number | undefined;
+                fields?: ({
+                    type: import("../../../brick-builder/dist").FieldTypesEnum;
+                    key: string;
+                    fields_id?: number | undefined;
+                    parent_repeater?: number | undefined;
+                    group_position?: number | undefined;
+                    value?: any;
+                    target?: any;
+                } & {
+                    items?: ({
+                        type: import("../../../brick-builder/dist").FieldTypesEnum;
+                        key: string;
+                        fields_id?: number | undefined;
+                        parent_repeater?: number | undefined;
+                        group_position?: number | undefined;
+                        value?: any;
+                        target?: any;
+                    } & any)[] | undefined;
+                })[] | undefined;
+            }[] | undefined;
+            fixed_bricks?: {
                 key: string;
                 id?: number | undefined;
                 fields?: ({
@@ -242,7 +350,30 @@ declare const _default: {
             category_ids?: number[] | undefined;
             published?: boolean | undefined;
             excerpt?: string | undefined;
-            bricks?: {
+            builder_bricks?: {
+                key: string;
+                id?: number | undefined;
+                fields?: ({
+                    type: import("../../../brick-builder/dist").FieldTypesEnum;
+                    key: string;
+                    fields_id?: number | undefined;
+                    parent_repeater?: number | undefined;
+                    group_position?: number | undefined;
+                    value?: any;
+                    target?: any;
+                } & {
+                    items?: ({
+                        type: import("../../../brick-builder/dist").FieldTypesEnum;
+                        key: string;
+                        fields_id?: number | undefined;
+                        parent_repeater?: number | undefined;
+                        group_position?: number | undefined;
+                        value?: any;
+                        target?: any;
+                    } & any)[] | undefined;
+                })[] | undefined;
+            }[] | undefined;
+            fixed_bricks?: {
                 key: string;
                 id?: number | undefined;
                 fields?: ({

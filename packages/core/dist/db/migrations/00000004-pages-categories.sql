@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS lucid_page_categories (
   PRIMARY KEY (page_id, category_id)
 );
 
--- GROUP TABLE - collection group type, is used as a intermediary table for the collections bricks
-CREATE TABLE IF NOT EXISTS lucid_groups (
+-- GROUP TABLE - collection singlepages type, is used as a intermediary table for the collections bricks
+CREATE TABLE IF NOT EXISTS lucid_singlepages (
   id SERIAL PRIMARY KEY,
   environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
   collection_key TEXT NOT NULL, -- unique to environment_key

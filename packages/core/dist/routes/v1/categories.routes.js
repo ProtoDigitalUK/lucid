@@ -14,6 +14,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/",
+    permissions: {
+        environments: ["read_content"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -26,6 +29,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/:id",
+    permissions: {
+        environments: ["read_content"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -37,6 +43,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "post",
     path: "/",
+    permissions: {
+        environments: ["create_content"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -48,6 +57,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "patch",
     path: "/:id",
+    permissions: {
+        environments: ["update_content"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -59,6 +71,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "delete",
     path: "/:id",
+    permissions: {
+        environments: ["delete_content"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,

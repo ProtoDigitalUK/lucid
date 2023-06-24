@@ -1,15 +1,16 @@
-CREATE TABLE IF NOT EXISTS lucid_page_bricks (
+CREATE TABLE IF NOT EXISTS lucid_collection_bricks (
   id SERIAL PRIMARY KEY,
+  brick_type TEXT NOT NULL,
   brick_key TEXT NOT NULL,
   page_id INT REFERENCES lucid_pages(id) ON DELETE CASCADE,
-  group_id INT REFERENCES lucid_groups(id) ON DELETE CASCADE,
+  singlepage_id INT REFERENCES lucid_singlepages(id) ON DELETE CASCADE,
   
   brick_order INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS lucid_fields (
   fields_id SERIAL PRIMARY KEY,
-  page_brick_id INT REFERENCES lucid_page_bricks(id) ON DELETE CASCADE,
+  collection_brick_id INT REFERENCES lucid_collection_bricks(id) ON DELETE CASCADE,
   parent_repeater INT REFERENCES lucid_fields(fields_id) ON DELETE CASCADE,
 
   key TEXT NOT NULL,

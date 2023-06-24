@@ -1,10 +1,11 @@
-import { BrickFieldsT } from "../../db/models/BrickData";
+import { BrickFieldsT, BrickT } from "../../db/models/BrickData";
 import { CollectionT } from "../../db/models/Collection";
 import { FieldTypes } from "@lucid/brick-builder";
-interface BrickResponseT {
-    id: number;
-    key: string;
-    order: number;
+export interface BrickResponseT {
+    id: BrickT["id"];
+    key: BrickT["brick_key"];
+    order: BrickT["brick_order"];
+    type: BrickT["brick_type"];
     fields: Array<{
         fields_id: number;
         key: string;
@@ -18,6 +19,10 @@ interface BrickResponseT {
         items?: Array<BrickResponseT["fields"][0]>;
     }>;
 }
-declare const formatBricks: (brickFields: BrickFieldsT[], envrionment_key: string, collection: CollectionT) => Promise<BrickResponseT[]>;
+declare const formatBricks: (data: {
+    brick_fields: BrickFieldsT[];
+    environment_key: string;
+    collection: CollectionT;
+}) => Promise<BrickResponseT[]>;
 export default formatBricks;
 //# sourceMappingURL=format-bricks.d.ts.map

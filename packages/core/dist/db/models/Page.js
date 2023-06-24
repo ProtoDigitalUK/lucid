@@ -20,7 +20,7 @@ const query_helpers_1 = require("../../utils/query-helpers");
 class Page {
 }
 _a = Page;
-Page.getMultiple = async (environment_key, query) => {
+Page.getMultiple = async (query, data) => {
     const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -44,7 +44,7 @@ Page.getMultiple = async (environment_key, query) => {
         filter: {
             data: {
                 ...filter,
-                environment_key: environment_key,
+                environment_key: data.environment_key,
             },
             meta: {
                 collection_key: {
@@ -112,7 +112,7 @@ Page.getMultiple = async (environment_key, query) => {
         count: count.rows[0].count,
     };
 };
-Page.getSingle = async (environment_key, id, query) => {
+Page.getSingle = async (query, data) => {
     const { include } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -135,8 +135,8 @@ Page.getSingle = async (environment_key, id, query) => {
         exclude: undefined,
         filter: {
             data: {
-                id: id,
-                environment_key: environment_key,
+                id: data.id,
+                environment_key: data.environment_key,
             },
             meta: {
                 id: {
@@ -171,20 +171,34 @@ Page.getSingle = async (environment_key, id, query) => {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Page not found",
-            message: `Page with id "${id}" not found`,
+            message: `Page with id "${data.id}" not found`,
             status: 404,
         });
     }
     if (include && include.includes("bricks")) {
-        const collection = await Collection_1.default.getSingle(page.rows[0].collection_key, "pages", environment_key);
-        const pageBricks = await BrickData_1.default.getAll("page", page.rows[0].id, environment_key, collection);
-        page.rows[0].bricks = pageBricks;
+        const collection = await Collection_1.default.getSingle({
+            collection_key: page.rows[0].collection_key,
+            environment_key: page.rows[0].environment_key,
+            type: "pages",
+        });
+        const pageBricks = await BrickData_1.default.getAll({
+            reference_id: page.rows[0].id,
+            type: "pages",
+            environment_key: data.environment_key,
+            collection: collection,
+        });
+        page.rows[0].builder_bricks = pageBricks.builder_bricks;
+        page.rows[0].fixed_bricks = pageBricks.fixed_bricks;
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.create = async (userId, data) => {
+Page.create = async (data) => {
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
-    await Collection_1.default.getSingle(data.collection_key, "pages", data.environment_key);
+    await Collection_1.default.getSingle({
+        collection_key: data.collection_key,
+        environment_key: data.environment_key,
+        type: "pages",
+    });
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
         environment_key: data.environment_key,
@@ -214,7 +228,7 @@ Page.create = async (userId, data) => {
             data.excerpt || null,
             data.published || false,
             parentId,
-            userId,
+            data.userId,
         ],
     });
     if (!page.rows[0]) {
@@ -240,19 +254,19 @@ Page.create = async (userId, data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.update = async (userId, environment_key, id, data) => {
-    const pageId = parseInt(id);
-    const currentPage = await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, environment_key);
+Page.update = async (data) => {
+    const pageId = parseInt(data.id);
+    const currentPage = await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
-        environment_key: environment_key,
+        environment_key: data.environment_key,
     });
     if (parentId) {
         await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, {
             parent_id: parentId,
             collection_key: currentPage.collection_key,
-            environment_key: environment_key,
+            environment_key: data.environment_key,
         });
     }
     let newSlug = undefined;
@@ -260,7 +274,7 @@ Page.update = async (userId, environment_key, id, data) => {
         newSlug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
             slug: data.slug,
             homepage: data.homepage || false,
-            environment_key: environment_key,
+            environment_key: data.environment_key,
             collection_key: currentPage.collection_key,
             parent_id: parentId,
         });
@@ -280,7 +294,7 @@ Page.update = async (userId, environment_key, id, data) => {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? userId : null,
+        data.published ? data.userId : null,
         parentId,
         data.homepage,
     ], {
@@ -308,16 +322,19 @@ Page.update = async (userId, environment_key, id, data) => {
         });
         page.rows[0].categories = categories.map((category) => category.category_id);
     }
-    const brickPromises = data.bricks?.map((brick, index) => BrickData_1.default.createOrUpdate(brick, index, "page", pageId)) || [];
-    const pageBricksIds = await Promise.all(brickPromises);
-    if (data.bricks) {
-        await BrickData_1.default.deleteUnused("page", pageId, pageBricksIds);
-    }
+    await Collection_1.default.updateBricks({
+        environment_key: data.environment_key,
+        builder_bricks: data.builder_bricks || [],
+        fixed_bricks: data.fixed_bricks || [],
+        collection_type: "pages",
+        id: page.rows[0].id,
+        collection_key: currentPage.collection_key,
+    });
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.delete = async (environment_key, id) => {
-    const pageId = parseInt(id);
-    await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, environment_key);
+Page.delete = async (data) => {
+    const pageId = parseInt(data.id);
+    await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
     const page = await db_1.default.query({
         text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
         values: [pageId],

@@ -87,7 +87,11 @@ Category.getSingle = async (environment_key, id) => {
     return category.rows[0];
 };
 Category.create = async (data) => {
-    await Collection_1.default.getSingle(data.collection_key, "pages", data.environment_key);
+    await Collection_1.default.getSingle({
+        collection_key: data.collection_key,
+        type: "pages",
+        environment_key: data.environment_key,
+    });
     const isSlugUnique = await Category.isSlugUniqueInCollection({
         collection_key: data.collection_key,
         slug: data.slug,

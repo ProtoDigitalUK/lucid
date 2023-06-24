@@ -3,49 +3,45 @@ declare const _default: {
         body: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
         query: import("zod").ZodObject<{
             filter: import("zod").ZodOptional<import("zod").ZodObject<{
-                type: import("zod").ZodOptional<import("zod").ZodEnum<["pages", "group"]>>;
-                environment_key: import("zod").ZodOptional<import("zod").ZodString>;
+                type: import("zod").ZodOptional<import("zod").ZodEnum<["pages", "singlepage"]>>;
             }, "strip", import("zod").ZodTypeAny, {
-                type?: "pages" | "group" | undefined;
-                environment_key?: string | undefined;
+                type?: "pages" | "singlepage" | undefined;
             }, {
-                type?: "pages" | "group" | undefined;
-                environment_key?: string | undefined;
+                type?: "pages" | "singlepage" | undefined;
             }>>;
+            include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["bricks"]>, "many">>;
         }, "strip", import("zod").ZodTypeAny, {
             filter?: {
-                type?: "pages" | "group" | undefined;
-                environment_key?: string | undefined;
+                type?: "pages" | "singlepage" | undefined;
             } | undefined;
+            include?: "bricks"[] | undefined;
         }, {
             filter?: {
-                type?: "pages" | "group" | undefined;
-                environment_key?: string | undefined;
+                type?: "pages" | "singlepage" | undefined;
             } | undefined;
+            include?: "bricks"[] | undefined;
         }>;
         params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
     controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
         filter: import("zod").ZodOptional<import("zod").ZodObject<{
-            type: import("zod").ZodOptional<import("zod").ZodEnum<["pages", "group"]>>;
-            environment_key: import("zod").ZodOptional<import("zod").ZodString>;
+            type: import("zod").ZodOptional<import("zod").ZodEnum<["pages", "singlepage"]>>;
         }, "strip", import("zod").ZodTypeAny, {
-            type?: "pages" | "group" | undefined;
-            environment_key?: string | undefined;
+            type?: "pages" | "singlepage" | undefined;
         }, {
-            type?: "pages" | "group" | undefined;
-            environment_key?: string | undefined;
+            type?: "pages" | "singlepage" | undefined;
         }>>;
+        include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["bricks"]>, "many">>;
     }, "strip", import("zod").ZodTypeAny, {
         filter?: {
-            type?: "pages" | "group" | undefined;
-            environment_key?: string | undefined;
+            type?: "pages" | "singlepage" | undefined;
         } | undefined;
+        include?: "bricks"[] | undefined;
     }, {
         filter?: {
-            type?: "pages" | "group" | undefined;
-            environment_key?: string | undefined;
+            type?: "pages" | "singlepage" | undefined;
         } | undefined;
+        include?: "bricks"[] | undefined;
     }>>;
 };
 export default _default;

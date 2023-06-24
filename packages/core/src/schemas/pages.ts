@@ -62,7 +62,8 @@ const updateSingleBody = z.object({
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
   excerpt: z.string().optional(),
-  bricks: z.array(BrickSchema).optional(),
+  builder_bricks: z.array(BrickSchema).optional(),
+  fixed_bricks: z.array(BrickSchema).optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

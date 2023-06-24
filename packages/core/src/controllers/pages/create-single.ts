@@ -13,7 +13,7 @@ const createSingle: Controller<
   typeof pagesSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.create(req.auth.id, {
+    const page = await Page.create({
       environment_key: req.headers["lucid-environment"] as string,
       title: req.body.title,
       slug: req.body.slug,
@@ -23,6 +23,7 @@ const createSingle: Controller<
       published: req.body.published,
       parent_id: req.body.parent_id,
       category_ids: req.body.category_ids,
+      userId: req.auth.id,
     });
 
     res.status(200).json(

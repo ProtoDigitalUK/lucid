@@ -1,0 +1,1335 @@
+{
+	"info": {
+		"_postman_id": "77ac344e-d810-4dc9-a078-808a82a307eb",
+		"name": "Headless/Core",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20656721"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CSRF Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var CSRFToken = jsonData.data._csrf;\r",
+									"pm.collectionVariables.set(\"CSRF\", CSRFToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/csrf",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"csrf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authenticated User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/me",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							],
+							"query": [
+								{
+									"key": null,
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							},
+							{
+								"key": "lucid-environment",
+								"value": "{{LUCID_ENVIRONMENT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles?include=permissions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-name,created_at",
+									"disabled": true
+								},
+								{
+									"key": "filter[role_ids]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter[name]",
+									"value": "Admin",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "include",
+									"value": "permissions"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							},
+							{
+								"key": "lucid-environment",
+								"value": "{{LUCID_ENVIRONMENT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Admin\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"2"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/3",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"3"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							},
+							{
+								"key": "lucid-environment",
+								"value": "{{LUCID_ENVIRONMENT}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/permissions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Environments",
+			"item": [
+				{
+					"name": "Collections",
+					"item": [
+						{
+							"name": "Categories",
+							"item": [
+								{
+									"name": "Get Multiple",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/categories?filter[collection_key]=page",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"categories"
+											],
+											"query": [
+												{
+													"key": "filter[collection_key]",
+													"value": "page"
+												},
+												{
+													"key": "sort",
+													"value": "title,-created_at",
+													"disabled": true
+												},
+												{
+													"key": "filter[title]",
+													"value": "News",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Single",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/categories/1",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"categories",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Single",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"collection_key\": \"page\",\n    \"title\": \"Page Category\",\n    \"slug\": \"page-category\"\n    // \"description\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/categories",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"categories"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Single",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Staff\",\n    \"slug\": \"staff\",\n    \"description\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/categories/3",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"categories",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Single",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/categories/1",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"categories",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Brick Config",
+							"item": [
+								{
+									"name": "Get All",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/brick-config/page/all",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"brick-config",
+												"page",
+												"all"
+											],
+											"query": [
+												{
+													"key": "include",
+													"value": "fields",
+													"disabled": true
+												}
+											]
+										},
+										"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+									},
+									"response": []
+								},
+								{
+									"name": "Get Single",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/brick-config/page/banner",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"brick-config",
+												"page",
+												"banner"
+											]
+										},
+										"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Collection Types",
+							"item": [
+								{
+									"name": "Pages",
+									"item": [
+										{
+											"name": "Get Multiple",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages?sort=created_at",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages"
+													],
+													"query": [
+														{
+															"key": "sort",
+															"value": "created_at"
+														},
+														{
+															"key": "filter[collection_key]",
+															"value": "page",
+															"disabled": true
+														},
+														{
+															"key": "filter[title]",
+															"value": "",
+															"disabled": true
+														},
+														{
+															"key": "filter[slug]",
+															"value": "",
+															"disabled": true
+														},
+														{
+															"key": "filter[category_id]",
+															"value": "1",
+															"disabled": true
+														},
+														{
+															"key": "page",
+															"value": "1",
+															"disabled": true
+														},
+														{
+															"key": "per_page",
+															"value": "1",
+															"disabled": true
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get Single",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/1?include=bricks",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"1"
+													],
+													"query": [
+														{
+															"key": "include",
+															"value": "bricks"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Create Single",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Single",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n    \"builder_bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                // {\n                //     \"key\": \"page_link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": 1,\n                //     \"target\": \"_self\"\n                // },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            // \"id\": 1,\n            \"key\": \"intro\"\n        }\n    ],\n    \"fixed_bricks\": []\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/1",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Single",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/3",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"3"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Single Page",
+									"item": [
+										{
+											"name": "Get Single",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/single-page/settings",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"single-page",
+														"settings"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Single",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"builder_bricks\": [],\n    \"fixed_bricks\": [\n        {\n            // \"id\": 4,\n            \"key\": \"default_meta\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 7,\n                    \"key\": \"meta_title\",\n                    \"type\": \"text\",\n                    \"value\": \"Default Title 2\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"meta_description\",\n                    \"type\": \"text\",\n                    \"value\": \"Welcome to LUCID Headless CMS!\"\n                }\n            ]\n        }\n    ]\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/single-page/settings",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"single-page",
+														"settings"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections?include=bricks",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections"
+									],
+									"query": [
+										{
+											"key": "filter[type]",
+											"value": "singlepage",
+											"disabled": true
+										},
+										{
+											"key": "include",
+											"value": "bricks"
+										}
+									]
+								},
+								"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/settings",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"settings"
+									]
+								},
+								"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Menus",
+					"item": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/environments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"environments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/environments/site_prod",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"environments",
+								"site_prod"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/environments/site_prod",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"environments",
+								"site_prod"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Migrate (needs adding)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"intro\"],\r\n    \"assigned_collections\": [\"page\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/environments/site_prod/migrate",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"environments",
+								"site_prod",
+								"migrate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Media",
+			"item": []
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Update Roles",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/1/roles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1",
+								"roles"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "Health",
+					"item": [
+						{
+							"name": "Get Health",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/health",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"health"
+									],
+									"query": [
+										{
+											"key": "filter[active]",
+											"value": "12",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Settings",
+			"item": []
+		}
+	],
+	"variable": [
+		{
+			"key": "_csrf",
+			"value": ""
+		},
+		{
+			"key": "CSRF",
+			"value": ""
+		}
+	]
+}

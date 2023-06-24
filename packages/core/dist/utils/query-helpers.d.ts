@@ -34,6 +34,7 @@ interface SelectQueryBuilderConfig {
                 operator: "=" | "!=" | "<" | ">" | "<=" | ">=" | "||" | "LIKE" | "ILIKE" | "SIMILAR TO" | "~" | "~*" | "BETWEEN" | "IN" | "@>";
                 type: "int" | "string" | "boolean";
                 columnType: "array" | "standard";
+                key?: string;
                 table?: string;
                 exclude?: boolean;
             };

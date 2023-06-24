@@ -1,12 +1,18 @@
 import z from "zod";
 import BrickData, { BrickObject } from "../models/BrickData";
 import pagesSchema from "../../schemas/pages";
-type PageGetMultiple = (environment_key: string, query: z.infer<typeof pagesSchema.getMultiple.query>) => Promise<{
+type PageGetMultiple = (query: z.infer<typeof pagesSchema.getMultiple.query>, data: {
+    environment_key: string;
+}) => Promise<{
     data: PageT[];
     count: number;
 }>;
-type PageGetSingle = (environment_key: string, id: string, query: z.infer<typeof pagesSchema.getSingle.query>) => Promise<PageT>;
-type PageCreate = (userId: number, data: {
+type PageGetSingle = (query: z.infer<typeof pagesSchema.getSingle.query>, data: {
+    environment_key: string;
+    id: string;
+}) => Promise<PageT>;
+type PageCreate = (data: {
+    userId: number;
     environment_key: string;
     title: string;
     slug: string;
@@ -17,7 +23,10 @@ type PageCreate = (userId: number, data: {
     parent_id?: number;
     category_ids?: Array<number>;
 }) => Promise<PageT>;
-type PageUpdate = (userId: number, environment_key: string, id: string, data: {
+type PageUpdate = (data: {
+    id: string;
+    environment_key: string;
+    userId: number;
     title?: string;
     slug?: string;
     homepage?: boolean;
@@ -25,9 +34,13 @@ type PageUpdate = (userId: number, environment_key: string, id: string, data: {
     category_ids?: Array<number>;
     published?: boolean;
     excerpt?: string;
-    bricks?: Array<BrickObject>;
+    builder_bricks?: Array<BrickObject>;
+    fixed_bricks?: Array<BrickObject>;
 }) => Promise<PageT>;
-type PageDelete = (environment_key: string, id: string) => Promise<PageT>;
+type PageDelete = (data: {
+    environment_key: string;
+    id: string;
+}) => Promise<PageT>;
 export type PageT = {
     id: number;
     environment_key: string;
@@ -39,7 +52,8 @@ export type PageT = {
     homepage: boolean;
     excerpt: string | null;
     categories?: Array<number> | null;
-    bricks?: Array<BrickData> | null;
+    builder_bricks?: Array<BrickData> | null;
+    fixed_bricks?: Array<BrickData> | null;
     published: boolean;
     published_at: string | null;
     published_by: number | null;

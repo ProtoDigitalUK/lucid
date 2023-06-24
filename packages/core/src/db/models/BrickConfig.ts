@@ -1,25 +1,50 @@
 import z from "zod";
-import Fuse from "fuse.js";
-import { LucidError } from "@utils/error-handler";
 import Config from "@db/models/Config";
 // Models
-import Collection from "./Collection";
-import Environment from "@db/models/Environment";
+import Collection, { CollectionT } from "@db/models/Collection";
+import Environment, { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
+import { CollectionBrickT } from "@lucid/collection-builder";
+// Utils
+import { LucidError } from "@utils/error-handler";
 // Schema
 import bricksSchema from "@schemas/bricks";
 
 // -------------------------------------------
 // Types
+type BrickConfigIsBrickAllowed = (data: {
+  key: string;
+  collection: CollectionT;
+  environment: EnvironmentT;
+  type?: CollectionBrickT["type"];
+}) => {
+  allowed: boolean;
+  brick?: BrickConfigT;
+  collectionBrick?: CollectionBrickT;
+};
+
 type BrickConfigGetAll = (
-  environment_key: string,
-  query: z.infer<typeof bricksSchema.getAll.query>
+  query: z.infer<typeof bricksSchema.getAll.query>,
+  data: {
+    collection_key: string;
+    environment_key: string;
+  }
 ) => Promise<BrickConfigT[]>;
-type BrickConfigGetSingle = (
-  environment_key: string,
-  key: string
-) => Promise<BrickConfigT>;
+
+type BrickConfigGetSingle = (data: {
+  brick_key: string;
+  collection_key: string;
+  environment_key: string;
+}) => Promise<BrickConfigT>;
+
+type BrickConfigGetAllAllowedBricks = (data: {
+  collection: CollectionT;
+  environment: EnvironmentT;
+}) => {
+  bricks: BrickConfigT[];
+  collectionBricks: CollectionBrickT[];
+};
 
 // -------------------------------------------
 // Brick Config
@@ -32,18 +57,18 @@ export type BrickConfigT = {
 export default class BrickConfig {
   // -------------------------------------------
   // Functions
-  static getSingle: BrickConfigGetSingle = async (environment_key, key) => {
-    const brickInstance = BrickConfig.getBrickConfig();
-    if (!brickInstance) {
-      throw new LucidError({
-        type: "basic",
-        name: "Brick not found",
-        message: "We could not find the brick you are looking for.",
-        status: 404,
-      });
-    }
+  static getSingle: BrickConfigGetSingle = async (data) => {
+    const allBricks = await BrickConfig.getAll(
+      {
+        include: ["fields"],
+      },
+      {
+        collection_key: data.collection_key,
+        environment_key: data.environment_key,
+      }
+    );
 
-    const brick = brickInstance.find((b) => b.key === key);
+    const brick = allBricks.find((b) => b.key === data.brick_key);
     if (!brick) {
       throw new LucidError({
         type: "basic",
@@ -53,48 +78,92 @@ export default class BrickConfig {
       });
     }
 
-    const environment = await Environment.getSingle(environment_key);
+    return brick;
+  };
+  static getAll: BrickConfigGetAll = async (query, data) => {
+    const environment = await Environment.getSingle(data.environment_key);
+    const collection = await Collection.getSingle({
+      collection_key: data.collection_key,
+      environment_key: data.environment_key,
+      environment: environment,
+    });
 
-    if (!environment.assigned_bricks?.includes(brick.key)) {
-      throw new LucidError({
-        type: "basic",
-        name: "Brick not found",
-        message: "This brick is not assigned to this environment.",
-        status: 404,
+    const allowedBricks = BrickConfig.getAllAllowedBricks({
+      collection: collection,
+      environment: environment,
+    });
+
+    if (!query.include?.includes("fields")) {
+      allowedBricks.bricks.forEach((brick) => {
+        delete brick.fields;
       });
     }
 
-    const brickData = BrickConfig.getBrickData(brick);
-
-    return brickData;
+    return allowedBricks.bricks;
   };
-  static getAll: BrickConfigGetAll = async (environment_key, query) => {
-    const brickInstance = BrickConfig.getBrickConfig();
-    if (!brickInstance) return [];
+  static isBrickAllowed: BrickConfigIsBrickAllowed = (data) => {
+    // checks if the brick is allowed in the collection and environment and that there is config for it
+    let allowed = false;
+    const builderInstances = BrickConfig.getBrickConfig();
 
-    let bricks = await Promise.all(
-      brickInstance.map((brick) => BrickConfig.getBrickData(brick, query))
+    const instance = builderInstances.find((b) => b.key === data.key);
+    const envAssigned = (data.environment.assigned_bricks || [])?.includes(
+      data.key
     );
+    let collectionBrick: CollectionBrickT | undefined;
 
-    if (query.filter?.environment_key) {
-      const environment = await Environment.getSingle(
-        query.filter.environment_key
-      );
-
-      bricks = BrickConfig.#filterEnvironmentBricks(
-        environment.assigned_bricks || [],
-        bricks
-      );
+    if (!data.type) {
+      collectionBrick = data.collection.bricks?.find(
+        (b) =>
+          (b.key === data.key && b.type === "builder") || b.type === "fixed"
+      ) as CollectionBrickT | undefined;
+    } else {
+      collectionBrick = data.collection.bricks?.find(
+        (b) => b.key === data.key && b.type === data.type
+      ) as CollectionBrickT | undefined;
     }
 
-    const filteredBricks = await BrickConfig.#filterBricks(
-      query.filter,
-      bricks,
-      environment_key
-    );
-    const sortedBricks = BrickConfig.#sortBricks(query.sort, filteredBricks);
+    // Set response data
+    if (instance && envAssigned && collectionBrick) allowed = true;
 
-    return sortedBricks;
+    let brick: BrickConfigT | undefined;
+    if (instance) {
+      brick = {
+        key: instance.key,
+        title: instance.title,
+        fields: instance.fieldTree,
+      };
+    }
+
+    return {
+      allowed: allowed,
+      brick: brick,
+      collectionBrick: collectionBrick,
+    };
+  };
+  static getAllAllowedBricks: BrickConfigGetAllAllowedBricks = (data) => {
+    const allowedBricks: BrickConfigT[] = [];
+    const allowedCollectionBricks: CollectionBrickT[] = [];
+    const brickConfigData = BrickConfig.getBrickConfig();
+
+    for (const brick of brickConfigData) {
+      const brickAllowed = BrickConfig.isBrickAllowed({
+        key: brick.key,
+        collection: data.collection,
+        environment: data.environment,
+      });
+
+      if (brickAllowed.allowed && brickAllowed.brick) {
+        allowedBricks.push(brickAllowed.brick);
+      }
+      if (brickAllowed.allowed && brickAllowed.collectionBrick) {
+        allowedCollectionBricks.push(brickAllowed.collectionBrick);
+      }
+    }
+    return {
+      bricks: allowedBricks,
+      collectionBricks: allowedCollectionBricks,
+    };
   };
   // -------------------------------------------
   // Util Functions
@@ -122,118 +191,5 @@ export default class BrickConfig {
     if (query.include?.includes("fields")) data.fields = instance.fieldTree;
 
     return data;
-  };
-
-  // -------------------------------------------
-  // Query Functions
-  static #searcBricks = (
-    query: string,
-    bricks: BrickConfigT[]
-  ): BrickConfigT[] => {
-    if (!query) return bricks;
-
-    const fuse = new Fuse(bricks, {
-      keys: ["title"],
-      threshold: 0.3,
-    });
-
-    const searchResults = fuse.search(query);
-
-    return searchResults.map((r) => r.item);
-  };
-  static #filterBricks = async (
-    filter: z.infer<typeof bricksSchema.getAll.query>["filter"],
-    bricks: BrickConfigT[],
-    environment_key: string
-  ): Promise<BrickConfigT[]> => {
-    if (!filter) return bricks;
-
-    let filteredBricks = [...bricks];
-
-    // Run each possible filter
-    const keys = Object.keys(filter);
-    if (!keys.length) return filteredBricks;
-
-    // get collections
-    const collections = await Collection.getAll({
-      filter: {
-        environment_key,
-      },
-    });
-
-    Object.keys(filter).forEach((f) => {
-      switch (f) {
-        case "s":
-          const searchQuery = filter.s;
-          if (searchQuery)
-            filteredBricks = BrickConfig.#searcBricks(
-              searchQuery,
-              filteredBricks
-            );
-          break;
-        case "collection_key":
-          let collectionKeys = filter.collection_key;
-          if (collectionKeys) {
-            // Get all collections
-            const permittedBricks: Array<string> = [];
-
-            // If single collection key, convert to array
-            if (!Array.isArray(collectionKeys)) {
-              collectionKeys = [collectionKeys];
-            }
-
-            // Get all bricks from permitted collections
-            collectionKeys.forEach((key) => {
-              const collection = collections.find((c) => c.key === key);
-              if (collection) {
-                permittedBricks.push(...collection.bricks);
-              }
-            });
-
-            // Filter bricks
-            filteredBricks = filteredBricks.filter((b) =>
-              permittedBricks.includes(b.key)
-            );
-          }
-          break;
-        default:
-          break;
-      }
-    });
-
-    return filteredBricks;
-  };
-  static #sortBricks = (
-    sort: z.infer<typeof bricksSchema.getAll.query>["sort"],
-    bricks: BrickConfigT[]
-  ): BrickConfigT[] => {
-    if (!sort) return bricks;
-
-    let sortedBricks = [...bricks];
-
-    // Run each possible sort
-    sort.forEach((s) => {
-      sortedBricks = sortedBricks.sort((a, b) => {
-        switch (s.key) {
-          case "name":
-            if (s.value === "asc") {
-              return a.title.localeCompare(b.title);
-            } else {
-              return b.title.localeCompare(a.title);
-            }
-          default:
-            return 0;
-        }
-      });
-    });
-
-    return sortedBricks;
-  };
-  static #filterEnvironmentBricks = (
-    environment_bricks: string[],
-    bricks: BrickConfigT[]
-  ): BrickConfigT[] => {
-    if (!environment_bricks) return bricks;
-    return bricks.filter((b) => environment_bricks.includes(b.key));
   };
 }

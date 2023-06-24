@@ -33,6 +33,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "patch",
     path: "/:key",
+    permissions: {
+        global: ["update_environment"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -44,6 +47,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "post",
     path: "/:key/migrate",
+    permissions: {
+        global: ["migrate_environment"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,

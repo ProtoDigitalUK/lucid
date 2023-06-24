@@ -13,7 +13,10 @@ const getAll: Controller<
   typeof collectionSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const collections = await Collection.getAll(req.query);
+    const collections = await Collection.getAll(
+      req.query,
+      req.headers["lucid-environment"] as string
+    );
 
     res.status(200).json(
       buildResponse(req, {

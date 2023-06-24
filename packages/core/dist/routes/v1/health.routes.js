@@ -10,7 +10,6 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/",
-    permissions: ["create_user"],
     schema: get_health_1.default.schema,
     controller: get_health_1.default.controller,
 });

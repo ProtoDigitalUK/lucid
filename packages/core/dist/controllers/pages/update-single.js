@@ -8,7 +8,10 @@ const Page_1 = __importDefault(require("../../db/models/Page"));
 const pages_1 = __importDefault(require("../../schemas/pages"));
 const updateSingle = async (req, res, next) => {
     try {
-        const page = await Page_1.default.update(req.auth.id, req.headers["lucid-environment"], req.params.id, {
+        const page = await Page_1.default.update({
+            id: req.params.id,
+            environment_key: req.headers["lucid-environment"],
+            userId: req.auth.id,
             title: req.body.title,
             slug: req.body.slug,
             homepage: req.body.homepage,
@@ -16,7 +19,8 @@ const updateSingle = async (req, res, next) => {
             category_ids: req.body.category_ids,
             published: req.body.published,
             excerpt: req.body.excerpt,
-            bricks: req.body.bricks,
+            builder_bricks: req.body.builder_bricks,
+            fixed_bricks: req.body.fixed_bricks,
         });
         res.status(200).json((0, build_response_1.default)(req, {
             data: page,

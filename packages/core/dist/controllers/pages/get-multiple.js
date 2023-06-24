@@ -8,7 +8,9 @@ const Page_1 = __importDefault(require("../../db/models/Page"));
 const pages_1 = __importDefault(require("../../schemas/pages"));
 const getMultiple = async (req, res, next) => {
     try {
-        const pages = await Page_1.default.getMultiple(req.headers["lucid-environment"], req.query);
+        const pages = await Page_1.default.getMultiple(req.query, {
+            environment_key: req.headers["lucid-environment"],
+        });
         res.status(200).json((0, build_response_1.default)(req, {
             data: pages.data,
             pagination: {

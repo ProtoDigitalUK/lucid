@@ -8,17 +8,27 @@ const getAllBody = zod_1.default.object({});
 const getAllQuery = zod_1.default.object({
     filter: zod_1.default
         .object({
-        type: zod_1.default.enum(["pages", "group"]).optional(),
-        environment_key: zod_1.default.string().optional(),
+        type: zod_1.default.enum(["pages", "singlepage"]).optional(),
     })
         .optional(),
+    include: zod_1.default.array(zod_1.default.enum(["bricks"])).optional(),
 });
 const getAllParams = zod_1.default.object({});
+const getSingleBody = zod_1.default.object({});
+const getSingleQuery = zod_1.default.object({});
+const getSingleParams = zod_1.default.object({
+    collection_key: zod_1.default.string(),
+});
 exports.default = {
     getAll: {
         body: getAllBody,
         query: getAllQuery,
         params: getAllParams,
+    },
+    getSingle: {
+        body: getSingleBody,
+        query: getSingleQuery,
+        params: getSingleParams,
     },
 };
 //# sourceMappingURL=collections.js.map

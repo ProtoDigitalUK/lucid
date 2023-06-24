@@ -11,48 +11,127 @@ var _a, _Collection_filterCollections, _Collection_filterEnvironmentCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
+const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
+const BrickData_1 = __importDefault(require("../models/BrickData"));
 const error_handler_1 = require("../../utils/error-handler");
 class Collection {
 }
 _a = Collection;
-Collection.getAll = async (query) => {
+Collection.getAll = async (query, environment_key) => {
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances)
         return [];
-    let collections = await Promise.all(collectionInstances.map((collection) => Collection.getCollectionData(collection)));
-    if (!query.filter)
-        return collections;
-    if (query.filter.environment_key) {
-        const environment = await Environment_1.default.getSingle(query.filter.environment_key);
-        collections = __classPrivateFieldGet(Collection, _a, "f", _Collection_filterEnvironmentCollections).call(Collection, environment.assigned_collections || [], collections);
-    }
-    return __classPrivateFieldGet(Collection, _a, "f", _Collection_filterCollections).call(Collection, query.filter, collections);
+    let collections = collectionInstances.map((collection) => Collection.getCollectionData(collection));
+    const environment = await Environment_1.default.getSingle(environment_key);
+    collections = __classPrivateFieldGet(Collection, _a, "f", _Collection_filterEnvironmentCollections).call(Collection, environment.assigned_collections || [], collections);
+    collections = __classPrivateFieldGet(Collection, _a, "f", _Collection_filterCollections).call(Collection, query.filter, collections);
+    const collectionsRes = collections.map((collection) => {
+        const collectionData = {
+            key: collection.key,
+            title: collection.title,
+            singular: collection.singular,
+            description: collection.description,
+            type: collection.type,
+        };
+        if (query.include?.includes("bricks")) {
+            const collectionBricks = BrickConfig_1.default.getAllAllowedBricks({
+                collection,
+                environment,
+            });
+            collectionData.bricks = collectionBricks.collectionBricks;
+        }
+        return collectionData;
+    });
+    return collectionsRes;
 };
-Collection.getSingle = async (key, type, environment_key) => {
+Collection.getSingle = async (props) => {
     const collectionInstances = Collection.getCollectionsConfig();
     if (!collectionInstances) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Collection not found",
-            message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
+            message: `Collection with key "${props.collection_key}" under environment "${props.environment_key}" not found`,
             status: 404,
         });
     }
-    const environment = await Environment_1.default.getSingle(environment_key);
-    const collection = await Promise.all(collectionInstances.map((collection) => Collection.getCollectionData(collection)));
+    const environment = props.environment
+        ? props.environment
+        : await Environment_1.default.getSingle(props.environment_key);
+    const allCollections = collectionInstances.map((collection) => Collection.getCollectionData(collection));
     const assignedCollections = environment.assigned_collections || [];
-    const found = collection.find((c) => {
-        return (c.key === key && c.type === type && assignedCollections.includes(c.key));
-    });
-    if (!found) {
+    let collection;
+    if (props.type) {
+        collection = allCollections.find((c) => {
+            return (c.key === props.collection_key &&
+                c.type === props.type &&
+                assignedCollections.includes(c.key));
+        });
+    }
+    else {
+        collection = allCollections.find((c) => {
+            return (c.key === props.collection_key && assignedCollections.includes(c.key));
+        });
+    }
+    if (!collection) {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Collection not found",
-            message: `Collection with key "${key}" and of type "${type}" under environment "${environment_key}" not found`,
+            message: `Collection with key "${props.collection_key}" and of type "${props.type}" under environment "${props.environment_key}" not found`,
             status: 404,
         });
     }
-    return found;
+    const collectionBricks = BrickConfig_1.default.getAllAllowedBricks({
+        collection,
+        environment,
+    });
+    collection["bricks"] = collectionBricks.collectionBricks;
+    return collection;
+};
+Collection.updateBricks = async (props) => {
+    const environment = await Environment_1.default.getSingle(props.environment_key);
+    const collection = await Collection.getSingle({
+        collection_key: props.collection_key,
+        environment_key: props.environment_key,
+        type: "singlepage",
+    });
+    const builderBricksPromise = props.builder_bricks.map((brick, index) => BrickData_1.default.createOrUpdate({
+        reference_id: props.id,
+        brick: brick,
+        brick_type: "builder",
+        order: index,
+        collection_type: props.collection_type,
+        environment: environment,
+        collection: collection,
+    })) || [];
+    const fixedBricksPromise = props.fixed_bricks.map((brick, index) => BrickData_1.default.createOrUpdate({
+        reference_id: props.id,
+        brick: brick,
+        brick_type: "fixed",
+        order: index,
+        collection_type: props.collection_type,
+        environment: environment,
+        collection: collection,
+    })) || [];
+    const [buildBrickRes, fixedBrickRes] = await Promise.all([
+        Promise.all(builderBricksPromise),
+        Promise.all(fixedBricksPromise),
+    ]);
+    const builderIds = buildBrickRes.map((brickId) => brickId);
+    const fixedIds = fixedBrickRes.map((brickId) => brickId);
+    if (builderIds.length > 0)
+        await BrickData_1.default.deleteUnused({
+            type: props.collection_type,
+            reference_id: props.id,
+            brick_ids: builderIds,
+            brick_type: "builder",
+        });
+    if (fixedIds.length > 0)
+        await BrickData_1.default.deleteUnused({
+            type: props.collection_type,
+            reference_id: props.id,
+            brick_ids: fixedIds,
+            brick_type: "fixed",
+        });
 };
 Collection.getCollectionsConfig = () => {
     const collectionInstances = Config_1.default.get().collections;

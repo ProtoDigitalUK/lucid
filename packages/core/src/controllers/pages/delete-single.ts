@@ -13,10 +13,10 @@ const deleteSingle: Controller<
   typeof pagesSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.delete(
-      req.headers["lucid-environment"] as string,
-      req.params.id
-    );
+    const page = await Page.delete({
+      id: req.params.id,
+      environment_key: req.headers["lucid-environment"] as string,
+    });
 
     res.status(200).json(
       buildResponse(req, {
