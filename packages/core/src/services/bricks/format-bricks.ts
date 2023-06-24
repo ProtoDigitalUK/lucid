@@ -1,16 +1,16 @@
 // Models
-import { BrickFieldsT } from "@db/models/BrickData";
+import { BrickFieldsT, BrickT } from "@db/models/BrickData";
 import BrickConfig from "@db/models/BrickConfig";
 import Environment from "@db/models/Environment";
 import { CollectionT } from "@db/models/Collection";
 // Internal packages
 import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
-import { CollectionBrickT } from "@lucid/collection-builder";
 
-interface BrickResponseT {
-  id: number;
-  key: string;
-  order: number;
+export interface BrickResponseT {
+  id: BrickT["id"];
+  key: BrickT["brick_key"];
+  order: BrickT["brick_order"];
+  type: BrickT["brick_type"];
   fields: Array<{
     fields_id: number;
     key: string;
@@ -187,6 +187,7 @@ const buildBrickStructure = (brickFields: BrickFieldsT[]) => {
         id: brickField.id,
         key: brickField.brick_key,
         order: brickField.brick_order,
+        type: brickField.brick_type,
         fields: [],
       });
     }
@@ -200,8 +201,7 @@ const buildBrickStructure = (brickFields: BrickFieldsT[]) => {
 const formatBricks = async (
   brick_fields: BrickFieldsT[],
   environment_key: string,
-  collection: CollectionT,
-  collection_brick_type: CollectionBrickT["type"]
+  collection: CollectionT
 ) => {
   // Get all config
   const builderInstances = BrickConfig.getBrickConfig();
@@ -218,7 +218,7 @@ const formatBricks = async (
         environment,
         collection,
       },
-      collection_brick_type
+      brick.type
     );
     return allowed.allowed;
   });

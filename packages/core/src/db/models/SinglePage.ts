@@ -8,16 +8,17 @@ import { SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
-type SinglePageGetSingle = (
-  environment_key: string,
-  collection_key: string
-) => Promise<SinglePageT>;
+type SinglePageGetSingle = (data: {
+  environment_key: string;
+  collection_key: string;
+}) => Promise<SinglePageT>;
 
 type SinglePageUpdateSingle = (
   userId: number,
   environment_key: string,
   collection_key: string,
-  bricks: Array<BrickObject>
+  builder_bricks?: Array<BrickObject>,
+  fixed_bricks?: Array<BrickObject>
 ) => Promise<SinglePageT>;
 
 // -------------------------------------------
@@ -27,7 +28,8 @@ export type SinglePageT = {
   environment_key: string;
   collection_key: string;
 
-  bricks?: Array<BrickData> | null;
+  builder_bricks?: Array<BrickData> | null;
+  fixed_bricks?: Array<BrickData> | null;
 
   created_at: string;
   updated_at: string;
@@ -37,14 +39,11 @@ export type SinglePageT = {
 export default class SinglePage {
   // -------------------------------------------
   // Functions
-  static getSingle: SinglePageGetSingle = async (
-    environment_key,
-    collection_key
-  ) => {
+  static getSingle: SinglePageGetSingle = async (data) => {
     // Checks if we have access to the collection
     const collection = await Collection.getSingle({
-      collection_key: collection_key,
-      environment_key: environment_key,
+      collection_key: data.collection_key,
+      environment_key: data.environment_key,
       type: "singlepage",
     });
 
@@ -62,8 +61,8 @@ export default class SinglePage {
       exclude: undefined,
       filter: {
         data: {
-          collection_key: collection_key,
-          environment_key: environment_key,
+          collection_key: data.collection_key,
+          environment_key: data.environment_key,
         },
         meta: {
           collection_key: {
@@ -103,12 +102,12 @@ export default class SinglePage {
 
     const pageBricks = await BrickData.getAll(
       "singlepage",
-      "builder",
       singlepage.rows[0].id,
-      environment_key,
+      data.environment_key,
       collection
     );
-    singlepage.rows[0].bricks = pageBricks || [];
+    singlepage.rows[0].builder_bricks = pageBricks.builder_bricks;
+    singlepage.rows[0].fixed_bricks = pageBricks.fixed_bricks;
 
     return singlepage.rows[0];
   };
@@ -116,7 +115,8 @@ export default class SinglePage {
     userId,
     environment_key,
     collection_key,
-    bricks
+    builder_bricks,
+    fixed_bricks
   ) => {
     // Used to check if we have access to the collection
     await Collection.getSingle({
@@ -133,15 +133,14 @@ export default class SinglePage {
 
     // -------------------------------------------
     // Update/Create Bricks
-    const brickPromises =
-      bricks.map((brick, index) =>
-        BrickData.createOrUpdate(brick, index, "singlepage", singlepage.id)
-      ) || [];
-    const pageBricksIds = await Promise.all(brickPromises);
-
-    // -------------------------------------------
-    // Delete unused bricks
-    await BrickData.deleteUnused("singlepage", singlepage.id, pageBricksIds);
+    await Collection.updateBricks({
+      environment_key: environment_key,
+      builder_bricks: builder_bricks || [],
+      fixed_bricks: fixed_bricks || [],
+      collection_type: "singlepage",
+      id: singlepage.id,
+      collection_key: collection_key,
+    });
 
     // -------------------------------------------
     // Update the single page

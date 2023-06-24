@@ -5,7 +5,8 @@ import { BrickSchema } from "@schemas/bricks";
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
-  bricks: z.array(BrickSchema),
+  builder_bricks: z.array(BrickSchema).optional(),
+  fixed_bricks: z.array(BrickSchema).optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

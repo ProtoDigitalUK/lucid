@@ -5,11 +5,13 @@ import { FieldTypes } from "@lucid/brick-builder";
 import { LucidError } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
 // Services
-import formatBricks from "@services/bricks/format-bricks";
+import formatBricks, { BrickResponseT } from "@services/bricks/format-bricks";
 // Schema
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
 // Models
 import { CollectionT } from "@db/models/Collection";
+import { EnvironmentT } from "@db/models/Environment";
+import BrickConfig from "@db/models/BrickConfig";
 // Internal packages
 import { CollectionBrickT } from "@lucid/collection-builder";
 
@@ -25,24 +27,32 @@ interface LinkJsonT {
 
 // Methods
 type BrickDataCreateOrUpdate = (
-  brick: BrickObject,
-  order: number,
-  type: CollectionT["type"],
-  reference_id: number
+  reference_id: number,
+  data: {
+    brick: BrickObject;
+    brick_type: CollectionBrickT["type"];
+    order: number;
+    collection_type: CollectionT["type"];
+    environment: EnvironmentT;
+    collection: CollectionT;
+  }
 ) => Promise<number>;
 
 type BrickDataGetAll = (
   type: CollectionT["type"],
-  collection_brick_type: CollectionBrickT["type"],
   reference_id: number,
   environment_key: string,
   collection: CollectionT
-) => Promise<Array<any>>;
+) => Promise<{
+  builder_bricks: BrickResponseT[];
+  fixed_bricks: BrickResponseT[];
+}>;
 
 type BrickDataDeleteUnused = (
   type: CollectionT["type"],
   reference_id: number,
-  brick_ids: Array<number | undefined>
+  brick_ids: Array<number | undefined>,
+  brick_type: CollectionBrickT["type"]
 ) => Promise<void>;
 
 // -------------------------------------------
@@ -50,6 +60,7 @@ type BrickDataDeleteUnused = (
 export type BrickFieldsT = {
   // Page brick info
   id: number;
+  brick_type: CollectionBrickT["type"];
   brick_key: string;
   page_id: number | null;
   singlepage_id: number | null;
@@ -76,32 +87,62 @@ export type BrickFieldsT = {
   linked_page_full_slug: string | null;
 };
 
+export type BrickT = {
+  id: number;
+  brick_type: CollectionBrickT["type"];
+  brick_key: string;
+  page_id: number | null;
+  singlepage_id: number | null;
+
+  brick_order: number;
+};
+
 export default class BrickData {
   // -------------------------------------------
   // Functions
   static createOrUpdate: BrickDataCreateOrUpdate = async (
-    brick,
-    order,
-    type,
-    reference_id
+    reference_id,
+    data
   ) => {
     // Create or update the page brick record
     const promises = [];
 
+    const allowed = BrickConfig.isBrickAllowed(
+      data.brick.key,
+      {
+        environment: data.environment,
+        collection: data.collection,
+      },
+      data.brick_type
+    );
+    if (!allowed.allowed) {
+      throw new LucidError({
+        type: "basic",
+        name: "Brick not allowed",
+        message: `The brick "${data.brick.key}" of type "${data.brick_type}" is not allowed in this collection. Check your assigned bricks in the collection and environment.`,
+        status: 500,
+      });
+    }
+
     // Create the page brick record
-    const brickId = brick.id
-      ? await BrickData.#updateSinglePageBrick(order, brick)
+    const brickId = data.brick.id
+      ? await BrickData.#updateSinglePageBrick(
+          data.order,
+          data.brick,
+          data.brick_type
+        )
       : await BrickData.#createSinglePageBrick(
-          type,
+          data.collection_type,
           reference_id,
-          order,
-          brick
+          data.order,
+          data.brick,
+          data.brick_type
         );
 
     // for each field, create or update the field, if its a repeater, create or update the repeater and items
-    if (!brick.fields) return brickId;
+    if (!data.brick.fields) return brickId;
 
-    for (const field of brick.fields) {
+    for (const field of data.brick.fields) {
       if (field.type === "tab") continue;
 
       if (field.type === "repeater")
@@ -115,12 +156,10 @@ export default class BrickData {
   };
   static getAll: BrickDataGetAll = async (
     type,
-    collection_brick_type,
     reference_id,
     environment_key,
     collection
   ) => {
-    // fetch all lucid_collection_bricks for the given page/group id and order by brick_order
     // join all lucid_fields in flat structure, making sure to join page_link_id or media_id if applicable
     const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
 
@@ -148,26 +187,38 @@ export default class BrickData {
       [reference_id]
     );
 
-    if (!brickFields.rows[0]) return [];
+    if (!brickFields.rows[0]) {
+      return {
+        builder_bricks: [],
+        fixed_bricks: [],
+      };
+    }
 
-    return await formatBricks(
+    const formmatedBricks = await formatBricks(
       brickFields.rows,
       environment_key,
-      collection,
-      collection_brick_type
+      collection
     );
+
+    return {
+      builder_bricks: formmatedBricks.filter(
+        (brick) => brick.type === "builder"
+      ),
+      fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder"),
+    };
   };
   static deleteUnused: BrickDataDeleteUnused = async (
     type,
     reference_id,
-    brick_ids
+    brick_ids,
+    brick_type
   ) => {
     const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
 
     // Fetch all bricks for the page
     const pageBrickIds = await client.query<{ id: number }>({
-      text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1`,
-      values: [reference_id],
+      text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
+      values: [reference_id, brick_type],
     });
 
     // Filter out the bricks that are still in use
@@ -200,7 +251,8 @@ export default class BrickData {
     type: CollectionT["type"],
     reference_id: number,
     order: number,
-    brick: BrickObject
+    brick: BrickObject,
+    brick_type: CollectionBrickT["type"]
   ) => {
     const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
 
@@ -208,11 +260,11 @@ export default class BrickData {
       id: number;
     }>(
       `INSERT INTO 
-        lucid_collection_bricks (brick_key, ${referenceKey}, brick_order) 
+        lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
       VALUES 
-        ($1, $2, $3)
+        ($1, $2, $3, $4)
       RETURNING id`,
-      [brick.key, reference_id, order]
+      [brick.key, brick_type, reference_id, order]
     );
 
     if (!brickRes.rows[0]) {
@@ -226,7 +278,11 @@ export default class BrickData {
 
     return brickRes.rows[0].id;
   };
-  static #updateSinglePageBrick = async (order: number, brick: BrickObject) => {
+  static #updateSinglePageBrick = async (
+    order: number,
+    brick: BrickObject,
+    brick_type: CollectionBrickT["type"]
+  ) => {
     const brickRes = await client.query<{
       id: number;
     }>(
@@ -236,8 +292,10 @@ export default class BrickData {
         brick_order = $1
       WHERE 
         id = $2
+      AND
+        brick_type = $3
       RETURNING id`,
-      [order, brick.id]
+      [order, brick.id, brick_type]
     );
 
     if (!brickRes.rows[0]) {

@@ -2,14 +2,15 @@ import z from "zod";
 import { CollectionBuilderT } from "@lucid/collection-builder";
 // Models
 import Config from "@db/models/Config";
-import Environment from "@db/models/Environment";
-import BrickConfig, { BrickConfigT } from "@db/models/BrickConfig";
+import Environment, { EnvironmentT } from "@db/models/Environment";
+import BrickConfig from "@db/models/BrickConfig";
+import BrickData, { BrickObject } from "@db/models/BrickData";
 // Utils
 import { LucidError } from "@utils/error-handler";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Internal packages
-import { CollectionConfigT } from "@lucid/collection-builder";
+import { CollectionConfigT } from "@lucid/collection-builder"; // Internal packages
 
 // -------------------------------------------
 // Types
@@ -22,7 +23,17 @@ type CollectionGetSingle = (props: {
   collection_key: CollectionConfigT["key"];
   environment_key: string;
   type?: CollectionConfigT["type"];
+  environment?: EnvironmentT;
 }) => Promise<CollectionT>;
+
+type CollectionUpdateBricks = (props: {
+  collection_key: CollectionConfigT["key"];
+  environment_key: string;
+  builder_bricks: Array<BrickObject>;
+  fixed_bricks: Array<BrickObject>;
+  collection_type: CollectionConfigT["type"];
+  id: number;
+}) => Promise<void>;
 
 // -------------------------------------------
 // Collection
@@ -91,7 +102,9 @@ export default class Collection {
       });
     }
 
-    const environment = await Environment.getSingle(props.environment_key);
+    const environment = props.environment
+      ? props.environment
+      : await Environment.getSingle(props.environment_key);
 
     const allCollections = collectionInstances.map((collection) =>
       Collection.getCollectionData(collection)
@@ -132,6 +145,64 @@ export default class Collection {
     collection["bricks"] = collectionBricks.collectionBricks;
 
     return collection;
+  };
+  static updateBricks: CollectionUpdateBricks = async (props) => {
+    const environment = await Environment.getSingle(props.environment_key);
+    const collection = await Collection.getSingle({
+      collection_key: props.collection_key,
+      environment_key: props.environment_key,
+      type: "singlepage",
+    });
+
+    // -------------------------------------------
+    // Update/Create Bricks
+    const builderBricksPromise =
+      props.builder_bricks.map((brick, index) =>
+        BrickData.createOrUpdate(props.id, {
+          brick: brick,
+          brick_type: "builder",
+          order: index,
+          collection_type: props.collection_type,
+          environment: environment,
+          collection: collection,
+        })
+      ) || [];
+    const fixedBricksPromise =
+      props.fixed_bricks.map((brick, index) =>
+        BrickData.createOrUpdate(props.id, {
+          brick: brick,
+          brick_type: "fixed",
+          order: index,
+          collection_type: props.collection_type,
+          environment: environment,
+          collection: collection,
+        })
+      ) || [];
+
+    const [buildBrickRes, fixedBrickRes] = await Promise.all([
+      Promise.all(builderBricksPromise),
+      Promise.all(fixedBricksPromise),
+    ]);
+
+    const builderIds = buildBrickRes.map((brickId) => brickId);
+    const fixedIds = fixedBrickRes.map((brickId) => brickId);
+
+    // -------------------------------------------
+    // Delete unused bricks
+    if (builderIds.length > 0)
+      await BrickData.deleteUnused(
+        props.collection_type,
+        props.id,
+        builderIds,
+        "builder"
+      );
+    if (fixedIds.length > 0)
+      await BrickData.deleteUnused(
+        props.collection_type,
+        props.id,
+        fixedIds,
+        "fixed"
+      );
   };
   // -------------------------------------------
   // Util Functions

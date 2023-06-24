@@ -13,10 +13,10 @@ const getSingle: Controller<
   typeof singlePageSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await SinglePage.getSingle(
-      req.headers["lucid-environment"] as string,
-      req.params.collection_key
-    );
+    const page = await SinglePage.getSingle({
+      environment_key: req.headers["lucid-environment"] as string,
+      collection_key: req.params.collection_key,
+    });
 
     res.status(200).json(
       buildResponse(req, {

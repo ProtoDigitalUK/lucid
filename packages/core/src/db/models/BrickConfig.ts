@@ -117,9 +117,9 @@ export default class BrickConfig {
     let collectionBrick: CollectionBrickT | undefined;
 
     if (!type) {
-      collectionBrick = data.collection.bricks?.find((b) => b.key === key) as
-        | CollectionBrickT
-        | undefined;
+      collectionBrick = data.collection.bricks?.find(
+        (b) => (b.key === key && b.type === "builder") || b.type === "fixed"
+      ) as CollectionBrickT | undefined;
     } else {
       collectionBrick = data.collection.bricks?.find(
         (b) => b.key === key && b.type === type

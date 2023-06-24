@@ -56,7 +56,8 @@ type PageUpdate = (
     category_ids?: Array<number>;
     published?: boolean;
     excerpt?: string;
-    bricks?: Array<BrickObject>;
+    builder_bricks?: Array<BrickObject>;
+    fixed_bricks?: Array<BrickObject>;
   }
 ) => Promise<PageT>;
 
@@ -76,7 +77,9 @@ export type PageT = {
   homepage: boolean;
   excerpt: string | null;
   categories?: Array<number> | null;
-  bricks?: Array<BrickData> | null;
+
+  builder_bricks?: Array<BrickData> | null;
+  fixed_bricks?: Array<BrickData> | null;
 
   published: boolean;
   published_at: string | null;
@@ -266,12 +269,12 @@ export default class Page {
 
       const pageBricks = await BrickData.getAll(
         "pages",
-        "builder",
         page.rows[0].id,
         environment_key,
         collection
       );
-      page.rows[0].bricks = pageBricks;
+      page.rows[0].builder_bricks = pageBricks.builder_bricks;
+      page.rows[0].fixed_bricks = pageBricks.fixed_bricks;
     }
 
     return formatPage(page.rows[0]);
@@ -458,18 +461,17 @@ export default class Page {
 
     // -------------------------------------------
     // Update/Create Bricks
-    const brickPromises =
-      data.bricks?.map((brick, index) =>
-        BrickData.createOrUpdate(brick, index, "pages", pageId)
-      ) || [];
-    const pageBricksIds = await Promise.all(brickPromises);
+    await Collection.updateBricks({
+      environment_key: environment_key,
+      builder_bricks: data.builder_bricks || [],
+      fixed_bricks: data.fixed_bricks || [],
+      collection_type: "pages",
+      id: page.rows[0].id,
+      collection_key: currentPage.collection_key,
+    });
 
     // -------------------------------------------
-    // Delete unused bricks
-    if (data.bricks) {
-      await BrickData.deleteUnused("pages", pageId, pageBricksIds);
-    }
-
+    // Format and return
     return formatPage(page.rows[0]);
   };
   static delete: PageDelete = async (environment_key, id) => {

@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS lucid_collection_bricks (
   id SERIAL PRIMARY KEY,
+  brick_type TEXT NOT NULL,
   brick_key TEXT NOT NULL,
   page_id INT REFERENCES lucid_pages(id) ON DELETE CASCADE,
   singlepage_id INT REFERENCES lucid_singlepages(id) ON DELETE CASCADE,

@@ -17,7 +17,8 @@ const updateSingle: Controller<
       req.auth.id,
       req.headers["lucid-environment"] as string,
       req.params.collection_key,
-      req.body.bricks
+      req.body.builder_bricks,
+      req.body.fixed_bricks
     );
 
     res.status(200).json(
