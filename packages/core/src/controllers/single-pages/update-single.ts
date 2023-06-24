@@ -1,19 +1,19 @@
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import Group from "@db/models/Group";
+import SinglePage from "@db/models/SinglePage";
 // Schema
-import groupsSchema from "@schemas/groups";
+import singlePageSchema from "@schemas/single-page";
 
 // --------------------------------------------------
 // Controller
 const updateSingle: Controller<
-  typeof groupsSchema.updateSingle.params,
-  typeof groupsSchema.updateSingle.body,
-  typeof groupsSchema.updateSingle.query
+  typeof singlePageSchema.updateSingle.params,
+  typeof singlePageSchema.updateSingle.body,
+  typeof singlePageSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const group = await Group.updateSingle(
+    const page = await SinglePage.updateSingle(
       req.auth.id,
       req.headers["lucid-environment"] as string,
       req.params.collection_key,
@@ -22,7 +22,7 @@ const updateSingle: Controller<
 
     res.status(200).json(
       buildResponse(req, {
-        data: group,
+        data: page,
       })
     );
   } catch (error) {
@@ -33,6 +33,6 @@ const updateSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: groupsSchema.updateSingle,
+  schema: singlePageSchema.updateSingle,
   controller: updateSingle,
 };

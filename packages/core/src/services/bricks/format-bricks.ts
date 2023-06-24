@@ -118,7 +118,9 @@ const buildFieldTree = (
   builderInstance: BrickBuilderT
 ): BrickResponseT["fields"] => {
   // filter out the fields specific to this brick
-  const brickFields = fields.filter((field) => field.page_brick_id === brickId);
+  const brickFields = fields.filter(
+    (field) => field.collection_brick_id === brickId
+  );
   const basicFieldTree = builderInstance.basicFieldTree;
 
   const buildFields = (fields: CustomField[]): BrickResponseT["fields"] => {

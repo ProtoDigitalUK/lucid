@@ -1,8 +1,8 @@
 import { Router } from "express";
 import r from "@utils/route";
 // Controller
-import updateSingle from "@controllers/groups/update-single";
-import getSingle from "@controllers/groups/get-single";
+import updateSingle from "@controllers/single-pages/update-single";
+import getSingle from "@controllers/single-pages/get-single";
 
 // ------------------------------------
 // Router
@@ -31,9 +31,8 @@ r(router, {
     environments: ["read_content"],
   },
   middleware: {
-    authenticate: false,
-    authoriseCSRF: false,
-    validateBricks: false,
+    authenticate: true,
+    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getSingle.schema,

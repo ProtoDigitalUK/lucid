@@ -1,35 +1,28 @@
-import z from "zod";
 import client from "@db/db";
-import slugify from "slugify";
 // Models
-import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
 import BrickData, { BrickObject } from "@db/models/BrickData";
-// Serivces
-import formatPage from "@services/pages/format-page";
 // Utils
 import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
-// Schema
-import pagesSchema from "@schemas/pages";
+import { SelectQueryBuilder } from "@utils/query-helpers";
 
 // -------------------------------------------
 // Types
-type GroupGetSingle = (
+type SinglePageGetSingle = (
   environment_key: string,
   collection_key: string
-) => Promise<GroupT>;
+) => Promise<SinglePageT>;
 
-type GroupUpdateSingle = (
+type SinglePageUpdateSingle = (
   userId: number,
   environment_key: string,
   collection_key: string,
   bricks: Array<BrickObject>
-) => Promise<GroupT>;
+) => Promise<SinglePageT>;
 
 // -------------------------------------------
-// Group
-export type GroupT = {
+// Single Page
+export type SinglePageT = {
   id: number;
   environment_key: string;
   collection_key: string;
@@ -41,10 +34,10 @@ export type GroupT = {
   updated_by: string;
 };
 
-export default class Group {
+export default class SinglePage {
   // -------------------------------------------
   // Functions
-  static getSingle: GroupGetSingle = async (
+  static getSingle: SinglePageGetSingle = async (
     environment_key,
     collection_key
   ) => {
@@ -52,7 +45,7 @@ export default class Group {
     const collection = await Collection.getSingle({
       collection_key: collection_key,
       environment_key: environment_key,
-      type: "group",
+      type: "singlepage",
     });
 
     // Build Query Data and Query
@@ -90,36 +83,36 @@ export default class Group {
       per_page: undefined,
     });
 
-    const group = await client.query<GroupT>({
+    const singlepage = await client.query<SinglePageT>({
       text: `SELECT
           ${SelectQuery.query.select}
         FROM
-          lucid_groups
+        lucid_singlepages
         ${SelectQuery.query.where}`,
       values: SelectQuery.values,
     });
 
-    if (group.rows.length === 0) {
+    if (singlepage.rows.length === 0) {
       throw new LucidError({
         type: "basic",
-        name: "Group Error",
-        message: "We could not find the group you are looking for!",
+        name: "Single Page Error",
+        message: "We could not find the single page you are looking for!",
         status: 404,
       });
     }
 
     const pageBricks = await BrickData.getAll(
-      "group",
+      "singlepage",
       "builder",
-      group.rows[0].id,
+      singlepage.rows[0].id,
       environment_key,
       collection
     );
-    group.rows[0].bricks = pageBricks || [];
+    singlepage.rows[0].bricks = pageBricks || [];
 
-    return group.rows[0];
+    return singlepage.rows[0];
   };
-  static updateSingle: GroupUpdateSingle = async (
+  static updateSingle: SinglePageUpdateSingle = async (
     userId,
     environment_key,
     collection_key,
@@ -129,11 +122,11 @@ export default class Group {
     await Collection.getSingle({
       collection_key: collection_key,
       environment_key: environment_key,
-      type: "group",
+      type: "singlepage",
     });
 
-    // Get the group
-    const group = await Group.#getOrCreateGroup(
+    // Get the singlepage
+    const singlepage = await SinglePage.#getOrCreateSinglePage(
       environment_key,
       collection_key
     );
@@ -142,48 +135,48 @@ export default class Group {
     // Update/Create Bricks
     const brickPromises =
       bricks.map((brick, index) =>
-        BrickData.createOrUpdate(brick, index, "group", group.id)
+        BrickData.createOrUpdate(brick, index, "singlepage", singlepage.id)
       ) || [];
     const pageBricksIds = await Promise.all(brickPromises);
 
     // -------------------------------------------
     // Delete unused bricks
-    await BrickData.deleteUnused("group", group.id, pageBricksIds);
+    await BrickData.deleteUnused("singlepage", singlepage.id, pageBricksIds);
 
     // -------------------------------------------
-    // Update the group
-    const updatedGroup = await client.query<GroupT>({
-      text: `UPDATE lucid_groups SET updated_by = $1 WHERE id = $2 RETURNING *`,
-      values: [userId, group.id],
+    // Update the single page
+    const updateSinglePage = await client.query<SinglePageT>({
+      text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,
+      values: [userId, singlepage.id],
     });
 
-    return updatedGroup.rows[0];
+    return updateSinglePage.rows[0];
   };
   // -------------------------------------------
   // Util Functions
-  static #getOrCreateGroup = async (
+  static #getOrCreateSinglePage = async (
     environment_key: string,
     collection_key: string
   ) => {
     try {
-      // Check if the lucid_groups item exists, if not, create it
-      const group = await client.query<GroupT>({
-        text: `SELECT * FROM lucid_groups WHERE environment_key = $1 AND collection_key = $2`,
+      // Check if the lucid_singlepages item exists, if not, create it
+      const singlepage = await client.query<SinglePageT>({
+        text: `SELECT * FROM lucid_singlepages WHERE environment_key = $1 AND collection_key = $2`,
         values: [environment_key, collection_key],
       });
-      if (group.rows.length === 0) {
-        // Create the group
-        const newGroup = await client.query<GroupT>({
-          text: `INSERT INTO lucid_groups (environment_key, collection_key) VALUES ($1, $2) RETURNING *`,
+      if (singlepage.rows.length === 0) {
+        // Create the single apge
+        const newSinglePage = await client.query<SinglePageT>({
+          text: `INSERT INTO lucid_singlepages (environment_key, collection_key) VALUES ($1, $2) RETURNING *`,
           values: [environment_key, collection_key],
         });
-        return newGroup.rows[0];
-      } else return group.rows[0];
+        return newSinglePage.rows[0];
+      } else return singlepage.rows[0];
     } catch (err) {
       throw new LucidError({
         type: "basic",
-        name: "Group Error",
-        message: "There was an error getting or creating the group",
+        name: "Single Page Error",
+        message: "There was an error getting or creating the single page",
         status: 500,
       });
     }

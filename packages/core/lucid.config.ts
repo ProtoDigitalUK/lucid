@@ -105,7 +105,7 @@ const pageCollection = new CollectionBuilder("page", {
 
 const settingsCollection = new CollectionBuilder("settings", {
   config: {
-    type: "group",
+    type: "singlepage",
     title: "Settings",
     singular: "Setting",
     description: "Settings are used to configure your website.",

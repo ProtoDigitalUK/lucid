@@ -265,7 +265,7 @@ export default class Page {
       });
 
       const pageBricks = await BrickData.getAll(
-        "page",
+        "pages",
         "builder",
         page.rows[0].id,
         environment_key,
@@ -460,14 +460,14 @@ export default class Page {
     // Update/Create Bricks
     const brickPromises =
       data.bricks?.map((brick, index) =>
-        BrickData.createOrUpdate(brick, index, "page", pageId)
+        BrickData.createOrUpdate(brick, index, "pages", pageId)
       ) || [];
     const pageBricksIds = await Promise.all(brickPromises);
 
     // -------------------------------------------
     // Delete unused bricks
     if (data.bricks) {
-      await BrickData.deleteUnused("page", pageId, pageBricksIds);
+      await BrickData.deleteUnused("pages", pageId, pageBricksIds);
     }
 
     return formatPage(page.rows[0]);

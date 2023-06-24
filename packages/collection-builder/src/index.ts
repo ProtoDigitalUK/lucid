@@ -2,7 +2,7 @@ import z from "zod";
 
 const CollectionOptionsSchema = z.object({
   config: z.object({
-    type: z.enum(["pages", "group"]),
+    type: z.enum(["pages", "singlepage"]),
     title: z.string(),
     singular: z.string(),
     description: z.string().optional(),
@@ -23,13 +23,13 @@ interface CollectionConfigT {
   title: string;
   singular: string;
   description: string | null;
-  type: "pages" | "group";
+  type: "pages" | "singlepage";
   bricks: Array<CollectionBrickT>;
 }
 
 interface CollectionOptions {
   config: {
-    type: "pages" | "group";
+    type: "pages" | "singlepage";
     title: string;
     singular: string;
     description: string | undefined;

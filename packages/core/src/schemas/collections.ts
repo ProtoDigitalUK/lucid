@@ -6,7 +6,7 @@ const getAllBody = z.object({});
 const getAllQuery = z.object({
   filter: z
     .object({
-      type: z.enum(["pages", "group"]).optional(),
+      type: z.enum(["pages", "singlepage"]).optional(),
     })
     .optional(),
   include: z.array(z.enum(["bricks"])).optional(),

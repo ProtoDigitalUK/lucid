@@ -3,12 +3,12 @@ interface CollectionConfigT {
     title: string;
     singular: string;
     description: string | null;
-    type: "pages" | "group";
+    type: "pages" | "singlepage";
     bricks: Array<CollectionBrickT>;
 }
 interface CollectionOptions {
     config: {
-        type: "pages" | "group";
+        type: "pages" | "singlepage";
         title: string;
         singular: string;
         description: string | undefined;

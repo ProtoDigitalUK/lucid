@@ -1,26 +1,26 @@
 // Services
 import buildResponse from "@services/controllers/build-response";
 // Models
-import Group from "@db/models/Group";
+import SinglePage from "@db/models/SinglePage";
 // Schema
-import groupsSchema from "@schemas/groups";
+import singlePageSchema from "@schemas/single-page";
 
 // --------------------------------------------------
 // Controller
 const getSingle: Controller<
-  typeof groupsSchema.getSingle.params,
-  typeof groupsSchema.getSingle.body,
-  typeof groupsSchema.getSingle.query
+  typeof singlePageSchema.getSingle.params,
+  typeof singlePageSchema.getSingle.body,
+  typeof singlePageSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const group = await Group.getSingle(
+    const page = await SinglePage.getSingle(
       req.headers["lucid-environment"] as string,
       req.params.collection_key
     );
 
     res.status(200).json(
       buildResponse(req, {
-        data: group,
+        data: page,
       })
     );
   } catch (error) {
@@ -31,6 +31,6 @@ const getSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: groupsSchema.getSingle,
+  schema: singlePageSchema.getSingle,
   controller: getSingle,
 };
