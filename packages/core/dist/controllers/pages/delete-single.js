@@ -8,7 +8,10 @@ const Page_1 = __importDefault(require("../../db/models/Page"));
 const pages_1 = __importDefault(require("../../schemas/pages"));
 const deleteSingle = async (req, res, next) => {
     try {
-        const page = await Page_1.default.delete(req.headers["lucid-environment"], req.params.id);
+        const page = await Page_1.default.delete({
+            id: req.params.id,
+            environment_key: req.headers["lucid-environment"],
+        });
         res.status(200).json((0, build_response_1.default)(req, {
             data: page,
         }));

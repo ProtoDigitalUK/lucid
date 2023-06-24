@@ -52,7 +52,8 @@ const updateSingleBody = zod_1.default.object({
     category_ids: zod_1.default.array(zod_1.default.number()).optional(),
     published: zod_1.default.boolean().optional(),
     excerpt: zod_1.default.string().optional(),
-    bricks: zod_1.default.array(bricks_1.BrickSchema).optional(),
+    builder_bricks: zod_1.default.array(bricks_1.BrickSchema).optional(),
+    fixed_bricks: zod_1.default.array(bricks_1.BrickSchema).optional(),
 });
 const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({

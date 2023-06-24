@@ -23,8 +23,12 @@ UserRole.update = async (id, data) => {
         return !userRoles.rows.find((userRole) => userRole.role_id === role);
     });
     if (newRoles.length > 0) {
-        const rolesRes = await Role_1.default.getMultiple(newRoles);
-        if (rolesRes.length !== newRoles.length) {
+        const rolesRes = await Role_1.default.getMultiple({
+            filter: {
+                role_ids: newRoles.map((role) => role.toString()),
+            },
+        });
+        if (rolesRes.count !== newRoles.length) {
             throw new error_handler_1.LucidError({
                 type: "basic",
                 name: "Role Error",

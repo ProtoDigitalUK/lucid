@@ -20,6 +20,7 @@ type UserLogin = (data: {
 type UserUpdateSingle = (id: number, data: {}) => Promise<UserT>;
 export type UserT = {
     id: number;
+    super_admin: boolean;
     email: string;
     username: string;
     first_name: string | null;

@@ -10,7 +10,9 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "post",
     path: "/:id/roles",
-    permissions: ["assign_role"],
+    permissions: {
+        global: ["assign_role"],
+    },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,

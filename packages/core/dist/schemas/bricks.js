@@ -27,25 +27,15 @@ exports.BrickSchema = zod_1.default.object({
 const getAllBody = zod_1.default.object({});
 const getAllQuery = zod_1.default.object({
     include: zod_1.default.array(zod_1.default.enum(["fields"])).optional(),
-    filter: zod_1.default
-        .object({
-        s: zod_1.default.string().optional(),
-        collection_key: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
-        environment_key: zod_1.default.string().optional(),
-    })
-        .optional(),
-    sort: zod_1.default
-        .array(zod_1.default.object({
-        key: zod_1.default.enum(["name"]),
-        value: zod_1.default.enum(["asc", "desc"]),
-    }))
-        .optional(),
 });
-const getAllParams = zod_1.default.object({});
+const getAllParams = zod_1.default.object({
+    collection_key: zod_1.default.string().nonempty(),
+});
 const getSingleBody = zod_1.default.object({});
 const getSingleQuery = zod_1.default.object({});
 const getSingleParams = zod_1.default.object({
-    key: zod_1.default.string().nonempty(),
+    brick_key: zod_1.default.string().nonempty(),
+    collection_key: zod_1.default.string().nonempty(),
 });
 exports.default = {
     getAll: {

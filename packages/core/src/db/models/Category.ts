@@ -147,11 +147,11 @@ export default class Category {
   static create: CategoryCreate = async (data) => {
     // -------------------------------------------
     // Checks
-    await Collection.getSingle(
-      data.collection_key,
-      "pages",
-      data.environment_key
-    );
+    await Collection.getSingle({
+      collection_key: data.collection_key,
+      type: "pages",
+      environment_key: data.environment_key,
+    });
 
     // check if slug is unique in post type
     const isSlugUnique = await Category.isSlugUniqueInCollection({

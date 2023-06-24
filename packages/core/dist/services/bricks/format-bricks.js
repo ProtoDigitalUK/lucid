@@ -80,7 +80,7 @@ const specificFieldValues = (type, builderField, field) => {
     return { value, meta };
 };
 const buildFieldTree = (brickId, fields, builderInstance) => {
-    const brickFields = fields.filter((field) => field.page_brick_id === brickId);
+    const brickFields = fields.filter((field) => field.collection_brick_id === brickId);
     const basicFieldTree = builderInstance.basicFieldTree;
     const buildFields = (fields) => {
         const fieldObjs = [];
@@ -136,30 +136,32 @@ const buildBrickStructure = (brickFields) => {
                 id: brickField.id,
                 key: brickField.brick_key,
                 order: brickField.brick_order,
+                type: brickField.brick_type,
                 fields: [],
             });
         }
     });
     return brickStructure;
 };
-const formatBricks = async (brickFields, envrionment_key, collection) => {
+const formatBricks = async (brick_fields, environment_key, collection) => {
     const builderInstances = BrickConfig_1.default.getBrickConfig();
     if (!builderInstances)
         return [];
-    const environment = await Environment_1.default.getSingle(envrionment_key);
+    const environment = await Environment_1.default.getSingle(environment_key);
     if (!environment)
         return [];
-    const brickStructure = buildBrickStructure(brickFields).filter((brick) => {
-        const instance = builderInstances.find((b) => b.key === brick.key);
-        const allowed = (environment.assigned_bricks || [])?.includes(brick.key);
-        const inCollection = collection.bricks.includes(brick.key);
-        return instance && allowed && inCollection;
+    const brickStructure = buildBrickStructure(brick_fields).filter((brick) => {
+        const allowed = BrickConfig_1.default.isBrickAllowed(brick.key, {
+            environment,
+            collection,
+        }, brick.type);
+        return allowed.allowed;
     });
     brickStructure.forEach((brick) => {
         const instance = builderInstances.find((b) => b.key === brick.key);
         if (!instance)
             return;
-        brick.fields = buildFieldTree(brick.id, brickFields, instance);
+        brick.fields = buildFieldTree(brick.id, brick_fields, instance);
     });
     return brickStructure;
 };

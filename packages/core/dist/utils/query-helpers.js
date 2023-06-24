@@ -122,7 +122,8 @@ _SelectQueryBuilder_instances = new WeakSet(), _SelectQueryBuilder_buildSelect =
         if (meta?.exclude)
             continue;
         const columnType = meta?.columnType || "standard";
-        const keyV = meta?.table ? `${meta?.table}.${key}` : key;
+        const baseKey = meta?.key || key;
+        const keyV = meta?.table ? `${meta?.table}.${baseKey}` : baseKey;
         switch (columnType) {
             case "array": {
                 filterClauses.push(`${keyV} ${meta?.operator || "@>"} $${this.values.length + 1}::${meta?.type || "int"}[]`);

@@ -1,23 +1,48 @@
 import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
+import { BrickResponseT } from "../../services/bricks/format-bricks";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
-import { CollectionT } from "./Collection";
+import { CollectionT } from "../models/Collection";
+import { EnvironmentT } from "../models/Environment";
+import { CollectionBrickT } from "@lucid/collection-builder";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
 interface LinkJsonT {
     target: "_blank" | "_self";
 }
-type BrickDataCreateOrUpdate = (brick: BrickObject, order: number, type: "page" | "group", referenceId: number) => Promise<number>;
-type BrickDataGetAll = (type: "page" | "group", referenceId: number, environment_key: string, collection: CollectionT) => Promise<Array<any>>;
-type BrickDataDeleteUnused = (type: "page" | "group", referenceId: number, brickIds: Array<number | undefined>) => Promise<void>;
+type BrickDataCreateOrUpdate = (data: {
+    reference_id: number;
+    brick: BrickObject;
+    brick_type: CollectionBrickT["type"];
+    order: number;
+    collection_type: CollectionT["type"];
+    environment: EnvironmentT;
+    collection: CollectionT;
+}) => Promise<number>;
+type BrickDataGetAll = (data: {
+    reference_id: number;
+    type: CollectionT["type"];
+    environment_key: string;
+    collection: CollectionT;
+}) => Promise<{
+    builder_bricks: BrickResponseT[];
+    fixed_bricks: BrickResponseT[];
+}>;
+type BrickDataDeleteUnused = (data: {
+    type: CollectionT["type"];
+    reference_id: number;
+    brick_ids: Array<number | undefined>;
+    brick_type: CollectionBrickT["type"];
+}) => Promise<void>;
 export type BrickFieldsT = {
     id: number;
+    brick_type: CollectionBrickT["type"];
     brick_key: string;
     page_id: number | null;
-    group_id: number | null;
+    singlepage_id: number | null;
     brick_order: number;
     fields_id: number;
-    page_brick_id: number;
+    collection_brick_id: number;
     parent_repeater: number | null;
     key: string;
     type: FieldTypes;
@@ -31,6 +56,14 @@ export type BrickFieldsT = {
     linked_page_title: string | null;
     linked_page_slug: string | null;
     linked_page_full_slug: string | null;
+};
+export type BrickT = {
+    id: number;
+    brick_type: CollectionBrickT["type"];
+    brick_key: string;
+    page_id: number | null;
+    singlepage_id: number | null;
+    brick_order: number;
 };
 export default class BrickData {
     #private;
