@@ -198,30 +198,30 @@ const buildBrickStructure = (brickFields: BrickFieldsT[]) => {
 
 // -------------------------------------------
 // Format response
-const formatBricks = async (
-  brick_fields: BrickFieldsT[],
-  environment_key: string,
-  collection: CollectionT
-) => {
+const formatBricks = async (data: {
+  brick_fields: BrickFieldsT[];
+  environment_key: string;
+  collection: CollectionT;
+}) => {
   // Get all config
   const builderInstances = BrickConfig.getBrickConfig();
   if (!builderInstances) return [];
 
-  const environment = await Environment.getSingle(environment_key);
+  const environment = await Environment.getSingle(data.environment_key);
   if (!environment) return [];
 
   // Build the base brick structure
-  const brickStructure = buildBrickStructure(brick_fields).filter((brick) => {
-    const allowed = BrickConfig.isBrickAllowed(
-      brick.key,
-      {
+  const brickStructure = buildBrickStructure(data.brick_fields).filter(
+    (brick) => {
+      const allowed = BrickConfig.isBrickAllowed({
+        key: brick.key,
+        type: brick.type,
         environment,
-        collection,
-      },
-      brick.type
-    );
-    return allowed.allowed;
-  });
+        collection: data.collection,
+      });
+      return allowed.allowed;
+    }
+  );
 
   // Build the field tree
   brickStructure.forEach((brick) => {
@@ -230,7 +230,7 @@ const formatBricks = async (
     if (!instance) return;
 
     // Build the field tree
-    brick.fields = buildFieldTree(brick.id, brick_fields, instance);
+    brick.fields = buildFieldTree(brick.id, data.brick_fields, instance);
   });
 
   return brickStructure;

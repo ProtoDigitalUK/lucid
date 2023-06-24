@@ -124,14 +124,12 @@ export default class BrickData {
     // Create or update the page brick record
     const promises = [];
 
-    const allowed = BrickConfig.isBrickAllowed(
-      data.brick.key,
-      {
-        environment: data.environment,
-        collection: data.collection,
-      },
-      data.brick_type
-    );
+    const allowed = BrickConfig.isBrickAllowed({
+      key: data.brick_type,
+      type: data.brick_type,
+      environment: data.environment,
+      collection: data.collection,
+    });
     if (!allowed.allowed) {
       throw new LucidError({
         type: "basic",
@@ -206,11 +204,11 @@ export default class BrickData {
       };
     }
 
-    const formmatedBricks = await formatBricks(
-      brickFields.rows,
-      data.environment_key,
-      data.collection
-    );
+    const formmatedBricks = await formatBricks({
+      brick_fields: brickFields.rows,
+      environment_key: data.environment_key,
+      collection: data.collection,
+    });
 
     return {
       builder_bricks: formmatedBricks.filter(

@@ -4,16 +4,25 @@ import { EnvironmentT } from "../models/Environment";
 import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
 import { CollectionBrickT } from "@lucid/collection-builder";
 import bricksSchema from "../../schemas/bricks";
-type BrickConfigIsBrickAllowed = (key: string, data: {
+type BrickConfigIsBrickAllowed = (data: {
+    key: string;
     collection: CollectionT;
     environment: EnvironmentT;
-}, type?: CollectionBrickT["type"]) => {
+    type?: CollectionBrickT["type"];
+}) => {
     allowed: boolean;
     brick?: BrickConfigT;
     collectionBrick?: CollectionBrickT;
 };
-type BrickConfigGetAll = (collection_key: string, environment_key: string, query: z.infer<typeof bricksSchema.getAll.query>) => Promise<BrickConfigT[]>;
-type BrickConfigGetSingle = (brick_key: string, collection_key: string, environment_key: string) => Promise<BrickConfigT>;
+type BrickConfigGetAll = (query: z.infer<typeof bricksSchema.getAll.query>, data: {
+    collection_key: string;
+    environment_key: string;
+}) => Promise<BrickConfigT[]>;
+type BrickConfigGetSingle = (data: {
+    brick_key: string;
+    collection_key: string;
+    environment_key: string;
+}) => Promise<BrickConfigT>;
 type BrickConfigGetAllAllowedBricks = (data: {
     collection: CollectionT;
     environment: EnvironmentT;

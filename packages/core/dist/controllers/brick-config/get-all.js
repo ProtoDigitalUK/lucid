@@ -8,7 +8,10 @@ const BrickConfig_1 = __importDefault(require("../../db/models/BrickConfig"));
 const bricks_1 = __importDefault(require("../../schemas/bricks"));
 const getAll = async (req, res, next) => {
     try {
-        const bricks = await BrickConfig_1.default.getAll(req.params.collection_key, req.headers["lucid-environment"], req.query);
+        const bricks = await BrickConfig_1.default.getAll(req.query, {
+            collection_key: req.params.collection_key,
+            environment_key: req.headers["lucid-environment"],
+        });
         res.status(200).json((0, build_response_1.default)(req, {
             data: bricks,
         }));

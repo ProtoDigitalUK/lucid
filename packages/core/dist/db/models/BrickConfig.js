@@ -11,11 +11,14 @@ const error_handler_1 = require("../../utils/error-handler");
 class BrickConfig {
 }
 _a = BrickConfig;
-BrickConfig.getSingle = async (brick_key, collection_key, environment_key) => {
-    const allBricks = await BrickConfig.getAll(collection_key, environment_key, {
+BrickConfig.getSingle = async (data) => {
+    const allBricks = await BrickConfig.getAll({
         include: ["fields"],
+    }, {
+        collection_key: data.collection_key,
+        environment_key: data.environment_key,
     });
-    const brick = allBricks.find((b) => b.key === brick_key);
+    const brick = allBricks.find((b) => b.key === data.brick_key);
     if (!brick) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -26,15 +29,16 @@ BrickConfig.getSingle = async (brick_key, collection_key, environment_key) => {
     }
     return brick;
 };
-BrickConfig.getAll = async (collection_key, environment_key, query) => {
+BrickConfig.getAll = async (query, data) => {
+    const environment = await Environment_1.default.getSingle(data.environment_key);
     const collection = await Collection_1.default.getSingle({
-        collection_key: collection_key,
-        environment_key: environment_key,
+        collection_key: data.collection_key,
+        environment_key: data.environment_key,
+        environment: environment,
     });
-    const environments = await Environment_1.default.getSingle(environment_key);
     const allowedBricks = BrickConfig.getAllAllowedBricks({
         collection: collection,
-        environment: environments,
+        environment: environment,
     });
     if (!query.include?.includes("fields")) {
         allowedBricks.bricks.forEach((brick) => {
@@ -43,17 +47,17 @@ BrickConfig.getAll = async (collection_key, environment_key, query) => {
     }
     return allowedBricks.bricks;
 };
-BrickConfig.isBrickAllowed = (key, data, type) => {
+BrickConfig.isBrickAllowed = (data) => {
     let allowed = false;
     const builderInstances = BrickConfig.getBrickConfig();
-    const instance = builderInstances.find((b) => b.key === key);
-    const envAssigned = (data.environment.assigned_bricks || [])?.includes(key);
+    const instance = builderInstances.find((b) => b.key === data.key);
+    const envAssigned = (data.environment.assigned_bricks || [])?.includes(data.key);
     let collectionBrick;
-    if (!type) {
-        collectionBrick = data.collection.bricks?.find((b) => (b.key === key && b.type === "builder") || b.type === "fixed");
+    if (!data.type) {
+        collectionBrick = data.collection.bricks?.find((b) => (b.key === data.key && b.type === "builder") || b.type === "fixed");
     }
     else {
-        collectionBrick = data.collection.bricks?.find((b) => b.key === key && b.type === type);
+        collectionBrick = data.collection.bricks?.find((b) => b.key === data.key && b.type === data.type);
     }
     if (instance && envAssigned && collectionBrick)
         allowed = true;
@@ -76,7 +80,8 @@ BrickConfig.getAllAllowedBricks = (data) => {
     const allowedCollectionBricks = [];
     const brickConfigData = BrickConfig.getBrickConfig();
     for (const brick of brickConfigData) {
-        const brickAllowed = BrickConfig.isBrickAllowed(brick.key, {
+        const brickAllowed = BrickConfig.isBrickAllowed({
+            key: brick.key,
             collection: data.collection,
             environment: data.environment,
         });

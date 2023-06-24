@@ -143,25 +143,27 @@ const buildBrickStructure = (brickFields) => {
     });
     return brickStructure;
 };
-const formatBricks = async (brick_fields, environment_key, collection) => {
+const formatBricks = async (data) => {
     const builderInstances = BrickConfig_1.default.getBrickConfig();
     if (!builderInstances)
         return [];
-    const environment = await Environment_1.default.getSingle(environment_key);
+    const environment = await Environment_1.default.getSingle(data.environment_key);
     if (!environment)
         return [];
-    const brickStructure = buildBrickStructure(brick_fields).filter((brick) => {
-        const allowed = BrickConfig_1.default.isBrickAllowed(brick.key, {
+    const brickStructure = buildBrickStructure(data.brick_fields).filter((brick) => {
+        const allowed = BrickConfig_1.default.isBrickAllowed({
+            key: brick.key,
+            type: brick.type,
             environment,
-            collection,
-        }, brick.type);
+            collection: data.collection,
+        });
         return allowed.allowed;
     });
     brickStructure.forEach((brick) => {
         const instance = builderInstances.find((b) => b.key === brick.key);
         if (!instance)
             return;
-        brick.fields = buildFieldTree(brick.id, brick_fields, instance);
+        brick.fields = buildFieldTree(brick.id, data.brick_fields, instance);
     });
     return brickStructure;
 };

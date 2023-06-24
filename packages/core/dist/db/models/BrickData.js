@@ -19,10 +19,12 @@ class BrickData {
 _a = BrickData;
 BrickData.createOrUpdate = async (data) => {
     const promises = [];
-    const allowed = BrickConfig_1.default.isBrickAllowed(data.brick.key, {
+    const allowed = BrickConfig_1.default.isBrickAllowed({
+        key: data.brick_type,
+        type: data.brick_type,
         environment: data.environment,
         collection: data.collection,
-    }, data.brick_type);
+    });
     if (!allowed.allowed) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -85,7 +87,11 @@ BrickData.getAll = async (data) => {
             fixed_bricks: [],
         };
     }
-    const formmatedBricks = await (0, format_bricks_1.default)(brickFields.rows, data.environment_key, data.collection);
+    const formmatedBricks = await (0, format_bricks_1.default)({
+        brick_fields: brickFields.rows,
+        environment_key: data.environment_key,
+        collection: data.collection,
+    });
     return {
         builder_bricks: formmatedBricks.filter((brick) => brick.type === "builder"),
         fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder"),

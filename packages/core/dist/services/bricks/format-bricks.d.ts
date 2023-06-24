@@ -19,6 +19,10 @@ export interface BrickResponseT {
         items?: Array<BrickResponseT["fields"][0]>;
     }>;
 }
-declare const formatBricks: (brick_fields: BrickFieldsT[], environment_key: string, collection: CollectionT) => Promise<BrickResponseT[]>;
+declare const formatBricks: (data: {
+    brick_fields: BrickFieldsT[];
+    environment_key: string;
+    collection: CollectionT;
+}) => Promise<BrickResponseT[]>;
 export default formatBricks;
 //# sourceMappingURL=format-bricks.d.ts.map

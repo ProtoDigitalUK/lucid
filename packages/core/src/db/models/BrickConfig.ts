@@ -13,30 +13,30 @@ import bricksSchema from "@schemas/bricks";
 
 // -------------------------------------------
 // Types
-type BrickConfigIsBrickAllowed = (
-  key: string,
-  data: {
-    collection: CollectionT;
-    environment: EnvironmentT;
-  },
-  type?: CollectionBrickT["type"]
-) => {
+type BrickConfigIsBrickAllowed = (data: {
+  key: string;
+  collection: CollectionT;
+  environment: EnvironmentT;
+  type?: CollectionBrickT["type"];
+}) => {
   allowed: boolean;
   brick?: BrickConfigT;
   collectionBrick?: CollectionBrickT;
 };
 
 type BrickConfigGetAll = (
-  collection_key: string,
-  environment_key: string,
-  query: z.infer<typeof bricksSchema.getAll.query>
+  query: z.infer<typeof bricksSchema.getAll.query>,
+  data: {
+    collection_key: string;
+    environment_key: string;
+  }
 ) => Promise<BrickConfigT[]>;
 
-type BrickConfigGetSingle = (
-  brick_key: string,
-  collection_key: string,
-  environment_key: string
-) => Promise<BrickConfigT>;
+type BrickConfigGetSingle = (data: {
+  brick_key: string;
+  collection_key: string;
+  environment_key: string;
+}) => Promise<BrickConfigT>;
 
 type BrickConfigGetAllAllowedBricks = (data: {
   collection: CollectionT;
@@ -57,20 +57,18 @@ export type BrickConfigT = {
 export default class BrickConfig {
   // -------------------------------------------
   // Functions
-  static getSingle: BrickConfigGetSingle = async (
-    brick_key,
-    collection_key,
-    environment_key
-  ) => {
+  static getSingle: BrickConfigGetSingle = async (data) => {
     const allBricks = await BrickConfig.getAll(
-      collection_key,
-      environment_key,
       {
         include: ["fields"],
+      },
+      {
+        collection_key: data.collection_key,
+        environment_key: data.environment_key,
       }
     );
 
-    const brick = allBricks.find((b) => b.key === brick_key);
+    const brick = allBricks.find((b) => b.key === data.brick_key);
     if (!brick) {
       throw new LucidError({
         type: "basic",
@@ -82,21 +80,17 @@ export default class BrickConfig {
 
     return brick;
   };
-  static getAll: BrickConfigGetAll = async (
-    collection_key,
-    environment_key,
-    query
-  ) => {
-    // get collections
+  static getAll: BrickConfigGetAll = async (query, data) => {
+    const environment = await Environment.getSingle(data.environment_key);
     const collection = await Collection.getSingle({
-      collection_key: collection_key,
-      environment_key: environment_key,
+      collection_key: data.collection_key,
+      environment_key: data.environment_key,
+      environment: environment,
     });
-    const environments = await Environment.getSingle(environment_key);
 
     const allowedBricks = BrickConfig.getAllAllowedBricks({
       collection: collection,
-      environment: environments,
+      environment: environment,
     });
 
     if (!query.include?.includes("fields")) {
@@ -107,22 +101,25 @@ export default class BrickConfig {
 
     return allowedBricks.bricks;
   };
-  static isBrickAllowed: BrickConfigIsBrickAllowed = (key, data, type) => {
+  static isBrickAllowed: BrickConfigIsBrickAllowed = (data) => {
     // checks if the brick is allowed in the collection and environment and that there is config for it
     let allowed = false;
     const builderInstances = BrickConfig.getBrickConfig();
 
-    const instance = builderInstances.find((b) => b.key === key);
-    const envAssigned = (data.environment.assigned_bricks || [])?.includes(key);
+    const instance = builderInstances.find((b) => b.key === data.key);
+    const envAssigned = (data.environment.assigned_bricks || [])?.includes(
+      data.key
+    );
     let collectionBrick: CollectionBrickT | undefined;
 
-    if (!type) {
+    if (!data.type) {
       collectionBrick = data.collection.bricks?.find(
-        (b) => (b.key === key && b.type === "builder") || b.type === "fixed"
+        (b) =>
+          (b.key === data.key && b.type === "builder") || b.type === "fixed"
       ) as CollectionBrickT | undefined;
     } else {
       collectionBrick = data.collection.bricks?.find(
-        (b) => b.key === key && b.type === type
+        (b) => b.key === data.key && b.type === data.type
       ) as CollectionBrickT | undefined;
     }
 
@@ -150,7 +147,8 @@ export default class BrickConfig {
     const brickConfigData = BrickConfig.getBrickConfig();
 
     for (const brick of brickConfigData) {
-      const brickAllowed = BrickConfig.isBrickAllowed(brick.key, {
+      const brickAllowed = BrickConfig.isBrickAllowed({
+        key: brick.key,
         collection: data.collection,
         environment: data.environment,
       });
