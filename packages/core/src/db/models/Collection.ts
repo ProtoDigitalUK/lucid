@@ -158,7 +158,8 @@ export default class Collection {
     // Update/Create Bricks
     const builderBricksPromise =
       props.builder_bricks.map((brick, index) =>
-        BrickData.createOrUpdate(props.id, {
+        BrickData.createOrUpdate({
+          reference_id: props.id,
           brick: brick,
           brick_type: "builder",
           order: index,
@@ -169,7 +170,8 @@ export default class Collection {
       ) || [];
     const fixedBricksPromise =
       props.fixed_bricks.map((brick, index) =>
-        BrickData.createOrUpdate(props.id, {
+        BrickData.createOrUpdate({
+          reference_id: props.id,
           brick: brick,
           brick_type: "fixed",
           order: index,
@@ -190,19 +192,19 @@ export default class Collection {
     // -------------------------------------------
     // Delete unused bricks
     if (builderIds.length > 0)
-      await BrickData.deleteUnused(
-        props.collection_type,
-        props.id,
-        builderIds,
-        "builder"
-      );
+      await BrickData.deleteUnused({
+        type: props.collection_type,
+        reference_id: props.id,
+        brick_ids: builderIds,
+        brick_type: "builder",
+      });
     if (fixedIds.length > 0)
-      await BrickData.deleteUnused(
-        props.collection_type,
-        props.id,
-        fixedIds,
-        "fixed"
-      );
+      await BrickData.deleteUnused({
+        type: props.collection_type,
+        reference_id: props.id,
+        brick_ids: fixedIds,
+        brick_type: "fixed",
+      });
   };
   // -------------------------------------------
   // Util Functions

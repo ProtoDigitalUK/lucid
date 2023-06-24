@@ -13,13 +13,13 @@ type SinglePageGetSingle = (data: {
   collection_key: string;
 }) => Promise<SinglePageT>;
 
-type SinglePageUpdateSingle = (
-  userId: number,
-  environment_key: string,
-  collection_key: string,
-  builder_bricks?: Array<BrickObject>,
-  fixed_bricks?: Array<BrickObject>
-) => Promise<SinglePageT>;
+type SinglePageUpdateSingle = (data: {
+  userId: number;
+  environment_key: string;
+  collection_key: string;
+  builder_bricks?: Array<BrickObject>;
+  fixed_bricks?: Array<BrickObject>;
+}) => Promise<SinglePageT>;
 
 // -------------------------------------------
 // Single Page
@@ -100,53 +100,47 @@ export default class SinglePage {
       });
     }
 
-    const pageBricks = await BrickData.getAll(
-      "singlepage",
-      singlepage.rows[0].id,
-      data.environment_key,
-      collection
-    );
+    const pageBricks = await BrickData.getAll({
+      reference_id: singlepage.rows[0].id,
+      type: "singlepage",
+      environment_key: data.environment_key,
+      collection: collection,
+    });
     singlepage.rows[0].builder_bricks = pageBricks.builder_bricks;
     singlepage.rows[0].fixed_bricks = pageBricks.fixed_bricks;
 
     return singlepage.rows[0];
   };
-  static updateSingle: SinglePageUpdateSingle = async (
-    userId,
-    environment_key,
-    collection_key,
-    builder_bricks,
-    fixed_bricks
-  ) => {
+  static updateSingle: SinglePageUpdateSingle = async (data) => {
     // Used to check if we have access to the collection
     await Collection.getSingle({
-      collection_key: collection_key,
-      environment_key: environment_key,
+      collection_key: data.collection_key,
+      environment_key: data.environment_key,
       type: "singlepage",
     });
 
     // Get the singlepage
     const singlepage = await SinglePage.#getOrCreateSinglePage(
-      environment_key,
-      collection_key
+      data.environment_key,
+      data.collection_key
     );
 
     // -------------------------------------------
     // Update/Create Bricks
     await Collection.updateBricks({
-      environment_key: environment_key,
-      builder_bricks: builder_bricks || [],
-      fixed_bricks: fixed_bricks || [],
+      environment_key: data.environment_key,
+      builder_bricks: data.builder_bricks || [],
+      fixed_bricks: data.fixed_bricks || [],
       collection_type: "singlepage",
       id: singlepage.id,
-      collection_key: collection_key,
+      collection_key: data.collection_key,
     });
 
     // -------------------------------------------
     // Update the single page
     const updateSinglePage = await client.query<SinglePageT>({
       text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,
-      values: [userId, singlepage.id],
+      values: [data.userId, singlepage.id],
     });
 
     return updateSinglePage.rows[0];

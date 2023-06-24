@@ -115,10 +115,6 @@ const settingsCollection = new CollectionBuilder("settings", {
         type: "fixed",
         position: "standard",
       },
-      {
-        key: "default_meta",
-        type: "builder",
-      },
     ],
   },
 });

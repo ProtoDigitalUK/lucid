@@ -411,309 +411,6 @@
 					"name": "Collections",
 					"item": [
 						{
-							"name": "Pages",
-							"item": [
-								{
-									"name": "Get Multiple",
-									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages?sort=created_at",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"pages"
-											],
-											"query": [
-												{
-													"key": "sort",
-													"value": "created_at"
-												},
-												{
-													"key": "filter[collection_key]",
-													"value": "page",
-													"disabled": true
-												},
-												{
-													"key": "filter[title]",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "filter[slug]",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "filter[category_id]",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "page",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "per_page",
-													"value": "1",
-													"disabled": true
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Single",
-									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages/1?include=bricks",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"pages",
-												"1"
-											],
-											"query": [
-												{
-													"key": "include",
-													"value": "bricks"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Create Single",
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"pages"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update Single",
-									"request": {
-										"method": "PATCH",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                // {\n                //     \"key\": \"page_link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": 1,\n                //     \"target\": \"_self\"\n                // },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            // \"id\": 1,\n            \"key\": \"intro\"\n        }\n    ],\n    \"fixed_bricks\": []\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages/1",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"pages",
-												"1"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Delete Single",
-									"request": {
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/pages/3",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"pages",
-												"3"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Groups",
-							"item": [
-								{
-									"name": "Get Single",
-									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/groups/settings",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"groups",
-												"settings"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update Single",
-									"request": {
-										"method": "PATCH",
-										"header": [
-											{
-												"key": "_csrf",
-												"value": "{{CSRF}}",
-												"type": "text"
-											},
-											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"fixed_bricks\": [\n        {\n            // \"id\": 4,\n            \"key\": \"default_meta\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 7,\n                    \"key\": \"meta_title\",\n                    \"type\": \"text\",\n                    \"value\": \"Default Title 2\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"meta_description\",\n                    \"type\": \"text\",\n                    \"value\": \"Welcome to LUCID Headless CMS!\"\n                }\n            ]\n        }\n    ]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{BASE_URL}}/api/v1/groups/settings",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"groups",
-												"settings"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
 							"name": "Categories",
 							"item": [
 								{
@@ -1027,6 +724,314 @@
 							]
 						},
 						{
+							"name": "Collection Types",
+							"item": [
+								{
+									"name": "Pages",
+									"item": [
+										{
+											"name": "Get Multiple",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages?sort=created_at",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages"
+													],
+													"query": [
+														{
+															"key": "sort",
+															"value": "created_at"
+														},
+														{
+															"key": "filter[collection_key]",
+															"value": "page",
+															"disabled": true
+														},
+														{
+															"key": "filter[title]",
+															"value": "",
+															"disabled": true
+														},
+														{
+															"key": "filter[slug]",
+															"value": "",
+															"disabled": true
+														},
+														{
+															"key": "filter[category_id]",
+															"value": "1",
+															"disabled": true
+														},
+														{
+															"key": "page",
+															"value": "1",
+															"disabled": true
+														},
+														{
+															"key": "per_page",
+															"value": "1",
+															"disabled": true
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get Single",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/1?include=bricks",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"1"
+													],
+													"query": [
+														{
+															"key": "include",
+															"value": "bricks"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Create Single",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Single",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n    \"builder_bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                // {\n                //     \"key\": \"page_link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": 1,\n                //     \"target\": \"_self\"\n                // },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            // \"id\": 1,\n            \"key\": \"intro\"\n        }\n    ],\n    \"fixed_bricks\": []\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/1",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Single",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/3",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"3"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Single Page",
+									"item": [
+										{
+											"name": "Get Single",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/single-page/settings",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"single-page",
+														"settings"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Single",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"builder_bricks\": [],\n    \"fixed_bricks\": [\n        {\n            // \"id\": 4,\n            \"key\": \"default_meta\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 7,\n                    \"key\": \"meta_title\",\n                    \"type\": \"text\",\n                    \"value\": \"Default Title 2\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"meta_description\",\n                    \"type\": \"text\",\n                    \"value\": \"Welcome to LUCID Headless CMS!\"\n                }\n            ]\n        }\n    ]\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/single-page/settings",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"single-page",
+														"settings"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						},
+						{
 							"name": "Get All",
 							"request": {
 								"method": "GET",
@@ -1043,7 +1048,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections?filter[type]=pages&include=brick_config",
+									"raw": "{{BASE_URL}}/api/v1/collections?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1055,11 +1060,12 @@
 									"query": [
 										{
 											"key": "filter[type]",
-											"value": "pages"
+											"value": "singlepage",
+											"disabled": true
 										},
 										{
 											"key": "include",
-											"value": "brick_config"
+											"value": "bricks"
 										}
 									]
 								},
@@ -1084,7 +1090,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/page",
+									"raw": "{{BASE_URL}}/api/v1/collections/settings",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1092,7 +1098,7 @@
 										"api",
 										"v1",
 										"collections",
-										"page"
+										"settings"
 									]
 								},
 								"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."

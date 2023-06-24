@@ -13,10 +13,9 @@ const getMultiple: Controller<
   typeof pagesSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const pages = await Page.getMultiple(
-      req.headers["lucid-environment"] as string,
-      req.query
-    );
+    const pages = await Page.getMultiple(req.query, {
+      environment_key: req.headers["lucid-environment"] as string,
+    });
 
     res.status(200).json(
       buildResponse(req, {

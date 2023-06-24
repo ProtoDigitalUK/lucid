@@ -26,34 +26,54 @@ interface LinkJsonT {
 }
 
 // Methods
-type BrickDataCreateOrUpdate = (
-  reference_id: number,
-  data: {
-    brick: BrickObject;
-    brick_type: CollectionBrickT["type"];
-    order: number;
-    collection_type: CollectionT["type"];
-    environment: EnvironmentT;
-    collection: CollectionT;
-  }
-) => Promise<number>;
+type BrickDataCreateOrUpdate = (data: {
+  reference_id: number;
+  brick: BrickObject;
+  brick_type: CollectionBrickT["type"];
+  order: number;
+  collection_type: CollectionT["type"];
+  environment: EnvironmentT;
+  collection: CollectionT;
+}) => Promise<number>;
 
-type BrickDataGetAll = (
-  type: CollectionT["type"],
-  reference_id: number,
-  environment_key: string,
-  collection: CollectionT
-) => Promise<{
+type BrickDataGetAll = (data: {
+  reference_id: number;
+  type: CollectionT["type"];
+  environment_key: string;
+  collection: CollectionT;
+}) => Promise<{
   builder_bricks: BrickResponseT[];
   fixed_bricks: BrickResponseT[];
 }>;
 
-type BrickDataDeleteUnused = (
-  type: CollectionT["type"],
-  reference_id: number,
-  brick_ids: Array<number | undefined>,
-  brick_type: CollectionBrickT["type"]
-) => Promise<void>;
+type BrickDataDeleteUnused = (data: {
+  type: CollectionT["type"];
+  reference_id: number;
+  brick_ids: Array<number | undefined>;
+  brick_type: CollectionBrickT["type"];
+}) => Promise<void>;
+
+type BrickDataCreateSinglePageBrick = (data: {
+  type: CollectionT["type"];
+  reference_id: number;
+  order: number;
+  brick: BrickObject;
+  brick_type: CollectionBrickT["type"];
+}) => Promise<number>;
+
+type BrickDataUpdateSinglePageBrick = (data: {
+  order: number;
+  brick: BrickObject;
+  brick_type: CollectionBrickT["type"];
+}) => Promise<number>;
+
+type BrickDataCheckFieldExists = (data: {
+  brick_id: number;
+  key: string;
+  type: string;
+  parent_repeater?: number;
+  group_position?: number;
+}) => Promise<boolean>;
 
 // -------------------------------------------
 // Page Brick
@@ -100,10 +120,7 @@ export type BrickT = {
 export default class BrickData {
   // -------------------------------------------
   // Functions
-  static createOrUpdate: BrickDataCreateOrUpdate = async (
-    reference_id,
-    data
-  ) => {
+  static createOrUpdate: BrickDataCreateOrUpdate = async (data) => {
     // Create or update the page brick record
     const promises = [];
 
@@ -126,18 +143,18 @@ export default class BrickData {
 
     // Create the page brick record
     const brickId = data.brick.id
-      ? await BrickData.#updateSinglePageBrick(
-          data.order,
-          data.brick,
-          data.brick_type
-        )
-      : await BrickData.#createSinglePageBrick(
-          data.collection_type,
-          reference_id,
-          data.order,
-          data.brick,
-          data.brick_type
-        );
+      ? await BrickData.#updateSinglePageBrick({
+          order: data.order,
+          brick: data.brick,
+          brick_type: data.brick_type,
+        })
+      : await BrickData.#createSinglePageBrick({
+          type: data.collection_type,
+          reference_id: data.reference_id,
+          order: data.order,
+          brick: data.brick,
+          brick_type: data.brick_type,
+        });
 
     // for each field, create or update the field, if its a repeater, create or update the repeater and items
     if (!data.brick.fields) return brickId;
@@ -154,14 +171,9 @@ export default class BrickData {
 
     return brickId;
   };
-  static getAll: BrickDataGetAll = async (
-    type,
-    reference_id,
-    environment_key,
-    collection
-  ) => {
+  static getAll: BrickDataGetAll = async (data) => {
     // join all lucid_fields in flat structure, making sure to join page_link_id or media_id if applicable
-    const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
     const brickFields = await client.query<BrickFieldsT>(
       `SELECT 
@@ -184,7 +196,7 @@ export default class BrickData {
         lucid_collection_bricks.${referenceKey} = $1
       ORDER BY 
         lucid_collection_bricks.brick_order`,
-      [reference_id]
+      [data.reference_id]
     );
 
     if (!brickFields.rows[0]) {
@@ -196,8 +208,8 @@ export default class BrickData {
 
     const formmatedBricks = await formatBricks(
       brickFields.rows,
-      environment_key,
-      collection
+      data.environment_key,
+      data.collection
     );
 
     return {
@@ -207,23 +219,18 @@ export default class BrickData {
       fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder"),
     };
   };
-  static deleteUnused: BrickDataDeleteUnused = async (
-    type,
-    reference_id,
-    brick_ids,
-    brick_type
-  ) => {
-    const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
+  static deleteUnused: BrickDataDeleteUnused = async (data) => {
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
     // Fetch all bricks for the page
     const pageBrickIds = await client.query<{ id: number }>({
       text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
-      values: [reference_id, brick_type],
+      values: [data.reference_id, data.brick_type],
     });
 
     // Filter out the bricks that are still in use
     const bricksToDelete = pageBrickIds.rows.filter(
-      (brick) => !brick_ids.includes(brick.id)
+      (brick) => !data.brick_ids.includes(brick.id)
     );
 
     // Delete the bricks
@@ -240,21 +247,17 @@ export default class BrickData {
       throw new LucidError({
         type: "basic",
         name: "Brick Delete Error",
-        message: `There was an error deleting bricks for "${type}" of ID "${reference_id}"!`,
+        message: `There was an error deleting bricks for "${data.type}" of ID "${data.reference_id}"!`,
         status: 500,
       });
     }
   };
   // -------------------------------------------
   // Page Brick
-  static #createSinglePageBrick = async (
-    type: CollectionT["type"],
-    reference_id: number,
-    order: number,
-    brick: BrickObject,
-    brick_type: CollectionBrickT["type"]
+  static #createSinglePageBrick: BrickDataCreateSinglePageBrick = async (
+    data
   ) => {
-    const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
     const brickRes = await client.query<{
       id: number;
@@ -264,7 +267,7 @@ export default class BrickData {
       VALUES 
         ($1, $2, $3, $4)
       RETURNING id`,
-      [brick.key, brick_type, reference_id, order]
+      [data.brick.key, data.brick_type, data.reference_id, data.order]
     );
 
     if (!brickRes.rows[0]) {
@@ -278,10 +281,8 @@ export default class BrickData {
 
     return brickRes.rows[0].id;
   };
-  static #updateSinglePageBrick = async (
-    order: number,
-    brick: BrickObject,
-    brick_type: CollectionBrickT["type"]
+  static #updateSinglePageBrick: BrickDataUpdateSinglePageBrick = async (
+    data
   ) => {
     const brickRes = await client.query<{
       id: number;
@@ -295,7 +296,7 @@ export default class BrickData {
       AND
         brick_type = $3
       RETURNING id`,
-      [order, brick.id, brick_type]
+      [data.order, data.brick.id, data.brick_type]
     );
 
     if (!brickRes.rows[0]) {
@@ -333,13 +334,13 @@ export default class BrickData {
       fieldId = fieldRes.rows[0].fields_id;
     } else {
       // Check if the field already exists
-      const fieldExists = await BrickData.#checkFieldExists(
-        brick_id,
-        data.key,
-        data.type,
-        data.parent_repeater,
-        data.group_position
-      );
+      const fieldExists = await BrickData.#checkFieldExists({
+        brick_id: brick_id,
+        key: data.key,
+        type: data.type,
+        parent_repeater: data.parent_repeater,
+        group_position: data.group_position,
+      });
       if (fieldExists) {
         throw new LucidError({
           type: "basic",
@@ -374,27 +375,21 @@ export default class BrickData {
 
     return fieldId;
   };
-  static #checkFieldExists = async (
-    brick_id: number,
-    key: string,
-    type: string,
-    parent_repeater?: number,
-    group_position?: number
-  ) => {
+  static #checkFieldExists: BrickDataCheckFieldExists = async (data) => {
     let queryText =
       "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE collection_brick_id = $1 AND key = $2 AND type = $3";
-    let queryValues = [brick_id, key, type];
+    let queryValues = [data.brick_id, data.key, data.type];
 
     // If parent repeater is provided, add it to the query
-    if (parent_repeater !== undefined) {
+    if (data.parent_repeater !== undefined) {
       queryText += " AND parent_repeater = $4";
-      queryValues.push(parent_repeater);
+      queryValues.push(data.parent_repeater);
     }
 
     // If group_position is provided, add it to the query
-    if (group_position !== undefined) {
+    if (data.group_position !== undefined) {
       queryText += " AND group_position = $5";
-      queryValues.push(group_position);
+      queryValues.push(data.group_position);
     }
 
     queryText += ")";
@@ -530,13 +525,13 @@ export default class BrickData {
 
       repeaterId = repeaterRes.rows[0].fields_id;
     } else {
-      const repeaterExists = await BrickData.#checkFieldExists(
-        brick_id,
-        data.key,
-        data.type,
-        data.parent_repeater,
-        data.group_position
-      );
+      const repeaterExists = await BrickData.#checkFieldExists({
+        brick_id: brick_id,
+        key: data.key,
+        type: data.type,
+        parent_repeater: data.parent_repeater,
+        group_position: data.group_position,
+      });
 
       if (repeaterExists) {
         throw new LucidError({

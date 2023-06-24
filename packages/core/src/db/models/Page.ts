@@ -16,52 +16,56 @@ import pagesSchema from "@schemas/pages";
 // -------------------------------------------
 // Types
 type PageGetMultiple = (
-  environment_key: string,
-  query: z.infer<typeof pagesSchema.getMultiple.query>
+  query: z.infer<typeof pagesSchema.getMultiple.query>,
+  data: {
+    environment_key: string;
+  }
 ) => Promise<{
   data: PageT[];
   count: number;
 }>;
 
 type PageGetSingle = (
-  environment_key: string,
-  id: string,
-  query: z.infer<typeof pagesSchema.getSingle.query>
-) => Promise<PageT>;
-
-type PageCreate = (
-  userId: number,
+  query: z.infer<typeof pagesSchema.getSingle.query>,
   data: {
     environment_key: string;
-    title: string;
-    slug: string;
-    collection_key: string;
-    homepage?: boolean;
-    excerpt?: string;
-    published?: boolean;
-    parent_id?: number;
-    category_ids?: Array<number>;
+    id: string;
   }
 ) => Promise<PageT>;
 
-type PageUpdate = (
-  userId: number,
-  environment_key: string,
-  id: string,
-  data: {
-    title?: string;
-    slug?: string;
-    homepage?: boolean;
-    parent_id?: number;
-    category_ids?: Array<number>;
-    published?: boolean;
-    excerpt?: string;
-    builder_bricks?: Array<BrickObject>;
-    fixed_bricks?: Array<BrickObject>;
-  }
-) => Promise<PageT>;
+type PageCreate = (data: {
+  userId: number;
+  environment_key: string;
+  title: string;
+  slug: string;
+  collection_key: string;
+  homepage?: boolean;
+  excerpt?: string;
+  published?: boolean;
+  parent_id?: number;
+  category_ids?: Array<number>;
+}) => Promise<PageT>;
 
-type PageDelete = (environment_key: string, id: string) => Promise<PageT>;
+type PageUpdate = (data: {
+  id: string;
+  environment_key: string;
+  userId: number;
+
+  title?: string;
+  slug?: string;
+  homepage?: boolean;
+  parent_id?: number;
+  category_ids?: Array<number>;
+  published?: boolean;
+  excerpt?: string;
+  builder_bricks?: Array<BrickObject>;
+  fixed_bricks?: Array<BrickObject>;
+}) => Promise<PageT>;
+
+type PageDelete = (data: {
+  environment_key: string;
+  id: string;
+}) => Promise<PageT>;
 
 // -------------------------------------------
 // User
@@ -93,7 +97,7 @@ export type PageT = {
 export default class Page {
   // -------------------------------------------
   // Functions
-  static getMultiple: PageGetMultiple = async (environment_key, query) => {
+  static getMultiple: PageGetMultiple = async (query, data) => {
     const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
@@ -119,7 +123,7 @@ export default class Page {
       filter: {
         data: {
           ...filter,
-          environment_key: environment_key,
+          environment_key: data.environment_key,
         },
         meta: {
           collection_key: {
@@ -192,7 +196,7 @@ export default class Page {
       count: count.rows[0].count,
     };
   };
-  static getSingle: PageGetSingle = async (environment_key, id, query) => {
+  static getSingle: PageGetSingle = async (query, data) => {
     const { include } = query;
 
     // Build Query Data and Query
@@ -217,8 +221,8 @@ export default class Page {
       exclude: undefined,
       filter: {
         data: {
-          id: id,
-          environment_key: environment_key,
+          id: data.id,
+          environment_key: data.environment_key,
         },
         meta: {
           id: {
@@ -255,7 +259,7 @@ export default class Page {
       throw new LucidError({
         type: "basic",
         name: "Page not found",
-        message: `Page with id "${id}" not found`,
+        message: `Page with id "${data.id}" not found`,
         status: 404,
       });
     }
@@ -267,19 +271,19 @@ export default class Page {
         type: "pages",
       });
 
-      const pageBricks = await BrickData.getAll(
-        "pages",
-        page.rows[0].id,
-        environment_key,
-        collection
-      );
+      const pageBricks = await BrickData.getAll({
+        reference_id: page.rows[0].id,
+        type: "pages",
+        environment_key: data.environment_key,
+        collection: collection,
+      });
       page.rows[0].builder_bricks = pageBricks.builder_bricks;
       page.rows[0].fixed_bricks = pageBricks.fixed_bricks;
     }
 
     return formatPage(page.rows[0]);
   };
-  static create: PageCreate = async (userId, data) => {
+  static create: PageCreate = async (data) => {
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
@@ -331,7 +335,7 @@ export default class Page {
         data.excerpt || null,
         data.published || false,
         parentId,
-        userId,
+        data.userId,
       ],
     });
 
@@ -362,12 +366,12 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
-  static update: PageUpdate = async (userId, environment_key, id, data) => {
-    const pageId = parseInt(id);
+  static update: PageUpdate = async (data) => {
+    const pageId = parseInt(data.id);
 
     // -------------------------------------------
     // Checks
-    const currentPage = await Page.#pageExists(pageId, environment_key);
+    const currentPage = await Page.#pageExists(pageId, data.environment_key);
 
     // Set parent id to null if homepage as homepage has to be root level
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
@@ -375,14 +379,14 @@ export default class Page {
     // Check if the the parent_id is the homepage
     await Page.#checkParentNotHomepage({
       parent_id: data.parent_id || null,
-      environment_key: environment_key,
+      environment_key: data.environment_key,
     });
     // Check if the parent is in the same collection
     if (parentId) {
       await Page.#isParentSameCollection({
         parent_id: parentId,
         collection_key: currentPage.collection_key,
-        environment_key: environment_key,
+        environment_key: data.environment_key,
       });
     }
 
@@ -394,7 +398,7 @@ export default class Page {
       newSlug = await Page.#slugUnique({
         slug: data.slug,
         homepage: data.homepage || false,
-        environment_key: environment_key,
+        environment_key: data.environment_key,
         collection_key: currentPage.collection_key,
         parent_id: parentId,
       });
@@ -417,7 +421,7 @@ export default class Page {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? userId : null,
+        data.published ? data.userId : null,
         parentId,
         data.homepage,
       ],
@@ -462,7 +466,7 @@ export default class Page {
     // -------------------------------------------
     // Update/Create Bricks
     await Collection.updateBricks({
-      environment_key: environment_key,
+      environment_key: data.environment_key,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],
       collection_type: "pages",
@@ -474,12 +478,12 @@ export default class Page {
     // Format and return
     return formatPage(page.rows[0]);
   };
-  static delete: PageDelete = async (environment_key, id) => {
-    const pageId = parseInt(id);
+  static delete: PageDelete = async (data) => {
+    const pageId = parseInt(data.id);
 
     // -------------------------------------------
     // Checks
-    await Page.#pageExists(pageId, environment_key);
+    await Page.#pageExists(pageId, data.environment_key);
 
     // -------------------------------------------
     // Delete page
