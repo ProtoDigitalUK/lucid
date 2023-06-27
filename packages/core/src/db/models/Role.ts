@@ -50,7 +50,10 @@ export default class Role {
   // -------------------------------------------
   // Functions
   static createSingle: RoleCreateSingle = async (data) => {
-    const { columns, aliases, values } = queryDataFormat(["name"], [data.name]);
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["name"],
+      values: [data.name],
+    });
 
     const parsePermissions = await validatePermissions(data.permission_groups);
 
@@ -181,7 +184,10 @@ export default class Role {
     };
   };
   static updateSingle: RoleUpdateSingle = async (id, data) => {
-    const { columns, aliases, values } = queryDataFormat(["name"], [data.name]);
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["name"],
+      values: [data.name],
+    });
     const parsePermissions = await validatePermissions(data.permission_groups);
 
     await Role.#roleNameUnique(data.name, id);

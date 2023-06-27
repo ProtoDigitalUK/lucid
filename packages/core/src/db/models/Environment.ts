@@ -65,10 +65,15 @@ export default class Environment {
   };
   static upsertSingle: EnvironmentUpsertSingle = async (data) => {
     // Create query from data
-    const { columns, aliases, values } = queryDataFormat(
-      ["key", "title", "assigned_bricks", "assigned_collections"],
-      [data.key, data.title, data.assigned_bricks, data.assigned_collections]
-    );
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["key", "title", "assigned_bricks", "assigned_collections"],
+      values: [
+        data.key,
+        data.title,
+        data.assigned_bricks,
+        data.assigned_collections,
+      ],
+    });
 
     // Check assigned_brick keys against config
     if (data.assigned_bricks) {

@@ -5,7 +5,7 @@ import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
 // Models
 import UserRole from "@db/models/UserRole";
-import { EnvironmentPermissionT, PermissionT } from "@db/models/RolePermission";
+import { PermissionT } from "@db/models/RolePermission";
 // Services
 import {
   UserRoleRes,
@@ -75,10 +75,16 @@ export default class User {
     // hash password
     const hashedPassword = await argon2.hash(password);
 
-    const { columns, aliases, values } = queryDataFormat(
-      ["email", "username", "password", "account_reset", "super_admin"],
-      [email, username, hashedPassword, account_reset, super_admin]
-    );
+    const { columns, aliases, values } = queryDataFormat({
+      columns: [
+        "email",
+        "username",
+        "password",
+        "account_reset",
+        "super_admin",
+      ],
+      values: [email, username, hashedPassword, account_reset, super_admin],
+    });
 
     const user = await client.query<UserT>({
       text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,

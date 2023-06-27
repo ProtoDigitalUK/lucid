@@ -174,16 +174,22 @@ export default class Category {
       });
     }
 
-    const { columns, aliases, values } = queryDataFormat(
-      ["environment_key", "collection_key", "title", "slug", "description"],
-      [
+    const { columns, aliases, values } = queryDataFormat({
+      columns: [
+        "environment_key",
+        "collection_key",
+        "title",
+        "slug",
+        "description",
+      ],
+      values: [
         data.environment_key,
         data.collection_key,
         data.title,
         data.slug,
         data.description,
-      ]
-    );
+      ],
+    });
 
     const res = await client.query<CategoryT>({
       name: "create-category",

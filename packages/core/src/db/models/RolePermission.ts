@@ -90,10 +90,10 @@ export default class RolePermission {
     permissions
   ) => {
     const permissionsPromise = permissions.map((permission) => {
-      const { columns, aliases, values } = queryDataFormat(
-        ["role_id", "permission", "environment_key"],
-        [role_id, permission.permission, permission.environment_key]
-      );
+      const { columns, aliases, values } = queryDataFormat({
+        columns: ["role_id", "permission", "environment_key"],
+        values: [role_id, permission.permission, permission.environment_key],
+      });
 
       return client.query<RolePermissionT>({
         text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,

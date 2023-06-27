@@ -3,9 +3,9 @@ import { LucidError } from "@utils/error-handler";
 // -------------------------------------------
 // Formats data for a query and removes undefined values and their corresponding columns
 
-export const queryDataFormat = (
-  columns: string[],
-  values: (any | undefined)[],
+export const queryDataFormat = (data: {
+  columns: string[];
+  values: (any | undefined)[];
   conditional?: {
     hasValues?: {
       [key: string]:
@@ -14,16 +14,16 @@ export const queryDataFormat = (
         | boolean
         | Array<string | number | boolean>;
     };
-  }
-) => {
+  };
+}) => {
   // Ensure columns and values have the same length
-  if (columns.length !== values.length) {
+  if (data.columns.length !== data.values.length) {
     throw new Error("Columns and values arrays must have the same length");
   }
 
   // Filter out undefined values and their corresponding columns
-  const filteredData = columns
-    .map((col, i) => ({ col, val: values[i] }))
+  const filteredData = data.columns
+    .map((col, i) => ({ col, val: data.values[i] }))
     .filter((data) => data.val !== undefined);
 
   const c = filteredData.map((data) => data.col);
@@ -32,7 +32,7 @@ export const queryDataFormat = (
 
   // -------------------------------------------
   // Conditionals
-  if (conditional?.hasValues) {
+  if (data.conditional?.hasValues) {
     if (c.length === 0) {
       throw new LucidError({
         type: "basic",
@@ -42,7 +42,7 @@ export const queryDataFormat = (
       });
     }
 
-    const hasValues = Object.entries(conditional.hasValues);
+    const hasValues = Object.entries(data.conditional.hasValues);
     for (let i = 0; i < hasValues.length; i++) {
       const [key, value] = hasValues[i];
       if (value === undefined) continue;

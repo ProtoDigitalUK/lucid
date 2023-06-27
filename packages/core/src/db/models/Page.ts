@@ -404,8 +404,8 @@ export default class Page {
       });
     }
 
-    const { columns, aliases, values } = queryDataFormat(
-      [
+    const { columns, aliases, values } = queryDataFormat({
+      columns: [
         "title",
         "slug",
         "excerpt",
@@ -415,7 +415,7 @@ export default class Page {
         "parent_id",
         "homepage",
       ],
-      [
+      values: [
         data.title,
         newSlug,
         data.excerpt,
@@ -425,12 +425,12 @@ export default class Page {
         parentId,
         data.homepage,
       ],
-      {
+      conditional: {
         hasValues: {
           updated_at: new Date().toISOString(),
         },
-      }
-    );
+      },
+    });
 
     // -------------------------------------------
     // Update page
