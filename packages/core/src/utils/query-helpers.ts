@@ -15,10 +15,13 @@ export const queryDataFormat = (data: {
         | Array<string | number | boolean>;
     };
   };
+  flatValues?: boolean;
 }) => {
   // Ensure columns and values have the same length
-  if (data.columns.length !== data.values.length) {
-    throw new Error("Columns and values arrays must have the same length");
+  if (!data.flatValues) {
+    if (data.columns.length !== data.values.length) {
+      throw new Error("Columns and values arrays must have the same length");
+    }
   }
 
   // Filter out undefined values and their corresponding columns
@@ -28,7 +31,27 @@ export const queryDataFormat = (data: {
 
   const c = filteredData.map((data) => data.col);
   const v = filteredData.map((data) => data.val);
-  const a = v.map((_, i) => `$${i + 1}`);
+
+  let a: string[];
+  if (data.flatValues) {
+    // based on the column length, convert the values array into multiple arrays
+    const groupedValues = [];
+    const valueCopy = [...data.values];
+    for (let i = 0; i < data.columns.length; i++) {
+      const newGroup = valueCopy.splice(0, data.columns.length);
+      if (newGroup.length === 0) break;
+      groupedValues.push(newGroup);
+    }
+
+    a = groupedValues.map((_, i) => {
+      const g = data.columns.map(
+        (_, j) => `$${i * data.columns.length + j + 1}`
+      );
+      return `(${g.join(", ")})`;
+    });
+  } else {
+    a = v.map((_, i) => `$${i + 1}`);
+  }
 
   // -------------------------------------------
   // Conditionals
@@ -60,6 +83,7 @@ export const queryDataFormat = (data: {
         insert: c.join(", "),
         update: c.map((col, i) => `${col} = ${a[i]}`).join(", "),
         doUpdate: c.map((col, i) => `${col} = EXCLUDED.${col}`).join(", "),
+        insertMultiple: data.columns.join(", "),
       },
     },
     aliases: {
@@ -67,10 +91,14 @@ export const queryDataFormat = (data: {
       formatted: {
         insert: a.join(", "),
         update: a.join(", "),
+        insertMultiple: a.join(", "),
       },
     },
     values: {
       value: v,
+      formatted: {
+        insertMultiple: data.values,
+      },
     },
   };
 };
