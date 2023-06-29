@@ -2,12 +2,13 @@ import client from "@db/db";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
+// Schema
+import { MenuItem } from "@schemas/menus";
 
 // -------------------------------------------
 // Types
 type MenuCreateSingle = (data: {
   environment_key: string;
-
   id: number;
   key: string;
   name: string;
@@ -25,7 +26,7 @@ export type MenuT = {
   description: string;
 };
 
-export type MenuItem = {
+export type MenuItemT = {
   id: number;
   menu_id: MenuT["key"];
 
@@ -69,64 +70,66 @@ export default class Menu {
 
     // -------------------------------------------
     // Create Menu Items
-    try {
-      if (data.items) {
-        const { columns, aliases, values } = queryDataFormat({
-          columns: [
-            "menu_id",
-            "parent_id",
-            "page_id",
-            "name",
-            "url",
-            "target",
-            "position",
-            "meta",
-          ],
-          values: data.items.flatMap((item) => [
-            menu.rows[0].id,
-            item.parent_id || null,
-            item.page_id || null,
-            item.name,
-            item.url || null,
-            item.target,
-            item.position || 0,
-            item.meta || {},
-          ]),
-          flatValues: true,
-        });
-
-        const menuItems = await client.query<MenuItem>({
-          text: `INSERT INTO lucid_menu_items (${columns.formatted.insertMultiple}) VALUES ${aliases.formatted.insertMultiple} RETURNING *`,
-          values: values.formatted.insertMultiple,
-        });
-
-        if (menuItems.rows.length !== data.items.length) {
-          throw new LucidError({
-            type: "basic",
-            name: "Menu Item Creation Error",
-            message: "Menu Items could not be created",
-            status: 500,
+    if (data.items) {
+      try {
+        const createMenuItem = async (
+          menuId: number,
+          itemData: MenuItem,
+          pos: number,
+          parentId?: number
+        ) => {
+          const { columns, aliases, values } = queryDataFormat({
+            columns: [
+              "menu_id",
+              "parent_id",
+              "url",
+              "page_id",
+              "name",
+              "target",
+              "position",
+              "meta",
+            ],
+            values: [
+              menuId,
+              parentId,
+              itemData.url,
+              itemData.page_id,
+              itemData.name,
+              itemData.target,
+              pos,
+              itemData.meta,
+            ],
           });
-        }
+
+          const item = await client.query<MenuItemT>({
+            text: `INSERT INTO lucid_menu_items (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+            values: values.value,
+          });
+
+          if (itemData.children) {
+            await Promise.all(
+              itemData.children.map((child, i) =>
+                createMenuItem(menuId, child, i, item.rows[0].id)
+              )
+            );
+          }
+        };
+
+        await Promise.all(
+          data.items.map((item, i) => createMenuItem(menu.rows[0].id, item, i))
+        );
+      } catch (err) {
+        await client.query({
+          text: `DELETE FROM lucid_menus WHERE id = $1`,
+          values: [menu.rows[0].id],
+        });
+        throw err;
       }
-    } catch (err) {
-      await client.query({
-        text: `DELETE FROM lucid_menus WHERE id = $1`,
-        values: [menu.rows[0].id],
-      });
-      throw err;
     }
 
     // -------------------------------------------
     // Return Menu
-    return {
-      id: menu.rows[0].id,
-      key: menu.rows[0].key,
-      environment_key: menu.rows[0].environment_key,
-      name: menu.rows[0].name,
-      description: menu.rows[0].description,
-      items: data.items,
-    };
+    return menu.rows[0];
   };
   // -------------------------------------------
   // Util Functions
