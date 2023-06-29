@@ -1109,7 +1109,87 @@
 				},
 				{
 					"name": "Menus",
-					"item": []
+					"item": [
+						{
+							"name": "Create Single",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"key\": \"main\",\n    \"name\": \"Main Navigation\",\n    \"description\": \"Used accross the site in the header.\",\n    \"items\": [\n        {\n            \"url\": \"\",\n            // \"page_id\": 1,\n            \"name\": \"Homepage\",\n            \"target\": \"_self\",\n            \"meta\": {\n                \"test\": true\n            }\n            // \"children\": []\n        },\n        {\n            \"url\": \"\",\n            // \"page_id\": 1,\n            \"name\": \"About\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    \"url\": \"\",\n                    \"name\": \"Services\",\n                    \"target\": \"_blank\",\n                    \"children\": [\n                        {\n                            \"url\": \"\",\n                            \"name\": \"Services Test\",\n                            \"target\": \"_blank\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/menus",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"menus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Single",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/menus/4",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"menus",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Get All",

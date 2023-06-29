@@ -7,18 +7,15 @@ import menusSchema from "@schemas/menus";
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
-  typeof menusSchema.createSingle.params,
-  typeof menusSchema.createSingle.body,
-  typeof menusSchema.createSingle.query
+const deleteSingle: Controller<
+  typeof menusSchema.deleteSingle.params,
+  typeof menusSchema.deleteSingle.body,
+  typeof menusSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const menu = await Menu.createSingle({
+    const menu = await Menu.deleteSingle({
       environment_key: req.headers["lucid-environment"] as string,
-      key: req.body.key,
-      name: req.body.name,
-      description: req.body.description,
-      items: req.body.items,
+      id: parseInt(req.params.id),
     });
 
     res.status(200).json(
@@ -34,6 +31,6 @@ const createSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: menusSchema.createSingle,
-  controller: createSingle,
+  schema: menusSchema.deleteSingle,
+  controller: deleteSingle,
 };

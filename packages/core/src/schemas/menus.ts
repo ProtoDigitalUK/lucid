@@ -30,11 +30,24 @@ const createSingleQuery = z.object({});
 const createSingleParams = z.object({});
 
 // ------------------------------------
+// DELETE SINGLE
+const deleteSingleBody = z.object({});
+const deleteSingleQuery = z.object({});
+const deleteSingleParams = z.object({
+  id: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
     body: createSingleBody,
     query: createSingleQuery,
     params: createSingleParams,
+  },
+  deleteSingle: {
+    body: deleteSingleBody,
+    query: deleteSingleQuery,
+    params: deleteSingleParams,
   },
 };

@@ -9,11 +9,15 @@ import { MenuItem } from "@schemas/menus";
 // Types
 type MenuCreateSingle = (data: {
   environment_key: string;
-  id: number;
   key: string;
   name: string;
   description?: string;
   items?: MenuItem[];
+}) => Promise<MenuT>;
+
+type MenuDeleteSingle = (data: {
+  environment_key: string;
+  id: number;
 }) => Promise<MenuT>;
 
 // -------------------------------------------
@@ -129,6 +133,23 @@ export default class Menu {
 
     // -------------------------------------------
     // Return Menu
+    return menu.rows[0];
+  };
+  static deleteSingle: MenuDeleteSingle = async (data) => {
+    const menu = await client.query({
+      text: `DELETE FROM lucid_menus WHERE id = $1 AND environment_key = $2 RETURNING *`,
+      values: [data.id, data.environment_key],
+    });
+
+    if (!menu.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Menu Delete Error",
+        message: "Menu could not be deleted",
+        status: 500,
+      });
+    }
+
     return menu.rows[0];
   };
   // -------------------------------------------
