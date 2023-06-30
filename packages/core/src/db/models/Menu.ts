@@ -20,6 +20,11 @@ type MenuDeleteSingle = (data: {
   id: number;
 }) => Promise<MenuT>;
 
+type MenuGetSingle = (data: {
+  environment_key: string;
+  id: number;
+}) => Promise<MenuT>;
+
 // -------------------------------------------
 // Menu
 export type MenuT = {
@@ -147,6 +152,45 @@ export default class Menu {
         name: "Menu Delete Error",
         message: "Menu could not be deleted",
         status: 500,
+      });
+    }
+
+    return menu.rows[0];
+  };
+  static getSingle: MenuGetSingle = async (data) => {
+    const menu = await client.query<MenuT>({
+      text: `SELECT 
+          m.*, 
+          COALESCE(json_agg(
+            json_build_object(
+              'id', mi.id,
+              'menu_id', mi.menu_id,
+              'parent_id', mi.parent_id,
+              'page_id', mi.page_id,
+              'name', mi.name,
+              'url', mi.url,
+              'target', mi.target,
+              'position', mi.position,
+              'meta', mi.meta
+            ) 
+          ) FILTER (WHERE mi.id IS NOT NULL), '[]') AS items
+        FROM 
+          lucid_menus m
+        LEFT JOIN 
+          lucid_menu_items mi ON m.id = mi.menu_id
+        WHERE 
+          m.id = $1 AND m.environment_key = $2
+        GROUP BY 
+          m.id, m.environment_key, m.key, m.name, m.description, m.created_at, m.updated_at;`,
+      values: [data.id, data.environment_key],
+    });
+
+    if (!menu.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Menu Get Error",
+        message: "Menu could not be found",
+        status: 404,
       });
     }
 

@@ -38,6 +38,14 @@ const deleteSingleParams = z.object({
 });
 
 // ------------------------------------
+// GET SINGLE
+const getSingleBody = z.object({});
+const getSingleQuery = z.object({});
+const getSingleParams = z.object({
+  id: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -49,5 +57,10 @@ export default {
     body: deleteSingleBody,
     query: deleteSingleQuery,
     params: deleteSingleParams,
+  },
+  getSingle: {
+    body: getSingleBody,
+    query: getSingleQuery,
+    params: getSingleParams,
   },
 };

@@ -1188,6 +1188,49 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Single",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/menus/5",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"menus",
+										"5"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
