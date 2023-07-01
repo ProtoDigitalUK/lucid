@@ -1,7 +1,7 @@
 import z from "zod";
 
 // ------------------------------------
-// CREATE & UPDATE BRICKS / FIELDS
+// CREATE & UPDATE MENU ITEM
 const BaseMenuItemSchema = z.object({
   url: z.string().optional(),
   page_id: z.number().optional(),
@@ -69,6 +69,19 @@ const getMultipleQuery = z.object({
 const getMultipleParams = z.object({});
 
 // ------------------------------------
+// UPDATE SINGLE
+const updateSingleBody = z.object({
+  key: z.string().optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  items: z.array(MenuItem).optional(),
+});
+const updateSingleQuery = z.object({});
+const updateSingleParams = z.object({
+  id: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -90,5 +103,10 @@ export default {
     body: getMultipleBody,
     query: getMultipleQuery,
     params: getMultipleParams,
+  },
+  updateSingle: {
+    body: updateSingleBody,
+    query: updateSingleQuery,
+    params: updateSingleParams,
   },
 };

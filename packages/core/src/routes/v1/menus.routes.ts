@@ -5,6 +5,7 @@ import createSingle from "@controllers/menu/create-single";
 import deleteSingle from "@controllers/menu/delete-single";
 import getSingle from "@controllers/menu/get-single";
 import getMultiple from "@controllers/menu/get-multiple";
+import updateSingle from "@controllers/menu/update-single";
 
 // ------------------------------------
 // Router
@@ -69,6 +70,21 @@ r(router, {
   },
   schema: getMultiple.schema,
   controller: getMultiple.controller,
+});
+
+r(router, {
+  method: "patch",
+  path: "/:id",
+  permissions: {
+    environments: ["update_menu"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: updateSingle.schema,
+  controller: updateSingle.controller,
 });
 
 export default router;

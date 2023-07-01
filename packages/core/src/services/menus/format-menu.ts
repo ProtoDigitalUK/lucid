@@ -4,7 +4,6 @@ import { MenuT, MenuItemT } from "@db/models/Menu";
 // -------------------------------------------
 // Types
 interface ItemsRes {
-  id: number;
   page_id: number | null;
 
   name: string;
@@ -46,7 +45,6 @@ const buildItems = (
   const matchedItems =
     items?.filter((item) => item.parent_id === parent_id) || [];
   return matchedItems.map((item) => ({
-    id: item.id,
     page_id: item.page_id,
     name: item.name,
     url: buildURL(item.full_slug, item.url),

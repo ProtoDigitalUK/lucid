@@ -1150,6 +1150,46 @@
 							"response": []
 						},
 						{
+							"name": "Update Single",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									},
+									{
+										"key": "lucid-environment",
+										"value": "{{LUCID_ENVIRONMENT}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    // \"key\": \"footer\",\n    // \"name\": \"Footer\",\n    // \"description\": \"Footer description\",\n    \"items\": [\n        {\n            \"page_id\": 1,\n            \"name\": \"Services\",\n            \"target\": \"_self\"\n        },\n        {\n            \"url\": \"https://example.com\",\n            \"name\": \"Example\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    \"url\": \"\",\n                    \"name\": \"About Us\",\n                    \"target\": \"_blank\"\n                }\n            ]\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/menus/7",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"menus",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Delete Single",
 							"request": {
 								"method": "DELETE",
@@ -1218,7 +1258,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/menus/6",
+									"raw": "{{BASE_URL}}/api/v1/menus/7",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1226,7 +1266,7 @@
 										"api",
 										"v1",
 										"menus",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -1261,7 +1301,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/menus?sort=-created_at&include=items",
+									"raw": "{{BASE_URL}}/api/v1/menus?sort=-created_at",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1282,7 +1322,8 @@
 										},
 										{
 											"key": "include",
-											"value": "items"
+											"value": "items",
+											"disabled": true
 										}
 									]
 								}

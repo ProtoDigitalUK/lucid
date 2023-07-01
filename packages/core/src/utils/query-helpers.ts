@@ -56,15 +56,6 @@ export const queryDataFormat = (data: {
   // -------------------------------------------
   // Conditionals
   if (data.conditional?.hasValues) {
-    if (c.length === 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "No data to update",
-        message: `No data to update`,
-        status: 400,
-      });
-    }
-
     const hasValues = Object.entries(data.conditional.hasValues);
     for (let i = 0; i < hasValues.length; i++) {
       const [key, value] = hasValues[i];
