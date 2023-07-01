@@ -4,7 +4,7 @@ import client from "@db/db";
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Schema
-import menusSchema, { MenuItem } from "@schemas/menus";
+import menusSchema, { MenuItem, MenuItemUpdate } from "@schemas/menus";
 // Services
 import formatMenu, { MenuRes } from "@services/menus/format-menu";
 
@@ -44,7 +44,7 @@ type MenuUpdateSingle = (data: {
   key?: string;
   name?: string;
   description?: string;
-  items?: MenuItem[];
+  items?: MenuItemUpdate[];
 }) => Promise<MenuT>;
 
 // -------------------------------------------
@@ -104,7 +104,7 @@ export default class Menu {
     // Create Menu Items
     if (data.items) {
       try {
-        await Menu.#createMenuItems(menu.rows[0].id, data.items);
+        await Menu.#upsertMenuItems(menu.rows[0].id, data.items);
       } catch (err) {
         await client.query({
           text: `DELETE FROM lucid_menus WHERE id = $1`,
@@ -313,30 +313,37 @@ export default class Menu {
     // Update menu items if there are any
     if (data.items) {
       // Work out what items need to be created, updated and deleted
-      const originalMenuItems = await Menu.#getMenuItems([getMenu.id]);
+      const originalItems = await Menu.#getMenuItems([getMenu.id]);
 
+      // create or update all items in the request
+      let updatedItems: MenuItemT[] = [];
       try {
-        await Menu.#createMenuItems(getMenu.id, data.items);
-      } catch (error) {
-        // delete everything that was created
+        updatedItems = await Menu.#upsertMenuItems(getMenu.id, data.items);
+      } catch (err) {
+        // get all items, then remove anything that doesnt belong to the original menu
         const allItems = await Menu.#getMenuItems([getMenu.id]);
         const deleteItems = allItems.filter((item) => {
           return (
-            originalMenuItems.findIndex(
+            originalItems.findIndex(
               (originalItem) => originalItem.id === item.id
             ) === -1
           );
         });
-        if (deleteItems.length > 0) {
-          await Menu.#deleteMenuItemsByIds(deleteItems.map((item) => item.id));
-        }
-        throw error;
+        // delete all items that are not in the original menu
+        await Menu.#deleteMenuItemsByIds(deleteItems.map((item) => item.id));
+        throw err;
       }
 
-      // delete all original items excluding new ones
-      await Menu.#deleteMenuItemsByIds(
-        originalMenuItems.map((item) => item.id)
-      );
+      // delete all items, that id is not in the updated items
+      const deleteItems = originalItems.filter((item) => {
+        return (
+          updatedItems.findIndex(
+            (updatedItem) => updatedItem.id === item.id
+          ) === -1
+        );
+      });
+      // delete all items that are not in the updated items
+      await Menu.#deleteMenuItemsByIds(deleteItems.map((item) => item.id));
     }
 
     // -------------------------------------------
@@ -385,50 +392,23 @@ export default class Menu {
 
     return menuItems.rows;
   };
-  static #createMenuItems = async (menu_id: number, items: MenuItem[]) => {
-    const createMenuItem = async (
-      menuId: number,
-      itemData: MenuItem,
-      pos: number,
-      parentId?: number
-    ) => {
-      const { columns, aliases, values } = queryDataFormat({
-        columns: [
-          "menu_id",
-          "parent_id",
-          "url",
-          "page_id",
-          "name",
-          "target",
-          "position",
-          "meta",
-        ],
-        values: [
-          menuId,
-          parentId,
-          itemData.url,
-          itemData.page_id,
-          itemData.name,
-          itemData.target,
-          pos,
-          itemData.meta,
-        ],
-      });
 
-      const item = await client.query<MenuItemT>({
-        text: `INSERT INTO lucid_menu_items (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
-        values: values.value,
-      });
+  static #checkItemExists = async (id: number, menu_id: number) => {
+    const menuItem = await client.query<MenuItemT>({
+      text: `SELECT * FROM lucid_menu_items WHERE id = $1 AND menu_id = $2`,
+      values: [id, menu_id],
+    });
 
-      if (itemData.children) {
-        await Promise.all(
-          itemData.children.map((child, i) =>
-            createMenuItem(menuId, child, i, item.rows[0].id)
-          )
-        );
-      }
-    };
-    await Promise.all(items.map((item, i) => createMenuItem(menu_id, item, i)));
+    if (!menuItem.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Menu Item Not Found",
+        message: `Menu item with id "${id}" not found in menu with id "${menu_id}"`,
+        status: 404,
+      });
+    }
+
+    return true;
   };
   static #deleteMenuItemsByIds = async (ids: number[]) => {
     const deleted = await client.query<MenuItemT>({
@@ -446,5 +426,98 @@ export default class Menu {
     }
 
     return deleted.rows;
+  };
+  static #flattenMenuItems = (items: MenuItem[]) => {
+    const flattenedItems: MenuItem[] = [];
+    items.forEach((item) => {
+      const children = [...(item.children || [])];
+      delete item.children;
+      flattenedItems.push(item);
+      if (children.length > 0) {
+        Menu.#flattenMenuItems(children);
+      }
+    });
+    return flattenedItems;
+  };
+  static #upsertMenuItem = async (
+    menu_id: number,
+    item: MenuItemUpdate,
+    pos: number,
+    parentId?: number
+  ) => {
+    const itemsRes: MenuItemT[] = [];
+
+    const { columns, aliases, values } = queryDataFormat({
+      columns: [
+        "menu_id",
+        "parent_id",
+        "url",
+        "page_id",
+        "name",
+        "target",
+        "position",
+        "meta",
+      ],
+      values: [
+        menu_id,
+        parentId,
+        item.url,
+        item.page_id,
+        item.name,
+        item.target,
+        pos,
+        item.meta,
+      ],
+    });
+
+    let newParentId = parentId;
+
+    // Update item
+    if (item.id) {
+      await Menu.#checkItemExists(item.id, menu_id);
+
+      const res = await client.query<MenuItemT>({
+        text: `UPDATE lucid_menu_items SET ${
+          columns.formatted.update
+        } WHERE id = $${aliases.value.length + 1} RETURNING *`,
+        values: [...values.value, item.id],
+      });
+      newParentId = res.rows[0].id;
+      itemsRes.push(res.rows[0]);
+    }
+    // Create item
+    else {
+      const res = await client.query<MenuItemT>({
+        text: `INSERT INTO lucid_menu_items (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+        values: values.value,
+      });
+      newParentId = res.rows[0].id;
+      itemsRes.push(res.rows[0]);
+    }
+
+    // Update children
+    if (item.children) {
+      const promises = item.children.map((child, i) =>
+        Menu.#upsertMenuItem(menu_id, child, i, newParentId)
+      );
+      const childrenRes = await Promise.all(promises);
+      childrenRes.forEach((res) => itemsRes.push(...res));
+    }
+
+    return itemsRes;
+  };
+  static #upsertMenuItems = async (
+    menu_id: number,
+    items: MenuItemUpdate[]
+  ) => {
+    const itemsRes: MenuItemT[] = [];
+
+    const promises = items.map((item, i) =>
+      Menu.#upsertMenuItem(menu_id, item, i)
+    );
+    const res = await Promise.all(promises);
+    res.forEach((items) => itemsRes.push(...items));
+
+    return itemsRes;
   };
 }

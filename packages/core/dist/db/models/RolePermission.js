@@ -104,7 +104,10 @@ class RolePermission {
 _a = RolePermission;
 RolePermission.createMultiple = async (role_id, permissions) => {
     const permissionsPromise = permissions.map((permission) => {
-        const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["role_id", "permission", "environment_key"], [role_id, permission.permission, permission.environment_key]);
+        const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+            columns: ["role_id", "permission", "environment_key"],
+            values: [role_id, permission.permission, permission.environment_key],
+        });
         return db_1.default.query({
             text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
             values: values.value,

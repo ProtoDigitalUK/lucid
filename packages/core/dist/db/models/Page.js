@@ -279,27 +279,31 @@ Page.update = async (data) => {
             parent_id: parentId,
         });
     }
-    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)([
-        "title",
-        "slug",
-        "excerpt",
-        "published",
-        "published_at",
-        "published_by",
-        "parent_id",
-        "homepage",
-    ], [
-        data.title,
-        newSlug,
-        data.excerpt,
-        data.published,
-        data.published ? new Date() : null,
-        data.published ? data.userId : null,
-        parentId,
-        data.homepage,
-    ], {
-        hasValues: {
-            updated_at: new Date().toISOString(),
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: [
+            "title",
+            "slug",
+            "excerpt",
+            "published",
+            "published_at",
+            "published_by",
+            "parent_id",
+            "homepage",
+        ],
+        values: [
+            data.title,
+            newSlug,
+            data.excerpt,
+            data.published,
+            data.published ? new Date() : null,
+            data.published ? data.userId : null,
+            parentId,
+            data.homepage,
+        ],
+        conditional: {
+            hasValues: {
+                updated_at: new Date().toISOString(),
+            },
         },
     });
     const page = await db_1.default.query({

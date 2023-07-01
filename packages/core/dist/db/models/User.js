@@ -16,7 +16,16 @@ User.register = async (data) => {
     const { email, username, password, account_reset, super_admin } = data;
     await User.checkIfUserExistsAlready(email, username);
     const hashedPassword = await argon2_1.default.hash(password);
-    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["email", "username", "password", "account_reset", "super_admin"], [email, username, hashedPassword, account_reset, super_admin]);
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: [
+            "email",
+            "username",
+            "password",
+            "account_reset",
+            "super_admin",
+        ],
+        values: [email, username, hashedPassword, account_reset, super_admin],
+    });
     const user = await db_1.default.query({
         text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,

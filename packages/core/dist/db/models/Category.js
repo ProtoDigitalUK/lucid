@@ -111,13 +111,22 @@ Category.create = async (data) => {
             }),
         });
     }
-    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["environment_key", "collection_key", "title", "slug", "description"], [
-        data.environment_key,
-        data.collection_key,
-        data.title,
-        data.slug,
-        data.description,
-    ]);
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: [
+            "environment_key",
+            "collection_key",
+            "title",
+            "slug",
+            "description",
+        ],
+        values: [
+            data.environment_key,
+            data.collection_key,
+            data.title,
+            data.slug,
+            data.description,
+        ],
+    });
     const res = await db_1.default.query({
         name: "create-category",
         text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,

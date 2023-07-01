@@ -52,14 +52,20 @@ BrickConfig.isBrickAllowed = (data) => {
     const builderInstances = BrickConfig.getBrickConfig();
     const instance = builderInstances.find((b) => b.key === data.key);
     const envAssigned = (data.environment.assigned_bricks || [])?.includes(data.key);
-    let collectionBrick;
+    let builderBrick;
+    let fixedBrick;
     if (!data.type) {
-        collectionBrick = data.collection.bricks?.find((b) => (b.key === data.key && b.type === "builder") || b.type === "fixed");
+        builderBrick = data.collection.bricks?.find((b) => b.key === data.key && b.type === "builder");
+        fixedBrick = data.collection.bricks?.find((b) => b.key === data.key && b.type === "fixed");
     }
     else {
-        collectionBrick = data.collection.bricks?.find((b) => b.key === data.key && b.type === data.type);
+        const brickF = data.collection.bricks?.find((b) => b.key === data.key && b.type === data.type);
+        if (data.type === "builder")
+            builderBrick = brickF;
+        if (data.type === "fixed")
+            fixedBrick = brickF;
     }
-    if (instance && envAssigned && collectionBrick)
+    if (instance && envAssigned && (builderBrick || fixedBrick))
         allowed = true;
     let brick;
     if (instance) {
@@ -72,7 +78,10 @@ BrickConfig.isBrickAllowed = (data) => {
     return {
         allowed: allowed,
         brick: brick,
-        collectionBrick: collectionBrick,
+        collectionBrick: {
+            builder: builderBrick,
+            fixed: fixedBrick,
+        },
     };
 };
 BrickConfig.getAllAllowedBricks = (data) => {
@@ -89,7 +98,10 @@ BrickConfig.getAllAllowedBricks = (data) => {
             allowedBricks.push(brickAllowed.brick);
         }
         if (brickAllowed.allowed && brickAllowed.collectionBrick) {
-            allowedCollectionBricks.push(brickAllowed.collectionBrick);
+            if (brickAllowed.collectionBrick.builder)
+                allowedCollectionBricks.push(brickAllowed.collectionBrick.builder);
+            if (brickAllowed.collectionBrick.fixed)
+                allowedCollectionBricks.push(brickAllowed.collectionBrick.fixed);
         }
     }
     return {

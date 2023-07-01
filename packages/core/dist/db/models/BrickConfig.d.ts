@@ -12,7 +12,10 @@ type BrickConfigIsBrickAllowed = (data: {
 }) => {
     allowed: boolean;
     brick?: BrickConfigT;
-    collectionBrick?: CollectionBrickT;
+    collectionBrick?: {
+        builder?: CollectionBrickT;
+        fixed?: CollectionBrickT;
+    };
 };
 type BrickConfigGetAll = (query: z.infer<typeof bricksSchema.getAll.query>, data: {
     collection_key: string;

@@ -3,6 +3,7 @@ import z from "zod";
 // ------------------------------------
 // CREATE & UPDATE MENU ITEM
 const BaseMenuItemSchema = z.object({
+  id: z.number().optional(),
   url: z.string().optional(),
   page_id: z.number().optional(),
   name: z.string().nonempty(),
@@ -10,13 +11,29 @@ const BaseMenuItemSchema = z.object({
   meta: z.any().optional(),
 });
 
+const BaseMenuItemSchemaUpdate = z.object({
+  id: z.number().optional(),
+  url: z.string().optional(),
+  page_id: z.number().optional(),
+  name: z.string().optional(),
+  target: z.enum(["_self", "_blank", "_parent", "_top"]).optional(),
+  meta: z.any().optional(),
+});
+
 export type MenuItem = z.infer<typeof BaseMenuItemSchema> & {
+  children?: MenuItem[];
+};
+export type MenuItemUpdate = z.infer<typeof BaseMenuItemSchemaUpdate> & {
   children?: MenuItem[];
 };
 
 export const MenuItem: z.ZodType<MenuItem> = BaseMenuItemSchema.extend({
   children: z.lazy(() => MenuItem.array().optional()),
 });
+const MenuItemUpdate: z.ZodType<MenuItemUpdate> =
+  BaseMenuItemSchemaUpdate.extend({
+    children: z.lazy(() => MenuItem.array().optional()),
+  });
 
 // ------------------------------------
 // CREATE SINGLE
@@ -74,7 +91,7 @@ const updateSingleBody = z.object({
   key: z.string().optional(),
   name: z.string().optional(),
   description: z.string().optional(),
-  items: z.array(MenuItem).optional(),
+  items: z.array(MenuItemUpdate).optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

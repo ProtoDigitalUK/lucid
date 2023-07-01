@@ -64,12 +64,14 @@ SinglePage.getSingle = async (data) => {
         values: SelectQuery.values,
     });
     if (singlepage.rows.length === 0) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Single Page Error",
-            message: "We could not find the single page you are looking for!",
-            status: 404,
+        const newSinglePage = await SinglePage.updateSingle({
+            userId: 1,
+            environment_key: data.environment_key,
+            collection_key: data.collection_key,
+            builder_bricks: [],
+            fixed_bricks: [],
         });
+        return newSinglePage;
     }
     const pageBricks = await BrickData_1.default.getAll({
         reference_id: singlepage.rows[0].id,

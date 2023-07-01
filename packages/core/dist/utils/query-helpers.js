@@ -7,27 +7,37 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _SelectQueryBuilder_instances, _SelectQueryBuilder_buildSelect, _SelectQueryBuilder_buildFilter, _SelectQueryBuilder_buildOrder, _SelectQueryBuilder_buildPagination, _SelectQueryBuilder_parseArrayValues, _SelectQueryBuilder_parseSingleValue;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectQueryBuilder = exports.queryDataFormat = void 0;
-const error_handler_1 = require("./error-handler");
-const queryDataFormat = (columns, values, conditional) => {
-    if (columns.length !== values.length) {
-        throw new Error("Columns and values arrays must have the same length");
+const queryDataFormat = (data) => {
+    if (!data.flatValues) {
+        if (data.columns.length !== data.values.length) {
+            throw new Error("Columns and values arrays must have the same length");
+        }
     }
-    const filteredData = columns
-        .map((col, i) => ({ col, val: values[i] }))
+    const filteredData = data.columns
+        .map((col, i) => ({ col, val: data.values[i] }))
         .filter((data) => data.val !== undefined);
     const c = filteredData.map((data) => data.col);
     const v = filteredData.map((data) => data.val);
-    const a = v.map((_, i) => `$${i + 1}`);
-    if (conditional?.hasValues) {
-        if (c.length === 0) {
-            throw new error_handler_1.LucidError({
-                type: "basic",
-                name: "No data to update",
-                message: `No data to update`,
-                status: 400,
-            });
+    let a;
+    if (data.flatValues) {
+        const groupedValues = [];
+        const valueCopy = [...data.values];
+        for (let i = 0; i < data.columns.length; i++) {
+            const newGroup = valueCopy.splice(0, data.columns.length);
+            if (newGroup.length === 0)
+                break;
+            groupedValues.push(newGroup);
         }
-        const hasValues = Object.entries(conditional.hasValues);
+        a = groupedValues.map((_, i) => {
+            const g = data.columns.map((_, j) => `$${i * data.columns.length + j + 1}`);
+            return `(${g.join(", ")})`;
+        });
+    }
+    else {
+        a = v.map((_, i) => `$${i + 1}`);
+    }
+    if (data.conditional?.hasValues) {
+        const hasValues = Object.entries(data.conditional.hasValues);
         for (let i = 0; i < hasValues.length; i++) {
             const [key, value] = hasValues[i];
             if (value === undefined)
@@ -44,6 +54,7 @@ const queryDataFormat = (columns, values, conditional) => {
                 insert: c.join(", "),
                 update: c.map((col, i) => `${col} = ${a[i]}`).join(", "),
                 doUpdate: c.map((col, i) => `${col} = EXCLUDED.${col}`).join(", "),
+                insertMultiple: data.columns.join(", "),
             },
         },
         aliases: {
@@ -51,10 +62,14 @@ const queryDataFormat = (columns, values, conditional) => {
             formatted: {
                 insert: a.join(", "),
                 update: a.join(", "),
+                insertMultiple: a.join(", "),
             },
         },
         values: {
             value: v,
+            formatted: {
+                insertMultiple: data.values,
+            },
         },
     };
 };

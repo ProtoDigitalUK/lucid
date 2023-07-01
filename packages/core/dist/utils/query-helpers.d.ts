@@ -1,14 +1,20 @@
-export declare const queryDataFormat: (columns: string[], values: (any | undefined)[], conditional?: {
-    hasValues?: {
-        [key: string]: string | number | boolean | (string | number | boolean)[];
+export declare const queryDataFormat: (data: {
+    columns: string[];
+    values: (any | undefined)[];
+    conditional?: {
+        hasValues?: {
+            [key: string]: string | number | boolean | (string | number | boolean)[];
+        } | undefined;
     } | undefined;
-} | undefined) => {
+    flatValues?: boolean | undefined;
+}) => {
     columns: {
         value: string[];
         formatted: {
             insert: string;
             update: string;
             doUpdate: string;
+            insertMultiple: string;
         };
     };
     aliases: {
@@ -16,10 +22,14 @@ export declare const queryDataFormat: (columns: string[], values: (any | undefin
         formatted: {
             insert: string;
             update: string;
+            insertMultiple: string;
         };
     };
     values: {
         value: any[];
+        formatted: {
+            insertMultiple: any[];
+        };
     };
 };
 interface SelectQueryBuilderConfig {

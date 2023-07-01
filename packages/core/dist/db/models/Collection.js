@@ -92,7 +92,7 @@ Collection.updateBricks = async (props) => {
     const collection = await Collection.getSingle({
         collection_key: props.collection_key,
         environment_key: props.environment_key,
-        type: "singlepage",
+        type: props.collection_type,
     });
     const builderBricksPromise = props.builder_bricks.map((brick, index) => BrickData_1.default.createOrUpdate({
         reference_id: props.id,

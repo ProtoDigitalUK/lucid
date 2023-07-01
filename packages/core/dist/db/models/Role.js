@@ -18,7 +18,10 @@ class Role {
 }
 _a = Role;
 Role.createSingle = async (data) => {
-    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["name"], [data.name]);
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: ["name"],
+        values: [data.name],
+    });
     const parsePermissions = await (0, validate_permissions_1.default)(data.permission_groups);
     await __classPrivateFieldGet(Role, _a, "f", _Role_roleNameUnique).call(Role, data.name);
     const roleRes = await db_1.default.query({
@@ -131,7 +134,10 @@ Role.getMultiple = async (query) => {
     };
 };
 Role.updateSingle = async (id, data) => {
-    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["name"], [data.name]);
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: ["name"],
+        values: [data.name],
+    });
     const parsePermissions = await (0, validate_permissions_1.default)(data.permission_groups);
     await __classPrivateFieldGet(Role, _a, "f", _Role_roleNameUnique).call(Role, data.name, id);
     const roleRes = await db_1.default.query({

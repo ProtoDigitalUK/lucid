@@ -40,7 +40,15 @@ Environment.getSingle = async (key) => {
     return environment.rows[0];
 };
 Environment.upsertSingle = async (data) => {
-    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)(["key", "title", "assigned_bricks", "assigned_collections"], [data.key, data.title, data.assigned_bricks, data.assigned_collections]);
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: ["key", "title", "assigned_bricks", "assigned_collections"],
+        values: [
+            data.key,
+            data.title,
+            data.assigned_bricks,
+            data.assigned_collections,
+        ],
+    });
     if (data.assigned_bricks) {
         const brickInstances = Config_1.default.get().bricks || [];
         const brickKeys = brickInstances.map((b) => b.key);

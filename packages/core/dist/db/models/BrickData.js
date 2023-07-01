@@ -20,7 +20,7 @@ _a = BrickData;
 BrickData.createOrUpdate = async (data) => {
     const promises = [];
     const allowed = BrickConfig_1.default.isBrickAllowed({
-        key: data.brick_type,
+        key: data.brick.key,
         type: data.brick_type,
         environment: data.environment,
         collection: data.collection,
@@ -222,88 +222,106 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brick_id, data, mode) => {
         switch (data.type) {
             case "link": {
                 if (mode === "create") {
-                    return (0, query_helpers_1.queryDataFormat)([
-                        "collection_brick_id",
-                        "key",
-                        "type",
-                        "text_value",
-                        "json_value",
-                        "parent_repeater",
-                        "group_position",
-                    ], [
-                        brick_id,
-                        data.key,
-                        data.type,
-                        data.value,
-                        {
-                            target: data.target,
-                        },
-                        data.parent_repeater,
-                        data.group_position,
-                    ]);
+                    return (0, query_helpers_1.queryDataFormat)({
+                        columns: [
+                            "collection_brick_id",
+                            "key",
+                            "type",
+                            "text_value",
+                            "json_value",
+                            "parent_repeater",
+                            "group_position",
+                        ],
+                        values: [
+                            brick_id,
+                            data.key,
+                            data.type,
+                            data.value,
+                            {
+                                target: data.target,
+                            },
+                            data.parent_repeater,
+                            data.group_position,
+                        ],
+                    });
                 }
                 else {
-                    return (0, query_helpers_1.queryDataFormat)(["text_value", "json_value", "group_position"], [
-                        data.value,
-                        {
-                            target: data.target,
-                        },
-                        data.group_position,
-                    ]);
+                    return (0, query_helpers_1.queryDataFormat)({
+                        columns: ["text_value", "json_value", "group_position"],
+                        values: [
+                            data.value,
+                            {
+                                target: data.target,
+                            },
+                            data.group_position,
+                        ],
+                    });
                 }
             }
             case "pagelink": {
                 if (mode === "create") {
-                    return (0, query_helpers_1.queryDataFormat)([
-                        "collection_brick_id",
-                        "key",
-                        "type",
-                        "page_link_id",
-                        "json_value",
-                        "parent_repeater",
-                        "group_position",
-                    ], [
-                        brick_id,
-                        data.key,
-                        data.type,
-                        data.value,
-                        {
-                            target: data.target,
-                        },
-                        data.parent_repeater,
-                        data.group_position,
-                    ]);
+                    return (0, query_helpers_1.queryDataFormat)({
+                        columns: [
+                            "collection_brick_id",
+                            "key",
+                            "type",
+                            "page_link_id",
+                            "json_value",
+                            "parent_repeater",
+                            "group_position",
+                        ],
+                        values: [
+                            brick_id,
+                            data.key,
+                            data.type,
+                            data.value,
+                            {
+                                target: data.target,
+                            },
+                            data.parent_repeater,
+                            data.group_position,
+                        ],
+                    });
                 }
                 else {
-                    return (0, query_helpers_1.queryDataFormat)(["page_link_id", "json_value", "group_position"], [
-                        data.value,
-                        {
-                            target: data.target,
-                        },
-                        data.group_position,
-                    ]);
+                    return (0, query_helpers_1.queryDataFormat)({
+                        columns: ["page_link_id", "json_value", "group_position"],
+                        values: [
+                            data.value,
+                            {
+                                target: data.target,
+                            },
+                            data.group_position,
+                        ],
+                    });
                 }
             }
             default: {
                 if (mode === "create") {
-                    return (0, query_helpers_1.queryDataFormat)([
-                        "collection_brick_id",
-                        "key",
-                        "type",
-                        __classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type),
-                        "parent_repeater",
-                        "group_position",
-                    ], [
-                        brick_id,
-                        data.key,
-                        data.type,
-                        data.value,
-                        data.parent_repeater,
-                        data.group_position,
-                    ]);
+                    return (0, query_helpers_1.queryDataFormat)({
+                        columns: [
+                            "collection_brick_id",
+                            "key",
+                            "type",
+                            __classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type),
+                            "parent_repeater",
+                            "group_position",
+                        ],
+                        values: [
+                            brick_id,
+                            data.key,
+                            data.type,
+                            data.value,
+                            data.parent_repeater,
+                            data.group_position,
+                        ],
+                    });
                 }
                 else {
-                    return (0, query_helpers_1.queryDataFormat)([__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"], [data.value, data.group_position]);
+                    return (0, query_helpers_1.queryDataFormat)({
+                        columns: [__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"],
+                        values: [data.value, data.group_position],
+                    });
                 }
             }
         }
@@ -333,19 +351,22 @@ _BrickData_upsertRepeater = { value: async (brick_id, data) => {
                     status: 409,
                 });
             }
-            const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)([
-                "collection_brick_id",
-                "key",
-                "type",
-                "parent_repeater",
-                "group_position",
-            ], [
-                brick_id,
-                data.key,
-                data.type,
-                data.parent_repeater,
-                data.group_position,
-            ]);
+            const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+                columns: [
+                    "collection_brick_id",
+                    "key",
+                    "type",
+                    "parent_repeater",
+                    "group_position",
+                ],
+                values: [
+                    brick_id,
+                    data.key,
+                    data.type,
+                    data.parent_repeater,
+                    data.group_position,
+                ],
+            });
             const repeaterRes = await db_1.default.query({
                 text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
                 values: values.value,
