@@ -1,9 +1,10 @@
+import z from "zod";
 import client from "@db/db";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
-import { queryDataFormat } from "@utils/query-helpers";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Schema
-import { MenuItem } from "@schemas/menus";
+import menusSchema, { MenuItem } from "@schemas/menus";
 // Services
 import formatMenu, { MenuRes } from "@services/menus/format-menu";
 
@@ -25,8 +26,17 @@ type MenuDeleteSingle = (data: {
 type MenuGetSingle = (data: {
   environment_key: string;
   id: number;
-  // response type of formatMenu
 }) => Promise<MenuRes>;
+
+type MenuGetMultiple = (
+  query: z.infer<typeof menusSchema.getMultiple.query>,
+  data: {
+    environment_key: string;
+  }
+) => Promise<{
+  data: MenuRes[];
+  count: number;
+}>;
 
 // -------------------------------------------
 // Menu
@@ -38,8 +48,6 @@ export type MenuT = {
   description: string;
   created_at: string;
   updated_at: string;
-
-  items?: MenuItemT[];
 };
 
 export type MenuItemT = {
@@ -164,34 +172,43 @@ export default class Menu {
     return menu.rows[0];
   };
   static getSingle: MenuGetSingle = async (data) => {
+    const SelectQuery = new SelectQueryBuilder({
+      columns: [
+        "id",
+        "key",
+        "environment_key",
+        "name",
+        "description",
+        "created_at",
+        "updated_at",
+      ],
+      filter: {
+        data: {
+          id: data.id.toString(),
+          environment_key: data.environment_key,
+        },
+        meta: {
+          id: {
+            operator: "=",
+            type: "int",
+            columnType: "standard",
+          },
+          environment_key: {
+            operator: "=",
+            type: "string",
+            columnType: "standard",
+          },
+        },
+      },
+    });
+
     const menu = await client.query<MenuT>({
-      text: `SELECT 
-            m.*, 
-            COALESCE(json_agg(
-                json_build_object(
-                    'id', mi.id,
-                    'menu_id', mi.menu_id,
-                    'parent_id', mi.parent_id,
-                    'page_id', mi.page_id,
-                    'name', mi.name,
-                    'url', mi.url,
-                    'target', mi.target,
-                    'position', mi.position,
-                    'meta', mi.meta,
-                    'full_slug', p.full_slug
-                )
-            ) FILTER (WHERE mi.id IS NOT NULL), '[]') AS items
-        FROM 
-            lucid_menus m
-        LEFT JOIN 
-            lucid_menu_items mi ON m.id = mi.menu_id
-        LEFT JOIN
-            lucid_pages p ON mi.page_id = p.id
-        WHERE 
-            m.id = $1 AND m.environment_key = $2
-        GROUP BY 
-            m.id, m.environment_key, m.key, m.name, m.description, m.created_at, m.updated_at;`,
-      values: [data.id, data.environment_key],
+      text: `SELECT
+          ${SelectQuery.query.select}
+        FROM
+          lucid_menus
+        ${SelectQuery.query.where}`,
+      values: SelectQuery.values,
     });
 
     if (!menu.rows[0]) {
@@ -203,7 +220,76 @@ export default class Menu {
       });
     }
 
-    return formatMenu(menu.rows[0]);
+    const menuItems = await Menu.#getMenuItems([menu.rows[0].id]);
+
+    return formatMenu(menu.rows[0], menuItems);
+  };
+  static getMultiple: MenuGetMultiple = async (query, data) => {
+    const { filter, sort, include, page, per_page } = query;
+
+    // Build Query Data and Query
+    const SelectQuery = new SelectQueryBuilder({
+      columns: [
+        "id",
+        "key",
+        "environment_key",
+        "name",
+        "description",
+        "created_at",
+        "updated_at",
+      ],
+      exclude: undefined,
+      filter: {
+        data: {
+          ...filter,
+          environment_key: data.environment_key,
+        },
+        meta: {
+          name: {
+            operator: "ILIKE",
+            type: "string",
+            columnType: "standard",
+          },
+          environment_key: {
+            operator: "=",
+            type: "string",
+            columnType: "standard",
+          },
+        },
+      },
+      sort: sort,
+      page: page,
+      per_page: per_page,
+    });
+
+    const menus = await client.query<MenuT>({
+      text: `SELECT
+          ${SelectQuery.query.select}
+        FROM
+          lucid_menus
+        ${SelectQuery.query.where}
+        ${SelectQuery.query.order}
+        ${SelectQuery.query.pagination}`,
+      values: SelectQuery.values,
+    });
+    const count = await client.query<{ count: number }>({
+      text: `SELECT 
+          COUNT(DISTINCT lucid_menus.id)
+        FROM
+          lucid_menus
+        ${SelectQuery.query.where} `,
+      values: SelectQuery.countValues,
+    });
+
+    let menuItems: MenuItemT[] = [];
+    if (include && include.includes("items")) {
+      menuItems = await Menu.#getMenuItems(menus.rows.map((menu) => menu.id));
+    }
+
+    return {
+      data: menus.rows.map((menu) => formatMenu(menu, menuItems)),
+      count: count.rows[0].count,
+    };
   };
   // -------------------------------------------
   // Util Functions
@@ -223,5 +309,25 @@ export default class Menu {
     }
 
     return true;
+  };
+  static #getMenuItems = async (menu_ids: number[]) => {
+    const menuItems = await client.query<MenuItemT>({
+      text: `SELECT
+          mi.*,
+          p.full_slug
+        FROM
+          lucid_menu_items mi
+        LEFT JOIN
+          lucid_pages p ON mi.page_id = p.id
+        WHERE
+          mi.menu_id = ANY($1::int[])`,
+      values: [menu_ids],
+    });
+
+    if (!menuItems.rows[0]) {
+      return [];
+    }
+
+    return menuItems.rows;
   };
 }

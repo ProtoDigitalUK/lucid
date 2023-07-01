@@ -46,6 +46,29 @@ const getSingleParams = z.object({
 });
 
 // ------------------------------------
+// GET MULTIPLE
+const getMultipleBody = z.object({});
+const getMultipleQuery = z.object({
+  filter: z
+    .object({
+      name: z.string().optional(),
+    })
+    .optional(),
+  sort: z
+    .array(
+      z.object({
+        key: z.enum(["created_at"]),
+        value: z.enum(["asc", "desc"]),
+      })
+    )
+    .optional(),
+  include: z.array(z.enum(["items"])).optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
+});
+const getMultipleParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -62,5 +85,10 @@ export default {
     body: getSingleBody,
     query: getSingleQuery,
     params: getSingleParams,
+  },
+  getMultiple: {
+    body: getMultipleBody,
+    query: getMultipleQuery,
+    params: getMultipleParams,
   },
 };

@@ -1,5 +1,5 @@
 // Models
-import { MenuT } from "@db/models/Menu";
+import { MenuT, MenuItemT } from "@db/models/Menu";
 
 // -------------------------------------------
 // Types
@@ -24,7 +24,7 @@ export interface MenuRes {
   created_at: string;
   updated_at: string;
 
-  items: ItemsRes[];
+  items: ItemsRes[] | null;
 }
 
 // -------------------------------------------
@@ -40,7 +40,7 @@ const buildURL = (full_slug: string | null, url: string) => {
 
 // Recursive function to build menu items
 const buildItems = (
-  items: MenuT["items"],
+  items: MenuItemT[],
   parent_id: number | null
 ): ItemsRes[] => {
   const matchedItems =
@@ -57,8 +57,10 @@ const buildItems = (
 };
 
 // Format menu
-const formatMenu = (menu: MenuT) => {
-  const items = buildItems(menu.items, null);
+const formatMenu = (menu: MenuT, items: MenuItemT[]) => {
+  const menuItems = items.filter((item) => item.menu_id === menu.id);
+  const nestedItems = buildItems(menuItems, null);
+
   return {
     id: menu.id,
     key: menu.key,
@@ -67,7 +69,7 @@ const formatMenu = (menu: MenuT) => {
     description: menu.description,
     created_at: menu.created_at,
     updated_at: menu.updated_at,
-    items,
+    items: nestedItems.length ? nestedItems : null,
   };
 };
 

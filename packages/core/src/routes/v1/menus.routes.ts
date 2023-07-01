@@ -4,6 +4,7 @@ import r from "@utils/route";
 import createSingle from "@controllers/menu/create-single";
 import deleteSingle from "@controllers/menu/delete-single";
 import getSingle from "@controllers/menu/get-single";
+import getMultiple from "@controllers/menu/get-multiple";
 
 // ------------------------------------
 // Router
@@ -52,6 +53,22 @@ r(router, {
   },
   schema: getSingle.schema,
   controller: getSingle.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/",
+  permissions: {
+    environments: ["read_menu"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    paginated: true,
+    validateEnvironment: true,
+  },
+  schema: getMultiple.schema,
+  controller: getMultiple.controller,
 });
 
 export default router;
