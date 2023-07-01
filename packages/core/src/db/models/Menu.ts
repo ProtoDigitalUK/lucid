@@ -4,6 +4,8 @@ import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
 // Schema
 import { MenuItem } from "@schemas/menus";
+// Services
+import formatMenu, { MenuRes } from "@services/menus/format-menu";
 
 // -------------------------------------------
 // Types
@@ -23,7 +25,8 @@ type MenuDeleteSingle = (data: {
 type MenuGetSingle = (data: {
   environment_key: string;
   id: number;
-}) => Promise<MenuT>;
+  // response type of formatMenu
+}) => Promise<MenuRes>;
 
 // -------------------------------------------
 // Menu
@@ -33,20 +36,23 @@ export type MenuT = {
   environment_key: string;
   name: string;
   description: string;
+  created_at: string;
+  updated_at: string;
+
+  items?: MenuItemT[];
 };
 
 export type MenuItemT = {
   id: number;
-  menu_id: MenuT["key"];
-
-  parent_id?: string;
-  url?: string;
-  page_id?: number;
-
+  menu_id: number;
+  parent_id: number | null;
+  page_id: number | null;
   name: string;
+  url: string;
   target: "_self" | "_blank" | "_parent" | "_top";
   position: number;
-  meta: {};
+  meta: any;
+  full_slug: string | null;
 };
 
 export default class Menu {
@@ -160,28 +166,31 @@ export default class Menu {
   static getSingle: MenuGetSingle = async (data) => {
     const menu = await client.query<MenuT>({
       text: `SELECT 
-          m.*, 
-          COALESCE(json_agg(
-            json_build_object(
-              'id', mi.id,
-              'menu_id', mi.menu_id,
-              'parent_id', mi.parent_id,
-              'page_id', mi.page_id,
-              'name', mi.name,
-              'url', mi.url,
-              'target', mi.target,
-              'position', mi.position,
-              'meta', mi.meta
-            ) 
-          ) FILTER (WHERE mi.id IS NOT NULL), '[]') AS items
+            m.*, 
+            COALESCE(json_agg(
+                json_build_object(
+                    'id', mi.id,
+                    'menu_id', mi.menu_id,
+                    'parent_id', mi.parent_id,
+                    'page_id', mi.page_id,
+                    'name', mi.name,
+                    'url', mi.url,
+                    'target', mi.target,
+                    'position', mi.position,
+                    'meta', mi.meta,
+                    'full_slug', p.full_slug
+                )
+            ) FILTER (WHERE mi.id IS NOT NULL), '[]') AS items
         FROM 
-          lucid_menus m
+            lucid_menus m
         LEFT JOIN 
-          lucid_menu_items mi ON m.id = mi.menu_id
+            lucid_menu_items mi ON m.id = mi.menu_id
+        LEFT JOIN
+            lucid_pages p ON mi.page_id = p.id
         WHERE 
-          m.id = $1 AND m.environment_key = $2
+            m.id = $1 AND m.environment_key = $2
         GROUP BY 
-          m.id, m.environment_key, m.key, m.name, m.description, m.created_at, m.updated_at;`,
+            m.id, m.environment_key, m.key, m.name, m.description, m.created_at, m.updated_at;`,
       values: [data.id, data.environment_key],
     });
 
@@ -194,7 +203,7 @@ export default class Menu {
       });
     }
 
-    return menu.rows[0];
+    return formatMenu(menu.rows[0]);
   };
   // -------------------------------------------
   // Util Functions
