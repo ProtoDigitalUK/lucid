@@ -21,14 +21,16 @@ import Option from "@db/models/Option";
 // Services
 import S3 from "@services/media/s3-client";
 import helpers, { type MediaMetaDataT } from "@services/media/helpers";
+import formatMedia, { type MediaResT } from "@services/media/format-media";
 
 // -------------------------------------------
 // Types
 type MediaCreateSingle = (data: {
-  name: string;
+  location: string;
+  name?: string;
   alt?: string;
   files: fileUpload.FileArray | null | undefined;
-}) => Promise<MediaT>;
+}) => Promise<MediaResT>;
 
 // -------------------------------------------
 // Media
@@ -56,7 +58,7 @@ export default class Media {
   static createSingle: MediaCreateSingle = async (data) => {
     // -------------------------------------------
     // Data
-    const { name, alt } = data;
+    const { name, alt, location } = data;
     const files = helpers.formatReqFiles(data.files);
     const firstFile = files[0];
 
@@ -80,7 +82,7 @@ export default class Media {
 
     // -------------------------------------------
     // Generate key and save file
-    const key = helpers.uniqueKey(firstFile.name);
+    const key = helpers.uniqueKey(name || firstFile.name);
     const meta = await helpers.getMetaData(firstFile);
     const response = await Media.#saveFile(key, firstFile, meta);
 
@@ -117,7 +119,7 @@ export default class Media {
       values: [
         key,
         response.ETag?.replace(/"/g, ""),
-        name,
+        name || firstFile.name,
         alt,
         meta.mimeType,
         meta.fileExtension,
@@ -153,7 +155,7 @@ export default class Media {
 
     // -------------------------------------------
     // Return
-    return media.rows[0];
+    return formatMedia(media.rows[0], location);
   };
   // -------------------------------------------
   // Storage Functions

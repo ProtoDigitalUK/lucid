@@ -1128,7 +1128,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"key\": \"footer-2\",\n    \"name\": \"Footer Navigation\",\n    // \"description\": \"Used accross the site in the header.\",\n    \"items\": [\n        {\n            \"url\": \"\",\n            \"page_id\": 1,\n            \"name\": \"Homepage\",\n            \"target\": \"_self\",\n            \"meta\": {\n                \"test\": true\n            }\n            // \"children\": []\n        },\n        {\n            \"url\": \"\",\n            \"page_id\": 2,\n            \"name\": \"About\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    \"url\": \"\",\n                    \"name\": \"Services\",\n                    \"target\": \"_blank\",\n                    \"children\": [\n                        {\n                            \"url\": \"\",\n                            \"name\": \"Services Test\",\n                            \"target\": \"_blank\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+									"raw": "{\n    \"key\": \"footer-3\",\n    \"name\": \"Footer Navigation\",\n    // \"description\": \"Used accross the site in the header.\",\n    \"items\": [\n        {\n            \"url\": \"\",\n            \"page_id\": 1,\n            \"name\": \"Homepage\",\n            \"target\": \"_self\",\n            \"meta\": {\n                \"test\": true\n            }\n            // \"children\": []\n        },\n        {\n            \"url\": \"\",\n            \"page_id\": 2,\n            \"name\": \"About\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    \"url\": \"\",\n                    \"name\": \"Services\",\n                    \"target\": \"_blank\",\n                    \"children\": [\n                        {\n                            \"url\": \"\",\n                            \"name\": \"Services Test\",\n                            \"target\": \"_blank\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1458,7 +1458,57 @@
 		},
 		{
 			"name": "Media",
-			"item": []
+			"item": [
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Rum Ham",
+									"type": "text"
+								},
+								{
+									"key": "alt",
+									"value": "A ham baked in rum, floating on the ocean surface",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": [
+										"/C:/Users/wyall/Desktop/rumham.jpg",
+										"/C:/Users/wyall/Desktop/rumham2.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Users",

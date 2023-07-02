@@ -1,5 +1,7 @@
 // Services
-import buildResponse from "@services/controllers/build-response";
+import buildResponse, {
+  getLocation,
+} from "@services/controllers/build-response";
 // Models
 import Media from "@db/models/Media";
 // Schema
@@ -14,6 +16,7 @@ const createSingle: Controller<
 > = async (req, res, next) => {
   try {
     const media = await Media.createSingle({
+      location: getLocation(req),
       name: req.body.name,
       alt: req.body.alt,
       files: req.files,

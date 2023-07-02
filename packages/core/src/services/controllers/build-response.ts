@@ -18,12 +18,13 @@ type BuildResponseT = (
 
 // --------------------------------------------------
 // Helpers
-const getPath = (req: Request) => {
-  const protocol = req.protocol;
-  const host = req.get("host");
-  const originalUrl = req.originalUrl;
+export const getLocation = (req: Request) => {
+  return `${req.protocol}://${req.get("host")}`;
+};
 
-  return `${protocol}://${host}${originalUrl}`.split("?")[0];
+const getPath = (req: Request) => {
+  const originalUrl = req.originalUrl;
+  return `${getLocation(req)}${originalUrl}`.split("?")[0];
 };
 
 const buildMetaLinks = (

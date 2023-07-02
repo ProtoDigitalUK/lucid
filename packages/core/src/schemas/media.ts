@@ -3,7 +3,7 @@ import z from "zod";
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  name: z.string().nonempty(),
+  name: z.string().optional(),
   alt: z.string().optional(),
 });
 const createSingleQuery = z.object({});
