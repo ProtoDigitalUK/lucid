@@ -18,6 +18,18 @@ const config: Config = {
       key: "staging",
     },
   ],
+  media: {
+    storageLimit: 5368709120,
+    maxFileSize: 16777216,
+    store: {
+      service: "cloudflare",
+      cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,
+      region: process.env.LUCID_S3_REGION as string,
+      bucket: process.env.LUCID_S3_BUCKET as string,
+      accessKeyId: process.env.LUCID_S3_ACCESS_KEY as string,
+      secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
+    },
+  },
   collections: [pages, settings],
   bricks: [banner, intro, defaultMeta],
 };
