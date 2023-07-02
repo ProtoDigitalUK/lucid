@@ -1511,6 +1511,62 @@
 			]
 		},
 		{
+			"name": "CDN",
+			"item": [
+				{
+					"name": "Stream Media",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Rum Ham",
+									"type": "text"
+								},
+								{
+									"key": "alt",
+									"value": "A ham baked in rum, floating on the ocean surface",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": [
+										"/C:/Users/wyall/Desktop/rumham.jpg",
+										"/C:/Users/wyall/Desktop/rumham2.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cdn/rumhamjpg-1688299268408",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cdn",
+								"rumhamjpg-1688299268408"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Users",
 			"item": [
 				{

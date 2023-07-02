@@ -1,16 +1,10 @@
 import client from "@db/db";
 import fileUpload from "express-fileupload";
-import fs from "fs-extra";
-import mime from "mime-types";
-import sharp from "sharp";
 import {
-  ListBucketsCommand,
-  ListObjectsV2Command,
   GetObjectCommand,
   DeleteObjectCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
-
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
@@ -156,6 +150,13 @@ export default class Media {
     // -------------------------------------------
     // Return
     return formatMedia(media.rows[0], location);
+  };
+  static streamFile = async (key: string) => {
+    const command = new GetObjectCommand({
+      Bucket: Config.media?.s3?.bucket,
+      Key: key,
+    });
+    return S3.send(command);
   };
   // -------------------------------------------
   // Storage Functions

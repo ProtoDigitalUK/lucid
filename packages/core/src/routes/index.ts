@@ -1,3 +1,4 @@
+// API
 import auth from "@routes/v1/auth.routes";
 import health from "@routes/v1/health.routes";
 import categories from "@routes/v1/categories.routes";
@@ -11,6 +12,8 @@ import permissions from "@routes/v1/permissions.routes";
 import brickConfig from "@routes/v1/brick-config.routes";
 import menus from "@routes/v1/menus.routes";
 import media from "@routes/v1/media.routes";
+// CDN
+import cdnMedia from "@routes/cdn/media.routes";
 
 const initRoutes = (app: any) => {
   // Version 1
@@ -27,6 +30,9 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/brick-config", brickConfig);
   app.use("/api/v1/menus", menus);
   app.use("/api/v1/media", media);
+
+  // CDN
+  app.use("/cdn", cdnMedia);
 };
 
 export default initRoutes;
