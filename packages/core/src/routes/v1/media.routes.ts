@@ -5,6 +5,7 @@ import createSingle from "@controllers/media/create-single";
 import getMultiple from "@controllers/media/get-multiple";
 import getSingle from "@controllers/media/get-single";
 import deleteSingle from "@controllers/media/delete-single";
+import updateSingle from "@controllers/media/update-single";
 
 // ------------------------------------
 // Router
@@ -65,6 +66,20 @@ r(router, {
   },
   schema: deleteSingle.schema,
   controller: deleteSingle.controller,
+});
+
+r(router, {
+  method: "patch",
+  path: "/:key",
+  permissions: {
+    global: ["update_media"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: updateSingle.schema,
+  controller: updateSingle.controller,
 });
 
 export default router;

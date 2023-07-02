@@ -53,22 +53,9 @@ const getMetaData = async (
 };
 
 // formats files from request into an array
-const formatReqFiles = (files: fileUpload.FileArray | null | undefined) => {
+const formatReqFiles = (files: fileUpload.FileArray) => {
   // Check if files exist
-  if (!files || !files["file"]) {
-    throw new LucidError({
-      type: "basic",
-      name: "No files provided",
-      message: "No files provided",
-      status: 400,
-      errors: modelErrors({
-        file: {
-          code: "required",
-          message: "No files provided",
-        },
-      }),
-    });
-  }
+
   const file = files["file"];
   if (Array.isArray(file)) {
     return file;

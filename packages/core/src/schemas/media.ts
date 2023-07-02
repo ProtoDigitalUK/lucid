@@ -68,6 +68,17 @@ const deleteSingleParams = z.object({
 });
 
 // ------------------------------------
+// UPDATE SINGLE
+const updateSingleBody = z.object({
+  name: z.string().optional(),
+  alt: z.string().optional(),
+});
+const updateSingleQuery = z.object({});
+const updateSingleParams = z.object({
+  key: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -94,5 +105,10 @@ export default {
     body: deleteSingleBody,
     query: deleteSingleQuery,
     params: deleteSingleParams,
+  },
+  updateSingle: {
+    body: updateSingleBody,
+    query: updateSingleQuery,
+    params: updateSingleParams,
   },
 };

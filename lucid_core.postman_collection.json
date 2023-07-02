@@ -1508,6 +1508,54 @@
 					"response": []
 				},
 				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Rum Ham 2",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "alt",
+									"value": "A ham baked in rum, floating on the ocean surface",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/wyall/Desktop/rumham3.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688307767893",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"rum-ham-1688307767893"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Multiple",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -1600,7 +1648,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688303984723",
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688307409214",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1608,7 +1656,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1688303984723"
+								"rum-ham-1688307409214"
 							]
 						}
 					},
@@ -1635,7 +1683,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688303984723",
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688307767893",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1643,7 +1691,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1688303984723"
+								"rum-ham-1688307767893"
 							]
 						}
 					},
@@ -1693,13 +1741,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/rumhamjpg-1688299268408",
+							"raw": "{{BASE_URL}}/cdn/rum-ham-1688306718587",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
-								"rumhamjpg-1688299268408"
+								"rum-ham-1688306718587"
 							]
 						}
 					},

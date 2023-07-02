@@ -52,6 +52,16 @@ type MediaDeleteSingle = (
   }
 ) => Promise<MediaResT>;
 
+type MediaUpdateSingle = (
+  key: string,
+  data: {
+    location: string;
+    name?: string;
+    alt?: string;
+    files: fileUpload.FileArray | null | undefined;
+  }
+) => Promise<MediaResT>;
+
 // -------------------------------------------
 // Media
 export type MediaT = {
@@ -79,6 +89,22 @@ export default class Media {
     // -------------------------------------------
     // Data
     const { name, alt, location } = data;
+
+    if (!data.files || !data.files["file"]) {
+      throw new LucidError({
+        type: "basic",
+        name: "No files provided",
+        message: "No files provided",
+        status: 400,
+        errors: modelErrors({
+          file: {
+            code: "required",
+            message: "No files provided",
+          },
+        }),
+      });
+    }
+
     const files = helpers.formatReqFiles(data.files);
     const firstFile = files[0];
 
@@ -293,7 +319,123 @@ export default class Media {
 
     await Media.#deleteFile(key);
 
+    // update storage used
+    await Media.#setStorageUsed(0, media.rows[0].file_size);
+
     return formatMedia(media.rows[0], data.location);
+  };
+  static updateSingle: MediaUpdateSingle = async (key, data) => {
+    // -------------------------------------------
+    // Get Media
+    const media = await Media.getSingle(key, {
+      location: data.location,
+    });
+
+    // -------------------------------------------
+    // Update Media
+    let meta: MediaMetaDataT | undefined = undefined;
+    if (data.files && data.files["file"]) {
+      const files = helpers.formatReqFiles(data.files);
+      const firstFile = files[0];
+
+      // -------------------------------------------
+      // Checks
+      const canStoreRes = await Media.#canStoreFiles(files);
+      if (!canStoreRes.can) {
+        throw new LucidError({
+          type: "basic",
+          name: "Error saving file",
+          message: canStoreRes.message,
+          status: 500,
+          errors: modelErrors({
+            file: {
+              code: "storage_limit",
+              message: canStoreRes.message,
+            },
+          }),
+        });
+      }
+
+      // -------------------------------------------
+      // Upload to S3
+      meta = await helpers.getMetaData(firstFile);
+      const response = await Media.#saveFile(key, firstFile, meta);
+
+      if (response.$metadata.httpStatusCode !== 200) {
+        throw new LucidError({
+          type: "basic",
+          name: "Error updating file",
+          message: "There was an error updating the file.",
+          status: 500,
+          errors: modelErrors({
+            file: {
+              code: "required",
+              message: "There was an error updating the file.",
+            },
+          }),
+        });
+      }
+
+      // -------------------------------------------
+      // Update storage used
+      await Media.#setStorageUsed(meta.size, media.meta.file_size);
+    }
+
+    // -------------------------------------------
+    // Update Media Row
+    const { columns, aliases, values } = queryDataFormat({
+      columns: [
+        "name",
+        "alt",
+        "mime_type",
+        "file_extension",
+        "file_size",
+        "width",
+        "height",
+      ],
+      values: [
+        data.name,
+        data.alt,
+        meta?.mimeType,
+        meta?.fileExtension,
+        meta?.size,
+        meta?.width,
+        meta?.height,
+      ],
+      conditional: {
+        hasValues: {
+          updated_at: new Date().toISOString(),
+        },
+      },
+    });
+
+    if (values.value.length > 0) {
+      const mediaRes = await client.query<MediaT>({
+        text: `UPDATE 
+            lucid_media 
+          SET 
+            ${columns.formatted.update} 
+          WHERE 
+            key = $${aliases.value.length + 1}
+          RETURNING *`,
+        values: [...values.value, key],
+      });
+
+      if (!mediaRes.rows[0]) {
+        throw new LucidError({
+          type: "basic",
+          name: "Error updating media",
+          message: "There was an error updating the media.",
+          status: 500,
+        });
+      }
+    }
+
+    // -------------------------------------------
+    // Return Media
+    return Media.getSingle(key, {
+      location: data.location,
+    });
   };
   static streamFile = async (key: string) => {
     const command = new GetObjectCommand({
@@ -308,10 +450,13 @@ export default class Media {
     const res = await Option.getByName("media_storage_used");
     return res.option_value as number;
   };
-  static #setStorageUsed = async (value: number) => {
+  static #setStorageUsed = async (add: number, minus?: number) => {
     const storageUsed = await Media.#getStorageUsed();
-    const newValue = storageUsed + value;
 
+    let newValue = storageUsed + add;
+    if (minus !== undefined) {
+      newValue = newValue - minus;
+    }
     const res = await Option.patchByName({
       name: "media_storage_used",
       value: newValue,
