@@ -4,6 +4,7 @@ import r from "@utils/route";
 import createSingle from "@controllers/media/create-single";
 import getMultiple from "@controllers/media/get-multiple";
 import getSingle from "@controllers/media/get-single";
+import deleteSingle from "@controllers/media/delete-single";
 
 // ------------------------------------
 // Router
@@ -50,6 +51,20 @@ r(router, {
   },
   schema: getSingle.schema,
   controller: getSingle.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/:key",
+  permissions: {
+    global: ["delete_media"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: deleteSingle.schema,
+  controller: deleteSingle.controller,
 });
 
 export default router;

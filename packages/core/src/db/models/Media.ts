@@ -45,6 +45,13 @@ type MediaGetSingle = (
   }
 ) => Promise<MediaResT>;
 
+type MediaDeleteSingle = (
+  key: string,
+  data: {
+    location: string;
+  }
+) => Promise<MediaResT>;
+
 // -------------------------------------------
 // Media
 export type MediaT = {
@@ -258,10 +265,33 @@ export default class Media {
       throw new LucidError({
         type: "basic",
         name: "Media not found",
+        message: "We couldn't find the media you were looking for.",
+        status: 404,
+      });
+    }
+
+    return formatMedia(media.rows[0], data.location);
+  };
+  static deleteSingle: MediaDeleteSingle = async (key, data) => {
+    const media = await client.query<MediaT>({
+      text: `DELETE FROM
+          lucid_media
+        WHERE
+          key = $1
+        RETURNING *`,
+      values: [key],
+    });
+
+    if (media.rowCount === 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "Media not found",
         message: "Media not found",
         status: 404,
       });
     }
+
+    await Media.#deleteFile(key);
 
     return formatMedia(media.rows[0], data.location);
   };
