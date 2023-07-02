@@ -78,8 +78,8 @@ Role.getMultiple = async (query) => {
             data: filter,
             meta: {
                 name: {
-                    operator: "ILIKE",
-                    type: "string",
+                    operator: "%",
+                    type: "text",
                     columnType: "standard",
                 },
                 role_ids: {

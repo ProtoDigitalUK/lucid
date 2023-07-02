@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getLocation = void 0;
+const getLocation = (req) => {
+    return `${req.protocol}://${req.get("host")}`;
+};
+exports.getLocation = getLocation;
 const getPath = (req) => {
-    const protocol = req.protocol;
-    const host = req.get("host");
     const originalUrl = req.originalUrl;
-    return `${protocol}://${host}${originalUrl}`.split("?")[0];
+    return `${(0, exports.getLocation)(req)}${originalUrl}`.split("?")[0];
 };
 const buildMetaLinks = (req, params) => {
     const links = [];

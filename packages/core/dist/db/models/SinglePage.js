@@ -41,12 +41,12 @@ SinglePage.getSingle = async (data) => {
             meta: {
                 collection_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
                 environment_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
             },

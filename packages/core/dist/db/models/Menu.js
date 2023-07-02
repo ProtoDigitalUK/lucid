@@ -88,7 +88,7 @@ Menu.getSingle = async (data) => {
                 },
                 environment_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
             },
@@ -133,13 +133,13 @@ Menu.getMultiple = async (query, data) => {
             },
             meta: {
                 name: {
-                    operator: "ILIKE",
-                    type: "string",
+                    operator: "%",
+                    type: "text",
                     columnType: "standard",
                 },
                 environment_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
             },

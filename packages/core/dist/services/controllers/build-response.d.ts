@@ -10,6 +10,7 @@ interface BuildResponseParams {
     };
 }
 type BuildResponseT = (req: Request, params: BuildResponseParams) => ResponseBody;
+export declare const getLocation: (req: Request) => string;
 declare const buildResponse: BuildResponseT;
 export default buildResponse;
 //# sourceMappingURL=build-response.d.ts.map

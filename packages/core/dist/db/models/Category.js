@@ -33,17 +33,17 @@ Category.getMultiple = async (environment_key, query) => {
             meta: {
                 collection_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
                 title: {
-                    operator: "ILIKE",
-                    type: "string",
+                    operator: "%",
+                    type: "text",
                     columnType: "standard",
                 },
                 environment_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
             },

@@ -49,17 +49,17 @@ Page.getMultiple = async (query, data) => {
             meta: {
                 collection_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
                 title: {
-                    operator: "ILIKE",
-                    type: "string",
+                    operator: "%",
+                    type: "text",
                     columnType: "standard",
                 },
                 slug: {
-                    operator: "ILIKE",
-                    type: "string",
+                    operator: "%",
+                    type: "text",
                     columnType: "standard",
                 },
                 category_id: {
@@ -70,7 +70,7 @@ Page.getMultiple = async (query, data) => {
                 },
                 environment_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
             },
@@ -146,7 +146,7 @@ Page.getSingle = async (query, data) => {
                 },
                 environment_key: {
                     operator: "=",
-                    type: "string",
+                    type: "text",
                     columnType: "standard",
                 },
             },

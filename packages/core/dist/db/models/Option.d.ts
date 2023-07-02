@@ -1,4 +1,4 @@
-type OptionNames = "initial_user_created";
+type OptionNames = "initial_user_created" | "media_storage_used";
 type OptionTypes = "boolean" | "string" | "number" | "json";
 type OptionValue = boolean | number | string | object | Array<any>;
 type OptionGetByName = (name: OptionNames) => Promise<OptionT>;

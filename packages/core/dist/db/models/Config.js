@@ -13,6 +13,7 @@ const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const zod_1 = __importDefault(require("zod"));
 const error_handler_1 = require("../../utils/error-handler");
+const constants_1 = __importDefault(require("../../constants"));
 const configSchema = zod_1.default.object({
     port: zod_1.default.number(),
     origin: zod_1.default.string().optional(),
@@ -21,6 +22,18 @@ const configSchema = zod_1.default.object({
     secretKey: zod_1.default.string(),
     collections: zod_1.default.array(zod_1.default.any()).optional(),
     bricks: zod_1.default.array(zod_1.default.any()).optional(),
+    media: zod_1.default.object({
+        storageLimit: zod_1.default.number().optional(),
+        maxFileSize: zod_1.default.number().optional(),
+        store: zod_1.default.object({
+            service: zod_1.default.enum(["aws", "cloudflare"]),
+            cloudflareAccountId: zod_1.default.string().optional(),
+            region: zod_1.default.string(),
+            bucket: zod_1.default.string(),
+            accessKeyId: zod_1.default.string(),
+            secretAccessKey: zod_1.default.string(),
+        }),
+    }),
 });
 class Config {
     static get secretKey() {
@@ -34,6 +47,21 @@ class Config {
     }
     static get environments() {
         return Config.get().environments;
+    }
+    static get media() {
+        const media = Config.get().media;
+        return {
+            storageLimit: media?.storageLimit || constants_1.default.media.storageLimit,
+            maxFileSize: media?.maxFileSize || constants_1.default.media.maxFileSize,
+            store: {
+                service: media.store.service,
+                cloudflareAccountId: media.store.cloudflareAccountId,
+                region: media.store.region,
+                bucket: media.store.bucket,
+                accessKeyId: media.store.accessKeyId,
+                secretAccessKey: media.store.secretAccessKey,
+            },
+        };
     }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {

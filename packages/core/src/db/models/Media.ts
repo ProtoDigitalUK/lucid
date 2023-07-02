@@ -439,7 +439,7 @@ export default class Media {
   };
   static streamFile = async (key: string) => {
     const command = new GetObjectCommand({
-      Bucket: Config.media?.s3?.bucket,
+      Bucket: Config.media.store.bucket,
       Key: key,
     });
     return S3.send(command);
@@ -501,7 +501,7 @@ export default class Media {
     meta: MediaMetaDataT
   ) => {
     const command = new PutObjectCommand({
-      Bucket: Config.media?.s3?.bucket,
+      Bucket: Config.media.store.bucket,
       Key: key,
       Body: file.data,
       ContentType: meta.mimeType,
@@ -515,7 +515,7 @@ export default class Media {
   };
   static #deleteFile = async (key: string) => {
     const command = new DeleteObjectCommand({
-      Bucket: Config.media?.s3?.bucket,
+      Bucket: Config.media.store.bucket,
       Key: key,
     });
     return S3.send(command);

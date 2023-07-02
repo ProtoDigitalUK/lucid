@@ -41,8 +41,8 @@ interface SelectQueryBuilderConfig {
         };
         meta?: {
             [key: string]: {
-                operator: "=" | "!=" | "<" | ">" | "<=" | ">=" | "||" | "LIKE" | "ILIKE" | "SIMILAR TO" | "~" | "~*" | "BETWEEN" | "IN" | "@>";
-                type: "int" | "string" | "boolean";
+                operator: "=" | "!=" | "<" | ">" | "<=" | ">=" | "||" | "LIKE" | "ILIKE" | "SIMILAR TO" | "~" | "~*" | "BETWEEN" | "IN" | "@>" | "%";
+                type: "int" | "string" | "boolean" | "text";
                 columnType: "array" | "standard";
                 key?: string;
                 table?: string;

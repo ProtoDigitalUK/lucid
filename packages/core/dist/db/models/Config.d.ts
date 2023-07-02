@@ -12,6 +12,18 @@ export type ConfigT = {
     }>;
     collections?: CollectionBuilderT[];
     bricks?: BrickBuilderT[];
+    media: {
+        storageLimit?: number;
+        maxFileSize?: number;
+        store: {
+            service: "aws" | "cloudflare";
+            cloudflareAccountId?: string;
+            region?: string;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+        };
+    };
 };
 export default class Config {
     #private;
@@ -26,5 +38,17 @@ export default class Config {
         title: string;
         key: string;
     }[];
+    static get media(): {
+        storageLimit: number;
+        maxFileSize: number;
+        store: {
+            service: "aws" | "cloudflare";
+            cloudflareAccountId: string | undefined;
+            region: string | undefined;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+        };
+    };
 }
 //# sourceMappingURL=Config.d.ts.map

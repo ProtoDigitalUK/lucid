@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const console_log_colors_1 = require("console-log-colors");
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const Config_1 = __importDefault(require("./db/models/Config"));
 const launch_steps_1 = __importDefault(require("./services/app/launch-steps"));
 const migration_1 = __importDefault(require("./db/migration"));
@@ -26,6 +27,9 @@ const app = async () => {
     }));
     app.use((0, morgan_1.default)("dev"));
     app.use((0, cookie_parser_1.default)(Config_1.default.get().secretKey));
+    app.use((0, express_fileupload_1.default)({
+        debug: Config_1.default.mode === "development",
+    }));
     console_log_colors_1.log.yellow("Middleware configured");
     console_log_colors_1.log.white("----------------------------------------------------");
     await (0, migration_1.default)();

@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE TABLE IF NOT EXISTS lucid_migrations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   file TEXT,
