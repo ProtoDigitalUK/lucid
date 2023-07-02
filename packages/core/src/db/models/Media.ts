@@ -17,6 +17,7 @@ import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Schema
 // Models
 import Config from "@db/models/Config";
+import Option from "@db/models/Option";
 // Services
 import S3 from "@services/media/s3-client";
 import helpers, { type MediaMetaDataT } from "@services/media/helpers";
@@ -58,6 +59,24 @@ export default class Media {
     const { name, alt } = data;
     const files = helpers.formatReqFiles(data.files);
     const firstFile = files[0];
+
+    // -------------------------------------------
+    // Checks
+    const canStoreRes = await Media.#canStoreFiles(files);
+    if (!canStoreRes.can) {
+      throw new LucidError({
+        type: "basic",
+        name: "Error saving file",
+        message: canStoreRes.message,
+        status: 500,
+        errors: modelErrors({
+          file: {
+            code: "storage_limit",
+            message: canStoreRes.message,
+          },
+        }),
+      });
+    }
 
     // -------------------------------------------
     // Generate key and save file
@@ -129,12 +148,61 @@ export default class Media {
       });
     }
 
+    // update storage used
+    await Media.#setStorageUsed(meta.size);
+
     // -------------------------------------------
     // Return
     return media.rows[0];
   };
   // -------------------------------------------
-  // Util Functions
+  // Storage Functions
+  static #getStorageUsed = async () => {
+    const res = await Option.getByName("media_storage_used");
+    return res.option_value as number;
+  };
+  static #setStorageUsed = async (value: number) => {
+    const storageUsed = await Media.#getStorageUsed();
+    const newValue = storageUsed + value;
+
+    const res = await Option.patchByName({
+      name: "media_storage_used",
+      value: newValue,
+      type: "number",
+      locked: false,
+    });
+    return res.option_value as number;
+  };
+  static #canStoreFiles = async (files: fileUpload.UploadedFile[]) => {
+    const { storageLimit, maxFileSize } = Config.media;
+
+    // check files dont exceed max file size limit
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > maxFileSize) {
+        return {
+          can: false,
+          message: `File ${file.name} is too large. Max file size is ${maxFileSize} bytes.`,
+        };
+      }
+    }
+
+    // get the total size of all files
+    const storageUsed = await Media.#getStorageUsed();
+
+    // check files dont exceed storage limit
+    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+    if (totalSize + storageUsed > storageLimit) {
+      return {
+        can: false,
+        message: `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`,
+      };
+    }
+
+    return { can: true };
+  };
+  // -------------------------------------------
+  // S3 Functions
   static #saveFile = async (
     key: string,
     file: fileUpload.UploadedFile,

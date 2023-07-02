@@ -136,8 +136,8 @@ const config: ConfigT = {
     },
   ],
   media: {
-    // storageLimit: 5368709120,
-    // maxFileSize: 16777216,
+    storageLimit: 5368709120,
+    maxFileSize: 16777216,
     s3: {
       service: "cloudflare",
       bucket: process.env.LUCID_S3_BUCKET as string,
