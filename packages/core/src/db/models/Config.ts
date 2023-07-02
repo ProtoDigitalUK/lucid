@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import path from "path";
 import z from "zod";
 import { RuntimeError } from "@utils/error-handler";
+import C from "@root/constants";
 // Internal packages
 import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
@@ -16,6 +17,22 @@ const configSchema = z.object({
   secretKey: z.string(),
   collections: z.array(z.any()).optional(),
   bricks: z.array(z.any()).optional(),
+
+  media: z
+    .object({
+      storageLimit: z.number().optional(),
+      maxFileSize: z.number().optional(),
+      s3: z
+        .object({
+          service: z.enum(["aws", "cloudflare"]).optional(),
+          bucket: z.string(),
+          accountId: z.string(),
+          accessKeyId: z.string(),
+          secretAccessKey: z.string(),
+        })
+        .optional(),
+    })
+    .optional(),
 });
 
 export type ConfigT = {
@@ -30,6 +47,17 @@ export type ConfigT = {
   }>;
   collections?: CollectionBuilderT[];
   bricks?: BrickBuilderT[];
+  media?: {
+    storageLimit?: number;
+    maxFileSize?: number;
+    s3?: {
+      service: "aws" | "cloudflare";
+      bucket: string;
+      accountId: string;
+      accessKeyId: string;
+      secretAccessKey: string;
+    };
+  };
 };
 
 export default class Config {
@@ -117,6 +145,14 @@ export default class Config {
   }
   static get environments() {
     return Config.get().environments;
+  }
+  static get media() {
+    const media = Config.get().media;
+    return {
+      storageLimit: media?.storageLimit || C.media.storageLimit,
+      maxFileSize: media?.maxFileSize || C.media.maxFileSize,
+      s3: media?.s3,
+    };
   }
   // -------------------------------------------
   // Private

@@ -124,7 +124,7 @@ const config: ConfigT = {
   port: 8393,
   origin: "*",
   mode: "development",
-  secretKey: process.env.SECRET_KEY as string,
+  secretKey: process.env.LUCID_SECRET_KEY as string,
   environments: [
     {
       title: "Site Production",
@@ -135,6 +135,17 @@ const config: ConfigT = {
       key: "site_stage",
     },
   ],
+  media: {
+    // storageLimit: 5368709120,
+    // maxFileSize: 16777216,
+    s3: {
+      service: "cloudflare",
+      bucket: process.env.LUCID_S3_BUCKET as string,
+      accountId: process.env.LUCID_S3_ACCOUNT_ID as string,
+      accessKeyId: process.env.LUCID_S3_ACCESS_KEY as string,
+      secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
+    },
+  },
   collections: [pageCollection, settingsCollection],
   bricks: [bannerBrick, introBrick, defaultMetaBrick],
 };

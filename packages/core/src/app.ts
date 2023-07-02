@@ -4,6 +4,7 @@ import cors from "cors";
 import { log } from "console-log-colors";
 import path from "path";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 // internal
 import Config from "@db/models/Config";
 import launchSteps from "@services/app/launch-steps";
@@ -35,6 +36,11 @@ const app = async () => {
   );
   app.use(morgan("dev"));
   app.use(cookieParser(Config.get().secretKey));
+  app.use(
+    fileUpload({
+      debug: Config.mode === "development",
+    })
+  );
   log.yellow("Middleware configured");
 
   // ------------------------------------

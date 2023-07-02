@@ -10,6 +10,7 @@ import users from "@routes/v1/users.routes";
 import permissions from "@routes/v1/permissions.routes";
 import brickConfig from "@routes/v1/brick-config.routes";
 import menus from "@routes/v1/menus.routes";
+import media from "@routes/v1/media.routes";
 
 const initRoutes = (app: any) => {
   // Version 1
@@ -25,6 +26,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/permissions", permissions);
   app.use("/api/v1/brick-config", brickConfig);
   app.use("/api/v1/menus", menus);
+  app.use("/api/v1/media", media);
 };
 
 export default initRoutes;
