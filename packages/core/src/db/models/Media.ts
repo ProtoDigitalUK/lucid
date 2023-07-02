@@ -38,6 +38,13 @@ type MediaGetMultiple = (
   count: number;
 }>;
 
+type MediaGetSingle = (
+  key: string,
+  data: {
+    location: string;
+  }
+) => Promise<MediaResT>;
+
 // -------------------------------------------
 // Media
 export type MediaT = {
@@ -235,6 +242,28 @@ export default class Media {
       data: medias.rows.map((menu) => formatMedia(menu, data.location)),
       count: count.rows[0].count,
     };
+  };
+  static getSingle: MediaGetSingle = async (key, data) => {
+    const media = await client.query<MediaT>({
+      text: `SELECT
+          *
+        FROM
+          lucid_media
+        WHERE
+          key = $1`,
+      values: [key],
+    });
+
+    if (media.rowCount === 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "Media not found",
+        message: "Media not found",
+        status: 404,
+      });
+    }
+
+    return formatMedia(media.rows[0], data.location);
   };
   static streamFile = async (key: string) => {
     const command = new GetObjectCommand({

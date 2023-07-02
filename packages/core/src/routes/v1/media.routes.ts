@@ -3,6 +3,7 @@ import r from "@utils/route";
 // Controller
 import createSingle from "@controllers/media/create-single";
 import getMultiple from "@controllers/media/get-multiple";
+import getSingle from "@controllers/media/get-single";
 
 // ------------------------------------
 // Router
@@ -35,6 +36,20 @@ r(router, {
   },
   schema: getMultiple.schema,
   controller: getMultiple.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/:key",
+  permissions: {
+    global: ["read_media"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: getSingle.schema,
+  controller: getSingle.controller,
 });
 
 export default router;

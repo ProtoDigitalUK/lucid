@@ -52,6 +52,14 @@ const getMultipleQuery = z.object({
 const getMultipleParams = z.object({});
 
 // ------------------------------------
+// GET SINGLE
+const getSingleBody = z.object({});
+const getSingleQuery = z.object({});
+const getSingleParams = z.object({
+  key: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -68,5 +76,10 @@ export default {
     body: getMultipleBody,
     query: getMultipleQuery,
     params: getMultipleParams,
+  },
+  getSingle: {
+    body: getSingleBody,
+    query: getSingleQuery,
+    params: getSingleParams,
   },
 };

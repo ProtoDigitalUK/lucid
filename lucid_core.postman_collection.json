@@ -1481,8 +1481,7 @@
 								{
 									"key": "alt",
 									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "file",
@@ -1503,6 +1502,113 @@
 								"api",
 								"v1",
 								"media"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media"
+							],
+							"query": [
+								{
+									"key": "filter[name]",
+									"value": "Rum",
+									"disabled": true
+								},
+								{
+									"key": "filter[key]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[mime_type]",
+									"value": "image/jpeg,image/png",
+									"disabled": true
+								},
+								{
+									"key": "filter[file_extension]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-created_at",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at,updated_at,name,file_size,width,height,mime_type,file_extension",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688303984723",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"rum-ham-1688303984723"
 							]
 						}
 					},
