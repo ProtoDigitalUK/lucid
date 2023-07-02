@@ -121,8 +121,9 @@ interface SelectQueryBuilderConfig {
           | "~*"
           | "BETWEEN"
           | "IN"
-          | "@>";
-        type: "int" | "string" | "boolean";
+          | "@>"
+          | "%";
+        type: "int" | "string" | "boolean" | "text";
         columnType: "array" | "standard";
         key?: string;
         table?: string;

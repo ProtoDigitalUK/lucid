@@ -128,17 +128,17 @@ export default class Page {
         meta: {
           collection_key: {
             operator: "=",
-            type: "string",
+            type: "text",
             columnType: "standard",
           },
           title: {
-            operator: "ILIKE",
-            type: "string",
+            operator: "%",
+            type: "text",
             columnType: "standard",
           },
           slug: {
-            operator: "ILIKE",
-            type: "string",
+            operator: "%",
+            type: "text",
             columnType: "standard",
           },
           category_id: {
@@ -149,7 +149,7 @@ export default class Page {
           },
           environment_key: {
             operator: "=",
-            type: "string",
+            type: "text",
             columnType: "standard",
           },
         },
@@ -232,7 +232,7 @@ export default class Page {
           },
           environment_key: {
             operator: "=",
-            type: "string",
+            type: "text",
             columnType: "standard",
           },
         },

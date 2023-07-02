@@ -1,4 +1,5 @@
 import client from "@db/db";
+import z from "zod";
 import fileUpload from "express-fileupload";
 import {
   GetObjectCommand,
@@ -16,6 +17,7 @@ import Option from "@db/models/Option";
 import S3 from "@services/media/s3-client";
 import helpers, { type MediaMetaDataT } from "@services/media/helpers";
 import formatMedia, { type MediaResT } from "@services/media/format-media";
+import mediaSchema from "@schemas/media";
 
 // -------------------------------------------
 // Types
@@ -25,6 +27,16 @@ type MediaCreateSingle = (data: {
   alt?: string;
   files: fileUpload.FileArray | null | undefined;
 }) => Promise<MediaResT>;
+
+type MediaGetMultiple = (
+  query: z.infer<typeof mediaSchema.getMultiple.query>,
+  data: {
+    location: string;
+  }
+) => Promise<{
+  data: MediaResT[];
+  count: number;
+}>;
 
 // -------------------------------------------
 // Media
@@ -150,6 +162,79 @@ export default class Media {
     // -------------------------------------------
     // Return
     return formatMedia(media.rows[0], location);
+  };
+  static getMultiple: MediaGetMultiple = async (query, data) => {
+    const { filter, sort, page, per_page } = query;
+
+    // Build Query Data and Query
+    const SelectQuery = new SelectQueryBuilder({
+      columns: [
+        "id",
+        "key",
+        "e_tag",
+        "name",
+        "alt",
+        "mime_type",
+        "file_extension",
+        "file_size",
+        "width",
+        "height",
+        "created_at",
+        "updated_at",
+      ],
+      filter: {
+        data: filter,
+        meta: {
+          name: {
+            operator: "%",
+            type: "text",
+            columnType: "standard",
+          },
+          key: {
+            operator: "%",
+            type: "text",
+            columnType: "standard",
+          },
+          mime_type: {
+            operator: "=",
+            type: "text",
+            columnType: "standard",
+          },
+          file_extension: {
+            operator: "=",
+            type: "text",
+            columnType: "standard",
+          },
+        },
+      },
+      sort: sort,
+      page: page,
+      per_page: per_page,
+    });
+
+    const medias = await client.query<MediaT>({
+      text: `SELECT
+          ${SelectQuery.query.select}
+        FROM
+          lucid_media
+        ${SelectQuery.query.where}
+        ${SelectQuery.query.order}
+        ${SelectQuery.query.pagination}`,
+      values: SelectQuery.values,
+    });
+    const count = await client.query<{ count: number }>({
+      text: `SELECT 
+          COUNT(DISTINCT lucid_media.id)
+        FROM
+          lucid_media
+        ${SelectQuery.query.where} `,
+      values: SelectQuery.countValues,
+    });
+
+    return {
+      data: medias.rows.map((menu) => formatMedia(menu, data.location)),
+      count: count.rows[0].count,
+    };
   };
   static streamFile = async (key: string) => {
     const command = new GetObjectCommand({

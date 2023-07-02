@@ -161,7 +161,7 @@ export default class Menu {
           },
           environment_key: {
             operator: "=",
-            type: "string",
+            type: "text",
             columnType: "standard",
           },
         },
@@ -212,13 +212,13 @@ export default class Menu {
         },
         meta: {
           name: {
-            operator: "ILIKE",
-            type: "string",
+            operator: "%",
+            type: "text",
             columnType: "standard",
           },
           environment_key: {
             operator: "=",
-            type: "string",
+            type: "text",
             columnType: "standard",
           },
         },
