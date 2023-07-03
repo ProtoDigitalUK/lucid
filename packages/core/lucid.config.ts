@@ -135,9 +135,15 @@ const config: ConfigT = {
       key: "site_stage",
     },
   ],
+  email: {
+    from: {
+      name: "Lucid CMS",
+      email: "hello@lucidcms.com",
+    },
+  },
   media: {
     storageLimit: 5368709120,
-    maxFileSize: 16777216,
+    maxFileSize: 20777216,
     store: {
       service: "cloudflare",
       cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,

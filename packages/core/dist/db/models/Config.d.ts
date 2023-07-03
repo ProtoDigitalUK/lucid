@@ -24,6 +24,20 @@ export type ConfigT = {
             secretAccessKey: string;
         };
     };
+    email?: {
+        from: {
+            name?: string;
+            email: string;
+        } | string;
+        templateDir?: string;
+        smtp?: {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean;
+        };
+    };
 };
 export default class Config {
     #private;
@@ -50,5 +64,19 @@ export default class Config {
             secretAccessKey: string;
         };
     };
+    static get email(): {
+        from: string | {
+            name?: string | undefined;
+            email: string;
+        };
+        templateDir?: string | undefined;
+        smtp?: {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean | undefined;
+        } | undefined;
+    } | undefined;
 }
 //# sourceMappingURL=Config.d.ts.map

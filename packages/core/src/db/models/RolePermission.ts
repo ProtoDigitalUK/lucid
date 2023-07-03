@@ -22,6 +22,7 @@ type PermissionMedia =
   | "delete_media";
 type PermissionSettings = "update_settings";
 type PermissionEnvironment = "update_environment" | "migrate_environment";
+type PermissionEmails = "read_email" | "delete_email" | "send_email";
 // env permissions
 type PermissionContent =
   | "create_content"
@@ -47,7 +48,8 @@ export type PermissionT =
   | PermissionRoles
   | PermissionMedia
   | PermissionSettings
-  | PermissionEnvironment;
+  | PermissionEnvironment
+  | PermissionEmails;
 
 export type EnvironmentPermissionT =
   | PermissionContent
@@ -161,6 +163,10 @@ export default class RolePermission {
           title: "Environment",
           permissions: RolePermission.environmentPermissions,
         },
+        emails: {
+          title: "Emails",
+          permissions: RolePermission.emailPermissions,
+        },
       },
       environment: {
         content: {
@@ -189,6 +195,7 @@ export default class RolePermission {
         ...RolePermission.mediaPermissions,
         ...RolePermission.settingsPermissions,
         ...RolePermission.environmentPermissions,
+        ...RolePermission.emailPermissions,
       ],
       environment: [
         ...RolePermission.contentPermissions,
@@ -218,6 +225,9 @@ export default class RolePermission {
   }
   static get environmentPermissions(): PermissionEnvironment[] {
     return ["update_environment", "migrate_environment"];
+  }
+  static get emailPermissions(): PermissionEmails[] {
+    return ["send_email", "read_email", "delete_email"];
   }
   static get contentPermissions(): PermissionContent[] {
     return [

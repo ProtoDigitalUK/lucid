@@ -12,6 +12,7 @@ import permissions from "@routes/v1/permissions.routes";
 import brickConfig from "@routes/v1/brick-config.routes";
 import menus from "@routes/v1/menus.routes";
 import media from "@routes/v1/media.routes";
+import emails from "@routes/v1/emails.routes";
 // CDN
 import cdnMedia from "@routes/cdn/media.routes";
 
@@ -30,7 +31,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/brick-config", brickConfig);
   app.use("/api/v1/menus", menus);
   app.use("/api/v1/media", media);
-
+  app.use("/api/v1/emails", emails);
   // CDN
   app.use("/cdn", cdnMedia);
 };

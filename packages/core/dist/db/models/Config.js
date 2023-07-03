@@ -34,6 +34,31 @@ const configSchema = zod_1.default.object({
             secretAccessKey: zod_1.default.string(),
         }),
     }),
+    email: zod_1.default
+        .object({
+        from: zod_1.default.union([
+            zod_1.default.string(),
+            zod_1.default.object({
+                name: zod_1.default.string(),
+                email: zod_1.default.string().email(),
+            }),
+        ]),
+        templateDir: zod_1.default.string().optional(),
+        smtp: zod_1.default
+            .object({
+            host: zod_1.default.string(),
+            port: zod_1.default.number(),
+            user: zod_1.default.string(),
+            pass: zod_1.default.string(),
+            secure: zod_1.default.boolean().optional(),
+        })
+            .optional(),
+    })
+        .optional(),
+    environments: zod_1.default.array(zod_1.default.object({
+        title: zod_1.default.string(),
+        key: zod_1.default.string(),
+    })),
 });
 class Config {
     static get secretKey() {
@@ -62,6 +87,9 @@ class Config {
                 secretAccessKey: media.store.secretAccessKey,
             },
         };
+    }
+    static get email() {
+        return Config.get().email;
     }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {

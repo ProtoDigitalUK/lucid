@@ -17,7 +17,6 @@ const configSchema = z.object({
   secretKey: z.string(),
   collections: z.array(z.any()).optional(),
   bricks: z.array(z.any()).optional(),
-
   media: z.object({
     storageLimit: z.number().optional(),
     maxFileSize: z.number().optional(),
@@ -30,6 +29,33 @@ const configSchema = z.object({
       secretAccessKey: z.string(),
     }),
   }),
+  email: z
+    .object({
+      from: z.union([
+        z.string(),
+        z.object({
+          name: z.string(),
+          email: z.string().email(),
+        }),
+      ]),
+      templateDir: z.string().optional(),
+      smtp: z
+        .object({
+          host: z.string(),
+          port: z.number(),
+          user: z.string(),
+          pass: z.string(),
+          secure: z.boolean().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
+  environments: z.array(
+    z.object({
+      title: z.string(),
+      key: z.string(),
+    })
+  ),
 });
 
 export type ConfigT = {
@@ -54,6 +80,22 @@ export type ConfigT = {
       bucket: string;
       accessKeyId: string;
       secretAccessKey: string;
+    };
+  };
+  email?: {
+    from:
+      | {
+          name?: string;
+          email: string;
+        }
+      | string;
+    templateDir?: string;
+    smtp?: {
+      host: string;
+      port: number;
+      user: string;
+      pass: string;
+      secure?: boolean;
     };
   };
 };
@@ -158,6 +200,9 @@ export default class Config {
         secretAccessKey: media.store.secretAccessKey,
       },
     };
+  }
+  static get email() {
+    return Config.get().email;
   }
   // -------------------------------------------
   // Private

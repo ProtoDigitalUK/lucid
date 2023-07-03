@@ -30,6 +30,10 @@ class RolePermission {
                     title: "Environment",
                     permissions: RolePermission.environmentPermissions,
                 },
+                emails: {
+                    title: "Emails",
+                    permissions: RolePermission.emailPermissions,
+                },
             },
             environment: {
                 content: {
@@ -55,6 +59,7 @@ class RolePermission {
                 ...RolePermission.mediaPermissions,
                 ...RolePermission.settingsPermissions,
                 ...RolePermission.environmentPermissions,
+                ...RolePermission.emailPermissions,
             ],
             environment: [
                 ...RolePermission.contentPermissions,
@@ -83,6 +88,9 @@ class RolePermission {
     }
     static get environmentPermissions() {
         return ["update_environment", "migrate_environment"];
+    }
+    static get emailPermissions() {
+        return ["send_email", "read_email", "delete_email"];
     }
     static get contentPermissions() {
         return [
