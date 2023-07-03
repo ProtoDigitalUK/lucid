@@ -17,7 +17,8 @@
   },
   "files": [
     "dist/**",
-    "cms/**"
+    "cms/**",
+    "templates/**"
   ],
   "author": "William Yallop",
   "devDependencies": {

@@ -26,9 +26,9 @@ export type ConfigT = {
     };
     email?: {
         from: {
-            name?: string;
+            name: string;
             email: string;
-        } | string;
+        };
         templateDir?: string;
         smtp?: {
             host: string;
@@ -65,8 +65,8 @@ export default class Config {
         };
     };
     static get email(): {
-        from: string | {
-            name?: string | undefined;
+        from: {
+            name: string;
             email: string;
         };
         templateDir?: string | undefined;

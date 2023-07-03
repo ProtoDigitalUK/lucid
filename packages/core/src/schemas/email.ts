@@ -41,6 +41,14 @@ const deleteSingleParams = z.object({
 });
 
 // ------------------------------------
+// RESEND SINGLE
+const resendSingleBody = z.object({});
+const resendSingleQuery = z.object({});
+const resendSingleParams = z.object({
+  id: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   getMultiple: {
@@ -57,5 +65,10 @@ export default {
     body: deleteSingleBody,
     query: deleteSingleQuery,
     params: deleteSingleParams,
+  },
+  resendSingle: {
+    body: resendSingleBody,
+    query: resendSingleQuery,
+    params: resendSingleParams,
   },
 };

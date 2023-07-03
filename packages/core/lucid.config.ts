@@ -140,6 +140,13 @@ const config: ConfigT = {
       name: "Lucid CMS",
       email: "hello@lucidcms.com",
     },
+    smtp: {
+      host: "127.0.0.1",
+      port: 6969,
+      secure: false,
+      user: process.env.LUCID_SMPT_USER as string,
+      pass: process.env.LUCID_SMPT_PASS as string,
+    },
   },
   media: {
     storageLimit: 5368709120,

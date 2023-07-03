@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS lucid_emails (
   id SERIAL PRIMARY KEY,
 
   from_address TEXT,
+  from_name TEXT,
   to_address TEXT,
   subject TEXT,
   cc TEXT,

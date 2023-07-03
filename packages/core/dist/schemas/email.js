@@ -33,6 +33,11 @@ const deleteSingleQuery = zod_1.default.object({});
 const deleteSingleParams = zod_1.default.object({
     id: zod_1.default.string(),
 });
+const resendSingleBody = zod_1.default.object({});
+const resendSingleQuery = zod_1.default.object({});
+const resendSingleParams = zod_1.default.object({
+    id: zod_1.default.string(),
+});
 exports.default = {
     getMultiple: {
         body: getMultipleBody,
@@ -48,6 +53,11 @@ exports.default = {
         body: deleteSingleBody,
         query: deleteSingleQuery,
         params: deleteSingleParams,
+    },
+    resendSingle: {
+        body: resendSingleBody,
+        query: resendSingleQuery,
+        params: resendSingleParams,
     },
 };
 //# sourceMappingURL=email.js.map

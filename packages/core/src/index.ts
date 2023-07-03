@@ -1,8 +1,11 @@
 require("dotenv").config();
 import http from "http";
 import { log } from "console-log-colors";
-import Config, { ConfigT } from "@db/models/Config";
 import app from "./app";
+// Models
+import Config, { ConfigT } from "@db/models/Config";
+// Services
+import { sendEmailExternal } from "@services/emails/send-email";
 
 // ------------------------------------
 // Start server
@@ -25,4 +28,5 @@ export type { ConfigT as Config };
 
 export default {
   start,
+  sendEmail: sendEmailExternal,
 };

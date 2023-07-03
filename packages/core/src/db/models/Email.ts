@@ -7,12 +7,13 @@ import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 import emailsSchema from "@schemas/email";
 // Services
 import renderTemplate from "@services/emails/render-template";
-import sendEmail from "@services/emails/send-email";
+import { sendEmailInternal } from "@services/emails/send-email";
 
 // -------------------------------------------
 // Types
 type EmailCreateSingle = (data: {
   from_address?: string;
+  from_name?: string;
   to_address?: string;
   subject?: string;
   cc?: string;
@@ -31,13 +32,23 @@ type EmailGetMultiple = (
   count: number;
 }>;
 
+type EmailUpdateSingle = (
+  id: number,
+  data: {
+    from_address?: string;
+    from_name?: string;
+    delivery_status?: "sent" | "failed" | "pending";
+  }
+) => Promise<EmailT>;
+
 type EmailGetSingle = (id: number) => Promise<EmailT>;
-
 type EmailDeleteSingle = (id: number) => Promise<EmailT>;
-
 type EmailResendSingle = (id: number) => Promise<{
-  success: boolean;
-  message: string;
+  email: EmailT;
+  status: {
+    success: boolean;
+    message: string;
+  };
 }>;
 
 // -------------------------------------------
@@ -46,6 +57,7 @@ export type EmailT = {
   id: number;
 
   from_address: string | null;
+  from_name: string | null;
   to_address: string | null;
   subject: string | null;
   cc: string | null;
@@ -71,6 +83,7 @@ export default class Email {
     // Data
     const {
       from_address,
+      from_name,
       to_address,
       subject,
       cc,
@@ -85,6 +98,7 @@ export default class Email {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
         "from_address",
+        "from_name",
         "to_address",
         "subject",
         "cc",
@@ -95,6 +109,7 @@ export default class Email {
       ],
       values: [
         from_address,
+        from_name,
         to_address,
         subject,
         cc,
@@ -131,6 +146,7 @@ export default class Email {
       columns: [
         "id",
         "from_address",
+        "from_name",
         "to_address",
         "subject",
         "cc",
@@ -239,24 +255,64 @@ export default class Email {
 
     return email.rows[0];
   };
-  static resendSingle: EmailResendSingle = async (id) => {
-    const email = await Email.getSingle(id);
-
-    // TODO: update the email table so from and from name are seperate values
-    // TODO: add the option to update the from, from name, cc, bcc, to, and subject
-    // TODO: update this to pass down the email id so we can update the email status
-    const sentEmail = await sendEmail(email.template, {
-      data: email.data || {},
-      options: {
-        to: email.to_address || "",
-        subject: email.subject || "",
-
-        from: email.from_address || undefined,
-        cc: email.cc || undefined,
-        bcc: email.bcc || undefined,
+  static updateSingle: EmailUpdateSingle = async (id, data) => {
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["from_address", "from_name", "delivery_status"],
+      values: [data.from_address, data.from_name, data.delivery_status],
+      conditional: {
+        hasValues: {
+          updated_at: new Date().toISOString(),
+        },
       },
     });
 
-    return sentEmail;
+    const emailRes = await client.query<EmailT>({
+      text: `UPDATE 
+        lucid_emails 
+        SET 
+          ${columns.formatted.update} 
+        WHERE 
+          id = $${aliases.value.length + 1}
+        RETURNING *`,
+      values: [...values.value, id],
+    });
+
+    if (!emailRes.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Error updating email",
+        message: "There was an error updating the email",
+        status: 500,
+      });
+    }
+
+    return emailRes.rows[0];
+  };
+  static resendSingle: EmailResendSingle = async (id) => {
+    const email = await Email.getSingle(id);
+
+    const status = await sendEmailInternal(
+      email.template,
+      {
+        data: email.data || {},
+        options: {
+          to: email.to_address || "",
+          subject: email.subject || "",
+          from: email.from_address || undefined,
+          fromName: email.from_name || undefined,
+          cc: email.cc || undefined,
+          bcc: email.bcc || undefined,
+          replyTo: email.from_address || undefined,
+        },
+      },
+      id
+    );
+
+    const updatedEmail = await Email.getSingle(id);
+
+    return {
+      status,
+      email: updatedEmail,
+    };
   };
 }

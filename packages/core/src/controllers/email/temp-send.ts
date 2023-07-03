@@ -1,6 +1,6 @@
 // Services
 import buildResponse from "@services/controllers/build-response";
-import sendEmail from "@services/emails/send-email";
+import { sendEmailExternal } from "@services/emails/send-email";
 // Schema
 import healthSchema from "@schemas/health";
 
@@ -13,12 +13,12 @@ const tempSend: Controller<
 > = async (req, res, next) => {
   try {
     // TODO: remove this, it's just for testing
-    const status = await sendEmail("forgot-password", {
+    const status = await sendEmailExternal("forgot-password", {
       data: {
         name: "William Yallop",
       },
       options: {
-        to: "wyallop14@gmail.com  ",
+        to: "wyallop14@gmail.com",
         subject: "Forgot Password",
       },
     });

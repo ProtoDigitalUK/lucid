@@ -1,4 +1,4 @@
-interface EmailParamsT {
+export interface EmailParamsT {
     data: {
         [key: string]: any;
     };
@@ -6,14 +6,18 @@ interface EmailParamsT {
         to: string;
         subject: string;
         from?: string;
+        fromName?: string;
         cc?: string;
         bcc?: string;
         replyTo?: string;
     };
 }
-declare const sendEmail: (template: string, params: EmailParamsT) => Promise<{
+export declare const sendEmailExternal: (template: string, params: EmailParamsT) => Promise<{
     success: boolean;
     message: string;
 }>;
-export default sendEmail;
+export declare const sendEmailInternal: (template: string, params: EmailParamsT, id?: number) => Promise<{
+    success: boolean;
+    message: string;
+}>;
 //# sourceMappingURL=send-email.d.ts.map

@@ -2,6 +2,7 @@ import z from "zod";
 import emailsSchema from "../../schemas/email";
 type EmailCreateSingle = (data: {
     from_address?: string;
+    from_name?: string;
     to_address?: string;
     subject?: string;
     cc?: string;
@@ -16,15 +17,24 @@ type EmailGetMultiple = (query: z.infer<typeof emailsSchema.getMultiple.query>) 
     data: EmailT[];
     count: number;
 }>;
+type EmailUpdateSingle = (id: number, data: {
+    from_address?: string;
+    from_name?: string;
+    delivery_status?: "sent" | "failed" | "pending";
+}) => Promise<EmailT>;
 type EmailGetSingle = (id: number) => Promise<EmailT>;
 type EmailDeleteSingle = (id: number) => Promise<EmailT>;
 type EmailResendSingle = (id: number) => Promise<{
-    success: boolean;
-    message: string;
+    email: EmailT;
+    status: {
+        success: boolean;
+        message: string;
+    };
 }>;
 export type EmailT = {
     id: number;
     from_address: string | null;
+    from_name: string | null;
     to_address: string | null;
     subject: string | null;
     cc: string | null;
@@ -43,6 +53,7 @@ export default class Email {
     static getMultiple: EmailGetMultiple;
     static getSingle: EmailGetSingle;
     static deleteSingle: EmailDeleteSingle;
+    static updateSingle: EmailUpdateSingle;
     static resendSingle: EmailResendSingle;
 }
 export {};

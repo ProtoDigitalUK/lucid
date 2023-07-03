@@ -5,7 +5,7 @@ import Email from "@db/models/Email";
 // Services
 import renderTemplate from "./render-template";
 
-interface EmailParamsT {
+export interface EmailParamsT {
   data: {
     [key: string]: any;
   };
@@ -14,33 +14,74 @@ interface EmailParamsT {
     subject: string;
 
     from?: string;
+    fromName?: string;
     cc?: string;
     bcc?: string;
     replyTo?: string;
   };
 }
+interface MailOptionsT {
+  to?: string;
+  subject?: string;
+  from?: string;
+  fromName?: string;
+  cc?: string;
+  bcc?: string;
+  replyTo?: string;
+}
 
-const sendEmail = async (template: string, params: EmailParamsT) => {
+// -------------------------------------------
+// Utility functions
+const createEmailRow = async (data: {
+  template: string;
+  options: MailOptionsT;
+  delivery_status: "sent" | "failed" | "pending";
+  data: {
+    [key: string]: any;
+  };
+}) => {
+  // Save the email to the database
+  await Email.createSingle({
+    from_address: data.options.from,
+    from_name: data.options.fromName,
+    to_address: data.options.to,
+    subject: data.options.subject,
+    cc: data.options.cc,
+    bcc: data.options.bcc,
+    template: data.template,
+    data: data.data,
+    delivery_status: data.delivery_status,
+  });
+};
+
+// -------------------------------------------
+// Functions
+
+// Handles building the email and sending it
+const sendEmailAction = async (
+  template: string,
+  params: EmailParamsT
+): Promise<{
+  success: boolean;
+  message: string;
+  options: MailOptionsT;
+}> => {
+  let fromName = params.options?.fromName || Config.email?.from?.name;
+  let from = params.options?.from || Config.email?.from?.email;
+
   // Create the email options
-  const mailOptions = {
-    from: params.options?.from,
+  const mailOptions: MailOptionsT = {
+    from: from,
+    fromName: fromName,
     to: params.options?.to,
     subject: params.options?.subject,
     cc: params.options?.cc,
     bcc: params.options?.bcc,
     replyTo: params.options?.replyTo,
-    html: "",
   };
-  const defaultFrom = Config.email?.from;
-  if (typeof defaultFrom === "string") {
-    mailOptions.from = defaultFrom;
-  } else if (typeof defaultFrom === "object") {
-    mailOptions.from = `"${defaultFrom.name}" <${defaultFrom.email}>`;
-  }
 
   try {
     const html = await renderTemplate(template, params.data);
-    mailOptions.html = html;
 
     // Check if SMTP config exists
     const smptConfig = Config.email?.smtp;
@@ -50,7 +91,6 @@ const sendEmail = async (template: string, params: EmailParamsT) => {
       );
     }
 
-    // Configuring the transporter
     const transporter = nodemailer.createTransport({
       host: smptConfig.host,
       port: smptConfig.port,
@@ -62,43 +102,78 @@ const sendEmail = async (template: string, params: EmailParamsT) => {
     });
 
     // Send the email
-    await transporter.sendMail(mailOptions);
-
-    // Save the email to the database
-    await Email.createSingle({
-      from_address: mailOptions.from,
-      to_address: mailOptions.to,
+    await transporter.sendMail({
+      from: `${fromName} <${from}>`,
+      to: mailOptions.to,
       subject: mailOptions.subject,
       cc: mailOptions.cc,
       bcc: mailOptions.bcc,
-      template: template,
-      data: params.data,
-      delivery_status: "sent",
+      replyTo: mailOptions.replyTo,
+      html: html,
     });
 
     return {
       success: true,
       message: "Email sent successfully.",
+      options: mailOptions,
     };
   } catch (error) {
     const err = error as Error;
-
-    await Email.createSingle({
-      from_address: mailOptions.from,
-      to_address: mailOptions.to,
-      subject: mailOptions.subject,
-      cc: mailOptions.cc,
-      bcc: mailOptions.bcc,
-      template: template,
-      data: params.data,
-      delivery_status: "failed",
-    });
-
     return {
       success: false,
       message: err.message || "Failed to send email.",
+      options: mailOptions,
     };
   }
 };
 
-export default sendEmail;
+// The exported function for the package - allows creating and sending an email
+export const sendEmailExternal = async (
+  template: string,
+  params: EmailParamsT
+) => {
+  const result = await sendEmailAction(template, params);
+
+  await createEmailRow({
+    template: template,
+    options: result.options,
+    delivery_status: result.success ? "sent" : "failed",
+    data: params.data,
+  });
+
+  // Return the result
+  return {
+    success: result.success,
+    message: result.message,
+  };
+};
+
+// Allows creating and updating an email
+export const sendEmailInternal = async (
+  template: string,
+  params: EmailParamsT,
+  id?: number
+) => {
+  const result = await sendEmailAction(template, params);
+
+  if (!id) {
+    await createEmailRow({
+      template: template,
+      options: result.options,
+      delivery_status: result.success ? "sent" : "failed",
+      data: params.data,
+    });
+  } else {
+    await Email.updateSingle(id, {
+      from_address: result.options.from,
+      from_name: result.options.fromName,
+      delivery_status: result.success ? "sent" : "failed",
+    });
+  }
+
+  // Return the result
+  return {
+    success: result.success,
+    message: result.message,
+  };
+};

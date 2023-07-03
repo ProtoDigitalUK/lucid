@@ -7,7 +7,7 @@ const config: Config = {
   port: 8393,
   origin: "*",
   mode: "development",
-  secretKey: process.env.SECRET_KEY as string,
+  secretKey: process.env.LUCID_SECRET_KEY as string,
   environments: [
     {
       title: "Production",
@@ -18,6 +18,19 @@ const config: Config = {
       key: "staging",
     },
   ],
+  email: {
+    from: {
+      name: "Lucid CMS",
+      email: "hello@lucidcms.com",
+    },
+    smtp: {
+      host: "127.0.0.1",
+      port: 6969,
+      secure: false,
+      user: process.env.LUCID_SMPT_USER as string,
+      pass: process.env.LUCID_SMPT_PASS as string,
+    },
+  },
   media: {
     storageLimit: 5368709120,
     maxFileSize: 16777216,

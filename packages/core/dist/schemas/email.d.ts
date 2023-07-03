@@ -77,6 +77,17 @@ declare const _default: {
             id: string;
         }>;
     };
+    resendSingle: {
+        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: z.ZodObject<{
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            id: string;
+        }, {
+            id: string;
+        }>;
+    };
 };
 export default _default;
 //# sourceMappingURL=email.d.ts.map

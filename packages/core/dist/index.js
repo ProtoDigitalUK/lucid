@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const http_1 = __importDefault(require("http"));
 const console_log_colors_1 = require("console-log-colors");
-const Config_1 = __importDefault(require("./db/models/Config"));
 const app_1 = __importDefault(require("./app"));
+const Config_1 = __importDefault(require("./db/models/Config"));
+const send_email_1 = require("./services/emails/send-email");
 const start = async () => {
     const server = http_1.default.createServer(await (0, app_1.default)());
     server.listen(Config_1.default.get().port, () => {
@@ -19,5 +20,6 @@ const start = async () => {
 };
 exports.default = {
     start,
+    sendEmail: send_email_1.sendEmailExternal,
 };
 //# sourceMappingURL=index.js.map

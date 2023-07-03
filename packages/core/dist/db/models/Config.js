@@ -36,13 +36,10 @@ const configSchema = zod_1.default.object({
     }),
     email: zod_1.default
         .object({
-        from: zod_1.default.union([
-            zod_1.default.string(),
-            zod_1.default.object({
-                name: zod_1.default.string(),
-                email: zod_1.default.string().email(),
-            }),
-        ]),
+        from: zod_1.default.object({
+            name: zod_1.default.string(),
+            email: zod_1.default.string().email(),
+        }),
         templateDir: zod_1.default.string().optional(),
         smtp: zod_1.default
             .object({

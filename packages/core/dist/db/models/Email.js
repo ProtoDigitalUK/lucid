@@ -8,15 +8,16 @@ const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
 const render_template_1 = __importDefault(require("../../services/emails/render-template"));
-const send_email_1 = __importDefault(require("../../services/emails/send-email"));
+const send_email_1 = require("../../services/emails/send-email");
 class Email {
 }
 _a = Email;
 Email.createSingle = async (data) => {
-    const { from_address, to_address, subject, cc, bcc, template, delivery_status, data: templateData, } = data;
+    const { from_address, from_name, to_address, subject, cc, bcc, template, delivery_status, data: templateData, } = data;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
             "from_address",
+            "from_name",
             "to_address",
             "subject",
             "cc",
@@ -27,6 +28,7 @@ Email.createSingle = async (data) => {
         ],
         values: [
             from_address,
+            from_name,
             to_address,
             subject,
             cc,
@@ -56,6 +58,7 @@ Email.getMultiple = async (query) => {
         columns: [
             "id",
             "from_address",
+            "from_name",
             "to_address",
             "subject",
             "cc",
@@ -154,19 +157,55 @@ Email.deleteSingle = async (id) => {
     }
     return email.rows[0];
 };
+Email.updateSingle = async (id, data) => {
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: ["from_address", "from_name", "delivery_status"],
+        values: [data.from_address, data.from_name, data.delivery_status],
+        conditional: {
+            hasValues: {
+                updated_at: new Date().toISOString(),
+            },
+        },
+    });
+    const emailRes = await db_1.default.query({
+        text: `UPDATE 
+        lucid_emails 
+        SET 
+          ${columns.formatted.update} 
+        WHERE 
+          id = $${aliases.value.length + 1}
+        RETURNING *`,
+        values: [...values.value, id],
+    });
+    if (!emailRes.rows[0]) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Error updating email",
+            message: "There was an error updating the email",
+            status: 500,
+        });
+    }
+    return emailRes.rows[0];
+};
 Email.resendSingle = async (id) => {
     const email = await Email.getSingle(id);
-    const sentEmail = await (0, send_email_1.default)(email.template, {
+    const status = await (0, send_email_1.sendEmailInternal)(email.template, {
         data: email.data || {},
         options: {
             to: email.to_address || "",
             subject: email.subject || "",
             from: email.from_address || undefined,
+            fromName: email.from_name || undefined,
             cc: email.cc || undefined,
             bcc: email.bcc || undefined,
+            replyTo: email.from_address || undefined,
         },
-    });
-    return sentEmail;
+    }, id);
+    const updatedEmail = await Email.getSingle(id);
+    return {
+        status,
+        email: updatedEmail,
+    };
 };
 exports.default = Email;
 //# sourceMappingURL=Email.js.map

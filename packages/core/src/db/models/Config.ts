@@ -31,13 +31,10 @@ const configSchema = z.object({
   }),
   email: z
     .object({
-      from: z.union([
-        z.string(),
-        z.object({
-          name: z.string(),
-          email: z.string().email(),
-        }),
-      ]),
+      from: z.object({
+        name: z.string(),
+        email: z.string().email(),
+      }),
       templateDir: z.string().optional(),
       smtp: z
         .object({
@@ -83,12 +80,10 @@ export type ConfigT = {
     };
   };
   email?: {
-    from:
-      | {
-          name?: string;
-          email: string;
-        }
-      | string;
+    from: {
+      name: string;
+      email: string;
+    };
     templateDir?: string;
     smtp?: {
       host: string;
