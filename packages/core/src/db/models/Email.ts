@@ -242,6 +242,8 @@ export default class Email {
   static resendSingle: EmailResendSingle = async (id) => {
     const email = await Email.getSingle(id);
 
+    // TODO: update the email table so from and from name are seperate values
+    // TODO: add the option to update the from, from name, cc, bcc, to, and subject
     // TODO: update this to pass down the email id so we can update the email status
     const sentEmail = await sendEmail(email.template, {
       data: email.data || {},
