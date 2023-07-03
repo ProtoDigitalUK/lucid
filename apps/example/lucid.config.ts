@@ -1,6 +1,7 @@
 import { type Config } from "@lucid/core";
 import { banner, intro, defaultMeta } from "./src/bricks";
 import { pages, settings } from "./src/collections";
+import path from "path";
 
 const config: Config = {
   databaseUrl: process.env.LUCID_database_url as string,
@@ -23,6 +24,7 @@ const config: Config = {
       name: "Lucid CMS",
       email: "hello@lucidcms.com",
     },
+    templateDir: path.join(__dirname, "./templates"),
     smtp: {
       host: "127.0.0.1",
       port: 6969,

@@ -15,8 +15,8 @@ const launch_steps_1 = __importDefault(require("./services/app/launch-steps"));
 const migration_1 = __importDefault(require("./db/migration"));
 const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/error-handler");
-const app = async () => {
-    const app = (0, express_1.default)();
+const app = async (config) => {
+    const app = config.express;
     Config_1.default.validate();
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use(express_1.default.json());
@@ -46,4 +46,4 @@ const app = async () => {
     return app;
 };
 exports.default = app;
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=init.js.map

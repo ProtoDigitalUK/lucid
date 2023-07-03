@@ -1481,15 +1481,13 @@
 								{
 									"key": "alt",
 									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": [
-										"/C:/Users/wyall/Desktop/rumham.jpg",
-										"/C:/Users/wyall/Desktop/rumham2.jpg"
-									]
+									"src": "/C:/Users/wyall/Desktop/rumham3.png"
 								}
 							]
 						},
@@ -1648,7 +1646,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688307409214",
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-2-1688309882605",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1656,7 +1654,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1688307409214"
+								"rum-ham-2-1688309882605"
 							]
 						}
 					},
@@ -1683,7 +1681,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688307767893",
+							"raw": "{{BASE_URL}}/api/v1/media/ocean-video-1688315789383",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1691,7 +1689,185 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1688307767893"
+								"ocean-video-1688315789383"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Emails",
+			"item": [
+				{
+					"name": "Get Multiple",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails"
+							],
+							"query": [
+								{
+									"key": "filter[to_address]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[subject]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[delivery_status]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-created_at",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at,updated_at",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails/1/resend",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails",
+								"1",
+								"resend"
 							]
 						}
 					},
@@ -1741,13 +1917,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/rum-ham-1688306718587",
+							"raw": "{{BASE_URL}}/cdn/rum-ham-1688309652545",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
-								"rum-ham-1688306718587"
+								"rum-ham-1688309652545"
 							]
 						}
 					},
@@ -1836,6 +2012,23 @@
 		{
 			"name": "Settings",
 			"item": []
+		},
+		{
+			"name": "Example Custom Route",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/send-email-custom",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"send-email-custom"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"variable": [

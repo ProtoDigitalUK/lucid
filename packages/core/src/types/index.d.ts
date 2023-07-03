@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, Express } from "express";
 import z from "zod";
 
 declare global {
@@ -10,6 +10,10 @@ declare global {
         username: string;
       };
     }
+  }
+
+  interface InitConfig {
+    express: Express;
   }
 
   // --------------------------------------------------

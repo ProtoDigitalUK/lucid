@@ -16,8 +16,8 @@ import {
   invalidPathHandler,
 } from "@utils/error-handler";
 
-const app = async () => {
-  const app = express();
+const app = async (config: InitConfig) => {
+  const app = config.express;
 
   // ------------------------------------
   // Config

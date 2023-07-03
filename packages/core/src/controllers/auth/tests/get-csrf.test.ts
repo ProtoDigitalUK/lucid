@@ -1,6 +1,6 @@
 import request from "supertest";
 // import { config } from "@root/dev";
-import app from "@root/app";
+import app from "@root/init";
 
 const route = "/api/v1/auth/csrf";
 
