@@ -18,13 +18,14 @@ class Role {
 }
 _a = Role;
 Role.createSingle = async (data) => {
+    const client = await db_1.default;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["name"],
         values: [data.name],
     });
     const parsePermissions = await (0, validate_permissions_1.default)(data.permission_groups);
     await __classPrivateFieldGet(Role, _a, "f", _Role_roleNameUnique).call(Role, data.name);
-    const roleRes = await db_1.default.query({
+    const roleRes = await client.query({
         text: `INSERT INTO lucid_roles (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,
     });
@@ -49,7 +50,8 @@ Role.createSingle = async (data) => {
     return role;
 };
 Role.deleteSingle = async (id) => {
-    const roleRes = await db_1.default.query({
+    const client = await db_1.default;
+    const roleRes = await client.query({
         text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
         values: [id],
     });
@@ -65,6 +67,7 @@ Role.deleteSingle = async (id) => {
     return role;
 };
 Role.getMultiple = async (query) => {
+    const client = await db_1.default;
     const { filter, sort, page, per_page, include } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -94,7 +97,7 @@ Role.getMultiple = async (query) => {
         page: page,
         per_page: per_page,
     });
-    const roles = await db_1.default.query({
+    const roles = await client.query({
         text: `SELECT
           ${SelectQuery.query.select}
         FROM
@@ -104,7 +107,7 @@ Role.getMultiple = async (query) => {
         ${SelectQuery.query.pagination}`,
         values: SelectQuery.values,
     });
-    const count = await db_1.default.query({
+    const count = await client.query({
         text: `SELECT 
           COUNT(DISTINCT lucid_roles.id)
         FROM
@@ -134,13 +137,14 @@ Role.getMultiple = async (query) => {
     };
 };
 Role.updateSingle = async (id, data) => {
+    const client = await db_1.default;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["name"],
         values: [data.name],
     });
     const parsePermissions = await (0, validate_permissions_1.default)(data.permission_groups);
     await __classPrivateFieldGet(Role, _a, "f", _Role_roleNameUnique).call(Role, data.name, id);
-    const roleRes = await db_1.default.query({
+    const roleRes = await client.query({
         text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
         values: [...values.value, id],
     });
@@ -160,7 +164,8 @@ Role.updateSingle = async (id, data) => {
     return role;
 };
 Role.getSingle = async (id) => {
-    const roleRes = await db_1.default.query({
+    const client = await db_1.default;
+    const roleRes = await client.query({
         text: `SELECT 
           roles.*,
           json_agg(json_build_object(
@@ -190,7 +195,8 @@ Role.getSingle = async (id) => {
     return role;
 };
 _Role_roleNameUnique = { value: async (name, id) => {
-        const roleCheck = await db_1.default.query({
+        const client = await db_1.default;
+        const roleCheck = await client.query({
             text: `SELECT * FROM lucid_roles WHERE name = $1 AND id != $2`,
             values: [name, id],
         });

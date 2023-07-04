@@ -12,7 +12,8 @@ class UserRole {
 }
 _a = UserRole;
 UserRole.update = async (id, data) => {
-    const userRoles = await db_1.default.query({
+    const client = await db_1.default;
+    const userRoles = await client.query({
         text: `
         SELECT * FROM lucid_user_roles
         WHERE user_id = $1
@@ -36,7 +37,7 @@ UserRole.update = async (id, data) => {
                 status: 500,
             });
         }
-        await db_1.default.query({
+        await client.query({
             text: `
           INSERT INTO lucid_user_roles(user_id, role_id)
           SELECT $1, unnest($2::integer[]);`,
@@ -48,14 +49,14 @@ UserRole.update = async (id, data) => {
     });
     if (rolesToRemove.length > 0) {
         const rolesToRemoveIds = rolesToRemove.map((role) => role.id);
-        await db_1.default.query({
+        await client.query({
             text: `
           DELETE FROM lucid_user_roles
           WHERE id IN (${rolesToRemoveIds.join(",")})
         `,
         });
     }
-    const updatedUserRoles = await db_1.default.query({
+    const updatedUserRoles = await client.query({
         text: `
         SELECT * FROM lucid_user_roles
         WHERE user_id = $1
@@ -65,7 +66,8 @@ UserRole.update = async (id, data) => {
     return updatedUserRoles.rows;
 };
 UserRole.getPermissions = async (id) => {
-    const userPermissions = await db_1.default.query({
+    const client = await db_1.default;
+    const userPermissions = await client.query({
         text: `SELECT 
           rp.permission,
           rp.environment_key,

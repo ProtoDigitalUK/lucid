@@ -12,6 +12,7 @@ class Category {
 }
 _a = Category;
 Category.getMultiple = async (environment_key, query) => {
+    const client = await db_1.default;
     const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -52,11 +53,11 @@ Category.getMultiple = async (environment_key, query) => {
         page: page,
         per_page: per_page,
     });
-    const categories = await db_1.default.query({
+    const categories = await client.query({
         text: `SELECT ${SelectQuery.query.select} FROM lucid_categories ${SelectQuery.query.where} ${SelectQuery.query.order} ${SelectQuery.query.pagination}`,
         values: SelectQuery.values,
     });
-    const count = await db_1.default.query({
+    const count = await client.query({
         text: `SELECT COUNT(*) FROM lucid_categories ${SelectQuery.query.where}`,
         values: SelectQuery.countValues,
     });
@@ -66,7 +67,8 @@ Category.getMultiple = async (environment_key, query) => {
     };
 };
 Category.getSingle = async (environment_key, id) => {
-    const category = await db_1.default.query({
+    const client = await db_1.default;
+    const category = await client.query({
         text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
         values: [id, environment_key],
     });
@@ -87,6 +89,7 @@ Category.getSingle = async (environment_key, id) => {
     return category.rows[0];
 };
 Category.create = async (data) => {
+    const client = await db_1.default;
     await Collection_1.default.getSingle({
         collection_key: data.collection_key,
         type: "pages",
@@ -127,7 +130,7 @@ Category.create = async (data) => {
             data.description,
         ],
     });
-    const res = await db_1.default.query({
+    const res = await client.query({
         name: "create-category",
         text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,
@@ -144,6 +147,7 @@ Category.create = async (data) => {
     return category;
 };
 Category.update = async (environment_key, id, data) => {
+    const client = await db_1.default;
     const currentCategory = await Category.getSingle(environment_key, id);
     if (data.slug) {
         const isSlugUnique = await Category.isSlugUniqueInCollection({
@@ -167,7 +171,7 @@ Category.update = async (environment_key, id, data) => {
             });
         }
     }
-    const category = await db_1.default.query({
+    const category = await client.query({
         name: "update-category",
         text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
         values: [data.title, data.slug, data.description, id, environment_key],
@@ -183,7 +187,8 @@ Category.update = async (environment_key, id, data) => {
     return category.rows[0];
 };
 Category.delete = async (environment_key, id) => {
-    const category = await db_1.default.query({
+    const client = await db_1.default;
+    const category = await client.query({
         name: "delete-category",
         text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
         values: [id, environment_key],
@@ -199,6 +204,7 @@ Category.delete = async (environment_key, id) => {
     return category.rows[0];
 };
 Category.isSlugUniqueInCollection = async (data) => {
+    const client = await db_1.default;
     const values = [
         data.collection_key,
         data.slug,
@@ -207,7 +213,7 @@ Category.isSlugUniqueInCollection = async (data) => {
     if (data.ignore_id) {
         values.push(data.ignore_id);
     }
-    const res = await db_1.default.query({
+    const res = await client.query({
         text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 AND environment_key = $3 ${data.ignore_id ? "AND id != $4" : ""}`,
         values: values,
     });

@@ -1,4 +1,4 @@
 import { Client } from "pg";
-declare const client: Client;
-export default client;
+declare const _default: Promise<Client>;
+export default _default;
 //# sourceMappingURL=db.d.ts.map

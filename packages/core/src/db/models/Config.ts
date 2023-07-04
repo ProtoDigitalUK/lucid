@@ -12,7 +12,9 @@ import { CollectionBuilderT } from "@lucid/collection-builder";
 // -------------------------------------------
 // Config
 const configSchema = z.object({
+  origin: z.string(),
   mode: z.enum(["development", "production"]),
+  postgresURL: z.string(),
   secret: z.string(),
   collections: z.array(z.any()).optional(),
   bricks: z.array(z.any()).optional(),
@@ -55,7 +57,9 @@ const configSchema = z.object({
 });
 
 export type ConfigT = {
+  origin: string;
   mode: "development" | "production";
+  postgresURL: string;
   secret: string;
   environments: Array<{
     title: string;
@@ -96,10 +100,8 @@ export default class Config {
   private static _configCache: ConfigT | null = null;
   // -------------------------------------------
   // Public
-  public static validate = async (): Promise<void> => {
+  public static validate = (config: ConfigT) => {
     try {
-      const config = await Config.get();
-
       configSchema.parse(config);
 
       Config.#validateBricks(config);
@@ -162,30 +164,34 @@ export default class Config {
   };
   // -------------------------------------------
   // Functions
-  static get = async (): Promise<ConfigT> => {
-    if (Config._configCache) {
-      return Config._configCache;
+  static getConfig = async (): Promise<ConfigT> => {
+    return await Config.cacheConfig();
+  };
+  static cacheConfig = async (): Promise<ConfigT> => {
+    if (Config.configCache) {
+      return Config.configCache;
     }
 
     const configPath = Config.findPath(process.cwd());
     let configModule = await import(configPath);
-    let config = configModule.default;
-
-    // const config = require(configPath).default as ConfigT;
+    let config = configModule.default as ConfigT;
 
     Config._configCache = config;
 
     return config;
   };
   // getters
+  static get configCache() {
+    return Config._configCache as ConfigT;
+  }
   static get mode() {
-    return Config._configCache?.mode as ConfigT["mode"];
+    return Config.configCache.mode;
   }
   static get environments() {
-    return Config._configCache?.environments as ConfigT["environments"];
+    return Config.configCache.environments;
   }
   static get media() {
-    const media = Config._configCache?.media;
+    const media = Config.configCache?.media;
     return {
       storageLimit: media?.storageLimit || C.media.storageLimit,
       maxFileSize: media?.maxFileSize || C.media.maxFileSize,
@@ -196,20 +202,26 @@ export default class Config {
         bucket: media?.store.bucket,
         accessKeyId: media?.store.accessKeyId,
         secretAccessKey: media?.store.secretAccessKey,
-      } as ConfigT["media"]["store"],
+      },
     };
   }
   static get email() {
-    return Config._configCache?.email as ConfigT["email"];
+    return Config.configCache.email;
   }
   static get secret() {
-    return Config._configCache?.secret as ConfigT["secret"];
+    return Config.configCache.secret;
   }
   static get bricks() {
-    return Config._configCache?.bricks as BrickBuilderT[];
+    return Config.configCache.bricks;
   }
   static get collections() {
-    return Config._configCache?.collections as CollectionBuilderT[];
+    return Config.configCache.collections;
+  }
+  static get postgresURL() {
+    return Config.configCache.postgresURL;
+  }
+  static get origin() {
+    return Config.configCache.origin;
   }
   // -------------------------------------------
   // Private
@@ -238,5 +250,6 @@ export default class Config {
 }
 
 export const buildConfig = (config: ConfigT) => {
+  Config.validate(config);
   return config;
 };

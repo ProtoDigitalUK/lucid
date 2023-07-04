@@ -2,7 +2,9 @@ import z from "zod";
 import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
 export type ConfigT = {
+    origin: string;
     mode: "development" | "production";
+    postgresURL: string;
     secret: string;
     environments: Array<{
         title: string;
@@ -40,9 +42,11 @@ export type ConfigT = {
 export default class Config {
     #private;
     private static _configCache;
-    static validate: () => Promise<void>;
+    static validate: (config: ConfigT) => void;
     static findPath: (cwd: string) => string;
-    static get: () => Promise<ConfigT>;
+    static getConfig: () => Promise<ConfigT>;
+    static cacheConfig: () => Promise<ConfigT>;
+    static get configCache(): ConfigT;
     static get mode(): "development" | "production";
     static get environments(): {
         title: string;
@@ -53,8 +57,8 @@ export default class Config {
         maxFileSize: number;
         store: {
             service: "aws" | "cloudflare";
-            cloudflareAccountId?: string | undefined;
-            region?: string | undefined;
+            cloudflareAccountId: string | undefined;
+            region: string | undefined;
             bucket: string;
             accessKeyId: string;
             secretAccessKey: string;
@@ -142,7 +146,7 @@ export default class Config {
         "__#1@#keyToTitle"(key: string): string;
         "__#1@#addToFields"(type: import("@lucid/brick-builder").FieldTypes, config: import("@lucid/brick-builder").FieldConfigs): void;
         "__#1@#checkKeyDuplication"(key: string): void;
-    }[];
+    }[] | undefined;
     static get collections(): {
         key: string;
         config: {
@@ -155,7 +159,9 @@ export default class Config {
         "__#1@#removeDuplicateBricks": () => void;
         "__#1@#addBrickDefaults": () => void;
         "__#1@#validateOptions": (options: import("@lucid/collection-builder").CollectionOptions) => void;
-    }[];
+    }[] | undefined;
+    static get postgresURL(): string;
+    static get origin(): string;
 }
 export declare const buildConfig: (config: ConfigT) => ConfigT;
 //# sourceMappingURL=Config.d.ts.map

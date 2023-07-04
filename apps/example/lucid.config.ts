@@ -4,7 +4,9 @@ import { pages, settings } from "./src/collections";
 import path from "path";
 
 export default buildConfig({
+  origin: "*",
   mode: "development",
+  postgresURL: process.env.LUCID_POSTGRES_URL as string,
   secret: process.env.LUCID_SECRET_KEY as string,
   environments: [
     {

@@ -21,6 +21,7 @@ class Page {
 }
 _a = Page;
 Page.getMultiple = async (query, data) => {
+    const client = await db_1.default;
     const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -79,7 +80,7 @@ Page.getMultiple = async (query, data) => {
         page: page,
         per_page: per_page,
     });
-    const pages = await db_1.default.query({
+    const pages = await client.query({
         text: `SELECT
           ${SelectQuery.query.select},
           COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
@@ -93,7 +94,7 @@ Page.getMultiple = async (query, data) => {
         ${SelectQuery.query.pagination}`,
         values: SelectQuery.values,
     });
-    const count = await db_1.default.query({
+    const count = await client.query({
         text: `SELECT 
           COUNT(DISTINCT lucid_pages.id)
         FROM
@@ -113,6 +114,7 @@ Page.getMultiple = async (query, data) => {
     };
 };
 Page.getSingle = async (query, data) => {
+    const client = await db_1.default;
     const { include } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -155,7 +157,7 @@ Page.getSingle = async (query, data) => {
         page: undefined,
         per_page: undefined,
     });
-    const page = await db_1.default.query({
+    const page = await client.query({
         text: `SELECT
         ${SelectQuery.query.select},
         COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
@@ -193,6 +195,7 @@ Page.getSingle = async (query, data) => {
     return (0, format_page_1.default)(page.rows[0]);
 };
 Page.create = async (data) => {
+    const client = await db_1.default;
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await Collection_1.default.getSingle({
         collection_key: data.collection_key,
@@ -217,7 +220,7 @@ Page.create = async (data) => {
         collection_key: data.collection_key,
         parent_id: parentId,
     });
-    const page = await db_1.default.query({
+    const page = await client.query({
         text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         values: [
             data.environment_key,
@@ -255,6 +258,7 @@ Page.create = async (data) => {
     return (0, format_page_1.default)(page.rows[0]);
 };
 Page.update = async (data) => {
+    const client = await db_1.default;
     const pageId = parseInt(data.id);
     const currentPage = await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
@@ -306,7 +310,7 @@ Page.update = async (data) => {
             },
         },
     });
-    const page = await db_1.default.query({
+    const page = await client.query({
         text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
         values: [...values.value, pageId],
     });
@@ -337,9 +341,10 @@ Page.update = async (data) => {
     return (0, format_page_1.default)(page.rows[0]);
 };
 Page.delete = async (data) => {
+    const client = await db_1.default;
     const pageId = parseInt(data.id);
     await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
-    const page = await db_1.default.query({
+    const page = await client.query({
         text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
         values: [pageId],
     });
@@ -354,7 +359,8 @@ Page.delete = async (data) => {
     return (0, format_page_1.default)(page.rows[0]);
 };
 _Page_pageExists = { value: async (id, environment_key) => {
-        const page = await db_1.default.query({
+        const client = await db_1.default;
+        const page = await client.query({
             text: `SELECT
           id,
           collection_key
@@ -377,6 +383,7 @@ _Page_pageExists = { value: async (id, environment_key) => {
         return page.rows[0];
     } };
 _Page_slugUnique = { value: async (data) => {
+        const client = await db_1.default;
         if (data.homepage) {
             return "/";
         }
@@ -388,7 +395,7 @@ _Page_slugUnique = { value: async (data) => {
         ];
         if (data.parent_id)
             values.push(data.parent_id);
-        const slugCount = await db_1.default.query({
+        const slugCount = await client.query({
             text: `SELECT COUNT(*) 
         FROM 
           lucid_pages 
@@ -410,12 +417,13 @@ _Page_slugUnique = { value: async (data) => {
         }
     } };
 _Page_checkParentNotHomepage = { value: async (data) => {
+        const client = await db_1.default;
         if (!data.parent_id)
             return;
         const values = [data.environment_key];
         if (data.parent_id)
             values.push(data.parent_id);
-        const parent = await db_1.default.query({
+        const parent = await client.query({
             text: `SELECT homepage 
         FROM 
           lucid_pages 
@@ -435,7 +443,8 @@ _Page_checkParentNotHomepage = { value: async (data) => {
         }
     } };
 _Page_isParentSameCollection = { value: async (data) => {
-        const parent = await db_1.default.query({
+        const client = await db_1.default;
+        const parent = await client.query({
             text: `SELECT collection_key FROM lucid_pages WHERE id = $1 AND environment_key = $2`,
             values: [data.parent_id, data.environment_key],
         });
@@ -457,20 +466,21 @@ _Page_isParentSameCollection = { value: async (data) => {
         }
     } };
 _Page_resetHomepages = { value: async (data) => {
-        const result = await db_1.default.query({
+        const client = await db_1.default;
+        const result = await client.query({
             text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
             values: [data.current, data.environment_key],
         });
         for (const row of result.rows) {
             let newSlug = (0, slugify_1.default)(row.title, { lower: true, strict: true });
-            const slugExists = await db_1.default.query({
+            const slugExists = await client.query({
                 text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
                 values: [newSlug, row.id, data.environment_key],
             });
             if (slugExists.rows[0].count > 0) {
                 newSlug += `-${row.id}`;
             }
-            await db_1.default.query({
+            await client.query({
                 text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
                 values: [row.id, newSlug],
             });

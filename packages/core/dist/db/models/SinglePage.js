@@ -18,6 +18,7 @@ class SinglePage {
 }
 _a = SinglePage;
 SinglePage.getSingle = async (data) => {
+    const client = await db_1.default;
     const collection = await Collection_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
@@ -55,7 +56,7 @@ SinglePage.getSingle = async (data) => {
         page: undefined,
         per_page: undefined,
     });
-    const singlepage = await db_1.default.query({
+    const singlepage = await client.query({
         text: `SELECT
           ${SelectQuery.query.select}
         FROM
@@ -84,6 +85,7 @@ SinglePage.getSingle = async (data) => {
     return singlepage.rows[0];
 };
 SinglePage.updateSingle = async (data) => {
+    const client = await db_1.default;
     await Collection_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
@@ -98,7 +100,7 @@ SinglePage.updateSingle = async (data) => {
         id: singlepage.id,
         collection_key: data.collection_key,
     });
-    const updateSinglePage = await db_1.default.query({
+    const updateSinglePage = await client.query({
         text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,
         values: [data.userId, singlepage.id],
     });
@@ -106,12 +108,13 @@ SinglePage.updateSingle = async (data) => {
 };
 _SinglePage_getOrCreateSinglePage = { value: async (environment_key, collection_key) => {
         try {
-            const singlepage = await db_1.default.query({
+            const client = await db_1.default;
+            const singlepage = await client.query({
                 text: `SELECT * FROM lucid_singlepages WHERE environment_key = $1 AND collection_key = $2`,
                 values: [environment_key, collection_key],
             });
             if (singlepage.rows.length === 0) {
-                const newSinglePage = await db_1.default.query({
+                const newSinglePage = await client.query({
                     text: `INSERT INTO lucid_singlepages (environment_key, collection_key) VALUES ($1, $2) RETURNING *`,
                     values: [environment_key, collection_key],
                 });

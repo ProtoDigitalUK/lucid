@@ -41,7 +41,9 @@ const console_log_colors_1 = require("console-log-colors");
 const constants_1 = __importDefault(require("../../constants"));
 const zod_validation_error_1 = require("zod-validation-error");
 const configSchema = zod_1.default.object({
+    origin: zod_1.default.string(),
     mode: zod_1.default.enum(["development", "production"]),
+    postgresURL: zod_1.default.string(),
     secret: zod_1.default.string(),
     collections: zod_1.default.array(zod_1.default.any()).optional(),
     bricks: zod_1.default.array(zod_1.default.any()).optional(),
@@ -81,14 +83,17 @@ const configSchema = zod_1.default.object({
     })),
 });
 class Config {
+    static get configCache() {
+        return Config._configCache;
+    }
     static get mode() {
-        return Config._configCache?.mode;
+        return Config.configCache.mode;
     }
     static get environments() {
-        return Config._configCache?.environments;
+        return Config.configCache.environments;
     }
     static get media() {
-        const media = Config._configCache?.media;
+        const media = Config.configCache?.media;
         return {
             storageLimit: media?.storageLimit || constants_1.default.media.storageLimit,
             maxFileSize: media?.maxFileSize || constants_1.default.media.maxFileSize,
@@ -103,16 +108,22 @@ class Config {
         };
     }
     static get email() {
-        return Config._configCache?.email;
+        return Config.configCache.email;
     }
     static get secret() {
-        return Config._configCache?.secret;
+        return Config.configCache.secret;
     }
     static get bricks() {
-        return Config._configCache?.bricks;
+        return Config.configCache.bricks;
     }
     static get collections() {
-        return Config._configCache?.collections;
+        return Config.configCache.collections;
+    }
+    static get postgresURL() {
+        return Config.configCache.postgresURL;
+    }
+    static get origin() {
+        return Config.configCache.origin;
     }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
@@ -133,9 +144,8 @@ _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
     }
 };
 Config._configCache = null;
-Config.validate = async () => {
+Config.validate = (config) => {
     try {
-        const config = await Config.get();
         configSchema.parse(config);
         __classPrivateFieldGet(Config, _a, "m", _Config_validateBricks).call(Config, config);
         __classPrivateFieldGet(Config, _a, "m", _Config_validateCollections).call(Config, config);
@@ -185,9 +195,12 @@ Config.findPath = (cwd) => {
     }
     return configPath;
 };
-Config.get = async () => {
-    if (Config._configCache) {
-        return Config._configCache;
+Config.getConfig = async () => {
+    return await Config.cacheConfig();
+};
+Config.cacheConfig = async () => {
+    if (Config.configCache) {
+        return Config.configCache;
     }
     const configPath = Config.findPath(process.cwd());
     let configModule = await Promise.resolve(`${configPath}`).then(s => __importStar(require(s)));
@@ -197,6 +210,7 @@ Config.get = async () => {
 };
 exports.default = Config;
 const buildConfig = (config) => {
+    Config.validate(config);
     return config;
 };
 exports.buildConfig = buildConfig;

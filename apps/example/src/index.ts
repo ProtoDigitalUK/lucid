@@ -4,9 +4,7 @@ import lucid from "@lucid/core";
 
 const app = express();
 
-lucid.init({
-  express: app,
-});
+lucid.init(app);
 
 // create new route /test
 app.get("/send-email-custom", async (req, res) => {

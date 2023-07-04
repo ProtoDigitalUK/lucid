@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 import { z } from "zod";
 // Models
 import Collection from "@db/models/Collection";
@@ -62,6 +62,8 @@ export default class Category {
   // -------------------------------------------
   // Functions
   static getMultiple: CategoryGetMultiple = async (environment_key, query) => {
+    const client = await getDBClient;
+
     const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
@@ -122,6 +124,8 @@ export default class Category {
     };
   };
   static getSingle: CategoryGetSingle = async (environment_key, id) => {
+    const client = await getDBClient;
+
     const category = await client.query<CategoryT>({
       text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
       values: [id, environment_key],
@@ -145,6 +149,8 @@ export default class Category {
     return category.rows[0];
   };
   static create: CategoryCreate = async (data) => {
+    const client = await getDBClient;
+
     // -------------------------------------------
     // Checks
     await Collection.getSingle({
@@ -209,6 +215,8 @@ export default class Category {
     return category;
   };
   static update: CategoryUpdate = async (environment_key, id, data) => {
+    const client = await getDBClient;
+
     // Check if category exists
     const currentCategory = await Category.getSingle(environment_key, id);
 
@@ -252,6 +260,8 @@ export default class Category {
     return category.rows[0];
   };
   static delete: CategoryDelete = async (environment_key, id) => {
+    const client = await getDBClient;
+
     const category = await client.query<CategoryT>({
       name: "delete-category",
       text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
@@ -277,6 +287,8 @@ export default class Category {
     environment_key: string;
     ignore_id?: number;
   }): Promise<boolean> => {
+    const client = await getDBClient;
+
     const values: Array<string | number> = [
       data.collection_key,
       data.slug,

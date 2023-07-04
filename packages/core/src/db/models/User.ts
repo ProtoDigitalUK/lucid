@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Utils
 import { LucidError, modelErrors } from "@utils/error-handler";
 import { queryDataFormat } from "@utils/query-helpers";
@@ -67,6 +67,8 @@ export default class User {
   // -------------------------------------------
   // Functions
   static register: UserRegister = async (data) => {
+    const client = await getDBClient;
+
     const { email, username, password, account_reset, super_admin } = data;
 
     // check if user exists
@@ -104,6 +106,8 @@ export default class User {
     return user.rows[0];
   };
   static accountReset: UserAccountReset = async (id, data) => {
+    const client = await getDBClient;
+
     const { email, username, password } = data;
 
     const user = await User.getById(id);
@@ -144,6 +148,8 @@ export default class User {
     return updatedUser.rows[0];
   };
   static getById: UserGetById = async (id) => {
+    const client = await getDBClient;
+
     const user = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE id = $1`,
       values: [id],
@@ -175,6 +181,8 @@ export default class User {
     return user.rows[0];
   };
   static login: UserLogin = async (data) => {
+    const client = await getDBClient;
+
     // double submit cooki - csrf protection
     // https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie
     const user = await client.query<UserT>({
@@ -214,6 +222,8 @@ export default class User {
   // -------------------------------------------
   // Util Functions
   static checkIfUserExistsAlready = async (email: string, username: string) => {
+    const client = await getDBClient;
+
     const userExists = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
       values: [email, username],

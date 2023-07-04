@@ -10,7 +10,8 @@ class Option {
 }
 _a = Option;
 Option.getByName = async (name) => {
-    const options = await db_1.default.query({
+    const client = await db_1.default;
+    const options = await client.query({
         text: `SELECT * FROM lucid_options WHERE option_name = $1`,
         values: [name],
     });
@@ -31,8 +32,9 @@ Option.getByName = async (name) => {
     return Option.convertToType(options.rows[0]);
 };
 Option.patchByName = async (data) => {
+    const client = await db_1.default;
     const value = Option.convertToString(data.value, data.type);
-    const options = await db_1.default.query({
+    const options = await client.query({
         text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW(), locked = $3 WHERE option_name = $4 AND locked = false RETURNING *`,
         values: [value, data.type, data.locked || false, data.name],
     });
@@ -53,15 +55,16 @@ Option.patchByName = async (data) => {
     return Option.convertToType(options.rows[0]);
 };
 Option.create = async (data) => {
+    const client = await db_1.default;
     const value = Option.convertToString(data.value, data.type);
-    const optionExisting = await db_1.default.query({
+    const optionExisting = await client.query({
         text: `SELECT * FROM lucid_options WHERE option_name = $1`,
         values: [data.name],
     });
     if (optionExisting.rows[0]) {
         return Option.convertToType(optionExisting.rows[0]);
     }
-    const option = await db_1.default.query({
+    const option = await client.query({
         text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,
         values: [data.name, value, data.type, data.locked || false],
     });

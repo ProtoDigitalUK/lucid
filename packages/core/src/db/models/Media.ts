@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 import z from "zod";
 import fileUpload from "express-fileupload";
 import {
@@ -14,7 +14,7 @@ import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 import Config from "@db/models/Config";
 import Option from "@db/models/Option";
 // Services
-import S3 from "@services/media/s3-client";
+import getS3Client from "@services/media/s3-client";
 import helpers, { type MediaMetaDataT } from "@services/media/helpers";
 import formatMedia, { type MediaResT } from "@services/media/format-media";
 import mediaSchema from "@schemas/media";
@@ -86,6 +86,8 @@ export default class Media {
   // -------------------------------------------
   // Functions
   static createSingle: MediaCreateSingle = async (data) => {
+    const client = await getDBClient;
+
     // -------------------------------------------
     // Data
     const { name, alt, location } = data;
@@ -204,6 +206,8 @@ export default class Media {
     return formatMedia(media.rows[0], location);
   };
   static getMultiple: MediaGetMultiple = async (query, data) => {
+    const client = await getDBClient;
+
     const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
@@ -277,6 +281,8 @@ export default class Media {
     };
   };
   static getSingle: MediaGetSingle = async (key, data) => {
+    const client = await getDBClient;
+
     const media = await client.query<MediaT>({
       text: `SELECT
           *
@@ -299,6 +305,8 @@ export default class Media {
     return formatMedia(media.rows[0], data.location);
   };
   static deleteSingle: MediaDeleteSingle = async (key, data) => {
+    const client = await getDBClient;
+
     const media = await client.query<MediaT>({
       text: `DELETE FROM
           lucid_media
@@ -325,6 +333,8 @@ export default class Media {
     return formatMedia(media.rows[0], data.location);
   };
   static updateSingle: MediaUpdateSingle = async (key, data) => {
+    const client = await getDBClient;
+
     // -------------------------------------------
     // Get Media
     const media = await Media.getSingle(key, {
@@ -438,6 +448,8 @@ export default class Media {
     });
   };
   static streamFile = async (key: string) => {
+    const S3 = await getS3Client;
+
     const command = new GetObjectCommand({
       Bucket: Config.media.store.bucket,
       Key: key,
@@ -500,6 +512,8 @@ export default class Media {
     file: fileUpload.UploadedFile,
     meta: MediaMetaDataT
   ) => {
+    const S3 = await getS3Client;
+
     const command = new PutObjectCommand({
       Bucket: Config.media.store.bucket,
       Key: key,
@@ -514,6 +528,8 @@ export default class Media {
     return S3.send(command);
   };
   static #deleteFile = async (key: string) => {
+    const S3 = await getS3Client;
+
     const command = new DeleteObjectCommand({
       Bucket: Config.media.store.bucket,
       Key: key,

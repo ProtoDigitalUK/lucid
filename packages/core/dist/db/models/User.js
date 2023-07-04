@@ -13,6 +13,7 @@ class User {
 }
 _a = User;
 User.register = async (data) => {
+    const client = await db_1.default;
     const { email, username, password, account_reset, super_admin } = data;
     await User.checkIfUserExistsAlready(email, username);
     const hashedPassword = await argon2_1.default.hash(password);
@@ -26,7 +27,7 @@ User.register = async (data) => {
         ],
         values: [email, username, hashedPassword, account_reset, super_admin],
     });
-    const user = await db_1.default.query({
+    const user = await client.query({
         text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,
     });
@@ -42,6 +43,7 @@ User.register = async (data) => {
     return user.rows[0];
 };
 User.accountReset = async (id, data) => {
+    const client = await db_1.default;
     const { email, username, password } = data;
     const user = await User.getById(id);
     if (!user.account_reset) {
@@ -59,7 +61,7 @@ User.accountReset = async (id, data) => {
         });
     }
     const hashedPassword = await argon2_1.default.hash(password);
-    const updatedUser = await db_1.default.query({
+    const updatedUser = await client.query({
         text: `UPDATE lucid_users SET email = $1, username = $2, password = $3, account_reset = $4 WHERE id = $5 RETURNING *`,
         values: [email, username, hashedPassword, false, id],
     });
@@ -75,7 +77,8 @@ User.accountReset = async (id, data) => {
     return updatedUser.rows[0];
 };
 User.getById = async (id) => {
-    const user = await db_1.default.query({
+    const client = await db_1.default;
+    const user = await client.query({
         text: `SELECT * FROM lucid_users WHERE id = $1`,
         values: [id],
     });
@@ -103,7 +106,8 @@ User.getById = async (id) => {
     return user.rows[0];
 };
 User.login = async (data) => {
-    const user = await db_1.default.query({
+    const client = await db_1.default;
+    const user = await client.query({
         text: `SELECT * FROM lucid_users WHERE username = $1`,
         values: [data.username],
     });
@@ -131,7 +135,8 @@ User.updateSingle = async (id, data) => {
     return {};
 };
 User.checkIfUserExistsAlready = async (email, username) => {
-    const userExists = await db_1.default.query({
+    const client = await db_1.default;
+    const userExists = await client.query({
         text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
         values: [email, username],
     });

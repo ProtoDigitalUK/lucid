@@ -12,9 +12,10 @@ class Environment {
 }
 _a = Environment;
 Environment.getAll = async () => {
+    const client = await db_1.default;
     const environmentConfig = Config_1.default.environments;
     const envKeys = environmentConfig.map((e) => e.key);
-    const environments = await db_1.default.query({
+    const environments = await client.query({
         text: `SELECT *
         FROM 
           lucid_environments
@@ -25,7 +26,8 @@ Environment.getAll = async () => {
     return environments.rows;
 };
 Environment.getSingle = async (key) => {
-    const environment = await db_1.default.query({
+    const client = await db_1.default;
+    const environment = await client.query({
         text: `SELECT * FROM lucid_environments WHERE key = $1`,
         values: [key],
     });
@@ -40,6 +42,7 @@ Environment.getSingle = async (key) => {
     return environment.rows[0];
 };
 Environment.upsertSingle = async (data) => {
+    const client = await db_1.default;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["key", "title", "assigned_bricks", "assigned_collections"],
         values: [
@@ -95,7 +98,7 @@ Environment.upsertSingle = async (data) => {
             });
         }
     }
-    const environments = await db_1.default.query({
+    const environments = await client.query({
         text: `INSERT INTO lucid_environments (${columns.formatted.insert}) 
         VALUES (${aliases.formatted.insert}) 
         ON CONFLICT (key) 

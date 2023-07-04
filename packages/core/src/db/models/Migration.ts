@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 
 // -------------------------------------------
 // Types
@@ -23,6 +23,8 @@ export default class Migration {
   // Public
   static all: MigrationAll = async () => {
     try {
+      const client = await getDBClient;
+
       const migrations = await client.query<MigrationT>(
         `SELECT * FROM lucid_migrations`
       );
@@ -33,6 +35,8 @@ export default class Migration {
     }
   };
   static create: MigrationCreate = async (data) => {
+    const client = await getDBClient;
+
     const { file, rawSql } = data;
     await client.query({
       text: rawSql,

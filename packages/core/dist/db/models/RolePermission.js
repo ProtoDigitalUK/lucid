@@ -111,12 +111,13 @@ class RolePermission {
 }
 _a = RolePermission;
 RolePermission.createMultiple = async (role_id, permissions) => {
+    const client = await db_1.default;
     const permissionsPromise = permissions.map((permission) => {
         const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
             columns: ["role_id", "permission", "environment_key"],
             values: [role_id, permission.permission, permission.environment_key],
         });
-        return db_1.default.query({
+        return client.query({
             text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
             values: values.value,
         });
@@ -126,8 +127,9 @@ RolePermission.createMultiple = async (role_id, permissions) => {
     return permissionsData;
 };
 RolePermission.deleteMultiple = async (ids) => {
+    const client = await db_1.default;
     const permissionsPromise = ids.map((id) => {
-        return db_1.default.query({
+        return client.query({
             text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
             values: [id],
         });
@@ -137,14 +139,16 @@ RolePermission.deleteMultiple = async (ids) => {
     return permissionsData;
 };
 RolePermission.deleteAll = async (role_id) => {
-    const res = await db_1.default.query({
+    const client = await db_1.default;
+    const res = await client.query({
         text: `DELETE FROM lucid_role_permissions WHERE role_id = $1 RETURNING *`,
         values: [role_id],
     });
     return res.rows;
 };
 RolePermission.getAll = async (role_id) => {
-    const res = await db_1.default.query({
+    const client = await db_1.default;
+    const res = await client.query({
         text: `SELECT * FROM lucid_role_permissions WHERE role_id = $1`,
         values: [role_id],
     });

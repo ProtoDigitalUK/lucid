@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Models
 import Collection from "@db/models/Collection";
 import BrickData, { BrickObject } from "@db/models/BrickData";
@@ -40,6 +40,8 @@ export default class SinglePage {
   // -------------------------------------------
   // Functions
   static getSingle: SinglePageGetSingle = async (data) => {
+    const client = await getDBClient;
+
     // Checks if we have access to the collection
     const collection = await Collection.getSingle({
       collection_key: data.collection_key,
@@ -114,6 +116,8 @@ export default class SinglePage {
     return singlepage.rows[0];
   };
   static updateSingle: SinglePageUpdateSingle = async (data) => {
+    const client = await getDBClient;
+
     // Used to check if we have access to the collection
     await Collection.getSingle({
       collection_key: data.collection_key,
@@ -154,6 +158,8 @@ export default class SinglePage {
     collection_key: string
   ) => {
     try {
+      const client = await getDBClient;
+
       // Check if the lucid_singlepages item exists, if not, create it
       const singlepage = await client.query<SinglePageT>({
         text: `SELECT * FROM lucid_singlepages WHERE environment_key = $1 AND collection_key = $2`,

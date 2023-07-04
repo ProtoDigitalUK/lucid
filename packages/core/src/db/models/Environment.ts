@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Models
 import Config from "@db/models/Config";
 // Utils
@@ -30,6 +30,8 @@ export default class Environment {
   // -------------------------------------------
   // Functions
   static getAll: EnvironmentGetAll = async () => {
+    const client = await getDBClient;
+
     // Current specific environment
     const environmentConfig = Config.environments;
     const envKeys = environmentConfig.map((e) => e.key);
@@ -47,6 +49,8 @@ export default class Environment {
     return environments.rows;
   };
   static getSingle: EnvironmentGetSingle = async (key) => {
+    const client = await getDBClient;
+
     const environment = await client.query<EnvironmentT>({
       text: `SELECT * FROM lucid_environments WHERE key = $1`,
       values: [key],
@@ -64,6 +68,8 @@ export default class Environment {
     return environment.rows[0];
   };
   static upsertSingle: EnvironmentUpsertSingle = async (data) => {
+    const client = await getDBClient;
+
     // Create query from data
     const { columns, aliases, values } = queryDataFormat({
       columns: ["key", "title", "assigned_bricks", "assigned_collections"],

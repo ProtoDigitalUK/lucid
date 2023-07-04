@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Utils
 import { queryDataFormat } from "@utils/query-helpers";
 
@@ -91,6 +91,8 @@ export default class RolePermission {
     role_id,
     permissions
   ) => {
+    const client = await getDBClient;
+
     const permissionsPromise = permissions.map((permission) => {
       const { columns, aliases, values } = queryDataFormat({
         columns: ["role_id", "permission", "environment_key"],
@@ -110,6 +112,8 @@ export default class RolePermission {
     return permissionsData;
   };
   static deleteMultiple: RolePermissionDeleteMultiple = async (ids) => {
+    const client = await getDBClient;
+
     const permissionsPromise = ids.map((id) => {
       return client.query<RolePermissionT>({
         text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
@@ -124,6 +128,8 @@ export default class RolePermission {
     return permissionsData;
   };
   static deleteAll: RolePermissionDeleteAll = async (role_id) => {
+    const client = await getDBClient;
+
     const res = await client.query<RolePermissionT>({
       text: `DELETE FROM lucid_role_permissions WHERE role_id = $1 RETURNING *`,
       values: [role_id],
@@ -131,6 +137,8 @@ export default class RolePermission {
     return res.rows;
   };
   static getAll: RolePermissionGetAll = async (role_id) => {
+    const client = await getDBClient;
+
     const res = await client.query<RolePermissionT>({
       text: `SELECT * FROM lucid_role_permissions WHERE role_id = $1`,
       values: [role_id],

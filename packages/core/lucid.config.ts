@@ -1,6 +1,5 @@
 import { buildConfig } from "./src/index";
 import z from "zod";
-import { ConfigT } from "./src/db/models/Config";
 import BrickBuilder from "@lucid/brick-builder";
 import CollectionBuilder from "@lucid/collection-builder";
 
@@ -120,53 +119,11 @@ const settingsCollection = new CollectionBuilder("settings", {
   },
 });
 
-// const config: ConfigT = {
-//   postgresURL: process.env.LUCID_database_url as string,
-//   mode: "development",
-//   environments: [
-//     {
-//       title: "Site Production",
-//       key: "site_prod",
-//     },
-//     {
-//       title: "Site Staging",
-//       key: "site_stage",
-//     },
-//   ],
-//   email: {
-//     from: {
-//       name: "Lucid CMS",
-//       email: "hello@lucidcms.com",
-//     },
-//     smtp: {
-//       host: "127.0.0.1",
-//       port: 6969,
-//       secure: false,
-//       user: process.env.LUCID_SMPT_USER as string,
-//       pass: process.env.LUCID_SMPT_PASS as string,
-//     },
-//   },
-//   media: {
-//     storageLimit: 5368709120,
-//     maxFileSize: 20777216,
-//     store: {
-//       service: "cloudflare",
-//       cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,
-//       region: process.env.LUCID_S3_REGION as string,
-//       bucket: process.env.LUCID_S3_BUCKET as string,
-//       accessKeyId: process.env.LUCID_S3_ACCESS_KEY as string,
-//       secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
-//     },
-//   },
-//   collections: [pageCollection, settingsCollection],
-//   bricks: [bannerBrick, introBrick, defaultMetaBrick],
-// };
-
-// export default config;
-
 export default buildConfig({
+  origin: "*",
   mode: "development",
   secret: process.env.LUCID_SECRET_KEY as string,
+  postgresURL: process.env.LUCID_POSTGRES_URL as string,
   environments: [
     {
       title: "Site Production",

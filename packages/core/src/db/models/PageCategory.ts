@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 import { LucidError, modelErrors } from "@utils/error-handler";
 
 // -------------------------------------------
@@ -33,6 +33,8 @@ export default class PageCategory {
   // -------------------------------------------
   // Functions
   static create: PageCategoryCreate = async (data) => {
+    const client = await getDBClient;
+
     const { page_id, category_ids, collection_key } = data;
 
     await PageCategory.checkCategoryPostType(category_ids, collection_key);
@@ -54,6 +56,8 @@ export default class PageCategory {
     return categories.rows;
   };
   static delete: PageCategoryDelete = async (data) => {
+    const client = await getDBClient;
+
     const { page_id, category_ids } = data;
 
     const deleteCategories = await client.query<PageCategoryT>({
@@ -73,6 +77,8 @@ export default class PageCategory {
     return deleteCategories.rows;
   };
   static update: PageCategoryUpdate = async (data) => {
+    const client = await getDBClient;
+
     const { page_id, category_ids, collection_key } = data;
 
     // get all page_categories for the page
@@ -134,6 +140,8 @@ export default class PageCategory {
     category_ids: Array<number>,
     collection_key: string
   ) => {
+    const client = await getDBClient;
+
     const res = await client.query<{ id: number }>({
       text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND collection_key = $2`,
       values: [category_ids, collection_key],

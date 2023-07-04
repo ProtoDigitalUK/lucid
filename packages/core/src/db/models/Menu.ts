@@ -1,7 +1,7 @@
 import z from "zod";
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
+import { LucidError } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Schema
 import menusSchema, { MenuItem, MenuItemUpdate } from "@schemas/menus";
@@ -76,6 +76,8 @@ export default class Menu {
   // -------------------------------------------
   // Functions
   static createSingle: MenuCreateSingle = async (data) => {
+    const client = await getDBClient;
+
     // Check if key is unique
     await Menu.#checkKeyIsUnique(data.key, data.environment_key);
 
@@ -121,6 +123,8 @@ export default class Menu {
     return formatMenu(menu.rows[0], menuItems);
   };
   static deleteSingle: MenuDeleteSingle = async (data) => {
+    const client = await getDBClient;
+
     const menu = await client.query({
       text: `DELETE FROM lucid_menus WHERE id = $1 AND environment_key = $2 RETURNING *`,
       values: [data.id, data.environment_key],
@@ -138,6 +142,8 @@ export default class Menu {
     return menu.rows[0];
   };
   static getSingle: MenuGetSingle = async (data) => {
+    const client = await getDBClient;
+
     const SelectQuery = new SelectQueryBuilder({
       columns: [
         "id",
@@ -191,6 +197,8 @@ export default class Menu {
     return formatMenu(menu.rows[0], menuItems);
   };
   static getMultiple: MenuGetMultiple = async (query, data) => {
+    const client = await getDBClient;
+
     const { filter, sort, include, page, per_page } = query;
 
     // Build Query Data and Query
@@ -258,6 +266,8 @@ export default class Menu {
     };
   };
   static updateSingle: MenuUpdateSingle = async (data) => {
+    const client = await getDBClient;
+
     // -------------------------------------------
     // Check Menu Exists
     const getMenu = await Menu.getSingle({
@@ -356,6 +366,8 @@ export default class Menu {
   // -------------------------------------------
   // Util Functions
   static #checkKeyIsUnique = async (key: string, environment_key: string) => {
+    const client = await getDBClient;
+
     const findMenu = await client.query({
       text: `SELECT * FROM lucid_menus WHERE key = $1 AND environment_key = $2`,
       values: [key, environment_key],
@@ -373,6 +385,8 @@ export default class Menu {
     return true;
   };
   static #getMenuItems = async (menu_ids: number[]) => {
+    const client = await getDBClient;
+
     const menuItems = await client.query<MenuItemT>({
       text: `SELECT
           mi.*,
@@ -394,6 +408,8 @@ export default class Menu {
   };
 
   static #checkItemExists = async (id: number, menu_id: number) => {
+    const client = await getDBClient;
+
     const menuItem = await client.query<MenuItemT>({
       text: `SELECT * FROM lucid_menu_items WHERE id = $1 AND menu_id = $2`,
       values: [id, menu_id],
@@ -411,6 +427,8 @@ export default class Menu {
     return true;
   };
   static #deleteMenuItemsByIds = async (ids: number[]) => {
+    const client = await getDBClient;
+
     const deleted = await client.query<MenuItemT>({
       text: `DELETE FROM lucid_menu_items WHERE id = ANY($1::int[])`,
       values: [ids],
@@ -445,6 +463,8 @@ export default class Menu {
     pos: number,
     parentId?: number
   ) => {
+    const client = await getDBClient;
+
     const itemsRes: MenuItemT[] = [];
 
     const { columns, aliases, values } = queryDataFormat({

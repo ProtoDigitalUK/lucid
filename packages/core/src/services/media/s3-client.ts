@@ -1,19 +1,22 @@
-import { S3Client } from "@aws-sdk/client-s3";
-// Models
+import { S3Client, S3ClientConfig } from "@aws-sdk/client-s3";
 import Config from "@db/models/Config";
 
-const storeConfig = Config.media.store;
+const getS3Client = async () => {
+  const config = await Config.getConfig();
 
-const S3 = new S3Client({
-  region: storeConfig.region,
-  endpoint:
-    storeConfig.service === "cloudflare"
-      ? `https://${storeConfig.cloudflareAccountId}.r2.cloudflarestorage.com`
-      : undefined,
-  credentials: {
-    accessKeyId: storeConfig.accessKeyId,
-    secretAccessKey: storeConfig.secretAccessKey,
-  },
-});
+  const s3Config: S3ClientConfig = {
+    region: config.media.store.region,
+    credentials: {
+      accessKeyId: config.media.store.accessKeyId,
+      secretAccessKey: config.media.store.secretAccessKey,
+    },
+  };
 
-export default S3;
+  if (config.media.store.service === "cloudflare") {
+    s3Config.endpoint = `https://${config.media.store.cloudflareAccountId}.r2.cloudflarestorage.com`;
+  }
+
+  return new S3Client(s3Config);
+};
+
+export default getS3Client();

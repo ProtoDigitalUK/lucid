@@ -60,8 +60,9 @@ BrickData.createOrUpdate = async (data) => {
     return brickId;
 };
 BrickData.getAll = async (data) => {
+    const client = await db_1.default;
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
-    const brickFields = await db_1.default.query(`SELECT 
+    const brickFields = await client.query(`SELECT 
       lucid_collection_bricks.*,
         lucid_fields.*,
         lucid_pages.title as linked_page_title,
@@ -98,13 +99,14 @@ BrickData.getAll = async (data) => {
     };
 };
 BrickData.deleteUnused = async (data) => {
+    const client = await db_1.default;
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
-    const pageBrickIds = await db_1.default.query({
+    const pageBrickIds = await client.query({
         text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
         values: [data.reference_id, data.brick_type],
     });
     const bricksToDelete = pageBrickIds.rows.filter((brick) => !data.brick_ids.includes(brick.id));
-    const promises = bricksToDelete.map((brick) => db_1.default.query({
+    const promises = bricksToDelete.map((brick) => client.query({
         text: `DELETE FROM lucid_collection_bricks WHERE id = $1`,
         values: [brick.id],
     }));
@@ -121,8 +123,9 @@ BrickData.deleteUnused = async (data) => {
     }
 };
 _BrickData_createSinglePageBrick = { value: async (data) => {
+        const client = await db_1.default;
         const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
-        const brickRes = await db_1.default.query(`INSERT INTO 
+        const brickRes = await client.query(`INSERT INTO 
         lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
       VALUES 
         ($1, $2, $3, $4)
@@ -138,7 +141,8 @@ _BrickData_createSinglePageBrick = { value: async (data) => {
         return brickRes.rows[0].id;
     } };
 _BrickData_updateSinglePageBrick = { value: async (data) => {
-        const brickRes = await db_1.default.query(`UPDATE 
+        const client = await db_1.default;
+        const brickRes = await client.query(`UPDATE 
         lucid_collection_bricks 
       SET 
         brick_order = $1
@@ -158,10 +162,11 @@ _BrickData_updateSinglePageBrick = { value: async (data) => {
         return brickRes.rows[0].id;
     } };
 _BrickData_upsertField = { value: async (brick_id, data) => {
+        const client = await db_1.default;
         let fieldId;
         if (data.fields_id) {
             const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brick_id, data, "update");
-            const fieldRes = await db_1.default.query({
+            const fieldRes = await client.query({
                 text: `UPDATE lucid_fields SET ${columns.formatted.update} WHERE fields_id = $${aliases.value.length + 1} RETURNING fields_id`,
                 values: [...values.value, data.fields_id],
             });
@@ -184,7 +189,7 @@ _BrickData_upsertField = { value: async (brick_id, data) => {
                 });
             }
             const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brick_id, data, "create");
-            const fieldRes = await db_1.default.query({
+            const fieldRes = await client.query({
                 text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
                 values: values.value,
             });
@@ -201,6 +206,7 @@ _BrickData_upsertField = { value: async (brick_id, data) => {
         return fieldId;
     } };
 _BrickData_checkFieldExists = { value: async (data) => {
+        const client = await db_1.default;
         let queryText = "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE collection_brick_id = $1 AND key = $2 AND type = $3";
         let queryValues = [data.brick_id, data.key, data.type];
         if (data.parent_repeater !== undefined) {
@@ -212,7 +218,7 @@ _BrickData_checkFieldExists = { value: async (data) => {
             queryValues.push(data.group_position);
         }
         queryText += ")";
-        const res = await db_1.default.query({
+        const res = await client.query({
             text: queryText,
             values: queryValues,
         });
@@ -327,9 +333,10 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brick_id, data, mode) => {
         }
     } };
 _BrickData_upsertRepeater = { value: async (brick_id, data) => {
+        const client = await db_1.default;
         let repeaterId;
         if (data.fields_id && data.group_position !== undefined) {
-            const repeaterRes = await db_1.default.query({
+            const repeaterRes = await client.query({
                 text: `UPDATE lucid_fields SET group_position = $1 WHERE fields_id = $2 RETURNING fields_id`,
                 values: [data.group_position, data.fields_id],
             });
@@ -367,7 +374,7 @@ _BrickData_upsertRepeater = { value: async (brick_id, data) => {
                     data.group_position,
                 ],
             });
-            const repeaterRes = await db_1.default.query({
+            const repeaterRes = await client.query({
                 text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
                 values: values.value,
             });

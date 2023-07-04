@@ -12,11 +12,6 @@ declare global {
     }
   }
 
-  interface InitConfig {
-    origin: string;
-    express: Express;
-  }
-
   // --------------------------------------------------
   // Controller
   type Controller<ParamsT, BodyT, QueryT> = (

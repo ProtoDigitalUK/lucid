@@ -1,5 +1,5 @@
 import z from "zod";
-import client from "@db/db";
+import getDBClient from "@db/db";
 import { FieldTypes } from "@lucid/brick-builder";
 // Utils
 import { LucidError } from "@utils/error-handler";
@@ -171,6 +171,8 @@ export default class BrickData {
     return brickId;
   };
   static getAll: BrickDataGetAll = async (data) => {
+    const client = await getDBClient;
+
     // join all lucid_fields in flat structure, making sure to join page_link_id or media_id if applicable
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
@@ -219,6 +221,8 @@ export default class BrickData {
     };
   };
   static deleteUnused: BrickDataDeleteUnused = async (data) => {
+    const client = await getDBClient;
+
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
     // Fetch all bricks for the page
@@ -256,6 +260,8 @@ export default class BrickData {
   static #createSinglePageBrick: BrickDataCreateSinglePageBrick = async (
     data
   ) => {
+    const client = await getDBClient;
+
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
     const brickRes = await client.query<{
@@ -283,6 +289,8 @@ export default class BrickData {
   static #updateSinglePageBrick: BrickDataUpdateSinglePageBrick = async (
     data
   ) => {
+    const client = await getDBClient;
+
     const brickRes = await client.query<{
       id: number;
     }>(
@@ -312,6 +320,8 @@ export default class BrickData {
   // -------------------------------------------
   // Fields
   static #upsertField = async (brick_id: number, data: BrickFieldObject) => {
+    const client = await getDBClient;
+
     let fieldId;
 
     // Check if id exists. If it does, update, else create.
@@ -375,6 +385,8 @@ export default class BrickData {
     return fieldId;
   };
   static #checkFieldExists: BrickDataCheckFieldExists = async (data) => {
+    const client = await getDBClient;
+
     let queryText =
       "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE collection_brick_id = $1 AND key = $2 AND type = $3";
     let queryValues = [data.brick_id, data.key, data.type];
@@ -513,6 +525,8 @@ export default class BrickData {
   // -------------------------------------------
   // Repeater Field
   static #upsertRepeater = async (brick_id: number, data: BrickFieldObject) => {
+    const client = await getDBClient;
+
     let repeaterId;
 
     // Check if id exists. If it does, update, else create.

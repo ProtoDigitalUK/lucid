@@ -1,12 +1,17 @@
 import { Client } from "pg";
+import Config from "@db/models/Config";
 
-const client = new Client({
-  connectionString: process.env.LUCID_POSTGRES_URL as string,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+const getDBClient = async () => {
+  const config = await Config.getConfig();
 
-client.connect();
+  const client = new Client({
+    connectionString: config.postgresURL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
 
-export default client;
+  return client.connect().then(() => client);
+};
+
+export default getDBClient();

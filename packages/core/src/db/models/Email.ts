@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 import z from "zod";
 // Utils
 import { LucidError } from "@utils/error-handler";
@@ -79,6 +79,8 @@ export default class Email {
   // -------------------------------------------
   // Functions
   static createSingle: EmailCreateSingle = async (data) => {
+    const client = await getDBClient;
+
     // -------------------------------------------
     // Data
     const {
@@ -139,6 +141,8 @@ export default class Email {
     return email.rows[0];
   };
   static getMultiple: EmailGetMultiple = async (query) => {
+    const client = await getDBClient;
+
     const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
@@ -207,6 +211,8 @@ export default class Email {
     };
   };
   static getSingle: EmailGetSingle = async (id) => {
+    const client = await getDBClient;
+
     const email = await client.query<EmailT>({
       text: `SELECT
           *
@@ -235,6 +241,8 @@ export default class Email {
     return email.rows[0];
   };
   static deleteSingle: EmailDeleteSingle = async (id) => {
+    const client = await getDBClient;
+
     const email = await client.query<EmailT>({
       text: `DELETE FROM
           lucid_emails
@@ -256,6 +264,8 @@ export default class Email {
     return email.rows[0];
   };
   static updateSingle: EmailUpdateSingle = async (id, data) => {
+    const client = await getDBClient;
+
     const { columns, aliases, values } = queryDataFormat({
       columns: ["from_address", "from_name", "delivery_status"],
       values: [data.from_address, data.from_name, data.delivery_status],

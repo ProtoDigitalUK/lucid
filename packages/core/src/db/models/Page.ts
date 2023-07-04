@@ -1,5 +1,5 @@
 import z from "zod";
-import client from "@db/db";
+import getDBClient from "@db/db";
 import slugify from "slugify";
 // Models
 import PageCategory from "@db/models/PageCategory";
@@ -98,6 +98,8 @@ export default class Page {
   // -------------------------------------------
   // Functions
   static getMultiple: PageGetMultiple = async (query, data) => {
+    const client = await getDBClient;
+
     const { filter, sort, page, per_page } = query;
 
     // Build Query Data and Query
@@ -197,6 +199,8 @@ export default class Page {
     };
   };
   static getSingle: PageGetSingle = async (query, data) => {
+    const client = await getDBClient;
+
     const { include } = query;
 
     // Build Query Data and Query
@@ -284,6 +288,8 @@ export default class Page {
     return formatPage(page.rows[0]);
   };
   static create: PageCreate = async (data) => {
+    const client = await getDBClient;
+
     // -------------------------------------------
     // Values
     // Set parent id to null if homepage as homepage has to be root level
@@ -367,6 +373,8 @@ export default class Page {
     return formatPage(page.rows[0]);
   };
   static update: PageUpdate = async (data) => {
+    const client = await getDBClient;
+
     const pageId = parseInt(data.id);
 
     // -------------------------------------------
@@ -479,6 +487,8 @@ export default class Page {
     return formatPage(page.rows[0]);
   };
   static delete: PageDelete = async (data) => {
+    const client = await getDBClient;
+
     const pageId = parseInt(data.id);
 
     // -------------------------------------------
@@ -506,6 +516,8 @@ export default class Page {
   // -------------------------------------------
   // Util Functions
   static #pageExists = async (id: number, environment_key: string) => {
+    const client = await getDBClient;
+
     const page = await client.query<PageT>({
       text: `SELECT
           id,
@@ -537,6 +549,8 @@ export default class Page {
     collection_key: string;
     parent_id?: number;
   }) => {
+    const client = await getDBClient;
+
     // For homepage, return "/"
     if (data.homepage) {
       return "/";
@@ -578,6 +592,8 @@ export default class Page {
     parent_id: number | null;
     environment_key: string;
   }) => {
+    const client = await getDBClient;
+
     if (!data.parent_id) return;
     const values: Array<any> = [data.environment_key];
     if (data.parent_id) values.push(data.parent_id);
@@ -606,6 +622,8 @@ export default class Page {
     collection_key: string;
     environment_key: string;
   }) => {
+    const client = await getDBClient;
+
     // Check if the parent is apart of the same collection
     const parent = await client.query<{ collection_key: string }>({
       text: `SELECT collection_key FROM lucid_pages WHERE id = $1 AND environment_key = $2`,
@@ -635,6 +653,8 @@ export default class Page {
     current: number;
     environment_key: string;
   }) => {
+    const client = await getDBClient;
+
     // reset homepage, set its parent to null and its full slug to slugified title
     const result = await client.query({
       text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,

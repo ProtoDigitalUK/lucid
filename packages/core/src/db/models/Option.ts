@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 import { LucidError, modelErrors } from "@utils/error-handler";
 
 // -------------------------------------------
@@ -45,6 +45,8 @@ export default class Option {
   // -------------------------------------------
   // Functions
   static getByName: OptionGetByName = async (name) => {
+    const client = await getDBClient;
+
     const options = await client.query<OptionT>({
       text: `SELECT * FROM lucid_options WHERE option_name = $1`,
       values: [name],
@@ -68,6 +70,8 @@ export default class Option {
     return Option.convertToType(options.rows[0]);
   };
   static patchByName: OptionPatchByName = async (data) => {
+    const client = await getDBClient;
+
     const value = Option.convertToString(data.value, data.type);
 
     const options = await client.query<OptionT>({
@@ -93,6 +97,8 @@ export default class Option {
     return Option.convertToType(options.rows[0]);
   };
   static create: OptionCreate = async (data) => {
+    const client = await getDBClient;
+
     const value = Option.convertToString(data.value, data.type);
 
     const optionExisting = await client.query<OptionT>({

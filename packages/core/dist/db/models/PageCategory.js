@@ -10,9 +10,10 @@ class PageCategory {
 }
 _a = PageCategory;
 PageCategory.create = async (data) => {
+    const client = await db_1.default;
     const { page_id, category_ids, collection_key } = data;
     await PageCategory.checkCategoryPostType(category_ids, collection_key);
-    const categories = await db_1.default.query({
+    const categories = await client.query({
         text: `INSERT INTO lucid_page_categories (page_id, category_id) SELECT $1, id FROM lucid_categories WHERE id = ANY($2) RETURNING *`,
         values: [page_id, category_ids],
     });
@@ -27,8 +28,9 @@ PageCategory.create = async (data) => {
     return categories.rows;
 };
 PageCategory.delete = async (data) => {
+    const client = await db_1.default;
     const { page_id, category_ids } = data;
-    const deleteCategories = await db_1.default.query({
+    const deleteCategories = await client.query({
         text: `DELETE FROM lucid_page_categories WHERE page_id = $1 AND category_id = ANY($2) RETURNING *`,
         values: [page_id, category_ids],
     });
@@ -43,8 +45,9 @@ PageCategory.delete = async (data) => {
     return deleteCategories.rows;
 };
 PageCategory.update = async (data) => {
+    const client = await db_1.default;
     const { page_id, category_ids, collection_key } = data;
-    const pageCategoriesRes = await db_1.default.query({
+    const pageCategoriesRes = await client.query({
         text: `SELECT * FROM lucid_page_categories WHERE page_id = $1`,
         values: [page_id],
     });
@@ -72,7 +75,8 @@ PageCategory.update = async (data) => {
     return newPageCategories;
 };
 PageCategory.checkCategoryPostType = async (category_ids, collection_key) => {
-    const res = await db_1.default.query({
+    const client = await db_1.default;
+    const res = await client.query({
         text: `SELECT id FROM lucid_categories WHERE id = ANY($1) AND collection_key = $2`,
         values: [category_ids, collection_key],
     });

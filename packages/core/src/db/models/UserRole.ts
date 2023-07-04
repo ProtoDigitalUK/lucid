@@ -1,4 +1,4 @@
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Utils
 import { LucidError } from "@utils/error-handler";
 // Models
@@ -43,6 +43,8 @@ export default class UserRole {
   // -------------------------------------------
   // Functions
   static update: UserRoleUpdate = async (id, data) => {
+    const client = await getDBClient;
+
     // Get all users roles
     const userRoles = await client.query<UserRoleT>({
       text: `
@@ -108,6 +110,8 @@ export default class UserRole {
     return updatedUserRoles.rows;
   };
   static getPermissions: UserRoleGetPermissions = async (id) => {
+    const client = await getDBClient;
+
     const userPermissions = await client.query<UserRolePermissionRes>({
       text: `SELECT 
           rp.permission,

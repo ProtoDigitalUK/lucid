@@ -1,4 +1,5 @@
-import express from "express";
+require("dotenv").config();
+import express, { Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { log } from "console-log-colors";
@@ -16,11 +17,10 @@ import {
   invalidPathHandler,
 } from "@utils/error-handler";
 
-const app = async (config: InitConfig) => {
-  const app = config.express;
+const app = async (app: Express) => {
   // ------------------------------------
   // Config
-  await Config.validate();
+  await Config.cacheConfig();
 
   // ------------------------------------
   // Server wide middleware
@@ -28,7 +28,7 @@ const app = async (config: InitConfig) => {
   app.use(express.json());
   app.use(
     cors({
-      origin: config.origin,
+      origin: Config.origin,
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })

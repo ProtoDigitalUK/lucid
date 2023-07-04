@@ -4,10 +4,7 @@ import lucid from "./index";
 
 const app = express();
 
-lucid.init({
-  origin: "*",
-  express: app,
-});
+lucid.init(app);
 
 app.listen(8393, () => {
   log.white("----------------------------------------------------");

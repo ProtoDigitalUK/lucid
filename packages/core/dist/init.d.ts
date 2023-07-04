@@ -1,4 +1,4 @@
-import express from "express";
-declare const app: (config: InitConfig) => Promise<express.Express>;
+import express, { Express } from "express";
+declare const app: (app: Express) => Promise<express.Express>;
 export default app;
 //# sourceMappingURL=init.d.ts.map

@@ -22,6 +22,7 @@ class Media {
 }
 _a = Media;
 Media.createSingle = async (data) => {
+    const client = await db_1.default;
     const { name, alt, location } = data;
     if (!data.files || !data.files["file"]) {
         throw new error_handler_1.LucidError({
@@ -95,7 +96,7 @@ Media.createSingle = async (data) => {
             meta.height,
         ],
     });
-    const media = await db_1.default.query({
+    const media = await client.query({
         text: `INSERT INTO lucid_media (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,
     });
@@ -118,6 +119,7 @@ Media.createSingle = async (data) => {
     return (0, format_media_1.default)(media.rows[0], location);
 };
 Media.getMultiple = async (query, data) => {
+    const client = await db_1.default;
     const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -163,7 +165,7 @@ Media.getMultiple = async (query, data) => {
         page: page,
         per_page: per_page,
     });
-    const medias = await db_1.default.query({
+    const medias = await client.query({
         text: `SELECT
           ${SelectQuery.query.select}
         FROM
@@ -173,7 +175,7 @@ Media.getMultiple = async (query, data) => {
         ${SelectQuery.query.pagination}`,
         values: SelectQuery.values,
     });
-    const count = await db_1.default.query({
+    const count = await client.query({
         text: `SELECT 
           COUNT(DISTINCT lucid_media.id)
         FROM
@@ -187,7 +189,8 @@ Media.getMultiple = async (query, data) => {
     };
 };
 Media.getSingle = async (key, data) => {
-    const media = await db_1.default.query({
+    const client = await db_1.default;
+    const media = await client.query({
         text: `SELECT
           *
         FROM
@@ -207,7 +210,8 @@ Media.getSingle = async (key, data) => {
     return (0, format_media_1.default)(media.rows[0], data.location);
 };
 Media.deleteSingle = async (key, data) => {
-    const media = await db_1.default.query({
+    const client = await db_1.default;
+    const media = await client.query({
         text: `DELETE FROM
           lucid_media
         WHERE
@@ -228,6 +232,7 @@ Media.deleteSingle = async (key, data) => {
     return (0, format_media_1.default)(media.rows[0], data.location);
 };
 Media.updateSingle = async (key, data) => {
+    const client = await db_1.default;
     const media = await Media.getSingle(key, {
         location: data.location,
     });
@@ -294,7 +299,7 @@ Media.updateSingle = async (key, data) => {
         },
     });
     if (values.value.length > 0) {
-        const mediaRes = await db_1.default.query({
+        const mediaRes = await client.query({
             text: `UPDATE 
             lucid_media 
           SET 
@@ -318,11 +323,12 @@ Media.updateSingle = async (key, data) => {
     });
 };
 Media.streamFile = async (key) => {
+    const S3 = await s3_client_1.default;
     const command = new client_s3_1.GetObjectCommand({
         Bucket: Config_1.default.media.store.bucket,
         Key: key,
     });
-    return s3_client_1.default.send(command);
+    return S3.send(command);
 };
 _Media_getStorageUsed = { value: async () => {
         const res = await Option_1.default.getByName("media_storage_used");
@@ -364,6 +370,7 @@ _Media_canStoreFiles = { value: async (files) => {
         return { can: true };
     } };
 _Media_saveFile = { value: async (key, file, meta) => {
+        const S3 = await s3_client_1.default;
         const command = new client_s3_1.PutObjectCommand({
             Bucket: Config_1.default.media.store.bucket,
             Key: key,
@@ -375,14 +382,15 @@ _Media_saveFile = { value: async (key, file, meta) => {
                 extension: meta.fileExtension,
             },
         });
-        return s3_client_1.default.send(command);
+        return S3.send(command);
     } };
 _Media_deleteFile = { value: async (key) => {
+        const S3 = await s3_client_1.default;
         const command = new client_s3_1.DeleteObjectCommand({
             Bucket: Config_1.default.media.store.bucket,
             Key: key,
         });
-        return s3_client_1.default.send(command);
+        return S3.send(command);
     } };
 exports.default = Media;
 //# sourceMappingURL=Media.js.map

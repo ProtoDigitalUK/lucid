@@ -13,6 +13,7 @@ class Email {
 }
 _a = Email;
 Email.createSingle = async (data) => {
+    const client = await db_1.default;
     const { from_address, from_name, to_address, subject, cc, bcc, template, delivery_status, data: templateData, } = data;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
@@ -38,7 +39,7 @@ Email.createSingle = async (data) => {
             delivery_status,
         ],
     });
-    const email = await db_1.default.query({
+    const email = await client.query({
         text: `INSERT INTO lucid_emails (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,
     });
@@ -53,6 +54,7 @@ Email.createSingle = async (data) => {
     return email.rows[0];
 };
 Email.getMultiple = async (query) => {
+    const client = await db_1.default;
     const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -93,7 +95,7 @@ Email.getMultiple = async (query) => {
         page: page,
         per_page: per_page,
     });
-    const emails = await db_1.default.query({
+    const emails = await client.query({
         text: `SELECT
           ${SelectQuery.query.select}
         FROM
@@ -103,7 +105,7 @@ Email.getMultiple = async (query) => {
         ${SelectQuery.query.pagination}`,
         values: SelectQuery.values,
     });
-    const count = await db_1.default.query({
+    const count = await client.query({
         text: `SELECT 
           COUNT(DISTINCT lucid_emails.id)
         FROM
@@ -117,7 +119,8 @@ Email.getMultiple = async (query) => {
     };
 };
 Email.getSingle = async (id) => {
-    const email = await db_1.default.query({
+    const client = await db_1.default;
+    const email = await client.query({
         text: `SELECT
           *
         FROM
@@ -139,7 +142,8 @@ Email.getSingle = async (id) => {
     return email.rows[0];
 };
 Email.deleteSingle = async (id) => {
-    const email = await db_1.default.query({
+    const client = await db_1.default;
+    const email = await client.query({
         text: `DELETE FROM
           lucid_emails
         WHERE
@@ -158,6 +162,7 @@ Email.deleteSingle = async (id) => {
     return email.rows[0];
 };
 Email.updateSingle = async (id, data) => {
+    const client = await db_1.default;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["from_address", "from_name", "delivery_status"],
         values: [data.from_address, data.from_name, data.delivery_status],
@@ -167,7 +172,7 @@ Email.updateSingle = async (id, data) => {
             },
         },
     });
-    const emailRes = await db_1.default.query({
+    const emailRes = await client.query({
         text: `UPDATE 
         lucid_emails 
         SET 

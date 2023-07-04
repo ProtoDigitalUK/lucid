@@ -1,5 +1,5 @@
 import z from "zod";
-import client from "@db/db";
+import getDBClient from "@db/db";
 // Schema
 import roleSchema from "@schemas/roles";
 // Utils
@@ -50,6 +50,8 @@ export default class Role {
   // -------------------------------------------
   // Functions
   static createSingle: RoleCreateSingle = async (data) => {
+    const client = await getDBClient;
+
     const { columns, aliases, values } = queryDataFormat({
       columns: ["name"],
       values: [data.name],
@@ -88,6 +90,8 @@ export default class Role {
     return role;
   };
   static deleteSingle: RoleDeleteSingle = async (id) => {
+    const client = await getDBClient;
+
     const roleRes = await client.query<RoleT>({
       text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
       values: [id],
@@ -107,6 +111,8 @@ export default class Role {
     return role;
   };
   static getMultiple: RoleGetMultiple = async (query) => {
+    const client = await getDBClient;
+
     const { filter, sort, page, per_page, include } = query;
 
     // Build Query Data and Query
@@ -184,6 +190,8 @@ export default class Role {
     };
   };
   static updateSingle: RoleUpdateSingle = async (id, data) => {
+    const client = await getDBClient;
+
     const { columns, aliases, values } = queryDataFormat({
       columns: ["name"],
       values: [data.name],
@@ -218,6 +226,8 @@ export default class Role {
     return role;
   };
   static getSingle: RoleGetSingle = async (id) => {
+    const client = await getDBClient;
+
     const roleRes = await client.query<RoleT>({
       text: `SELECT 
           roles.*,
@@ -253,6 +263,8 @@ export default class Role {
   // -------------------------------------------
   // Util Functions
   static #roleNameUnique = async (name: string, id?: number) => {
+    const client = await getDBClient;
+
     const roleCheck = await client.query<RoleT>({
       text: `SELECT * FROM lucid_roles WHERE name = $1 AND id != $2`,
       values: [name, id],
