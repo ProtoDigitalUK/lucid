@@ -13,6 +13,7 @@ declare global {
   }
 
   interface InitConfig {
+    origin: string;
     express: Express;
   }
 

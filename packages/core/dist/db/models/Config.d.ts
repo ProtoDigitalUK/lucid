@@ -1,11 +1,9 @@
+import z from "zod";
 import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
 export type ConfigT = {
-    port: number;
-    origin?: string;
     mode: "development" | "production";
-    databaseUrl: string;
-    secretKey: string;
+    secret: string;
     environments: Array<{
         title: string;
         key: string;
@@ -42,12 +40,10 @@ export type ConfigT = {
 export default class Config {
     #private;
     private static _configCache;
-    static validate: () => void;
+    static validate: () => Promise<void>;
     static findPath: (cwd: string) => string;
-    static get: () => ConfigT;
-    static get secretKey(): string;
+    static get: () => Promise<ConfigT>;
     static get mode(): "development" | "production";
-    static get databaseUrl(): string;
     static get environments(): {
         title: string;
         key: string;
@@ -57,8 +53,8 @@ export default class Config {
         maxFileSize: number;
         store: {
             service: "aws" | "cloudflare";
-            cloudflareAccountId: string | undefined;
-            region: string | undefined;
+            cloudflareAccountId?: string | undefined;
+            region?: string | undefined;
             bucket: string;
             accessKeyId: string;
             secretAccessKey: string;
@@ -78,5 +74,88 @@ export default class Config {
             secure?: boolean | undefined;
         } | undefined;
     } | undefined;
+    static get secret(): string;
+    static get bricks(): {
+        key: string;
+        title: string;
+        fields: Map<string, import("@lucid/brick-builder").CustomField>;
+        repeaterStack: string[];
+        maxRepeaterDepth: number;
+        addFields(BrickBuilder: any): any;
+        endRepeater(): any;
+        addTab(config: import("@lucid/brick-builder").TabConfig): any;
+        addText: (config: import("@lucid/brick-builder").TextConfig) => any;
+        addWysiwyg(config: import("@lucid/brick-builder").WysiwygConfig): any;
+        addImage(config: import("@lucid/brick-builder").ImageConfig): any;
+        addRepeater(config: import("@lucid/brick-builder").RepeaterConfig): any;
+        addNumber(config: import("@lucid/brick-builder").NumberConfig): any;
+        addCheckbox(config: import("@lucid/brick-builder").CheckboxConfig): any;
+        addSelect(config: import("@lucid/brick-builder").SelectConfig): any;
+        addTextarea(config: import("@lucid/brick-builder").TextareaConfig): any;
+        addJSON(config: import("@lucid/brick-builder").JSONConfig): any;
+        addFile(config: import("@lucid/brick-builder").FileConfig): any;
+        addColour(config: import("@lucid/brick-builder").ColourConfig): any;
+        addDateTime(config: import("@lucid/brick-builder").DateTimeConfig): any;
+        addPageLink(config: import("@lucid/brick-builder").PageLinkConfig): any;
+        addLink(config: import("@lucid/brick-builder").LinkConfig): any;
+        readonly fieldTree: import("@lucid/brick-builder").CustomField[];
+        readonly basicFieldTree: import("@lucid/brick-builder").CustomField[];
+        readonly flatFields: import("@lucid/brick-builder").CustomField[];
+        fieldValidation({ type, key, value, secondaryValue, }: {
+            type: string;
+            key: string;
+            value: any;
+            secondaryValue?: any;
+        }): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateSelectType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateWysiwygType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateImageType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateFileType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateDatetimeType"({ type, key, value, }: {
+            type: string;
+            key: string;
+            value: string;
+        }): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateLinkTarget"(value: string): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateRequired"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateType"(providedType: string, type: import("@lucid/brick-builder").FieldTypes): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateZodSchema"(schema: z.ZodType<any, z.ZodTypeDef, any>, value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateIsString"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateIsNumber"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#validateIsBoolean"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#1@#keyToTitle"(key: string): string;
+        "__#1@#addToFields"(type: import("@lucid/brick-builder").FieldTypes, config: import("@lucid/brick-builder").FieldConfigs): void;
+        "__#1@#checkKeyDuplication"(key: string): void;
+    }[];
+    static get collections(): {
+        key: string;
+        config: {
+            type: "pages" | "singlepage";
+            title: string;
+            singular: string;
+            description: string | undefined;
+            bricks: import("@lucid/collection-builder").CollectionBrickT[];
+        };
+        "__#1@#removeDuplicateBricks": () => void;
+        "__#1@#addBrickDefaults": () => void;
+        "__#1@#validateOptions": (options: import("@lucid/collection-builder").CollectionOptions) => void;
+    }[];
 }
+export declare const buildConfig: (config: ConfigT) => ConfigT;
 //# sourceMappingURL=Config.d.ts.map

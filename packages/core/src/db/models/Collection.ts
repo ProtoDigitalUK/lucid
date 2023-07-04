@@ -209,7 +209,7 @@ export default class Collection {
   // -------------------------------------------
   // Util Functions
   static getCollectionsConfig = (): CollectionBuilderT[] => {
-    const collectionInstances = Config.get().collections;
+    const collectionInstances = Config.collections;
 
     if (!collectionInstances) {
       return [];

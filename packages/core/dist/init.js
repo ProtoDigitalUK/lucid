@@ -17,16 +17,16 @@ const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/error-handler");
 const app = async (config) => {
     const app = config.express;
-    Config_1.default.validate();
+    await Config_1.default.validate();
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use(express_1.default.json());
     app.use((0, cors_1.default)({
-        origin: Config_1.default.get().origin,
+        origin: config.origin,
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
     }));
     app.use((0, morgan_1.default)("dev"));
-    app.use((0, cookie_parser_1.default)(Config_1.default.get().secretKey));
+    app.use((0, cookie_parser_1.default)(Config_1.default.secret));
     app.use((0, express_fileupload_1.default)({
         debug: Config_1.default.mode === "development",
     }));

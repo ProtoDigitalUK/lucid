@@ -1,8 +1,8 @@
 import z from "zod";
-interface BrickConfig {
+export interface BrickConfig {
 }
-type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json" | "colour" | "datetime" | "pagelink" | "link";
-declare enum FieldTypesEnum {
+export type FieldTypes = "tab" | "text" | "wysiwyg" | "image" | "file" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json" | "colour" | "datetime" | "pagelink" | "link";
+export declare enum FieldTypesEnum {
     Tab = "tab",
     Text = "text",
     Wysiwyg = "wysiwyg",
@@ -19,8 +19,8 @@ declare enum FieldTypesEnum {
     Pagelink = "pagelink",
     Link = "link"
 }
-type BrickBuilderT = InstanceType<typeof BrickBuilder>;
-interface CustomField {
+export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
+export interface CustomField {
     type: FieldTypes;
     key: CustomFieldConfig["key"];
     title: CustomFieldConfig["title"];
@@ -46,11 +46,129 @@ interface CustomField {
         };
     };
 }
-interface ValidationResponse {
+declare const baseCustomFieldSchema: z.ZodObject<{
+    type: z.ZodString;
+    key: z.ZodString;
+    title: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    placeholder: z.ZodOptional<z.ZodString>;
+    default: z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodString]>>;
+    options: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        label: z.ZodString;
+        value: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        value: string;
+        label: string;
+    }, {
+        value: string;
+        label: string;
+    }>, "many">>;
+    validation: z.ZodOptional<z.ZodObject<{
+        zod: z.ZodOptional<z.ZodAny>;
+        required: z.ZodOptional<z.ZodBoolean>;
+        extensions: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        width: z.ZodOptional<z.ZodObject<{
+            min: z.ZodOptional<z.ZodNumber>;
+            max: z.ZodOptional<z.ZodNumber>;
+        }, "strip", z.ZodTypeAny, {
+            min?: number | undefined;
+            max?: number | undefined;
+        }, {
+            min?: number | undefined;
+            max?: number | undefined;
+        }>>;
+        height: z.ZodOptional<z.ZodObject<{
+            min: z.ZodOptional<z.ZodNumber>;
+            max: z.ZodOptional<z.ZodNumber>;
+        }, "strip", z.ZodTypeAny, {
+            min?: number | undefined;
+            max?: number | undefined;
+        }, {
+            min?: number | undefined;
+            max?: number | undefined;
+        }>>;
+    }, "strip", z.ZodTypeAny, {
+        zod?: any;
+        required?: boolean | undefined;
+        extensions?: string[] | undefined;
+        width?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+        height?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+    }, {
+        zod?: any;
+        required?: boolean | undefined;
+        extensions?: string[] | undefined;
+        width?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+        height?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+    }>>;
+}, "strip", z.ZodTypeAny, {
+    key: string;
+    title: string;
+    type: string;
+    description?: string | undefined;
+    placeholder?: string | undefined;
+    default?: string | boolean | undefined;
+    options?: {
+        value: string;
+        label: string;
+    }[] | undefined;
+    validation?: {
+        zod?: any;
+        required?: boolean | undefined;
+        extensions?: string[] | undefined;
+        width?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+        height?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+    } | undefined;
+}, {
+    key: string;
+    title: string;
+    type: string;
+    description?: string | undefined;
+    placeholder?: string | undefined;
+    default?: string | boolean | undefined;
+    options?: {
+        value: string;
+        label: string;
+    }[] | undefined;
+    validation?: {
+        zod?: any;
+        required?: boolean | undefined;
+        extensions?: string[] | undefined;
+        width?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+        height?: {
+            min?: number | undefined;
+            max?: number | undefined;
+        } | undefined;
+    } | undefined;
+}>;
+export type Fields = z.infer<typeof baseCustomFieldSchema> & {
+    fields?: Fields[];
+};
+export interface ValidationResponse {
     valid: boolean;
     message?: string;
 }
-interface CustomFieldConfig {
+export interface CustomFieldConfig {
     key: string;
     title?: string;
     description?: string;
@@ -58,9 +176,9 @@ interface CustomFieldConfig {
         required?: boolean;
     };
 }
-interface TabConfig extends CustomFieldConfig {
+export interface TabConfig extends CustomFieldConfig {
 }
-interface TextConfig extends CustomFieldConfig {
+export interface TextConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
@@ -68,7 +186,7 @@ interface TextConfig extends CustomFieldConfig {
         zod?: z.ZodType<any>;
     };
 }
-interface WysiwygConfig extends CustomFieldConfig {
+export interface WysiwygConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
@@ -76,7 +194,7 @@ interface WysiwygConfig extends CustomFieldConfig {
         zod?: z.ZodType<any>;
     };
 }
-interface ImageConfig extends CustomFieldConfig {
+export interface ImageConfig extends CustomFieldConfig {
     validation?: {
         required?: boolean;
         extensions?: string[];
@@ -90,12 +208,12 @@ interface ImageConfig extends CustomFieldConfig {
         };
     };
 }
-interface RepeaterConfig extends CustomFieldConfig {
+export interface RepeaterConfig extends CustomFieldConfig {
     validation?: {
         required?: boolean;
     };
 }
-interface NumberConfig extends CustomFieldConfig {
+export interface NumberConfig extends CustomFieldConfig {
     default?: number;
     placeholder?: string;
     validation?: {
@@ -103,10 +221,10 @@ interface NumberConfig extends CustomFieldConfig {
         zod?: z.ZodType<any>;
     };
 }
-interface CheckboxConfig extends CustomFieldConfig {
+export interface CheckboxConfig extends CustomFieldConfig {
     default?: boolean;
 }
-interface SelectConfig extends CustomFieldConfig {
+export interface SelectConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     options: Array<{
@@ -114,7 +232,7 @@ interface SelectConfig extends CustomFieldConfig {
         value: string;
     }>;
 }
-interface TextareaConfig extends CustomFieldConfig {
+export interface TextareaConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
@@ -122,7 +240,7 @@ interface TextareaConfig extends CustomFieldConfig {
         zod?: z.ZodType<any>;
     };
 }
-interface JSONConfig extends CustomFieldConfig {
+export interface JSONConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
@@ -130,39 +248,39 @@ interface JSONConfig extends CustomFieldConfig {
         zod?: z.ZodType<any>;
     };
 }
-interface FileConfig extends CustomFieldConfig {
+export interface FileConfig extends CustomFieldConfig {
     validation?: {
         required?: boolean;
         extensions?: string[];
     };
 }
-interface ColourConfig extends CustomFieldConfig {
+export interface ColourConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
         required?: boolean;
     };
 }
-interface DateTimeConfig extends CustomFieldConfig {
+export interface DateTimeConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
         required?: boolean;
     };
 }
-interface PageLinkConfig extends CustomFieldConfig {
+export interface PageLinkConfig extends CustomFieldConfig {
     validation?: {
         required?: boolean;
     };
 }
-interface LinkConfig extends CustomFieldConfig {
+export interface LinkConfig extends CustomFieldConfig {
     default?: string;
     placeholder?: string;
     validation?: {
         required?: boolean;
     };
 }
-type FieldConfigs = TabConfig | TextConfig | WysiwygConfig | ImageConfig | NumberConfig | CheckboxConfig | SelectConfig | TextareaConfig | JSONConfig | FileConfig | ColourConfig | DateTimeConfig | PageLinkConfig;
+export type FieldConfigs = TabConfig | TextConfig | WysiwygConfig | ImageConfig | NumberConfig | CheckboxConfig | SelectConfig | TextareaConfig | JSONConfig | FileConfig | ColourConfig | DateTimeConfig | PageLinkConfig;
 declare const BrickBuilder: {
     new (key: string, config?: BrickConfig): {
         key: string;
@@ -233,6 +351,5 @@ declare const BrickBuilder: {
         "__#1@#checkKeyDuplication"(key: string): void;
     };
 };
-export { BrickBuilderT, CustomField, FieldTypes, FieldTypesEnum };
 export default BrickBuilder;
 //# sourceMappingURL=index.d.ts.map

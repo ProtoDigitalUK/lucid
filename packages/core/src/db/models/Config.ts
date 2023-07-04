@@ -2,7 +2,9 @@ import fs from "fs-extra";
 import path from "path";
 import z from "zod";
 import { RuntimeError } from "@utils/error-handler";
+import { bgRed } from "console-log-colors";
 import C from "@root/constants";
+import { fromZodError } from "zod-validation-error";
 // Internal packages
 import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
@@ -10,11 +12,8 @@ import { CollectionBuilderT } from "@lucid/collection-builder";
 // -------------------------------------------
 // Config
 const configSchema = z.object({
-  port: z.number(),
-  origin: z.string().optional(),
   mode: z.enum(["development", "production"]),
-  databaseUrl: z.string(),
-  secretKey: z.string(),
+  secret: z.string(),
   collections: z.array(z.any()).optional(),
   bricks: z.array(z.any()).optional(),
   media: z.object({
@@ -56,11 +55,8 @@ const configSchema = z.object({
 });
 
 export type ConfigT = {
-  port: number;
-  origin?: string;
   mode: "development" | "production";
-  databaseUrl: string;
-  secretKey: string;
+  secret: string;
   environments: Array<{
     title: string;
     key: string;
@@ -100,14 +96,24 @@ export default class Config {
   private static _configCache: ConfigT | null = null;
   // -------------------------------------------
   // Public
-  public static validate = (): void => {
-    const config = Config.get();
+  public static validate = async (): Promise<void> => {
+    try {
+      const config = await Config.get();
 
-    // TODO: Format errors for better readability
-    configSchema.parse(config);
+      configSchema.parse(config);
 
-    Config.#validateBricks(config);
-    Config.#validateCollections(config);
+      Config.#validateBricks(config);
+      Config.#validateCollections(config);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationError = fromZodError(error);
+        const message = validationError.message.split("Validation error: ")[1];
+        console.error(bgRed(`Config validation error: ${message}`));
+        process.exit(1);
+      } else {
+        throw error;
+      }
+    }
   };
   public static findPath = (cwd: string): string => {
     // if specified, use the specified path
@@ -156,48 +162,54 @@ export default class Config {
   };
   // -------------------------------------------
   // Functions
-  static get = (): ConfigT => {
+  static get = async (): Promise<ConfigT> => {
     if (Config._configCache) {
       return Config._configCache;
     }
 
     const configPath = Config.findPath(process.cwd());
-    const config = require(configPath).default as ConfigT;
+    let configModule = await import(configPath);
+    let config = configModule.default;
+
+    // const config = require(configPath).default as ConfigT;
 
     Config._configCache = config;
 
     return config;
   };
   // getters
-  static get secretKey() {
-    return Config.get().secretKey;
-  }
   static get mode() {
-    return Config.get().mode;
-  }
-  static get databaseUrl() {
-    return Config.get().databaseUrl;
+    return Config._configCache?.mode as ConfigT["mode"];
   }
   static get environments() {
-    return Config.get().environments;
+    return Config._configCache?.environments as ConfigT["environments"];
   }
   static get media() {
-    const media = Config.get().media;
+    const media = Config._configCache?.media;
     return {
       storageLimit: media?.storageLimit || C.media.storageLimit,
       maxFileSize: media?.maxFileSize || C.media.maxFileSize,
       store: {
-        service: media.store.service,
-        cloudflareAccountId: media.store.cloudflareAccountId,
-        region: media.store.region,
-        bucket: media.store.bucket,
-        accessKeyId: media.store.accessKeyId,
-        secretAccessKey: media.store.secretAccessKey,
-      },
+        service: media?.store.service,
+        cloudflareAccountId: media?.store.cloudflareAccountId,
+        region: media?.store.region,
+        bucket: media?.store.bucket,
+        accessKeyId: media?.store.accessKeyId,
+        secretAccessKey: media?.store.secretAccessKey,
+      } as ConfigT["media"]["store"],
     };
   }
   static get email() {
-    return Config.get().email;
+    return Config._configCache?.email as ConfigT["email"];
+  }
+  static get secret() {
+    return Config._configCache?.secret as ConfigT["secret"];
+  }
+  static get bricks() {
+    return Config._configCache?.bricks as BrickBuilderT[];
+  }
+  static get collections() {
+    return Config._configCache?.collections as CollectionBuilderT[];
   }
   // -------------------------------------------
   // Private
@@ -224,3 +236,7 @@ export default class Config {
     }
   }
 }
+
+export const buildConfig = (config: ConfigT) => {
+  return config;
+};

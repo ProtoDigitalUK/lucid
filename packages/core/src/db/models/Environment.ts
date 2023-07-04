@@ -77,7 +77,7 @@ export default class Environment {
 
     // Check assigned_brick keys against config
     if (data.assigned_bricks) {
-      const brickInstances = Config.get().bricks || [];
+      const brickInstances = Config.bricks || [];
       const brickKeys = brickInstances.map((b) => b.key);
 
       const invalidBricks = data.assigned_bricks.filter(
@@ -105,7 +105,7 @@ export default class Environment {
 
     // Check assigned_collection keys against config
     if (data.assigned_collections) {
-      const collectionInstances = Config.get().collections || [];
+      const collectionInstances = Config.collections || [];
       const collectionKeys = collectionInstances.map((c) => c.key);
 
       const invalidCollections = data.assigned_collections.filter(

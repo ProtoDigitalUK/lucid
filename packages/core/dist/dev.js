@@ -8,6 +8,7 @@ const console_log_colors_1 = require("console-log-colors");
 const index_1 = __importDefault(require("./index"));
 const app = (0, express_1.default)();
 index_1.default.init({
+    origin: "*",
     express: app,
 });
 app.listen(8393, () => {

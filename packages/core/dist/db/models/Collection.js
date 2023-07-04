@@ -134,7 +134,7 @@ Collection.updateBricks = async (props) => {
         });
 };
 Collection.getCollectionsConfig = () => {
-    const collectionInstances = Config_1.default.get().collections;
+    const collectionInstances = Config_1.default.collections;
     if (!collectionInstances) {
         return [];
     }

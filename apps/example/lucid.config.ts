@@ -1,14 +1,11 @@
-import { type Config } from "@lucid/core";
+import { buildConfig } from "@lucid/core";
 import { banner, intro, defaultMeta } from "./src/bricks";
 import { pages, settings } from "./src/collections";
 import path from "path";
 
-const config: Config = {
-  databaseUrl: process.env.LUCID_database_url as string,
-  port: 8393,
-  origin: "*",
+export default buildConfig({
   mode: "development",
-  secretKey: process.env.LUCID_SECRET_KEY as string,
+  secret: process.env.LUCID_SECRET_KEY as string,
   environments: [
     {
       title: "Production",
@@ -47,6 +44,4 @@ const config: Config = {
   },
   collections: [pages, settings],
   bricks: [banner, intro, defaultMeta],
-};
-
-export default config;
+});

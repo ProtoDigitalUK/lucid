@@ -5,6 +5,7 @@ import lucid from "./index";
 const app = express();
 
 lucid.init({
+  origin: "*",
   express: app,
 });
 

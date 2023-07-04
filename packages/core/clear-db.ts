@@ -2,7 +2,7 @@ require("dotenv").config();
 import { Client } from "pg";
 
 const client = new Client({
-  connectionString: process.env.LUCID_DATABASE_URL as string,
+  connectionString: process.env.LUCID_POSTGRES_URL as string,
   ssl: {
     rejectUnauthorized: false,
   },

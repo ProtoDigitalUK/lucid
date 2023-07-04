@@ -110,7 +110,7 @@ BrickConfig.getAllAllowedBricks = (data) => {
     };
 };
 BrickConfig.getBrickConfig = () => {
-    const brickInstances = Config_1.default.get().bricks;
+    const brickInstances = Config_1.default.bricks;
     if (!brickInstances) {
         return [];
     }

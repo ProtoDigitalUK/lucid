@@ -184,7 +184,7 @@ export default class BrickConfig {
   // -------------------------------------------
   // Util Functions
   static getBrickConfig = (): BrickBuilderT[] => {
-    const brickInstances = Config.get().bricks;
+    const brickInstances = Config.bricks;
 
     if (!brickInstances) {
       return [];

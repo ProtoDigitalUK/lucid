@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
@@ -9,17 +32,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a, _Config_validateBricks, _Config_validateCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildConfig = void 0;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const zod_1 = __importDefault(require("zod"));
 const error_handler_1 = require("../../utils/error-handler");
+const console_log_colors_1 = require("console-log-colors");
 const constants_1 = __importDefault(require("../../constants"));
+const zod_validation_error_1 = require("zod-validation-error");
 const configSchema = zod_1.default.object({
-    port: zod_1.default.number(),
-    origin: zod_1.default.string().optional(),
     mode: zod_1.default.enum(["development", "production"]),
-    databaseUrl: zod_1.default.string(),
-    secretKey: zod_1.default.string(),
+    secret: zod_1.default.string(),
     collections: zod_1.default.array(zod_1.default.any()).optional(),
     bricks: zod_1.default.array(zod_1.default.any()).optional(),
     media: zod_1.default.object({
@@ -58,35 +81,38 @@ const configSchema = zod_1.default.object({
     })),
 });
 class Config {
-    static get secretKey() {
-        return Config.get().secretKey;
-    }
     static get mode() {
-        return Config.get().mode;
-    }
-    static get databaseUrl() {
-        return Config.get().databaseUrl;
+        return Config._configCache?.mode;
     }
     static get environments() {
-        return Config.get().environments;
+        return Config._configCache?.environments;
     }
     static get media() {
-        const media = Config.get().media;
+        const media = Config._configCache?.media;
         return {
             storageLimit: media?.storageLimit || constants_1.default.media.storageLimit,
             maxFileSize: media?.maxFileSize || constants_1.default.media.maxFileSize,
             store: {
-                service: media.store.service,
-                cloudflareAccountId: media.store.cloudflareAccountId,
-                region: media.store.region,
-                bucket: media.store.bucket,
-                accessKeyId: media.store.accessKeyId,
-                secretAccessKey: media.store.secretAccessKey,
+                service: media?.store.service,
+                cloudflareAccountId: media?.store.cloudflareAccountId,
+                region: media?.store.region,
+                bucket: media?.store.bucket,
+                accessKeyId: media?.store.accessKeyId,
+                secretAccessKey: media?.store.secretAccessKey,
             },
         };
     }
     static get email() {
-        return Config.get().email;
+        return Config._configCache?.email;
+    }
+    static get secret() {
+        return Config._configCache?.secret;
+    }
+    static get bricks() {
+        return Config._configCache?.bricks;
+    }
+    static get collections() {
+        return Config._configCache?.collections;
     }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
@@ -107,11 +133,24 @@ _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
     }
 };
 Config._configCache = null;
-Config.validate = () => {
-    const config = Config.get();
-    configSchema.parse(config);
-    __classPrivateFieldGet(Config, _a, "m", _Config_validateBricks).call(Config, config);
-    __classPrivateFieldGet(Config, _a, "m", _Config_validateCollections).call(Config, config);
+Config.validate = async () => {
+    try {
+        const config = await Config.get();
+        configSchema.parse(config);
+        __classPrivateFieldGet(Config, _a, "m", _Config_validateBricks).call(Config, config);
+        __classPrivateFieldGet(Config, _a, "m", _Config_validateCollections).call(Config, config);
+    }
+    catch (error) {
+        if (error instanceof zod_1.default.ZodError) {
+            const validationError = (0, zod_validation_error_1.fromZodError)(error);
+            const message = validationError.message.split("Validation error: ")[1];
+            console.error((0, console_log_colors_1.bgRed)(`Config validation error: ${message}`));
+            process.exit(1);
+        }
+        else {
+            throw error;
+        }
+    }
 };
 Config.findPath = (cwd) => {
     if (process.env.LUCID_CONFIG_PATH) {
@@ -146,14 +185,19 @@ Config.findPath = (cwd) => {
     }
     return configPath;
 };
-Config.get = () => {
+Config.get = async () => {
     if (Config._configCache) {
         return Config._configCache;
     }
     const configPath = Config.findPath(process.cwd());
-    const config = require(configPath).default;
+    let configModule = await Promise.resolve(`${configPath}`).then(s => __importStar(require(s)));
+    let config = configModule.default;
     Config._configCache = config;
     return config;
 };
 exports.default = Config;
+const buildConfig = (config) => {
+    return config;
+};
+exports.buildConfig = buildConfig;
 //# sourceMappingURL=Config.js.map

@@ -50,7 +50,7 @@ Environment.upsertSingle = async (data) => {
         ],
     });
     if (data.assigned_bricks) {
-        const brickInstances = Config_1.default.get().bricks || [];
+        const brickInstances = Config_1.default.bricks || [];
         const brickKeys = brickInstances.map((b) => b.key);
         const invalidBricks = data.assigned_bricks.filter((b) => !brickKeys.includes(b));
         if (invalidBricks.length > 0) {
@@ -73,7 +73,7 @@ Environment.upsertSingle = async (data) => {
         }
     }
     if (data.assigned_collections) {
-        const collectionInstances = Config_1.default.get().collections || [];
+        const collectionInstances = Config_1.default.collections || [];
         const collectionKeys = collectionInstances.map((c) => c.key);
         const invalidCollections = data.assigned_collections.filter((c) => !collectionKeys.includes(c));
         if (invalidCollections.length > 0) {

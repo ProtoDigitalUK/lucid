@@ -18,7 +18,7 @@ const CollectionOptionsSchema = z.object({
 
 // ------------------------------------
 // Types & Interfaces
-interface CollectionConfigT {
+export interface CollectionConfigT {
   key: string;
   title: string;
   singular: string;
@@ -27,7 +27,7 @@ interface CollectionConfigT {
   bricks: Array<CollectionBrickT>;
 }
 
-interface CollectionOptions {
+export interface CollectionOptions {
   config: {
     type: "pages" | "singlepage";
     title: string;
@@ -36,13 +36,13 @@ interface CollectionOptions {
     bricks: Array<CollectionBrickT>;
   };
 }
-interface CollectionBrickT {
+export interface CollectionBrickT {
   key: string;
   type: "builder" | "fixed";
   position?: "standard" | "bottom" | "top" | "sidebar";
 }
 
-type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
+export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 
 // ------------------------------------
 // BrickBuilder
@@ -108,5 +108,4 @@ const CollectionBuilder = class CollectionBuilder {
   };
 };
 
-export { CollectionConfigT, CollectionBuilderT, CollectionBrickT };
 export default CollectionBuilder;

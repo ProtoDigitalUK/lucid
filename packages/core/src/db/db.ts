@@ -1,8 +1,7 @@
 import { Client } from "pg";
-import Config from "@db/models/Config";
 
 const client = new Client({
-  connectionString: Config.databaseUrl,
+  connectionString: process.env.LUCID_POSTGRES_URL as string,
   ssl: {
     rejectUnauthorized: false,
   },

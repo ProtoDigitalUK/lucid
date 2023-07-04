@@ -12,7 +12,7 @@ export const generateJWT = (res: Response, user: UserT) => {
     username,
   };
 
-  const token = jwt.sign(payload, Config.secretKey, {
+  const token = jwt.sign(payload, Config.secret, {
     expiresIn: "7d",
   });
 
@@ -35,7 +35,7 @@ export const verifyJWT = (req: Request) => {
       };
     }
 
-    const decoded = jwt.verify(_jwt, Config.secretKey);
+    const decoded = jwt.verify(_jwt, Config.secret);
 
     return {
       sucess: true,

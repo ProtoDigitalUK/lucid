@@ -3,9 +3,9 @@ import sanitizeHtml from "sanitize-html";
 
 // ------------------------------------
 // Types & Interfaces
-interface BrickConfig {}
+export interface BrickConfig {}
 
-type FieldTypes =
+export type FieldTypes =
   | "tab"
   | "text"
   | "wysiwyg"
@@ -22,7 +22,7 @@ type FieldTypes =
   | "pagelink"
   | "link";
 
-enum FieldTypesEnum {
+export enum FieldTypesEnum {
   Tab = "tab",
   Text = "text",
   Wysiwyg = "wysiwyg",
@@ -40,10 +40,10 @@ enum FieldTypesEnum {
   Link = "link",
 }
 
-type BrickBuilderT = InstanceType<typeof BrickBuilder>;
+export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 
 // Custom Fields
-interface CustomField {
+export interface CustomField {
   type: FieldTypes;
   key: CustomFieldConfig["key"];
   title: CustomFieldConfig["title"];
@@ -108,7 +108,7 @@ const baseCustomFieldSchema = z.object({
     })
     .optional(),
 });
-type Fields = z.infer<typeof baseCustomFieldSchema> & {
+export type Fields = z.infer<typeof baseCustomFieldSchema> & {
   fields?: Fields[];
 };
 const customFieldSchemaObject: z.ZodType<Fields> = baseCustomFieldSchema.extend(
@@ -120,14 +120,14 @@ const customFieldSchemaObject: z.ZodType<Fields> = baseCustomFieldSchema.extend(
 
 // ------------------------------------
 // Validate
-interface ValidationResponse {
+export interface ValidationResponse {
   valid: boolean;
   message?: string;
 }
 
 // ------------------------------------
 // Custom Fields Config
-interface CustomFieldConfig {
+export interface CustomFieldConfig {
   key: string;
   title?: string;
   description?: string;
@@ -137,8 +137,8 @@ interface CustomFieldConfig {
 }
 
 // text field
-interface TabConfig extends CustomFieldConfig {}
-interface TextConfig extends CustomFieldConfig {
+export interface TabConfig extends CustomFieldConfig {}
+export interface TextConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
@@ -146,7 +146,7 @@ interface TextConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
-interface WysiwygConfig extends CustomFieldConfig {
+export interface WysiwygConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
@@ -154,7 +154,7 @@ interface WysiwygConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
-interface ImageConfig extends CustomFieldConfig {
+export interface ImageConfig extends CustomFieldConfig {
   validation?: {
     required?: boolean;
     extensions?: string[];
@@ -168,12 +168,12 @@ interface ImageConfig extends CustomFieldConfig {
     };
   };
 }
-interface RepeaterConfig extends CustomFieldConfig {
+export interface RepeaterConfig extends CustomFieldConfig {
   validation?: {
     required?: boolean;
   };
 }
-interface NumberConfig extends CustomFieldConfig {
+export interface NumberConfig extends CustomFieldConfig {
   default?: number;
   placeholder?: string;
   validation?: {
@@ -181,15 +181,15 @@ interface NumberConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
-interface CheckboxConfig extends CustomFieldConfig {
+export interface CheckboxConfig extends CustomFieldConfig {
   default?: boolean;
 }
-interface SelectConfig extends CustomFieldConfig {
+export interface SelectConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   options: Array<{ label: string; value: string }>;
 }
-interface TextareaConfig extends CustomFieldConfig {
+export interface TextareaConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
@@ -197,7 +197,7 @@ interface TextareaConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
-interface JSONConfig extends CustomFieldConfig {
+export interface JSONConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
@@ -205,32 +205,32 @@ interface JSONConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
-interface FileConfig extends CustomFieldConfig {
+export interface FileConfig extends CustomFieldConfig {
   validation?: {
     required?: boolean;
     extensions?: string[];
   };
 }
-interface ColourConfig extends CustomFieldConfig {
+export interface ColourConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
     required?: boolean;
   };
 }
-interface DateTimeConfig extends CustomFieldConfig {
+export interface DateTimeConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
     required?: boolean;
   };
 }
-interface PageLinkConfig extends CustomFieldConfig {
+export interface PageLinkConfig extends CustomFieldConfig {
   validation?: {
     required?: boolean;
   };
 }
-interface LinkConfig extends CustomFieldConfig {
+export interface LinkConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
   validation?: {
@@ -238,7 +238,7 @@ interface LinkConfig extends CustomFieldConfig {
   };
 }
 
-type FieldConfigs =
+export type FieldConfigs =
   | TabConfig
   | TextConfig
   | WysiwygConfig
@@ -905,5 +905,4 @@ const BrickBuilder = class BrickBuilder {
 // });
 // console.log(valid);
 
-export { BrickBuilderT, CustomField, FieldTypes, FieldTypesEnum };
 export default BrickBuilder;

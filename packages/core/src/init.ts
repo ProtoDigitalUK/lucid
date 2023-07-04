@@ -18,10 +18,9 @@ import {
 
 const app = async (config: InitConfig) => {
   const app = config.express;
-
   // ------------------------------------
   // Config
-  Config.validate();
+  await Config.validate();
 
   // ------------------------------------
   // Server wide middleware
@@ -29,13 +28,13 @@ const app = async (config: InitConfig) => {
   app.use(express.json());
   app.use(
     cors({
-      origin: Config.get().origin,
+      origin: config.origin,
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   );
   app.use(morgan("dev"));
-  app.use(cookieParser(Config.get().secretKey));
+  app.use(cookieParser(Config.secret));
   app.use(
     fileUpload({
       debug: Config.mode === "development",

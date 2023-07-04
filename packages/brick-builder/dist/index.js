@@ -566,4 +566,52 @@ const BrickBuilder = (_a = class BrickBuilder {
         }
     },
     _a);
+// const bannerBrick = new BrickBuilder("banner")
+//   .addTab({
+//     key: "content_tab",
+//   })
+//   .addText({
+//     key: "title",
+//     description: "The title of the banner",
+//     validation: {
+//       zod: z.string().min(3).max(10),
+//     },
+//   })
+//   .addWysiwyg({
+//     key: "description",
+//   })
+//   .addRepeater({
+//     key: "links",
+//     validation: {
+//       max: 3,
+//     },
+//   })
+//   .addText({
+//     key: "image_alt",
+//     validation: {
+//       zod: z.string().min(3).max(10),
+//     },
+//   })
+//   .addImage({
+//     key: "image",
+//   })
+//   .endRepeater()
+//   .addWysiwyg({
+//     key: "description_last",
+//   })
+//   .addTab({
+//     key: "general-2",
+//   })
+//   .addText({
+//     key: "title-2",
+//     description: "The title of the banner",
+//   });
+// // @ts-ignore
+// console.log(bannerBrick.fieldTree[0].fields);
+// const valid = bannerBrick.validateTextType({
+//   type: "text",
+//   key: "image_alt",
+//   value: "hello",
+// });
+// console.log(valid);
 exports.default = BrickBuilder;
