@@ -255,7 +255,7 @@ export type FieldConfigs =
 
 // ------------------------------------
 // BrickBuilder
-const BrickBuilder = class BrickBuilder {
+export default class BrickBuilder {
   key: string;
   title: string;
   fields: Map<string, CustomField> = new Map();
@@ -852,7 +852,7 @@ const BrickBuilder = class BrickBuilder {
       throw new Error(`Field with key "${key}" already exists.`);
     }
   }
-};
+}
 
 // const bannerBrick = new BrickBuilder("banner")
 //   .addTab({
@@ -904,5 +904,3 @@ const BrickBuilder = class BrickBuilder {
 //   value: "hello",
 // });
 // console.log(valid);
-
-export default BrickBuilder;

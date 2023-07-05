@@ -45,8 +45,8 @@ export interface CollectionBrickT {
 export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 
 // ------------------------------------
-// BrickBuilder
-const CollectionBuilder = class CollectionBuilder {
+// Collection Builder
+export default class CollectionBuilder {
   key: string;
   config: CollectionOptions["config"];
   constructor(key: string, options: CollectionOptions) {
@@ -106,6 +106,4 @@ const CollectionBuilder = class CollectionBuilder {
       throw new Error("Invalid Collection Config");
     }
   };
-};
-
-export default CollectionBuilder;
+}
