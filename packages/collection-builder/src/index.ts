@@ -28,13 +28,11 @@ export interface CollectionConfigT {
 }
 
 export interface CollectionOptions {
-  config: {
-    type: "pages" | "singlepage";
-    title: string;
-    singular: string;
-    description: string | undefined;
-    bricks: Array<CollectionBrickT>;
-  };
+  type: "pages" | "singlepage";
+  title: string;
+  singular: string;
+  description: string | undefined;
+  bricks: Array<CollectionBrickT>;
 }
 export interface CollectionBrickT {
   key: string;
@@ -48,10 +46,10 @@ export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 // Collection Builder
 export default class CollectionBuilder {
   key: string;
-  config: CollectionOptions["config"];
+  config: CollectionOptions;
   constructor(key: string, options: CollectionOptions) {
     this.key = key;
-    this.config = options.config;
+    this.config = options;
 
     this.#validateOptions(options);
     this.#removeDuplicateBricks();

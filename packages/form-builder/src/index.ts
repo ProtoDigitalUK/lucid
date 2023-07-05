@@ -6,6 +6,7 @@ const FormBuilderOptionsSchema = z.object({
 
   structure: z.array(
     z.object({
+      data_key: z.string(),
       type: z.enum([
         "text",
         "number",
@@ -30,7 +31,6 @@ const FormBuilderOptionsSchema = z.object({
         .optional(),
     })
   ),
-  data_key: z.string(),
 });
 
 // ------------------------------------

@@ -15,13 +15,25 @@ CollectionBuilder is a JavaScript library designed for Lucid CMS. It simplifies 
 
 ```typescript
 const pageCollection = new CollectionBuilder("page", {
-  config: {
-    type: "pages",
-    title: "Pages",
-    singular: "Page",
-    description: "Pages are used to create static content on your website.",
-    bricks: ["banner", "intro"],
-  },
+  type: "pages",
+  title: "Pages",
+  singular: "Page",
+  description: "Pages are used to create static content on your website.",
+  bricks: [
+    {
+      key: "banner",
+      type: "builder",
+    },
+    {
+      key: "intro",
+      type: "builder",
+    },
+    {
+      key: "default_meta",
+      type: "fixed",
+      position: "bottom",
+    },
+  ],
 });
 
 const settingsCollection = new CollectionBuilder("settings", {
@@ -30,7 +42,13 @@ const settingsCollection = new CollectionBuilder("settings", {
     title: "Settings",
     singular: "Setting",
     description: "Settings are used to configure your website.",
-    bricks: ["default_meta"],
+    bricks: [
+      {
+        key: "default_meta",
+        type: "fixed",
+        position: "standard",
+      },
+    ],
   },
 });
 ```
