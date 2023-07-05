@@ -1,7 +1,5 @@
 # @lucid/collection-builder
 
-> IN ACTIVE DEVELOPMENT
-
 CollectionBuilder is a JavaScript library designed for Lucid CMS. It simplifies the process of defining collections within the CMS, making it a powerful tool for CMS developers.
 
 ## Features
@@ -14,6 +12,8 @@ CollectionBuilder is a JavaScript library designed for Lucid CMS. It simplifies 
 ## Usage
 
 ```typescript
+import { CollectionBuilder } from "@lucid/core";
+
 const pageCollection = new CollectionBuilder("page", {
   type: "pages",
   title: "Pages",

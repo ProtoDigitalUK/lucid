@@ -1,12 +1,14 @@
 # @lucid/form-builder
 
-> IN ACTIVE DEVELOPMENT
+FormBuilder works in conjunction with Lucid Core to provide a way to define the structure of form data. The CMS uses this information to generate pages to display all recorded form submissions.
 
-## Features
+The Core package provides a function to store form submissions in the database, so depending on the data you choose to save there, you can use this to define how it looks in the CMS. The `data_key` value is used to determine the path to the data, where `.` is used to denote a nested object, and `[]` is used to denote an array.
 
 ## Usage
 
 ```typescript
+import { FormBuilder } from "@lucid/core";
+
 new FormBuilder("contact-form", {
   title: z.string(),
   description: z.string().optional(),

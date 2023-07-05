@@ -1,7 +1,5 @@
 # @lucid/brick-builder
 
-> IN ACTIVE DEVELOPMENT
-
 BrickBuilder is a JavaScript library designed to provide a flexible and dynamic way to construct content structures for Content Management Systems (CMS). It takes inspiration from the Advanced Custom Fields (ACF) plugin for WordPress, allowing developers to build custom fields, tabs, and repeaters to define complex content structures.
 
 ## Key Features
@@ -14,6 +12,8 @@ BrickBuilder is a JavaScript library designed to provide a flexible and dynamic 
 ## Usage
 
 ```typescript
+import { BrickBuilder } from "@lucid/core";
+
 const myBrick = new BrickBuilder("my_brick")
   .addTab({
     key: "content_tab",

@@ -4,6 +4,7 @@
 
 - [BrickBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/brick-builder)
 - [CollectionBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/collection-builder)
+- [FormBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/form-builder)
 - [Core](https://github.com/WillYallop/Lucid/tree/master/packages/core)
 
 ## Installation
@@ -76,4 +77,4 @@ username: admin
 password: admin
 ```
 
-After logging in for the first time, you will be prompted to change your password, email and optionally your username.
+When logging in for the first time, you will be prompted to change your password, email and optionally your username. The first two are required, but you can leave the username field blank to keep the default value.
