@@ -1,4 +1,4 @@
-import BrickBuilder from "@lucid/brick-builder";
+import { BrickBuilder } from "@lucid/core";
 
 export const banner = new BrickBuilder("banner")
   .addTab({
@@ -7,12 +7,8 @@ export const banner = new BrickBuilder("banner")
   .addText({
     key: "title",
     description: "The title of the banner",
-    validate: (value) => {
-      const v = value as string;
-      if (v.length > 10) {
-        return "Title must be less than 10 characters";
-      }
-      return "";
+    validation: {
+      required: true,
     },
   })
   .addWysiwyg({

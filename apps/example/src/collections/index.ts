@@ -1,4 +1,4 @@
-import CollectionBuilder from "@lucid/collection-builder";
+import { CollectionBuilder } from "@lucid/core";
 
 export const pages = new CollectionBuilder("page", {
   config: {

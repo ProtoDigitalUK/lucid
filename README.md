@@ -9,32 +9,45 @@
 ## Installation
 
 ```bash
-npm install @lucid/core @lucid/brick-builder @lucid/collection-builder
+npm install @lucid/core
 ```
 
 ## lucid.config.ts/js
 
 ```ts
-import { type Config } from "@lucid/core";
+import { buildConfig } from "@lucid/core";
 import { banner, intro, defaultMeta } from "./src/bricks";
 import { pages, settings } from "./src/collections";
 
-const config: Config = {
-  databaseUrl: process.env.LUCID_database_url as string,
-  port: 8393,
+export default buildConfig({
   origin: "*",
   mode: "development",
-  secretKey: process.env.LUCID_SECRET_KEY as string,
+  postgresURL: process.env.LUCID_POSTGRES_URL as string,
+  secret: process.env.LUCID_SECRET_KEY as string,
   environments: [
     {
-      title: "Site Production",
-      key: "site_prod",
+      title: "Production",
+      key: "production",
     },
     {
-      title: "Site Staging",
-      key: "site_stage",
+      title: "Staging",
+      key: "staging",
     },
   ],
+  email: {
+    from: {
+      name: "Lucid CMS",
+      email: "hello@lucidcms.com",
+    },
+    templateDir: path.join(__dirname, "./templates"),
+    smtp: {
+      host: "127.0.0.1",
+      port: 6969,
+      secure: false,
+      user: process.env.LUCID_SMPT_USER as string,
+      pass: process.env.LUCID_SMPT_PASS as string,
+    },
+  },
   media: {
     storageLimit: 5368709120,
     maxFileSize: 16777216,
@@ -49,9 +62,7 @@ const config: Config = {
   },
   collections: [pages, settings],
   bricks: [banner, intro, defaultMeta],
-};
-
-export default config;
+});
 ```
 
 > Check the example app: [example](https://github.com/WillYallop/Lucid/tree/master/apps/example/lucid.config.ts)

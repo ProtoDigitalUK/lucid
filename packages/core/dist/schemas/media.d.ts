@@ -49,10 +49,10 @@ declare const _default: {
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
                 value: "asc" | "desc";
-                key: "name" | "created_at" | "updated_at" | "width" | "height" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }, {
                 value: "asc" | "desc";
-                key: "name" | "created_at" | "updated_at" | "width" | "height" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }>, "many">>;
             page: z.ZodOptional<z.ZodString>;
             per_page: z.ZodOptional<z.ZodString>;
@@ -65,7 +65,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "asc" | "desc";
-                key: "name" | "created_at" | "updated_at" | "width" | "height" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -78,7 +78,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "asc" | "desc";
-                key: "name" | "created_at" | "updated_at" | "width" | "height" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;

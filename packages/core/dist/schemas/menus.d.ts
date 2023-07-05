@@ -11,14 +11,14 @@ declare const BaseMenuItemSchema: z.ZodObject<{
     id?: number | undefined;
     url?: string | undefined;
     page_id?: number | undefined;
-    target?: "_blank" | "_self" | "_parent" | "_top" | undefined;
+    target?: "_self" | "_blank" | "_parent" | "_top" | undefined;
     meta?: any;
 }, {
     name: string;
     id?: number | undefined;
     url?: string | undefined;
     page_id?: number | undefined;
-    target?: "_blank" | "_self" | "_parent" | "_top" | undefined;
+    target?: "_self" | "_blank" | "_parent" | "_top" | undefined;
     meta?: any;
 }>;
 declare const BaseMenuItemSchemaUpdate: z.ZodObject<{
@@ -33,14 +33,14 @@ declare const BaseMenuItemSchemaUpdate: z.ZodObject<{
     url?: string | undefined;
     page_id?: number | undefined;
     name?: string | undefined;
-    target?: "_blank" | "_self" | "_parent" | "_top" | undefined;
+    target?: "_self" | "_blank" | "_parent" | "_top" | undefined;
     meta?: any;
 }, {
     id?: number | undefined;
     url?: string | undefined;
     page_id?: number | undefined;
     name?: string | undefined;
-    target?: "_blank" | "_self" | "_parent" | "_top" | undefined;
+    target?: "_self" | "_blank" | "_parent" | "_top" | undefined;
     meta?: any;
 }>;
 export type MenuItem = z.infer<typeof BaseMenuItemSchema> & {

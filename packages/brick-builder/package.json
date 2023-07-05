@@ -3,11 +3,9 @@
   "version": "0.0.0",
   "private": false,
   "description": "A flexible library for building content structures for Content Management Systems, with features including various field types, nested repeaters, and top-level tab grouping.",
-  "main": "dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "repository": {
     "type": "git",

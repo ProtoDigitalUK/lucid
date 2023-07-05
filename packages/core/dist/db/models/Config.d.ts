@@ -111,41 +111,41 @@ export default class Config {
             value: any;
             secondaryValue?: any;
         }): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateSelectType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+        "__#2@#validateSelectType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateWysiwygType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+        "__#2@#validateWysiwygType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateImageType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+        "__#2@#validateImageType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateFileType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
+        "__#2@#validateFileType"(field: import("@lucid/brick-builder").CustomField, { type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateDatetimeType"({ type, key, value, }: {
+        "__#2@#validateDatetimeType"({ type, key, value, }: {
             type: string;
             key: string;
             value: string;
         }): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateLinkTarget"(value: string): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateRequired"(value: any): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateType"(providedType: string, type: import("@lucid/brick-builder").FieldTypes): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateZodSchema"(schema: z.ZodType<any, z.ZodTypeDef, any>, value: any): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateIsString"(value: any): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateIsNumber"(value: any): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#validateIsBoolean"(value: any): import("@lucid/brick-builder").ValidationResponse;
-        "__#1@#keyToTitle"(key: string): string;
-        "__#1@#addToFields"(type: import("@lucid/brick-builder").FieldTypes, config: import("@lucid/brick-builder").FieldConfigs): void;
-        "__#1@#checkKeyDuplication"(key: string): void;
+        "__#2@#validateLinkTarget"(value: string): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#validateRequired"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#validateType"(providedType: string, type: import("@lucid/brick-builder").FieldTypes): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#validateZodSchema"(schema: z.ZodType<any, z.ZodTypeDef, any>, value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#validateIsString"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#validateIsNumber"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#validateIsBoolean"(value: any): import("@lucid/brick-builder").ValidationResponse;
+        "__#2@#keyToTitle"(key: string): string;
+        "__#2@#addToFields"(type: import("@lucid/brick-builder").FieldTypes, config: import("@lucid/brick-builder").FieldConfigs): void;
+        "__#2@#checkKeyDuplication"(key: string): void;
     }[] | undefined;
     static get collections(): {
         key: string;
@@ -156,9 +156,9 @@ export default class Config {
             description: string | undefined;
             bricks: import("@lucid/collection-builder").CollectionBrickT[];
         };
-        "__#1@#removeDuplicateBricks": () => void;
-        "__#1@#addBrickDefaults": () => void;
-        "__#1@#validateOptions": (options: import("@lucid/collection-builder").CollectionOptions) => void;
+        "__#3@#removeDuplicateBricks": () => void;
+        "__#3@#addBrickDefaults": () => void;
+        "__#3@#validateOptions": (options: import("@lucid/collection-builder").CollectionOptions) => void;
     }[] | undefined;
     static get postgresURL(): string;
     static get origin(): string;

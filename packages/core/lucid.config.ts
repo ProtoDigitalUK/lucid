@@ -1,7 +1,5 @@
-import { buildConfig } from "./src/index";
+import { buildConfig, BrickBuilder, CollectionBuilder } from "./src/index";
 import z from "zod";
-import BrickBuilder from "@lucid/brick-builder";
-import CollectionBuilder from "@lucid/collection-builder";
 
 // ------------------------------------
 // Define Bricks
@@ -36,9 +34,6 @@ const bannerBrick = new BrickBuilder("banner")
   })
   .addRepeater({
     key: "social_links",
-    validation: {
-      max: 5,
-    },
   })
   .addText({
     key: "social_title",

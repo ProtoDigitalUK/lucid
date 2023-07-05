@@ -9,16 +9,16 @@ declare const baseFieldSchema: z.ZodObject<{
     value: z.ZodAny;
     target: z.ZodOptional<z.ZodAny>;
 }, "strip", z.ZodTypeAny, {
-    type: FieldTypesEnum;
     key: string;
+    type: FieldTypesEnum;
     fields_id?: number | undefined;
     parent_repeater?: number | undefined;
     group_position?: number | undefined;
     value?: any;
     target?: any;
 }, {
-    type: FieldTypesEnum;
     key: string;
+    type: FieldTypesEnum;
     fields_id?: number | undefined;
     parent_repeater?: number | undefined;
     group_position?: number | undefined;
