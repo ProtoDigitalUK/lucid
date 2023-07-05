@@ -1,9 +1,10 @@
 import { buildConfig, BrickBuilder, CollectionBuilder } from "./src/index";
 import z from "zod";
+import { ContactForm } from "./src/dev";
 
 // ------------------------------------
 // Define Bricks
-const bannerBrick = new BrickBuilder("banner")
+const BannerBrick = new BrickBuilder("banner")
   .addTab({
     key: "content_tab",
   })
@@ -51,7 +52,7 @@ const bannerBrick = new BrickBuilder("banner")
     default: true,
   });
 
-const introBrick = new BrickBuilder("intro")
+const IntroBrick = new BrickBuilder("intro")
   .addTab({
     key: "content_tab",
   })
@@ -62,7 +63,7 @@ const introBrick = new BrickBuilder("intro")
     key: "intro",
   });
 
-const defaultMetaBrick = new BrickBuilder("default_meta")
+const DefaultMetaBrick = new BrickBuilder("default_meta")
   .addText({
     key: "meta_title",
     title: "Meta Title",
@@ -74,7 +75,7 @@ const defaultMetaBrick = new BrickBuilder("default_meta")
 
 // ------------------------------------
 // Define Collections
-const pageCollection = new CollectionBuilder("page", {
+const PageCollection = new CollectionBuilder("page", {
   type: "pages",
   title: "Pages",
   singular: "Page",
@@ -96,7 +97,7 @@ const pageCollection = new CollectionBuilder("page", {
   ],
 });
 
-const settingsCollection = new CollectionBuilder("settings", {
+const SettingsCollection = new CollectionBuilder("settings", {
   type: "singlepage",
   title: "Settings",
   singular: "Setting",
@@ -110,6 +111,11 @@ const settingsCollection = new CollectionBuilder("settings", {
   ],
 });
 
+// ------------------------------------
+// Define Forms
+
+// ------------------------------------
+// Build Config
 export default buildConfig({
   origin: "*",
   mode: "development",
@@ -150,6 +156,7 @@ export default buildConfig({
       secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
     },
   },
-  collections: [pageCollection, settingsCollection],
-  bricks: [bannerBrick, introBrick, defaultMetaBrick],
+  forms: [ContactForm],
+  collections: [PageCollection, SettingsCollection],
+  bricks: [BannerBrick, IntroBrick, DefaultMetaBrick],
 });

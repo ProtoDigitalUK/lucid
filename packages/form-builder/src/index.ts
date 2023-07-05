@@ -4,9 +4,9 @@ const FormBuilderOptionsSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
 
-  structure: z.array(
+  fields: z.array(
     z.object({
-      data_key: z.string(),
+      zod: z.any().optional(),
       type: z.enum([
         "text",
         "number",
@@ -15,8 +15,6 @@ const FormBuilderOptionsSchema = z.object({
         "radio",
         "date",
         "textarea",
-        "file",
-        "image",
       ]),
       name: z.string(),
       label: z.string(),
@@ -29,13 +27,15 @@ const FormBuilderOptionsSchema = z.object({
           })
         )
         .optional(),
+      default_value: z.union([z.string(), z.number(), z.boolean()]).optional(),
+      show_in_table: z.boolean().optional(),
     })
   ),
 });
 
 // ------------------------------------
 // Types & Interfaces
-export interface FormBuilderOptionsT {}
+export type FormBuilderOptionsT = z.infer<typeof FormBuilderOptionsSchema>;
 
 export type FormBuilderT = InstanceType<typeof FormBuilder>;
 
@@ -51,14 +51,29 @@ export default class FormBuilder {
     this.#validateOptions(options);
   }
   // ------------------------------------
-  // Methods
+  // External Functions
+  validate = async (data: { [key: string]: string | number | boolean }) => {
+    const errors: {
+      [key: string]: string[];
+    } = {};
 
-  // ------------------------------------
-  // Getters
+    for (const key in data) {
+      const field = this.options.fields.find((field) => field.name === key);
+      if (field && field.zod) {
+        const result = await field.zod.safeParseAsync(data[key]);
+        if (!result.success) {
+          const zerrors: z.ZodError = result.error;
+          const issues = zerrors.issues;
+          errors[key] = issues.map((err) => err.message);
+        }
+      }
+    }
 
-  // ------------------------------------
-  // External Methods
-
+    return {
+      valid: Object.keys(errors).length === 0,
+      errors: errors,
+    };
+  };
   // ------------------------------------
   // Private Methods
   #validateOptions = (options: FormBuilderOptionsT) => {

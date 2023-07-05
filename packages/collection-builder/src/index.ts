@@ -1,19 +1,17 @@
 import z from "zod";
 
 const CollectionOptionsSchema = z.object({
-  config: z.object({
-    type: z.enum(["pages", "singlepage"]),
-    title: z.string(),
-    singular: z.string(),
-    description: z.string().optional(),
-    bricks: z.array(
-      z.object({
-        key: z.string(),
-        type: z.enum(["builder", "fixed"]),
-        position: z.enum(["standard", "bottom", "top", "sidebar"]).optional(),
-      })
-    ),
-  }),
+  type: z.enum(["pages", "singlepage"]),
+  title: z.string(),
+  singular: z.string(),
+  description: z.string().optional(),
+  bricks: z.array(
+    z.object({
+      key: z.string(),
+      type: z.enum(["builder", "fixed"]),
+      position: z.enum(["standard", "bottom", "top", "sidebar"]).optional(),
+    })
+  ),
 });
 
 // ------------------------------------

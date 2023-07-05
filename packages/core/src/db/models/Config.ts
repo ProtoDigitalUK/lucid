@@ -8,6 +8,7 @@ import { fromZodError } from "zod-validation-error";
 // Internal packages
 import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
+import { FormBuilderT } from "@lucid/form-builder";
 
 // -------------------------------------------
 // Config
@@ -16,6 +17,7 @@ const configSchema = z.object({
   mode: z.enum(["development", "production"]),
   postgresURL: z.string(),
   secret: z.string(),
+  forms: z.array(z.any()).optional(),
   collections: z.array(z.any()).optional(),
   bricks: z.array(z.any()).optional(),
   media: z.object({
@@ -65,6 +67,7 @@ export type ConfigT = {
     title: string;
     key: string;
   }>;
+  forms?: FormBuilderT[];
   collections?: CollectionBuilderT[];
   bricks?: BrickBuilderT[];
   media: {
@@ -106,6 +109,7 @@ export default class Config {
 
       Config.#validateBricks(config);
       Config.#validateCollections(config);
+      Config.#validateForms(config);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const validationError = fromZodError(error);
@@ -223,6 +227,9 @@ export default class Config {
   static get origin() {
     return Config.configCache.origin;
   }
+  static get forms() {
+    return Config.configCache.forms;
+  }
   // -------------------------------------------
   // Private
   static #validateBricks(config: ConfigT) {
@@ -244,6 +251,16 @@ export default class Config {
     if (collectionKeys.length !== uniqueCollectionKeys.length) {
       throw new RuntimeError(
         "Each collection key must be unique, found duplicates in lucid.config.ts/js."
+      );
+    }
+  }
+  static #validateForms(config: ConfigT) {
+    if (!config.forms) return;
+    const formKeys = config.forms.map((form) => form.key);
+    const uniqueFormKeys = [...new Set(formKeys)];
+    if (formKeys.length !== uniqueFormKeys.length) {
+      throw new RuntimeError(
+        "Each form key must be unique, found duplicates in lucid.config.ts/js."
       );
     }
   }
