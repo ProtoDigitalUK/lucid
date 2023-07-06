@@ -49,16 +49,20 @@ app.get("/test", async (req, res) => {
   }
 
   // save form data & send email
-  saveFormSubmission(ContactForm, data);
-  sendEmail("contact-form", {
-    data: data,
-    options: {
-      to: "",
-      subject: "New contact form submission",
-    },
+  const submission = await saveFormSubmission({
+    environment_key: "site_prod",
+    form: ContactForm,
+    data,
   });
+  // sendEmail("contact-form", {
+  //   data: data,
+  //   options: {
+  //     to: "",
+  //     subject: "New contact form submission",
+  //   },
+  // });
 
-  res.json({ valid, errors });
+  res.json({ submission });
 });
 
 app.listen(8393, () => {

@@ -2,35 +2,55 @@ import FormBuilder from "@lucid/form-builder";
 // Models
 import Form from "@db/models/Form";
 
-interface SubmissionDataT {
-  [key: string]: string | number | boolean;
+interface SubmissionPropsT {
+  environment_key: string;
+  form: FormBuilder;
+  data: {
+    [key: string]: string | number | boolean;
+  };
 }
 
-export const saveFormSubmission = async (
-  form: FormBuilder,
-  data: SubmissionDataT
-) => {
-  /*
-        Forms have 3 tables in the DB:
+export const saveFormSubmission = async (props: SubmissionPropsT) => {
+  const data: {
+    name: string;
+    value: string | number | boolean;
+    type: "string" | "number" | "boolean";
+  }[] = [];
 
-        1. Form Types
-        2. Form Fields
-        3. Form Data
+  // Create or update form fields
+  for (let [key, value] of Object.entries(props.data)) {
+    // Set default value if it is not set
+    if (!value) {
+      const defaultValue = props.form.options.fields.find(
+        (field) => field.name === key
+      )?.default_value;
+      if (defaultValue !== undefined) {
+        value = defaultValue;
+      }
+    }
 
+    // Check if the value is a string, number or boolean
+    const type = typeof value;
+    if (type !== "string" && type !== "number" && type !== "boolean") {
+      throw new Error(
+        "Form submision data must be a string, number or boolean."
+      );
+    }
 
-        ! Form Types
-        For each unique form.key, there is a form type, if the name and description are different, update them.
+    // Add to data array
+    data.push({
+      name: key,
+      value: value,
+      type: type,
+    });
+  }
 
-        ! Form Fields
-        For each field in the form, create or update a form field, never delete ones that are not present as they may be used in previous submissions.
+  const formRes = await Form.createSingle({
+    id: undefined,
+    form_key: props.form.key,
+    environment_key: props.environment_key,
+    data,
+  });
 
-        ! Form Data
-        For the all form data, create a new form data row that stores the value and the form field id it belongs to.
-
-
-        ===================================¬
-        | If all went well, return success |
-    */
-
-  await Form.upsertSingle({});
+  return formRes;
 };

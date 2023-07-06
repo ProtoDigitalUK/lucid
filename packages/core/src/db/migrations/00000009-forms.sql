@@ -1,18 +1,17 @@
-
-CREATE TABLE IF NOT EXISTS lucid_forms (
-  key TEXT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS lucid_form_submissions (
+  id SERIAL PRIMARY KEY,
+  form_key TEXT NOT NULL, -- referneces formbuilder instance
   environment_key TEXT NOT NULL REFERENCES lucid_environments(key) ON DELETE CASCADE,
 
-  title TEXT NOT NULL,
-  description TEXT,
+  read_at TIMESTAMP,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS lucid_forms_data (
+CREATE TABLE IF NOT EXISTS lucid_form_data (
   id SERIAL PRIMARY KEY,
-  forms_key TEXT NOT NULL REFERENCES lucid_forms(key) ON DELETE CASCADE,
+  form_submission_id INTEGER NOT NULL REFERENCES lucid_form_submissions(id) ON DELETE CASCADE,
 
   name TEXT NOT NULL,
   text_value TEXT,
