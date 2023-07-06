@@ -4,6 +4,7 @@ import r from "@utils/route";
 
 // Submissions
 import getSingleSubmission from "@controllers/form-submissions/get-single";
+import getMultipleSubmissions from "@controllers/form-submissions/get-multiple";
 
 // ------------------------------------
 // Router
@@ -22,6 +23,21 @@ r(router, {
   },
   schema: getSingleSubmission.schema,
   controller: getSingleSubmission.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/:form_key/submissions",
+  permissions: {
+    environments: ["read_form_submissions"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: getMultipleSubmissions.schema,
+  controller: getMultipleSubmissions.controller,
 });
 
 export default router;

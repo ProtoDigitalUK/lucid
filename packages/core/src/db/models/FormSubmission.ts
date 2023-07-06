@@ -1,15 +1,18 @@
 import getDBClient from "@db/db";
+import z from "zod";
 // Utils
 import { LucidError } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Models
 import Config from "@db/models/Config";
+import Environment from "@db/models/Environment";
+
 // Serices
 import {
   formatFormSubmission,
   FormSubmissionResT,
 } from "@services/forms/format-form";
-import Environment from "./Environment";
+import formSubmissionsSchema from "@schemas/form-submissions";
 
 // -------------------------------------------
 // Types
@@ -30,9 +33,21 @@ type FormSubmissionGetSingle = (data: {
   environment_key: string;
 }) => Promise<FormSubmissionResT>;
 
-type FormSubmissionGetMultiple = (data: {}) => Promise<FormSubmissionResT>;
+type FormSubmissionGetMultiple = (
+  query: z.infer<typeof formSubmissionsSchema.getMultiple.query>,
+  data: {
+    form_key: string;
+    environment_key: string;
+  }
+) => Promise<{
+  data: FormSubmissionResT[];
+  count: number;
+}>;
 
-type FormSubmissionUpdateSingle = (data: {}) => Promise<FormSubmissionResT>;
+type FormSubmissionUpdateSingle = (data: {
+  form_key: string;
+  environment_key: string;
+}) => Promise<FormSubmissionResT>;
 
 // -------------------------------------------
 // Form Submission
@@ -130,10 +145,101 @@ export default class FormSubmission {
       data: formData,
     });
   };
-  static getMultiple: FormSubmissionGetMultiple = async (data) => {
-    return {} as FormSubmissionResT;
+  static getMultiple: FormSubmissionGetMultiple = async (query, data) => {
+    const client = await getDBClient;
+
+    // Check if form is assigned to environment
+    await FormSubmission.#checkFormEnvrionmentPermissions(data);
+
+    const { sort, include, page, per_page } = query;
+
+    // Build Query Data and Query
+    const SelectQuery = new SelectQueryBuilder({
+      columns: [
+        "id",
+        "form_key",
+        "environment_key",
+        "read_at",
+        "created_at",
+        "updated_at",
+      ],
+      filter: {
+        data: {
+          environment_key: data.environment_key,
+          form_key: data.form_key,
+        },
+        meta: {
+          environment_key: {
+            operator: "=",
+            type: "text",
+            columnType: "standard",
+          },
+          form_key: {
+            operator: "=",
+            type: "text",
+            columnType: "standard",
+          },
+        },
+      },
+      sort: sort,
+      page: page,
+      per_page: per_page,
+    });
+
+    const submissions = await client.query<FormSubmissionsT>({
+      text: `SELECT
+          ${SelectQuery.query.select}
+        FROM
+          lucid_form_submissions
+        ${SelectQuery.query.where}
+        ${SelectQuery.query.order}
+        ${SelectQuery.query.pagination}`,
+      values: SelectQuery.values,
+    });
+    const count = await client.query<{ count: number }>({
+      text: `SELECT 
+          COUNT(DISTINCT lucid_form_submissions.id)
+        FROM
+          lucid_form_submissions
+        ${SelectQuery.query.where} `,
+      values: SelectQuery.countValues,
+    });
+
+    // Get Form Data
+
+    const formBuilder = await FormSubmission.#getFormBuilder(data.form_key);
+    let formData: FormDataT[] = [];
+
+    if (include?.includes("fields")) {
+      const formSubmissionIds = submissions.rows.map(
+        (submission) => submission.id
+      );
+      formData = await FormSubmission.#getAllFormData(formSubmissionIds);
+    }
+
+    const formattedSubmissions = submissions.rows.map((submission) => {
+      return formatFormSubmission(formBuilder, {
+        submission,
+        data: formData.filter(
+          (field) => field.form_submission_id === submission.id
+        ),
+      });
+    });
+
+    return {
+      data: formattedSubmissions,
+      count: count.rows[0].count,
+    };
   };
   static updateSingle: FormSubmissionUpdateSingle = async (data) => {
+    const client = await getDBClient;
+
+    // Check if form is assigned to environment
+    await FormSubmission.#checkFormEnvrionmentPermissions({
+      form_key: data.form_key,
+      environment_key: data.environment_key,
+    });
+
     return {} as FormSubmissionResT;
   };
   // -------------------------------------------
@@ -243,24 +349,5 @@ export default class FormSubmission {
     }
 
     return res.rows;
-  };
-  static #checkFormEnvrionmentAccess = async (data: {
-    form_key: string;
-    environment_key: string;
-  }) => {
-    const environment = await Environment.getSingle(data.environment_key);
-
-    const hasPerm = environment.assigned_forms?.includes(data.form_key);
-
-    if (!hasPerm) {
-      throw new LucidError({
-        type: "basic",
-        name: "Form Error",
-        message: "This form is not assigned to this environment.",
-        status: 403,
-      });
-    }
-
-    return environment;
   };
 }

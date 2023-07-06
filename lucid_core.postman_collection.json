@@ -1341,7 +1341,47 @@
 									"name": "Get Multiple",
 									"request": {
 										"method": "GET",
-										"header": []
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions?sort=created_at",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"forms",
+												"contact-form",
+												"submissions"
+											],
+											"query": [
+												{
+													"key": "sort",
+													"value": "created_at"
+												},
+												{
+													"key": "sort",
+													"value": "created_at,updated_at,read_at",
+													"disabled": true
+												},
+												{
+													"key": "include",
+													"value": "fields",
+													"disabled": true
+												}
+											]
+										}
 									},
 									"response": []
 								},
@@ -1349,22 +1389,72 @@
 									"name": "Get Single",
 									"request": {
 										"method": "GET",
-										"header": []
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/2",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"forms",
+												"contact-form",
+												"submissions",
+												"2"
+											]
+										}
 									},
 									"response": []
 								},
 								{
-									"name": "Update Single",
+									"name": "Update Single (needs implementing)",
 									"request": {
 										"method": "POST",
-										"header": []
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/1",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"forms",
+												"contact-form",
+												"submissions",
+												"1"
+											]
+										}
 									},
 									"response": []
 								}
 							]
 						},
 						{
-							"name": "Get All",
+							"name": "Get All (needs implementing)",
 							"request": {
 								"method": "GET",
 								"header": []
@@ -1372,7 +1462,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Single",
+							"name": "Get Single (needs implementing)",
 							"request": {
 								"method": "GET",
 								"header": []
