@@ -41,6 +41,10 @@ type PermissionMenu =
   | "read_menu"
   | "update_menu"
   | "delete_menu";
+type PermissionFormSubmissions =
+  | "read_form_submissions"
+  | "delete_form_submissions"
+  | "update_form_submissions";
 
 // Type Categories
 export type PermissionT =
@@ -54,7 +58,8 @@ export type PermissionT =
 export type EnvironmentPermissionT =
   | PermissionContent
   | PermissionCategory
-  | PermissionMenu;
+  | PermissionMenu
+  | PermissionFormSubmissions;
 
 type RolePermissionCreateMultiple = (
   role_id: number,
@@ -189,6 +194,10 @@ export default class RolePermission {
           title: "Menu",
           permissions: RolePermission.menuPermissions,
         },
+        form_submissions: {
+          title: "Form Submissions",
+          permissions: RolePermission.formSubmissionsPermissions,
+        },
       },
     };
   }
@@ -209,6 +218,7 @@ export default class RolePermission {
         ...RolePermission.contentPermissions,
         ...RolePermission.categoryPermissions,
         ...RolePermission.menuPermissions,
+        ...RolePermission.formSubmissionsPermissions,
       ],
     };
   }
@@ -252,5 +262,12 @@ export default class RolePermission {
   }
   static get menuPermissions(): PermissionMenu[] {
     return ["create_menu", "read_menu", "update_menu", "delete_menu"];
+  }
+  static get formSubmissionsPermissions(): PermissionFormSubmissions[] {
+    return [
+      "read_form_submissions",
+      "delete_form_submissions",
+      "update_form_submissions",
+    ];
   }
 }
