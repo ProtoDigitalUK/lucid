@@ -1,5 +1,5 @@
 // Models
-import { FormDataT, FormSubmissionsT } from "@db/models/Form";
+import { FormDataT, FormSubmissionsT } from "@db/models/FormSubmission";
 // Extenal Packages
 import FormBuilder from "@lucid/form-builder";
 

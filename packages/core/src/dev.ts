@@ -1,7 +1,7 @@
 import express from "express";
 import z from "zod";
 import { log } from "console-log-colors";
-import lucid, { FormBuilder, saveFormSubmission } from "./index";
+import lucid, { FormBuilder, submitForm } from "./index";
 
 const app = express();
 
@@ -50,7 +50,7 @@ app.get("/test", async (req, res, next) => {
     }
 
     // save form data & send email
-    const submission = await saveFormSubmission({
+    const submission = await submitForm({
       environment_key: "site_prod",
       form: ContactForm,
       data,

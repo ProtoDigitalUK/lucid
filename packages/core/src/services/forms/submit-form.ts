@@ -1,6 +1,6 @@
 import FormBuilder from "@lucid/form-builder";
 // Models
-import Form from "@db/models/Form";
+import FormSubmission from "@db/models/FormSubmission";
 
 interface SubmissionPropsT {
   environment_key: string;
@@ -10,7 +10,7 @@ interface SubmissionPropsT {
   };
 }
 
-export const saveFormSubmission = async (props: SubmissionPropsT) => {
+export const submitForm = async (props: SubmissionPropsT) => {
   const data: {
     name: string;
     value: string | number | boolean;
@@ -45,7 +45,7 @@ export const saveFormSubmission = async (props: SubmissionPropsT) => {
     });
   }
 
-  const formRes = await Form.createSingle({
+  const formRes = await FormSubmission.createSingle({
     id: undefined,
     form_key: props.form.key,
     environment_key: props.environment_key,

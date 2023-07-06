@@ -653,7 +653,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/brick-config/page/all",
+											"raw": "{{BASE_URL}}/api/v1/brick-config/page/all?include=fields",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -667,8 +667,7 @@
 											"query": [
 												{
 													"key": "include",
-													"value": "fields",
-													"disabled": true
+													"value": "fields"
 												}
 											]
 										},
@@ -1333,6 +1332,56 @@
 					]
 				},
 				{
+					"name": "Forms",
+					"item": [
+						{
+							"name": "Submissions",
+							"item": [
+								{
+									"name": "Get Multiple",
+									"request": {
+										"method": "GET",
+										"header": []
+									},
+									"response": []
+								},
+								{
+									"name": "Get Single",
+									"request": {
+										"method": "GET",
+										"header": []
+									},
+									"response": []
+								},
+								{
+									"name": "Update Single",
+									"request": {
+										"method": "POST",
+										"header": []
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get All",
 					"request": {
 						"method": "GET",
@@ -1396,7 +1445,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"]\r\n}",
+							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"],\r\n    \"assigned_forms\": [\"contact-form\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1646,7 +1695,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-2-1688309882605",
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688491954013",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1654,7 +1703,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-2-1688309882605"
+								"rum-ham-1688491954013"
 							]
 						}
 					},
@@ -1917,13 +1966,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/rum-ham-1688309652545",
+							"raw": "{{BASE_URL}}/cdn/rum-ham-1688492181638",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
-								"rum-ham-1688309652545"
+								"rum-ham-1688492181638"
 							]
 						}
 					},
@@ -2019,12 +2068,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{BASE_URL}}/send-email-custom",
+					"raw": "{{BASE_URL}}/test",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"send-email-custom"
+						"test"
 					]
 				}
 			},
