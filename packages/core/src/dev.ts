@@ -1,7 +1,7 @@
 import express from "express";
 import z from "zod";
 import { log } from "console-log-colors";
-import lucid, { FormBuilder, saveFormSubmission, sendEmail } from "./index";
+import lucid, { FormBuilder, saveFormSubmission } from "./index";
 
 const app = express();
 
@@ -34,35 +34,39 @@ export const ContactForm = new FormBuilder("contact-form", {
   ],
 });
 
-app.get("/test", async (req, res) => {
-  const data = {
-    name: "John Doe",
-    email: "wyallop14@gmail.com",
-    message: "Hello world!",
-  };
+app.get("/test", async (req, res, next) => {
+  try {
+    const data = {
+      name: "John Doe",
+      email: "wyallop14@gmail.com",
+      message: "Hello world!",
+    };
 
-  // validate data with form builder
-  const { valid, errors } = await ContactForm.validate(data);
+    // validate data with form builder
+    const { valid, errors } = await ContactForm.validate(data);
 
-  if (!valid) {
-    return res.json({ errors });
+    if (!valid) {
+      return res.json({ errors });
+    }
+
+    // save form data & send email
+    const submission = await saveFormSubmission({
+      environment_key: "site_prod",
+      form: ContactForm,
+      data,
+    });
+    // sendEmail("contact-form", {
+    //   data: data,
+    //   options: {
+    //     to: "",
+    //     subject: "New contact form submission",
+    //   },
+    // });
+
+    res.json({ submission });
+  } catch (error) {
+    next(error as Error);
   }
-
-  // save form data & send email
-  const submission = await saveFormSubmission({
-    environment_key: "site_prod",
-    form: ContactForm,
-    data,
-  });
-  // sendEmail("contact-form", {
-  //   data: data,
-  //   options: {
-  //     to: "",
-  //     subject: "New contact form submission",
-  //   },
-  // });
-
-  res.json({ submission });
 });
 
 app.listen(8393, () => {

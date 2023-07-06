@@ -9,6 +9,7 @@ import {
   formatFormSubmission,
   FormSubmissionResT,
 } from "@services/forms/format-form";
+import Environment from "./Environment";
 
 // -------------------------------------------
 // Types
@@ -52,6 +53,9 @@ export default class Form {
   // -------------------------------------------
   // Functions
   static createSingle: FormDataCreateSingle = async (data) => {
+    // Check if form is assigned to environment
+    await Form.#checkFormEnvrionmentPermissions(data);
+
     const formBuilder = await Form.#getFormBuilder(data.form_key);
 
     // Create form submission
@@ -81,6 +85,25 @@ export default class Form {
   };
   // -------------------------------------------
   // Util Functions
+  static #checkFormEnvrionmentPermissions = async (data: {
+    form_key: string;
+    environment_key: string;
+  }) => {
+    const environment = await Environment.getSingle(data.environment_key);
+
+    const hasPerm = environment.assigned_forms?.includes(data.form_key);
+
+    if (!hasPerm) {
+      throw new LucidError({
+        type: "basic",
+        name: "Form Error",
+        message: "This form is not assigned to this environment.",
+        status: 403,
+      });
+    }
+
+    return environment;
+  };
   static #getFormBuilder = async (form_key: string) => {
     const FormBuilderInstances = Config.forms || [];
 

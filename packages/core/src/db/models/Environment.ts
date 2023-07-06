@@ -14,6 +14,7 @@ type EnvironmentUpsertSingle = (data: {
   title?: string;
   assigned_bricks?: string[];
   assigned_collections?: string[];
+  assigned_forms?: string[];
 }) => Promise<EnvironmentT>;
 
 // -------------------------------------------
@@ -24,6 +25,7 @@ export type EnvironmentT = {
 
   assigned_bricks: string[] | null;
   assigned_collections: string[] | null;
+  assigned_forms: string[] | null;
 };
 
 export default class Environment {
@@ -72,12 +74,19 @@ export default class Environment {
 
     // Create query from data
     const { columns, aliases, values } = queryDataFormat({
-      columns: ["key", "title", "assigned_bricks", "assigned_collections"],
+      columns: [
+        "key",
+        "title",
+        "assigned_bricks",
+        "assigned_collections",
+        "assigned_forms",
+      ],
       values: [
         data.key,
         data.title,
         data.assigned_bricks,
         data.assigned_collections,
+        data.assigned_forms,
       ],
     });
 
@@ -130,6 +139,34 @@ export default class Environment {
               children: invalidCollections.map((c) => ({
                 code: "invalid",
                 message: `Collection with key "${c}" not found.`,
+              })),
+            },
+          }),
+        });
+      }
+    }
+
+    // Check assigned_form keys against config
+    if (data.assigned_forms) {
+      const formInstances = Config.forms || [];
+      const formKeys = formInstances.map((f) => f.key);
+
+      const invalidForms = data.assigned_forms.filter(
+        (f) => !formKeys.includes(f)
+      );
+      if (invalidForms.length > 0) {
+        throw new LucidError({
+          type: "basic",
+          name: "Invalid form keys",
+          message: `Make sure all assigned_forms are valid.`,
+          status: 400,
+          errors: modelErrors({
+            assigned_forms: {
+              code: "invalid",
+              message: `Make sure all assigned_forms are valid.`,
+              children: invalidForms.map((f) => ({
+                code: "invalid",
+                message: `Form with key "${f}" not found.`,
               })),
             },
           }),

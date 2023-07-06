@@ -18,6 +18,7 @@ const updateSingle: Controller<
       title: undefined,
       assigned_bricks: req.body.assigned_bricks,
       assigned_collections: req.body.assigned_collections,
+      assigned_forms: req.body.assigned_forms,
     });
 
     res.status(200).json(
