@@ -1,5 +1,4 @@
 import z from "zod";
-import { CollectionBuilderT } from "@lucid/collection-builder";
 // Models
 import Config from "@db/models/Config";
 import Environment, { EnvironmentT } from "@db/models/Environment";
@@ -10,7 +9,10 @@ import { LucidError } from "@utils/error-handler";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Internal packages
-import { CollectionConfigT } from "@lucid/collection-builder"; // Internal packages
+import {
+  CollectionConfigT,
+  CollectionBuilderT,
+} from "@lucid/collection-builder"; // Internal packages
 
 // -------------------------------------------
 // Types

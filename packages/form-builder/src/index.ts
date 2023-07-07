@@ -3,7 +3,6 @@ import z from "zod";
 const FormBuilderOptionsSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-
   fields: z.array(
     z.object({
       zod: z.any().optional(),

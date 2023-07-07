@@ -1,7 +1,7 @@
 import { Router } from "express";
 import r from "@utils/route";
 // Controller
-
+import getSingle from "@controllers/form/get-single";
 // Submissions
 import getSingleSubmission from "@controllers/form-submissions/get-single";
 import getMultipleSubmissions from "@controllers/form-submissions/get-multiple";
@@ -11,6 +11,23 @@ import toggleReadAtSubmissions from "@controllers/form-submissions/toggle-read-a
 // Router
 const router = Router();
 
+// Form routes
+r(router, {
+  method: "get",
+  path: "/:form_key",
+  permissions: {
+    environments: ["read_form_submissions"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: getSingle.schema,
+  controller: getSingle.controller,
+});
+
+// Submission routes
 r(router, {
   method: "get",
   path: "/:form_key/submissions/:id",
