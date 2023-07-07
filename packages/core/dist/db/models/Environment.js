@@ -1,29 +1,34 @@
 "use strict";
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
+var _a, _Environment_checkAssignedBricks, _Environment_checkAssignedCollections, _Environment_checkAssignedForms, _Environment_checkKeyExists;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
+const slugify_1 = __importDefault(require("slugify"));
 const Config_1 = __importDefault(require("../models/Config"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
+const format_environment_1 = __importDefault(require("../../services/environments/format-environment"));
 class Environment {
 }
 _a = Environment;
 Environment.getAll = async () => {
     const client = await db_1.default;
-    const environmentConfig = Config_1.default.environments;
-    const envKeys = environmentConfig.map((e) => e.key);
     const environments = await client.query({
         text: `SELECT *
         FROM 
           lucid_environments
-        WHERE 
-          key = ANY($1)`,
-        values: [envKeys],
+        ORDER BY
+          key ASC`,
+        values: [],
     });
-    return environments.rows;
+    return environments.rows.map((environment) => (0, format_environment_1.default)(environment));
 };
 Environment.getSingle = async (key) => {
     const client = await db_1.default;
@@ -39,23 +44,81 @@ Environment.getSingle = async (key) => {
             status: 404,
         });
     }
-    return environment.rows[0];
+    return (0, format_environment_1.default)(environment.rows[0]);
 };
-Environment.upsertSingle = async (data) => {
+Environment.upsertSingle = async (data, create) => {
     const client = await db_1.default;
+    const key = create ? (0, slugify_1.default)(data.key, { lower: true }) : data.key;
+    if (!create) {
+        await Environment.getSingle(key);
+    }
+    else {
+        await __classPrivateFieldGet(Environment, _a, "f", _Environment_checkKeyExists).call(Environment, data.key);
+    }
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
-        columns: ["key", "title", "assigned_bricks", "assigned_collections"],
+        columns: [
+            "key",
+            "title",
+            "assigned_bricks",
+            "assigned_collections",
+            "assigned_forms",
+        ],
         values: [
-            data.key,
+            key,
             data.title,
             data.assigned_bricks,
             data.assigned_collections,
+            data.assigned_forms,
         ],
     });
     if (data.assigned_bricks) {
+        await __classPrivateFieldGet(Environment, _a, "f", _Environment_checkAssignedBricks).call(Environment, data.assigned_bricks);
+    }
+    if (data.assigned_collections) {
+        await __classPrivateFieldGet(Environment, _a, "f", _Environment_checkAssignedCollections).call(Environment, data.assigned_collections);
+    }
+    if (data.assigned_forms) {
+        await __classPrivateFieldGet(Environment, _a, "f", _Environment_checkAssignedForms).call(Environment, data.assigned_forms);
+    }
+    const environments = await client.query({
+        text: `INSERT INTO lucid_environments (${columns.formatted.insert}) 
+        VALUES (${aliases.formatted.insert}) 
+        ON CONFLICT (key) 
+        DO UPDATE SET ${columns.formatted.doUpdate}
+        RETURNING *`,
+        values: [...values.value],
+    });
+    if (environments.rows.length === 0) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Environment not created",
+            message: `Environment with key "${key}" could not be created`,
+            status: 400,
+        });
+    }
+    return (0, format_environment_1.default)(environments.rows[0]);
+};
+Environment.deleteSingle = async (key) => {
+    const client = await db_1.default;
+    await Environment.getSingle(key);
+    const environments = await client.query({
+        text: `DELETE FROM lucid_environments WHERE key = $1 RETURNING *`,
+        values: [key],
+    });
+    if (environments.rows.length === 0) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Environment not deleted",
+            message: `Environment with key "${key}" could not be deleted`,
+            status: 400,
+        });
+    }
+    return (0, format_environment_1.default)(environments.rows[0]);
+};
+_Environment_checkAssignedBricks = { value: async (assigned_bricks) => {
         const brickInstances = Config_1.default.bricks || [];
         const brickKeys = brickInstances.map((b) => b.key);
-        const invalidBricks = data.assigned_bricks.filter((b) => !brickKeys.includes(b));
+        const invalidBricks = assigned_bricks.filter((b) => !brickKeys.includes(b));
         if (invalidBricks.length > 0) {
             throw new error_handler_1.LucidError({
                 type: "basic",
@@ -74,11 +137,11 @@ Environment.upsertSingle = async (data) => {
                 }),
             });
         }
-    }
-    if (data.assigned_collections) {
+    } };
+_Environment_checkAssignedCollections = { value: async (assigned_collections) => {
         const collectionInstances = Config_1.default.collections || [];
         const collectionKeys = collectionInstances.map((c) => c.key);
-        const invalidCollections = data.assigned_collections.filter((c) => !collectionKeys.includes(c));
+        const invalidCollections = assigned_collections.filter((c) => !collectionKeys.includes(c));
         if (invalidCollections.length > 0) {
             throw new error_handler_1.LucidError({
                 type: "basic",
@@ -97,24 +160,44 @@ Environment.upsertSingle = async (data) => {
                 }),
             });
         }
-    }
-    const environments = await client.query({
-        text: `INSERT INTO lucid_environments (${columns.formatted.insert}) 
-        VALUES (${aliases.formatted.insert}) 
-        ON CONFLICT (key) 
-        DO UPDATE SET ${columns.formatted.doUpdate}
-        RETURNING *`,
-        values: [...values.value],
-    });
-    if (environments.rows.length === 0) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Environment not created",
-            message: `Environment with key "${data.key}" could not be created`,
-            status: 400,
+    } };
+_Environment_checkAssignedForms = { value: async (assigned_forms) => {
+        const formInstances = Config_1.default.forms || [];
+        const formKeys = formInstances.map((f) => f.key);
+        const invalidForms = assigned_forms.filter((f) => !formKeys.includes(f));
+        if (invalidForms.length > 0) {
+            throw new error_handler_1.LucidError({
+                type: "basic",
+                name: "Invalid form keys",
+                message: `Make sure all assigned_forms are valid.`,
+                status: 400,
+                errors: (0, error_handler_1.modelErrors)({
+                    assigned_forms: {
+                        code: "invalid",
+                        message: `Make sure all assigned_forms are valid.`,
+                        children: invalidForms.map((f) => ({
+                            code: "invalid",
+                            message: `Form with key "${f}" not found.`,
+                        })),
+                    },
+                }),
+            });
+        }
+    } };
+_Environment_checkKeyExists = { value: async (key) => {
+        const client = await db_1.default;
+        const environments = await client.query({
+            text: `SELECT * FROM lucid_environments WHERE key = $1`,
+            values: [key],
         });
-    }
-    return environments.rows[0];
-};
+        if (environments.rows.length > 0) {
+            throw new error_handler_1.LucidError({
+                type: "basic",
+                name: "Environment already exists",
+                message: `Environment with key "${key}" already exists`,
+                status: 400,
+            });
+        }
+    } };
 exports.default = Environment;
 //# sourceMappingURL=Environment.js.map

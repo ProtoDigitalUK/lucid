@@ -13,7 +13,8 @@ const updateSingle = async (req, res, next) => {
             title: undefined,
             assigned_bricks: req.body.assigned_bricks,
             assigned_collections: req.body.assigned_collections,
-        });
+            assigned_forms: req.body.assigned_forms,
+        }, false);
         res.status(200).json((0, build_response_1.default)(req, {
             data: environment,
         }));

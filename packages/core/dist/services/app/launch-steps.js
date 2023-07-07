@@ -4,8 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/error-handler");
-const Config_1 = __importDefault(require("../../db/models/Config"));
-const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const User_1 = __importDefault(require("../../db/models/User"));
 const Option_1 = __importDefault(require("../../db/models/Option"));
 const createFixOptions = async () => {
@@ -43,22 +41,10 @@ const createInitialAdmin = async () => {
         });
     }
 };
-const syncEnvironments = async () => {
-    const syncPromise = [];
-    const environments = Config_1.default.environments;
-    for (const env of environments) {
-        syncPromise.push(Environment_1.default.upsertSingle({
-            key: env.key,
-            title: env.title,
-        }));
-    }
-    await Promise.all(syncPromise);
-};
 const launchSteps = async () => {
     try {
         await createFixOptions();
         await createInitialAdmin();
-        await syncEnvironments();
     }
     catch (err) {
         new error_handler_1.RuntimeError(err.message);

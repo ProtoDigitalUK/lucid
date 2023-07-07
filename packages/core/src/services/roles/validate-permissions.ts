@@ -4,11 +4,12 @@ import RolePermission, {
   PermissionT,
   EnvironmentPermissionT,
 } from "@db/models/RolePermission";
-import Config from "@db/models/Config";
 // Schema
 import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, ErrorResult, modelErrors } from "@utils/error-handler";
+// Models
+import Environment from "@db/models/Environment";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body
@@ -16,7 +17,7 @@ type SchemaPermissions = z.infer<
 
 const validatePermissions = async (permGroup: SchemaPermissions) => {
   const permissionSet = RolePermission.permissions;
-  const environments = Config.environments;
+  const environments = await Environment.getAll();
 
   // Data
   const validPermissions: Array<{

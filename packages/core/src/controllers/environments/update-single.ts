@@ -13,13 +13,16 @@ const updateSingle: Controller<
   typeof environmentSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await Environment.upsertSingle({
-      key: req.params.key,
-      title: undefined,
-      assigned_bricks: req.body.assigned_bricks,
-      assigned_collections: req.body.assigned_collections,
-      assigned_forms: req.body.assigned_forms,
-    });
+    const environment = await Environment.upsertSingle(
+      {
+        key: req.params.key,
+        title: undefined,
+        assigned_bricks: req.body.assigned_bricks,
+        assigned_collections: req.body.assigned_collections,
+        assigned_forms: req.body.assigned_forms,
+      },
+      false
+    );
 
     res.status(200).json(
       buildResponse(req, {

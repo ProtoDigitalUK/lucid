@@ -35,6 +35,26 @@ const updateSingleParams = z.object({
 });
 
 // ------------------------------------
+// CREATE SINGLE
+const createSingleBody = z.object({
+  key: z.string().min(4).max(64),
+  title: z.string(),
+  assigned_bricks: z.array(z.string()).optional(),
+  assigned_collections: z.array(z.string()).optional(),
+  assigned_forms: z.array(z.string()).optional(),
+});
+const createSingleQuery = z.object({});
+const createSingleParams = z.object({});
+
+// ------------------------------------
+// DELETE SINGLE
+const deleteSingleBody = z.object({});
+const deleteSingleQuery = z.object({});
+const deleteSingleParams = z.object({
+  key: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   getAll: {
@@ -56,5 +76,15 @@ export default {
     body: updateSingleBody,
     query: updateSingleQuery,
     params: updateSingleParams,
+  },
+  createSingle: {
+    body: createSingleBody,
+    query: createSingleQuery,
+    params: createSingleParams,
+  },
+  deleteSingle: {
+    body: deleteSingleBody,
+    query: deleteSingleQuery,
+    params: deleteSingleParams,
   },
 };

@@ -1,14 +1,12 @@
 import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
+import { FormBuilderT } from "@lucid/form-builder";
 export type ConfigT = {
     origin: string;
     mode: "development" | "production";
     postgresURL: string;
     secret: string;
-    environments: Array<{
-        title: string;
-        key: string;
-    }>;
+    forms?: FormBuilderT[];
     collections?: CollectionBuilderT[];
     bricks?: BrickBuilderT[];
     media: {
@@ -47,10 +45,6 @@ export default class Config {
     static cacheConfig: () => Promise<ConfigT>;
     static get configCache(): ConfigT;
     static get mode(): "development" | "production";
-    static get environments(): {
-        title: string;
-        key: string;
-    }[];
     static get media(): {
         storageLimit: number;
         maxFileSize: number;
@@ -82,6 +76,7 @@ export default class Config {
     static get collections(): import("@lucid/collection-builder").default[] | undefined;
     static get postgresURL(): string;
     static get origin(): string;
+    static get forms(): import("@lucid/form-builder").default[] | undefined;
 }
 export declare const buildConfig: (config: ConfigT) => ConfigT;
 //# sourceMappingURL=Config.d.ts.map

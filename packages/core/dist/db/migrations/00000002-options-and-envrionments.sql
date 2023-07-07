@@ -18,5 +18,6 @@ CREATE TABLE IF NOT EXISTS lucid_environments (
 
   title TEXT,
   assigned_bricks TEXT[],
-  assigned_collections TEXT[]
+  assigned_collections TEXT[],
+  assigned_forms TEXT[]
 );

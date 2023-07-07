@@ -8,16 +8,6 @@ export default buildConfig({
   mode: "development",
   postgresURL: process.env.LUCID_POSTGRES_URL as string,
   secret: process.env.LUCID_SECRET_KEY as string,
-  environments: [
-    {
-      title: "Production",
-      key: "production",
-    },
-    {
-      title: "Staging",
-      key: "staging",
-    },
-  ],
   email: {
     from: {
       name: "Lucid CMS",

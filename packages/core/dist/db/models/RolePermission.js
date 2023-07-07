@@ -48,6 +48,10 @@ class RolePermission {
                     title: "Menu",
                     permissions: RolePermission.menuPermissions,
                 },
+                form_submissions: {
+                    title: "Form Submissions",
+                    permissions: RolePermission.formSubmissionsPermissions,
+                },
             },
         };
     }
@@ -65,6 +69,7 @@ class RolePermission {
                 ...RolePermission.contentPermissions,
                 ...RolePermission.categoryPermissions,
                 ...RolePermission.menuPermissions,
+                ...RolePermission.formSubmissionsPermissions,
             ],
         };
     }
@@ -87,7 +92,12 @@ class RolePermission {
         return ["update_settings"];
     }
     static get environmentPermissions() {
-        return ["update_environment", "migrate_environment"];
+        return [
+            "update_environment",
+            "migrate_environment",
+            "delete_environment",
+            "create_environment",
+        ];
     }
     static get emailPermissions() {
         return ["send_email", "read_email", "delete_email"];
@@ -107,6 +117,13 @@ class RolePermission {
     }
     static get menuPermissions() {
         return ["create_menu", "read_menu", "update_menu", "delete_menu"];
+    }
+    static get formSubmissionsPermissions() {
+        return [
+            "read_form_submissions",
+            "delete_form_submissions",
+            "update_form_submissions",
+        ];
     }
 }
 _a = RolePermission;

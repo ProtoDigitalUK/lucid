@@ -30,7 +30,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Config_validateBricks, _Config_validateCollections;
+var _a, _Config_validateBricks, _Config_validateCollections, _Config_validateForms;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildConfig = void 0;
 const fs_extra_1 = __importDefault(require("fs-extra"));
@@ -45,6 +45,7 @@ const configSchema = zod_1.default.object({
     mode: zod_1.default.enum(["development", "production"]),
     postgresURL: zod_1.default.string(),
     secret: zod_1.default.string(),
+    forms: zod_1.default.array(zod_1.default.any()).optional(),
     collections: zod_1.default.array(zod_1.default.any()).optional(),
     bricks: zod_1.default.array(zod_1.default.any()).optional(),
     media: zod_1.default.object({
@@ -77,10 +78,6 @@ const configSchema = zod_1.default.object({
             .optional(),
     })
         .optional(),
-    environments: zod_1.default.array(zod_1.default.object({
-        title: zod_1.default.string(),
-        key: zod_1.default.string(),
-    })),
 });
 class Config {
     static get configCache() {
@@ -88,9 +85,6 @@ class Config {
     }
     static get mode() {
         return Config.configCache.mode;
-    }
-    static get environments() {
-        return Config.configCache.environments;
     }
     static get media() {
         const media = Config.configCache?.media;
@@ -125,6 +119,9 @@ class Config {
     static get origin() {
         return Config.configCache.origin;
     }
+    static get forms() {
+        return Config.configCache.forms;
+    }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
     if (!config.bricks)
@@ -142,6 +139,14 @@ _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {
     if (collectionKeys.length !== uniqueCollectionKeys.length) {
         throw new error_handler_1.RuntimeError("Each collection key must be unique, found duplicates in lucid.config.ts/js.");
     }
+}, _Config_validateForms = function _Config_validateForms(config) {
+    if (!config.forms)
+        return;
+    const formKeys = config.forms.map((form) => form.key);
+    const uniqueFormKeys = [...new Set(formKeys)];
+    if (formKeys.length !== uniqueFormKeys.length) {
+        throw new error_handler_1.RuntimeError("Each form key must be unique, found duplicates in lucid.config.ts/js.");
+    }
 };
 Config._configCache = null;
 Config.validate = (config) => {
@@ -149,6 +154,7 @@ Config.validate = (config) => {
         configSchema.parse(config);
         __classPrivateFieldGet(Config, _a, "m", _Config_validateBricks).call(Config, config);
         __classPrivateFieldGet(Config, _a, "m", _Config_validateCollections).call(Config, config);
+        __classPrivateFieldGet(Config, _a, "m", _Config_validateForms).call(Config, config);
     }
     catch (error) {
         if (error instanceof zod_1.default.ZodError) {

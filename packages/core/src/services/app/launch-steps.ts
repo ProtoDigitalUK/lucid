@@ -1,7 +1,5 @@
 import { RuntimeError } from "@utils/error-handler";
 // Models
-import Config from "@db/models/Config";
-import Environment from "@db/models/Environment";
 import User from "@db/models/User";
 import Option from "@db/models/Option";
 
@@ -50,30 +48,11 @@ const createInitialAdmin = async () => {
   }
 };
 
-/*
-    Sync the environments from the lucid.config.ts file with the database.
-*/
-const syncData = async () => {
-  const syncPromise = [];
-  const environments = Config.environments;
-  // Sync environments
-  for (const env of environments) {
-    syncPromise.push(
-      Environment.upsertSingle({
-        key: env.key,
-        title: env.title,
-      })
-    );
-  }
-  await Promise.all(syncPromise);
-};
-
 // Run all launch steps
 const launchSteps = async () => {
   try {
     await createFixOptions();
     await createInitialAdmin();
-    await syncData();
   } catch (err) {
     new RuntimeError((err as Error).message);
   }

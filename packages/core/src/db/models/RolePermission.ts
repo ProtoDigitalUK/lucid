@@ -21,7 +21,11 @@ type PermissionMedia =
   | "update_media"
   | "delete_media";
 type PermissionSettings = "update_settings";
-type PermissionEnvironment = "update_environment" | "migrate_environment";
+type PermissionEnvironment =
+  | "update_environment"
+  | "migrate_environment"
+  | "delete_environment"
+  | "create_environment";
 type PermissionEmails = "read_email" | "delete_email" | "send_email";
 // env permissions
 type PermissionContent =
@@ -242,7 +246,12 @@ export default class RolePermission {
     return ["update_settings"];
   }
   static get environmentPermissions(): PermissionEnvironment[] {
-    return ["update_environment", "migrate_environment"];
+    return [
+      "update_environment",
+      "migrate_environment",
+      "delete_environment",
+      "create_environment",
+    ];
   }
   static get emailPermissions(): PermissionEmails[] {
     return ["send_email", "read_email", "delete_email"];

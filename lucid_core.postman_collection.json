@@ -1678,6 +1678,75 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"key\": \"site_prod\",\r\n    \"title\": \"Production\",\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"],\r\n    \"assigned_forms\": [\"contact-form\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/environments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"environments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/environments/site_prode",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"environments",
+								"site_prode"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

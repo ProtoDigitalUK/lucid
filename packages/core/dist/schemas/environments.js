@@ -20,9 +20,24 @@ const migrateEnvironmentParams = zod_1.default.object({
 const updateSingleBody = zod_1.default.object({
     assigned_bricks: zod_1.default.array(zod_1.default.string()).optional(),
     assigned_collections: zod_1.default.array(zod_1.default.string()).optional(),
+    assigned_forms: zod_1.default.array(zod_1.default.string()).optional(),
 });
 const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({
+    key: zod_1.default.string(),
+});
+const createSingleBody = zod_1.default.object({
+    key: zod_1.default.string().min(4).max(64),
+    title: zod_1.default.string(),
+    assigned_bricks: zod_1.default.array(zod_1.default.string()).optional(),
+    assigned_collections: zod_1.default.array(zod_1.default.string()).optional(),
+    assigned_forms: zod_1.default.array(zod_1.default.string()).optional(),
+});
+const createSingleQuery = zod_1.default.object({});
+const createSingleParams = zod_1.default.object({});
+const deleteSingleBody = zod_1.default.object({});
+const deleteSingleQuery = zod_1.default.object({});
+const deleteSingleParams = zod_1.default.object({
     key: zod_1.default.string(),
 });
 exports.default = {
@@ -45,6 +60,16 @@ exports.default = {
         body: updateSingleBody,
         query: updateSingleQuery,
         params: updateSingleParams,
+    },
+    createSingle: {
+        body: createSingleBody,
+        query: createSingleQuery,
+        params: createSingleParams,
+    },
+    deleteSingle: {
+        body: deleteSingleBody,
+        query: deleteSingleQuery,
+        params: deleteSingleParams,
     },
 };
 //# sourceMappingURL=environments.js.map

@@ -50,12 +50,6 @@ const configSchema = z.object({
         .optional(),
     })
     .optional(),
-  environments: z.array(
-    z.object({
-      title: z.string(),
-      key: z.string(),
-    })
-  ),
 });
 
 export type ConfigT = {
@@ -63,10 +57,6 @@ export type ConfigT = {
   mode: "development" | "production";
   postgresURL: string;
   secret: string;
-  environments: Array<{
-    title: string;
-    key: string;
-  }>;
   forms?: FormBuilderT[];
   collections?: CollectionBuilderT[];
   bricks?: BrickBuilderT[];
@@ -190,9 +180,6 @@ export default class Config {
   }
   static get mode() {
     return Config.configCache.mode;
-  }
-  static get environments() {
-    return Config.configCache.environments;
   }
   static get media() {
     const media = Config.configCache?.media;

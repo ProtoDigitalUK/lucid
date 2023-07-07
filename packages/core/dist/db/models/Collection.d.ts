@@ -1,9 +1,8 @@
 import z from "zod";
-import { CollectionBuilderT } from "@lucid/collection-builder";
 import { EnvironmentT } from "../models/Environment";
 import { BrickObject } from "../models/BrickData";
 import collectionSchema from "../../schemas/collections";
-import { CollectionConfigT } from "@lucid/collection-builder";
+import { CollectionConfigT, CollectionBuilderT } from "@lucid/collection-builder";
 type CollectionGetAll = (query: z.infer<typeof collectionSchema.getAll.query>, environment_key: string) => Promise<CollectionT[]>;
 type CollectionGetSingle = (props: {
     collection_key: CollectionConfigT["key"];
