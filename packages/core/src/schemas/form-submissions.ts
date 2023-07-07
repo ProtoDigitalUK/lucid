@@ -30,6 +30,15 @@ const getMultipleParams = z.object({
 });
 
 // ------------------------------------
+// TOGGLE READ AT
+const toggleReadAtBody = z.object({});
+const toggleReadAtQuery = z.object({});
+const toggleReadAtParams = z.object({
+  id: z.string(),
+  form_key: z.string(),
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   getSingle: {
@@ -41,5 +50,10 @@ export default {
     body: getMultipleBody,
     query: getMultipleQuery,
     params: getMultipleParams,
+  },
+  toggleReadAt: {
+    body: toggleReadAtBody,
+    query: toggleReadAtQuery,
+    params: toggleReadAtParams,
   },
 };

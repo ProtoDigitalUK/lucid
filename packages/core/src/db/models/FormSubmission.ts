@@ -44,7 +44,8 @@ type FormSubmissionGetMultiple = (
   count: number;
 }>;
 
-type FormSubmissionUpdateSingle = (data: {
+type FormSubmissionToggleReadAt = (data: {
+  id: number;
   form_key: string;
   environment_key: string;
 }) => Promise<FormSubmissionResT>;
@@ -231,7 +232,7 @@ export default class FormSubmission {
       count: count.rows[0].count,
     };
   };
-  static updateSingle: FormSubmissionUpdateSingle = async (data) => {
+  static toggleReadAt: FormSubmissionToggleReadAt = async (data) => {
     const client = await getDBClient;
 
     // Check if form is assigned to environment
@@ -240,7 +241,54 @@ export default class FormSubmission {
       environment_key: data.environment_key,
     });
 
-    return {} as FormSubmissionResT;
+    // Get form submission
+    const formSubmission = await client.query<FormSubmissionsT>({
+      text: `SELECT read_at FROM lucid_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3;`,
+      values: [data.id, data.form_key, data.environment_key],
+    });
+
+    if (!formSubmission.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Form Error",
+        message: "This form submission does not exist.",
+        status: 404,
+      });
+    }
+
+    // Check if form submission is already read
+    const newReadAt = formSubmission.rows[0].read_at ? null : new Date();
+
+    // Update form submission
+    const updatedFormSubmission = await client.query<FormSubmissionsT>({
+      text: `UPDATE lucid_form_submissions SET read_at = $1 WHERE id = $2 AND form_key = $3 AND environment_key = $4 RETURNING *;`,
+      values: [newReadAt, data.id, data.form_key, data.environment_key],
+    });
+
+    if (!updatedFormSubmission.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Form Error",
+        message: "This form submission does not exist.",
+        status: 404,
+      });
+    }
+
+    let formData = await FormSubmission.#getAllFormData([
+      updatedFormSubmission.rows[0].id,
+    ]);
+    formData = formData.filter(
+      (field) => field.form_submission_id === updatedFormSubmission.rows[0].id
+    );
+
+    const formBuilder = await FormSubmission.#getFormBuilder(
+      updatedFormSubmission.rows[0].form_key
+    );
+
+    return formatFormSubmission(formBuilder, {
+      submission: updatedFormSubmission.rows[0],
+      data: formData,
+    });
   };
   // -------------------------------------------
   // Util Functions

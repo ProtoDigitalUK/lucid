@@ -1419,9 +1419,9 @@
 									"response": []
 								},
 								{
-									"name": "Update Single (needs implementing)",
+									"name": "Toggle Read",
 									"request": {
-										"method": "POST",
+										"method": "PATCH",
 										"header": [
 											{
 												"key": "_csrf",
@@ -1435,7 +1435,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/1",
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/1/read",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -1445,7 +1445,8 @@
 												"forms",
 												"contact-form",
 												"submissions",
-												"1"
+												"1",
+												"read"
 											]
 										}
 									},
