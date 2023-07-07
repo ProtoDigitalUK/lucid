@@ -1402,7 +1402,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/2",
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/1",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -1412,7 +1412,40 @@
 												"forms",
 												"contact-form",
 												"submissions",
-												"2"
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Single",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "_csrf",
+												"value": "{{CSRF}}",
+												"type": "text"
+											},
+											{
+												"key": "lucid-environment",
+												"value": "{{LUCID_ENVIRONMENT}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions/1",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"forms",
+												"contact-form",
+												"submissions",
+												"1"
 											]
 										}
 									},

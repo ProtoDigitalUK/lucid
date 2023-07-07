@@ -7,6 +7,7 @@ import getAll from "@controllers/form/get-all";
 import getSingleSubmission from "@controllers/form-submissions/get-single";
 import getMultipleSubmissions from "@controllers/form-submissions/get-multiple";
 import toggleReadAtSubmissions from "@controllers/form-submissions/toggle-read-at";
+import deleteSingleSubmission from "@controllers/form-submissions/delete-single";
 
 // ------------------------------------
 // Router
@@ -87,6 +88,21 @@ r(router, {
   },
   schema: toggleReadAtSubmissions.schema,
   controller: toggleReadAtSubmissions.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/:form_key/submissions/:id",
+  permissions: {
+    environments: ["delete_form_submissions"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: deleteSingleSubmission.schema,
+  controller: deleteSingleSubmission.controller,
 });
 
 export default router;

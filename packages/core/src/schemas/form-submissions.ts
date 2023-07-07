@@ -10,6 +10,15 @@ const getSingleParams = z.object({
 });
 
 // ------------------------------------
+// DELETE SINGLE
+const deleteSingleBody = z.object({});
+const deleteSingleQuery = z.object({});
+const deleteSingleParams = z.object({
+  id: z.string(),
+  form_key: z.string(),
+});
+
+// ------------------------------------
 // GET MULTIPLE
 const getMultipleBody = z.object({});
 const getMultipleQuery = z.object({
@@ -55,5 +64,10 @@ export default {
     body: toggleReadAtBody,
     query: toggleReadAtQuery,
     params: toggleReadAtParams,
+  },
+  deleteSingle: {
+    body: deleteSingleBody,
+    query: deleteSingleQuery,
+    params: deleteSingleParams,
   },
 };

@@ -50,6 +50,12 @@ type FormSubmissionToggleReadAt = (data: {
   environment_key: string;
 }) => Promise<FormSubmissionResT>;
 
+type FormSubmissionDeleteSingle = (data: {
+  id: number;
+  form_key: string;
+  environment_key: string;
+}) => Promise<FormSubmissionResT>;
+
 // -------------------------------------------
 // Form Submission
 export type FormSubmissionsT = {
@@ -288,6 +294,37 @@ export default class FormSubmission {
     return formatFormSubmission(formBuilder, {
       submission: updatedFormSubmission.rows[0],
       data: formData,
+    });
+  };
+  static deleteSingle: FormSubmissionDeleteSingle = async (data) => {
+    const client = await getDBClient;
+
+    // Check if form is assigned to environment
+    await FormSubmission.#checkFormEnvrionmentPermissions({
+      form_key: data.form_key,
+      environment_key: data.environment_key,
+    });
+
+    // Delete form submission
+    const formSubmission = await client.query<FormSubmissionsT>({
+      text: `DELETE FROM lucid_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3 RETURNING *;`,
+      values: [data.id, data.form_key, data.environment_key],
+    });
+
+    if (!formSubmission.rows[0]) {
+      throw new LucidError({
+        type: "basic",
+        name: "Form Error",
+        message: "This form submission does not exist.",
+        status: 404,
+      });
+    }
+
+    const formBuilder = await FormSubmission.#getFormBuilder(data.form_key);
+
+    return formatFormSubmission(formBuilder, {
+      submission: formSubmission.rows[0],
+      data: [],
     });
   };
   // -------------------------------------------
