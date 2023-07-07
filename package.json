@@ -18,5 +18,8 @@
   ],
   "volta": {
     "node": "20.1.0"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.8.2"
   }
 }

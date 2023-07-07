@@ -1,15 +1,29 @@
 /* @refresh reload */
-import { render } from 'solid-js/web';
+import { render } from "solid-js/web";
+import { Router, Routes, Route } from "@solidjs/router";
 
-import './index.css';
-import App from './App';
+import "./index.css";
 
-const root = document.getElementById('root');
+//  Routes
+import LoginRoute from "./routes/Login";
+import DashboardRoute from "./routes/Dashboard";
+
+const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   throw new Error(
-    'Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got mispelled?',
+    "Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?"
   );
 }
 
-render(() => <App />, root!);
+render(
+  () => (
+    <Router>
+      <Routes>
+        <Route path="/" component={DashboardRoute} />
+        <Route path="/login" component={LoginRoute} />
+      </Routes>
+    </Router>
+  ),
+  root!
+);
