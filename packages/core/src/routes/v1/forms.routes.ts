@@ -2,6 +2,7 @@ import { Router } from "express";
 import r from "@utils/route";
 // Controller
 import getSingle from "@controllers/form/get-single";
+import getAll from "@controllers/form/get-all";
 // Submissions
 import getSingleSubmission from "@controllers/form-submissions/get-single";
 import getMultipleSubmissions from "@controllers/form-submissions/get-multiple";
@@ -25,6 +26,21 @@ r(router, {
   },
   schema: getSingle.schema,
   controller: getSingle.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/",
+  permissions: {
+    environments: ["read_form_submissions"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: getAll.schema,
+  controller: getAll.controller,
 });
 
 // Submission routes

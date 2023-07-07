@@ -1455,7 +1455,7 @@
 							]
 						},
 						{
-							"name": "Get All (needs implementing)",
+							"name": "Get All",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -1479,6 +1479,13 @@
 										"api",
 										"v1",
 										"forms"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "fields",
+											"disabled": true
+										}
 									]
 								}
 							},

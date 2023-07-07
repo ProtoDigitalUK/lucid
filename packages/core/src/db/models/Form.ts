@@ -1,12 +1,12 @@
-import getDBClient from "@db/db";
+import z from "zod";
 // Utils
 import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Models
 import Config from "@db/models/Config";
 import Environment from "@db/models/Environment";
 // Serices
 import FormBuilder, { FormBuilderOptionsT } from "@lucid/form-builder";
+import formsSchema from "@schemas/forms";
 
 // -------------------------------------------
 // Types
@@ -16,7 +16,10 @@ type FormGetSingle = (data: {
   environment_key: string;
 }) => Promise<FormT>;
 
-type FormGetAll = (data: { environment_key: string }) => Promise<FormT[]>;
+type FormGetAll = (
+  query: z.infer<typeof formsSchema.getAll.query>,
+  environment_key: string
+) => Promise<FormT[]>;
 
 // -------------------------------------------
 // Form
@@ -24,13 +27,12 @@ export type FormT = {
   key: string;
   title: string;
   description: string | null;
-  fields: FormBuilderOptionsT["fields"];
+  fields?: FormBuilderOptionsT["fields"];
 };
 
 export default class Form {
   // -------------------------------------------
   // Functions
-
   static getSingle: FormGetSingle = async (data) => {
     // Check access
     const formInstances = Form.getFormBuilderConfig();
@@ -65,8 +67,32 @@ export default class Form {
 
     return formData;
   };
-  static getAll: FormGetAll = async (data) => {
-    return [];
+  static getAll: FormGetAll = async (query, environment_key) => {
+    // Check access
+    const formInstances = Form.getFormBuilderConfig();
+    if (!formInstances) {
+      return [];
+    }
+
+    let forms = formInstances.map((form) => Form.getFormBuilderData(form));
+
+    // Get data
+    const environment = await Environment.getSingle(environment_key);
+
+    // Filtered
+    forms = Form.#filterEnvironmentForms(
+      environment.assigned_forms || [],
+      forms
+    );
+
+    const formsRes = forms.map((form) => {
+      if (!query.include?.includes("fields")) {
+        delete form.fields;
+      }
+      return form;
+    });
+
+    return formsRes;
   };
   // -------------------------------------------
   // Util Functions
@@ -89,23 +115,10 @@ export default class Form {
 
     return data;
   };
-  static #checkFormEnvrionmentPermissions = async (data: {
-    key: string;
-    environment_key: string;
-  }) => {
-    const environment = await Environment.getSingle(data.environment_key);
-
-    const hasPerm = environment.assigned_forms?.includes(data.key);
-
-    if (!hasPerm) {
-      throw new LucidError({
-        type: "basic",
-        name: "Form Error",
-        message: "This form is not assigned to this environment.",
-        status: 403,
-      });
-    }
-
-    return environment;
+  static #filterEnvironmentForms = (
+    environment_forms: string[],
+    forms: FormT[]
+  ) => {
+    return forms.filter((form) => environment_forms.includes(form.key));
   };
 }
