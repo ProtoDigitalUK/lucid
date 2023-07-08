@@ -9,7 +9,11 @@ import Page, { PageT } from "@db/models/Page";
 // Services
 import { MediaResT } from "@services/media/format-media";
 // Internal packages
-import BrickBuilder from "@lucid/brick-builder";
+import BrickBuilder, {
+  ValidationProps,
+  MediaReferenceData,
+  LinkReferenceData,
+} from "@lucid/brick-builder";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 
 // ------------------------------------
@@ -190,31 +194,32 @@ const validateBricksGroup = async (data: {
       const field = flatFields[j];
 
       // Set the secondary value
-      let secondaryValue: any = undefined;
+      let referenceData: ValidationProps["referenceData"] = undefined;
+
       switch (field.type) {
         case "link": {
-          secondaryValue = {
+          referenceData = {
             target: field.target,
-          };
+          } as LinkReferenceData;
           break;
         }
         case "pagelink": {
           const page = data.pages.find((p) => p.id === field.value);
           if (page) {
-            secondaryValue = {
+            referenceData = {
               target: field.target,
-            };
+            } as LinkReferenceData;
           }
           break;
         }
         case "media": {
           const media = data.media.find((m) => m.id === field.value);
           if (media) {
-            secondaryValue = {
+            referenceData = {
               extension: media.meta.file_extension,
               width: media.meta.width,
               height: media.meta.height,
-            };
+            } as MediaReferenceData;
           }
           break;
         }
@@ -224,8 +229,10 @@ const validateBricksGroup = async (data: {
         key: field.key,
         value: field.value,
         type: field.type,
-        secondaryValue,
+        referenceData,
+        flatFieldConfig: instance.flatFields,
       });
+
       if (err.valid === false) {
         brickErrors.errors.push({
           key: errorKey(field.key, field.group_position),
@@ -251,8 +258,6 @@ const getAllMedia = async (fields: BrickFieldObject[]) => {
   const ids = getIDs
     .filter((id) => id !== undefined)
     .filter((value, index, self) => self.indexOf(value) === index) as number[];
-
-  console.log(ids);
 
   const media = await Media.getMultipleByIds(ids);
   return media;

@@ -114,10 +114,10 @@ const validateBricksGroup = async (data) => {
         const flatFields = brick.flat_fields;
         for (let j = 0; j < flatFields.length; j++) {
             const field = flatFields[j];
-            let secondaryValue = undefined;
+            let referenceData = undefined;
             switch (field.type) {
                 case "link": {
-                    secondaryValue = {
+                    referenceData = {
                         target: field.target,
                     };
                     break;
@@ -125,7 +125,7 @@ const validateBricksGroup = async (data) => {
                 case "pagelink": {
                     const page = data.pages.find((p) => p.id === field.value);
                     if (page) {
-                        secondaryValue = {
+                        referenceData = {
                             target: field.target,
                         };
                     }
@@ -134,7 +134,7 @@ const validateBricksGroup = async (data) => {
                 case "media": {
                     const media = data.media.find((m) => m.id === field.value);
                     if (media) {
-                        secondaryValue = {
+                        referenceData = {
                             extension: media.meta.file_extension,
                             width: media.meta.width,
                             height: media.meta.height,
@@ -147,7 +147,8 @@ const validateBricksGroup = async (data) => {
                 key: field.key,
                 value: field.value,
                 type: field.type,
-                secondaryValue,
+                referenceData,
+                flatFieldConfig: instance.flatFields,
             });
             if (err.valid === false) {
                 brickErrors.errors.push({
@@ -170,7 +171,6 @@ const getAllMedia = async (fields) => {
     const ids = getIDs
         .filter((id) => id !== undefined)
         .filter((value, index, self) => self.indexOf(value) === index);
-    console.log(ids);
     const media = await Media_1.default.getMultipleByIds(ids);
     return media;
 };
