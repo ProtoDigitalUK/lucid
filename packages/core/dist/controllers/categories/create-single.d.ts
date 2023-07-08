@@ -7,13 +7,13 @@ declare const _default: {
             description: import("zod").ZodOptional<import("zod").ZodString>;
         }, "strip", import("zod").ZodTypeAny, {
             title: string;
-            slug: string;
             collection_key: string;
+            slug: string;
             description?: string | undefined;
         }, {
             title: string;
-            slug: string;
             collection_key: string;
+            slug: string;
             description?: string | undefined;
         }>;
         query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
@@ -26,13 +26,13 @@ declare const _default: {
         description: import("zod").ZodOptional<import("zod").ZodString>;
     }, "strip", import("zod").ZodTypeAny, {
         title: string;
-        slug: string;
         collection_key: string;
+        slug: string;
         description?: string | undefined;
     }, {
         title: string;
-        slug: string;
         collection_key: string;
+        slug: string;
         description?: string | undefined;
     }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };

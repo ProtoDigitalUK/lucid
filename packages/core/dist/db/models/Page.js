@@ -14,7 +14,9 @@ const slugify_1 = __importDefault(require("slugify"));
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
 const Collection_1 = __importDefault(require("../models/Collection"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
+const Environment_1 = __importDefault(require("../models/Environment"));
 const format_page_1 = __importDefault(require("../../services/pages/format-page"));
+const validate_bricks_1 = __importDefault(require("../../services/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
 class Page {
@@ -194,7 +196,7 @@ Page.getSingle = async (query, data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.create = async (data) => {
+Page.createSingle = async (data) => {
     const client = await db_1.default;
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await Collection_1.default.getSingle({
@@ -257,7 +259,7 @@ Page.create = async (data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.update = async (data) => {
+Page.updateSingle = async (data) => {
     const client = await db_1.default;
     const pageId = parseInt(data.id);
     const currentPage = await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
@@ -273,6 +275,18 @@ Page.update = async (data) => {
             environment_key: data.environment_key,
         });
     }
+    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const collection = await Collection_1.default.getSingle({
+        collection_key: currentPage.collection_key,
+        environment_key: data.environment_key,
+        type: "pages",
+    });
+    await (0, validate_bricks_1.default)({
+        builder_bricks: data.builder_bricks || [],
+        fixed_bricks: data.fixed_bricks || [],
+        collection: collection,
+        environment: environment,
+    });
     let newSlug = undefined;
     if (data.slug) {
         newSlug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
@@ -331,16 +345,15 @@ Page.update = async (data) => {
         page.rows[0].categories = categories.map((category) => category.category_id);
     }
     await Collection_1.default.updateBricks({
-        environment_key: data.environment_key,
+        id: page.rows[0].id,
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],
-        collection_type: "pages",
-        id: page.rows[0].id,
-        collection_key: currentPage.collection_key,
+        collection: collection,
+        environment: environment,
     });
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.delete = async (data) => {
+Page.deleteSingle = async (data) => {
     const client = await db_1.default;
     const pageId = parseInt(data.id);
     await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);

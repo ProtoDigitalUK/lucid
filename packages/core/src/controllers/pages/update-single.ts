@@ -13,7 +13,7 @@ const updateSingle: Controller<
   typeof pagesSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.update({
+    const page = await Page.updateSingle({
       id: req.params.id,
       environment_key: req.headers["lucid-environment"] as string,
       userId: req.auth.id,

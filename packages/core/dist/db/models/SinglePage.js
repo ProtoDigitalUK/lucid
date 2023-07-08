@@ -12,8 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const Collection_1 = __importDefault(require("../models/Collection"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
+const Environment_1 = __importDefault(require("../models/Environment"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
+const validate_bricks_1 = __importDefault(require("../../services/bricks/validate-bricks"));
 class SinglePage {
 }
 _a = SinglePage;
@@ -86,19 +88,25 @@ SinglePage.getSingle = async (data) => {
 };
 SinglePage.updateSingle = async (data) => {
     const client = await db_1.default;
-    await Collection_1.default.getSingle({
+    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const collection = await Collection_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
         type: "singlepage",
     });
-    const singlepage = await __classPrivateFieldGet(SinglePage, _a, "f", _SinglePage_getOrCreateSinglePage).call(SinglePage, data.environment_key, data.collection_key);
-    await Collection_1.default.updateBricks({
-        environment_key: data.environment_key,
+    await (0, validate_bricks_1.default)({
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],
-        collection_type: "singlepage",
+        collection: collection,
+        environment: environment,
+    });
+    const singlepage = await __classPrivateFieldGet(SinglePage, _a, "f", _SinglePage_getOrCreateSinglePage).call(SinglePage, data.environment_key, data.collection_key);
+    await Collection_1.default.updateBricks({
         id: singlepage.id,
-        collection_key: data.collection_key,
+        builder_bricks: data.builder_bricks || [],
+        fixed_bricks: data.fixed_bricks || [],
+        collection: collection,
+        environment: environment,
     });
     const updateSinglePage = await client.query({
         text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,

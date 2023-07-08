@@ -68,11 +68,11 @@ declare const _default: {
                 brick_key: z.ZodString;
                 collection_key: z.ZodString;
             }, "strip", z.ZodTypeAny, {
-                brick_key: string;
                 collection_key: string;
+                brick_key: string;
             }, {
-                brick_key: string;
                 collection_key: string;
+                brick_key: string;
             }>;
         };
     };

@@ -5,9 +5,11 @@ import slugify from "slugify";
 import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
+import Environment from "@db/models/Environment";
 // Serivces
 import formatPage from "@services/pages/format-page";
 import { BrickResponseT } from "@services/bricks/format-bricks";
+import validateBricks from "@services/bricks/validate-bricks";
 // Utils
 import { LucidError } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
@@ -34,7 +36,7 @@ type PageGetSingle = (
   }
 ) => Promise<PageT>;
 
-type PageCreate = (data: {
+type PageCreateSingle = (data: {
   userId: number;
   environment_key: string;
   title: string;
@@ -47,7 +49,7 @@ type PageCreate = (data: {
   category_ids?: Array<number>;
 }) => Promise<PageT>;
 
-type PageUpdate = (data: {
+type PageUpdateSingle = (data: {
   id: string;
   environment_key: string;
   userId: number;
@@ -63,7 +65,7 @@ type PageUpdate = (data: {
   fixed_bricks?: Array<BrickObject>;
 }) => Promise<PageT>;
 
-type PageDelete = (data: {
+type PageDeleteSingle = (data: {
   environment_key: string;
   id: string;
 }) => Promise<PageT>;
@@ -288,7 +290,7 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
-  static create: PageCreate = async (data) => {
+  static createSingle: PageCreateSingle = async (data) => {
     const client = await getDBClient;
 
     // -------------------------------------------
@@ -373,7 +375,7 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
-  static update: PageUpdate = async (data) => {
+  static updateSingle: PageUpdateSingle = async (data) => {
     const client = await getDBClient;
 
     const pageId = parseInt(data.id);
@@ -398,6 +400,22 @@ export default class Page {
         environment_key: data.environment_key,
       });
     }
+
+    //
+    // validate bricks
+    const environment = await Environment.getSingle(data.environment_key);
+    const collection = await Collection.getSingle({
+      collection_key: currentPage.collection_key,
+      environment_key: data.environment_key,
+      type: "pages",
+    });
+
+    await validateBricks({
+      builder_bricks: data.builder_bricks || [],
+      fixed_bricks: data.fixed_bricks || [],
+      collection: collection,
+      environment: environment,
+    });
 
     // -------------------------------------------
     // Set Data
@@ -475,19 +493,18 @@ export default class Page {
     // -------------------------------------------
     // Update/Create Bricks
     await Collection.updateBricks({
-      environment_key: data.environment_key,
+      id: page.rows[0].id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],
-      collection_type: "pages",
-      id: page.rows[0].id,
-      collection_key: currentPage.collection_key,
+      collection: collection,
+      environment: environment,
     });
 
     // -------------------------------------------
     // Format and return
     return formatPage(page.rows[0]);
   };
-  static delete: PageDelete = async (data) => {
+  static deleteSingle: PageDeleteSingle = async (data) => {
     const client = await getDBClient;
 
     const pageId = parseInt(data.id);

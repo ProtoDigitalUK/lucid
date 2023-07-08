@@ -88,27 +88,21 @@ Collection.getSingle = async (props) => {
     return collection;
 };
 Collection.updateBricks = async (props) => {
-    const environment = await Environment_1.default.getSingle(props.environment_key);
-    const collection = await Collection.getSingle({
-        collection_key: props.collection_key,
-        environment_key: props.environment_key,
-        type: props.collection_type,
-    });
     const builderBricksPromise = props.builder_bricks.map((brick, index) => CollectionBrick_1.default.createOrUpdate({
         reference_id: props.id,
         brick: brick,
         brick_type: "builder",
         order: index,
-        environment: environment,
-        collection: collection,
+        environment: props.environment,
+        collection: props.collection,
     })) || [];
     const fixedBricksPromise = props.fixed_bricks.map((brick, index) => CollectionBrick_1.default.createOrUpdate({
         reference_id: props.id,
         brick: brick,
         brick_type: "fixed",
         order: index,
-        environment: environment,
-        collection: collection,
+        environment: props.environment,
+        collection: props.collection,
     })) || [];
     const [buildBrickRes, fixedBrickRes] = await Promise.all([
         Promise.all(builderBricksPromise),
@@ -118,14 +112,14 @@ Collection.updateBricks = async (props) => {
     const fixedIds = fixedBrickRes.map((brickId) => brickId);
     if (builderIds.length > 0)
         await CollectionBrick_1.default.deleteUnused({
-            type: props.collection_type,
+            type: props.collection.type,
             reference_id: props.id,
             brick_ids: builderIds,
             brick_type: "builder",
         });
     if (fixedIds.length > 0)
         await CollectionBrick_1.default.deleteUnused({
-            type: props.collection_type,
+            type: props.collection.type,
             reference_id: props.id,
             brick_ids: fixedIds,
             brick_type: "fixed",

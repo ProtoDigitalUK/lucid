@@ -17,7 +17,6 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
-        validateBricks: true,
         validateEnvironment: true,
     },
     schema: update_single_1.default.schema,

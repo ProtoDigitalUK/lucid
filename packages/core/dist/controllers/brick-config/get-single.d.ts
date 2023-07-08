@@ -6,22 +6,22 @@ declare const _default: {
             brick_key: import("zod").ZodString;
             collection_key: import("zod").ZodString;
         }, "strip", import("zod").ZodTypeAny, {
-            brick_key: string;
             collection_key: string;
+            brick_key: string;
         }, {
-            brick_key: string;
             collection_key: string;
+            brick_key: string;
         }>;
     };
     controller: Controller<import("zod").ZodObject<{
         brick_key: import("zod").ZodString;
         collection_key: import("zod").ZodString;
     }, "strip", import("zod").ZodTypeAny, {
-        brick_key: string;
         collection_key: string;
+        brick_key: string;
     }, {
-        brick_key: string;
         collection_key: string;
+        brick_key: string;
     }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;

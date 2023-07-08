@@ -12,7 +12,9 @@ import collectionSchema from "@schemas/collections";
 import {
   CollectionConfigT,
   CollectionBuilderT,
-} from "@lucid/collection-builder"; // Internal packages
+} from "@lucid/collection-builder";
+// Services
+import { EnvironmentResT } from "@services/environments/format-environment";
 
 // -------------------------------------------
 // Types
@@ -29,12 +31,11 @@ type CollectionGetSingle = (props: {
 }) => Promise<CollectionT>;
 
 type CollectionUpdateBricks = (props: {
-  collection_key: CollectionConfigT["key"];
-  environment_key: string;
+  id: number;
   builder_bricks: Array<BrickObject>;
   fixed_bricks: Array<BrickObject>;
-  collection_type: CollectionConfigT["type"];
-  id: number;
+  collection: CollectionT;
+  environment: EnvironmentResT;
 }) => Promise<void>;
 
 // -------------------------------------------
@@ -149,13 +150,6 @@ export default class Collection {
     return collection;
   };
   static updateBricks: CollectionUpdateBricks = async (props) => {
-    const environment = await Environment.getSingle(props.environment_key);
-    const collection = await Collection.getSingle({
-      collection_key: props.collection_key,
-      environment_key: props.environment_key,
-      type: props.collection_type,
-    });
-
     // -------------------------------------------
     // Update/Create Bricks
     const builderBricksPromise =
@@ -165,8 +159,8 @@ export default class Collection {
           brick: brick,
           brick_type: "builder",
           order: index,
-          environment: environment,
-          collection: collection,
+          environment: props.environment,
+          collection: props.collection,
         })
       ) || [];
     const fixedBricksPromise =
@@ -176,8 +170,8 @@ export default class Collection {
           brick: brick,
           brick_type: "fixed",
           order: index,
-          environment: environment,
-          collection: collection,
+          environment: props.environment,
+          collection: props.collection,
         })
       ) || [];
 
@@ -193,14 +187,14 @@ export default class Collection {
     // Delete unused bricks
     if (builderIds.length > 0)
       await CollectionBrick.deleteUnused({
-        type: props.collection_type,
+        type: props.collection.type,
         reference_id: props.id,
         brick_ids: builderIds,
         brick_type: "builder",
       });
     if (fixedIds.length > 0)
       await CollectionBrick.deleteUnused({
-        type: props.collection_type,
+        type: props.collection.type,
         reference_id: props.id,
         brick_ids: fixedIds,
         brick_type: "fixed",
