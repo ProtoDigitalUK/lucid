@@ -23,7 +23,7 @@ class Media {
 _a = Media;
 Media.createSingle = async (data) => {
     const client = await db_1.default;
-    const { name, alt, location } = data;
+    const { name, alt } = data;
     if (!data.files || !data.files["file"]) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -116,9 +116,9 @@ Media.createSingle = async (data) => {
         });
     }
     await __classPrivateFieldGet(Media, _a, "f", _Media_setStorageUsed).call(Media, meta.size);
-    return (0, format_media_1.default)(media.rows[0], location);
+    return (0, format_media_1.default)(media.rows[0]);
 };
-Media.getMultiple = async (query, data) => {
+Media.getMultiple = async (query) => {
     const client = await db_1.default;
     const { filter, sort, page, per_page } = query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
@@ -184,11 +184,11 @@ Media.getMultiple = async (query, data) => {
         values: SelectQuery.countValues,
     });
     return {
-        data: medias.rows.map((menu) => (0, format_media_1.default)(menu, data.location)),
+        data: medias.rows.map((menu) => (0, format_media_1.default)(menu)),
         count: count.rows[0].count,
     };
 };
-Media.getSingle = async (key, data) => {
+Media.getSingle = async (key) => {
     const client = await db_1.default;
     const media = await client.query({
         text: `SELECT
@@ -207,9 +207,9 @@ Media.getSingle = async (key, data) => {
             status: 404,
         });
     }
-    return (0, format_media_1.default)(media.rows[0], data.location);
+    return (0, format_media_1.default)(media.rows[0]);
 };
-Media.deleteSingle = async (key, data) => {
+Media.deleteSingle = async (key) => {
     const client = await db_1.default;
     const media = await client.query({
         text: `DELETE FROM
@@ -229,13 +229,11 @@ Media.deleteSingle = async (key, data) => {
     }
     await __classPrivateFieldGet(Media, _a, "f", _Media_deleteFile).call(Media, key);
     await __classPrivateFieldGet(Media, _a, "f", _Media_setStorageUsed).call(Media, 0, media.rows[0].file_size);
-    return (0, format_media_1.default)(media.rows[0], data.location);
+    return (0, format_media_1.default)(media.rows[0]);
 };
 Media.updateSingle = async (key, data) => {
     const client = await db_1.default;
-    const media = await Media.getSingle(key, {
-        location: data.location,
-    });
+    const media = await Media.getSingle(key);
     let meta = undefined;
     if (data.files && data.files["file"]) {
         const files = helpers_1.default.formatReqFiles(data.files);
@@ -318,9 +316,7 @@ Media.updateSingle = async (key, data) => {
             });
         }
     }
-    return Media.getSingle(key, {
-        location: data.location,
-    });
+    return Media.getSingle(key);
 };
 Media.streamFile = async (key) => {
     const S3 = await s3_client_1.default;

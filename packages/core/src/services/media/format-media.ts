@@ -1,4 +1,6 @@
 import { MediaT } from "@db/models/Media";
+// Services
+import createURL from "@services/media/create-url";
 
 export interface MediaResT {
   id: number;
@@ -17,11 +19,11 @@ export interface MediaResT {
   updated_at: string;
 }
 
-const formatMedia = (media: MediaT, location: string): MediaResT => {
+const formatMedia = (media: MediaT): MediaResT => {
   return {
     id: media.id,
     key: media.key,
-    url: `${location}/cdn/${media.key}`,
+    url: createURL(media.key) as string,
     name: media.name,
     alt: media.alt,
     meta: {

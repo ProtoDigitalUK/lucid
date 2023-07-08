@@ -13,6 +13,7 @@ import { FormBuilderT } from "@lucid/form-builder";
 // -------------------------------------------
 // Config
 const configSchema = z.object({
+  host: z.string(),
   origin: z.string(),
   mode: z.enum(["development", "production"]),
   postgresURL: z.string(),
@@ -53,6 +54,7 @@ const configSchema = z.object({
 });
 
 export type ConfigT = {
+  host: string;
   origin: string;
   mode: "development" | "production";
   postgresURL: string;
@@ -216,6 +218,9 @@ export default class Config {
   }
   static get forms() {
     return Config.configCache.forms;
+  }
+  static get host() {
+    return Config.configCache.host;
   }
   // -------------------------------------------
   // Private

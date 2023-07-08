@@ -1,10 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const formatMedia = (media, location) => {
+const create_url_1 = __importDefault(require("../media/create-url"));
+const formatMedia = (media) => {
     return {
         id: media.id,
         key: media.key,
-        url: `${location}/cdn/${media.key}`,
+        url: (0, create_url_1.default)(media.key),
         name: media.name,
         alt: media.alt,
         meta: {

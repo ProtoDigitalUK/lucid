@@ -21,7 +21,7 @@ const getAll = async (req, res, next) => {
     }
 };
 exports.default = {
-    schema: bricks_1.default.getAll,
+    schema: bricks_1.default.config.getAll,
     controller: getAll,
 };
 //# sourceMappingURL=get-all.js.map

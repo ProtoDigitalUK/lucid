@@ -11,7 +11,7 @@ var _a, _SinglePage_getOrCreateSinglePage;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const Collection_1 = __importDefault(require("../models/Collection"));
-const BrickData_1 = __importDefault(require("../models/BrickData"));
+const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
 class SinglePage {
@@ -74,7 +74,7 @@ SinglePage.getSingle = async (data) => {
         });
         return newSinglePage;
     }
-    const pageBricks = await BrickData_1.default.getAll({
+    const pageBricks = await CollectionBrick_1.default.getAll({
         reference_id: singlepage.rows[0].id,
         type: "singlepage",
         environment_key: data.environment_key,

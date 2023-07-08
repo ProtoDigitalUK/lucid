@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { LucidError, modelErrors } from "@utils/error-handler";
 // Models
 import BrickConfig from "@db/models/BrickConfig";
-import { BrickObject, BrickFieldObject } from "@db/models/BrickData";
+import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
 
 // ------------------------------------
 // Interfaces

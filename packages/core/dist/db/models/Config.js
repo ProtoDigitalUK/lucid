@@ -41,6 +41,7 @@ const console_log_colors_1 = require("console-log-colors");
 const constants_1 = __importDefault(require("../../constants"));
 const zod_validation_error_1 = require("zod-validation-error");
 const configSchema = zod_1.default.object({
+    host: zod_1.default.string(),
     origin: zod_1.default.string(),
     mode: zod_1.default.enum(["development", "production"]),
     postgresURL: zod_1.default.string(),
@@ -121,6 +122,9 @@ class Config {
     }
     static get forms() {
         return Config.configCache.forms;
+    }
+    static get host() {
+        return Config.configCache.host;
     }
 }
 _a = Config, _Config_validateBricks = function _Config_validateBricks(config) {

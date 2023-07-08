@@ -11,8 +11,8 @@ declare const _default: {
             category_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
         }, "strip", import("zod").ZodTypeAny, {
             title: string;
-            collection_key: string;
             slug: string;
+            collection_key: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
             published?: boolean | undefined;
@@ -20,8 +20,8 @@ declare const _default: {
             category_ids?: number[] | undefined;
         }, {
             title: string;
-            collection_key: string;
             slug: string;
+            collection_key: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
             published?: boolean | undefined;
@@ -42,8 +42,8 @@ declare const _default: {
         category_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
     }, "strip", import("zod").ZodTypeAny, {
         title: string;
-        collection_key: string;
         slug: string;
+        collection_key: string;
         homepage?: boolean | undefined;
         excerpt?: string | undefined;
         published?: boolean | undefined;
@@ -51,8 +51,8 @@ declare const _default: {
         category_ids?: number[] | undefined;
     }, {
         title: string;
-        collection_key: string;
         slug: string;
+        collection_key: string;
         homepage?: boolean | undefined;
         excerpt?: string | undefined;
         published?: boolean | undefined;

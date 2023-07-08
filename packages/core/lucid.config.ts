@@ -18,6 +18,13 @@ const BannerBrick = new BrickBuilder("banner")
       zod: z.string().min(3).max(100),
     },
   })
+  .addMedia({
+    key: "image",
+    description: "The image for the banner",
+    validation: {
+      required: true,
+    },
+  })
   .addLink({
     key: "link",
   })
@@ -117,6 +124,7 @@ const SettingsCollection = new CollectionBuilder("settings", {
 // ------------------------------------
 // Build Config
 export default buildConfig({
+  host: "http://localhost:8393",
   origin: "*",
   mode: "development",
   secret: process.env.LUCID_SECRET_KEY as string,

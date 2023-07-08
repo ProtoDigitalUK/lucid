@@ -22,7 +22,7 @@ export interface CollectionConfigT {
   singular: string;
   description: string | null;
   type: "pages" | "singlepage";
-  bricks: Array<CollectionBrickT>;
+  bricks: Array<CollectionBrickConfigT>;
 }
 
 export interface CollectionOptions {
@@ -30,9 +30,9 @@ export interface CollectionOptions {
   title: string;
   singular: string;
   description: string | undefined;
-  bricks: Array<CollectionBrickT>;
+  bricks: Array<CollectionBrickConfigT>;
 }
-export interface CollectionBrickT {
+export interface CollectionBrickConfigT {
   key: string;
   type: "builder" | "fixed";
   position?: "standard" | "bottom" | "top" | "sidebar";

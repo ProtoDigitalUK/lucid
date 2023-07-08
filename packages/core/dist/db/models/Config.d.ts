@@ -2,6 +2,7 @@ import { BrickBuilderT } from "@lucid/brick-builder";
 import { CollectionBuilderT } from "@lucid/collection-builder";
 import { FormBuilderT } from "@lucid/form-builder";
 export type ConfigT = {
+    host: string;
     origin: string;
     mode: "development" | "production";
     postgresURL: string;
@@ -77,6 +78,7 @@ export default class Config {
     static get postgresURL(): string;
     static get origin(): string;
     static get forms(): import("@lucid/form-builder").default[] | undefined;
+    static get host(): string;
 }
 export declare const buildConfig: (config: ConfigT) => ConfigT;
 //# sourceMappingURL=Config.d.ts.map

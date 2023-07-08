@@ -43,36 +43,38 @@ export declare const BrickSchema: z.ZodObject<{
     fields?: Field[] | undefined;
 }>;
 declare const _default: {
-    getAll: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{
-            include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
-        }, "strip", z.ZodTypeAny, {
-            include?: "fields"[] | undefined;
-        }, {
-            include?: "fields"[] | undefined;
-        }>;
-        params: z.ZodObject<{
-            collection_key: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
-            collection_key: string;
-        }, {
-            collection_key: string;
-        }>;
-    };
-    getSingle: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{
-            brick_key: z.ZodString;
-            collection_key: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
-            brick_key: string;
-            collection_key: string;
-        }, {
-            brick_key: string;
-            collection_key: string;
-        }>;
+    config: {
+        getAll: {
+            body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+            query: z.ZodObject<{
+                include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
+            }, "strip", z.ZodTypeAny, {
+                include?: "fields"[] | undefined;
+            }, {
+                include?: "fields"[] | undefined;
+            }>;
+            params: z.ZodObject<{
+                collection_key: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                collection_key: string;
+            }, {
+                collection_key: string;
+            }>;
+        };
+        getSingle: {
+            body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+            query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+            params: z.ZodObject<{
+                brick_key: z.ZodString;
+                collection_key: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                brick_key: string;
+                collection_key: string;
+            }, {
+                brick_key: string;
+                collection_key: string;
+            }>;
+        };
     };
 };
 export default _default;

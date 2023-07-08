@@ -22,40 +22,25 @@ import mediaSchema from "@schemas/media";
 // -------------------------------------------
 // Types
 type MediaCreateSingle = (data: {
-  location: string;
   name?: string;
   alt?: string;
   files: fileUpload.FileArray | null | undefined;
 }) => Promise<MediaResT>;
 
 type MediaGetMultiple = (
-  query: z.infer<typeof mediaSchema.getMultiple.query>,
-  data: {
-    location: string;
-  }
+  query: z.infer<typeof mediaSchema.getMultiple.query>
 ) => Promise<{
   data: MediaResT[];
   count: number;
 }>;
 
-type MediaGetSingle = (
-  key: string,
-  data: {
-    location: string;
-  }
-) => Promise<MediaResT>;
+type MediaGetSingle = (key: string) => Promise<MediaResT>;
 
-type MediaDeleteSingle = (
-  key: string,
-  data: {
-    location: string;
-  }
-) => Promise<MediaResT>;
+type MediaDeleteSingle = (key: string) => Promise<MediaResT>;
 
 type MediaUpdateSingle = (
   key: string,
   data: {
-    location: string;
     name?: string;
     alt?: string;
     files: fileUpload.FileArray | null | undefined;
@@ -90,7 +75,7 @@ export default class Media {
 
     // -------------------------------------------
     // Data
-    const { name, alt, location } = data;
+    const { name, alt } = data;
 
     if (!data.files || !data.files["file"]) {
       throw new LucidError({
@@ -203,9 +188,9 @@ export default class Media {
 
     // -------------------------------------------
     // Return
-    return formatMedia(media.rows[0], location);
+    return formatMedia(media.rows[0]);
   };
-  static getMultiple: MediaGetMultiple = async (query, data) => {
+  static getMultiple: MediaGetMultiple = async (query) => {
     const client = await getDBClient;
 
     const { filter, sort, page, per_page } = query;
@@ -276,11 +261,11 @@ export default class Media {
     });
 
     return {
-      data: medias.rows.map((menu) => formatMedia(menu, data.location)),
+      data: medias.rows.map((menu) => formatMedia(menu)),
       count: count.rows[0].count,
     };
   };
-  static getSingle: MediaGetSingle = async (key, data) => {
+  static getSingle: MediaGetSingle = async (key) => {
     const client = await getDBClient;
 
     const media = await client.query<MediaT>({
@@ -302,9 +287,9 @@ export default class Media {
       });
     }
 
-    return formatMedia(media.rows[0], data.location);
+    return formatMedia(media.rows[0]);
   };
-  static deleteSingle: MediaDeleteSingle = async (key, data) => {
+  static deleteSingle: MediaDeleteSingle = async (key) => {
     const client = await getDBClient;
 
     const media = await client.query<MediaT>({
@@ -330,16 +315,14 @@ export default class Media {
     // update storage used
     await Media.#setStorageUsed(0, media.rows[0].file_size);
 
-    return formatMedia(media.rows[0], data.location);
+    return formatMedia(media.rows[0]);
   };
   static updateSingle: MediaUpdateSingle = async (key, data) => {
     const client = await getDBClient;
 
     // -------------------------------------------
     // Get Media
-    const media = await Media.getSingle(key, {
-      location: data.location,
-    });
+    const media = await Media.getSingle(key);
 
     // -------------------------------------------
     // Update Media
@@ -443,9 +426,7 @@ export default class Media {
 
     // -------------------------------------------
     // Return Media
-    return Media.getSingle(key, {
-      location: data.location,
-    });
+    return Media.getSingle(key);
   };
   static streamFile = async (key: string) => {
     const S3 = await getS3Client;

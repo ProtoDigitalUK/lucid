@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
 const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
-const BrickData_1 = __importDefault(require("../models/BrickData"));
+const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const error_handler_1 = require("../../utils/error-handler");
 class Collection {
 }
@@ -94,21 +94,19 @@ Collection.updateBricks = async (props) => {
         environment_key: props.environment_key,
         type: props.collection_type,
     });
-    const builderBricksPromise = props.builder_bricks.map((brick, index) => BrickData_1.default.createOrUpdate({
+    const builderBricksPromise = props.builder_bricks.map((brick, index) => CollectionBrick_1.default.createOrUpdate({
         reference_id: props.id,
         brick: brick,
         brick_type: "builder",
         order: index,
-        collection_type: props.collection_type,
         environment: environment,
         collection: collection,
     })) || [];
-    const fixedBricksPromise = props.fixed_bricks.map((brick, index) => BrickData_1.default.createOrUpdate({
+    const fixedBricksPromise = props.fixed_bricks.map((brick, index) => CollectionBrick_1.default.createOrUpdate({
         reference_id: props.id,
         brick: brick,
         brick_type: "fixed",
         order: index,
-        collection_type: props.collection_type,
         environment: environment,
         collection: collection,
     })) || [];
@@ -119,14 +117,14 @@ Collection.updateBricks = async (props) => {
     const builderIds = buildBrickRes.map((brickId) => brickId);
     const fixedIds = fixedBrickRes.map((brickId) => brickId);
     if (builderIds.length > 0)
-        await BrickData_1.default.deleteUnused({
+        await CollectionBrick_1.default.deleteUnused({
             type: props.collection_type,
             reference_id: props.id,
             brick_ids: builderIds,
             brick_type: "builder",
         });
     if (fixedIds.length > 0)
-        await BrickData_1.default.deleteUnused({
+        await CollectionBrick_1.default.deleteUnused({
             type: props.collection_type,
             reference_id: props.id,
             brick_ids: fixedIds,

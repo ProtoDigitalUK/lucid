@@ -22,7 +22,7 @@ const getSingle = async (req, res, next) => {
     }
 };
 exports.default = {
-    schema: bricks_1.default.getSingle,
+    schema: bricks_1.default.config.getSingle,
     controller: getSingle,
 };
 //# sourceMappingURL=get-single.js.map

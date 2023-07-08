@@ -4,9 +4,10 @@ import slugify from "slugify";
 // Models
 import PageCategory from "@db/models/PageCategory";
 import Collection from "@db/models/Collection";
-import BrickData, { BrickObject } from "@db/models/BrickData";
+import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 // Serivces
 import formatPage from "@services/pages/format-page";
+import { BrickResponseT } from "@services/bricks/format-bricks";
 // Utils
 import { LucidError } from "@utils/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
@@ -82,8 +83,8 @@ export type PageT = {
   excerpt: string | null;
   categories?: Array<number> | null;
 
-  builder_bricks?: Array<BrickData> | null;
-  fixed_bricks?: Array<BrickData> | null;
+  builder_bricks?: Array<BrickResponseT> | null;
+  fixed_bricks?: Array<BrickResponseT> | null;
 
   published: boolean;
   published_at: string | null;
@@ -275,7 +276,7 @@ export default class Page {
         type: "pages",
       });
 
-      const pageBricks = await BrickData.getAll({
+      const pageBricks = await CollectionBrick.getAll({
         reference_id: page.rows[0].id,
         type: "pages",
         environment_key: data.environment_key,

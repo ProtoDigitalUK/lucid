@@ -8,13 +8,13 @@ declare const _default: {
             description: z.ZodOptional<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
             title: string;
-            collection_key: string;
             slug: string;
+            collection_key: string;
             description?: string | undefined;
         }, {
             title: string;
-            collection_key: string;
             slug: string;
+            collection_key: string;
             description?: string | undefined;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;

@@ -1,7 +1,5 @@
 // Services
-import buildResponse, {
-  getLocation,
-} from "@services/controllers/build-response";
+import buildResponse from "@services/controllers/build-response";
 // Models
 import FormSubmission from "@db/models/FormSubmission";
 // Schema

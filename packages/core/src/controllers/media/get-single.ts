@@ -1,7 +1,5 @@
 // Services
-import buildResponse, {
-  getLocation,
-} from "@services/controllers/build-response";
+import buildResponse from "@services/controllers/build-response";
 // Models
 import Media from "@db/models/Media";
 // Schema
@@ -15,9 +13,7 @@ const getSingle: Controller<
   typeof mediaSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await Media.getSingle(req.params.key, {
-      location: getLocation(req),
-    });
+    const media = await Media.getSingle(req.params.key);
 
     res.status(200).json(
       buildResponse(req, {

@@ -72,8 +72,8 @@ declare const _default: {
             category_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
         }, "strip", z.ZodTypeAny, {
             title: string;
-            collection_key: string;
             slug: string;
+            collection_key: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
             published?: boolean | undefined;
@@ -81,8 +81,8 @@ declare const _default: {
             category_ids?: number[] | undefined;
         }, {
             title: string;
-            collection_key: string;
             slug: string;
+            collection_key: string;
             homepage?: boolean | undefined;
             excerpt?: string | undefined;
             published?: boolean | undefined;

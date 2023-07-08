@@ -3,25 +3,17 @@ import fileUpload from "express-fileupload";
 import { type MediaResT } from "../../services/media/format-media";
 import mediaSchema from "../../schemas/media";
 type MediaCreateSingle = (data: {
-    location: string;
     name?: string;
     alt?: string;
     files: fileUpload.FileArray | null | undefined;
 }) => Promise<MediaResT>;
-type MediaGetMultiple = (query: z.infer<typeof mediaSchema.getMultiple.query>, data: {
-    location: string;
-}) => Promise<{
+type MediaGetMultiple = (query: z.infer<typeof mediaSchema.getMultiple.query>) => Promise<{
     data: MediaResT[];
     count: number;
 }>;
-type MediaGetSingle = (key: string, data: {
-    location: string;
-}) => Promise<MediaResT>;
-type MediaDeleteSingle = (key: string, data: {
-    location: string;
-}) => Promise<MediaResT>;
+type MediaGetSingle = (key: string) => Promise<MediaResT>;
+type MediaDeleteSingle = (key: string) => Promise<MediaResT>;
 type MediaUpdateSingle = (key: string, data: {
-    location: string;
     name?: string;
     alt?: string;
     files: fileUpload.FileArray | null | undefined;

@@ -15,6 +15,6 @@ export interface MediaResT {
     created_at: string;
     updated_at: string;
 }
-declare const formatMedia: (media: MediaT, location: string) => MediaResT;
+declare const formatMedia: (media: MediaT) => MediaResT;
 export default formatMedia;
 //# sourceMappingURL=format-media.d.ts.map

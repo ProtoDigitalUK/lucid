@@ -13,7 +13,7 @@ const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
 const Collection_1 = __importDefault(require("../models/Collection"));
-const BrickData_1 = __importDefault(require("../models/BrickData"));
+const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const format_page_1 = __importDefault(require("../../services/pages/format-page"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
@@ -183,7 +183,7 @@ Page.getSingle = async (query, data) => {
             environment_key: page.rows[0].environment_key,
             type: "pages",
         });
-        const pageBricks = await BrickData_1.default.getAll({
+        const pageBricks = await CollectionBrick_1.default.getAll({
             reference_id: page.rows[0].id,
             type: "pages",
             environment_key: data.environment_key,

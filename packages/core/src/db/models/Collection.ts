@@ -3,7 +3,7 @@ import z from "zod";
 import Config from "@db/models/Config";
 import Environment, { EnvironmentT } from "@db/models/Environment";
 import BrickConfig from "@db/models/BrickConfig";
-import BrickData, { BrickObject } from "@db/models/BrickData";
+import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 // Utils
 import { LucidError } from "@utils/error-handler";
 // Schema
@@ -160,24 +160,22 @@ export default class Collection {
     // Update/Create Bricks
     const builderBricksPromise =
       props.builder_bricks.map((brick, index) =>
-        BrickData.createOrUpdate({
+        CollectionBrick.createOrUpdate({
           reference_id: props.id,
           brick: brick,
           brick_type: "builder",
           order: index,
-          collection_type: props.collection_type,
           environment: environment,
           collection: collection,
         })
       ) || [];
     const fixedBricksPromise =
       props.fixed_bricks.map((brick, index) =>
-        BrickData.createOrUpdate({
+        CollectionBrick.createOrUpdate({
           reference_id: props.id,
           brick: brick,
           brick_type: "fixed",
           order: index,
-          collection_type: props.collection_type,
           environment: environment,
           collection: collection,
         })
@@ -194,14 +192,14 @@ export default class Collection {
     // -------------------------------------------
     // Delete unused bricks
     if (builderIds.length > 0)
-      await BrickData.deleteUnused({
+      await CollectionBrick.deleteUnused({
         type: props.collection_type,
         reference_id: props.id,
         brick_ids: builderIds,
         brick_type: "builder",
       });
     if (fixedIds.length > 0)
-      await BrickData.deleteUnused({
+      await CollectionBrick.deleteUnused({
         type: props.collection_type,
         reference_id: props.id,
         brick_ids: fixedIds,

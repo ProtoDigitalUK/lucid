@@ -9,8 +9,7 @@ export type FieldTypes =
   | "tab"
   | "text"
   | "wysiwyg"
-  | "image"
-  | "file"
+  | "media"
   | "repeater"
   | "number"
   | "checkbox"
@@ -26,8 +25,7 @@ export enum FieldTypesEnum {
   Tab = "tab",
   Text = "text",
   Wysiwyg = "wysiwyg",
-  Image = "image",
-  File = "file",
+  Media = "media",
   Repeater = "repeater",
   Number = "number",
   Checkbox = "checkbox",
@@ -331,9 +329,9 @@ export default class BrickBuilder {
     this.#addToFields("wysiwyg", config);
     return this;
   }
-  public addImage(config: ImageConfig) {
+  public addMedia(config: ImageConfig) {
     this.#checkKeyDuplication(config.key);
-    this.#addToFields("image", config);
+    this.#addToFields("media", config);
     return this;
   }
   public addRepeater(config: RepeaterConfig) {
@@ -372,11 +370,6 @@ export default class BrickBuilder {
   public addJSON(config: JSONConfig) {
     this.#checkKeyDuplication(config.key);
     this.#addToFields("json", config);
-    return this;
-  }
-  public addFile(config: FileConfig) {
-    this.#checkKeyDuplication(config.key);
-    this.#addToFields("file", config);
     return this;
   }
   public addColour(config: ColourConfig) {
@@ -558,25 +551,14 @@ export default class BrickBuilder {
         }
         break;
       }
-      case "image": {
-        const imageTypeValidation = this.#validateImageType(field, {
+      case "media": {
+        const imageTypeValidation = this.#validateMediaType(field, {
           type,
           key,
           value,
         });
         if (!imageTypeValidation.valid) {
           return imageTypeValidation;
-        }
-        break;
-      }
-      case "file": {
-        const fileTypeValidation = this.#validateFileType(field, {
-          type,
-          key,
-          value,
-        });
-        if (!fileTypeValidation.valid) {
-          return fileTypeValidation;
         }
         break;
       }
@@ -675,7 +657,7 @@ export default class BrickBuilder {
       valid: true,
     };
   }
-  #validateImageType(
+  #validateMediaType(
     field: CustomField,
     {
       type,
@@ -688,23 +670,6 @@ export default class BrickBuilder {
     }
   ): ValidationResponse {
     // TODO: add validation for extensions and max/min size
-    return {
-      valid: true,
-    };
-  }
-  #validateFileType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
-    }
-  ): ValidationResponse {
-    // TODO: add validation for extensions
     return {
       valid: true,
     };
@@ -880,7 +845,7 @@ export default class BrickBuilder {
 //       zod: z.string().min(3).max(10),
 //     },
 //   })
-//   .addImage({
+//   .addMedia({
 //     key: "image",
 //   })
 //   .endRepeater()

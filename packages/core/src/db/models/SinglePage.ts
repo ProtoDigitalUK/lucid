@@ -1,10 +1,12 @@
 import getDBClient from "@db/db";
 // Models
 import Collection from "@db/models/Collection";
-import BrickData, { BrickObject } from "@db/models/BrickData";
+import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 // Utils
 import { LucidError } from "@utils/error-handler";
 import { SelectQueryBuilder } from "@utils/query-helpers";
+// Services
+import { BrickResponseT } from "@services/bricks/format-bricks";
 
 // -------------------------------------------
 // Types
@@ -28,8 +30,8 @@ export type SinglePageT = {
   environment_key: string;
   collection_key: string;
 
-  builder_bricks?: Array<BrickData> | null;
-  fixed_bricks?: Array<BrickData> | null;
+  builder_bricks?: Array<BrickResponseT> | null;
+  fixed_bricks?: Array<BrickResponseT> | null;
 
   created_at: string;
   updated_at: string;
@@ -104,7 +106,7 @@ export default class SinglePage {
       return newSinglePage;
     }
 
-    const pageBricks = await BrickData.getAll({
+    const pageBricks = await CollectionBrick.getAll({
       reference_id: singlepage.rows[0].id,
       type: "singlepage",
       environment_key: data.environment_key,
