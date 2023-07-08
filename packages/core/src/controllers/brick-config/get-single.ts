@@ -8,9 +8,9 @@ import bricksSchema from "@schemas/bricks";
 // --------------------------------------------------
 // Controller
 const getSingle: Controller<
-  typeof bricksSchema.getSingle.params,
-  typeof bricksSchema.getSingle.body,
-  typeof bricksSchema.getSingle.query
+  typeof bricksSchema.config.getSingle.params,
+  typeof bricksSchema.config.getSingle.body,
+  typeof bricksSchema.config.getSingle.query
 > = async (req, res, next) => {
   try {
     const brick = await BrickConfig.getSingle({
@@ -32,6 +32,6 @@ const getSingle: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: bricksSchema.getSingle,
+  schema: bricksSchema.config.getSingle,
   controller: getSingle,
 };

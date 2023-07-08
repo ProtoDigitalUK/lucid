@@ -1,34 +1,37 @@
 import { Router } from "express";
 import r from "@utils/route";
 // Controller
-import getAll from "@controllers/brick-config/get-all";
-import getSingle from "@controllers/brick-config/get-single";
+
+// Config
+import getAllConfig from "@controllers/brick-config/get-all";
+import getSingleConfig from "@controllers/brick-config/get-single";
 
 // ------------------------------------
 // Router
 const router = Router();
 
+// Config
 r(router, {
   method: "get",
-  path: "/:collection_key/all",
+  path: "/config/:collection_key/all",
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
   },
-  schema: getAll.schema,
-  controller: getAll.controller,
+  schema: getAllConfig.schema,
+  controller: getAllConfig.controller,
 });
 
 r(router, {
   method: "get",
-  path: "/:collection_key/:brick_key",
+  path: "/config/:collection_key/:brick_key",
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
     validateEnvironment: true,
   },
-  schema: getSingle.schema,
-  controller: getSingle.controller,
+  schema: getSingleConfig.schema,
+  controller: getSingleConfig.controller,
 });
 
 export default router;
