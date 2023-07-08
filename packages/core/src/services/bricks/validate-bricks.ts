@@ -250,36 +250,48 @@ const validateBricksGroup = async (data: {
 
 // Get data
 const getAllMedia = async (fields: BrickFieldObject[]) => {
-  const getIDs = fields.map((field) => {
-    if (field.type === "media") {
-      return field.value;
-    }
-  });
-  const ids = getIDs
-    .filter((id) => id !== undefined)
-    .filter((value, index, self) => self.indexOf(value) === index) as number[];
+  try {
+    const getIDs = fields.map((field) => {
+      if (field.type === "media") {
+        return field.value;
+      }
+    });
+    const ids = getIDs
+      .filter((id) => id !== undefined)
+      .filter(
+        (value, index, self) => self.indexOf(value) === index
+      ) as number[];
 
-  const media = await Media.getMultipleByIds(ids);
-  return media;
+    const media = await Media.getMultipleByIds(ids);
+    return media;
+  } catch (err) {
+    return [];
+  }
 };
 const getAllPages = async (
   fields: BrickFieldObject[],
   environment_key: string
 ) => {
-  const getIDs = fields.map((field) => {
-    if (field.type === "pagelink") {
-      return field.value;
-    }
-  });
-  const ids = getIDs
-    .filter((id) => id !== undefined)
-    .filter((value, index, self) => self.indexOf(value) === index) as number[];
+  try {
+    const getIDs = fields.map((field) => {
+      if (field.type === "pagelink") {
+        return field.value;
+      }
+    });
+    const ids = getIDs
+      .filter((id) => id !== undefined)
+      .filter(
+        (value, index, self) => self.indexOf(value) === index
+      ) as number[];
 
-  const pages = await Page.getMultipleByIds({
-    ids,
-    environment_key,
-  });
-  return pages;
+    const pages = await Page.getMultipleByIds({
+      ids,
+      environment_key,
+    });
+    return pages;
+  } catch (err) {
+    return [];
+  }
 };
 
 // ------------------------------------
