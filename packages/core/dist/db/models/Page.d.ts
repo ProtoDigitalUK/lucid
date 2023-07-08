@@ -42,6 +42,10 @@ type PageDeleteSingle = (data: {
     environment_key: string;
     id: string;
 }) => Promise<PageT>;
+type PageGetMultipleByIds = (data: {
+    ids: Array<number>;
+    environment_key: string;
+}) => Promise<PageT[]>;
 export type PageT = {
     id: number;
     environment_key: string;
@@ -69,6 +73,8 @@ export default class Page {
     static createSingle: PageCreateSingle;
     static updateSingle: PageUpdateSingle;
     static deleteSingle: PageDeleteSingle;
+    static getMultipleByIds: PageGetMultipleByIds;
+    static pageExists: (id: number, environment_key: string) => Promise<PageT>;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

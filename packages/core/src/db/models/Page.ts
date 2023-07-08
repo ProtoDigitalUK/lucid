@@ -70,6 +70,11 @@ type PageDeleteSingle = (data: {
   id: string;
 }) => Promise<PageT>;
 
+type PageGetMultipleByIds = (data: {
+  ids: Array<number>;
+  environment_key: string;
+}) => Promise<PageT[]>;
+
 // -------------------------------------------
 // User
 export type PageT = {
@@ -382,7 +387,7 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    const currentPage = await Page.#pageExists(pageId, data.environment_key);
+    const currentPage = await Page.pageExists(pageId, data.environment_key);
 
     // Set parent id to null if homepage as homepage has to be root level
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
@@ -511,7 +516,7 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    await Page.#pageExists(pageId, data.environment_key);
+    await Page.pageExists(pageId, data.environment_key);
 
     // -------------------------------------------
     // Delete page
@@ -531,9 +536,19 @@ export default class Page {
 
     return formatPage(page.rows[0]);
   };
+  static getMultipleByIds: PageGetMultipleByIds = async (data) => {
+    const client = await getDBClient;
+
+    const pages = await client.query<PageT>({
+      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
+      values: [data.ids, data.environment_key],
+    });
+
+    return pages.rows.map((page) => formatPage(page));
+  };
   // -------------------------------------------
   // Util Functions
-  static #pageExists = async (id: number, environment_key: string) => {
+  static pageExists = async (id: number, environment_key: string) => {
     const client = await getDBClient;
 
     const page = await client.query<PageT>({

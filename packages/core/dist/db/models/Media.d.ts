@@ -12,6 +12,8 @@ type MediaGetMultiple = (query: z.infer<typeof mediaSchema.getMultiple.query>) =
     count: number;
 }>;
 type MediaGetSingle = (key: string) => Promise<MediaResT>;
+type MediaGetSingleById = (id: number) => Promise<MediaResT>;
+type MediaGetMultipleByIds = (ids: number[]) => Promise<MediaResT[]>;
 type MediaDeleteSingle = (key: string) => Promise<MediaResT>;
 type MediaUpdateSingle = (key: string, data: {
     name?: string;
@@ -37,9 +39,11 @@ export default class Media {
     static createSingle: MediaCreateSingle;
     static getMultiple: MediaGetMultiple;
     static getSingle: MediaGetSingle;
+    static getSingleById: MediaGetSingleById;
     static deleteSingle: MediaDeleteSingle;
     static updateSingle: MediaUpdateSingle;
     static streamFile: (key: string) => Promise<import("@aws-sdk/client-s3").GetObjectCommandOutput>;
+    static getMultipleByIds: MediaGetMultipleByIds;
 }
 export {};
 //# sourceMappingURL=Media.d.ts.map

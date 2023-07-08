@@ -35,6 +35,8 @@ type MediaGetMultiple = (
 }>;
 
 type MediaGetSingle = (key: string) => Promise<MediaResT>;
+type MediaGetSingleById = (id: number) => Promise<MediaResT>;
+type MediaGetMultipleByIds = (ids: number[]) => Promise<MediaResT[]>;
 
 type MediaDeleteSingle = (key: string) => Promise<MediaResT>;
 
@@ -289,6 +291,30 @@ export default class Media {
 
     return formatMedia(media.rows[0]);
   };
+  static getSingleById: MediaGetSingleById = async (id) => {
+    const client = await getDBClient;
+
+    const media = await client.query<MediaT>({
+      text: `SELECT
+          *
+        FROM
+          lucid_media
+        WHERE
+          id = $1`,
+      values: [id],
+    });
+
+    if (media.rowCount === 0) {
+      throw new LucidError({
+        type: "basic",
+        name: "Media not found",
+        message: "We couldn't find the media you were looking for.",
+        status: 404,
+      });
+    }
+
+    return formatMedia(media.rows[0]);
+  };
   static deleteSingle: MediaDeleteSingle = async (key) => {
     const client = await getDBClient;
 
@@ -436,6 +462,21 @@ export default class Media {
       Key: key,
     });
     return S3.send(command);
+  };
+  static getMultipleByIds: MediaGetMultipleByIds = async (ids) => {
+    const client = await getDBClient;
+
+    const media = await client.query<MediaT>({
+      text: `SELECT
+          *
+        FROM
+          lucid_media
+        WHERE
+          id = ANY($1)`,
+      values: [ids],
+    });
+
+    return media.rows.map((m) => formatMedia(m));
   };
   // -------------------------------------------
   // Storage Functions

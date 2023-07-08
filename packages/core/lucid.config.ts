@@ -23,6 +23,15 @@ const BannerBrick = new BrickBuilder("banner")
     description: "The image for the banner",
     validation: {
       required: true,
+      extensions: ["jpg", "png", "gif"],
+      width: {
+        min: 100,
+        max: 500,
+      },
+      height: {
+        min: 100,
+        max: 500,
+      },
     },
   })
   .addLink({

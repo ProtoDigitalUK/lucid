@@ -152,7 +152,7 @@ export interface WysiwygConfig extends CustomFieldConfig {
     zod?: z.ZodType<any>;
   };
 }
-export interface ImageConfig extends CustomFieldConfig {
+export interface MediaConfig extends CustomFieldConfig {
   validation?: {
     required?: boolean;
     extensions?: string[];
@@ -240,7 +240,7 @@ export type FieldConfigs =
   | TabConfig
   | TextConfig
   | WysiwygConfig
-  | ImageConfig
+  | MediaConfig
   | NumberConfig
   | CheckboxConfig
   | SelectConfig
@@ -329,7 +329,7 @@ export default class BrickBuilder {
     this.#addToFields("wysiwyg", config);
     return this;
   }
-  public addMedia(config: ImageConfig) {
+  public addMedia(config: MediaConfig) {
     this.#checkKeyDuplication(config.key);
     this.#addToFields("media", config);
     return this;
@@ -530,64 +530,47 @@ export default class BrickBuilder {
     // Field specific validation
     switch (field.type) {
       case "select": {
-        const selectTypeValidation = this.#validateSelectType(field, {
-          type,
-          key,
-          value,
-        });
+        const selectTypeValidation = this.#validateSelectType(field, value);
         if (!selectTypeValidation.valid) {
           return selectTypeValidation;
         }
         break;
       }
       case "wysiwyg": {
-        const wysiwygTypeValidation = this.#validateWysiwygType(field, {
-          type,
-          key,
-          value,
-        });
+        const wysiwygTypeValidation = this.#validateWysiwygType(field, value);
         if (!wysiwygTypeValidation.valid) {
           return wysiwygTypeValidation;
         }
         break;
       }
       case "media": {
-        const imageTypeValidation = this.#validateMediaType(field, {
-          type,
-          key,
-          value,
-        });
+        const imageTypeValidation = this.#validateMediaType(
+          field,
+          secondaryValue
+        );
         if (!imageTypeValidation.valid) {
           return imageTypeValidation;
         }
         break;
       }
       case "datetime": {
-        const datetimeTypeValidation = this.#validateDatetimeType({
-          type,
-          key,
-          value,
-        });
+        const datetimeTypeValidation = this.#validateDatetimeType(value);
         if (!datetimeTypeValidation.valid) {
           return datetimeTypeValidation;
         }
         break;
       }
       case "link": {
-        if (secondaryValue) {
-          const tagetValidation = this.#validateLinkTarget(secondaryValue);
-          if (!tagetValidation.valid) {
-            return tagetValidation;
-          }
+        const tagetValidation = this.#validateLinkTarget(secondaryValue);
+        if (!tagetValidation.valid) {
+          return tagetValidation;
         }
         break;
       }
       case "pagelink": {
-        if (secondaryValue) {
-          const tagetValidation = this.#validateLinkTarget(secondaryValue);
-          if (!tagetValidation.valid) {
-            return tagetValidation;
-          }
+        const tagetValidation = this.#validateLinkTarget(secondaryValue);
+        if (!tagetValidation.valid) {
+          return tagetValidation;
         }
         break;
       }
@@ -598,18 +581,7 @@ export default class BrickBuilder {
     };
   }
   // ------------------------------------
-  #validateSelectType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
-    }
-  ): ValidationResponse {
+  #validateSelectType(field: CustomField, value: string): ValidationResponse {
     // Check if value is in the options
     if (field.options) {
       const optionValues = field.options.map((option) => option.value);
@@ -625,18 +597,7 @@ export default class BrickBuilder {
       valid: true,
     };
   }
-  #validateWysiwygType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
-    }
-  ): ValidationResponse {
+  #validateWysiwygType(field: CustomField, value: string): ValidationResponse {
     const sanitizedValue = sanitizeHtml(value, {
       allowedTags: [],
       allowedAttributes: {},
@@ -659,30 +620,85 @@ export default class BrickBuilder {
   }
   #validateMediaType(
     field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
+    value: {
+      extension: string;
+      width: number | null;
+      height: number | null;
     }
   ): ValidationResponse {
-    // TODO: add validation for extensions and max/min size
+    if (value === undefined) {
+      return {
+        valid: false,
+        message: "Cannot find media.",
+      };
+    }
+
+    // Check if value is in the options
+    if (field.validation?.extensions && field.validation.extensions.length) {
+      const extension = value.extension;
+      if (!field.validation.extensions.includes(extension)) {
+        return {
+          valid: false,
+          message: `Media must be one of the following extensions: ${field.validation.extensions.join(
+            ", "
+          )}`,
+        };
+      }
+    }
+
+    // Check width
+    if (field.validation?.width) {
+      const width = value.width;
+      if (!width) {
+        return {
+          valid: false,
+          message: "This media does not have a width.",
+        };
+      }
+
+      if (field.validation.width.min && width < field.validation.width.min) {
+        return {
+          valid: false,
+          message: `Media width must be greater than ${field.validation.width.min}px.`,
+        };
+      }
+      if (field.validation.width.max && width > field.validation.width.max) {
+        return {
+          valid: false,
+          message: `Media width must be less than ${field.validation.width.max}px.`,
+        };
+      }
+    }
+
+    // Check height
+    if (field.validation?.height) {
+      const height = value.height;
+      if (!height) {
+        return {
+          valid: false,
+          message: "This media does not have a height.",
+        };
+      }
+
+      if (field.validation.height.min && height < field.validation.height.min) {
+        return {
+          valid: false,
+          message: `Media height must be greater than ${field.validation.height.min}px.`,
+        };
+      }
+      if (field.validation.height.max && height > field.validation.height.max) {
+        return {
+          valid: false,
+          message: `Media height must be less than ${field.validation.height.max}px.`,
+        };
+      }
+    }
+
     return {
       valid: true,
     };
   }
-  #validateDatetimeType({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: string;
-  }): ValidationResponse {
+  #validateDatetimeType(value: string): ValidationResponse {
     const date = new Date(value);
     if (isNaN(date.getTime())) {
       return {
@@ -694,9 +710,16 @@ export default class BrickBuilder {
       valid: true,
     };
   }
-  #validateLinkTarget(value: string): ValidationResponse {
+  #validateLinkTarget(value?: { target: string }): ValidationResponse {
+    if (!value) {
+      return {
+        valid: false,
+        message: "Cannot find page.",
+      };
+    }
+
     const allowedValues = ["_self", "_blank"];
-    if (!allowedValues.includes(value)) {
+    if (!allowedValues.includes(value.target)) {
       return {
         valid: false,
         message: "Target must be _self or _blank.",

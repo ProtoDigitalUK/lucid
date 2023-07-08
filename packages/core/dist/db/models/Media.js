@@ -209,6 +209,27 @@ Media.getSingle = async (key) => {
     }
     return (0, format_media_1.default)(media.rows[0]);
 };
+Media.getSingleById = async (id) => {
+    const client = await db_1.default;
+    const media = await client.query({
+        text: `SELECT
+          *
+        FROM
+          lucid_media
+        WHERE
+          id = $1`,
+        values: [id],
+    });
+    if (media.rowCount === 0) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Media not found",
+            message: "We couldn't find the media you were looking for.",
+            status: 404,
+        });
+    }
+    return (0, format_media_1.default)(media.rows[0]);
+};
 Media.deleteSingle = async (key) => {
     const client = await db_1.default;
     const media = await client.query({
@@ -325,6 +346,19 @@ Media.streamFile = async (key) => {
         Key: key,
     });
     return S3.send(command);
+};
+Media.getMultipleByIds = async (ids) => {
+    const client = await db_1.default;
+    const media = await client.query({
+        text: `SELECT
+          *
+        FROM
+          lucid_media
+        WHERE
+          id = ANY($1)`,
+        values: [ids],
+    });
+    return media.rows.map((m) => (0, format_media_1.default)(m));
 };
 _Media_getStorageUsed = { value: async () => {
         const res = await Option_1.default.getByName("media_storage_used");
