@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Form from "@db/models/Form";
 // Schema
 import formsSchema from "@schemas/forms";
+// Services
+import getSingle from "@services/form/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof formsSchema.getSingle.params,
   typeof formsSchema.getSingle.body,
   typeof formsSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const form = await Form.getSingle({
+    const form = await getSingle({
       key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,
     });
@@ -32,5 +32,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: formsSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };

@@ -1,22 +1,22 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Form from "@db/models/Form";
 // Schema
 import formsSchema from "@schemas/forms";
+// Services
+import getAll from "@services/form/get-all";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<
+const getAllController: Controller<
   typeof formsSchema.getAll.params,
   typeof formsSchema.getAll.body,
   typeof formsSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const forms = await Form.getAll(
-      req.query,
-      req.headers["lucid-environment"] as string
-    );
+    const forms = await getAll({
+      query: req.query,
+      environment_key: req.headers["lucid-environment"] as string,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -32,5 +32,5 @@ const getAll: Controller<
 // Export
 export default {
   schema: formsSchema.getAll,
-  controller: getAll,
+  controller: getAllController,
 };
