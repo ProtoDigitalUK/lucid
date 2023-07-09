@@ -1,22 +1,25 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
+// Services
+import updateSingle from "@services/media/update-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof mediaSchema.updateSingle.params,
   typeof mediaSchema.updateSingle.body,
   typeof mediaSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await Media.updateSingle(req.params.key, {
-      name: req.body.name,
-      alt: req.body.alt,
-      files: req.files,
+    const media = await updateSingle({
+      key: req.params.key,
+      data: {
+        name: req.body.name,
+        alt: req.body.alt,
+        files: req.files,
+      },
     });
 
     res.status(200).json(
@@ -33,5 +36,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: mediaSchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };

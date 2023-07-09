@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
+// Services
+import getMultiple from "@services/media/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof mediaSchema.getMultiple.params,
   typeof mediaSchema.getMultiple.body,
   typeof mediaSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const medias = await Media.getMultiple(req.query);
+    const medias = await getMultiple({
+      query: req.query,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -34,5 +36,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: mediaSchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };

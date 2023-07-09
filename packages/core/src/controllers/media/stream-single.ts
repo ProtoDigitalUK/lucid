@@ -1,19 +1,21 @@
 import { Readable } from "stream";
-// Models
-import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
+// Services
+import streamMedia from "@services/media/stream-media";
 
 // --------------------------------------------------
 // Controller
-const streamSingle: Controller<
+const streamSingleController: Controller<
   typeof mediaSchema.streamSingle.params,
   typeof mediaSchema.streamSingle.body,
   typeof mediaSchema.streamSingle.query
 > = async (req, res, next) => {
   try {
     // GET MEDIA
-    const response = await Media.streamFile(req.params.key);
+    const response = await streamMedia({
+      key: req.params.key,
+    });
 
     // SET HEADERS
     res.setHeader(
@@ -37,5 +39,5 @@ const streamSingle: Controller<
 // Export
 export default {
   schema: mediaSchema.streamSingle,
-  controller: streamSingle,
+  controller: streamSingleController,
 };

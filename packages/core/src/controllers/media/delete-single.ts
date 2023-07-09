@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
+// Services
+import deleteSingle from "@services/media/delete-single";
 
 // --------------------------------------------------
 // Controller
-const deleteSingle: Controller<
+const deleteSingleController: Controller<
   typeof mediaSchema.deleteSingle.params,
   typeof mediaSchema.deleteSingle.body,
   typeof mediaSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await Media.deleteSingle(req.params.key);
+    const media = await deleteSingle({
+      key: req.params.key,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const deleteSingle: Controller<
 // Export
 export default {
   schema: mediaSchema.deleteSingle,
-  controller: deleteSingle,
+  controller: deleteSingleController,
 };

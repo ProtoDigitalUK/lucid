@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
+// Services
+import createSingle from "@services/media/create-single";
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const createSingleController: Controller<
   typeof mediaSchema.createSingle.params,
   typeof mediaSchema.createSingle.body,
   typeof mediaSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await Media.createSingle({
+    const media = await createSingle({
       name: req.body.name,
       alt: req.body.alt,
       files: req.files,
@@ -33,5 +33,5 @@ const createSingle: Controller<
 // Export
 export default {
   schema: mediaSchema.createSingle,
-  controller: createSingle,
+  controller: createSingleController,
 };

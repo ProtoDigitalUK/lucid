@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
+// Services
+import getSingle from "@services/media/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof mediaSchema.getSingle.params,
   typeof mediaSchema.getSingle.body,
   typeof mediaSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await Media.getSingle(req.params.key);
+    const media = await getSingle({
+      key: req.params.key,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: mediaSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };
