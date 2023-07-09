@@ -1,21 +1,23 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import RolePermission from "@db/models/RolePermission";
 // Schema
 import permissionsSchema from "@schemas/permissions";
+// Services
+import getAll from "@services/permissions/get-all";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<
+const getAllController: Controller<
   typeof permissionsSchema.getAll.params,
   typeof permissionsSchema.getAll.body,
   typeof permissionsSchema.getAll.query
 > = async (req, res, next) => {
   try {
+    const permissions = await getAll({});
+
     res.status(200).json(
       buildResponse(req, {
-        data: RolePermission.getValidPermissions,
+        data: permissions,
       })
     );
   } catch (error) {
@@ -27,5 +29,5 @@ const getAll: Controller<
 // Export
 export default {
   schema: permissionsSchema.getAll,
-  controller: getAll,
+  controller: getAllController,
 };
