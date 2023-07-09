@@ -1,22 +1,22 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Category from "@db/models/Category";
 // Schema
 import categorySchema from "@schemas/categories";
+// Services
+import getMultiple from "@services/categories/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof categorySchema.getMultiple.params,
   typeof categorySchema.getMultiple.body,
   typeof categorySchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const categories = await Category.getMultiple(
-      req.headers["lucid-environment"] as string,
-      req.query
-    );
+    const categories = await getMultiple({
+      environment_key: req.headers["lucid-environment"] as string,
+      query: req.query,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -37,5 +37,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: categorySchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };

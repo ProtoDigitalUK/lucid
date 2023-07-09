@@ -22,7 +22,7 @@ type CategoryGetMultiple = (
   data: CategoryT[];
   count: number;
 }>;
-type CategoryCreate = (data: {
+type CategoryCreateSingle = (data: {
   environment_key: string;
   collection_key: string;
   title: string;
@@ -30,7 +30,7 @@ type CategoryCreate = (data: {
   description?: string;
 }) => Promise<CategoryT>;
 
-type CategoryUpdate = (
+type CategoryUpdateSingle = (
   environment_key: string,
   id: number,
   data: {
@@ -40,7 +40,7 @@ type CategoryUpdate = (
   }
 ) => Promise<CategoryT>;
 
-type CategoryDelete = (
+type CategoryDeleteSingle = (
   environment_key: string,
   id: number
 ) => Promise<CategoryT>;
@@ -148,7 +148,7 @@ export default class Category {
 
     return category.rows[0];
   };
-  static create: CategoryCreate = async (data) => {
+  static createSingle: CategoryCreateSingle = async (data) => {
     const client = await getDBClient;
 
     // -------------------------------------------
@@ -214,7 +214,11 @@ export default class Category {
 
     return category;
   };
-  static update: CategoryUpdate = async (environment_key, id, data) => {
+  static updateSingle: CategoryUpdateSingle = async (
+    environment_key,
+    id,
+    data
+  ) => {
     const client = await getDBClient;
 
     // Check if category exists
@@ -259,7 +263,7 @@ export default class Category {
 
     return category.rows[0];
   };
-  static delete: CategoryDelete = async (environment_key, id) => {
+  static deleteSingle: CategoryDeleteSingle = async (environment_key, id) => {
     const client = await getDBClient;
 
     const category = await client.query<CategoryT>({

@@ -1,22 +1,22 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Category from "@db/models/Category";
 // Schema
 import categorySchema from "@schemas/categories";
+// Services
+import getSingle from "@services/categories/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof categorySchema.getSingle.params,
   typeof categorySchema.getSingle.body,
   typeof categorySchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await Category.getSingle(
-      req.headers["lucid-environment"] as string,
-      parseInt(req.params.id)
-    );
+    const category = await getSingle({
+      environment_key: req.headers["lucid-environment"] as string,
+      id: req.params.id,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -32,5 +32,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: categorySchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };

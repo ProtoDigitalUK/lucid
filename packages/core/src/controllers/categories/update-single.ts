@@ -1,27 +1,27 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Category from "@db/models/Category";
 // Schema
 import categorySchema from "@schemas/categories";
+// Serives
+import updateSingle from "@services/categories/update-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof categorySchema.updateSingle.params,
   typeof categorySchema.updateSingle.body,
   typeof categorySchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await Category.update(
-      req.headers["lucid-environment"] as string,
-      parseInt(req.params.id),
-      {
+    const category = await updateSingle({
+      environment_key: req.headers["lucid-environment"] as string,
+      id: req.params.id,
+      data: {
         title: req.body.title,
         slug: req.body.slug,
         description: req.body.description,
-      }
-    );
+      },
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -37,5 +37,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: categorySchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };
