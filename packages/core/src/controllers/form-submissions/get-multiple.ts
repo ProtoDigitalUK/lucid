@@ -1,19 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import FormSubmission from "@db/models/FormSubmission";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
+// Services
+import getMultiple from "@services/form-submissions/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof formSubmissionsSchema.getMultiple.params,
   typeof formSubmissionsSchema.getMultiple.body,
   typeof formSubmissionsSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const submissions = await FormSubmission.getMultiple(req.query, {
+    const submissions = await getMultiple({
+      query: req.query,
       form_key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,
     });
@@ -37,5 +38,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: formSubmissionsSchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };
