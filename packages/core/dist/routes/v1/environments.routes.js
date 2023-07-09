@@ -54,7 +54,6 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
-        validateBricks: true,
     },
     schema: update_single_1.default.schema,
     controller: update_single_1.default.controller,
@@ -68,7 +67,6 @@ const router = (0, express_1.Router)();
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
-        validateBricks: true,
     },
     schema: create_single_1.default.schema,
     controller: create_single_1.default.controller,

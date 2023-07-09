@@ -17,7 +17,9 @@ import {
   invalidPathHandler,
 } from "@utils/error-handler";
 
-const app = async (app: Express) => {
+const app = async (options: InitOptions) => {
+  const app = options.express;
+
   // ------------------------------------
   // Config
   await Config.cacheConfig();
@@ -60,6 +62,7 @@ const app = async (app: Express) => {
     "/",
     express.static(path.join(__dirname, "../cms"), { extensions: ["html"] })
   );
+  if (options.public) app.use("/api/public", express.static(options.public));
   initRoutes(app);
   log.yellow("Routes initialised");
 

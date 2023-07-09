@@ -57,7 +57,6 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
-    validateBricks: true,
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,
@@ -72,7 +71,6 @@ r(router, {
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
-    validateBricks: true,
   },
   schema: createSingle.schema,
   controller: createSingle.controller,

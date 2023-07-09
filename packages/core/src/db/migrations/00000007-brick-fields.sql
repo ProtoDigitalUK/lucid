@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS lucid_fields (
   bool_value BOOLEAN,
   json_value JSONB,
   page_link_id INT REFERENCES lucid_pages(id) ON DELETE SET NULL,
-  media_id TEXT -- this will be a reference to the media in the file system at some point
+  media_id INT REFERENCES lucid_media(id) ON DELETE SET NULL
 );

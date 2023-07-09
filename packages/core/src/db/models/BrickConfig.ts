@@ -4,8 +4,12 @@ import Config from "@db/models/Config";
 import Collection, { CollectionT } from "@db/models/Collection";
 import Environment, { EnvironmentT } from "@db/models/Environment";
 // Internal packages
-import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
-import { CollectionBrickT } from "@lucid/collection-builder";
+import {
+  BrickBuilderT,
+  CustomField,
+  BrickConfigOptionsT,
+} from "@lucid/brick-builder";
+import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Utils
 import { LucidError } from "@utils/error-handler";
 // Schema
@@ -17,18 +21,18 @@ type BrickConfigIsBrickAllowed = (data: {
   key: string;
   collection: CollectionT;
   environment: EnvironmentT;
-  type?: CollectionBrickT["type"];
+  type?: CollectionBrickConfigT["type"];
 }) => {
   allowed: boolean;
   brick?: BrickConfigT;
   collectionBrick?: {
-    builder?: CollectionBrickT;
-    fixed?: CollectionBrickT;
+    builder?: CollectionBrickConfigT;
+    fixed?: CollectionBrickConfigT;
   };
 };
 
 type BrickConfigGetAll = (
-  query: z.infer<typeof bricksSchema.getAll.query>,
+  query: z.infer<typeof bricksSchema.config.getAll.query>,
   data: {
     collection_key: string;
     environment_key: string;
@@ -46,7 +50,7 @@ type BrickConfigGetAllAllowedBricks = (data: {
   environment: EnvironmentT;
 }) => {
   bricks: BrickConfigT[];
-  collectionBricks: CollectionBrickT[];
+  collectionBricks: CollectionBrickConfigT[];
 };
 
 // -------------------------------------------
@@ -55,6 +59,7 @@ export type BrickConfigT = {
   key: string;
   title: string;
   fields?: CustomField[];
+  preview?: BrickConfigOptionsT["preview"];
 };
 
 export default class BrickConfig {
@@ -114,21 +119,21 @@ export default class BrickConfig {
       data.key
     );
 
-    let builderBrick: CollectionBrickT | undefined;
-    let fixedBrick: CollectionBrickT | undefined;
+    let builderBrick: CollectionBrickConfigT | undefined;
+    let fixedBrick: CollectionBrickConfigT | undefined;
 
     if (!data.type) {
       builderBrick = data.collection.bricks?.find(
         (b) => b.key === data.key && b.type === "builder"
-      ) as CollectionBrickT | undefined;
+      ) as CollectionBrickConfigT | undefined;
 
       fixedBrick = data.collection.bricks?.find(
         (b) => b.key === data.key && b.type === "fixed"
-      ) as CollectionBrickT | undefined;
+      ) as CollectionBrickConfigT | undefined;
     } else {
       const brickF = data.collection.bricks?.find(
         (b) => b.key === data.key && b.type === data.type
-      ) as CollectionBrickT | undefined;
+      ) as CollectionBrickConfigT | undefined;
       if (data.type === "builder") builderBrick = brickF;
       if (data.type === "fixed") fixedBrick = brickF;
     }
@@ -138,11 +143,9 @@ export default class BrickConfig {
 
     let brick: BrickConfigT | undefined;
     if (instance) {
-      brick = {
-        key: instance.key,
-        title: instance.title,
-        fields: instance.fieldTree,
-      };
+      brick = BrickConfig.getBrickData(instance, {
+        include: ["fields"],
+      });
     }
 
     return {
@@ -156,7 +159,7 @@ export default class BrickConfig {
   };
   static getAllAllowedBricks: BrickConfigGetAllAllowedBricks = (data) => {
     const allowedBricks: BrickConfigT[] = [];
-    const allowedCollectionBricks: CollectionBrickT[] = [];
+    const allowedCollectionBricks: CollectionBrickConfigT[] = [];
     const brickConfigData = BrickConfig.getBrickConfig();
 
     for (const brick of brickConfigData) {
@@ -194,11 +197,12 @@ export default class BrickConfig {
   };
   static getBrickData = (
     instance: BrickBuilderT,
-    query?: z.infer<typeof bricksSchema.getAll.query>
+    query?: z.infer<typeof bricksSchema.config.getAll.query>
   ): BrickConfigT => {
     const data: BrickConfigT = {
       key: instance.key,
       title: instance.title,
+      preview: instance.config?.preview,
     };
 
     if (!query) return data;

@@ -16,7 +16,8 @@ const launch_steps_1 = __importDefault(require("./services/app/launch-steps"));
 const migration_1 = __importDefault(require("./db/migration"));
 const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/error-handler");
-const app = async (app) => {
+const app = async (options) => {
+    const app = options.express;
     await Config_1.default.cacheConfig();
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use(express_1.default.json());
@@ -38,6 +39,8 @@ const app = async (app) => {
     console_log_colors_1.log.yellow("Launch steps ran");
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use("/", express_1.default.static(path_1.default.join(__dirname, "../cms"), { extensions: ["html"] }));
+    if (options.public)
+        app.use("/api/public", express_1.default.static(options.public));
     (0, index_1.default)(app);
     console_log_colors_1.log.yellow("Routes initialised");
     app.use(error_handler_1.errorLogger);

@@ -1,13 +1,12 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLocation = void 0;
-const getLocation = (req) => {
-    return `${req.protocol}://${req.get("host")}`;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.getLocation = getLocation;
+Object.defineProperty(exports, "__esModule", { value: true });
+const Config_1 = __importDefault(require("../../db/models/Config"));
 const getPath = (req) => {
     const originalUrl = req.originalUrl;
-    return `${(0, exports.getLocation)(req)}${originalUrl}`.split("?")[0];
+    return `${Config_1.default.host}${originalUrl}`.split("?")[0];
 };
 const buildMetaLinks = (req, params) => {
     const links = [];

@@ -1,23 +1,23 @@
 import z from "zod";
 import { CollectionT } from "../models/Collection";
 import { EnvironmentT } from "../models/Environment";
-import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
-import { CollectionBrickT } from "@lucid/collection-builder";
+import { BrickBuilderT, CustomField, BrickConfigOptionsT } from "@lucid/brick-builder";
+import { CollectionBrickConfigT } from "@lucid/collection-builder";
 import bricksSchema from "../../schemas/bricks";
 type BrickConfigIsBrickAllowed = (data: {
     key: string;
     collection: CollectionT;
     environment: EnvironmentT;
-    type?: CollectionBrickT["type"];
+    type?: CollectionBrickConfigT["type"];
 }) => {
     allowed: boolean;
     brick?: BrickConfigT;
     collectionBrick?: {
-        builder?: CollectionBrickT;
-        fixed?: CollectionBrickT;
+        builder?: CollectionBrickConfigT;
+        fixed?: CollectionBrickConfigT;
     };
 };
-type BrickConfigGetAll = (query: z.infer<typeof bricksSchema.getAll.query>, data: {
+type BrickConfigGetAll = (query: z.infer<typeof bricksSchema.config.getAll.query>, data: {
     collection_key: string;
     environment_key: string;
 }) => Promise<BrickConfigT[]>;
@@ -31,12 +31,13 @@ type BrickConfigGetAllAllowedBricks = (data: {
     environment: EnvironmentT;
 }) => {
     bricks: BrickConfigT[];
-    collectionBricks: CollectionBrickT[];
+    collectionBricks: CollectionBrickConfigT[];
 };
 export type BrickConfigT = {
     key: string;
     title: string;
     fields?: CustomField[];
+    preview?: BrickConfigOptionsT["preview"];
 };
 export default class BrickConfig {
     static getSingle: BrickConfigGetSingle;

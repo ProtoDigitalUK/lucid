@@ -31,8 +31,12 @@ const express_1 = __importDefault(require("express"));
 const zod_1 = __importDefault(require("zod"));
 const console_log_colors_1 = require("console-log-colors");
 const index_1 = __importStar(require("./index"));
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
-index_1.default.init(app);
+index_1.default.init({
+    express: app,
+    public: path_1.default.join(__dirname, "../public"),
+});
 exports.ContactForm = new index_1.FormBuilder("contact-form", {
     title: "Contact Form",
     fields: [

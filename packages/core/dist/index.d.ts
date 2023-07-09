@@ -12,7 +12,7 @@ declare const sendEmail: (template: string, params: import("./services/emails/se
 }>;
 export { init, buildConfig, sendEmail, BrickBuilder, CollectionBuilder, FormBuilder, submitForm, };
 declare const _default: {
-    init: (app: import("express").Express) => Promise<import("express").Express>;
+    init: (options: InitOptions) => Promise<import("express").Express>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

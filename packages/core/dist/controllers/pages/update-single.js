@@ -8,7 +8,7 @@ const Page_1 = __importDefault(require("../../db/models/Page"));
 const pages_1 = __importDefault(require("../../schemas/pages"));
 const updateSingle = async (req, res, next) => {
     try {
-        const page = await Page_1.default.update({
+        const page = await Page_1.default.updateSingle({
             id: req.params.id,
             environment_key: req.headers["lucid-environment"],
             userId: req.auth.id,

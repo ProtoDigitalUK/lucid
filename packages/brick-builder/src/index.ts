@@ -1,77 +1,34 @@
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
+// Types
+import {
+  BrickConfigOptionsT,
+  CustomField,
+  FieldTypes,
+  TabConfig,
+  TextConfig,
+  RepeaterConfig,
+  WysiwygConfig,
+  MediaConfig,
+  NumberConfig,
+  CheckboxConfig,
+  SelectConfig,
+  CustomFieldConfig,
+  TextareaConfig,
+  JSONConfig,
+  ColourConfig,
+  DateTimeConfig,
+  PageLinkConfig,
+  LinkConfig,
+  ValidationResponse,
+  FieldConfigs,
+  ValidationProps,
+  MediaReferenceData,
+  LinkReferenceData,
+} from "./types";
 
 // ------------------------------------
-// Types & Interfaces
-export interface BrickConfig {}
-
-export type FieldTypes =
-  | "tab"
-  | "text"
-  | "wysiwyg"
-  | "image"
-  | "file"
-  | "repeater"
-  | "number"
-  | "checkbox"
-  | "select"
-  | "textarea"
-  | "json"
-  | "colour"
-  | "datetime"
-  | "pagelink"
-  | "link";
-
-export enum FieldTypesEnum {
-  Tab = "tab",
-  Text = "text",
-  Wysiwyg = "wysiwyg",
-  Image = "image",
-  File = "file",
-  Repeater = "repeater",
-  Number = "number",
-  Checkbox = "checkbox",
-  Select = "select",
-  Textarea = "textarea",
-  JSON = "json",
-  Colour = "colour",
-  Datetime = "datetime",
-  Pagelink = "pagelink",
-  Link = "link",
-}
-
-export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
-
-// Custom Fields
-export interface CustomField {
-  type: FieldTypes;
-  key: CustomFieldConfig["key"];
-  title: CustomFieldConfig["title"];
-  description?: CustomFieldConfig["description"];
-  placeholder?: string;
-  fields?: Array<CustomField>;
-  default?: string | boolean;
-
-  options?: Array<{
-    label: string;
-    value: string;
-  }>;
-  // Validation
-  validation?: {
-    zod?: z.ZodType<any>;
-    required?: boolean;
-    extensions?: string[];
-    width?: {
-      min?: number;
-      max?: number;
-    };
-    height?: {
-      min?: number;
-      max?: number;
-    };
-  };
-}
-
+// Schema
 const baseCustomFieldSchema = z.object({
   type: z.string(),
   key: z.string(),
@@ -116,142 +73,15 @@ const customFieldSchemaObject: z.ZodType<Fields> = baseCustomFieldSchema.extend(
     fields: z.lazy(() => customFieldSchemaObject.array().optional()),
   }
 );
-// const customFieldSchema = customFieldSchemaObject.array();
 
 // ------------------------------------
-// Validate
-export interface ValidationResponse {
-  valid: boolean;
-  message?: string;
+// Validation
+class ValidationError extends Error {
+  constructor(public message: string) {
+    super(message);
+    this.name = "ValidationError";
+  }
 }
-
-// ------------------------------------
-// Custom Fields Config
-export interface CustomFieldConfig {
-  key: string;
-  title?: string;
-  description?: string;
-  validation?: {
-    required?: boolean;
-  };
-}
-
-// text field
-export interface TabConfig extends CustomFieldConfig {}
-export interface TextConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-    zod?: z.ZodType<any>;
-  };
-}
-export interface WysiwygConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-    zod?: z.ZodType<any>;
-  };
-}
-export interface ImageConfig extends CustomFieldConfig {
-  validation?: {
-    required?: boolean;
-    extensions?: string[];
-    width?: {
-      min?: number;
-      max?: number;
-    };
-    height?: {
-      min?: number;
-      max?: number;
-    };
-  };
-}
-export interface RepeaterConfig extends CustomFieldConfig {
-  validation?: {
-    required?: boolean;
-  };
-}
-export interface NumberConfig extends CustomFieldConfig {
-  default?: number;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-    zod?: z.ZodType<any>;
-  };
-}
-export interface CheckboxConfig extends CustomFieldConfig {
-  default?: boolean;
-}
-export interface SelectConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  options: Array<{ label: string; value: string }>;
-}
-export interface TextareaConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-    zod?: z.ZodType<any>;
-  };
-}
-export interface JSONConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-    zod?: z.ZodType<any>;
-  };
-}
-export interface FileConfig extends CustomFieldConfig {
-  validation?: {
-    required?: boolean;
-    extensions?: string[];
-  };
-}
-export interface ColourConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-  };
-}
-export interface DateTimeConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-  };
-}
-export interface PageLinkConfig extends CustomFieldConfig {
-  validation?: {
-    required?: boolean;
-  };
-}
-export interface LinkConfig extends CustomFieldConfig {
-  default?: string;
-  placeholder?: string;
-  validation?: {
-    required?: boolean;
-  };
-}
-
-export type FieldConfigs =
-  | TabConfig
-  | TextConfig
-  | WysiwygConfig
-  | ImageConfig
-  | NumberConfig
-  | CheckboxConfig
-  | SelectConfig
-  | TextareaConfig
-  | JSONConfig
-  | FileConfig
-  | ColourConfig
-  | DateTimeConfig
-  | PageLinkConfig;
 
 // ------------------------------------
 // BrickBuilder
@@ -261,12 +91,13 @@ export default class BrickBuilder {
   fields: Map<string, CustomField> = new Map();
   repeaterStack: string[] = [];
   maxRepeaterDepth: number = 5;
-  constructor(key: string, config?: BrickConfig) {
+  config: BrickConfigOptionsT = {};
+  constructor(key: string, config?: BrickConfigOptionsT) {
     this.key = key;
     this.title = this.#keyToTitle(key);
+    this.config = config || {};
   }
   // ------------------------------------
-  // Methods
   public addFields(BrickBuilder: BrickBuilder) {
     const fields = BrickBuilder.fields;
     fields.forEach((field) => {
@@ -331,9 +162,9 @@ export default class BrickBuilder {
     this.#addToFields("wysiwyg", config);
     return this;
   }
-  public addImage(config: ImageConfig) {
+  public addMedia(config: MediaConfig) {
     this.#checkKeyDuplication(config.key);
-    this.#addToFields("image", config);
+    this.#addToFields("media", config);
     return this;
   }
   public addRepeater(config: RepeaterConfig) {
@@ -372,11 +203,6 @@ export default class BrickBuilder {
   public addJSON(config: JSONConfig) {
     this.#checkKeyDuplication(config.key);
     this.#addToFields("json", config);
-    return this;
-  }
-  public addFile(config: FileConfig) {
-    this.#checkKeyDuplication(config.key);
-    this.#addToFields("file", config);
     return this;
   }
   public addColour(config: ColourConfig) {
@@ -459,156 +285,102 @@ export default class BrickBuilder {
   }
   // ------------------------------------
   // Field Type Validation
+  private fieldTypeToDataType: Record<string, "string" | "number" | "boolean"> =
+    {
+      text: "string",
+      textarea: "string",
+      colour: "string",
+      datetime: "string",
+      link: "string",
+      wysiwyg: "string",
+      select: "string",
+      number: "number",
+      pagelink: "number",
+      checkbox: "boolean",
+    };
   fieldValidation({
     type,
     key,
     value,
-    secondaryValue,
-  }: {
-    type: string;
-    key: string;
-    value: any;
-    secondaryValue?: any;
-  }): ValidationResponse {
-    const field = this.flatFields.find((item) => item.key === key);
-    if (!field) {
-      return {
-        valid: false,
-        message: `Field with key "${key}" does not exist.`,
-      };
-    }
-    // Check if field type is text
-    const typeValidation = this.#validateType(type, field.type);
-    if (!typeValidation.valid) {
-      return typeValidation;
-    }
-
-    // Check if field is required
-    if (field.validation?.required) {
-      const requiredValidation = this.#validateRequired(value);
-      if (!requiredValidation.valid) {
-        return requiredValidation;
+    referenceData,
+    flatFieldConfig,
+  }: ValidationProps): ValidationResponse {
+    try {
+      // Check if field exists in config
+      const field = flatFieldConfig.find((item) => item.key === key);
+      if (!field) {
+        throw new ValidationError(`Field with key "${key}" does not exist.`);
       }
-    }
 
-    // run zod validation
-    if (field.validation?.zod && field.type !== "wysiwyg") {
-      const zodValidation = this.#validateZodSchema(
-        field.validation.zod,
-        value
-      );
-      if (!zodValidation.valid) {
-        return zodValidation;
+      // Check if field type matches
+      if (field.type !== type) {
+        throw new ValidationError(`Field with key "${key}" is not a ${type}.`);
       }
-    }
 
-    // Validate string
-    if (
-      field.type === "text" ||
-      field.type === "textarea" ||
-      field.type === "colour" ||
-      field.type === "datetime" ||
-      field.type === "link" ||
-      field.type === "wysiwyg" ||
-      field.type === "select"
-    ) {
-      const stringValidation = this.#validateIsString(value);
-      if (!stringValidation.valid) {
-        return stringValidation;
-      }
-    }
-
-    // Validate number
-    if (field.type === "number" || field.type === "pagelink") {
-      const numberValidation = this.#validateIsNumber(value);
-      if (!numberValidation.valid) {
-        return numberValidation;
-      }
-    }
-
-    // Validate boolean
-    if (field.type === "checkbox") {
-      const checkboxValidation = this.#validateIsBoolean(value);
-      if (!checkboxValidation.valid) {
-        return checkboxValidation;
-      }
-    }
-
-    // Field specific validation
-    switch (field.type) {
-      case "select": {
-        const selectTypeValidation = this.#validateSelectType(field, {
-          type,
-          key,
-          value,
-        });
-        if (!selectTypeValidation.valid) {
-          return selectTypeValidation;
+      // Check if field is required
+      if (field.validation?.required) {
+        if (value === undefined || value === null || value === "") {
+          throw new ValidationError(`Please enter a value.`);
         }
-        break;
       }
-      case "wysiwyg": {
-        const wysiwygTypeValidation = this.#validateWysiwygType(field, {
-          type,
-          key,
-          value,
-        });
-        if (!wysiwygTypeValidation.valid) {
-          return wysiwygTypeValidation;
+
+      // run zod validation
+      if (field.validation?.zod && field.type !== "wysiwyg") {
+        this.#validateZodSchema(field.validation.zod, value);
+      }
+
+      // Use the map to do the data type validation
+      const dataType = this.fieldTypeToDataType[field.type];
+      if (dataType) {
+        if (typeof value !== dataType) {
+          throw new ValidationError(`The field value must be a ${dataType}.`);
         }
-        break;
       }
-      case "image": {
-        const imageTypeValidation = this.#validateImageType(field, {
-          type,
-          key,
-          value,
-        });
-        if (!imageTypeValidation.valid) {
-          return imageTypeValidation;
+
+      // Field specific validation
+      switch (field.type) {
+        case "select": {
+          this.#validateSelectType(field, value);
+          break;
         }
-        break;
-      }
-      case "file": {
-        const fileTypeValidation = this.#validateFileType(field, {
-          type,
-          key,
-          value,
-        });
-        if (!fileTypeValidation.valid) {
-          return fileTypeValidation;
+        case "wysiwyg": {
+          this.#validateWysiwygType(field, value);
+          break;
         }
-        break;
-      }
-      case "datetime": {
-        const datetimeTypeValidation = this.#validateDatetimeType({
-          type,
-          key,
-          value,
-        });
-        if (!datetimeTypeValidation.valid) {
-          return datetimeTypeValidation;
+        case "media": {
+          this.#validateMediaType(field, referenceData as MediaReferenceData);
+          break;
         }
-        break;
-      }
-      case "link": {
-        if (secondaryValue) {
-          const tagetValidation = this.#validateLinkTarget(secondaryValue);
-          if (!tagetValidation.valid) {
-            return tagetValidation;
+        case "datetime": {
+          const date = new Date(value);
+          if (isNaN(date.getTime())) {
+            throw new ValidationError("Please ensure the date is valid.");
           }
+          break;
         }
-        break;
-      }
-      case "pagelink": {
-        if (secondaryValue) {
-          const tagetValidation = this.#validateLinkTarget(secondaryValue);
-          if (!tagetValidation.valid) {
-            return tagetValidation;
+        case "link": {
+          this.#validateLinkTarget(referenceData as LinkReferenceData);
+          break;
+        }
+        case "pagelink": {
+          if (!referenceData) {
+            throw new ValidationError(
+              "We couldn't find the page you selected."
+            );
           }
+          this.#validateLinkTarget(referenceData as LinkReferenceData);
+          break;
         }
-        break;
       }
+    } catch (error) {
+      // Catch validation errors and return them
+      if (error instanceof ValidationError) {
+        return {
+          valid: false,
+          message: error.message,
+        };
+      }
+      throw error;
     }
 
     return {
@@ -616,45 +388,16 @@ export default class BrickBuilder {
     };
   }
   // ------------------------------------
-  #validateSelectType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
-    }
-  ): ValidationResponse {
+  #validateSelectType(field: CustomField, value: string) {
     // Check if value is in the options
     if (field.options) {
       const optionValues = field.options.map((option) => option.value);
       if (!optionValues.includes(value)) {
-        return {
-          valid: false,
-          message: "Value must be one of the provided options.",
-        };
+        throw new ValidationError("Please ensure the value is a valid option.");
       }
     }
-
-    return {
-      valid: true,
-    };
   }
-  #validateWysiwygType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
-    }
-  ): ValidationResponse {
+  #validateWysiwygType(field: CustomField, value: string) {
     const sanitizedValue = sanitizeHtml(value, {
       allowedTags: [],
       allowedAttributes: {},
@@ -662,155 +405,83 @@ export default class BrickBuilder {
 
     // run zod validation
     if (field.validation?.zod) {
-      const zodValidation = this.#validateZodSchema(
-        field.validation.zod,
-        sanitizedValue
-      );
-      if (!zodValidation.valid) {
-        return zodValidation;
+      this.#validateZodSchema(field.validation.zod, sanitizedValue);
+    }
+  }
+  #validateMediaType(field: CustomField, referenceData: MediaReferenceData) {
+    if (referenceData === undefined) {
+      throw new ValidationError("We couldn't find the media you selected.");
+    }
+
+    // Check if value is in the options
+    if (field.validation?.extensions && field.validation.extensions.length) {
+      const extension = referenceData.extension;
+      if (!field.validation.extensions.includes(extension)) {
+        throw new ValidationError(
+          `Media must be one of the following extensions: ${field.validation.extensions.join(
+            ", "
+          )}`
+        );
       }
     }
 
-    return {
-      valid: true,
-    };
-  }
-  #validateImageType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
+    // Check width
+    if (field.validation?.width) {
+      const width = referenceData.width;
+      if (!width) {
+        throw new ValidationError("This media does not have a width.");
+      }
+
+      if (field.validation.width.min && width < field.validation.width.min) {
+        throw new ValidationError(
+          `Media width must be greater than ${field.validation.width.min}px.`
+        );
+      }
+      if (field.validation.width.max && width > field.validation.width.max) {
+        throw new ValidationError(
+          `Media width must be less than ${field.validation.width.max}px.`
+        );
+      }
     }
-  ): ValidationResponse {
-    // TODO: add validation for extensions and max/min size
-    return {
-      valid: true,
-    };
-  }
-  #validateFileType(
-    field: CustomField,
-    {
-      type,
-      key,
-      value,
-    }: {
-      type: string;
-      key: string;
-      value: string;
+
+    // Check height
+    if (field.validation?.height) {
+      const height = referenceData.height;
+      if (!height) {
+        throw new ValidationError("This media does not have a height.");
+      }
+
+      if (field.validation.height.min && height < field.validation.height.min) {
+        throw new ValidationError(
+          `Media height must be greater than ${field.validation.height.min}px.`
+        );
+      }
+      if (field.validation.height.max && height > field.validation.height.max) {
+        throw new ValidationError(
+          `Media height must be less than ${field.validation.height.max}px.`
+        );
+      }
     }
-  ): ValidationResponse {
-    // TODO: add validation for extensions
-    return {
-      valid: true,
-    };
   }
-  #validateDatetimeType({
-    type,
-    key,
-    value,
-  }: {
-    type: string;
-    key: string;
-    value: string;
-  }): ValidationResponse {
-    const date = new Date(value);
-    if (isNaN(date.getTime())) {
-      return {
-        valid: false,
-        message: "Value must be a valid date.",
-      };
-    }
-    return {
-      valid: true,
-    };
-  }
-  #validateLinkTarget(value: string): ValidationResponse {
+  #validateLinkTarget(referenceData: LinkReferenceData) {
     const allowedValues = ["_self", "_blank"];
-    if (!allowedValues.includes(value)) {
-      return {
-        valid: false,
-        message: "Target must be _self or _blank.",
-      };
+    if (!allowedValues.includes(referenceData.target)) {
+      throw new ValidationError(
+        `Please set the target to one of the following: ${allowedValues.join(
+          ", "
+        )}.`
+      );
     }
-    return {
-      valid: true,
-    };
   }
   // ------------------------------------
   // Validation Util
-  #validateRequired(value: any): ValidationResponse {
-    if (value === undefined || value === null || value === "") {
-      return {
-        valid: false,
-        message: "This field is required.",
-      };
-    }
-    return {
-      valid: true,
-    };
-  }
-  #validateType(providedType: string, type: FieldTypes): ValidationResponse {
-    if (providedType !== type) {
-      return {
-        valid: false,
-        message: `Field type must be "${type}".`,
-      };
-    }
-    return {
-      valid: true,
-    };
-  }
-  #validateZodSchema(schema: z.ZodSchema<any>, value: any): ValidationResponse {
+  #validateZodSchema(schema: z.ZodSchema<any>, value: any) {
     try {
       schema.parse(value);
-      return {
-        valid: true,
-      };
     } catch (error) {
       const err = error as z.ZodError;
-      return {
-        valid: false,
-        message: err.issues[0].message,
-      };
+      throw new ValidationError(err.issues[0].message);
     }
-  }
-  #validateIsString(value: any): ValidationResponse {
-    if (typeof value !== "string") {
-      return {
-        valid: false,
-        message: "Value must be a string.",
-      };
-    }
-    return {
-      valid: true,
-    };
-  }
-  #validateIsNumber(value: any): ValidationResponse {
-    if (typeof value !== "number") {
-      return {
-        valid: false,
-        message: "Value must be a number.",
-      };
-    }
-    return {
-      valid: true,
-    };
-  }
-  #validateIsBoolean(value: any): ValidationResponse {
-    if (typeof value !== "boolean") {
-      return {
-        valid: false,
-        message: "Value must be a boolean.",
-      };
-    }
-    return {
-      valid: true,
-    };
   }
   // ------------------------------------
   // Private Methods
@@ -854,53 +525,5 @@ export default class BrickBuilder {
   }
 }
 
-// const bannerBrick = new BrickBuilder("banner")
-//   .addTab({
-//     key: "content_tab",
-//   })
-//   .addText({
-//     key: "title",
-//     description: "The title of the banner",
-//     validation: {
-//       zod: z.string().min(3).max(10),
-//     },
-//   })
-//   .addWysiwyg({
-//     key: "description",
-//   })
-//   .addRepeater({
-//     key: "links",
-//     validation: {
-//       max: 3,
-//     },
-//   })
-//   .addText({
-//     key: "image_alt",
-//     validation: {
-//       zod: z.string().min(3).max(10),
-//     },
-//   })
-//   .addImage({
-//     key: "image",
-//   })
-//   .endRepeater()
-//   .addWysiwyg({
-//     key: "description_last",
-//   })
-//   .addTab({
-//     key: "general-2",
-//   })
-//   .addText({
-//     key: "title-2",
-//     description: "The title of the banner",
-//   });
-
-// // @ts-ignore
-// console.log(bannerBrick.fieldTree[0].fields);
-
-// const valid = bannerBrick.validateTextType({
-//   type: "text",
-//   key: "image_alt",
-//   value: "hello",
-// });
-// console.log(valid);
+export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
+export * from "./types";

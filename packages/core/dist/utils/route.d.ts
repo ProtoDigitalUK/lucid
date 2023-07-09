@@ -12,7 +12,6 @@ type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT e
         authenticate?: boolean;
         authoriseCSRF?: boolean;
         paginated?: boolean;
-        validateBricks?: boolean;
         validateEnvironment?: boolean;
     };
     schema?: {

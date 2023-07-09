@@ -7,17 +7,17 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _BrickData_createSinglePageBrick, _BrickData_updateSinglePageBrick, _BrickData_upsertField, _BrickData_checkFieldExists, _BrickData_fieldTypeSpecificQueryData, _BrickData_upsertRepeater, _BrickData_valueKey;
+var _a, _CollectionBrick_createSingleCollectionBrick, _CollectionBrick_updateSingleCollectionBrick, _CollectionBrick_upsertField, _CollectionBrick_checkFieldExists, _CollectionBrick_fieldTypeSpecificQueryData, _CollectionBrick_upsertRepeater, _CollectionBrick_valueKey;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
 const format_bricks_1 = __importDefault(require("../../services/bricks/format-bricks"));
 const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
-class BrickData {
+class CollectionBrick {
 }
-_a = BrickData;
-BrickData.createOrUpdate = async (data) => {
+_a = CollectionBrick;
+CollectionBrick.createOrUpdate = async (data) => {
     const promises = [];
     const allowed = BrickConfig_1.default.isBrickAllowed({
         key: data.brick.key,
@@ -34,13 +34,13 @@ BrickData.createOrUpdate = async (data) => {
         });
     }
     const brickId = data.brick.id
-        ? await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_updateSinglePageBrick).call(BrickData, {
+        ? await __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_updateSingleCollectionBrick).call(CollectionBrick, {
             order: data.order,
             brick: data.brick,
             brick_type: data.brick_type,
         })
-        : await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_createSinglePageBrick).call(BrickData, {
-            type: data.collection_type,
+        : await __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_createSingleCollectionBrick).call(CollectionBrick, {
+            type: data.collection.type,
             reference_id: data.reference_id,
             order: data.order,
             brick: data.brick,
@@ -52,36 +52,52 @@ BrickData.createOrUpdate = async (data) => {
         if (field.type === "tab")
             continue;
         if (field.type === "repeater")
-            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertRepeater).call(BrickData, brickId, field));
+            promises.push(__classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_upsertRepeater).call(CollectionBrick, brickId, field));
         else
-            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertField).call(BrickData, brickId, field));
+            promises.push(__classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_upsertField).call(CollectionBrick, brickId, field));
     }
     await Promise.all(promises);
     return brickId;
 };
-BrickData.getAll = async (data) => {
+CollectionBrick.getAll = async (data) => {
     const client = await db_1.default;
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
     const brickFields = await client.query(`SELECT 
-      lucid_collection_bricks.*,
-        lucid_fields.*,
-        lucid_pages.title as linked_page_title,
-        lucid_pages.slug as linked_page_slug,
-        lucid_pages.full_slug as linked_page_full_slug
-      FROM 
-        lucid_collection_bricks
-      LEFT JOIN 
-        lucid_fields
-      ON 
-        lucid_collection_bricks.id = lucid_fields.collection_brick_id
-      LEFT JOIN 
-        lucid_pages
-      ON 
-        lucid_fields.page_link_id = lucid_pages.id
-      WHERE 
-        lucid_collection_bricks.${referenceKey} = $1
-      ORDER BY 
-        lucid_collection_bricks.brick_order`, [data.reference_id]);
+          lucid_collection_bricks.*,
+          lucid_fields.*,
+          json_build_object(
+            'title', lucid_pages.title,
+            'slug', lucid_pages.slug,
+            'full_slug', lucid_pages.full_slug
+          ) as linked_page,
+          json_build_object(
+            'key', lucid_media.key,
+            'mime_type', lucid_media.mime_type,
+            'file_extension', lucid_media.file_extension,
+            'file_size', lucid_media.file_size,
+            'width', lucid_media.width,
+            'height', lucid_media.height,
+            'name', lucid_media.name,
+            'alt', lucid_media.alt
+          ) as media
+        FROM 
+          lucid_collection_bricks
+        LEFT JOIN 
+          lucid_fields
+        ON 
+          lucid_collection_bricks.id = lucid_fields.collection_brick_id
+        LEFT JOIN 
+          lucid_pages
+        ON 
+          lucid_fields.page_link_id = lucid_pages.id
+        LEFT JOIN 
+          lucid_media
+        ON 
+          lucid_fields.media_id = lucid_media.id
+        WHERE 
+          lucid_collection_bricks.${referenceKey} = $1
+        ORDER BY 
+          lucid_collection_bricks.brick_order`, [data.reference_id]);
     if (!brickFields.rows[0]) {
         return {
             builder_bricks: [],
@@ -98,14 +114,14 @@ BrickData.getAll = async (data) => {
         fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder"),
     };
 };
-BrickData.deleteUnused = async (data) => {
+CollectionBrick.deleteUnused = async (data) => {
     const client = await db_1.default;
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
-    const pageBrickIds = await client.query({
+    const collectionBrickIds = await client.query({
         text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
         values: [data.reference_id, data.brick_type],
     });
-    const bricksToDelete = pageBrickIds.rows.filter((brick) => !data.brick_ids.includes(brick.id));
+    const bricksToDelete = collectionBrickIds.rows.filter((brick) => !data.brick_ids.includes(brick.id));
     const promises = bricksToDelete.map((brick) => client.query({
         text: `DELETE FROM lucid_collection_bricks WHERE id = $1`,
         values: [brick.id],
@@ -122,7 +138,7 @@ BrickData.deleteUnused = async (data) => {
         });
     }
 };
-_BrickData_createSinglePageBrick = { value: async (data) => {
+_CollectionBrick_createSingleCollectionBrick = { value: async (data) => {
         const client = await db_1.default;
         const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
         const brickRes = await client.query(`INSERT INTO 
@@ -140,7 +156,7 @@ _BrickData_createSinglePageBrick = { value: async (data) => {
         }
         return brickRes.rows[0].id;
     } };
-_BrickData_updateSinglePageBrick = { value: async (data) => {
+_CollectionBrick_updateSingleCollectionBrick = { value: async (data) => {
         const client = await db_1.default;
         const brickRes = await client.query(`UPDATE 
         lucid_collection_bricks 
@@ -161,11 +177,26 @@ _BrickData_updateSinglePageBrick = { value: async (data) => {
         }
         return brickRes.rows[0].id;
     } };
-_BrickData_upsertField = { value: async (brick_id, data) => {
+_CollectionBrick_upsertField = { value: async (brick_id, data) => {
         const client = await db_1.default;
         let fieldId;
+        const fieldExists = await __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_checkFieldExists).call(CollectionBrick, {
+            brick_id: brick_id,
+            key: data.key,
+            type: data.type,
+            parent_repeater: data.parent_repeater,
+            group_position: data.group_position,
+        });
         if (data.fields_id) {
-            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brick_id, data, "update");
+            if (!fieldExists) {
+                throw new error_handler_1.LucidError({
+                    type: "basic",
+                    name: "Field Update Error",
+                    message: `Could not update field "${data.key}" for page brick "${brick_id}". Field does not exist.`,
+                    status: 404,
+                });
+            }
+            const { columns, aliases, values } = __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_fieldTypeSpecificQueryData).call(CollectionBrick, brick_id, data, "update");
             const fieldRes = await client.query({
                 text: `UPDATE lucid_fields SET ${columns.formatted.update} WHERE fields_id = $${aliases.value.length + 1} RETURNING fields_id`,
                 values: [...values.value, data.fields_id],
@@ -173,13 +204,6 @@ _BrickData_upsertField = { value: async (brick_id, data) => {
             fieldId = fieldRes.rows[0].fields_id;
         }
         else {
-            const fieldExists = await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_checkFieldExists).call(BrickData, {
-                brick_id: brick_id,
-                key: data.key,
-                type: data.type,
-                parent_repeater: data.parent_repeater,
-                group_position: data.group_position,
-            });
             if (fieldExists) {
                 throw new error_handler_1.LucidError({
                     type: "basic",
@@ -188,7 +212,7 @@ _BrickData_upsertField = { value: async (brick_id, data) => {
                     status: 409,
                 });
             }
-            const { columns, aliases, values } = __classPrivateFieldGet(BrickData, _a, "f", _BrickData_fieldTypeSpecificQueryData).call(BrickData, brick_id, data, "create");
+            const { columns, aliases, values } = __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_fieldTypeSpecificQueryData).call(CollectionBrick, brick_id, data, "create");
             const fieldRes = await client.query({
                 text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
                 values: values.value,
@@ -205,7 +229,7 @@ _BrickData_upsertField = { value: async (brick_id, data) => {
         }
         return fieldId;
     } };
-_BrickData_checkFieldExists = { value: async (data) => {
+_CollectionBrick_checkFieldExists = { value: async (data) => {
         const client = await db_1.default;
         let queryText = "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE collection_brick_id = $1 AND key = $2 AND type = $3";
         let queryValues = [data.brick_id, data.key, data.type];
@@ -224,7 +248,7 @@ _BrickData_checkFieldExists = { value: async (data) => {
         });
         return res.rows[0].exists;
     } };
-_BrickData_fieldTypeSpecificQueryData = { value: (brick_id, data, mode) => {
+_CollectionBrick_fieldTypeSpecificQueryData = { value: (brick_id, data, mode) => {
         switch (data.type) {
             case "link": {
                 if (mode === "create") {
@@ -309,7 +333,7 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brick_id, data, mode) => {
                             "collection_brick_id",
                             "key",
                             "type",
-                            __classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type),
+                            __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_valueKey).call(CollectionBrick, data.type),
                             "parent_repeater",
                             "group_position",
                         ],
@@ -325,14 +349,14 @@ _BrickData_fieldTypeSpecificQueryData = { value: (brick_id, data, mode) => {
                 }
                 else {
                     return (0, query_helpers_1.queryDataFormat)({
-                        columns: [__classPrivateFieldGet(BrickData, _a, "f", _BrickData_valueKey).call(BrickData, data.type), "group_position"],
+                        columns: [__classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_valueKey).call(CollectionBrick, data.type), "group_position"],
                         values: [data.value, data.group_position],
                     });
                 }
             }
         }
     } };
-_BrickData_upsertRepeater = { value: async (brick_id, data) => {
+_CollectionBrick_upsertRepeater = { value: async (brick_id, data) => {
         const client = await db_1.default;
         let repeaterId;
         if (data.fields_id && data.group_position !== undefined) {
@@ -343,7 +367,7 @@ _BrickData_upsertRepeater = { value: async (brick_id, data) => {
             repeaterId = repeaterRes.rows[0].fields_id;
         }
         else {
-            const repeaterExists = await __classPrivateFieldGet(BrickData, _a, "f", _BrickData_checkFieldExists).call(BrickData, {
+            const repeaterExists = await __classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_checkFieldExists).call(CollectionBrick, {
                 brick_id: brick_id,
                 key: data.key,
                 type: data.type,
@@ -389,22 +413,20 @@ _BrickData_upsertRepeater = { value: async (brick_id, data) => {
                 continue;
             item.parent_repeater = repeaterId;
             if (item.type === "repeater") {
-                promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertRepeater).call(BrickData, brick_id, item));
+                promises.push(__classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_upsertRepeater).call(CollectionBrick, brick_id, item));
                 continue;
             }
-            promises.push(__classPrivateFieldGet(BrickData, _a, "f", _BrickData_upsertField).call(BrickData, brick_id, item));
+            promises.push(__classPrivateFieldGet(CollectionBrick, _a, "f", _CollectionBrick_upsertField).call(CollectionBrick, brick_id, item));
         }
         await Promise.all(promises);
     } };
-_BrickData_valueKey = { value: (type) => {
+_CollectionBrick_valueKey = { value: (type) => {
         switch (type) {
             case "text":
                 return "text_value";
             case "wysiwyg":
                 return "text_value";
-            case "image":
-                return "media_id";
-            case "file":
+            case "media":
                 return "media_id";
             case "number":
                 return "int_value";
@@ -428,5 +450,5 @@ _BrickData_valueKey = { value: (type) => {
                 return "text_value";
         }
     } };
-exports.default = BrickData;
-//# sourceMappingURL=BrickData.js.map
+exports.default = CollectionBrick;
+//# sourceMappingURL=CollectionBrick.js.map

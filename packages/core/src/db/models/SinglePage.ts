@@ -1,10 +1,14 @@
 import getDBClient from "@db/db";
 // Models
 import Collection from "@db/models/Collection";
-import BrickData, { BrickObject } from "@db/models/BrickData";
+import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
+import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/error-handler";
 import { SelectQueryBuilder } from "@utils/query-helpers";
+// Services
+import { BrickResponseT } from "@services/bricks/format-bricks";
+import validateBricks from "@services/bricks/validate-bricks";
 
 // -------------------------------------------
 // Types
@@ -28,8 +32,8 @@ export type SinglePageT = {
   environment_key: string;
   collection_key: string;
 
-  builder_bricks?: Array<BrickData> | null;
-  fixed_bricks?: Array<BrickData> | null;
+  builder_bricks?: Array<BrickResponseT> | null;
+  fixed_bricks?: Array<BrickResponseT> | null;
 
   created_at: string;
   updated_at: string;
@@ -104,7 +108,7 @@ export default class SinglePage {
       return newSinglePage;
     }
 
-    const pageBricks = await BrickData.getAll({
+    const pageBricks = await CollectionBrick.getAll({
       reference_id: singlepage.rows[0].id,
       type: "singlepage",
       environment_key: data.environment_key,
@@ -119,10 +123,20 @@ export default class SinglePage {
     const client = await getDBClient;
 
     // Used to check if we have access to the collection
-    await Collection.getSingle({
+    const environment = await Environment.getSingle(data.environment_key);
+    const collection = await Collection.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "singlepage",
+    });
+
+    //
+    // validate bricks
+    await validateBricks({
+      builder_bricks: data.builder_bricks || [],
+      fixed_bricks: data.fixed_bricks || [],
+      collection: collection,
+      environment: environment,
     });
 
     // Get the singlepage
@@ -134,12 +148,11 @@ export default class SinglePage {
     // -------------------------------------------
     // Update/Create Bricks
     await Collection.updateBricks({
-      environment_key: data.environment_key,
+      id: singlepage.id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],
-      collection_type: "singlepage",
-      id: singlepage.id,
-      collection_key: data.collection_key,
+      collection: collection,
+      environment: environment,
     });
 
     // -------------------------------------------

@@ -13,6 +13,13 @@ declare global {
   }
 
   // --------------------------------------------------
+  // Init
+  interface InitOptions {
+    express: Express;
+    public?: string;
+  }
+
+  // --------------------------------------------------
   // Controller
   type Controller<ParamsT, BodyT, QueryT> = (
     req: Request<z.infer<ParamsT>, any, z.infer<BodyT>, z.infer<QueryT>>,

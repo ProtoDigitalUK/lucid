@@ -10,7 +10,7 @@ const get_single_1 = __importDefault(require("../../controllers/brick-config/get
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
-    path: "/:collection_key/all",
+    path: "/config/:collection_key/all",
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -20,7 +20,7 @@ const router = (0, express_1.Router)();
 });
 (0, route_1.default)(router, {
     method: "get",
-    path: "/:collection_key/:brick_key",
+    path: "/config/:collection_key/:brick_key",
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
@@ -30,4 +30,4 @@ const router = (0, express_1.Router)();
     controller: get_single_1.default.controller,
 });
 exports.default = router;
-//# sourceMappingURL=brick-config.routes.js.map
+//# sourceMappingURL=bricks.routes.js.map

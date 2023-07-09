@@ -13,13 +13,14 @@ const environments_routes_1 = __importDefault(require("./v1/environments.routes"
 const roles_routes_1 = __importDefault(require("./v1/roles.routes"));
 const users_routes_1 = __importDefault(require("./v1/users.routes"));
 const permissions_routes_1 = __importDefault(require("./v1/permissions.routes"));
-const brick_config_routes_1 = __importDefault(require("./v1/brick-config.routes"));
+const bricks_routes_1 = __importDefault(require("./v1/bricks.routes"));
 const menus_routes_1 = __importDefault(require("./v1/menus.routes"));
 const media_routes_1 = __importDefault(require("./v1/media.routes"));
 const emails_routes_1 = __importDefault(require("./v1/emails.routes"));
 const forms_routes_1 = __importDefault(require("./v1/forms.routes"));
-const media_routes_2 = __importDefault(require("./cdn/media.routes"));
+const media_routes_2 = __importDefault(require("./root/media.routes"));
 const initRoutes = (app) => {
+    app.use("/api/media", media_routes_2.default);
     app.use("/api/v1/auth", auth_routes_1.default);
     app.use("/api/v1/health", health_routes_1.default);
     app.use("/api/v1/categories", categories_routes_1.default);
@@ -30,12 +31,11 @@ const initRoutes = (app) => {
     app.use("/api/v1/roles", roles_routes_1.default);
     app.use("/api/v1/users", users_routes_1.default);
     app.use("/api/v1/permissions", permissions_routes_1.default);
-    app.use("/api/v1/brick-config", brick_config_routes_1.default);
+    app.use("/api/v1/bricks", bricks_routes_1.default);
     app.use("/api/v1/menus", menus_routes_1.default);
     app.use("/api/v1/media", media_routes_1.default);
     app.use("/api/v1/emails", emails_routes_1.default);
     app.use("/api/v1/forms", forms_routes_1.default);
-    app.use("/cdn", media_routes_2.default);
 };
 exports.default = initRoutes;
 //# sourceMappingURL=index.js.map

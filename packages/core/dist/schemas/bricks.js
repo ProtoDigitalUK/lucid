@@ -24,29 +24,31 @@ exports.BrickSchema = zod_1.default.object({
     key: zod_1.default.string(),
     fields: zod_1.default.array(exports.FieldSchema).optional(),
 });
-const getAllBody = zod_1.default.object({});
-const getAllQuery = zod_1.default.object({
+const getAllConfigBody = zod_1.default.object({});
+const getAllConfigQuery = zod_1.default.object({
     include: zod_1.default.array(zod_1.default.enum(["fields"])).optional(),
 });
-const getAllParams = zod_1.default.object({
+const getAllConfigParams = zod_1.default.object({
     collection_key: zod_1.default.string().nonempty(),
 });
-const getSingleBody = zod_1.default.object({});
-const getSingleQuery = zod_1.default.object({});
-const getSingleParams = zod_1.default.object({
+const getSingleConfigBody = zod_1.default.object({});
+const getSingleConfigQuery = zod_1.default.object({});
+const getSingleConfigParams = zod_1.default.object({
     brick_key: zod_1.default.string().nonempty(),
     collection_key: zod_1.default.string().nonempty(),
 });
 exports.default = {
-    getAll: {
-        body: getAllBody,
-        query: getAllQuery,
-        params: getAllParams,
-    },
-    getSingle: {
-        body: getSingleBody,
-        query: getSingleQuery,
-        params: getSingleParams,
+    config: {
+        getAll: {
+            body: getAllConfigBody,
+            query: getAllConfigQuery,
+            params: getAllConfigParams,
+        },
+        getSingle: {
+            body: getSingleConfigBody,
+            query: getSingleConfigQuery,
+            params: getSingleConfigParams,
+        },
     },
 };
 //# sourceMappingURL=bricks.js.map

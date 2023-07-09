@@ -80,7 +80,9 @@ export default class Environment {
   static upsertSingle: EnvironmentUpsertSingle = async (data, create) => {
     const client = await getDBClient;
 
-    const key = create ? slugify(data.key, { lower: true }) : data.key;
+    const key = create
+      ? slugify(data.key, { lower: true, strict: true })
+      : data.key;
 
     // if create false, check if environment exists
     if (!create) {

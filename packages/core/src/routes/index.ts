@@ -9,15 +9,17 @@ import environments from "@routes/v1/environments.routes";
 import roles from "@routes/v1/roles.routes";
 import users from "@routes/v1/users.routes";
 import permissions from "@routes/v1/permissions.routes";
-import brickConfig from "@routes/v1/brick-config.routes";
+import bricks from "@routes/v1/bricks.routes";
 import menus from "@routes/v1/menus.routes";
 import media from "@routes/v1/media.routes";
 import emails from "@routes/v1/emails.routes";
 import forms from "@routes/v1/forms.routes";
 // CDN
-import cdnMedia from "@routes/cdn/media.routes";
+import assets from "@routes/root/media.routes";
 
 const initRoutes = (app: any) => {
+  // Root
+  app.use("/api/media", assets);
   // Version 1
   app.use("/api/v1/auth", auth);
   app.use("/api/v1/health", health);
@@ -29,13 +31,11 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/roles", roles);
   app.use("/api/v1/users", users);
   app.use("/api/v1/permissions", permissions);
-  app.use("/api/v1/brick-config", brickConfig);
+  app.use("/api/v1/bricks", bricks);
   app.use("/api/v1/menus", menus);
   app.use("/api/v1/media", media);
   app.use("/api/v1/emails", emails);
   app.use("/api/v1/forms", forms);
-  // CDN
-  app.use("/cdn", cdnMedia);
 };
 
 export default initRoutes;

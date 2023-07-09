@@ -7,14 +7,16 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Page_pageExists, _Page_slugUnique, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
+var _a, _Page_slugUnique, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
 const Collection_1 = __importDefault(require("../models/Collection"));
-const BrickData_1 = __importDefault(require("../models/BrickData"));
+const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
+const Environment_1 = __importDefault(require("../models/Environment"));
 const format_page_1 = __importDefault(require("../../services/pages/format-page"));
+const validate_bricks_1 = __importDefault(require("../../services/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/error-handler");
 const query_helpers_1 = require("../../utils/query-helpers");
 class Page {
@@ -183,7 +185,7 @@ Page.getSingle = async (query, data) => {
             environment_key: page.rows[0].environment_key,
             type: "pages",
         });
-        const pageBricks = await BrickData_1.default.getAll({
+        const pageBricks = await CollectionBrick_1.default.getAll({
             reference_id: page.rows[0].id,
             type: "pages",
             environment_key: data.environment_key,
@@ -194,7 +196,7 @@ Page.getSingle = async (query, data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.create = async (data) => {
+Page.createSingle = async (data) => {
     const client = await db_1.default;
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await Collection_1.default.getSingle({
@@ -257,10 +259,10 @@ Page.create = async (data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.update = async (data) => {
+Page.updateSingle = async (data) => {
     const client = await db_1.default;
     const pageId = parseInt(data.id);
-    const currentPage = await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
+    const currentPage = await Page.pageExists(pageId, data.environment_key);
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
@@ -273,6 +275,18 @@ Page.update = async (data) => {
             environment_key: data.environment_key,
         });
     }
+    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const collection = await Collection_1.default.getSingle({
+        collection_key: currentPage.collection_key,
+        environment_key: data.environment_key,
+        type: "pages",
+    });
+    await (0, validate_bricks_1.default)({
+        builder_bricks: data.builder_bricks || [],
+        fixed_bricks: data.fixed_bricks || [],
+        collection: collection,
+        environment: environment,
+    });
     let newSlug = undefined;
     if (data.slug) {
         newSlug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
@@ -331,19 +345,18 @@ Page.update = async (data) => {
         page.rows[0].categories = categories.map((category) => category.category_id);
     }
     await Collection_1.default.updateBricks({
-        environment_key: data.environment_key,
+        id: page.rows[0].id,
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],
-        collection_type: "pages",
-        id: page.rows[0].id,
-        collection_key: currentPage.collection_key,
+        collection: collection,
+        environment: environment,
     });
     return (0, format_page_1.default)(page.rows[0]);
 };
-Page.delete = async (data) => {
+Page.deleteSingle = async (data) => {
     const client = await db_1.default;
     const pageId = parseInt(data.id);
-    await __classPrivateFieldGet(Page, _a, "f", _Page_pageExists).call(Page, pageId, data.environment_key);
+    await Page.pageExists(pageId, data.environment_key);
     const page = await client.query({
         text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
         values: [pageId],
@@ -358,10 +371,18 @@ Page.delete = async (data) => {
     }
     return (0, format_page_1.default)(page.rows[0]);
 };
-_Page_pageExists = { value: async (id, environment_key) => {
-        const client = await db_1.default;
-        const page = await client.query({
-            text: `SELECT
+Page.getMultipleByIds = async (data) => {
+    const client = await db_1.default;
+    const pages = await client.query({
+        text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
+        values: [data.ids, data.environment_key],
+    });
+    return pages.rows.map((page) => (0, format_page_1.default)(page));
+};
+Page.pageExists = async (id, environment_key) => {
+    const client = await db_1.default;
+    const page = await client.query({
+        text: `SELECT
           id,
           collection_key
         FROM
@@ -370,18 +391,18 @@ _Page_pageExists = { value: async (id, environment_key) => {
           id = $1
         AND
           environment_key = $2`,
-            values: [id, environment_key],
+        values: [id, environment_key],
+    });
+    if (!page.rows[0]) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Page not found",
+            message: `Page with id "${id}" not found in environment "${environment_key}"!`,
+            status: 404,
         });
-        if (!page.rows[0]) {
-            throw new error_handler_1.LucidError({
-                type: "basic",
-                name: "Page not found",
-                message: `Page with id "${id}" not found in environment "${environment_key}"!`,
-                status: 404,
-            });
-        }
-        return page.rows[0];
-    } };
+    }
+    return page.rows[0];
+};
 _Page_slugUnique = { value: async (data) => {
         const client = await db_1.default;
         if (data.homepage) {

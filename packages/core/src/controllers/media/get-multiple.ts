@@ -1,7 +1,5 @@
 // Services
-import buildResponse, {
-  getLocation,
-} from "@services/controllers/build-response";
+import buildResponse from "@services/controllers/build-response";
 // Models
 import Media from "@db/models/Media";
 // Schema
@@ -15,9 +13,7 @@ const getMultiple: Controller<
   typeof mediaSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const medias = await Media.getMultiple(req.query, {
-      location: getLocation(req),
-    });
+    const medias = await Media.getMultiple(req.query);
 
     res.status(200).json(
       buildResponse(req, {

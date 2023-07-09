@@ -69,11 +69,9 @@ BrickConfig.isBrickAllowed = (data) => {
         allowed = true;
     let brick;
     if (instance) {
-        brick = {
-            key: instance.key,
-            title: instance.title,
-            fields: instance.fieldTree,
-        };
+        brick = BrickConfig.getBrickData(instance, {
+            include: ["fields"],
+        });
     }
     return {
         allowed: allowed,
@@ -122,6 +120,7 @@ BrickConfig.getBrickData = (instance, query) => {
     const data = {
         key: instance.key,
         title: instance.title,
+        preview: instance.config?.preview,
     };
     if (!query)
         return data;

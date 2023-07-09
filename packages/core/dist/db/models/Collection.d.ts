@@ -1,8 +1,9 @@
 import z from "zod";
 import { EnvironmentT } from "../models/Environment";
-import { BrickObject } from "../models/BrickData";
+import { BrickObject } from "../models/CollectionBrick";
 import collectionSchema from "../../schemas/collections";
 import { CollectionConfigT, CollectionBuilderT } from "@lucid/collection-builder";
+import { EnvironmentResT } from "../../services/environments/format-environment";
 type CollectionGetAll = (query: z.infer<typeof collectionSchema.getAll.query>, environment_key: string) => Promise<CollectionT[]>;
 type CollectionGetSingle = (props: {
     collection_key: CollectionConfigT["key"];
@@ -11,12 +12,11 @@ type CollectionGetSingle = (props: {
     environment?: EnvironmentT;
 }) => Promise<CollectionT>;
 type CollectionUpdateBricks = (props: {
-    collection_key: CollectionConfigT["key"];
-    environment_key: string;
+    id: number;
     builder_bricks: Array<BrickObject>;
     fixed_bricks: Array<BrickObject>;
-    collection_type: CollectionConfigT["type"];
-    id: number;
+    collection: CollectionT;
+    environment: EnvironmentResT;
 }) => Promise<void>;
 export type CollectionT = {
     key: CollectionConfigT["key"];

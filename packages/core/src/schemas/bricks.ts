@@ -30,20 +30,20 @@ export const BrickSchema = z.object({
 });
 
 // ------------------------------------
-// GET ALL
-const getAllBody = z.object({});
-const getAllQuery = z.object({
+// GET ALL CONFIG
+const getAllConfigBody = z.object({});
+const getAllConfigQuery = z.object({
   include: z.array(z.enum(["fields"])).optional(),
 });
-const getAllParams = z.object({
+const getAllConfigParams = z.object({
   collection_key: z.string().nonempty(),
 });
 
 // ------------------------------------
-// GET SINGLE
-const getSingleBody = z.object({});
-const getSingleQuery = z.object({});
-const getSingleParams = z.object({
+// GET SINGLE CONFIG
+const getSingleConfigBody = z.object({});
+const getSingleConfigQuery = z.object({});
+const getSingleConfigParams = z.object({
   brick_key: z.string().nonempty(),
   collection_key: z.string().nonempty(),
 });
@@ -51,14 +51,16 @@ const getSingleParams = z.object({
 // ------------------------------------
 // EXPORT
 export default {
-  getAll: {
-    body: getAllBody,
-    query: getAllQuery,
-    params: getAllParams,
-  },
-  getSingle: {
-    body: getSingleBody,
-    query: getSingleQuery,
-    params: getSingleParams,
+  config: {
+    getAll: {
+      body: getAllConfigBody,
+      query: getAllConfigQuery,
+      params: getAllConfigParams,
+    },
+    getSingle: {
+      body: getSingleConfigBody,
+      query: getSingleConfigQuery,
+      params: getSingleConfigParams,
+    },
   },
 };

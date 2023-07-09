@@ -7,7 +7,6 @@ import validate from "@middleware/validate";
 import authenticate from "@middleware/authenticate";
 import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
-import validateBricks from "@middleware/validate-bricks";
 import validateEnvironment from "@middleware/validate-environment";
 import permissions from "@middleware/permissions";
 
@@ -28,7 +27,6 @@ type Route = <
       authenticate?: boolean;
       authoriseCSRF?: boolean;
       paginated?: boolean;
-      validateBricks?: boolean;
       validateEnvironment?: boolean;
     };
     schema?: {
@@ -68,11 +66,6 @@ const route: Route = (router, props) => {
         })
       )
     );
-  }
-
-  // set middleware for brick validation
-  if (props.middleware?.validateBricks) {
-    middleware.push(validateBricks);
   }
 
   // set middleware for pagination

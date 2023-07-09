@@ -13,7 +13,7 @@ const createSingle: Controller<
   typeof pagesSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.create({
+    const page = await Page.createSingle({
       environment_key: req.headers["lucid-environment"] as string,
       title: req.body.title,
       slug: req.body.slug,

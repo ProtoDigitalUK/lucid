@@ -1,5 +1,6 @@
 import z from "zod";
-import BrickData, { BrickObject } from "../models/BrickData";
+import { BrickObject } from "../models/CollectionBrick";
+import { BrickResponseT } from "../../services/bricks/format-bricks";
 import pagesSchema from "../../schemas/pages";
 type PageGetMultiple = (query: z.infer<typeof pagesSchema.getMultiple.query>, data: {
     environment_key: string;
@@ -11,7 +12,7 @@ type PageGetSingle = (query: z.infer<typeof pagesSchema.getSingle.query>, data: 
     environment_key: string;
     id: string;
 }) => Promise<PageT>;
-type PageCreate = (data: {
+type PageCreateSingle = (data: {
     userId: number;
     environment_key: string;
     title: string;
@@ -23,7 +24,7 @@ type PageCreate = (data: {
     parent_id?: number;
     category_ids?: Array<number>;
 }) => Promise<PageT>;
-type PageUpdate = (data: {
+type PageUpdateSingle = (data: {
     id: string;
     environment_key: string;
     userId: number;
@@ -37,10 +38,14 @@ type PageUpdate = (data: {
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
 }) => Promise<PageT>;
-type PageDelete = (data: {
+type PageDeleteSingle = (data: {
     environment_key: string;
     id: string;
 }) => Promise<PageT>;
+type PageGetMultipleByIds = (data: {
+    ids: Array<number>;
+    environment_key: string;
+}) => Promise<PageT[]>;
 export type PageT = {
     id: number;
     environment_key: string;
@@ -52,8 +57,8 @@ export type PageT = {
     homepage: boolean;
     excerpt: string | null;
     categories?: Array<number> | null;
-    builder_bricks?: Array<BrickData> | null;
-    fixed_bricks?: Array<BrickData> | null;
+    builder_bricks?: Array<BrickResponseT> | null;
+    fixed_bricks?: Array<BrickResponseT> | null;
     published: boolean;
     published_at: string | null;
     published_by: number | null;
@@ -65,9 +70,11 @@ export default class Page {
     #private;
     static getMultiple: PageGetMultiple;
     static getSingle: PageGetSingle;
-    static create: PageCreate;
-    static update: PageUpdate;
-    static delete: PageDelete;
+    static createSingle: PageCreateSingle;
+    static updateSingle: PageUpdateSingle;
+    static deleteSingle: PageDeleteSingle;
+    static getMultipleByIds: PageGetMultipleByIds;
+    static pageExists: (id: number, environment_key: string) => Promise<PageT>;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

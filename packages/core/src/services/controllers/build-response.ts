@@ -1,4 +1,6 @@
 import { Request } from "express";
+// Models
+import Config from "@db/models/Config";
 
 // --------------------------------------------------
 // Types
@@ -18,13 +20,10 @@ type BuildResponseT = (
 
 // --------------------------------------------------
 // Helpers
-export const getLocation = (req: Request) => {
-  return `${req.protocol}://${req.get("host")}`;
-};
 
 const getPath = (req: Request) => {
   const originalUrl = req.originalUrl;
-  return `${getLocation(req)}${originalUrl}`.split("?")[0];
+  return `${Config.host}${originalUrl}`.split("?")[0];
 };
 
 const buildMetaLinks = (

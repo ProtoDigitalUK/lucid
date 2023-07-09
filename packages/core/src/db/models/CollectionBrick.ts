@@ -13,7 +13,7 @@ import { CollectionT } from "@db/models/Collection";
 import { EnvironmentT } from "@db/models/Environment";
 import BrickConfig from "@db/models/BrickConfig";
 // Internal packages
-import { CollectionBrickT } from "@lucid/collection-builder";
+import { CollectionBrickConfigT } from "@lucid/collection-builder";
 
 // -------------------------------------------
 // Types
@@ -25,18 +25,17 @@ interface LinkJsonT {
   target: "_blank" | "_self";
 }
 
-// Methods
-type BrickDataCreateOrUpdate = (data: {
+// Functions
+type CollectionBrickCreateOrUpdate = (data: {
   reference_id: number;
   brick: BrickObject;
-  brick_type: CollectionBrickT["type"];
+  brick_type: CollectionBrickConfigT["type"];
   order: number;
-  collection_type: CollectionT["type"];
   environment: EnvironmentT;
   collection: CollectionT;
 }) => Promise<number>;
 
-type BrickDataGetAll = (data: {
+type CollectionBrickGetAll = (data: {
   reference_id: number;
   type: CollectionT["type"];
   environment_key: string;
@@ -46,28 +45,28 @@ type BrickDataGetAll = (data: {
   fixed_bricks: BrickResponseT[];
 }>;
 
-type BrickDataDeleteUnused = (data: {
+type CollectionBrickDeleteUnused = (data: {
   type: CollectionT["type"];
   reference_id: number;
   brick_ids: Array<number | undefined>;
-  brick_type: CollectionBrickT["type"];
+  brick_type: CollectionBrickConfigT["type"];
 }) => Promise<void>;
 
-type BrickDataCreateSinglePageBrick = (data: {
+type CollectionBrickCreateSingle = (data: {
   type: CollectionT["type"];
   reference_id: number;
   order: number;
   brick: BrickObject;
-  brick_type: CollectionBrickT["type"];
+  brick_type: CollectionBrickConfigT["type"];
 }) => Promise<number>;
 
-type BrickDataUpdateSinglePageBrick = (data: {
+type CollectionBrickUpdateSingle = (data: {
   order: number;
   brick: BrickObject;
-  brick_type: CollectionBrickT["type"];
+  brick_type: CollectionBrickConfigT["type"];
 }) => Promise<number>;
 
-type BrickDataCheckFieldExists = (data: {
+type CollectionBrickCheckFieldExists = (data: {
   brick_id: number;
   key: string;
   type: string;
@@ -77,10 +76,10 @@ type BrickDataCheckFieldExists = (data: {
 
 // -------------------------------------------
 // Page Brick
-export type BrickFieldsT = {
+export type CollectionBrickFieldsT = {
   // Page brick info
   id: number;
-  brick_type: CollectionBrickT["type"];
+  brick_type: CollectionBrickConfigT["type"];
   brick_key: string;
   page_id: number | null;
   singlepage_id: number | null;
@@ -93,23 +92,36 @@ export type BrickFieldsT = {
   key: string;
   type: FieldTypes;
   group_position: number | null;
-
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;
-  json_value: LinkJsonT | any | null;
-
+  json_value: any | null;
+  page_link_id: number | null;
   media_id: number | null;
 
-  page_link_id: number | null;
-  linked_page_title: string | null;
-  linked_page_slug: string | null;
-  linked_page_full_slug: string | null;
+  // Page Join
+  linked_page: {
+    title: string | null;
+    slug: string | null;
+    full_slug: string | null;
+  };
+
+  // Media Join
+  media: {
+    key: string | null;
+    mime_type: string | null;
+    file_extension: string | null;
+    file_size: number | null;
+    width: number | null;
+    height: number | null;
+    name: string | null;
+    alt: string | null;
+  };
 };
 
-export type BrickT = {
+export type CollectionBrickT = {
   id: number;
-  brick_type: CollectionBrickT["type"];
+  brick_type: CollectionBrickConfigT["type"];
   brick_key: string;
   page_id: number | null;
   singlepage_id: number | null;
@@ -117,10 +129,10 @@ export type BrickT = {
   brick_order: number;
 };
 
-export default class BrickData {
+export default class CollectionBrick {
   // -------------------------------------------
   // Functions
-  static createOrUpdate: BrickDataCreateOrUpdate = async (data) => {
+  static createOrUpdate: CollectionBrickCreateOrUpdate = async (data) => {
     // Create or update the page brick record
     const promises = [];
 
@@ -142,13 +154,13 @@ export default class BrickData {
 
     // Create the page brick record
     const brickId = data.brick.id
-      ? await BrickData.#updateSinglePageBrick({
+      ? await CollectionBrick.#updateSingleCollectionBrick({
           order: data.order,
           brick: data.brick,
           brick_type: data.brick_type,
         })
-      : await BrickData.#createSinglePageBrick({
-          type: data.collection_type,
+      : await CollectionBrick.#createSingleCollectionBrick({
+          type: data.collection.type,
           reference_id: data.reference_id,
           order: data.order,
           brick: data.brick,
@@ -162,41 +174,57 @@ export default class BrickData {
       if (field.type === "tab") continue;
 
       if (field.type === "repeater")
-        promises.push(BrickData.#upsertRepeater(brickId, field));
-      else promises.push(BrickData.#upsertField(brickId, field));
+        promises.push(CollectionBrick.#upsertRepeater(brickId, field));
+      else promises.push(CollectionBrick.#upsertField(brickId, field));
     }
 
     await Promise.all(promises);
 
     return brickId;
   };
-  static getAll: BrickDataGetAll = async (data) => {
+  static getAll: CollectionBrickGetAll = async (data) => {
     const client = await getDBClient;
 
     // join all lucid_fields in flat structure, making sure to join page_link_id or media_id if applicable
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
-    const brickFields = await client.query<BrickFieldsT>(
+    const brickFields = await client.query<CollectionBrickFieldsT>(
       `SELECT 
-      lucid_collection_bricks.*,
-        lucid_fields.*,
-        lucid_pages.title as linked_page_title,
-        lucid_pages.slug as linked_page_slug,
-        lucid_pages.full_slug as linked_page_full_slug
-      FROM 
-        lucid_collection_bricks
-      LEFT JOIN 
-        lucid_fields
-      ON 
-        lucid_collection_bricks.id = lucid_fields.collection_brick_id
-      LEFT JOIN 
-        lucid_pages
-      ON 
-        lucid_fields.page_link_id = lucid_pages.id
-      WHERE 
-        lucid_collection_bricks.${referenceKey} = $1
-      ORDER BY 
-        lucid_collection_bricks.brick_order`,
+          lucid_collection_bricks.*,
+          lucid_fields.*,
+          json_build_object(
+            'title', lucid_pages.title,
+            'slug', lucid_pages.slug,
+            'full_slug', lucid_pages.full_slug
+          ) as linked_page,
+          json_build_object(
+            'key', lucid_media.key,
+            'mime_type', lucid_media.mime_type,
+            'file_extension', lucid_media.file_extension,
+            'file_size', lucid_media.file_size,
+            'width', lucid_media.width,
+            'height', lucid_media.height,
+            'name', lucid_media.name,
+            'alt', lucid_media.alt
+          ) as media
+        FROM 
+          lucid_collection_bricks
+        LEFT JOIN 
+          lucid_fields
+        ON 
+          lucid_collection_bricks.id = lucid_fields.collection_brick_id
+        LEFT JOIN 
+          lucid_pages
+        ON 
+          lucid_fields.page_link_id = lucid_pages.id
+        LEFT JOIN 
+          lucid_media
+        ON 
+          lucid_fields.media_id = lucid_media.id
+        WHERE 
+          lucid_collection_bricks.${referenceKey} = $1
+        ORDER BY 
+          lucid_collection_bricks.brick_order`,
       [data.reference_id]
     );
 
@@ -220,19 +248,19 @@ export default class BrickData {
       fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder"),
     };
   };
-  static deleteUnused: BrickDataDeleteUnused = async (data) => {
+  static deleteUnused: CollectionBrickDeleteUnused = async (data) => {
     const client = await getDBClient;
 
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
     // Fetch all bricks for the page
-    const pageBrickIds = await client.query<{ id: number }>({
+    const collectionBrickIds = await client.query<{ id: number }>({
       text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
       values: [data.reference_id, data.brick_type],
     });
 
     // Filter out the bricks that are still in use
-    const bricksToDelete = pageBrickIds.rows.filter(
+    const bricksToDelete = collectionBrickIds.rows.filter(
       (brick) => !data.brick_ids.includes(brick.id)
     );
 
@@ -257,7 +285,7 @@ export default class BrickData {
   };
   // -------------------------------------------
   // Page Brick
-  static #createSinglePageBrick: BrickDataCreateSinglePageBrick = async (
+  static #createSingleCollectionBrick: CollectionBrickCreateSingle = async (
     data
   ) => {
     const client = await getDBClient;
@@ -286,7 +314,7 @@ export default class BrickData {
 
     return brickRes.rows[0].id;
   };
-  static #updateSinglePageBrick: BrickDataUpdateSinglePageBrick = async (
+  static #updateSingleCollectionBrick: CollectionBrickUpdateSingle = async (
     data
   ) => {
     const client = await getDBClient;
@@ -324,12 +352,29 @@ export default class BrickData {
 
     let fieldId;
 
-    // Check if id exists. If it does, update, else create.
-    if (data.fields_id) {
-      const { columns, aliases, values } =
-        BrickData.#fieldTypeSpecificQueryData(brick_id, data, "update");
+    // Check if the field already exists
+    const fieldExists = await CollectionBrick.#checkFieldExists({
+      brick_id: brick_id,
+      key: data.key,
+      type: data.type,
+      parent_repeater: data.parent_repeater,
+      group_position: data.group_position,
+    });
 
-      // Generate the SET part of the update statement
+    // Update the field
+    if (data.fields_id) {
+      // field does not exist
+      if (!fieldExists) {
+        throw new LucidError({
+          type: "basic",
+          name: "Field Update Error",
+          message: `Could not update field "${data.key}" for page brick "${brick_id}". Field does not exist.`,
+          status: 404,
+        });
+      }
+
+      const { columns, aliases, values } =
+        CollectionBrick.#fieldTypeSpecificQueryData(brick_id, data, "update");
 
       const fieldRes = await client.query<{
         fields_id: number;
@@ -341,15 +386,10 @@ export default class BrickData {
       });
 
       fieldId = fieldRes.rows[0].fields_id;
-    } else {
-      // Check if the field already exists
-      const fieldExists = await BrickData.#checkFieldExists({
-        brick_id: brick_id,
-        key: data.key,
-        type: data.type,
-        parent_repeater: data.parent_repeater,
-        group_position: data.group_position,
-      });
+    }
+    // Create the field
+    else {
+      // field already exists
       if (fieldExists) {
         throw new LucidError({
           type: "basic",
@@ -361,7 +401,7 @@ export default class BrickData {
 
       // Create the field
       const { columns, aliases, values } =
-        BrickData.#fieldTypeSpecificQueryData(brick_id, data, "create");
+        CollectionBrick.#fieldTypeSpecificQueryData(brick_id, data, "create");
 
       const fieldRes = await client.query<{
         fields_id: number;
@@ -384,7 +424,7 @@ export default class BrickData {
 
     return fieldId;
   };
-  static #checkFieldExists: BrickDataCheckFieldExists = async (data) => {
+  static #checkFieldExists: CollectionBrickCheckFieldExists = async (data) => {
     const client = await getDBClient;
 
     let queryText =
@@ -500,7 +540,7 @@ export default class BrickData {
               "collection_brick_id",
               "key",
               "type",
-              BrickData.#valueKey(data.type),
+              CollectionBrick.#valueKey(data.type),
               "parent_repeater",
               "group_position",
             ],
@@ -515,7 +555,7 @@ export default class BrickData {
           });
         } else {
           return queryDataFormat({
-            columns: [BrickData.#valueKey(data.type), "group_position"],
+            columns: [CollectionBrick.#valueKey(data.type), "group_position"],
             values: [data.value, data.group_position],
           });
         }
@@ -538,7 +578,7 @@ export default class BrickData {
 
       repeaterId = repeaterRes.rows[0].fields_id;
     } else {
-      const repeaterExists = await BrickData.#checkFieldExists({
+      const repeaterExists = await CollectionBrick.#checkFieldExists({
         brick_id: brick_id,
         key: data.key,
         type: data.type,
@@ -595,12 +635,12 @@ export default class BrickData {
 
       // If its a repeater, recursively call this function
       if (item.type === "repeater") {
-        promises.push(BrickData.#upsertRepeater(brick_id, item));
+        promises.push(CollectionBrick.#upsertRepeater(brick_id, item));
         continue;
       }
 
       // Update the field
-      promises.push(BrickData.#upsertField(brick_id, item));
+      promises.push(CollectionBrick.#upsertField(brick_id, item));
     }
 
     await Promise.all(promises);
@@ -613,9 +653,7 @@ export default class BrickData {
         return "text_value";
       case "wysiwyg":
         return "text_value";
-      case "image":
-        return "media_id";
-      case "file":
+      case "media":
         return "media_id";
       case "number":
         return "int_value";

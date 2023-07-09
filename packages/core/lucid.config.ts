@@ -1,10 +1,18 @@
 import { buildConfig, BrickBuilder, CollectionBuilder } from "./src/index";
 import z from "zod";
 import { ContactForm } from "./src/dev";
+import path from "path";
 
 // ------------------------------------
 // Define Bricks
-const BannerBrick = new BrickBuilder("banner")
+const BannerBrick = new BrickBuilder("banner", {
+  preview: {
+    mode: "image",
+    image: {
+      url: "/api/public/rumham.jpg",
+    },
+  },
+})
   .addTab({
     key: "content_tab",
   })
@@ -16,6 +24,22 @@ const BannerBrick = new BrickBuilder("banner")
     validation: {
       required: true,
       zod: z.string().min(3).max(100),
+    },
+  })
+  .addMedia({
+    key: "image",
+    description: "The image for the banner",
+    validation: {
+      required: true,
+      extensions: ["jpg", "png", "gif"],
+      width: {
+        min: 100,
+        max: 500,
+      },
+      height: {
+        min: 100,
+        max: 500,
+      },
     },
   })
   .addLink({
@@ -117,10 +141,12 @@ const SettingsCollection = new CollectionBuilder("settings", {
 // ------------------------------------
 // Build Config
 export default buildConfig({
+  host: "http://localhost:8393",
   origin: "*",
   mode: "development",
   secret: process.env.LUCID_SECRET_KEY as string,
   postgresURL: process.env.LUCID_POSTGRES_URL as string,
+  public: path.join(__dirname, "public"),
   email: {
     from: {
       name: "Lucid CMS",

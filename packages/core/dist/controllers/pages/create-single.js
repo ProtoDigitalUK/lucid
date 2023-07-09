@@ -8,7 +8,7 @@ const Page_1 = __importDefault(require("../../db/models/Page"));
 const pages_1 = __importDefault(require("../../schemas/pages"));
 const createSingle = async (req, res, next) => {
     try {
-        const page = await Page_1.default.create({
+        const page = await Page_1.default.createSingle({
             environment_key: req.headers["lucid-environment"],
             title: req.body.title,
             slug: req.body.slug,

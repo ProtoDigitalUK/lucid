@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const BrickConfig_1 = __importDefault(require("../../db/models/BrickConfig"));
 const Environment_1 = __importDefault(require("../../db/models/Environment"));
+const create_url_1 = __importDefault(require("../media/create-url"));
 const specificFieldValues = (type, builderField, field) => {
     let value = null;
-    let meta = null;
     switch (type) {
         case "tab": {
             break;
@@ -20,12 +20,19 @@ const specificFieldValues = (type, builderField, field) => {
             value = field?.text_value || builderField.default || "";
             break;
         }
-        case "image": {
-            value = null;
-            break;
-        }
-        case "file": {
-            value = null;
+        case "media": {
+            value = {
+                id: field?.media_id || undefined,
+                url: (0, create_url_1.default)(field?.media.key || undefined),
+                key: field?.media.key || undefined,
+                mime_type: field?.media.mime_type || undefined,
+                file_extension: field?.media.file_extension || undefined,
+                file_size: field?.media.file_size || undefined,
+                width: field?.media.width || undefined,
+                height: field?.media.height || undefined,
+                name: field?.media.name || undefined,
+                alt: field?.media.alt || undefined,
+            };
             break;
         }
         case "number": {
@@ -37,11 +44,7 @@ const specificFieldValues = (type, builderField, field) => {
             break;
         }
         case "select": {
-            value =
-                field?.text_value ||
-                    builderField.default ||
-                    builderField.options?.[0] ||
-                    "";
+            value = field?.text_value || builderField.default || "";
             break;
         }
         case "textarea": {
@@ -61,71 +64,92 @@ const specificFieldValues = (type, builderField, field) => {
             break;
         }
         case "pagelink": {
-            value = field?.linked_page_full_slug || "";
-            meta = {
+            value = {
+                id: field?.page_link_id || undefined,
                 target: field?.json_value.target || "_self",
-                title: field?.linked_page_title || "",
-                slug: field?.linked_page_slug || "",
+                title: field?.linked_page.title || undefined,
+                full_slug: field?.linked_page.full_slug || undefined,
+                slug: field?.linked_page.slug || undefined,
             };
             break;
         }
         case "link": {
-            value = field?.text_value || builderField.default || "";
-            meta = {
+            value = {
                 target: field?.json_value.target || "_self",
+                url: field?.text_value || builderField.default || "",
             };
             break;
         }
     }
-    return { value, meta };
+    return { value };
 };
 const buildFieldTree = (brickId, fields, builderInstance) => {
     const brickFields = fields.filter((field) => field.collection_brick_id === brickId);
     const basicFieldTree = builderInstance.basicFieldTree;
-    const buildFields = (fields) => {
-        const fieldObjs = [];
-        fields.forEach((field) => {
-            const brickField = brickFields.find((bField) => bField.key === field.key);
-            const { value, meta } = specificFieldValues(field.type, field, brickField);
-            if (!brickField) {
+    const fieldRes = buildFields(brickFields, basicFieldTree);
+    return fieldRes;
+};
+const buildFields = (brickFields, fields) => {
+    const fieldObjs = [];
+    fields.forEach((field) => {
+        const brickField = brickFields.find((bField) => bField.key === field.key);
+        const { value } = specificFieldValues(field.type, field, brickField);
+        if (!brickField) {
+            const fieldObj = {
+                fields_id: -1,
+                key: field.key,
+                type: field.type,
+            };
+            if (value !== null)
+                fieldObj.value = value;
+            fieldObjs.push(fieldObj);
+        }
+        else {
+            if (field.type === "repeater") {
+                fieldObjs.push({
+                    fields_id: brickField.fields_id,
+                    key: brickField.key,
+                    type: brickField.type,
+                    items: buildFieldGroups(brickFields, field.fields || []),
+                });
+            }
+            else {
                 const fieldObj = {
-                    fields_id: -1,
-                    key: field.key,
-                    type: field.type,
+                    fields_id: brickField.fields_id,
+                    key: brickField.key,
+                    type: brickField.type,
                 };
                 if (value !== null)
                     fieldObj.value = value;
-                if (meta !== null)
-                    fieldObj.meta = meta;
                 fieldObjs.push(fieldObj);
             }
-            else {
-                if (field.type === "repeater") {
-                    fieldObjs.push({
-                        fields_id: brickField.fields_id,
-                        key: brickField.key,
-                        type: brickField.type,
-                        items: buildFields(field.fields || []),
-                    });
-                }
-                else {
-                    const fieldObj = {
-                        fields_id: brickField.fields_id,
-                        key: brickField.key,
-                        type: brickField.type,
-                    };
-                    if (value !== null)
-                        fieldObj.value = value;
-                    if (meta !== null)
-                        fieldObj.meta = meta;
-                    fieldObjs.push(fieldObj);
-                }
-            }
-        });
-        return fieldObjs;
-    };
-    const fieldRes = buildFields(basicFieldTree);
-    return fieldRes;
+        }
+    });
+    return fieldObjs;
+};
+const buildFieldGroups = (data, fields) => {
+    const groupMap = new Map();
+    let maxGroupPosition = 0;
+    for (const datum of data) {
+        if (datum.group_position !== null) {
+            const group = groupMap.get(datum.group_position) || [];
+            group.push(datum);
+            groupMap.set(datum.group_position, group);
+            maxGroupPosition = Math.max(maxGroupPosition, datum.group_position);
+        }
+    }
+    const output = [];
+    for (let i = 1; i <= maxGroupPosition; i++) {
+        const group = groupMap.get(i) || [];
+        const outputGroup = buildFields(group, fields);
+        output.push(outputGroup);
+    }
+    const grouplessData = groupMap.get(null) || [];
+    if (grouplessData.length > 0) {
+        const lastGroup = output[output.length - 1];
+        lastGroup.push(...buildFields(grouplessData, fields));
+    }
+    return output;
 };
 const buildBrickStructure = (brickFields) => {
     const brickStructure = [];
