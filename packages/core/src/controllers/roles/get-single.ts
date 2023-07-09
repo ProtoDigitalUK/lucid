@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
+// Services
+import getSingle from "@services/roles/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof rolesSchema.getSingle.params,
   typeof rolesSchema.getSingle.body,
   typeof rolesSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await Role.getSingle(parseInt(req.params.id));
+    const role = await getSingle({
+      id: parseInt(req.params.id),
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: rolesSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };

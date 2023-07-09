@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
+// Services
+import createSingle from "@services/roles/create-single";
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const createSingleController: Controller<
   typeof rolesSchema.createSingle.params,
   typeof rolesSchema.createSingle.body,
   typeof rolesSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await Role.createSingle({
+    const role = await createSingle({
       name: req.body.name,
       permission_groups: req.body.permission_groups,
     });
@@ -32,5 +32,5 @@ const createSingle: Controller<
 // Export
 export default {
   schema: rolesSchema.createSingle,
-  controller: createSingle,
+  controller: createSingleController,
 };

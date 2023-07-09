@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
+// Services
+import getMultiple from "@services/roles/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof rolesSchema.getMultiple.params,
   typeof rolesSchema.getMultiple.body,
   typeof rolesSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const roles = await Role.getMultiple(req.query);
+    const roles = await getMultiple({
+      query: req.query,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -34,5 +36,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: rolesSchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };

@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
+// Services
+import deleteSingle from "@services/roles/delete-single";
 
 // --------------------------------------------------
 // Controller
-const deleteSingle: Controller<
+const deleteSingleController: Controller<
   typeof rolesSchema.deleteSingle.params,
   typeof rolesSchema.deleteSingle.body,
   typeof rolesSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await Role.deleteSingle(parseInt(req.params.id));
+    const role = await deleteSingle({
+      id: parseInt(req.params.id),
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const deleteSingle: Controller<
 // Export
 export default {
   schema: rolesSchema.deleteSingle,
-  controller: deleteSingle,
+  controller: deleteSingleController,
 };

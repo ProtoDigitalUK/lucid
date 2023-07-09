@@ -1,19 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
+// Services
+import updateSingle from "@services/roles/update-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof rolesSchema.updateSingle.params,
   typeof rolesSchema.updateSingle.body,
   typeof rolesSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await Role.updateSingle(parseInt(req.params.id), {
+    const role = await updateSingle({
+      id: parseInt(req.params.id),
       name: req.body.name,
       permission_groups: req.body.permission_groups,
     });
@@ -32,5 +33,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: rolesSchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };
