@@ -1,19 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Menu from "@db/models/Menu";
 // Schema
 import menusSchema from "@schemas/menus";
+// Services
+import getMultiple from "@services/menu/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof menusSchema.getMultiple.params,
   typeof menusSchema.getMultiple.body,
   typeof menusSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const menus = await Menu.getMultiple(req.query, {
+    const menus = await getMultiple({
+      query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
     });
 
@@ -36,5 +37,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: menusSchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };

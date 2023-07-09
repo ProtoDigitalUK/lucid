@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Menu from "@db/models/Menu";
 // Schema
 import menusSchema from "@schemas/menus";
+// Services
+import createSingle from "@services/menu/create-single";
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const createSingleController: Controller<
   typeof menusSchema.createSingle.params,
   typeof menusSchema.createSingle.body,
   typeof menusSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const menu = await Menu.createSingle({
+    const menu = await createSingle({
       environment_key: req.headers["lucid-environment"] as string,
       key: req.body.key,
       name: req.body.name,
@@ -35,5 +35,5 @@ const createSingle: Controller<
 // Export
 export default {
   schema: menusSchema.createSingle,
-  controller: createSingle,
+  controller: createSingleController,
 };

@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Menu from "@db/models/Menu";
 // Schema
 import menusSchema from "@schemas/menus";
+// Services
+import updateSingle from "@services/menu/update-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof menusSchema.updateSingle.params,
   typeof menusSchema.updateSingle.body,
   typeof menusSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const menu = await Menu.updateSingle({
+    const menu = await updateSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
 
@@ -37,5 +37,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: menusSchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };
