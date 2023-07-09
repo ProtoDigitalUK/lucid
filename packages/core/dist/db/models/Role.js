@@ -10,10 +10,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _Role_roleNameUnique;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
 const RolePermission_1 = __importDefault(require("../models/RolePermission"));
-const validate_permissions_1 = __importDefault(require("../../services/roles/validate-permissions"));
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
+const validate_permissions_1 = __importDefault(require("../../utils/roles/validate-permissions"));
 class Role {
 }
 _a = Role;
@@ -133,7 +133,7 @@ Role.getMultiple = async (query) => {
     }
     return {
         data: roles.rows,
-        count: count.rows[0].count,
+        count: parseInt(count.rows[0].count),
     };
 };
 Role.updateSingle = async (id, data) => {

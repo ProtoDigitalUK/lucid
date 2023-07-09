@@ -1,4 +1,4 @@
-import { EnvironmentResT } from "../../services/environments/format-environment";
+import { EnvironmentResT } from "../../utils/environments/format-environment";
 type EnvironmentGetAll = () => Promise<EnvironmentResT[]>;
 type EnvironmentGetSingle = (key: string) => Promise<EnvironmentResT>;
 type EnvironmentUpsertSingle = (data: {

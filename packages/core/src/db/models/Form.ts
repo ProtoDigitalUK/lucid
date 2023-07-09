@@ -1,10 +1,9 @@
 import z from "zod";
-// Utils
-import { LucidError } from "@utils/error-handler";
 // Models
 import Config from "@db/models/Config";
 import Environment from "@db/models/Environment";
 // Serices
+import { LucidError } from "@utils/app/error-handler";
 import FormBuilder, { FormBuilderOptionsT } from "@lucid/form-builder";
 import formsSchema from "@schemas/forms";
 

@@ -1,5 +1,5 @@
 import getDBClient from "@db/db";
-import { LucidError, modelErrors } from "@utils/error-handler";
+import { LucidError, modelErrors } from "@utils/app/error-handler";
 
 // -------------------------------------------
 // Types
@@ -13,21 +13,18 @@ type OptionPatchByName = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
-  locked: boolean;
 }) => Promise<OptionT>;
 
 type OptionCreate = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
-  locked: boolean;
 }) => Promise<OptionT>;
 
 type OptionCreateOrPatchByName = (data: {
   name: OptionNames;
   value: OptionValue;
   type: OptionTypes;
-  locked: boolean;
 }) => Promise<OptionT>;
 
 // -------------------------------------------
@@ -36,7 +33,7 @@ export type OptionT = {
   option_name: OptionNames;
   option_value: OptionValue;
   type: OptionTypes;
-  locked: boolean;
+
   created_at: string;
   updated_at: string;
 };
@@ -75,8 +72,8 @@ export default class Option {
     const value = Option.convertToString(data.value, data.type);
 
     const options = await client.query<OptionT>({
-      text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW(), locked = $3 WHERE option_name = $4 AND locked = false RETURNING *`,
-      values: [value, data.type, data.locked || false, data.name],
+      text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
+      values: [value, data.type, data.name],
     });
 
     if (!options.rows[0]) {
@@ -111,8 +108,8 @@ export default class Option {
     }
 
     const option = await client.query<OptionT>({
-      text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,
-      values: [data.name, value, data.type, data.locked || false],
+      text: `INSERT INTO lucid_options (option_name, option_value, type) VALUES ($1, $2, $3) RETURNING *`,
+      values: [data.name, value, data.type],
     });
 
     if (!option.rows[0]) {
@@ -125,17 +122,6 @@ export default class Option {
     }
 
     return Option.convertToType(option.rows[0]);
-  };
-  static createOrPatch: OptionCreateOrPatchByName = async (data) => {
-    try {
-      // try to patch
-      const option = await Option.patchByName(data);
-      return option;
-    } catch (err) {
-      // if patch fails, create
-      const option = await Option.create(data);
-      return option;
-    }
   };
   // -------------------------------------------
   // Util Functions

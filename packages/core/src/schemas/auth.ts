@@ -28,6 +28,16 @@ const logoutQuery = z.object({});
 const logoutParams = z.object({});
 
 // ------------------------------------
+// REGISTER SUPER ADMIN
+const registerSuperAdminBody = z.object({
+  email: z.string().email(),
+  username: z.string(),
+  password: z.string().min(8),
+});
+const registerSuperAdminQuery = z.object({});
+const registerSuperAdminParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   getAuthenticatedUser: {
@@ -49,5 +59,10 @@ export default {
     body: logoutBody,
     query: logoutQuery,
     params: logoutParams,
+  },
+  registerSuperAdmin: {
+    body: registerSuperAdminBody,
+    query: registerSuperAdminQuery,
+    params: registerSuperAdminParams,
   },
 };

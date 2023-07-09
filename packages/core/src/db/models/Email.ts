@@ -1,13 +1,12 @@
 import getDBClient from "@db/db";
 import z from "zod";
-// Utils
-import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Schema
 import emailsSchema from "@schemas/email";
-// Services
-import renderTemplate from "@services/emails/render-template";
-import { sendEmailInternal } from "@services/emails/send-email";
+// Utils
+import renderTemplate from "@utils/emails/render-template";
+import { sendEmailInternal } from "@utils/emails/send-email";
+import { LucidError } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types

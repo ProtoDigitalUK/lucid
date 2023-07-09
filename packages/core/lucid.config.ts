@@ -1,7 +1,6 @@
 import { buildConfig, BrickBuilder, CollectionBuilder } from "./src/index";
 import z from "zod";
 import { ContactForm } from "./src/dev";
-import path from "path";
 
 // ------------------------------------
 // Define Bricks
@@ -146,7 +145,6 @@ export default buildConfig({
   mode: "development",
   secret: process.env.LUCID_SECRET_KEY as string,
   postgresURL: process.env.LUCID_POSTGRES_URL as string,
-  public: path.join(__dirname, "public"),
   email: {
     from: {
       name: "Lucid CMS",

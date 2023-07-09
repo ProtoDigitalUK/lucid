@@ -1,4 +1,4 @@
-import formatPermissions from "../../services/users/format-permissions";
+import formatPermissions from "../../utils/users/format-permissions";
 type UserRoleUpdate = (id: string, data: {
     role_ids: number[];
 }) => Promise<UserRoleT[]>;

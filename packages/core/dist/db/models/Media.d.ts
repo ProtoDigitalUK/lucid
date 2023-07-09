@@ -1,6 +1,6 @@
 import z from "zod";
 import fileUpload from "express-fileupload";
-import { type MediaResT } from "../../services/media/format-media";
+import { type MediaResT } from "../../utils/media/format-media";
 import mediaSchema from "../../schemas/media";
 type MediaCreateSingle = (data: {
     name?: string;

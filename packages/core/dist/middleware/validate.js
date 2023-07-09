@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
 const constants_1 = __importDefault(require("../constants"));
-const error_handler_1 = require("../utils/error-handler");
+const error_handler_1 = require("../utils/app/error-handler");
 const querySchema = zod_1.default.object({
     include: zod_1.default.string().optional(),
     exclude: zod_1.default.string().optional(),

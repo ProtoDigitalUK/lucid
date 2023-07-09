@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const route_1 = __importDefault(require("../../utils/route"));
+const route_1 = __importDefault(require("../../utils/app/route"));
 const update_single_1 = __importDefault(require("../../controllers/single-pages/update-single"));
 const get_single_1 = __importDefault(require("../../controllers/single-pages/get-single"));
 const router = (0, express_1.Router)();

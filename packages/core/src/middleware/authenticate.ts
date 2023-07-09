@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-// Services
-import { verifyJWT } from "@services/auth/jwt";
 // Utils
-import { LucidError } from "@utils/error-handler";
+import { verifyJWT } from "@services/auth/jwt";
+import { LucidError } from "@utils/app/error-handler";
 
 const authenticate = async (
   req: Request,

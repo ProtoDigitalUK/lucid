@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
+const error_handler_1 = require("../../utils/app/error-handler");
 class Option {
 }
 _a = Option;
@@ -35,8 +35,8 @@ Option.patchByName = async (data) => {
     const client = await db_1.default;
     const value = Option.convertToString(data.value, data.type);
     const options = await client.query({
-        text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW(), locked = $3 WHERE option_name = $4 AND locked = false RETURNING *`,
-        values: [value, data.type, data.locked || false, data.name],
+        text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
+        values: [value, data.type, data.name],
     });
     if (!options.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -65,8 +65,8 @@ Option.create = async (data) => {
         return Option.convertToType(optionExisting.rows[0]);
     }
     const option = await client.query({
-        text: `INSERT INTO lucid_options (option_name, option_value, type, locked) VALUES ($1, $2, $3, $4) RETURNING *`,
-        values: [data.name, value, data.type, data.locked || false],
+        text: `INSERT INTO lucid_options (option_name, option_value, type) VALUES ($1, $2, $3) RETURNING *`,
+        values: [data.name, value, data.type],
     });
     if (!option.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -77,16 +77,6 @@ Option.create = async (data) => {
         });
     }
     return Option.convertToType(option.rows[0]);
-};
-Option.createOrPatch = async (data) => {
-    try {
-        const option = await Option.patchByName(data);
-        return option;
-    }
-    catch (err) {
-        const option = await Option.create(data);
-        return option;
-    }
 };
 Option.convertToType = (option) => {
     switch (option.type) {

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt_1 = require("../services/auth/jwt");
-const error_handler_1 = require("../utils/error-handler");
+const error_handler_1 = require("../utils/app/error-handler");
 const authenticate = async (req, res, next) => {
     try {
         const authenticateJWT = (0, jwt_1.verifyJWT)(req);

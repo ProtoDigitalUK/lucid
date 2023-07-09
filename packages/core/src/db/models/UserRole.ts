@@ -1,10 +1,9 @@
 import getDBClient from "@db/db";
-// Utils
-import { LucidError } from "@utils/error-handler";
 // Models
 import Role from "@db/models/Role";
-// Services
-import formatPermissions from "@services/users/format-permissions";
+// Utils
+import formatPermissions from "@utils/users/format-permissions";
+import { LucidError } from "@utils/app/error-handler";
 
 // -------------------------------------------
 // Types
@@ -131,9 +130,11 @@ export default class UserRole {
 
     if (!userPermissions.rows) {
       return {
-        permissions: [],
         roles: [],
-        environments: [],
+        permissions: {
+          global: [],
+          environments: [],
+        },
       };
     }
 

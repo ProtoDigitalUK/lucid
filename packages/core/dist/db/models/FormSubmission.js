@@ -10,11 +10,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _FormSubmission_checkFormEnvrionmentPermissions, _FormSubmission_getFormBuilder, _FormSubmission_createNewFormSubmission, _FormSubmission_createNewFormData, _FormSubmission_getAllFormData;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
-const format_form_1 = require("../../services/forms/format-form");
+const format_form_1 = require("../../utils/forms/format-form");
 class FormSubmission {
 }
 _a = FormSubmission;

@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import z from "zod";
-import { RuntimeError } from "@utils/error-handler";
+import { RuntimeError } from "@utils/app/error-handler";
 import { bgRed } from "console-log-colors";
 import C from "@root/constants";
 import { fromZodError } from "zod-validation-error";

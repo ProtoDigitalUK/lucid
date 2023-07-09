@@ -1,6 +1,6 @@
 import getDBClient from "@db/db";
 // Utils
-import { queryDataFormat } from "@utils/query-helpers";
+import { queryDataFormat } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types

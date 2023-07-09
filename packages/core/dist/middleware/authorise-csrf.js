@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const csrf_1 = require("../services/auth/csrf");
-const error_handler_1 = require("../utils/error-handler");
+const error_handler_1 = require("../utils/app/error-handler");
 const authoriseCSRF = async (req, res, next) => {
     try {
         const verifyCSRF = (0, csrf_1.verifyCSRFToken)(req);

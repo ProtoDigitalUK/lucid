@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const Config_1 = __importDefault(require("../models/Config"));
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
-const format_environment_1 = __importDefault(require("../../services/environments/format-environment"));
+const format_environment_1 = __importDefault(require("../../utils/environments/format-environment"));
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 class Environment {
 }
 _a = Environment;

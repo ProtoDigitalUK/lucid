@@ -1,12 +1,13 @@
-// Services
-import buildResponse from "@services/controllers/build-response";
-import { generateCSRFToken } from "@services/auth/csrf";
+// Utils
+import buildResponse from "@utils/controllers/build-response";
 // Schema
 import authSchema from "@schemas/auth";
+// Services
+import { generateCSRFToken } from "@services/auth/csrf";
 
 // --------------------------------------------------
 // Controller
-const getCSRF: Controller<
+const getCSRFController: Controller<
   typeof authSchema.getCSRF.params,
   typeof authSchema.getCSRF.body,
   typeof authSchema.getCSRF.query
@@ -30,5 +31,5 @@ const getCSRF: Controller<
 // Export
 export default {
   schema: authSchema.getCSRF,
-  controller: getCSRF,
+  controller: getCSRFController,
 };

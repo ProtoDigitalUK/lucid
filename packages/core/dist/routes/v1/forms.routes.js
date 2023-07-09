@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const route_1 = __importDefault(require("../../utils/route"));
+const route_1 = __importDefault(require("../../utils/app/route"));
 const get_single_1 = __importDefault(require("../../controllers/form/get-single"));
 const get_all_1 = __importDefault(require("../../controllers/form/get-all"));
 const get_single_2 = __importDefault(require("../../controllers/form-submissions/get-single"));

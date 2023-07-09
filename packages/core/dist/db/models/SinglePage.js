@@ -13,9 +13,9 @@ const db_1 = __importDefault(require("../db"));
 const Collection_1 = __importDefault(require("../models/Collection"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const Environment_1 = __importDefault(require("../models/Environment"));
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
-const validate_bricks_1 = __importDefault(require("../../services/bricks/validate-bricks"));
+const validate_bricks_1 = __importDefault(require("../../utils/bricks/validate-bricks"));
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 class SinglePage {
 }
 _a = SinglePage;

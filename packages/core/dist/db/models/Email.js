@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
-const render_template_1 = __importDefault(require("../../services/emails/render-template"));
-const send_email_1 = require("../../services/emails/send-email");
+const render_template_1 = __importDefault(require("../../utils/emails/render-template"));
+const send_email_1 = require("../../utils/emails/send-email");
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 class Email {
 }
 _a = Email;

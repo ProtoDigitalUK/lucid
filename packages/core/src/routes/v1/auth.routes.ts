@@ -1,10 +1,11 @@
 import { Router } from "express";
-import r from "@utils/route";
+import r from "@utils/app/route";
 // Controller
 import login from "@controllers/auth/login";
 import logout from "@controllers/auth/logout";
 import getAuthenticatedUser from "@controllers/auth/get-authenticated-user";
 import getCSRF from "@controllers/auth/get-csrf";
+import registerSuperadmin from "@controllers/auth/register-superadmin";
 
 // ------------------------------------
 // Router
@@ -43,6 +44,17 @@ r(router, {
   path: "/csrf",
   schema: getCSRF.schema,
   controller: getCSRF.controller,
+});
+
+// only used to register the first superadmin (the inital account)
+r(router, {
+  method: "post",
+  path: "/register-superadmin",
+  middleware: {
+    authoriseCSRF: true,
+  },
+  schema: registerSuperadmin.schema,
+  controller: registerSuperadmin.controller,
 });
 
 export default router;

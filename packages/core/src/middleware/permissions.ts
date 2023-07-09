@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
+import { LucidError } from "@utils/app/error-handler";
 // Models
 import { PermissionT, EnvironmentPermissionT } from "@db/models/RolePermission";
 import User from "@db/models/User";

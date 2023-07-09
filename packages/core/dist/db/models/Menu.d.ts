@@ -1,6 +1,6 @@
 import z from "zod";
 import menusSchema, { MenuItem, MenuItemUpdate } from "../../schemas/menus";
-import { MenuRes } from "../../services/menus/format-menu";
+import { MenuRes } from "../../utils/menus/format-menu";
 type MenuCreateSingle = (data: {
     environment_key: string;
     key: string;

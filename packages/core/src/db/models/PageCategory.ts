@@ -1,5 +1,5 @@
 import getDBClient from "@db/db";
-import { LucidError, modelErrors } from "@utils/error-handler";
+import { LucidError, modelErrors } from "@utils/app/error-handler";
 
 // -------------------------------------------
 // Types

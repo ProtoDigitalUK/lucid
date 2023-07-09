@@ -3,8 +3,8 @@ import { z } from "zod";
 // Models
 import Collection from "@db/models/Collection";
 // Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
+import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Schema
 import categorySchema from "@schemas/categories";
 

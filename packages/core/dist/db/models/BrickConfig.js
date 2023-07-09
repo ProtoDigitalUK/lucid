@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
 const Collection_1 = __importDefault(require("../models/Collection"));
 const Environment_1 = __importDefault(require("../models/Environment"));
-const error_handler_1 = require("../../utils/error-handler");
+const error_handler_1 = require("../../utils/app/error-handler");
 class BrickConfig {
 }
 _a = BrickConfig;

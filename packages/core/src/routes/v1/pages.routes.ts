@@ -1,5 +1,5 @@
 import { Router } from "express";
-import r from "@utils/route";
+import r from "@utils/app/route";
 // Controller
 import createSingle from "@controllers/pages/create-single";
 import getMultiple from "@controllers/pages/get-multiple";

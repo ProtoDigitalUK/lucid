@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { green } from "console-log-colors";
-import { RuntimeError } from "@utils/error-handler";
+import { RuntimeError } from "@utils/app/error-handler";
 // Models
 import Migration from "@db/models/Migration";
 

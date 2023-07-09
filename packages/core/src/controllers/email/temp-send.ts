@@ -1,6 +1,6 @@
-// Services
-import buildResponse from "@services/controllers/build-response";
-import { sendEmailExternal } from "@services/emails/send-email";
+// Utils
+import buildResponse from "@utils/controllers/build-response";
+import { sendEmailExternal } from "@utils/emails/send-email";
 // Schema
 import healthSchema from "@schemas/health";
 

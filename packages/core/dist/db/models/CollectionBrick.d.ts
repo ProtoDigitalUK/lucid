@@ -1,6 +1,6 @@
 import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
-import { BrickResponseT } from "../../services/bricks/format-bricks";
+import { BrickResponseT } from "../../utils/bricks/format-bricks";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
 import { CollectionT } from "../models/Collection";
 import { EnvironmentT } from "../models/Environment";

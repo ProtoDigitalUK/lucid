@@ -2,10 +2,9 @@ import z from "zod";
 import getDBClient from "@db/db";
 import { FieldTypes } from "@lucid/brick-builder";
 // Utils
-import { LucidError } from "@utils/error-handler";
-import { queryDataFormat } from "@utils/query-helpers";
-// Services
-import formatBricks, { BrickResponseT } from "@services/bricks/format-bricks";
+import formatBricks, { BrickResponseT } from "@utils/bricks/format-bricks";
+import { LucidError } from "@utils/app/error-handler";
+import { queryDataFormat } from "@utils/app/query-helpers";
 // Schema
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
 // Models

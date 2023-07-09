@@ -1,5 +1,5 @@
-// Services
-import buildResponse from "@services/controllers/build-response";
+// Utils
+import buildResponse from "@utils/controllers/build-response";
 // Models
 import Media from "@db/models/Media";
 // Schema

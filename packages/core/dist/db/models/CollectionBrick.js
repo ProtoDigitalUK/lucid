@@ -10,9 +10,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _CollectionBrick_createSingleCollectionBrick, _CollectionBrick_updateSingleCollectionBrick, _CollectionBrick_upsertField, _CollectionBrick_checkFieldExists, _CollectionBrick_fieldTypeSpecificQueryData, _CollectionBrick_upsertRepeater, _CollectionBrick_valueKey;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
-const format_bricks_1 = __importDefault(require("../../services/bricks/format-bricks"));
+const format_bricks_1 = __importDefault(require("../../utils/bricks/format-bricks"));
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
 class CollectionBrick {
 }

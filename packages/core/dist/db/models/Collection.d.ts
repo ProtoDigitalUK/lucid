@@ -3,7 +3,7 @@ import { EnvironmentT } from "../models/Environment";
 import { BrickObject } from "../models/CollectionBrick";
 import collectionSchema from "../../schemas/collections";
 import { CollectionConfigT, CollectionBuilderT } from "@lucid/collection-builder";
-import { EnvironmentResT } from "../../services/environments/format-environment";
+import { EnvironmentResT } from "../../utils/environments/format-environment";
 type CollectionGetAll = (query: z.infer<typeof collectionSchema.getAll.query>, environment_key: string) => Promise<CollectionT[]>;
 type CollectionGetSingle = (props: {
     collection_key: CollectionConfigT["key"];

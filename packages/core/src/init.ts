@@ -8,14 +8,14 @@ import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 // internal
 import Config from "@db/models/Config";
-import launchSteps from "@services/app/launch-steps";
+import launchSteps from "@utils/app/launch-steps";
 import migrateDB from "@db/migration";
 import initRoutes from "@routes/index";
 import {
   errorLogger,
   errorResponder,
   invalidPathHandler,
-} from "@utils/error-handler";
+} from "@utils/app/error-handler";
 
 const app = async (options: InitOptions) => {
   const app = options.express;

@@ -6,18 +6,16 @@ import {
   DeleteObjectCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
-// Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
-// Schema
 // Models
 import Config from "@db/models/Config";
 import Option from "@db/models/Option";
-// Services
-import getS3Client from "@services/media/s3-client";
-import helpers, { type MediaMetaDataT } from "@services/media/helpers";
-import formatMedia, { type MediaResT } from "@services/media/format-media";
+// Utils
+import getS3Client from "@utils/media/s3-client";
+import helpers, { type MediaMetaDataT } from "@utils/media/helpers";
+import formatMedia, { type MediaResT } from "@utils/media/format-media";
 import mediaSchema from "@schemas/media";
+import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
@@ -495,7 +493,6 @@ export default class Media {
       name: "media_storage_used",
       value: newValue,
       type: "number",
-      locked: false,
     });
     return res.option_value as number;
   };

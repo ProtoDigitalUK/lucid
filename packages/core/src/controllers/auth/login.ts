@@ -1,25 +1,24 @@
-// Services
-import buildResponse from "@services/controllers/build-response";
-import { generateJWT } from "@services/auth/jwt";
-// Models
-import User from "@db/models/User";
+// Utils
+import buildResponse from "@utils/controllers/build-response";
 // Schema
 import authSchema from "@schemas/auth";
+// Services
+import { generateJWT } from "@services/auth/jwt";
+import login from "@services/auth/login";
 
 // --------------------------------------------------
 // Controller
-const login: Controller<
+const loginController: Controller<
   typeof authSchema.login.params,
   typeof authSchema.login.body,
   typeof authSchema.login.query
 > = async (req, res, next) => {
   try {
-    const user = await User.login({
+    const user = await login({
       username: req.body.username,
       password: req.body.password,
     });
     generateJWT(res, user);
-
     res.status(200).json(buildResponse(req, { data: user }));
   } catch (error) {
     next(error as Error);
@@ -30,5 +29,5 @@ const login: Controller<
 // Export
 export default {
   schema: authSchema.login,
-  controller: login,
+  controller: loginController,
 };

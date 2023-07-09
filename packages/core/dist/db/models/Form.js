@@ -9,9 +9,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a, _Form_filterEnvironmentForms;
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_handler_1 = require("../../utils/error-handler");
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
+const error_handler_1 = require("../../utils/app/error-handler");
 class Form {
 }
 _a = Form;

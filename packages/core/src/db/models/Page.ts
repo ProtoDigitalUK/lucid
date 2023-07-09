@@ -7,12 +7,11 @@ import Collection from "@db/models/Collection";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 import Environment from "@db/models/Environment";
 // Serivces
-import formatPage from "@services/pages/format-page";
-import { BrickResponseT } from "@services/bricks/format-bricks";
-import validateBricks from "@services/bricks/validate-bricks";
-// Utils
-import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
+import formatPage from "@utils/pages/format-page";
+import { BrickResponseT } from "@utils/bricks/format-bricks";
+import validateBricks from "@utils/bricks/validate-bricks";
+import { LucidError } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Schema
 import pagesSchema from "@schemas/pages";
 

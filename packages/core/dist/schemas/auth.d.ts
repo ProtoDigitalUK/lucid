@@ -29,6 +29,23 @@ declare const _default: {
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
     };
+    registerSuperAdmin: {
+        body: z.ZodObject<{
+            email: z.ZodString;
+            username: z.ZodString;
+            password: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            email: string;
+            username: string;
+            password: string;
+        }, {
+            email: string;
+            username: string;
+            password: string;
+        }>;
+        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+    };
 };
 export default _default;
 //# sourceMappingURL=auth.d.ts.map

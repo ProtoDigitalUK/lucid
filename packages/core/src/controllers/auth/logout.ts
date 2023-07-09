@@ -1,9 +1,10 @@
-// Services
-import buildResponse from "@services/controllers/build-response";
-import { clearJWT } from "@services/auth/jwt";
-import { clearCSRFToken } from "@services/auth/csrf";
+// Utils
+import buildResponse from "@utils/controllers/build-response";
 // Schema
 import authSchema from "@schemas/auth";
+// Services
+import { clearJWT } from "@services/auth/jwt";
+import { clearCSRFToken } from "@services/auth/csrf";
 
 // --------------------------------------------------
 // Controller

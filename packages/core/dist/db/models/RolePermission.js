@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const query_helpers_1 = require("../../utils/query-helpers");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 class RolePermission {
     static get getValidPermissions() {
         return {

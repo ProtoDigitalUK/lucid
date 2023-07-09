@@ -1,8 +1,8 @@
 import getDBClient from "@db/db";
 import z from "zod";
 // Utils
-import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
+import { LucidError } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Models
 import Config from "@db/models/Config";
 import Environment from "@db/models/Environment";
@@ -11,7 +11,7 @@ import Environment from "@db/models/Environment";
 import {
   formatFormSubmission,
   FormSubmissionResT,
-} from "@services/forms/format-form";
+} from "@utils/forms/format-form";
 import formSubmissionsSchema from "@schemas/form-submissions";
 
 // -------------------------------------------

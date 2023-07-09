@@ -11,13 +11,13 @@ var _a, _Media_getStorageUsed, _Media_setStorageUsed, _Media_canStoreFiles, _Med
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const client_s3_1 = require("@aws-sdk/client-s3");
-const error_handler_1 = require("../../utils/error-handler");
-const query_helpers_1 = require("../../utils/query-helpers");
 const Config_1 = __importDefault(require("../models/Config"));
 const Option_1 = __importDefault(require("../models/Option"));
-const s3_client_1 = __importDefault(require("../../services/media/s3-client"));
-const helpers_1 = __importDefault(require("../../services/media/helpers"));
-const format_media_1 = __importDefault(require("../../services/media/format-media"));
+const s3_client_1 = __importDefault(require("../../utils/media/s3-client"));
+const helpers_1 = __importDefault(require("../../utils/media/helpers"));
+const format_media_1 = __importDefault(require("../../utils/media/format-media"));
+const error_handler_1 = require("../../utils/app/error-handler");
+const query_helpers_1 = require("../../utils/app/query-helpers");
 class Media {
 }
 _a = Media;
@@ -374,7 +374,6 @@ _Media_setStorageUsed = { value: async (add, minus) => {
             name: "media_storage_used",
             value: newValue,
             type: "number",
-            locked: false,
         });
         return res.option_value;
     } };

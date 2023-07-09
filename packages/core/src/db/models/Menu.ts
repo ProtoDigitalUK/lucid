@@ -1,12 +1,11 @@
 import z from "zod";
 import getDBClient from "@db/db";
-// Utils
-import { LucidError } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Schema
 import menusSchema, { MenuItem, MenuItemUpdate } from "@schemas/menus";
-// Services
-import formatMenu, { MenuRes } from "@services/menus/format-menu";
+// Utils
+import formatMenu, { MenuRes } from "@utils/menus/format-menu";
+import { LucidError } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types

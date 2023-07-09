@@ -19,6 +19,13 @@ const loginParams = zod_1.default.object({});
 const logoutBody = zod_1.default.object({});
 const logoutQuery = zod_1.default.object({});
 const logoutParams = zod_1.default.object({});
+const registerSuperAdminBody = zod_1.default.object({
+    email: zod_1.default.string().email(),
+    username: zod_1.default.string(),
+    password: zod_1.default.string().min(8),
+});
+const registerSuperAdminQuery = zod_1.default.object({});
+const registerSuperAdminParams = zod_1.default.object({});
 exports.default = {
     getAuthenticatedUser: {
         body: getAuthenticatedUserBody,
@@ -39,6 +46,11 @@ exports.default = {
         body: logoutBody,
         query: logoutQuery,
         params: logoutParams,
+    },
+    registerSuperAdmin: {
+        body: registerSuperAdminBody,
+        query: registerSuperAdminQuery,
+        params: registerSuperAdminParams,
     },
 };
 //# sourceMappingURL=auth.js.map

@@ -10,10 +10,10 @@ import {
   BrickConfigOptionsT,
 } from "@lucid/brick-builder";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-// Utils
-import { LucidError } from "@utils/error-handler";
 // Schema
 import bricksSchema from "@schemas/bricks";
+// Utils
+import { LucidError } from "@utils/app/error-handler";
 
 // -------------------------------------------
 // Types

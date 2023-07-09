@@ -13,7 +13,7 @@ const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
 const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
-const error_handler_1 = require("../../utils/error-handler");
+const error_handler_1 = require("../../utils/app/error-handler");
 class Collection {
 }
 _a = Collection;

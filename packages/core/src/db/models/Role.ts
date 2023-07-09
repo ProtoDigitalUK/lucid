@@ -2,13 +2,12 @@ import z from "zod";
 import getDBClient from "@db/db";
 // Schema
 import roleSchema from "@schemas/roles";
-// Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/query-helpers";
 // Models
 import RolePermission, { RolePermissionT } from "@db/models/RolePermission";
-// Services
-import validatePermissions from "@services/roles/validate-permissions";
+// Utils
+import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import validatePermissions from "@utils/roles/validate-permissions";
 
 // -------------------------------------------
 // Types
@@ -156,7 +155,7 @@ export default class Role {
       values: SelectQuery.values,
     });
 
-    const count = await client.query<{ count: number }>({
+    const count = await client.query<{ count: string }>({
       text: `SELECT 
           COUNT(DISTINCT lucid_roles.id)
         FROM
@@ -186,7 +185,7 @@ export default class Role {
 
     return {
       data: roles.rows,
-      count: count.rows[0].count,
+      count: parseInt(count.rows[0].count),
     };
   };
   static updateSingle: RoleUpdateSingle = async (id, data) => {

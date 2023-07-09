@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const console_log_colors_1 = require("console-log-colors");
-const error_handler_1 = require("../utils/error-handler");
+const error_handler_1 = require("../utils/app/error-handler");
 const Migration_1 = __importDefault(require("./models/Migration"));
 const getOutstandingMigrations = async () => {
     const migrationFiles = await fs_extra_1.default.readdir(path_1.default.join(__dirname, "./migrations"));

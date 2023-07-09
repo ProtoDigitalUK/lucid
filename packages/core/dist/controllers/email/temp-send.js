@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const build_response_1 = __importDefault(require("../../services/controllers/build-response"));
-const send_email_1 = require("../../services/emails/send-email");
+const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
+const send_email_1 = require("../../utils/emails/send-email");
 const health_1 = __importDefault(require("../../schemas/health"));
 const tempSend = async (req, res, next) => {
     try {

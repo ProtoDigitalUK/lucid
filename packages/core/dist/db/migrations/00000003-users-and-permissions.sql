@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS lucid_users (
   first_name TEXT,
   last_name TEXT,
   password TEXT NOT NULL,
-  account_reset BOOLEAN DEFAULT FALSE, -- if true, user will be forced to reset password and email on next login. Only used for initial account.
 
   delete BOOLEAN DEFAULT FALSE, -- Marked for deletion. Will be deleted on after 30 days.
   deleted_at TIMESTAMP, -- When the user was marked for deletion.

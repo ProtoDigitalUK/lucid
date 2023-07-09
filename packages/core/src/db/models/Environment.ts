@@ -3,12 +3,11 @@ import slugify from "slugify";
 // Models
 import Config from "@db/models/Config";
 // Utils
-import { LucidError, modelErrors } from "@utils/error-handler";
-import { queryDataFormat } from "@utils/query-helpers";
-// Services
 import formatEnvironment, {
   EnvironmentResT,
-} from "@services/environments/format-environment";
+} from "@utils/environments/format-environment";
+import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { queryDataFormat } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types

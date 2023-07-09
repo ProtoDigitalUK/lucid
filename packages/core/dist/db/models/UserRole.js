@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/error-handler");
 const Role_1 = __importDefault(require("../models/Role"));
-const format_permissions_1 = __importDefault(require("../../services/users/format-permissions"));
+const format_permissions_1 = __importDefault(require("../../utils/users/format-permissions"));
+const error_handler_1 = require("../../utils/app/error-handler");
 class UserRole {
 }
 _a = UserRole;
@@ -85,9 +85,11 @@ UserRole.getPermissions = async (id) => {
     });
     if (!userPermissions.rows) {
         return {
-            permissions: [],
             roles: [],
-            environments: [],
+            permissions: {
+                global: [],
+                environments: [],
+            },
         };
     }
     const formattedPermissions = (0, format_permissions_1.default)(userPermissions.rows);

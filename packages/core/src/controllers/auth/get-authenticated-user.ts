@@ -1,19 +1,21 @@
-// Services
-import buildResponse from "@services/controllers/build-response";
-// Models
-import User from "@db/models/User";
+// Utils
+import buildResponse from "@utils/controllers/build-response";
 // Schema
 import authSchema from "@schemas/auth";
+// Services
+import getAuthenticatedUser from "@services/auth/get-authenticated-user";
 
 // --------------------------------------------------
 // Controller
-const getAuthenticatedUser: Controller<
+const getAuthenticatedUserController: Controller<
   typeof authSchema.getAuthenticatedUser.params,
   typeof authSchema.getAuthenticatedUser.body,
   typeof authSchema.getAuthenticatedUser.query
 > = async (req, res, next) => {
   try {
-    const user = await User.getById(req.auth.id);
+    const user = await getAuthenticatedUser({
+      userId: req.auth.id,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const getAuthenticatedUser: Controller<
 // Export
 export default {
   schema: authSchema.getAuthenticatedUser,
-  controller: getAuthenticatedUser,
+  controller: getAuthenticatedUserController,
 };

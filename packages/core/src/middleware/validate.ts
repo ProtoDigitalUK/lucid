@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import z, { AnyZodObject } from "zod";
 import constants from "@root/constants";
 // Utils
-import { LucidError } from "@utils/error-handler";
+import { LucidError } from "@utils/app/error-handler";
+
 // ------------------------------------
 // Schemas
 const querySchema = z.object({

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { LucidError, modelErrors } from "@utils/error-handler";
+import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import Environment from "@db/models/Environment";
 

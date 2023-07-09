@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-// Services
-import { verifyCSRFToken } from "@services/auth/csrf";
 // Utils
-import { LucidError } from "@utils/error-handler";
+import { verifyCSRFToken } from "@services/auth/csrf";
+import { LucidError } from "@utils/app/error-handler";
 
 const authoriseCSRF = async (
   req: Request,

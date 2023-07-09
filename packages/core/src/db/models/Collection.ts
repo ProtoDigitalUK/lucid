@@ -4,8 +4,6 @@ import Config from "@db/models/Config";
 import Environment, { EnvironmentT } from "@db/models/Environment";
 import BrickConfig from "@db/models/BrickConfig";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
-// Utils
-import { LucidError } from "@utils/error-handler";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Internal packages
@@ -13,8 +11,9 @@ import {
   CollectionConfigT,
   CollectionBuilderT,
 } from "@lucid/collection-builder";
-// Services
-import { EnvironmentResT } from "@services/environments/format-environment";
+// Utils
+import { EnvironmentResT } from "@utils/environments/format-environment";
+import { LucidError } from "@utils/app/error-handler";
 
 // -------------------------------------------
 // Types
