@@ -1,7 +1,7 @@
 // Models
 import UserRole from "@db/models/UserRole";
 
-interface ServiceData {
+export interface ServiceData {
   user_id: number;
   role_ids: number[];
 }

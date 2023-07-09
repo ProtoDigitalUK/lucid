@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import usersSchema from "@schemas/users";
 // Services
-import updateRoles from "@services/users/update-roles";
+import users from "@services/users";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const updateRolesController: Controller<
   typeof usersSchema.updateRoles.query
 > = async (req, res, next) => {
   try {
-    const userRoles = await updateRoles({
+    const userRoles = await users.updateRoles({
       user_id: parseInt(req.params.id),
       role_ids: req.body.role_ids,
     });

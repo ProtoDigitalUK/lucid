@@ -4,7 +4,7 @@ import Form from "@db/models/Form";
 // Schema
 import formsSchema from "@schemas/forms";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof formsSchema.getAll.query>;
   environment_key: string;
 }

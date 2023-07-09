@@ -29,3 +29,9 @@ export const verifyCSRFToken = (req: Request) => {
 export const clearCSRFToken = (res: Response) => {
   res.clearCookie("_csrf");
 };
+
+export default {
+  generateCSRFToken,
+  verifyCSRFToken,
+  clearCSRFToken,
+};

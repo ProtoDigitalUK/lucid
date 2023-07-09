@@ -1,7 +1,7 @@
 // Models
 import SinglePage from "@db/models/SinglePage";
 
-interface ServiceData {
+export interface ServiceData {
   environment_key: string;
   collection_key: string;
 }

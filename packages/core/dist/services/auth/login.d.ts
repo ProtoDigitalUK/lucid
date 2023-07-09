@@ -1,4 +1,4 @@
-interface ServiceData {
+export interface ServiceData {
     username: string;
     password: string;
 }

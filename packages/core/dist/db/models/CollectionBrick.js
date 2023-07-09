@@ -13,13 +13,13 @@ const db_1 = __importDefault(require("../db"));
 const format_bricks_1 = __importDefault(require("../../utils/bricks/format-bricks"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
-const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
+const brick_config_1 = __importDefault(require("../../services/brick-config"));
 class CollectionBrick {
 }
 _a = CollectionBrick;
 CollectionBrick.createOrUpdate = async (data) => {
     const promises = [];
-    const allowed = BrickConfig_1.default.isBrickAllowed({
+    const allowed = brick_config_1.default.isBrickAllowed({
         key: data.brick.key,
         type: data.brick_type,
         environment: data.environment,

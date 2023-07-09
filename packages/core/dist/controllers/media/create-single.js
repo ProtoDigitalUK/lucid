@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../../schemas/media"));
-const createSingle = async (req, res, next) => {
+const media_2 = __importDefault(require("../../services/media"));
+const createSingleController = async (req, res, next) => {
     try {
-        const media = await Media_1.default.createSingle({
+        const media = await media_2.default.createSingle({
             name: req.body.name,
             alt: req.body.alt,
             files: req.files,
@@ -23,6 +23,6 @@ const createSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: media_1.default.createSingle,
-    controller: createSingle,
+    controller: createSingleController,
 };
 //# sourceMappingURL=create-single.js.map

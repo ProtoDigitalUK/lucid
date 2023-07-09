@@ -52,3 +52,9 @@ export const verifyJWT = (req: Request) => {
 export const clearJWT = (res: Response) => {
   res.clearCookie("_jwt");
 };
+
+export default {
+  generateJWT,
+  verifyJWT,
+  clearJWT,
+};

@@ -1,7 +1,7 @@
 // Models
 import Form from "@db/models/Form";
 
-interface ServiceData {
+export interface ServiceData {
   key: string;
   environment_key: string;
 }

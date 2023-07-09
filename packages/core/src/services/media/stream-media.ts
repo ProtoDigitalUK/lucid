@@ -3,7 +3,7 @@ import { GetObjectCommand } from "@aws-sdk/client-s3";
 // Models
 import Config from "@db/models/Config";
 
-interface ServiceData {
+export interface ServiceData {
   key: string;
 }
 

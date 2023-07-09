@@ -10,9 +10,10 @@ import { BrickSchema, FieldSchema } from "@schemas/bricks";
 // Models
 import { CollectionT } from "@db/models/Collection";
 import { EnvironmentT } from "@db/models/Environment";
-import BrickConfig from "@db/models/BrickConfig";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
+// Services
+import brickConfig from "@services/brick-config";
 
 // -------------------------------------------
 // Types
@@ -135,7 +136,7 @@ export default class CollectionBrick {
     // Create or update the page brick record
     const promises = [];
 
-    const allowed = BrickConfig.isBrickAllowed({
+    const allowed = brickConfig.isBrickAllowed({
       key: data.brick.key,
       type: data.brick_type,
       environment: data.environment,

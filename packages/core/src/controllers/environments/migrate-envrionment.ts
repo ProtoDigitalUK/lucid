@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
-import migrateEnvironment from "@services/environments/migrate-environment";
+import environments from "@services/environments";
 
 // --------------------------------------------------
 // Controller
@@ -18,7 +18,7 @@ const migrateEnvironmentController: Controller<
       This means deleting the target envrionments data,
       then looking up all data that is scoped to the current envrionemnt and copying it over to the target envrionemnt.
     */
-    await migrateEnvironment({});
+    await environments.migrateEnvironment({});
 
     res.status(200).json(
       buildResponse(req, {

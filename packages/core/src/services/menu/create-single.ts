@@ -3,7 +3,7 @@ import Menu from "@db/models/Menu";
 // Schema
 import { MenuItem } from "@schemas/menus";
 
-interface ServiceData {
+export interface ServiceData {
   environment_key: string;
   key: string;
   name: string;

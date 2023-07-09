@@ -1,9 +1,9 @@
 // Models
 import RolePermission from "@db/models/RolePermission";
 
-interface ServiceData {}
+export interface ServiceData {}
 
-const getAll = async (data: ServiceData) => {
+export const getAll = async (data: ServiceData) => {
   return RolePermission.getValidPermissions;
 };
 

@@ -9,7 +9,6 @@ const get_multiple_1 = __importDefault(require("../../controllers/email/get-mult
 const get_single_1 = __importDefault(require("../../controllers/email/get-single"));
 const delete_single_1 = __importDefault(require("../../controllers/email/delete-single"));
 const resend_single_1 = __importDefault(require("../../controllers/email/resend-single"));
-const temp_send_1 = __importDefault(require("../../controllers/email/temp-send"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
@@ -50,19 +49,6 @@ const router = (0, express_1.Router)();
     },
     schema: delete_single_1.default.schema,
     controller: delete_single_1.default.controller,
-});
-(0, route_1.default)(router, {
-    method: "post",
-    path: "/temp-send",
-    permissions: {
-        global: ["send_email"],
-    },
-    middleware: {
-        authenticate: true,
-        authoriseCSRF: true,
-    },
-    schema: temp_send_1.default.schema,
-    controller: temp_send_1.default.controller,
 });
 (0, route_1.default)(router, {
     method: "post",

@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Menu_1 = __importDefault(require("../../db/models/Menu"));
 const menus_1 = __importDefault(require("../../schemas/menus"));
-const deleteSingle = async (req, res, next) => {
+const menu_1 = __importDefault(require("../../services/menu"));
+const deleteSingleController = async (req, res, next) => {
     try {
-        const menu = await Menu_1.default.deleteSingle({
+        const menu = await menu_1.default.deleteSingle({
             environment_key: req.headers["lucid-environment"],
             id: parseInt(req.params.id),
         });
@@ -22,6 +22,6 @@ const deleteSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: menus_1.default.deleteSingle,
-    controller: deleteSingle,
+    controller: deleteSingleController,
 };
 //# sourceMappingURL=delete-single.js.map

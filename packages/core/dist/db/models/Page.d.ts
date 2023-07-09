@@ -10,7 +10,7 @@ type PageGetMultiple = (query: z.infer<typeof pagesSchema.getMultiple.query>, da
 }>;
 type PageGetSingle = (query: z.infer<typeof pagesSchema.getSingle.query>, data: {
     environment_key: string;
-    id: string;
+    id: number;
 }) => Promise<PageT>;
 type PageCreateSingle = (data: {
     userId: number;
@@ -25,7 +25,7 @@ type PageCreateSingle = (data: {
     category_ids?: Array<number>;
 }) => Promise<PageT>;
 type PageUpdateSingle = (data: {
-    id: string;
+    id: number;
     environment_key: string;
     userId: number;
     title?: string;
@@ -40,7 +40,7 @@ type PageUpdateSingle = (data: {
 }) => Promise<PageT>;
 type PageDeleteSingle = (data: {
     environment_key: string;
-    id: string;
+    id: number;
 }) => Promise<PageT>;
 type PageGetMultipleByIds = (data: {
     ids: Array<number>;

@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
-import getAll from "@services/environments/get-all";
+import environments from "@services/environments";
 
 // --------------------------------------------------
 // Controller
@@ -13,11 +13,11 @@ const getAllController: Controller<
   typeof environmentSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const environments = await getAll({});
+    const environmentsRes = await environments.getAll({});
 
     res.status(200).json(
       buildResponse(req, {
-        data: environments,
+        data: environmentsRes,
       })
     );
   } catch (error) {

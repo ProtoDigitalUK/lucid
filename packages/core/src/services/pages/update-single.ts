@@ -4,7 +4,7 @@ import Page from "@db/models/Page";
 // Schema
 import { BrickSchema } from "@schemas/bricks";
 
-interface ServiceData {
+export interface ServiceData {
   id: number;
   environment_key: string;
   userId: number;

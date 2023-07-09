@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../../schemas/media"));
-const getSingle = async (req, res, next) => {
+const media_2 = __importDefault(require("../../services/media"));
+const getSingleController = async (req, res, next) => {
     try {
-        const media = await Media_1.default.getSingle(req.params.key);
+        const media = await media_2.default.getSingle({
+            key: req.params.key,
+        });
         res.status(200).json((0, build_response_1.default)(req, {
             data: media,
         }));
@@ -19,6 +21,6 @@ const getSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: media_1.default.getSingle,
-    controller: getSingle,
+    controller: getSingleController,
 };
 //# sourceMappingURL=get-single.js.map

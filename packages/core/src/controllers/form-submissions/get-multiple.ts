@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Services
-import getMultiple from "@services/form-submissions/get-multiple";
+import formSubmissions from "@services/form-submissions";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getMultipleController: Controller<
   typeof formSubmissionsSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const submissions = await getMultiple({
+    const submissions = await formSubmissions.getMultiple({
       query: req.query,
       form_key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,

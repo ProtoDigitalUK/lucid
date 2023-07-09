@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Services
-import getSingle from "@services/collections/get-single";
+import collections from "@services/collections";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof collectionSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const collections = await getSingle({
+    const collectionsRes = await collections.getSingle({
       collection_key: req.params.collection_key,
       environment_key: req.headers["lucid-environment"] as string,
     });

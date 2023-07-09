@@ -4,13 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Form_1 = __importDefault(require("../../db/models/Form"));
 const forms_1 = __importDefault(require("../../schemas/forms"));
-const getAll = async (req, res, next) => {
+const form_1 = __importDefault(require("../../services/form"));
+const getAllController = async (req, res, next) => {
     try {
-        const forms = await Form_1.default.getAll(req.query, req.headers["lucid-environment"]);
+        const formsRes = await form_1.default.getAll({
+            query: req.query,
+            environment_key: req.headers["lucid-environment"],
+        });
         res.status(200).json((0, build_response_1.default)(req, {
-            data: forms,
+            data: formsRes,
         }));
     }
     catch (error) {
@@ -19,6 +22,6 @@ const getAll = async (req, res, next) => {
 };
 exports.default = {
     schema: forms_1.default.getAll,
-    controller: getAll,
+    controller: getAllController,
 };
 //# sourceMappingURL=get-all.js.map

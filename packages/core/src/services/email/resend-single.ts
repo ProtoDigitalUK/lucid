@@ -1,7 +1,7 @@
 // Models
 import Email from "@db/models/Email";
 
-interface ServiceData {
+export interface ServiceData {
   id: number;
 }
 

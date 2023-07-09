@@ -1,6 +1,5 @@
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
-import BrickConfig from "@db/models/BrickConfig";
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
 import { CollectionT } from "@db/models/Collection";
@@ -15,6 +14,8 @@ import BrickBuilder, {
   LinkReferenceData,
 } from "@lucid/brick-builder";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
+// Services
+import brickConfig from "@services/brick-config";
 
 // ------------------------------------
 // Interfaces
@@ -171,7 +172,7 @@ const validateBricksGroup = async (data: {
     }
 
     // Check if the brick is permitted against the envrionment and collection
-    const allowed = BrickConfig.isBrickAllowed({
+    const allowed = brickConfig.isBrickAllowed({
       key: brick.brick_key,
       type: data.type,
       environment: data.environment,
@@ -302,7 +303,7 @@ const validateBricks = async (data: {
   collection: CollectionT;
   environment: EnvironmentT;
 }) => {
-  const builderInstances = BrickConfig.getBrickConfig();
+  const builderInstances = brickConfig.getBrickConfig();
 
   // Flatten all fields and get all media and pages
   const bricksFlattened = flattenAllBricks(

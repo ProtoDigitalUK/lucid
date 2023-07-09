@@ -1,7 +1,7 @@
 // Models
 import Page from "@db/models/Page";
 
-interface ServiceData {
+export interface ServiceData {
   environment_key: string;
   title: string;
   slug: string;

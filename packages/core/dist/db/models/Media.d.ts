@@ -42,7 +42,6 @@ export default class Media {
     static getSingleById: MediaGetSingleById;
     static deleteSingle: MediaDeleteSingle;
     static updateSingle: MediaUpdateSingle;
-    static streamFile: (key: string) => Promise<import("@aws-sdk/client-s3").GetObjectCommandOutput>;
     static getMultipleByIds: MediaGetMultipleByIds;
 }
 export {};

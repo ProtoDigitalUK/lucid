@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../../schemas/form-submissions"));
-const deleteSingle = async (req, res, next) => {
+const form_submissions_2 = __importDefault(require("../../services/form-submissions"));
+const deleteSingleController = async (req, res, next) => {
     try {
-        const formSubmission = await FormSubmission_1.default.deleteSingle({
+        const formSubmission = await form_submissions_2.default.deleteSingle({
             id: parseInt(req.params.id),
             form_key: req.params.form_key,
             environment_key: req.headers["lucid-environment"],
@@ -23,6 +23,6 @@ const deleteSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: form_submissions_1.default.deleteSingle,
-    controller: deleteSingle,
+    controller: deleteSingleController,
 };
 //# sourceMappingURL=delete-single.js.map

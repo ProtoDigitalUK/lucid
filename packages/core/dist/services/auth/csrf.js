@@ -30,4 +30,9 @@ const clearCSRFToken = (res) => {
     res.clearCookie("_csrf");
 };
 exports.clearCSRFToken = clearCSRFToken;
+exports.default = {
+    generateCSRFToken: exports.generateCSRFToken,
+    verifyCSRFToken: exports.verifyCSRFToken,
+    clearCSRFToken: exports.clearCSRFToken,
+};
 //# sourceMappingURL=csrf.js.map

@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import menusSchema from "@schemas/menus";
 // Services
-import getMultiple from "@services/menu/get-multiple";
+import menus from "@services/menu";
 
 // --------------------------------------------------
 // Controller
@@ -13,16 +13,16 @@ const getMultipleController: Controller<
   typeof menusSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const menus = await getMultiple({
+    const menusRes = await menus.getMultiple({
       query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: menus.data,
+        data: menusRes.data,
         pagination: {
-          count: menus.count,
+          count: menusRes.count,
           page: req.query.page as string,
           per_page: req.query.per_page as string,
         },

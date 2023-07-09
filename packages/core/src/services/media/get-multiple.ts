@@ -4,7 +4,7 @@ import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof mediaSchema.getMultiple.query>;
 }
 

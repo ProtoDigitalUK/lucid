@@ -4,7 +4,7 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 import User from "@db/models/User";
 import UserRole from "@db/models/UserRole";
 
-interface ServiceData {
+export interface ServiceData {
   userId: number;
 }
 

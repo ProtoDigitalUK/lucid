@@ -1,0 +1,1 @@
+{"version":3,"file":"get-single.js","sourceRoot":"","sources":["../../../src/services/menu/get-single.ts"],"names":[],"mappings":";;;;;AACA,2DAAmC;AAOnC,MAAM,SAAS,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC5C,MAAM,IAAI,GAAG,MAAM,cAAI,CAAC,SAAS,CAAC;QAChC,eAAe,EAAE,IAAI,CAAC,eAAe;QACrC,EAAE,EAAE,IAAI,CAAC,EAAE;KACZ,CAAC,CAAC;IAEH,OAAO,IAAI,CAAC;AACd,CAAC,CAAC;AAEF,kBAAe,SAAS,CAAC"}

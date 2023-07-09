@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import categorySchema from "@schemas/categories";
 // Services
-import getSingle from "@services/categories/get-single";
+import categories from "@services/categories";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof categorySchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await getSingle({
+    const category = await categories.getSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
     });

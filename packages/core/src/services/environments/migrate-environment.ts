@@ -1,7 +1,7 @@
 // Models
 // import Environment from "@db/models/Environment";
 
-interface ServiceData {}
+export interface ServiceData {}
 
 const migrateEnvironment = async (data: ServiceData) => {
   return;

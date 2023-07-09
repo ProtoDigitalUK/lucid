@@ -4,7 +4,7 @@ import { LucidError } from "@utils/app/error-handler";
 import User from "@db/models/User";
 import Option from "@db/models/Option";
 
-interface ServiceData {
+export interface ServiceData {
   email: string;
   username: string;
   password: string;

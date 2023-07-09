@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import pagesSchema from "@schemas/pages";
 // Services
-import updateSingle from "@services/pages/update-single";
+import pages from "@services/pages";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const updateSingleController: Controller<
   typeof pagesSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await updateSingle({
+    const page = await pages.updateSingle({
       id: parseInt(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
       userId: req.auth.id,

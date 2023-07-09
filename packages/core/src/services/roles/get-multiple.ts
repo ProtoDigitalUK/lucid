@@ -4,7 +4,7 @@ import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof rolesSchema.getMultiple.query>;
 }
 

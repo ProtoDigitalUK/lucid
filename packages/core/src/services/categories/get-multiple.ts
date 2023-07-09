@@ -4,7 +4,7 @@ import Category from "@db/models/Category";
 // Schema
 import categorySchema from "@schemas/categories";
 
-interface ServiceData {
+export interface ServiceData {
   environment_key: string;
   query: z.infer<typeof categorySchema.getMultiple.query>;
 }

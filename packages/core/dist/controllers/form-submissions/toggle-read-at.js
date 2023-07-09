@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../../schemas/form-submissions"));
-const toggleReadAt = async (req, res, next) => {
+const form_submissions_2 = __importDefault(require("../../services/form-submissions"));
+const toggleReadAtController = async (req, res, next) => {
     try {
-        const formSubmission = await FormSubmission_1.default.toggleReadAt({
+        const formSubmission = await form_submissions_2.default.toggleReadAt({
             id: parseInt(req.params.id),
             form_key: req.params.form_key,
             environment_key: req.headers["lucid-environment"],
@@ -23,6 +23,6 @@ const toggleReadAt = async (req, res, next) => {
 };
 exports.default = {
     schema: form_submissions_1.default.toggleReadAt,
-    controller: toggleReadAt,
+    controller: toggleReadAtController,
 };
 //# sourceMappingURL=toggle-read-at.js.map

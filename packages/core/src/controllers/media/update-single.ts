@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import updateSingle from "@services/media/update-single";
+import medias from "@services/media";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const updateSingleController: Controller<
   typeof mediaSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await updateSingle({
+    const media = await medias.updateSingle({
       key: req.params.key,
       data: {
         name: req.body.name,

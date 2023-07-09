@@ -4,7 +4,7 @@ import Email from "@db/models/Email";
 // Schema
 import emailsSchema from "@schemas/email";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof emailsSchema.getMultiple.query>;
 }
 

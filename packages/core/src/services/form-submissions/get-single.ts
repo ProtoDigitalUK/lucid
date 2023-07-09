@@ -1,7 +1,7 @@
 // Models
 import FormSubmission from "@db/models/FormSubmission";
 
-interface ServiceData {
+export interface ServiceData {
   id: number;
   form_key: string;
   environment_key: string;

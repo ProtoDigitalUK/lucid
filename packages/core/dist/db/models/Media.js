@@ -339,14 +339,6 @@ Media.updateSingle = async (key, data) => {
     }
     return Media.getSingle(key);
 };
-Media.streamFile = async (key) => {
-    const S3 = await s3_client_1.default;
-    const command = new client_s3_1.GetObjectCommand({
-        Bucket: Config_1.default.media.store.bucket,
-        Key: key,
-    });
-    return S3.send(command);
-};
 Media.getMultipleByIds = async (ids) => {
     const client = await db_1.default;
     const media = await client.query({

@@ -88,7 +88,7 @@ Category.getSingle = async (environment_key, id) => {
     }
     return category.rows[0];
 };
-Category.create = async (data) => {
+Category.createSingle = async (data) => {
     const client = await db_1.default;
     await Collection_1.default.getSingle({
         collection_key: data.collection_key,
@@ -146,7 +146,7 @@ Category.create = async (data) => {
     }
     return category;
 };
-Category.update = async (environment_key, id, data) => {
+Category.updateSingle = async (environment_key, id, data) => {
     const client = await db_1.default;
     const currentCategory = await Category.getSingle(environment_key, id);
     if (data.slug) {
@@ -186,7 +186,7 @@ Category.update = async (environment_key, id, data) => {
     }
     return category.rows[0];
 };
-Category.delete = async (environment_key, id) => {
+Category.deleteSingle = async (environment_key, id) => {
     const client = await db_1.default;
     const category = await client.query({
         name: "delete-category",

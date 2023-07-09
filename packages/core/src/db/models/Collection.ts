@@ -2,7 +2,6 @@ import z from "zod";
 // Models
 import Config from "@db/models/Config";
 import Environment, { EnvironmentT } from "@db/models/Environment";
-import BrickConfig from "@db/models/BrickConfig";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 // Schema
 import collectionSchema from "@schemas/collections";
@@ -14,6 +13,8 @@ import {
 // Utils
 import { EnvironmentResT } from "@utils/environments/format-environment";
 import { LucidError } from "@utils/app/error-handler";
+// Services
+import brickConfig from "@services/brick-config";
 
 // -------------------------------------------
 // Types
@@ -80,7 +81,7 @@ export default class Collection {
       };
 
       if (query.include?.includes("bricks")) {
-        const collectionBricks = BrickConfig.getAllAllowedBricks({
+        const collectionBricks = brickConfig.getAllAllowedBricks({
           collection,
           environment,
         });
@@ -140,7 +141,7 @@ export default class Collection {
       });
     }
 
-    const collectionBricks = BrickConfig.getAllAllowedBricks({
+    const collectionBricks = brickConfig.getAllAllowedBricks({
       collection,
       environment,
     });

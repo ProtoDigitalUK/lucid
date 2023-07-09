@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import categorySchema from "@schemas/categories";
 // Serives
-import updateSingle from "@services/categories/update-single";
+import categories from "@services/categories";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const updateSingleController: Controller<
   typeof categorySchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await updateSingle({
+    const category = await categories.updateSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
       data: {

@@ -1,0 +1,1 @@
+{"version":3,"file":"get-multiple.js","sourceRoot":"","sources":["../../../src/services/roles/get-multiple.ts"],"names":[],"mappings":";;;;;AAEA,2DAAmC;AAQnC,MAAM,WAAW,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC9C,MAAM,KAAK,GAAG,MAAM,cAAI,CAAC,WAAW,CAAC,IAAI,CAAC,KAAK,CAAC,CAAC;IAEjD,OAAO,KAAK,CAAC;AACf,CAAC,CAAC;AAEF,kBAAe,WAAW,CAAC"}

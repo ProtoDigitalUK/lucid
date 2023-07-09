@@ -51,4 +51,9 @@ const clearJWT = (res) => {
     res.clearCookie("_jwt");
 };
 exports.clearJWT = clearJWT;
+exports.default = {
+    generateJWT: exports.generateJWT,
+    verifyJWT: exports.verifyJWT,
+    clearJWT: exports.clearJWT,
+};
 //# sourceMappingURL=jwt.js.map

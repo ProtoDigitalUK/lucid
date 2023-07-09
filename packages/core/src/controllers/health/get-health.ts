@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import healthSchema from "@schemas/health";
 // Serives
-import getHealth from "@services/health/get-health";
+import health from "@services/health";
 
 // --------------------------------------------------
 // Controller
@@ -13,11 +13,11 @@ const getHealthController: Controller<
   typeof healthSchema.getHealth.query
 > = async (req, res, next) => {
   try {
-    const health = await getHealth({});
+    const healthRes = await health.getHealth({});
 
     res.status(200).json(
       buildResponse(req, {
-        data: health,
+        data: healthRes,
       })
     );
   } catch (error) {

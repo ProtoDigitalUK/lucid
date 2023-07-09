@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
-import deleteSingle from "@services/environments/delete-single";
+import environments from "@services/environments";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const deleteSingleController: Controller<
   typeof environmentSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await deleteSingle({
+    const environment = await environments.deleteSingle({
       key: req.params.key,
     });
 

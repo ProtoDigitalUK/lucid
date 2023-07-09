@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import categorySchema from "@schemas/categories";
 // Serives
-import deleteSingle from "@services/categories/delete-single";
+import categories from "@services/categories";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const deleteSingleController: Controller<
   typeof categorySchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const category = await deleteSingle({
+    const category = await categories.deleteSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
     });

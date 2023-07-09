@@ -139,7 +139,7 @@ Page.getSingle = async (query, data) => {
         exclude: undefined,
         filter: {
             data: {
-                id: data.id,
+                id: data.id.toString(),
                 environment_key: data.environment_key,
             },
             meta: {
@@ -261,8 +261,7 @@ Page.createSingle = async (data) => {
 };
 Page.updateSingle = async (data) => {
     const client = await db_1.default;
-    const pageId = parseInt(data.id);
-    const currentPage = await Page.pageExists(pageId, data.environment_key);
+    const currentPage = await Page.pageExists(data.id, data.environment_key);
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
@@ -326,7 +325,7 @@ Page.updateSingle = async (data) => {
     });
     const page = await client.query({
         text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
-        values: [...values.value, pageId],
+        values: [...values.value, data.id],
     });
     if (!page.rows[0]) {
         throw new error_handler_1.LucidError({
@@ -355,11 +354,10 @@ Page.updateSingle = async (data) => {
 };
 Page.deleteSingle = async (data) => {
     const client = await db_1.default;
-    const pageId = parseInt(data.id);
-    await Page.pageExists(pageId, data.environment_key);
+    await Page.pageExists(data.id, data.environment_key);
     const page = await client.query({
         text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
-        values: [pageId],
+        values: [data.id],
     });
     if (!page.rows[0]) {
         throw new error_handler_1.LucidError({

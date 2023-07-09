@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import menusSchema from "@schemas/menus";
 // Services
-import updateSingle from "@services/menu/update-single";
+import menus from "@services/menu";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const updateSingleController: Controller<
   typeof menusSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const menu = await updateSingle({
+    const menu = await menus.updateSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
 

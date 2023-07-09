@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import menusSchema from "@schemas/menus";
 // Services
-import deleteSingle from "@services/menu/delete-single";
+import menus from "@services/menu";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const deleteSingleController: Controller<
   typeof menusSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const menu = await deleteSingle({
+    const menu = await menus.deleteSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
     });

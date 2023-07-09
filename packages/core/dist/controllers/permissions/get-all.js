@@ -4,12 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const RolePermission_1 = __importDefault(require("../../db/models/RolePermission"));
 const permissions_1 = __importDefault(require("../../schemas/permissions"));
-const getAll = async (req, res, next) => {
+const permissions_2 = __importDefault(require("../../services/permissions"));
+const getAllController = async (req, res, next) => {
     try {
+        const permissionsRes = await permissions_2.default.getAll({});
         res.status(200).json((0, build_response_1.default)(req, {
-            data: RolePermission_1.default.getValidPermissions,
+            data: permissionsRes,
         }));
     }
     catch (error) {
@@ -18,6 +19,6 @@ const getAll = async (req, res, next) => {
 };
 exports.default = {
     schema: permissions_1.default.getAll,
-    controller: getAll,
+    controller: getAllController,
 };
 //# sourceMappingURL=get-all.js.map

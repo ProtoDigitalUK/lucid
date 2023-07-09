@@ -11,9 +11,9 @@ var _a, _Collection_filterCollections, _Collection_filterEnvironmentCollections;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
 const Environment_1 = __importDefault(require("../models/Environment"));
-const BrickConfig_1 = __importDefault(require("../models/BrickConfig"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const brick_config_1 = __importDefault(require("../../services/brick-config"));
 class Collection {
 }
 _a = Collection;
@@ -34,7 +34,7 @@ Collection.getAll = async (query, environment_key) => {
             type: collection.type,
         };
         if (query.include?.includes("bricks")) {
-            const collectionBricks = BrickConfig_1.default.getAllAllowedBricks({
+            const collectionBricks = brick_config_1.default.getAllAllowedBricks({
                 collection,
                 environment,
             });
@@ -80,7 +80,7 @@ Collection.getSingle = async (props) => {
             status: 404,
         });
     }
-    const collectionBricks = BrickConfig_1.default.getAllAllowedBricks({
+    const collectionBricks = brick_config_1.default.getAllAllowedBricks({
         collection,
         environment,
     });

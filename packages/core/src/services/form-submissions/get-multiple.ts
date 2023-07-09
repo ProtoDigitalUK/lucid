@@ -4,7 +4,7 @@ import FormSubmission from "@db/models/FormSubmission";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof formSubmissionsSchema.getMultiple.query>;
   form_key: string;
   environment_key: string;

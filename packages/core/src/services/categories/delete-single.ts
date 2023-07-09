@@ -1,7 +1,7 @@
 // Models
 import Category from "@db/models/Category";
 
-interface ServiceData {
+export interface ServiceData {
   id: number;
   environment_key: string;
 }

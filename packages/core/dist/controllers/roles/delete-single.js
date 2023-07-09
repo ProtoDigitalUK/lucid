@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Role_1 = __importDefault(require("../../db/models/Role"));
 const roles_1 = __importDefault(require("../../schemas/roles"));
-const deleteSingle = async (req, res, next) => {
+const roles_2 = __importDefault(require("../../services/roles"));
+const deleteSingleController = async (req, res, next) => {
     try {
-        const role = await Role_1.default.deleteSingle(parseInt(req.params.id));
+        const role = await roles_2.default.deleteSingle({
+            id: parseInt(req.params.id),
+        });
         res.status(200).json((0, build_response_1.default)(req, {
             data: role,
         }));
@@ -19,6 +21,6 @@ const deleteSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: roles_1.default.deleteSingle,
-    controller: deleteSingle,
+    controller: deleteSingleController,
 };
 //# sourceMappingURL=delete-single.js.map

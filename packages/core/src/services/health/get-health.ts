@@ -1,4 +1,4 @@
-interface ServiceData {}
+export interface ServiceData {}
 
 const getHealth = async (data: ServiceData) => {
   return {

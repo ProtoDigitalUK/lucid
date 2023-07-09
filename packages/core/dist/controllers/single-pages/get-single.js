@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const SinglePage_1 = __importDefault(require("../../db/models/SinglePage"));
 const single_page_1 = __importDefault(require("../../schemas/single-page"));
-const getSingle = async (req, res, next) => {
+const single_pages_1 = __importDefault(require("../../services/single-pages"));
+const getSingleController = async (req, res, next) => {
     try {
-        const page = await SinglePage_1.default.getSingle({
+        const singlepage = await single_pages_1.default.getSingle({
             environment_key: req.headers["lucid-environment"],
             collection_key: req.params.collection_key,
         });
         res.status(200).json((0, build_response_1.default)(req, {
-            data: page,
+            data: singlepage,
         }));
     }
     catch (error) {
@@ -22,6 +22,6 @@ const getSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: single_page_1.default.getSingle,
-    controller: getSingle,
+    controller: getSingleController,
 };
 //# sourceMappingURL=get-single.js.map

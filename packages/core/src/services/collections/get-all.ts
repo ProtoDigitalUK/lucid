@@ -4,7 +4,7 @@ import Collection from "@db/models/Collection";
 // Schema
 import collectionSchema from "@schemas/collections";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof collectionSchema.getAll.query>;
   environment_key: string;
 }

@@ -1,7 +1,7 @@
 // Models
 import Menu from "@db/models/Menu";
 
-interface ServiceData {
+export interface ServiceData {
   environment_key: string;
   id: number;
 }

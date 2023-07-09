@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import getMultiple from "@services/media/get-multiple";
+import medias from "@services/media";
 
 // --------------------------------------------------
 // Controller
@@ -13,15 +13,15 @@ const getMultipleController: Controller<
   typeof mediaSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const medias = await getMultiple({
+    const mediasRes = await medias.getMultiple({
       query: req.query,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: medias.data,
+        data: mediasRes.data,
         pagination: {
-          count: medias.count,
+          count: mediasRes.count,
           page: req.query.page as string,
           per_page: req.query.per_page as string,
         },

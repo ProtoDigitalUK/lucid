@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Services
-import getSingle from "@services/form-submissions/get-single";
+import formSubmissions from "@services/form-submissions";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof formSubmissionsSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const formSubmission = await getSingle({
+    const formSubmission = await formSubmissions.getSingle({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,

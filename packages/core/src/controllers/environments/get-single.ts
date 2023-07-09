@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
-import getSingle from "@services/environments/get-single";
+import environments from "@services/environments";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof environmentSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await getSingle({
+    const environment = await environments.getSingle({
       key: req.params.key,
     });
 

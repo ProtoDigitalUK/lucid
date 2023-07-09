@@ -3,7 +3,7 @@ import { LucidError } from "@utils/app/error-handler";
 // Models
 import User from "@db/models/User";
 
-interface ServiceData {
+export interface ServiceData {
   username: string;
   password: string;
 }

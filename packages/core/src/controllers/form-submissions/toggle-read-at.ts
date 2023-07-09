@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Services
-import toggleReadAt from "@services/form-submissions/toggle-read-at";
+import formSubmissions from "@services/form-submissions";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const toggleReadAtController: Controller<
   typeof formSubmissionsSchema.toggleReadAt.query
 > = async (req, res, next) => {
   try {
-    const formSubmission = await toggleReadAt({
+    const formSubmission = await formSubmissions.toggleReadAt({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,

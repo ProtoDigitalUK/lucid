@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import deleteSingle from "@services/media/delete-single";
+import medias from "@services/media";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const deleteSingleController: Controller<
   typeof mediaSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await deleteSingle({
+    const media = await medias.deleteSingle({
       key: req.params.key,
     });
 

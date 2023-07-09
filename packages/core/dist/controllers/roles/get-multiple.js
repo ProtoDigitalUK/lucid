@@ -4,15 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Role_1 = __importDefault(require("../../db/models/Role"));
 const roles_1 = __importDefault(require("../../schemas/roles"));
-const getMultiple = async (req, res, next) => {
+const roles_2 = __importDefault(require("../../services/roles"));
+const getMultipleController = async (req, res, next) => {
     try {
-        const roles = await Role_1.default.getMultiple(req.query);
+        const rolesRes = await roles_2.default.getMultiple({
+            query: req.query,
+        });
         res.status(200).json((0, build_response_1.default)(req, {
-            data: roles.data,
+            data: rolesRes.data,
             pagination: {
-                count: roles.count,
+                count: rolesRes.count,
                 page: req.query.page,
                 per_page: req.query.per_page,
             },
@@ -24,6 +26,6 @@ const getMultiple = async (req, res, next) => {
 };
 exports.default = {
     schema: roles_1.default.getMultiple,
-    controller: getMultiple,
+    controller: getMultipleController,
 };
 //# sourceMappingURL=get-multiple.js.map

@@ -48,9 +48,7 @@ Environment.getSingle = async (key) => {
 };
 Environment.upsertSingle = async (data, create) => {
     const client = await db_1.default;
-    const key = create
-        ? (0, slugify_1.default)(data.key, { lower: true, strict: true })
-        : data.key;
+    const key = create ? (0, slugify_1.default)(data.key, { lower: true }) : data.key;
     if (!create) {
         await Environment.getSingle(key);
     }

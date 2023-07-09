@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../app/error-handler");
-const BrickConfig_1 = __importDefault(require("../../db/models/BrickConfig"));
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const Page_1 = __importDefault(require("../../db/models/Page"));
+const brick_config_1 = __importDefault(require("../../services/brick-config"));
 const flattenAllBricks = (builder_bricks, fixed_bricks) => {
     if (!builder_bricks && !fixed_bricks)
         return {
@@ -97,7 +97,7 @@ const validateBricksGroup = async (data) => {
                 status: 404,
             });
         }
-        const allowed = BrickConfig_1.default.isBrickAllowed({
+        const allowed = brick_config_1.default.isBrickAllowed({
             key: brick.brick_key,
             type: data.type,
             environment: data.environment,
@@ -200,7 +200,7 @@ const getAllPages = async (fields, environment_key) => {
     }
 };
 const validateBricks = async (data) => {
-    const builderInstances = BrickConfig_1.default.getBrickConfig();
+    const builderInstances = brick_config_1.default.getBrickConfig();
     const bricksFlattened = flattenAllBricks(data.builder_bricks, data.fixed_bricks);
     const pageMediaPromises = await Promise.all([
         getAllMedia(bricksFlattened.flat_fields),

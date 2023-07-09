@@ -1,0 +1,1 @@
+{"version":3,"file":"get-multiple.js","sourceRoot":"","sources":["../../../src/services/categories/get-multiple.ts"],"names":[],"mappings":";;;;;AAEA,mEAA2C;AAS3C,MAAM,WAAW,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC9C,MAAM,UAAU,GAAG,MAAM,kBAAQ,CAAC,WAAW,CAC3C,IAAI,CAAC,eAAe,EACpB,IAAI,CAAC,KAAK,CACX,CAAC;IAEF,OAAO,UAAU,CAAC;AACpB,CAAC,CAAC;AAEF,kBAAe,WAAW,CAAC"}

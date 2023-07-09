@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import getSingle from "@services/media/get-single";
+import medias from "@services/media";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof mediaSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await getSingle({
+    const media = await medias.getSingle({
       key: req.params.key,
     });
 

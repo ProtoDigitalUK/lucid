@@ -1,7 +1,7 @@
 // Models
 import Role from "@db/models/Role";
 
-interface ServiceData {
+export interface ServiceData {
   name: string;
   permission_groups: Array<{
     environment_key?: string;

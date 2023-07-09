@@ -1,0 +1,1 @@
+{"version":3,"file":"get-single.d.ts","sourceRoot":"","sources":["../../../src/services/brick-config/get-single.ts"],"names":[],"mappings":"AAKA,MAAM,WAAW,WAAW;IAC1B,SAAS,EAAE,MAAM,CAAC;IAClB,cAAc,EAAE,MAAM,CAAC;IACvB,eAAe,EAAE,MAAM,CAAC;CACzB;AAED,QAAA,MAAM,SAAS,SAAgB,WAAW,2DAoBzC,CAAC;AAEF,eAAe,SAAS,CAAC"}

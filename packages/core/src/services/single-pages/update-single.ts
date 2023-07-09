@@ -4,7 +4,7 @@ import SinglePage from "@db/models/SinglePage";
 // Schema
 import { BrickSchema } from "@schemas/bricks";
 
-interface ServiceData {
+export interface ServiceData {
   environment_key: string;
   collection_key: string;
   userId: number;

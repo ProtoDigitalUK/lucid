@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import rolesSchema from "@schemas/roles";
 // Services
-import deleteSingle from "@services/roles/delete-single";
+import roles from "@services/roles";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const deleteSingleController: Controller<
   typeof rolesSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await deleteSingle({
+    const role = await roles.deleteSingle({
       id: parseInt(req.params.id),
     });
 

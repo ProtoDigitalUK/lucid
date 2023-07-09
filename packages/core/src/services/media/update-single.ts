@@ -2,7 +2,7 @@ import fileUpload from "express-fileupload";
 // Models
 import Media from "@db/models/Media";
 
-interface ServiceData {
+export interface ServiceData {
   key: string;
   data: {
     name?: string;

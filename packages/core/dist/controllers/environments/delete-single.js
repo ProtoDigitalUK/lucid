@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const environments_1 = __importDefault(require("../../schemas/environments"));
-const deleteSingle = async (req, res, next) => {
+const environments_2 = __importDefault(require("../../services/environments"));
+const deleteSingleController = async (req, res, next) => {
     try {
-        const environment = await Environment_1.default.deleteSingle(req.params.key);
+        const environment = await environments_2.default.deleteSingle({
+            key: req.params.key,
+        });
         res.status(200).json((0, build_response_1.default)(req, {
             data: environment,
         }));
@@ -19,6 +21,6 @@ const deleteSingle = async (req, res, next) => {
 };
 exports.default = {
     schema: environments_1.default.deleteSingle,
-    controller: deleteSingle,
+    controller: deleteSingleController,
 };
 //# sourceMappingURL=delete-single.js.map

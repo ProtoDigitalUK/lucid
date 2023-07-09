@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import rolesSchema from "@schemas/roles";
 // Services
-import createSingle from "@services/roles/create-single";
+import roles from "@services/roles";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const createSingleController: Controller<
   typeof rolesSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await createSingle({
+    const role = await roles.createSingle({
       name: req.body.name,
       permission_groups: req.body.permission_groups,
     });

@@ -1,7 +1,7 @@
 // Models
 import Collection from "@db/models/Collection";
 
-interface ServiceData {
+export interface ServiceData {
   collection_key: string;
   environment_key: string;
 }

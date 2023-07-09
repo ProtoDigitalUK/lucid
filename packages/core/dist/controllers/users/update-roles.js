@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
-const UserRole_1 = __importDefault(require("../../db/models/UserRole"));
 const users_1 = __importDefault(require("../../schemas/users"));
-const updateRoles = async (req, res, next) => {
+const users_2 = __importDefault(require("../../services/users"));
+const updateRolesController = async (req, res, next) => {
     try {
-        const userRoles = await UserRole_1.default.update(req.params.id, {
+        const userRoles = await users_2.default.updateRoles({
+            user_id: parseInt(req.params.id),
             role_ids: req.body.role_ids,
         });
         res.status(200).json((0, build_response_1.default)(req, {
@@ -21,6 +22,6 @@ const updateRoles = async (req, res, next) => {
 };
 exports.default = {
     schema: users_1.default.updateRoles,
-    controller: updateRoles,
+    controller: updateRolesController,
 };
 //# sourceMappingURL=update-roles.js.map

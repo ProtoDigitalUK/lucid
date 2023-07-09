@@ -3,7 +3,7 @@ import buildResponse from "@utils/controllers/build-response";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Serives
-import getAll from "@services/collections/get-all";
+import collections from "@services/collections";
 
 // --------------------------------------------------
 // Controller
@@ -13,14 +13,14 @@ const getAllController: Controller<
   typeof collectionSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const collections = await getAll({
+    const collectionsRes = await collections.getAll({
       query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: collections,
+        data: collectionsRes,
       })
     );
   } catch (error) {

@@ -5,12 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
 const auth_1 = __importDefault(require("../../schemas/auth"));
-const jwt_1 = require("../../services/auth/jwt");
-const csrf_1 = require("../../services/auth/csrf");
+const auth_2 = __importDefault(require("../../services/auth"));
 const logout = async (req, res, next) => {
     try {
-        (0, jwt_1.clearJWT)(res);
-        (0, csrf_1.clearCSRFToken)(res);
+        auth_2.default.jwt.clearJWT(res);
+        auth_2.default.csrf.clearCSRFToken(res);
         res.status(200).json((0, build_response_1.default)(req, {
             data: {
                 message: "Logged out successfully",

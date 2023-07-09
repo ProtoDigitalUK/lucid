@@ -4,7 +4,7 @@ import Page from "@db/models/Page";
 // Schema
 import pagesSchema from "@schemas/pages";
 
-interface ServiceData {
+export interface ServiceData {
   query: z.infer<typeof pagesSchema.getMultiple.query>;
   environment_key: string;
 }

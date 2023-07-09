@@ -1,0 +1,1 @@
+{"version":3,"file":"update-roles.js","sourceRoot":"","sources":["../../../src/services/users/update-roles.ts"],"names":[],"mappings":";;;;;AACA,mEAA2C;AAO3C,MAAM,WAAW,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC9C,MAAM,SAAS,GAAG,MAAM,kBAAQ,CAAC,MAAM,CAAC,IAAI,CAAC,OAAO,EAAE;QACpD,QAAQ,EAAE,IAAI,CAAC,QAAQ;KACxB,CAAC,CAAC;IACH,OAAO,SAAS,CAAC;AACnB,CAAC,CAAC;AAEF,kBAAe,WAAW,CAAC"}
