@@ -162,6 +162,44 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Register Super Admin",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/register-superadmin",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register-superadmin"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -2218,62 +2256,6 @@
 			]
 		},
 		{
-			"name": "CDN",
-			"item": [
-				{
-					"name": "Stream Media",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Rum Ham",
-									"type": "text"
-								},
-								{
-									"key": "alt",
-									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "file",
-									"type": "file",
-									"src": [
-										"/C:/Users/wyall/Desktop/rumham.jpg",
-										"/C:/Users/wyall/Desktop/rumham2.jpg"
-									]
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/cdn/rum-ham-1688492181638",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"cdn",
-								"rum-ham-1688492181638"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Users",
 			"item": [
 				{
@@ -2289,7 +2271,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+							"raw": "{\r\n    \"role_ids\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2356,17 +2338,104 @@
 			"item": []
 		},
 		{
-			"name": "Example Custom Route",
+			"name": "Public",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "_csrf",
+						"value": "{{CSRF}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Rum Ham",
+							"type": "text"
+						},
+						{
+							"key": "alt",
+							"value": "A ham baked in rum, floating on the ocean surface",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": [
+								"/C:/Users/wyall/Desktop/rumham.jpg",
+								"/C:/Users/wyall/Desktop/rumham2.jpg"
+							]
+						}
+					]
+				},
 				"url": {
-					"raw": "{{BASE_URL}}/test",
+					"raw": "{{BASE_URL}}/api/public/rumham.jpg",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"test"
+						"api",
+						"public",
+						"rumham.jpg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stream Media",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "_csrf",
+						"value": "{{CSRF}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Rum Ham",
+							"type": "text"
+						},
+						{
+							"key": "alt",
+							"value": "A ham baked in rum, floating on the ocean surface",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": [
+								"/C:/Users/wyall/Desktop/rumham.jpg",
+								"/C:/Users/wyall/Desktop/rumham2.jpg"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/media/rum-ham-1688821181131",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"media",
+						"rum-ham-1688821181131"
 					]
 				}
 			},
