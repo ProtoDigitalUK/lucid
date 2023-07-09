@@ -8,7 +8,7 @@ import { LucidError } from "@utils/app/error-handler";
 // -------------------------------------------
 // Types
 type UserRoleUpdate = (
-  id: string,
+  id: number,
   data: {
     role_ids: number[];
   }

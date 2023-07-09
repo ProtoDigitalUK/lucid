@@ -1,19 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import UserRole from "@db/models/UserRole";
 // Schema
 import usersSchema from "@schemas/users";
+// Services
+import updateRoles from "@services/users/update-roles";
 
 // --------------------------------------------------
 // Controller
-const updateRoles: Controller<
+const updateRolesController: Controller<
   typeof usersSchema.updateRoles.params,
   typeof usersSchema.updateRoles.body,
   typeof usersSchema.updateRoles.query
 > = async (req, res, next) => {
   try {
-    const userRoles = await UserRole.update(req.params.id, {
+    const userRoles = await updateRoles({
+      user_id: parseInt(req.params.id),
       role_ids: req.body.role_ids,
     });
 
@@ -31,5 +32,5 @@ const updateRoles: Controller<
 // Export
 export default {
   schema: usersSchema.updateRoles,
-  controller: updateRoles,
+  controller: updateRolesController,
 };
