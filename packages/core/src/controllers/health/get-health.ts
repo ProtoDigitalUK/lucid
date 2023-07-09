@@ -2,21 +2,22 @@
 import buildResponse from "@utils/controllers/build-response";
 // Schema
 import healthSchema from "@schemas/health";
+// Serives
+import getHealth from "@services/health/get-health";
 
 // --------------------------------------------------
 // Controller
-const getHealth: Controller<
+const getHealthController: Controller<
   typeof healthSchema.getHealth.params,
   typeof healthSchema.getHealth.body,
   typeof healthSchema.getHealth.query
 > = async (req, res, next) => {
   try {
+    const health = await getHealth({});
+
     res.status(200).json(
       buildResponse(req, {
-        data: {
-          api: "ok",
-          db: "ok",
-        },
+        data: health,
       })
     );
   } catch (error) {
@@ -28,5 +29,5 @@ const getHealth: Controller<
 // Export
 export default {
   schema: healthSchema.getHealth,
-  controller: getHealth,
+  controller: getHealthController,
 };
