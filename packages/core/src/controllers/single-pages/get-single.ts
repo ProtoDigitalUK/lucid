@@ -1,26 +1,26 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import SinglePage from "@db/models/SinglePage";
 // Schema
 import singlePageSchema from "@schemas/single-page";
+// Services
+import getSingle from "@services/single-pages/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof singlePageSchema.getSingle.params,
   typeof singlePageSchema.getSingle.body,
   typeof singlePageSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await SinglePage.getSingle({
+    const singlepage = await getSingle({
       environment_key: req.headers["lucid-environment"] as string,
       collection_key: req.params.collection_key,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: page,
+        data: singlepage,
       })
     );
   } catch (error) {
@@ -32,5 +32,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: singlePageSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };

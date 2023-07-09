@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import SinglePage from "@db/models/SinglePage";
 // Schema
 import singlePageSchema from "@schemas/single-page";
+// Services
+import updateSingle from "@services/single-pages/update-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof singlePageSchema.updateSingle.params,
   typeof singlePageSchema.updateSingle.body,
   typeof singlePageSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await SinglePage.updateSingle({
+    const singlepage = await updateSingle({
       userId: req.auth.id,
       environment_key: req.headers["lucid-environment"] as string,
       collection_key: req.params.collection_key,
@@ -23,7 +23,7 @@ const updateSingle: Controller<
 
     res.status(200).json(
       buildResponse(req, {
-        data: page,
+        data: singlepage,
       })
     );
   } catch (error) {
@@ -35,5 +35,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: singlePageSchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };
