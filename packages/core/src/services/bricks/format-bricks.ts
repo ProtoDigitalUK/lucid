@@ -28,7 +28,7 @@ export interface BrickResponseT {
       | LinkValueT
       | MediaValueT
       | PageLinkValueT;
-    items?: Array<BrickResponseT["fields"][0]>;
+    items?: Array<Array<BrickResponseT["fields"][0]>>;
   }>;
 }
 
@@ -157,48 +157,88 @@ const buildFieldTree = (
   );
   const basicFieldTree = builderInstance.basicFieldTree;
 
-  const buildFields = (fields: CustomField[]): BrickResponseT["fields"] => {
-    const fieldObjs: BrickResponseT["fields"] = [];
-    fields.forEach((field) => {
-      // find the corresponding field in our brick fields
-      const brickField = brickFields.find((bField) => bField.key === field.key);
+  const fieldRes = buildFields(brickFields, basicFieldTree);
+  return fieldRes;
+};
 
-      const { value } = specificFieldValues(field.type, field, brickField);
+const buildFields = (
+  brickFields: CollectionBrickFieldsT[],
+  fields: CustomField[]
+): BrickResponseT["fields"] => {
+  const fieldObjs: BrickResponseT["fields"] = [];
+  fields.forEach((field) => {
+    // find the corresponding field in our brick fields
+    const brickField = brickFields.find((bField) => bField.key === field.key);
 
-      // if a field doesn't exist in the brick fields, use the default value from the instance
-      if (!brickField) {
+    const { value } = specificFieldValues(field.type, field, brickField);
+
+    // if a field doesn't exist in the brick fields, use the default value from the instance
+    if (!brickField) {
+      const fieldObj: BrickResponseT["fields"][0] = {
+        fields_id: -1, // use a sentinel value for non-existing fields
+        key: field.key,
+        type: field.type as FieldTypes,
+      };
+      if (value !== null) fieldObj.value = value;
+      fieldObjs.push(fieldObj);
+    } else {
+      // if the field is a repeater, call buildFieldTree recursively on its fields
+      if (field.type === "repeater") {
+        fieldObjs.push({
+          fields_id: brickField.fields_id,
+          key: brickField.key,
+          type: brickField.type,
+          items: buildFieldGroups(brickFields, field.fields || []),
+        });
+      } else {
+        // add the field to the response
         const fieldObj: BrickResponseT["fields"][0] = {
-          fields_id: -1, // use a sentinel value for non-existing fields
-          key: field.key,
-          type: field.type as FieldTypes,
+          fields_id: brickField.fields_id,
+          key: brickField.key,
+          type: brickField.type,
         };
         if (value !== null) fieldObj.value = value;
         fieldObjs.push(fieldObj);
-      } else {
-        // if the field is a repeater, call buildFieldTree recursively on its fields
-        if (field.type === "repeater") {
-          fieldObjs.push({
-            fields_id: brickField.fields_id,
-            key: brickField.key,
-            type: brickField.type,
-            items: buildFields(field.fields || []),
-          });
-        } else {
-          // add the field to the response
-          const fieldObj: BrickResponseT["fields"][0] = {
-            fields_id: brickField.fields_id,
-            key: brickField.key,
-            type: brickField.type,
-          };
-          if (value !== null) fieldObj.value = value;
-          fieldObjs.push(fieldObj);
-        }
       }
-    });
-    return fieldObjs;
-  };
-  const fieldRes = buildFields(basicFieldTree);
-  return fieldRes;
+    }
+  });
+  return fieldObjs;
+};
+
+// Determine max groups in repeater
+const buildFieldGroups = (
+  data: CollectionBrickFieldsT[],
+  fields: CustomField[]
+) => {
+  // Group data by group_position
+  const groupMap = new Map<number | null, CollectionBrickFieldsT[]>();
+  let maxGroupPosition = 0;
+
+  for (const datum of data) {
+    if (datum.group_position !== null) {
+      const group = groupMap.get(datum.group_position) || [];
+      group.push(datum);
+      groupMap.set(datum.group_position, group);
+      maxGroupPosition = Math.max(maxGroupPosition, datum.group_position);
+    }
+  }
+
+  // Convert each group to the desired output format
+  const output: BrickResponseT["fields"][0]["items"] = [];
+  for (let i = 1; i <= maxGroupPosition; i++) {
+    const group = groupMap.get(i) || [];
+    const outputGroup = buildFields(group, fields);
+    output.push(outputGroup);
+  }
+
+  // Handle data without a group_position
+  const grouplessData = groupMap.get(null) || [];
+  if (grouplessData.length > 0) {
+    const lastGroup = output[output.length - 1];
+    lastGroup.push(...buildFields(grouplessData, fields));
+  }
+
+  return output;
 };
 
 // -------------------------------------------
