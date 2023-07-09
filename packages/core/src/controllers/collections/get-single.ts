@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Collection from "@db/models/Collection";
 // Schema
 import collectionSchema from "@schemas/collections";
+// Services
+import getSingle from "@services/collections/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof collectionSchema.getSingle.params,
   typeof collectionSchema.getSingle.body,
   typeof collectionSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const collections = await Collection.getSingle({
+    const collections = await getSingle({
       collection_key: req.params.collection_key,
       environment_key: req.headers["lucid-environment"] as string,
     });
@@ -32,5 +32,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: collectionSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };
