@@ -1,28 +1,28 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Environment from "@db/models/Environment";
 // Schema
 import environmentSchema from "@schemas/environments";
+// Services
+import upsertSingle from "@services/environments/upsert-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof environmentSchema.updateSingle.params,
   typeof environmentSchema.updateSingle.body,
   typeof environmentSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await Environment.upsertSingle(
-      {
+    const environment = await upsertSingle({
+      data: {
         key: req.params.key,
         title: undefined,
         assigned_bricks: req.body.assigned_bricks,
         assigned_collections: req.body.assigned_collections,
         assigned_forms: req.body.assigned_forms,
       },
-      false
-    );
+      create: false,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -38,5 +38,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: environmentSchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };

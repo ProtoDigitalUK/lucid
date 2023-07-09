@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Environment from "@db/models/Environment";
 // Schema
 import environmentSchema from "@schemas/environments";
+// Services
+import deleteSingle from "@services/environments/delete-single";
 
 // --------------------------------------------------
 // Controller
-const deleteSingle: Controller<
+const deleteSingleController: Controller<
   typeof environmentSchema.deleteSingle.params,
   typeof environmentSchema.deleteSingle.body,
   typeof environmentSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await Environment.deleteSingle(req.params.key);
+    const environment = await deleteSingle({
+      key: req.params.key,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const deleteSingle: Controller<
 // Export
 export default {
   schema: environmentSchema.deleteSingle,
-  controller: deleteSingle,
+  controller: deleteSingleController,
 };

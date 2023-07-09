@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Environment from "@db/models/Environment";
 // Schema
 import environmentSchema from "@schemas/environments";
+// Services
+import getSingle from "@services/environments/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof environmentSchema.getSingle.params,
   typeof environmentSchema.getSingle.body,
   typeof environmentSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await Environment.getSingle(req.params.key);
+    const environment = await getSingle({
+      key: req.params.key,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: environmentSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };
