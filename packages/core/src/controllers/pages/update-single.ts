@@ -1,20 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Page from "@db/models/Page";
 // Schema
 import pagesSchema from "@schemas/pages";
+// Services
+import updateSingle from "@services/pages/update-single";
 
 // --------------------------------------------------
 // Controller
-const updateSingle: Controller<
+const updateSingleController: Controller<
   typeof pagesSchema.updateSingle.params,
   typeof pagesSchema.updateSingle.body,
   typeof pagesSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.updateSingle({
-      id: req.params.id,
+    const page = await updateSingle({
+      id: parseInt(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
       userId: req.auth.id,
 
@@ -43,5 +43,5 @@ const updateSingle: Controller<
 // Export
 export default {
   schema: pagesSchema.updateSingle,
-  controller: updateSingle,
+  controller: updateSingleController,
 };

@@ -1,20 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Page from "@db/models/Page";
 // Schema
 import pagesSchema from "@schemas/pages";
+// Services
+import deleteSingle from "@services/pages/delete-single";
 
 // --------------------------------------------------
 // Controller
-const deleteSingle: Controller<
+const deleteSingleController: Controller<
   typeof pagesSchema.deleteSingle.params,
   typeof pagesSchema.deleteSingle.body,
   typeof pagesSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.deleteSingle({
-      id: req.params.id,
+    const page = await deleteSingle({
+      id: parseInt(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
     });
 
@@ -32,5 +32,5 @@ const deleteSingle: Controller<
 // Export
 export default {
   schema: pagesSchema.deleteSingle,
-  controller: deleteSingle,
+  controller: deleteSingleController,
 };

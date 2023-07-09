@@ -1,21 +1,22 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Page from "@db/models/Page";
 // Schema
 import pagesSchema from "@schemas/pages";
+// Services
+import getSingle from "@services/pages/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof pagesSchema.getSingle.params,
   typeof pagesSchema.getSingle.body,
   typeof pagesSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.getSingle(req.query, {
+    const page = await getSingle({
+      query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
-      id: req.params.id,
+      id: parseInt(req.params.id),
     });
 
     res.status(200).json(
@@ -32,5 +33,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: pagesSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };

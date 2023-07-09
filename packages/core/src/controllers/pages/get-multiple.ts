@@ -1,19 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Page from "@db/models/Page";
 // Schema
 import pagesSchema from "@schemas/pages";
+// Services
+import getMultiple from "@services/pages/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof pagesSchema.getMultiple.params,
   typeof pagesSchema.getMultiple.body,
   typeof pagesSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const pages = await Page.getMultiple(req.query, {
+    const pages = await getMultiple({
+      query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
     });
 
@@ -36,5 +37,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: pagesSchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };

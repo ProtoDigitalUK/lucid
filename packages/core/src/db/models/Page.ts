@@ -31,7 +31,7 @@ type PageGetSingle = (
   query: z.infer<typeof pagesSchema.getSingle.query>,
   data: {
     environment_key: string;
-    id: string;
+    id: number;
   }
 ) => Promise<PageT>;
 
@@ -49,7 +49,7 @@ type PageCreateSingle = (data: {
 }) => Promise<PageT>;
 
 type PageUpdateSingle = (data: {
-  id: string;
+  id: number;
   environment_key: string;
   userId: number;
 
@@ -66,7 +66,7 @@ type PageUpdateSingle = (data: {
 
 type PageDeleteSingle = (data: {
   environment_key: string;
-  id: string;
+  id: number;
 }) => Promise<PageT>;
 
 type PageGetMultipleByIds = (data: {
@@ -232,7 +232,7 @@ export default class Page {
       exclude: undefined,
       filter: {
         data: {
-          id: data.id,
+          id: data.id.toString(),
           environment_key: data.environment_key,
         },
         meta: {
@@ -382,11 +382,9 @@ export default class Page {
   static updateSingle: PageUpdateSingle = async (data) => {
     const client = await getDBClient;
 
-    const pageId = parseInt(data.id);
-
     // -------------------------------------------
     // Checks
-    const currentPage = await Page.pageExists(pageId, data.environment_key);
+    const currentPage = await Page.pageExists(data.id, data.environment_key);
 
     // Set parent id to null if homepage as homepage has to be root level
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
@@ -469,7 +467,7 @@ export default class Page {
       text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${
         aliases.value.length + 1
       } RETURNING *`,
-      values: [...values.value, pageId],
+      values: [...values.value, data.id],
     });
 
     if (!page.rows[0]) {
@@ -511,17 +509,15 @@ export default class Page {
   static deleteSingle: PageDeleteSingle = async (data) => {
     const client = await getDBClient;
 
-    const pageId = parseInt(data.id);
-
     // -------------------------------------------
     // Checks
-    await Page.pageExists(pageId, data.environment_key);
+    await Page.pageExists(data.id, data.environment_key);
 
     // -------------------------------------------
     // Delete page
     const page = await client.query<PageT>({
       text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
-      values: [pageId],
+      values: [data.id],
     });
 
     if (!page.rows[0]) {

@@ -1,19 +1,19 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Page from "@db/models/Page";
 // Schema
 import pagesSchema from "@schemas/pages";
+// Services
+import createSingle from "@services/pages/create-single";
 
 // --------------------------------------------------
 // Controller
-const createSingle: Controller<
+const createSingleController: Controller<
   typeof pagesSchema.createSingle.params,
   typeof pagesSchema.createSingle.body,
   typeof pagesSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const page = await Page.createSingle({
+    const page = await createSingle({
       environment_key: req.headers["lucid-environment"] as string,
       title: req.body.title,
       slug: req.body.slug,
@@ -40,5 +40,5 @@ const createSingle: Controller<
 // Export
 export default {
   schema: pagesSchema.createSingle,
-  controller: createSingle,
+  controller: createSingleController,
 };
