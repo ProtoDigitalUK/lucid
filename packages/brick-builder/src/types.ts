@@ -2,7 +2,14 @@ import z from "zod";
 
 // ------------------------------------
 // Types & Interfaces
-export interface BrickConfig {}
+export interface BrickConfigOptionsT {
+  preview?: {
+    mode: "image";
+    image?: {
+      url: string;
+    };
+  };
+}
 
 export type FieldTypes =
   | "tab"

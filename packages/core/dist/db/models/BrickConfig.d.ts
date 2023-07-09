@@ -1,7 +1,7 @@
 import z from "zod";
 import { CollectionT } from "../models/Collection";
 import { EnvironmentT } from "../models/Environment";
-import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
+import { BrickBuilderT, CustomField, BrickConfigOptionsT } from "@lucid/brick-builder";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 import bricksSchema from "../../schemas/bricks";
 type BrickConfigIsBrickAllowed = (data: {
@@ -37,6 +37,7 @@ export type BrickConfigT = {
     key: string;
     title: string;
     fields?: CustomField[];
+    preview?: BrickConfigOptionsT["preview"];
 };
 export default class BrickConfig {
     static getSingle: BrickConfigGetSingle;

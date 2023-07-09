@@ -2,10 +2,14 @@ import express from "express";
 import z from "zod";
 import { log } from "console-log-colors";
 import lucid, { FormBuilder, submitForm } from "./index";
+import path from "path";
 
 const app = express();
 
-lucid.init(app);
+lucid.init({
+  express: app,
+  public: path.join(__dirname, "../public"),
+});
 
 // ------------------------------------
 // Form builder use example

@@ -86,46 +86,70 @@ const specificFieldValues = (type, builderField, field) => {
 const buildFieldTree = (brickId, fields, builderInstance) => {
     const brickFields = fields.filter((field) => field.collection_brick_id === brickId);
     const basicFieldTree = builderInstance.basicFieldTree;
-    const buildFields = (fields) => {
-        const fieldObjs = [];
-        fields.forEach((field) => {
-            const brickField = brickFields.find((bField) => bField.key === field.key);
-            const { value } = specificFieldValues(field.type, field, brickField);
-            if (!brickField) {
+    const fieldRes = buildFields(brickFields, basicFieldTree);
+    return fieldRes;
+};
+const buildFields = (brickFields, fields) => {
+    const fieldObjs = [];
+    fields.forEach((field) => {
+        const brickField = brickFields.find((bField) => bField.key === field.key);
+        const { value } = specificFieldValues(field.type, field, brickField);
+        if (!brickField) {
+            const fieldObj = {
+                fields_id: -1,
+                key: field.key,
+                type: field.type,
+            };
+            if (value !== null)
+                fieldObj.value = value;
+            fieldObjs.push(fieldObj);
+        }
+        else {
+            if (field.type === "repeater") {
+                fieldObjs.push({
+                    fields_id: brickField.fields_id,
+                    key: brickField.key,
+                    type: brickField.type,
+                    items: buildFieldGroups(brickFields, field.fields || []),
+                });
+            }
+            else {
                 const fieldObj = {
-                    fields_id: -1,
-                    key: field.key,
-                    type: field.type,
+                    fields_id: brickField.fields_id,
+                    key: brickField.key,
+                    type: brickField.type,
                 };
                 if (value !== null)
                     fieldObj.value = value;
                 fieldObjs.push(fieldObj);
             }
-            else {
-                if (field.type === "repeater") {
-                    fieldObjs.push({
-                        fields_id: brickField.fields_id,
-                        key: brickField.key,
-                        type: brickField.type,
-                        items: buildFields(field.fields || []),
-                    });
-                }
-                else {
-                    const fieldObj = {
-                        fields_id: brickField.fields_id,
-                        key: brickField.key,
-                        type: brickField.type,
-                    };
-                    if (value !== null)
-                        fieldObj.value = value;
-                    fieldObjs.push(fieldObj);
-                }
-            }
-        });
-        return fieldObjs;
-    };
-    const fieldRes = buildFields(basicFieldTree);
-    return fieldRes;
+        }
+    });
+    return fieldObjs;
+};
+const buildFieldGroups = (data, fields) => {
+    const groupMap = new Map();
+    let maxGroupPosition = 0;
+    for (const datum of data) {
+        if (datum.group_position !== null) {
+            const group = groupMap.get(datum.group_position) || [];
+            group.push(datum);
+            groupMap.set(datum.group_position, group);
+            maxGroupPosition = Math.max(maxGroupPosition, datum.group_position);
+        }
+    }
+    const output = [];
+    for (let i = 1; i <= maxGroupPosition; i++) {
+        const group = groupMap.get(i) || [];
+        const outputGroup = buildFields(group, fields);
+        output.push(outputGroup);
+    }
+    const grouplessData = groupMap.get(null) || [];
+    if (grouplessData.length > 0) {
+        const lastGroup = output[output.length - 1];
+        lastGroup.push(...buildFields(grouplessData, fields));
+    }
+    return output;
 };
 const buildBrickStructure = (brickFields) => {
     const brickStructure = [];

@@ -163,31 +163,41 @@ const validateBricksGroup = async (data) => {
     return { errors, hasErrors };
 };
 const getAllMedia = async (fields) => {
-    const getIDs = fields.map((field) => {
-        if (field.type === "media") {
-            return field.value;
-        }
-    });
-    const ids = getIDs
-        .filter((id) => id !== undefined)
-        .filter((value, index, self) => self.indexOf(value) === index);
-    const media = await Media_1.default.getMultipleByIds(ids);
-    return media;
+    try {
+        const getIDs = fields.map((field) => {
+            if (field.type === "media") {
+                return field.value;
+            }
+        });
+        const ids = getIDs
+            .filter((id) => id !== undefined)
+            .filter((value, index, self) => self.indexOf(value) === index);
+        const media = await Media_1.default.getMultipleByIds(ids);
+        return media;
+    }
+    catch (err) {
+        return [];
+    }
 };
 const getAllPages = async (fields, environment_key) => {
-    const getIDs = fields.map((field) => {
-        if (field.type === "pagelink") {
-            return field.value;
-        }
-    });
-    const ids = getIDs
-        .filter((id) => id !== undefined)
-        .filter((value, index, self) => self.indexOf(value) === index);
-    const pages = await Page_1.default.getMultipleByIds({
-        ids,
-        environment_key,
-    });
-    return pages;
+    try {
+        const getIDs = fields.map((field) => {
+            if (field.type === "pagelink") {
+                return field.value;
+            }
+        });
+        const ids = getIDs
+            .filter((id) => id !== undefined)
+            .filter((value, index, self) => self.indexOf(value) === index);
+        const pages = await Page_1.default.getMultipleByIds({
+            ids,
+            environment_key,
+        });
+        return pages;
+    }
+    catch (err) {
+        return [];
+    }
 };
 const validateBricks = async (data) => {
     const builderInstances = BrickConfig_1.default.getBrickConfig();

@@ -11,7 +11,7 @@ export interface BrickResponseT {
         key: string;
         type: FieldTypes;
         value?: string | number | boolean | null | LinkValueT | MediaValueT | PageLinkValueT;
-        items?: Array<BrickResponseT["fields"][0]>;
+        items?: Array<Array<BrickResponseT["fields"][0]>>;
     }>;
 }
 interface PageLinkValueT {

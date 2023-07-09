@@ -5,7 +5,7 @@ const createURL = (key?: string) => {
   if (!key) {
     return undefined;
   }
-  return `${Config.host}/cdn/${key}`;
+  return `${Config.host}/api/media/${key}`;
 };
 
 export default createURL;

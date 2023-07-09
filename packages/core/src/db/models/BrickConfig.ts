@@ -4,7 +4,11 @@ import Config from "@db/models/Config";
 import Collection, { CollectionT } from "@db/models/Collection";
 import Environment, { EnvironmentT } from "@db/models/Environment";
 // Internal packages
-import { BrickBuilderT, CustomField } from "@lucid/brick-builder";
+import {
+  BrickBuilderT,
+  CustomField,
+  BrickConfigOptionsT,
+} from "@lucid/brick-builder";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Utils
 import { LucidError } from "@utils/error-handler";
@@ -55,6 +59,7 @@ export type BrickConfigT = {
   key: string;
   title: string;
   fields?: CustomField[];
+  preview?: BrickConfigOptionsT["preview"];
 };
 
 export default class BrickConfig {
@@ -138,11 +143,9 @@ export default class BrickConfig {
 
     let brick: BrickConfigT | undefined;
     if (instance) {
-      brick = {
-        key: instance.key,
-        title: instance.title,
-        fields: instance.fieldTree,
-      };
+      brick = BrickConfig.getBrickData(instance, {
+        include: ["fields"],
+      });
     }
 
     return {
@@ -199,6 +202,7 @@ export default class BrickConfig {
     const data: BrickConfigT = {
       key: instance.key,
       title: instance.title,
+      preview: instance.config?.preview,
     };
 
     if (!query) return data;

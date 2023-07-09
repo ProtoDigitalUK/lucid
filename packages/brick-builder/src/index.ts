@@ -2,7 +2,7 @@ import z from "zod";
 import sanitizeHtml from "sanitize-html";
 // Types
 import {
-  BrickConfig,
+  BrickConfigOptionsT,
   CustomField,
   FieldTypes,
   TabConfig,
@@ -75,7 +75,7 @@ const customFieldSchemaObject: z.ZodType<Fields> = baseCustomFieldSchema.extend(
 );
 
 // ------------------------------------
-// BrickBuilder
+// Validation
 class ValidationError extends Error {
   constructor(public message: string) {
     super(message);
@@ -83,18 +83,21 @@ class ValidationError extends Error {
   }
 }
 
+// ------------------------------------
+// BrickBuilder
 export default class BrickBuilder {
   key: string;
   title: string;
   fields: Map<string, CustomField> = new Map();
   repeaterStack: string[] = [];
   maxRepeaterDepth: number = 5;
-  constructor(key: string, config?: BrickConfig) {
+  config: BrickConfigOptionsT = {};
+  constructor(key: string, config?: BrickConfigOptionsT) {
     this.key = key;
     this.title = this.#keyToTitle(key);
+    this.config = config || {};
   }
   // ------------------------------------
-  // Methods
   public addFields(BrickBuilder: BrickBuilder) {
     const fields = BrickBuilder.fields;
     fields.forEach((field) => {
