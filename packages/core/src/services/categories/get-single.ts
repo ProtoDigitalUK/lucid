@@ -3,13 +3,11 @@ import Category from "@db/models/Category";
 
 interface ServiceData {
   environment_key: string;
-  id: string;
+  id: number;
 }
 
 const getSingle = async (data: ServiceData) => {
-  const id = parseInt(data.id);
-
-  const category = await Category.getSingle(data.environment_key, id);
+  const category = await Category.getSingle(data.environment_key, data.id);
 
   return category;
 };

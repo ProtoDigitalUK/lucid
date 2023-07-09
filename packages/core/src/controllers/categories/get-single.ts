@@ -15,7 +15,7 @@ const getSingleController: Controller<
   try {
     const category = await getSingle({
       environment_key: req.headers["lucid-environment"] as string,
-      id: req.params.id,
+      id: parseInt(req.params.id),
     });
 
     res.status(200).json(

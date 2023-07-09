@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Email from "@db/models/Email";
 // Schema
 import emailsSchema from "@schemas/email";
+// Services
+import getMultiple from "@services/email/get-multiple";
 
 // --------------------------------------------------
 // Controller
-const getMultiple: Controller<
+const getMultipleController: Controller<
   typeof emailsSchema.getMultiple.params,
   typeof emailsSchema.getMultiple.body,
   typeof emailsSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const emails = await Email.getMultiple(req.query);
+    const emails = await getMultiple({
+      query: req.query,
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -34,5 +36,5 @@ const getMultiple: Controller<
 // Export
 export default {
   schema: emailsSchema.getMultiple,
-  controller: getMultiple,
+  controller: getMultipleController,
 };

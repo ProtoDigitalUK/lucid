@@ -15,7 +15,7 @@ const updateSingleController: Controller<
   try {
     const category = await updateSingle({
       environment_key: req.headers["lucid-environment"] as string,
-      id: req.params.id,
+      id: parseInt(req.params.id),
       data: {
         title: req.body.title,
         slug: req.body.slug,

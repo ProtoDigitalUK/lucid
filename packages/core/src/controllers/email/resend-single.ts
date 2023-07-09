@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Email from "@db/models/Email";
 // Schema
 import emailsSchema from "@schemas/email";
+// Services
+import resendSingle from "@services/email/resend-single";
 
 // --------------------------------------------------
 // Controller
-const resendSingle: Controller<
+const resendSingleController: Controller<
   typeof emailsSchema.resendSingle.params,
   typeof emailsSchema.resendSingle.body,
   typeof emailsSchema.resendSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await Email.resendSingle(parseInt(req.params.id));
+    const email = await resendSingle({
+      id: parseInt(req.params.id),
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const resendSingle: Controller<
 // Export
 export default {
   schema: emailsSchema.resendSingle,
-  controller: resendSingle,
+  controller: resendSingleController,
 };

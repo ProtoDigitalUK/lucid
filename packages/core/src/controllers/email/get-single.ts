@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Email from "@db/models/Email";
 // Schema
 import emailsSchema from "@schemas/email";
+// Serices
+import getSingle from "@services/email/get-single";
 
 // --------------------------------------------------
 // Controller
-const getSingle: Controller<
+const getSingleController: Controller<
   typeof emailsSchema.getSingle.params,
   typeof emailsSchema.getSingle.body,
   typeof emailsSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await Email.getSingle(parseInt(req.params.id));
+    const email = await getSingle({
+      id: parseInt(req.params.id),
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const getSingle: Controller<
 // Export
 export default {
   schema: emailsSchema.getSingle,
-  controller: getSingle,
+  controller: getSingleController,
 };

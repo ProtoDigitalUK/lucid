@@ -1,19 +1,21 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import Email from "@db/models/Email";
 // Schema
 import emailsSchema from "@schemas/email";
+// Services
+import deleteSingle from "@services/email/delete-single";
 
 // --------------------------------------------------
 // Controller
-const deleteSingle: Controller<
+const deleteSingleController: Controller<
   typeof emailsSchema.deleteSingle.params,
   typeof emailsSchema.deleteSingle.body,
   typeof emailsSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await Email.deleteSingle(parseInt(req.params.id));
+    const email = await deleteSingle({
+      id: parseInt(req.params.id),
+    });
 
     res.status(200).json(
       buildResponse(req, {
@@ -29,5 +31,5 @@ const deleteSingle: Controller<
 // Export
 export default {
   schema: emailsSchema.deleteSingle,
-  controller: deleteSingle,
+  controller: deleteSingleController,
 };

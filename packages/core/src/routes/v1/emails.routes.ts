@@ -5,7 +5,6 @@ import getMultiple from "@controllers/email/get-multiple";
 import getSingle from "@controllers/email/get-single";
 import deleteSingle from "@controllers/email/delete-single";
 import resendSingle from "@controllers/email/resend-single";
-import tempSend from "@controllers/email/temp-send";
 
 // ------------------------------------
 // Router
@@ -52,20 +51,6 @@ r(router, {
   },
   schema: deleteSingle.schema,
   controller: deleteSingle.controller,
-});
-
-r(router, {
-  method: "post",
-  path: "/temp-send",
-  permissions: {
-    global: ["send_email"],
-  },
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-  },
-  schema: tempSend.schema,
-  controller: tempSend.controller,
 });
 
 r(router, {
