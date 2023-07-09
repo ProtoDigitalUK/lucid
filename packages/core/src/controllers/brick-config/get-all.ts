@@ -1,19 +1,20 @@
 // Utils
 import buildResponse from "@utils/controllers/build-response";
-// Models
-import BrickConfig from "@db/models/BrickConfig";
 // Schema
 import bricksSchema from "@schemas/bricks";
+// Services
+import getAll from "@services/brick-config/get-all";
 
 // --------------------------------------------------
 // Controller
-const getAll: Controller<
+const getAllController: Controller<
   typeof bricksSchema.config.getAll.params,
   typeof bricksSchema.config.getAll.body,
   typeof bricksSchema.config.getAll.query
 > = async (req, res, next) => {
   try {
-    const bricks = await BrickConfig.getAll(req.query, {
+    const bricks = await getAll({
+      query: req.query,
       collection_key: req.params.collection_key,
       environment_key: req.headers["lucid-environment"] as string,
     });
@@ -32,5 +33,5 @@ const getAll: Controller<
 // Export
 export default {
   schema: bricksSchema.config.getAll,
-  controller: getAll,
+  controller: getAllController,
 };
