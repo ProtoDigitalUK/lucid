@@ -2,9 +2,9 @@ import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
 import { BrickResponseT } from "../../utils/bricks/format-bricks";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
-import { CollectionT } from "../models/Collection";
 import { EnvironmentT } from "../models/Environment";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
+import { CollectionT } from "../../services/collections";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
 type CollectionBrickCreateOrUpdate = (data: {

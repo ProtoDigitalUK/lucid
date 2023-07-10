@@ -10,18 +10,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _SinglePage_getOrCreateSinglePage;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const Collection_1 = __importDefault(require("../models/Collection"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const Environment_1 = __importDefault(require("../models/Environment"));
 const validate_bricks_1 = __importDefault(require("../../utils/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const collections_1 = __importDefault(require("../../services/collections"));
 class SinglePage {
 }
 _a = SinglePage;
 SinglePage.getSingle = async (data) => {
     const client = await db_1.default;
-    const collection = await Collection_1.default.getSingle({
+    const collection = await collections_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
         type: "singlepage",
@@ -89,7 +89,7 @@ SinglePage.getSingle = async (data) => {
 SinglePage.updateSingle = async (data) => {
     const client = await db_1.default;
     const environment = await Environment_1.default.getSingle(data.environment_key);
-    const collection = await Collection_1.default.getSingle({
+    const collection = await collections_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
         type: "singlepage",
@@ -101,7 +101,7 @@ SinglePage.updateSingle = async (data) => {
         environment: environment,
     });
     const singlepage = await __classPrivateFieldGet(SinglePage, _a, "f", _SinglePage_getOrCreateSinglePage).call(SinglePage, data.environment_key, data.collection_key);
-    await Collection_1.default.updateBricks({
+    await collections_1.default.updateBricks({
         id: singlepage.id,
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],

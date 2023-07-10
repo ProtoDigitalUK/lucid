@@ -3,15 +3,16 @@ import getDBClient from "@db/db";
 import slugify from "slugify";
 // Models
 import PageCategory from "@db/models/PageCategory";
-import Collection from "@db/models/Collection";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 import Environment from "@db/models/Environment";
-// Serivces
+// Utils
 import formatPage from "@utils/pages/format-page";
 import { BrickResponseT } from "@utils/bricks/format-bricks";
 import validateBricks from "@utils/bricks/validate-bricks";
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+// Services
+import collections from "@services/collections";
 // Schema
 import pagesSchema from "@schemas/pages";
 
@@ -276,7 +277,7 @@ export default class Page {
     }
 
     if (include && include.includes("bricks")) {
-      const collection = await Collection.getSingle({
+      const collection = await collections.getSingle({
         collection_key: page.rows[0].collection_key,
         environment_key: page.rows[0].environment_key,
         type: "pages",
@@ -306,7 +307,7 @@ export default class Page {
     // Checks
 
     // Checks if we have access to the collection
-    await Collection.getSingle({
+    await collections.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "pages",
@@ -406,7 +407,7 @@ export default class Page {
     //
     // validate bricks
     const environment = await Environment.getSingle(data.environment_key);
-    const collection = await Collection.getSingle({
+    const collection = await collections.getSingle({
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
       type: "pages",
@@ -494,7 +495,7 @@ export default class Page {
 
     // -------------------------------------------
     // Update/Create Bricks
-    await Collection.updateBricks({
+    await collections.updateBricks({
       id: page.rows[0].id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],

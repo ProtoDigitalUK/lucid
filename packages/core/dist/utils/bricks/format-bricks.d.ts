@@ -1,6 +1,6 @@
 import { CollectionBrickFieldsT, CollectionBrickT } from "../../db/models/CollectionBrick";
-import { CollectionT } from "../../db/models/Collection";
 import { FieldTypes } from "@lucid/brick-builder";
+import { CollectionT } from "../../services/collections";
 export interface BrickResponseT {
     id: CollectionBrickT["id"];
     key: CollectionBrickT["brick_key"];

@@ -8,12 +8,12 @@ import { queryDataFormat } from "@utils/app/query-helpers";
 // Schema
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
 // Models
-import { CollectionT } from "@db/models/Collection";
 import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
 import brickConfig from "@services/brick-config";
+import { CollectionT } from "@services/collections";
 
 // -------------------------------------------
 // Types

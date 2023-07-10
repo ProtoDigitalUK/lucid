@@ -1,7 +1,6 @@
-import { z } from "zod";
-import categorySchema from "../../schemas/categories";
+import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 type CategoryGetSingle = (environment_key: string, id: number) => Promise<CategoryT>;
-type CategoryGetMultiple = (environment_key: string, query: z.infer<typeof categorySchema.getMultiple.query>) => Promise<{
+type CategoryGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
     data: CategoryT[];
     count: number;
 }>;

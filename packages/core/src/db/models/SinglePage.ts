@@ -1,6 +1,5 @@
 import getDBClient from "@db/db";
 // Models
-import Collection from "@db/models/Collection";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 import Environment from "@db/models/Environment";
 // Utils
@@ -8,6 +7,8 @@ import { BrickResponseT } from "@utils/bricks/format-bricks";
 import validateBricks from "@utils/bricks/validate-bricks";
 import { LucidError } from "@utils/app/error-handler";
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
+// Services
+import collections from "@services/collections";
 
 // -------------------------------------------
 // Types
@@ -46,7 +47,7 @@ export default class SinglePage {
     const client = await getDBClient;
 
     // Checks if we have access to the collection
-    const collection = await Collection.getSingle({
+    const collection = await collections.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "singlepage",
@@ -123,7 +124,7 @@ export default class SinglePage {
 
     // Used to check if we have access to the collection
     const environment = await Environment.getSingle(data.environment_key);
-    const collection = await Collection.getSingle({
+    const collection = await collections.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "singlepage",
@@ -146,7 +147,7 @@ export default class SinglePage {
 
     // -------------------------------------------
     // Update/Create Bricks
-    await Collection.updateBricks({
+    await collections.updateBricks({
       id: singlepage.id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],

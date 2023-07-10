@@ -1,8 +1,9 @@
 // Models
 import Category from "@db/models/Category";
-import Collection from "@db/models/Collection";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
+// Services
+import collections from "@services/collections";
 
 export interface ServiceData {
   environment_key: string;
@@ -14,7 +15,7 @@ export interface ServiceData {
 
 const createSingle = async (data: ServiceData) => {
   // Perform checks
-  await Collection.getSingle({
+  await collections.getSingle({
     collection_key: data.collection_key,
     type: "pages",
     environment_key: data.environment_key,

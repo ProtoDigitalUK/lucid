@@ -2,7 +2,6 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
-import { CollectionT } from "@db/models/Collection";
 import Media from "@db/models/Media";
 import Page, { PageT } from "@db/models/Page";
 // Utils
@@ -16,6 +15,7 @@ import BrickBuilder, {
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
 import brickConfig from "@services/brick-config";
+import { CollectionT } from "@services/collections";
 
 // ------------------------------------
 // Interfaces

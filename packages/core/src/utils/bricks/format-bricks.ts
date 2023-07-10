@@ -4,13 +4,13 @@ import {
   CollectionBrickT,
 } from "@db/models/CollectionBrick";
 import Environment from "@db/models/Environment";
-import { CollectionT } from "@db/models/Collection";
 // Internal packages
 import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
 // Utils
 import createURL from "@utils/media/create-url";
 // Services
 import brickConfig from "@services/brick-config";
+import { CollectionT } from "@services/collections";
 
 export interface BrickResponseT {
   id: CollectionBrickT["id"];

@@ -12,13 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
-const Collection_1 = __importDefault(require("../models/Collection"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
 const Environment_1 = __importDefault(require("../models/Environment"));
 const format_page_1 = __importDefault(require("../../utils/pages/format-page"));
 const validate_bricks_1 = __importDefault(require("../../utils/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const collections_1 = __importDefault(require("../../services/collections"));
 class Page {
 }
 _a = Page;
@@ -180,7 +180,7 @@ Page.getSingle = async (query, data) => {
         });
     }
     if (include && include.includes("bricks")) {
-        const collection = await Collection_1.default.getSingle({
+        const collection = await collections_1.default.getSingle({
             collection_key: page.rows[0].collection_key,
             environment_key: page.rows[0].environment_key,
             type: "pages",
@@ -199,7 +199,7 @@ Page.getSingle = async (query, data) => {
 Page.createSingle = async (data) => {
     const client = await db_1.default;
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
-    await Collection_1.default.getSingle({
+    await collections_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
         type: "pages",
@@ -275,7 +275,7 @@ Page.updateSingle = async (data) => {
         });
     }
     const environment = await Environment_1.default.getSingle(data.environment_key);
-    const collection = await Collection_1.default.getSingle({
+    const collection = await collections_1.default.getSingle({
         collection_key: currentPage.collection_key,
         environment_key: data.environment_key,
         type: "pages",
@@ -343,7 +343,7 @@ Page.updateSingle = async (data) => {
         });
         page.rows[0].categories = categories.map((category) => category.category_id);
     }
-    await Collection_1.default.updateBricks({
+    await collections_1.default.updateBricks({
         id: page.rows[0].id,
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],
