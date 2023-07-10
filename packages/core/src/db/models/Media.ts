@@ -1,17 +1,15 @@
 import getDBClient from "@db/db";
 import z from "zod";
 import fileUpload from "express-fileupload";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-// Models
-import Config from "@db/models/Config";
-import Option from "@db/models/Option";
 // Utils
-import getS3Client from "@utils/media/s3-client";
 import helpers, { type MediaMetaDataT } from "@utils/media/helpers";
 import formatMedia, { type MediaResT } from "@utils/media/format-media";
 import mediaSchema from "@schemas/media";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+// Serices
+import medias from "@services/media";
+import s3 from "@services/s3";
 
 // -------------------------------------------
 // Types
@@ -93,27 +91,19 @@ export default class Media {
 
     // -------------------------------------------
     // Checks
-    const canStoreRes = await Media.#canStoreFiles(files);
-    if (!canStoreRes.can) {
-      throw new LucidError({
-        type: "basic",
-        name: "Error saving file",
-        message: canStoreRes.message,
-        status: 500,
-        errors: modelErrors({
-          file: {
-            code: "storage_limit",
-            message: canStoreRes.message,
-          },
-        }),
-      });
-    }
+    await medias.canStoreFiles({
+      files,
+    });
 
     // -------------------------------------------
     // Generate key and save file
     const key = helpers.uniqueKey(name || firstFile.name);
     const meta = await helpers.getMetaData(firstFile);
-    const response = await Media.#saveFile(key, firstFile, meta);
+    const response = await s3.saveFile({
+      key: key,
+      file: firstFile,
+      meta,
+    });
 
     // Error if file not saved
     if (response.$metadata.httpStatusCode !== 200) {
@@ -164,7 +154,9 @@ export default class Media {
     });
 
     if (media.rowCount === 0) {
-      await Media.#deleteFile(key);
+      await s3.deleteFile({
+        key,
+      });
       throw new LucidError({
         type: "basic",
         name: "Error saving file",
@@ -180,7 +172,9 @@ export default class Media {
     }
 
     // update storage used
-    await Media.#setStorageUsed(meta.size);
+    await medias.setStorageUsed({
+      add: meta.size,
+    });
 
     // -------------------------------------------
     // Return
@@ -330,10 +324,14 @@ export default class Media {
       });
     }
 
-    await Media.#deleteFile(key);
-
+    await s3.deleteFile({
+      key,
+    });
     // update storage used
-    await Media.#setStorageUsed(0, media.rows[0].file_size);
+    await medias.setStorageUsed({
+      add: 0,
+      minus: media.rows[0].file_size,
+    });
 
     return formatMedia(media.rows[0]);
   };
@@ -353,26 +351,18 @@ export default class Media {
 
       // -------------------------------------------
       // Checks
-      const canStoreRes = await Media.#canStoreFiles(files);
-      if (!canStoreRes.can) {
-        throw new LucidError({
-          type: "basic",
-          name: "Error saving file",
-          message: canStoreRes.message,
-          status: 500,
-          errors: modelErrors({
-            file: {
-              code: "storage_limit",
-              message: canStoreRes.message,
-            },
-          }),
-        });
-      }
+      await medias.canStoreFiles({
+        files,
+      });
 
       // -------------------------------------------
       // Upload to S3
       meta = await helpers.getMetaData(firstFile);
-      const response = await Media.#saveFile(key, firstFile, meta);
+      const response = await s3.saveFile({
+        key: media.key,
+        file: firstFile,
+        meta,
+      });
 
       if (response.$metadata.httpStatusCode !== 200) {
         throw new LucidError({
@@ -391,7 +381,10 @@ export default class Media {
 
       // -------------------------------------------
       // Update storage used
-      await Media.#setStorageUsed(meta.size, media.meta.file_size);
+      await medias.setStorageUsed({
+        add: meta.size,
+        minus: media.meta.file_size,
+      });
     }
 
     // -------------------------------------------
@@ -462,84 +455,5 @@ export default class Media {
     });
 
     return media.rows.map((m) => formatMedia(m));
-  };
-  // -------------------------------------------
-  // Storage Functions
-  static #getStorageUsed = async () => {
-    const res = await Option.getByName("media_storage_used");
-    return res.option_value as number;
-  };
-  static #setStorageUsed = async (add: number, minus?: number) => {
-    const storageUsed = await Media.#getStorageUsed();
-
-    let newValue = storageUsed + add;
-    if (minus !== undefined) {
-      newValue = newValue - minus;
-    }
-    const res = await Option.patchByName({
-      name: "media_storage_used",
-      value: newValue,
-      type: "number",
-    });
-    return res.option_value as number;
-  };
-  static #canStoreFiles = async (files: fileUpload.UploadedFile[]) => {
-    const { storageLimit, maxFileSize } = Config.media;
-
-    // check files dont exceed max file size limit
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.size > maxFileSize) {
-        return {
-          can: false,
-          message: `File ${file.name} is too large. Max file size is ${maxFileSize} bytes.`,
-        };
-      }
-    }
-
-    // get the total size of all files
-    const storageUsed = await Media.#getStorageUsed();
-
-    // check files dont exceed storage limit
-    const totalSize = files.reduce((acc, file) => acc + file.size, 0);
-    if (totalSize + storageUsed > storageLimit) {
-      return {
-        can: false,
-        message: `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`,
-      };
-    }
-
-    return { can: true };
-  };
-  // -------------------------------------------
-  // S3 Functions
-  static #saveFile = async (
-    key: string,
-    file: fileUpload.UploadedFile,
-    meta: MediaMetaDataT
-  ) => {
-    const S3 = await getS3Client;
-
-    const command = new PutObjectCommand({
-      Bucket: Config.media.store.bucket,
-      Key: key,
-      Body: file.data,
-      ContentType: meta.mimeType,
-      Metadata: {
-        width: meta.width?.toString() || "",
-        height: meta.height?.toString() || "",
-        extension: meta.fileExtension,
-      },
-    });
-    return S3.send(command);
-  };
-  static #deleteFile = async (key: string) => {
-    const S3 = await getS3Client;
-
-    const command = new DeleteObjectCommand({
-      Bucket: Config.media.store.bucket,
-      Key: key,
-    });
-    return S3.send(command);
   };
 }

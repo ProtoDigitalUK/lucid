@@ -35,7 +35,6 @@ export type MediaT = {
     updated_at: string;
 };
 export default class Media {
-    #private;
     static createSingle: MediaCreateSingle;
     static getMultiple: MediaGetMultiple;
     static getSingle: MediaGetSingle;

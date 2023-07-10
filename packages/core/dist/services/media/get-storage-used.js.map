@@ -1,0 +1,1 @@
+{"version":3,"file":"get-storage-used.js","sourceRoot":"","sources":["../../../src/services/media/get-storage-used.ts"],"names":[],"mappings":";;;;;AACA,+DAAuC;AAEvC,MAAM,cAAc,GAAG,KAAK,IAAI,EAAE;IAChC,MAAM,GAAG,GAAG,MAAM,gBAAM,CAAC,SAAS,CAAC,oBAAoB,CAAC,CAAC;IACzD,OAAO,GAAG,CAAC,YAAsB,CAAC;AACpC,CAAC,CAAC;AAEF,kBAAe,cAAc,CAAC"}

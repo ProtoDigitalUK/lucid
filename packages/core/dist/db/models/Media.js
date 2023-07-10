@@ -1,23 +1,16 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Media_getStorageUsed, _Media_setStorageUsed, _Media_canStoreFiles, _Media_saveFile, _Media_deleteFile;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const client_s3_1 = require("@aws-sdk/client-s3");
-const Config_1 = __importDefault(require("../models/Config"));
-const Option_1 = __importDefault(require("../models/Option"));
-const s3_client_1 = __importDefault(require("../../utils/media/s3-client"));
 const helpers_1 = __importDefault(require("../../utils/media/helpers"));
 const format_media_1 = __importDefault(require("../../utils/media/format-media"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const media_1 = __importDefault(require("../../services/media"));
+const s3_1 = __importDefault(require("../../services/s3"));
 class Media {
 }
 _a = Media;
@@ -40,24 +33,16 @@ Media.createSingle = async (data) => {
     }
     const files = helpers_1.default.formatReqFiles(data.files);
     const firstFile = files[0];
-    const canStoreRes = await __classPrivateFieldGet(Media, _a, "f", _Media_canStoreFiles).call(Media, files);
-    if (!canStoreRes.can) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Error saving file",
-            message: canStoreRes.message,
-            status: 500,
-            errors: (0, error_handler_1.modelErrors)({
-                file: {
-                    code: "storage_limit",
-                    message: canStoreRes.message,
-                },
-            }),
-        });
-    }
+    await media_1.default.canStoreFiles({
+        files,
+    });
     const key = helpers_1.default.uniqueKey(name || firstFile.name);
     const meta = await helpers_1.default.getMetaData(firstFile);
-    const response = await __classPrivateFieldGet(Media, _a, "f", _Media_saveFile).call(Media, key, firstFile, meta);
+    const response = await s3_1.default.saveFile({
+        key: key,
+        file: firstFile,
+        meta,
+    });
     if (response.$metadata.httpStatusCode !== 200) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -101,7 +86,9 @@ Media.createSingle = async (data) => {
         values: values.value,
     });
     if (media.rowCount === 0) {
-        await __classPrivateFieldGet(Media, _a, "f", _Media_deleteFile).call(Media, key);
+        await s3_1.default.deleteFile({
+            key,
+        });
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "Error saving file",
@@ -115,7 +102,9 @@ Media.createSingle = async (data) => {
             }),
         });
     }
-    await __classPrivateFieldGet(Media, _a, "f", _Media_setStorageUsed).call(Media, meta.size);
+    await media_1.default.setStorageUsed({
+        add: meta.size,
+    });
     return (0, format_media_1.default)(media.rows[0]);
 };
 Media.getMultiple = async (query) => {
@@ -248,8 +237,13 @@ Media.deleteSingle = async (key) => {
             status: 404,
         });
     }
-    await __classPrivateFieldGet(Media, _a, "f", _Media_deleteFile).call(Media, key);
-    await __classPrivateFieldGet(Media, _a, "f", _Media_setStorageUsed).call(Media, 0, media.rows[0].file_size);
+    await s3_1.default.deleteFile({
+        key,
+    });
+    await media_1.default.setStorageUsed({
+        add: 0,
+        minus: media.rows[0].file_size,
+    });
     return (0, format_media_1.default)(media.rows[0]);
 };
 Media.updateSingle = async (key, data) => {
@@ -259,23 +253,15 @@ Media.updateSingle = async (key, data) => {
     if (data.files && data.files["file"]) {
         const files = helpers_1.default.formatReqFiles(data.files);
         const firstFile = files[0];
-        const canStoreRes = await __classPrivateFieldGet(Media, _a, "f", _Media_canStoreFiles).call(Media, files);
-        if (!canStoreRes.can) {
-            throw new error_handler_1.LucidError({
-                type: "basic",
-                name: "Error saving file",
-                message: canStoreRes.message,
-                status: 500,
-                errors: (0, error_handler_1.modelErrors)({
-                    file: {
-                        code: "storage_limit",
-                        message: canStoreRes.message,
-                    },
-                }),
-            });
-        }
+        await media_1.default.canStoreFiles({
+            files,
+        });
         meta = await helpers_1.default.getMetaData(firstFile);
-        const response = await __classPrivateFieldGet(Media, _a, "f", _Media_saveFile).call(Media, key, firstFile, meta);
+        const response = await s3_1.default.saveFile({
+            key: media.key,
+            file: firstFile,
+            meta,
+        });
         if (response.$metadata.httpStatusCode !== 200) {
             throw new error_handler_1.LucidError({
                 type: "basic",
@@ -290,7 +276,10 @@ Media.updateSingle = async (key, data) => {
                 }),
             });
         }
-        await __classPrivateFieldGet(Media, _a, "f", _Media_setStorageUsed).call(Media, meta.size, media.meta.file_size);
+        await media_1.default.setStorageUsed({
+            add: meta.size,
+            minus: media.meta.file_size,
+        });
     }
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
@@ -352,66 +341,5 @@ Media.getMultipleByIds = async (ids) => {
     });
     return media.rows.map((m) => (0, format_media_1.default)(m));
 };
-_Media_getStorageUsed = { value: async () => {
-        const res = await Option_1.default.getByName("media_storage_used");
-        return res.option_value;
-    } };
-_Media_setStorageUsed = { value: async (add, minus) => {
-        const storageUsed = await __classPrivateFieldGet(Media, _a, "f", _Media_getStorageUsed).call(Media);
-        let newValue = storageUsed + add;
-        if (minus !== undefined) {
-            newValue = newValue - minus;
-        }
-        const res = await Option_1.default.patchByName({
-            name: "media_storage_used",
-            value: newValue,
-            type: "number",
-        });
-        return res.option_value;
-    } };
-_Media_canStoreFiles = { value: async (files) => {
-        const { storageLimit, maxFileSize } = Config_1.default.media;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file.size > maxFileSize) {
-                return {
-                    can: false,
-                    message: `File ${file.name} is too large. Max file size is ${maxFileSize} bytes.`,
-                };
-            }
-        }
-        const storageUsed = await __classPrivateFieldGet(Media, _a, "f", _Media_getStorageUsed).call(Media);
-        const totalSize = files.reduce((acc, file) => acc + file.size, 0);
-        if (totalSize + storageUsed > storageLimit) {
-            return {
-                can: false,
-                message: `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`,
-            };
-        }
-        return { can: true };
-    } };
-_Media_saveFile = { value: async (key, file, meta) => {
-        const S3 = await s3_client_1.default;
-        const command = new client_s3_1.PutObjectCommand({
-            Bucket: Config_1.default.media.store.bucket,
-            Key: key,
-            Body: file.data,
-            ContentType: meta.mimeType,
-            Metadata: {
-                width: meta.width?.toString() || "",
-                height: meta.height?.toString() || "",
-                extension: meta.fileExtension,
-            },
-        });
-        return S3.send(command);
-    } };
-_Media_deleteFile = { value: async (key) => {
-        const S3 = await s3_client_1.default;
-        const command = new client_s3_1.DeleteObjectCommand({
-            Bucket: Config_1.default.media.store.bucket,
-            Key: key,
-        });
-        return S3.send(command);
-    } };
 exports.default = Media;
 //# sourceMappingURL=Media.js.map

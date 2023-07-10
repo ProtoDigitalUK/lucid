@@ -1,0 +1,1 @@
+{"version":3,"file":"delete-file.d.ts","sourceRoot":"","sources":["../../../src/services/s3/delete-file.ts"],"names":[],"mappings":"AAMA,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,UAAU,SAAgB,WAAW,oEAQ1C,CAAC;AAEF,eAAe,UAAU,CAAC"}
