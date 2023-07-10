@@ -1,10 +1,9 @@
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
 import CollectionBrick from "@db/models/CollectionBrick";
-// Utils
-import { EnvironmentResT } from "@utils/environments/format-environment";
 // Services
 import { CollectionT } from "@services/collections";
+import { EnvironmentResT } from "@services/environments";
 
 export interface ServiceData {
   id: number;

@@ -5,7 +5,7 @@ import path from "path";
 // Models
 import Config from "@db/models/Config";
 
-interface renderTemplateDataT {
+export interface renderTemplateDataT {
   [key: string]: any;
 }
 

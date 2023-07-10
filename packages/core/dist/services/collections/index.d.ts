@@ -13,10 +13,10 @@ declare const _default: {
         getSingle: (data: import("./get-single").ServiceData) => Promise<CollectionT>;
         getAll: any;
         updateBricks: (data: import("./update-bricks").ServiceData) => Promise<void>;
-        formatCollection: (instance: import("@lucid/collection-builder").default) => CollectionT;
+        format: (instance: import("@lucid/collection-builder").default) => CollectionT;
     }>;
     updateBricks: (data: import("./update-bricks").ServiceData) => Promise<void>;
-    formatCollection: (instance: import("@lucid/collection-builder").default) => CollectionT;
+    format: (instance: import("@lucid/collection-builder").default) => CollectionT;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

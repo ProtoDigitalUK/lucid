@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmailInternal = exports.sendEmailExternal = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const Config_1 = __importDefault(require("../../db/models/Config"));
-const Email_1 = __importDefault(require("../../db/models/Email"));
-const render_template_1 = __importDefault(require("./render-template"));
+const email_1 = __importDefault(require("../email"));
 const createEmailRow = async (data) => {
-    await Email_1.default.createSingle({
+    await email_1.default.createSingle({
         from_address: data.options.from,
         from_name: data.options.fromName,
         to_address: data.options.to,
@@ -34,7 +33,7 @@ const sendEmailAction = async (template, params) => {
         replyTo: params.options?.replyTo,
     };
     try {
-        const html = await (0, render_template_1.default)(template, params.data);
+        const html = await email_1.default.renderTemplate(template, params.data);
         const smptConfig = Config_1.default.email?.smtp;
         if (!smptConfig) {
             throw new Error("SMTP config not found. The email has been stored in the database and can be sent manually.");
@@ -97,10 +96,13 @@ const sendEmailInternal = async (template, params, id) => {
         });
     }
     else {
-        await Email_1.default.updateSingle(id, {
-            from_address: result.options.from,
-            from_name: result.options.fromName,
-            delivery_status: result.success ? "sent" : "failed",
+        await email_1.default.updateSingle({
+            id: id,
+            data: {
+                from_address: result.options.from,
+                from_name: result.options.fromName,
+                delivery_status: result.success ? "sent" : "failed",
+            },
         });
     }
     return {

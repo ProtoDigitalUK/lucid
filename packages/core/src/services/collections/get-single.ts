@@ -30,7 +30,7 @@ const getSingle = async (data: ServiceData) => {
 
   // Format collections
   const collectionsF = instances.map((collection) =>
-    collections.formatCollection(collection)
+    collections.format(collection)
   );
 
   // get environment

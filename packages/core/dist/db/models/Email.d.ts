@@ -1,5 +1,4 @@
-import z from "zod";
-import emailsSchema from "../../schemas/email";
+import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 type EmailCreateSingle = (data: {
     from_address?: string;
     from_name?: string;
@@ -13,7 +12,7 @@ type EmailCreateSingle = (data: {
         [key: string]: any;
     };
 }) => Promise<EmailT>;
-type EmailGetMultiple = (query: z.infer<typeof emailsSchema.getMultiple.query>) => Promise<{
+type EmailGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
     data: EmailT[];
     count: number;
 }>;
@@ -24,13 +23,6 @@ type EmailUpdateSingle = (id: number, data: {
 }) => Promise<EmailT>;
 type EmailGetSingle = (id: number) => Promise<EmailT>;
 type EmailDeleteSingle = (id: number) => Promise<EmailT>;
-type EmailResendSingle = (id: number) => Promise<{
-    email: EmailT;
-    status: {
-        success: boolean;
-        message: string;
-    };
-}>;
 export type EmailT = {
     id: number;
     from_address: string | null;
@@ -54,7 +46,6 @@ export default class Email {
     static getSingle: EmailGetSingle;
     static deleteSingle: EmailDeleteSingle;
     static updateSingle: EmailUpdateSingle;
-    static resendSingle: EmailResendSingle;
 }
 export {};
 //# sourceMappingURL=Email.d.ts.map

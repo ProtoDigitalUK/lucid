@@ -3,11 +3,11 @@ import slugify from "slugify";
 // Models
 import Config from "@db/models/Config";
 // Utils
-import formatEnvironment, {
-  EnvironmentResT,
-} from "@utils/environments/format-environment";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat } from "@utils/app/query-helpers";
+// Services
+// Serices
+import envrionments, { EnvironmentResT } from "@services/environments";
 
 // -------------------------------------------
 // Types
@@ -54,7 +54,7 @@ export default class Environment {
     });
 
     return environments.rows.map((environment) =>
-      formatEnvironment(environment)
+      envrionments.format(environment)
     );
   };
   static getSingle: EnvironmentGetSingle = async (key) => {
@@ -74,7 +74,7 @@ export default class Environment {
       });
     }
 
-    return formatEnvironment(environment.rows[0]);
+    return envrionments.format(environment.rows[0]);
   };
   static upsertSingle: EnvironmentUpsertSingle = async (data, create) => {
     const client = await getDBClient;
@@ -140,7 +140,7 @@ export default class Environment {
       });
     }
 
-    return formatEnvironment(environments.rows[0]);
+    return envrionments.format(environments.rows[0]);
   };
   static deleteSingle: EnvironmentDeleteSingle = async (key) => {
     const client = await getDBClient;
@@ -163,7 +163,7 @@ export default class Environment {
       });
     }
 
-    return formatEnvironment(environments.rows[0]);
+    return envrionments.format(environments.rows[0]);
   };
   // -------------------------------------------
   // Util Functions

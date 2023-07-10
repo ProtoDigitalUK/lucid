@@ -1,6 +1,6 @@
 import { BrickObject } from "../../db/models/CollectionBrick";
-import { EnvironmentResT } from "../../utils/environments/format-environment";
 import { CollectionT } from "../collections";
+import { EnvironmentResT } from "../environments";
 export interface ServiceData {
     id: number;
     builder_bricks: Array<BrickObject>;

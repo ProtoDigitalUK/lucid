@@ -11,7 +11,7 @@ const getAll = async (data) => {
     const instances = Config_1.default.collections || [];
     if (!instances)
         return [];
-    let collectionsF = instances.map((collection) => collections_1.default.formatCollection(collection));
+    let collectionsF = instances.map((collection) => collections_1.default.format(collection));
     const environment = await Environment_1.default.getSingle(data.environment_key);
     collectionsF.filter((collection) => environment.assigned_collections.includes(collection.key));
     collectionsF = filterCollections(data.query.filter, collectionsF);

@@ -19,7 +19,7 @@ const getAll = async (data: ServiceData) => {
 
   // Get all collections data
   let collectionsF = instances.map((collection) =>
-    collections.formatCollection(collection)
+    collections.format(collection)
   );
   // Get environment
   const environment = await Environment.getSingle(data.environment_key);

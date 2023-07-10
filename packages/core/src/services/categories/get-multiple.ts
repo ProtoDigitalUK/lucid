@@ -14,7 +14,7 @@ export interface ServiceData {
 const getMultiple = async (data: ServiceData) => {
   const { filter, sort, page, per_page } = data.query;
 
-  const selectQuery = new SelectQueryBuilder({
+  const SelectQuery = new SelectQueryBuilder({
     columns: [
       "id",
       "environment_key",
@@ -54,7 +54,7 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  return await Category.getMultiple(selectQuery);
+  return await Category.getMultiple(SelectQuery);
 };
 
 export default getMultiple;

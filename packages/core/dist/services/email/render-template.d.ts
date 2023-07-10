@@ -1,4 +1,4 @@
-interface renderTemplateDataT {
+export interface renderTemplateDataT {
     [key: string]: any;
 }
 declare const renderTemplate: (template: string, data: renderTemplateDataT) => Promise<string>;

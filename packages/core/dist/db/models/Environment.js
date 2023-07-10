@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const Config_1 = __importDefault(require("../models/Config"));
-const format_environment_1 = __importDefault(require("../../utils/environments/format-environment"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const environments_1 = __importDefault(require("../../services/environments"));
 class Environment {
 }
 _a = Environment;
@@ -28,7 +28,7 @@ Environment.getAll = async () => {
           key ASC`,
         values: [],
     });
-    return environments.rows.map((environment) => (0, format_environment_1.default)(environment));
+    return environments.rows.map((environment) => environments_1.default.format(environment));
 };
 Environment.getSingle = async (key) => {
     const client = await db_1.default;
@@ -44,7 +44,7 @@ Environment.getSingle = async (key) => {
             status: 404,
         });
     }
-    return (0, format_environment_1.default)(environment.rows[0]);
+    return environments_1.default.format(environment.rows[0]);
 };
 Environment.upsertSingle = async (data, create) => {
     const client = await db_1.default;
@@ -96,7 +96,7 @@ Environment.upsertSingle = async (data, create) => {
             status: 400,
         });
     }
-    return (0, format_environment_1.default)(environments.rows[0]);
+    return environments_1.default.format(environments.rows[0]);
 };
 Environment.deleteSingle = async (key) => {
     const client = await db_1.default;
@@ -113,7 +113,7 @@ Environment.deleteSingle = async (key) => {
             status: 400,
         });
     }
-    return (0, format_environment_1.default)(environments.rows[0]);
+    return environments_1.default.format(environments.rows[0]);
 };
 _Environment_checkAssignedBricks = { value: async (assigned_bricks) => {
         const brickInstances = Config_1.default.bricks || [];

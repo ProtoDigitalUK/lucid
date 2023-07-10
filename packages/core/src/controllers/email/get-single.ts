@@ -1,5 +1,5 @@
 // Utils
-import buildResponse from "@utils/controllers/build-response";
+import buildResponse from "@utils/app/build-response";
 // Schema
 import emailsSchema from "@schemas/email";
 // Serices

@@ -7,7 +7,7 @@ const Category_1 = __importDefault(require("../../db/models/Category"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const getMultiple = async (data) => {
     const { filter, sort, page, per_page } = data.query;
-    const selectQuery = new query_helpers_1.SelectQueryBuilder({
+    const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
             "id",
             "environment_key",
@@ -46,7 +46,7 @@ const getMultiple = async (data) => {
         page: page,
         per_page: per_page,
     });
-    return await Category_1.default.getMultiple(selectQuery);
+    return await Category_1.default.getMultiple(SelectQuery);
 };
 exports.default = getMultiple;
 //# sourceMappingURL=get-multiple.js.map

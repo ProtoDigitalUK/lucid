@@ -11,4 +11,4 @@ const formatCollection = (instance) => {
     };
 };
 exports.default = formatCollection;
-//# sourceMappingURL=format-collection.js.map
+//# sourceMappingURL=format.js.map

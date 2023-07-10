@@ -1,15 +1,9 @@
 // Models
 import { EnvironmentT } from "@db/models/Environment";
+// Serices
+import { EnvironmentResT } from "@services/environments";
 
-export interface EnvironmentResT {
-  key: string;
-  title: string;
-  assigned_bricks: string[];
-  assigned_collections: string[];
-  assigned_forms: string[];
-}
-
-const formatEnvrionment = (environment: EnvironmentT): EnvironmentResT => {
+const formatEnvironment = (environment: EnvironmentT): EnvironmentResT => {
   return {
     key: environment.key,
     title: environment.title || "",
@@ -19,4 +13,4 @@ const formatEnvrionment = (environment: EnvironmentT): EnvironmentResT => {
   };
 };
 
-export default formatEnvrionment;
+export default formatEnvironment;

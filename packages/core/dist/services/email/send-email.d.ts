@@ -12,6 +12,15 @@ export interface EmailParamsT {
         replyTo?: string;
     };
 }
+export interface MailOptionsT {
+    to?: string;
+    subject?: string;
+    from?: string;
+    fromName?: string;
+    cc?: string;
+    bcc?: string;
+    replyTo?: string;
+}
 export declare const sendEmailExternal: (template: string, params: EmailParamsT) => Promise<{
     success: boolean;
     message: string;

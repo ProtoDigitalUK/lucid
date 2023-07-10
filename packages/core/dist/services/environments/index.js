@@ -8,11 +8,13 @@ const get_single_1 = __importDefault(require("./get-single"));
 const get_all_1 = __importDefault(require("./get-all"));
 const migrate_environment_1 = __importDefault(require("./migrate-environment"));
 const upsert_single_1 = __importDefault(require("./upsert-single"));
+const format_1 = __importDefault(require("./format"));
 exports.default = {
     deleteSingle: delete_single_1.default,
     getSingle: get_single_1.default,
     getAll: get_all_1.default,
     migrateEnvironment: migrate_environment_1.default,
     upsertSingle: upsert_single_1.default,
+    format: format_1.default,
 };
 //# sourceMappingURL=index.js.map

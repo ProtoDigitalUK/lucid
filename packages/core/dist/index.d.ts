@@ -6,7 +6,7 @@ import BrickBuilder from "@lucid/brick-builder";
 import CollectionBuilder from "@lucid/collection-builder";
 import FormBuilder from "@lucid/form-builder";
 export type { ConfigT as Config };
-declare const sendEmail: (template: string, params: import("./utils/emails/send-email").EmailParamsT) => Promise<{
+declare const sendEmail: (template: string, params: import("./services/email/send-email").EmailParamsT) => Promise<{
     success: boolean;
     message: string;
 }>;

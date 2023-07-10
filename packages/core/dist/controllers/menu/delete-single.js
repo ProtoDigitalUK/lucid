@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const build_response_1 = __importDefault(require("../../utils/controllers/build-response"));
+const build_response_1 = __importDefault(require("../../utils/app/build-response"));
 const menus_1 = __importDefault(require("../../schemas/menus"));
 const menu_1 = __importDefault(require("../../services/menu"));
 const deleteSingleController = async (req, res, next) => {

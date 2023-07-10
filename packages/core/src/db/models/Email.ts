@@ -1,11 +1,5 @@
 import getDBClient from "@db/db";
-import z from "zod";
-// Schema
-import emailsSchema from "@schemas/email";
 // Utils
-import renderTemplate from "@utils/emails/render-template";
-import { sendEmailInternal } from "@utils/emails/send-email";
-import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
@@ -24,9 +18,7 @@ type EmailCreateSingle = (data: {
   };
 }) => Promise<EmailT>;
 
-type EmailGetMultiple = (
-  query: z.infer<typeof emailsSchema.getMultiple.query>
-) => Promise<{
+type EmailGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
   data: EmailT[];
   count: number;
 }>;
@@ -42,13 +34,6 @@ type EmailUpdateSingle = (
 
 type EmailGetSingle = (id: number) => Promise<EmailT>;
 type EmailDeleteSingle = (id: number) => Promise<EmailT>;
-type EmailResendSingle = (id: number) => Promise<{
-  email: EmailT;
-  status: {
-    success: boolean;
-    message: string;
-  };
-}>;
 
 // -------------------------------------------
 // Media
@@ -126,82 +111,21 @@ export default class Email {
       values: values.value,
     });
 
-    if (email.rowCount === 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "Email",
-        message: "Error saving email",
-        status: 500,
-      });
-    }
-
     // -------------------------------------------
     // Return
     return email.rows[0];
   };
-  static getMultiple: EmailGetMultiple = async (query) => {
+  static getMultiple: EmailGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const { filter, sort, page, per_page } = query;
-
-    // Build Query Data and Query
-    const SelectQuery = new SelectQueryBuilder({
-      columns: [
-        "id",
-        "from_address",
-        "from_name",
-        "to_address",
-        "subject",
-        "cc",
-        "bcc",
-        "template",
-        "data",
-        "delivery_status",
-        "created_at",
-        "updated_at",
-      ],
-      filter: {
-        data: filter,
-        meta: {
-          to_address: {
-            operator: "%",
-            type: "text",
-            columnType: "standard",
-          },
-          subject: {
-            operator: "%",
-            type: "text",
-            columnType: "standard",
-          },
-          delivery_status: {
-            operator: "ILIKE",
-            type: "text",
-            columnType: "standard",
-          },
-        },
-      },
-      sort: sort,
-      page: page,
-      per_page: per_page,
-    });
-
     const emails = await client.query<EmailT>({
-      text: `SELECT
-          ${SelectQuery.query.select}
-        FROM
-          lucid_emails
-        ${SelectQuery.query.where}
-        ${SelectQuery.query.order}
-        ${SelectQuery.query.pagination}`,
-      values: SelectQuery.values,
+      text: `SELECT ${query_instance.query.select} FROM lucid_emails ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      values: query_instance.values,
     });
+
     const count = await client.query<{ count: number }>({
-      text: `SELECT 
-          COUNT(DISTINCT lucid_emails.id)
-        FROM
-          lucid_emails
-        ${SelectQuery.query.where} `,
-      values: SelectQuery.countValues,
+      text: `SELECT  COUNT(DISTINCT lucid_emails.id) FROM lucid_emails ${query_instance.query.where}`,
+      values: query_instance.countValues,
     });
 
     return {
@@ -222,21 +146,6 @@ export default class Email {
       values: [id],
     });
 
-    if (email.rowCount === 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "Email",
-        message: "Email not found",
-        status: 404,
-      });
-    }
-
-    const html = await renderTemplate(
-      email.rows[0].template,
-      email.rows[0].data || {}
-    );
-    email.rows[0].html = html;
-
     return email.rows[0];
   };
   static deleteSingle: EmailDeleteSingle = async (id) => {
@@ -250,15 +159,6 @@ export default class Email {
         RETURNING *`,
       values: [id],
     });
-
-    if (email.rowCount === 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "Email",
-        message: "Email not found",
-        status: 404,
-      });
-    }
 
     return email.rows[0];
   };
@@ -275,7 +175,7 @@ export default class Email {
       },
     });
 
-    const emailRes = await client.query<EmailT>({
+    const email = await client.query<EmailT>({
       text: `UPDATE 
         lucid_emails 
         SET 
@@ -286,42 +186,6 @@ export default class Email {
       values: [...values.value, id],
     });
 
-    if (!emailRes.rows[0]) {
-      throw new LucidError({
-        type: "basic",
-        name: "Error updating email",
-        message: "There was an error updating the email",
-        status: 500,
-      });
-    }
-
-    return emailRes.rows[0];
-  };
-  static resendSingle: EmailResendSingle = async (id) => {
-    const email = await Email.getSingle(id);
-
-    const status = await sendEmailInternal(
-      email.template,
-      {
-        data: email.data || {},
-        options: {
-          to: email.to_address || "",
-          subject: email.subject || "",
-          from: email.from_address || undefined,
-          fromName: email.from_name || undefined,
-          cc: email.cc || undefined,
-          bcc: email.bcc || undefined,
-          replyTo: email.from_address || undefined,
-        },
-      },
-      id
-    );
-
-    const updatedEmail = await Email.getSingle(id);
-
-    return {
-      status,
-      email: updatedEmail,
-    };
+    return email.rows[0];
   };
 }

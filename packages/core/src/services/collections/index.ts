@@ -3,7 +3,7 @@ import { CollectionConfigT } from "@lucid/collection-builder";
 import getSingle from "./get-single";
 import getAll from "./get-all";
 import updateBricks from "./update-bricks";
-import formatCollection from "./format-collection";
+import format from "./format";
 
 // -------------------------------------------
 // Types
@@ -23,5 +23,5 @@ export default {
   getSingle,
   getAll,
   updateBricks,
-  formatCollection,
+  format,
 };

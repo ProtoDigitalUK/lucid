@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const formatEnvrionment = (environment) => {
+const formatEnvironment = (environment) => {
     return {
         key: environment.key,
         title: environment.title || "",
@@ -9,5 +9,5 @@ const formatEnvrionment = (environment) => {
         assigned_forms: environment.assigned_forms || [],
     };
 };
-exports.default = formatEnvrionment;
-//# sourceMappingURL=format-environment.js.map
+exports.default = formatEnvironment;
+//# sourceMappingURL=format.js.map

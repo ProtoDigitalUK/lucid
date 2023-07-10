@@ -18,7 +18,7 @@ const getSingle = async (data) => {
             status: 404,
         });
     }
-    const collectionsF = instances.map((collection) => collections_1.default.formatCollection(collection));
+    const collectionsF = instances.map((collection) => collections_1.default.format(collection));
     const environment = data.environment
         ? data.environment
         : await Environment_1.default.getSingle(data.environment_key);
