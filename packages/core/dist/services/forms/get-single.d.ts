@@ -1,8 +1,7 @@
 export interface ServiceData {
-    id: number;
-    form_key: string;
+    key: string;
     environment_key: string;
 }
-declare const getSingle: (data: ServiceData) => Promise<import(".").FormSubmissionResT>;
+declare const getSingle: (data: ServiceData) => Promise<import("../forms").FormT>;
 export default getSingle;
 //# sourceMappingURL=get-single.d.ts.map

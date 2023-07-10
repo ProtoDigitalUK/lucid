@@ -3,6 +3,6 @@ export interface ServiceData {
     form_key: string;
     environment_key: string;
 }
-declare const deleteSingle: (data: ServiceData) => Promise<import("../../utils/forms/format-form").FormSubmissionResT>;
+declare const deleteSingle: (data: ServiceData) => Promise<import(".").FormSubmissionResT>;
 export default deleteSingle;
 //# sourceMappingURL=delete-single.d.ts.map

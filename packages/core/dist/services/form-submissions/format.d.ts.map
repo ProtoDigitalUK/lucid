@@ -1,0 +1,1 @@
+{"version":3,"file":"format.d.ts","sourceRoot":"","sources":["../../../src/services/form-submissions/format.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,gBAAgB,EAAE,MAAM,2BAA2B,CAAC;AAExE,OAAO,EAAE,kBAAkB,EAAE,MAAM,4BAA4B,CAAC;AAEhE,OAAO,WAAW,MAAM,qBAAqB,CAAC;AAE9C,QAAA,MAAM,oBAAoB,SAClB,WAAW;gBAEH,gBAAgB;UACtB,SAAS,EAAE;MAElB,kBAkCF,CAAC;AAEF,eAAe,oBAAoB,CAAC"}

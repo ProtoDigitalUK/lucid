@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import formsSchema from "@schemas/forms";
 // Services
-import forms from "@services/form";
+import forms from "@services/forms";
 
 // --------------------------------------------------
 // Controller

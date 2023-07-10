@@ -3,10 +3,9 @@ import z from "zod";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
-import {
-  formatFormSubmission,
+import formsubmissions, {
   FormSubmissionResT,
-} from "@utils/forms/format-form";
+} from "@services/form-submissions";
 // Models
 import Config from "@db/models/Config";
 // Schema
@@ -110,7 +109,7 @@ export default class FormSubmission {
 
     const formDataRes = formData.map((field) => field.rows[0]);
 
-    return formatFormSubmission(formBuilder, {
+    return formsubmissions.format(formBuilder, {
       submission: formSubmission,
       data: formDataRes,
     });
@@ -147,7 +146,7 @@ export default class FormSubmission {
       formSubmission.rows[0].form_key
     );
 
-    return formatFormSubmission(formBuilder, {
+    return formsubmissions.format(formBuilder, {
       submission: formSubmission.rows[0],
       data: formData,
     });
@@ -225,7 +224,7 @@ export default class FormSubmission {
     }
 
     const formattedSubmissions = submissions.rows.map((submission) => {
-      return formatFormSubmission(formBuilder, {
+      return formsubmissions.format(formBuilder, {
         submission,
         data: formData.filter(
           (field) => field.form_submission_id === submission.id
@@ -291,7 +290,7 @@ export default class FormSubmission {
       updatedFormSubmission.rows[0].form_key
     );
 
-    return formatFormSubmission(formBuilder, {
+    return formsubmissions.format(formBuilder, {
       submission: updatedFormSubmission.rows[0],
       data: formData,
     });
@@ -322,7 +321,7 @@ export default class FormSubmission {
 
     const formBuilder = await FormSubmission.#getFormBuilder(data.form_key);
 
-    return formatFormSubmission(formBuilder, {
+    return formsubmissions.format(formBuilder, {
       submission: formSubmission.rows[0],
       data: [],
     });

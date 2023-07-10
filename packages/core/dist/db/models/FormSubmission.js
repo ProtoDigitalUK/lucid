@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
-const format_form_1 = require("../../utils/forms/format-form");
+const form_submissions_1 = __importDefault(require("../../services/form-submissions"));
 const Config_1 = __importDefault(require("../models/Config"));
 const environments_1 = __importDefault(require("../../services/environments"));
 class FormSubmission {
@@ -32,7 +32,7 @@ FormSubmission.createSingle = async (data) => {
         value: field.value,
     })));
     const formDataRes = formData.map((field) => field.rows[0]);
-    return (0, format_form_1.formatFormSubmission)(formBuilder, {
+    return form_submissions_1.default.format(formBuilder, {
         submission: formSubmission,
         data: formDataRes,
     });
@@ -57,7 +57,7 @@ FormSubmission.getSingle = async (data) => {
     ]);
     formData = formData.filter((field) => field.form_submission_id === formSubmission.rows[0].id);
     const formBuilder = await __classPrivateFieldGet(FormSubmission, _a, "f", _FormSubmission_getFormBuilder).call(FormSubmission, formSubmission.rows[0].form_key);
-    return (0, format_form_1.formatFormSubmission)(formBuilder, {
+    return form_submissions_1.default.format(formBuilder, {
         submission: formSubmission.rows[0],
         data: formData,
     });
@@ -122,7 +122,7 @@ FormSubmission.getMultiple = async (query, data) => {
         formData = await __classPrivateFieldGet(FormSubmission, _a, "f", _FormSubmission_getAllFormData).call(FormSubmission, formSubmissionIds);
     }
     const formattedSubmissions = submissions.rows.map((submission) => {
-        return (0, format_form_1.formatFormSubmission)(formBuilder, {
+        return form_submissions_1.default.format(formBuilder, {
             submission,
             data: formData.filter((field) => field.form_submission_id === submission.id),
         });
@@ -168,7 +168,7 @@ FormSubmission.toggleReadAt = async (data) => {
     ]);
     formData = formData.filter((field) => field.form_submission_id === updatedFormSubmission.rows[0].id);
     const formBuilder = await __classPrivateFieldGet(FormSubmission, _a, "f", _FormSubmission_getFormBuilder).call(FormSubmission, updatedFormSubmission.rows[0].form_key);
-    return (0, format_form_1.formatFormSubmission)(formBuilder, {
+    return form_submissions_1.default.format(formBuilder, {
         submission: updatedFormSubmission.rows[0],
         data: formData,
     });
@@ -192,7 +192,7 @@ FormSubmission.deleteSingle = async (data) => {
         });
     }
     const formBuilder = await __classPrivateFieldGet(FormSubmission, _a, "f", _FormSubmission_getFormBuilder).call(FormSubmission, data.form_key);
-    return (0, format_form_1.formatFormSubmission)(formBuilder, {
+    return form_submissions_1.default.format(formBuilder, {
         submission: formSubmission.rows[0],
         data: [],
     });

@@ -3,7 +3,7 @@ import init from "./init";
 // Models
 import { ConfigT, buildConfig } from "@db/models/Config";
 // Utils
-import { submitForm } from "@utils/forms/submit-form";
+import formSubmissions from "@services/form-submissions";
 // Services
 import emails from "@services/email";
 // Packages
@@ -16,6 +16,7 @@ import FormBuilder from "@lucid/form-builder";
 export type { ConfigT as Config };
 
 const sendEmail = emails.sendEmailExternal;
+const submitForm = formSubmissions.submitForm;
 
 export {
   init,

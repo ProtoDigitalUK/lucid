@@ -1,5 +1,5 @@
 import z from "zod";
-import { FormSubmissionResT } from "../../utils/forms/format-form";
+import { FormSubmissionResT } from "../../services/form-submissions";
 import formSubmissionsSchema from "../../schemas/form-submissions";
 type FormSubmissionCreateSingle = (data: {
     id?: number;
