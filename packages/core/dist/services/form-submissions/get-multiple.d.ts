@@ -6,7 +6,7 @@ export interface ServiceData {
     environment_key: string;
 }
 declare const getMultiple: (data: ServiceData) => Promise<{
-    data: import(".").FormSubmissionResT[];
+    data: import("../form-submissions").FormSubmissionResT[];
     count: number;
 }>;
 export default getMultiple;

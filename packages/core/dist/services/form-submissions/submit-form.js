@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
+const form_submissions_1 = __importDefault(require("../form-submissions"));
 const submitForm = async (props) => {
     const data = [];
     for (let [key, value] of Object.entries(props.data)) {
@@ -23,7 +23,7 @@ const submitForm = async (props) => {
             type: type,
         });
     }
-    const formRes = await FormSubmission_1.default.createSingle({
+    const formRes = await form_submissions_1.default.createSingle({
         id: undefined,
         form_key: props.form.key,
         environment_key: props.environment_key,

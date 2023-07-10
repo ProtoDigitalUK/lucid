@@ -3,6 +3,7 @@ import { FormBuilderOptionsT } from "@lucid/form-builder";
 import getSingle from "./get-single";
 import getAll from "./get-all";
 import format from "./format";
+import getBuilderInstance from "./get-builder-instance";
 
 // -------------------------------------------
 // Types
@@ -19,4 +20,5 @@ export default {
   getSingle,
   getAll,
   format,
+  getBuilderInstance,
 };

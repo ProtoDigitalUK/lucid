@@ -6,6 +6,6 @@ export interface ServiceData {
         [key: string]: string | number | boolean;
     };
 }
-declare const submitForm: (props: ServiceData) => Promise<import(".").FormSubmissionResT>;
+declare const submitForm: (props: ServiceData) => Promise<import("../form-submissions").FormSubmissionResT>;
 export default submitForm;
 //# sourceMappingURL=submit-form.d.ts.map

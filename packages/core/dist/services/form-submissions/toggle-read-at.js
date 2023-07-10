@@ -3,14 +3,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const error_handler_1 = require("../../utils/app/error-handler");
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
+const form_submissions_1 = __importDefault(require("../form-submissions"));
+const forms_1 = __importDefault(require("../forms"));
 const toggleReadAt = async (data) => {
-    const formSubmission = await FormSubmission_1.default.toggleReadAt({
+    await form_submissions_1.default.hasEnvironmentPermission({
+        form_key: data.form_key,
+        environment_key: data.environment_key,
+    });
+    const formSubmission = await form_submissions_1.default.getSingle({
         id: data.id,
         form_key: data.form_key,
         environment_key: data.environment_key,
     });
-    return formSubmission;
+    const updateFormSubmission = await FormSubmission_1.default.toggleReadAt({
+        id: data.id,
+        form_key: data.form_key,
+        environment_key: data.environment_key,
+        read_at: formSubmission.read_at ? null : new Date(),
+    });
+    if (!updateFormSubmission) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Form Error",
+            message: "This form submission does not exist.",
+            status: 404,
+        });
+    }
+    let formData = await FormSubmission_1.default.getAllFormData([updateFormSubmission.id]);
+    formData = formData.filter((field) => field.form_submission_id === updateFormSubmission.id);
+    const formBuilder = forms_1.default.getBuilderInstance({
+        form_key: updateFormSubmission.form_key,
+    });
+    return form_submissions_1.default.format(formBuilder, {
+        submission: updateFormSubmission,
+        data: formData,
+    });
 };
 exports.default = toggleReadAt;
 //# sourceMappingURL=toggle-read-at.js.map

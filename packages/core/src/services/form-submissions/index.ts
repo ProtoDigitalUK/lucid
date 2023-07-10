@@ -5,6 +5,8 @@ import getSingle from "./get-single";
 import toggleReadAt from "./toggle-read-at";
 import format from "./format";
 import submitForm from "./submit-form";
+import hasEnvironmentPermission from "./has-environment-permission";
+import createSingle from "./create-single";
 
 // ----------------
 // Types
@@ -38,4 +40,6 @@ export default {
   toggleReadAt,
   format,
   submitForm,
+  hasEnvironmentPermission,
+  createSingle,
 };

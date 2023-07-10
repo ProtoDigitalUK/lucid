@@ -7,30 +7,33 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
-const getSingle = async (data) => {
+const createSingle = async (data) => {
     await form_submissions_1.default.hasEnvironmentPermission(data);
-    const formSubmission = await FormSubmission_1.default.getSingle({
-        id: data.id,
+    const formBuilder = forms_1.default.getBuilderInstance({
+        form_key: data.form_key,
+    });
+    const formSubmission = await FormSubmission_1.default.createSingle({
         form_key: data.form_key,
         environment_key: data.environment_key,
     });
     if (!formSubmission) {
         throw new error_handler_1.LucidError({
             type: "basic",
-            name: "Form Error",
-            message: "This form submission does not exist.",
-            status: 404,
+            name: "Form Submission Error",
+            message: "Failed to create form submission entry.",
+            status: 500,
         });
     }
-    let formData = await FormSubmission_1.default.getAllFormData([formSubmission.id]);
-    formData = formData.filter((field) => field.form_submission_id === formSubmission.id);
-    const formBuilder = forms_1.default.getBuilderInstance({
-        form_key: formSubmission.form_key,
-    });
+    const formData = await Promise.all(data.data.map((field) => FormSubmission_1.default.createFormData({
+        form_submission_id: formSubmission.id,
+        name: field.name,
+        type: field.type,
+        value: field.value,
+    })));
     return form_submissions_1.default.format(formBuilder, {
         submission: formSubmission,
         data: formData,
     });
 };
-exports.default = getSingle;
-//# sourceMappingURL=get-single.js.map
+exports.default = createSingle;
+//# sourceMappingURL=create-single.js.map

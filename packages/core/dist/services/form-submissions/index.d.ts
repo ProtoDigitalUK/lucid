@@ -31,6 +31,8 @@ declare const _default: {
         data: import("../../db/models/FormSubmission").FormDataT[];
     }) => FormSubmissionResT;
     submitForm: (props: import("./submit-form").ServiceData) => Promise<FormSubmissionResT>;
+    hasEnvironmentPermission: (data: import("./has-environment-permission").ServiceData) => Promise<import("../environments").EnvironmentResT>;
+    createSingle: (data: import("./create-single").ServiceData) => Promise<FormSubmissionResT>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map
