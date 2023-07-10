@@ -5,6 +5,7 @@ import getAll from "./get-all";
 import migrateEnvironment from "./migrate-environment";
 import upsertSingle from "./upsert-single";
 import format from "./format";
+import checkKeyExists from "./check-key-exists";
 
 // ----------------------------------
 // Types
@@ -25,4 +26,5 @@ export default {
   migrateEnvironment,
   upsertSingle,
   format,
+  checkKeyExists,
 };

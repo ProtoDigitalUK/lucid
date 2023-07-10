@@ -3,7 +3,6 @@ import {
   CollectionBrickFieldsT,
   CollectionBrickT,
 } from "@db/models/CollectionBrick";
-import Environment from "@db/models/Environment";
 // Internal packages
 import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
 // Utils
@@ -11,6 +10,7 @@ import createURL from "@utils/media/create-url";
 // Services
 import brickConfig from "@services/brick-config";
 import { CollectionT } from "@services/collections";
+import environments from "@services/environments";
 
 export interface BrickResponseT {
   id: CollectionBrickT["id"];
@@ -276,7 +276,9 @@ const formatBricks = async (data: {
   const builderInstances = brickConfig.getBrickConfig();
   if (!builderInstances) return [];
 
-  const environment = await Environment.getSingle(data.environment_key);
+  const environment = await environments.getSingle({
+    key: data.environment_key,
+  });
   if (!environment) return [];
 
   // Build the base brick structure

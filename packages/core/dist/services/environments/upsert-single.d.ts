@@ -8,6 +8,6 @@ export interface ServiceData {
     };
     create: boolean;
 }
-declare const upsertSingle: (data: ServiceData) => Promise<import(".").EnvironmentResT>;
+declare const upsertSingle: (data: ServiceData) => Promise<import("../environments").EnvironmentResT>;
 export default upsertSingle;
 //# sourceMappingURL=upsert-single.d.ts.map

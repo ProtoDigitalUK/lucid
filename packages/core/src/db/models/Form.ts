@@ -1,11 +1,11 @@
 import z from "zod";
 // Models
 import Config from "@db/models/Config";
-import Environment from "@db/models/Environment";
 // Serices
 import { LucidError } from "@utils/app/error-handler";
 import FormBuilder, { FormBuilderOptionsT } from "@lucid/form-builder";
 import formsSchema from "@schemas/forms";
+import environments from "@services/environments";
 
 // -------------------------------------------
 // Types
@@ -45,7 +45,9 @@ export default class Form {
       });
     }
 
-    const environment = await Environment.getSingle(data.environment_key);
+    const environment = await environments.getSingle({
+      key: data.environment_key,
+    });
 
     const allForms = formInstances.map((form) => Form.getFormBuilderData(form));
 
@@ -76,7 +78,9 @@ export default class Form {
     let forms = formInstances.map((form) => Form.getFormBuilderData(form));
 
     // Get data
-    const environment = await Environment.getSingle(environment_key);
+    const environment = await environments.getSingle({
+      key: environment_key,
+    });
 
     // Filtered
     forms = Form.#filterEnvironmentForms(

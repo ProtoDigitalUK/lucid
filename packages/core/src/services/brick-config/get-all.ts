@@ -1,11 +1,10 @@
 import z from "zod";
-// Models
-import Environment from "@db/models/Environment";
 // Schema
 import bricksSchema from "@schemas/bricks";
 // Services
 import brickConfig from "@services/brick-config";
 import collections from "@services/collections";
+import environments from "@services/environments";
 
 export interface ServiceData {
   query: z.infer<typeof bricksSchema.config.getAll.query>;
@@ -14,7 +13,9 @@ export interface ServiceData {
 }
 
 const getAll = async (data: ServiceData) => {
-  const environment = await Environment.getSingle(data.environment_key);
+  const environment = await environments.getSingle({
+    key: data.environment_key,
+  });
   const collection = await collections.getSingle({
     collection_key: data.collection_key,
     environment_key: data.environment_key,

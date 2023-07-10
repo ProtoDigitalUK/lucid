@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
-const Config_1 = __importDefault(require("../models/Config"));
-const Environment_1 = __importDefault(require("../models/Environment"));
 const format_form_1 = require("../../utils/forms/format-form");
+const Config_1 = __importDefault(require("../models/Config"));
+const environments_1 = __importDefault(require("../../services/environments"));
 class FormSubmission {
 }
 _a = FormSubmission;
@@ -198,7 +198,9 @@ FormSubmission.deleteSingle = async (data) => {
     });
 };
 _FormSubmission_checkFormEnvrionmentPermissions = { value: async (data) => {
-        const environment = await Environment_1.default.getSingle(data.environment_key);
+        const environment = await environments_1.default.getSingle({
+            key: data.environment_key,
+        });
         const hasPerm = environment.assigned_forms?.includes(data.form_key);
         if (!hasPerm) {
             throw new error_handler_1.LucidError({

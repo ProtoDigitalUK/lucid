@@ -2,11 +2,11 @@ import z from "zod";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Models
-import Environment from "@db/models/Environment";
 import Config from "@db/models/Config";
 // Services
 import collections, { CollectionT } from "@services/collections";
 import brickConfig from "@services/brick-config";
+import environments from "@services/environments";
 
 export interface ServiceData {
   query: z.infer<typeof collectionSchema.getAll.query>;
@@ -22,7 +22,9 @@ const getAll = async (data: ServiceData) => {
     collections.format(collection)
   );
   // Get environment
-  const environment = await Environment.getSingle(data.environment_key);
+  const environment = await environments.getSingle({
+    key: data.environment_key,
+  });
 
   // Filtered by assigned collections in environment
   collectionsF.filter((collection) =>

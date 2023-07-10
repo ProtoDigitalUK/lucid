@@ -3,16 +3,16 @@ import z from "zod";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
-// Models
-import Config from "@db/models/Config";
-import Environment from "@db/models/Environment";
-
-// Serices
 import {
   formatFormSubmission,
   FormSubmissionResT,
 } from "@utils/forms/format-form";
+// Models
+import Config from "@db/models/Config";
+// Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
+// Services
+import environments from "@services/environments";
 
 // -------------------------------------------
 // Types
@@ -333,7 +333,9 @@ export default class FormSubmission {
     form_key: string;
     environment_key: string;
   }) => {
-    const environment = await Environment.getSingle(data.environment_key);
+    const environment = await environments.getSingle({
+      key: data.environment_key,
+    });
 
     const hasPerm = environment.assigned_forms?.includes(data.form_key);
 

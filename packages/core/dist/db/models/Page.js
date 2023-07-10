@@ -13,12 +13,12 @@ const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
-const Environment_1 = __importDefault(require("../models/Environment"));
 const format_page_1 = __importDefault(require("../../utils/pages/format-page"));
 const validate_bricks_1 = __importDefault(require("../../utils/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const collections_1 = __importDefault(require("../../services/collections"));
+const environments_1 = __importDefault(require("../../services/environments"));
 class Page {
 }
 _a = Page;
@@ -274,7 +274,9 @@ Page.updateSingle = async (data) => {
             environment_key: data.environment_key,
         });
     }
-    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const environment = await environments_1.default.getSingle({
+        key: data.environment_key,
+    });
     const collection = await collections_1.default.getSingle({
         collection_key: currentPage.collection_key,
         environment_key: data.environment_key,

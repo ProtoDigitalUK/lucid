@@ -8,8 +8,8 @@ import RolePermission, {
 import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
-// Models
-import Environment from "@db/models/Environment";
+// Services
+import environments from "@services/environments";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body
@@ -17,7 +17,7 @@ type SchemaPermissions = z.infer<
 
 const validatePermissions = async (permGroup: SchemaPermissions) => {
   const permissionSet = RolePermission.permissions;
-  const environments = await Environment.getAll();
+  const environmentsRes = await environments.getAll();
 
   // Data
   const validPermissions: Array<{
@@ -61,7 +61,7 @@ const validatePermissions = async (permGroup: SchemaPermissions) => {
           )
         ) {
           // Check if the environment key is valid
-          const env = environments.find((e) => e.key === envKey);
+          const env = environmentsRes.find((e) => e.key === envKey);
           if (!env) {
             if (!environmentErrors[envKey]) {
               environmentErrors[envKey] = {

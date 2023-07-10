@@ -11,11 +11,11 @@ var _a, _SinglePage_getOrCreateSinglePage;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
-const Environment_1 = __importDefault(require("../models/Environment"));
 const validate_bricks_1 = __importDefault(require("../../utils/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const collections_1 = __importDefault(require("../../services/collections"));
+const environments_1 = __importDefault(require("../../services/environments"));
 class SinglePage {
 }
 _a = SinglePage;
@@ -88,7 +88,9 @@ SinglePage.getSingle = async (data) => {
 };
 SinglePage.updateSingle = async (data) => {
     const client = await db_1.default;
-    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const environment = await environments_1.default.getSingle({
+        key: data.environment_key,
+    });
     const collection = await collections_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,

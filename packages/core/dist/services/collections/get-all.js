@@ -3,16 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const Config_1 = __importDefault(require("../../db/models/Config"));
 const collections_1 = __importDefault(require("../collections"));
 const brick_config_1 = __importDefault(require("../brick-config"));
+const environments_1 = __importDefault(require("../environments"));
 const getAll = async (data) => {
     const instances = Config_1.default.collections || [];
     if (!instances)
         return [];
     let collectionsF = instances.map((collection) => collections_1.default.format(collection));
-    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const environment = await environments_1.default.getSingle({
+        key: data.environment_key,
+    });
     collectionsF.filter((collection) => environment.assigned_collections.includes(collection.key));
     collectionsF = filterCollections(data.query.filter, collectionsF);
     collectionsF = collectionsF.map((collection) => {

@@ -2,12 +2,13 @@
 import { LucidError } from "@utils/app/error-handler";
 // Models
 import Config from "@db/models/Config";
-import Environment, { EnvironmentT } from "@db/models/Environment";
+import { EnvironmentT } from "@db/models/Environment";
 // Intenal
 import { CollectionConfigT } from "@lucid/collection-builder";
 // Services
 import collections, { CollectionT } from "@services/collections";
 import brickConfig from "@services/brick-config";
+import environments from "@services/environments";
 
 export interface ServiceData {
   collection_key: string;
@@ -36,7 +37,9 @@ const getSingle = async (data: ServiceData) => {
   // get environment
   const environment = data.environment
     ? data.environment
-    : await Environment.getSingle(data.environment_key);
+    : await environments.getSingle({
+        key: data.environment_key,
+      });
   const assignedCollections = environment.assigned_collections || [];
 
   // Filter by key and type

@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const create_url_1 = __importDefault(require("../media/create-url"));
 const brick_config_1 = __importDefault(require("../../services/brick-config"));
+const environments_1 = __importDefault(require("../../services/environments"));
 const specificFieldValues = (type, builderField, field) => {
     let value = null;
     switch (type) {
@@ -171,7 +171,9 @@ const formatBricks = async (data) => {
     const builderInstances = brick_config_1.default.getBrickConfig();
     if (!builderInstances)
         return [];
-    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const environment = await environments_1.default.getSingle({
+        key: data.environment_key,
+    });
     if (!environment)
         return [];
     const brickStructure = buildBrickStructure(data.brick_fields).filter((brick) => {

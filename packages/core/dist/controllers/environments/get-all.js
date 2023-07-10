@@ -8,7 +8,7 @@ const environments_1 = __importDefault(require("../../schemas/environments"));
 const environments_2 = __importDefault(require("../../services/environments"));
 const getAllController = async (req, res, next) => {
     try {
-        const environmentsRes = await environments_2.default.getAll({});
+        const environmentsRes = await environments_2.default.getAll();
         res.status(200).json((0, build_response_1.default)(req, {
             data: environmentsRes,
         }));

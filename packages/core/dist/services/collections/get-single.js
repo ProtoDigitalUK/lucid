@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Config_1 = __importDefault(require("../../db/models/Config"));
-const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const collections_1 = __importDefault(require("../collections"));
 const brick_config_1 = __importDefault(require("../brick-config"));
+const environments_1 = __importDefault(require("../environments"));
 const getSingle = async (data) => {
     const instances = Config_1.default.collections || [];
     if (!instances) {
@@ -21,7 +21,9 @@ const getSingle = async (data) => {
     const collectionsF = instances.map((collection) => collections_1.default.format(collection));
     const environment = data.environment
         ? data.environment
-        : await Environment_1.default.getSingle(data.environment_key);
+        : await environments_1.default.getSingle({
+            key: data.environment_key,
+        });
     const assignedCollections = environment.assigned_collections || [];
     let collection;
     if (data.type) {

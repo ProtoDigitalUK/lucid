@@ -1,14 +1,13 @@
-import { EnvironmentResT } from "../../services/environments";
-type EnvironmentGetAll = () => Promise<EnvironmentResT[]>;
-type EnvironmentGetSingle = (key: string) => Promise<EnvironmentResT>;
+type EnvironmentGetAll = () => Promise<EnvironmentT[]>;
+type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
 type EnvironmentUpsertSingle = (data: {
     key: string;
     title?: string;
     assigned_bricks?: string[];
     assigned_collections?: string[];
     assigned_forms?: string[];
-}, create: boolean) => Promise<EnvironmentResT>;
-type EnvironmentDeleteSingle = (key: string) => Promise<EnvironmentResT>;
+}) => Promise<EnvironmentT>;
+type EnvironmentDeleteSingle = (key: string) => Promise<EnvironmentT>;
 export type EnvironmentT = {
     key: string;
     title: string | null;
@@ -17,11 +16,11 @@ export type EnvironmentT = {
     assigned_forms: string[] | null;
 };
 export default class Environment {
-    #private;
     static getAll: EnvironmentGetAll;
     static getSingle: EnvironmentGetSingle;
     static upsertSingle: EnvironmentUpsertSingle;
     static deleteSingle: EnvironmentDeleteSingle;
+    static checkKeyExists: (key: string) => Promise<EnvironmentT[]>;
 }
 export {};
 //# sourceMappingURL=Environment.d.ts.map

@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const RolePermission_1 = __importDefault(require("../../db/models/RolePermission"));
 const error_handler_1 = require("../app/error-handler");
-const Environment_1 = __importDefault(require("../../db/models/Environment"));
+const environments_1 = __importDefault(require("../../services/environments"));
 const validatePermissions = async (permGroup) => {
     const permissionSet = RolePermission_1.default.permissions;
-    const environments = await Environment_1.default.getAll();
+    const environmentsRes = await environments_1.default.getAll();
     const validPermissions = [];
     const permissionErrors = {};
     const environmentErrors = {};
@@ -35,7 +35,7 @@ const validatePermissions = async (permGroup) => {
             }
             else {
                 if (permissionSet.environment.includes(permission)) {
-                    const env = environments.find((e) => e.key === envKey);
+                    const env = environmentsRes.find((e) => e.key === envKey);
                     if (!env) {
                         if (!environmentErrors[envKey]) {
                             environmentErrors[envKey] = {

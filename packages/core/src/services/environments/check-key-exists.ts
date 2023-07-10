@@ -9,19 +9,19 @@ export interface ServiceData {
   key: string;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const environment = await Environment.getSingle(data.key);
+const checkKeyExists = async (data: ServiceData) => {
+  const environment = await Environment.checkKeyExists(data.key);
 
-  if (!environment) {
+  if (environment) {
     throw new LucidError({
       type: "basic",
-      name: "Environment not found",
-      message: `Environment with key "${data.key}" not found`,
-      status: 404,
+      name: "Environment already exists",
+      message: `Environment with key "${data.key}" already exists`,
+      status: 400,
     });
   }
 
   return environments.format(environment);
 };
 
-export default getSingle;
+export default checkKeyExists;

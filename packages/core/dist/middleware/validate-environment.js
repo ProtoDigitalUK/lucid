@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../utils/app/error-handler");
-const Environment_1 = __importDefault(require("../db/models/Environment"));
+const environments_1 = __importDefault(require("../services/environments"));
 const validateEnvironment = async (req, res, next) => {
     try {
         const environment = req.headers["lucid-environment"];
@@ -22,7 +22,7 @@ const validateEnvironment = async (req, res, next) => {
                 }),
             });
         }
-        const environmentConfig = await Environment_1.default.getAll();
+        const environmentConfig = await environments_1.default.getAll();
         const findEnv = environmentConfig.find((env) => env.key === environment);
         if (!findEnv) {
             throw new error_handler_1.LucidError({

@@ -1,7 +1,6 @@
 import getDBClient from "@db/db";
 // Models
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
-import Environment from "@db/models/Environment";
 // Utils
 import { BrickResponseT } from "@utils/bricks/format-bricks";
 import validateBricks from "@utils/bricks/validate-bricks";
@@ -9,6 +8,7 @@ import { LucidError } from "@utils/app/error-handler";
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import collections from "@services/collections";
+import environments from "@services/environments";
 
 // -------------------------------------------
 // Types
@@ -123,7 +123,9 @@ export default class SinglePage {
     const client = await getDBClient;
 
     // Used to check if we have access to the collection
-    const environment = await Environment.getSingle(data.environment_key);
+    const environment = await environments.getSingle({
+      key: data.environment_key,
+    });
     const collection = await collections.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,

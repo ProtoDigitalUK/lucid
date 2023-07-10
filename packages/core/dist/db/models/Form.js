@@ -10,8 +10,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _Form_filterEnvironmentForms;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../models/Config"));
-const Environment_1 = __importDefault(require("../models/Environment"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const environments_1 = __importDefault(require("../../services/environments"));
 class Form {
 }
 _a = Form;
@@ -25,7 +25,9 @@ Form.getSingle = async (data) => {
             status: 404,
         });
     }
-    const environment = await Environment_1.default.getSingle(data.environment_key);
+    const environment = await environments_1.default.getSingle({
+        key: data.environment_key,
+    });
     const allForms = formInstances.map((form) => Form.getFormBuilderData(form));
     const assignedForms = environment.assigned_forms || [];
     const formData = allForms.find((c) => {
@@ -47,7 +49,9 @@ Form.getAll = async (query, environment_key) => {
         return [];
     }
     let forms = formInstances.map((form) => Form.getFormBuilderData(form));
-    const environment = await Environment_1.default.getSingle(environment_key);
+    const environment = await environments_1.default.getSingle({
+        key: environment_key,
+    });
     forms = __classPrivateFieldGet(Form, _a, "f", _Form_filterEnvironmentForms).call(Form, environment.assigned_forms || [], forms);
     const formsRes = forms.map((form) => {
         if (!query.include?.includes("fields")) {

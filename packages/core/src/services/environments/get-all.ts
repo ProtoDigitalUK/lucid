@@ -1,12 +1,12 @@
 // Models
 import Environment from "@db/models/Environment";
+// Services
+import environments from "@services/environments";
 
-export interface ServiceData {}
+const getAll = async () => {
+  const environmentsRes = await Environment.getAll();
 
-const getAll = async (data: ServiceData) => {
-  const environments = await Environment.getAll();
-
-  return environments;
+  return environmentsRes.map((environment) => environments.format(environment));
 };
 
 export default getAll;

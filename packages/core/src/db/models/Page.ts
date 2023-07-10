@@ -4,7 +4,6 @@ import slugify from "slugify";
 // Models
 import PageCategory from "@db/models/PageCategory";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
-import Environment from "@db/models/Environment";
 // Utils
 import formatPage from "@utils/pages/format-page";
 import { BrickResponseT } from "@utils/bricks/format-bricks";
@@ -13,6 +12,7 @@ import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import collections from "@services/collections";
+import environments from "@services/environments";
 // Schema
 import pagesSchema from "@schemas/pages";
 
@@ -406,7 +406,9 @@ export default class Page {
 
     //
     // validate bricks
-    const environment = await Environment.getSingle(data.environment_key);
+    const environment = await environments.getSingle({
+      key: data.environment_key,
+    });
     const collection = await collections.getSingle({
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
