@@ -7,6 +7,15 @@ export interface ServiceData {
     description?: string;
     items?: MenuItemUpdate[];
 }
-declare const getSingle: (data: ServiceData) => Promise<import("../../db/models/Menu").MenuT>;
-export default getSingle;
+declare const updateSingle: (data: ServiceData) => Promise<{
+    id: number;
+    key: string;
+    environment_key: string;
+    name: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+    items: import("../menu").ItemsRes[] | null;
+}>;
+export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

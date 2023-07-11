@@ -1,8 +1,12 @@
 import z from "zod";
+// Utils
+import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Models
-import Menu from "@db/models/Menu";
+import Menu, { MenuItemT } from "@db/models/Menu";
 // Schema
 import menusSchema from "@schemas/menus";
+// Services
+import menuServices from "@services/menu";
 
 export interface ServiceData {
   query: z.infer<typeof menusSchema.getMultiple.query>;
@@ -10,11 +14,56 @@ export interface ServiceData {
 }
 
 const getMultiple = async (data: ServiceData) => {
-  const menus = await Menu.getMultiple(data.query, {
-    environment_key: data.environment_key,
+  const { filter, sort, include, page, per_page } = data.query;
+
+  // Build Query Data and Query
+  const SelectQuery = new SelectQueryBuilder({
+    columns: [
+      "id",
+      "key",
+      "environment_key",
+      "name",
+      "description",
+      "created_at",
+      "updated_at",
+    ],
+    exclude: undefined,
+    filter: {
+      data: {
+        ...filter,
+        environment_key: data.environment_key,
+      },
+      meta: {
+        name: {
+          operator: "%",
+          type: "text",
+          columnType: "standard",
+        },
+        environment_key: {
+          operator: "=",
+          type: "text",
+          columnType: "standard",
+        },
+      },
+    },
+    sort: sort,
+    page: page,
+    per_page: per_page,
   });
 
-  return menus;
+  const menus = await Menu.getMultiple(SelectQuery);
+
+  let menuItems: MenuItemT[] = [];
+  if (include && include.includes("items")) {
+    menuItems = await menuServices.getItems({
+      menu_ids: menus.data.map((menu) => menu.id),
+    });
+  }
+
+  return {
+    data: menus.data.map((menu) => menuServices.format(menu, menuItems)),
+    count: menus.count,
+  };
 };
 
 export default getMultiple;

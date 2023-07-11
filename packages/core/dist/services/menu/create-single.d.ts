@@ -6,6 +6,15 @@ export interface ServiceData {
     description?: string;
     items?: MenuItem[];
 }
-declare const createSingle: (data: ServiceData) => Promise<import("../../db/models/Menu").MenuT>;
+declare const createSingle: (data: ServiceData) => Promise<{
+    id: number;
+    key: string;
+    environment_key: string;
+    name: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+    items: import("../menu").ItemsRes[] | null;
+}>;
 export default createSingle;
 //# sourceMappingURL=create-single.d.ts.map

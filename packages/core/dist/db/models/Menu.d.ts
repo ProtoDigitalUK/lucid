@@ -1,13 +1,9 @@
-import z from "zod";
-import menusSchema, { MenuItem, MenuItemUpdate } from "../../schemas/menus";
-import { queryDataFormat } from "../../utils/app/query-helpers";
-import { MenuRes } from "../../services/menu";
+import { queryDataFormat, SelectQueryBuilder } from "../../utils/app/query-helpers";
 type MenuCreateSingle = (data: {
     environment_key: string;
     key: string;
     name: string;
     description?: string;
-    items?: MenuItem[];
 }) => Promise<MenuT>;
 type MenuDeleteSingle = (data: {
     environment_key: string;
@@ -16,11 +12,9 @@ type MenuDeleteSingle = (data: {
 type MenuGetSingle = (data: {
     environment_key: string;
     id: number;
-}) => Promise<MenuRes>;
-type MenuGetMultiple = (query: z.infer<typeof menusSchema.getMultiple.query>, data: {
-    environment_key: string;
-}) => Promise<{
-    data: MenuRes[];
+}) => Promise<MenuT>;
+type MenuGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+    data: MenuT[];
     count: number;
 }>;
 type MenuUpdateSingle = (data: {
@@ -29,7 +23,6 @@ type MenuUpdateSingle = (data: {
     key?: string;
     name?: string;
     description?: string;
-    items?: MenuItemUpdate[];
 }) => Promise<MenuT>;
 export type MenuT = {
     id: number;
