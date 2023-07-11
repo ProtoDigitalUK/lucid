@@ -2,7 +2,8 @@
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import User from "@db/models/User";
-import UserRole from "@db/models/UserRole";
+// Services
+import usersServices from "@services/users";
 
 export interface ServiceData {
   userId: number;
@@ -26,14 +27,11 @@ const getAuthenticatedUser = async (data: ServiceData) => {
     });
   }
 
-  const userPermissions = await UserRole.getPermissions(data.userId);
+  const userPermissions = await usersServices.getPermissions({
+    user_id: user.id,
+  });
 
-  // Add roles and permissions to the user object
-  user.roles = userPermissions.roles;
-  user.permissions = userPermissions.permissions;
-
-  delete user.password;
-  return user;
+  return usersServices.format(user, userPermissions);
 };
 
 export default getAuthenticatedUser;

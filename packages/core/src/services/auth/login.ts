@@ -2,6 +2,9 @@
 import { LucidError } from "@utils/app/error-handler";
 // Models
 import User from "@db/models/User";
+// Serices
+import authServices from "@services/auth";
+import usersServices from "@services/users";
 
 export interface ServiceData {
   username: string;
@@ -9,7 +12,7 @@ export interface ServiceData {
 }
 
 const login = async (data: ServiceData) => {
-  const user = await User.login({
+  const user = await User.getByUsername({
     username: data.username,
   });
 
@@ -22,10 +25,10 @@ const login = async (data: ServiceData) => {
     });
   }
 
-  const passwordValid = await User.validatePassword(
-    user.password,
-    data.password
-  );
+  const passwordValid = await authServices.validatePassword({
+    hashedPassword: user.password,
+    password: data.password,
+  });
 
   if (!passwordValid) {
     throw new LucidError({
@@ -36,9 +39,9 @@ const login = async (data: ServiceData) => {
     });
   }
 
-  delete user.password;
-
-  return user;
+  return await usersServices.getSingle({
+    userId: user.id,
+  });
 };
 
 export default login;

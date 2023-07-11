@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-// Models
-import User from "@db/models/User";
 // Serivces
 import { PermissionT, EnvironmentPermissionT } from "@services/permissions";
+import usersServices from "@services/users";
 
 const throwPermissionError = () => {
   throw new LucidError({
@@ -27,7 +26,9 @@ const permissions =
       const environment = req.headers["lucid-environment"];
 
       // Lookup the users role and permissions
-      const user = await User.getById(req.auth.id);
+      const user = await usersServices.getSingle({
+        userId: req.auth.id,
+      });
       if (user.super_admin) return next();
 
       // No user permissions found

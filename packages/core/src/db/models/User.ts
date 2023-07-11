@@ -6,7 +6,7 @@ import Option from "@db/models/Option";
 import {
   UserRoleRes,
   UserEnvrionmentRes,
-} from "@utils/users/format-permissions";
+} from "@services/users/format-permissions";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat } from "@utils/app/query-helpers";
 // Services
@@ -23,9 +23,7 @@ type UserRegister = (data: {
 
 type UserGetById = (id: number) => Promise<UserT>;
 
-type UserLogin = (data: { username: string }) => Promise<UserT>;
-
-type UserUpdateSingle = (id: number, data: {}) => Promise<UserT>;
+type UserGetByUsername = (data: { username: string }) => Promise<UserT>;
 
 // -------------------------------------------
 // User
@@ -37,12 +35,6 @@ export type UserT = {
   first_name: string | null;
   last_name: string | null;
   password?: string;
-
-  roles?: UserRoleRes[];
-  permissions?: {
-    global: PermissionT[];
-    environments?: UserEnvrionmentRes[];
-  };
 
   created_at: string;
   updated_at: string;
@@ -84,16 +76,6 @@ export default class User {
     delete user.rows[0].password;
     return user.rows[0];
   };
-  static registerSuperAdmin: UserRegister = async (data) => {
-    const user = await User.register({ ...data, super_admin: true });
-    await Option.patchByName({
-      name: "initial_user_created",
-      value: true,
-      type: "boolean",
-    });
-
-    return user;
-  };
   static getById: UserGetById = async (id) => {
     const client = await getDBClient;
 
@@ -104,7 +86,7 @@ export default class User {
 
     return user.rows[0];
   };
-  static login: UserLogin = async (data) => {
+  static getByUsername: UserGetByUsername = async (data) => {
     const client = await getDBClient;
 
     const user = await client.query<UserT>({
@@ -113,9 +95,6 @@ export default class User {
     });
 
     return user.rows[0];
-  };
-  static updateSingle: UserUpdateSingle = async (id, data) => {
-    return {} as UserT;
   };
   // -------------------------------------------
   // Util Functions
@@ -145,11 +124,5 @@ export default class User {
         }),
       });
     }
-  };
-  static validatePassword = async (
-    hashedPassword: string,
-    password: string
-  ) => {
-    return await argon2.verify(hashedPassword, password);
   };
 }

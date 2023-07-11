@@ -6,7 +6,6 @@ declare const _default: {
         verifyCSRFToken: (req: import("express").Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>) => boolean;
         clearCSRFToken: (res: import("express").Response<any, Record<string, any>>) => void;
     };
-    getAuthenticatedUser: (data: import("./get-authenticated-user").ServiceData) => Promise<import("../../db/models/User").UserT>;
     jwt: {
         generateJWT: (res: import("express").Response<any, Record<string, any>>, user: import("../../db/models/User").UserT) => void;
         verifyJWT: (req: import("express").Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>) => {
@@ -22,8 +21,9 @@ declare const _default: {
         };
         clearJWT: (res: import("express").Response<any, Record<string, any>>) => void;
     };
-    login: (data: import("./login").ServiceData) => Promise<import("../../db/models/User").UserT>;
-    registerSuperAdmin: (data: import("./register-superadmin").ServiceData) => Promise<import("../../db/models/User").UserT>;
+    login: (data: import("./login").ServiceData) => Promise<import("../users").UserResT>;
+    registerSuperAdmin: (data: import("./register-superadmin").ServiceData) => Promise<import("../users").UserResT>;
+    validatePassword: (data: import("./validate-password").ServiceData) => Promise<boolean>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

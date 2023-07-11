@@ -6,7 +6,6 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const db_1 = __importDefault(require("../db"));
-const Option_1 = __importDefault(require("../models/Option"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
 class User {
@@ -36,15 +35,6 @@ User.register = async (data) => {
     delete user.rows[0].password;
     return user.rows[0];
 };
-User.registerSuperAdmin = async (data) => {
-    const user = await User.register({ ...data, super_admin: true });
-    await Option_1.default.patchByName({
-        name: "initial_user_created",
-        value: true,
-        type: "boolean",
-    });
-    return user;
-};
 User.getById = async (id) => {
     const client = await db_1.default;
     const user = await client.query({
@@ -53,16 +43,13 @@ User.getById = async (id) => {
     });
     return user.rows[0];
 };
-User.login = async (data) => {
+User.getByUsername = async (data) => {
     const client = await db_1.default;
     const user = await client.query({
         text: `SELECT * FROM lucid_users WHERE username = $1`,
         values: [data.username],
     });
     return user.rows[0];
-};
-User.updateSingle = async (id, data) => {
-    return {};
 };
 User.checkIfUserExistsAlready = async (email, username) => {
     const client = await db_1.default;
@@ -88,9 +75,6 @@ User.checkIfUserExistsAlready = async (email, username) => {
             }),
         });
     }
-};
-User.validatePassword = async (hashedPassword, password) => {
-    return await argon2_1.default.verify(hashedPassword, password);
 };
 exports.default = User;
 //# sourceMappingURL=User.js.map

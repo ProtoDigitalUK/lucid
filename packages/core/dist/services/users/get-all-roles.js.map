@@ -1,0 +1,1 @@
+{"version":3,"file":"get-all-roles.js","sourceRoot":"","sources":["../../../src/services/users/get-all-roles.ts"],"names":[],"mappings":";;;;;AACA,mEAA2C;AAM3C,MAAM,WAAW,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC9C,MAAM,SAAS,GAAG,MAAM,kBAAQ,CAAC,MAAM,CAAC,IAAI,CAAC,OAAO,CAAC,CAAC;IACtD,OAAO,SAAS,CAAC;AACnB,CAAC,CAAC;AAEF,kBAAe,WAAW,CAAC"}

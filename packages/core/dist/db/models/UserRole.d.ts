@@ -1,8 +1,9 @@
-import formatPermissions from "../../utils/users/format-permissions";
+type UserRoleGetAll = (user_id: number) => Promise<UserRoleT[]>;
 type UserRoleUpdate = (id: number, data: {
     role_ids: number[];
 }) => Promise<UserRoleT[]>;
-type UserRoleGetPermissions = (id: number) => Promise<ReturnType<typeof formatPermissions>>;
+type UserRoleGetPermissions = (user_id: number) => Promise<UserRolePermissionRes[]>;
+type UserRoleDeleteMultiple = (user_id: number, role_ids: number[]) => Promise<UserRoleT[]>;
 export interface UserRolePermissionRes {
     permission: string;
     environment_key: string;
@@ -17,7 +18,9 @@ export type UserRoleT = {
     updated_at: string;
 };
 export default class UserRole {
-    static update: UserRoleUpdate;
+    static getAll: UserRoleGetAll;
+    static updateRoles: UserRoleUpdate;
+    static deleteMultiple: UserRoleDeleteMultiple;
     static getPermissions: UserRoleGetPermissions;
 }
 export {};

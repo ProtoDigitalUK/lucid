@@ -12,7 +12,17 @@ export interface UserEnvrionmentRes {
   permissions: Array<EnvironmentPermissionT>;
 }
 
-const formatPermissions = (permissionRes: Array<UserRolePermissionRes>) => {
+export interface UserPermissionsRes {
+  roles: UserRoleRes[];
+  permissions: {
+    global: PermissionT[];
+    environments: UserEnvrionmentRes[];
+  };
+}
+
+const formatPermissions = (
+  permissionRes: Array<UserRolePermissionRes>
+): UserPermissionsRes => {
   const roles: UserRoleRes[] = permissionRes
     .map((permission) => {
       return {

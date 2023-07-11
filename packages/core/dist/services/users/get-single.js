@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const User_1 = __importDefault(require("../../db/models/User"));
-const UserRole_1 = __importDefault(require("../../db/models/UserRole"));
+const users_1 = __importDefault(require("../users"));
 const getAuthenticatedUser = async (data) => {
     const user = await User_1.default.getById(data.userId);
     if (!user) {
@@ -22,11 +22,10 @@ const getAuthenticatedUser = async (data) => {
             }),
         });
     }
-    const userPermissions = await UserRole_1.default.getPermissions(data.userId);
-    user.roles = userPermissions.roles;
-    user.permissions = userPermissions.permissions;
-    delete user.password;
-    return user;
+    const userPermissions = await users_1.default.getPermissions({
+        user_id: user.id,
+    });
+    return users_1.default.format(user, userPermissions);
 };
 exports.default = getAuthenticatedUser;
-//# sourceMappingURL=get-authenticated-user.js.map
+//# sourceMappingURL=get-single.js.map

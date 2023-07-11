@@ -3,6 +3,8 @@ import { LucidError } from "@utils/app/error-handler";
 // Models
 import User from "@db/models/User";
 import Option from "@db/models/Option";
+// Services
+import usersServices from "@services/users";
 
 export interface ServiceData {
   email: string;
@@ -23,13 +25,22 @@ const registerSuperAdmin = async (data: ServiceData) => {
     });
   }
 
-  const user = await User.registerSuperAdmin({
+  const user = await User.register({
     email: data.email,
     username: data.username,
     password: data.password,
+    super_admin: true,
   });
 
-  return user;
+  await Option.patchByName({
+    name: "initial_user_created",
+    value: true,
+    type: "boolean",
+  });
+
+  return await usersServices.getSingle({
+    userId: user.id,
+  });
 };
 
 export default registerSuperAdmin;

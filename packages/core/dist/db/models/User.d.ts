@@ -1,5 +1,3 @@
-import { UserRoleRes, UserEnvrionmentRes } from "../../utils/users/format-permissions";
-import { PermissionT } from "../../services/permissions";
 type UserRegister = (data: {
     email: string;
     username: string;
@@ -7,10 +5,9 @@ type UserRegister = (data: {
     super_admin?: boolean;
 }) => Promise<UserT>;
 type UserGetById = (id: number) => Promise<UserT>;
-type UserLogin = (data: {
+type UserGetByUsername = (data: {
     username: string;
 }) => Promise<UserT>;
-type UserUpdateSingle = (id: number, data: {}) => Promise<UserT>;
 export type UserT = {
     id: number;
     super_admin: boolean;
@@ -19,22 +16,14 @@ export type UserT = {
     first_name: string | null;
     last_name: string | null;
     password?: string;
-    roles?: UserRoleRes[];
-    permissions?: {
-        global: PermissionT[];
-        environments?: UserEnvrionmentRes[];
-    };
     created_at: string;
     updated_at: string;
 };
 export default class User {
     static register: UserRegister;
-    static registerSuperAdmin: UserRegister;
     static getById: UserGetById;
-    static login: UserLogin;
-    static updateSingle: UserUpdateSingle;
+    static getByUsername: UserGetByUsername;
     static checkIfUserExistsAlready: (email: string, username: string) => Promise<void>;
-    static validatePassword: (hashedPassword: string, password: string) => Promise<boolean>;
 }
 export {};
 //# sourceMappingURL=User.d.ts.map
