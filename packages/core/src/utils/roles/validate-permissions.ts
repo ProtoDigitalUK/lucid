@@ -10,13 +10,14 @@ import roleSchema from "@schemas/roles";
 import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
 // Services
 import environmentsService from "@services/environments";
+import permissionServices from "@services/permissions";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body
 >["permission_groups"];
 
 const validatePermissions = async (permGroup: SchemaPermissions) => {
-  const permissionSet = RolePermission.permissions;
+  const permissionSet = permissionServices.permissions;
   const environmentsRes = await environmentsService.getAll();
 
   // Data

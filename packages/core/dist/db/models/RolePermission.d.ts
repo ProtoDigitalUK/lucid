@@ -30,66 +30,6 @@ export default class RolePermission {
     static deleteMultiple: RolePermissionDeleteMultiple;
     static deleteAll: RolePermissionDeleteAll;
     static getAll: RolePermissionGetAll;
-    static get getValidPermissions(): {
-        global: {
-            users: {
-                title: string;
-                permissions: PermissionUsers[];
-            };
-            roles: {
-                title: string;
-                permissions: PermissionRoles[];
-            };
-            media: {
-                title: string;
-                permissions: PermissionMedia[];
-            };
-            settings: {
-                title: string;
-                permissions: "update_settings"[];
-            };
-            environment: {
-                title: string;
-                permissions: PermissionEnvironment[];
-            };
-            emails: {
-                title: string;
-                permissions: PermissionEmails[];
-            };
-        };
-        environment: {
-            content: {
-                title: string;
-                permissions: PermissionContent[];
-            };
-            category: {
-                title: string;
-                permissions: PermissionCategory[];
-            };
-            menu: {
-                title: string;
-                permissions: PermissionMenu[];
-            };
-            form_submissions: {
-                title: string;
-                permissions: PermissionFormSubmissions[];
-            };
-        };
-    };
-    static get permissions(): {
-        global: PermissionT[];
-        environment: EnvironmentPermissionT[];
-    };
-    static get userPermissions(): PermissionUsers[];
-    static get rolePermissions(): PermissionRoles[];
-    static get mediaPermissions(): PermissionMedia[];
-    static get settingsPermissions(): PermissionSettings[];
-    static get environmentPermissions(): PermissionEnvironment[];
-    static get emailPermissions(): PermissionEmails[];
-    static get contentPermissions(): PermissionContent[];
-    static get categoryPermissions(): PermissionCategory[];
-    static get menuPermissions(): PermissionMenu[];
-    static get formSubmissionsPermissions(): PermissionFormSubmissions[];
 }
 export {};
 //# sourceMappingURL=RolePermission.d.ts.map

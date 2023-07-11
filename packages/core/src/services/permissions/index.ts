@@ -1,5 +1,6 @@
-import getAll from "./get-all";
+import Permissions from "@services/permissions/Permissions";
 
 export default {
-  getAll,
+  formatted: Permissions.formattedPermissions,
+  permissions: Permissions.permissions,
 };

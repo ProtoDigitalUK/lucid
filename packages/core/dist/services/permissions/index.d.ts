@@ -1,5 +1,5 @@
 declare const _default: {
-    getAll: (data: import("./get-all").ServiceData) => Promise<{
+    formatted: {
         global: {
             users: {
                 title: string;
@@ -44,7 +44,11 @@ declare const _default: {
                 permissions: ("read_form_submissions" | "delete_form_submissions" | "update_form_submissions")[];
             };
         };
-    }>;
+    };
+    permissions: {
+        global: import("../permissions/Permissions").PermissionT[];
+        environment: import("../permissions/Permissions").EnvironmentPermissionT[];
+    };
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

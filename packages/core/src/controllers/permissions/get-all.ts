@@ -13,7 +13,7 @@ const getAllController: Controller<
   typeof permissionsSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const permissionsRes = await permissionsService.getAll({});
+    const permissionsRes = permissionsService.formatted;
 
     res.status(200).json(
       buildResponse(req, {

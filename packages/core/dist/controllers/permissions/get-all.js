@@ -8,7 +8,7 @@ const permissions_1 = __importDefault(require("../../schemas/permissions"));
 const permissions_2 = __importDefault(require("../../services/permissions"));
 const getAllController = async (req, res, next) => {
     try {
-        const permissionsRes = await permissions_2.default.getAll({});
+        const permissionsRes = permissions_2.default.formatted;
         res.status(200).json((0, build_response_1.default)(req, {
             data: permissionsRes,
         }));
