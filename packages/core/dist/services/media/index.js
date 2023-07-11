@@ -12,6 +12,9 @@ const stream_media_1 = __importDefault(require("./stream-media"));
 const can_store_files_1 = __importDefault(require("./can-store-files"));
 const get_storage_used_1 = __importDefault(require("./get-storage-used"));
 const set_storage_used_1 = __importDefault(require("./set-storage-used"));
+const format_1 = __importDefault(require("./format"));
+const get_single_by_id_1 = __importDefault(require("./get-single-by-id"));
+const get_multiple_by_ids_1 = __importDefault(require("./get-multiple-by-ids"));
 exports.default = {
     createSingle: create_single_1.default,
     deleteSingle: delete_single_1.default,
@@ -22,5 +25,8 @@ exports.default = {
     canStoreFiles: can_store_files_1.default,
     getStorageUsed: get_storage_used_1.default,
     setStorageUsed: set_storage_used_1.default,
+    format: format_1.default,
+    getSingleById: get_single_by_id_1.default,
+    getMultipleByIds: get_multiple_by_ids_1.default,
 };
 //# sourceMappingURL=index.js.map

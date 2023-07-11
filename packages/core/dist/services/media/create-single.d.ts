@@ -4,6 +4,6 @@ export interface ServiceData {
     alt?: string;
     files?: fileUpload.FileArray | null | undefined;
 }
-declare const createSingle: (data: ServiceData) => Promise<import("../../utils/media/format-media").MediaResT>;
+declare const createSingle: (data: ServiceData) => Promise<import("../media").MediaResT>;
 export default createSingle;
 //# sourceMappingURL=create-single.d.ts.map

@@ -1,25 +1,25 @@
-import z from "zod";
-import fileUpload from "express-fileupload";
-import { type MediaResT } from "../../utils/media/format-media";
-import mediaSchema from "../../schemas/media";
+import { type MediaMetaDataT } from "../../utils/media/helpers";
+import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 type MediaCreateSingle = (data: {
-    name?: string;
+    key: string;
+    name: string;
+    etag?: string;
     alt?: string;
-    files: fileUpload.FileArray | null | undefined;
-}) => Promise<MediaResT>;
-type MediaGetMultiple = (query: z.infer<typeof mediaSchema.getMultiple.query>) => Promise<{
-    data: MediaResT[];
+    meta: MediaMetaDataT;
+}) => Promise<MediaT>;
+type MediaGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+    data: MediaT[];
     count: number;
 }>;
-type MediaGetSingle = (key: string) => Promise<MediaResT>;
-type MediaGetSingleById = (id: number) => Promise<MediaResT>;
-type MediaGetMultipleByIds = (ids: number[]) => Promise<MediaResT[]>;
-type MediaDeleteSingle = (key: string) => Promise<MediaResT>;
+type MediaGetSingle = (key: string) => Promise<MediaT>;
+type MediaGetSingleById = (id: number) => Promise<MediaT>;
+type MediaGetMultipleByIds = (ids: number[]) => Promise<MediaT[]>;
+type MediaDeleteSingle = (key: string) => Promise<MediaT>;
 type MediaUpdateSingle = (key: string, data: {
     name?: string;
     alt?: string;
-    files: fileUpload.FileArray | null | undefined;
-}) => Promise<MediaResT>;
+    meta?: MediaMetaDataT;
+}) => Promise<MediaT>;
 export type MediaT = {
     id: number;
     key: string;

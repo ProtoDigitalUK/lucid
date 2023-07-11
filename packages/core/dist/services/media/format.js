@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const create_url_1 = __importDefault(require("../media/create-url"));
+const create_url_1 = __importDefault(require("../../utils/media/create-url"));
 const formatMedia = (media) => {
     return {
         id: media.id,
@@ -23,4 +23,4 @@ const formatMedia = (media) => {
     };
 };
 exports.default = formatMedia;
-//# sourceMappingURL=format-media.js.map
+//# sourceMappingURL=format.js.map

@@ -2,10 +2,7 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
-import Media from "@db/models/Media";
 import Page, { PageT } from "@db/models/Page";
-// Utils
-import { MediaResT } from "@utils/media/format-media";
 // Internal packages
 import BrickBuilder, {
   ValidationProps,
@@ -16,6 +13,7 @@ import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
 import brickConfig from "@services/brick-config";
 import { CollectionT } from "@services/collections";
+import medias, { MediaResT } from "@services/media";
 
 // ------------------------------------
 // Interfaces
@@ -263,7 +261,9 @@ const getAllMedia = async (fields: BrickFieldObject[]) => {
         (value, index, self) => self.indexOf(value) === index
       ) as number[];
 
-    const media = await Media.getMultipleByIds(ids);
+    const media = await medias.getMultipleByIds({
+      ids: ids,
+    });
     return media;
   } catch (err) {
     return [];
