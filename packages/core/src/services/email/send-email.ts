@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 // Models
 import Config from "@db/models/Config";
 // Services
-import emails from "@services/email";
+import emailsService from "@services/email";
 
 export interface EmailParamsT {
   data: {
@@ -40,7 +40,7 @@ const createEmailRow = async (data: {
   };
 }) => {
   // Save the email to the database
-  await emails.createSingle({
+  await emailsService.createSingle({
     from_address: data.options.from,
     from_name: data.options.fromName,
     to_address: data.options.to,
@@ -80,7 +80,7 @@ const sendEmailAction = async (
   };
 
   try {
-    const html = await emails.renderTemplate(template, params.data);
+    const html = await emailsService.renderTemplate(template, params.data);
 
     // Check if SMTP config exists
     const smptConfig = Config.email?.smtp;
@@ -163,7 +163,7 @@ export const sendEmailInternal = async (
       data: params.data,
     });
   } else {
-    await emails.updateSingle({
+    await emailsService.updateSingle({
       id: id,
       data: {
         from_address: result.options.from,

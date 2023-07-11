@@ -6,9 +6,9 @@ import { EnvironmentT } from "@db/models/Environment";
 // Intenal
 import { CollectionConfigT } from "@lucid/collection-builder";
 // Services
-import collections, { CollectionT } from "@services/collections";
-import brickConfig from "@services/brick-config";
-import environments from "@services/environments";
+import collectionsService, { CollectionT } from "@services/collections";
+import brickConfigService from "@services/brick-config";
+import environmentsService from "@services/environments";
 
 export interface ServiceData {
   collection_key: string;
@@ -31,13 +31,13 @@ const getSingle = async (data: ServiceData) => {
 
   // Format collections
   const collectionsF = instances.map((collection) =>
-    collections.format(collection)
+    collectionsService.format(collection)
   );
 
   // get environment
   const environment = data.environment
     ? data.environment
-    : await environments.getSingle({
+    : await environmentsService.getSingle({
         key: data.environment_key,
       });
   const assignedCollections = environment.assigned_collections || [];
@@ -69,7 +69,7 @@ const getSingle = async (data: ServiceData) => {
   }
 
   // Get bricks
-  const collectionBricks = brickConfig.getAllAllowedBricks({
+  const collectionBricks = brickConfigService.getAllAllowedBricks({
     collection,
     environment,
   });

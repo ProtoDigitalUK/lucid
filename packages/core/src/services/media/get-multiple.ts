@@ -6,7 +6,7 @@ import Media from "@db/models/Media";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import medias from "@services/media";
+import mediaService from "@services/media";
 
 export interface ServiceData {
   query: z.infer<typeof mediaSchema.getMultiple.query>;
@@ -64,7 +64,7 @@ const getMultiple = async (data: ServiceData) => {
   const mediasRes = await Media.getMultiple(SelectQuery);
 
   return {
-    data: mediasRes.data.map((media) => medias.format(media)),
+    data: mediasRes.data.map((media) => mediaService.format(media)),
     count: mediasRes.count,
   };
 };

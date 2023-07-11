@@ -5,7 +5,7 @@ import Config from "@db/models/Config";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Services
-import environments from "@services/environments";
+import environmentsService from "@services/environments";
 
 export interface ServiceData {
   data: {
@@ -100,11 +100,11 @@ const upsertSingle = async (data: ServiceData) => {
 
   // if create false, check if environment exists
   if (!data.create) {
-    await environments.getSingle({
+    await environmentsService.getSingle({
       key: data.data.key,
     });
   } else {
-    await environments.checkKeyExists({
+    await environmentsService.checkKeyExists({
       key: data.data.key,
     });
   }
@@ -141,7 +141,7 @@ const upsertSingle = async (data: ServiceData) => {
     });
   }
 
-  return environments.format(environment);
+  return environmentsService.format(environment);
 };
 
 export default upsertSingle;

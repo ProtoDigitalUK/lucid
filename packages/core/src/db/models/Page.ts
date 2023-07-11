@@ -11,8 +11,8 @@ import validateBricks from "@utils/bricks/validate-bricks";
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
-import collections from "@services/collections";
-import environments from "@services/environments";
+import collectionsService from "@services/collections";
+import environmentsService from "@services/environments";
 // Schema
 import pagesSchema from "@schemas/pages";
 
@@ -277,7 +277,7 @@ export default class Page {
     }
 
     if (include && include.includes("bricks")) {
-      const collection = await collections.getSingle({
+      const collection = await collectionsService.getSingle({
         collection_key: page.rows[0].collection_key,
         environment_key: page.rows[0].environment_key,
         type: "pages",
@@ -307,7 +307,7 @@ export default class Page {
     // Checks
 
     // Checks if we have access to the collection
-    await collections.getSingle({
+    await collectionsService.getSingle({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "pages",
@@ -406,10 +406,10 @@ export default class Page {
 
     //
     // validate bricks
-    const environment = await environments.getSingle({
+    const environment = await environmentsService.getSingle({
       key: data.environment_key,
     });
-    const collection = await collections.getSingle({
+    const collection = await collectionsService.getSingle({
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
       type: "pages",
@@ -497,7 +497,7 @@ export default class Page {
 
     // -------------------------------------------
     // Update/Create Bricks
-    await collections.updateBricks({
+    await collectionsService.updateBricks({
       id: page.rows[0].id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],

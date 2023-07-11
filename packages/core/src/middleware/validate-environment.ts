@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Services
-import environments from "@services/environments";
+import environmentsService from "@services/environments";
 
 // ------------------------------------
 // Validate Environment Middleware
@@ -30,7 +30,7 @@ const validateEnvironment = async (
     }
 
     // check if the environment is valid
-    const environmentConfig = await environments.getAll();
+    const environmentConfig = await environmentsService.getAll();
     const findEnv = environmentConfig.find((env) => env.key === environment);
 
     if (!findEnv) {

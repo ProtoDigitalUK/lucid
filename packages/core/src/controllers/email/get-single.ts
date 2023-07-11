@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import emailsSchema from "@schemas/email";
 // Serices
-import emails from "@services/email";
+import emailsService from "@services/email";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof emailsSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await emails.getSingle({
+    const email = await emailsService.getSingle({
       id: parseInt(req.params.id),
     });
 

@@ -4,9 +4,9 @@ import collectionSchema from "@schemas/collections";
 // Models
 import Config from "@db/models/Config";
 // Services
-import collections, { CollectionT } from "@services/collections";
-import brickConfig from "@services/brick-config";
-import environments from "@services/environments";
+import collectionsService, { CollectionT } from "@services/collections";
+import brickConfigService from "@services/brick-config";
+import environmentsService from "@services/environments";
 
 export interface ServiceData {
   query: z.infer<typeof collectionSchema.getAll.query>;
@@ -19,10 +19,10 @@ const getAll = async (data: ServiceData) => {
 
   // Get all collections data
   let collectionsF = instances.map((collection) =>
-    collections.format(collection)
+    collectionsService.format(collection)
   );
   // Get environment
-  const environment = await environments.getSingle({
+  const environment = await environmentsService.getSingle({
     key: data.environment_key,
   });
 
@@ -43,7 +43,7 @@ const getAll = async (data: ServiceData) => {
     };
 
     if (data.query.include?.includes("bricks")) {
-      const collectionBricks = brickConfig.getAllAllowedBricks({
+      const collectionBricks = brickConfigService.getAllAllowedBricks({
         collection,
         environment,
       });
@@ -53,7 +53,7 @@ const getAll = async (data: ServiceData) => {
     return collectionData;
   });
 
-  return collections;
+  return collectionsF;
 };
 
 // Filter

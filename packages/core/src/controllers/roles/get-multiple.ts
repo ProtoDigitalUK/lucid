@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import rolesSchema from "@schemas/roles";
 // Services
-import roles from "@services/roles";
+import rolesService from "@services/roles";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getMultipleController: Controller<
   typeof rolesSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const rolesRes = await roles.getMultiple({
+    const rolesRes = await rolesService.getMultiple({
       query: req.query,
     });
 

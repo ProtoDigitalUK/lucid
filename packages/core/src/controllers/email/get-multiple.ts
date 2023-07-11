@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import emailsSchema from "@schemas/email";
 // Services
-import emails from "@services/email";
+import emailsService from "@services/email";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getMultipleController: Controller<
   typeof emailsSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const emailsRes = await emails.getMultiple({
+    const emailsRes = await emailsService.getMultiple({
       query: req.query,
     });
 

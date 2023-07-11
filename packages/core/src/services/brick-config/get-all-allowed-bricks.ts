@@ -3,7 +3,7 @@ import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
-import brickConfig, { BrickConfigT } from "@services/brick-config";
+import brickConfigService, { BrickConfigT } from "@services/brick-config";
 import { CollectionT } from "@services/collections";
 
 export interface ServiceData {
@@ -14,10 +14,10 @@ export interface ServiceData {
 const getAllAllowedBricks = (data: ServiceData) => {
   const allowedBricks: BrickConfigT[] = [];
   const allowedCollectionBricks: CollectionBrickConfigT[] = [];
-  const brickConfigData = brickConfig.getBrickConfig();
+  const brickConfigData = brickConfigService.getBrickConfig();
 
   for (const brick of brickConfigData) {
-    const brickAllowed = brickConfig.isBrickAllowed({
+    const brickAllowed = brickConfigService.isBrickAllowed({
       key: brick.key,
       collection: data.collection,
       environment: data.environment,

@@ -1,7 +1,7 @@
 // Models
 import Option from "@db/models/Option";
 // Services
-import medias from "@services/media";
+import mediaService from "@services/media";
 
 export interface ServiceData {
   add: number;
@@ -9,7 +9,7 @@ export interface ServiceData {
 }
 
 const getStorageUsed = async (data: ServiceData) => {
-  const storageUsed = await medias.getStorageUsed();
+  const storageUsed = await mediaService.getStorageUsed();
 
   let newValue = storageUsed + data.add;
   if (data.minus !== undefined) {

@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import permissionsSchema from "@schemas/permissions";
 // Services
-import permissions from "@services/permissions";
+import permissionsService from "@services/permissions";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getAllController: Controller<
   typeof permissionsSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const permissionsRes = await permissions.getAll({});
+    const permissionsRes = await permissionsService.getAll({});
 
     res.status(200).json(
       buildResponse(req, {

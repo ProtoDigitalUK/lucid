@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import bricksSchema from "@schemas/bricks";
 // Services
-import brickConfig from "@services/brick-config";
+import brickConfigService from "@services/brick-config";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof bricksSchema.config.getSingle.query
 > = async (req, res, next) => {
   try {
-    const brick = await brickConfig.getSingle({
+    const brick = await brickConfigService.getSingle({
       brick_key: req.params.brick_key,
       collection_key: req.params.collection_key,
       environment_key: req.headers["lucid-environment"] as string,

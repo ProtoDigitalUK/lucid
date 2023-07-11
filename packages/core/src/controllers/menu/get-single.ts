@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import menusSchema from "@schemas/menus";
 // Services
-import menus from "@services/menu";
+import menusService from "@services/menu";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof menusSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const menu = await menus.getSingle({
+    const menu = await menusService.getSingle({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
     });

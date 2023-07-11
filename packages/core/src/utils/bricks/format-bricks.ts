@@ -8,9 +8,9 @@ import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
 // Utils
 import createURL from "@utils/media/create-url";
 // Services
-import brickConfig from "@services/brick-config";
+import brickConfigService from "@services/brick-config";
 import { CollectionT } from "@services/collections";
-import environments from "@services/environments";
+import environmentsService from "@services/environments";
 
 export interface BrickResponseT {
   id: CollectionBrickT["id"];
@@ -273,10 +273,10 @@ const formatBricks = async (data: {
   collection: CollectionT;
 }) => {
   // Get all config
-  const builderInstances = brickConfig.getBrickConfig();
+  const builderInstances = brickConfigService.getBrickConfig();
   if (!builderInstances) return [];
 
-  const environment = await environments.getSingle({
+  const environment = await environmentsService.getSingle({
     key: data.environment_key,
   });
   if (!environment) return [];
@@ -284,7 +284,7 @@ const formatBricks = async (data: {
   // Build the base brick structure
   const brickStructure = buildBrickStructure(data.brick_fields).filter(
     (brick) => {
-      const allowed = brickConfig.isBrickAllowed({
+      const allowed = brickConfigService.isBrickAllowed({
         key: brick.key,
         type: brick.type,
         environment,

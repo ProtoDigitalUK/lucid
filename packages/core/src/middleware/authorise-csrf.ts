@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
-import { verifyCSRFToken } from "@services/auth/csrf";
 import { LucidError } from "@utils/app/error-handler";
+// Services
+import authService from "@services/auth";
 
 const authoriseCSRF = async (
   req: Request,
@@ -9,7 +10,7 @@ const authoriseCSRF = async (
   next: NextFunction
 ) => {
   try {
-    const verifyCSRF = verifyCSRFToken(req);
+    const verifyCSRF = authService.csrf.verifyCSRFToken(req);
     if (!verifyCSRF) {
       throw new LucidError({
         type: "forbidden",

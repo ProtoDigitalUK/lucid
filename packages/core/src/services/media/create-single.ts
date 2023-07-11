@@ -1,12 +1,12 @@
 import fileUpload from "express-fileupload";
 // Utils
-import helpers, { type MediaMetaDataT } from "@utils/media/helpers";
+import helpers from "@utils/media/helpers";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import Media from "@db/models/Media";
 // Services
-import medias from "@services/media";
-import s3 from "@services/s3";
+import mediaService from "@services/media";
+import s3Service from "@services/s3";
 
 export interface ServiceData {
   name?: string;
@@ -37,7 +37,7 @@ const createSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Checks
-  await medias.canStoreFiles({
+  await mediaService.canStoreFiles({
     files,
   });
 
@@ -45,7 +45,7 @@ const createSingle = async (data: ServiceData) => {
   // Generate key and save file
   const key = helpers.uniqueKey(data.name || firstFile.name);
   const meta = await helpers.getMetaData(firstFile);
-  const response = await s3.saveFile({
+  const response = await s3Service.saveFile({
     key: key,
     file: firstFile,
     meta,
@@ -76,7 +76,7 @@ const createSingle = async (data: ServiceData) => {
   });
 
   if (!media) {
-    await s3.deleteFile({
+    await s3Service.deleteFile({
       key,
     });
     throw new LucidError({
@@ -94,13 +94,13 @@ const createSingle = async (data: ServiceData) => {
   }
 
   // update storage used
-  await medias.setStorageUsed({
+  await mediaService.setStorageUsed({
     add: meta.size,
   });
 
   // -------------------------------------------
   // Return
-  return medias.format(media);
+  return mediaService.format(media);
 };
 
 export default createSingle;

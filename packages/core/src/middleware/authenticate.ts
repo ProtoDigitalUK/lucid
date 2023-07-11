@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
-import { verifyJWT } from "@services/auth/jwt";
 import { LucidError } from "@utils/app/error-handler";
+// Services
+import authService from "@services/auth";
 
 const authenticate = async (
   req: Request,
@@ -9,7 +10,7 @@ const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const authenticateJWT = verifyJWT(req);
+    const authenticateJWT = authService.jwt.verifyJWT(req);
     if (!authenticateJWT.sucess || !authenticateJWT.data) {
       throw new LucidError({
         type: "authorisation",

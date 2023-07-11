@@ -11,7 +11,7 @@ import BrickBuilder, {
 } from "@lucid/brick-builder";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
-import brickConfig from "@services/brick-config";
+import brickConfigService from "@services/brick-config";
 import { CollectionT } from "@services/collections";
 import medias, { MediaResT } from "@services/media";
 
@@ -170,7 +170,7 @@ const validateBricksGroup = async (data: {
     }
 
     // Check if the brick is permitted against the envrionment and collection
-    const allowed = brickConfig.isBrickAllowed({
+    const allowed = brickConfigService.isBrickAllowed({
       key: brick.brick_key,
       type: data.type,
       environment: data.environment,
@@ -303,7 +303,7 @@ const validateBricks = async (data: {
   collection: CollectionT;
   environment: EnvironmentT;
 }) => {
-  const builderInstances = brickConfig.getBrickConfig();
+  const builderInstances = brickConfigService.getBrickConfig();
 
   // Flatten all fields and get all media and pages
   const bricksFlattened = flattenAllBricks(

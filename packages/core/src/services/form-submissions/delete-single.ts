@@ -3,8 +3,8 @@ import { LucidError } from "@utils/app/error-handler";
 // Models
 import FormSubmission from "@db/models/FormSubmission";
 // Serives
-import formSubmissions from "@services/form-submissions";
-import forms from "@services/forms";
+import formSubService from "@services/form-submissions";
+import formsService from "@services/forms";
 
 export interface ServiceData {
   id: number;
@@ -14,7 +14,7 @@ export interface ServiceData {
 
 const deleteSingle = async (data: ServiceData) => {
   // Check if form is assigned to environment
-  await formSubmissions.hasEnvironmentPermission({
+  await formSubService.hasEnvironmentPermission({
     form_key: data.form_key,
     environment_key: data.environment_key,
   });
@@ -35,11 +35,11 @@ const deleteSingle = async (data: ServiceData) => {
     });
   }
 
-  const formBuilder = forms.getBuilderInstance({
+  const formBuilder = formsService.getBuilderInstance({
     form_key: data.form_key,
   });
 
-  return formSubmissions.format(formBuilder, {
+  return formSubService.format(formBuilder, {
     submission: formSubmission,
     data: [],
   });

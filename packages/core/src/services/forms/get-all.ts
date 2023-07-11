@@ -4,8 +4,8 @@ import Config from "@db/models/Config";
 // Schema
 import formsSchema from "@schemas/forms";
 // Services
-import environments from "@services/environments";
-import forms from "@services/forms";
+import environmentsService from "@services/environments";
+import formsService from "@services/forms";
 
 export interface ServiceData {
   query: z.infer<typeof formsSchema.getAll.query>;
@@ -16,10 +16,10 @@ const getAll = async (data: ServiceData) => {
   // Check access
   const formInstances = Config.forms || [];
 
-  let formsRes = formInstances.map((form) => forms.format(form));
+  let formsRes = formInstances.map((form) => formsService.format(form));
 
   // Get data
-  const environment = await environments.getSingle({
+  const environment = await environmentsService.getSingle({
     key: data.environment_key,
   });
 

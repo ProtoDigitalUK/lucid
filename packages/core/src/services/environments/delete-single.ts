@@ -3,7 +3,7 @@ import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Services
-import environments from "@services/environments";
+import environmentsService from "@services/environments";
 
 export interface ServiceData {
   key: string;
@@ -11,7 +11,7 @@ export interface ServiceData {
 
 const deleteSingle = async (data: ServiceData) => {
   // Check if environment exists
-  await environments.getSingle({
+  await environmentsService.getSingle({
     key: data.key,
   });
 
@@ -26,7 +26,7 @@ const deleteSingle = async (data: ServiceData) => {
     });
   }
 
-  return environments.format(environment);
+  return environmentsService.format(environment);
 };
 
 export default deleteSingle;

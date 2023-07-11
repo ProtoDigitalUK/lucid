@@ -3,8 +3,8 @@ import Config from "@db/models/Config";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Serices
-import environments from "@services/environments";
-import forms from "@services/forms";
+import environmentsService from "@services/environments";
+import formsService from "@services/forms";
 
 export interface ServiceData {
   key: string;
@@ -15,11 +15,11 @@ const getSingle = async (data: ServiceData) => {
   // Check access
   const formInstances = Config.forms || [];
 
-  const environment = await environments.getSingle({
+  const environment = await environmentsService.getSingle({
     key: data.environment_key,
   });
 
-  const allForms = formInstances.map((form) => forms.format(form));
+  const allForms = formInstances.map((form) => formsService.format(form));
 
   const assignedForms = environment.assigned_forms || [];
 

@@ -5,8 +5,8 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import Media from "@db/models/Media";
 // Services
-import medias from "@services/media";
-import s3 from "@services/s3";
+import mediaService from "@services/media";
+import s3Service from "@services/s3";
 
 export interface ServiceData {
   key: string;
@@ -20,7 +20,7 @@ export interface ServiceData {
 const updateSingle = async (data: ServiceData) => {
   // -------------------------------------------
   // Get Media
-  const media = await medias.getSingle({
+  const media = await mediaService.getSingle({
     key: data.key,
   });
 
@@ -33,7 +33,7 @@ const updateSingle = async (data: ServiceData) => {
 
     // -------------------------------------------
     // Checks
-    await medias.canStoreFiles({
+    await mediaService.canStoreFiles({
       files,
     });
 
@@ -41,7 +41,7 @@ const updateSingle = async (data: ServiceData) => {
     // Upload to S3
     meta = await helpers.getMetaData(firstFile);
 
-    const response = await s3.saveFile({
+    const response = await s3Service.saveFile({
       key: media.key,
       file: firstFile,
       meta,
@@ -64,7 +64,7 @@ const updateSingle = async (data: ServiceData) => {
 
     // -------------------------------------------
     // Update storage used
-    await medias.setStorageUsed({
+    await mediaService.setStorageUsed({
       add: meta.size,
       minus: media.meta.file_size,
     });
@@ -89,7 +89,7 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Get Single
-  return await medias.getSingle({
+  return await mediaService.getSingle({
     key: mediaUpdate.key,
   });
 };

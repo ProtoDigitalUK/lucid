@@ -3,7 +3,7 @@ import { LucidError } from "@utils/app/error-handler";
 // Models
 import Media from "@db/models/Media";
 // Services
-import medias from "@services/media";
+import mediaService from "@services/media";
 
 export interface ServiceData {
   key: string;
@@ -21,7 +21,7 @@ const getSingleById = async (data: ServiceData) => {
     });
   }
 
-  return medias.format(media);
+  return mediaService.format(media);
 };
 
 export default getSingleById;

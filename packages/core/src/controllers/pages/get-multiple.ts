@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import pagesSchema from "@schemas/pages";
 // Services
-import pages from "@services/pages";
+import pagesService from "@services/pages";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getMultipleController: Controller<
   typeof pagesSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const pagesRes = await pages.getMultiple({
+    const pagesRes = await pagesService.getMultiple({
       query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
     });

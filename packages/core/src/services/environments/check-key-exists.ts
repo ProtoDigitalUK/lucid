@@ -3,7 +3,7 @@ import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Services
-import environments from "@services/environments";
+import environmentsService from "@services/environments";
 
 export interface ServiceData {
   key: string;
@@ -21,7 +21,7 @@ const checkKeyExists = async (data: ServiceData) => {
     });
   }
 
-  return environments.format(environment);
+  return environmentsService.format(environment);
 };
 
 export default checkKeyExists;

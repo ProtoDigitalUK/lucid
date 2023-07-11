@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import rolesSchema from "@schemas/roles";
 // Services
-import roles from "@services/roles";
+import rolesService from "@services/roles";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getSingleController: Controller<
   typeof rolesSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await roles.getSingle({
+    const role = await rolesService.getSingle({
       id: parseInt(req.params.id),
     });
 

@@ -1,7 +1,7 @@
 // Models
 import Media from "@db/models/Media";
 // Services
-import medias from "@services/media";
+import mediaService from "@services/media";
 
 export interface ServiceData {
   ids: number[];
@@ -14,7 +14,7 @@ const getMultipleByIds = async (data: ServiceData) => {
     return [];
   }
 
-  return mediasRes.map((media) => medias.format(media));
+  return mediasRes.map((media) => mediaService.format(media));
 };
 
 export default getMultipleByIds;

@@ -3,7 +3,7 @@ import Email from "@db/models/Email";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Services
-import emails from "@services/email";
+import emailsService from "@services/email";
 
 export interface ServiceData {
   id: number;
@@ -21,7 +21,10 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  const html = await emails.renderTemplate(email.template, email.data || {});
+  const html = await emailsService.renderTemplate(
+    email.template,
+    email.data || {}
+  );
   email.html = html;
 
   return email;

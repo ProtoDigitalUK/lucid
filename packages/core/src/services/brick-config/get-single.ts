@@ -1,7 +1,7 @@
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Services
-import brickConfig from "@services/brick-config";
+import brickConfigService from "@services/brick-config";
 
 export interface ServiceData {
   brick_key: string;
@@ -10,7 +10,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (data: ServiceData) => {
-  const allBricks = await brickConfig.getAll({
+  const allBricks = await brickConfigService.getAll({
     query: {
       include: ["fields"],
     },

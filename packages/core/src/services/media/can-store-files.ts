@@ -4,7 +4,7 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import Config from "@db/models/Config";
 // Services
-import medias from "@services/media";
+import mediaService from "@services/media";
 
 export interface ServiceData {
   files: fileUpload.UploadedFile[];
@@ -34,7 +34,7 @@ const canStoreFiles = async (data: ServiceData) => {
   }
 
   // get the total size of all files
-  const storageUsed = await medias.getStorageUsed();
+  const storageUsed = await mediaService.getStorageUsed();
 
   // check files dont exceed storage limit
   const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);

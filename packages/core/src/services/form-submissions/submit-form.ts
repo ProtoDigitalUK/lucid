@@ -1,8 +1,6 @@
 import FormBuilder from "@lucid/form-builder";
-// Models
-import FormSubmission from "@db/models/FormSubmission";
 // Services
-import formSubmissions from "@services/form-submissions";
+import formSubService from "@services/form-submissions";
 
 export interface ServiceData {
   environment_key: string;
@@ -47,7 +45,7 @@ const submitForm = async (props: ServiceData) => {
     });
   }
 
-  const formRes = await formSubmissions.createSingle({
+  const formRes = await formSubService.createSingle({
     id: undefined,
     form_key: props.form.key,
     environment_key: props.environment_key,

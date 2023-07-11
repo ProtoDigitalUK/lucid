@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
-import auth from "@services/auth";
+import authService from "@services/auth";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getCSRFController: Controller<
   typeof authSchema.getCSRF.query
 > = async (req, res, next) => {
   try {
-    const token = auth.csrf.generateCSRFToken(res);
+    const token = authService.csrf.generateCSRFToken(res);
 
     res.status(200).json(
       buildResponse(req, {

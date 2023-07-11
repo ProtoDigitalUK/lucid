@@ -1,16 +1,16 @@
 // Services
-import emails from "@services/email";
+import emailsService from "@services/email";
 
 export interface ServiceData {
   id: number;
 }
 
 const resendSingle = async (data: ServiceData) => {
-  const email = await emails.getSingle({
+  const email = await emailsService.getSingle({
     id: data.id,
   });
 
-  const status = await emails.sendEmailInternal(
+  const status = await emailsService.sendEmailInternal(
     email.template,
     {
       data: email.data || {},
@@ -27,7 +27,7 @@ const resendSingle = async (data: ServiceData) => {
     data.id
   );
 
-  const updatedEmail = await emails.getSingle({
+  const updatedEmail = await emailsService.getSingle({
     id: data.id,
   });
 

@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Services
-import formSubmissions from "@services/form-submissions";
+import formSubService from "@services/form-submissions";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const deleteSingleController: Controller<
   typeof formSubmissionsSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const formSubmission = await formSubmissions.deleteSingle({
+    const formSubmission = await formSubService.deleteSingle({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,

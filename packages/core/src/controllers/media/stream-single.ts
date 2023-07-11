@@ -2,7 +2,7 @@ import { Readable } from "stream";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import medias from "@services/media";
+import mediaService from "@services/media";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const streamSingleController: Controller<
 > = async (req, res, next) => {
   try {
     // GET MEDIA
-    const response = await medias.streamMedia({
+    const response = await mediaService.streamMedia({
       key: req.params.key,
     });
 

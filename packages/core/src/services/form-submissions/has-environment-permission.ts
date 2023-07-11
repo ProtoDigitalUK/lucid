@@ -1,7 +1,7 @@
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Services
-import environments from "@services/environments";
+import environmentsService from "@services/environments";
 
 export interface ServiceData {
   form_key: string;
@@ -9,7 +9,7 @@ export interface ServiceData {
 }
 
 const hasEnvironmentPermission = async (data: ServiceData) => {
-  const environment = await environments.getSingle({
+  const environment = await environmentsService.getSingle({
     key: data.environment_key,
   });
 

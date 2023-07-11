@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import categorySchema from "@schemas/categories";
 // Services
-import categories from "@services/categories";
+import categoriesService from "@services/categories";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getMultipleController: Controller<
   typeof categorySchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const categoriesRes = await categories.getMultiple({
+    const categoriesRes = await categoriesService.getMultiple({
       environment_key: req.headers["lucid-environment"] as string,
       query: req.query,
     });

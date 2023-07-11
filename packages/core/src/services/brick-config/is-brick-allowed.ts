@@ -3,7 +3,7 @@ import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
-import brickConfig, { BrickConfigT } from "@services/brick-config";
+import brickConfigService, { BrickConfigT } from "@services/brick-config";
 import { CollectionT } from "@services/collections";
 
 export interface ServiceData {
@@ -16,7 +16,7 @@ export interface ServiceData {
 const isBrickAllowed = (data: ServiceData) => {
   // checks if the brick is allowed in the collection and environment and that there is config for it
   let allowed = false;
-  const builderInstances = brickConfig.getBrickConfig();
+  const builderInstances = brickConfigService.getBrickConfig();
 
   const instance = builderInstances.find((b) => b.key === data.key);
   const envAssigned = (data.environment.assigned_bricks || [])?.includes(
@@ -47,7 +47,7 @@ const isBrickAllowed = (data: ServiceData) => {
 
   let brick: BrickConfigT | undefined;
   if (instance) {
-    brick = brickConfig.getBrickData(instance, {
+    brick = brickConfigService.getBrickData(instance, {
       include: ["fields"],
     });
   }

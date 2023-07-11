@@ -4,11 +4,10 @@ import FormSubmission, { FormDataT } from "@db/models/FormSubmission";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
-import formSubmissions from "@services/form-submissions";
-import forms from "@services/forms";
+import formSubService from "@services/form-submissions";
+import formsService from "@services/forms";
 
 export interface ServiceData {
   query: z.infer<typeof formSubmissionsSchema.getMultiple.query>;
@@ -18,7 +17,7 @@ export interface ServiceData {
 
 const getMultiple = async (data: ServiceData) => {
   // Check if form is assigned to environment
-  await formSubmissions.hasEnvironmentPermission(data);
+  await formSubService.hasEnvironmentPermission(data);
 
   const { sort, include, page, per_page } = data.query;
 
@@ -58,7 +57,7 @@ const getMultiple = async (data: ServiceData) => {
   const formSubmissionsRes = await FormSubmission.getMultiple(SelectQuery);
 
   // Get Form Data
-  const formBuilder = forms.getBuilderInstance({
+  const formBuilder = formsService.getBuilderInstance({
     form_key: data.form_key,
   });
 
@@ -72,7 +71,7 @@ const getMultiple = async (data: ServiceData) => {
   }
 
   const formattedSubmissions = formSubmissionsRes.data.map((submission) => {
-    return formSubmissions.format(formBuilder, {
+    return formSubService.format(formBuilder, {
       submission,
       data: formData.filter(
         (field) => field.form_submission_id === submission.id

@@ -12,7 +12,7 @@ import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
-import brickConfig from "@services/brick-config";
+import brickConfigService from "@services/brick-config";
 import { CollectionT } from "@services/collections";
 
 // -------------------------------------------
@@ -136,7 +136,7 @@ export default class CollectionBrick {
     // Create or update the page brick record
     const promises = [];
 
-    const allowed = brickConfig.isBrickAllowed({
+    const allowed = brickConfigService.isBrickAllowed({
       key: data.brick.key,
       type: data.brick_type,
       environment: data.environment,

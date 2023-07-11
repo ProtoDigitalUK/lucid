@@ -1,6 +1,6 @@
 // Models
 import Category from "@db/models/Category";
-import categories from "@services/categories";
+import categoriesService from "@services/categories";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 
@@ -16,7 +16,7 @@ export interface ServiceData {
 
 const updateSingle = async (data: ServiceData) => {
   // Check if category exists
-  const currentCategory = await categories.getSingle({
+  const currentCategory = await categoriesService.getSingle({
     environment_key: data.environment_key,
     id: data.id,
   });

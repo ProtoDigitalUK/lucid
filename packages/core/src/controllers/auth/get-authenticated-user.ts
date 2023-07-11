@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
-import auth from "@services/auth";
+import authService from "@services/auth";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const getAuthenticatedUserController: Controller<
   typeof authSchema.getAuthenticatedUser.query
 > = async (req, res, next) => {
   try {
-    const user = await auth.getAuthenticatedUser({
+    const user = await authService.getAuthenticatedUser({
       userId: req.auth.id,
     });
 
