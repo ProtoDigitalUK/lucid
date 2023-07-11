@@ -1,6 +1,6 @@
 import { Router } from "express";
 import z from "zod";
-import { PermissionT, EnvironmentPermissionT } from "../../services/permissions";
+import { PermissionT, EnvironmentPermissionT } from "../app/Permissions";
 type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT extends z.ZodTypeAny>(router: Router, props: {
     method: "get" | "post" | "put" | "delete" | "patch";
     path: string;

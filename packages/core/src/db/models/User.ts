@@ -1,16 +1,8 @@
 import argon2 from "argon2";
 import getDBClient from "@db/db";
-// Models
-import Option from "@db/models/Option";
 // Utils
-import {
-  UserRoleRes,
-  UserEnvrionmentRes,
-} from "@services/users/format-permissions";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat } from "@utils/app/query-helpers";
-// Services
-import { PermissionT } from "@services/permissions";
 
 // -------------------------------------------
 // Types

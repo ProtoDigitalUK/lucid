@@ -1,7 +1,7 @@
 // Models
 import RolePermission from "@db/models/RolePermission";
 // Services
-import { PermissionT, EnvironmentPermissionT } from "@services/permissions";
+import { PermissionT, EnvironmentPermissionT } from "@utils/app/Permissions";
 
 export interface ServiceData {
   role_id: number;

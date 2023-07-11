@@ -12,7 +12,7 @@ declare const _default: {
         permissions: string[];
         environment_key?: string | undefined;
     }[]) => Promise<{
-        permission: import("../permissions").PermissionT | import("../permissions").EnvironmentPermissionT;
+        permission: import("../../utils/app/Permissions").PermissionT | import("../../utils/app/Permissions").EnvironmentPermissionT;
         environment_key?: string | undefined;
     }[]>;
 };

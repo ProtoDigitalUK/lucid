@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { Request, Response, NextFunction } from "express";
-import { PermissionT, EnvironmentPermissionT } from "../services/permissions";
+import { PermissionT, EnvironmentPermissionT } from "../utils/app/Permissions";
 declare const permissions: (permissions: {
     global?: PermissionT[];
     environments?: EnvironmentPermissionT[];

@@ -1,7 +1,7 @@
 // Models
 import { UserRolePermissionRes } from "@db/models/UserRole";
 // Services
-import { PermissionT, EnvironmentPermissionT } from "@services/permissions";
+import { PermissionT, EnvironmentPermissionT } from "@utils/app/Permissions";
 
 export interface UserRoleRes {
   id: number;

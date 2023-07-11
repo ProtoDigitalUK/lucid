@@ -1,4 +1,4 @@
-import { PermissionT, EnvironmentPermissionT } from "../../services/permissions";
+import { PermissionT, EnvironmentPermissionT } from "../../utils/app/Permissions";
 type RolePermissionCreateSingle = (role_id: number, permission: PermissionT | EnvironmentPermissionT, environment_key?: string) => Promise<RolePermissionT>;
 type RolePermissionDeleteSingle = (id: RolePermissionT["id"]) => Promise<RolePermissionT>;
 type RolePermissionGetAll = (role_id: number) => Promise<RolePermissionT[]>;

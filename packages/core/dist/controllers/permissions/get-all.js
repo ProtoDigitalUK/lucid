@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const Permissions_1 = __importDefault(require("../../utils/app/Permissions"));
 const permissions_1 = __importDefault(require("../../schemas/permissions"));
-const permissions_2 = __importDefault(require("../../services/permissions"));
 const getAllController = async (req, res, next) => {
     try {
-        const permissionsRes = permissions_2.default.formatted;
+        const permissionsRes = Permissions_1.default.formattedPermissions;
         res.status(200).json((0, build_response_1.default)(req, {
             data: permissionsRes,
         }));

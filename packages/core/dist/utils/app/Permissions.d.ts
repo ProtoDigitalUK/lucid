@@ -10,8 +10,8 @@ export type PermissionMenu = "create_menu" | "read_menu" | "update_menu" | "dele
 export type PermissionFormSubmissions = "read_form_submissions" | "delete_form_submissions" | "update_form_submissions";
 export type PermissionT = PermissionUsers | PermissionRoles | PermissionMedia | PermissionSettings | PermissionEnvironment | PermissionEmails;
 export type EnvironmentPermissionT = PermissionContent | PermissionCategory | PermissionMenu | PermissionFormSubmissions;
-declare const _default: {
-    formatted: {
+export default class Permissions {
+    static get formattedPermissions(): {
         global: {
             users: {
                 title: string;
@@ -57,10 +57,19 @@ declare const _default: {
             };
         };
     };
-    permissions: {
+    static get permissions(): {
         global: PermissionT[];
         environment: EnvironmentPermissionT[];
     };
-};
-export default _default;
-//# sourceMappingURL=index.d.ts.map
+    static get userPermissions(): PermissionUsers[];
+    static get rolePermissions(): PermissionRoles[];
+    static get mediaPermissions(): PermissionMedia[];
+    static get settingsPermissions(): PermissionSettings[];
+    static get environmentPermissions(): PermissionEnvironment[];
+    static get emailPermissions(): PermissionEmails[];
+    static get contentPermissions(): PermissionContent[];
+    static get categoryPermissions(): PermissionCategory[];
+    static get menuPermissions(): PermissionMenu[];
+    static get formSubmissionsPermissions(): PermissionFormSubmissions[];
+}
+//# sourceMappingURL=Permissions.d.ts.map

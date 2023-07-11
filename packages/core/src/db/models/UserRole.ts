@@ -1,9 +1,4 @@
 import getDBClient from "@db/db";
-// Utils
-import { LucidError } from "@utils/app/error-handler";
-// Services
-import roleServices from "@services/roles";
-import usersServices from "@services/users";
 
 // -------------------------------------------
 // Types
