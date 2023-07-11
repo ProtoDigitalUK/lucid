@@ -16,10 +16,10 @@ declare const _default: {
                 key: import("zod").ZodEnum<["created_at", "name"]>;
                 value: import("zod").ZodEnum<["asc", "desc"]>;
             }, "strip", import("zod").ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }>, "many">>;
             include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["permissions"]>, "many">>;
@@ -31,7 +31,7 @@ declare const _default: {
                 role_ids?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }[] | undefined;
             include?: "permissions"[] | undefined;
@@ -43,7 +43,7 @@ declare const _default: {
                 role_ids?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }[] | undefined;
             include?: "permissions"[] | undefined;
@@ -67,10 +67,10 @@ declare const _default: {
             key: import("zod").ZodEnum<["created_at", "name"]>;
             value: import("zod").ZodEnum<["asc", "desc"]>;
         }, "strip", import("zod").ZodTypeAny, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "name" | "created_at";
         }, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "name" | "created_at";
         }>, "many">>;
         include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["permissions"]>, "many">>;
@@ -82,7 +82,7 @@ declare const _default: {
             role_ids?: string | string[] | undefined;
         } | undefined;
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "name" | "created_at";
         }[] | undefined;
         include?: "permissions"[] | undefined;
@@ -94,7 +94,7 @@ declare const _default: {
             role_ids?: string | string[] | undefined;
         } | undefined;
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "name" | "created_at";
         }[] | undefined;
         include?: "permissions"[] | undefined;

@@ -4,6 +4,8 @@ import Role from "@db/models/Role";
 // Utils
 import formatPermissions from "@utils/users/format-permissions";
 import { LucidError } from "@utils/app/error-handler";
+// Services
+import roleServices from "@services/roles";
 
 // -------------------------------------------
 // Types
@@ -59,9 +61,11 @@ export default class UserRole {
 
     // Add the new roles to the user
     if (newRoles.length > 0) {
-      const rolesRes = await Role.getMultiple({
-        filter: {
-          role_ids: newRoles.map((role) => role.toString()),
+      const rolesRes = await roleServices.getMultiple({
+        query: {
+          filter: {
+            role_ids: newRoles.map((role) => role.toString()),
+          },
         },
       });
       if (rolesRes.count !== newRoles.length) {

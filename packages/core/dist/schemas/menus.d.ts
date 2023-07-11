@@ -107,10 +107,10 @@ declare const _default: {
                 key: z.ZodEnum<["created_at"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }>, "many">>;
             include: z.ZodOptional<z.ZodArray<z.ZodEnum<["items"]>, "many">>;
@@ -121,7 +121,7 @@ declare const _default: {
                 name?: string | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }[] | undefined;
             include?: "items"[] | undefined;
@@ -132,7 +132,7 @@ declare const _default: {
                 name?: string | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }[] | undefined;
             include?: "items"[] | undefined;

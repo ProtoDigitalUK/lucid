@@ -1,7 +1,5 @@
 import { Router } from "express";
 import z from "zod";
-// Models
-import { PermissionT, EnvironmentPermissionT } from "@db/models/RolePermission";
 // Middleware
 import validate from "@middleware/validate";
 import authenticate from "@middleware/authenticate";
@@ -9,6 +7,8 @@ import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
 import validateEnvironment from "@middleware/validate-environment";
 import permissions from "@middleware/permissions";
+// Services
+import { PermissionT, EnvironmentPermissionT } from "@services/permissions";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,

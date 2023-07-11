@@ -16,10 +16,10 @@ declare const _default: {
                 key: import("zod").ZodEnum<["title", "created_at"]>;
                 value: import("zod").ZodEnum<["asc", "desc"]>;
             }, "strip", import("zod").ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "title" | "created_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "title" | "created_at";
             }>, "many">>;
             page: import("zod").ZodOptional<import("zod").ZodString>;
@@ -30,7 +30,7 @@ declare const _default: {
                 title?: string | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "title" | "created_at";
             }[] | undefined;
             page?: string | undefined;
@@ -41,7 +41,7 @@ declare const _default: {
                 title?: string | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "title" | "created_at";
             }[] | undefined;
             page?: string | undefined;
@@ -64,10 +64,10 @@ declare const _default: {
             key: import("zod").ZodEnum<["title", "created_at"]>;
             value: import("zod").ZodEnum<["asc", "desc"]>;
         }, "strip", import("zod").ZodTypeAny, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "title" | "created_at";
         }, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "title" | "created_at";
         }>, "many">>;
         page: import("zod").ZodOptional<import("zod").ZodString>;
@@ -78,7 +78,7 @@ declare const _default: {
             title?: string | undefined;
         } | undefined;
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "title" | "created_at";
         }[] | undefined;
         page?: string | undefined;
@@ -89,7 +89,7 @@ declare const _default: {
             title?: string | undefined;
         } | undefined;
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "title" | "created_at";
         }[] | undefined;
         page?: string | undefined;

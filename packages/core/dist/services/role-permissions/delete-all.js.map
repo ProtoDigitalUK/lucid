@@ -1,0 +1,1 @@
+{"version":3,"file":"delete-all.js","sourceRoot":"","sources":["../../../src/services/role-permissions/delete-all.ts"],"names":[],"mappings":";;;;;AACA,+EAAuD;AAMvD,MAAM,SAAS,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC5C,MAAM,WAAW,GAAG,MAAM,wBAAc,CAAC,SAAS,CAAC,IAAI,CAAC,OAAO,CAAC,CAAC;IAEjE,OAAO,WAAW,CAAC;AACrB,CAAC,CAAC;AAEF,kBAAe,SAAS,CAAC"}

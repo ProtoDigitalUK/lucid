@@ -1,16 +1,14 @@
 import z from "zod";
-// Models
-import RolePermission, {
-  PermissionT,
-  EnvironmentPermissionT,
-} from "@db/models/RolePermission";
 // Schema
 import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
 // Services
 import environmentsService from "@services/environments";
-import permissionServices from "@services/permissions";
+import permissionServices, {
+  PermissionT,
+  EnvironmentPermissionT,
+} from "@services/permissions";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body

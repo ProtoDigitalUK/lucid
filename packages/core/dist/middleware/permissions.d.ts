@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { Request, Response, NextFunction } from "express";
-import { PermissionT, EnvironmentPermissionT } from "../db/models/RolePermission";
+import { PermissionT, EnvironmentPermissionT } from "../services/permissions";
 declare const permissions: (permissions: {
     global?: PermissionT[];
     environments?: EnvironmentPermissionT[];

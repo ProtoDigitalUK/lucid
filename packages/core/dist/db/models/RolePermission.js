@@ -9,33 +9,25 @@ const query_helpers_1 = require("../../utils/app/query-helpers");
 class RolePermission {
 }
 _a = RolePermission;
-RolePermission.createMultiple = async (role_id, permissions) => {
+RolePermission.createSingle = async (role_id, permission, environment_key) => {
     const client = await db_1.default;
-    const permissionsPromise = permissions.map((permission) => {
-        const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
-            columns: ["role_id", "permission", "environment_key"],
-            values: [role_id, permission.permission, permission.environment_key],
-        });
-        return client.query({
-            text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
-            values: values.value,
-        });
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: ["role_id", "permission", "environment_key"],
+        values: [role_id, permission, environment_key],
     });
-    const permissionsRes = await Promise.all(permissionsPromise);
-    const permissionsData = permissionsRes.map((permission) => permission.rows[0]);
-    return permissionsData;
+    const permissionRes = await client.query({
+        text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+        values: values.value,
+    });
+    return permissionRes.rows[0];
 };
-RolePermission.deleteMultiple = async (ids) => {
+RolePermission.deleteSingle = async (id) => {
     const client = await db_1.default;
-    const permissionsPromise = ids.map((id) => {
-        return client.query({
-            text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
-            values: [id],
-        });
+    const rolePermission = await client.query({
+        text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
+        values: [id],
     });
-    const permissionsRes = await Promise.all(permissionsPromise);
-    const permissionsData = permissionsRes.map((permission) => permission.rows[0]);
-    return permissionsData;
+    return rolePermission.rows[0];
 };
 RolePermission.deleteAll = async (role_id) => {
     const client = await db_1.default;

@@ -7,6 +7,14 @@ declare const _default: {
     }>;
     getSingle: (data: import("./get-single").ServiceData) => Promise<import("../../db/models/Role").RoleT>;
     updateSingle: (data: import("./update-single").ServiceData) => Promise<import("../../db/models/Role").RoleT>;
+    checkNameIsUnique: (data: import("./check-name-unique").ServiceData) => Promise<never>;
+    validatePermissions: (permGroup: {
+        permissions: string[];
+        environment_key?: string | undefined;
+    }[]) => Promise<{
+        permission: import("../permissions").PermissionT | import("../permissions").EnvironmentPermissionT;
+        environment_key?: string | undefined;
+    }[]>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

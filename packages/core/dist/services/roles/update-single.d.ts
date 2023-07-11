@@ -1,6 +1,6 @@
 export interface ServiceData {
     id: number;
-    name: string;
+    name?: string;
     permission_groups: Array<{
         environment_key?: string;
         permissions: string[];

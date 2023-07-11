@@ -1,7 +1,6 @@
 import argon2 from "argon2";
 import getDBClient from "@db/db";
 // Models
-import { PermissionT } from "@db/models/RolePermission";
 import Option from "@db/models/Option";
 // Utils
 import {
@@ -10,10 +9,11 @@ import {
 } from "@utils/users/format-permissions";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat } from "@utils/app/query-helpers";
+// Services
+import { PermissionT } from "@services/permissions";
 
 // -------------------------------------------
 // Types
-
 type UserRegister = (data: {
   email: string;
   username: string;

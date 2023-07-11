@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const Role_1 = __importDefault(require("../models/Role"));
 const format_permissions_1 = __importDefault(require("../../utils/users/format-permissions"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const roles_1 = __importDefault(require("../../services/roles"));
 class UserRole {
 }
 _a = UserRole;
@@ -24,9 +24,11 @@ UserRole.update = async (id, data) => {
         return !userRoles.rows.find((userRole) => userRole.role_id === role);
     });
     if (newRoles.length > 0) {
-        const rolesRes = await Role_1.default.getMultiple({
-            filter: {
-                role_ids: newRoles.map((role) => role.toString()),
+        const rolesRes = await roles_1.default.getMultiple({
+            query: {
+                filter: {
+                    role_ids: newRoles.map((role) => role.toString()),
+                },
             },
         });
         if (rolesRes.count !== newRoles.length) {

@@ -1,4 +1,4 @@
-import { PermissionT, EnvironmentPermissionT } from "../../db/models/RolePermission";
+import { PermissionT, EnvironmentPermissionT } from "../permissions";
 declare const validatePermissions: (permGroup: {
     permissions: string[];
     environment_key?: string | undefined;

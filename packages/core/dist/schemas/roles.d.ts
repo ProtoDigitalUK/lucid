@@ -31,7 +31,7 @@ declare const _default: {
     };
     updateSingle: {
         body: z.ZodObject<{
-            name: z.ZodString;
+            name: z.ZodOptional<z.ZodString>;
             permission_groups: z.ZodArray<z.ZodObject<{
                 environment_key: z.ZodOptional<z.ZodString>;
                 permissions: z.ZodArray<z.ZodString, "many">;
@@ -43,17 +43,17 @@ declare const _default: {
                 environment_key?: string | undefined;
             }>, "many">;
         }, "strip", z.ZodTypeAny, {
-            name: string;
             permission_groups: {
                 permissions: string[];
                 environment_key?: string | undefined;
             }[];
+            name?: string | undefined;
         }, {
-            name: string;
             permission_groups: {
                 permissions: string[];
                 environment_key?: string | undefined;
             }[];
+            name?: string | undefined;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{
@@ -92,10 +92,10 @@ declare const _default: {
                 key: z.ZodEnum<["created_at", "name"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }>, "many">>;
             include: z.ZodOptional<z.ZodArray<z.ZodEnum<["permissions"]>, "many">>;
@@ -107,7 +107,7 @@ declare const _default: {
                 role_ids?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }[] | undefined;
             include?: "permissions"[] | undefined;
@@ -119,7 +119,7 @@ declare const _default: {
                 role_ids?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "name" | "created_at";
             }[] | undefined;
             include?: "permissions"[] | undefined;

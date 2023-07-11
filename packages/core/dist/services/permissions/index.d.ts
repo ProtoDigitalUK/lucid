@@ -1,17 +1,29 @@
+export type PermissionUsers = "create_user" | "read_user" | "update_user" | "delete_user";
+export type PermissionRoles = "create_role" | "read_role" | "update_role" | "delete_role" | "assign_role";
+export type PermissionMedia = "create_media" | "read_media" | "update_media" | "delete_media";
+export type PermissionSettings = "update_settings";
+export type PermissionEnvironment = "update_environment" | "migrate_environment" | "delete_environment" | "create_environment";
+export type PermissionEmails = "read_email" | "delete_email" | "send_email";
+export type PermissionContent = "create_content" | "read_content" | "update_content" | "delete_content" | "publish_content" | "unpublish_content";
+export type PermissionCategory = "create_category" | "read_category" | "update_category" | "delete_category";
+export type PermissionMenu = "create_menu" | "read_menu" | "update_menu" | "delete_menu";
+export type PermissionFormSubmissions = "read_form_submissions" | "delete_form_submissions" | "update_form_submissions";
+export type PermissionT = PermissionUsers | PermissionRoles | PermissionMedia | PermissionSettings | PermissionEnvironment | PermissionEmails;
+export type EnvironmentPermissionT = PermissionContent | PermissionCategory | PermissionMenu | PermissionFormSubmissions;
 declare const _default: {
     formatted: {
         global: {
             users: {
                 title: string;
-                permissions: ("create_user" | "read_user" | "update_user" | "delete_user")[];
+                permissions: PermissionUsers[];
             };
             roles: {
                 title: string;
-                permissions: ("create_role" | "read_role" | "update_role" | "delete_role" | "assign_role")[];
+                permissions: PermissionRoles[];
             };
             media: {
                 title: string;
-                permissions: ("create_media" | "read_media" | "update_media" | "delete_media")[];
+                permissions: PermissionMedia[];
             };
             settings: {
                 title: string;
@@ -19,35 +31,35 @@ declare const _default: {
             };
             environment: {
                 title: string;
-                permissions: ("update_environment" | "migrate_environment" | "delete_environment" | "create_environment")[];
+                permissions: PermissionEnvironment[];
             };
             emails: {
                 title: string;
-                permissions: ("read_email" | "delete_email" | "send_email")[];
+                permissions: PermissionEmails[];
             };
         };
         environment: {
             content: {
                 title: string;
-                permissions: ("create_content" | "read_content" | "update_content" | "delete_content" | "publish_content" | "unpublish_content")[];
+                permissions: PermissionContent[];
             };
             category: {
                 title: string;
-                permissions: ("create_category" | "read_category" | "update_category" | "delete_category")[];
+                permissions: PermissionCategory[];
             };
             menu: {
                 title: string;
-                permissions: ("create_menu" | "read_menu" | "update_menu" | "delete_menu")[];
+                permissions: PermissionMenu[];
             };
             form_submissions: {
                 title: string;
-                permissions: ("read_form_submissions" | "delete_form_submissions" | "update_form_submissions")[];
+                permissions: PermissionFormSubmissions[];
             };
         };
     };
     permissions: {
-        global: import("../permissions/Permissions").PermissionT[];
-        environment: import("../permissions/Permissions").EnvironmentPermissionT[];
+        global: PermissionT[];
+        environment: EnvironmentPermissionT[];
     };
 };
 export default _default;

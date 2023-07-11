@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_handler_1 = require("../app/error-handler");
-const environments_1 = __importDefault(require("../../services/environments"));
-const permissions_1 = __importDefault(require("../../services/permissions"));
+const error_handler_1 = require("../../utils/app/error-handler");
+const environments_1 = __importDefault(require("../environments"));
+const permissions_1 = __importDefault(require("../permissions"));
 const validatePermissions = async (permGroup) => {
     const permissionSet = permissions_1.default.permissions;
     const environmentsRes = await environments_1.default.getAll();

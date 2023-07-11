@@ -1,5 +1,5 @@
-import { EnvironmentPermissionT, PermissionT } from "../../db/models/RolePermission";
 import { UserRolePermissionRes } from "../../db/models/UserRole";
+import { PermissionT, EnvironmentPermissionT } from "../../services/permissions";
 export interface UserRoleRes {
     id: number;
     name: string;

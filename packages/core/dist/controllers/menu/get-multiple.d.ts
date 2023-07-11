@@ -13,10 +13,10 @@ declare const _default: {
                 key: import("zod").ZodEnum<["created_at"]>;
                 value: import("zod").ZodEnum<["asc", "desc"]>;
             }, "strip", import("zod").ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }>, "many">>;
             include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["items"]>, "many">>;
@@ -27,7 +27,7 @@ declare const _default: {
                 name?: string | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }[] | undefined;
             include?: "items"[] | undefined;
@@ -38,7 +38,7 @@ declare const _default: {
                 name?: string | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at";
             }[] | undefined;
             include?: "items"[] | undefined;
@@ -59,10 +59,10 @@ declare const _default: {
             key: import("zod").ZodEnum<["created_at"]>;
             value: import("zod").ZodEnum<["asc", "desc"]>;
         }, "strip", import("zod").ZodTypeAny, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at";
         }, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at";
         }>, "many">>;
         include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["items"]>, "many">>;
@@ -73,7 +73,7 @@ declare const _default: {
             name?: string | undefined;
         } | undefined;
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at";
         }[] | undefined;
         include?: "items"[] | undefined;
@@ -84,7 +84,7 @@ declare const _default: {
             name?: string | undefined;
         } | undefined;
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at";
         }[] | undefined;
         include?: "items"[] | undefined;

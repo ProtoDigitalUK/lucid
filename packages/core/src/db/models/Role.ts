@@ -3,29 +3,31 @@ import getDBClient from "@db/db";
 // Schema
 import roleSchema from "@schemas/roles";
 // Models
-import RolePermission, { RolePermissionT } from "@db/models/RolePermission";
+import { RolePermissionT } from "@db/models/RolePermission";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
-import validatePermissions from "@utils/roles/validate-permissions";
 
 // -------------------------------------------
 // Types
 type RoleCreateSingle = (
   data: z.infer<typeof roleSchema.createSingle.body>
 ) => Promise<RoleT>;
+
 type RoleDeleteSingle = (id: number) => Promise<RoleT>;
-type RoleGetMultiple = (
-  query: z.infer<typeof roleSchema.getMultiple.query>
-) => Promise<{
+
+type RoleGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
   data: RoleT[];
   count: number;
 }>;
+
 type RoleUpdateSingle = (
   id: number,
   data: z.infer<typeof roleSchema.updateSingle.body>
 ) => Promise<RoleT>;
+
 type RoleGetSingle = (id: number) => Promise<RoleT>;
+
+type RoleGetSingleByName = (name: string) => Promise<RoleT>;
 
 // -------------------------------------------
 // User
@@ -56,37 +58,12 @@ export default class Role {
       values: [data.name],
     });
 
-    const parsePermissions = await validatePermissions(data.permission_groups);
-
-    // check if role name is unique
-    await Role.#roleNameUnique(data.name);
-
     const roleRes = await client.query<RoleT>({
       text: `INSERT INTO lucid_roles (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
-    let role = roleRes.rows[0];
-
-    if (!role) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "There was an error creating the role.",
-        status: 500,
-      });
-    }
-
-    if (data.permission_groups.length > 0) {
-      try {
-        await RolePermission.createMultiple(role.id, parsePermissions);
-      } catch (error) {
-        await Role.deleteSingle(role.id);
-        throw error;
-      }
-    }
-
-    return role;
+    return roleRes.rows[0];
   };
   static deleteSingle: RoleDeleteSingle = async (id) => {
     const client = await getDBClient;
@@ -96,92 +73,20 @@ export default class Role {
       values: [id],
     });
 
-    let role = roleRes.rows[0];
-
-    if (!role) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "There was an error deleting the role.",
-        status: 500,
-      });
-    }
-
-    return role;
+    return roleRes.rows[0];
   };
-  static getMultiple: RoleGetMultiple = async (query) => {
+  static getMultiple: RoleGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const { filter, sort, page, per_page, include } = query;
-
-    // Build Query Data and Query
-    const SelectQuery = new SelectQueryBuilder({
-      columns: [
-        "roles.id",
-        "roles.name",
-        "roles.created_at",
-        "roles.updated_at",
-      ],
-      exclude: undefined,
-      filter: {
-        data: filter,
-        meta: {
-          name: {
-            operator: "%",
-            type: "text",
-            columnType: "standard",
-          },
-          role_ids: {
-            key: "id",
-            operator: "=",
-            type: "int",
-            columnType: "standard",
-          },
-        },
-      },
-      sort: sort,
-      page: page,
-      per_page: per_page,
-    });
-
     const roles = await client.query<RoleT>({
-      text: `SELECT
-          ${SelectQuery.query.select}
-        FROM
-          lucid_roles as roles
-        ${SelectQuery.query.where}
-        ${SelectQuery.query.order}
-        ${SelectQuery.query.pagination}`,
-      values: SelectQuery.values,
+      text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      values: query_instance.values,
     });
 
     const count = await client.query<{ count: string }>({
-      text: `SELECT 
-          COUNT(DISTINCT lucid_roles.id)
-        FROM
-          lucid_roles
-        ${SelectQuery.query.where}`,
-      values: SelectQuery.countValues,
+      text: `SELECT COUNT(DISTINCT lucid_roles.id) FROM lucid_roles ${query_instance.query.where}`,
+      values: query_instance.countValues,
     });
-
-    if (include && include.includes("permissions")) {
-      const permissionsPromise = roles.rows.map((role) =>
-        RolePermission.getAll(role.id)
-      );
-      const permissions = await Promise.all(permissionsPromise);
-      roles.rows = roles.rows.map((role, index) => {
-        return {
-          ...role,
-          permissions: permissions[index].map((permission) => {
-            return {
-              id: permission.id,
-              permission: permission.permission,
-              environment_key: permission.environment_key,
-            };
-          }),
-        };
-      });
-    }
 
     return {
       data: roles.rows,
@@ -195,9 +100,6 @@ export default class Role {
       columns: ["name"],
       values: [data.name],
     });
-    const parsePermissions = await validatePermissions(data.permission_groups);
-
-    await Role.#roleNameUnique(data.name, id);
 
     const roleRes = await client.query<RoleT>({
       text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${
@@ -206,23 +108,7 @@ export default class Role {
       values: [...values.value, id],
     });
 
-    let role = roleRes.rows[0];
-
-    if (!role) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "There was an error updating the role.",
-        status: 500,
-      });
-    }
-
-    if (data.permission_groups.length > 0) {
-      await RolePermission.deleteAll(id);
-      await RolePermission.createMultiple(id, parsePermissions);
-    }
-
-    return role;
+    return roleRes.rows[0];
   };
   static getSingle: RoleGetSingle = async (id) => {
     const client = await getDBClient;
@@ -246,42 +132,16 @@ export default class Role {
       values: [id],
     });
 
-    let role = roleRes.rows[0];
-
-    if (!role) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "There was an error getting the role.",
-        status: 500,
-      });
-    }
-
-    return role;
+    return roleRes.rows[0];
   };
-  // -------------------------------------------
-  // Util Functions
-  static #roleNameUnique = async (name: string, id?: number) => {
+  static getSingleByName: RoleGetSingleByName = async (name) => {
     const client = await getDBClient;
 
-    const roleCheck = await client.query<RoleT>({
-      text: `SELECT * FROM lucid_roles WHERE name = $1 AND id != $2`,
-      values: [name, id],
+    const roleRes = await client.query<RoleT>({
+      text: `SELECT * FROM lucid_roles WHERE name = $1`,
+      values: [name],
     });
 
-    if (roleCheck.rows.length > 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "Role Error",
-        message: "The role name must be unique.",
-        status: 500,
-        errors: modelErrors({
-          name: {
-            code: "Not unique",
-            message: "The role name must be unique.",
-          },
-        }),
-      });
-    }
+    return roleRes.rows[0];
   };
 }

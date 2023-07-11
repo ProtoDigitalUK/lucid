@@ -1,5 +1,5 @@
-import { PermissionT } from "../models/RolePermission";
 import { UserRoleRes, UserEnvrionmentRes } from "../../utils/users/format-permissions";
+import { PermissionT } from "../../services/permissions";
 type UserRegister = (data: {
     email: string;
     username: string;

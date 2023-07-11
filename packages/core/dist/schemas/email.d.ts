@@ -20,10 +20,10 @@ declare const _default: {
                 key: z.ZodEnum<["created_at", "updated_at"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at";
             }>, "many">>;
             page: z.ZodOptional<z.ZodString>;
@@ -35,7 +35,7 @@ declare const _default: {
                 delivery_status?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at";
             }[] | undefined;
             page?: string | undefined;
@@ -47,7 +47,7 @@ declare const _default: {
                 delivery_status?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at";
             }[] | undefined;
             page?: string | undefined;

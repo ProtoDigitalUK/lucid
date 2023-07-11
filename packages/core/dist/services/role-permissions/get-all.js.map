@@ -1,0 +1,1 @@
+{"version":3,"file":"get-all.js","sourceRoot":"","sources":["../../../src/services/role-permissions/get-all.ts"],"names":[],"mappings":";;;;;AACA,+EAAuD;AAMvD,MAAM,MAAM,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IACzC,MAAM,eAAe,GAAG,MAAM,wBAAc,CAAC,MAAM,CAAC,IAAI,CAAC,OAAO,CAAC,CAAC;IAElE,OAAO,eAAe,CAAC;AACzB,CAAC,CAAC;AAEF,kBAAe,MAAM,CAAC"}

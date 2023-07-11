@@ -6,10 +6,10 @@ declare const _default: {
                 key: import("zod").ZodEnum<["created_at", "updated_at", "read_at"]>;
                 value: import("zod").ZodEnum<["asc", "desc"]>;
             }, "strip", import("zod").ZodTypeAny, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at" | "read_at";
             }, {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at" | "read_at";
             }>, "many">>;
             include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["fields"]>, "many">>;
@@ -17,7 +17,7 @@ declare const _default: {
             per_page: import("zod").ZodOptional<import("zod").ZodString>;
         }, "strip", import("zod").ZodTypeAny, {
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at" | "read_at";
             }[] | undefined;
             include?: "fields"[] | undefined;
@@ -25,7 +25,7 @@ declare const _default: {
             per_page?: string | undefined;
         }, {
             sort?: {
-                value: "asc" | "desc";
+                value: "desc" | "asc";
                 key: "created_at" | "updated_at" | "read_at";
             }[] | undefined;
             include?: "fields"[] | undefined;
@@ -51,10 +51,10 @@ declare const _default: {
             key: import("zod").ZodEnum<["created_at", "updated_at", "read_at"]>;
             value: import("zod").ZodEnum<["asc", "desc"]>;
         }, "strip", import("zod").ZodTypeAny, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at" | "updated_at" | "read_at";
         }, {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at" | "updated_at" | "read_at";
         }>, "many">>;
         include: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodEnum<["fields"]>, "many">>;
@@ -62,7 +62,7 @@ declare const _default: {
         per_page: import("zod").ZodOptional<import("zod").ZodString>;
     }, "strip", import("zod").ZodTypeAny, {
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at" | "updated_at" | "read_at";
         }[] | undefined;
         include?: "fields"[] | undefined;
@@ -70,7 +70,7 @@ declare const _default: {
         per_page?: string | undefined;
     }, {
         sort?: {
-            value: "asc" | "desc";
+            value: "desc" | "asc";
             key: "created_at" | "updated_at" | "read_at";
         }[] | undefined;
         include?: "fields"[] | undefined;

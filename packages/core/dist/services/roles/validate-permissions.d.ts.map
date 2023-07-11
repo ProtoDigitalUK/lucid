@@ -1,0 +1,1 @@
+{"version":3,"file":"validate-permissions.d.ts","sourceRoot":"","sources":["../../../src/services/roles/validate-permissions.ts"],"names":[],"mappings":"AAOA,OAA2B,EACzB,WAAW,EACX,sBAAsB,EACvB,MAAM,uBAAuB,CAAC;AAM/B,QAAA,MAAM,mBAAmB;;;;gBAMT,WAAW,GAAG,sBAAsB;;IAuFnD,CAAC;AAEF,eAAe,mBAAmB,CAAC"}

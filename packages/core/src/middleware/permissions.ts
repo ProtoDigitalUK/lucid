@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from "express";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
-import { PermissionT, EnvironmentPermissionT } from "@db/models/RolePermission";
 import User from "@db/models/User";
+// Serivces
+import { PermissionT, EnvironmentPermissionT } from "@services/permissions";
 
 const throwPermissionError = () => {
   throw new LucidError({

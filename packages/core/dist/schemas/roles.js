@@ -14,7 +14,7 @@ const createSingleBody = zod_1.default.object({
 const createSingleQuery = zod_1.default.object({});
 const createSingleParams = zod_1.default.object({});
 const updateSingleBody = zod_1.default.object({
-    name: zod_1.default.string().min(2),
+    name: zod_1.default.string().min(2).optional(),
     permission_groups: zod_1.default.array(zod_1.default.object({
         environment_key: zod_1.default.string().optional(),
         permissions: zod_1.default.array(zod_1.default.string()),
