@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const csrf_1 = require("../services/auth/csrf");
 const error_handler_1 = require("../utils/app/error-handler");
+const auth_1 = __importDefault(require("../services/auth"));
 const authoriseCSRF = async (req, res, next) => {
     try {
-        const verifyCSRF = (0, csrf_1.verifyCSRFToken)(req);
+        const verifyCSRF = auth_1.default.csrf.verifyCSRFToken(req);
         if (!verifyCSRF) {
             throw new error_handler_1.LucidError({
                 type: "forbidden",

@@ -9,12 +9,7 @@ export type CollectionT = {
 };
 declare const _default: {
     getSingle: (data: import("./get-single").ServiceData) => Promise<CollectionT>;
-    getAll: (data: import("./get-all").ServiceData) => Promise<never[] | {
-        getSingle: (data: import("./get-single").ServiceData) => Promise<CollectionT>;
-        getAll: any;
-        updateBricks: (data: import("./update-bricks").ServiceData) => Promise<void>;
-        format: (instance: import("@lucid/collection-builder").default) => CollectionT;
-    }>;
+    getAll: (data: import("./get-all").ServiceData) => Promise<CollectionT[]>;
     updateBricks: (data: import("./update-bricks").ServiceData) => Promise<void>;
     format: (instance: import("@lucid/collection-builder").default) => CollectionT;
 };

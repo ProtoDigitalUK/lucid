@@ -34,7 +34,7 @@ const getAll = async (data) => {
         }
         return collectionData;
     });
-    return collections_1.default;
+    return collectionsF;
 };
 const filterCollections = (filter, collections) => {
     if (!filter)

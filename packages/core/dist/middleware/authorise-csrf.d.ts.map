@@ -1,1 +1,1 @@
-{"version":3,"file":"authorise-csrf.d.ts","sourceRoot":"","sources":["../../src/middleware/authorise-csrf.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAK1D,QAAA,MAAM,aAAa,QACZ,OAAO,OACP,QAAQ,QACP,YAAY,kBAgBnB,CAAC;AAEF,eAAe,aAAa,CAAC"}
+{"version":3,"file":"authorise-csrf.d.ts","sourceRoot":"","sources":["../../src/middleware/authorise-csrf.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAM1D,QAAA,MAAM,aAAa,QACZ,OAAO,OACP,QAAQ,QACP,YAAY,kBAgBnB,CAAC;AAEF,eAAe,aAAa,CAAC"}

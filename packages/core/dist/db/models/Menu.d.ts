@@ -1,6 +1,7 @@
 import z from "zod";
 import menusSchema, { MenuItem, MenuItemUpdate } from "../../schemas/menus";
-import { MenuRes } from "../../utils/menus/format-menu";
+import { queryDataFormat } from "../../utils/app/query-helpers";
+import { MenuRes } from "../../services/menu";
 type MenuCreateSingle = (data: {
     environment_key: string;
     key: string;
@@ -52,12 +53,17 @@ export type MenuItemT = {
     full_slug: string | null;
 };
 export default class Menu {
-    #private;
     static createSingle: MenuCreateSingle;
     static deleteSingle: MenuDeleteSingle;
     static getSingle: MenuGetSingle;
     static getMultiple: MenuGetMultiple;
     static updateSingle: MenuUpdateSingle;
+    static checkKeyIsUnique: (key: string, environment_key: string) => Promise<MenuT>;
+    static getMenuItems: (menu_ids: number[]) => Promise<MenuItemT[]>;
+    static getSingleItem: (id: number, menu_id: number) => Promise<MenuItemT>;
+    static deleteItemsByIds: (ids: number[]) => Promise<MenuItemT[]>;
+    static updateMenuItem: (item_id: number, query_data: ReturnType<typeof queryDataFormat>) => Promise<MenuItemT>;
+    static createMenuItem: (query_data: ReturnType<typeof queryDataFormat>) => Promise<MenuItemT>;
 }
 export {};
 //# sourceMappingURL=Menu.d.ts.map

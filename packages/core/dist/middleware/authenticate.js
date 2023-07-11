@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const jwt_1 = require("../services/auth/jwt");
 const error_handler_1 = require("../utils/app/error-handler");
+const auth_1 = __importDefault(require("../services/auth"));
 const authenticate = async (req, res, next) => {
     try {
-        const authenticateJWT = (0, jwt_1.verifyJWT)(req);
+        const authenticateJWT = auth_1.default.jwt.verifyJWT(req);
         if (!authenticateJWT.sucess || !authenticateJWT.data) {
             throw new error_handler_1.LucidError({
                 type: "authorisation",

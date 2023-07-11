@@ -5,7 +5,7 @@ export interface ServiceData {
     environment_key: string;
 }
 declare const getMultiple: (data: ServiceData) => Promise<{
-    data: import("../../utils/menus/format-menu").MenuRes[];
+    data: import(".").MenuRes[];
     count: number;
 }>;
 export default getMultiple;

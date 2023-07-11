@@ -34,4 +34,4 @@ const formatMenu = (menu, items) => {
     };
 };
 exports.default = formatMenu;
-//# sourceMappingURL=format-menu.js.map
+//# sourceMappingURL=format.js.map

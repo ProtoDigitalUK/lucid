@@ -5,11 +5,6 @@ export interface ServiceData {
     query: z.infer<typeof collectionSchema.getAll.query>;
     environment_key: string;
 }
-declare const getAll: (data: ServiceData) => Promise<never[] | {
-    getSingle: (data: import("./get-single").ServiceData) => Promise<CollectionT>;
-    getAll: any;
-    updateBricks: (data: import("./update-bricks").ServiceData) => Promise<void>;
-    format: (instance: import("../../../../collection-builder/src").default) => CollectionT;
-}>;
+declare const getAll: (data: ServiceData) => Promise<CollectionT[]>;
 export default getAll;
 //# sourceMappingURL=get-all.d.ts.map

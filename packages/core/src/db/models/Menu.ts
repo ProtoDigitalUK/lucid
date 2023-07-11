@@ -3,9 +3,11 @@ import getDBClient from "@db/db";
 // Schema
 import menusSchema, { MenuItem, MenuItemUpdate } from "@schemas/menus";
 // Utils
-import formatMenu, { MenuRes } from "@utils/menus/format-menu";
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import flattenMenuItems from "@utils/menus/flatten-menu-items";
+// Serices
+import menuServices, { MenuRes, ItemsRes } from "@services/menu";
 
 // -------------------------------------------
 // Types
@@ -78,7 +80,10 @@ export default class Menu {
     const client = await getDBClient;
 
     // Check if key is unique
-    await Menu.#checkKeyIsUnique(data.key, data.environment_key);
+    await menuServices.checkKeyUnique({
+      key: data.key,
+      environment_key: data.environment_key,
+    });
 
     const { columns, aliases, values } = queryDataFormat({
       columns: ["environment_key", "key", "name", "description"],
@@ -105,7 +110,10 @@ export default class Menu {
     // Create Menu Items
     if (data.items) {
       try {
-        await Menu.#upsertMenuItems(menu.rows[0].id, data.items);
+        await menuServices.upsertMultipleItems({
+          menu_id: menu.rows[0].id,
+          items: data.items,
+        });
       } catch (err) {
         await client.query({
           text: `DELETE FROM lucid_menus WHERE id = $1`,
@@ -115,11 +123,13 @@ export default class Menu {
       }
     }
 
-    const menuItems = await Menu.#getMenuItems([menu.rows[0].id]);
+    const menuItems = await menuServices.getItems({
+      menu_ids: [menu.rows[0].id],
+    });
 
     // -------------------------------------------
     // Return Menu
-    return formatMenu(menu.rows[0], menuItems);
+    return menuServices.format(menu.rows[0], menuItems);
   };
   static deleteSingle: MenuDeleteSingle = async (data) => {
     const client = await getDBClient;
@@ -191,9 +201,11 @@ export default class Menu {
       });
     }
 
-    const menuItems = await Menu.#getMenuItems([menu.rows[0].id]);
+    const menuItems = await menuServices.getItems({
+      menu_ids: [menu.rows[0].id],
+    });
 
-    return formatMenu(menu.rows[0], menuItems);
+    return menuServices.format(menu.rows[0], menuItems);
   };
   static getMultiple: MenuGetMultiple = async (query, data) => {
     const client = await getDBClient;
@@ -256,11 +268,13 @@ export default class Menu {
 
     let menuItems: MenuItemT[] = [];
     if (include && include.includes("items")) {
-      menuItems = await Menu.#getMenuItems(menus.rows.map((menu) => menu.id));
+      menuItems = await menuServices.getItems({
+        menu_ids: menus.rows.map((menu) => menu.id),
+      });
     }
 
     return {
-      data: menus.rows.map((menu) => formatMenu(menu, menuItems)),
+      data: menus.rows.map((menu) => menuServices.format(menu, menuItems)),
       count: count.rows[0].count,
     };
   };
@@ -279,7 +293,10 @@ export default class Menu {
     }
 
     if (data.key) {
-      await Menu.#checkKeyIsUnique(data.key, data.environment_key);
+      await menuServices.checkKeyUnique({
+        key: data.key,
+        environment_key: data.environment_key,
+      });
     }
 
     // -------------------------------------------
@@ -322,15 +339,22 @@ export default class Menu {
     // Update menu items if there are any
     if (data.items) {
       // Work out what items need to be created, updated and deleted
-      const originalItems = await Menu.#getMenuItems([getMenu.id]);
+      const originalItems = await menuServices.getItems({
+        menu_ids: [getMenu.id],
+      });
 
       // create or update all items in the request
       let updatedItems: MenuItemT[] = [];
       try {
-        updatedItems = await Menu.#upsertMenuItems(getMenu.id, data.items);
+        updatedItems = await menuServices.upsertMultipleItems({
+          menu_id: getMenu.id,
+          items: data.items,
+        });
       } catch (err) {
         // get all items, then remove anything that doesnt belong to the original menu
-        const allItems = await Menu.#getMenuItems([getMenu.id]);
+        const allItems = await menuServices.getItems({
+          menu_ids: [getMenu.id],
+        });
         const deleteItems = allItems.filter((item) => {
           return (
             originalItems.findIndex(
@@ -339,7 +363,9 @@ export default class Menu {
           );
         });
         // delete all items that are not in the original menu
-        await Menu.#deleteMenuItemsByIds(deleteItems.map((item) => item.id));
+        await menuServices.deleteItemsByIds({
+          ids: deleteItems.map((item) => item.id),
+        });
         throw err;
       }
 
@@ -352,7 +378,9 @@ export default class Menu {
         );
       });
       // delete all items that are not in the updated items
-      await Menu.#deleteMenuItemsByIds(deleteItems.map((item) => item.id));
+      await menuServices.deleteItemsByIds({
+        ids: deleteItems.map((item) => item.id),
+      });
     }
 
     // -------------------------------------------
@@ -362,28 +390,19 @@ export default class Menu {
       environment_key: data.environment_key,
     });
   };
-  // -------------------------------------------
-  // Util Functions
-  static #checkKeyIsUnique = async (key: string, environment_key: string) => {
+  static checkKeyIsUnique = async (key: string, environment_key: string) => {
     const client = await getDBClient;
 
-    const findMenu = await client.query({
+    const findMenu = await client.query<MenuT>({
       text: `SELECT * FROM lucid_menus WHERE key = $1 AND environment_key = $2`,
       values: [key, environment_key],
     });
 
-    if (findMenu.rows.length > 0) {
-      throw new LucidError({
-        type: "basic",
-        name: "Menu Key Already Exists",
-        message: `Menu key "${key}" already exists in environment "${environment_key}"`,
-        status: 400,
-      });
-    }
-
-    return true;
+    return findMenu.rows[0];
   };
-  static #getMenuItems = async (menu_ids: number[]) => {
+  // -------------------------------------------
+  // Menu Items
+  static getMenuItems = async (menu_ids: number[]) => {
     const client = await getDBClient;
 
     const menuItems = await client.query<MenuItemT>({
@@ -399,14 +418,9 @@ export default class Menu {
       values: [menu_ids],
     });
 
-    if (!menuItems.rows[0]) {
-      return [];
-    }
-
     return menuItems.rows;
   };
-
-  static #checkItemExists = async (id: number, menu_id: number) => {
+  static getSingleItem = async (id: number, menu_id: number) => {
     const client = await getDBClient;
 
     const menuItem = await client.query<MenuItemT>({
@@ -414,129 +428,43 @@ export default class Menu {
       values: [id, menu_id],
     });
 
-    if (!menuItem.rows[0]) {
-      throw new LucidError({
-        type: "basic",
-        name: "Menu Item Not Found",
-        message: `Menu item with id "${id}" not found in menu with id "${menu_id}"`,
-        status: 404,
-      });
-    }
-
-    return true;
+    return menuItem.rows[0];
   };
-  static #deleteMenuItemsByIds = async (ids: number[]) => {
+  static deleteItemsByIds = async (ids: number[]) => {
     const client = await getDBClient;
 
     const deleted = await client.query<MenuItemT>({
-      text: `DELETE FROM lucid_menu_items WHERE id = ANY($1::int[])`,
+      text: `DELETE FROM lucid_menu_items WHERE id = ANY($1::int[]) RETURNING *`,
       values: [ids],
     });
 
-    if (deleted.rowCount !== ids.length) {
-      throw new LucidError({
-        type: "basic",
-        name: "Menu Item Delete Error",
-        message: "Menu items could not be deleted",
-        status: 500,
-      });
-    }
-
     return deleted.rows;
   };
-  static #flattenMenuItems = (items: MenuItem[]) => {
-    const flattenedItems: MenuItem[] = [];
-    items.forEach((item) => {
-      const children = [...(item.children || [])];
-      delete item.children;
-      flattenedItems.push(item);
-      if (children.length > 0) {
-        Menu.#flattenMenuItems(children);
-      }
-    });
-    return flattenedItems;
-  };
-  static #upsertMenuItem = async (
-    menu_id: number,
-    item: MenuItemUpdate,
-    pos: number,
-    parentId?: number
+  static updateMenuItem = async (
+    item_id: number,
+    query_data: ReturnType<typeof queryDataFormat>
   ) => {
     const client = await getDBClient;
 
-    const itemsRes: MenuItemT[] = [];
-
-    const { columns, aliases, values } = queryDataFormat({
-      columns: [
-        "menu_id",
-        "parent_id",
-        "url",
-        "page_id",
-        "name",
-        "target",
-        "position",
-        "meta",
-      ],
-      values: [
-        menu_id,
-        parentId,
-        item.url,
-        item.page_id,
-        item.name,
-        item.target,
-        pos,
-        item.meta,
-      ],
+    const res = await client.query<MenuItemT>({
+      text: `UPDATE lucid_menu_items SET ${
+        query_data.columns.formatted.update
+      } WHERE id = $${query_data.aliases.value.length + 1} RETURNING *`,
+      values: [...query_data.values.value, item_id],
     });
 
-    let newParentId = parentId;
-
-    // Update item
-    if (item.id) {
-      await Menu.#checkItemExists(item.id, menu_id);
-
-      const res = await client.query<MenuItemT>({
-        text: `UPDATE lucid_menu_items SET ${
-          columns.formatted.update
-        } WHERE id = $${aliases.value.length + 1} RETURNING *`,
-        values: [...values.value, item.id],
-      });
-      newParentId = res.rows[0].id;
-      itemsRes.push(res.rows[0]);
-    }
-    // Create item
-    else {
-      const res = await client.query<MenuItemT>({
-        text: `INSERT INTO lucid_menu_items (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
-        values: values.value,
-      });
-      newParentId = res.rows[0].id;
-      itemsRes.push(res.rows[0]);
-    }
-
-    // Update children
-    if (item.children) {
-      const promises = item.children.map((child, i) =>
-        Menu.#upsertMenuItem(menu_id, child, i, newParentId)
-      );
-      const childrenRes = await Promise.all(promises);
-      childrenRes.forEach((res) => itemsRes.push(...res));
-    }
-
-    return itemsRes;
+    return res.rows[0];
   };
-  static #upsertMenuItems = async (
-    menu_id: number,
-    items: MenuItemUpdate[]
+  static createMenuItem = async (
+    query_data: ReturnType<typeof queryDataFormat>
   ) => {
-    const itemsRes: MenuItemT[] = [];
+    const client = await getDBClient;
 
-    const promises = items.map((item, i) =>
-      Menu.#upsertMenuItem(menu_id, item, i)
-    );
-    const res = await Promise.all(promises);
-    res.forEach((items) => itemsRes.push(...items));
+    const res = await client.query<MenuItemT>({
+      text: `INSERT INTO lucid_menu_items (${query_data.columns.formatted.insert}) VALUES (${query_data.aliases.formatted.insert}) RETURNING *`,
+      values: query_data.values.value,
+    });
 
-    return itemsRes;
+    return res.rows[0];
   };
 }

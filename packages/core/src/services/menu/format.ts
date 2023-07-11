@@ -1,30 +1,7 @@
 // Models
 import { MenuT, MenuItemT } from "@db/models/Menu";
-
-// -------------------------------------------
-// Types
-interface ItemsRes {
-  page_id: number | null;
-
-  name: string;
-  url: string;
-  target: "_self" | "_blank" | "_parent" | "_top";
-  meta: any;
-
-  children?: ItemsRes[];
-}
-
-export interface MenuRes {
-  id: number;
-  key: string;
-  environment_key: string;
-  name: string;
-  description: string;
-  created_at: string;
-  updated_at: string;
-
-  items: ItemsRes[] | null;
-}
+// Services
+import { ItemsRes } from "@services/menu";
 
 // -------------------------------------------
 // Functions

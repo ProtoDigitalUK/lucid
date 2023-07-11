@@ -13,7 +13,7 @@ const getSingleController = async (req, res, next) => {
             environment_key: req.headers["lucid-environment"],
         });
         res.status(200).json((0, build_response_1.default)(req, {
-            data: collections_2.default,
+            data: collectionsRes,
         }));
     }
     catch (error) {
