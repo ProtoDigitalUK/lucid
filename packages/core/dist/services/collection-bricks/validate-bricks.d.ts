@@ -1,6 +1,6 @@
 import { BrickObject } from "../../db/models/CollectionBrick";
 import { EnvironmentT } from "../../db/models/Environment";
-import { CollectionT } from "../../services/collections";
+import { CollectionT } from "../collections";
 declare const validateBricks: (data: {
     builder_bricks: BrickObject[];
     fixed_bricks: BrickObject[];

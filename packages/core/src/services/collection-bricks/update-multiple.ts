@@ -1,9 +1,9 @@
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
-import CollectionBrick from "@db/models/CollectionBrick";
 // Services
 import { CollectionT } from "@services/collections";
 import { EnvironmentResT } from "@services/environments";
+import collectionBricksService from "@services/collection-bricks";
 
 export interface ServiceData {
   id: number;
@@ -13,12 +13,18 @@ export interface ServiceData {
   environment: EnvironmentResT;
 }
 
-const updateBricks = async (data: ServiceData) => {
+/*
+  Updates multiple bricks for a collection. 
+  
+  This will create/update/delete bricks based on the data provided.
+*/
+
+const updateMultiple = async (data: ServiceData) => {
   // -------------------------------------------
   // Update/Create Bricks
   const builderBricksPromise =
     data.builder_bricks.map((brick, index) =>
-      CollectionBrick.createOrUpdate({
+      collectionBricksService.upsertSingle({
         reference_id: data.id,
         brick: brick,
         brick_type: "builder",
@@ -29,7 +35,7 @@ const updateBricks = async (data: ServiceData) => {
     ) || [];
   const fixedBricksPromise =
     data.fixed_bricks.map((brick, index) =>
-      CollectionBrick.createOrUpdate({
+      collectionBricksService.upsertSingle({
         reference_id: data.id,
         brick: brick,
         brick_type: "fixed",
@@ -50,14 +56,14 @@ const updateBricks = async (data: ServiceData) => {
   // -------------------------------------------
   // Delete unused bricks
   if (builderIds.length > 0)
-    await CollectionBrick.deleteUnused({
+    await collectionBricksService.deleteUnused({
       type: data.collection.type,
       reference_id: data.id,
       brick_ids: builderIds,
       brick_type: "builder",
     });
   if (fixedIds.length > 0)
-    await CollectionBrick.deleteUnused({
+    await collectionBricksService.deleteUnused({
       type: data.collection.type,
       reference_id: data.id,
       brick_ids: fixedIds,
@@ -65,4 +71,4 @@ const updateBricks = async (data: ServiceData) => {
     });
 };
 
-export default updateBricks;
+export default updateMultiple;

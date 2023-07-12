@@ -10,12 +10,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _SinglePage_getOrCreateSinglePage;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const CollectionBrick_1 = __importDefault(require("../models/CollectionBrick"));
-const validate_bricks_1 = __importDefault(require("../../utils/bricks/validate-bricks"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const collections_1 = __importDefault(require("../../services/collections"));
 const environments_1 = __importDefault(require("../../services/environments"));
+const collection_bricks_1 = __importDefault(require("../../services/collection-bricks"));
 class SinglePage {
 }
 _a = SinglePage;
@@ -76,7 +75,7 @@ SinglePage.getSingle = async (data) => {
         });
         return newSinglePage;
     }
-    const pageBricks = await CollectionBrick_1.default.getAll({
+    const pageBricks = await collection_bricks_1.default.getAll({
         reference_id: singlepage.rows[0].id,
         type: "singlepage",
         environment_key: data.environment_key,
@@ -96,14 +95,14 @@ SinglePage.updateSingle = async (data) => {
         environment_key: data.environment_key,
         type: "singlepage",
     });
-    await (0, validate_bricks_1.default)({
+    await collection_bricks_1.default.validateBricks({
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],
         collection: collection,
         environment: environment,
     });
     const singlepage = await __classPrivateFieldGet(SinglePage, _a, "f", _SinglePage_getOrCreateSinglePage).call(SinglePage, data.environment_key, data.collection_key);
-    await collections_1.default.updateBricks({
+    await collection_bricks_1.default.updateMultiple({
         id: singlepage.id,
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],

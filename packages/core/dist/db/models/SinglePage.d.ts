@@ -1,5 +1,5 @@
 import { BrickObject } from "../models/CollectionBrick";
-import { BrickResponseT } from "../../utils/bricks/format-bricks";
+import { BrickResponseT } from "../../services/collection-bricks";
 type SinglePageGetSingle = (data: {
     environment_key: string;
     collection_key: string;

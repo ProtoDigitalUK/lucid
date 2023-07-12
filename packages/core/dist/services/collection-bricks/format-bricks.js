@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const create_url_1 = __importDefault(require("../media/create-url"));
-const brick_config_1 = __importDefault(require("../../services/brick-config"));
-const environments_1 = __importDefault(require("../../services/environments"));
+const create_url_1 = __importDefault(require("../../utils/media/create-url"));
+const brick_config_1 = __importDefault(require("../brick-config"));
+const environments_1 = __importDefault(require("../environments"));
 const specificFieldValues = (type, builderField, field) => {
     let value = null;
     switch (type) {

@@ -6,13 +6,15 @@ import PageCategory from "@db/models/PageCategory";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 // Utils
 import formatPage from "@utils/pages/format-page";
-import { BrickResponseT } from "@utils/bricks/format-bricks";
-import validateBricks from "@utils/bricks/validate-bricks";
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
+import collectionBricksService, {
+  BrickResponseT,
+} from "@services/collection-bricks";
+
 // Schema
 import pagesSchema from "@schemas/pages";
 
@@ -283,7 +285,7 @@ export default class Page {
         type: "pages",
       });
 
-      const pageBricks = await CollectionBrick.getAll({
+      const pageBricks = await collectionBricksService.getAll({
         reference_id: page.rows[0].id,
         type: "pages",
         environment_key: data.environment_key,
@@ -415,7 +417,7 @@ export default class Page {
       type: "pages",
     });
 
-    await validateBricks({
+    await collectionBricksService.validateBricks({
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],
       collection: collection,
@@ -497,7 +499,7 @@ export default class Page {
 
     // -------------------------------------------
     // Update/Create Bricks
-    await collectionsService.updateBricks({
+    await collectionBricksService.updateMultiple({
       id: page.rows[0].id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],

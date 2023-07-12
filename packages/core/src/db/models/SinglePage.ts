@@ -2,13 +2,14 @@ import getDBClient from "@db/db";
 // Models
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 // Utils
-import { BrickResponseT } from "@utils/bricks/format-bricks";
-import validateBricks from "@utils/bricks/validate-bricks";
 import { LucidError } from "@utils/app/error-handler";
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
+import collectionBricksService, {
+  BrickResponseT,
+} from "@services/collection-bricks";
 
 // -------------------------------------------
 // Types
@@ -108,7 +109,7 @@ export default class SinglePage {
       return newSinglePage;
     }
 
-    const pageBricks = await CollectionBrick.getAll({
+    const pageBricks = await collectionBricksService.getAll({
       reference_id: singlepage.rows[0].id,
       type: "singlepage",
       environment_key: data.environment_key,
@@ -134,7 +135,7 @@ export default class SinglePage {
 
     //
     // validate bricks
-    await validateBricks({
+    await collectionBricksService.validateBricks({
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],
       collection: collection,
@@ -149,7 +150,7 @@ export default class SinglePage {
 
     // -------------------------------------------
     // Update/Create Bricks
-    await collectionsService.updateBricks({
+    await collectionBricksService.updateMultiple({
       id: singlepage.id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],

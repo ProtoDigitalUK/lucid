@@ -1,35 +1,33 @@
 import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
-import { BrickResponseT } from "../../utils/bricks/format-bricks";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
-import { EnvironmentT } from "../models/Environment";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 import { CollectionT } from "../../services/collections";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
-type CollectionBrickCreateOrUpdate = (data: {
-    reference_id: number;
-    brick: BrickObject;
-    brick_type: CollectionBrickConfigT["type"];
-    order: number;
-    environment: EnvironmentT;
-    collection: CollectionT;
-}) => Promise<number>;
 type CollectionBrickGetAll = (data: {
     reference_id: number;
     type: CollectionT["type"];
-    environment_key: string;
-    collection: CollectionT;
-}) => Promise<{
-    builder_bricks: BrickResponseT[];
-    fixed_bricks: BrickResponseT[];
-}>;
-type CollectionBrickDeleteUnused = (data: {
+}) => Promise<CollectionBrickFieldsT[]>;
+type CollectionBrickCreateSingle = (data: {
     type: CollectionT["type"];
     reference_id: number;
-    brick_ids: Array<number | undefined>;
+    order: number;
+    brick: BrickObject;
     brick_type: CollectionBrickConfigT["type"];
-}) => Promise<void>;
+}) => Promise<CollectionBrickT>;
+type CollectionBrickUpdateSingle = (data: {
+    order: number;
+    brick: BrickObject;
+    brick_type: CollectionBrickConfigT["type"];
+}) => Promise<CollectionBrickT>;
+type CollectionBrickCheckFieldExists = (data: {
+    brick_id: number;
+    key: string;
+    type: string;
+    parent_repeater?: number;
+    group_position?: number;
+}) => Promise<boolean>;
 export type CollectionBrickFieldsT = {
     id: number;
     brick_type: CollectionBrickConfigT["type"];
@@ -65,6 +63,20 @@ export type CollectionBrickFieldsT = {
         alt: string | null;
     };
 };
+export type FieldsT = {
+    fields_id: number;
+    collection_brick_id: number;
+    parent_repeater: number | null;
+    key: string;
+    type: FieldTypes;
+    group_position: number | null;
+    text_value: string | null;
+    int_value: number | null;
+    bool_value: boolean | null;
+    json_value: any | null;
+    page_link_id: number | null;
+    media_id: number | null;
+};
 export type CollectionBrickT = {
     id: number;
     brick_type: CollectionBrickConfigT["type"];
@@ -74,10 +86,16 @@ export type CollectionBrickT = {
     brick_order: number;
 };
 export default class CollectionBrick {
-    #private;
-    static createOrUpdate: CollectionBrickCreateOrUpdate;
     static getAll: CollectionBrickGetAll;
-    static deleteUnused: CollectionBrickDeleteUnused;
+    static createSingleBrick: CollectionBrickCreateSingle;
+    static updateSingleBrick: CollectionBrickUpdateSingle;
+    static getAllBricks: (type: CollectionT["type"], reference_id: number, brick_type: CollectionBrickConfigT["type"]) => Promise<CollectionBrickT[]>;
+    static deleteSingleBrick: (id: number) => Promise<CollectionBrickT>;
+    static updateField: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
+    static createField: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
+    static checkFieldExists: CollectionBrickCheckFieldExists;
+    static updateRepeater: (data: BrickFieldObject) => Promise<FieldsT>;
+    static createRepeater: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
 }
 export {};
 //# sourceMappingURL=CollectionBrick.d.ts.map

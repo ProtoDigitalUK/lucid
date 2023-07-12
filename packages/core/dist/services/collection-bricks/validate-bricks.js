@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_handler_1 = require("../app/error-handler");
+const error_handler_1 = require("../../utils/app/error-handler");
 const Page_1 = __importDefault(require("../../db/models/Page"));
-const brick_config_1 = __importDefault(require("../../services/brick-config"));
-const media_1 = __importDefault(require("../../services/media"));
+const brick_config_1 = __importDefault(require("../brick-config"));
+const media_1 = __importDefault(require("../media"));
 const flattenAllBricks = (builder_bricks, fixed_bricks) => {
     if (!builder_bricks && !fixed_bricks)
         return {

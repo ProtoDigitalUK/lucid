@@ -2,7 +2,6 @@ import { CollectionConfigT } from "@lucid/collection-builder";
 // Services
 import getSingle from "./get-single";
 import getAll from "./get-all";
-import updateBricks from "./update-bricks";
 import format from "./format";
 
 // -------------------------------------------
@@ -22,6 +21,5 @@ export type CollectionT = {
 export default {
   getSingle,
   getAll,
-  updateBricks,
   format,
 };

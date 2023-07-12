@@ -8,6 +8,6 @@ export interface ServiceData {
     collection: CollectionT;
     environment: EnvironmentResT;
 }
-declare const updateBricks: (data: ServiceData) => Promise<void>;
-export default updateBricks;
-//# sourceMappingURL=update-bricks.d.ts.map
+declare const updateMultiple: (data: ServiceData) => Promise<void>;
+export default updateMultiple;
+//# sourceMappingURL=update-multiple.d.ts.map

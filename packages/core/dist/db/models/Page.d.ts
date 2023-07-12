@@ -1,6 +1,6 @@
 import z from "zod";
 import { BrickObject } from "../models/CollectionBrick";
-import { BrickResponseT } from "../../utils/bricks/format-bricks";
+import { BrickResponseT } from "../../services/collection-bricks";
 import pagesSchema from "../../schemas/pages";
 type PageGetMultiple = (query: z.infer<typeof pagesSchema.getMultiple.query>, data: {
     environment_key: string;

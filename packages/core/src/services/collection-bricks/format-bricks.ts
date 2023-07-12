@@ -1,8 +1,5 @@
 // Models
-import {
-  CollectionBrickFieldsT,
-  CollectionBrickT,
-} from "@db/models/CollectionBrick";
+import { CollectionBrickFieldsT } from "@db/models/CollectionBrick";
 // Internal packages
 import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
 // Utils
@@ -11,53 +8,7 @@ import createURL from "@utils/media/create-url";
 import brickConfigService from "@services/brick-config";
 import { CollectionT } from "@services/collections";
 import environmentsService from "@services/environments";
-
-export interface BrickResponseT {
-  id: CollectionBrickT["id"];
-  key: CollectionBrickT["brick_key"];
-  order: CollectionBrickT["brick_order"];
-  type: CollectionBrickT["brick_type"];
-  fields: Array<{
-    fields_id: number;
-    key: string;
-    type: FieldTypes;
-    value?:
-      | string
-      | number
-      | boolean
-      | null
-      | LinkValueT
-      | MediaValueT
-      | PageLinkValueT;
-    items?: Array<Array<BrickResponseT["fields"][0]>>;
-  }>;
-}
-
-interface PageLinkValueT {
-  id: number;
-  target?: "_blank" | "_self";
-  title?: string;
-  slug?: string;
-  full_slug?: string;
-}
-
-interface LinkValueT {
-  target?: "_blank" | "_self";
-  url?: string;
-}
-
-interface MediaValueT {
-  id: number;
-  url?: string;
-  key?: string;
-  mime_type?: string;
-  file_extension?: string;
-  file_size?: number;
-  width?: number;
-  height?: number;
-  name?: string;
-  alt?: string;
-}
+import { BrickResponseT } from "@services/collection-bricks";
 
 // -------------------------------------------
 // Custom Field Specific Fields
