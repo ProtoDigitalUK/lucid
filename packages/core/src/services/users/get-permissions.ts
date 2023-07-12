@@ -1,7 +1,7 @@
 // Models
 import UserRole from "@db/models/UserRole";
-// Services
-import usersServices from "@services/users";
+// Format
+import formatUserPermissions from "@utils/format/format-user-permissions";
 
 export interface ServiceData {
   user_id: number;
@@ -20,7 +20,7 @@ const getPermissions = async (data: ServiceData) => {
     };
   }
 
-  return usersServices.formatPermissions(userPermissions);
+  return formatUserPermissions(userPermissions);
 };
 
 export default getPermissions;

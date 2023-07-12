@@ -7,6 +7,7 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
+const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
 const getSingle = async (data) => {
     await form_submissions_1.default.hasEnvironmentPermission(data);
     const formSubmission = await FormSubmission_1.default.getSingle({
@@ -27,7 +28,7 @@ const getSingle = async (data) => {
     const formBuilder = forms_1.default.getBuilderInstance({
         form_key: formSubmission.form_key,
     });
-    return form_submissions_1.default.format(formBuilder, {
+    return (0, format_form_submission_1.default)(formBuilder, {
         submission: formSubmission,
         data: formData,
     });

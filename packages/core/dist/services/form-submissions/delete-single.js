@@ -7,6 +7,7 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
+const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
 const deleteSingle = async (data) => {
     await form_submissions_1.default.hasEnvironmentPermission({
         form_key: data.form_key,
@@ -28,7 +29,7 @@ const deleteSingle = async (data) => {
     const formBuilder = forms_1.default.getBuilderInstance({
         form_key: data.form_key,
     });
-    return form_submissions_1.default.format(formBuilder, {
+    return (0, format_form_submission_1.default)(formBuilder, {
         submission: formSubmission,
         data: [],
     });

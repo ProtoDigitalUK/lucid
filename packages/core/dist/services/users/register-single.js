@@ -7,6 +7,7 @@ const argon2_1 = __importDefault(require("argon2"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const User_1 = __importDefault(require("../../db/models/User"));
 const users_1 = __importDefault(require("../users"));
+const format_user_1 = __importDefault(require("../../utils/format/format-user"));
 const registerSingle = async (data) => {
     await users_1.default.checkIfUserExists({
         email: data.email,
@@ -30,7 +31,7 @@ const registerSingle = async (data) => {
     const userPermissions = await users_1.default.getPermissions({
         user_id: user.id,
     });
-    return users_1.default.format(user, userPermissions);
+    return (0, format_user_1.default)(user, userPermissions);
 };
 exports.default = registerSingle;
 //# sourceMappingURL=register-single.js.map

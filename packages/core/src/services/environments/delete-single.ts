@@ -4,6 +4,8 @@ import Environment from "@db/models/Environment";
 import { LucidError } from "@utils/app/error-handler";
 // Services
 import environmentsService from "@services/environments";
+// Format
+import formatEnvironment from "@utils/format/format-environment";
 
 export interface ServiceData {
   key: string;
@@ -26,7 +28,7 @@ const deleteSingle = async (data: ServiceData) => {
     });
   }
 
-  return environmentsService.format(environment);
+  return formatEnvironment(environment);
 };
 
 export default deleteSingle;

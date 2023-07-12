@@ -5,6 +5,8 @@ import FormSubmission from "@db/models/FormSubmission";
 // Services
 import formSubService from "@services/form-submissions";
 import formsService from "@services/forms";
+// Format
+import formatFormSubmission from "@utils/format/format-form-submission";
 
 export interface ServiceData {
   id: number;
@@ -51,7 +53,7 @@ const toggleReadAt = async (data: ServiceData) => {
     form_key: updateFormSubmission.form_key,
   });
 
-  return formSubService.format(formBuilder, {
+  return formatFormSubmission(formBuilder, {
     submission: updateFormSubmission,
     data: formData,
   });

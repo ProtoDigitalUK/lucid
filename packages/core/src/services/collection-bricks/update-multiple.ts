@@ -1,15 +1,17 @@
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
+// Format
+import { CollectionResT } from "@utils/format/format-collections";
 // Services
-import { CollectionT } from "@services/collections";
-import { EnvironmentResT } from "@services/environments";
 import collectionBricksService from "@services/collection-bricks";
+// Format
+import { EnvironmentResT } from "@utils/format/format-environment";
 
 export interface ServiceData {
   id: number;
   builder_bricks: Array<BrickObject>;
   fixed_bricks: Array<BrickObject>;
-  collection: CollectionT;
+  collection: CollectionResT;
   environment: EnvironmentResT;
 }
 

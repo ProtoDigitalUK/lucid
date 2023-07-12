@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const format_collections_1 = __importDefault(require("../../utils/format/format-collections"));
 const Config_1 = __importDefault(require("../Config"));
-const collections_1 = __importDefault(require("../collections"));
 const brick_config_1 = __importDefault(require("../brick-config"));
 const environments_1 = __importDefault(require("../environments"));
 const getSingle = async (data) => {
@@ -18,7 +18,7 @@ const getSingle = async (data) => {
             status: 404,
         });
     }
-    const collectionsF = instances.map((collection) => collections_1.default.format(collection));
+    const collectionsF = instances.map((collection) => (0, format_collections_1.default)(collection));
     const environment = data.environment
         ? data.environment
         : await environments_1.default.getSingle({

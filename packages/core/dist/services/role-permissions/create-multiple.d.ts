@@ -1,4 +1,4 @@
-import { PermissionT, EnvironmentPermissionT } from "../../utils/app/Permissions";
+import { PermissionT, EnvironmentPermissionT } from "../Permissions";
 export interface ServiceData {
     role_id: number;
     permissions: Array<{

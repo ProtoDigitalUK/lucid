@@ -1,5 +1,5 @@
 import { BrickObject } from "../models/CollectionBrick";
-import { BrickResponseT } from "../../services/collection-bricks";
+import { BrickResT } from "../../utils/format/format-bricks";
 type SinglePageGetSingle = (data: {
     environment_key: string;
     collection_key: string;
@@ -15,8 +15,8 @@ export type SinglePageT = {
     id: number;
     environment_key: string;
     collection_key: string;
-    builder_bricks?: Array<BrickResponseT> | null;
-    fixed_bricks?: Array<BrickResponseT> | null;
+    builder_bricks?: Array<BrickResT> | null;
+    fixed_bricks?: Array<BrickResT> | null;
     created_at: string;
     updated_at: string;
     updated_by: string;

@@ -1,10 +1,10 @@
 import z from "zod";
 import collectionSchema from "../../schemas/collections";
-import { CollectionT } from "../collections";
+import { CollectionResT } from "../../utils/format/format-collections";
 export interface ServiceData {
     query: z.infer<typeof collectionSchema.getAll.query>;
     environment_key: string;
 }
-declare const getAll: (data: ServiceData) => Promise<CollectionT[]>;
+declare const getAll: (data: ServiceData) => Promise<CollectionResT[]>;
 export default getAll;
 //# sourceMappingURL=get-all.d.ts.map

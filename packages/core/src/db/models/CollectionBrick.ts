@@ -8,8 +8,8 @@ import generateFieldQuery from "@utils/bricks/generate-field-query";
 import { BrickSchema, FieldSchema } from "@schemas/bricks";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-// Services
-import { CollectionT } from "@services/collections";
+// Format
+import { CollectionResT } from "@utils/format/format-collections";
 
 // -------------------------------------------
 // Types
@@ -19,11 +19,11 @@ export type BrickObject = z.infer<typeof BrickSchema>;
 // Functions
 type CollectionBrickGetAll = (data: {
   reference_id: number;
-  type: CollectionT["type"];
+  type: CollectionResT["type"];
 }) => Promise<CollectionBrickFieldsT[]>;
 
 type CollectionBrickCreateSingle = (data: {
-  type: CollectionT["type"];
+  type: CollectionResT["type"];
   reference_id: number;
   order: number;
   brick: BrickObject;
@@ -203,7 +203,7 @@ export default class CollectionBrick {
     return brickRes.rows[0];
   };
   static getAllBricks = async (
-    type: CollectionT["type"],
+    type: CollectionResT["type"],
     reference_id: number,
     brick_type: CollectionBrickConfigT["type"]
   ) => {

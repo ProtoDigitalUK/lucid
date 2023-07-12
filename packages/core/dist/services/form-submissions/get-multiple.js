@@ -7,6 +7,7 @@ const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
+const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
 const getMultiple = async (data) => {
     await form_submissions_1.default.hasEnvironmentPermission(data);
     const { sort, include, page, per_page } = data.query;
@@ -51,7 +52,7 @@ const getMultiple = async (data) => {
         formData = await FormSubmission_1.default.getAllFormData(formSubmissionIds);
     }
     const formattedSubmissions = formSubmissionsRes.data.map((submission) => {
-        return form_submissions_1.default.format(formBuilder, {
+        return (0, format_form_submission_1.default)(formBuilder, {
             submission,
             data: formData.filter((field) => field.form_submission_id === submission.id),
         });

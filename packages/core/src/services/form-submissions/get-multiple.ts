@@ -8,6 +8,8 @@ import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import formSubService from "@services/form-submissions";
 import formsService from "@services/forms";
+// Format
+import formatFormSubmission from "@utils/format/format-form-submission";
 
 export interface ServiceData {
   query: z.infer<typeof formSubmissionsSchema.getMultiple.query>;
@@ -71,7 +73,7 @@ const getMultiple = async (data: ServiceData) => {
   }
 
   const formattedSubmissions = formSubmissionsRes.data.map((submission) => {
-    return formSubService.format(formBuilder, {
+    return formatFormSubmission(formBuilder, {
       submission,
       data: formData.filter(
         (field) => field.form_submission_id === submission.id

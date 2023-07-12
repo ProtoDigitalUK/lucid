@@ -1,1 +1,1 @@
-{"version":3,"file":"get-single-by-id.d.ts","sourceRoot":"","sources":["../../../src/services/media/get-single-by-id.ts"],"names":[],"mappings":"AAOA,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,aAAa,SAAgB,WAAW,iDAa7C,CAAC;AAEF,eAAe,aAAa,CAAC"}
+{"version":3,"file":"get-single-by-id.d.ts","sourceRoot":"","sources":["../../../src/services/media/get-single-by-id.ts"],"names":[],"mappings":"AAOA,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,aAAa,SAAgB,WAAW,4DAa7C,CAAC;AAEF,eAAe,aAAa,CAAC"}

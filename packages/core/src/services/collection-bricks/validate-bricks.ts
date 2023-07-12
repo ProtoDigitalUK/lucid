@@ -12,8 +12,10 @@ import BrickBuilder, {
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
 import brickConfigService from "@services/brick-config";
-import { CollectionT } from "@services/collections";
-import medias, { MediaResT } from "@services/media";
+import medias from "@services/media";
+// Format
+import { CollectionResT } from "@utils/format/format-collections";
+import { MediaResT } from "@utils/format/format-media";
 
 // ------------------------------------
 // Interfaces
@@ -142,7 +144,7 @@ const validateBricksGroup = async (data: {
   builderInstances: BrickBuilder[];
   type: CollectionBrickConfigT["type"];
   environment: EnvironmentT;
-  collection: CollectionT;
+  collection: CollectionResT;
   media: MediaResT[];
   pages: PageT[];
 }) => {
@@ -300,7 +302,7 @@ const getAllPages = async (
 const validateBricks = async (data: {
   builder_bricks: BrickObject[];
   fixed_bricks: BrickObject[];
-  collection: CollectionT;
+  collection: CollectionResT;
   environment: EnvironmentT;
 }) => {
   const builderInstances = brickConfigService.getBrickConfig();

@@ -7,6 +7,8 @@ import Menu, { MenuItemT } from "@db/models/Menu";
 import menusSchema from "@schemas/menus";
 // Services
 import menuServices from "@services/menu";
+// Format
+import formatMenu from "@utils/format/format-menu";
 
 export interface ServiceData {
   query: z.infer<typeof menusSchema.getMultiple.query>;
@@ -61,7 +63,7 @@ const getMultiple = async (data: ServiceData) => {
   }
 
   return {
-    data: menus.data.map((menu) => menuServices.format(menu, menuItems)),
+    data: menus.data.map((menu) => formatMenu(menu, menuItems)),
     count: menus.count,
   };
 };

@@ -5,9 +5,10 @@ import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
+// Format
+import { CollectionResT } from "@utils/format/format-collections";
 // Services
 import brickConfigService from "@services/brick-config";
-import { CollectionT } from "@services/collections";
 import collectionBricksService from "@services/collection-bricks";
 
 export interface ServiceData {
@@ -16,7 +17,7 @@ export interface ServiceData {
   brick_type: CollectionBrickConfigT["type"];
   order: number;
   environment: EnvironmentT;
-  collection: CollectionT;
+  collection: CollectionResT;
 }
 
 /*

@@ -2,15 +2,15 @@ import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-import { CollectionT } from "../../services/collections";
+import { CollectionResT } from "../../utils/format/format-collections";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
 type CollectionBrickGetAll = (data: {
     reference_id: number;
-    type: CollectionT["type"];
+    type: CollectionResT["type"];
 }) => Promise<CollectionBrickFieldsT[]>;
 type CollectionBrickCreateSingle = (data: {
-    type: CollectionT["type"];
+    type: CollectionResT["type"];
     reference_id: number;
     order: number;
     brick: BrickObject;
@@ -89,7 +89,7 @@ export default class CollectionBrick {
     static getAll: CollectionBrickGetAll;
     static createSingleBrick: CollectionBrickCreateSingle;
     static updateSingleBrick: CollectionBrickUpdateSingle;
-    static getAllBricks: (type: CollectionT["type"], reference_id: number, brick_type: CollectionBrickConfigT["type"]) => Promise<CollectionBrickT[]>;
+    static getAllBricks: (type: CollectionResT["type"], reference_id: number, brick_type: CollectionBrickConfigT["type"]) => Promise<CollectionBrickT[]>;
     static deleteSingleBrick: (id: number) => Promise<CollectionBrickT>;
     static updateField: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
     static createField: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;

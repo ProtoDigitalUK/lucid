@@ -7,7 +7,6 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 // internal
-import launchSteps from "@utils/app/launch-steps";
 import migrateDB from "@db/migration";
 import initRoutes from "@routes/index";
 import {
@@ -49,12 +48,6 @@ const app = async (options: InitOptions) => {
   // Initialise database
   log.white("----------------------------------------------------");
   await migrateDB();
-
-  // ------------------------------------
-  // Launch steps
-  log.white("----------------------------------------------------");
-  await launchSteps();
-  log.yellow("Launch steps ran");
 
   // ------------------------------------
   // Routes

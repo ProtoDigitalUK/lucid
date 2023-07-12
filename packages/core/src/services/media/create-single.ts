@@ -7,6 +7,8 @@ import Media from "@db/models/Media";
 // Services
 import mediaService from "@services/media";
 import s3Service from "@services/s3";
+// Format
+import formatMedia from "@utils/format/format-media";
 
 export interface ServiceData {
   name?: string;
@@ -100,7 +102,7 @@ const createSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Return
-  return mediaService.format(media);
+  return formatMedia(media);
 };
 
 export default createSingle;

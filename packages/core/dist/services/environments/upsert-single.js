@@ -8,6 +8,7 @@ const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const environments_1 = __importDefault(require("../environments"));
 const Config_1 = __importDefault(require("../Config"));
+const format_environment_1 = __importDefault(require("../../utils/format/format-environment"));
 const checkAssignedBricks = async (assigned_bricks) => {
     const brickInstances = Config_1.default.bricks || [];
     const brickKeys = brickInstances.map((b) => b.key);
@@ -115,7 +116,7 @@ const upsertSingle = async (data) => {
             status: 400,
         });
     }
-    return environments_1.default.format(environment);
+    return (0, format_environment_1.default)(environment);
 };
 exports.default = upsertSingle;
 //# sourceMappingURL=upsert-single.js.map

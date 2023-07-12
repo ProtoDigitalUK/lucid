@@ -4,6 +4,8 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 import User from "@db/models/User";
 // Services
 import usersServices from "@services/users";
+// Format
+import formatUser from "@utils/format/format-user";
 
 export interface ServiceData {
   userId: number;
@@ -31,7 +33,7 @@ const getAuthenticatedUser = async (data: ServiceData) => {
     user_id: user.id,
   });
 
-  return usersServices.format(user, userPermissions);
+  return formatUser(user, userPermissions);
 };
 
 export default getAuthenticatedUser;

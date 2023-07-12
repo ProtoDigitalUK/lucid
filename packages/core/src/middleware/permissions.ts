@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-import { PermissionT, EnvironmentPermissionT } from "@utils/app/Permissions";
+import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
 // Serivces
 import usersServices from "@services/users";
 

@@ -1,6 +1,6 @@
 import z from "zod";
 import { BrickObject } from "../models/CollectionBrick";
-import { BrickResponseT } from "../../services/collection-bricks";
+import { BrickResT } from "../../utils/format/format-bricks";
 import pagesSchema from "../../schemas/pages";
 type PageGetMultiple = (query: z.infer<typeof pagesSchema.getMultiple.query>, data: {
     environment_key: string;
@@ -57,8 +57,8 @@ export type PageT = {
     homepage: boolean;
     excerpt: string | null;
     categories?: Array<number> | null;
-    builder_bricks?: Array<BrickResponseT> | null;
-    fixed_bricks?: Array<BrickResponseT> | null;
+    builder_bricks?: Array<BrickResT> | null;
+    fixed_bricks?: Array<BrickResT> | null;
     published: boolean;
     published_at: string | null;
     published_by: number | null;

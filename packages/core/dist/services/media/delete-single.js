@@ -7,6 +7,7 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../media"));
 const s3_1 = __importDefault(require("../s3"));
+const format_media_1 = __importDefault(require("../../utils/format/format-media"));
 const deleteSingle = async (data) => {
     const media = await Media_1.default.deleteSingle(data.key);
     if (!media) {
@@ -24,7 +25,7 @@ const deleteSingle = async (data) => {
         add: 0,
         minus: media.file_size,
     });
-    return media_1.default.format(media);
+    return (0, format_media_1.default)(media);
 };
 exports.default = deleteSingle;
 //# sourceMappingURL=delete-single.js.map

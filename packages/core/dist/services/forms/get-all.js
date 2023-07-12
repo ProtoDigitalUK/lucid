@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Config_1 = __importDefault(require("../Config"));
 const environments_1 = __importDefault(require("../environments"));
-const forms_1 = __importDefault(require("../forms"));
+const format_form_1 = __importDefault(require("../../utils/format/format-form"));
 const getAll = async (data) => {
     const formInstances = Config_1.default.forms || [];
-    let formsRes = formInstances.map((form) => forms_1.default.format(form));
+    let formsRes = formInstances.map((form) => (0, format_form_1.default)(form));
     const environment = await environments_1.default.getSingle({
         key: data.environment_key,
     });

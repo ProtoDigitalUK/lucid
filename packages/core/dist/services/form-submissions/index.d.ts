@@ -1,38 +1,14 @@
-export interface FormSubmissionResT {
-    id: number;
-    form_key: string;
-    environment_key: string;
-    read_at: string | null;
-    created_at: string;
-    updated_at: string;
-    fields: Array<{
-        type: string;
-        name: string;
-        label: string;
-        placeholder?: string;
-        options?: Array<{
-            label: string;
-            value: string;
-        }>;
-        show_in_table?: boolean;
-        value: string | number | boolean;
-    }>;
-}
 declare const _default: {
-    deleteSingle: (data: import("./delete-single").ServiceData) => Promise<FormSubmissionResT>;
+    deleteSingle: (data: import("./delete-single").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
     getMultiple: (data: import("./get-multiple").ServiceData) => Promise<{
-        data: FormSubmissionResT[];
+        data: import("../../utils/format/format-form-submission").FormSubmissionResT[];
         count: number;
     }>;
-    getSingle: (data: import("./get-single").ServiceData) => Promise<FormSubmissionResT>;
-    toggleReadAt: (data: import("./toggle-read-at").ServiceData) => Promise<FormSubmissionResT>;
-    format: (form: import("../../../../form-builder/src").default, data: {
-        submission: import("../../db/models/FormSubmission").FormSubmissionsT;
-        data: import("../../db/models/FormSubmission").FormDataT[];
-    }) => FormSubmissionResT;
-    submitForm: (props: import("./submit-form").ServiceData) => Promise<FormSubmissionResT>;
-    hasEnvironmentPermission: (data: import("./has-environment-permission").ServiceData) => Promise<import("../environments").EnvironmentResT>;
-    createSingle: (data: import("./create-single").ServiceData) => Promise<FormSubmissionResT>;
+    getSingle: (data: import("./get-single").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
+    toggleReadAt: (data: import("./toggle-read-at").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
+    submitForm: (props: import("./submit-form").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
+    hasEnvironmentPermission: (data: import("./has-environment-permission").ServiceData) => Promise<import("../../utils/format/format-environment").EnvironmentResT>;
+    createSingle: (data: import("./create-single").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

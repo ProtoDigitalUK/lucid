@@ -11,7 +11,6 @@ const console_log_colors_1 = require("console-log-colors");
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
-const launch_steps_1 = __importDefault(require("./utils/app/launch-steps"));
 const migration_1 = __importDefault(require("./db/migration"));
 const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/app/error-handler");
@@ -34,9 +33,6 @@ const app = async (options) => {
     console_log_colors_1.log.yellow("Middleware configured");
     console_log_colors_1.log.white("----------------------------------------------------");
     await (0, migration_1.default)();
-    console_log_colors_1.log.white("----------------------------------------------------");
-    await (0, launch_steps_1.default)();
-    console_log_colors_1.log.yellow("Launch steps ran");
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use("/", express_1.default.static(path_1.default.join(__dirname, "../cms"), { extensions: ["html"] }));
     if (options.public)

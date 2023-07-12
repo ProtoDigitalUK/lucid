@@ -1,11 +1,11 @@
 import { BrickObject } from "../../db/models/CollectionBrick";
-import { CollectionT } from "../collections";
-import { EnvironmentResT } from "../environments";
+import { CollectionResT } from "../../utils/format/format-collections";
+import { EnvironmentResT } from "../../utils/format/format-environment";
 export interface ServiceData {
     id: number;
     builder_bricks: Array<BrickObject>;
     fixed_bricks: Array<BrickObject>;
-    collection: CollectionT;
+    collection: CollectionResT;
     environment: EnvironmentResT;
 }
 declare const updateMultiple: (data: ServiceData) => Promise<void>;

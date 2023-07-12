@@ -1,1 +1,1 @@
-{"version":3,"file":"delete-single.d.ts","sourceRoot":"","sources":["../../../src/services/media/delete-single.ts"],"names":[],"mappings":"AAQA,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,YAAY,SAAgB,WAAW,iDAsB5C,CAAC;AAEF,eAAe,YAAY,CAAC"}
+{"version":3,"file":"delete-single.d.ts","sourceRoot":"","sources":["../../../src/services/media/delete-single.ts"],"names":[],"mappings":"AAUA,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,YAAY,SAAgB,WAAW,4DAsB5C,CAAC;AAEF,eAAe,YAAY,CAAC"}

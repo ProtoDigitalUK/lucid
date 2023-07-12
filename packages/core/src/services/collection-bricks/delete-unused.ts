@@ -3,11 +3,11 @@ import { LucidError } from "@utils/app/error-handler";
 import CollectionBrick from "@db/models/CollectionBrick";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-// Services
-import { CollectionT } from "@services/collections";
+// Format
+import { CollectionResT } from "@utils/format/format-collections";
 
 export interface ServiceData {
-  type: CollectionT["type"];
+  type: CollectionResT["type"];
   reference_id: number;
   brick_ids: Array<number | undefined>;
   brick_type: CollectionBrickConfigT["type"];

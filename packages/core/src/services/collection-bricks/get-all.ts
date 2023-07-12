@@ -1,14 +1,16 @@
 // Models
 import CollectionBrick from "@db/models/CollectionBrick";
+// Format
+import { CollectionResT } from "@utils/format/format-collections";
+import formatBricks from "@utils/format/format-bricks";
 // Services
-import { CollectionT } from "@services/collections";
 import collectionBricksService from "@services/collection-bricks";
 
 export interface ServiceData {
   reference_id: number;
-  type: CollectionT["type"];
+  type: CollectionResT["type"];
   environment_key: string;
-  collection: CollectionT;
+  collection: CollectionResT;
 }
 
 /*
@@ -30,7 +32,7 @@ const getAll = async (data: ServiceData) => {
     };
   }
 
-  const formmatedBricks = await collectionBricksService.formatBricks({
+  const formmatedBricks = await formatBricks({
     brick_fields: brickFields,
     environment_key: data.environment_key,
     collection: data.collection,

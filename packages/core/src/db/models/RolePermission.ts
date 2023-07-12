@@ -1,7 +1,7 @@
 import getDBClient from "@db/db";
 // Utils
 import { queryDataFormat } from "@utils/app/query-helpers";
-import { PermissionT, EnvironmentPermissionT } from "@utils/app/Permissions";
+import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
 
 // -------------------------------------------
 // Types

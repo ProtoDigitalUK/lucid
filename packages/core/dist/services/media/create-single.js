@@ -8,6 +8,7 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../media"));
 const s3_1 = __importDefault(require("../s3"));
+const format_media_1 = __importDefault(require("../../utils/format/format-media"));
 const createSingle = async (data) => {
     if (!data.files || !data.files["file"]) {
         throw new error_handler_1.LucidError({
@@ -76,7 +77,7 @@ const createSingle = async (data) => {
     await media_1.default.setStorageUsed({
         add: meta.size,
     });
-    return media_1.default.format(media);
+    return (0, format_media_1.default)(media);
 };
 exports.default = createSingle;
 //# sourceMappingURL=create-single.js.map

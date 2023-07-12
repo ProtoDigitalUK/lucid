@@ -1,7 +1,7 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import fileUpload from "express-fileupload";
 // Utils
-import getS3Client from "@utils/media/s3-client";
+import getS3Client from "@utils/app/s3-client";
 import { type MediaMetaDataT } from "@utils/media/helpers";
 // Services
 import Config from "@services/Config";

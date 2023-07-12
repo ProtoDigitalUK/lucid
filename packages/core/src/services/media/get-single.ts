@@ -2,8 +2,8 @@
 import { LucidError } from "@utils/app/error-handler";
 // Models
 import Media from "@db/models/Media";
-// Services
-import mediaService from "@services/media";
+// Format
+import formatMedia from "@utils/format/format-media";
 
 export interface ServiceData {
   key: string;
@@ -21,7 +21,7 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  return mediaService.format(media);
+  return formatMedia(media);
 };
 
 export default getSingle;

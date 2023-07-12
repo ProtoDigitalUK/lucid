@@ -3,18 +3,17 @@ import getDBClient from "@db/db";
 import slugify from "slugify";
 // Models
 import PageCategory from "@db/models/PageCategory";
-import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
+import { BrickObject } from "@db/models/CollectionBrick";
 // Utils
-import formatPage from "@utils/pages/format-page";
+import formatPage from "@utils/format/format-page";
 import { LucidError } from "@utils/app/error-handler";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
-import collectionBricksService, {
-  BrickResponseT,
-} from "@services/collection-bricks";
-
+import collectionBricksService from "@services/collection-bricks";
+// Format
+import { BrickResT } from "@utils/format/format-bricks";
 // Schema
 import pagesSchema from "@schemas/pages";
 
@@ -92,8 +91,8 @@ export type PageT = {
   excerpt: string | null;
   categories?: Array<number> | null;
 
-  builder_bricks?: Array<BrickResponseT> | null;
-  fixed_bricks?: Array<BrickResponseT> | null;
+  builder_bricks?: Array<BrickResT> | null;
+  fixed_bricks?: Array<BrickResT> | null;
 
   published: boolean;
   published_at: string | null;

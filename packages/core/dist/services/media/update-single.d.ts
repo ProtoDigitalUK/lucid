@@ -7,6 +7,6 @@ export interface ServiceData {
         files: fileUpload.FileArray | null | undefined;
     };
 }
-declare const updateSingle: (data: ServiceData) => Promise<import("../media").MediaResT>;
+declare const updateSingle: (data: ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

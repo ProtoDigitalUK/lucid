@@ -5,6 +5,8 @@ import FormSubmission from "@db/models/FormSubmission";
 // Serives
 import formSubService from "@services/form-submissions";
 import formsService from "@services/forms";
+// Format
+import formatFormSubmission from "@utils/format/format-form-submission";
 
 export interface ServiceData {
   id: number;
@@ -39,7 +41,7 @@ const deleteSingle = async (data: ServiceData) => {
     form_key: data.form_key,
   });
 
-  return formSubService.format(formBuilder, {
+  return formatFormSubmission(formBuilder, {
     submission: formSubmission,
     data: [],
   });

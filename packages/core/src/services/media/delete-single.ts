@@ -5,6 +5,8 @@ import Media from "@db/models/Media";
 // Services
 import mediaService from "@services/media";
 import s3Service from "@services/s3";
+// Format
+import formatMedia from "@utils/format/format-media";
 
 export interface ServiceData {
   key: string;
@@ -31,7 +33,7 @@ const deleteSingle = async (data: ServiceData) => {
     minus: media.file_size,
   });
 
-  return mediaService.format(media);
+  return formatMedia(media);
 };
 
 export default deleteSingle;

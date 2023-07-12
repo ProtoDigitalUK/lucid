@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const Media_1 = __importDefault(require("../../db/models/Media"));
-const media_1 = __importDefault(require("../media"));
+const format_media_1 = __importDefault(require("../../utils/format/format-media"));
 const getMultiple = async (data) => {
     const { filter, sort, page, per_page } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
@@ -54,7 +54,7 @@ const getMultiple = async (data) => {
     });
     const mediasRes = await Media_1.default.getMultiple(SelectQuery);
     return {
-        data: mediasRes.data.map((media) => media_1.default.format(media)),
+        data: mediasRes.data.map((media) => (0, format_media_1.default)(media)),
         count: mediasRes.count,
     };
 };

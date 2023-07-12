@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const Menu_1 = __importDefault(require("../../db/models/Menu"));
 const menu_1 = __importDefault(require("../menu"));
+const format_menu_1 = __importDefault(require("../../utils/format/format-menu"));
 const getMultiple = async (data) => {
     const { filter, sort, include, page, per_page } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
@@ -49,7 +50,7 @@ const getMultiple = async (data) => {
         });
     }
     return {
-        data: menus.data.map((menu) => menu_1.default.format(menu, menuItems)),
+        data: menus.data.map((menu) => (0, format_menu_1.default)(menu, menuItems)),
         count: menus.count,
     };
 };

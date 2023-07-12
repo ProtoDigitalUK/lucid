@@ -1,7 +1,7 @@
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-import { CollectionT } from "../collections";
+import { CollectionResT } from "../../utils/format/format-collections";
 export interface ServiceData {
-    type: CollectionT["type"];
+    type: CollectionResT["type"];
     reference_id: number;
     brick_ids: Array<number | undefined>;
     brick_type: CollectionBrickConfigT["type"];

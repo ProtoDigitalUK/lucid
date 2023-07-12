@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const s3_client_1 = __importDefault(require("../../utils/media/s3-client"));
+const s3_client_1 = __importDefault(require("../../utils/app/s3-client"));
 const client_s3_1 = require("@aws-sdk/client-s3");
 const Config_1 = __importDefault(require("../Config"));
 const streamMedia = async (data) => {

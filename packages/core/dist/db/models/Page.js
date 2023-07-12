@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
 const PageCategory_1 = __importDefault(require("../models/PageCategory"));
-const format_page_1 = __importDefault(require("../../utils/pages/format-page"));
+const format_page_1 = __importDefault(require("../../utils/format/format-page"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const collections_1 = __importDefault(require("../../services/collections"));

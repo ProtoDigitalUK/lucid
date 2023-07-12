@@ -8,7 +8,7 @@ import environmentsService from "@services/environments";
 import Permissions, {
   PermissionT,
   EnvironmentPermissionT,
-} from "@utils/app/Permissions";
+} from "@services/Permissions";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body

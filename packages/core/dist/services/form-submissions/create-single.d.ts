@@ -8,6 +8,6 @@ export interface ServiceData {
         value: string | number | boolean;
     }>;
 }
-declare const createSingle: (data: ServiceData) => Promise<import("../form-submissions").FormSubmissionResT>;
+declare const createSingle: (data: ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
 export default createSingle;
 //# sourceMappingURL=create-single.d.ts.map

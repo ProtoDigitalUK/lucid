@@ -4,6 +4,8 @@ import { LucidError } from "@utils/app/error-handler";
 import Menu from "@db/models/Menu";
 // Services
 import menuServices from "@services/menu";
+// Format
+import formatMenu from "@utils/format/format-menu";
 
 export interface ServiceData {
   environment_key: string;
@@ -29,7 +31,7 @@ const getSingle = async (data: ServiceData) => {
     menu_ids: [menu.id],
   });
 
-  return menuServices.format(menu, menuItems);
+  return formatMenu(menu, menuItems);
 };
 
 export default getSingle;

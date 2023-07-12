@@ -1,13 +1,13 @@
-import { CollectionT } from "../collections";
+import { CollectionResT } from "../../utils/format/format-collections";
 export interface ServiceData {
     reference_id: number;
-    type: CollectionT["type"];
+    type: CollectionResT["type"];
     environment_key: string;
-    collection: CollectionT;
+    collection: CollectionResT;
 }
 declare const getAll: (data: ServiceData) => Promise<{
-    builder_bricks: import("../collection-bricks").BrickResponseT[];
-    fixed_bricks: import("../collection-bricks").BrickResponseT[];
+    builder_bricks: import("../../utils/format/format-bricks").BrickResT[];
+    fixed_bricks: import("../../utils/format/format-bricks").BrickResT[];
 }>;
 export default getAll;
 //# sourceMappingURL=get-all.d.ts.map

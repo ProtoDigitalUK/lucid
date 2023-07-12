@@ -21,7 +21,7 @@ declare const _default: {
         };
         clearJWT: (res: import("express").Response<any, Record<string, any>>) => void;
     };
-    login: (data: import("./login").ServiceData) => Promise<import("../users").UserResT>;
+    login: (data: import("./login").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     validatePassword: (data: import("./validate-password").ServiceData) => Promise<boolean>;
 };
 export default _default;

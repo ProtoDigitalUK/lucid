@@ -6,6 +6,8 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Services
 import environmentsService from "@services/environments";
 import Config from "@services/Config";
+// Format
+import formatEnvironment from "@utils/format/format-environment";
 
 export interface ServiceData {
   data: {
@@ -141,7 +143,7 @@ const upsertSingle = async (data: ServiceData) => {
     });
   }
 
-  return environmentsService.format(environment);
+  return formatEnvironment(environment);
 };
 
 export default upsertSingle;

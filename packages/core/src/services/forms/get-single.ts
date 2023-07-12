@@ -3,7 +3,8 @@ import { LucidError } from "@utils/app/error-handler";
 // Serices
 import Config from "@services/Config";
 import environmentsService from "@services/environments";
-import formsService from "@services/forms";
+// Format
+import formatForm from "@utils/format/format-form";
 
 export interface ServiceData {
   key: string;
@@ -18,7 +19,7 @@ const getSingle = async (data: ServiceData) => {
     key: data.environment_key,
   });
 
-  const allForms = formInstances.map((form) => formsService.format(form));
+  const allForms = formInstances.map((form) => formatForm(form));
 
   const assignedForms = environment.assigned_forms || [];
 

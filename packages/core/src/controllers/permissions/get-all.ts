@@ -1,6 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
-import Permissions from "@utils/app/Permissions";
+import Permissions from "@services/Permissions";
 // Schema
 import permissionsSchema from "@schemas/permissions";
 

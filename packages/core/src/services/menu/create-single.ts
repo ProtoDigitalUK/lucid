@@ -6,6 +6,8 @@ import Menu from "@db/models/Menu";
 import { MenuItem } from "@schemas/menus";
 // Serices
 import menuServices from "@services/menu";
+// Format
+import formatMenu from "@utils/format/format-menu";
 
 export interface ServiceData {
   environment_key: string;
@@ -61,7 +63,7 @@ const createSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Return Menu
-  return menuServices.format(menu, menuItems);
+  return formatMenu(menu, menuItems);
 };
 
 export default createSingle;

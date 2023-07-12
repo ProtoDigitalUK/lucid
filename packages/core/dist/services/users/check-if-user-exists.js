@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const User_1 = __importDefault(require("../../db/models/User"));
-const users_1 = __importDefault(require("../users"));
+const format_user_1 = __importDefault(require("../../utils/format/format-user"));
 const checkIfUserExists = async (data) => {
     const user = await User_1.default.checkIfUserExistsAlready(data.email, data.username);
     if (user) {
@@ -26,7 +26,7 @@ const checkIfUserExists = async (data) => {
             }),
         });
     }
-    return users_1.default.format(user);
+    return (0, format_user_1.default)(user);
 };
 exports.default = checkIfUserExists;
 //# sourceMappingURL=check-if-user-exists.js.map

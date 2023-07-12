@@ -4,9 +4,12 @@ import { LucidError } from "@utils/app/error-handler";
 import { EnvironmentT } from "@db/models/Environment";
 // Intenal
 import { CollectionConfigT } from "@lucid/collection-builder";
+// Utils
+import formatCollection, {
+  CollectionResT,
+} from "@utils/format/format-collections";
 // Services
 import Config from "@services/Config";
-import collectionsService, { CollectionT } from "@services/collections";
 import brickConfigService from "@services/brick-config";
 import environmentsService from "@services/environments";
 
@@ -31,7 +34,7 @@ const getSingle = async (data: ServiceData) => {
 
   // Format collections
   const collectionsF = instances.map((collection) =>
-    collectionsService.format(collection)
+    formatCollection(collection)
   );
 
   // get environment
@@ -43,7 +46,7 @@ const getSingle = async (data: ServiceData) => {
   const assignedCollections = environment.assigned_collections || [];
 
   // Filter by key and type
-  let collection: CollectionT | undefined;
+  let collection: CollectionResT | undefined;
   if (data.type) {
     collection = collectionsF.find((c) => {
       return (

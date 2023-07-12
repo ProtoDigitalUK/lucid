@@ -1,15 +1,15 @@
 import getDBClient from "@db/db";
 // Models
-import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
+import { BrickObject } from "@db/models/CollectionBrick";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Services
 import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
-import collectionBricksService, {
-  BrickResponseT,
-} from "@services/collection-bricks";
+import collectionBricksService from "@services/collection-bricks";
+// Format
+import { BrickResT } from "@utils/format/format-bricks";
 
 // -------------------------------------------
 // Types
@@ -33,8 +33,8 @@ export type SinglePageT = {
   environment_key: string;
   collection_key: string;
 
-  builder_bricks?: Array<BrickResponseT> | null;
-  fixed_bricks?: Array<BrickResponseT> | null;
+  builder_bricks?: Array<BrickResT> | null;
+  fixed_bricks?: Array<BrickResT> | null;
 
   created_at: string;
   updated_at: string;

@@ -2,8 +2,8 @@
 import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-// Services
-import environmentsService from "@services/environments";
+// Format
+import formatEnvironment from "@utils/format/format-environment";
 
 export interface ServiceData {
   key: string;
@@ -21,7 +21,7 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  return environmentsService.format(environment);
+  return formatEnvironment(environment);
 };
 
 export default getSingle;

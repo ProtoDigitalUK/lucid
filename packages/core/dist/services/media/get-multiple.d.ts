@@ -4,7 +4,7 @@ export interface ServiceData {
     query: z.infer<typeof mediaSchema.getMultiple.query>;
 }
 declare const getMultiple: (data: ServiceData) => Promise<{
-    data: import("../media").MediaResT[];
+    data: import("../../utils/format/format-media").MediaResT[];
     count: number;
 }>;
 export default getMultiple;

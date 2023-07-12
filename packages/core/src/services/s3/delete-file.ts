@@ -1,6 +1,6 @@
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 // Utils
-import getS3Client from "@utils/media/s3-client";
+import getS3Client from "@utils/app/s3-client";
 // Services
 import Config from "@services/Config";
 

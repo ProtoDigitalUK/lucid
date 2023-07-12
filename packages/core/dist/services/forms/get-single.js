@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Config_1 = __importDefault(require("../Config"));
 const environments_1 = __importDefault(require("../environments"));
-const forms_1 = __importDefault(require("../forms"));
+const format_form_1 = __importDefault(require("../../utils/format/format-form"));
 const getSingle = async (data) => {
     const formInstances = Config_1.default.forms || [];
     const environment = await environments_1.default.getSingle({
         key: data.environment_key,
     });
-    const allForms = formInstances.map((form) => forms_1.default.format(form));
+    const allForms = formInstances.map((form) => (0, format_form_1.default)(form));
     const assignedForms = environment.assigned_forms || [];
     const formData = allForms.find((c) => {
         return c.key === data.key && assignedForms.includes(c.key);

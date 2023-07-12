@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_s3_1 = require("@aws-sdk/client-s3");
-const s3_client_1 = __importDefault(require("../../utils/media/s3-client"));
+const s3_client_1 = __importDefault(require("../../utils/app/s3-client"));
 const Config_1 = __importDefault(require("../Config"));
 const deleteFile = async (data) => {
     const S3 = await s3_client_1.default;

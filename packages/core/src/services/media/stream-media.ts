@@ -1,4 +1,4 @@
-import getS3Client from "@utils/media/s3-client";
+import getS3Client from "@utils/app/s3-client";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 // Services
 import Config from "@services/Config";

@@ -1,9 +1,12 @@
 import z from "zod";
 // Schema
 import collectionSchema from "@schemas/collections";
+// Utils
+import formatCollection, {
+  CollectionResT,
+} from "@utils/format/format-collections";
 // Services
 import Config from "@services/Config";
-import collectionsService, { CollectionT } from "@services/collections";
 import brickConfigService from "@services/brick-config";
 import environmentsService from "@services/environments";
 
@@ -18,7 +21,7 @@ const getAll = async (data: ServiceData) => {
 
   // Get all collections data
   let collectionsF = instances.map((collection) =>
-    collectionsService.format(collection)
+    formatCollection(collection)
   );
   // Get environment
   const environment = await environmentsService.getSingle({
@@ -33,7 +36,7 @@ const getAll = async (data: ServiceData) => {
   collectionsF = filterCollections(data.query.filter, collectionsF);
 
   collectionsF = collectionsF.map((collection) => {
-    const collectionData: CollectionT = {
+    const collectionData: CollectionResT = {
       key: collection.key,
       title: collection.title,
       singular: collection.singular,
@@ -58,8 +61,8 @@ const getAll = async (data: ServiceData) => {
 // Filter
 const filterCollections = (
   filter: z.infer<typeof collectionSchema.getAll.query>["filter"],
-  collections: CollectionT[]
-): CollectionT[] => {
+  collections: CollectionResT[]
+): CollectionResT[] => {
   if (!filter) return collections;
 
   let filtered = [...collections];

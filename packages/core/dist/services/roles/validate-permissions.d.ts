@@ -1,4 +1,4 @@
-import { PermissionT, EnvironmentPermissionT } from "../../utils/app/Permissions";
+import { PermissionT, EnvironmentPermissionT } from "../Permissions";
 declare const validatePermissions: (permGroup: {
     permissions: string[];
     environment_key?: string | undefined;
