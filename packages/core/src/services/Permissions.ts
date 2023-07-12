@@ -1,186 +1,155 @@
 // -------------------------------------------
 // Types
-export type PermissionUsers =
+export type PermissionT =
   | "create_user"
   | "read_user"
   | "update_user"
-  | "delete_user";
-export type PermissionRoles =
+  | "delete_user"
   | "create_role"
   | "read_role"
   | "update_role"
   | "delete_role"
-  | "assign_role";
-export type PermissionMedia =
+  | "assign_role"
   | "create_media"
   | "read_media"
   | "update_media"
-  | "delete_media";
-export type PermissionSettings = "update_settings";
-export type PermissionEnvironment =
+  | "delete_media"
   | "update_environment"
   | "migrate_environment"
   | "delete_environment"
-  | "create_environment";
-export type PermissionEmails = "read_email" | "delete_email" | "send_email";
-// env permissions
-export type PermissionContent =
+  | "create_environment"
+  | "update_settings"
+  | "read_email"
+  | "delete_email"
+  | "send_email";
+
+export type EnvironmentPermissionT =
   | "create_content"
   | "read_content"
   | "update_content"
   | "delete_content"
   | "publish_content"
-  | "unpublish_content";
-export type PermissionCategory =
+  | "unpublish_content"
   | "create_category"
   | "read_category"
   | "update_category"
-  | "delete_category";
-export type PermissionMenu =
+  | "delete_category"
   | "create_menu"
   | "read_menu"
   | "update_menu"
-  | "delete_menu";
-export type PermissionFormSubmissions =
+  | "delete_menu"
   | "read_form_submissions"
   | "delete_form_submissions"
   | "update_form_submissions";
 
-export type PermissionT =
-  | PermissionUsers
-  | PermissionRoles
-  | PermissionMedia
-  | PermissionSettings
-  | PermissionEnvironment
-  | PermissionEmails;
+type PermissionGroup = {
+  title: string;
+  permissions: PermissionT[] | EnvironmentPermissionT[];
+};
 
-export type EnvironmentPermissionT =
-  | PermissionContent
-  | PermissionCategory
-  | PermissionMenu
-  | PermissionFormSubmissions;
+// -------------------------------------------
+// Permissions
 
-export default class Permissions {
-  static get formattedPermissions() {
-    return {
-      global: {
-        users: {
-          title: "Users",
-          permissions: Permissions.userPermissions,
-        },
-        roles: {
-          title: "Roles",
-          permissions: Permissions.rolePermissions,
-        },
-        media: {
-          title: "Media",
-          permissions: Permissions.mediaPermissions,
-        },
-        settings: {
-          title: "Settings",
-          permissions: Permissions.settingsPermissions,
-        },
-        environment: {
-          title: "Environment",
-          permissions: Permissions.environmentPermissions,
-        },
-        emails: {
-          title: "Emails",
-          permissions: Permissions.emailPermissions,
-        },
-      },
-      environment: {
-        content: {
-          title: "Content",
-          permissions: Permissions.contentPermissions,
-        },
-        category: {
-          title: "Category",
-          permissions: Permissions.categoryPermissions,
-        },
-        menu: {
-          title: "Menu",
-          permissions: Permissions.menuPermissions,
-        },
-        form_submissions: {
-          title: "Form Submissions",
-          permissions: Permissions.formSubmissionsPermissions,
-        },
-      },
-    };
-  }
-  static get permissions(): {
-    global: PermissionT[];
-    environment: EnvironmentPermissionT[];
-  } {
-    return {
-      global: [
-        ...Permissions.userPermissions,
-        ...Permissions.rolePermissions,
-        ...Permissions.mediaPermissions,
-        ...Permissions.settingsPermissions,
-        ...Permissions.environmentPermissions,
-        ...Permissions.emailPermissions,
-      ],
-      environment: [
-        ...Permissions.contentPermissions,
-        ...Permissions.categoryPermissions,
-        ...Permissions.menuPermissions,
-        ...Permissions.formSubmissionsPermissions,
-      ],
-    };
-  }
-  // GET SUB PERMISSIONS
-  static get userPermissions(): PermissionUsers[] {
-    return ["create_user", "read_user", "update_user", "delete_user"];
-  }
-  static get rolePermissions(): PermissionRoles[] {
-    return [
+const PERMISSIONS: Record<string, PermissionGroup> = {
+  users: {
+    title: "Users",
+    permissions: ["create_user", "read_user", "update_user", "delete_user"],
+  },
+  roles: {
+    title: "Roles",
+    permissions: [
       "create_role",
       "read_role",
       "update_role",
       "delete_role",
       "assign_role",
-    ];
-  }
-  static get mediaPermissions(): PermissionMedia[] {
-    return ["create_media", "read_media", "update_media", "delete_media"];
-  }
-  static get settingsPermissions(): PermissionSettings[] {
-    return ["update_settings"];
-  }
-  static get environmentPermissions(): PermissionEnvironment[] {
-    return [
+    ],
+  },
+  media: {
+    title: "Media",
+    permissions: ["create_media", "read_media", "update_media", "delete_media"],
+  },
+  settings: {
+    title: "Settings",
+    permissions: ["update_settings"],
+  },
+  environment: {
+    title: "Environment",
+    permissions: [
       "update_environment",
       "migrate_environment",
       "delete_environment",
       "create_environment",
-    ];
-  }
-  static get emailPermissions(): PermissionEmails[] {
-    return ["send_email", "read_email", "delete_email"];
-  }
-  static get contentPermissions(): PermissionContent[] {
-    return [
+    ],
+  },
+  emails: {
+    title: "Emails",
+    permissions: ["read_email", "delete_email", "send_email"],
+  },
+  content: {
+    title: "Content",
+    permissions: [
       "create_content",
       "read_content",
       "update_content",
       "delete_content",
       "publish_content",
       "unpublish_content",
-    ];
-  }
-  static get categoryPermissions(): PermissionCategory[] {
-    return ["create_category", "update_category", "delete_category"];
-  }
-  static get menuPermissions(): PermissionMenu[] {
-    return ["create_menu", "read_menu", "update_menu", "delete_menu"];
-  }
-  static get formSubmissionsPermissions(): PermissionFormSubmissions[] {
-    return [
+    ],
+  },
+  category: {
+    title: "Category",
+    permissions: [
+      "create_category",
+      "read_category",
+      "update_category",
+      "delete_category",
+    ],
+  },
+  menu: {
+    title: "Menu",
+    permissions: ["create_menu", "read_menu", "update_menu", "delete_menu"],
+  },
+  form_submissions: {
+    title: "Form Submissions",
+    permissions: [
       "read_form_submissions",
       "delete_form_submissions",
       "update_form_submissions",
-    ];
+    ],
+  },
+};
+
+export default class Permissions {
+  static get formattedPermissions() {
+    return {
+      global: {
+        users: PERMISSIONS.users,
+        roles: PERMISSIONS.roles,
+        media: PERMISSIONS.media,
+        settings: PERMISSIONS.settings,
+        environment: PERMISSIONS.environment,
+        emails: PERMISSIONS.emails,
+      },
+      environment: {
+        content: PERMISSIONS.content,
+        category: PERMISSIONS.category,
+        menu: PERMISSIONS.menu,
+        form_submissions: PERMISSIONS.form_submissions,
+      },
+    };
+  }
+
+  static get permissions() {
+    const globalPermissions = Object.values(PERMISSIONS).flatMap(
+      (group) => group.permissions
+    );
+    const environmentPermissions = Object.values(PERMISSIONS).flatMap(
+      (group) => group.permissions
+    );
+    return {
+      global: globalPermissions,
+      environment: environmentPermissions,
+    };
   }
 }
