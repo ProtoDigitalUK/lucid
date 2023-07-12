@@ -36,9 +36,9 @@ exports.buildConfig = void 0;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const zod_1 = __importDefault(require("zod"));
-const error_handler_1 = require("../../utils/app/error-handler");
+const error_handler_1 = require("../utils/app/error-handler");
 const console_log_colors_1 = require("console-log-colors");
-const constants_1 = __importDefault(require("../../constants"));
+const constants_1 = __importDefault(require("../constants"));
 const zod_validation_error_1 = require("zod-validation-error");
 const configSchema = zod_1.default.object({
     host: zod_1.default.string(),

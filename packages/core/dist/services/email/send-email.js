@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmailInternal = exports.sendEmailExternal = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const Config_1 = __importDefault(require("../../db/models/Config"));
+const Config_1 = __importDefault(require("../Config"));
 const email_1 = __importDefault(require("../email"));
 const createEmailRow = async (data) => {
     await email_1.default.createSingle({

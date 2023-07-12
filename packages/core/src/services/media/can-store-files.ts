@@ -1,9 +1,8 @@
 import fileUpload from "express-fileupload";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
-// Models
-import Config from "@db/models/Config";
 // Services
+import Config from "@services/Config";
 import mediaService from "@services/media";
 
 export interface ServiceData {

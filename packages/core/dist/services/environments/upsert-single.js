@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const slugify_1 = __importDefault(require("slugify"));
 const Environment_1 = __importDefault(require("../../db/models/Environment"));
-const Config_1 = __importDefault(require("../../db/models/Config"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const environments_1 = __importDefault(require("../environments"));
+const Config_1 = __importDefault(require("../Config"));
 const checkAssignedBricks = async (assigned_bricks) => {
     const brickInstances = Config_1.default.bricks || [];
     const brickKeys = brickInstances.map((b) => b.key);

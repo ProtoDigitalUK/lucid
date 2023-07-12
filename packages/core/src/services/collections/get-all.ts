@@ -1,9 +1,8 @@
 import z from "zod";
 // Schema
 import collectionSchema from "@schemas/collections";
-// Models
-import Config from "@db/models/Config";
 // Services
+import Config from "@services/Config";
 import collectionsService, { CollectionT } from "@services/collections";
 import brickConfigService from "@services/brick-config";
 import environmentsService from "@services/environments";

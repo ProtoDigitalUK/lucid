@@ -1,5 +1,5 @@
-// Models
-import Config from "@db/models/Config";
+// Services
+import Config from "@services/Config";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 

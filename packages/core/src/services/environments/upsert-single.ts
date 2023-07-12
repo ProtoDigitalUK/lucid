@@ -1,11 +1,11 @@
 import slugify from "slugify";
 // Models
 import Environment from "@db/models/Environment";
-import Config from "@db/models/Config";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Services
 import environmentsService from "@services/environments";
+import Config from "@services/Config";
 
 export interface ServiceData {
   data: {

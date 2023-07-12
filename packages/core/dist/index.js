@@ -7,7 +7,7 @@ exports.submitForm = exports.FormBuilder = exports.CollectionBuilder = exports.B
 require("dotenv").config();
 const init_1 = __importDefault(require("./init"));
 exports.init = init_1.default;
-const Config_1 = require("./db/models/Config");
+const Config_1 = require("./services/Config");
 Object.defineProperty(exports, "buildConfig", { enumerable: true, get: function () { return Config_1.buildConfig; } });
 const form_submissions_1 = __importDefault(require("./services/form-submissions"));
 const email_1 = __importDefault(require("./services/email"));

@@ -1,6 +1,6 @@
 import { Request } from "express";
-// Models
-import Config from "@db/models/Config";
+// Services
+import Config from "@services/Config";
 
 // --------------------------------------------------
 // Types

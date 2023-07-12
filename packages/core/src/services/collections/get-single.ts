@@ -1,11 +1,11 @@
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
-import Config from "@db/models/Config";
 import { EnvironmentT } from "@db/models/Environment";
 // Intenal
 import { CollectionConfigT } from "@lucid/collection-builder";
 // Services
+import Config from "@services/Config";
 import collectionsService, { CollectionT } from "@services/collections";
 import brickConfigService from "@services/brick-config";
 import environmentsService from "@services/environments";

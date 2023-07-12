@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_s3_1 = require("@aws-sdk/client-s3");
-const Config_1 = __importDefault(require("../../db/models/Config"));
+const Config_1 = __importDefault(require("../../services/Config"));
 const getS3Client = async () => {
     const config = await Config_1.default.getConfig();
     const s3Config = {

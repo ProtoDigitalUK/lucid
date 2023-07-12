@@ -7,7 +7,7 @@ const fs_extra_1 = __importDefault(require("fs-extra"));
 const handlebars_1 = __importDefault(require("handlebars"));
 const mjml_1 = __importDefault(require("mjml"));
 const path_1 = __importDefault(require("path"));
-const Config_1 = __importDefault(require("../../db/models/Config"));
+const Config_1 = __importDefault(require("../Config"));
 const getTemplateData = async (template) => {
     const templatePath = path_1.default.join(__dirname, `../../../templates/${template}.mjml`);
     if (await fs_extra_1.default.pathExists(templatePath)) {

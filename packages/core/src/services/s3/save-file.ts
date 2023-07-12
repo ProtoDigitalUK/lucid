@@ -3,9 +3,8 @@ import fileUpload from "express-fileupload";
 // Utils
 import getS3Client from "@utils/media/s3-client";
 import { type MediaMetaDataT } from "@utils/media/helpers";
-
-// Models
-import Config from "@db/models/Config";
+// Services
+import Config from "@services/Config";
 
 export interface ServiceData {
   key: string;

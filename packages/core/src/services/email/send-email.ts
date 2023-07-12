@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
-// Models
-import Config from "@db/models/Config";
 // Services
+import Config from "@services/Config";
 import emailsService from "@services/email";
 
 export interface EmailParamsT {

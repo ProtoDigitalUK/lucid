@@ -1,5 +1,5 @@
 require("dotenv").config();
-import express, { Express } from "express";
+import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { log } from "console-log-colors";
@@ -7,7 +7,6 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 // internal
-import Config from "@db/models/Config";
 import launchSteps from "@utils/app/launch-steps";
 import migrateDB from "@db/migration";
 import initRoutes from "@routes/index";
@@ -16,6 +15,8 @@ import {
   errorResponder,
   invalidPathHandler,
 } from "@utils/app/error-handler";
+// Service
+import Config from "@services/Config";
 
 const app = async (options: InitOptions) => {
   const app = options.express;

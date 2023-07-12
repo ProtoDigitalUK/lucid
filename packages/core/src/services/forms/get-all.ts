@@ -1,9 +1,8 @@
 import z from "zod";
-// Models
-import Config from "@db/models/Config";
 // Schema
 import formsSchema from "@schemas/forms";
 // Services
+import Config from "@services/Config";
 import environmentsService from "@services/environments";
 import formsService from "@services/forms";
 

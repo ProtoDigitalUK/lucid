@@ -78,7 +78,7 @@ CollectionBrick.getAllBricks = async (type, reference_id, brick_type) => {
     const client = await db_1.default;
     const referenceKey = type === "pages" ? "page_id" : "singlepage_id";
     const collectionBrickIds = await client.query({
-        text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2 RETURNING *`,
+        text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
         values: [reference_id, brick_type],
     });
     return collectionBrickIds.rows;
@@ -163,7 +163,7 @@ CollectionBrick.createRepeater = async (brick_id, data) => {
         ],
     });
     const repeaterRes = await client.query({
-        text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING fields_id`,
+        text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
         values: values.value,
     });
     return repeaterRes.rows[0];

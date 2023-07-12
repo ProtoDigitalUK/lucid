@@ -1,7 +1,7 @@
 import getS3Client from "@utils/media/s3-client";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-// Models
-import Config from "@db/models/Config";
+// Services
+import Config from "@services/Config";
 
 export interface ServiceData {
   key: string;

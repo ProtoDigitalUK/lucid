@@ -1,8 +1,7 @@
-// Models
-import Config from "@db/models/Config";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Serices
+import Config from "@services/Config";
 import environmentsService from "@services/environments";
 import formsService from "@services/forms";
 

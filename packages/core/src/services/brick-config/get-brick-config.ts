@@ -1,5 +1,5 @@
-// Models
-import Config from "@db/models/Config";
+// Services
+import Config from "@services/Config";
 // Internal packages
 import { BrickBuilderT } from "@lucid/brick-builder";
 

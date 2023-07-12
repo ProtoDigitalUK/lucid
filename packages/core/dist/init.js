@@ -11,11 +11,11 @@ const console_log_colors_1 = require("console-log-colors");
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
-const Config_1 = __importDefault(require("./db/models/Config"));
 const launch_steps_1 = __importDefault(require("./utils/app/launch-steps"));
 const migration_1 = __importDefault(require("./db/migration"));
 const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/app/error-handler");
+const Config_1 = __importDefault(require("./services/Config"));
 const app = async (options) => {
     const app = options.express;
     await Config_1.default.cacheConfig();

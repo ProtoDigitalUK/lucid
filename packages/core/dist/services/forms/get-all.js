@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Config_1 = __importDefault(require("../../db/models/Config"));
+const Config_1 = __importDefault(require("../Config"));
 const environments_1 = __importDefault(require("../environments"));
 const forms_1 = __importDefault(require("../forms"));
 const getAll = async (data) => {

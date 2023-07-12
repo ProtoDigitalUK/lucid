@@ -1,7 +1,7 @@
 require("dotenv").config();
 import init from "./init";
 // Models
-import { ConfigT, buildConfig } from "@db/models/Config";
+import { ConfigT, buildConfig } from "@services/Config";
 // Utils
 import formSubService from "@services/form-submissions";
 // Services

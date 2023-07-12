@@ -1,6 +1,6 @@
 /// <reference types="express" />
 import init from "./init";
-import { ConfigT, buildConfig } from "./db/models/Config";
+import { ConfigT, buildConfig } from "./services/Config";
 import BrickBuilder from "@lucid/brick-builder";
 import CollectionBuilder from "@lucid/collection-builder";
 import FormBuilder from "@lucid/form-builder";
