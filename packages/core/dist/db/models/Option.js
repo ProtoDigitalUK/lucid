@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const error_handler_1 = require("../../utils/app/error-handler");
 class Option {
 }
 _a = Option;
@@ -15,99 +14,15 @@ Option.getByName = async (name) => {
         text: `SELECT * FROM lucid_options WHERE option_name = $1`,
         values: [name],
     });
-    if (!options.rows[0]) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Option Not Found",
-            message: "There was an error finding the option.",
-            status: 500,
-            errors: (0, error_handler_1.modelErrors)({
-                option_name: {
-                    code: "not_found",
-                    message: "Option not found.",
-                },
-            }),
-        });
-    }
-    return Option.convertToType(options.rows[0]);
+    return options.rows[0];
 };
 Option.patchByName = async (data) => {
     const client = await db_1.default;
-    const value = Option.convertToString(data.value, data.type);
     const options = await client.query({
         text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
-        values: [value, data.type, data.name],
+        values: [data.value, data.type, data.name],
     });
-    if (!options.rows[0]) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Option Not Found",
-            message: "There was an error patching the option.",
-            status: 500,
-            errors: (0, error_handler_1.modelErrors)({
-                option_name: {
-                    code: "not_found",
-                    message: "Option not found.",
-                },
-            }),
-        });
-    }
-    return Option.convertToType(options.rows[0]);
-};
-Option.create = async (data) => {
-    const client = await db_1.default;
-    const value = Option.convertToString(data.value, data.type);
-    const optionExisting = await client.query({
-        text: `SELECT * FROM lucid_options WHERE option_name = $1`,
-        values: [data.name],
-    });
-    if (optionExisting.rows[0]) {
-        return Option.convertToType(optionExisting.rows[0]);
-    }
-    const option = await client.query({
-        text: `INSERT INTO lucid_options (option_name, option_value, type) VALUES ($1, $2, $3) RETURNING *`,
-        values: [data.name, value, data.type],
-    });
-    if (!option.rows[0]) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Option Not Created",
-            message: "There was an error creating the option.",
-            status: 500,
-        });
-    }
-    return Option.convertToType(option.rows[0]);
-};
-Option.convertToType = (option) => {
-    switch (option.type) {
-        case "boolean":
-            option.option_value = option.option_value === "true" ? true : false;
-            break;
-        case "number":
-            option.option_value = parseInt(option.option_value);
-            break;
-        case "json":
-            option.option_value = JSON.parse(option.option_value);
-            break;
-        default:
-            option.option_value;
-            break;
-    }
-    return option;
-};
-Option.convertToString = (value, type) => {
-    switch (type) {
-        case "boolean":
-            value = value ? "true" : "false";
-            break;
-        case "json":
-            value = JSON.stringify(value);
-            break;
-        default:
-            value = value.toString();
-            break;
-    }
-    return value;
+    return options.rows[0];
 };
 exports.default = Option;
 //# sourceMappingURL=Option.js.map

@@ -1,8 +1,10 @@
-// Models
-import Option from "@db/models/Option";
+// Services
+import optionServices from "@services/options";
 
 const getStorageUsed = async () => {
-  const res = await Option.getByName("media_storage_used");
+  const res = await optionServices.getByName({
+    name: "media_storage_used",
+  });
   return res.option_value as number;
 };
 

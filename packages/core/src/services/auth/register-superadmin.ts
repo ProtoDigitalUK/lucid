@@ -5,6 +5,7 @@ import User from "@db/models/User";
 import Option from "@db/models/Option";
 // Services
 import usersServices from "@services/users";
+import optionServices from "@services/options";
 
 export interface ServiceData {
   email: string;
@@ -13,7 +14,9 @@ export interface ServiceData {
 }
 
 const registerSuperAdmin = async (data: ServiceData) => {
-  const initialUserRes = await Option.getByName("initial_user_created");
+  const initialUserRes = await optionServices.getByName({
+    name: "initial_user_created",
+  });
   const resValue = initialUserRes.option_value as boolean;
 
   if (resValue) {
@@ -32,7 +35,7 @@ const registerSuperAdmin = async (data: ServiceData) => {
     super_admin: true,
   });
 
-  await Option.patchByName({
+  await optionServices.patchByName({
     name: "initial_user_created",
     value: true,
     type: "boolean",

@@ -1,7 +1,6 @@
-// Models
-import Option from "@db/models/Option";
 // Services
 import mediaService from "@services/media";
+import optionService from "@services/options";
 
 export interface ServiceData {
   add: number;
@@ -15,7 +14,7 @@ const getStorageUsed = async (data: ServiceData) => {
   if (data.minus !== undefined) {
     newValue = newValue - data.minus;
   }
-  const res = await Option.patchByName({
+  const res = await optionService.patchByName({
     name: "media_storage_used",
     value: newValue,
     type: "number",
