@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
-const User_1 = __importDefault(require("../../db/models/User"));
 const users_1 = __importDefault(require("../users"));
 const options_1 = __importDefault(require("../options"));
 const registerSuperAdmin = async (data) => {
@@ -20,7 +19,7 @@ const registerSuperAdmin = async (data) => {
             status: 400,
         });
     }
-    const user = await User_1.default.register({
+    const user = await users_1.default.registerSingle({
         email: data.email,
         username: data.username,
         password: data.password,
@@ -31,9 +30,7 @@ const registerSuperAdmin = async (data) => {
         value: true,
         type: "boolean",
     });
-    return await users_1.default.getSingle({
-        userId: user.id,
-    });
+    return user;
 };
 exports.default = registerSuperAdmin;
 //# sourceMappingURL=register-superadmin.js.map

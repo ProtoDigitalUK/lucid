@@ -1,7 +1,5 @@
-import argon2 from "argon2";
 import getDBClient from "@db/db";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
 import { queryDataFormat } from "@utils/app/query-helpers";
 
 // -------------------------------------------
@@ -33,22 +31,12 @@ export type UserT = {
 };
 
 export default class User {
-  // -------------------------------------------
-  // Functions
   static register: UserRegister = async (data) => {
     const client = await getDBClient;
 
-    const { email, username, password, super_admin } = data;
-
-    // check if user exists
-    await User.checkIfUserExistsAlready(email, username);
-
-    // hash password
-    const hashedPassword = await argon2.hash(password);
-
     const { columns, aliases, values } = queryDataFormat({
       columns: ["email", "username", "password", "super_admin"],
-      values: [email, username, hashedPassword, super_admin],
+      values: [data.email, data.username, data.password, data.super_admin],
     });
 
     const user = await client.query<UserT>({
@@ -56,16 +44,6 @@ export default class User {
       values: values.value,
     });
 
-    if (!user.rows[0]) {
-      throw new LucidError({
-        type: "basic",
-        name: "User Not Created",
-        message: "There was an error creating the user.",
-        status: 500,
-      });
-    }
-
-    delete user.rows[0].password;
     return user.rows[0];
   };
   static getById: UserGetById = async (id) => {
@@ -88,8 +66,6 @@ export default class User {
 
     return user.rows[0];
   };
-  // -------------------------------------------
-  // Util Functions
   static checkIfUserExistsAlready = async (email: string, username: string) => {
     const client = await getDBClient;
 
@@ -98,23 +74,6 @@ export default class User {
       values: [email, username],
     });
 
-    if (userExists.rows[0]) {
-      throw new LucidError({
-        type: "basic",
-        name: "User Already Exists",
-        message: "A user with that email or username already exists.",
-        status: 400,
-        errors: modelErrors({
-          email: {
-            code: "email_already_exists",
-            message: "A user with that email already exists.",
-          },
-          username: {
-            code: "username_already_exists",
-            message: "A user with that username already exists.",
-          },
-        }),
-      });
-    }
+    return userExists.rows[0];
   };
 }

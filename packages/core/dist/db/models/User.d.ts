@@ -23,7 +23,7 @@ export default class User {
     static register: UserRegister;
     static getById: UserGetById;
     static getByUsername: UserGetByUsername;
-    static checkIfUserExistsAlready: (email: string, username: string) => Promise<void>;
+    static checkIfUserExistsAlready: (email: string, username: string) => Promise<UserT>;
 }
 export {};
 //# sourceMappingURL=User.d.ts.map

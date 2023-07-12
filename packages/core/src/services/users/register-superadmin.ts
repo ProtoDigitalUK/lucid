@@ -1,8 +1,5 @@
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-// Models
-import User from "@db/models/User";
-import Option from "@db/models/Option";
 // Services
 import usersServices from "@services/users";
 import optionServices from "@services/options";
@@ -28,7 +25,7 @@ const registerSuperAdmin = async (data: ServiceData) => {
     });
   }
 
-  const user = await User.register({
+  const user = await usersServices.registerSingle({
     email: data.email,
     username: data.username,
     password: data.password,
@@ -41,9 +38,7 @@ const registerSuperAdmin = async (data: ServiceData) => {
     type: "boolean",
   });
 
-  return await usersServices.getSingle({
-    userId: user.id,
-  });
+  return user;
 };
 
 export default registerSuperAdmin;

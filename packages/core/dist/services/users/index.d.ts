@@ -18,6 +18,9 @@ declare const _default: {
     getPermissions: (data: import("./get-permissions").ServiceData) => Promise<UserPermissionsRes>;
     getSingle: (data: import("./get-single").ServiceData) => Promise<UserResT>;
     format: (user: import("../../db/models/User").UserT, permissions?: UserPermissionsRes | undefined) => UserResT;
+    registerSingle: (data: import("./register-single").ServiceData) => Promise<UserResT>;
+    registerSuperAdmin: (data: import("./register-superadmin").ServiceData) => Promise<UserResT>;
+    checkIfUserExists: (data: import("./check-if-user-exists").ServiceData) => Promise<UserResT>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

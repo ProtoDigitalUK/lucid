@@ -3,7 +3,7 @@ import buildResponse from "@utils/app/build-response";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
-import authService from "@services/auth";
+import userServices from "@services/users";
 
 // --------------------------------------------------
 // Controller
@@ -13,7 +13,7 @@ const registerSuperAdminController: Controller<
   typeof authSchema.registerSuperAdmin.query
 > = async (req, res, next) => {
   try {
-    const user = await authService.registerSuperAdmin({
+    const user = await userServices.registerSuperAdmin({
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,

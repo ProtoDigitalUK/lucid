@@ -1,0 +1,1 @@
+{"version":3,"file":"register-single.d.ts","sourceRoot":"","sources":["../../../src/services/users/register-single.ts"],"names":[],"mappings":"AAQA,MAAM,WAAW,WAAW;IAC1B,KAAK,EAAE,MAAM,CAAC;IACd,QAAQ,EAAE,MAAM,CAAC;IACjB,QAAQ,EAAE,MAAM,CAAC;IACjB,WAAW,CAAC,EAAE,OAAO,CAAC;CACvB;AAED,QAAA,MAAM,cAAc,SAAgB,WAAW,gDA8B9C,CAAC;AAEF,eAAe,cAAc,CAAC"}
