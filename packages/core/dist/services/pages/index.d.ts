@@ -7,6 +7,8 @@ declare const _default: {
     }>;
     getSingle: (data: import("./get-single").ServiceData) => Promise<import("../../db/models/Page").PageT>;
     updateSingle: (data: import("./update-single").ServiceData) => Promise<import("../../db/models/Page").PageT>;
+    checkPageExists: (data: import("./check-page-exists").ServiceData) => Promise<import("../../db/models/Page").PageT>;
+    buildUniqueSlug: (data: import("./build-unique-slug").ServiceData) => Promise<string>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

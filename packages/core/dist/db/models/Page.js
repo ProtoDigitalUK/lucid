@@ -7,7 +7,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Page_slugUnique, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
+var _a, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
@@ -18,6 +18,7 @@ const collections_1 = __importDefault(require("../../services/collections"));
 const environments_1 = __importDefault(require("../../services/environments"));
 const collection_bricks_1 = __importDefault(require("../../services/collection-bricks"));
 const page_categories_1 = __importDefault(require("../../services/page-categories"));
+const pages_1 = __importDefault(require("../../services/pages"));
 class Page {
 }
 _a = Page;
@@ -214,7 +215,7 @@ Page.createSingle = async (data) => {
             environment_key: data.environment_key,
         });
     }
-    const slug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
+    const slug = await pages_1.default.buildUniqueSlug({
         slug: data.slug,
         homepage: data.homepage || false,
         environment_key: data.environment_key,
@@ -260,7 +261,10 @@ Page.createSingle = async (data) => {
 };
 Page.updateSingle = async (data) => {
     const client = await db_1.default;
-    const currentPage = await Page.pageExists(data.id, data.environment_key);
+    const currentPage = await pages_1.default.checkPageExists({
+        id: data.id,
+        environment_key: data.environment_key,
+    });
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
         parent_id: data.parent_id || null,
@@ -289,7 +293,7 @@ Page.updateSingle = async (data) => {
     });
     let newSlug = undefined;
     if (data.slug) {
-        newSlug = await __classPrivateFieldGet(Page, _a, "f", _Page_slugUnique).call(Page, {
+        newSlug = await pages_1.default.buildUniqueSlug({
             slug: data.slug,
             homepage: data.homepage || false,
             environment_key: data.environment_key,
@@ -355,7 +359,10 @@ Page.updateSingle = async (data) => {
 };
 Page.deleteSingle = async (data) => {
     const client = await db_1.default;
-    await Page.pageExists(data.id, data.environment_key);
+    await pages_1.default.checkPageExists({
+        id: data.id,
+        environment_key: data.environment_key,
+    });
     const page = await client.query({
         text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
         values: [data.id],
@@ -378,7 +385,7 @@ Page.getMultipleByIds = async (data) => {
     });
     return pages.rows.map((page) => (0, format_page_1.default)(page));
 };
-Page.pageExists = async (id, environment_key) => {
+Page.getSingleBasic = async (id, environment_key) => {
     const client = await db_1.default;
     const page = await client.query({
         text: `SELECT
@@ -392,31 +399,19 @@ Page.pageExists = async (id, environment_key) => {
           environment_key = $2`,
         values: [id, environment_key],
     });
-    if (!page.rows[0]) {
-        throw new error_handler_1.LucidError({
-            type: "basic",
-            name: "Page not found",
-            message: `Page with id "${id}" not found in environment "${environment_key}"!`,
-            status: 404,
-        });
-    }
     return page.rows[0];
 };
-_Page_slugUnique = { value: async (data) => {
-        const client = await db_1.default;
-        if (data.homepage) {
-            return "/";
-        }
-        data.slug = (0, slugify_1.default)(data.slug, { lower: true, strict: true });
-        const values = [
-            data.slug,
-            data.collection_key,
-            data.environment_key,
-        ];
-        if (data.parent_id)
-            values.push(data.parent_id);
-        const slugCount = await client.query({
-            text: `SELECT COUNT(*) 
+Page.getSlugCount = async (data) => {
+    const client = await db_1.default;
+    const values = [
+        data.slug,
+        data.collection_key,
+        data.environment_key,
+    ];
+    if (data.parent_id)
+        values.push(data.parent_id);
+    const slugCount = await client.query({
+        text: `SELECT COUNT(*) 
         FROM 
           lucid_pages 
         WHERE slug ~ '^${data.slug}-\\d+$' 
@@ -427,15 +422,10 @@ _Page_slugUnique = { value: async (data) => {
         AND
           environment_key = $3
         ${data.parent_id ? `AND parent_id = $4` : `AND parent_id IS NULL`}`,
-            values: values,
-        });
-        if (slugCount.rows[0].count >= 1) {
-            return `${data.slug}-${slugCount.rows[0].count}`;
-        }
-        else {
-            return data.slug;
-        }
-    } };
+        values: values,
+    });
+    return slugCount.rows[0].count;
+};
 _Page_checkParentNotHomepage = { value: async (data) => {
         const client = await db_1.default;
         if (!data.parent_id)

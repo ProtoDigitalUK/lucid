@@ -12,6 +12,7 @@ import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
 import collectionBricksService from "@services/collection-bricks";
 import pageCategoryService from "@services/page-categories";
+import pageServices from "@services/pages";
 // Format
 import { BrickResT } from "@utils/format/format-bricks";
 // Schema
@@ -36,6 +37,18 @@ type PageGetSingle = (
     id: number;
   }
 ) => Promise<PageT>;
+
+type PageGetSingleBasic = (
+  id: number,
+  environment_key: string
+) => Promise<PageT>;
+
+type PageGetSlugCount = (data: {
+  slug: string;
+  environment_key: string;
+  collection_key: string;
+  parent_id?: number;
+}) => Promise<number>;
 
 type PageCreateSingle = (data: {
   userId: number;
@@ -329,7 +342,7 @@ export default class Page {
       });
     }
     // Check if slug is unique
-    const slug = await Page.#slugUnique({
+    const slug = await pageServices.buildUniqueSlug({
       slug: data.slug,
       homepage: data.homepage || false,
       environment_key: data.environment_key,
@@ -386,7 +399,10 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    const currentPage = await Page.pageExists(data.id, data.environment_key);
+    const currentPage = await pageServices.checkPageExists({
+      id: data.id,
+      environment_key: data.environment_key,
+    });
 
     // Set parent id to null if homepage as homepage has to be root level
     const parentId = data.homepage ? undefined : data.parent_id || undefined;
@@ -428,7 +444,7 @@ export default class Page {
     let newSlug = undefined;
     if (data.slug) {
       // Check if slug is unique
-      newSlug = await Page.#slugUnique({
+      newSlug = await pageServices.buildUniqueSlug({
         slug: data.slug,
         homepage: data.homepage || false,
         environment_key: data.environment_key,
@@ -515,7 +531,10 @@ export default class Page {
 
     // -------------------------------------------
     // Checks
-    await Page.pageExists(data.id, data.environment_key);
+    await pageServices.checkPageExists({
+      id: data.id,
+      environment_key: data.environment_key,
+    });
 
     // -------------------------------------------
     // Delete page
@@ -546,8 +565,8 @@ export default class Page {
     return pages.rows.map((page) => formatPage(page));
   };
   // -------------------------------------------
-  // Util Functions
-  static pageExists = async (id: number, environment_key: string) => {
+  // new
+  static getSingleBasic: PageGetSingleBasic = async (id, environment_key) => {
     const client = await getDBClient;
 
     const page = await client.query<PageT>({
@@ -563,33 +582,10 @@ export default class Page {
       values: [id, environment_key],
     });
 
-    if (!page.rows[0]) {
-      throw new LucidError({
-        type: "basic",
-        name: "Page not found",
-        message: `Page with id "${id}" not found in environment "${environment_key}"!`,
-        status: 404,
-      });
-    }
-
     return page.rows[0];
   };
-  static #slugUnique = async (data: {
-    slug: string;
-    homepage: boolean;
-    environment_key: string;
-    collection_key: string;
-    parent_id?: number;
-  }) => {
+  static getSlugCount: PageGetSlugCount = async (data) => {
     const client = await getDBClient;
-
-    // For homepage, return "/"
-    if (data.homepage) {
-      return "/";
-    }
-
-    // Sanitize slug with slugify
-    data.slug = slugify(data.slug, { lower: true, strict: true });
 
     const values: Array<any> = [
       data.slug,
@@ -614,12 +610,11 @@ export default class Page {
       values: values,
     });
 
-    if (slugCount.rows[0].count >= 1) {
-      return `${data.slug}-${slugCount.rows[0].count}`;
-    } else {
-      return data.slug;
-    }
+    return slugCount.rows[0].count;
   };
+
+  //
+
   static #checkParentNotHomepage = async (data: {
     parent_id: number | null;
     environment_key: string;

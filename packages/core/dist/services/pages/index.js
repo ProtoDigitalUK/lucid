@@ -8,11 +8,15 @@ const delete_single_1 = __importDefault(require("./delete-single"));
 const get_multiple_1 = __importDefault(require("./get-multiple"));
 const get_single_1 = __importDefault(require("./get-single"));
 const update_single_1 = __importDefault(require("./update-single"));
+const check_page_exists_1 = __importDefault(require("./check-page-exists"));
+const build_unique_slug_1 = __importDefault(require("./build-unique-slug"));
 exports.default = {
     createSingle: create_single_1.default,
     deleteSingle: delete_single_1.default,
     getMultiple: get_multiple_1.default,
     getSingle: get_single_1.default,
     updateSingle: update_single_1.default,
+    checkPageExists: check_page_exists_1.default,
+    buildUniqueSlug: build_unique_slug_1.default,
 };
 //# sourceMappingURL=index.js.map

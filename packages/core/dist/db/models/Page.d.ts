@@ -12,6 +12,13 @@ type PageGetSingle = (query: z.infer<typeof pagesSchema.getSingle.query>, data: 
     environment_key: string;
     id: number;
 }) => Promise<PageT>;
+type PageGetSingleBasic = (id: number, environment_key: string) => Promise<PageT>;
+type PageGetSlugCount = (data: {
+    slug: string;
+    environment_key: string;
+    collection_key: string;
+    parent_id?: number;
+}) => Promise<number>;
 type PageCreateSingle = (data: {
     userId: number;
     environment_key: string;
@@ -74,7 +81,8 @@ export default class Page {
     static updateSingle: PageUpdateSingle;
     static deleteSingle: PageDeleteSingle;
     static getMultipleByIds: PageGetMultipleByIds;
-    static pageExists: (id: number, environment_key: string) => Promise<PageT>;
+    static getSingleBasic: PageGetSingleBasic;
+    static getSlugCount: PageGetSlugCount;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

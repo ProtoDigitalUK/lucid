@@ -3,6 +3,8 @@ import deleteSingle from "./delete-single";
 import getMultiple from "./get-multiple";
 import getSingle from "./get-single";
 import updateSingle from "./update-single";
+import checkPageExists from "./check-page-exists";
+import buildUniqueSlug from "./build-unique-slug";
 
 export default {
   createSingle,
@@ -10,4 +12,6 @@ export default {
   getMultiple,
   getSingle,
   updateSingle,
+  checkPageExists,
+  buildUniqueSlug,
 };
