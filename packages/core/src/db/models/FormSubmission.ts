@@ -99,18 +99,20 @@ export default class FormSubmission {
   static getMultiple: FormSubmissionGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const submissions = await client.query<FormSubmissionsT>({
+    const submissions = client.query<FormSubmissionsT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_form_submissions ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
-    const count = await client.query<{ count: number }>({
+    const count = client.query<{ count: number }>({
       text: `SELECT COUNT(DISTINCT lucid_form_submissions.id) FROM lucid_form_submissions ${query_instance.query.where} `,
       values: query_instance.countValues,
     });
 
+    const data = await Promise.all([submissions, count]);
+
     return {
-      data: submissions.rows,
-      count: count.rows[0].count,
+      data: data[0].rows,
+      count: data[1].rows[0].count,
     };
   };
   static toggleReadAt: FormSubmissionToggleReadAt = async (data) => {

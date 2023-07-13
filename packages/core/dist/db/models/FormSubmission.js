@@ -31,17 +31,18 @@ FormSubmission.getSingle = async (data) => {
 };
 FormSubmission.getMultiple = async (query_instance) => {
     const client = await db_1.default;
-    const submissions = await client.query({
+    const submissions = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_form_submissions ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
     });
-    const count = await client.query({
+    const count = client.query({
         text: `SELECT COUNT(DISTINCT lucid_form_submissions.id) FROM lucid_form_submissions ${query_instance.query.where} `,
         values: query_instance.countValues,
     });
+    const data = await Promise.all([submissions, count]);
     return {
-        data: submissions.rows,
-        count: count.rows[0].count,
+        data: data[0].rows,
+        count: data[1].rows[0].count,
     };
 };
 FormSubmission.toggleReadAt = async (data) => {

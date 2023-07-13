@@ -96,18 +96,20 @@ export default class Media {
   static getMultiple: MediaGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const mediasRes = await client.query<MediaT>({
+    const mediasRes = client.query<MediaT>({
       text: `SELECT${query_instance.query.select}FROMlucid_media${query_instance.query.where}${query_instance.query.order}${query_instance.query.pagination}`,
       values: query_instance.values,
     });
-    const count = await client.query<{ count: number }>({
+    const count = client.query<{ count: number }>({
       text: `SELECT COUNT(DISTINCT lucid_media.id)FROMlucid_media${query_instance.query.where} `,
       values: query_instance.countValues,
     });
 
+    const data = await Promise.all([mediasRes, count]);
+
     return {
-      data: mediasRes.rows,
-      count: count.rows[0].count,
+      data: data[0].rows,
+      count: data[1].rows[0].count,
     };
   };
   static getSingle: MediaGetSingle = async (key) => {

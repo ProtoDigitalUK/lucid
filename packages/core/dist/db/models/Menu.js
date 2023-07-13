@@ -72,17 +72,18 @@ Menu.getSingle = async (data) => {
 };
 Menu.getMultiple = async (query_instance) => {
     const client = await db_1.default;
-    const menus = await client.query({
+    const menus = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_menus ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
     });
-    const count = await client.query({
+    const count = client.query({
         text: `SELECT COUNT(DISTINCT lucid_menus.id) FROM lucid_menus ${query_instance.query.where} `,
         values: query_instance.countValues,
     });
+    const data = await Promise.all([menus, count]);
     return {
-        data: menus.rows,
-        count: count.rows[0].count,
+        data: data[0].rows,
+        count: data[1].rows[0].count,
     };
 };
 Menu.updateSingle = async (data) => {

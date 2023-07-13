@@ -11,17 +11,18 @@ class Category {
 _a = Category;
 Category.getMultiple = async (query_instance) => {
     const client = await db_1.default;
-    const categories = await client.query({
+    const categories = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_categories ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
     });
-    const count = await client.query({
+    const count = client.query({
         text: `SELECT COUNT(*) FROM lucid_categories ${query_instance.query.where}`,
         values: query_instance.countValues,
     });
+    const data = await Promise.all([categories, count]);
     return {
-        data: categories.rows,
-        count: count.rows[0].count,
+        data: data[0].rows,
+        count: data[1].rows[0].count,
     };
 };
 Category.getSingle = async (environment_key, id) => {

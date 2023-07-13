@@ -56,19 +56,21 @@ export default class Category {
   static getMultiple: CategoryGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const categories = await client.query<CategoryT>({
+    const categories = client.query<CategoryT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_categories ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
-    const count = await client.query<{ count: number }>({
+    const count = client.query<{ count: number }>({
       text: `SELECT COUNT(*) FROM lucid_categories ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
+    const data = await Promise.all([categories, count]);
+
     return {
-      data: categories.rows,
-      count: count.rows[0].count,
+      data: data[0].rows,
+      count: data[1].rows[0].count,
     };
   };
   static getSingle: CategoryGetSingle = async (environment_key, id) => {

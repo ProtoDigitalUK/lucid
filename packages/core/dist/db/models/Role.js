@@ -31,17 +31,18 @@ Role.deleteSingle = async (id) => {
 };
 Role.getMultiple = async (query_instance) => {
     const client = await db_1.default;
-    const roles = await client.query({
+    const roles = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
     });
-    const count = await client.query({
+    const count = client.query({
         text: `SELECT COUNT(DISTINCT lucid_roles.id) FROM lucid_roles ${query_instance.query.where}`,
         values: query_instance.countValues,
     });
+    const data = await Promise.all([roles, count]);
     return {
-        data: roles.rows,
-        count: parseInt(count.rows[0].count),
+        data: data[0].rows,
+        count: parseInt(data[1].rows[0].count),
     };
 };
 Role.updateSingle = async (id, data) => {

@@ -118,19 +118,21 @@ export default class Email {
   static getMultiple: EmailGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const emails = await client.query<EmailT>({
+    const emails = client.query<EmailT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_emails ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
-    const count = await client.query<{ count: number }>({
+    const count = client.query<{ count: number }>({
       text: `SELECT  COUNT(DISTINCT lucid_emails.id) FROM lucid_emails ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
+    const data = await Promise.all([emails, count]);
+
     return {
-      data: emails.rows,
-      count: count.rows[0].count,
+      data: data[0].rows,
+      count: data[1].rows[0].count,
     };
   };
   static getSingle: EmailGetSingle = async (id) => {

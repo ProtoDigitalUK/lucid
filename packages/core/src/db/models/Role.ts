@@ -78,19 +78,21 @@ export default class Role {
   static getMultiple: RoleGetMultiple = async (query_instance) => {
     const client = await getDBClient;
 
-    const roles = await client.query<RoleT>({
+    const roles = client.query<RoleT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
-    const count = await client.query<{ count: string }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT COUNT(DISTINCT lucid_roles.id) FROM lucid_roles ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
+    const data = await Promise.all([roles, count]);
+
     return {
-      data: roles.rows,
-      count: parseInt(count.rows[0].count),
+      data: data[0].rows,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static updateSingle: RoleUpdateSingle = async (id, data) => {
