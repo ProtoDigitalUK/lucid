@@ -1,0 +1,1 @@
+{"version":3,"file":"update-multiple.d.ts","sourceRoot":"","sources":["../../../src/services/page-categories/update-multiple.ts"],"names":[],"mappings":"AAKA,MAAM,WAAW,WAAW;IAC1B,OAAO,EAAE,MAAM,CAAC;IAChB,YAAY,EAAE,KAAK,CAAC,MAAM,CAAC,CAAC;IAC5B,cAAc,EAAE,MAAM,CAAC;CACxB;AAED,QAAA,MAAM,cAAc,SAAgB,WAAW,+DAkD9C,CAAC;AAEF,eAAe,cAAc,CAAC"}

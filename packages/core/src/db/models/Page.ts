@@ -2,7 +2,6 @@ import z from "zod";
 import getDBClient from "@db/db";
 import slugify from "slugify";
 // Models
-import PageCategory from "@db/models/PageCategory";
 import { BrickObject } from "@db/models/CollectionBrick";
 // Utils
 import formatPage from "@utils/format/format-page";
@@ -12,6 +11,7 @@ import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
 import collectionBricksService from "@services/collection-bricks";
+import pageCategoryService from "@services/page-categories";
 // Format
 import { BrickResT } from "@utils/format/format-bricks";
 // Schema
@@ -364,7 +364,7 @@ export default class Page {
     }
 
     if (data.category_ids) {
-      await PageCategory.create({
+      await pageCategoryService.createMultiple({
         page_id: page.rows[0].id,
         category_ids: data.category_ids,
         collection_key: data.collection_key,
@@ -486,7 +486,7 @@ export default class Page {
     // -------------------------------------------
     // Update categories
     if (data.category_ids) {
-      const categories = await PageCategory.update({
+      const categories = await pageCategoryService.updateMultiple({
         page_id: page.rows[0].id,
         category_ids: data.category_ids,
         collection_key: currentPage.collection_key,

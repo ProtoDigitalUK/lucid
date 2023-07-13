@@ -11,13 +11,13 @@ var _a, _Page_slugUnique, _Page_checkParentNotHomepage, _Page_isParentSameCollec
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
 const slugify_1 = __importDefault(require("slugify"));
-const PageCategory_1 = __importDefault(require("../models/PageCategory"));
 const format_page_1 = __importDefault(require("../../utils/format/format-page"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const collections_1 = __importDefault(require("../../services/collections"));
 const environments_1 = __importDefault(require("../../services/environments"));
 const collection_bricks_1 = __importDefault(require("../../services/collection-bricks"));
+const page_categories_1 = __importDefault(require("../../services/page-categories"));
 class Page {
 }
 _a = Page;
@@ -244,7 +244,7 @@ Page.createSingle = async (data) => {
         });
     }
     if (data.category_ids) {
-        await PageCategory_1.default.create({
+        await page_categories_1.default.createMultiple({
             page_id: page.rows[0].id,
             category_ids: data.category_ids,
             collection_key: data.collection_key,
@@ -337,7 +337,7 @@ Page.updateSingle = async (data) => {
         });
     }
     if (data.category_ids) {
-        const categories = await PageCategory_1.default.update({
+        const categories = await page_categories_1.default.updateMultiple({
             page_id: page.rows[0].id,
             category_ids: data.category_ids,
             collection_key: currentPage.collection_key,
