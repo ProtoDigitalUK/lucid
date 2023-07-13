@@ -5,6 +5,8 @@ import getSingle from "./get-single";
 import updateSingle from "./update-single";
 import checkPageExists from "./check-page-exists";
 import buildUniqueSlug from "./build-unique-slug";
+import parentChecks from "./parent-checks";
+import resetHomepages from "./reset-homepages";
 
 export default {
   createSingle,
@@ -14,4 +16,6 @@ export default {
   updateSingle,
   checkPageExists,
   buildUniqueSlug,
+  parentChecks,
+  resetHomepages,
 };

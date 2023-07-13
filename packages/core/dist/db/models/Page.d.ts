@@ -74,7 +74,6 @@ export type PageT = {
     updated_at: string;
 };
 export default class Page {
-    #private;
     static getMultiple: PageGetMultiple;
     static getSingle: PageGetSingle;
     static createSingle: PageCreateSingle;
@@ -83,6 +82,9 @@ export default class Page {
     static getMultipleByIds: PageGetMultipleByIds;
     static getSingleBasic: PageGetSingleBasic;
     static getSlugCount: PageGetSlugCount;
+    static getNonCurrentHomepages: (currentId: number, environment_key: string) => Promise<any[]>;
+    static checkSlugExistence: (slug: string, id: number, environment_key: string) => Promise<boolean>;
+    static updatePageToNonHomepage: (id: number, newSlug: string) => Promise<void>;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

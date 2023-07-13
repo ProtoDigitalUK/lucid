@@ -313,12 +313,7 @@ export default class Page {
     const client = await getDBClient;
 
     // -------------------------------------------
-    // Values
-    // Set parent id to null if homepage as homepage has to be root level
-    const parentId = data.homepage ? undefined : data.parent_id || undefined;
-
-    // -------------------------------------------
-    // Checks
+    // Checks  -TODO: group checks into single promise and run in parallel
 
     // Checks if we have access to the collection
     await collectionsService.getSingle({
@@ -327,20 +322,16 @@ export default class Page {
       type: "pages",
     });
 
-    // Check if the the parent_id is the homepage
-    await Page.#checkParentNotHomepage({
-      parent_id: data.parent_id || null,
-      environment_key: data.environment_key,
-    });
-
-    // Check if the parent is in the same collection
+    // If the page is a homepage, set the parent_id to undefined
+    const parentId = data.homepage ? undefined : data.parent_id;
     if (parentId) {
-      await Page.#isParentSameCollection({
+      await pageServices.parentChecks({
         parent_id: parentId,
-        collection_key: data.collection_key,
         environment_key: data.environment_key,
+        collection_key: data.collection_key,
       });
     }
+
     // Check if slug is unique
     const slug = await pageServices.buildUniqueSlug({
       slug: data.slug,
@@ -386,7 +377,7 @@ export default class Page {
 
     // Reset homepages
     if (data.homepage) {
-      await Page.#resetHomepages({
+      await pageServices.resetHomepages({
         current: page.rows[0].id,
         environment_key: data.environment_key,
       });
@@ -404,20 +395,13 @@ export default class Page {
       environment_key: data.environment_key,
     });
 
-    // Set parent id to null if homepage as homepage has to be root level
-    const parentId = data.homepage ? undefined : data.parent_id || undefined;
-
-    // Check if the the parent_id is the homepage
-    await Page.#checkParentNotHomepage({
-      parent_id: data.parent_id || null,
-      environment_key: data.environment_key,
-    });
-    // Check if the parent is in the same collection
+    // If the page is a homepage, set the parent_id to undefined
+    const parentId = data.homepage ? undefined : data.parent_id;
     if (parentId) {
-      await Page.#isParentSameCollection({
+      await pageServices.parentChecks({
         parent_id: parentId,
-        collection_key: currentPage.collection_key,
         environment_key: data.environment_key,
+        collection_key: currentPage.collection_key,
       });
     }
 
@@ -571,8 +555,7 @@ export default class Page {
 
     const page = await client.query<PageT>({
       text: `SELECT
-          id,
-          collection_key
+          *
         FROM
           lucid_pages
         WHERE
@@ -612,97 +595,34 @@ export default class Page {
 
     return slugCount.rows[0].count;
   };
-
-  //
-
-  static #checkParentNotHomepage = async (data: {
-    parent_id: number | null;
-    environment_key: string;
-  }) => {
+  static getNonCurrentHomepages = async (
+    currentId: number,
+    environment_key: string
+  ) => {
     const client = await getDBClient;
-
-    if (!data.parent_id) return;
-    const values: Array<any> = [data.environment_key];
-    if (data.parent_id) values.push(data.parent_id);
-
-    const parent = await client.query<{ homepage: boolean }>({
-      text: `SELECT homepage 
-        FROM 
-          lucid_pages 
-        WHERE
-          environment_key = $1
-        AND 
-          id = $2`,
-      values: values,
-    });
-    if (parent.rows[0].homepage) {
-      throw new LucidError({
-        type: "basic",
-        name: "Homepage Parent",
-        message: "The homepage cannot be set as a parent!",
-        status: 400,
-      });
-    }
-  };
-  static #isParentSameCollection = async (data: {
-    parent_id: number;
-    collection_key: string;
-    environment_key: string;
-  }) => {
-    const client = await getDBClient;
-
-    // Check if the parent is apart of the same collection
-    const parent = await client.query<{ collection_key: string }>({
-      text: `SELECT collection_key FROM lucid_pages WHERE id = $1 AND environment_key = $2`,
-      values: [data.parent_id, data.environment_key],
-    });
-
-    if (!parent.rows[0]) {
-      throw new LucidError({
-        type: "basic",
-        name: "Parent Not Found",
-        message: "The parent page could not be found!",
-        status: 404,
-      });
-    }
-
-    if (parent.rows[0].collection_key !== data.collection_key) {
-      throw new LucidError({
-        type: "basic",
-        name: "Parent Collection Mismatch",
-        message:
-          "The parent page must be in the same collection as the page you are creating!",
-        status: 400,
-      });
-    }
-  };
-  static #resetHomepages = async (data: {
-    current: number;
-    environment_key: string;
-  }) => {
-    const client = await getDBClient;
-
-    // reset homepage, set its parent to null and its full slug to slugified title
     const result = await client.query({
       text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-      values: [data.current, data.environment_key],
+      values: [currentId, environment_key],
     });
-
-    for (const row of result.rows) {
-      let newSlug = slugify(row.title, { lower: true, strict: true });
-      const slugExists = await client.query({
-        text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
-        values: [newSlug, row.id, data.environment_key],
-      });
-
-      if (slugExists.rows[0].count > 0) {
-        newSlug += `-${row.id}`;
-      }
-
-      await client.query({
-        text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
-        values: [row.id, newSlug],
-      });
-    }
+    return result.rows;
+  };
+  static checkSlugExistence = async (
+    slug: string,
+    id: number,
+    environment_key: string
+  ) => {
+    const client = await getDBClient;
+    const slugExists = await client.query({
+      text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
+      values: [slug, id, environment_key],
+    });
+    return slugExists.rows[0].count > 0;
+  };
+  static updatePageToNonHomepage = async (id: number, newSlug: string) => {
+    const client = await getDBClient;
+    await client.query({
+      text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
+      values: [id, newSlug],
+    });
   };
 }

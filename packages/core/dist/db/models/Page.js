@@ -1,16 +1,10 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _Page_checkParentNotHomepage, _Page_isParentSameCollection, _Page_resetHomepages;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../db"));
-const slugify_1 = __importDefault(require("slugify"));
 const format_page_1 = __importDefault(require("../../utils/format/format-page"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const query_helpers_1 = require("../../utils/app/query-helpers");
@@ -198,21 +192,17 @@ Page.getSingle = async (query, data) => {
 };
 Page.createSingle = async (data) => {
     const client = await db_1.default;
-    const parentId = data.homepage ? undefined : data.parent_id || undefined;
     await collections_1.default.getSingle({
         collection_key: data.collection_key,
         environment_key: data.environment_key,
         type: "pages",
     });
-    await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
-        parent_id: data.parent_id || null,
-        environment_key: data.environment_key,
-    });
+    const parentId = data.homepage ? undefined : data.parent_id;
     if (parentId) {
-        await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, {
+        await pages_1.default.parentChecks({
             parent_id: parentId,
-            collection_key: data.collection_key,
             environment_key: data.environment_key,
+            collection_key: data.collection_key,
         });
     }
     const slug = await pages_1.default.buildUniqueSlug({
@@ -252,7 +242,7 @@ Page.createSingle = async (data) => {
         });
     }
     if (data.homepage) {
-        await __classPrivateFieldGet(Page, _a, "f", _Page_resetHomepages).call(Page, {
+        await pages_1.default.resetHomepages({
             current: page.rows[0].id,
             environment_key: data.environment_key,
         });
@@ -265,16 +255,12 @@ Page.updateSingle = async (data) => {
         id: data.id,
         environment_key: data.environment_key,
     });
-    const parentId = data.homepage ? undefined : data.parent_id || undefined;
-    await __classPrivateFieldGet(Page, _a, "f", _Page_checkParentNotHomepage).call(Page, {
-        parent_id: data.parent_id || null,
-        environment_key: data.environment_key,
-    });
+    const parentId = data.homepage ? undefined : data.parent_id;
     if (parentId) {
-        await __classPrivateFieldGet(Page, _a, "f", _Page_isParentSameCollection).call(Page, {
+        await pages_1.default.parentChecks({
             parent_id: parentId,
-            collection_key: currentPage.collection_key,
             environment_key: data.environment_key,
+            collection_key: currentPage.collection_key,
         });
     }
     const environment = await environments_1.default.getSingle({
@@ -389,8 +375,7 @@ Page.getSingleBasic = async (id, environment_key) => {
     const client = await db_1.default;
     const page = await client.query({
         text: `SELECT
-          id,
-          collection_key
+          *
         FROM
           lucid_pages
         WHERE
@@ -426,75 +411,28 @@ Page.getSlugCount = async (data) => {
     });
     return slugCount.rows[0].count;
 };
-_Page_checkParentNotHomepage = { value: async (data) => {
-        const client = await db_1.default;
-        if (!data.parent_id)
-            return;
-        const values = [data.environment_key];
-        if (data.parent_id)
-            values.push(data.parent_id);
-        const parent = await client.query({
-            text: `SELECT homepage 
-        FROM 
-          lucid_pages 
-        WHERE
-          environment_key = $1
-        AND 
-          id = $2`,
-            values: values,
-        });
-        if (parent.rows[0].homepage) {
-            throw new error_handler_1.LucidError({
-                type: "basic",
-                name: "Homepage Parent",
-                message: "The homepage cannot be set as a parent!",
-                status: 400,
-            });
-        }
-    } };
-_Page_isParentSameCollection = { value: async (data) => {
-        const client = await db_1.default;
-        const parent = await client.query({
-            text: `SELECT collection_key FROM lucid_pages WHERE id = $1 AND environment_key = $2`,
-            values: [data.parent_id, data.environment_key],
-        });
-        if (!parent.rows[0]) {
-            throw new error_handler_1.LucidError({
-                type: "basic",
-                name: "Parent Not Found",
-                message: "The parent page could not be found!",
-                status: 404,
-            });
-        }
-        if (parent.rows[0].collection_key !== data.collection_key) {
-            throw new error_handler_1.LucidError({
-                type: "basic",
-                name: "Parent Collection Mismatch",
-                message: "The parent page must be in the same collection as the page you are creating!",
-                status: 400,
-            });
-        }
-    } };
-_Page_resetHomepages = { value: async (data) => {
-        const client = await db_1.default;
-        const result = await client.query({
-            text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-            values: [data.current, data.environment_key],
-        });
-        for (const row of result.rows) {
-            let newSlug = (0, slugify_1.default)(row.title, { lower: true, strict: true });
-            const slugExists = await client.query({
-                text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
-                values: [newSlug, row.id, data.environment_key],
-            });
-            if (slugExists.rows[0].count > 0) {
-                newSlug += `-${row.id}`;
-            }
-            await client.query({
-                text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
-                values: [row.id, newSlug],
-            });
-        }
-    } };
+Page.getNonCurrentHomepages = async (currentId, environment_key) => {
+    const client = await db_1.default;
+    const result = await client.query({
+        text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
+        values: [currentId, environment_key],
+    });
+    return result.rows;
+};
+Page.checkSlugExistence = async (slug, id, environment_key) => {
+    const client = await db_1.default;
+    const slugExists = await client.query({
+        text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
+        values: [slug, id, environment_key],
+    });
+    return slugExists.rows[0].count > 0;
+};
+Page.updatePageToNonHomepage = async (id, newSlug) => {
+    const client = await db_1.default;
+    await client.query({
+        text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
+        values: [id, newSlug],
+    });
+};
 exports.default = Page;
 //# sourceMappingURL=Page.js.map
