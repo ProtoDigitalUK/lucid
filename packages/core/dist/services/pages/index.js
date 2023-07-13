@@ -12,6 +12,7 @@ const check_page_exists_1 = __importDefault(require("./check-page-exists"));
 const build_unique_slug_1 = __importDefault(require("./build-unique-slug"));
 const parent_checks_1 = __importDefault(require("./parent-checks"));
 const reset_homepages_1 = __importDefault(require("./reset-homepages"));
+const get_multiple_by_id_1 = __importDefault(require("./get-multiple-by-id"));
 exports.default = {
     createSingle: create_single_1.default,
     deleteSingle: delete_single_1.default,
@@ -22,5 +23,6 @@ exports.default = {
     buildUniqueSlug: build_unique_slug_1.default,
     parentChecks: parent_checks_1.default,
     resetHomepages: reset_homepages_1.default,
+    getMultipleById: get_multiple_by_id_1.default,
 };
 //# sourceMappingURL=index.js.map

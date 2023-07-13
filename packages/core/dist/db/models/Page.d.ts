@@ -1,17 +1,11 @@
-import z from "zod";
 import { BrickObject } from "../models/CollectionBrick";
+import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 import { BrickResT } from "../../utils/format/format-bricks";
-import pagesSchema from "../../schemas/pages";
-type PageGetMultiple = (query: z.infer<typeof pagesSchema.getMultiple.query>, data: {
-    environment_key: string;
-}) => Promise<{
+type PageGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
     data: PageT[];
     count: number;
 }>;
-type PageGetSingle = (query: z.infer<typeof pagesSchema.getSingle.query>, data: {
-    environment_key: string;
-    id: number;
-}) => Promise<PageT>;
+type PageGetSingle = (query_instance: SelectQueryBuilder) => Promise<PageT>;
 type PageGetSingleBasic = (id: number, environment_key: string) => Promise<PageT>;
 type PageGetSlugCount = (data: {
     slug: string;
@@ -46,7 +40,6 @@ type PageUpdateSingle = (data: {
     fixed_bricks?: Array<BrickObject>;
 }) => Promise<PageT>;
 type PageDeleteSingle = (data: {
-    environment_key: string;
     id: number;
 }) => Promise<PageT>;
 type PageGetMultipleByIds = (data: {

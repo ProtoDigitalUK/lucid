@@ -2,7 +2,7 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
-import Page, { PageT } from "@db/models/Page";
+import { PageT } from "@db/models/Page";
 // Internal packages
 import BrickBuilder, {
   ValidationProps,
@@ -12,6 +12,7 @@ import BrickBuilder, {
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
 import brickConfigService from "@services/brick-config";
+import pageService from "@services/pages";
 import medias from "@services/media";
 // Format
 import { CollectionResT } from "@utils/format/format-collections";
@@ -287,7 +288,7 @@ const getAllPages = async (
         (value, index, self) => self.indexOf(value) === index
       ) as number[];
 
-    const pages = await Page.getMultipleByIds({
+    const pages = await pageService.getMultipleById({
       ids,
       environment_key,
     });

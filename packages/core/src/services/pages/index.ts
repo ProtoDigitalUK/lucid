@@ -7,6 +7,7 @@ import checkPageExists from "./check-page-exists";
 import buildUniqueSlug from "./build-unique-slug";
 import parentChecks from "./parent-checks";
 import resetHomepages from "./reset-homepages";
+import getMultipleById from "./get-multiple-by-id";
 
 export default {
   createSingle,
@@ -18,4 +19,5 @@ export default {
   buildUniqueSlug,
   parentChecks,
   resetHomepages,
+  getMultipleById,
 };

@@ -11,6 +11,7 @@ declare const _default: {
     buildUniqueSlug: (data: import("./build-unique-slug").ServiceData) => Promise<string>;
     parentChecks: (data: import("./parent-checks").ServiceData) => Promise<import("../../db/models/Page").PageT>;
     resetHomepages: (data: import("./reset-homepages").ServiceData) => Promise<void>;
+    getMultipleById: (data: import("./get-multiple-by-id").ServiceData) => Promise<import("../../db/models/Page").PageT[]>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

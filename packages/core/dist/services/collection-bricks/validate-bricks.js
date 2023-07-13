@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
-const Page_1 = __importDefault(require("../../db/models/Page"));
 const brick_config_1 = __importDefault(require("../brick-config"));
+const pages_1 = __importDefault(require("../pages"));
 const media_1 = __importDefault(require("../media"));
 const flattenAllBricks = (builder_bricks, fixed_bricks) => {
     if (!builder_bricks && !fixed_bricks)
@@ -191,7 +191,7 @@ const getAllPages = async (fields, environment_key) => {
         const ids = getIDs
             .filter((id) => id !== undefined)
             .filter((value, index, self) => self.indexOf(value) === index);
-        const pages = await Page_1.default.getMultipleByIds({
+        const pages = await pages_1.default.getMultipleById({
             ids,
             environment_key,
         });
