@@ -1,15 +1,17 @@
 import { BrickObject } from "../models/CollectionBrick";
+import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 import { BrickResT } from "../../utils/format/format-bricks";
-type SinglePageGetSingle = (data: {
-    environment_key: string;
-    collection_key: string;
-}) => Promise<SinglePageT>;
-type SinglePageUpdateSingle = (data: {
-    userId: number;
+type SinglePageGetSingle = (query_instance: SelectQueryBuilder) => Promise<SinglePageT>;
+type SinglePageCreateSingle = (data: {
+    user_id: number;
     environment_key: string;
     collection_key: string;
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
+}) => Promise<SinglePageT>;
+type SinglePageUpdateSingle = (data: {
+    id: number;
+    user_id: number;
 }) => Promise<SinglePageT>;
 export type SinglePageT = {
     id: number;
@@ -22,8 +24,8 @@ export type SinglePageT = {
     updated_by: string;
 };
 export default class SinglePage {
-    #private;
     static getSingle: SinglePageGetSingle;
+    static createSingle: SinglePageCreateSingle;
     static updateSingle: SinglePageUpdateSingle;
 }
 export {};

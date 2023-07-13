@@ -9,8 +9,10 @@ const single_pages_1 = __importDefault(require("../../services/single-pages"));
 const getSingleController = async (req, res, next) => {
     try {
         const singlepage = await single_pages_1.default.getSingle({
+            user_id: req.auth.id,
             environment_key: req.headers["lucid-environment"],
             collection_key: req.params.collection_key,
+            include_bricks: true,
         });
         res.status(200).json((0, build_response_1.default)(req, {
             data: singlepage,

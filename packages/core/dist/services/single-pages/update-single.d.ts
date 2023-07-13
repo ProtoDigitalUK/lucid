@@ -3,7 +3,7 @@ import { BrickSchema } from "../../schemas/bricks";
 export interface ServiceData {
     environment_key: string;
     collection_key: string;
-    userId: number;
+    user_id: number;
     builder_bricks?: z.infer<typeof BrickSchema>[];
     fixed_bricks?: z.infer<typeof BrickSchema>[];
 }
