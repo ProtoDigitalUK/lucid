@@ -104,4 +104,14 @@ export default class User {
 
     return userExists.rows[0];
   };
+  static updatePassword = async (id: number, password: string) => {
+    const client = await getDBClient;
+
+    const user = await client.query<UserT>({
+      text: `UPDATE lucid_users SET password = $1 WHERE id = $2 RETURNING *`,
+      values: [password, id],
+    });
+
+    return user.rows[0];
+  };
 }

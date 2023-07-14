@@ -40,12 +40,30 @@ const registerSuperAdminQuery = z.object({});
 const registerSuperAdminParams = z.object({});
 
 // ------------------------------------
-// FORGOT PASSWORD
-const forgotPasswordBody = z.object({
+// SEND RESET PASSWORD
+const sendResetPasswordBody = z.object({
   email: z.string().email(),
 });
-const forgotPasswordQuery = z.object({});
-const forgotPasswordParams = z.object({});
+const sendResetPasswordQuery = z.object({});
+const sendResetPasswordParams = z.object({});
+
+// ------------------------------------
+// VERIFY PASSWORD RESET TOKEN
+const verifyResetPasswordBody = z.object({});
+const verifyResetPasswordQuery = z.object({});
+const verifyResetPasswordParams = z.object({
+  token: z.string(),
+});
+
+// ------------------------------------
+// RESET PASSWORD
+const resetPasswordBody = z.object({
+  password: z.string().min(8),
+});
+const resetPasswordQuery = z.object({});
+const resetPasswordParams = z.object({
+  token: z.string(),
+});
 
 // ------------------------------------
 // EXPORT
@@ -75,9 +93,19 @@ export default {
     query: registerSuperAdminQuery,
     params: registerSuperAdminParams,
   },
-  forgotPassword: {
-    body: forgotPasswordBody,
-    query: forgotPasswordQuery,
-    params: forgotPasswordParams,
+  sendResetPassword: {
+    body: sendResetPasswordBody,
+    query: sendResetPasswordQuery,
+    params: sendResetPasswordParams,
+  },
+  verifyResetPassword: {
+    body: verifyResetPasswordBody,
+    query: verifyResetPasswordQuery,
+    params: verifyResetPasswordParams,
+  },
+  resetPassword: {
+    body: resetPasswordBody,
+    query: resetPasswordQuery,
+    params: resetPasswordParams,
   },
 };

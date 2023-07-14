@@ -14,10 +14,7 @@ type UserTokenGetByToken = (data: {
   token_type: UserTokenT["token_type"];
 }) => Promise<UserTokenT>;
 
-type UserTokenDeleteByToken = (data: {
-  token: string;
-  token_type: UserTokenT["token_type"];
-}) => Promise<UserTokenT>;
+type UserTokenDeleteSingle = (data: { id: number }) => Promise<UserTokenT>;
 
 // -------------------------------------------
 // User Roles
@@ -68,16 +65,15 @@ export default class UserToken {
 
     return userToken.rows[0];
   };
-  static deleteByToken: UserTokenDeleteByToken = async (data) => {
+  static deleteSingle: UserTokenDeleteSingle = async (data) => {
     const client = await getDBClient;
 
     const userToken = await client.query<UserTokenT>({
       text: `
             DELETE FROM lucid_user_tokens
-            WHERE token = $1
-            AND token_type = $2
+            WHERE id = $1
         `,
-      values: [data.token, data.token_type],
+      values: [data.id],
     });
 
     return userToken.rows[0];

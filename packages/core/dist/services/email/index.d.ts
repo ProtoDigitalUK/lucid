@@ -19,7 +19,7 @@ declare const _default: {
         success: boolean;
         message: string;
     }>;
-    sendEmailInternal: (template: string, params: import("./send-email").EmailParamsT, id?: number | undefined) => Promise<{
+    sendEmailInternal: (template: string, params: import("./send-email").EmailParamsT, id?: number | undefined, track?: boolean | undefined) => Promise<{
         success: boolean;
         message: string;
     }>;

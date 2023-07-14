@@ -31,6 +31,8 @@ declare const _default: {
     };
     registerSuperAdmin: {
         body: z.ZodObject<{
+            first_name: z.ZodOptional<z.ZodString>;
+            last_name: z.ZodOptional<z.ZodString>;
             email: z.ZodString;
             username: z.ZodString;
             password: z.ZodString;
@@ -38,13 +40,56 @@ declare const _default: {
             email: string;
             username: string;
             password: string;
+            first_name?: string | undefined;
+            last_name?: string | undefined;
         }, {
             email: string;
             username: string;
             password: string;
+            first_name?: string | undefined;
+            last_name?: string | undefined;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+    };
+    sendResetPassword: {
+        body: z.ZodObject<{
+            email: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            email: string;
+        }, {
+            email: string;
+        }>;
+        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+    };
+    verifyResetPassword: {
+        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: z.ZodObject<{
+            token: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            token: string;
+        }, {
+            token: string;
+        }>;
+    };
+    resetPassword: {
+        body: z.ZodObject<{
+            password: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            password: string;
+        }, {
+            password: string;
+        }>;
+        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: z.ZodObject<{
+            token: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            token: string;
+        }, {
+            token: string;
+        }>;
     };
 };
 export default _default;

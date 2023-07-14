@@ -10,7 +10,7 @@ const paginated = async (req, res, next) => {
             req.query.page = constants_1.default.pagination.page;
         }
         if (!req.query.per_page) {
-            req.query.per_page = constants_1.default.pagination.per_page;
+            req.query.per_page = constants_1.default.pagination.perPage;
         }
         return next();
     }

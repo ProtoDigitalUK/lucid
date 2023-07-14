@@ -11,7 +11,7 @@ export interface ServiceData {
   userId: number;
 }
 
-const getAuthenticatedUser = async (data: ServiceData) => {
+const getSingle = async (data: ServiceData) => {
   const user = await User.getById(data.userId);
 
   if (!user) {
@@ -36,4 +36,4 @@ const getAuthenticatedUser = async (data: ServiceData) => {
   return formatUser(user, userPermissions);
 };
 
-export default getAuthenticatedUser;
+export default getSingle;

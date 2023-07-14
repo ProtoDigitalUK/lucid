@@ -5,7 +5,8 @@ declare const _default: {
     getSingle: (data: import("./get-single").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     registerSingle: (data: import("./register-single").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     registerSuperAdmin: (data: import("./register-superadmin").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
-    checkIfUserExists: (data: import("./check-if-user-exists").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+    checkIfUserExists: (data: import("./check-if-user-exists").ServiceData) => Promise<never>;
+    updatePassword: (data: import("./update-password").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

@@ -20,6 +20,8 @@ const registerSuperAdmin = async (data) => {
         });
     }
     const user = await users_1.default.registerSingle({
+        first_name: data.first_name,
+        last_name: data.last_name,
         email: data.email,
         username: data.username,
         password: data.password,

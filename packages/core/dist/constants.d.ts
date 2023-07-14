@@ -1,11 +1,14 @@
 declare const _default: {
     pagination: {
         page: string;
-        per_page: string;
+        perPage: string;
     };
     media: {
         storageLimit: number;
         maxFileSize: number;
+    };
+    locations: {
+        resetPassword: string;
     };
 };
 export default _default;

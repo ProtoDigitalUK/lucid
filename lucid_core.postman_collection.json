@@ -199,7 +199,7 @@
 					"response": []
 				},
 				{
-					"name": "Forgot Password",
+					"name": "Reset Password (send email)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -219,7 +219,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/forgot-password",
+							"raw": "{{BASE_URL}}/api/v1/auth/reset-password",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -227,7 +227,82 @@
 								"api",
 								"v1",
 								"auth",
-								"forgot-password"
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password (update password)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/reset-password/a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"reset-password",
+								"a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password (verify token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/reset-password/a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"reset-password",
+								"a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663"
 							]
 						}
 					},

@@ -11,7 +11,7 @@ export interface ServiceData {
   email: string;
 }
 
-const forgotPassword = async (data: ServiceData) => {
+const sendResetPassword = async (data: ServiceData) => {
   const successMessage = `If an account with that email exists, we sent you an email with instructions to reset your password.`;
 
   // -------------------------------------------
@@ -22,7 +22,9 @@ const forgotPassword = async (data: ServiceData) => {
 
   if (!user) {
     // We don't want to tell the user that the email doesn't exist in our database for security reasons.
-    return successMessage;
+    return {
+      message: successMessage,
+    };
   }
 
   // -------------------------------------------
@@ -37,7 +39,7 @@ const forgotPassword = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Send the password reset email
-  await emailServices.sendEmailInternal("forgot-password", {
+  await emailServices.sendEmailInternal("reset-password", {
     data: {
       first_name: user.first_name,
       last_name: user.last_name,
@@ -50,7 +52,9 @@ const forgotPassword = async (data: ServiceData) => {
     },
   });
 
-  return successMessage;
+  return {
+    message: successMessage,
+  };
 };
 
-export default forgotPassword;
+export default sendResetPassword;

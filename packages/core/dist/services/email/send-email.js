@@ -85,25 +85,27 @@ const sendEmailExternal = async (template, params) => {
     };
 };
 exports.sendEmailExternal = sendEmailExternal;
-const sendEmailInternal = async (template, params, id) => {
+const sendEmailInternal = async (template, params, id, track) => {
     const result = await sendEmailAction(template, params);
-    if (!id) {
-        await createEmailRow({
-            template: template,
-            options: result.options,
-            delivery_status: result.success ? "sent" : "failed",
-            data: params.data,
-        });
-    }
-    else {
-        await email_1.default.updateSingle({
-            id: id,
-            data: {
-                from_address: result.options.from,
-                from_name: result.options.fromName,
+    if (track) {
+        if (!id) {
+            await createEmailRow({
+                template: template,
+                options: result.options,
                 delivery_status: result.success ? "sent" : "failed",
-            },
-        });
+                data: params.data,
+            });
+        }
+        else {
+            await email_1.default.updateSingle({
+                id: id,
+                data: {
+                    from_address: result.options.from,
+                    from_name: result.options.fromName,
+                    delivery_status: result.success ? "sent" : "failed",
+                },
+            });
+        }
     }
     return {
         success: result.success,

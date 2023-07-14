@@ -13,11 +13,11 @@ const permissions_1 = __importDefault(require("../../middleware/permissions"));
 const route = (router, props) => {
     const { method, path, controller } = props;
     const middleware = [];
-    if (props.middleware?.authoriseCSRF) {
-        middleware.push(authorise_csrf_1.default);
-    }
     if (props.middleware?.authenticate) {
         middleware.push(authenticate_1.default);
+    }
+    if (props.middleware?.authoriseCSRF) {
+        middleware.push(authorise_csrf_1.default);
     }
     if (props.schema?.params || props.schema?.body || props.schema?.query) {
         middleware.push((0, validate_1.default)(zod_1.default.object({

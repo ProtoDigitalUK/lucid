@@ -78,7 +78,7 @@ const buildPerPage = (query) => {
             per_page = per_pageInt.toString();
         }
         else {
-            per_page = constants_1.default.pagination.per_page;
+            per_page = constants_1.default.pagination.perPage;
         }
     }
     return per_page;

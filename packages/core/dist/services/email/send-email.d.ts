@@ -25,7 +25,7 @@ export declare const sendEmailExternal: (template: string, params: EmailParamsT)
     success: boolean;
     message: string;
 }>;
-export declare const sendEmailInternal: (template: string, params: EmailParamsT, id?: number) => Promise<{
+export declare const sendEmailInternal: (template: string, params: EmailParamsT, id?: number, track?: boolean) => Promise<{
     success: boolean;
     message: string;
 }>;

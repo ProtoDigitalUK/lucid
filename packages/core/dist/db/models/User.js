@@ -12,8 +12,22 @@ _a = User;
 User.register = async (data) => {
     const client = await db_1.default;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
-        columns: ["email", "username", "password", "super_admin"],
-        values: [data.email, data.username, data.password, data.super_admin],
+        columns: [
+            "email",
+            "username",
+            "password",
+            "super_admin",
+            "first_name",
+            "last_name",
+        ],
+        values: [
+            data.email,
+            data.username,
+            data.password,
+            data.super_admin,
+            data.first_name,
+            data.last_name,
+        ],
     });
     const user = await client.query({
         text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
@@ -37,6 +51,14 @@ User.getByUsername = async (data) => {
     });
     return user.rows[0];
 };
+User.getByEmail = async (data) => {
+    const client = await db_1.default;
+    const user = await client.query({
+        text: `SELECT * FROM lucid_users WHERE email = $1`,
+        values: [data.email],
+    });
+    return user.rows[0];
+};
 User.checkIfUserExistsAlready = async (email, username) => {
     const client = await db_1.default;
     const userExists = await client.query({
@@ -44,6 +66,14 @@ User.checkIfUserExistsAlready = async (email, username) => {
         values: [email, username],
     });
     return userExists.rows[0];
+};
+User.updatePassword = async (id, password) => {
+    const client = await db_1.default;
+    const user = await client.query({
+        text: `UPDATE lucid_users SET password = $1 WHERE id = $2 RETURNING *`,
+        values: [password, id],
+    });
+    return user.rows[0];
 };
 exports.default = User;
 //# sourceMappingURL=User.js.map

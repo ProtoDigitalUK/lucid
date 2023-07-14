@@ -7,21 +7,20 @@ import authService from "@services/auth";
 
 // --------------------------------------------------
 // Controller
-const forgotPasswordController: Controller<
-  typeof authSchema.forgotPassword.params,
-  typeof authSchema.forgotPassword.body,
-  typeof authSchema.forgotPassword.query
+const resetPasswordController: Controller<
+  typeof authSchema.resetPassword.params,
+  typeof authSchema.resetPassword.body,
+  typeof authSchema.resetPassword.query
 > = async (req, res, next) => {
   try {
-    const forgotPassword = await authService.forgotPassword({
-      email: req.body.email,
+    const resetPassword = await authService.resetPassword({
+      token: req.params.token,
+      password: req.body.password,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: {
-          message: forgotPassword,
-        },
+        data: resetPassword,
       })
     );
   } catch (error) {
@@ -32,6 +31,6 @@ const forgotPasswordController: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: authSchema.forgotPassword,
-  controller: forgotPasswordController,
+  schema: authSchema.resetPassword,
+  controller: resetPasswordController,
 };

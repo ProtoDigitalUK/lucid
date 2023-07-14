@@ -23,6 +23,13 @@ declare const _default: {
     };
     login: (data: import("./login").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     validatePassword: (data: import("./validate-password").ServiceData) => Promise<boolean>;
+    sendResetPassword: (data: import("./send-reset-password").ServiceData) => Promise<{
+        message: string;
+    }>;
+    verifyResetPassword: (data: import("./verify-reset-password").ServiceData) => Promise<{}>;
+    resetPassword: (data: import("./reset-password").ServiceData) => Promise<{
+        message: string;
+    }>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const error_handler_1 = require("../../utils/app/error-handler");
+const UserToken_1 = __importDefault(require("../../db/models/UserToken"));
+const getSingle = async (data) => {
+    const userToken = await UserToken_1.default.getByToken({
+        token_type: data.token_type,
+        token: data.token,
+    });
+    if (!userToken) {
+        throw new error_handler_1.LucidError({
+            type: "basic",
+            name: "Invalid token",
+            message: "The provided token is either invalid or expired. Please try again.",
+            status: 400,
+        });
+    }
+    return userToken;
+};
+exports.default = getSingle;
+//# sourceMappingURL=get-single.js.map

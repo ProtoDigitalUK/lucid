@@ -1,4 +1,6 @@
 type UserRegister = (data: {
+    first_name?: string;
+    last_name?: string;
     email: string;
     username: string;
     password: string;
@@ -7,6 +9,9 @@ type UserRegister = (data: {
 type UserGetById = (id: number) => Promise<UserT>;
 type UserGetByUsername = (data: {
     username: string;
+}) => Promise<UserT>;
+type UserGetByEmail = (data: {
+    email: string;
 }) => Promise<UserT>;
 export type UserT = {
     id: number;
@@ -23,7 +28,9 @@ export default class User {
     static register: UserRegister;
     static getById: UserGetById;
     static getByUsername: UserGetByUsername;
+    static getByEmail: UserGetByEmail;
     static checkIfUserExistsAlready: (email: string, username: string) => Promise<UserT>;
+    static updatePassword: (id: number, password: string) => Promise<UserT>;
 }
 export {};
 //# sourceMappingURL=User.d.ts.map

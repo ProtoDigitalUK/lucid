@@ -19,6 +19,8 @@ const registerSingle = async (data) => {
         username: data.username,
         password: hashedPassword,
         super_admin: data.super_admin,
+        first_name: data.first_name,
+        last_name: data.last_name,
     });
     if (!user) {
         throw new error_handler_1.LucidError({

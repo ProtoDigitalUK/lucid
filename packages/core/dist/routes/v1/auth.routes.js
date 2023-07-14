@@ -10,6 +10,9 @@ const logout_1 = __importDefault(require("../../controllers/auth/logout"));
 const get_authenticated_user_1 = __importDefault(require("../../controllers/auth/get-authenticated-user"));
 const get_csrf_1 = __importDefault(require("../../controllers/auth/get-csrf"));
 const register_superadmin_1 = __importDefault(require("../../controllers/auth/register-superadmin"));
+const send_reset_password_1 = __importDefault(require("../../controllers/auth/send-reset-password"));
+const verify_reset_password_1 = __importDefault(require("../../controllers/auth/verify-reset-password"));
+const reset_password_1 = __importDefault(require("../../controllers/auth/reset-password"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
@@ -50,6 +53,30 @@ const router = (0, express_1.Router)();
     },
     schema: register_superadmin_1.default.schema,
     controller: register_superadmin_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "post",
+    path: "/reset-password",
+    middleware: {
+        authoriseCSRF: true,
+    },
+    schema: send_reset_password_1.default.schema,
+    controller: send_reset_password_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "get",
+    path: "/reset-password/:token",
+    schema: verify_reset_password_1.default.schema,
+    controller: verify_reset_password_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "post",
+    path: "/reset-password/:token",
+    middleware: {
+        authoriseCSRF: true,
+    },
+    schema: reset_password_1.default.schema,
+    controller: reset_password_1.default.controller,
 });
 exports.default = router;
 //# sourceMappingURL=auth.routes.js.map
