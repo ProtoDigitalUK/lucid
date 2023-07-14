@@ -8,6 +8,8 @@ export interface ServiceData {
   email: string;
   username: string;
   password: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 const registerSuperAdmin = async (data: ServiceData) => {
@@ -26,6 +28,8 @@ const registerSuperAdmin = async (data: ServiceData) => {
   }
 
   const user = await usersServices.registerSingle({
+    first_name: data.first_name,
+    last_name: data.last_name,
     email: data.email,
     username: data.username,
     password: data.password,

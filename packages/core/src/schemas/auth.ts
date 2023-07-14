@@ -30,6 +30,8 @@ const logoutParams = z.object({});
 // ------------------------------------
 // REGISTER SUPER ADMIN
 const registerSuperAdminBody = z.object({
+  first_name: z.string().optional(),
+  last_name: z.string().optional(),
   email: z.string().email(),
   username: z.string(),
   password: z.string().min(8),

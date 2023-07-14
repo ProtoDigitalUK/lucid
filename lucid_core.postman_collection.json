@@ -176,7 +176,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"password\"\r\n}",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"password\",\r\n    \"first_name\": \"William\",\r\n    \"last_name\": \"Yallop\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -193,6 +193,41 @@
 								"v1",
 								"auth",
 								"register-superadmin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@admin.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/forgot-password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"forgot-password"
 							]
 						}
 					},

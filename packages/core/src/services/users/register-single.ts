@@ -9,6 +9,8 @@ import usersServices from "@services/users";
 import formatUser from "@utils/format/format-user";
 
 export interface ServiceData {
+  first_name?: string;
+  last_name?: string;
   email: string;
   username: string;
   password: string;
@@ -29,6 +31,8 @@ const registerSingle = async (data: ServiceData) => {
     username: data.username,
     password: hashedPassword,
     super_admin: data.super_admin,
+    first_name: data.first_name,
+    last_name: data.last_name,
   });
 
   if (!user) {

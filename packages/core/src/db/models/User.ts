@@ -5,6 +5,8 @@ import { queryDataFormat } from "@utils/app/query-helpers";
 // -------------------------------------------
 // Types
 type UserRegister = (data: {
+  first_name?: string;
+  last_name?: string;
   email: string;
   username: string;
   password: string;
@@ -37,8 +39,22 @@ export default class User {
     const client = await getDBClient;
 
     const { columns, aliases, values } = queryDataFormat({
-      columns: ["email", "username", "password", "super_admin"],
-      values: [data.email, data.username, data.password, data.super_admin],
+      columns: [
+        "email",
+        "username",
+        "password",
+        "super_admin",
+        "first_name",
+        "last_name",
+      ],
+      values: [
+        data.email,
+        data.username,
+        data.password,
+        data.super_admin,
+        data.first_name,
+        data.last_name,
+      ],
     });
 
     const user = await client.query<UserT>({
