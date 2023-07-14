@@ -2,8 +2,6 @@
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import User from "@db/models/User";
-// Format
-import formatUser from "@utils/format/format-user";
 
 export interface ServiceData {
   email: string;
@@ -33,7 +31,7 @@ const checkIfUserExists = async (data: ServiceData) => {
     });
   }
 
-  return formatUser(user);
+  return user;
 };
 
 export default checkIfUserExists;

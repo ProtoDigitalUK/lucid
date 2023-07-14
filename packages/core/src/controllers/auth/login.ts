@@ -18,6 +18,7 @@ const loginController: Controller<
       password: req.body.password,
     });
     authService.jwt.generateJWT(res, user);
+
     res.status(200).json(buildResponse(req, { data: user }));
   } catch (error) {
     next(error as Error);

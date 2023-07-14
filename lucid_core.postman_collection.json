@@ -25,7 +25,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -165,11 +165,8 @@
 				},
 				{
 					"name": "Register Super Admin",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "_csrf",
@@ -179,7 +176,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"admin\"\r\n}",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -196,6 +193,45 @@
 								"v1",
 								"auth",
 								"register-superadmin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Options",
+			"item": [
+				{
+					"name": "Get Single (public)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/options/public/initial_user_created",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"options",
+								"public",
+								"initial_user_created"
+							],
+							"query": [
+								{
+									"key": null,
+									"value": "",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -786,7 +822,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"title\": \"Homepage\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"raw": "{\n    \"title\": \"Homepage 4\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -825,7 +861,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n    \"builder_bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"image\",\n                    \"type\": \"media\",\n                    \"value\": 1\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                // {\n                //     \"key\": \"page_link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": 1,\n                //     \"target\": \"_self\"\n                // },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            // \"id\": 1,\n            \"key\": \"intro\"\n        }\n    ],\n    \"fixed_bricks\": []\n}",
+													"raw": "{\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n    \"builder_bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title\"\n                },\n                {\n                    \"key\": \"image\",\n                    \"type\": \"media\",\n                    \"value\": 1\n                },\n                {\n                    \"key\": \"link\",\n                    \"type\": \"link\",\n                    \"value\": \"https://example.com\",\n                    \"target\": \"_blank\"\n                },\n                // {\n                //     \"key\": \"page_link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": 1,\n                //     \"target\": \"_self\"\n                // },\n                {\n                    \"key\": \"colour\",\n                    \"type\": \"colour\",\n                    \"value\": \"#FFFFFF\"\n                },\n                {\n                    \"key\": \"date\",\n                    \"type\": \"datetime\",\n                    \"value\": \"10/02/1999\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_links\",\n                    \"type\": \"repeater\",\n                    \"items\": [\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 1,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 1\"\n                        },\n                        {\n                            // \"fields_id\": 1,\n                            // \"parent_repeater\": 1,\n                            \"group_position\": 2,\n                            \"key\": \"social_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Title 2\"\n                        }\n                    ]\n                }\n            ]\n        }\n   \n    ],\n    \"fixed_bricks\": []\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -913,7 +949,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/3",
+													"raw": "{{BASE_URL}}/api/v1/pages/32",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -921,7 +957,7 @@
 														"api",
 														"v1",
 														"pages",
-														"3"
+														"32"
 													]
 												}
 											},
@@ -1042,7 +1078,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/bricks/config/page/all",
+													"raw": "{{BASE_URL}}/api/v1/bricks/config/page/all?include=fields",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -1057,8 +1093,7 @@
 													"query": [
 														{
 															"key": "include",
-															"value": "fields",
-															"disabled": true
+															"value": "fields"
 														}
 													]
 												},
@@ -1252,7 +1287,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    // \"key\": \"footer\",\n    // \"name\": \"Footer\",\n    // \"description\": \"Footer description\",\n    \"items\": [\n        {\n            // \"id\": 36,\n            \"page_id\": 1,\n            \"name\": \"Services\",\n            \"target\": \"_self\"\n        },\n        {\n            \"url\": \"https://example.com\",\n            \"name\": \"Example 2\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    // \"id\": 38,\n                    \"url\": \"https://test.com\",\n                    \"name\": \"About Us\"\n                    // \"target\": \"_blank\"\n                }\n            ]\n        }\n    ]\n}",
+									"raw": "{\n    // \"key\": \"footer\",\n    // \"name\": \"Footer\",\n    // \"description\": \"Footer description\",\n    \"items\": [\n        {\n            // \"id\": 36,\n            \"page_id\": 1,\n            \"name\": \"Services\",\n            \"target\": \"_self\"\n        },\n        {\n            \"page_id\": 2,\n            \"url\": \"https://example.com\",\n            \"name\": \"Example 2\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    // \"id\": 38,\n                    \"url\": \"https://test.com\",\n                    \"name\": \"About Us\"\n                    // \"target\": \"_blank\"\n                }\n            ]\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1260,7 +1295,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/menus/7",
+									"raw": "{{BASE_URL}}/api/v1/menus/18",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1268,7 +1303,7 @@
 										"api",
 										"v1",
 										"menus",
-										"7"
+										"18"
 									]
 								}
 							},
@@ -1386,7 +1421,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/menus?sort=-created_at",
+									"raw": "{{BASE_URL}}/api/v1/menus?sort=-created_at&include=items",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1407,8 +1442,7 @@
 										},
 										{
 											"key": "include",
-											"value": "items",
-											"disabled": true
+											"value": "items"
 										}
 									]
 								}
@@ -2271,7 +2305,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"role_ids\": []\r\n}",
+							"raw": "{\r\n    \"role_ids\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

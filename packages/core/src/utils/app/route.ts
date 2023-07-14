@@ -45,14 +45,14 @@ const route: Route = (router, props) => {
   // Assign middleware
   const middleware = [];
 
-  // set middleware for authorisation (CSRF)
-  if (props.middleware?.authoriseCSRF) {
-    middleware.push(authoriseCSRF);
-  }
-
   // set middleware for authentication
   if (props.middleware?.authenticate) {
     middleware.push(authenticate);
+  }
+
+  // set middleware for authorisation (CSRF)
+  if (props.middleware?.authoriseCSRF) {
+    middleware.push(authoriseCSRF);
   }
 
   // set middleware for validation
