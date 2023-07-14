@@ -150,26 +150,29 @@ export const sendEmailExternal = async (
 export const sendEmailInternal = async (
   template: string,
   params: EmailParamsT,
-  id?: number
+  id?: number,
+  track?: boolean
 ) => {
   const result = await sendEmailAction(template, params);
 
-  if (!id) {
-    await createEmailRow({
-      template: template,
-      options: result.options,
-      delivery_status: result.success ? "sent" : "failed",
-      data: params.data,
-    });
-  } else {
-    await emailsService.updateSingle({
-      id: id,
-      data: {
-        from_address: result.options.from,
-        from_name: result.options.fromName,
+  if (track) {
+    if (!id) {
+      await createEmailRow({
+        template: template,
+        options: result.options,
         delivery_status: result.success ? "sent" : "failed",
-      },
-    });
+        data: params.data,
+      });
+    } else {
+      await emailsService.updateSingle({
+        id: id,
+        data: {
+          from_address: result.options.from,
+          from_name: result.options.fromName,
+          delivery_status: result.success ? "sent" : "failed",
+        },
+      });
+    }
   }
 
   // Return the result

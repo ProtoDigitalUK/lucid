@@ -8,7 +8,7 @@ const paginated = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (!req.query.per_page) {
-      req.query.per_page = constants.pagination.per_page;
+      req.query.per_page = constants.pagination.perPage;
     }
 
     return next();

@@ -38,6 +38,14 @@ const registerSuperAdminQuery = z.object({});
 const registerSuperAdminParams = z.object({});
 
 // ------------------------------------
+// FORGOT PASSWORD
+const forgotPasswordBody = z.object({
+  email: z.string().email(),
+});
+const forgotPasswordQuery = z.object({});
+const forgotPasswordParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   getAuthenticatedUser: {
@@ -64,5 +72,10 @@ export default {
     body: registerSuperAdminBody,
     query: registerSuperAdminQuery,
     params: registerSuperAdminParams,
+  },
+  forgotPassword: {
+    body: forgotPasswordBody,
+    query: forgotPasswordQuery,
+    params: forgotPasswordParams,
   },
 };

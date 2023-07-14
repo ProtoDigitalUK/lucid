@@ -98,7 +98,7 @@ const buildPerPage = (query: z.infer<typeof querySchema>) => {
     if (!isNaN(per_pageInt)) {
       per_page = per_pageInt.toString();
     } else {
-      per_page = constants.pagination.per_page;
+      per_page = constants.pagination.perPage;
     }
   }
 

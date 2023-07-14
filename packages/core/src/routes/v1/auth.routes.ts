@@ -6,6 +6,7 @@ import logout from "@controllers/auth/logout";
 import getAuthenticatedUser from "@controllers/auth/get-authenticated-user";
 import getCSRF from "@controllers/auth/get-csrf";
 import registerSuperadmin from "@controllers/auth/register-superadmin";
+import forgotPassword from "@controllers/auth/forgot-password";
 
 // ------------------------------------
 // Router
@@ -55,6 +56,16 @@ r(router, {
   },
   schema: registerSuperadmin.schema,
   controller: registerSuperadmin.controller,
+});
+
+r(router, {
+  method: "post",
+  path: "/forgot-password",
+  middleware: {
+    authoriseCSRF: true,
+  },
+  schema: forgotPassword.schema,
+  controller: forgotPassword.controller,
 });
 
 export default router;

@@ -45,3 +45,14 @@ CREATE TABLE IF NOT EXISTS lucid_user_roles (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+
+-- USER TOKENS TABLE
+CREATE TABLE IF NOT EXISTS lucid_user_tokens (
+    id serial PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
+    token_type varchar(255),
+    token varchar(255) NOT NULL UNIQUE,
+
+    created_at TIMESTAMP DEFAULT NOW(),
+    expiry_date TIMESTAMP NOT NULL
+);

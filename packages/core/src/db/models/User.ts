@@ -15,6 +15,8 @@ type UserGetById = (id: number) => Promise<UserT>;
 
 type UserGetByUsername = (data: { username: string }) => Promise<UserT>;
 
+type UserGetByEmail = (data: { email: string }) => Promise<UserT>;
+
 // -------------------------------------------
 // User
 export type UserT = {
@@ -62,6 +64,16 @@ export default class User {
     const user = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE username = $1`,
       values: [data.username],
+    });
+
+    return user.rows[0];
+  };
+  static getByEmail: UserGetByEmail = async (data) => {
+    const client = await getDBClient;
+
+    const user = await client.query<UserT>({
+      text: `SELECT * FROM lucid_users WHERE email = $1`,
+      values: [data.email],
     });
 
     return user.rows[0];
