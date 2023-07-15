@@ -147,9 +147,9 @@ const errorLogger = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(error);
-  // const { message, status } = decodeError(error);
-  // console.error(red(`${status} - ${message}`));
+  // console.log(error);
+  const { message, status } = decodeError(error);
+  console.error(red(`${status} - ${message}`));
   next(error);
 };
 
