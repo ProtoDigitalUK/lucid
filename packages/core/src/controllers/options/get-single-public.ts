@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Models
 import { OptionT } from "@db/models/Option";
 // Schema
@@ -15,7 +16,10 @@ const getSinglePublicController: Controller<
   typeof optionsSchema.getSinglePublic.query
 > = async (req, res, next) => {
   try {
-    const option = await optionsService.getByName({
+    const option = await service(
+      optionsService.getByName,
+      false
+    )({
       name: req.params.name as OptionT["option_name"],
     });
 

@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Services
@@ -13,7 +14,10 @@ const getSingleController: Controller<
   typeof formSubmissionsSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const formSubmission = await formSubService.getSingle({
+    const formSubmission = await service(
+      formSubService.getSingle,
+      false
+    )({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,
       environment_key: req.headers["lucid-environment"] as string,

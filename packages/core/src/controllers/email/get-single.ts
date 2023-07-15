@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import emailsSchema from "@schemas/email";
 // Serices
@@ -13,7 +14,10 @@ const getSingleController: Controller<
   typeof emailsSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await emailsService.getSingle({
+    const email = await service(
+      emailsService.getSingle,
+      false
+    )({
       id: parseInt(req.params.id),
     });
 

@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
@@ -13,7 +14,10 @@ const updateSingleController: Controller<
   typeof environmentSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await environmentsService.upsertSingle({
+    const environment = await service(
+      environmentsService.upsertSingle,
+      true
+    )({
       data: {
         key: req.params.key,
         title: undefined,

@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
@@ -13,7 +14,10 @@ const sendResetPasswordController: Controller<
   typeof authSchema.sendResetPassword.query
 > = async (req, res, next) => {
   try {
-    const resetPassword = await authService.sendResetPassword({
+    const resetPassword = await service(
+      authService.sendResetPassword,
+      false
+    )({
       email: req.body.email,
     });
 

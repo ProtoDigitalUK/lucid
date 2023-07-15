@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import emailsSchema from "@schemas/email";
 // Services
@@ -13,7 +14,10 @@ const resendSingleController: Controller<
   typeof emailsSchema.resendSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await emailsService.resendSingle({
+    const email = await service(
+      emailsService.resendSingle,
+      true
+    )({
       id: parseInt(req.params.id),
     });
 

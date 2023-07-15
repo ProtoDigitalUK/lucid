@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
@@ -13,7 +14,10 @@ const getMultipleController: Controller<
   typeof mediaSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const mediasRes = await mediaService.getMultiple({
+    const mediasRes = await service(
+      mediaService.getMultiple,
+      false
+    )({
       query: req.query,
     });
 

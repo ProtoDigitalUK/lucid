@@ -1,11 +1,11 @@
 import { Response, Request } from "express";
 import jwt from "jsonwebtoken";
-// Models
-import { UserT } from "@db/models/User";
 // Services
 import Config from "@services/Config";
+// Format
+import { UserResT } from "@utils/format/format-user";
 
-export const generateJWT = (res: Response, user: UserT) => {
+export const generateJWT = (res: Response, user: UserResT) => {
   const { id, email, username } = user;
 
   const payload: Request["auth"] = {

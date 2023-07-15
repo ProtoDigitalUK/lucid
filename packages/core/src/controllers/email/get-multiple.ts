@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import emailsSchema from "@schemas/email";
 // Services
@@ -13,7 +14,10 @@ const getMultipleController: Controller<
   typeof emailsSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const emailsRes = await emailsService.getMultiple({
+    const emailsRes = await service(
+      emailsService.getMultiple,
+      false
+    )({
       query: req.query,
     });
 
