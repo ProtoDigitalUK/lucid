@@ -140,7 +140,7 @@ export default class Menu {
       text: `SELECT ${query_instance.query.select} FROM lucid_menus ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
-    const count = client.query<{ count: number }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT COUNT(DISTINCT lucid_menus.id) FROM lucid_menus ${query_instance.query.where} `,
       values: query_instance.countValues,
     });
@@ -149,7 +149,7 @@ export default class Menu {
 
     return {
       data: data[0].rows,
-      count: data[1].rows[0].count,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static updateSingle: MenuUpdateSingle = async (data) => {

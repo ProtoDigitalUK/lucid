@@ -39,6 +39,31 @@ const deleteSingleParams = z.object({
 });
 
 // ------------------------------------
+// GET MULTIPLE
+const getMultipleBody = z.object({});
+const getMultipleQuery = z.object({
+  filter: z
+    .object({
+      first_name: z.string().optional(),
+      last_name: z.string().optional(),
+      email: z.string().optional(),
+      username: z.string().optional(),
+    })
+    .optional(),
+  sort: z
+    .array(
+      z.object({
+        key: z.enum(["created_at"]),
+        value: z.enum(["asc", "desc"]),
+      })
+    )
+    .optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
+});
+const getMultipleParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   updateSingle: {
@@ -60,5 +85,10 @@ export default {
     body: deleteSingleBody,
     query: deleteSingleQuery,
     params: deleteSingleParams,
+  },
+  getMultiple: {
+    body: getMultipleBody,
+    query: getMultipleQuery,
+    params: getMultipleParams,
   },
 };

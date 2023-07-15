@@ -61,7 +61,7 @@ export default class Category {
       values: query_instance.values,
     });
 
-    const count = client.query<{ count: number }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT COUNT(*) FROM lucid_categories ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
@@ -70,7 +70,7 @@ export default class Category {
 
     return {
       data: data[0].rows,
-      count: data[1].rows[0].count,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static getSingle: CategoryGetSingle = async (environment_key, id) => {

@@ -35,6 +35,22 @@ User.register = async (data) => {
     });
     return user.rows[0];
 };
+User.getMultiple = async (query_instance) => {
+    const client = await db_1.default;
+    const users = client.query({
+        text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+        values: query_instance.values,
+    });
+    const count = client.query({
+        text: `SELECT COUNT(DISTINCT lucid_users.id) FROM lucid_users ${query_instance.query.where}`,
+        values: query_instance.countValues,
+    });
+    const data = await Promise.all([users, count]);
+    return {
+        data: data[0].rows,
+        count: parseInt(data[1].rows[0].count),
+    };
+};
 User.getById = async (id) => {
     const client = await db_1.default;
     const user = await client.query({

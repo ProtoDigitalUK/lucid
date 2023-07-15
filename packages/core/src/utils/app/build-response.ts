@@ -69,14 +69,11 @@ const buildLinks = (
     prev: null,
   };
 
-  // TODO: check why count is a string - should be a number
-  if (parseInt(count as unknown as string) === 0) {
-    return links;
-  }
-
   // Set First
   url.searchParams.delete("page");
   links.first = url.toString();
+
+  console.log(typeof page, typeof totalPages);
 
   // Set Last
   if (page !== String(totalPages))

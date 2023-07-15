@@ -123,7 +123,7 @@ export default class Email {
       values: query_instance.values,
     });
 
-    const count = client.query<{ count: number }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT  COUNT(DISTINCT lucid_emails.id) FROM lucid_emails ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
@@ -132,7 +132,7 @@ export default class Email {
 
     return {
       data: data[0].rows,
-      count: data[1].rows[0].count,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static getSingle: EmailGetSingle = async (id) => {

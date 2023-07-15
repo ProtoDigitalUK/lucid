@@ -103,7 +103,7 @@ export default class FormSubmission {
       text: `SELECT ${query_instance.query.select} FROM lucid_form_submissions ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
-    const count = client.query<{ count: number }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT COUNT(DISTINCT lucid_form_submissions.id) FROM lucid_form_submissions ${query_instance.query.where} `,
       values: query_instance.countValues,
     });
@@ -112,7 +112,7 @@ export default class FormSubmission {
 
     return {
       data: data[0].rows,
-      count: data[1].rows[0].count,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static toggleReadAt: FormSubmissionToggleReadAt = async (data) => {

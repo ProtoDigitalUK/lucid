@@ -100,7 +100,7 @@ export default class Media {
       text: `SELECT${query_instance.query.select}FROMlucid_media${query_instance.query.where}${query_instance.query.order}${query_instance.query.pagination}`,
       values: query_instance.values,
     });
-    const count = client.query<{ count: number }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT COUNT(DISTINCT lucid_media.id)FROMlucid_media${query_instance.query.where} `,
       values: query_instance.countValues,
     });
@@ -109,7 +109,7 @@ export default class Media {
 
     return {
       data: data[0].rows,
-      count: data[1].rows[0].count,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static getSingle: MediaGetSingle = async (key) => {

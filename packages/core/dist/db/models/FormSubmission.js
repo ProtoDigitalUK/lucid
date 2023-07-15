@@ -42,7 +42,7 @@ FormSubmission.getMultiple = async (query_instance) => {
     const data = await Promise.all([submissions, count]);
     return {
         data: data[0].rows,
-        count: data[1].rows[0].count,
+        count: parseInt(data[1].rows[0].count),
     };
 };
 FormSubmission.toggleReadAt = async (data) => {

@@ -11,6 +11,8 @@ const register_single_1 = __importDefault(require("./register-single"));
 const register_superadmin_1 = __importDefault(require("./register-superadmin"));
 const check_if_user_exists_1 = __importDefault(require("./check-if-user-exists"));
 const update_password_1 = __importDefault(require("./update-password"));
+const delete_single_1 = __importDefault(require("./delete-single"));
+const get_multiple_1 = __importDefault(require("./get-multiple"));
 exports.default = {
     updateRoles: update_roles_1.default,
     getAllRoles: get_all_roles_1.default,
@@ -20,5 +22,7 @@ exports.default = {
     registerSuperAdmin: register_superadmin_1.default,
     checkIfUserExists: check_if_user_exists_1.default,
     updatePassword: update_password_1.default,
+    deleteSingle: delete_single_1.default,
+    getMultiple: get_multiple_1.default,
 };
 //# sourceMappingURL=index.js.map

@@ -41,11 +41,9 @@ const buildLinks = (req, params) => {
         next: null,
         prev: null,
     };
-    if (parseInt(count) === 0) {
-        return links;
-    }
     url.searchParams.delete("page");
     links.first = url.toString();
+    console.log(typeof page, typeof totalPages);
     if (page !== String(totalPages))
         url.searchParams.set("page", String(totalPages));
     links.last = url.toString();

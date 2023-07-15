@@ -39,7 +39,7 @@ Page.getMultiple = async (query_instance) => {
     const data = await Promise.all([pages, count]);
     return {
         data: data[0].rows,
-        count: data[1].rows[0].count,
+        count: parseInt(data[1].rows[0].count),
     };
 };
 Page.getSingle = async (query_instance) => {
@@ -165,7 +165,7 @@ Page.getSlugCount = async (data) => {
         ${data.parent_id ? `AND parent_id = $4` : `AND parent_id IS NULL`}`,
         values: values,
     });
-    return slugCount.rows[0].count;
+    return parseInt(slugCount.rows[0].count);
 };
 Page.getNonCurrentHomepages = async (currentId, environment_key) => {
     const client = await db_1.default;

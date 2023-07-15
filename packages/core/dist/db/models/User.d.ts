@@ -1,3 +1,8 @@
+import { SelectQueryBuilder } from "../../utils/app/query-helpers";
+type UserGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+    data: UserT[];
+    count: number;
+}>;
 type UserRegister = (data: {
     first_name?: string;
     last_name?: string;
@@ -26,6 +31,7 @@ export type UserT = {
 };
 export default class User {
     static register: UserRegister;
+    static getMultiple: UserGetMultiple;
     static getById: UserGetById;
     static getByUsername: UserGetByUsername;
     static getByEmail: UserGetByEmail;

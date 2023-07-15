@@ -55,4 +55,4 @@ declare const _default: {
     }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;
-//# sourceMappingURL=create-user.d.ts.map
+//# sourceMappingURL=create-single.d.ts.map

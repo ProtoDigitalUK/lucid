@@ -7,6 +7,11 @@ declare const _default: {
     registerSuperAdmin: (data: import("./register-superadmin").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     checkIfUserExists: (data: import("./check-if-user-exists").ServiceData) => Promise<never>;
     updatePassword: (data: import("./update-password").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+    deleteSingle: (data: import("./delete-single").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+    getMultiple: (data: import("./get-multiple").ServiceData) => Promise<{
+        data: import("../../utils/format/format-user").UserResT[];
+        count: number;
+    }>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

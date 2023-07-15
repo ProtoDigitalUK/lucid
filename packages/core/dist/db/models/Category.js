@@ -22,7 +22,7 @@ Category.getMultiple = async (query_instance) => {
     const data = await Promise.all([categories, count]);
     return {
         data: data[0].rows,
-        count: data[1].rows[0].count,
+        count: parseInt(data[1].rows[0].count),
     };
 };
 Category.getSingle = async (environment_key, id) => {

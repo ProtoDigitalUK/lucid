@@ -2,7 +2,7 @@
 // Types
 export type PermissionT =
   | "create_user"
-  | "read_user"
+  | "read_users"
   | "update_user"
   | "delete_user"
   | "create_role"
@@ -53,7 +53,7 @@ type PermissionGroup = {
 const PERMISSIONS: Record<string, PermissionGroup> = {
   users: {
     title: "Users",
-    permissions: ["create_user", "read_user", "update_user", "delete_user"],
+    permissions: ["create_user", "read_users", "update_user", "delete_user"],
   },
   roles: {
     title: "Roles",

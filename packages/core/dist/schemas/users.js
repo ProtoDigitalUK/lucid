@@ -14,7 +14,7 @@ const updateRolesQuery = zod_1.default.object({});
 const updateRolesParams = zod_1.default.object({
     id: zod_1.default.string(),
 });
-const createUserBody = zod_1.default.object({
+const createSingleBody = zod_1.default.object({
     email: zod_1.default.string().email(),
     username: zod_1.default.string(),
     password: zod_1.default.string().min(8),
@@ -23,8 +23,33 @@ const createUserBody = zod_1.default.object({
     last_name: zod_1.default.string().optional(),
     super_admin: zod_1.default.boolean().optional(),
 });
-const createUserQuery = zod_1.default.object({});
-const createUserParams = zod_1.default.object({});
+const createSingleQuery = zod_1.default.object({});
+const createSingleParams = zod_1.default.object({});
+const deleteSingleBody = zod_1.default.object({});
+const deleteSingleQuery = zod_1.default.object({});
+const deleteSingleParams = zod_1.default.object({
+    id: zod_1.default.string(),
+});
+const getMultipleBody = zod_1.default.object({});
+const getMultipleQuery = zod_1.default.object({
+    filter: zod_1.default
+        .object({
+        first_name: zod_1.default.string().optional(),
+        last_name: zod_1.default.string().optional(),
+        email: zod_1.default.string().optional(),
+        username: zod_1.default.string().optional(),
+    })
+        .optional(),
+    sort: zod_1.default
+        .array(zod_1.default.object({
+        key: zod_1.default.enum(["created_at"]),
+        value: zod_1.default.enum(["asc", "desc"]),
+    }))
+        .optional(),
+    page: zod_1.default.string().optional(),
+    per_page: zod_1.default.string().optional(),
+});
+const getMultipleParams = zod_1.default.object({});
 exports.default = {
     updateSingle: {
         body: updateSingleBody,
@@ -36,10 +61,20 @@ exports.default = {
         query: updateRolesQuery,
         params: updateRolesParams,
     },
-    createUser: {
-        body: createUserBody,
-        query: createUserQuery,
-        params: createUserParams,
+    createSingle: {
+        body: createSingleBody,
+        query: createSingleQuery,
+        params: createSingleParams,
+    },
+    deleteSingle: {
+        body: deleteSingleBody,
+        query: deleteSingleQuery,
+        params: deleteSingleParams,
+    },
+    getMultiple: {
+        body: getMultipleBody,
+        query: getMultipleQuery,
+        params: getMultipleParams,
     },
 };
 //# sourceMappingURL=users.js.map

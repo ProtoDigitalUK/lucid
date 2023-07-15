@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const PERMISSIONS = {
     users: {
         title: "Users",
-        permissions: ["create_user", "read_user", "update_user", "delete_user"],
+        permissions: ["create_user", "read_users", "update_user", "delete_user"],
     },
     roles: {
         title: "Roles",

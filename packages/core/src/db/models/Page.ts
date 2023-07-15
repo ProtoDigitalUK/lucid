@@ -111,7 +111,7 @@ export default class Page {
       values: query_instance.values,
     });
 
-    const count = client.query<{ count: number }>({
+    const count = client.query<{ count: string }>({
       text: `SELECT 
           COUNT(DISTINCT lucid_pages.id)
         FROM
@@ -127,7 +127,7 @@ export default class Page {
 
     return {
       data: data[0].rows,
-      count: data[1].rows[0].count,
+      count: parseInt(data[1].rows[0].count),
     };
   };
   static getSingle: PageGetSingle = async (query_instance) => {
@@ -259,7 +259,7 @@ export default class Page {
     ];
     if (data.parent_id) values.push(data.parent_id);
 
-    const slugCount = await client.query<{ count: number }>({
+    const slugCount = await client.query<{ count: string }>({
       // where slug is like, slug-example, slug-example-1, slug-example-2
       text: `SELECT COUNT(*) 
         FROM 
@@ -275,7 +275,7 @@ export default class Page {
       values: values,
     });
 
-    return slugCount.rows[0].count;
+    return parseInt(slugCount.rows[0].count);
   };
   static getNonCurrentHomepages = async (
     currentId: number,

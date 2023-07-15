@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
 const users_1 = __importDefault(require("../../schemas/users"));
 const users_2 = __importDefault(require("../../services/users"));
-const createUserController = async (req, res, next) => {
+const createSingleController = async (req, res, next) => {
     try {
         const user = await users_2.default.registerSingle({
             email: req.body.email,
@@ -26,7 +26,7 @@ const createUserController = async (req, res, next) => {
     }
 };
 exports.default = {
-    schema: users_1.default.createUser,
-    controller: createUserController,
+    schema: users_1.default.createSingle,
+    controller: createSingleController,
 };
-//# sourceMappingURL=create-user.js.map
+//# sourceMappingURL=create-single.js.map

@@ -1,10 +1,14 @@
-import deleteSingle from "@controllers/categories/delete-single";
 import getDBClient from "@db/db";
 // Utils
-import { queryDataFormat } from "@utils/app/query-helpers";
+import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
+type UserGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+  data: UserT[];
+  count: number;
+}>;
+
 type UserRegister = (data: {
   first_name?: string;
   last_name?: string;
@@ -65,7 +69,26 @@ export default class User {
 
     return user.rows[0];
   };
+  static getMultiple: UserGetMultiple = async (query_instance) => {
+    const client = await getDBClient;
 
+    const users = client.query<UserT>({
+      text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      values: query_instance.values,
+    });
+
+    const count = client.query<{ count: string }>({
+      text: `SELECT COUNT(DISTINCT lucid_users.id) FROM lucid_users ${query_instance.query.where}`,
+      values: query_instance.countValues,
+    });
+
+    const data = await Promise.all([users, count]);
+
+    return {
+      data: data[0].rows,
+      count: parseInt(data[1].rows[0].count),
+    };
+  };
   static getById: UserGetById = async (id) => {
     const client = await getDBClient;
 

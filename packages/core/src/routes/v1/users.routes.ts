@@ -4,6 +4,7 @@ import r from "@utils/app/route";
 import updateRoles from "@controllers/users/update-roles";
 import createSingle from "@controllers/users/create-single";
 import deleteSingle from "@controllers/users/delete-single";
+import getMultiple from "@controllers/users/get-multiple";
 
 // ------------------------------------
 // Router
@@ -49,6 +50,21 @@ r(router, {
   },
   schema: deleteSingle.schema,
   controller: deleteSingle.controller,
+});
+
+r(router, {
+  method: "get",
+  path: "/",
+  permissions: {
+    global: ["read_users"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    paginated: true,
+  },
+  schema: getMultiple.schema,
+  controller: getMultiple.controller,
 });
 
 export default router;
