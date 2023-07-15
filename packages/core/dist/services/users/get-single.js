@@ -8,7 +8,7 @@ const User_1 = __importDefault(require("../../db/models/User"));
 const users_1 = __importDefault(require("../users"));
 const format_user_1 = __importDefault(require("../../utils/format/format-user"));
 const getSingle = async (data) => {
-    const user = await User_1.default.getById(data.userId);
+    const user = await User_1.default.getById(data.user_id);
     if (!user) {
         throw new error_handler_1.LucidError({
             type: "basic",

@@ -9,7 +9,7 @@ const users_1 = __importDefault(require("../../services/users"));
 const getAuthenticatedUserController = async (req, res, next) => {
     try {
         const user = await users_1.default.getSingle({
-            userId: req.auth.id,
+            user_id: req.auth.id,
         });
         res.status(200).json((0, build_response_1.default)(req, {
             data: user,

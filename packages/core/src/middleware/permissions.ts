@@ -27,7 +27,7 @@ const permissions =
 
       // Lookup the users role and permissions
       const user = await usersServices.getSingle({
-        userId: req.auth.id,
+        user_id: req.auth.id,
       });
       if (user.super_admin) return next();
 

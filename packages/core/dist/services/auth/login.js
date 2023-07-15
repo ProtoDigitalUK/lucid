@@ -32,7 +32,7 @@ const login = async (data) => {
         });
     }
     return await users_1.default.getSingle({
-        userId: user.id,
+        user_id: user.id,
     });
 };
 exports.default = login;

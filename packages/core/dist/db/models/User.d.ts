@@ -30,6 +30,7 @@ export default class User {
     static getByUsername: UserGetByUsername;
     static getByEmail: UserGetByEmail;
     static checkIfUserExistsAlready: (email: string, username: string) => Promise<UserT>;
+    static deleteSingle: (id: number) => Promise<UserT>;
     static updatePassword: (id: number, password: string) => Promise<UserT>;
 }
 export {};

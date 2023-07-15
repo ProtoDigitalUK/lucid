@@ -1,1 +1,1 @@
-{"version":3,"file":"get-single.d.ts","sourceRoot":"","sources":["../../../src/services/users/get-single.ts"],"names":[],"mappings":"AASA,MAAM,WAAW,WAAW;IAC1B,MAAM,EAAE,MAAM,CAAC;CAChB;AAED,QAAA,MAAM,SAAS,SAAgB,WAAW,0DAuBzC,CAAC;AAEF,eAAe,SAAS,CAAC"}
+{"version":3,"file":"get-single.d.ts","sourceRoot":"","sources":["../../../src/services/users/get-single.ts"],"names":[],"mappings":"AASA,MAAM,WAAW,WAAW;IAC1B,OAAO,EAAE,MAAM,CAAC;CACjB;AAED,QAAA,MAAM,SAAS,SAAgB,WAAW,0DAuBzC,CAAC;AAEF,eAAe,SAAS,CAAC"}

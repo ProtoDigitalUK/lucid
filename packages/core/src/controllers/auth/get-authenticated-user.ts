@@ -14,7 +14,7 @@ const getAuthenticatedUserController: Controller<
 > = async (req, res, next) => {
   try {
     const user = await usersService.getSingle({
-      userId: req.auth.id,
+      user_id: req.auth.id,
     });
 
     res.status(200).json(

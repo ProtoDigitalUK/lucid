@@ -128,16 +128,19 @@ const sendEmailAction = async (
 // The exported function for the package - allows creating and sending an email
 export const sendEmailExternal = async (
   template: string,
-  params: EmailParamsT
+  params: EmailParamsT,
+  track?: boolean
 ) => {
   const result = await sendEmailAction(template, params);
 
-  await createEmailRow({
-    template: template,
-    options: result.options,
-    delivery_status: result.success ? "sent" : "failed",
-    data: params.data,
-  });
+  if (track) {
+    await createEmailRow({
+      template: template,
+      options: result.options,
+      delivery_status: result.success ? "sent" : "failed",
+      data: params.data,
+    });
+  }
 
   // Return the result
   return {

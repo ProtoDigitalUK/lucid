@@ -14,6 +14,17 @@ const updateRolesQuery = zod_1.default.object({});
 const updateRolesParams = zod_1.default.object({
     id: zod_1.default.string(),
 });
+const createUserBody = zod_1.default.object({
+    email: zod_1.default.string().email(),
+    username: zod_1.default.string(),
+    password: zod_1.default.string().min(8),
+    role_ids: zod_1.default.array(zod_1.default.number()),
+    first_name: zod_1.default.string().optional(),
+    last_name: zod_1.default.string().optional(),
+    super_admin: zod_1.default.boolean().optional(),
+});
+const createUserQuery = zod_1.default.object({});
+const createUserParams = zod_1.default.object({});
 exports.default = {
     updateSingle: {
         body: updateSingleBody,
@@ -24,6 +35,11 @@ exports.default = {
         body: updateRolesBody,
         query: updateRolesQuery,
         params: updateRolesParams,
+    },
+    createUser: {
+        body: createUserBody,
+        query: createUserQuery,
+        params: createUserParams,
     },
 };
 //# sourceMappingURL=users.js.map

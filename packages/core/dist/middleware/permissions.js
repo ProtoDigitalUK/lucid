@@ -17,7 +17,7 @@ const permissions = (permissions) => async (req, res, next) => {
     try {
         const environment = req.headers["lucid-environment"];
         const user = await users_1.default.getSingle({
-            userId: req.auth.id,
+            user_id: req.auth.id,
         });
         if (user.super_admin)
             return next();

@@ -67,6 +67,14 @@ User.checkIfUserExistsAlready = async (email, username) => {
     });
     return userExists.rows[0];
 };
+User.deleteSingle = async (id) => {
+    const client = await db_1.default;
+    const user = await client.query({
+        text: `DELETE FROM lucid_users WHERE id = $1 RETURNING *`,
+        values: [id],
+    });
+    return user.rows[0];
+};
 User.updatePassword = async (id, password) => {
     const client = await db_1.default;
     const user = await client.query({

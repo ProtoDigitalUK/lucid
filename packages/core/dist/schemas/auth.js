@@ -12,7 +12,7 @@ const getCSRFQuery = zod_1.default.object({});
 const getCSRFParams = zod_1.default.object({});
 const loginBody = zod_1.default.object({
     username: zod_1.default.string(),
-    password: zod_1.default.string(),
+    password: zod_1.default.string().min(8),
 });
 const loginQuery = zod_1.default.object({});
 const loginParams = zod_1.default.object({});

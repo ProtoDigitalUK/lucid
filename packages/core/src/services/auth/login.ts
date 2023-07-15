@@ -40,7 +40,7 @@ const login = async (data: ServiceData) => {
   }
 
   return await usersServices.getSingle({
-    userId: user.id,
+    user_id: user.id,
   });
 };
 

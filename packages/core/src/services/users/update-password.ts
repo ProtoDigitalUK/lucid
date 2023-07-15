@@ -17,7 +17,7 @@ const updatePassword = async (data: ServiceData) => {
   // -------------------------------------------
   // Check if user exists and get them
   await userServices.getSingle({
-    userId: data.user_id,
+    user_id: data.user_id,
   });
 
   // -------------------------------------------

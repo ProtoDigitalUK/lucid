@@ -1,3 +1,4 @@
+import deleteSingle from "@controllers/categories/delete-single";
 import getDBClient from "@db/db";
 // Utils
 import { queryDataFormat } from "@utils/app/query-helpers";
@@ -64,6 +65,7 @@ export default class User {
 
     return user.rows[0];
   };
+
   static getById: UserGetById = async (id) => {
     const client = await getDBClient;
 
@@ -103,6 +105,16 @@ export default class User {
     });
 
     return userExists.rows[0];
+  };
+  static deleteSingle = async (id: number) => {
+    const client = await getDBClient;
+
+    const user = await client.query<UserT>({
+      text: `DELETE FROM lucid_users WHERE id = $1 RETURNING *`,
+      values: [id],
+    });
+
+    return user.rows[0];
   };
   static updatePassword = async (id: number, password: string) => {
     const client = await getDBClient;

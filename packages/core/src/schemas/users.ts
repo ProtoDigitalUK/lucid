@@ -17,6 +17,20 @@ const updateRolesParams = z.object({
 });
 
 // ------------------------------------
+// CREATE USER
+const createUserBody = z.object({
+  email: z.string().email(),
+  username: z.string(),
+  password: z.string().min(8),
+  role_ids: z.array(z.number()),
+  first_name: z.string().optional(),
+  last_name: z.string().optional(),
+  super_admin: z.boolean().optional(),
+});
+const createUserQuery = z.object({});
+const createUserParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   updateSingle: {
@@ -28,5 +42,10 @@ export default {
     body: updateRolesBody,
     query: updateRolesQuery,
     params: updateRolesParams,
+  },
+  createUser: {
+    body: createUserBody,
+    query: createUserQuery,
+    params: createUserParams,
   },
 };

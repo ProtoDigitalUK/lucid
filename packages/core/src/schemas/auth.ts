@@ -16,7 +16,7 @@ const getCSRFParams = z.object({});
 // LOGIN
 const loginBody = z.object({
   username: z.string(),
-  password: z.string(),
+  password: z.string().min(8),
 });
 const loginQuery = z.object({});
 const loginParams = z.object({});

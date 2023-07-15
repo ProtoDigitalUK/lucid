@@ -21,7 +21,7 @@ export interface MailOptionsT {
     bcc?: string;
     replyTo?: string;
 }
-export declare const sendEmailExternal: (template: string, params: EmailParamsT) => Promise<{
+export declare const sendEmailExternal: (template: string, params: EmailParamsT, track?: boolean) => Promise<{
     success: boolean;
     message: string;
 }>;

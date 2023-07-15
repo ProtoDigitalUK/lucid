@@ -71,14 +71,16 @@ const sendEmailAction = async (template, params) => {
         };
     }
 };
-const sendEmailExternal = async (template, params) => {
+const sendEmailExternal = async (template, params, track) => {
     const result = await sendEmailAction(template, params);
-    await createEmailRow({
-        template: template,
-        options: result.options,
-        delivery_status: result.success ? "sent" : "failed",
-        data: params.data,
-    });
+    if (track) {
+        await createEmailRow({
+            template: template,
+            options: result.options,
+            delivery_status: result.success ? "sent" : "failed",
+            data: params.data,
+        });
+    }
     return {
         success: result.success,
         message: result.message,

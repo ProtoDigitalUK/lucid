@@ -8,11 +8,11 @@ import usersServices from "@services/users";
 import formatUser from "@utils/format/format-user";
 
 export interface ServiceData {
-  userId: number;
+  user_id: number;
 }
 
 const getSingle = async (data: ServiceData) => {
-  const user = await User.getById(data.userId);
+  const user = await User.getById(data.user_id);
 
   if (!user) {
     throw new LucidError({

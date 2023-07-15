@@ -1,5 +1,5 @@
 export interface ServiceData {
-    userId: number;
+    user_id: number;
 }
 declare const getSingle: (data: ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
 export default getSingle;

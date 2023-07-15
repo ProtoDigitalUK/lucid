@@ -1,11 +1,12 @@
 export interface ServiceData {
-    first_name?: string;
-    last_name?: string;
     email: string;
     username: string;
     password: string;
+    first_name?: string;
+    last_name?: string;
     super_admin?: boolean;
+    role_ids?: number[];
 }
-declare const registerSingle: (data: ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+declare const registerSingle: (data: ServiceData, current_user_id?: number) => Promise<import("../../utils/format/format-user").UserResT>;
 export default registerSingle;
 //# sourceMappingURL=register-single.d.ts.map

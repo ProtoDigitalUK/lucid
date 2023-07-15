@@ -10,7 +10,7 @@ const users_1 = __importDefault(require("../users"));
 const format_user_1 = __importDefault(require("../../utils/format/format-user"));
 const updatePassword = async (data) => {
     await users_1.default.getSingle({
-        userId: data.user_id,
+        user_id: data.user_id,
     });
     const hashedPassword = await argon2_1.default.hash(data.password);
     const user = await User_1.default.updatePassword(data.user_id, hashedPassword);

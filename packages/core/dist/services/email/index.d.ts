@@ -15,7 +15,7 @@ declare const _default: {
     createSingle: (data: import("./create-single").ServiceData) => Promise<import("../../db/models/Email").EmailT>;
     updateSingle: (data: import("./update-single").ServiceData) => Promise<import("../../db/models/Email").EmailT>;
     renderTemplate: (template: string, data: import("./render-template").renderTemplateDataT) => Promise<string>;
-    sendEmailExternal: (template: string, params: import("./send-email").EmailParamsT) => Promise<{
+    sendEmailExternal: (template: string, params: import("./send-email").EmailParamsT, track?: boolean | undefined) => Promise<{
         success: boolean;
         message: string;
     }>;

@@ -2,8 +2,6 @@
 import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-// Format
-import formatEnvironment from "@utils/format/format-environment";
 
 export interface ServiceData {
   key: string;
@@ -12,7 +10,7 @@ export interface ServiceData {
 const checkKeyExists = async (data: ServiceData) => {
   const environment = await Environment.checkKeyExists(data.key);
 
-  if (environment) {
+  if (environment.length > 0) {
     throw new LucidError({
       type: "basic",
       name: "Environment already exists",
@@ -21,7 +19,7 @@ const checkKeyExists = async (data: ServiceData) => {
     });
   }
 
-  return formatEnvironment(environment);
+  return;
 };
 
 export default checkKeyExists;
