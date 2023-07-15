@@ -1,5 +1,8 @@
-type OptionGetByName = (name: OptionT["option_name"]) => Promise<OptionT>;
-type OptionPatchByName = (data: {
+import { PoolClient } from "pg";
+type OptionGetByName = (client: PoolClient, data: {
+    name: OptionT["option_name"];
+}) => Promise<OptionT>;
+type OptionPatchByName = (client: PoolClient, data: {
     name: OptionT["option_name"];
     value: OptionT["option_value"];
     type: OptionT["type"];

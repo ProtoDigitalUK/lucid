@@ -1,6 +1,8 @@
+import { PoolClient } from "pg";
 import fileUpload from "express-fileupload";
 // Utils
 import helpers from "@utils/media/helpers";
+import service from "@utils/app/service";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import Media from "@db/models/Media";
@@ -16,7 +18,7 @@ export interface ServiceData {
   files?: fileUpload.FileArray | null | undefined;
 }
 
-const createSingle = async (data: ServiceData) => {
+const createSingle = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Data
   if (!data.files || !data.files["file"]) {
@@ -39,7 +41,11 @@ const createSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Checks
-  await mediaService.canStoreFiles({
+  await service(
+    mediaService.canStoreFiles,
+    false,
+    client
+  )({
     files,
   });
 
@@ -69,7 +75,7 @@ const createSingle = async (data: ServiceData) => {
     });
   }
 
-  const media = await Media.createSingle({
+  const media = await Media.createSingle(client, {
     key: key,
     name: data.name || firstFile.name,
     alt: data.alt,
@@ -96,7 +102,11 @@ const createSingle = async (data: ServiceData) => {
   }
 
   // update storage used
-  await mediaService.setStorageUsed({
+  await service(
+    mediaService.setStorageUsed,
+    false,
+    client
+  )({
     add: meta.size,
   });
 

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Environment from "@db/models/Environment";
 // Utils
@@ -9,8 +10,10 @@ export interface ServiceData {
   key: string;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const environment = await Environment.getSingle(data.key);
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const environment = await Environment.getSingle(client, {
+    key: data.key,
+  });
 
   if (!environment) {
     throw new LucidError({

@@ -1,7 +1,9 @@
+import { PoolClient } from "pg";
 import fileUpload from "express-fileupload";
 // Utils
 import helpers, { type MediaMetaDataT } from "@utils/media/helpers";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Media from "@db/models/Media";
 // Services
@@ -17,10 +19,14 @@ export interface ServiceData {
   };
 }
 
-const updateSingle = async (data: ServiceData) => {
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Get Media
-  const media = await mediaService.getSingle({
+  const media = await service(
+    mediaService.getSingle,
+    false,
+    client
+  )({
     key: data.key,
   });
 
@@ -33,7 +39,11 @@ const updateSingle = async (data: ServiceData) => {
 
     // -------------------------------------------
     // Checks
-    await mediaService.canStoreFiles({
+    await service(
+      mediaService.canStoreFiles,
+      false,
+      client
+    )({
       files,
     });
 
@@ -64,7 +74,11 @@ const updateSingle = async (data: ServiceData) => {
 
     // -------------------------------------------
     // Update storage used
-    await mediaService.setStorageUsed({
+    await service(
+      mediaService.setStorageUsed,
+      false,
+      client
+    )({
       add: meta.size,
       minus: media.meta.file_size,
     });
@@ -72,7 +86,8 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Update Media Row
-  const mediaUpdate = await Media.updateSingle(data.key, {
+  const mediaUpdate = await Media.updateSingle(client, {
+    key: data.key,
     name: data.data.name,
     alt: data.data.alt,
     meta: meta,
@@ -89,7 +104,11 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Get Single
-  return await mediaService.getSingle({
+  return await service(
+    mediaService.getSingle,
+    false,
+    client
+  )({
     key: mediaUpdate.key,
   });
 };

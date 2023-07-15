@@ -4,12 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Config_1 = __importDefault(require("../Config"));
 const environments_1 = __importDefault(require("../environments"));
 const format_form_1 = __importDefault(require("../../utils/format/format-form"));
-const getSingle = async (data) => {
+const getSingle = async (client, data) => {
     const formInstances = Config_1.default.forms || [];
-    const environment = await environments_1.default.getSingle({
+    const environment = await (0, service_1.default)(environments_1.default.getSingle, false, client)({
         key: data.environment_key,
     });
     const allForms = formInstances.map((form) => (0, format_form_1.default)(form));

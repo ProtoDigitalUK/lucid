@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Page_1 = __importDefault(require("../../db/models/Page"));
 const collections_1 = __importDefault(require("../collections"));
 const collection_bricks_1 = __importDefault(require("../collection-bricks"));
 const format_page_1 = __importDefault(require("../../utils/format/format-page"));
-const getSingle = async (data) => {
+const getSingle = async (client, data) => {
     const { include } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -52,7 +53,7 @@ const getSingle = async (data) => {
         page: undefined,
         per_page: undefined,
     });
-    const page = await Page_1.default.getSingle(SelectQuery);
+    const page = await Page_1.default.getSingle(client, SelectQuery);
     if (!page) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -62,12 +63,12 @@ const getSingle = async (data) => {
         });
     }
     if (include && include.includes("bricks")) {
-        const collection = await collections_1.default.getSingle({
+        const collection = await (0, service_1.default)(collections_1.default.getSingle, false, client)({
             collection_key: page.collection_key,
             environment_key: page.environment_key,
             type: "pages",
         });
-        const pageBricks = await collection_bricks_1.default.getAll({
+        const pageBricks = await (0, service_1.default)(collection_bricks_1.default.getAll, false, client)({
             reference_id: page.id,
             type: "pages",
             environment_key: data.environment_key,

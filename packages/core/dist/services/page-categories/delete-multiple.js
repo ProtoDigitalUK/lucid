@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const PageCategory_1 = __importDefault(require("../../db/models/PageCategory"));
-const deleteMultiple = async (data) => {
-    const pageCategory = await PageCategory_1.default.deleteMultiple({
+const deleteMultiple = async (client, data) => {
+    const pageCategory = await PageCategory_1.default.deleteMultiple(client, {
         page_id: data.page_id,
         category_ids: data.category_ids,
     });

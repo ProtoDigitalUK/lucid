@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Media from "@db/models/Media";
 // Format
@@ -7,8 +8,10 @@ export interface ServiceData {
   ids: number[];
 }
 
-const getMultipleByIds = async (data: ServiceData) => {
-  const mediasRes = await Media.getMultipleByIds(data.ids);
+const getMultipleByIds = async (client: PoolClient, data: ServiceData) => {
+  const mediasRes = await Media.getMultipleByIds(client, {
+    ids: data.ids,
+  });
 
   if (!mediasRes) {
     return [];

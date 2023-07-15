@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { CollectionResT } from "../../utils/format/format-collections";
 export interface ServiceData {
     reference_id: number;
@@ -5,7 +6,7 @@ export interface ServiceData {
     environment_key: string;
     collection: CollectionResT;
 }
-declare const getAll: (data: ServiceData) => Promise<{
+declare const getAll: (client: PoolClient, data: ServiceData) => Promise<{
     builder_bricks: import("../../utils/format/format-bricks").BrickResT[];
     fixed_bricks: import("../../utils/format/format-bricks").BrickResT[];
 }>;

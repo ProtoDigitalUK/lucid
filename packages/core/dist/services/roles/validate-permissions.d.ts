@@ -1,5 +1,6 @@
+import { PoolClient } from "pg";
 import { PermissionT, EnvironmentPermissionT } from "../Permissions";
-declare const validatePermissions: (permGroup: {
+declare const validatePermissions: (client: PoolClient, permGroup: {
     permissions: string[];
     environment_key?: string | undefined;
 }[]) => Promise<{

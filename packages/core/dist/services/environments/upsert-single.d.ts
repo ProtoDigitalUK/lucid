@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     data: {
         key: string;
@@ -8,6 +9,6 @@ export interface ServiceData {
     };
     create: boolean;
 }
-declare const upsertSingle: (data: ServiceData) => Promise<import("../../utils/format/format-environment").EnvironmentResT>;
+declare const upsertSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-environment").EnvironmentResT>;
 export default upsertSingle;
 //# sourceMappingURL=upsert-single.d.ts.map

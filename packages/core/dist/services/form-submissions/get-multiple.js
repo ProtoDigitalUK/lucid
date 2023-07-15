@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
 const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
-const getMultiple = async (data) => {
-    await form_submissions_1.default.hasEnvironmentPermission(data);
+const getMultiple = async (client, data) => {
+    await (0, service_1.default)(form_submissions_1.default.hasEnvironmentPermission, false, client)(data);
     const { sort, include, page, per_page } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -42,14 +43,16 @@ const getMultiple = async (data) => {
         page: page,
         per_page: per_page,
     });
-    const formSubmissionsRes = await FormSubmission_1.default.getMultiple(SelectQuery);
+    const formSubmissionsRes = await FormSubmission_1.default.getMultiple(client, SelectQuery);
     const formBuilder = forms_1.default.getBuilderInstance({
         form_key: data.form_key,
     });
     let formData = [];
     if (include?.includes("fields")) {
         const formSubmissionIds = formSubmissionsRes.data.map((submission) => submission.id);
-        formData = await FormSubmission_1.default.getAllFormData(formSubmissionIds);
+        formData = await FormSubmission_1.default.getAllFormData(client, {
+            submission_ids: formSubmissionIds,
+        });
     }
     const formattedSubmissions = formSubmissionsRes.data.map((submission) => {
         return (0, format_form_submission_1.default)(formBuilder, {

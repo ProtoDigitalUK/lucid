@@ -50,6 +50,11 @@ const getMultipleQuery = zod_1.default.object({
     per_page: zod_1.default.string().optional(),
 });
 const getMultipleParams = zod_1.default.object({});
+const getSingleBody = zod_1.default.object({});
+const getSingleQuery = zod_1.default.object({});
+const getSingleParams = zod_1.default.object({
+    id: zod_1.default.string(),
+});
 exports.default = {
     updateSingle: {
         body: updateSingleBody,
@@ -75,6 +80,11 @@ exports.default = {
         body: getMultipleBody,
         query: getMultipleQuery,
         params: getMultipleParams,
+    },
+    getSingle: {
+        body: getSingleBody,
+        query: getSingleQuery,
+        params: getSingleParams,
     },
 };
 //# sourceMappingURL=users.js.map

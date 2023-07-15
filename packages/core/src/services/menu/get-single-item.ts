@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -8,8 +9,11 @@ export interface ServiceData {
   menu_id: number;
 }
 
-const getSingleItem = async (data: ServiceData) => {
-  const menuItem = await Menu.getSingleItem(data.id, data.menu_id);
+const getSingleItem = async (client: PoolClient, data: ServiceData) => {
+  const menuItem = await Menu.getSingleItem(client, {
+    id: data.id,
+    menu_id: data.menu_id,
+  });
 
   if (!menuItem) {
     throw new LucidError({

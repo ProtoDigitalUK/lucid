@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Menu_1 = __importDefault(require("../../db/models/Menu"));
 const menu_1 = __importDefault(require("../menu"));
-const updateSingle = async (data) => {
-    const getMenu = await menu_1.default.getSingle({
+const updateSingle = async (client, data) => {
+    const getMenu = await (0, service_1.default)(menu_1.default.getSingle, false, client)({
         id: data.id,
         environment_key: data.environment_key,
     });
@@ -15,12 +16,12 @@ const updateSingle = async (data) => {
         delete data.key;
     }
     if (data.key) {
-        await menu_1.default.checkKeyUnique({
+        await (0, service_1.default)(menu_1.default.checkKeyUnique, false, client)({
             key: data.key,
             environment_key: data.environment_key,
         });
     }
-    const menu = await Menu_1.default.updateSingle({
+    const menu = await Menu_1.default.updateSingle(client, {
         environment_key: data.environment_key,
         id: data.id,
         key: data.key,
@@ -36,37 +37,22 @@ const updateSingle = async (data) => {
         });
     }
     if (data.items) {
-        const originalItems = await menu_1.default.getItems({
+        const originalItems = await (0, service_1.default)(menu_1.default.getItems, false, client)({
             menu_ids: [getMenu.id],
         });
-        let updatedItems = [];
-        try {
-            updatedItems = await menu_1.default.upsertMultipleItems({
-                menu_id: getMenu.id,
-                items: data.items,
-            });
-        }
-        catch (err) {
-            const allItems = await menu_1.default.getItems({
-                menu_ids: [getMenu.id],
-            });
-            const deleteItems = allItems.filter((item) => {
-                return (originalItems.findIndex((originalItem) => originalItem.id === item.id) === -1);
-            });
-            await menu_1.default.deleteItemsByIds({
-                ids: deleteItems.map((item) => item.id),
-            });
-            throw err;
-        }
+        const updatedItems = await (0, service_1.default)(menu_1.default.upsertMultipleItems, false, client)({
+            menu_id: getMenu.id,
+            items: data.items,
+        });
         const deleteItems = originalItems.filter((item) => {
             return (updatedItems.findIndex((updatedItem) => updatedItem.id === item.id) ===
                 -1);
         });
-        await menu_1.default.deleteItemsByIds({
+        await (0, service_1.default)(menu_1.default.deleteItemsByIds, false, client)({
             ids: deleteItems.map((item) => item.id),
         });
     }
-    return await menu_1.default.getSingle({
+    return await (0, service_1.default)(menu_1.default.getSingle, false, client)({
         id: data.id,
         environment_key: data.environment_key,
     });

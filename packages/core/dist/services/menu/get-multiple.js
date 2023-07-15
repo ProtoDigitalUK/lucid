@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Menu_1 = __importDefault(require("../../db/models/Menu"));
 const menu_1 = __importDefault(require("../menu"));
 const format_menu_1 = __importDefault(require("../../utils/format/format-menu"));
-const getMultiple = async (data) => {
+const getMultiple = async (client, data) => {
     const { filter, sort, include, page, per_page } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -42,10 +43,10 @@ const getMultiple = async (data) => {
         page: page,
         per_page: per_page,
     });
-    const menus = await Menu_1.default.getMultiple(SelectQuery);
+    const menus = await Menu_1.default.getMultiple(client, SelectQuery);
     let menuItems = [];
     if (include && include.includes("items")) {
-        menuItems = await menu_1.default.getItems({
+        menuItems = await (0, service_1.default)(menu_1.default.getItems, false, client)({
             menu_ids: menus.data.map((menu) => menu.id),
         });
     }

@@ -1,7 +1,8 @@
+import { PoolClient } from "pg";
 import { BrickObject } from "../../db/models/CollectionBrick";
 import { EnvironmentT } from "../../db/models/Environment";
 import { CollectionResT } from "../../utils/format/format-collections";
-declare const validateBricks: (data: {
+declare const validateBricks: (client: PoolClient, data: {
     builder_bricks: BrickObject[];
     fixed_bricks: BrickObject[];
     collection: CollectionResT;

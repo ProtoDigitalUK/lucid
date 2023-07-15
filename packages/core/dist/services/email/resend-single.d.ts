@@ -1,7 +1,8 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     id: number;
 }
-declare const resendSingle: (data: ServiceData) => Promise<{
+declare const resendSingle: (client: PoolClient, data: ServiceData) => Promise<{
     status: {
         success: boolean;
         message: string;

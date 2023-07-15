@@ -122,6 +122,17 @@ declare const _default: {
         }>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
     };
+    getSingle: {
+        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        params: z.ZodObject<{
+            id: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            id: string;
+        }, {
+            id: string;
+        }>;
+    };
 };
 export default _default;
 //# sourceMappingURL=users.d.ts.map

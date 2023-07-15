@@ -9,6 +9,7 @@ const update_roles_1 = __importDefault(require("../../controllers/users/update-r
 const create_single_1 = __importDefault(require("../../controllers/users/create-single"));
 const delete_single_1 = __importDefault(require("../../controllers/users/delete-single"));
 const get_multiple_1 = __importDefault(require("../../controllers/users/get-multiple"));
+const get_single_1 = __importDefault(require("../../controllers/users/get-single"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "post",
@@ -62,6 +63,19 @@ const router = (0, express_1.Router)();
     },
     schema: get_multiple_1.default.schema,
     controller: get_multiple_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "get",
+    path: "/:id",
+    permissions: {
+        global: ["read_users"],
+    },
+    middleware: {
+        authenticate: true,
+        authoriseCSRF: true,
+    },
+    schema: get_single_1.default.schema,
+    controller: get_single_1.default.controller,
 });
 exports.default = router;
 //# sourceMappingURL=users.routes.js.map

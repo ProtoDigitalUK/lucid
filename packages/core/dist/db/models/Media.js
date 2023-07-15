@@ -1,16 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
 class Media {
 }
 _a = Media;
-Media.createSingle = async (data) => {
-    const client = await db_1.default;
+Media.createSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
             "key",
@@ -41,8 +36,7 @@ Media.createSingle = async (data) => {
     });
     return media.rows[0];
 };
-Media.getMultiple = async (query_instance) => {
-    const client = await db_1.default;
+Media.getMultiple = async (client, query_instance) => {
     const mediasRes = client.query({
         text: `SELECT${query_instance.query.select}FROMlucid_media${query_instance.query.where}${query_instance.query.order}${query_instance.query.pagination}`,
         values: query_instance.values,
@@ -57,8 +51,7 @@ Media.getMultiple = async (query_instance) => {
         count: parseInt(data[1].rows[0].count),
     };
 };
-Media.getSingle = async (key) => {
-    const client = await db_1.default;
+Media.getSingle = async (client, data) => {
     const media = await client.query({
         text: `SELECT
           *
@@ -66,12 +59,11 @@ Media.getSingle = async (key) => {
           lucid_media
         WHERE
           key = $1`,
-        values: [key],
+        values: [data.key],
     });
     return media.rows[0];
 };
-Media.getSingleById = async (id) => {
-    const client = await db_1.default;
+Media.getSingleById = async (client, data) => {
     const media = await client.query({
         text: `SELECT
           *
@@ -79,24 +71,22 @@ Media.getSingleById = async (id) => {
           lucid_media
         WHERE
           id = $1`,
-        values: [id],
+        values: [data.id],
     });
     return media.rows[0];
 };
-Media.deleteSingle = async (key) => {
-    const client = await db_1.default;
+Media.deleteSingle = async (client, data) => {
     const media = await client.query({
         text: `DELETE FROM
           lucid_media
         WHERE
           key = $1
         RETURNING *`,
-        values: [key],
+        values: [data.key],
     });
     return media.rows[0];
 };
-Media.updateSingle = async (key, data) => {
-    const client = await db_1.default;
+Media.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
             "name",
@@ -130,12 +120,11 @@ Media.updateSingle = async (key, data) => {
           WHERE 
             key = $${aliases.value.length + 1}
           RETURNING *`,
-        values: [...values.value, key],
+        values: [...values.value, data.key],
     });
     return mediaRes.rows[0];
 };
-Media.getMultipleByIds = async (ids) => {
-    const client = await db_1.default;
+Media.getMultipleByIds = async (client, data) => {
     const media = await client.query({
         text: `SELECT
           *
@@ -143,7 +132,7 @@ Media.getMultipleByIds = async (ids) => {
           lucid_media
         WHERE
           id = ANY($1)`,
-        values: [ids],
+        values: [data.ids],
     });
     return media.rows;
 };

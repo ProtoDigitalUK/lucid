@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import User from "@db/models/User";
 // Serices
@@ -11,12 +13,18 @@ export interface ServiceData {
   user_id: number;
 }
 
-const deleteSingle = async (data: ServiceData) => {
-  await userServices.getSingle({
+const deleteSingle = async (client: PoolClient, data: ServiceData) => {
+  await service(
+    userServices.getSingle,
+    false,
+    client
+  )({
     user_id: data.user_id,
   });
 
-  const user = await User.deleteSingle(data.user_id);
+  const user = await User.deleteSingle(client, {
+    id: data.user_id,
+  });
 
   if (!user) {
     throw new LucidError({

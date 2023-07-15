@@ -1,10 +1,13 @@
+import { PoolClient } from "pg";
 // Models
 import CollectionBrick from "@db/models/CollectionBrick";
+// Utils
+import service from "@utils/app/service";
+// Serices
+import environmentsService from "@services/environments";
 // Format
 import { CollectionResT } from "@utils/format/format-collections";
 import formatBricks from "@utils/format/format-bricks";
-// Services
-import collectionBricksService from "@services/collection-bricks";
 
 export interface ServiceData {
   reference_id: number;
@@ -19,8 +22,8 @@ export interface ServiceData {
     Then format the bricks and fields into a format that can be used by the frontend.
 */
 
-const getAll = async (data: ServiceData) => {
-  const brickFields = await CollectionBrick.getAll({
+const getAll = async (client: PoolClient, data: ServiceData) => {
+  const brickFields = await CollectionBrick.getAll(client, {
     reference_id: data.reference_id,
     type: data.type,
   });
@@ -32,10 +35,19 @@ const getAll = async (data: ServiceData) => {
     };
   }
 
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
+    key: data.environment_key,
+  });
+
   const formmatedBricks = await formatBricks({
     brick_fields: brickFields,
     environment_key: data.environment_key,
     collection: data.collection,
+    environment: environment,
   });
 
   return {

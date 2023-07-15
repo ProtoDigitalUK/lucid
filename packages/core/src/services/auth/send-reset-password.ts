@@ -1,5 +1,8 @@
+import { PoolClient } from "pg";
 import { add } from "date-fns";
 import C from "@root/constants";
+// Utils
+import service from "@utils/app/service";
 // Models
 import User from "@db/models/User";
 // Serices
@@ -11,12 +14,12 @@ export interface ServiceData {
   email: string;
 }
 
-const sendResetPassword = async (data: ServiceData) => {
+const sendResetPassword = async (client: PoolClient, data: ServiceData) => {
   const successMessage = `If an account with that email exists, we sent you an email with instructions to reset your password.`;
 
   // -------------------------------------------
   // Check if user exists
-  const user = await User.getByEmail({
+  const user = await User.getByEmail(client, {
     email: data.email,
   });
 
@@ -31,7 +34,11 @@ const sendResetPassword = async (data: ServiceData) => {
   // Create a password reset token
   const expiryDate = add(new Date(), { hours: 1 }).toISOString();
 
-  const userToken = await userTokensServices.createSingle({
+  const userToken = await service(
+    userTokensServices.createSingle,
+    false,
+    client
+  )({
     user_id: user.id,
     token_type: "password_reset",
     expiry_date: expiryDate,
@@ -39,16 +46,23 @@ const sendResetPassword = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Send the password reset email
-  await emailServices.sendEmailInternal("reset-password", {
-    data: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      url: `${Config.host}${C.locations.resetPassword}?token=${userToken.token}`,
-    },
-    options: {
-      to: user.email,
-      subject: "Reset your password",
+  await service(
+    emailServices.sendEmailInternal,
+    false,
+    client
+  )({
+    template: "reset-password",
+    params: {
+      data: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        url: `${Config.host}${C.locations.resetPassword}?token=${userToken.token}`,
+      },
+      options: {
+        to: user.email,
+        subject: "Reset your password",
+      },
     },
   });
 

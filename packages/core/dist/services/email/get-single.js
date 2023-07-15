@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Email_1 = __importDefault(require("../../db/models/Email"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const email_1 = __importDefault(require("../email"));
-const getSingle = async (data) => {
-    const email = await Email_1.default.getSingle(data.id);
+const getSingle = async (client, data) => {
+    const email = await Email_1.default.getSingle(client, {
+        id: data.id,
+    });
     if (!email) {
         throw new error_handler_1.LucidError({
             type: "basic",

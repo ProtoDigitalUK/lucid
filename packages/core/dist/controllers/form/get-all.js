@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const forms_1 = __importDefault(require("../../schemas/forms"));
 const forms_2 = __importDefault(require("../../services/forms"));
 const getAllController = async (req, res, next) => {
     try {
-        const formsRes = await forms_2.default.getAll({
+        const formsRes = await (0, service_1.default)(forms_2.default.getAll, false)({
             query: req.query,
             environment_key: req.headers["lucid-environment"],
         });

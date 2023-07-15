@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import rolesSchema from "@schemas/roles";
 // Services
@@ -13,7 +14,10 @@ const deleteSingleController: Controller<
   typeof rolesSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await rolesService.deleteSingle({
+    const role = await service(
+      rolesService.deleteSingle,
+      true
+    )({
       id: parseInt(req.params.id),
     });
 

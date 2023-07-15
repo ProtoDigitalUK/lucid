@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
 // Format
@@ -21,12 +24,16 @@ export interface ServiceData {
   This will create/update/delete bricks based on the data provided.
 */
 
-const updateMultiple = async (data: ServiceData) => {
+const updateMultiple = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Update/Create Bricks
   const builderBricksPromise =
     data.builder_bricks.map((brick, index) =>
-      collectionBricksService.upsertSingle({
+      service(
+        collectionBricksService.upsertSingle,
+        false,
+        client
+      )({
         reference_id: data.id,
         brick: brick,
         brick_type: "builder",
@@ -37,7 +44,11 @@ const updateMultiple = async (data: ServiceData) => {
     ) || [];
   const fixedBricksPromise =
     data.fixed_bricks.map((brick, index) =>
-      collectionBricksService.upsertSingle({
+      service(
+        collectionBricksService.upsertSingle,
+        false,
+        client
+      )({
         reference_id: data.id,
         brick: brick,
         brick_type: "fixed",
@@ -58,14 +69,22 @@ const updateMultiple = async (data: ServiceData) => {
   // -------------------------------------------
   // Delete unused bricks
   if (builderIds.length > 0)
-    await collectionBricksService.deleteUnused({
+    await service(
+      collectionBricksService.deleteUnused,
+      false,
+      client
+    )({
       type: data.collection.type,
       reference_id: data.id,
       brick_ids: builderIds,
       brick_type: "builder",
     });
   if (fixedIds.length > 0)
-    await collectionBricksService.deleteUnused({
+    await service(
+      collectionBricksService.deleteUnused,
+      false,
+      client
+    )({
       type: data.collection.type,
       reference_id: data.id,
       brick_ids: fixedIds,

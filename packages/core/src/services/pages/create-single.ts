@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Page from "@db/models/Page";
 // Services
@@ -22,20 +24,28 @@ export interface ServiceData {
   userId: number;
 }
 
-const createSingle = async (data: ServiceData) => {
+const createSingle = async (client: PoolClient, data: ServiceData) => {
   // If the page is a homepage, set the parent_id to undefined
   const parentId = data.homepage ? undefined : data.parent_id;
 
   // Start checks that do not depend on each other in parallel
   const checks = Promise.all([
-    collectionsService.getSingle({
+    service(
+      collectionsService.getSingle,
+      false,
+      client
+    )({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
       type: "pages",
     }),
     parentId === undefined
       ? Promise.resolve(undefined) // If the page is a homepage, set the parent_id to undefined
-      : pageServices.parentChecks({
+      : service(
+          pageServices.parentChecks,
+          false,
+          client
+        )({
           parent_id: parentId,
           environment_key: data.environment_key,
           collection_key: data.collection_key,
@@ -44,7 +54,11 @@ const createSingle = async (data: ServiceData) => {
   await checks;
 
   // Check if slug is unique
-  const slug = await pageServices.buildUniqueSlug({
+  const slug = await service(
+    pageServices.buildUniqueSlug,
+    false,
+    client
+  )({
     slug: data.slug,
     homepage: data.homepage || false,
     environment_key: data.environment_key,
@@ -54,7 +68,7 @@ const createSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Create page
-  const page = await Page.createSingle({
+  const page = await Page.createSingle(client, {
     environment_key: data.environment_key,
     title: data.title,
     slug: slug,
@@ -79,14 +93,22 @@ const createSingle = async (data: ServiceData) => {
   // Start operations that do not depend on each other in parallel
   const operations = [
     data.category_ids
-      ? pageCategoryService.createMultiple({
+      ? service(
+          pageCategoryService.createMultiple,
+          false,
+          client
+        )({
           page_id: page.id,
           category_ids: data.category_ids,
           collection_key: data.collection_key,
         })
       : Promise.resolve(),
     data.homepage
-      ? pageServices.resetHomepages({
+      ? service(
+          pageServices.resetHomepages,
+          false,
+          client
+        )({
           current: page.id,
           environment_key: data.environment_key,
         })

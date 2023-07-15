@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     id: number;
     data: {
@@ -6,6 +7,6 @@ export interface ServiceData {
         delivery_status?: "sent" | "failed" | "pending";
     };
 }
-declare const updatteSingle: (data: ServiceData) => Promise<import("../../db/models/Email").EmailT>;
+declare const updatteSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/Email").EmailT>;
 export default updatteSingle;
 //# sourceMappingURL=update-single.d.ts.map

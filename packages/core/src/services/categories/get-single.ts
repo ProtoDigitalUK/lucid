@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Category from "@db/models/Category";
 // Utils
@@ -8,8 +9,11 @@ export interface ServiceData {
   id: number;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const category = await Category.getSingle(data.environment_key, data.id);
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const category = await Category.getSingle(client, {
+    environment_key: data.environment_key,
+    id: data.id,
+  });
 
   if (!category) {
     throw new LucidError({

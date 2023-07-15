@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const service_1 = __importDefault(require("../../utils/app/service"));
 const collection_bricks_1 = __importDefault(require("../collection-bricks"));
-const updateMultiple = async (data) => {
-    const builderBricksPromise = data.builder_bricks.map((brick, index) => collection_bricks_1.default.upsertSingle({
+const updateMultiple = async (client, data) => {
+    const builderBricksPromise = data.builder_bricks.map((brick, index) => (0, service_1.default)(collection_bricks_1.default.upsertSingle, false, client)({
         reference_id: data.id,
         brick: brick,
         brick_type: "builder",
@@ -13,7 +14,7 @@ const updateMultiple = async (data) => {
         environment: data.environment,
         collection: data.collection,
     })) || [];
-    const fixedBricksPromise = data.fixed_bricks.map((brick, index) => collection_bricks_1.default.upsertSingle({
+    const fixedBricksPromise = data.fixed_bricks.map((brick, index) => (0, service_1.default)(collection_bricks_1.default.upsertSingle, false, client)({
         reference_id: data.id,
         brick: brick,
         brick_type: "fixed",
@@ -28,14 +29,14 @@ const updateMultiple = async (data) => {
     const builderIds = buildBrickRes.map((brickId) => brickId);
     const fixedIds = fixedBrickRes.map((brickId) => brickId);
     if (builderIds.length > 0)
-        await collection_bricks_1.default.deleteUnused({
+        await (0, service_1.default)(collection_bricks_1.default.deleteUnused, false, client)({
             type: data.collection.type,
             reference_id: data.id,
             brick_ids: builderIds,
             brick_type: "builder",
         });
     if (fixedIds.length > 0)
-        await collection_bricks_1.default.deleteUnused({
+        await (0, service_1.default)(collection_bricks_1.default.deleteUnused, false, client)({
             type: data.collection.type,
             reference_id: data.id,
             brick_ids: fixedIds,

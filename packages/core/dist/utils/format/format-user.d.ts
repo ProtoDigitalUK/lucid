@@ -2,7 +2,7 @@ import { UserT } from "../../db/models/User";
 import { UserPermissionsResT } from "../format/format-user-permissions";
 export interface UserResT {
     id: number;
-    super_admin: boolean;
+    super_admin?: boolean;
     email: string;
     username: string;
     first_name: string | null;

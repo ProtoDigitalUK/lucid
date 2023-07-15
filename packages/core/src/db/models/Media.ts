@@ -1,32 +1,59 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { type MediaMetaDataT } from "@utils/media/helpers";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
-type MediaCreateSingle = (data: {
-  key: string;
-  name: string;
-  etag?: string;
-  alt?: string;
-  meta: MediaMetaDataT;
-}) => Promise<MediaT>;
+type MediaCreateSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+    name: string;
+    etag?: string;
+    alt?: string;
+    meta: MediaMetaDataT;
+  }
+) => Promise<MediaT>;
 
-type MediaGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type MediaGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
   data: MediaT[];
   count: number;
 }>;
 
-type MediaGetSingle = (key: string) => Promise<MediaT>;
-type MediaGetSingleById = (id: number) => Promise<MediaT>;
-type MediaGetMultipleByIds = (ids: number[]) => Promise<MediaT[]>;
+type MediaGetSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+  }
+) => Promise<MediaT>;
 
-type MediaDeleteSingle = (key: string) => Promise<MediaT>;
+type MediaGetSingleById = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<MediaT>;
+
+type MediaGetMultipleByIds = (
+  client: PoolClient,
+  data: {
+    ids: number[];
+  }
+) => Promise<MediaT[]>;
+
+type MediaDeleteSingle = (
+  client: PoolClient,
+  data: { key: string }
+) => Promise<MediaT>;
 
 type MediaUpdateSingle = (
-  key: string,
+  client: PoolClient,
   data: {
+    key: string;
     name?: string;
     alt?: string;
     meta?: MediaMetaDataT;
@@ -54,11 +81,7 @@ export type MediaT = {
 };
 
 export default class Media {
-  // -------------------------------------------
-  // Functions
-  static createSingle: MediaCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: MediaCreateSingle = async (client, data) => {
     // -------------------------------------------
     // Save to db
     const { columns, aliases, values } = queryDataFormat({
@@ -93,9 +116,7 @@ export default class Media {
 
     return media.rows[0];
   };
-  static getMultiple: MediaGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getMultiple: MediaGetMultiple = async (client, query_instance) => {
     const mediasRes = client.query<MediaT>({
       text: `SELECT${query_instance.query.select}FROMlucid_media${query_instance.query.where}${query_instance.query.order}${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -112,9 +133,7 @@ export default class Media {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static getSingle: MediaGetSingle = async (key) => {
-    const client = await getDBClient;
-
+  static getSingle: MediaGetSingle = async (client, data) => {
     const media = await client.query<MediaT>({
       text: `SELECT
           *
@@ -122,14 +141,12 @@ export default class Media {
           lucid_media
         WHERE
           key = $1`,
-      values: [key],
+      values: [data.key],
     });
 
     return media.rows[0];
   };
-  static getSingleById: MediaGetSingleById = async (id) => {
-    const client = await getDBClient;
-
+  static getSingleById: MediaGetSingleById = async (client, data) => {
     const media = await client.query<MediaT>({
       text: `SELECT
           *
@@ -137,28 +154,24 @@ export default class Media {
           lucid_media
         WHERE
           id = $1`,
-      values: [id],
+      values: [data.id],
     });
 
     return media.rows[0];
   };
-  static deleteSingle: MediaDeleteSingle = async (key) => {
-    const client = await getDBClient;
-
+  static deleteSingle: MediaDeleteSingle = async (client, data) => {
     const media = await client.query<MediaT>({
       text: `DELETE FROM
           lucid_media
         WHERE
           key = $1
         RETURNING *`,
-      values: [key],
+      values: [data.key],
     });
 
     return media.rows[0];
   };
-  static updateSingle: MediaUpdateSingle = async (key, data) => {
-    const client = await getDBClient;
-
+  static updateSingle: MediaUpdateSingle = async (client, data) => {
     // -------------------------------------------
     // Update Media Row
     const { columns, aliases, values } = queryDataFormat({
@@ -195,16 +208,14 @@ export default class Media {
           WHERE 
             key = $${aliases.value.length + 1}
           RETURNING *`,
-      values: [...values.value, key],
+      values: [...values.value, data.key],
     });
 
     // -------------------------------------------
     // Return Media
     return mediaRes.rows[0];
   };
-  static getMultipleByIds: MediaGetMultipleByIds = async (ids) => {
-    const client = await getDBClient;
-
+  static getMultipleByIds: MediaGetMultipleByIds = async (client, data) => {
     const media = await client.query<MediaT>({
       text: `SELECT
           *
@@ -212,7 +223,7 @@ export default class Media {
           lucid_media
         WHERE
           id = ANY($1)`,
-      values: [ids],
+      values: [data.ids],
     });
 
     return media.rows;

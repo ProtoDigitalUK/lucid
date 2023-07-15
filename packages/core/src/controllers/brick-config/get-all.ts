@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import bricksSchema from "@schemas/bricks";
 // Services
@@ -13,7 +14,10 @@ const getAllController: Controller<
   typeof bricksSchema.config.getAll.query
 > = async (req, res, next) => {
   try {
-    const bricks = await brickConfigService.getAll({
+    const bricks = await service(
+      brickConfigService.getAll,
+      false
+    )({
       query: req.query,
       collection_key: req.params.collection_key,
       environment_key: req.headers["lucid-environment"] as string,

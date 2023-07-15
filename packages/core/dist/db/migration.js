@@ -7,10 +7,11 @@ const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const console_log_colors_1 = require("console-log-colors");
 const error_handler_1 = require("../utils/app/error-handler");
+const db_1 = require("./db");
 const Migration_1 = __importDefault(require("./models/Migration"));
-const getOutstandingMigrations = async () => {
+const getOutstandingMigrations = async (client) => {
     const migrationFiles = await fs_extra_1.default.readdir(path_1.default.join(__dirname, "./migrations"));
-    const migrations = await Migration_1.default.all();
+    const migrations = await Migration_1.default.all(client);
     const outstandingMigrations = migrationFiles
         .filter((migrationFile) => {
         if (!migrationFile.endsWith(".sql"))
@@ -29,8 +30,9 @@ const getOutstandingMigrations = async () => {
     return outstandingMigrations;
 };
 const migrate = async () => {
+    const client = await (0, db_1.getDBClient)();
     try {
-        const outstandingMigrations = await getOutstandingMigrations();
+        const outstandingMigrations = await getOutstandingMigrations(client);
         if (outstandingMigrations.length === 0) {
             console.log((0, console_log_colors_1.green)("No outstanding migrations, database is up to date"));
             return;
@@ -38,7 +40,7 @@ const migrate = async () => {
         console.log((0, console_log_colors_1.green)(`Found ${outstandingMigrations.length} outstanding migrations, running...`));
         for (const migration of outstandingMigrations) {
             console.log((0, console_log_colors_1.green)(`- running migration ${migration.file}`));
-            await Migration_1.default.create({
+            await Migration_1.default.create(client, {
                 file: migration.file,
                 rawSql: migration.sql,
             });

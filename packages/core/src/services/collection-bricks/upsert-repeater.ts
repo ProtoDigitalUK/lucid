@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Models
 import CollectionBrick, { BrickFieldObject } from "@db/models/CollectionBrick";
 // Services
@@ -12,16 +15,22 @@ export interface ServiceData {
   Handles the upsert of a repeater field
 */
 
-const upsertRepeater = async (data: ServiceData) => {
+const upsertRepeater = async (client: PoolClient, data: ServiceData) => {
   let repeaterId;
   const brickField = data.data;
 
   // Check if id exists. If it does, update, else create.
   if (brickField.fields_id && brickField.group_position !== undefined) {
-    const repeaterRes = await CollectionBrick.updateRepeater(brickField);
+    const repeaterRes = await CollectionBrick.updateRepeater(client, {
+      field: brickField,
+    });
     repeaterId = repeaterRes.fields_id;
   } else {
-    await collectionBricksService.checkFieldExists({
+    await service(
+      collectionBricksService.checkFieldExists,
+      false,
+      client
+    )({
       brick_id: data.brick_id,
       key: brickField.key,
       type: brickField.type,
@@ -30,10 +39,10 @@ const upsertRepeater = async (data: ServiceData) => {
       create: true,
     });
 
-    const repeaterRes = await CollectionBrick.createRepeater(
-      data.brick_id,
-      data.data
-    );
+    const repeaterRes = await CollectionBrick.createRepeater(client, {
+      brick_id: data.brick_id,
+      field: brickField,
+    });
     repeaterId = repeaterRes.fields_id;
   }
 
@@ -53,7 +62,11 @@ const upsertRepeater = async (data: ServiceData) => {
     // If its a repeater, recursively call this function
     if (item.type === "repeater") {
       promises.push(
-        collectionBricksService.upsertRepeater({
+        service(
+          collectionBricksService.upsertRepeater,
+          false,
+          client
+        )({
           brick_id: data.brick_id,
           data: item,
         })
@@ -63,7 +76,11 @@ const upsertRepeater = async (data: ServiceData) => {
 
     // Update the field
     promises.push(
-      collectionBricksService.upsertField({
+      service(
+        collectionBricksService.upsertField,
+        false,
+        client
+      )({
         brick_id: data.brick_id,
         data: item,
       })

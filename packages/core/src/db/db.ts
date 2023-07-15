@@ -1,18 +1,27 @@
-import { Client } from "pg";
+import { Pool } from "pg";
 // Services
 import Config from "@services/Config";
 
-const getDBClient = async () => {
+let pool: Pool;
+
+const initializePool = async () => {
   const config = await Config.getConfig();
 
-  const client = new Client({
+  pool = new Pool({
     connectionString: config.postgresURL,
     ssl: {
       rejectUnauthorized: false,
     },
   });
-
-  return client.connect().then(() => client);
 };
 
-export default getDBClient();
+const getDBClient = () => {
+  if (!pool) {
+    throw new Error(
+      "Database connection pool is not initialized. Call initializePool() before getDBClient()."
+    );
+  }
+  return pool.connect();
+};
+
+export { initializePool, getDBClient };

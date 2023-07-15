@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 import bricksSchema from "../../schemas/bricks";
 export interface ServiceData {
@@ -5,6 +6,6 @@ export interface ServiceData {
     collection_key: string;
     environment_key: string;
 }
-declare const getAll: (data: ServiceData) => Promise<import("../brick-config").BrickConfigT[]>;
+declare const getAll: (client: PoolClient, data: ServiceData) => Promise<import("../brick-config").BrickConfigT[]>;
 export default getAll;
 //# sourceMappingURL=get-all.d.ts.map

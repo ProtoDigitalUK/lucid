@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
@@ -13,7 +14,7 @@ const getAllController: Controller<
   typeof environmentSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const environmentsRes = await environmentsService.getAll();
+    const environmentsRes = await service(environmentsService.getAll, false)();
 
     res.status(200).json(
       buildResponse(req, {

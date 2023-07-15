@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const users_1 = __importDefault(require("../users"));
 const options_1 = __importDefault(require("../options"));
-const registerSuperAdmin = async (data) => {
-    const initialUserRes = await options_1.default.getByName({
+const registerSuperAdmin = async (client, data) => {
+    const initialUserRes = await (0, service_1.default)(options_1.default.getByName, false, client)({
         name: "initial_user_created",
     });
     const resValue = initialUserRes.option_value;
@@ -19,7 +20,7 @@ const registerSuperAdmin = async (data) => {
             status: 400,
         });
     }
-    const user = await users_1.default.registerSingle({
+    const user = await (0, service_1.default)(users_1.default.registerSingle, false, client)({
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
@@ -27,7 +28,7 @@ const registerSuperAdmin = async (data) => {
         password: data.password,
         super_admin: true,
     });
-    await options_1.default.patchByName({
+    await (0, service_1.default)(options_1.default.patchByName, false, client)({
         name: "initial_user_created",
         value: true,
         type: "boolean",

@@ -1,23 +1,36 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
-type EnvironmentGetAll = () => Promise<EnvironmentT[]>;
-type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
-type EnvironmentUpsertSingle = (data: {
-  key: string;
-  title?: string;
-  assigned_bricks?: string[];
-  assigned_collections?: string[];
-  assigned_forms?: string[];
-}) => Promise<EnvironmentT>;
+type EnvironmentGetAll = (client: PoolClient) => Promise<EnvironmentT[]>;
+type EnvironmentGetSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+  }
+) => Promise<EnvironmentT>;
+type EnvironmentUpsertSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+    title?: string;
+    assigned_bricks?: string[];
+    assigned_collections?: string[];
+    assigned_forms?: string[];
+  }
+) => Promise<EnvironmentT>;
 
-type EnvironmentDeleteSingle = (key: string) => Promise<EnvironmentT>;
+type EnvironmentDeleteSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+  }
+) => Promise<EnvironmentT>;
 
 // -------------------------------------------
-// User
+// Environment
 export type EnvironmentT = {
   key: string;
   title: string | null;
@@ -28,9 +41,7 @@ export type EnvironmentT = {
 };
 
 export default class Environment {
-  static getAll: EnvironmentGetAll = async () => {
-    const client = await getDBClient;
-
+  static getAll: EnvironmentGetAll = async (client) => {
     // Get all environments
     const environments = await client.query<EnvironmentT>({
       text: `SELECT *
@@ -43,19 +54,15 @@ export default class Environment {
 
     return environments.rows;
   };
-  static getSingle: EnvironmentGetSingle = async (key) => {
-    const client = await getDBClient;
-
+  static getSingle: EnvironmentGetSingle = async (client, data) => {
     const environment = await client.query<EnvironmentT>({
       text: `SELECT * FROM lucid_environments WHERE key = $1`,
-      values: [key],
+      values: [data.key],
     });
 
     return environment.rows[0];
   };
-  static upsertSingle: EnvironmentUpsertSingle = async (data) => {
-    const client = await getDBClient;
-
+  static upsertSingle: EnvironmentUpsertSingle = async (client, data) => {
     // Create query from data
     const { columns, aliases, values } = queryDataFormat({
       columns: [
@@ -86,24 +93,12 @@ export default class Environment {
 
     return environments.rows[0];
   };
-  static deleteSingle: EnvironmentDeleteSingle = async (key) => {
-    const client = await getDBClient;
-
+  static deleteSingle: EnvironmentDeleteSingle = async (client, data) => {
     const environments = await client.query<EnvironmentT>({
       text: `DELETE FROM lucid_environments WHERE key = $1 RETURNING *`,
-      values: [key],
+      values: [data.key],
     });
 
     return environments.rows[0];
-  };
-  static checkKeyExists = async (key: string) => {
-    const client = await getDBClient;
-
-    const environments = await client.query<EnvironmentT>({
-      text: `SELECT * FROM lucid_environments WHERE key = $1`,
-      values: [key],
-    });
-
-    return environments.rows;
   };
 }

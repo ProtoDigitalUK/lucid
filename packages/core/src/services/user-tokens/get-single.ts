@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -8,8 +9,8 @@ export interface ServiceData {
   token: string;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const userToken = await UserToken.getByToken({
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const userToken = await UserToken.getByToken(client, {
     token_type: data.token_type,
     token: data.token,
   });

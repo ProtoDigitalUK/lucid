@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../utils/app/error-handler");
+const service_1 = __importDefault(require("../utils/app/service"));
 const environments_1 = __importDefault(require("../services/environments"));
 const validateEnvironment = async (req, res, next) => {
     try {
@@ -22,7 +23,7 @@ const validateEnvironment = async (req, res, next) => {
                 }),
             });
         }
-        const environmentConfig = await environments_1.default.getAll();
+        const environmentConfig = await (0, service_1.default)(environments_1.default.getAll, false)();
         const findEnv = environmentConfig.find((env) => env.key === environment);
         if (!findEnv) {
             throw new error_handler_1.LucidError({

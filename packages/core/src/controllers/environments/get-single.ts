@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import environmentSchema from "@schemas/environments";
 // Services
@@ -13,7 +14,10 @@ const getSingleController: Controller<
   typeof environmentSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const environment = await environmentsService.getSingle({
+    const environment = await service(
+      environmentsService.getSingle,
+      false
+    )({
       key: req.params.key,
     });
 

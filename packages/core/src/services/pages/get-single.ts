@@ -1,7 +1,9 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Page from "@db/models/Page";
 // Schema
@@ -18,7 +20,7 @@ export interface ServiceData {
   id: number;
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (client: PoolClient, data: ServiceData) => {
   const { include } = data.query;
 
   // Build Query Data and Query
@@ -64,7 +66,7 @@ const getSingle = async (data: ServiceData) => {
     per_page: undefined,
   });
 
-  const page = await Page.getSingle(SelectQuery);
+  const page = await Page.getSingle(client, SelectQuery);
 
   if (!page) {
     throw new LucidError({
@@ -76,13 +78,21 @@ const getSingle = async (data: ServiceData) => {
   }
 
   if (include && include.includes("bricks")) {
-    const collection = await collectionsService.getSingle({
+    const collection = await service(
+      collectionsService.getSingle,
+      false,
+      client
+    )({
       collection_key: page.collection_key,
       environment_key: page.environment_key,
       type: "pages",
     });
 
-    const pageBricks = await collectionBricksService.getAll({
+    const pageBricks = await service(
+      collectionBricksService.getAll,
+      false,
+      client
+    )({
       reference_id: page.id,
       type: "pages",
       environment_key: data.environment_key,

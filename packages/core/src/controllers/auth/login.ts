@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
@@ -13,7 +14,10 @@ const loginController: Controller<
   typeof authSchema.login.query
 > = async (req, res, next) => {
   try {
-    const user = await authService.login({
+    const user = await service(
+      authService.login,
+      false
+    )({
       username: req.body.username,
       password: req.body.password,
     });

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
@@ -12,7 +13,7 @@ export interface ServiceData {
   query: z.infer<typeof usersSchema.getMultiple.query>;
 }
 
-const getMultiple = async (data: ServiceData) => {
+const getMultiple = async (client: PoolClient, data: ServiceData) => {
   const { filter, sort, page, per_page } = data.query;
 
   // Build Query Data and Query
@@ -56,7 +57,7 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  const users = await User.getMultiple(SelectQuery);
+  const users = await User.getMultiple(client, SelectQuery);
 
   return {
     data: users.data.map((user) => formatUser(user)),

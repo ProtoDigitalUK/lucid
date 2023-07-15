@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Menu from "@db/models/Menu";
 // Services
@@ -12,8 +14,8 @@ export interface ServiceData {
   id: number;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const menu = await Menu.getSingle({
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const menu = await Menu.getSingle(client, {
     environment_key: data.environment_key,
     id: data.id,
   });
@@ -27,7 +29,11 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  const menuItems = await menuServices.getItems({
+  const menuItems = await service(
+    menuServices.getItems,
+    false,
+    client
+  )({
     menu_ids: [menu.id],
   });
 

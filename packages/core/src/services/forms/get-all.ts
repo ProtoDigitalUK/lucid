@@ -1,6 +1,9 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Schema
 import formsSchema from "@schemas/forms";
+// Utils
+import service from "@utils/app/service";
 // Services
 import Config from "@services/Config";
 import environmentsService from "@services/environments";
@@ -12,14 +15,18 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getAll = async (data: ServiceData) => {
+const getAll = async (client: PoolClient, data: ServiceData) => {
   // Check access
   const formInstances = Config.forms || [];
 
   let formsRes = formInstances.map((form) => formatForm(form));
 
   // Get data
-  const environment = await environmentsService.getSingle({
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
     key: data.environment_key,
   });
 

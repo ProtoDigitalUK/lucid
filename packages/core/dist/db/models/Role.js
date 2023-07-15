@@ -1,16 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
 class Role {
 }
 _a = Role;
-Role.createSingle = async (data) => {
-    const client = await db_1.default;
+Role.createSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["name"],
         values: [data.name],
@@ -21,16 +16,14 @@ Role.createSingle = async (data) => {
     });
     return roleRes.rows[0];
 };
-Role.deleteSingle = async (id) => {
-    const client = await db_1.default;
+Role.deleteSingle = async (client, data) => {
     const roleRes = await client.query({
         text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
-        values: [id],
+        values: [data.id],
     });
     return roleRes.rows[0];
 };
-Role.getMultiple = async (query_instance) => {
-    const client = await db_1.default;
+Role.getMultiple = async (client, query_instance) => {
     const roles = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
@@ -45,20 +38,18 @@ Role.getMultiple = async (query_instance) => {
         count: parseInt(data[1].rows[0].count),
     };
 };
-Role.updateSingle = async (id, data) => {
-    const client = await db_1.default;
+Role.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["name"],
-        values: [data.name],
+        values: [data.data.name],
     });
     const roleRes = await client.query({
         text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
-        values: [...values.value, id],
+        values: [...values.value, data.id],
     });
     return roleRes.rows[0];
 };
-Role.getSingle = async (id) => {
-    const client = await db_1.default;
+Role.getSingle = async (client, data) => {
     const roleRes = await client.query({
         text: `SELECT 
           roles.*,
@@ -75,15 +66,14 @@ Role.getSingle = async (id) => {
           roles.id = $1
         GROUP BY
           roles.id`,
-        values: [id],
+        values: [data.id],
     });
     return roleRes.rows[0];
 };
-Role.getSingleByName = async (name) => {
-    const client = await db_1.default;
+Role.getSingleByName = async (client, data) => {
     const roleRes = await client.query({
         text: `SELECT * FROM lucid_roles WHERE name = $1`,
-        values: [name],
+        values: [data.name],
     });
     return roleRes.rows[0];
 };

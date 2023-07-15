@@ -1,4 +1,4 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
 // Utils
@@ -8,63 +8,112 @@ import { BrickResT } from "@utils/format/format-bricks";
 
 // -------------------------------------------
 // Types
-type PageGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type PageGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
   data: PageT[];
   count: number;
 }>;
 
-type PageGetSingle = (query_instance: SelectQueryBuilder) => Promise<PageT>;
-
-type PageGetSingleBasic = (
-  id: number,
-  environment_key: string
+type PageGetSingle = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
 ) => Promise<PageT>;
 
-type PageGetSlugCount = (data: {
-  slug: string;
-  environment_key: string;
-  collection_key: string;
-  parent_id?: number;
-}) => Promise<number>;
+type PageGetSingleBasic = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+  }
+) => Promise<PageT>;
 
-type PageCreateSingle = (data: {
-  userId: number;
-  environment_key: string;
-  title: string;
-  slug: string;
-  collection_key: string;
-  homepage?: boolean;
-  excerpt?: string;
-  published?: boolean;
-  parent_id?: number;
-  category_ids?: Array<number>;
-}) => Promise<PageT>;
+type PageGetSlugCount = (
+  client: PoolClient,
+  data: {
+    slug: string;
+    environment_key: string;
+    collection_key: string;
+    parent_id?: number;
+  }
+) => Promise<number>;
 
-type PageUpdateSingle = (data: {
-  id: number;
-  environment_key: string;
-  userId: number;
+type PageCreateSingle = (
+  client: PoolClient,
+  data: {
+    userId: number;
+    environment_key: string;
+    title: string;
+    slug: string;
+    collection_key: string;
+    homepage?: boolean;
+    excerpt?: string;
+    published?: boolean;
+    parent_id?: number;
+    category_ids?: Array<number>;
+  }
+) => Promise<PageT>;
 
-  title?: string;
-  slug?: string;
-  homepage?: boolean;
-  parent_id?: number;
-  category_ids?: Array<number>;
-  published?: boolean;
-  excerpt?: string;
-  builder_bricks?: Array<BrickObject>;
-  fixed_bricks?: Array<BrickObject>;
-}) => Promise<PageT>;
+type PageUpdateSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+    userId: number;
 
-type PageDeleteSingle = (data: { id: number }) => Promise<PageT>;
+    title?: string;
+    slug?: string;
+    homepage?: boolean;
+    parent_id?: number;
+    category_ids?: Array<number>;
+    published?: boolean;
+    excerpt?: string;
+    builder_bricks?: Array<BrickObject>;
+    fixed_bricks?: Array<BrickObject>;
+  }
+) => Promise<PageT>;
 
-type PageGetMultipleByIds = (data: {
-  ids: Array<number>;
-  environment_key: string;
-}) => Promise<PageT[]>;
+type PageDeleteSingle = (
+  client: PoolClient,
+  data: { id: number }
+) => Promise<PageT>;
+
+type PageGetMultipleByIds = (
+  client: PoolClient,
+  data: {
+    ids: Array<number>;
+    environment_key: string;
+  }
+) => Promise<PageT[]>;
+
+type PageGetNonCurrentHomepages = (
+  client: PoolClient,
+  data: {
+    current_id: number;
+    environment_key: string;
+  }
+) => Promise<PageT[]>;
+
+type PageCheckSlugExistence = (
+  client: PoolClient,
+  data: {
+    slug: string;
+    id: number;
+    environment_key: string;
+  }
+) => Promise<boolean>;
+
+type PageUpdatePageToNonHomepage = (
+  client: PoolClient,
+  data: {
+    id: number;
+    slug: string;
+  }
+) => Promise<PageT>;
 
 // -------------------------------------------
-// User
+// Page
 export type PageT = {
   id: number;
   environment_key: string;
@@ -91,11 +140,7 @@ export type PageT = {
 };
 
 export default class Page {
-  // -------------------------------------------
-  // Functions
-  static getMultiple: PageGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getMultiple: PageGetMultiple = async (client, query_instance) => {
     const pages = client.query<PageT>({
       text: `SELECT
           ${query_instance.query.select},
@@ -130,9 +175,7 @@ export default class Page {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static getSingle: PageGetSingle = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getSingle: PageGetSingle = async (client, query_instance) => {
     const page = await client.query<PageT>({
       text: `SELECT
         ${query_instance.query.select},
@@ -148,9 +191,7 @@ export default class Page {
 
     return page.rows[0];
   };
-  static createSingle: PageCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: PageCreateSingle = async (client, data) => {
     const page = await client.query<PageT>({
       text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       values: [
@@ -168,9 +209,7 @@ export default class Page {
 
     return page.rows[0];
   };
-  static updateSingle: PageUpdateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static updateSingle: PageUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
         "title",
@@ -210,9 +249,7 @@ export default class Page {
 
     return page.rows[0];
   };
-  static deleteSingle: PageDeleteSingle = async (data) => {
-    const client = await getDBClient;
-
+  static deleteSingle: PageDeleteSingle = async (client, data) => {
     const page = await client.query<PageT>({
       text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
       values: [data.id],
@@ -220,9 +257,7 @@ export default class Page {
 
     return page.rows[0];
   };
-  static getMultipleByIds: PageGetMultipleByIds = async (data) => {
-    const client = await getDBClient;
-
+  static getMultipleByIds: PageGetMultipleByIds = async (client, data) => {
     const pages = await client.query<PageT>({
       text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
       values: [data.ids, data.environment_key],
@@ -230,11 +265,7 @@ export default class Page {
 
     return pages.rows;
   };
-  // -------------------------------------------
-  // new
-  static getSingleBasic: PageGetSingleBasic = async (id, environment_key) => {
-    const client = await getDBClient;
-
+  static getSingleBasic: PageGetSingleBasic = async (client, data) => {
     const page = await client.query<PageT>({
       text: `SELECT
           *
@@ -244,14 +275,12 @@ export default class Page {
           id = $1
         AND
           environment_key = $2`,
-      values: [id, environment_key],
+      values: [data.id, data.environment_key],
     });
 
     return page.rows[0];
   };
-  static getSlugCount: PageGetSlugCount = async (data) => {
-    const client = await getDBClient;
-
+  static getSlugCount: PageGetSlugCount = async (client, data) => {
     const values: Array<any> = [
       data.slug,
       data.collection_key,
@@ -277,34 +306,32 @@ export default class Page {
 
     return parseInt(slugCount.rows[0].count);
   };
-  static getNonCurrentHomepages = async (
-    currentId: number,
-    environment_key: string
+  static getNonCurrentHomepages: PageGetNonCurrentHomepages = async (
+    client,
+    data
   ) => {
-    const client = await getDBClient;
     const result = await client.query({
       text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-      values: [currentId, environment_key],
+      values: [data.current_id, data.environment_key],
     });
     return result.rows;
   };
-  static checkSlugExistence = async (
-    slug: string,
-    id: number,
-    environment_key: string
-  ) => {
-    const client = await getDBClient;
+  static checkSlugExistence: PageCheckSlugExistence = async (client, data) => {
     const slugExists = await client.query({
       text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
-      values: [slug, id, environment_key],
+      values: [data.slug, data.id, data.environment_key],
     });
     return slugExists.rows[0].count > 0;
   };
-  static updatePageToNonHomepage = async (id: number, newSlug: string) => {
-    const client = await getDBClient;
-    await client.query({
+  static updatePageToNonHomepage: PageUpdatePageToNonHomepage = async (
+    client,
+    data
+  ) => {
+    const updateRes = await client.query({
       text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
-      values: [id, newSlug],
+      values: [data.id, data.slug],
     });
+
+    return updateRes.rows[0];
   };
 }

@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const categories_1 = __importDefault(require("../../schemas/categories"));
 const categories_2 = __importDefault(require("../../services/categories"));
 const createSingleControllers = async (req, res, next) => {
     try {
-        const category = await categories_2.default.createSingle({
+        const category = await (0, service_1.default)(categories_2.default.createSingle, true)({
             environment_key: req.headers["lucid-environment"],
             collection_key: req.body.collection_key,
             title: req.body.title,

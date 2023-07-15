@@ -5,14 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Category_1 = __importDefault(require("../../db/models/Category"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const collections_1 = __importDefault(require("../collections"));
-const createSingle = async (data) => {
-    await collections_1.default.getSingle({
+const createSingle = async (client, data) => {
+    await (0, service_1.default)(collections_1.default.getSingle, false, client)({
         collection_key: data.collection_key,
         type: "pages",
         environment_key: data.environment_key,
     });
-    const isSlugUnique = await Category_1.default.isSlugUniqueInCollection({
+    const isSlugUnique = await Category_1.default.isSlugUniqueInCollection(client, {
         collection_key: data.collection_key,
         slug: data.slug,
         environment_key: data.environment_key,
@@ -31,7 +32,7 @@ const createSingle = async (data) => {
             }),
         });
     }
-    const category = await Category_1.default.createSingle(data);
+    const category = await Category_1.default.createSingle(client, data);
     if (!category) {
         throw new error_handler_1.LucidError({
             type: "basic",

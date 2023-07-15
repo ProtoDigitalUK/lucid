@@ -3,17 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const service_1 = __importDefault(require("../../utils/app/service"));
 const CollectionBrick_1 = __importDefault(require("../../db/models/CollectionBrick"));
 const collection_bricks_1 = __importDefault(require("../collection-bricks"));
-const upsertRepeater = async (data) => {
+const upsertRepeater = async (client, data) => {
     let repeaterId;
     const brickField = data.data;
     if (brickField.fields_id && brickField.group_position !== undefined) {
-        const repeaterRes = await CollectionBrick_1.default.updateRepeater(brickField);
+        const repeaterRes = await CollectionBrick_1.default.updateRepeater(client, {
+            field: brickField,
+        });
         repeaterId = repeaterRes.fields_id;
     }
     else {
-        await collection_bricks_1.default.checkFieldExists({
+        await (0, service_1.default)(collection_bricks_1.default.checkFieldExists, false, client)({
             brick_id: data.brick_id,
             key: brickField.key,
             type: brickField.type,
@@ -21,7 +24,10 @@ const upsertRepeater = async (data) => {
             group_position: brickField.group_position,
             create: true,
         });
-        const repeaterRes = await CollectionBrick_1.default.createRepeater(data.brick_id, data.data);
+        const repeaterRes = await CollectionBrick_1.default.createRepeater(client, {
+            brick_id: data.brick_id,
+            field: brickField,
+        });
         repeaterId = repeaterRes.fields_id;
     }
     if (!brickField.items)
@@ -33,13 +39,13 @@ const upsertRepeater = async (data) => {
             continue;
         item.parent_repeater = repeaterId;
         if (item.type === "repeater") {
-            promises.push(collection_bricks_1.default.upsertRepeater({
+            promises.push((0, service_1.default)(collection_bricks_1.default.upsertRepeater, false, client)({
                 brick_id: data.brick_id,
                 data: item,
             }));
             continue;
         }
-        promises.push(collection_bricks_1.default.upsertField({
+        promises.push((0, service_1.default)(collection_bricks_1.default.upsertField, false, client)({
             brick_id: data.brick_id,
             data: item,
         }));

@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Serices
 import userTokensServices from "@services/user-tokens";
 import emailServices from "@services/email";
@@ -8,39 +11,58 @@ export interface ServiceData {
   password: string;
 }
 
-const resetPassword = async (data: ServiceData) => {
+const resetPassword = async (client: PoolClient, data: ServiceData) => {
   const successMessage = `You have successfully reset your password. Please login with your new password.`;
 
   // -------------------------------------------
   // Check if token exists
-  const userToken = await userTokensServices.getSingle({
+  const userToken = await service(
+    userTokensServices.getSingle,
+    false,
+    client
+  )({
     token_type: "password_reset",
     token: data.token,
   });
 
   // -------------------------------------------
   // Check if user exists and get them
-  const user = await userServices.updatePassword({
+  const user = await service(
+    userServices.updatePassword,
+    false,
+    client
+  )({
     user_id: userToken.user_id,
     password: data.password,
   });
 
   // -------------------------------------------
   // Delete the token
-  await userTokensServices.deleteSingle({
+  await service(
+    userTokensServices.deleteSingle,
+    false,
+    client
+  )({
     id: userToken.id,
   });
 
   // -------------------------------------------
   // Send the password reset email
-  await emailServices.sendEmailInternal("password-reset", {
-    data: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-    },
-    options: {
-      to: user.email,
-      subject: "Your password has been reset",
+  await service(
+    emailServices.sendEmailInternal,
+    false,
+    client
+  )({
+    template: "password-reset",
+    params: {
+      data: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+      },
+      options: {
+        to: user.email,
+        subject: "Your password has been reset",
+      },
     },
   });
 

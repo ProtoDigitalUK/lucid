@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import service from "@utils/app/service";
 // Models
 import SinglePage from "@db/models/SinglePage";
 // Services
@@ -13,9 +15,13 @@ export interface ServiceData {
   include_bricks?: boolean;
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (client: PoolClient, data: ServiceData) => {
   // Checks if we have access to the collection
-  const collection = await collectionsService.getSingle({
+  const collection = await service(
+    collectionsService.getSingle,
+    false,
+    client
+  )({
     collection_key: data.collection_key,
     environment_key: data.environment_key,
     type: "singlepage",
@@ -56,10 +62,10 @@ const getSingle = async (data: ServiceData) => {
     per_page: undefined,
   });
 
-  let singlepage = await SinglePage.getSingle(SelectQuery);
+  let singlepage = await SinglePage.getSingle(client, SelectQuery);
 
   if (!singlepage) {
-    singlepage = await SinglePage.createSingle({
+    singlepage = await SinglePage.createSingle(client, {
       user_id: data.user_id,
       environment_key: data.environment_key,
       collection_key: data.collection_key,
@@ -69,7 +75,11 @@ const getSingle = async (data: ServiceData) => {
   }
 
   if (data.include_bricks) {
-    const pageBricks = await collectionBricksService.getAll({
+    const pageBricks = await service(
+      collectionBricksService.getAll,
+      false,
+      client
+    )({
       reference_id: singlepage.id,
       type: "singlepage",
       environment_key: data.environment_key,

@@ -1,42 +1,59 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
-type EmailCreateSingle = (data: {
-  from_address?: string;
-  from_name?: string;
-  to_address?: string;
-  subject?: string;
-  cc?: string;
-  bcc?: string;
-  template: string;
-  delivery_status: "sent" | "failed" | "pending";
-  data?: {
-    [key: string]: any;
-  };
-}) => Promise<EmailT>;
+type EmailCreateSingle = (
+  client: PoolClient,
+  data: {
+    from_address?: string;
+    from_name?: string;
+    to_address?: string;
+    subject?: string;
+    cc?: string;
+    bcc?: string;
+    template: string;
+    delivery_status: "sent" | "failed" | "pending";
+    data?: {
+      [key: string]: any;
+    };
+  }
+) => Promise<EmailT>;
 
-type EmailGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type EmailGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
   data: EmailT[];
   count: number;
 }>;
 
 type EmailUpdateSingle = (
-  id: number,
+  client: PoolClient,
   data: {
+    id: number;
     from_address?: string;
     from_name?: string;
     delivery_status?: "sent" | "failed" | "pending";
   }
 ) => Promise<EmailT>;
 
-type EmailGetSingle = (id: number) => Promise<EmailT>;
-type EmailDeleteSingle = (id: number) => Promise<EmailT>;
+type EmailGetSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<EmailT>;
+type EmailDeleteSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<EmailT>;
 
 // -------------------------------------------
-// Media
+// Email
 export type EmailT = {
   id: number;
 
@@ -60,11 +77,7 @@ export type EmailT = {
 };
 
 export default class Email {
-  // -------------------------------------------
-  // Functions
-  static createSingle: EmailCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: EmailCreateSingle = async (client, data) => {
     // -------------------------------------------
     // Data
     const {
@@ -115,9 +128,7 @@ export default class Email {
     // Return
     return email.rows[0];
   };
-  static getMultiple: EmailGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getMultiple: EmailGetMultiple = async (client, query_instance) => {
     const emails = client.query<EmailT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_emails ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -135,9 +146,7 @@ export default class Email {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static getSingle: EmailGetSingle = async (id) => {
-    const client = await getDBClient;
-
+  static getSingle: EmailGetSingle = async (client, data) => {
     const email = await client.query<EmailT>({
       text: `SELECT
           *
@@ -145,28 +154,24 @@ export default class Email {
           lucid_emails
         WHERE
           id = $1`,
-      values: [id],
+      values: [data.id],
     });
 
     return email.rows[0];
   };
-  static deleteSingle: EmailDeleteSingle = async (id) => {
-    const client = await getDBClient;
-
+  static deleteSingle: EmailDeleteSingle = async (client, data) => {
     const email = await client.query<EmailT>({
       text: `DELETE FROM
           lucid_emails
         WHERE
           id = $1
         RETURNING *`,
-      values: [id],
+      values: [data.id],
     });
 
     return email.rows[0];
   };
-  static updateSingle: EmailUpdateSingle = async (id, data) => {
-    const client = await getDBClient;
-
+  static updateSingle: EmailUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["from_address", "from_name", "delivery_status"],
       values: [data.from_address, data.from_name, data.delivery_status],
@@ -185,7 +190,7 @@ export default class Email {
         WHERE 
           id = $${aliases.value.length + 1}
         RETURNING *`,
-      values: [...values.value, id],
+      values: [...values.value, data.id],
     });
 
     return email.rows[0];

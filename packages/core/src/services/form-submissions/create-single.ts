@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import FormSubmission from "@db/models/FormSubmission";
 // Services
@@ -19,16 +21,16 @@ export interface ServiceData {
   }>;
 }
 
-const createSingle = async (data: ServiceData) => {
+const createSingle = async (client: PoolClient, data: ServiceData) => {
   // Check if form is assigned to environment
-  await formSubService.hasEnvironmentPermission(data);
+  await service(formSubService.hasEnvironmentPermission, false, client)(data);
 
   const formBuilder = formsService.getBuilderInstance({
     form_key: data.form_key,
   });
 
   // Create form submission
-  const formSubmission = await FormSubmission.createSingle({
+  const formSubmission = await FormSubmission.createSingle(client, {
     form_key: data.form_key,
     environment_key: data.environment_key,
   });
@@ -45,7 +47,7 @@ const createSingle = async (data: ServiceData) => {
   // Create form data
   const formData = await Promise.all(
     data.data.map((field) =>
-      FormSubmission.createFormData({
+      FormSubmission.createFormData(client, {
         form_submission_id: formSubmission.id,
         name: field.name,
         type: field.type,

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
 const Page_1 = __importDefault(require("../../db/models/Page"));
 const format_page_1 = __importDefault(require("../../utils/format/format-page"));
-const getMultiple = async (data) => {
+const getMultiple = async (client, data) => {
     const { filter, sort, page, per_page } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -65,7 +65,7 @@ const getMultiple = async (data) => {
         page: page,
         per_page: per_page,
     });
-    const pages = await Page_1.default.getMultiple(SelectQuery);
+    const pages = await Page_1.default.getMultiple(client, SelectQuery);
     return {
         data: pages.data.map((page) => (0, format_page_1.default)(page)),
         count: pages.count,

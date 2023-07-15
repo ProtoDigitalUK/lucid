@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import rolesSchema from "@schemas/roles";
 // Services
@@ -13,7 +14,10 @@ const updateSingleController: Controller<
   typeof rolesSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const role = await rolesService.updateSingle({
+    const role = await service(
+      rolesService.updateSingle,
+      true
+    )({
       id: parseInt(req.params.id),
       name: req.body.name,
       permission_groups: req.body.permission_groups,

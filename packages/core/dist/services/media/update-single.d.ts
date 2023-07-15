@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import fileUpload from "express-fileupload";
 export interface ServiceData {
     key: string;
@@ -7,6 +8,6 @@ export interface ServiceData {
         files: fileUpload.FileArray | null | undefined;
     };
 }
-declare const updateSingle: (data: ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
+declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

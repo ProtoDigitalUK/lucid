@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import emailsSchema from "@schemas/email";
 // Services
@@ -13,7 +14,10 @@ const deleteSingleController: Controller<
   typeof emailsSchema.deleteSingle.query
 > = async (req, res, next) => {
   try {
-    const email = await emailsService.deleteSingle({
+    const email = await service(
+      emailsService.deleteSingle,
+      true
+    )({
       id: parseInt(req.params.id),
     });
 

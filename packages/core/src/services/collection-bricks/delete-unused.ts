@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { LucidError } from "@utils/app/error-handler";
 // Models
 import CollectionBrick from "@db/models/CollectionBrick";
@@ -13,12 +14,12 @@ export interface ServiceData {
   brick_type: CollectionBrickConfigT["type"];
 }
 
-const deleteUnused = async (data: ServiceData) => {
-  const allBricks = await CollectionBrick.getAllBricks(
-    data.type,
-    data.reference_id,
-    data.brick_type
-  );
+const deleteUnused = async (client: PoolClient, data: ServiceData) => {
+  const allBricks = await CollectionBrick.getAllBricks(client, {
+    type: data.type,
+    reference_id: data.reference_id,
+    brick_type: data.brick_type,
+  });
   const brickIds = allBricks.map((brick) => brick.id);
 
   // Filter out the bricks that are still in use
@@ -26,7 +27,9 @@ const deleteUnused = async (data: ServiceData) => {
 
   // Delete the bricks
   const promises = bricksToDelete.map((id) =>
-    CollectionBrick.deleteSingleBrick(id)
+    CollectionBrick.deleteSingleBrick(client, {
+      brick_id: id,
+    })
   );
 
   try {

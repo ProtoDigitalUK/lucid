@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Media from "@db/models/Media";
 // Services
@@ -12,8 +14,10 @@ export interface ServiceData {
   key: string;
 }
 
-const deleteSingle = async (data: ServiceData) => {
-  const media = await Media.deleteSingle(data.key);
+const deleteSingle = async (client: PoolClient, data: ServiceData) => {
+  const media = await Media.deleteSingle(client, {
+    key: data.key,
+  });
 
   if (!media) {
     throw new LucidError({
@@ -28,7 +32,11 @@ const deleteSingle = async (data: ServiceData) => {
     key: media.key,
   });
   // update storage used
-  await mediaService.setStorageUsed({
+  await service(
+    mediaService.setStorageUsed,
+    false,
+    client
+  )({
     add: 0,
     minus: media.file_size,
   });

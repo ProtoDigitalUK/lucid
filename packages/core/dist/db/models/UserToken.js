@@ -1,15 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 class UserToken {
 }
 _a = UserToken;
-UserToken.createSingle = async (data) => {
-    const client = await db_1.default;
+UserToken.createSingle = async (client, data) => {
     const userToken = await client.query({
         text: `
             INSERT INTO lucid_user_tokens (
@@ -28,8 +23,7 @@ UserToken.createSingle = async (data) => {
     });
     return userToken.rows[0];
 };
-UserToken.getByToken = async (data) => {
-    const client = await db_1.default;
+UserToken.getByToken = async (client, data) => {
     const userToken = await client.query({
         text: `
             SELECT * FROM lucid_user_tokens
@@ -41,8 +35,7 @@ UserToken.getByToken = async (data) => {
     });
     return userToken.rows[0];
 };
-UserToken.deleteSingle = async (data) => {
-    const client = await db_1.default;
+UserToken.deleteSingle = async (client, data) => {
     const userToken = await client.query({
         text: `
             DELETE FROM lucid_user_tokens
@@ -52,15 +45,14 @@ UserToken.deleteSingle = async (data) => {
     });
     return userToken.rows[0];
 };
-UserToken.removeExpiredTokens = async () => {
-    const client = await db_1.default;
+UserToken.removeExpiredTokens = async (client) => {
     const userToken = await client.query({
         text: `
             DELETE FROM lucid_user_tokens
             WHERE expiry_date < NOW()
         `,
     });
-    return userToken.rows[0];
+    return userToken.rows;
 };
 exports.default = UserToken;
 //# sourceMappingURL=UserToken.js.map

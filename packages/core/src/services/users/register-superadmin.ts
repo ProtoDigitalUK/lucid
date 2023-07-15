@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import usersServices from "@services/users";
 import optionServices from "@services/options";
@@ -12,8 +14,12 @@ export interface ServiceData {
   last_name?: string;
 }
 
-const registerSuperAdmin = async (data: ServiceData) => {
-  const initialUserRes = await optionServices.getByName({
+const registerSuperAdmin = async (client: PoolClient, data: ServiceData) => {
+  const initialUserRes = await service(
+    optionServices.getByName,
+    false,
+    client
+  )({
     name: "initial_user_created",
   });
   const resValue = initialUserRes.option_value as boolean;
@@ -27,7 +33,11 @@ const registerSuperAdmin = async (data: ServiceData) => {
     });
   }
 
-  const user = await usersServices.registerSingle({
+  const user = await service(
+    usersServices.registerSingle,
+    false,
+    client
+  )({
     first_name: data.first_name,
     last_name: data.last_name,
     email: data.email,
@@ -36,7 +46,11 @@ const registerSuperAdmin = async (data: ServiceData) => {
     super_admin: true,
   });
 
-  await optionServices.patchByName({
+  await service(
+    optionServices.patchByName,
+    false,
+    client
+  )({
     name: "initial_user_created",
     value: true,
     type: "boolean",

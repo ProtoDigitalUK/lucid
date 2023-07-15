@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { MenuItemUpdate } from "../../schemas/menus";
 export interface ServiceData {
     environment_key: string;
@@ -7,6 +8,6 @@ export interface ServiceData {
     description?: string;
     items?: MenuItemUpdate[];
 }
-declare const updateSingle: (data: ServiceData) => Promise<import("../../utils/format/format-menu").MenuResT>;
+declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-menu").MenuResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

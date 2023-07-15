@@ -1,4 +1,6 @@
+import { PoolClient } from "pg";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
@@ -251,7 +253,7 @@ const validateBricksGroup = async (data: {
 };
 
 // Get data
-const getAllMedia = async (fields: BrickFieldObject[]) => {
+const getAllMedia = async (client: PoolClient, fields: BrickFieldObject[]) => {
   try {
     const getIDs = fields.map((field) => {
       if (field.type === "media") {
@@ -264,7 +266,11 @@ const getAllMedia = async (fields: BrickFieldObject[]) => {
         (value, index, self) => self.indexOf(value) === index
       ) as number[];
 
-    const media = await medias.getMultipleByIds({
+    const media = await service(
+      medias.getMultipleByIds,
+      false,
+      client
+    )({
       ids: ids,
     });
     return media;
@@ -273,6 +279,7 @@ const getAllMedia = async (fields: BrickFieldObject[]) => {
   }
 };
 const getAllPages = async (
+  client: PoolClient,
   fields: BrickFieldObject[],
   environment_key: string
 ) => {
@@ -288,7 +295,11 @@ const getAllPages = async (
         (value, index, self) => self.indexOf(value) === index
       ) as number[];
 
-    const pages = await pageService.getMultipleById({
+    const pages = await service(
+      pageService.getMultipleById,
+      false,
+      client
+    )({
       ids,
       environment_key,
     });
@@ -300,12 +311,15 @@ const getAllPages = async (
 
 // ------------------------------------
 // Validate Bricks
-const validateBricks = async (data: {
-  builder_bricks: BrickObject[];
-  fixed_bricks: BrickObject[];
-  collection: CollectionResT;
-  environment: EnvironmentT;
-}) => {
+const validateBricks = async (
+  client: PoolClient,
+  data: {
+    builder_bricks: BrickObject[];
+    fixed_bricks: BrickObject[];
+    collection: CollectionResT;
+    environment: EnvironmentT;
+  }
+) => {
   const builderInstances = brickConfigService.getBrickConfig();
 
   // Flatten all fields and get all media and pages
@@ -315,8 +329,8 @@ const validateBricks = async (data: {
   );
 
   const pageMediaPromises = await Promise.all([
-    getAllMedia(bricksFlattened.flat_fields),
-    getAllPages(bricksFlattened.flat_fields, data.environment.key),
+    getAllMedia(client, bricksFlattened.flat_fields),
+    getAllPages(client, bricksFlattened.flat_fields, data.environment.key),
   ]);
 
   const media = pageMediaPromises[0];

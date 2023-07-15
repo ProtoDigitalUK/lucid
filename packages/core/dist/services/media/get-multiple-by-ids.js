@@ -5,8 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const format_media_1 = __importDefault(require("../../utils/format/format-media"));
-const getMultipleByIds = async (data) => {
-    const mediasRes = await Media_1.default.getMultipleByIds(data.ids);
+const getMultipleByIds = async (client, data) => {
+    const mediasRes = await Media_1.default.getMultipleByIds(client, {
+        ids: data.ids,
+    });
     if (!mediasRes) {
         return [];
     }

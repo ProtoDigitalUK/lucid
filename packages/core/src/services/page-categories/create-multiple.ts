@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import PageCategory from "@db/models/PageCategory";
 // Srvices
@@ -11,13 +13,17 @@ export interface ServiceData {
   collection_key: string;
 }
 
-const createMultiple = async (data: ServiceData) => {
-  await pageCategoryService.verifyCategoriesInCollection({
+const createMultiple = async (client: PoolClient, data: ServiceData) => {
+  await service(
+    pageCategoryService.verifyCategoriesInCollection,
+    false,
+    client
+  )({
     category_ids: data.category_ids,
     collection_key: data.collection_key,
   });
 
-  const pageCategory = await PageCategory.createMultiple({
+  const pageCategory = await PageCategory.createMultiple(client, {
     page_id: data.page_id,
     category_ids: data.category_ids,
   });

@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import usersSchema from "@schemas/users";
 // Services
@@ -13,7 +14,10 @@ const getMultipleController: Controller<
   typeof usersSchema.getMultiple.query
 > = async (req, res, next) => {
   try {
-    const user = await usersService.getMultiple({
+    const user = await service(
+      usersService.getMultiple,
+      false
+    )({
       query: req.query,
     });
 

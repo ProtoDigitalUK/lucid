@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Models
 import { MenuItemT } from "@db/models/Menu";
 // Schema
@@ -10,11 +13,15 @@ export interface ServiceData {
   items: MenuItemUpdate[];
 }
 
-const upsertMultipleItems = async (data: ServiceData) => {
+const upsertMultipleItems = async (client: PoolClient, data: ServiceData) => {
   const itemsRes: MenuItemT[] = [];
 
   const promises = data.items.map((item, i) =>
-    menuService.upsertItem({
+    service(
+      menuService.upsertItem,
+      false,
+      client
+    )({
       menu_id: data.menu_id,
       item: item,
       pos: i,

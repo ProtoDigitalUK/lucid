@@ -1,9 +1,10 @@
+import { PoolClient } from "pg";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
-type UserGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type UserGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<{
     data: UserT[];
     count: number;
 }>;
-type UserRegister = (data: {
+type UserRegister = (client: PoolClient, data: {
     first_name?: string;
     last_name?: string;
     email: string;
@@ -11,12 +12,25 @@ type UserRegister = (data: {
     password: string;
     super_admin?: boolean;
 }) => Promise<UserT>;
-type UserGetById = (id: number) => Promise<UserT>;
-type UserGetByUsername = (data: {
+type UserGetById = (client: PoolClient, data: {
+    id: number;
+}) => Promise<UserT>;
+type UserGetByUsername = (client: PoolClient, data: {
     username: string;
 }) => Promise<UserT>;
-type UserGetByEmail = (data: {
+type UserGetByEmail = (client: PoolClient, data: {
     email: string;
+}) => Promise<UserT>;
+type UserGetByEmailAndUsername = (client: PoolClient, data: {
+    email: string;
+    username: string;
+}) => Promise<UserT>;
+type UserDeleteSingle = (client: PoolClient, data: {
+    id: number;
+}) => Promise<UserT>;
+type UserUpdatePassword = (client: PoolClient, data: {
+    id: number;
+    password: string;
 }) => Promise<UserT>;
 export type UserT = {
     id: number;
@@ -35,9 +49,9 @@ export default class User {
     static getById: UserGetById;
     static getByUsername: UserGetByUsername;
     static getByEmail: UserGetByEmail;
-    static checkIfUserExistsAlready: (email: string, username: string) => Promise<UserT>;
-    static deleteSingle: (id: number) => Promise<UserT>;
-    static updatePassword: (id: number, password: string) => Promise<UserT>;
+    static getByEmailAndUsername: UserGetByEmailAndUsername;
+    static deleteSingle: UserDeleteSingle;
+    static updatePassword: UserUpdatePassword;
 }
 export {};
 //# sourceMappingURL=User.d.ts.map

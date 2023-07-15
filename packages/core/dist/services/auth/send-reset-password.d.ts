@@ -1,7 +1,8 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     email: string;
 }
-declare const sendResetPassword: (data: ServiceData) => Promise<{
+declare const sendResetPassword: (client: PoolClient, data: ServiceData) => Promise<{
     message: string;
 }>;
 export default sendResetPassword;

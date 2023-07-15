@@ -5,8 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserRole_1 = __importDefault(require("../../db/models/UserRole"));
 const format_user_permissions_1 = __importDefault(require("../../utils/format/format-user-permissions"));
-const getPermissions = async (data) => {
-    const userPermissions = await UserRole_1.default.getPermissions(data.user_id);
+const getPermissions = async (client, data) => {
+    const userPermissions = await UserRole_1.default.getPermissions(client, {
+        user_id: data.user_id,
+    });
     if (!userPermissions) {
         return {
             roles: [],

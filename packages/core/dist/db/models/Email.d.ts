@@ -1,5 +1,6 @@
+import { PoolClient } from "pg";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
-type EmailCreateSingle = (data: {
+type EmailCreateSingle = (client: PoolClient, data: {
     from_address?: string;
     from_name?: string;
     to_address?: string;
@@ -12,17 +13,22 @@ type EmailCreateSingle = (data: {
         [key: string]: any;
     };
 }) => Promise<EmailT>;
-type EmailGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type EmailGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<{
     data: EmailT[];
     count: number;
 }>;
-type EmailUpdateSingle = (id: number, data: {
+type EmailUpdateSingle = (client: PoolClient, data: {
+    id: number;
     from_address?: string;
     from_name?: string;
     delivery_status?: "sent" | "failed" | "pending";
 }) => Promise<EmailT>;
-type EmailGetSingle = (id: number) => Promise<EmailT>;
-type EmailDeleteSingle = (id: number) => Promise<EmailT>;
+type EmailGetSingle = (client: PoolClient, data: {
+    id: number;
+}) => Promise<EmailT>;
+type EmailDeleteSingle = (client: PoolClient, data: {
+    id: number;
+}) => Promise<EmailT>;
 export type EmailT = {
     id: number;
     from_address: string | null;

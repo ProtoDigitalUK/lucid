@@ -1,31 +1,41 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
 type CategoryGetSingle = (
-  environment_key: string,
-  id: number
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    id: number;
+  }
 ) => Promise<CategoryT>;
 
-type CategoryGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type CategoryGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
   data: CategoryT[];
   count: number;
 }>;
 
-type CategoryCreateSingle = (data: {
-  environment_key: string;
-  collection_key: string;
-  title: string;
-  slug: string;
-  description?: string;
-}) => Promise<CategoryT>;
+type CategoryCreateSingle = (
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    collection_key: string;
+    title: string;
+    slug: string;
+    description?: string;
+  }
+) => Promise<CategoryT>;
 
 type CategoryUpdateSingle = (
-  environment_key: string,
-  id: number,
+  client: PoolClient,
   data: {
+    environment_key: string;
+    id: number;
     title?: string;
     slug?: string;
     description?: string;
@@ -33,12 +43,25 @@ type CategoryUpdateSingle = (
 ) => Promise<CategoryT>;
 
 type CategoryDeleteSingle = (
-  environment_key: string,
-  id: number
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    id: number;
+  }
 ) => Promise<CategoryT>;
 
+type CategoryIsSlugUniqueInCollection = (
+  client: PoolClient,
+  data: {
+    collection_key: string;
+    slug: string;
+    environment_key: string;
+    ignore_id?: number;
+  }
+) => Promise<boolean>;
+
 // -------------------------------------------
-// User
+// Category
 export type CategoryT = {
   id: number;
   environment_key: string;
@@ -51,11 +74,7 @@ export type CategoryT = {
 };
 
 export default class Category {
-  // -------------------------------------------
-  // Functions
-  static getMultiple: CategoryGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getMultiple: CategoryGetMultiple = async (client, query_instance) => {
     const categories = client.query<CategoryT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_categories ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -73,17 +92,15 @@ export default class Category {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static getSingle: CategoryGetSingle = async (environment_key, id) => {
-    const client = await getDBClient;
-
+  static getSingle: CategoryGetSingle = async (client, data) => {
     const category = await client.query<CategoryT>({
       text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
-      values: [id, environment_key],
+      values: [data.id, data.environment_key],
     });
 
     return category.rows[0];
   };
-  static createSingle: CategoryCreateSingle = async (data) => {
+  static createSingle: CategoryCreateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
         "environment_key",
@@ -101,7 +118,6 @@ export default class Category {
       ],
     });
 
-    const client = await getDBClient;
     const res = await client.query<CategoryT>({
       text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
@@ -109,42 +125,34 @@ export default class Category {
 
     return res.rows[0];
   };
-  static updateSingle: CategoryUpdateSingle = async (
-    environment_key,
-    id,
-    data
-  ) => {
-    const client = await getDBClient;
-
+  static updateSingle: CategoryUpdateSingle = async (client, data) => {
     const category = await client.query<CategoryT>({
       name: "update-category",
       text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
-      values: [data.title, data.slug, data.description, id, environment_key],
+      values: [
+        data.title,
+        data.slug,
+        data.description,
+        data.id,
+        data.environment_key,
+      ],
     });
 
     return category.rows[0];
   };
-  static deleteSingle: CategoryDeleteSingle = async (environment_key, id) => {
-    const client = await getDBClient;
-
+  static deleteSingle: CategoryDeleteSingle = async (client, data) => {
     const category = await client.query<CategoryT>({
       name: "delete-category",
       text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
-      values: [id, environment_key],
+      values: [data.id, data.environment_key],
     });
 
     return category.rows[0];
   };
-  // -------------------------------------------
-  // Util Functions
-  static isSlugUniqueInCollection = async (data: {
-    collection_key: string;
-    slug: string;
-    environment_key: string;
-    ignore_id?: number;
-  }): Promise<boolean> => {
-    const client = await getDBClient;
-
+  static isSlugUniqueInCollection: CategoryIsSlugUniqueInCollection = async (
+    client,
+    data
+  ) => {
     const values: Array<string | number> = [
       data.collection_key,
       data.slug,

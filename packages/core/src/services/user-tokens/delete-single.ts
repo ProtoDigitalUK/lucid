@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import UserToken from "@db/models/UserToken";
 
@@ -5,8 +6,8 @@ export interface ServiceData {
   id: number;
 }
 
-const deleteSingle = async (data: ServiceData) => {
-  const userToken = await UserToken.deleteSingle({
+const deleteSingle = async (client: PoolClient, data: ServiceData) => {
+  const userToken = await UserToken.deleteSingle(client, {
     id: data.id,
   });
 

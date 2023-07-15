@@ -1,16 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
 class Menu {
 }
 _a = Menu;
-Menu.createSingle = async (data) => {
-    const client = await db_1.default;
+Menu.createSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["environment_key", "key", "name", "description"],
         values: [data.environment_key, data.key, data.name, data.description],
@@ -21,16 +16,14 @@ Menu.createSingle = async (data) => {
     });
     return menu.rows[0];
 };
-Menu.deleteSingle = async (data) => {
-    const client = await db_1.default;
+Menu.deleteSingle = async (client, data) => {
     const menu = await client.query({
         text: `DELETE FROM lucid_menus WHERE id = $1 AND environment_key = $2 RETURNING *`,
         values: [data.id, data.environment_key],
     });
     return menu.rows[0];
 };
-Menu.getSingle = async (data) => {
-    const client = await db_1.default;
+Menu.getSingle = async (client, data) => {
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
             "id",
@@ -70,8 +63,7 @@ Menu.getSingle = async (data) => {
     });
     return menu.rows[0];
 };
-Menu.getMultiple = async (query_instance) => {
-    const client = await db_1.default;
+Menu.getMultiple = async (client, query_instance) => {
     const menus = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_menus ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
@@ -86,8 +78,7 @@ Menu.getMultiple = async (query_instance) => {
         count: parseInt(data[1].rows[0].count),
     };
 };
-Menu.updateSingle = async (data) => {
-    const client = await db_1.default;
+Menu.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["key", "name", "description"],
         values: [data.key, data.name, data.description],
@@ -111,16 +102,14 @@ Menu.updateSingle = async (data) => {
     });
     return menu.rows[0];
 };
-Menu.checkKeyIsUnique = async (key, environment_key) => {
-    const client = await db_1.default;
+Menu.checkKeyIsUnique = async (client, data) => {
     const findMenu = await client.query({
         text: `SELECT * FROM lucid_menus WHERE key = $1 AND environment_key = $2`,
-        values: [key, environment_key],
+        values: [data.key, data.environment_key],
     });
     return findMenu.rows[0];
 };
-Menu.getMenuItems = async (menu_ids) => {
-    const client = await db_1.default;
+Menu.getMenuItems = async (client, data) => {
     const menuItems = await client.query({
         text: `SELECT
           mi.*,
@@ -131,39 +120,35 @@ Menu.getMenuItems = async (menu_ids) => {
           lucid_pages p ON mi.page_id = p.id
         WHERE
           mi.menu_id = ANY($1::int[])`,
-        values: [menu_ids],
+        values: [data.menu_ids],
     });
     return menuItems.rows;
 };
-Menu.getSingleItem = async (id, menu_id) => {
-    const client = await db_1.default;
+Menu.getSingleItem = async (client, data) => {
     const menuItem = await client.query({
         text: `SELECT * FROM lucid_menu_items WHERE id = $1 AND menu_id = $2`,
-        values: [id, menu_id],
+        values: [data.id, data.menu_id],
     });
     return menuItem.rows[0];
 };
-Menu.deleteItemsByIds = async (ids) => {
-    const client = await db_1.default;
+Menu.deleteItemsByIds = async (client, data) => {
     const deleted = await client.query({
         text: `DELETE FROM lucid_menu_items WHERE id = ANY($1::int[]) RETURNING *`,
-        values: [ids],
+        values: [data.ids],
     });
     return deleted.rows;
 };
-Menu.updateMenuItem = async (item_id, query_data) => {
-    const client = await db_1.default;
+Menu.updateMenuItem = async (client, data) => {
     const res = await client.query({
-        text: `UPDATE lucid_menu_items SET ${query_data.columns.formatted.update} WHERE id = $${query_data.aliases.value.length + 1} RETURNING *`,
-        values: [...query_data.values.value, item_id],
+        text: `UPDATE lucid_menu_items SET ${data.query_data.columns.formatted.update} WHERE id = $${data.query_data.aliases.value.length + 1} RETURNING *`,
+        values: [...data.query_data.values.value, data.item_id],
     });
     return res.rows[0];
 };
-Menu.createMenuItem = async (query_data) => {
-    const client = await db_1.default;
+Menu.createMenuItem = async (client, data) => {
     const res = await client.query({
-        text: `INSERT INTO lucid_menu_items (${query_data.columns.formatted.insert}) VALUES (${query_data.aliases.formatted.insert}) RETURNING *`,
-        values: query_data.values.value,
+        text: `INSERT INTO lucid_menu_items (${data.query_data.columns.formatted.insert}) VALUES (${data.query_data.aliases.formatted.insert}) RETURNING *`,
+        values: data.query_data.values.value,
     });
     return res.rows[0];
 };

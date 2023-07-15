@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Category from "@db/models/Category";
 // Utils
@@ -8,8 +9,11 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const deleteSingle = async (data: ServiceData) => {
-  const category = await Category.deleteSingle(data.environment_key, data.id);
+const deleteSingle = async (client: PoolClient, data: ServiceData) => {
+  const category = await Category.deleteSingle(client, {
+    environment_key: data.environment_key,
+    id: data.id,
+  });
 
   if (!category) {
     throw new LucidError({

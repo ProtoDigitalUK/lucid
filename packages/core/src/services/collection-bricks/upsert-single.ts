@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
@@ -24,10 +26,14 @@ export interface ServiceData {
   Updates/Creates a single brick and all of its fields
 */
 
-const upsertSingleWithFields = async (data: ServiceData) => {
+const upsertSingleWithFields = async (
+  client: PoolClient,
+  data: ServiceData
+) => {
   // Create or update the page brick record
   const promises = [];
 
+  // doesnt need client
   const allowed = brickConfigService.isBrickAllowed({
     key: data.brick.key,
     type: data.brick_type,
@@ -48,7 +54,7 @@ const upsertSingleWithFields = async (data: ServiceData) => {
   let brickId = data.brick.id;
 
   if (brickId) {
-    const brickRes = await CollectionBrick.updateSingleBrick({
+    const brickRes = await CollectionBrick.updateSingleBrick(client, {
       order: data.order,
       brick: data.brick,
       brick_type: data.brick_type,
@@ -64,7 +70,7 @@ const upsertSingleWithFields = async (data: ServiceData) => {
       });
     }
   } else {
-    const brickRes = await CollectionBrick.createSingleBrick({
+    const brickRes = await CollectionBrick.createSingleBrick(client, {
       type: data.collection.type,
       reference_id: data.reference_id,
       order: data.order,
@@ -91,14 +97,22 @@ const upsertSingleWithFields = async (data: ServiceData) => {
 
     if (field.type === "repeater")
       promises.push(
-        collectionBricksService.upsertRepeater({
+        service(
+          collectionBricksService.upsertRepeater,
+          false,
+          client
+        )({
           brick_id: brickId,
           data: field,
         })
       );
     else
       promises.push(
-        collectionBricksService.upsertField({
+        service(
+          collectionBricksService.upsertField,
+          false,
+          client
+        )({
           brick_id: brickId,
           data: field,
         })

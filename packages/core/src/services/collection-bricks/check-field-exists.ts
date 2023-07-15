@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -13,8 +14,8 @@ export interface ServiceData {
   create: boolean;
 }
 
-const checkFieldExists = async (data: ServiceData) => {
-  const repeaterExists = await CollectionBrick.checkFieldExists({
+const checkFieldExists = async (client: PoolClient, data: ServiceData) => {
+  const repeaterExists = await CollectionBrick.checkFieldExists(client, {
     brick_id: data.brick_id,
     key: data.key,
     type: data.type,

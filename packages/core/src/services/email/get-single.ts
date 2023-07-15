@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Email from "@db/models/Email";
 // Utils
@@ -9,8 +10,10 @@ export interface ServiceData {
   id: number;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const email = await Email.getSingle(data.id);
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const email = await Email.getSingle(client, {
+    id: data.id,
+  });
 
   if (!email) {
     throw new LucidError({

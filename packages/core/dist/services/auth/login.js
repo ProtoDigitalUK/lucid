@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const User_1 = __importDefault(require("../../db/models/User"));
 const auth_1 = __importDefault(require("../auth"));
 const users_1 = __importDefault(require("../users"));
-const login = async (data) => {
-    const user = await User_1.default.getByUsername({
+const login = async (client, data) => {
+    const user = await User_1.default.getByUsername(client, {
         username: data.username,
     });
     if (!user || !user.password) {
@@ -31,7 +32,7 @@ const login = async (data) => {
             status: 500,
         });
     }
-    return await users_1.default.getSingle({
+    return await (0, service_1.default)(users_1.default.getSingle, false, client)({
         user_id: user.id,
     });
 };

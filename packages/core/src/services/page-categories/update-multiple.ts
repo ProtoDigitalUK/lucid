@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Models
 import PageCategory from "@db/models/PageCategory";
 // Srvices
@@ -9,11 +12,11 @@ export interface ServiceData {
   collection_key: string;
 }
 
-const updateMultiple = async (data: ServiceData) => {
+const updateMultiple = async (client: PoolClient, data: ServiceData) => {
   // get all page_categories for the page
-  const pageCategoriesRes = await PageCategory.getMultipleByPageId(
-    data.page_id
-  );
+  const pageCategoriesRes = await PageCategory.getMultipleByPageId(client, {
+    page_id: data.page_id,
+  });
 
   // Categories to add
   const categoriesToAdd = data.category_ids.filter(
@@ -30,7 +33,11 @@ const updateMultiple = async (data: ServiceData) => {
   const updatePromise = [];
   if (categoriesToAdd.length > 0) {
     updatePromise.push(
-      pageCategoryService.createMultiple({
+      service(
+        pageCategoryService.createMultiple,
+        false,
+        client
+      )({
         page_id: data.page_id,
         category_ids: categoriesToAdd,
         collection_key: data.collection_key,
@@ -39,7 +46,11 @@ const updateMultiple = async (data: ServiceData) => {
   }
   if (categoriesToRemove.length > 0) {
     updatePromise.push(
-      pageCategoryService.deleteMultiple({
+      service(
+        pageCategoryService.deleteMultiple,
+        false,
+        client
+      )({
         page_id: data.page_id,
         category_ids: categoriesToRemove.map(
           (category) => category.category_id

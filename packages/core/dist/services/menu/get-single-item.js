@@ -5,8 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Menu_1 = __importDefault(require("../../db/models/Menu"));
-const getSingleItem = async (data) => {
-    const menuItem = await Menu_1.default.getSingleItem(data.id, data.menu_id);
+const getSingleItem = async (client, data) => {
+    const menuItem = await Menu_1.default.getSingleItem(client, {
+        id: data.id,
+        menu_id: data.menu_id,
+    });
     if (!menuItem) {
         throw new error_handler_1.LucidError({
             type: "basic",

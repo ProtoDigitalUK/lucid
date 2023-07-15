@@ -1,8 +1,10 @@
+import { PoolClient } from "pg";
 import slugify from "slugify";
 // Models
 import Environment from "@db/models/Environment";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import environmentsService from "@services/environments";
 import Config from "@services/Config";
@@ -95,18 +97,26 @@ const checkAssignedForms = async (assigned_forms: string[]) => {
   }
 };
 
-const upsertSingle = async (data: ServiceData) => {
+const upsertSingle = async (client: PoolClient, data: ServiceData) => {
   const key = data.create
     ? slugify(data.data.key, { lower: true })
     : data.data.key;
 
   // if create false, check if environment exists
   if (!data.create) {
-    await environmentsService.getSingle({
+    await service(
+      environmentsService.getSingle,
+      false,
+      client
+    )({
       key: data.data.key,
     });
   } else {
-    await environmentsService.checkKeyExists({
+    await service(
+      environmentsService.checkKeyExists,
+      false,
+      client
+    )({
       key: data.data.key,
     });
   }
@@ -126,7 +136,7 @@ const upsertSingle = async (data: ServiceData) => {
     await checkAssignedForms(data.data.assigned_forms);
   }
 
-  const environment = await Environment.upsertSingle({
+  const environment = await Environment.upsertSingle(client, {
     key,
     title: data.data.title,
     assigned_bricks: data.data.assigned_bricks,

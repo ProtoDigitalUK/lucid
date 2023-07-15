@@ -1,4 +1,4 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
 // Utils
@@ -9,21 +9,28 @@ import { BrickResT } from "@utils/format/format-bricks";
 // -------------------------------------------
 // Types
 type SinglePageGetSingle = (
+  client: PoolClient,
   query_instance: SelectQueryBuilder
 ) => Promise<SinglePageT>;
 
-type SinglePageCreateSingle = (data: {
-  user_id: number;
-  environment_key: string;
-  collection_key: string;
-  builder_bricks?: Array<BrickObject>;
-  fixed_bricks?: Array<BrickObject>;
-}) => Promise<SinglePageT>;
+type SinglePageCreateSingle = (
+  client: PoolClient,
+  data: {
+    user_id: number;
+    environment_key: string;
+    collection_key: string;
+    builder_bricks?: Array<BrickObject>;
+    fixed_bricks?: Array<BrickObject>;
+  }
+) => Promise<SinglePageT>;
 
-type SinglePageUpdateSingle = (data: {
-  id: number;
-  user_id: number;
-}) => Promise<SinglePageT>;
+type SinglePageUpdateSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    user_id: number;
+  }
+) => Promise<SinglePageT>;
 
 // -------------------------------------------
 // Single Page
@@ -41,9 +48,7 @@ export type SinglePageT = {
 };
 
 export default class SinglePage {
-  static getSingle: SinglePageGetSingle = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getSingle: SinglePageGetSingle = async (client, query_instance) => {
     const singlepage = await client.query<SinglePageT>({
       text: `SELECT
           ${query_instance.query.select}
@@ -55,9 +60,7 @@ export default class SinglePage {
 
     return singlepage.rows[0];
   };
-  static createSingle: SinglePageCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: SinglePageCreateSingle = async (client, data) => {
     const res = await client.query<SinglePageT>({
       text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING *`,
       values: [data.environment_key, data.collection_key, data.user_id],
@@ -65,9 +68,7 @@ export default class SinglePage {
 
     return res.rows[0];
   };
-  static updateSingle: SinglePageUpdateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static updateSingle: SinglePageUpdateSingle = async (client, data) => {
     const updateSinglePage = await client.query<SinglePageT>({
       text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,
       values: [data.user_id, data.id],

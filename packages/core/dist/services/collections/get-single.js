@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const format_collections_1 = __importDefault(require("../../utils/format/format-collections"));
 const Config_1 = __importDefault(require("../Config"));
 const brick_config_1 = __importDefault(require("../brick-config"));
 const environments_1 = __importDefault(require("../environments"));
-const getSingle = async (data) => {
+const getSingle = async (client, data) => {
     const instances = Config_1.default.collections || [];
     if (!instances) {
         throw new error_handler_1.LucidError({
@@ -21,7 +22,7 @@ const getSingle = async (data) => {
     const collectionsF = instances.map((collection) => (0, format_collections_1.default)(collection));
     const environment = data.environment
         ? data.environment
-        : await environments_1.default.getSingle({
+        : await (0, service_1.default)(environments_1.default.getSingle, false, client)({
             key: data.environment_key,
         });
     const assignedCollections = environment.assigned_collections || [];

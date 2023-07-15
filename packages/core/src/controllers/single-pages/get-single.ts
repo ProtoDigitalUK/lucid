@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import singlePageSchema from "@schemas/single-page";
 // Services
@@ -13,7 +14,10 @@ const getSingleController: Controller<
   typeof singlePageSchema.getSingle.query
 > = async (req, res, next) => {
   try {
-    const singlepage = await singlePagesService.getSingle({
+    const singlepage = await service(
+      singlePagesService.getSingle,
+      true
+    )({
       user_id: req.auth.id,
       environment_key: req.headers["lucid-environment"] as string,
       collection_key: req.params.collection_key,

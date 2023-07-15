@@ -1,9 +1,10 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import service from "@utils/app/service";
 // Models
 import Role from "@db/models/Role";
-import RolePermission from "@db/models/RolePermission";
 // Schema
 import rolesSchema from "@schemas/roles";
 import rolePermService from "@services/role-permissions";
@@ -12,7 +13,7 @@ export interface ServiceData {
   query: z.infer<typeof rolesSchema.getMultiple.query>;
 }
 
-const getMultiple = async (data: ServiceData) => {
+const getMultiple = async (client: PoolClient, data: ServiceData) => {
   const { filter, sort, page, per_page, include } = data.query;
 
   // Build Query Data and Query
@@ -40,11 +41,15 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  const roles = await Role.getMultiple(SelectQuery);
+  const roles = await Role.getMultiple(client, SelectQuery);
 
   if (include && include.includes("permissions")) {
     const permissionsPromise = roles.data.map((role) =>
-      rolePermService.getAll({
+      service(
+        rolePermService.getAll,
+        false,
+        client
+      )({
         role_id: role.id,
       })
     );

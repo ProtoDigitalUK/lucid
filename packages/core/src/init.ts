@@ -7,6 +7,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 // internal
+import { initializePool } from "@db/db";
 import migrateDB from "@db/migration";
 import initRoutes from "@routes/index";
 import {
@@ -23,6 +24,7 @@ const app = async (options: InitOptions) => {
   // ------------------------------------
   // Config
   await Config.cacheConfig();
+  await initializePool();
 
   // ------------------------------------
   // Server wide middleware

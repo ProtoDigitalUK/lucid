@@ -1,5 +1,8 @@
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat } from "@utils/app/query-helpers";
+import service from "@utils/app/service";
+
 // Models
 import Menu, { MenuItemT } from "@db/models/Menu";
 // Schema
@@ -14,7 +17,7 @@ export interface ServiceData {
   parentId?: number;
 }
 
-const upsertItem = async (data: ServiceData) => {
+const upsertItem = async (client: PoolClient, data: ServiceData) => {
   const itemsRes: MenuItemT[] = [];
 
   const queryData = queryDataFormat({
@@ -44,18 +47,27 @@ const upsertItem = async (data: ServiceData) => {
 
   // Update item
   if (data.item.id) {
-    await menuServices.getSingleItem({
+    await service(
+      menuServices.getSingleItem,
+      false,
+      client
+    )({
       id: data.item.id,
       menu_id: data.menu_id,
     });
 
-    const updatedItem = await Menu.updateMenuItem(data.item.id, queryData);
+    const updatedItem = await Menu.updateMenuItem(client, {
+      item_id: data.item.id,
+      query_data: queryData,
+    });
     newParentId = updatedItem.id;
     itemsRes.push(updatedItem);
   }
   // Create item
   else {
-    const newItem = await Menu.createMenuItem(queryData);
+    const newItem = await Menu.createMenuItem(client, {
+      query_data: queryData,
+    });
     newParentId = newItem.id;
     itemsRes.push(newItem);
   }
@@ -64,7 +76,11 @@ const upsertItem = async (data: ServiceData) => {
   if (data.item.children) {
     const promises = data.item.children.map(
       (child, i) =>
-        upsertItem({
+        service(
+          upsertItem,
+          false,
+          client
+        )({
           menu_id: data.menu_id,
           item: child,
           pos: i,

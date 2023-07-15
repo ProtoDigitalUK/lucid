@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const media_1 = __importDefault(require("../../schemas/media"));
 const media_2 = __importDefault(require("../../services/media"));
 const createSingleController = async (req, res, next) => {
     try {
-        const media = await media_2.default.createSingle({
+        const media = await (0, service_1.default)(media_2.default.createSingle, true)({
             name: req.body.name,
             alt: req.body.alt,
             files: req.files,

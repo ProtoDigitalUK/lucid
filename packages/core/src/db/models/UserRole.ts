@@ -1,23 +1,35 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 
 // -------------------------------------------
 // Types
-type UserRoleGetAll = (user_id: number) => Promise<UserRoleT[]>;
+type UserRoleGetAll = (
+  client: PoolClient,
+  data: {
+    user_id: number;
+  }
+) => Promise<UserRoleT[]>;
 
 type UserRoleUpdate = (
-  id: number,
+  client: PoolClient,
   data: {
+    user_id: number;
     role_ids: number[];
   }
 ) => Promise<UserRoleT[]>;
 
 type UserRoleGetPermissions = (
-  user_id: number
+  client: PoolClient,
+  data: {
+    user_id: number;
+  }
 ) => Promise<UserRolePermissionRes[]>;
 
 type UserRoleDeleteMultiple = (
-  user_id: number,
-  role_ids: number[]
+  client: PoolClient,
+  data: {
+    user_id: number;
+    role_ids: number[];
+  }
 ) => Promise<UserRoleT[]>;
 
 // -------------------------------------------
@@ -41,37 +53,28 @@ export type UserRoleT = {
 };
 
 export default class UserRole {
-  // -------------------------------------------
-  // Functions
-  static getAll: UserRoleGetAll = async (user_id) => {
-    const client = await getDBClient;
-
-    // Get all users roles
+  static getAll: UserRoleGetAll = async (client, data) => {
     const userRoles = await client.query<UserRoleT>({
       text: `
         SELECT * FROM lucid_user_roles
         WHERE user_id = $1
       `,
-      values: [user_id],
+      values: [data.user_id],
     });
 
     return userRoles.rows;
   };
-  static updateRoles: UserRoleUpdate = async (user_id, data) => {
-    const client = await getDBClient;
-
+  static updateRoles: UserRoleUpdate = async (client, data) => {
     const roles = await client.query<UserRoleT>({
       text: `
         INSERT INTO lucid_user_roles(user_id, role_id)
         SELECT $1, unnest($2::integer[]);`,
-      values: [user_id, data.role_ids],
+      values: [data.user_id, data.role_ids],
     });
 
     return roles.rows;
   };
-  static deleteMultiple: UserRoleDeleteMultiple = async (user_id, role_ids) => {
-    const client = await getDBClient;
-
+  static deleteMultiple: UserRoleDeleteMultiple = async (client, data) => {
     const roles = await client.query<UserRoleT>({
       text: `
         DELETE FROM 
@@ -82,14 +85,12 @@ export default class UserRole {
           user_id = $2
         RETURNING *;
       `,
-      values: [role_ids, user_id],
+      values: [data.role_ids, data.user_id],
     });
 
     return roles.rows;
   };
-  static getPermissions: UserRoleGetPermissions = async (user_id) => {
-    const client = await getDBClient;
-
+  static getPermissions: UserRoleGetPermissions = async (client, data) => {
     const userPermissions = await client.query<UserRolePermissionRes>({
       text: `SELECT 
           rp.permission,
@@ -104,7 +105,7 @@ export default class UserRole {
           lucid_roles r ON r.id = rp.role_id
         WHERE 
           ur.user_id = $1;`,
-      values: [user_id],
+      values: [data.user_id],
     });
 
     return userPermissions.rows;

@@ -1,4 +1,7 @@
+import { PoolClient } from "pg";
 import z from "zod";
+//  Utils
+import service from "@utils/app/service";
 // Schema
 import bricksSchema from "@schemas/bricks";
 // Services
@@ -12,11 +15,19 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getAll = async (data: ServiceData) => {
-  const environment = await environmentsService.getSingle({
+const getAll = async (client: PoolClient, data: ServiceData) => {
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
     key: data.environment_key,
   });
-  const collection = await collectionsService.getSingle({
+  const collection = await service(
+    collectionsService.getSingle,
+    false,
+    client
+  )({
     collection_key: data.collection_key,
     environment_key: data.environment_key,
     environment: environment,

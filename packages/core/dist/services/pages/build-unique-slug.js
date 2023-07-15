@@ -5,12 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const slugify_1 = __importDefault(require("slugify"));
 const Page_1 = __importDefault(require("../../db/models/Page"));
-const buildUniqueSlug = async (data) => {
+const buildUniqueSlug = async (client, data) => {
     if (data.homepage) {
         return "/";
     }
     data.slug = (0, slugify_1.default)(data.slug, { lower: true, strict: true });
-    const slugCount = await Page_1.default.getSlugCount({
+    const slugCount = await Page_1.default.getSlugCount(client, {
         slug: data.slug,
         environment_key: data.environment_key,
         collection_key: data.collection_key,

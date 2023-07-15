@@ -1,16 +1,18 @@
 import fs from "fs-extra";
 import path from "path";
+import { PoolClient } from "pg";
 import { green } from "console-log-colors";
 import { RuntimeError } from "@utils/app/error-handler";
+import { getDBClient } from "@db/db";
 // Models
 import Migration from "@db/models/Migration";
 
-const getOutstandingMigrations = async () => {
+const getOutstandingMigrations = async (client: PoolClient) => {
   // Get all migration sql files
   const migrationFiles = await fs.readdir(path.join(__dirname, "./migrations"));
 
   // Get all migrations from database
-  const migrations = await Migration.all();
+  const migrations = await Migration.all(client);
 
   // Filter out migrations that have already been run
   const outstandingMigrations = migrationFiles
@@ -35,8 +37,9 @@ const getOutstandingMigrations = async () => {
 };
 
 const migrate = async () => {
+  const client = await getDBClient();
   try {
-    const outstandingMigrations = await getOutstandingMigrations();
+    const outstandingMigrations = await getOutstandingMigrations(client);
 
     if (outstandingMigrations.length === 0) {
       console.log(green("No outstanding migrations, database is up to date"));
@@ -51,7 +54,7 @@ const migrate = async () => {
 
     for (const migration of outstandingMigrations) {
       console.log(green(`- running migration ${migration.file}`));
-      await Migration.create({
+      await Migration.create(client, {
         file: migration.file,
         rawSql: migration.sql,
       });

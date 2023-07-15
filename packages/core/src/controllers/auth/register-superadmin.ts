@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
@@ -14,7 +15,10 @@ const registerSuperAdminController: Controller<
   typeof authSchema.registerSuperAdmin.query
 > = async (req, res, next) => {
   try {
-    const user = await userServices.registerSuperAdmin({
+    const user = await service(
+      userServices.registerSuperAdmin,
+      true
+    )({
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,

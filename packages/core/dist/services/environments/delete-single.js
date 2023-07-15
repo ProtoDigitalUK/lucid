@@ -5,13 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const environments_1 = __importDefault(require("../environments"));
 const format_environment_1 = __importDefault(require("../../utils/format/format-environment"));
-const deleteSingle = async (data) => {
-    await environments_1.default.getSingle({
+const deleteSingle = async (client, data) => {
+    await (0, service_1.default)(environments_1.default.getSingle, false, client)({
         key: data.key,
     });
-    const environment = await Environment_1.default.deleteSingle(data.key);
+    const environment = await Environment_1.default.deleteSingle(client, {
+        key: data.key,
+    });
     if (!environment) {
         throw new error_handler_1.LucidError({
             type: "basic",

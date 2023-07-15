@@ -5,10 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmailInternal = exports.sendEmailExternal = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const db_1 = require("../../db/db");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Config_1 = __importDefault(require("../Config"));
 const email_1 = __importDefault(require("../email"));
-const createEmailRow = async (data) => {
-    await email_1.default.createSingle({
+const createEmailRow = async (client, data) => {
+    await (0, service_1.default)(email_1.default.createSingle, false, client)({
         from_address: data.options.from,
         from_name: data.options.fromName,
         to_address: data.options.to,
@@ -72,14 +74,26 @@ const sendEmailAction = async (template, params) => {
     }
 };
 const sendEmailExternal = async (template, params, track) => {
+    const client = await (0, db_1.getDBClient)();
     const result = await sendEmailAction(template, params);
     if (track) {
-        await createEmailRow({
-            template: template,
-            options: result.options,
-            delivery_status: result.success ? "sent" : "failed",
-            data: params.data,
-        });
+        try {
+            await client.query("BEGIN");
+            await createEmailRow(client, {
+                template: template,
+                options: result.options,
+                delivery_status: result.success ? "sent" : "failed",
+                data: params.data,
+            });
+            await client.query("COMMIT");
+        }
+        catch (error) {
+            await client.query("ROLLBACK");
+            throw error;
+        }
+        finally {
+            client.release();
+        }
     }
     return {
         success: result.success,
@@ -87,20 +101,20 @@ const sendEmailExternal = async (template, params, track) => {
     };
 };
 exports.sendEmailExternal = sendEmailExternal;
-const sendEmailInternal = async (template, params, id, track) => {
-    const result = await sendEmailAction(template, params);
-    if (track) {
-        if (!id) {
-            await createEmailRow({
-                template: template,
+const sendEmailInternal = async (client, data) => {
+    const result = await sendEmailAction(data.template, data.params);
+    if (data.track) {
+        if (!data.id) {
+            await createEmailRow(client, {
+                template: data.template,
                 options: result.options,
                 delivery_status: result.success ? "sent" : "failed",
-                data: params.data,
+                data: data.params.data,
             });
         }
         else {
-            await email_1.default.updateSingle({
-                id: id,
+            await (0, service_1.default)(email_1.default.updateSingle, false, client)({
+                id: data.id,
                 data: {
                     from_address: result.options.from,
                     from_name: result.options.fromName,

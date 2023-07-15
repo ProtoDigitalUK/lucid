@@ -1,15 +1,15 @@
 declare const _default: {
-    updateMultiple: (data: import("./update-multiple").ServiceData) => Promise<void>;
-    upsertSingle: (data: import("./upsert-single").ServiceData) => Promise<number>;
-    upsertRepeater: (data: import("./upsert-repeater").ServiceData) => Promise<void>;
-    checkFieldExists: (data: import("./check-field-exists").ServiceData) => Promise<void>;
-    upsertField: (data: import("./upsert-field").ServiceData) => Promise<number>;
-    getAll: (data: import("./get-all").ServiceData) => Promise<{
+    updateMultiple: (client: import("pg").PoolClient, data: import("./update-multiple").ServiceData) => Promise<void>;
+    upsertSingle: (client: import("pg").PoolClient, data: import("./upsert-single").ServiceData) => Promise<number>;
+    upsertRepeater: (client: import("pg").PoolClient, data: import("./upsert-repeater").ServiceData) => Promise<void>;
+    checkFieldExists: (client: import("pg").PoolClient, data: import("./check-field-exists").ServiceData) => Promise<void>;
+    upsertField: (client: import("pg").PoolClient, data: import("./upsert-field").ServiceData) => Promise<number>;
+    getAll: (client: import("pg").PoolClient, data: import("./get-all").ServiceData) => Promise<{
         builder_bricks: import("../../utils/format/format-bricks").BrickResT[];
         fixed_bricks: import("../../utils/format/format-bricks").BrickResT[];
     }>;
-    deleteUnused: (data: import("./delete-unused").ServiceData) => Promise<void>;
-    validateBricks: (data: {
+    deleteUnused: (client: import("pg").PoolClient, data: import("./delete-unused").ServiceData) => Promise<void>;
+    validateBricks: (client: import("pg").PoolClient, data: {
         builder_bricks: {
             key: string;
             id?: number | undefined;

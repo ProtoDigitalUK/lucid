@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
@@ -12,10 +13,10 @@ export interface ServiceData {
   type: OptionT["type"];
 }
 
-const patchByName = async (data: ServiceData) => {
+const patchByName = async (client: PoolClient, data: ServiceData) => {
   const value = convertToString(data.value, data.type);
 
-  const option = await Option.patchByName({
+  const option = await Option.patchByName(client, {
     name: data.name,
     value,
     type: data.type,

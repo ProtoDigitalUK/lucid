@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Menu from "@db/models/Menu";
 // Schema
@@ -17,14 +19,18 @@ export interface ServiceData {
   items?: MenuItem[];
 }
 
-const createSingle = async (data: ServiceData) => {
+const createSingle = async (client: PoolClient, data: ServiceData) => {
   // Check if key is unique
-  await menuServices.checkKeyUnique({
+  await service(
+    menuServices.checkKeyUnique,
+    false,
+    client
+  )({
     key: data.key,
     environment_key: data.environment_key,
   });
 
-  const menu = await Menu.createSingle({
+  const menu = await Menu.createSingle(client, {
     environment_key: data.environment_key,
     key: data.key,
     name: data.name,
@@ -43,21 +49,21 @@ const createSingle = async (data: ServiceData) => {
   // -------------------------------------------
   // Create Menu Items
   if (data.items) {
-    try {
-      await menuServices.upsertMultipleItems({
-        menu_id: menu.id,
-        items: data.items,
-      });
-    } catch (err) {
-      await Menu.deleteSingle({
-        id: menu.id,
-        environment_key: data.environment_key,
-      });
-      throw err;
-    }
+    await service(
+      menuServices.upsertMultipleItems,
+      false,
+      client
+    )({
+      menu_id: menu.id,
+      items: data.items,
+    });
   }
 
-  const menuItems = await menuServices.getItems({
+  const menuItems = await service(
+    menuServices.getItems,
+    false,
+    client
+  )({
     menu_ids: [menu.id],
   });
 

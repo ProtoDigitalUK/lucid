@@ -1,19 +1,23 @@
+import { PoolClient } from "pg";
 import { BrickObject } from "../models/CollectionBrick";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 import { BrickResT } from "../../utils/format/format-bricks";
-type PageGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type PageGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<{
     data: PageT[];
     count: number;
 }>;
-type PageGetSingle = (query_instance: SelectQueryBuilder) => Promise<PageT>;
-type PageGetSingleBasic = (id: number, environment_key: string) => Promise<PageT>;
-type PageGetSlugCount = (data: {
+type PageGetSingle = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<PageT>;
+type PageGetSingleBasic = (client: PoolClient, data: {
+    id: number;
+    environment_key: string;
+}) => Promise<PageT>;
+type PageGetSlugCount = (client: PoolClient, data: {
     slug: string;
     environment_key: string;
     collection_key: string;
     parent_id?: number;
 }) => Promise<number>;
-type PageCreateSingle = (data: {
+type PageCreateSingle = (client: PoolClient, data: {
     userId: number;
     environment_key: string;
     title: string;
@@ -25,7 +29,7 @@ type PageCreateSingle = (data: {
     parent_id?: number;
     category_ids?: Array<number>;
 }) => Promise<PageT>;
-type PageUpdateSingle = (data: {
+type PageUpdateSingle = (client: PoolClient, data: {
     id: number;
     environment_key: string;
     userId: number;
@@ -39,13 +43,26 @@ type PageUpdateSingle = (data: {
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
 }) => Promise<PageT>;
-type PageDeleteSingle = (data: {
+type PageDeleteSingle = (client: PoolClient, data: {
     id: number;
 }) => Promise<PageT>;
-type PageGetMultipleByIds = (data: {
+type PageGetMultipleByIds = (client: PoolClient, data: {
     ids: Array<number>;
     environment_key: string;
 }) => Promise<PageT[]>;
+type PageGetNonCurrentHomepages = (client: PoolClient, data: {
+    current_id: number;
+    environment_key: string;
+}) => Promise<PageT[]>;
+type PageCheckSlugExistence = (client: PoolClient, data: {
+    slug: string;
+    id: number;
+    environment_key: string;
+}) => Promise<boolean>;
+type PageUpdatePageToNonHomepage = (client: PoolClient, data: {
+    id: number;
+    slug: string;
+}) => Promise<PageT>;
 export type PageT = {
     id: number;
     environment_key: string;
@@ -75,9 +92,9 @@ export default class Page {
     static getMultipleByIds: PageGetMultipleByIds;
     static getSingleBasic: PageGetSingleBasic;
     static getSlugCount: PageGetSlugCount;
-    static getNonCurrentHomepages: (currentId: number, environment_key: string) => Promise<any[]>;
-    static checkSlugExistence: (slug: string, id: number, environment_key: string) => Promise<boolean>;
-    static updatePageToNonHomepage: (id: number, newSlug: string) => Promise<void>;
+    static getNonCurrentHomepages: PageGetNonCurrentHomepages;
+    static checkSlugExistence: PageCheckSlugExistence;
+    static updatePageToNonHomepage: PageUpdatePageToNonHomepage;
 }
 export {};
 //# sourceMappingURL=Page.d.ts.map

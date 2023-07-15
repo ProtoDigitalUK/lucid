@@ -1,4 +1,4 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat } from "@utils/app/query-helpers";
 import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
@@ -7,21 +7,37 @@ import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
 // Types
 
 type RolePermissionCreateSingle = (
-  role_id: number,
-  permission: PermissionT | EnvironmentPermissionT,
-  environment_key?: string
+  client: PoolClient,
+  data: {
+    role_id: number;
+    permission: PermissionT | EnvironmentPermissionT;
+    environment_key?: string;
+  }
 ) => Promise<RolePermissionT>;
 
 type RolePermissionDeleteSingle = (
-  id: RolePermissionT["id"]
+  client: PoolClient,
+  data: {
+    id: RolePermissionT["id"];
+  }
 ) => Promise<RolePermissionT>;
 
-type RolePermissionGetAll = (role_id: number) => Promise<RolePermissionT[]>;
+type RolePermissionGetAll = (
+  client: PoolClient,
+  data: {
+    role_id: number;
+  }
+) => Promise<RolePermissionT[]>;
 
-type RolePermissionDeleteAll = (role_id: number) => Promise<RolePermissionT[]>;
+type RolePermissionDeleteAll = (
+  client: PoolClient,
+  data: {
+    role_id: number;
+  }
+) => Promise<RolePermissionT[]>;
 
 // -------------------------------------------
-// User
+// Role Permission
 export type RolePermissionT = {
   id: number;
   role_id: string;
@@ -33,18 +49,10 @@ export type RolePermissionT = {
 };
 
 export default class RolePermission {
-  // -------------------------------------------
-  // Functions
-  static createSingle: RolePermissionCreateSingle = async (
-    role_id,
-    permission,
-    environment_key
-  ) => {
-    const client = await getDBClient;
-
+  static createSingle: RolePermissionCreateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["role_id", "permission", "environment_key"],
-      values: [role_id, permission, environment_key],
+      values: [data.role_id, data.permission, data.environment_key],
     });
 
     const permissionRes = await client.query<RolePermissionT>({
@@ -54,32 +62,26 @@ export default class RolePermission {
 
     return permissionRes.rows[0];
   };
-  static deleteSingle: RolePermissionDeleteSingle = async (id) => {
-    const client = await getDBClient;
-
+  static deleteSingle: RolePermissionDeleteSingle = async (client, data) => {
     const rolePermission = await client.query<RolePermissionT>({
       text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
-      values: [id],
+      values: [data.id],
     });
 
     return rolePermission.rows[0];
   };
-  static deleteAll: RolePermissionDeleteAll = async (role_id) => {
-    const client = await getDBClient;
-
+  static deleteAll: RolePermissionDeleteAll = async (client, data) => {
     const res = await client.query<RolePermissionT>({
       text: `DELETE FROM lucid_role_permissions WHERE role_id = $1 RETURNING *`,
-      values: [role_id],
+      values: [data.role_id],
     });
 
     return res.rows;
   };
-  static getAll: RolePermissionGetAll = async (role_id) => {
-    const client = await getDBClient;
-
+  static getAll: RolePermissionGetAll = async (client, data) => {
     const res = await client.query<RolePermissionT>({
       text: `SELECT * FROM lucid_role_permissions WHERE role_id = $1`,
-      values: [role_id],
+      values: [data.role_id],
     });
 
     return res.rows;

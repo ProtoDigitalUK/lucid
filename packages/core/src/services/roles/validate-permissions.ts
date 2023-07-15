@@ -1,8 +1,10 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Schema
 import roleSchema from "@schemas/roles";
 // Utils
 import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import environmentsService from "@services/environments";
 import Permissions, {
@@ -14,9 +16,16 @@ type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body
 >["permission_groups"];
 
-const validatePermissions = async (permGroup: SchemaPermissions) => {
+const validatePermissions = async (
+  client: PoolClient,
+  permGroup: SchemaPermissions
+) => {
   const permissionSet = Permissions.permissions;
-  const environmentsRes = await environmentsService.getAll();
+  const environmentsRes = await service(
+    environmentsService.getAll,
+    false,
+    client
+  )();
 
   // Data
   const validPermissions: Array<{

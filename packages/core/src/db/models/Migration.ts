@@ -1,14 +1,16 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 
 // -------------------------------------------
 // Types
+type MigrationAll = (client: PoolClient) => Promise<MigrationT[]>;
 
-type MigrationAll = () => Promise<MigrationT[]>;
-
-type MigrationCreate = (data: {
-  file: string;
-  rawSql: string;
-}) => Promise<void>;
+type MigrationCreate = (
+  client: PoolClient,
+  data: {
+    file: string;
+    rawSql: string;
+  }
+) => Promise<void>;
 
 // -------------------------------------------
 // Migration
@@ -19,12 +21,8 @@ export type MigrationT = {
 };
 
 export default class Migration {
-  // -------------------------------------------
-  // Public
-  static all: MigrationAll = async () => {
+  static all: MigrationAll = async (client) => {
     try {
-      const client = await getDBClient;
-
       const migrations = await client.query<MigrationT>(
         `SELECT * FROM lucid_migrations`
       );
@@ -34,9 +32,7 @@ export default class Migration {
       return [];
     }
   };
-  static create: MigrationCreate = async (data) => {
-    const client = await getDBClient;
-
+  static create: MigrationCreate = async (client, data) => {
     const { file, rawSql } = data;
     await client.query({
       text: rawSql,
@@ -46,6 +42,4 @@ export default class Migration {
       values: [file],
     });
   };
-  // -------------------------------------------
-  // Util Functions
 }

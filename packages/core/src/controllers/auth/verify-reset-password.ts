@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import authSchema from "@schemas/auth";
 // Services
@@ -13,7 +14,10 @@ const verifyResetPasswordController: Controller<
   typeof authSchema.verifyResetPassword.query
 > = async (req, res, next) => {
   try {
-    const verifyResetPassword = await authService.verifyResetPassword({
+    const verifyResetPassword = await service(
+      authService.verifyResetPassword,
+      false
+    )({
       token: req.params.token,
     });
 

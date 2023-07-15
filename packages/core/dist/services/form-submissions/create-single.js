@@ -4,16 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
 const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
-const createSingle = async (data) => {
-    await form_submissions_1.default.hasEnvironmentPermission(data);
+const createSingle = async (client, data) => {
+    await (0, service_1.default)(form_submissions_1.default.hasEnvironmentPermission, false, client)(data);
     const formBuilder = forms_1.default.getBuilderInstance({
         form_key: data.form_key,
     });
-    const formSubmission = await FormSubmission_1.default.createSingle({
+    const formSubmission = await FormSubmission_1.default.createSingle(client, {
         form_key: data.form_key,
         environment_key: data.environment_key,
     });
@@ -25,7 +26,7 @@ const createSingle = async (data) => {
             status: 500,
         });
     }
-    const formData = await Promise.all(data.data.map((field) => FormSubmission_1.default.createFormData({
+    const formData = await Promise.all(data.data.map((field) => FormSubmission_1.default.createFormData(client, {
         form_submission_id: formSubmission.id,
         name: field.name,
         type: field.type,

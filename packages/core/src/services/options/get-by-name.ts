@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
@@ -9,8 +10,10 @@ export interface ServiceData {
   name: OptionT["option_name"];
 }
 
-const getByName = async (data: ServiceData) => {
-  const option = await Option.getByName(data.name);
+const getByName = async (client: PoolClient, data: ServiceData) => {
+  const option = await Option.getByName(client, {
+    name: data.name,
+  });
 
   if (!option) {
     throw new LucidError({

@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Role_1 = __importDefault(require("../../db/models/Role"));
 const role_permissions_1 = __importDefault(require("../role-permissions"));
-const getMultiple = async (data) => {
+const getMultiple = async (client, data) => {
     const { filter, sort, page, per_page, include } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: ["roles.id", "roles.name", "roles.created_at", "roles.updated_at"],
@@ -31,9 +32,9 @@ const getMultiple = async (data) => {
         page: page,
         per_page: per_page,
     });
-    const roles = await Role_1.default.getMultiple(SelectQuery);
+    const roles = await Role_1.default.getMultiple(client, SelectQuery);
     if (include && include.includes("permissions")) {
-        const permissionsPromise = roles.data.map((role) => role_permissions_1.default.getAll({
+        const permissionsPromise = roles.data.map((role) => (0, service_1.default)(role_permissions_1.default.getAll, false, client)({
             role_id: role.id,
         }));
         const permissions = await Promise.all(permissionsPromise);

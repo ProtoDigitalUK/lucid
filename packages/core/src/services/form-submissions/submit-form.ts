@@ -1,4 +1,8 @@
+import { PoolClient } from "pg";
+import { getDBClient } from "@db/db";
 import FormBuilder from "@lucid/form-builder";
+// Utils
+import service from "@utils/app/service";
 // Services
 import formSubService from "@services/form-submissions";
 
@@ -10,7 +14,7 @@ export interface ServiceData {
   };
 }
 
-const submitForm = async (props: ServiceData) => {
+const submitForm = async (client: PoolClient, props: ServiceData) => {
   const data: {
     name: string;
     value: string | number | boolean;
@@ -45,7 +49,11 @@ const submitForm = async (props: ServiceData) => {
     });
   }
 
-  const formRes = await formSubService.createSingle({
+  const formRes = await service(
+    formSubService.createSingle,
+    false,
+    client
+  )({
     id: undefined,
     form_key: props.form.key,
     environment_key: props.environment_key,
@@ -53,6 +61,21 @@ const submitForm = async (props: ServiceData) => {
   });
 
   return formRes;
+};
+
+export const submitFormExternal = async (props: ServiceData) => {
+  const client = await getDBClient();
+
+  try {
+    await client.query("BEGIN");
+    await submitForm(client, props);
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 };
 
 export default submitForm;

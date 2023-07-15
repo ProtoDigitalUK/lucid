@@ -4,21 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
 const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
-const toggleReadAt = async (data) => {
-    await form_submissions_1.default.hasEnvironmentPermission({
+const toggleReadAt = async (client, data) => {
+    await (0, service_1.default)(form_submissions_1.default.hasEnvironmentPermission, false, client)({
         form_key: data.form_key,
         environment_key: data.environment_key,
     });
-    const formSubmission = await form_submissions_1.default.getSingle({
+    const formSubmission = await (0, service_1.default)(form_submissions_1.default.getSingle, false, client)({
         id: data.id,
         form_key: data.form_key,
         environment_key: data.environment_key,
     });
-    const updateFormSubmission = await FormSubmission_1.default.toggleReadAt({
+    const updateFormSubmission = await FormSubmission_1.default.toggleReadAt(client, {
         id: data.id,
         form_key: data.form_key,
         environment_key: data.environment_key,
@@ -32,7 +33,9 @@ const toggleReadAt = async (data) => {
             status: 404,
         });
     }
-    let formData = await FormSubmission_1.default.getAllFormData([updateFormSubmission.id]);
+    let formData = await FormSubmission_1.default.getAllFormData(client, {
+        submission_ids: [updateFormSubmission.id],
+    });
     formData = formData.filter((field) => field.form_submission_id === updateFormSubmission.id);
     const formBuilder = forms_1.default.getBuilderInstance({
         form_key: updateFormSubmission.form_key,

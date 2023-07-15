@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const brick_config_1 = __importDefault(require("../brick-config"));
 const pages_1 = __importDefault(require("../pages"));
 const media_1 = __importDefault(require("../media"));
@@ -162,7 +163,7 @@ const validateBricksGroup = async (data) => {
     }
     return { errors, hasErrors };
 };
-const getAllMedia = async (fields) => {
+const getAllMedia = async (client, fields) => {
     try {
         const getIDs = fields.map((field) => {
             if (field.type === "media") {
@@ -172,7 +173,7 @@ const getAllMedia = async (fields) => {
         const ids = getIDs
             .filter((id) => id !== undefined)
             .filter((value, index, self) => self.indexOf(value) === index);
-        const media = await media_1.default.getMultipleByIds({
+        const media = await (0, service_1.default)(media_1.default.getMultipleByIds, false, client)({
             ids: ids,
         });
         return media;
@@ -181,7 +182,7 @@ const getAllMedia = async (fields) => {
         return [];
     }
 };
-const getAllPages = async (fields, environment_key) => {
+const getAllPages = async (client, fields, environment_key) => {
     try {
         const getIDs = fields.map((field) => {
             if (field.type === "pagelink") {
@@ -191,7 +192,7 @@ const getAllPages = async (fields, environment_key) => {
         const ids = getIDs
             .filter((id) => id !== undefined)
             .filter((value, index, self) => self.indexOf(value) === index);
-        const pages = await pages_1.default.getMultipleById({
+        const pages = await (0, service_1.default)(pages_1.default.getMultipleById, false, client)({
             ids,
             environment_key,
         });
@@ -201,12 +202,12 @@ const getAllPages = async (fields, environment_key) => {
         return [];
     }
 };
-const validateBricks = async (data) => {
+const validateBricks = async (client, data) => {
     const builderInstances = brick_config_1.default.getBrickConfig();
     const bricksFlattened = flattenAllBricks(data.builder_bricks, data.fixed_bricks);
     const pageMediaPromises = await Promise.all([
-        getAllMedia(bricksFlattened.flat_fields),
-        getAllPages(bricksFlattened.flat_fields, data.environment.key),
+        getAllMedia(client, bricksFlattened.flat_fields),
+        getAllPages(client, bricksFlattened.flat_fields, data.environment.key),
     ]);
     const media = pageMediaPromises[0];
     const pages = pageMediaPromises[1];

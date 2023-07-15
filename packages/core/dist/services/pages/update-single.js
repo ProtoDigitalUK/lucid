@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Page_1 = __importDefault(require("../../db/models/Page"));
 const collections_1 = __importDefault(require("../collections"));
 const environments_1 = __importDefault(require("../environments"));
@@ -11,16 +12,16 @@ const collection_bricks_1 = __importDefault(require("../collection-bricks"));
 const page_categories_1 = __importDefault(require("../page-categories"));
 const pages_1 = __importDefault(require("../pages"));
 const format_page_1 = __importDefault(require("../../utils/format/format-page"));
-const updateSingle = async (data) => {
-    const currentPage = await pages_1.default.checkPageExists({
+const updateSingle = async (client, data) => {
+    const currentPage = await (0, service_1.default)(pages_1.default.checkPageExists, false, client)({
         id: data.id,
         environment_key: data.environment_key,
     });
     const [environment, collection] = await Promise.all([
-        environments_1.default.getSingle({
+        (0, service_1.default)(environments_1.default.getSingle, false, client)({
             key: data.environment_key,
         }),
-        collections_1.default.getSingle({
+        (0, service_1.default)(collections_1.default.getSingle, false, client)({
             collection_key: currentPage.collection_key,
             environment_key: data.environment_key,
             type: "pages",
@@ -28,13 +29,13 @@ const updateSingle = async (data) => {
     ]);
     const parentId = data.homepage ? undefined : data.parent_id;
     if (parentId) {
-        await pages_1.default.parentChecks({
+        await (0, service_1.default)(pages_1.default.parentChecks, false, client)({
             parent_id: parentId,
             environment_key: data.environment_key,
             collection_key: currentPage.collection_key,
         });
     }
-    await collection_bricks_1.default.validateBricks({
+    await (0, service_1.default)(collection_bricks_1.default.validateBricks, false, client)({
         builder_bricks: data.builder_bricks || [],
         fixed_bricks: data.fixed_bricks || [],
         collection: collection,
@@ -42,7 +43,7 @@ const updateSingle = async (data) => {
     });
     let newSlug = undefined;
     if (data.slug) {
-        newSlug = await pages_1.default.buildUniqueSlug({
+        newSlug = await (0, service_1.default)(pages_1.default.buildUniqueSlug, false, client)({
             slug: data.slug,
             homepage: data.homepage || false,
             environment_key: data.environment_key,
@@ -50,7 +51,7 @@ const updateSingle = async (data) => {
             parent_id: parentId,
         });
     }
-    const page = await Page_1.default.updateSingle({
+    const page = await Page_1.default.updateSingle(client, {
         id: data.id,
         environment_key: data.environment_key,
         userId: data.userId,
@@ -74,13 +75,13 @@ const updateSingle = async (data) => {
     }
     await Promise.all([
         data.category_ids
-            ? page_categories_1.default.updateMultiple({
+            ? (0, service_1.default)(page_categories_1.default.updateMultiple, false, client)({
                 page_id: page.id,
                 category_ids: data.category_ids,
                 collection_key: currentPage.collection_key,
             })
             : Promise.resolve(),
-        collection_bricks_1.default.updateMultiple({
+        (0, service_1.default)(collection_bricks_1.default.updateMultiple, false, client)({
             id: page.id,
             builder_bricks: data.builder_bricks || [],
             fixed_bricks: data.fixed_bricks || [],
