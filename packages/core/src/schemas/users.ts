@@ -18,7 +18,7 @@ const updateRolesParams = z.object({
 
 // ------------------------------------
 // CREATE USER
-const createUserBody = z.object({
+const createSingleBody = z.object({
   email: z.string().email(),
   username: z.string(),
   password: z.string().min(8),
@@ -27,8 +27,16 @@ const createUserBody = z.object({
   last_name: z.string().optional(),
   super_admin: z.boolean().optional(),
 });
-const createUserQuery = z.object({});
-const createUserParams = z.object({});
+const createSingleQuery = z.object({});
+const createSingleParams = z.object({});
+
+// ------------------------------------
+// DELETE SINGLE
+const deleteSingleBody = z.object({});
+const deleteSingleQuery = z.object({});
+const deleteSingleParams = z.object({
+  id: z.string(),
+});
 
 // ------------------------------------
 // EXPORT
@@ -43,9 +51,14 @@ export default {
     query: updateRolesQuery,
     params: updateRolesParams,
   },
-  createUser: {
-    body: createUserBody,
-    query: createUserQuery,
-    params: createUserParams,
+  createSingle: {
+    body: createSingleBody,
+    query: createSingleQuery,
+    params: createSingleParams,
+  },
+  deleteSingle: {
+    body: deleteSingleBody,
+    query: deleteSingleQuery,
+    params: deleteSingleParams,
   },
 };

@@ -6,6 +6,7 @@ import registerSingle from "./register-single";
 import registerSuperAdmin from "./register-superadmin";
 import checkIfUserExists from "./check-if-user-exists";
 import updatePassword from "./update-password";
+import deleteSingle from "./delete-single";
 
 export default {
   updateRoles,
@@ -16,4 +17,5 @@ export default {
   registerSuperAdmin,
   checkIfUserExists,
   updatePassword,
+  deleteSingle,
 };

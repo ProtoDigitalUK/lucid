@@ -7,10 +7,10 @@ import usersService from "@services/users";
 
 // --------------------------------------------------
 // Controller
-const createUserController: Controller<
-  typeof usersSchema.createUser.params,
-  typeof usersSchema.createUser.body,
-  typeof usersSchema.createUser.query
+const createSingleController: Controller<
+  typeof usersSchema.createSingle.params,
+  typeof usersSchema.createSingle.body,
+  typeof usersSchema.createSingle.query
 > = async (req, res, next) => {
   try {
     const user = await usersService.registerSingle(
@@ -39,6 +39,6 @@ const createUserController: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: usersSchema.createUser,
-  controller: createUserController,
+  schema: usersSchema.createSingle,
+  controller: createSingleController,
 };

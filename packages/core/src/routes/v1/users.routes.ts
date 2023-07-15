@@ -2,7 +2,8 @@ import { Router } from "express";
 import r from "@utils/app/route";
 // Controller
 import updateRoles from "@controllers/users/update-roles";
-import createUser from "@controllers/users/create-user";
+import createSingle from "@controllers/users/create-single";
+import deleteSingle from "@controllers/users/delete-single";
 
 // ------------------------------------
 // Router
@@ -32,8 +33,22 @@ r(router, {
     authenticate: true,
     authoriseCSRF: true,
   },
-  schema: createUser.schema,
-  controller: createUser.controller,
+  schema: createSingle.schema,
+  controller: createSingle.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/:id",
+  permissions: {
+    global: ["delete_user"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: deleteSingle.schema,
+  controller: deleteSingle.controller,
 });
 
 export default router;
