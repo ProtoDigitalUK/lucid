@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import UserRole from "@db/models/UserRole";
 // Format
@@ -7,7 +8,7 @@ export interface ServiceData {
   user_id: number;
 }
 
-const getPermissions = async (data: ServiceData) => {
+const getPermissions = async (client: PoolClient, data: ServiceData) => {
   const userPermissions = await UserRole.getPermissions(data.user_id);
 
   if (!userPermissions) {

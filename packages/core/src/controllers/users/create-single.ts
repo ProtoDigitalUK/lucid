@@ -1,5 +1,6 @@
 // Utils
 import buildResponse from "@utils/app/build-response";
+import service from "@utils/app/service";
 // Schema
 import usersSchema from "@schemas/users";
 // Services
@@ -13,7 +14,7 @@ const createSingleController: Controller<
   typeof usersSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const user = await usersService.registerSingle(
+    const user = await service(usersService.registerSingle, true)(
       {
         email: req.body.email,
         username: req.body.username,

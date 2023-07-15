@@ -1,5 +1,5 @@
 import z from "zod";
-import getDBClient from "@db/db";
+import { getDBClient } from "@db/db";
 // Schema
 import roleSchema from "@schemas/roles";
 // Models
@@ -51,7 +51,7 @@ export default class Role {
   // -------------------------------------------
   // Functions
   static createSingle: RoleCreateSingle = async (data) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const { columns, aliases, values } = queryDataFormat({
       columns: ["name"],
@@ -66,7 +66,7 @@ export default class Role {
     return roleRes.rows[0];
   };
   static deleteSingle: RoleDeleteSingle = async (id) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const roleRes = await client.query<RoleT>({
       text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
@@ -76,7 +76,7 @@ export default class Role {
     return roleRes.rows[0];
   };
   static getMultiple: RoleGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const roles = client.query<RoleT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
@@ -96,7 +96,7 @@ export default class Role {
     };
   };
   static updateSingle: RoleUpdateSingle = async (id, data) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const { columns, aliases, values } = queryDataFormat({
       columns: ["name"],
@@ -113,7 +113,7 @@ export default class Role {
     return roleRes.rows[0];
   };
   static getSingle: RoleGetSingle = async (id) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const roleRes = await client.query<RoleT>({
       text: `SELECT 
@@ -137,7 +137,7 @@ export default class Role {
     return roleRes.rows[0];
   };
   static getSingleByName: RoleGetSingleByName = async (name) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const roleRes = await client.query<RoleT>({
       text: `SELECT * FROM lucid_roles WHERE name = $1`,

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -10,7 +11,7 @@ export interface ServiceData {
   role_ids: number[];
 }
 
-const updateRoles = async (data: ServiceData) => {
+const updateRoles = async (client: PoolClient, data: ServiceData) => {
   // Get all users roles
   const userRoles = await UserRole.getAll(data.user_id);
 

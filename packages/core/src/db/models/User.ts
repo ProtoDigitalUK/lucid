@@ -1,4 +1,5 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
+import { getDBClient } from "@db/db";
 // Utils
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
@@ -9,20 +10,29 @@ type UserGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
   count: number;
 }>;
 
-type UserRegister = (data: {
-  first_name?: string;
-  last_name?: string;
-  email: string;
-  username: string;
-  password: string;
-  super_admin?: boolean;
-}) => Promise<UserT>;
+type UserRegister = (
+  client: PoolClient,
+  data: {
+    first_name?: string;
+    last_name?: string;
+    email: string;
+    username: string;
+    password: string;
+    super_admin?: boolean;
+  }
+) => Promise<UserT>;
 
 type UserGetById = (id: number) => Promise<UserT>;
 
-type UserGetByUsername = (data: { username: string }) => Promise<UserT>;
+type UserGetByUsername = (
+  client: PoolClient,
+  data: { username: string }
+) => Promise<UserT>;
 
-type UserGetByEmail = (data: { email: string }) => Promise<UserT>;
+type UserGetByEmail = (
+  client: PoolClient,
+  data: { email: string }
+) => Promise<UserT>;
 
 // -------------------------------------------
 // User
@@ -40,9 +50,7 @@ export type UserT = {
 };
 
 export default class User {
-  static register: UserRegister = async (data) => {
-    const client = await getDBClient;
-
+  static register: UserRegister = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
         "email",
@@ -70,7 +78,7 @@ export default class User {
     return user.rows[0];
   };
   static getMultiple: UserGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const users = client.query<UserT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
@@ -90,7 +98,7 @@ export default class User {
     };
   };
   static getById: UserGetById = async (id) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const user = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE id = $1`,
@@ -99,9 +107,7 @@ export default class User {
 
     return user.rows[0];
   };
-  static getByUsername: UserGetByUsername = async (data) => {
-    const client = await getDBClient;
-
+  static getByUsername: UserGetByUsername = async (client, data) => {
     const user = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE username = $1`,
       values: [data.username],
@@ -109,9 +115,7 @@ export default class User {
 
     return user.rows[0];
   };
-  static getByEmail: UserGetByEmail = async (data) => {
-    const client = await getDBClient;
-
+  static getByEmail: UserGetByEmail = async (client, data) => {
     const user = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE email = $1`,
       values: [data.email],
@@ -120,7 +124,7 @@ export default class User {
     return user.rows[0];
   };
   static checkIfUserExistsAlready = async (email: string, username: string) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const userExists = await client.query<UserT>({
       text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
@@ -130,7 +134,7 @@ export default class User {
     return userExists.rows[0];
   };
   static deleteSingle = async (id: number) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const user = await client.query<UserT>({
       text: `DELETE FROM lucid_users WHERE id = $1 RETURNING *`,
@@ -140,7 +144,7 @@ export default class User {
     return user.rows[0];
   };
   static updatePassword = async (id: number, password: string) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const user = await client.query<UserT>({
       text: `UPDATE lucid_users SET password = $1 WHERE id = $2 RETURNING *`,

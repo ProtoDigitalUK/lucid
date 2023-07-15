@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import User from "@db/models/User";
 // Services
@@ -11,7 +13,7 @@ export interface ServiceData {
   user_id: number;
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (client: PoolClient, data: ServiceData) => {
   const user = await User.getById(data.user_id);
 
   if (!user) {
@@ -29,7 +31,11 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  const userPermissions = await usersServices.getPermissions({
+  const userPermissions = await service(
+    usersServices.getPermissions,
+    false,
+    client
+  )({
     user_id: user.id,
   });
 

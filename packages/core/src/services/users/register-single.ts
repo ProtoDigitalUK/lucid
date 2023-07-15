@@ -1,6 +1,8 @@
+import { PoolClient } from "pg";
 import argon2 from "argon2";
 // Utils
 import { LucidError, modelErrors, ErrorResult } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import User from "@db/models/User";
 // Services
@@ -18,16 +20,20 @@ export interface ServiceData {
   role_ids?: number[];
 }
 
-const registerSingle = async (data: ServiceData, current_user_id?: number) => {
+const registerSingle = async (
+  client: PoolClient,
+  data: ServiceData,
+  current_user_id?: number
+) => {
   let superAdmin = data.super_admin;
 
   // --------------------------------------------------
   // check if user exists
   const checkUserProm = Promise.all([
-    User.getByEmail({
+    User.getByEmail(client, {
       email: data.email,
     }),
-    User.getByUsername({
+    User.getByUsername(client, {
       username: data.username,
     }),
   ]);
@@ -56,18 +62,26 @@ const registerSingle = async (data: ServiceData, current_user_id?: number) => {
     });
   }
 
-  await usersServices.checkIfUserExists({
+  await service(
+    usersServices.checkIfUserExists,
+    false,
+    client
+  )({
     email: data.email,
     username: data.username,
   });
 
   // --------------------------------------------------
   // Get the current user and only allow them to create super admins if they are a super admin
-
-  if (current_user_id !== undefined) {
-    const currentUser = await usersServices.getSingle({
+  if (current_user_id !== undefined && data.super_admin === true) {
+    const currentUser = await service(
+      usersServices.getSingle,
+      false,
+      client
+    )({
       user_id: current_user_id,
     });
+
     if (!currentUser.super_admin) {
       superAdmin = false;
     }
@@ -77,7 +91,7 @@ const registerSingle = async (data: ServiceData, current_user_id?: number) => {
 
   // --------------------------------------------------
   // Create the user
-  const user = await User.register({
+  const user = await User.register(client, {
     email: data.email,
     username: data.username,
     password: hashedPassword,
@@ -97,20 +111,23 @@ const registerSingle = async (data: ServiceData, current_user_id?: number) => {
 
   // --------------------------------------------------
   // Add the roles
-  try {
-    if (data.role_ids && data.role_ids.length > 0) {
-      await usersServices.updateRoles({
-        user_id: user.id,
-        role_ids: data.role_ids,
-      });
-    }
-  } catch (err) {
-    await User.deleteSingle(user.id);
-    throw err;
+  if (data.role_ids && data.role_ids.length > 0) {
+    await service(
+      usersServices.updateRoles,
+      false,
+      client
+    )({
+      user_id: user.id,
+      role_ids: data.role_ids,
+    });
   }
   // --------------------------------------------------
   // Get the user permissions and return the user
-  const userPermissions = await usersServices.getPermissions({
+  const userPermissions = await service(
+    usersServices.getPermissions,
+    false,
+    client
+  )({
     user_id: user.id,
   });
 

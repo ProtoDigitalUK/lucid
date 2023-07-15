@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
@@ -8,7 +9,7 @@ export interface ServiceData {
   username: string;
 }
 
-const checkIfUserExists = async (data: ServiceData) => {
+const checkIfUserExists = async (client: PoolClient, data: ServiceData) => {
   // check if user exists
   const user = await User.checkIfUserExistsAlready(data.email, data.username);
 

@@ -1,4 +1,4 @@
-import getDBClient from "@db/db";
+import { getDBClient } from "@db/db";
 
 // -------------------------------------------
 // Types
@@ -44,7 +44,7 @@ export default class UserRole {
   // -------------------------------------------
   // Functions
   static getAll: UserRoleGetAll = async (user_id) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     // Get all users roles
     const userRoles = await client.query<UserRoleT>({
@@ -58,7 +58,7 @@ export default class UserRole {
     return userRoles.rows;
   };
   static updateRoles: UserRoleUpdate = async (user_id, data) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const roles = await client.query<UserRoleT>({
       text: `
@@ -70,7 +70,7 @@ export default class UserRole {
     return roles.rows;
   };
   static deleteMultiple: UserRoleDeleteMultiple = async (user_id, role_ids) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const roles = await client.query<UserRoleT>({
       text: `
@@ -88,7 +88,7 @@ export default class UserRole {
     return roles.rows;
   };
   static getPermissions: UserRoleGetPermissions = async (user_id) => {
-    const client = await getDBClient;
+    const client = await getDBClient();
 
     const userPermissions = await client.query<UserRolePermissionRes>({
       text: `SELECT 
