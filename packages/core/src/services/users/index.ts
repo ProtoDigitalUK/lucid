@@ -1,5 +1,4 @@
 import updateRoles from "./update-roles";
-import getAllRoles from "./get-all-roles";
 import getPermissions from "./get-permissions";
 import getSingle from "./get-single";
 import registerSingle from "./register-single";
@@ -11,7 +10,6 @@ import getMultiple from "./get-multiple";
 
 export default {
   updateRoles,
-  getAllRoles,
   getPermissions,
   getSingle,
   registerSingle,

@@ -3,7 +3,6 @@ import { LucidError } from "@utils/app/error-handler";
 // Models
 import UserRole from "@db/models/UserRole";
 // Services
-import usersServices from "@services/users";
 import roleServices from "@services/roles";
 
 export interface ServiceData {
@@ -13,9 +12,7 @@ export interface ServiceData {
 
 const updateRoles = async (data: ServiceData) => {
   // Get all users roles
-  const userRoles = await usersServices.getAllRoles({
-    user_id: data.user_id,
-  });
+  const userRoles = await UserRole.getAll(data.user_id);
 
   // Add roles that don't exist to the user
   const newRoles = data.role_ids.filter((role) => {
@@ -56,9 +53,7 @@ const updateRoles = async (data: ServiceData) => {
   }
 
   // Return the updated user roles
-  const updatedUserRoles = await usersServices.getAllRoles({
-    user_id: data.user_id,
-  });
+  const updatedUserRoles = await UserRole.getAll(data.user_id);
 
   return updatedUserRoles;
 };
