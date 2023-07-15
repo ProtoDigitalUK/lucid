@@ -5,6 +5,7 @@
 - [BrickBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/brick-builder)
 - [CollectionBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/collection-builder)
 - [FormBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/form-builder)
+
 - [Core](https://github.com/WillYallop/Lucid/tree/master/packages/core)
 
 ## Installation
@@ -17,20 +18,22 @@ npm install @lucid/core
 
 ```ts
 import { buildConfig } from "@lucid/core";
-import { banner, intro, defaultMeta } from "./src/bricks";
-import { pages, settings } from "./src/collections";
+
+import { ContactForm } from "./src/forms";
+import { Banner, Intro, DefaultMeta } from "./src/bricks";
+import { Pages, Settings } from "./src/collections";
 
 export default buildConfig({
+  host: "http://localhost:8393",
   origin: "*",
   mode: "development",
-  postgresURL: process.env.LUCID_POSTGRES_URL as string,
   secret: process.env.LUCID_SECRET_KEY as string,
+  postgresURL: process.env.LUCID_POSTGRES_URL as string,
   email: {
     from: {
       name: "Lucid CMS",
       email: "hello@lucidcms.com",
     },
-    templateDir: path.join(__dirname, "./templates"),
     smtp: {
       host: "127.0.0.1",
       port: 6969,
@@ -41,7 +44,7 @@ export default buildConfig({
   },
   media: {
     storageLimit: 5368709120,
-    maxFileSize: 16777216,
+    maxFileSize: 20777216,
     store: {
       service: "cloudflare",
       cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,
@@ -51,20 +54,10 @@ export default buildConfig({
       secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
     },
   },
-  collections: [pages, settings],
-  bricks: [banner, intro, defaultMeta],
+  forms: [ContactForm],
+  collections: [Pages, Settings],
+  bricks: [Banner, Intro, DefaultMeta],
 });
 ```
 
 > Check the example app: [example](https://github.com/WillYallop/Lucid/tree/master/apps/example/lucid.config.ts)
-
-## Logging In
-
-After starting the server, you can login by going to `/login`. Use the following credentials:
-
-```
-username: admin
-password: admin
-```
-
-When logging in for the first time, you will be prompted to change your password, email and optionally your username. The first two are required, but you can leave the username field blank to keep the default value.
