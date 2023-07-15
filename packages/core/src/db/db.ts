@@ -9,6 +9,7 @@ const initializePool = async () => {
 
   pool = new Pool({
     connectionString: config.postgresURL,
+    max: 20,
     ssl: {
       rejectUnauthorized: false,
     },
