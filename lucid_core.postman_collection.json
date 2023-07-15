@@ -2570,6 +2570,32 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

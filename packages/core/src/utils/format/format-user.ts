@@ -7,7 +7,7 @@ import { UserPermissionsResT } from "@utils/format/format-user-permissions";
 // Types
 export interface UserResT {
   id: number;
-  super_admin: boolean;
+  super_admin?: boolean;
   email: string;
   username: string;
   first_name: string | null;
