@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Page from "@db/models/Page";
 // Format
@@ -8,8 +9,8 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getMultipleById = async (data: ServiceData) => {
-  const pages = await Page.getMultipleByIds({
+const getMultipleById = async (client: PoolClient, data: ServiceData) => {
+  const pages = await Page.getMultipleByIds(client, {
     ids: data.ids,
     environment_key: data.environment_key,
   });

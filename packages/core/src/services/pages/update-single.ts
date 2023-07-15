@@ -1,6 +1,9 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
+
 // Models
 import Page from "@db/models/Page";
 // Schema
@@ -30,20 +33,32 @@ export interface ServiceData {
   fixed_bricks?: z.infer<typeof BrickSchema>[];
 }
 
-const updateSingle = async (data: ServiceData) => {
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Checks
-  const currentPage = await pageServices.checkPageExists({
+  const currentPage = await service(
+    pageServices.checkPageExists,
+    false,
+    client
+  )({
     id: data.id,
     environment_key: data.environment_key,
   });
 
   // Start checks that do not depend on each other in parallel
   const [environment, collection] = await Promise.all([
-    environmentsService.getSingle({
+    service(
+      environmentsService.getSingle,
+      false,
+      client
+    )({
       key: data.environment_key,
     }),
-    collectionsService.getSingle({
+    service(
+      collectionsService.getSingle,
+      false,
+      client
+    )({
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
       type: "pages",
@@ -53,7 +68,11 @@ const updateSingle = async (data: ServiceData) => {
   // If the page is a homepage, set the parent_id to undefined
   const parentId = data.homepage ? undefined : data.parent_id;
   if (parentId) {
-    await pageServices.parentChecks({
+    await service(
+      pageServices.parentChecks,
+      false,
+      client
+    )({
       parent_id: parentId,
       environment_key: data.environment_key,
       collection_key: currentPage.collection_key,
@@ -61,7 +80,11 @@ const updateSingle = async (data: ServiceData) => {
   }
 
   // validate bricks
-  await collectionBricksService.validateBricks({
+  await service(
+    collectionBricksService.validateBricks,
+    false,
+    client
+  )({
     builder_bricks: data.builder_bricks || [],
     fixed_bricks: data.fixed_bricks || [],
     collection: collection,
@@ -71,7 +94,11 @@ const updateSingle = async (data: ServiceData) => {
   let newSlug = undefined;
   if (data.slug) {
     // Check if slug is unique
-    newSlug = await pageServices.buildUniqueSlug({
+    newSlug = await service(
+      pageServices.buildUniqueSlug,
+      false,
+      client
+    )({
       slug: data.slug,
       homepage: data.homepage || false,
       environment_key: data.environment_key,
@@ -81,7 +108,7 @@ const updateSingle = async (data: ServiceData) => {
   }
 
   // Update page
-  const page = await Page.updateSingle({
+  const page = await Page.updateSingle(client, {
     id: data.id,
     environment_key: data.environment_key,
     userId: data.userId,
@@ -109,13 +136,21 @@ const updateSingle = async (data: ServiceData) => {
   // Update categories and bricks
   await Promise.all([
     data.category_ids
-      ? pageCategoryService.updateMultiple({
+      ? service(
+          pageCategoryService.updateMultiple,
+          false,
+          client
+        )({
           page_id: page.id,
           category_ids: data.category_ids,
           collection_key: currentPage.collection_key,
         })
       : Promise.resolve(),
-    collectionBricksService.updateMultiple({
+    service(
+      collectionBricksService.updateMultiple,
+      false,
+      client
+    )({
       id: page.id,
       builder_bricks: data.builder_bricks || [],
       fixed_bricks: data.fixed_bricks || [],

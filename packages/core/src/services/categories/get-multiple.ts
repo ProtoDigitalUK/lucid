@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Models
 import Category from "@db/models/Category";
@@ -11,7 +12,7 @@ export interface ServiceData {
   query: z.infer<typeof categorySchema.getMultiple.query>;
 }
 
-const getMultiple = async (data: ServiceData) => {
+const getMultiple = async (client: PoolClient, data: ServiceData) => {
   const { filter, sort, page, per_page } = data.query;
 
   const SelectQuery = new SelectQueryBuilder({
@@ -54,7 +55,7 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  return await Category.getMultiple(SelectQuery);
+  return await Category.getMultiple(client, SelectQuery);
 };
 
 export default getMultiple;

@@ -90,7 +90,7 @@ type PageGetMultipleByIds = (
 type PageGetNonCurrentHomepages = (
   client: PoolClient,
   data: {
-    currentId: number;
+    current_id: number;
     environment_key: string;
   }
 ) => Promise<PageT[]>;
@@ -312,7 +312,7 @@ export default class Page {
   ) => {
     const result = await client.query({
       text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-      values: [data.currentId, data.environment_key],
+      values: [data.current_id, data.environment_key],
     });
     return result.rows;
   };

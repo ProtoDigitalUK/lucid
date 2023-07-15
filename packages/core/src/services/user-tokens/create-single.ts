@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import crypto from "crypto";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
@@ -10,10 +11,10 @@ export interface ServiceData {
   expiry_date: string;
 }
 
-const createSingle = async (data: ServiceData) => {
+const createSingle = async (client: PoolClient, data: ServiceData) => {
   const token = crypto.randomBytes(32).toString("hex");
 
-  const userToken = await UserToken.createSingle({
+  const userToken = await UserToken.createSingle(client, {
     user_id: data.user_id,
     token_type: data.token_type,
     token,

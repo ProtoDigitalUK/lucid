@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import Environment from "@db/models/Environment";
 // Utils
@@ -7,8 +8,8 @@ export interface ServiceData {
   key: string;
 }
 
-const checkKeyExists = async (data: ServiceData) => {
-  const environment = await Environment.getSingle({
+const checkKeyExists = async (client: PoolClient, data: ServiceData) => {
+  const environment = await Environment.getSingle(client, {
     key: data.key,
   });
 

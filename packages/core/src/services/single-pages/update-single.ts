@@ -1,4 +1,7 @@
+import { PoolClient } from "pg";
 import z from "zod";
+// Utils
+import service from "@utils/app/service";
 // Models
 import SinglePage from "@db/models/SinglePage";
 // Schema
@@ -17,13 +20,21 @@ export interface ServiceData {
   fixed_bricks?: z.infer<typeof BrickSchema>[];
 }
 
-const updateSingle = async (data: ServiceData) => {
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // Used to check if we have access to the collection
-  const environment = await environmentsService.getSingle({
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
     key: data.environment_key,
   });
 
-  const collection = await collectionsService.getSingle({
+  const collection = await service(
+    collectionsService.getSingle,
+    false,
+    client
+  )({
     collection_key: data.collection_key,
     environment_key: data.environment_key,
     type: "singlepage",
@@ -31,7 +42,11 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Gets the single page, creates it if it doesn't exist
-  const getSinglepage = await singlePageService.getSingle({
+  const getSinglepage = await service(
+    singlePageService.getSingle,
+    false,
+    client
+  )({
     user_id: data.user_id,
     environment_key: data.environment_key,
     collection_key: data.collection_key,
@@ -39,7 +54,11 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // validate bricks
-  await collectionBricksService.validateBricks({
+  await service(
+    collectionBricksService.validateBricks,
+    false,
+    client
+  )({
     builder_bricks: data.builder_bricks || [],
     fixed_bricks: data.fixed_bricks || [],
     collection: collection,
@@ -48,14 +67,18 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Update Single Page
-  const singlepage = await SinglePage.updateSingle({
+  const singlepage = await SinglePage.updateSingle(client, {
     id: getSinglepage.id,
     user_id: data.user_id,
   });
 
   // -------------------------------------------
   // Update/Create Bricks
-  await collectionBricksService.updateMultiple({
+  await service(
+    collectionBricksService.updateMultiple,
+    false,
+    client
+  )({
     id: singlepage.id,
     builder_bricks: data.builder_bricks || [],
     fixed_bricks: data.fixed_bricks || [],
@@ -63,7 +86,11 @@ const updateSingle = async (data: ServiceData) => {
     environment: environment,
   });
 
-  return await singlePageService.getSingle({
+  return await service(
+    singlePageService.getSingle,
+    false,
+    client
+  )({
     user_id: data.user_id,
     environment_key: data.environment_key,
     collection_key: data.collection_key,

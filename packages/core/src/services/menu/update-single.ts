@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Menu, { MenuItemT } from "@db/models/Menu";
 // Schema
@@ -16,10 +18,14 @@ export interface ServiceData {
   items?: MenuItemUpdate[];
 }
 
-const updateSingle = async (data: ServiceData) => {
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Check Menu Exists
-  const getMenu = await menuServices.getSingle({
+  const getMenu = await service(
+    menuServices.getSingle,
+    false,
+    client
+  )({
     id: data.id,
     environment_key: data.environment_key,
   });
@@ -29,13 +35,17 @@ const updateSingle = async (data: ServiceData) => {
   }
 
   if (data.key) {
-    await menuServices.checkKeyUnique({
+    await service(
+      menuServices.checkKeyUnique,
+      false,
+      client
+    )({
       key: data.key,
       environment_key: data.environment_key,
     });
   }
 
-  const menu = await Menu.updateSingle({
+  const menu = await Menu.updateSingle(client, {
     environment_key: data.environment_key,
     id: data.id,
     key: data.key,
@@ -55,35 +65,23 @@ const updateSingle = async (data: ServiceData) => {
   // Update menu items if there are any
   if (data.items) {
     // Work out what items need to be created, updated and deleted
-    const originalItems = await menuServices.getItems({
+    const originalItems = await service(
+      menuServices.getItems,
+      false,
+      client
+    )({
       menu_ids: [getMenu.id],
     });
 
     // create or update all items in the request
-    let updatedItems: MenuItemT[] = [];
-    try {
-      updatedItems = await menuServices.upsertMultipleItems({
-        menu_id: getMenu.id,
-        items: data.items,
-      });
-    } catch (err) {
-      // get all items, then remove anything that doesnt belong to the original menu
-      const allItems = await menuServices.getItems({
-        menu_ids: [getMenu.id],
-      });
-      const deleteItems = allItems.filter((item) => {
-        return (
-          originalItems.findIndex(
-            (originalItem) => originalItem.id === item.id
-          ) === -1
-        );
-      });
-      // delete all items that are not in the original menu
-      await menuServices.deleteItemsByIds({
-        ids: deleteItems.map((item) => item.id),
-      });
-      throw err;
-    }
+    const updatedItems = await service(
+      menuServices.upsertMultipleItems,
+      false,
+      client
+    )({
+      menu_id: getMenu.id,
+      items: data.items,
+    });
 
     // delete all items, that id is not in the updated items
     const deleteItems = originalItems.filter((item) => {
@@ -93,14 +91,22 @@ const updateSingle = async (data: ServiceData) => {
       );
     });
     // delete all items that are not in the updated items
-    await menuServices.deleteItemsByIds({
+    await service(
+      menuServices.deleteItemsByIds,
+      false,
+      client
+    )({
       ids: deleteItems.map((item) => item.id),
     });
   }
 
   // -------------------------------------------
   // Return Updated Menu
-  return await menuServices.getSingle({
+  return await service(
+    menuServices.getSingle,
+    false,
+    client
+  )({
     id: data.id,
     environment_key: data.environment_key,
   });

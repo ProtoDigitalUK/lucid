@@ -1,4 +1,8 @@
+import { PoolClient } from "pg";
 import nodemailer from "nodemailer";
+import { getDBClient } from "@db/db";
+// Utils
+import service from "@utils/app/service";
 // Services
 import Config from "@services/Config";
 import emailsService from "@services/email";
@@ -30,16 +34,23 @@ export interface MailOptionsT {
 
 // -------------------------------------------
 // Utility functions
-const createEmailRow = async (data: {
-  template: string;
-  options: MailOptionsT;
-  delivery_status: "sent" | "failed" | "pending";
+const createEmailRow = async (
+  client: PoolClient,
   data: {
-    [key: string]: any;
-  };
-}) => {
+    template: string;
+    options: MailOptionsT;
+    delivery_status: "sent" | "failed" | "pending";
+    data: {
+      [key: string]: any;
+    };
+  }
+) => {
   // Save the email to the database
-  await emailsService.createSingle({
+  await service(
+    emailsService.createSingle,
+    false,
+    client
+  )({
     from_address: data.options.from,
     from_name: data.options.fromName,
     to_address: data.options.to,
@@ -131,15 +142,28 @@ export const sendEmailExternal = async (
   params: EmailParamsT,
   track?: boolean
 ) => {
+  const client = await getDBClient();
+
   const result = await sendEmailAction(template, params);
 
   if (track) {
-    await createEmailRow({
-      template: template,
-      options: result.options,
-      delivery_status: result.success ? "sent" : "failed",
-      data: params.data,
-    });
+    try {
+      await client.query("BEGIN");
+
+      await createEmailRow(client, {
+        template: template,
+        options: result.options,
+        delivery_status: result.success ? "sent" : "failed",
+        data: params.data,
+      });
+
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   // Return the result
@@ -151,24 +175,31 @@ export const sendEmailExternal = async (
 
 // Allows creating and updating an email
 export const sendEmailInternal = async (
-  template: string,
-  params: EmailParamsT,
-  id?: number,
-  track?: boolean
+  client: PoolClient,
+  data: {
+    template: string;
+    params: EmailParamsT;
+    id?: number;
+    track?: boolean;
+  }
 ) => {
-  const result = await sendEmailAction(template, params);
+  const result = await sendEmailAction(data.template, data.params);
 
-  if (track) {
-    if (!id) {
-      await createEmailRow({
-        template: template,
+  if (data.track) {
+    if (!data.id) {
+      await createEmailRow(client, {
+        template: data.template,
         options: result.options,
         delivery_status: result.success ? "sent" : "failed",
-        data: params.data,
+        data: data.params.data,
       });
     } else {
-      await emailsService.updateSingle({
-        id: id,
+      await service(
+        emailsService.updateSingle,
+        false,
+        client
+      )({
+        id: data.id,
         data: {
           from_address: result.options.from,
           from_name: result.options.fromName,

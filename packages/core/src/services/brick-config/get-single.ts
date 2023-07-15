@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import brickConfigService from "@services/brick-config";
 
@@ -9,8 +11,12 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const allBricks = await brickConfigService.getAll({
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const allBricks = await service(
+    brickConfigService.getAll,
+    false,
+    client
+  )({
     query: {
       include: ["fields"],
     },

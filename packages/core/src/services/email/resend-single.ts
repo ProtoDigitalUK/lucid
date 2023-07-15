@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Services
 import emailsService from "@services/email";
 
@@ -5,14 +8,18 @@ export interface ServiceData {
   id: number;
 }
 
-const resendSingle = async (data: ServiceData) => {
-  const email = await emailsService.getSingle({
+const resendSingle = async (client: PoolClient, data: ServiceData) => {
+  const email = await service(
+    emailsService.getSingle,
+    false,
+    client
+  )({
     id: data.id,
   });
 
-  const status = await emailsService.sendEmailInternal(
-    email.template,
-    {
+  const status = await emailsService.sendEmailInternal(client, {
+    template: email.template,
+    params: {
       data: email.data || {},
       options: {
         to: email.to_address || "",
@@ -24,10 +31,14 @@ const resendSingle = async (data: ServiceData) => {
         replyTo: email.from_address || undefined,
       },
     },
-    data.id
-  );
+    id: data.id,
+  });
 
-  const updatedEmail = await emailsService.getSingle({
+  const updatedEmail = await service(
+    emailsService.getSingle,
+    false,
+    client
+  )({
     id: data.id,
   });
 

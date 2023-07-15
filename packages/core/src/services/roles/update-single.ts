@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Role from "@db/models/Role";
 // Serivces
@@ -15,18 +17,24 @@ export interface ServiceData {
   }>;
 }
 
-const updateSingle = async (data: ServiceData) => {
-  const parsePermissions = await roleServices.validatePermissions(
-    data.permission_groups
-  );
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
+  const parsePermissions = await service(
+    roleServices.validatePermissions,
+    false,
+    client
+  )(data.permission_groups);
 
   if (data.name) {
-    await roleServices.checkNameIsUnique({
+    await service(
+      roleServices.checkNameIsUnique,
+      false,
+      client
+    )({
       name: data.name,
     });
   }
 
-  const role = await Role.updateSingle({
+  const role = await Role.updateSingle(client, {
     id: data.id,
     data: {
       name: data.name,
@@ -44,10 +52,18 @@ const updateSingle = async (data: ServiceData) => {
   }
 
   if (data.permission_groups.length > 0) {
-    await rolePermServices.deleteAll({
+    await service(
+      rolePermServices.deleteAll,
+      false,
+      client
+    )({
       role_id: role.id,
     });
-    await rolePermServices.createMultiple({
+    await service(
+      rolePermServices.createMultiple,
+      false,
+      client
+    )({
       role_id: role.id,
       permissions: parsePermissions,
     });

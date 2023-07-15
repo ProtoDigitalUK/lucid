@@ -1,6 +1,8 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import service from "@utils/app/service";
 // Models
 import Menu, { MenuItemT } from "@db/models/Menu";
 // Schema
@@ -15,7 +17,7 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getMultiple = async (data: ServiceData) => {
+const getMultiple = async (client: PoolClient, data: ServiceData) => {
   const { filter, sort, include, page, per_page } = data.query;
 
   // Build Query Data and Query
@@ -53,11 +55,15 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  const menus = await Menu.getMultiple(SelectQuery);
+  const menus = await Menu.getMultiple(client, SelectQuery);
 
   let menuItems: MenuItemT[] = [];
   if (include && include.includes("items")) {
-    menuItems = await menuServices.getItems({
+    menuItems = await service(
+      menuServices.getItems,
+      false,
+      client
+    )({
       menu_ids: menus.data.map((menu) => menu.id),
     });
   }

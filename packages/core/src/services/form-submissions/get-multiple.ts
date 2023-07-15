@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Models
 import FormSubmission, { FormDataT } from "@db/models/FormSubmission";
@@ -5,6 +6,7 @@ import FormSubmission, { FormDataT } from "@db/models/FormSubmission";
 import formSubmissionsSchema from "@schemas/form-submissions";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import service from "@utils/app/service";
 // Services
 import formSubService from "@services/form-submissions";
 import formsService from "@services/forms";
@@ -17,9 +19,9 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getMultiple = async (data: ServiceData) => {
+const getMultiple = async (client: PoolClient, data: ServiceData) => {
   // Check if form is assigned to environment
-  await formSubService.hasEnvironmentPermission(data);
+  await service(formSubService.hasEnvironmentPermission, false, client)(data);
 
   const { sort, include, page, per_page } = data.query;
 
@@ -56,7 +58,10 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  const formSubmissionsRes = await FormSubmission.getMultiple(SelectQuery);
+  const formSubmissionsRes = await FormSubmission.getMultiple(
+    client,
+    SelectQuery
+  );
 
   // Get Form Data
   const formBuilder = formsService.getBuilderInstance({
@@ -69,7 +74,7 @@ const getMultiple = async (data: ServiceData) => {
     const formSubmissionIds = formSubmissionsRes.data.map(
       (submission) => submission.id
     );
-    formData = await FormSubmission.getAllFormData({
+    formData = await FormSubmission.getAllFormData(client, {
       submission_ids: formSubmissionIds,
     });
   }

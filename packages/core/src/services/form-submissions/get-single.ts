@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import FormSubmission from "@db/models/FormSubmission";
 // Services
@@ -14,11 +16,11 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (client: PoolClient, data: ServiceData) => {
   // Check if form is assigned to environment
-  await formSubService.hasEnvironmentPermission(data);
+  await service(formSubService.hasEnvironmentPermission, false, client)(data);
 
-  const formSubmission = await FormSubmission.getSingle({
+  const formSubmission = await FormSubmission.getSingle(client, {
     id: data.id,
     form_key: data.form_key,
     environment_key: data.environment_key,
@@ -33,7 +35,7 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  let formData = await FormSubmission.getAllFormData({
+  let formData = await FormSubmission.getAllFormData(client, {
     submission_ids: [formSubmission.id],
   });
   formData = formData.filter(

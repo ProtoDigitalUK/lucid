@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import RolePermission from "@db/models/RolePermission";
 // Services
@@ -11,9 +12,9 @@ export interface ServiceData {
   }>;
 }
 
-const createMultiple = async (data: ServiceData) => {
+const createMultiple = async (client: PoolClient, data: ServiceData) => {
   const permissionsPromise = data.permissions.map((permission) => {
-    return RolePermission.createSingle({
+    return RolePermission.createSingle(client, {
       role_id: data.role_id,
       permission: permission.permission,
       environment_key: permission.environment_key,

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -8,8 +9,8 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const checkKeyUnique = async (data: ServiceData) => {
-  const menu = await Menu.checkKeyIsUnique({
+const checkKeyUnique = async (client: PoolClient, data: ServiceData) => {
+  const menu = await Menu.checkKeyIsUnique(client, {
     key: data.key,
     environment_key: data.environment_key,
   });

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Schema
 import collectionSchema from "@schemas/collections";
@@ -5,6 +6,7 @@ import collectionSchema from "@schemas/collections";
 import formatCollection, {
   CollectionResT,
 } from "@utils/format/format-collections";
+import service from "@utils/app/service";
 // Services
 import Config from "@services/Config";
 import brickConfigService from "@services/brick-config";
@@ -15,7 +17,7 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getAll = async (data: ServiceData) => {
+const getAll = async (client: PoolClient, data: ServiceData) => {
   const instances = Config.collections || [];
   if (!instances) return [];
 
@@ -24,7 +26,11 @@ const getAll = async (data: ServiceData) => {
     formatCollection(collection)
   );
   // Get environment
-  const environment = await environmentsService.getSingle({
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
     key: data.environment_key,
   });
 

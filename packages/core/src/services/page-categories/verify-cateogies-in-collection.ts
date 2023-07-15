@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
@@ -13,8 +14,11 @@ export interface ServiceData {
   If any of the categories do not exist, an error is thrown.
 */
 
-const verifyCategoriesInCollection = async (data: ServiceData) => {
-  const pageCategories = await PageCategory.getMultiple({
+const verifyCategoriesInCollection = async (
+  client: PoolClient,
+  data: ServiceData
+) => {
+  const pageCategories = await PageCategory.getMultiple(client, {
     category_ids: data.category_ids,
     collection_key: data.collection_key,
   });

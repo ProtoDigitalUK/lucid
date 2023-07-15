@@ -1,4 +1,6 @@
+import { PoolClient } from "pg";
 // Utils
+import service from "@utils/app/service";
 import { LucidError } from "@utils/app/error-handler";
 // Models
 import CollectionBrick, { BrickFieldObject } from "@db/models/CollectionBrick";
@@ -14,12 +16,16 @@ export interface ServiceData {
   Handles the upsert of a standard field
 */
 
-const upsertField = async (data: ServiceData) => {
+const upsertField = async (client: PoolClient, data: ServiceData) => {
   let fieldId;
   const brickField = data.data;
 
   // Check if the field already exists
-  await collectionBricksService.checkFieldExists({
+  await service(
+    collectionBricksService.checkFieldExists,
+    false,
+    client
+  )({
     brick_id: data.brick_id,
     key: brickField.key,
     type: brickField.type,
@@ -30,7 +36,7 @@ const upsertField = async (data: ServiceData) => {
 
   // Update the field
   if (brickField.fields_id) {
-    const fieldRes = await CollectionBrick.updateField({
+    const fieldRes = await CollectionBrick.updateField(client, {
       brick_id: data.brick_id,
       field: brickField,
     });
@@ -38,7 +44,7 @@ const upsertField = async (data: ServiceData) => {
   }
   // Create the field
   else {
-    const fieldRes = await CollectionBrick.createField({
+    const fieldRes = await CollectionBrick.createField(client, {
       brick_id: data.brick_id,
       field: brickField,
     });

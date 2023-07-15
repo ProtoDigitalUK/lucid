@@ -1,6 +1,7 @@
 import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import UserRole from "@db/models/UserRole";
 // Services
@@ -24,7 +25,11 @@ const updateRoles = async (client: PoolClient, data: ServiceData) => {
 
   // Add the new roles to the user
   if (newRoles.length > 0) {
-    const rolesRes = await roleServices.getMultiple({
+    const rolesRes = await service(
+      roleServices.getMultiple,
+      false,
+      client
+    )({
       query: {
         filter: {
           role_ids: newRoles.map((role) => role.toString()),

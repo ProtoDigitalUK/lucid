@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -7,8 +8,8 @@ export interface ServiceData {
   ids: number[];
 }
 
-const deleteItemsByIds = async (data: ServiceData) => {
-  const deletedItems = await Menu.deleteItemsByIds({
+const deleteItemsByIds = async (client: PoolClient, data: ServiceData) => {
+  const deletedItems = await Menu.deleteItemsByIds(client, {
     ids: data.ids,
   });
 

@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import Role from "@db/models/Role";
 // Services
@@ -14,17 +16,23 @@ export interface ServiceData {
   }>;
 }
 
-const createSingle = async (data: ServiceData) => {
-  const parsePermissions = await roleServices.validatePermissions(
-    data.permission_groups
-  );
+const createSingle = async (client: PoolClient, data: ServiceData) => {
+  const parsePermissions = await service(
+    roleServices.validatePermissions,
+    false,
+    client
+  )(data.permission_groups);
 
   // check if role name is unique
-  await roleServices.checkNameIsUnique({
+  await service(
+    roleServices.checkNameIsUnique,
+    false,
+    client
+  )({
     name: data.name,
   });
 
-  const role = await Role.createSingle({
+  const role = await Role.createSingle(client, {
     name: data.name,
     permission_groups: data.permission_groups,
   });
@@ -39,17 +47,14 @@ const createSingle = async (data: ServiceData) => {
   }
 
   if (data.permission_groups.length > 0) {
-    try {
-      await rolePermServices.createMultiple({
-        role_id: role.id,
-        permissions: parsePermissions,
-      });
-    } catch (error) {
-      await Role.deleteSingle({
-        id: role.id,
-      });
-      throw error;
-    }
+    await service(
+      rolePermServices.createMultiple,
+      false,
+      client
+    )({
+      role_id: role.id,
+      permissions: parsePermissions,
+    });
   }
 
   return role;

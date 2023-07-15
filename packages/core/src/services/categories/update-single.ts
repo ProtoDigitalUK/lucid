@@ -1,3 +1,6 @@
+import { PoolClient } from "pg";
+// Utils
+import service from "@utils/app/service";
 // Models
 import Category from "@db/models/Category";
 import categoriesService from "@services/categories";
@@ -14,15 +17,19 @@ export interface ServiceData {
   };
 }
 
-const updateSingle = async (data: ServiceData) => {
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // Check if category exists
-  const currentCategory = await categoriesService.getSingle({
+  const currentCategory = await service(
+    categoriesService.getSingle,
+    false,
+    client
+  )({
     environment_key: data.environment_key,
     id: data.id,
   });
 
   if (data.data.slug) {
-    const isSlugUnique = await Category.isSlugUniqueInCollection({
+    const isSlugUnique = await Category.isSlugUniqueInCollection(client, {
       collection_key: currentCategory.collection_key,
       slug: data.data.slug,
       environment_key: data.environment_key,
@@ -44,7 +51,7 @@ const updateSingle = async (data: ServiceData) => {
     }
   }
 
-  return await Category.updateSingle({
+  return await Category.updateSingle(client, {
     environment_key: data.environment_key,
     id: data.id,
     title: data.data.title,

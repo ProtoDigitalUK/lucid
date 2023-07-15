@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Models
 import RolePermission from "@db/models/RolePermission";
 
@@ -5,8 +6,8 @@ export interface ServiceData {
   role_id: number;
 }
 
-const deleteAll = async (data: ServiceData) => {
-  const permissions = await RolePermission.deleteAll({
+const deleteAll = async (client: PoolClient, data: ServiceData) => {
+  const permissions = await RolePermission.deleteAll(client, {
     role_id: data.role_id,
   });
 

@@ -1,7 +1,9 @@
+import { PoolClient } from "pg";
 // Models
 import Category from "@db/models/Category";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import collectionsService from "@services/collections";
 
@@ -13,16 +15,20 @@ export interface ServiceData {
   description?: string;
 }
 
-const createSingle = async (data: ServiceData) => {
-  // Perform checks
-  await collectionsService.getSingle({
+const createSingle = async (client: PoolClient, data: ServiceData) => {
+  // Perform checks  - doesnt need client
+  await service(
+    collectionsService.getSingle,
+    false,
+    client
+  )({
     collection_key: data.collection_key,
     type: "pages",
     environment_key: data.environment_key,
   });
 
   // check if slug is unique in post type
-  const isSlugUnique = await Category.isSlugUniqueInCollection({
+  const isSlugUnique = await Category.isSlugUniqueInCollection(client, {
     collection_key: data.collection_key,
     slug: data.slug,
     environment_key: data.environment_key,
@@ -44,7 +50,7 @@ const createSingle = async (data: ServiceData) => {
   }
 
   // Create the category using the model
-  const category = await Category.createSingle(data);
+  const category = await Category.createSingle(client, data);
 
   if (!category) {
     throw new LucidError({

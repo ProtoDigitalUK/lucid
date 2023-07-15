@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import User from "@db/models/User";
 // Serices
@@ -11,8 +13,8 @@ export interface ServiceData {
   password: string;
 }
 
-const login = async (data: ServiceData) => {
-  const user = await User.getByUsername({
+const login = async (client: PoolClient, data: ServiceData) => {
+  const user = await User.getByUsername(client, {
     username: data.username,
   });
 
@@ -39,7 +41,11 @@ const login = async (data: ServiceData) => {
     });
   }
 
-  return await usersServices.getSingle({
+  return await service(
+    usersServices.getSingle,
+    false,
+    client
+  )({
     user_id: user.id,
   });
 };

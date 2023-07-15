@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
@@ -7,8 +8,8 @@ export interface ServiceData {
   name: string;
 }
 
-const checkNameIsUnique = async (data: ServiceData) => {
-  const role = await Role.getSingleByName({
+const checkNameIsUnique = async (client: PoolClient, data: ServiceData) => {
+  const role = await Role.getSingleByName(client, {
     name: data.name,
   });
 

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -8,8 +9,8 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const checkPageExists = async (data: ServiceData) => {
-  const page = await Page.getSingleBasic({
+const checkPageExists = async (client: PoolClient, data: ServiceData) => {
+  const page = await Page.getSingleBasic(client, {
     id: data.id,
     environment_key: data.environment_key,
   });

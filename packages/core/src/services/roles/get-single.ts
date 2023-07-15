@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -7,8 +8,8 @@ export interface ServiceData {
   id: number;
 }
 
-const getSingle = async (data: ServiceData) => {
-  const role = await Role.getSingle({
+const getSingle = async (client: PoolClient, data: ServiceData) => {
+  const role = await Role.getSingle(client, {
     id: data.id,
   });
 

@@ -1,4 +1,7 @@
+import { PoolClient } from "pg";
 import FormBuilder from "@lucid/form-builder";
+// Utils
+import service from "@utils/app/service";
 // Services
 import formSubService from "@services/form-submissions";
 
@@ -10,7 +13,7 @@ export interface ServiceData {
   };
 }
 
-const submitForm = async (props: ServiceData) => {
+const submitForm = async (client: PoolClient, props: ServiceData) => {
   const data: {
     name: string;
     value: string | number | boolean;
@@ -45,7 +48,11 @@ const submitForm = async (props: ServiceData) => {
     });
   }
 
-  const formRes = await formSubService.createSingle({
+  const formRes = await service(
+    formSubService.createSingle,
+    false,
+    client
+  )({
     id: undefined,
     form_key: props.form.key,
     environment_key: props.environment_key,

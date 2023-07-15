@@ -1,10 +1,8 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
 // Models
 import User from "@db/models/User";
-// Services
-import usersServices from "@services/users";
-import roleServices from "@services/roles";
 
 export interface ServiceData {
   user_id: number;
@@ -16,17 +14,17 @@ export interface ServiceData {
   role_ids?: number[];
 }
 
-const updateSingle = async (data: ServiceData) => {
+const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Unique Checks
   const [usernameCheck, emailCheck] = await Promise.all([
     // Check username
     data.username !== undefined
-      ? User.getByUsername({ username: data.username })
+      ? User.getByUsername(client, { username: data.username })
       : Promise.resolve(undefined),
     // Check email
     data.email !== undefined
-      ? User.getByEmail({ email: data.email })
+      ? User.getByEmail(client, { email: data.email })
       : Promise.resolve(undefined),
   ]);
 

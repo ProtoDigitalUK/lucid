@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Models
 import { EnvironmentT } from "@db/models/Environment";
 // Intenal
@@ -20,7 +22,7 @@ export interface ServiceData {
   environment?: EnvironmentT;
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (client: PoolClient, data: ServiceData) => {
   // Get all instances from config
   const instances = Config.collections || [];
   if (!instances) {
@@ -40,7 +42,11 @@ const getSingle = async (data: ServiceData) => {
   // get environment
   const environment = data.environment
     ? data.environment
-    : await environmentsService.getSingle({
+    : await service(
+        environmentsService.getSingle,
+        false,
+        client
+      )({
         key: data.environment_key,
       });
   const assignedCollections = environment.assigned_collections || [];

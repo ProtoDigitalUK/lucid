@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 // Models
 import Email from "@db/models/Email";
@@ -10,7 +11,7 @@ export interface ServiceData {
   query: z.infer<typeof emailsSchema.getMultiple.query>;
 }
 
-const getMultiple = async (data: ServiceData) => {
+const getMultiple = async (client: PoolClient, data: ServiceData) => {
   const { filter, sort, page, per_page } = data.query;
 
   // Build Query Data and Query
@@ -54,7 +55,7 @@ const getMultiple = async (data: ServiceData) => {
     per_page: per_page,
   });
 
-  const emails = await Email.getMultiple(SelectQuery);
+  const emails = await Email.getMultiple(client, SelectQuery);
 
   return emails;
 };

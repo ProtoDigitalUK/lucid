@@ -1,7 +1,9 @@
+import { PoolClient } from "pg";
 // Models
 import Environment from "@db/models/Environment";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import environmentsService from "@services/environments";
 // Format
@@ -11,13 +13,17 @@ export interface ServiceData {
   key: string;
 }
 
-const deleteSingle = async (data: ServiceData) => {
+const deleteSingle = async (client: PoolClient, data: ServiceData) => {
   // Check if environment exists
-  await environmentsService.getSingle({
+  await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
     key: data.key,
   });
 
-  const environment = await Environment.deleteSingle({
+  const environment = await Environment.deleteSingle(client, {
     key: data.key,
   });
 

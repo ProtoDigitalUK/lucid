@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -17,8 +18,8 @@ export interface ServiceData {
   };
 }
 
-const createSingle = async (data: ServiceData) => {
-  const email = await Email.createSingle(data);
+const createSingle = async (client: PoolClient, data: ServiceData) => {
+  const email = await Email.createSingle(client, data);
 
   if (!email) {
     throw new LucidError({

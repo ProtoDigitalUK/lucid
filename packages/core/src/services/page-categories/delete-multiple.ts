@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 // Models
@@ -8,8 +9,8 @@ export interface ServiceData {
   category_ids: Array<number>;
 }
 
-const deleteMultiple = async (data: ServiceData) => {
-  const pageCategory = await PageCategory.deleteMultiple({
+const deleteMultiple = async (client: PoolClient, data: ServiceData) => {
+  const pageCategory = await PageCategory.deleteMultiple(client, {
     page_id: data.page_id,
     category_ids: data.category_ids,
   });

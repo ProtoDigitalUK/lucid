@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Serices
 import Config from "@services/Config";
 import environmentsService from "@services/environments";
@@ -11,11 +13,15 @@ export interface ServiceData {
   environment_key: string;
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (client: PoolClient, data: ServiceData) => {
   // Check access
   const formInstances = Config.forms || [];
 
-  const environment = await environmentsService.getSingle({
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
     key: data.environment_key,
   });
 

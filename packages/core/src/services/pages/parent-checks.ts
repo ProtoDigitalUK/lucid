@@ -1,5 +1,7 @@
+import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service";
 // Services
 import pageServices from "@services/pages";
 
@@ -17,9 +19,13 @@ export interface ServiceData {
     - If the parent is in the same collection as the child
 */
 
-const parentChecks = async (data: ServiceData) => {
+const parentChecks = async (client: PoolClient, data: ServiceData) => {
   // Check if the parent exists and return it
-  const parent = await pageServices.checkPageExists({
+  const parent = await service(
+    pageServices.checkPageExists,
+    false,
+    client
+  )({
     id: data.parent_id,
     environment_key: data.environment_key,
   });
