@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const query_helpers_1 = require("../../utils/app/query-helpers");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Menu_1 = __importDefault(require("../../db/models/Menu"));
 const menu_1 = __importDefault(require("../menu"));
-const upsertItem = async (data) => {
+const upsertItem = async (client, data) => {
     const itemsRes = [];
     const queryData = (0, query_helpers_1.queryDataFormat)({
         columns: [
@@ -32,21 +33,26 @@ const upsertItem = async (data) => {
     });
     let newParentId = data.parentId;
     if (data.item.id) {
-        await menu_1.default.getSingleItem({
+        await (0, service_1.default)(menu_1.default.getSingleItem, false, client)({
             id: data.item.id,
             menu_id: data.menu_id,
         });
-        const updatedItem = await Menu_1.default.updateMenuItem(data.item.id, queryData);
+        const updatedItem = await Menu_1.default.updateMenuItem(client, {
+            item_id: data.item.id,
+            query_data: queryData,
+        });
         newParentId = updatedItem.id;
         itemsRes.push(updatedItem);
     }
     else {
-        const newItem = await Menu_1.default.createMenuItem(queryData);
+        const newItem = await Menu_1.default.createMenuItem(client, {
+            query_data: queryData,
+        });
         newParentId = newItem.id;
         itemsRes.push(newItem);
     }
     if (data.item.children) {
-        const promises = data.item.children.map((child, i) => upsertItem({
+        const promises = data.item.children.map((child, i) => (0, service_1.default)(upsertItem, false, client)({
             menu_id: data.menu_id,
             item: child,
             pos: i,

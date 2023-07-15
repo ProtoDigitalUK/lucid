@@ -1,9 +1,8 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     category_ids: Array<number>;
     collection_key: string;
 }
-declare const verifyCategoriesInCollection: (data: ServiceData) => Promise<{
-    id: number;
-}[]>;
+declare const verifyCategoriesInCollection: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/PageCategory").PageCategoryT[]>;
 export default verifyCategoriesInCollection;
 //# sourceMappingURL=verify-cateogies-in-collection.d.ts.map

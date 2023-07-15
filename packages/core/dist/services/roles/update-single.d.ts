@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     id: number;
     name?: string;
@@ -6,6 +7,6 @@ export interface ServiceData {
         permissions: string[];
     }>;
 }
-declare const updateSingle: (data: ServiceData) => Promise<import("../../db/models/Role").RoleT>;
+declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/Role").RoleT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

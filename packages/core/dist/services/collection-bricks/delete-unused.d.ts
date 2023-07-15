@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 import { CollectionResT } from "../../utils/format/format-collections";
 export interface ServiceData {
@@ -6,6 +7,6 @@ export interface ServiceData {
     brick_ids: Array<number | undefined>;
     brick_type: CollectionBrickConfigT["type"];
 }
-declare const deleteUnused: (data: ServiceData) => Promise<void>;
+declare const deleteUnused: (client: PoolClient, data: ServiceData) => Promise<void>;
 export default deleteUnused;
 //# sourceMappingURL=delete-unused.d.ts.map

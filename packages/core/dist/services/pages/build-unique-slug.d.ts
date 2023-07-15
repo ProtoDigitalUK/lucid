@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     slug: string;
     homepage: boolean;
@@ -5,6 +6,6 @@ export interface ServiceData {
     collection_key: string;
     parent_id?: number;
 }
-declare const buildUniqueSlug: (data: ServiceData) => Promise<string>;
+declare const buildUniqueSlug: (client: PoolClient, data: ServiceData) => Promise<string>;
 export default buildUniqueSlug;
 //# sourceMappingURL=build-unique-slug.d.ts.map

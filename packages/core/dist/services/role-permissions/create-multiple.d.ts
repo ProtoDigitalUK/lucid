@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { PermissionT, EnvironmentPermissionT } from "../Permissions";
 export interface ServiceData {
     role_id: number;
@@ -6,6 +7,6 @@ export interface ServiceData {
         environment_key?: string;
     }>;
 }
-declare const createMultiple: (data: ServiceData) => Promise<import("../../db/models/RolePermission").RolePermissionT[]>;
+declare const createMultiple: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/RolePermission").RolePermissionT[]>;
 export default createMultiple;
 //# sourceMappingURL=create-multiple.d.ts.map

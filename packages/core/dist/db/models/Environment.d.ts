@@ -1,13 +1,18 @@
-type EnvironmentGetAll = () => Promise<EnvironmentT[]>;
-type EnvironmentGetSingle = (key: string) => Promise<EnvironmentT>;
-type EnvironmentUpsertSingle = (data: {
+import { PoolClient } from "pg";
+type EnvironmentGetAll = (client: PoolClient) => Promise<EnvironmentT[]>;
+type EnvironmentGetSingle = (client: PoolClient, data: {
+    key: string;
+}) => Promise<EnvironmentT>;
+type EnvironmentUpsertSingle = (client: PoolClient, data: {
     key: string;
     title?: string;
     assigned_bricks?: string[];
     assigned_collections?: string[];
     assigned_forms?: string[];
 }) => Promise<EnvironmentT>;
-type EnvironmentDeleteSingle = (key: string) => Promise<EnvironmentT>;
+type EnvironmentDeleteSingle = (client: PoolClient, data: {
+    key: string;
+}) => Promise<EnvironmentT>;
 export type EnvironmentT = {
     key: string;
     title: string | null;
@@ -20,7 +25,6 @@ export default class Environment {
     static getSingle: EnvironmentGetSingle;
     static upsertSingle: EnvironmentUpsertSingle;
     static deleteSingle: EnvironmentDeleteSingle;
-    static checkKeyExists: (key: string) => Promise<EnvironmentT[]>;
 }
 export {};
 //# sourceMappingURL=Environment.d.ts.map

@@ -1,15 +1,16 @@
+import { PoolClient } from "pg";
 import { BrickObject } from "../models/CollectionBrick";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
 import { BrickResT } from "../../utils/format/format-bricks";
-type SinglePageGetSingle = (query_instance: SelectQueryBuilder) => Promise<SinglePageT>;
-type SinglePageCreateSingle = (data: {
+type SinglePageGetSingle = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<SinglePageT>;
+type SinglePageCreateSingle = (client: PoolClient, data: {
     user_id: number;
     environment_key: string;
     collection_key: string;
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
 }) => Promise<SinglePageT>;
-type SinglePageUpdateSingle = (data: {
+type SinglePageUpdateSingle = (client: PoolClient, data: {
     id: number;
     user_id: number;
 }) => Promise<SinglePageT>;

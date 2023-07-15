@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
@@ -5,29 +6,48 @@ import { CollectionBrickConfigT } from "@lucid/collection-builder";
 import { CollectionResT } from "../../utils/format/format-collections";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
-type CollectionBrickGetAll = (data: {
+type CollectionBrickGetAll = (client: PoolClient, data: {
     reference_id: number;
     type: CollectionResT["type"];
 }) => Promise<CollectionBrickFieldsT[]>;
-type CollectionBrickCreateSingle = (data: {
+type CollectionBrickCreateSingle = (client: PoolClient, data: {
     type: CollectionResT["type"];
     reference_id: number;
     order: number;
     brick: BrickObject;
     brick_type: CollectionBrickConfigT["type"];
 }) => Promise<CollectionBrickT>;
-type CollectionBrickUpdateSingle = (data: {
+type CollectionBrickUpdateSingle = (client: PoolClient, data: {
     order: number;
     brick: BrickObject;
     brick_type: CollectionBrickConfigT["type"];
 }) => Promise<CollectionBrickT>;
-type CollectionBrickCheckFieldExists = (data: {
+type CollectionBrickCheckFieldExists = (client: PoolClient, data: {
     brick_id: number;
     key: string;
     type: string;
     parent_repeater?: number;
     group_position?: number;
 }) => Promise<boolean>;
+type CollectionBrickGetAllBricks = (client: PoolClient, data: {
+    type: CollectionResT["type"];
+    reference_id: number;
+    brick_type: CollectionBrickConfigT["type"];
+}) => Promise<CollectionBrickT[]>;
+type CollectionBrickDeleteSingleBrick = (client: PoolClient, data: {
+    brick_id: number;
+}) => Promise<CollectionBrickT>;
+type CollectionBrickUpdateField = (client: PoolClient, data: {
+    brick_id: number;
+    field: BrickFieldObject;
+}) => Promise<FieldsT>;
+type CollectionBrickCreateField = (client: PoolClient, data: {
+    brick_id: number;
+    field: BrickFieldObject;
+}) => Promise<FieldsT>;
+type CollectionBrickUpdateRepeater = (client: PoolClient, data: {
+    field: BrickFieldObject;
+}) => Promise<FieldsT>;
 export type CollectionBrickFieldsT = {
     id: number;
     brick_type: CollectionBrickConfigT["type"];
@@ -89,13 +109,13 @@ export default class CollectionBrick {
     static getAll: CollectionBrickGetAll;
     static createSingleBrick: CollectionBrickCreateSingle;
     static updateSingleBrick: CollectionBrickUpdateSingle;
-    static getAllBricks: (type: CollectionResT["type"], reference_id: number, brick_type: CollectionBrickConfigT["type"]) => Promise<CollectionBrickT[]>;
-    static deleteSingleBrick: (id: number) => Promise<CollectionBrickT>;
-    static updateField: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
-    static createField: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
+    static getAllBricks: CollectionBrickGetAllBricks;
+    static deleteSingleBrick: CollectionBrickDeleteSingleBrick;
+    static updateField: CollectionBrickUpdateField;
+    static createField: CollectionBrickCreateField;
     static checkFieldExists: CollectionBrickCheckFieldExists;
-    static updateRepeater: (data: BrickFieldObject) => Promise<FieldsT>;
-    static createRepeater: (brick_id: number, data: BrickFieldObject) => Promise<FieldsT>;
+    static updateRepeater: CollectionBrickUpdateRepeater;
+    static createRepeater: CollectionBrickCreateField;
 }
 export {};
 //# sourceMappingURL=CollectionBrick.d.ts.map

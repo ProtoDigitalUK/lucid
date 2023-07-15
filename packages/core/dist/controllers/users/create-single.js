@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const users_1 = __importDefault(require("../../schemas/users"));
 const users_2 = __importDefault(require("../../services/users"));
 const createSingleController = async (req, res, next) => {
     try {
-        const user = await users_2.default.registerSingle({
+        const user = await (0, service_1.default)(users_2.default.registerSingle, true)({
             email: req.body.email,
             username: req.body.username,
             password: req.body.password,

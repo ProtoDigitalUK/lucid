@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Email_1 = __importDefault(require("../../db/models/Email"));
-const createSingle = async (data) => {
-    const email = await Email_1.default.createSingle(data);
+const createSingle = async (client, data) => {
+    const email = await Email_1.default.createSingle(client, data);
     if (!email) {
         throw new error_handler_1.LucidError({
             type: "basic",

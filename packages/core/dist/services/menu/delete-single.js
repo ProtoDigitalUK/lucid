@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Menu_1 = __importDefault(require("../../db/models/Menu"));
-const deleteSingle = async (data) => {
-    const menu = await Menu_1.default.deleteSingle({
+const deleteSingle = async (client, data) => {
+    const menu = await Menu_1.default.deleteSingle(client, {
         environment_key: data.environment_key,
         id: data.id,
     });

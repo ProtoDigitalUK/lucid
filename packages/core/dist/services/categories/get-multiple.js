@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Category_1 = __importDefault(require("../../db/models/Category"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
-const getMultiple = async (data) => {
+const getMultiple = async (client, data) => {
     const { filter, sort, page, per_page } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
         columns: [
@@ -46,7 +46,7 @@ const getMultiple = async (data) => {
         page: page,
         per_page: per_page,
     });
-    return await Category_1.default.getMultiple(SelectQuery);
+    return await Category_1.default.getMultiple(client, SelectQuery);
 };
 exports.default = getMultiple;
 //# sourceMappingURL=get-multiple.js.map

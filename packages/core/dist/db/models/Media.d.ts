@@ -1,21 +1,31 @@
+import { PoolClient } from "pg";
 import { type MediaMetaDataT } from "../../utils/media/helpers";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
-type MediaCreateSingle = (data: {
+type MediaCreateSingle = (client: PoolClient, data: {
     key: string;
     name: string;
     etag?: string;
     alt?: string;
     meta: MediaMetaDataT;
 }) => Promise<MediaT>;
-type MediaGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type MediaGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<{
     data: MediaT[];
     count: number;
 }>;
-type MediaGetSingle = (key: string) => Promise<MediaT>;
-type MediaGetSingleById = (id: number) => Promise<MediaT>;
-type MediaGetMultipleByIds = (ids: number[]) => Promise<MediaT[]>;
-type MediaDeleteSingle = (key: string) => Promise<MediaT>;
-type MediaUpdateSingle = (key: string, data: {
+type MediaGetSingle = (client: PoolClient, data: {
+    key: string;
+}) => Promise<MediaT>;
+type MediaGetSingleById = (client: PoolClient, data: {
+    id: number;
+}) => Promise<MediaT>;
+type MediaGetMultipleByIds = (client: PoolClient, data: {
+    ids: number[];
+}) => Promise<MediaT[]>;
+type MediaDeleteSingle = (client: PoolClient, data: {
+    key: string;
+}) => Promise<MediaT>;
+type MediaUpdateSingle = (client: PoolClient, data: {
+    key: string;
     name?: string;
     alt?: string;
     meta?: MediaMetaDataT;

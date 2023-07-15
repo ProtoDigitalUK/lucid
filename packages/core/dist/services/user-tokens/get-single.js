@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const UserToken_1 = __importDefault(require("../../db/models/UserToken"));
-const getSingle = async (data) => {
-    const userToken = await UserToken_1.default.getByToken({
+const getSingle = async (client, data) => {
+    const userToken = await UserToken_1.default.getByToken(client, {
         token_type: data.token_type,
         token: data.token,
     });

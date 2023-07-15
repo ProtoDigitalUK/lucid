@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Option_1 = __importDefault(require("../../db/models/Option"));
 const convert_to_type_1 = __importDefault(require("../../utils/options/convert-to-type"));
-const getByName = async (data) => {
-    const option = await Option_1.default.getByName(data.name);
+const getByName = async (client, data) => {
+    const option = await Option_1.default.getByName(client, {
+        name: data.name,
+    });
     if (!option) {
         throw new error_handler_1.LucidError({
             type: "basic",

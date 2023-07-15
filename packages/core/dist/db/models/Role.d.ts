@@ -1,16 +1,26 @@
+import { PoolClient } from "pg";
 import z from "zod";
 import roleSchema from "../../schemas/roles";
 import { RolePermissionT } from "../models/RolePermission";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
-type RoleCreateSingle = (data: z.infer<typeof roleSchema.createSingle.body>) => Promise<RoleT>;
-type RoleDeleteSingle = (id: number) => Promise<RoleT>;
-type RoleGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type RoleCreateSingle = (client: PoolClient, data: z.infer<typeof roleSchema.createSingle.body>) => Promise<RoleT>;
+type RoleDeleteSingle = (client: PoolClient, data: {
+    id: number;
+}) => Promise<RoleT>;
+type RoleGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<{
     data: RoleT[];
     count: number;
 }>;
-type RoleUpdateSingle = (id: number, data: z.infer<typeof roleSchema.updateSingle.body>) => Promise<RoleT>;
-type RoleGetSingle = (id: number) => Promise<RoleT>;
-type RoleGetSingleByName = (name: string) => Promise<RoleT>;
+type RoleUpdateSingle = (client: PoolClient, data: {
+    id: number;
+    data: z.infer<typeof roleSchema.updateSingle.body>;
+}) => Promise<RoleT>;
+type RoleGetSingle = (client: PoolClient, data: {
+    id: number;
+}) => Promise<RoleT>;
+type RoleGetSingleByName = (client: PoolClient, data: {
+    name: string;
+}) => Promise<RoleT>;
 export type RoleT = {
     id: number;
     environment_key: string;

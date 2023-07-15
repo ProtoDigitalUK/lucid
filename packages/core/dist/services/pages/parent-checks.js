@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const pages_1 = __importDefault(require("../pages"));
-const parentChecks = async (data) => {
-    const parent = await pages_1.default.checkPageExists({
+const parentChecks = async (client, data) => {
+    const parent = await (0, service_1.default)(pages_1.default.checkPageExists, false, client)({
         id: data.parent_id,
         environment_key: data.environment_key,
     });

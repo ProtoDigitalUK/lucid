@@ -5,8 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const User_1 = __importDefault(require("../../db/models/User"));
-const checkIfUserExists = async (data) => {
-    const user = await User_1.default.checkIfUserExistsAlready(data.email, data.username);
+const checkIfUserExists = async (client, data) => {
+    const user = await User_1.default.getByEmailAndUsername(client, {
+        email: data.email,
+        username: data.username,
+    });
     if (user) {
         throw new error_handler_1.LucidError({
             type: "basic",

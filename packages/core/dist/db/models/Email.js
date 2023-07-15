@@ -1,16 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
 class Email {
 }
 _a = Email;
-Email.createSingle = async (data) => {
-    const client = await db_1.default;
+Email.createSingle = async (client, data) => {
     const { from_address, from_name, to_address, subject, cc, bcc, template, delivery_status, data: templateData, } = data;
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
@@ -42,8 +37,7 @@ Email.createSingle = async (data) => {
     });
     return email.rows[0];
 };
-Email.getMultiple = async (query_instance) => {
-    const client = await db_1.default;
+Email.getMultiple = async (client, query_instance) => {
     const emails = client.query({
         text: `SELECT ${query_instance.query.select} FROM lucid_emails ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
         values: query_instance.values,
@@ -58,8 +52,7 @@ Email.getMultiple = async (query_instance) => {
         count: parseInt(data[1].rows[0].count),
     };
 };
-Email.getSingle = async (id) => {
-    const client = await db_1.default;
+Email.getSingle = async (client, data) => {
     const email = await client.query({
         text: `SELECT
           *
@@ -67,24 +60,22 @@ Email.getSingle = async (id) => {
           lucid_emails
         WHERE
           id = $1`,
-        values: [id],
+        values: [data.id],
     });
     return email.rows[0];
 };
-Email.deleteSingle = async (id) => {
-    const client = await db_1.default;
+Email.deleteSingle = async (client, data) => {
     const email = await client.query({
         text: `DELETE FROM
           lucid_emails
         WHERE
           id = $1
         RETURNING *`,
-        values: [id],
+        values: [data.id],
     });
     return email.rows[0];
 };
-Email.updateSingle = async (id, data) => {
-    const client = await db_1.default;
+Email.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: ["from_address", "from_name", "delivery_status"],
         values: [data.from_address, data.from_name, data.delivery_status],
@@ -102,7 +93,7 @@ Email.updateSingle = async (id, data) => {
         WHERE 
           id = $${aliases.value.length + 1}
         RETURNING *`,
-        values: [...values.value, id],
+        values: [...values.value, data.id],
     });
     return email.rows[0];
 };

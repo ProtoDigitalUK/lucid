@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 export interface EmailParamsT {
     data: {
         [key: string]: any;
@@ -25,7 +26,12 @@ export declare const sendEmailExternal: (template: string, params: EmailParamsT,
     success: boolean;
     message: string;
 }>;
-export declare const sendEmailInternal: (template: string, params: EmailParamsT, id?: number, track?: boolean) => Promise<{
+export declare const sendEmailInternal: (client: PoolClient, data: {
+    template: string;
+    params: EmailParamsT;
+    id?: number;
+    track?: boolean;
+}) => Promise<{
     success: boolean;
     message: string;
 }>;

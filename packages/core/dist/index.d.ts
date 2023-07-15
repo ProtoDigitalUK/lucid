@@ -9,7 +9,7 @@ declare const sendEmail: (template: string, params: import("./services/email/sen
     success: boolean;
     message: string;
 }>;
-declare const submitForm: (props: import("./services/form-submissions/submit-form").ServiceData) => Promise<import("./utils/format/format-form-submission").FormSubmissionResT>;
+declare const submitForm: (props: import("./services/form-submissions/submit-form").ServiceData) => Promise<void>;
 export { init, buildConfig, sendEmail, BrickBuilder, CollectionBuilder, FormBuilder, submitForm, };
 declare const _default: {
     init: (options: InitOptions) => Promise<import("express").Express>;

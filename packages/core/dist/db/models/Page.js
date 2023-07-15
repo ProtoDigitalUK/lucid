@@ -1,16 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 const query_helpers_1 = require("../../utils/app/query-helpers");
 class Page {
 }
 _a = Page;
-Page.getMultiple = async (query_instance) => {
-    const client = await db_1.default;
+Page.getMultiple = async (client, query_instance) => {
     const pages = client.query({
         text: `SELECT
           ${query_instance.query.select},
@@ -42,8 +37,7 @@ Page.getMultiple = async (query_instance) => {
         count: parseInt(data[1].rows[0].count),
     };
 };
-Page.getSingle = async (query_instance) => {
-    const client = await db_1.default;
+Page.getSingle = async (client, query_instance) => {
     const page = await client.query({
         text: `SELECT
         ${query_instance.query.select},
@@ -58,8 +52,7 @@ Page.getSingle = async (query_instance) => {
     });
     return page.rows[0];
 };
-Page.createSingle = async (data) => {
-    const client = await db_1.default;
+Page.createSingle = async (client, data) => {
     const page = await client.query({
         text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         values: [
@@ -76,8 +69,7 @@ Page.createSingle = async (data) => {
     });
     return page.rows[0];
 };
-Page.updateSingle = async (data) => {
-    const client = await db_1.default;
+Page.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
             "title",
@@ -111,24 +103,21 @@ Page.updateSingle = async (data) => {
     });
     return page.rows[0];
 };
-Page.deleteSingle = async (data) => {
-    const client = await db_1.default;
+Page.deleteSingle = async (client, data) => {
     const page = await client.query({
         text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
         values: [data.id],
     });
     return page.rows[0];
 };
-Page.getMultipleByIds = async (data) => {
-    const client = await db_1.default;
+Page.getMultipleByIds = async (client, data) => {
     const pages = await client.query({
         text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
         values: [data.ids, data.environment_key],
     });
     return pages.rows;
 };
-Page.getSingleBasic = async (id, environment_key) => {
-    const client = await db_1.default;
+Page.getSingleBasic = async (client, data) => {
     const page = await client.query({
         text: `SELECT
           *
@@ -138,12 +127,11 @@ Page.getSingleBasic = async (id, environment_key) => {
           id = $1
         AND
           environment_key = $2`,
-        values: [id, environment_key],
+        values: [data.id, data.environment_key],
     });
     return page.rows[0];
 };
-Page.getSlugCount = async (data) => {
-    const client = await db_1.default;
+Page.getSlugCount = async (client, data) => {
     const values = [
         data.slug,
         data.collection_key,
@@ -167,28 +155,26 @@ Page.getSlugCount = async (data) => {
     });
     return parseInt(slugCount.rows[0].count);
 };
-Page.getNonCurrentHomepages = async (currentId, environment_key) => {
-    const client = await db_1.default;
+Page.getNonCurrentHomepages = async (client, data) => {
     const result = await client.query({
         text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-        values: [currentId, environment_key],
+        values: [data.current_id, data.environment_key],
     });
     return result.rows;
 };
-Page.checkSlugExistence = async (slug, id, environment_key) => {
-    const client = await db_1.default;
+Page.checkSlugExistence = async (client, data) => {
     const slugExists = await client.query({
         text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
-        values: [slug, id, environment_key],
+        values: [data.slug, data.id, data.environment_key],
     });
     return slugExists.rows[0].count > 0;
 };
-Page.updatePageToNonHomepage = async (id, newSlug) => {
-    const client = await db_1.default;
-    await client.query({
+Page.updatePageToNonHomepage = async (client, data) => {
+    const updateRes = await client.query({
         text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
-        values: [id, newSlug],
+        values: [data.id, data.slug],
     });
+    return updateRes.rows[0];
 };
 exports.default = Page;
 //# sourceMappingURL=Page.js.map

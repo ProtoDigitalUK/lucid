@@ -1,16 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = __importDefault(require("../db"));
 class Migration {
 }
 _a = Migration;
-Migration.all = async () => {
+Migration.all = async (client) => {
     try {
-        const client = await db_1.default;
         const migrations = await client.query(`SELECT * FROM lucid_migrations`);
         return migrations.rows;
     }
@@ -18,8 +13,7 @@ Migration.all = async () => {
         return [];
     }
 };
-Migration.create = async (data) => {
-    const client = await db_1.default;
+Migration.create = async (client, data) => {
     const { file, rawSql } = data;
     await client.query({
         text: rawSql,

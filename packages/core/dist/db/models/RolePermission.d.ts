@@ -1,8 +1,19 @@
+import { PoolClient } from "pg";
 import { PermissionT, EnvironmentPermissionT } from "../../services/Permissions";
-type RolePermissionCreateSingle = (role_id: number, permission: PermissionT | EnvironmentPermissionT, environment_key?: string) => Promise<RolePermissionT>;
-type RolePermissionDeleteSingle = (id: RolePermissionT["id"]) => Promise<RolePermissionT>;
-type RolePermissionGetAll = (role_id: number) => Promise<RolePermissionT[]>;
-type RolePermissionDeleteAll = (role_id: number) => Promise<RolePermissionT[]>;
+type RolePermissionCreateSingle = (client: PoolClient, data: {
+    role_id: number;
+    permission: PermissionT | EnvironmentPermissionT;
+    environment_key?: string;
+}) => Promise<RolePermissionT>;
+type RolePermissionDeleteSingle = (client: PoolClient, data: {
+    id: RolePermissionT["id"];
+}) => Promise<RolePermissionT>;
+type RolePermissionGetAll = (client: PoolClient, data: {
+    role_id: number;
+}) => Promise<RolePermissionT[]>;
+type RolePermissionDeleteAll = (client: PoolClient, data: {
+    role_id: number;
+}) => Promise<RolePermissionT[]>;
 export type RolePermissionT = {
     id: number;
     role_id: string;

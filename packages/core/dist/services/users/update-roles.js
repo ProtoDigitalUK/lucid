@@ -4,18 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const UserRole_1 = __importDefault(require("../../db/models/UserRole"));
-const users_1 = __importDefault(require("../users"));
 const roles_1 = __importDefault(require("../roles"));
-const updateRoles = async (data) => {
-    const userRoles = await users_1.default.getAllRoles({
+const updateRoles = async (client, data) => {
+    const userRoles = await UserRole_1.default.getAll(client, {
         user_id: data.user_id,
     });
     const newRoles = data.role_ids.filter((role) => {
         return !userRoles.find((userRole) => userRole.role_id === role);
     });
     if (newRoles.length > 0) {
-        const rolesRes = await roles_1.default.getMultiple({
+        const rolesRes = await (0, service_1.default)(roles_1.default.getMultiple, false, client)({
             query: {
                 filter: {
                     role_ids: newRoles.map((role) => role.toString()),
@@ -30,7 +30,8 @@ const updateRoles = async (data) => {
                 status: 500,
             });
         }
-        await UserRole_1.default.updateRoles(data.user_id, {
+        await UserRole_1.default.updateRoles(client, {
+            user_id: data.user_id,
             role_ids: newRoles,
         });
     }
@@ -39,9 +40,12 @@ const updateRoles = async (data) => {
     });
     if (rolesToRemove.length > 0) {
         const rolesToRemoveIds = rolesToRemove.map((role) => role.id);
-        await UserRole_1.default.deleteMultiple(data.user_id, rolesToRemoveIds);
+        await UserRole_1.default.deleteMultiple(client, {
+            user_id: data.user_id,
+            role_ids: rolesToRemoveIds,
+        });
     }
-    const updatedUserRoles = await users_1.default.getAllRoles({
+    const updatedUserRoles = await UserRole_1.default.getAll(client, {
         user_id: data.user_id,
     });
     return updatedUserRoles;

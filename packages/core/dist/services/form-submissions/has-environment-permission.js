@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const environments_1 = __importDefault(require("../environments"));
-const hasEnvironmentPermission = async (data) => {
-    const environment = await environments_1.default.getSingle({
+const hasEnvironmentPermission = async (client, data) => {
+    const environment = await (0, service_1.default)(environments_1.default.getSingle, false, client)({
         key: data.environment_key,
     });
     const hasPerm = environment.assigned_forms?.includes(data.form_key);

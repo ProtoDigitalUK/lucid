@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const brick_config_1 = __importDefault(require("../brick-config"));
-const getSingle = async (data) => {
-    const allBricks = await brick_config_1.default.getAll({
+const getSingle = async (client, data) => {
+    const allBricks = await (0, service_1.default)(brick_config_1.default.getAll, false, client)({
         query: {
             include: ["fields"],
         },

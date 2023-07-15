@@ -7,9 +7,9 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const Option_1 = __importDefault(require("../../db/models/Option"));
 const convert_to_type_1 = __importDefault(require("../../utils/options/convert-to-type"));
 const convert_to_string_1 = __importDefault(require("../../utils/options/convert-to-string"));
-const patchByName = async (data) => {
+const patchByName = async (client, data) => {
     const value = (0, convert_to_string_1.default)(data.value, data.type);
-    const option = await Option_1.default.patchByName({
+    const option = await Option_1.default.patchByName(client, {
         name: data.name,
         value,
         type: data.type,

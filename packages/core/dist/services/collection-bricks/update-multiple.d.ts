@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { BrickObject } from "../../db/models/CollectionBrick";
 import { CollectionResT } from "../../utils/format/format-collections";
 import { EnvironmentResT } from "../../utils/format/format-environment";
@@ -8,6 +9,6 @@ export interface ServiceData {
     collection: CollectionResT;
     environment: EnvironmentResT;
 }
-declare const updateMultiple: (data: ServiceData) => Promise<void>;
+declare const updateMultiple: (client: PoolClient, data: ServiceData) => Promise<void>;
 export default updateMultiple;
 //# sourceMappingURL=update-multiple.d.ts.map

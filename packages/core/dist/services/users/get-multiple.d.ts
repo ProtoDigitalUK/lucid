@@ -1,9 +1,10 @@
+import { PoolClient } from "pg";
 import z from "zod";
 import usersSchema from "../../schemas/users";
 export interface ServiceData {
     query: z.infer<typeof usersSchema.getMultiple.query>;
 }
-declare const getMultiple: (data: ServiceData) => Promise<{
+declare const getMultiple: (client: PoolClient, data: ServiceData) => Promise<{
     data: import("../../utils/format/format-user").UserResT[];
     count: number;
 }>;

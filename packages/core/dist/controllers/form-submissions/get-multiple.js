@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const form_submissions_1 = __importDefault(require("../../schemas/form-submissions"));
 const form_submissions_2 = __importDefault(require("../../services/form-submissions"));
 const getMultipleController = async (req, res, next) => {
     try {
-        const submissions = await form_submissions_2.default.getMultiple({
+        const submissions = await (0, service_1.default)(form_submissions_2.default.getMultiple, false)({
             query: req.query,
             form_key: req.params.form_key,
             environment_key: req.headers["lucid-environment"],

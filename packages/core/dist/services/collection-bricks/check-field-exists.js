@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const CollectionBrick_1 = __importDefault(require("../../db/models/CollectionBrick"));
-const checkFieldExists = async (data) => {
-    const repeaterExists = await CollectionBrick_1.default.checkFieldExists({
+const checkFieldExists = async (client, data) => {
+    const repeaterExists = await CollectionBrick_1.default.checkFieldExists(client, {
         brick_id: data.brick_id,
         key: data.key,
         type: data.type,

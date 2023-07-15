@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const format_media_1 = __importDefault(require("../../utils/format/format-media"));
-const getSingle = async (data) => {
-    const media = await Media_1.default.getSingle(data.key);
+const getSingle = async (client, data) => {
+    const media = await Media_1.default.getSingle(client, {
+        key: data.key,
+    });
     if (!media) {
         throw new error_handler_1.LucidError({
             type: "basic",

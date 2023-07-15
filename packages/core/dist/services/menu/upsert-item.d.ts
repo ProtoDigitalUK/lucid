@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { MenuItemT } from "../../db/models/Menu";
 import { MenuItemUpdate } from "../../schemas/menus";
 export interface ServiceData {
@@ -6,6 +7,6 @@ export interface ServiceData {
     pos: number;
     parentId?: number;
 }
-declare const upsertItem: (data: ServiceData) => Promise<MenuItemT[]>;
+declare const upsertItem: (client: PoolClient, data: ServiceData) => Promise<MenuItemT[]>;
 export default upsertItem;
 //# sourceMappingURL=upsert-item.d.ts.map

@@ -4,12 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../media"));
 const s3_1 = __importDefault(require("../s3"));
 const format_media_1 = __importDefault(require("../../utils/format/format-media"));
-const deleteSingle = async (data) => {
-    const media = await Media_1.default.deleteSingle(data.key);
+const deleteSingle = async (client, data) => {
+    const media = await Media_1.default.deleteSingle(client, {
+        key: data.key,
+    });
     if (!media) {
         throw new error_handler_1.LucidError({
             type: "basic",
@@ -21,7 +24,7 @@ const deleteSingle = async (data) => {
     await s3_1.default.deleteFile({
         key: media.key,
     });
-    await media_1.default.setStorageUsed({
+    await (0, service_1.default)(media_1.default.setStorageUsed, false, client)({
         add: 0,
         minus: media.file_size,
     });

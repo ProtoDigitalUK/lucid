@@ -1,9 +1,18 @@
-type UserRoleGetAll = (user_id: number) => Promise<UserRoleT[]>;
-type UserRoleUpdate = (id: number, data: {
+import { PoolClient } from "pg";
+type UserRoleGetAll = (client: PoolClient, data: {
+    user_id: number;
+}) => Promise<UserRoleT[]>;
+type UserRoleUpdate = (client: PoolClient, data: {
+    user_id: number;
     role_ids: number[];
 }) => Promise<UserRoleT[]>;
-type UserRoleGetPermissions = (user_id: number) => Promise<UserRolePermissionRes[]>;
-type UserRoleDeleteMultiple = (user_id: number, role_ids: number[]) => Promise<UserRoleT[]>;
+type UserRoleGetPermissions = (client: PoolClient, data: {
+    user_id: number;
+}) => Promise<UserRolePermissionRes[]>;
+type UserRoleDeleteMultiple = (client: PoolClient, data: {
+    user_id: number;
+    role_ids: number[];
+}) => Promise<UserRoleT[]>;
 export interface UserRolePermissionRes {
     permission: string;
     environment_key: string;

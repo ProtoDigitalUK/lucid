@@ -11,6 +11,7 @@ const console_log_colors_1 = require("console-log-colors");
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const db_1 = require("./db/db");
 const migration_1 = __importDefault(require("./db/migration"));
 const index_1 = __importDefault(require("./routes/index"));
 const error_handler_1 = require("./utils/app/error-handler");
@@ -18,6 +19,7 @@ const Config_1 = __importDefault(require("./services/Config"));
 const app = async (options) => {
     const app = options.express;
     await Config_1.default.cacheConfig();
+    await (0, db_1.initializePool)();
     console_log_colors_1.log.white("----------------------------------------------------");
     app.use(express_1.default.json());
     app.use((0, cors_1.default)({

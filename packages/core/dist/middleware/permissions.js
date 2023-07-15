@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../utils/app/error-handler");
+const service_1 = __importDefault(require("../utils/app/service"));
 const users_1 = __importDefault(require("../services/users"));
 const throwPermissionError = () => {
     throw new error_handler_1.LucidError({
@@ -16,7 +17,7 @@ const throwPermissionError = () => {
 const permissions = (permissions) => async (req, res, next) => {
     try {
         const environment = req.headers["lucid-environment"];
-        const user = await users_1.default.getSingle({
+        const user = await (0, service_1.default)(users_1.default.getSingle, false)({
             user_id: req.auth.id,
         });
         if (user.super_admin)

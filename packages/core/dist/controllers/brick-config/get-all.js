@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const bricks_1 = __importDefault(require("../../schemas/bricks"));
 const brick_config_1 = __importDefault(require("../../services/brick-config"));
 const getAllController = async (req, res, next) => {
     try {
-        const bricks = await brick_config_1.default.getAll({
+        const bricks = await (0, service_1.default)(brick_config_1.default.getAll, false)({
             query: req.query,
             collection_key: req.params.collection_key,
             environment_key: req.headers["lucid-environment"],

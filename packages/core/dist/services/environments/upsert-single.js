@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const slugify_1 = __importDefault(require("slugify"));
 const Environment_1 = __importDefault(require("../../db/models/Environment"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const environments_1 = __importDefault(require("../environments"));
 const Config_1 = __importDefault(require("../Config"));
 const format_environment_1 = __importDefault(require("../../utils/format/format-environment"));
@@ -78,17 +79,17 @@ const checkAssignedForms = async (assigned_forms) => {
         });
     }
 };
-const upsertSingle = async (data) => {
+const upsertSingle = async (client, data) => {
     const key = data.create
         ? (0, slugify_1.default)(data.data.key, { lower: true })
         : data.data.key;
     if (!data.create) {
-        await environments_1.default.getSingle({
+        await (0, service_1.default)(environments_1.default.getSingle, false, client)({
             key: data.data.key,
         });
     }
     else {
-        await environments_1.default.checkKeyExists({
+        await (0, service_1.default)(environments_1.default.checkKeyExists, false, client)({
             key: data.data.key,
         });
     }
@@ -101,7 +102,7 @@ const upsertSingle = async (data) => {
     if (data.data.assigned_forms) {
         await checkAssignedForms(data.data.assigned_forms);
     }
-    const environment = await Environment_1.default.upsertSingle({
+    const environment = await Environment_1.default.upsertSingle(client, {
         key,
         title: data.data.title,
         assigned_bricks: data.data.assigned_bricks,

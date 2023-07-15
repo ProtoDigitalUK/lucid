@@ -1,6 +1,10 @@
 import { PoolClient } from "pg";
 // Models
 import CollectionBrick from "@db/models/CollectionBrick";
+// Utils
+import service from "@utils/app/service";
+// Serices
+import environmentsService from "@services/environments";
 // Format
 import { CollectionResT } from "@utils/format/format-collections";
 import formatBricks from "@utils/format/format-bricks";
@@ -31,10 +35,19 @@ const getAll = async (client: PoolClient, data: ServiceData) => {
     };
   }
 
+  const environment = await service(
+    environmentsService.getSingle,
+    false,
+    client
+  )({
+    key: data.environment_key,
+  });
+
   const formmatedBricks = await formatBricks({
     brick_fields: brickFields,
     environment_key: data.environment_key,
     collection: data.collection,
+    environment: environment,
   });
 
   return {

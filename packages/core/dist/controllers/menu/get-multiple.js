@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const menus_1 = __importDefault(require("../../schemas/menus"));
 const menu_1 = __importDefault(require("../../services/menu"));
 const getMultipleController = async (req, res, next) => {
     try {
-        const menusRes = await menu_1.default.getMultiple({
+        const menusRes = await (0, service_1.default)(menu_1.default.getMultiple, false)({
             query: req.query,
             environment_key: req.headers["lucid-environment"],
         });

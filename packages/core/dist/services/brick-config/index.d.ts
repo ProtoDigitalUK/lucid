@@ -6,8 +6,8 @@ export type BrickConfigT = {
     preview?: BrickConfigOptionsT["preview"];
 };
 declare const _default: {
-    getAll: (data: import("./get-all").ServiceData) => Promise<BrickConfigT[]>;
-    getSingle: (data: import("./get-single").ServiceData) => Promise<BrickConfigT>;
+    getAll: (client: import("pg").PoolClient, data: import("./get-all").ServiceData) => Promise<BrickConfigT[]>;
+    getSingle: (client: import("pg").PoolClient, data: import("./get-single").ServiceData) => Promise<BrickConfigT>;
     getBrickConfig: () => import("@lucid/brick-builder").default[];
     isBrickAllowed: (data: import("./is-brick-allowed").ServiceData) => {
         allowed: boolean;

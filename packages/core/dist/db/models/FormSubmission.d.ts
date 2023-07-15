@@ -1,34 +1,38 @@
+import { PoolClient } from "pg";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
-type FormSubmissionCreateSingle = (data: {
+type FormSubmissionCreateSingle = (client: PoolClient, data: {
     form_key: string;
     environment_key: string;
 }) => Promise<FormSubmissionsT>;
-type FormSubmissionCreateFormData = (data: {
+type FormSubmissionCreateFormData = (client: PoolClient, data: {
     form_submission_id: number;
     name: string;
     type: "string" | "number" | "boolean";
     value: string | number | boolean;
 }) => Promise<FormDataT>;
-type FormSubmissionGetSingle = (data: {
+type FormSubmissionGetSingle = (client: PoolClient, data: {
     id: number;
     form_key: string;
     environment_key: string;
 }) => Promise<FormSubmissionsT>;
-type FormSubmissionGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type FormSubmissionGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<{
     data: FormSubmissionsT[];
     count: number;
 }>;
-type FormSubmissionToggleReadAt = (data: {
+type FormSubmissionToggleReadAt = (client: PoolClient, data: {
     id: number;
     form_key: string;
     environment_key: string;
     read_at: Date | null;
 }) => Promise<FormSubmissionsT>;
-type FormSubmissionDeleteSingle = (data: {
+type FormSubmissionDeleteSingle = (client: PoolClient, data: {
     id: number;
     form_key: string;
     environment_key: string;
 }) => Promise<FormSubmissionsT>;
+type FormSubmissionGetAllFormData = (client: PoolClient, data: {
+    submission_ids: number[];
+}) => Promise<FormDataT[]>;
 export type FormSubmissionsT = {
     id: number;
     form_key: string;
@@ -54,7 +58,7 @@ export default class FormSubmission {
     static toggleReadAt: FormSubmissionToggleReadAt;
     static deleteSingle: FormSubmissionDeleteSingle;
     static createFormData: FormSubmissionCreateFormData;
-    static getAllFormData: (submission_ids: number[]) => Promise<FormDataT[]>;
+    static getAllFormData: FormSubmissionGetAllFormData;
 }
 export {};
 //# sourceMappingURL=FormSubmission.d.ts.map

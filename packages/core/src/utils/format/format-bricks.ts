@@ -7,9 +7,9 @@ import { CollectionBrickT } from "@db/models/CollectionBrick";
 import createURL from "@utils/media/create-url";
 // Services
 import brickConfigService from "@services/brick-config";
-import environmentsService from "@services/environments";
 // Format
 import { CollectionResT } from "./format-collections";
+import { EnvironmentResT } from "./format-environment";
 
 // ------------------------------------
 // Types
@@ -272,15 +272,12 @@ const formatBricks = async (data: {
   brick_fields: CollectionBrickFieldsT[];
   environment_key: string;
   collection: CollectionResT;
+  environment: EnvironmentResT;
 }) => {
   // Get all config
   const builderInstances = brickConfigService.getBrickConfig();
   if (!builderInstances) return [];
-
-  const environment = await environmentsService.getSingle({
-    key: data.environment_key,
-  });
-  if (!environment) return [];
+  if (!data.environment) return [];
 
   // Build the base brick structure
   const brickStructure = buildBrickStructure(data.brick_fields).filter(
@@ -288,7 +285,7 @@ const formatBricks = async (data: {
       const allowed = brickConfigService.isBrickAllowed({
         key: brick.key,
         type: brick.type,
-        environment,
+        environment: data.environment,
         collection: data.collection,
       });
       return allowed.allowed;

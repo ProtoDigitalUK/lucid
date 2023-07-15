@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const build_response_1 = __importDefault(require("../../utils/app/build-response"));
+const service_1 = __importDefault(require("../../utils/app/service"));
 const environments_1 = __importDefault(require("../../schemas/environments"));
 const environments_2 = __importDefault(require("../../services/environments"));
 const createSingleController = async (req, res, next) => {
     try {
-        const environment = await environments_2.default.upsertSingle({
+        const environment = await (0, service_1.default)(environments_2.default.upsertSingle, true)({
             data: {
                 key: req.body.key,
                 title: req.body.title,

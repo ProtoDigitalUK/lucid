@@ -5,8 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const PageCategory_1 = __importDefault(require("../../db/models/PageCategory"));
-const verifyCategoriesInCollection = async (data) => {
-    const pageCategories = await PageCategory_1.default.getMultiple(data.category_ids, data.collection_key);
+const verifyCategoriesInCollection = async (client, data) => {
+    const pageCategories = await PageCategory_1.default.getMultiple(client, {
+        category_ids: data.category_ids,
+        collection_key: data.collection_key,
+    });
     if (pageCategories.length !== data.category_ids.length) {
         throw new error_handler_1.LucidError({
             type: "basic",

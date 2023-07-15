@@ -5,11 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const CollectionBrick_1 = __importDefault(require("../../db/models/CollectionBrick"));
-const deleteUnused = async (data) => {
-    const allBricks = await CollectionBrick_1.default.getAllBricks(data.type, data.reference_id, data.brick_type);
+const deleteUnused = async (client, data) => {
+    const allBricks = await CollectionBrick_1.default.getAllBricks(client, {
+        type: data.type,
+        reference_id: data.reference_id,
+        brick_type: data.brick_type,
+    });
     const brickIds = allBricks.map((brick) => brick.id);
     const bricksToDelete = brickIds.filter((id) => !data.brick_ids.includes(id));
-    const promises = bricksToDelete.map((id) => CollectionBrick_1.default.deleteSingleBrick(id));
+    const promises = bricksToDelete.map((id) => CollectionBrick_1.default.deleteSingleBrick(client, {
+        brick_id: id,
+    }));
     try {
         await Promise.all(promises);
     }

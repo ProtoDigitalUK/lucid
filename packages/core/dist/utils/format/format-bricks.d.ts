@@ -2,6 +2,7 @@ import { CollectionBrickFieldsT } from "../../db/models/CollectionBrick";
 import { FieldTypes } from "@lucid/brick-builder";
 import { CollectionBrickT } from "../../db/models/CollectionBrick";
 import { CollectionResT } from "./format-collections";
+import { EnvironmentResT } from "./format-environment";
 export interface BrickResT {
     id: CollectionBrickT["id"];
     key: CollectionBrickT["brick_key"];
@@ -42,6 +43,7 @@ declare const formatBricks: (data: {
     brick_fields: CollectionBrickFieldsT[];
     environment_key: string;
     collection: CollectionResT;
+    environment: EnvironmentResT;
 }) => Promise<BrickResT[]>;
 export default formatBricks;
 //# sourceMappingURL=format-bricks.d.ts.map

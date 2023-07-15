@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const CollectionBrick_1 = __importDefault(require("../../db/models/CollectionBrick"));
 const brick_config_1 = __importDefault(require("../brick-config"));
 const collection_bricks_1 = __importDefault(require("../collection-bricks"));
-const upsertSingleWithFields = async (data) => {
+const upsertSingleWithFields = async (client, data) => {
     const promises = [];
     const allowed = brick_config_1.default.isBrickAllowed({
         key: data.brick.key,
@@ -25,7 +26,7 @@ const upsertSingleWithFields = async (data) => {
     }
     let brickId = data.brick.id;
     if (brickId) {
-        const brickRes = await CollectionBrick_1.default.updateSingleBrick({
+        const brickRes = await CollectionBrick_1.default.updateSingleBrick(client, {
             order: data.order,
             brick: data.brick,
             brick_type: data.brick_type,
@@ -41,7 +42,7 @@ const upsertSingleWithFields = async (data) => {
         }
     }
     else {
-        const brickRes = await CollectionBrick_1.default.createSingleBrick({
+        const brickRes = await CollectionBrick_1.default.createSingleBrick(client, {
             type: data.collection.type,
             reference_id: data.reference_id,
             order: data.order,
@@ -64,12 +65,12 @@ const upsertSingleWithFields = async (data) => {
         if (field.type === "tab")
             continue;
         if (field.type === "repeater")
-            promises.push(collection_bricks_1.default.upsertRepeater({
+            promises.push((0, service_1.default)(collection_bricks_1.default.upsertRepeater, false, client)({
                 brick_id: brickId,
                 data: field,
             }));
         else
-            promises.push(collection_bricks_1.default.upsertField({
+            promises.push((0, service_1.default)(collection_bricks_1.default.upsertField, false, client)({
                 brick_id: brickId,
                 data: field,
             }));

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 export interface ServiceData {
     from_address?: string;
     from_name?: string;
@@ -11,6 +12,6 @@ export interface ServiceData {
         [key: string]: any;
     };
 }
-declare const createSingle: (data: ServiceData) => Promise<import("../../db/models/Email").EmailT>;
+declare const createSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/Email").EmailT>;
 export default createSingle;
 //# sourceMappingURL=create-single.d.ts.map

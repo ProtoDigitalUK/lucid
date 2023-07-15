@@ -1,4 +1,5 @@
 import { PoolClient } from "pg";
+import { getDBClient } from "@db/db";
 import FormBuilder from "@lucid/form-builder";
 // Utils
 import service from "@utils/app/service";
@@ -60,6 +61,21 @@ const submitForm = async (client: PoolClient, props: ServiceData) => {
   });
 
   return formRes;
+};
+
+export const submitFormExternal = async (props: ServiceData) => {
+  const client = await getDBClient();
+
+  try {
+    await client.query("BEGIN");
+    await submitForm(client, props);
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 };
 
 export default submitForm;

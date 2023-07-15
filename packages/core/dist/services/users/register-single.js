@@ -5,16 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const User_1 = __importDefault(require("../../db/models/User"));
 const users_1 = __importDefault(require("../users"));
 const format_user_1 = __importDefault(require("../../utils/format/format-user"));
-const registerSingle = async (data, current_user_id) => {
+const registerSingle = async (client, data, current_user_id) => {
     let superAdmin = data.super_admin;
     const checkUserProm = Promise.all([
-        User_1.default.getByEmail({
+        User_1.default.getByEmail(client, {
             email: data.email,
         }),
-        User_1.default.getByUsername({
+        User_1.default.getByUsername(client, {
             username: data.username,
         }),
     ]);
@@ -41,12 +42,12 @@ const registerSingle = async (data, current_user_id) => {
             errors: (0, error_handler_1.modelErrors)(errors),
         });
     }
-    await users_1.default.checkIfUserExists({
+    await (0, service_1.default)(users_1.default.checkIfUserExists, false, client)({
         email: data.email,
         username: data.username,
     });
-    if (current_user_id !== undefined) {
-        const currentUser = await users_1.default.getSingle({
+    if (current_user_id !== undefined && data.super_admin === true) {
+        const currentUser = await (0, service_1.default)(users_1.default.getSingle, false, client)({
             user_id: current_user_id,
         });
         if (!currentUser.super_admin) {
@@ -54,7 +55,7 @@ const registerSingle = async (data, current_user_id) => {
         }
     }
     const hashedPassword = await argon2_1.default.hash(data.password);
-    const user = await User_1.default.register({
+    const user = await User_1.default.register(client, {
         email: data.email,
         username: data.username,
         password: hashedPassword,
@@ -70,19 +71,13 @@ const registerSingle = async (data, current_user_id) => {
             status: 500,
         });
     }
-    try {
-        if (data.role_ids && data.role_ids.length > 0) {
-            await users_1.default.updateRoles({
-                user_id: user.id,
-                role_ids: data.role_ids,
-            });
-        }
+    if (data.role_ids && data.role_ids.length > 0) {
+        await (0, service_1.default)(users_1.default.updateRoles, false, client)({
+            user_id: user.id,
+            role_ids: data.role_ids,
+        });
     }
-    catch (err) {
-        await User_1.default.deleteSingle(user.id);
-        throw err;
-    }
-    const userPermissions = await users_1.default.getPermissions({
+    const userPermissions = await (0, service_1.default)(users_1.default.getPermissions, false, client)({
         user_id: user.id,
     });
     return (0, format_user_1.default)(user, userPermissions);

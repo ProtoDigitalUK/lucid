@@ -1,5 +1,6 @@
-type MigrationAll = () => Promise<MigrationT[]>;
-type MigrationCreate = (data: {
+import { PoolClient } from "pg";
+type MigrationAll = (client: PoolClient) => Promise<MigrationT[]>;
+type MigrationCreate = (client: PoolClient, data: {
     file: string;
     rawSql: string;
 }) => Promise<void>;

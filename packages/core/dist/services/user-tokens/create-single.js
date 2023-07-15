@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const crypto_1 = __importDefault(require("crypto"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const UserToken_1 = __importDefault(require("../../db/models/UserToken"));
-const createSingle = async (data) => {
+const createSingle = async (client, data) => {
     const token = crypto_1.default.randomBytes(32).toString("hex");
-    const userToken = await UserToken_1.default.createSingle({
+    const userToken = await UserToken_1.default.createSingle(client, {
         user_id: data.user_id,
         token_type: data.token_type,
         token,

@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const service_1 = __importDefault(require("../../utils/app/service"));
 const error_handler_1 = require("../../utils/app/error-handler");
 const Config_1 = __importDefault(require("../Config"));
 const media_1 = __importDefault(require("../media"));
-const canStoreFiles = async (data) => {
+const canStoreFiles = async (client, data) => {
     const { storageLimit, maxFileSize } = Config_1.default.media;
     for (let i = 0; i < data.files.length; i++) {
         const file = data.files[i];
@@ -26,7 +27,7 @@ const canStoreFiles = async (data) => {
             });
         }
     }
-    const storageUsed = await media_1.default.getStorageUsed();
+    const storageUsed = await (0, service_1.default)(media_1.default.getStorageUsed, false, client)();
     const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
     if (totalSize + storageUsed > storageLimit) {
         const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;

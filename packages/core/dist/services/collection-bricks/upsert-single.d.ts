@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { BrickObject } from "../../db/models/CollectionBrick";
 import { EnvironmentT } from "../../db/models/Environment";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
@@ -10,6 +11,6 @@ export interface ServiceData {
     environment: EnvironmentT;
     collection: CollectionResT;
 }
-declare const upsertSingleWithFields: (data: ServiceData) => Promise<number>;
+declare const upsertSingleWithFields: (client: PoolClient, data: ServiceData) => Promise<number>;
 export default upsertSingleWithFields;
 //# sourceMappingURL=upsert-single.d.ts.map

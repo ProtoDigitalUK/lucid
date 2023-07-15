@@ -4,13 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
+const service_1 = __importDefault(require("../../utils/app/service"));
 const FormSubmission_1 = __importDefault(require("../../db/models/FormSubmission"));
 const form_submissions_1 = __importDefault(require("../form-submissions"));
 const forms_1 = __importDefault(require("../forms"));
 const format_form_submission_1 = __importDefault(require("../../utils/format/format-form-submission"));
-const getSingle = async (data) => {
-    await form_submissions_1.default.hasEnvironmentPermission(data);
-    const formSubmission = await FormSubmission_1.default.getSingle({
+const getSingle = async (client, data) => {
+    await (0, service_1.default)(form_submissions_1.default.hasEnvironmentPermission, false, client)(data);
+    const formSubmission = await FormSubmission_1.default.getSingle(client, {
         id: data.id,
         form_key: data.form_key,
         environment_key: data.environment_key,
@@ -23,7 +24,9 @@ const getSingle = async (data) => {
             status: 404,
         });
     }
-    let formData = await FormSubmission_1.default.getAllFormData([formSubmission.id]);
+    let formData = await FormSubmission_1.default.getAllFormData(client, {
+        submission_ids: [formSubmission.id],
+    });
     formData = formData.filter((field) => field.form_submission_id === formSubmission.id);
     const formBuilder = forms_1.default.getBuilderInstance({
         form_key: formSubmission.form_key,
