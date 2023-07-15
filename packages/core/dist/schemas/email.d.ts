@@ -21,10 +21,10 @@ declare const _default: {
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }, {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }>, "many">>;
             page: z.ZodOptional<z.ZodString>;
             per_page: z.ZodOptional<z.ZodString>;
@@ -36,7 +36,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -48,7 +48,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;

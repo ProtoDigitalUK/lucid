@@ -15,7 +15,7 @@ const getCSRFParams = z.object({});
 // ------------------------------------
 // LOGIN
 const loginBody = z.object({
-  username: z.string(),
+  username: z.string().min(3),
   password: z.string().min(8),
 });
 const loginQuery = z.object({});
@@ -33,7 +33,7 @@ const registerSuperAdminBody = z.object({
   first_name: z.string().optional(),
   last_name: z.string().optional(),
   email: z.string().email(),
-  username: z.string(),
+  username: z.string().min(3),
   password: z.string().min(8),
 });
 const registerSuperAdminQuery = z.object({});

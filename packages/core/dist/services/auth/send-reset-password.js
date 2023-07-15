@@ -6,13 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const date_fns_1 = require("date-fns");
 const constants_1 = __importDefault(require("../../constants"));
 const service_1 = __importDefault(require("../../utils/app/service"));
-const User_1 = __importDefault(require("../../db/models/User"));
 const user_tokens_1 = __importDefault(require("../user-tokens"));
 const email_1 = __importDefault(require("../email"));
+const users_1 = __importDefault(require("../users"));
 const Config_1 = __importDefault(require("../Config"));
 const sendResetPassword = async (client, data) => {
     const successMessage = `If an account with that email exists, we sent you an email with instructions to reset your password.`;
-    const user = await User_1.default.getByEmail(client, {
+    const user = await (0, service_1.default)(users_1.default.getSingleQuery, false, client)({
         email: data.email,
     });
     if (!user) {

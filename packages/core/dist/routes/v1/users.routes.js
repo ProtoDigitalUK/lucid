@@ -5,24 +5,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const route_1 = __importDefault(require("../../utils/app/route"));
-const update_roles_1 = __importDefault(require("../../controllers/users/update-roles"));
+const update_single_1 = __importDefault(require("../../controllers/users/update-single"));
 const create_single_1 = __importDefault(require("../../controllers/users/create-single"));
 const delete_single_1 = __importDefault(require("../../controllers/users/delete-single"));
 const get_multiple_1 = __importDefault(require("../../controllers/users/get-multiple"));
 const get_single_1 = __importDefault(require("../../controllers/users/get-single"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
-    method: "post",
-    path: "/:id/roles",
+    method: "patch",
+    path: "/:id",
     permissions: {
-        global: ["assign_role"],
+        global: ["update_user"],
     },
     middleware: {
         authenticate: true,
         authoriseCSRF: true,
     },
-    schema: update_roles_1.default.schema,
-    controller: update_roles_1.default.controller,
+    schema: update_single_1.default.schema,
+    controller: update_single_1.default.controller,
 });
 (0, route_1.default)(router, {
     method: "post",

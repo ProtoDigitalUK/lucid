@@ -12,7 +12,7 @@ type UserGetMultiple = (
   count: number;
 }>;
 
-type UserRegister = (
+type UserCreateSingle = (
   client: PoolClient,
   data: {
     first_name?: string;
@@ -24,39 +24,26 @@ type UserRegister = (
   }
 ) => Promise<UserT>;
 
-type UserGetById = (
-  client: PoolClient,
-  data: {
-    id: number;
-  }
-) => Promise<UserT>;
-
-type UserGetByUsername = (
-  client: PoolClient,
-  data: { username: string }
-) => Promise<UserT>;
-
-type UserGetByEmail = (
-  client: PoolClient,
-  data: { email: string }
-) => Promise<UserT>;
-
-type UserGetByEmailAndUsername = (
-  client: PoolClient,
-  data: { email: string; username: string }
-) => Promise<UserT>;
-
 type UserDeleteSingle = (
   client: PoolClient,
   data: { id: number }
 ) => Promise<UserT>;
 
-type UserUpdatePassword = (
+type UserUpdateSingle = (
   client: PoolClient,
   data: {
-    id: number;
-    password: string;
+    user_id: number;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+    email?: string;
+    password?: string;
   }
+) => Promise<UserT>;
+
+type UserGetSingle = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
 ) => Promise<UserT>;
 
 // -------------------------------------------
@@ -75,7 +62,7 @@ export type UserT = {
 };
 
 export default class User {
-  static register: UserRegister = async (client, data) => {
+  static createSingle: UserCreateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
         "email",
@@ -120,40 +107,33 @@ export default class User {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static getById: UserGetById = async (client, data) => {
-    const user = await client.query<UserT>({
-      text: `SELECT * FROM lucid_users WHERE id = $1`,
-      values: [data.id],
+  static updateSingle: UserUpdateSingle = async (client, data) => {
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["first_name", "last_name", "username", "email", "password"],
+      values: [
+        data.first_name,
+        data.last_name,
+        data.username,
+        data.email,
+        data.password,
+      ],
+      conditional: {
+        hasValues: {
+          updated_at: new Date().toISOString(),
+        },
+      },
     });
 
-    return user.rows[0];
-  };
-  static getByUsername: UserGetByUsername = async (client, data) => {
-    const user = await client.query<UserT>({
-      text: `SELECT * FROM lucid_users WHERE username = $1`,
-      values: [data.username],
+    // -------------------------------------------
+    // Update page
+    const page = await client.query<UserT>({
+      text: `UPDATE lucid_users SET ${columns.formatted.update} WHERE id = $${
+        aliases.value.length + 1
+      } RETURNING *`,
+      values: [...values.value, data.user_id],
     });
 
-    return user.rows[0];
-  };
-  static getByEmail: UserGetByEmail = async (client, data) => {
-    const user = await client.query<UserT>({
-      text: `SELECT * FROM lucid_users WHERE email = $1`,
-      values: [data.email],
-    });
-
-    return user.rows[0];
-  };
-  static getByEmailAndUsername: UserGetByEmailAndUsername = async (
-    client,
-    data
-  ) => {
-    const userExists = await client.query<UserT>({
-      text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
-      values: [data.email, data.username],
-    });
-
-    return userExists.rows[0];
+    return page.rows[0];
   };
   static deleteSingle: UserDeleteSingle = async (client, data) => {
     const user = await client.query<UserT>({
@@ -163,10 +143,10 @@ export default class User {
 
     return user.rows[0];
   };
-  static updatePassword: UserUpdatePassword = async (client, data) => {
+  static getSingle: UserGetSingle = async (client, query_instance) => {
     const user = await client.query<UserT>({
-      text: `UPDATE lucid_users SET password = $1 WHERE id = $2 RETURNING *`,
-      values: [data.password, data.id],
+      text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where}`,
+      values: query_instance.values,
     });
 
     return user.rows[0];

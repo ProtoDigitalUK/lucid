@@ -30,10 +30,18 @@ const registerSingle = async (
   // --------------------------------------------------
   // check if user exists
   const checkUserProm = Promise.all([
-    User.getByEmail(client, {
+    service(
+      usersServices.getSingleQuery,
+      false,
+      client
+    )({
       email: data.email,
     }),
-    User.getByUsername(client, {
+    service(
+      usersServices.getSingleQuery,
+      false,
+      client
+    )({
       username: data.username,
     }),
   ]);
@@ -91,7 +99,7 @@ const registerSingle = async (
 
   // --------------------------------------------------
   // Create the user
-  const user = await User.register(client, {
+  const user = await User.createSingle(client, {
     email: data.email,
     username: data.username,
     password: hashedPassword,

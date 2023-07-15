@@ -106,7 +106,8 @@ const modelErrors = (error) => {
 };
 exports.modelErrors = modelErrors;
 const errorLogger = (error, req, res, next) => {
-    console.log(error);
+    const { message, status } = decodeError(error);
+    console.error((0, console_log_colors_1.red)(`${status} - ${message}`));
     next(error);
 };
 exports.errorLogger = errorLogger;

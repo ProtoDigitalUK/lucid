@@ -1,7 +1,7 @@
 import { Router } from "express";
 import r from "@utils/app/route";
 // Controller
-import updateRoles from "@controllers/users/update-roles";
+import updateSingle from "@controllers/users/update-single";
 import createSingle from "@controllers/users/create-single";
 import deleteSingle from "@controllers/users/delete-single";
 import getMultiple from "@controllers/users/get-multiple";
@@ -12,17 +12,17 @@ import getSingle from "@controllers/users/get-single";
 const router = Router();
 
 r(router, {
-  method: "post",
-  path: "/:id/roles",
+  method: "patch",
+  path: "/:id",
   permissions: {
-    global: ["assign_role"],
+    global: ["update_user"],
   },
   middleware: {
     authenticate: true,
     authoriseCSRF: true,
   },
-  schema: updateRoles.schema,
-  controller: updateRoles.controller,
+  schema: updateSingle.schema,
+  controller: updateSingle.controller,
 });
 
 r(router, {

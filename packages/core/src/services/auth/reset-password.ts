@@ -26,9 +26,9 @@ const resetPassword = async (client: PoolClient, data: ServiceData) => {
   });
 
   // -------------------------------------------
-  // Check if user exists and get them
+  // Update the user's password
   const user = await service(
-    userServices.updatePassword,
+    userServices.updateSingle,
     false,
     client
   )({

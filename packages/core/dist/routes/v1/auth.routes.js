@@ -70,7 +70,7 @@ const router = (0, express_1.Router)();
     controller: verify_reset_password_1.default.controller,
 });
 (0, route_1.default)(router, {
-    method: "post",
+    method: "patch",
     path: "/reset-password/:token",
     middleware: {
         authoriseCSRF: true,

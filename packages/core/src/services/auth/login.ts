@@ -2,8 +2,6 @@ import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
 import service from "@utils/app/service";
-// Models
-import User from "@db/models/User";
 // Serices
 import authServices from "@services/auth";
 import usersServices from "@services/users";
@@ -14,7 +12,11 @@ export interface ServiceData {
 }
 
 const login = async (client: PoolClient, data: ServiceData) => {
-  const user = await User.getByUsername(client, {
+  const user = await service(
+    usersServices.getSingleQuery,
+    false,
+    client
+  )({
     username: data.username,
   });
 

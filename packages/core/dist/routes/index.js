@@ -19,6 +19,7 @@ const media_routes_1 = __importDefault(require("./v1/media.routes"));
 const emails_routes_1 = __importDefault(require("./v1/emails.routes"));
 const forms_routes_1 = __importDefault(require("./v1/forms.routes"));
 const options_routes_1 = __importDefault(require("./v1/options.routes"));
+const account_routes_1 = __importDefault(require("./v1/account.routes"));
 const media_routes_2 = __importDefault(require("./root/media.routes"));
 const initRoutes = (app) => {
     app.use("/api/media", media_routes_2.default);
@@ -38,6 +39,7 @@ const initRoutes = (app) => {
     app.use("/api/v1/emails", emails_routes_1.default);
     app.use("/api/v1/forms", forms_routes_1.default);
     app.use("/api/v1/options", options_routes_1.default);
+    app.use("/api/v1/account", account_routes_1.default);
 };
 exports.default = initRoutes;
 //# sourceMappingURL=index.js.map

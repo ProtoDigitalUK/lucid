@@ -4,7 +4,7 @@ type UserGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) 
     data: UserT[];
     count: number;
 }>;
-type UserRegister = (client: PoolClient, data: {
+type UserCreateSingle = (client: PoolClient, data: {
     first_name?: string;
     last_name?: string;
     email: string;
@@ -12,26 +12,18 @@ type UserRegister = (client: PoolClient, data: {
     password: string;
     super_admin?: boolean;
 }) => Promise<UserT>;
-type UserGetById = (client: PoolClient, data: {
-    id: number;
-}) => Promise<UserT>;
-type UserGetByUsername = (client: PoolClient, data: {
-    username: string;
-}) => Promise<UserT>;
-type UserGetByEmail = (client: PoolClient, data: {
-    email: string;
-}) => Promise<UserT>;
-type UserGetByEmailAndUsername = (client: PoolClient, data: {
-    email: string;
-    username: string;
-}) => Promise<UserT>;
 type UserDeleteSingle = (client: PoolClient, data: {
     id: number;
 }) => Promise<UserT>;
-type UserUpdatePassword = (client: PoolClient, data: {
-    id: number;
-    password: string;
+type UserUpdateSingle = (client: PoolClient, data: {
+    user_id: number;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+    email?: string;
+    password?: string;
 }) => Promise<UserT>;
+type UserGetSingle = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<UserT>;
 export type UserT = {
     id: number;
     super_admin: boolean;
@@ -44,14 +36,11 @@ export type UserT = {
     updated_at: string;
 };
 export default class User {
-    static register: UserRegister;
+    static createSingle: UserCreateSingle;
     static getMultiple: UserGetMultiple;
-    static getById: UserGetById;
-    static getByUsername: UserGetByUsername;
-    static getByEmail: UserGetByEmail;
-    static getByEmailAndUsername: UserGetByEmailAndUsername;
+    static updateSingle: UserUpdateSingle;
     static deleteSingle: UserDeleteSingle;
-    static updatePassword: UserUpdatePassword;
+    static getSingle: UserGetSingle;
 }
 export {};
 //# sourceMappingURL=User.d.ts.map

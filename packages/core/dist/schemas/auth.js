@@ -11,7 +11,7 @@ const getCSRFBody = zod_1.default.object({});
 const getCSRFQuery = zod_1.default.object({});
 const getCSRFParams = zod_1.default.object({});
 const loginBody = zod_1.default.object({
-    username: zod_1.default.string(),
+    username: zod_1.default.string().min(3),
     password: zod_1.default.string().min(8),
 });
 const loginQuery = zod_1.default.object({});
@@ -23,7 +23,7 @@ const registerSuperAdminBody = zod_1.default.object({
     first_name: zod_1.default.string().optional(),
     last_name: zod_1.default.string().optional(),
     email: zod_1.default.string().email(),
-    username: zod_1.default.string(),
+    username: zod_1.default.string().min(3),
     password: zod_1.default.string().min(8),
 });
 const registerSuperAdminQuery = zod_1.default.object({});

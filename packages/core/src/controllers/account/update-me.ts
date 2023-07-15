@@ -2,23 +2,27 @@
 import buildResponse from "@utils/app/build-response";
 import service from "@utils/app/service";
 // Schema
-import usersSchema from "@schemas/users";
+import accountSchema from "@schemas/account";
 // Services
 import usersService from "@services/users";
 
 // --------------------------------------------------
 // Controller
-const updateRolesController: Controller<
-  typeof usersSchema.updateRoles.params,
-  typeof usersSchema.updateRoles.body,
-  typeof usersSchema.updateRoles.query
+const updateMeController: Controller<
+  typeof accountSchema.updateMe.params,
+  typeof accountSchema.updateMe.body,
+  typeof accountSchema.updateMe.query
 > = async (req, res, next) => {
   try {
     const userRoles = await service(
-      usersService.updateRoles,
+      usersService.updateSingle,
       true
     )({
-      user_id: parseInt(req.params.id),
+      user_id: req.auth.id,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      username: req.body.username,
+      email: req.body.email,
       role_ids: req.body.role_ids,
     });
 
@@ -35,6 +39,6 @@ const updateRolesController: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: usersSchema.updateRoles,
-  controller: updateRolesController,
+  schema: accountSchema.updateMe,
+  controller: updateMeController,
 };

@@ -8,6 +8,6 @@ export interface ServiceData {
     password?: string;
     role_ids?: number[];
 }
-declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<void>;
+declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

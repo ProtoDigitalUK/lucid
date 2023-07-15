@@ -5,11 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const service_1 = __importDefault(require("../../utils/app/service"));
-const User_1 = __importDefault(require("../../db/models/User"));
 const auth_1 = __importDefault(require("../auth"));
 const users_1 = __importDefault(require("../users"));
 const login = async (client, data) => {
-    const user = await User_1.default.getByUsername(client, {
+    const user = await (0, service_1.default)(users_1.default.getSingleQuery, false, client)({
         username: data.username,
     });
     if (!user || !user.password) {

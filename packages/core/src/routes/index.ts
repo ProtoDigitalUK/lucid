@@ -15,6 +15,7 @@ import media from "@routes/v1/media.routes";
 import emails from "@routes/v1/emails.routes";
 import forms from "@routes/v1/forms.routes";
 import options from "@routes/v1/options.routes";
+import account from "@routes/v1/account.routes";
 // CDN
 import assets from "@routes/root/media.routes";
 
@@ -38,6 +39,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/emails", emails);
   app.use("/api/v1/forms", forms);
   app.use("/api/v1/options", options);
+  app.use("/api/v1/account", account);
 };
 
 export default initRoutes;

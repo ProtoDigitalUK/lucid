@@ -20,10 +20,10 @@ declare const _default: {
                 value: import("zod").ZodEnum<["asc", "desc"]>;
             }, "strip", import("zod").ZodTypeAny, {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }, {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }>, "many">>;
             page: import("zod").ZodOptional<import("zod").ZodString>;
             per_page: import("zod").ZodOptional<import("zod").ZodString>;
@@ -35,7 +35,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -47,7 +47,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
-                key: "created_at" | "updated_at";
+                key: "updated_at" | "created_at";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -73,10 +73,10 @@ declare const _default: {
             value: import("zod").ZodEnum<["asc", "desc"]>;
         }, "strip", import("zod").ZodTypeAny, {
             value: "desc" | "asc";
-            key: "created_at" | "updated_at";
+            key: "updated_at" | "created_at";
         }, {
             value: "desc" | "asc";
-            key: "created_at" | "updated_at";
+            key: "updated_at" | "created_at";
         }>, "many">>;
         page: import("zod").ZodOptional<import("zod").ZodString>;
         per_page: import("zod").ZodOptional<import("zod").ZodString>;
@@ -88,7 +88,7 @@ declare const _default: {
         } | undefined;
         sort?: {
             value: "desc" | "asc";
-            key: "created_at" | "updated_at";
+            key: "updated_at" | "created_at";
         }[] | undefined;
         page?: string | undefined;
         per_page?: string | undefined;
@@ -100,7 +100,7 @@ declare const _default: {
         } | undefined;
         sort?: {
             value: "desc" | "asc";
-            key: "created_at" | "updated_at";
+            key: "updated_at" | "created_at";
         }[] | undefined;
         page?: string | undefined;
         per_page?: string | undefined;

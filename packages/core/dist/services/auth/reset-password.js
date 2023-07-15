@@ -13,7 +13,7 @@ const resetPassword = async (client, data) => {
         token_type: "password_reset",
         token: data.token,
     });
-    const user = await (0, service_1.default)(users_1.default.updatePassword, false, client)({
+    const user = await (0, service_1.default)(users_1.default.updateSingle, false, client)({
         user_id: userToken.user_id,
         password: data.password,
     });

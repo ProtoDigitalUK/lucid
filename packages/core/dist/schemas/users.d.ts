@@ -1,17 +1,12 @@
 import z from "zod";
 declare const _default: {
     updateSingle: {
-        body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-    };
-    updateRoles: {
         body: z.ZodObject<{
-            role_ids: z.ZodArray<z.ZodNumber, "many">;
+            role_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
         }, "strip", z.ZodTypeAny, {
-            role_ids: number[];
+            role_ids?: number[] | undefined;
         }, {
-            role_ids: number[];
+            role_ids?: number[] | undefined;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{

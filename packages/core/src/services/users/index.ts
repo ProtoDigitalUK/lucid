@@ -4,9 +4,10 @@ import getSingle from "./get-single";
 import registerSingle from "./register-single";
 import registerSuperAdmin from "./register-superadmin";
 import checkIfUserExists from "./check-if-user-exists";
-import updatePassword from "./update-password";
 import deleteSingle from "./delete-single";
 import getMultiple from "./get-multiple";
+import updateSingle from "./update-single";
+import getSingleQuery from "./get-single-query";
 
 export default {
   updateRoles,
@@ -15,7 +16,8 @@ export default {
   registerSingle,
   registerSuperAdmin,
   checkIfUserExists,
-  updatePassword,
   deleteSingle,
   getMultiple,
+  updateSingle,
+  getSingleQuery,
 };

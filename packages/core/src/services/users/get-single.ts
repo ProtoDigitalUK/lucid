@@ -1,21 +1,27 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler";
 import service from "@utils/app/service";
-// Models
-import User from "@db/models/User";
 // Services
 import usersServices from "@services/users";
 // Format
 import formatUser from "@utils/format/format-user";
 
 export interface ServiceData {
-  user_id: number;
+  user_id?: number;
+  email?: string;
+  username?: string;
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
-  const user = await User.getById(client, {
-    id: data.user_id,
+  const user = await service(
+    usersServices.getSingleQuery,
+    false,
+    client
+  )({
+    user_id: data.user_id,
+    email: data.email,
+    username: data.username,
   });
 
   if (!user) {
@@ -24,12 +30,6 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       name: "User Not Found",
       message: "There was an error finding the user.",
       status: 500,
-      errors: modelErrors({
-        id: {
-          code: "user_not_found",
-          message: "There was an error finding the user.",
-        },
-      }),
     });
   }
 

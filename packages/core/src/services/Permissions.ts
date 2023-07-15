@@ -9,7 +9,6 @@ export type PermissionT =
   | "read_role"
   | "update_role"
   | "delete_role"
-  | "assign_role"
   | "create_media"
   | "read_media"
   | "update_media"
@@ -57,13 +56,7 @@ const PERMISSIONS: Record<string, PermissionGroup> = {
   },
   roles: {
     title: "Roles",
-    permissions: [
-      "create_role",
-      "read_role",
-      "update_role",
-      "delete_role",
-      "assign_role",
-    ],
+    permissions: ["create_role", "read_role", "update_role", "delete_role"],
   },
   media: {
     title: "Media",

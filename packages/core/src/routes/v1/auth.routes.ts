@@ -79,7 +79,7 @@ r(router, {
 });
 
 r(router, {
-  method: "post",
+  method: "patch",
   path: "/reset-password/:token",
   middleware: {
     authoriseCSRF: true,

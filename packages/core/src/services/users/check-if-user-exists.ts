@@ -1,8 +1,9 @@
 import { PoolClient } from "pg";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler";
-// Models
-import User from "@db/models/User";
+import service from "@utils/app/service";
+// Serices
+import usersServices from "@services/users";
 
 export interface ServiceData {
   email: string;
@@ -11,7 +12,11 @@ export interface ServiceData {
 
 const checkIfUserExists = async (client: PoolClient, data: ServiceData) => {
   // check if user exists
-  const user = await User.getByEmailAndUsername(client, {
+  const user = await service(
+    usersServices.getSingleQuery,
+    false,
+    client
+  )({
     email: data.email,
     username: data.username,
   });

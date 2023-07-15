@@ -1,11 +1,11 @@
 declare const _default: {
     schema: {
         body: import("zod").ZodObject<{
-            role_ids: import("zod").ZodArray<import("zod").ZodNumber, "many">;
+            role_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
         }, "strip", import("zod").ZodTypeAny, {
-            role_ids: number[];
+            role_ids?: number[] | undefined;
         }, {
-            role_ids: number[];
+            role_ids?: number[] | undefined;
         }>;
         query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
         params: import("zod").ZodObject<{
@@ -23,12 +23,12 @@ declare const _default: {
     }, {
         id: string;
     }>, import("zod").ZodObject<{
-        role_ids: import("zod").ZodArray<import("zod").ZodNumber, "many">;
+        role_ids: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodNumber, "many">>;
     }, "strip", import("zod").ZodTypeAny, {
-        role_ids: number[];
+        role_ids?: number[] | undefined;
     }, {
-        role_ids: number[];
+        role_ids?: number[] | undefined;
     }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;
-//# sourceMappingURL=update-roles.d.ts.map
+//# sourceMappingURL=update-single.d.ts.map

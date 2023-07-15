@@ -12,10 +12,10 @@ const format_user_1 = __importDefault(require("../../utils/format/format-user"))
 const registerSingle = async (client, data, current_user_id) => {
     let superAdmin = data.super_admin;
     const checkUserProm = Promise.all([
-        User_1.default.getByEmail(client, {
+        (0, service_1.default)(users_1.default.getSingleQuery, false, client)({
             email: data.email,
         }),
-        User_1.default.getByUsername(client, {
+        (0, service_1.default)(users_1.default.getSingleQuery, false, client)({
             username: data.username,
         }),
     ]);
@@ -55,7 +55,7 @@ const registerSingle = async (client, data, current_user_id) => {
         }
     }
     const hashedPassword = await argon2_1.default.hash(data.password);
-    const user = await User_1.default.register(client, {
+    const user = await User_1.default.createSingle(client, {
         email: data.email,
         username: data.username,
         password: hashedPassword,

@@ -5,12 +5,13 @@ declare const _default: {
     registerSingle: (client: import("pg").PoolClient, data: import("./register-single").ServiceData, current_user_id?: number | undefined) => Promise<import("../../utils/format/format-user").UserResT>;
     registerSuperAdmin: (client: import("pg").PoolClient, data: import("./register-superadmin").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     checkIfUserExists: (client: import("pg").PoolClient, data: import("./check-if-user-exists").ServiceData) => Promise<never>;
-    updatePassword: (client: import("pg").PoolClient, data: import("./update-password").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     deleteSingle: (client: import("pg").PoolClient, data: import("./delete-single").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
     getMultiple: (client: import("pg").PoolClient, data: import("./get-multiple").ServiceData) => Promise<{
         data: import("../../utils/format/format-user").UserResT[];
         count: number;
     }>;
+    updateSingle: (client: import("pg").PoolClient, data: import("./update-single").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+    getSingleQuery: (client: import("pg").PoolClient, data: import("./get-single-query").ServiceData) => Promise<import("../../db/models/User").UserT>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

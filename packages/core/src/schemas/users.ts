@@ -2,17 +2,11 @@ import z from "zod";
 
 // ------------------------------------
 // UPDATE SINGLE
-const updateSingleBody = z.object({});
-const updateSingleQuery = z.object({});
-const updateSingleParams = z.object({});
-
-// ------------------------------------
-// UPDATE ROLES
-const updateRolesBody = z.object({
-  role_ids: z.array(z.number()),
+const updateSingleBody = z.object({
+  role_ids: z.array(z.number()).optional(),
 });
-const updateRolesQuery = z.object({});
-const updateRolesParams = z.object({
+const updateSingleQuery = z.object({});
+const updateSingleParams = z.object({
   id: z.string(),
 });
 
@@ -78,11 +72,6 @@ export default {
     body: updateSingleBody,
     query: updateSingleQuery,
     params: updateSingleParams,
-  },
-  updateRoles: {
-    body: updateRolesBody,
-    query: updateRolesQuery,
-    params: updateRolesParams,
   },
   createSingle: {
     body: createSingleBody,

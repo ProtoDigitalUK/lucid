@@ -5,7 +5,7 @@ const query_helpers_1 = require("../../utils/app/query-helpers");
 class User {
 }
 _a = User;
-User.register = async (client, data) => {
+User.createSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
         columns: [
             "email",
@@ -45,33 +45,27 @@ User.getMultiple = async (client, query_instance) => {
         count: parseInt(data[1].rows[0].count),
     };
 };
-User.getById = async (client, data) => {
-    const user = await client.query({
-        text: `SELECT * FROM lucid_users WHERE id = $1`,
-        values: [data.id],
+User.updateSingle = async (client, data) => {
+    const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
+        columns: ["first_name", "last_name", "username", "email", "password"],
+        values: [
+            data.first_name,
+            data.last_name,
+            data.username,
+            data.email,
+            data.password,
+        ],
+        conditional: {
+            hasValues: {
+                updated_at: new Date().toISOString(),
+            },
+        },
     });
-    return user.rows[0];
-};
-User.getByUsername = async (client, data) => {
-    const user = await client.query({
-        text: `SELECT * FROM lucid_users WHERE username = $1`,
-        values: [data.username],
+    const page = await client.query({
+        text: `UPDATE lucid_users SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
+        values: [...values.value, data.user_id],
     });
-    return user.rows[0];
-};
-User.getByEmail = async (client, data) => {
-    const user = await client.query({
-        text: `SELECT * FROM lucid_users WHERE email = $1`,
-        values: [data.email],
-    });
-    return user.rows[0];
-};
-User.getByEmailAndUsername = async (client, data) => {
-    const userExists = await client.query({
-        text: `SELECT * FROM lucid_users WHERE email = $1 OR username = $2`,
-        values: [data.email, data.username],
-    });
-    return userExists.rows[0];
+    return page.rows[0];
 };
 User.deleteSingle = async (client, data) => {
     const user = await client.query({
@@ -80,10 +74,10 @@ User.deleteSingle = async (client, data) => {
     });
     return user.rows[0];
 };
-User.updatePassword = async (client, data) => {
+User.getSingle = async (client, query_instance) => {
     const user = await client.query({
-        text: `UPDATE lucid_users SET password = $1 WHERE id = $2 RETURNING *`,
-        values: [data.password, data.id],
+        text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where}`,
+        values: query_instance.values,
     });
     return user.rows[0];
 };

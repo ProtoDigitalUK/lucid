@@ -7,13 +7,7 @@ const PERMISSIONS = {
     },
     roles: {
         title: "Roles",
-        permissions: [
-            "create_role",
-            "read_role",
-            "update_role",
-            "delete_role",
-            "assign_role",
-        ],
+        permissions: ["create_role", "read_role", "update_role", "delete_role"],
     },
     media: {
         title: "Media",

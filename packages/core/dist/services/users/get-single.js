@@ -5,12 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const service_1 = __importDefault(require("../../utils/app/service"));
-const User_1 = __importDefault(require("../../db/models/User"));
 const users_1 = __importDefault(require("../users"));
 const format_user_1 = __importDefault(require("../../utils/format/format-user"));
 const getSingle = async (client, data) => {
-    const user = await User_1.default.getById(client, {
-        id: data.user_id,
+    const user = await (0, service_1.default)(users_1.default.getSingleQuery, false, client)({
+        user_id: data.user_id,
+        email: data.email,
+        username: data.username,
     });
     if (!user) {
         throw new error_handler_1.LucidError({
@@ -18,12 +19,6 @@ const getSingle = async (client, data) => {
             name: "User Not Found",
             message: "There was an error finding the user.",
             status: 500,
-            errors: (0, error_handler_1.modelErrors)({
-                id: {
-                    code: "user_not_found",
-                    message: "There was an error finding the user.",
-                },
-            }),
         });
     }
     const userPermissions = await (0, service_1.default)(users_1.default.getPermissions, false, client)({

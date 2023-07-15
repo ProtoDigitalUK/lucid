@@ -3,11 +3,10 @@ import { add } from "date-fns";
 import C from "@root/constants";
 // Utils
 import service from "@utils/app/service";
-// Models
-import User from "@db/models/User";
 // Serices
 import userTokensServices from "@services/user-tokens";
 import emailServices from "@services/email";
+import usersServices from "@services/users";
 import Config from "@services/Config";
 
 export interface ServiceData {
@@ -19,7 +18,11 @@ const sendResetPassword = async (client: PoolClient, data: ServiceData) => {
 
   // -------------------------------------------
   // Check if user exists
-  const user = await User.getByEmail(client, {
+  const user = await service(
+    usersServices.getSingleQuery,
+    false,
+    client
+  )({
     email: data.email,
   });
 
