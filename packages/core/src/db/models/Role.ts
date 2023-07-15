@@ -1,5 +1,5 @@
+import { PoolClient } from "pg";
 import z from "zod";
-import { getDBClient } from "@db/db";
 // Schema
 import roleSchema from "@schemas/roles";
 // Models
@@ -10,27 +10,49 @@ import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 // -------------------------------------------
 // Types
 type RoleCreateSingle = (
+  client: PoolClient,
   data: z.infer<typeof roleSchema.createSingle.body>
 ) => Promise<RoleT>;
 
-type RoleDeleteSingle = (id: number) => Promise<RoleT>;
+type RoleDeleteSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<RoleT>;
 
-type RoleGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type RoleGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
   data: RoleT[];
   count: number;
 }>;
 
 type RoleUpdateSingle = (
-  id: number,
-  data: z.infer<typeof roleSchema.updateSingle.body>
+  client: PoolClient,
+  data: {
+    id: number;
+    data: z.infer<typeof roleSchema.updateSingle.body>;
+  }
 ) => Promise<RoleT>;
 
-type RoleGetSingle = (id: number) => Promise<RoleT>;
+type RoleGetSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<RoleT>;
 
-type RoleGetSingleByName = (name: string) => Promise<RoleT>;
+type RoleGetSingleByName = (
+  client: PoolClient,
+  data: {
+    name: string;
+  }
+) => Promise<RoleT>;
 
 // -------------------------------------------
-// User
+// Role
 export type RoleT = {
   id: number;
   environment_key: string;
@@ -48,11 +70,7 @@ export type RoleT = {
 };
 
 export default class Role {
-  // -------------------------------------------
-  // Functions
-  static createSingle: RoleCreateSingle = async (data) => {
-    const client = await getDBClient();
-
+  static createSingle: RoleCreateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["name"],
       values: [data.name],
@@ -65,19 +83,15 @@ export default class Role {
 
     return roleRes.rows[0];
   };
-  static deleteSingle: RoleDeleteSingle = async (id) => {
-    const client = await getDBClient();
-
+  static deleteSingle: RoleDeleteSingle = async (client, data) => {
     const roleRes = await client.query<RoleT>({
       text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
-      values: [id],
+      values: [data.id],
     });
 
     return roleRes.rows[0];
   };
-  static getMultiple: RoleGetMultiple = async (query_instance) => {
-    const client = await getDBClient();
-
+  static getMultiple: RoleGetMultiple = async (client, query_instance) => {
     const roles = client.query<RoleT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -95,26 +109,22 @@ export default class Role {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static updateSingle: RoleUpdateSingle = async (id, data) => {
-    const client = await getDBClient();
-
+  static updateSingle: RoleUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["name"],
-      values: [data.name],
+      values: [data.data.name],
     });
 
     const roleRes = await client.query<RoleT>({
       text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${
         aliases.value.length + 1
       } RETURNING *`,
-      values: [...values.value, id],
+      values: [...values.value, data.id],
     });
 
     return roleRes.rows[0];
   };
-  static getSingle: RoleGetSingle = async (id) => {
-    const client = await getDBClient();
-
+  static getSingle: RoleGetSingle = async (client, data) => {
     const roleRes = await client.query<RoleT>({
       text: `SELECT 
           roles.*,
@@ -131,17 +141,15 @@ export default class Role {
           roles.id = $1
         GROUP BY
           roles.id`,
-      values: [id],
+      values: [data.id],
     });
 
     return roleRes.rows[0];
   };
-  static getSingleByName: RoleGetSingleByName = async (name) => {
-    const client = await getDBClient();
-
+  static getSingleByName: RoleGetSingleByName = async (client, data) => {
     const roleRes = await client.query<RoleT>({
       text: `SELECT * FROM lucid_roles WHERE name = $1`,
-      values: [name],
+      values: [data.name],
     });
 
     return roleRes.rows[0];

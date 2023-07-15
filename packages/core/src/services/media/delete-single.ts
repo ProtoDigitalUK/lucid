@@ -13,7 +13,9 @@ export interface ServiceData {
 }
 
 const deleteSingle = async (data: ServiceData) => {
-  const media = await Media.deleteSingle(data.key);
+  const media = await Media.deleteSingle({
+    key: data.key,
+  });
 
   if (!media) {
     throw new LucidError({

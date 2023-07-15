@@ -6,7 +6,9 @@ export interface ServiceData {
 }
 
 const getAll = async (data: ServiceData) => {
-  const rolePermissions = await RolePermission.getAll(data.role_id);
+  const rolePermissions = await RolePermission.getAll({
+    role_id: data.role_id,
+  });
 
   return rolePermissions;
 };

@@ -26,9 +26,12 @@ const updateSingle = async (data: ServiceData) => {
     });
   }
 
-  const role = await Role.updateSingle(data.id, {
-    name: data.name,
-    permission_groups: data.permission_groups,
+  const role = await Role.updateSingle({
+    id: data.id,
+    data: {
+      name: data.name,
+      permission_groups: data.permission_groups,
+    },
   });
 
   if (!role) {

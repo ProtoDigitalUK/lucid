@@ -9,7 +9,10 @@ export interface ServiceData {
 }
 
 const deleteSingle = async (data: ServiceData) => {
-  const category = await Category.deleteSingle(data.environment_key, data.id);
+  const category = await Category.deleteSingle({
+    environment_key: data.environment_key,
+    id: data.id,
+  });
 
   if (!category) {
     throw new LucidError({

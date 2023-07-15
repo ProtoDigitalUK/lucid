@@ -9,7 +9,10 @@ export interface ServiceData {
 }
 
 const getSingle = async (data: ServiceData) => {
-  const category = await Category.getSingle(data.environment_key, data.id);
+  const category = await Category.getSingle({
+    environment_key: data.environment_key,
+    id: data.id,
+  });
 
   if (!category) {
     throw new LucidError({

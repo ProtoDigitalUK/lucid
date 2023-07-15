@@ -1,38 +1,98 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
-type MenuCreateSingle = (data: {
-  environment_key: string;
-  key: string;
-  name: string;
-  description?: string;
-}) => Promise<MenuT>;
+type MenuCreateSingle = (
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    key: string;
+    name: string;
+    description?: string;
+  }
+) => Promise<MenuT>;
 
-type MenuDeleteSingle = (data: {
-  environment_key: string;
-  id: number;
-}) => Promise<MenuT>;
+type MenuDeleteSingle = (
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    id: number;
+  }
+) => Promise<MenuT>;
 
-type MenuGetSingle = (data: {
-  environment_key: string;
-  id: number;
-}) => Promise<MenuT>;
+type MenuGetSingle = (
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    id: number;
+  }
+) => Promise<MenuT>;
 
-type MenuGetMultiple = (query_instance: SelectQueryBuilder) => Promise<{
+type MenuGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
   data: MenuT[];
   count: number;
 }>;
 
-type MenuUpdateSingle = (data: {
-  environment_key: string;
-  id: number;
-  key?: string;
-  name?: string;
-  description?: string;
-}) => Promise<MenuT>;
+type MenuUpdateSingle = (
+  client: PoolClient,
+  data: {
+    environment_key: string;
+    id: number;
+    key?: string;
+    name?: string;
+    description?: string;
+  }
+) => Promise<MenuT>;
+
+type MenuCheckKeyIsUnique = (
+  client: PoolClient,
+  data: {
+    key: string;
+    environment_key: string;
+  }
+) => Promise<MenuT>;
+
+type MenuGetMenuItems = (
+  client: PoolClient,
+  data: {
+    menu_ids: number[];
+  }
+) => Promise<MenuItemT[]>;
+
+type MenuGetSingleItem = (
+  client: PoolClient,
+  data: {
+    id: number;
+    menu_id: number;
+  }
+) => Promise<MenuItemT>;
+
+type MenuDeleteItemsByIds = (
+  client: PoolClient,
+  data: {
+    ids: number[];
+  }
+) => Promise<MenuItemT[]>;
+
+type MenuUpdateMenuItem = (
+  client: PoolClient,
+  data: {
+    item_id: number;
+    query_data: ReturnType<typeof queryDataFormat>;
+  }
+) => Promise<MenuItemT>;
+
+type MenuCreateMenuItem = (
+  client: PoolClient,
+  data: {
+    query_data: ReturnType<typeof queryDataFormat>;
+  }
+) => Promise<MenuItemT>;
 
 // -------------------------------------------
 // Menu
@@ -60,11 +120,7 @@ export type MenuItemT = {
 };
 
 export default class Menu {
-  // -------------------------------------------
-  // Functions
-  static createSingle: MenuCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: MenuCreateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["environment_key", "key", "name", "description"],
       values: [data.environment_key, data.key, data.name, data.description],
@@ -79,9 +135,7 @@ export default class Menu {
 
     return menu.rows[0];
   };
-  static deleteSingle: MenuDeleteSingle = async (data) => {
-    const client = await getDBClient;
-
+  static deleteSingle: MenuDeleteSingle = async (client, data) => {
     const menu = await client.query({
       text: `DELETE FROM lucid_menus WHERE id = $1 AND environment_key = $2 RETURNING *`,
       values: [data.id, data.environment_key],
@@ -89,9 +143,7 @@ export default class Menu {
 
     return menu.rows[0];
   };
-  static getSingle: MenuGetSingle = async (data) => {
-    const client = await getDBClient;
-
+  static getSingle: MenuGetSingle = async (client, data) => {
     const SelectQuery = new SelectQueryBuilder({
       columns: [
         "id",
@@ -133,9 +185,7 @@ export default class Menu {
 
     return menu.rows[0];
   };
-  static getMultiple: MenuGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getMultiple: MenuGetMultiple = async (client, query_instance) => {
     const menus = client.query<MenuT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_menus ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -152,9 +202,7 @@ export default class Menu {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static updateSingle: MenuUpdateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static updateSingle: MenuUpdateSingle = async (client, data) => {
     // -------------------------------------------
     // Build Query Data and Query
     const { columns, aliases, values } = queryDataFormat({
@@ -183,21 +231,17 @@ export default class Menu {
 
     return menu.rows[0];
   };
-  static checkKeyIsUnique = async (key: string, environment_key: string) => {
-    const client = await getDBClient;
-
+  static checkKeyIsUnique: MenuCheckKeyIsUnique = async (client, data) => {
     const findMenu = await client.query<MenuT>({
       text: `SELECT * FROM lucid_menus WHERE key = $1 AND environment_key = $2`,
-      values: [key, environment_key],
+      values: [data.key, data.environment_key],
     });
 
     return findMenu.rows[0];
   };
   // -------------------------------------------
   // Menu Items
-  static getMenuItems = async (menu_ids: number[]) => {
-    const client = await getDBClient;
-
+  static getMenuItems: MenuGetMenuItems = async (client, data) => {
     const menuItems = await client.query<MenuItemT>({
       text: `SELECT
           mi.*,
@@ -208,54 +252,41 @@ export default class Menu {
           lucid_pages p ON mi.page_id = p.id
         WHERE
           mi.menu_id = ANY($1::int[])`,
-      values: [menu_ids],
+      values: [data.menu_ids],
     });
 
     return menuItems.rows;
   };
-  static getSingleItem = async (id: number, menu_id: number) => {
-    const client = await getDBClient;
-
+  static getSingleItem: MenuGetSingleItem = async (client, data) => {
     const menuItem = await client.query<MenuItemT>({
       text: `SELECT * FROM lucid_menu_items WHERE id = $1 AND menu_id = $2`,
-      values: [id, menu_id],
+      values: [data.id, data.menu_id],
     });
 
     return menuItem.rows[0];
   };
-  static deleteItemsByIds = async (ids: number[]) => {
-    const client = await getDBClient;
-
+  static deleteItemsByIds: MenuDeleteItemsByIds = async (client, data) => {
     const deleted = await client.query<MenuItemT>({
       text: `DELETE FROM lucid_menu_items WHERE id = ANY($1::int[]) RETURNING *`,
-      values: [ids],
+      values: [data.ids],
     });
 
     return deleted.rows;
   };
-  static updateMenuItem = async (
-    item_id: number,
-    query_data: ReturnType<typeof queryDataFormat>
-  ) => {
-    const client = await getDBClient;
-
+  static updateMenuItem: MenuUpdateMenuItem = async (client, data) => {
     const res = await client.query<MenuItemT>({
       text: `UPDATE lucid_menu_items SET ${
-        query_data.columns.formatted.update
-      } WHERE id = $${query_data.aliases.value.length + 1} RETURNING *`,
-      values: [...query_data.values.value, item_id],
+        data.query_data.columns.formatted.update
+      } WHERE id = $${data.query_data.aliases.value.length + 1} RETURNING *`,
+      values: [...data.query_data.values.value, data.item_id],
     });
 
     return res.rows[0];
   };
-  static createMenuItem = async (
-    query_data: ReturnType<typeof queryDataFormat>
-  ) => {
-    const client = await getDBClient;
-
+  static createMenuItem: MenuCreateMenuItem = async (client, data) => {
     const res = await client.query<MenuItemT>({
-      text: `INSERT INTO lucid_menu_items (${query_data.columns.formatted.insert}) VALUES (${query_data.aliases.formatted.insert}) RETURNING *`,
-      values: query_data.values.value,
+      text: `INSERT INTO lucid_menu_items (${data.query_data.columns.formatted.insert}) VALUES (${data.query_data.aliases.formatted.insert}) RETURNING *`,
+      values: data.query_data.values.value,
     });
 
     return res.rows[0];

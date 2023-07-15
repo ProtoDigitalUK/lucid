@@ -23,7 +23,10 @@ const updatePassword = async (data: ServiceData) => {
   // -------------------------------------------
   // Update the user's password
   const hashedPassword = await argon2.hash(data.password);
-  const user = await User.updatePassword(data.user_id, hashedPassword);
+  const user = await User.updatePassword({
+    id: data.user_id,
+    password: hashedPassword,
+  });
 
   if (!user) {
     throw new LucidError({

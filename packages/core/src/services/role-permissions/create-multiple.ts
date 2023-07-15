@@ -13,11 +13,11 @@ export interface ServiceData {
 
 const createMultiple = async (data: ServiceData) => {
   const permissionsPromise = data.permissions.map((permission) => {
-    return RolePermission.createSingle(
-      data.role_id,
-      permission.permission,
-      permission.environment_key
-    );
+    return RolePermission.createSingle({
+      role_id: data.role_id,
+      permission: permission.permission,
+      environment_key: permission.environment_key,
+    });
   });
 
   return await Promise.all(permissionsPromise);

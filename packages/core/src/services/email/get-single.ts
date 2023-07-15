@@ -10,7 +10,9 @@ export interface ServiceData {
 }
 
 const getSingle = async (data: ServiceData) => {
-  const email = await Email.getSingle(data.id);
+  const email = await Email.getSingle({
+    id: data.id,
+  });
 
   if (!email) {
     throw new LucidError({

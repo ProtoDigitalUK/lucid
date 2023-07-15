@@ -8,7 +8,9 @@ export interface ServiceData {
 }
 
 const deleteSingle = async (data: ServiceData) => {
-  const role = await Role.deleteSingle(data.id);
+  const role = await Role.deleteSingle({
+    id: data.id,
+  });
 
   if (!role) {
     throw new LucidError({

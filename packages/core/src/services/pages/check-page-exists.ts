@@ -9,7 +9,10 @@ export interface ServiceData {
 }
 
 const checkPageExists = async (data: ServiceData) => {
-  const page = await Page.getSingleBasic(data.id, data.environment_key);
+  const page = await Page.getSingleBasic({
+    id: data.id,
+    environment_key: data.environment_key,
+  });
 
   if (!page) {
     throw new LucidError({

@@ -8,7 +8,9 @@ export interface ServiceData {
 }
 
 const getMultipleByIds = async (data: ServiceData) => {
-  const mediasRes = await Media.getMultipleByIds(data.ids);
+  const mediasRes = await Media.getMultipleByIds({
+    ids: data.ids,
+  });
 
   if (!mediasRes) {
     return [];

@@ -10,7 +10,9 @@ export interface ServiceData {
 }
 
 const getSingle = async (data: ServiceData) => {
-  const environment = await Environment.getSingle(data.key);
+  const environment = await Environment.getSingle({
+    key: data.key,
+  });
 
   if (!environment) {
     throw new LucidError({

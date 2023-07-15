@@ -9,7 +9,10 @@ export interface ServiceData {
 }
 
 const checkKeyUnique = async (data: ServiceData) => {
-  const menu = await Menu.checkKeyIsUnique(data.key, data.environment_key);
+  const menu = await Menu.checkKeyIsUnique({
+    key: data.key,
+    environment_key: data.environment_key,
+  });
 
   if (menu) {
     throw new LucidError({

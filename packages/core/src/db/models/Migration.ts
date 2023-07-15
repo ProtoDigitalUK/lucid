@@ -1,14 +1,16 @@
-import { getDBClient } from "@db/db";
+import { PoolClient } from "pg";
 
 // -------------------------------------------
 // Types
+type MigrationAll = (client: PoolClient) => Promise<MigrationT[]>;
 
-type MigrationAll = () => Promise<MigrationT[]>;
-
-type MigrationCreate = (data: {
-  file: string;
-  rawSql: string;
-}) => Promise<void>;
+type MigrationCreate = (
+  client: PoolClient,
+  data: {
+    file: string;
+    rawSql: string;
+  }
+) => Promise<void>;
 
 // -------------------------------------------
 // Migration
@@ -19,11 +21,7 @@ export type MigrationT = {
 };
 
 export default class Migration {
-  // -------------------------------------------
-  // Public
-  static all: MigrationAll = async () => {
-    const client = await getDBClient();
-
+  static all: MigrationAll = async (client) => {
     try {
       const migrations = await client.query<MigrationT>(
         `SELECT * FROM lucid_migrations`
@@ -32,26 +30,16 @@ export default class Migration {
     } catch (err) {
       // as this is never used within the app, we dont throw an error to the request
       return [];
-    } finally {
-      client.release();
     }
   };
-  static create: MigrationCreate = async (data) => {
-    const client = await getDBClient();
-
-    try {
-      const { file, rawSql } = data;
-      await client.query({
-        text: rawSql,
-      });
-      await client.query({
-        text: `INSERT INTO lucid_migrations (file) VALUES ($1)`,
-        values: [file],
-      });
-    } finally {
-      client.release();
-    }
+  static create: MigrationCreate = async (client, data) => {
+    const { file, rawSql } = data;
+    await client.query({
+      text: rawSql,
+    });
+    await client.query({
+      text: `INSERT INTO lucid_migrations (file) VALUES ($1)`,
+      values: [file],
+    });
   };
-  // -------------------------------------------
-  // Util Functions
 }

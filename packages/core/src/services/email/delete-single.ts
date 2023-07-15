@@ -8,7 +8,9 @@ export interface ServiceData {
 }
 
 const deleteSingle = async (data: ServiceData) => {
-  const email = await Email.deleteSingle(data.id);
+  const email = await Email.deleteSingle({
+    id: data.id,
+  });
 
   if (email) {
     throw new LucidError({

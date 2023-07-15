@@ -33,7 +33,9 @@ const getSingle = async (data: ServiceData) => {
     });
   }
 
-  let formData = await FormSubmission.getAllFormData([formSubmission.id]);
+  let formData = await FormSubmission.getAllFormData({
+    submission_ids: [formSubmission.id],
+  });
   formData = formData.filter(
     (field) => field.form_submission_id === formSubmission.id
   );

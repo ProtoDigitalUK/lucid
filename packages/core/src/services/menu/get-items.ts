@@ -6,7 +6,9 @@ export interface ServiceData {
 }
 
 const getItems = async (data: ServiceData) => {
-  const items = await Menu.getMenuItems(data.menu_ids);
+  const items = await Menu.getMenuItems({
+    menu_ids: data.menu_ids,
+  });
   return items;
 };
 

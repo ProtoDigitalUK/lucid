@@ -9,7 +9,10 @@ export interface ServiceData {
 }
 
 const getSingleItem = async (data: ServiceData) => {
-  const menuItem = await Menu.getSingleItem(data.id, data.menu_id);
+  const menuItem = await Menu.getSingleItem({
+    id: data.id,
+    menu_id: data.menu_id,
+  });
 
   if (!menuItem) {
     throw new LucidError({

@@ -44,7 +44,9 @@ const toggleReadAt = async (data: ServiceData) => {
     });
   }
 
-  let formData = await FormSubmission.getAllFormData([updateFormSubmission.id]);
+  let formData = await FormSubmission.getAllFormData({
+    submission_ids: [updateFormSubmission.id],
+  });
   formData = formData.filter(
     (field) => field.form_submission_id === updateFormSubmission.id
   );

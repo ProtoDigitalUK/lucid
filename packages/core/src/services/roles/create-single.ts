@@ -45,7 +45,9 @@ const createSingle = async (data: ServiceData) => {
         permissions: parsePermissions,
       });
     } catch (error) {
-      await Role.deleteSingle(role.id);
+      await Role.deleteSingle({
+        id: role.id,
+      });
       throw error;
     }
   }

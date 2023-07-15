@@ -8,7 +8,9 @@ export interface ServiceData {
 }
 
 const deleteItemsByIds = async (data: ServiceData) => {
-  const deletedItems = await Menu.deleteItemsByIds(data.ids);
+  const deletedItems = await Menu.deleteItemsByIds({
+    ids: data.ids,
+  });
 
   if (deletedItems.length !== data.ids.length) {
     throw new LucidError({

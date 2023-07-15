@@ -10,7 +10,9 @@ export interface ServiceData {
 }
 
 const getByName = async (data: ServiceData) => {
-  const option = await Option.getByName(data.name);
+  const option = await Option.getByName({
+    name: data.name,
+  });
 
   if (!option) {
     throw new LucidError({

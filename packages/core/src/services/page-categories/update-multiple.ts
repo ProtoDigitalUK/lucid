@@ -11,9 +11,9 @@ export interface ServiceData {
 
 const updateMultiple = async (data: ServiceData) => {
   // get all page_categories for the page
-  const pageCategoriesRes = await PageCategory.getMultipleByPageId(
-    data.page_id
-  );
+  const pageCategoriesRes = await PageCategory.getMultipleByPageId({
+    page_id: data.page_id,
+  });
 
   // Categories to add
   const categoriesToAdd = data.category_ids.filter(

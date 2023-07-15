@@ -8,7 +8,9 @@ export interface ServiceData {
 }
 
 const checkNameIsUnique = async (data: ServiceData) => {
-  const role = await Role.getSingleByName(data.name);
+  const role = await Role.getSingleByName({
+    name: data.name,
+  });
 
   if (role) {
     throw new LucidError({

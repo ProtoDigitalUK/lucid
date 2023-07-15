@@ -72,7 +72,8 @@ const updateSingle = async (data: ServiceData) => {
 
   // -------------------------------------------
   // Update Media Row
-  const mediaUpdate = await Media.updateSingle(data.key, {
+  const mediaUpdate = await Media.updateSingle({
+    key: data.key,
     name: data.data.name,
     alt: data.data.alt,
     meta: meta,

@@ -17,7 +17,9 @@ const deleteSingle = async (data: ServiceData) => {
     key: data.key,
   });
 
-  const environment = await Environment.deleteSingle(data.key);
+  const environment = await Environment.deleteSingle({
+    key: data.key,
+  });
 
   if (!environment) {
     throw new LucidError({

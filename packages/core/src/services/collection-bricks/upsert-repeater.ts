@@ -18,7 +18,9 @@ const upsertRepeater = async (data: ServiceData) => {
 
   // Check if id exists. If it does, update, else create.
   if (brickField.fields_id && brickField.group_position !== undefined) {
-    const repeaterRes = await CollectionBrick.updateRepeater(brickField);
+    const repeaterRes = await CollectionBrick.updateRepeater({
+      field: brickField,
+    });
     repeaterId = repeaterRes.fields_id;
   } else {
     await collectionBricksService.checkFieldExists({
@@ -30,10 +32,10 @@ const upsertRepeater = async (data: ServiceData) => {
       create: true,
     });
 
-    const repeaterRes = await CollectionBrick.createRepeater(
-      data.brick_id,
-      data.data
-    );
+    const repeaterRes = await CollectionBrick.createRepeater({
+      brick_id: data.brick_id,
+      field: brickField,
+    });
     repeaterId = repeaterRes.fields_id;
   }
 

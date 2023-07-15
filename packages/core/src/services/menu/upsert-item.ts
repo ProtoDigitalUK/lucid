@@ -49,13 +49,18 @@ const upsertItem = async (data: ServiceData) => {
       menu_id: data.menu_id,
     });
 
-    const updatedItem = await Menu.updateMenuItem(data.item.id, queryData);
+    const updatedItem = await Menu.updateMenuItem({
+      item_id: data.item.id,
+      query_data: queryData,
+    });
     newParentId = updatedItem.id;
     itemsRes.push(updatedItem);
   }
   // Create item
   else {
-    const newItem = await Menu.createMenuItem(queryData);
+    const newItem = await Menu.createMenuItem({
+      query_data: queryData,
+    });
     newParentId = newItem.id;
     itemsRes.push(newItem);
   }

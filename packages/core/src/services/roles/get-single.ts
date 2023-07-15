@@ -8,7 +8,9 @@ export interface ServiceData {
 }
 
 const getSingle = async (data: ServiceData) => {
-  const role = await Role.getSingle(data.id);
+  const role = await Role.getSingle({
+    id: data.id,
+  });
 
   if (!role) {
     throw new LucidError({

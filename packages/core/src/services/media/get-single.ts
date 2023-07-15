@@ -10,7 +10,9 @@ export interface ServiceData {
 }
 
 const getSingle = async (data: ServiceData) => {
-  const media = await Media.getSingle(data.key);
+  const media = await Media.getSingle({
+    key: data.key,
+  });
 
   if (!media) {
     throw new LucidError({

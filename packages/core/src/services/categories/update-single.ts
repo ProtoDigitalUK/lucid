@@ -44,7 +44,13 @@ const updateSingle = async (data: ServiceData) => {
     }
   }
 
-  return await Category.updateSingle(data.environment_key, data.id, data.data);
+  return await Category.updateSingle({
+    environment_key: data.environment_key,
+    id: data.id,
+    title: data.data.title,
+    slug: data.data.slug,
+    description: data.data.description,
+  });
 };
 
 export default updateSingle;

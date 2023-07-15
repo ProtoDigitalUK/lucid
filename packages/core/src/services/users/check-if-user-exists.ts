@@ -11,7 +11,10 @@ export interface ServiceData {
 
 const checkIfUserExists = async (client: PoolClient, data: ServiceData) => {
   // check if user exists
-  const user = await User.checkIfUserExistsAlready(data.email, data.username);
+  const user = await User.getByEmailAndUsername(client, {
+    email: data.email,
+    username: data.username,
+  });
 
   if (user) {
     throw new LucidError({

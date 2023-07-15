@@ -8,9 +8,11 @@ export interface ServiceData {
 }
 
 const checkKeyExists = async (data: ServiceData) => {
-  const environment = await Environment.checkKeyExists(data.key);
+  const environment = await Environment.getSingle({
+    key: data.key,
+  });
 
-  if (environment.length > 0) {
+  if (environment) {
     throw new LucidError({
       type: "basic",
       name: "Environment already exists",

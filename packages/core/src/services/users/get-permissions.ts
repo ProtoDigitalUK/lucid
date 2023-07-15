@@ -9,7 +9,9 @@ export interface ServiceData {
 }
 
 const getPermissions = async (client: PoolClient, data: ServiceData) => {
-  const userPermissions = await UserRole.getPermissions(data.user_id);
+  const userPermissions = await UserRole.getPermissions(client, {
+    user_id: data.user_id,
+  });
 
   if (!userPermissions) {
     return {

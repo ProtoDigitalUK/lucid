@@ -14,7 +14,9 @@ export interface ServiceData {
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
-  const user = await User.getById(data.user_id);
+  const user = await User.getById(client, {
+    id: data.user_id,
+  });
 
   if (!user) {
     throw new LucidError({

@@ -1,46 +1,69 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
 
 // -------------------------------------------
 // Types
-type FormSubmissionCreateSingle = (data: {
-  form_key: string;
-  environment_key: string;
-}) => Promise<FormSubmissionsT>;
+type FormSubmissionCreateSingle = (
+  client: PoolClient,
+  data: {
+    form_key: string;
+    environment_key: string;
+  }
+) => Promise<FormSubmissionsT>;
 
-type FormSubmissionCreateFormData = (data: {
-  form_submission_id: number;
-  name: string;
-  type: "string" | "number" | "boolean";
-  value: string | number | boolean;
-}) => Promise<FormDataT>;
+type FormSubmissionCreateFormData = (
+  client: PoolClient,
+  data: {
+    form_submission_id: number;
+    name: string;
+    type: "string" | "number" | "boolean";
+    value: string | number | boolean;
+  }
+) => Promise<FormDataT>;
 
-type FormSubmissionGetSingle = (data: {
-  id: number;
-  form_key: string;
-  environment_key: string;
-}) => Promise<FormSubmissionsT>;
+type FormSubmissionGetSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    form_key: string;
+    environment_key: string;
+  }
+) => Promise<FormSubmissionsT>;
 
 type FormSubmissionGetMultiple = (
+  client: PoolClient,
   query_instance: SelectQueryBuilder
 ) => Promise<{
   data: FormSubmissionsT[];
   count: number;
 }>;
 
-type FormSubmissionToggleReadAt = (data: {
-  id: number;
-  form_key: string;
-  environment_key: string;
-  read_at: Date | null;
-}) => Promise<FormSubmissionsT>;
+type FormSubmissionToggleReadAt = (
+  client: PoolClient,
+  data: {
+    id: number;
+    form_key: string;
+    environment_key: string;
+    read_at: Date | null;
+  }
+) => Promise<FormSubmissionsT>;
 
-type FormSubmissionDeleteSingle = (data: {
-  id: number;
-  form_key: string;
-  environment_key: string;
-}) => Promise<FormSubmissionsT>;
+type FormSubmissionDeleteSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    form_key: string;
+    environment_key: string;
+  }
+) => Promise<FormSubmissionsT>;
+
+type FormSubmissionGetAllFormData = (
+  client: PoolClient,
+  data: {
+    submission_ids: number[];
+  }
+) => Promise<FormDataT[]>;
 
 // -------------------------------------------
 // Form Submission
@@ -70,9 +93,7 @@ export type FormDataT = {
 export default class FormSubmission {
   // -------------------------------------------
   // Submissions
-  static createSingle: FormSubmissionCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: FormSubmissionCreateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["form_key", "environment_key"],
       values: [data.form_key, data.environment_key],
@@ -85,9 +106,7 @@ export default class FormSubmission {
 
     return res.rows[0];
   };
-  static getSingle: FormSubmissionGetSingle = async (data) => {
-    const client = await getDBClient;
-
+  static getSingle: FormSubmissionGetSingle = async (client, data) => {
     // Get form submission
     const formSubmission = await client.query<FormSubmissionsT>({
       text: `SELECT * FROM lucid_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3;`,
@@ -96,9 +115,10 @@ export default class FormSubmission {
 
     return formSubmission.rows[0];
   };
-  static getMultiple: FormSubmissionGetMultiple = async (query_instance) => {
-    const client = await getDBClient;
-
+  static getMultiple: FormSubmissionGetMultiple = async (
+    client,
+    query_instance
+  ) => {
     const submissions = client.query<FormSubmissionsT>({
       text: `SELECT ${query_instance.query.select} FROM lucid_form_submissions ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -115,9 +135,7 @@ export default class FormSubmission {
       count: parseInt(data[1].rows[0].count),
     };
   };
-  static toggleReadAt: FormSubmissionToggleReadAt = async (data) => {
-    const client = await getDBClient;
-
+  static toggleReadAt: FormSubmissionToggleReadAt = async (client, data) => {
     // Update form submission
     const updatedFormSubmission = await client.query<FormSubmissionsT>({
       text: `UPDATE lucid_form_submissions SET read_at = $1 WHERE id = $2 AND form_key = $3 AND environment_key = $4 RETURNING *;`,
@@ -126,9 +144,7 @@ export default class FormSubmission {
 
     return updatedFormSubmission.rows[0];
   };
-  static deleteSingle: FormSubmissionDeleteSingle = async (data) => {
-    const client = await getDBClient;
-
+  static deleteSingle: FormSubmissionDeleteSingle = async (client, data) => {
     // Delete form submission
     const formSubmission = await client.query<FormSubmissionsT>({
       text: `DELETE FROM lucid_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3 RETURNING *;`,
@@ -139,9 +155,10 @@ export default class FormSubmission {
   };
   // -------------------------------------------
   // Submission Data
-  static createFormData: FormSubmissionCreateFormData = async (data) => {
-    const client = await getDBClient;
-
+  static createFormData: FormSubmissionCreateFormData = async (
+    client,
+    data
+  ) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
         "form_submission_id",
@@ -166,12 +183,13 @@ export default class FormSubmission {
 
     return formData.rows[0];
   };
-  static getAllFormData = async (submission_ids: number[]) => {
-    const client = await getDBClient;
-
+  static getAllFormData: FormSubmissionGetAllFormData = async (
+    client,
+    data
+  ) => {
     const res = await client.query<FormDataT>({
       text: `SELECT * FROM lucid_form_data WHERE form_submission_id = ANY($1)`,
-      values: [submission_ids],
+      values: [data.submission_ids],
     });
 
     return res.rows;

@@ -14,10 +14,10 @@ export interface ServiceData {
 */
 
 const verifyCategoriesInCollection = async (data: ServiceData) => {
-  const pageCategories = await PageCategory.getMultiple(
-    data.category_ids,
-    data.collection_key
-  );
+  const pageCategories = await PageCategory.getMultiple({
+    category_ids: data.category_ids,
+    collection_key: data.collection_key,
+  });
 
   if (pageCategories.length !== data.category_ids.length) {
     throw new LucidError({

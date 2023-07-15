@@ -16,7 +16,9 @@ const deleteSingle = async (data: ServiceData) => {
     user_id: data.user_id,
   });
 
-  const user = await User.deleteSingle(data.user_id);
+  const user = await User.deleteSingle({
+    id: data.user_id,
+  });
 
   if (!user) {
     throw new LucidError({

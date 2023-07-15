@@ -12,24 +12,27 @@ export interface ServiceData {
 */
 
 const resetHomepages = async (data: ServiceData) => {
-  const homepages = await Page.getNonCurrentHomepages(
-    data.current,
-    data.environment_key
-  );
+  const homepages = await Page.getNonCurrentHomepages({
+    current: data.current,
+    environment_key: data.environment_key,
+  });
 
   const updatePromises = homepages.map(async (homepage) => {
     let newSlug = slugify(homepage.title, { lower: true, strict: true });
-    const slugExists = await Page.checkSlugExistence(
-      newSlug,
-      homepage.id,
-      data.environment_key
-    );
+    const slugExists = await Page.checkSlugExistence({
+      slug: newSlug,
+      id: homepage.id,
+      environment_key: data.environment_key,
+    });
 
     if (slugExists) {
       newSlug += `-${homepage.id}`;
     }
 
-    return Page.updatePageToNonHomepage(homepage.id, newSlug);
+    return Page.updatePageToNonHomepage({
+      id: homepage.id,
+      slug: newSlug,
+    });
   });
 
   await Promise.all(updatePromises);

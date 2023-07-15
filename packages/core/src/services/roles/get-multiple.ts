@@ -3,7 +3,6 @@ import z from "zod";
 import { SelectQueryBuilder } from "@utils/app/query-helpers";
 // Models
 import Role from "@db/models/Role";
-import RolePermission from "@db/models/RolePermission";
 // Schema
 import rolesSchema from "@schemas/roles";
 import rolePermService from "@services/role-permissions";

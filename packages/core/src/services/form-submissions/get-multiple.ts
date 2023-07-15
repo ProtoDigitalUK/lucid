@@ -69,7 +69,9 @@ const getMultiple = async (data: ServiceData) => {
     const formSubmissionIds = formSubmissionsRes.data.map(
       (submission) => submission.id
     );
-    formData = await FormSubmission.getAllFormData(formSubmissionIds);
+    formData = await FormSubmission.getAllFormData({
+      submission_ids: formSubmissionIds,
+    });
   }
 
   const formattedSubmissions = formSubmissionsRes.data.map((submission) => {

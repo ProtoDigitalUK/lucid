@@ -6,7 +6,9 @@ export interface ServiceData {
 }
 
 const deleteAll = async (data: ServiceData) => {
-  const permissions = await RolePermission.deleteAll(data.role_id);
+  const permissions = await RolePermission.deleteAll({
+    role_id: data.role_id,
+  });
 
   return permissions;
 };

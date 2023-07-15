@@ -30,18 +30,18 @@ const upsertField = async (data: ServiceData) => {
 
   // Update the field
   if (brickField.fields_id) {
-    const fieldRes = await CollectionBrick.updateField(
-      data.brick_id,
-      brickField
-    );
+    const fieldRes = await CollectionBrick.updateField({
+      brick_id: data.brick_id,
+      field: brickField,
+    });
     fieldId = fieldRes.fields_id;
   }
   // Create the field
   else {
-    const fieldRes = await CollectionBrick.createField(
-      data.brick_id,
-      brickField
-    );
+    const fieldRes = await CollectionBrick.createField({
+      brick_id: data.brick_id,
+      field: brickField,
+    });
 
     if (!fieldRes) {
       throw new LucidError({

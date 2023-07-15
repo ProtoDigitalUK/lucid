@@ -1,23 +1,36 @@
-import getDBClient from "@db/db";
+import { PoolClient } from "pg";
 
 // -------------------------------------------
 // Types
-type UserTokenCreateSingle = (data: {
-  user_id: number;
-  token_type: UserTokenT["token_type"];
-  token: string;
-  expiry_date: string;
-}) => Promise<UserTokenT>;
+type UserTokenCreateSingle = (
+  client: PoolClient,
+  data: {
+    user_id: number;
+    token_type: UserTokenT["token_type"];
+    token: string;
+    expiry_date: string;
+  }
+) => Promise<UserTokenT>;
 
-type UserTokenGetByToken = (data: {
-  token: string;
-  token_type: UserTokenT["token_type"];
-}) => Promise<UserTokenT>;
+type UserTokenGetByToken = (
+  client: PoolClient,
+  data: {
+    token: string;
+    token_type: UserTokenT["token_type"];
+  }
+) => Promise<UserTokenT>;
 
-type UserTokenDeleteSingle = (data: { id: number }) => Promise<UserTokenT>;
+type UserTokenDeleteSingle = (
+  client: PoolClient,
+  data: { id: number }
+) => Promise<UserTokenT>;
+
+type UserTokenRemoveExpiredTokens = (
+  client: PoolClient
+) => Promise<UserTokenT[]>;
 
 // -------------------------------------------
-// User Roles
+// User Token
 export type UserTokenT = {
   id: number;
   user_id: number;
@@ -28,9 +41,7 @@ export type UserTokenT = {
 };
 
 export default class UserToken {
-  static createSingle: UserTokenCreateSingle = async (data) => {
-    const client = await getDBClient;
-
+  static createSingle: UserTokenCreateSingle = async (client, data) => {
     const userToken = await client.query<UserTokenT>({
       text: `
             INSERT INTO lucid_user_tokens (
@@ -50,9 +61,7 @@ export default class UserToken {
 
     return userToken.rows[0];
   };
-  static getByToken: UserTokenGetByToken = async (data) => {
-    const client = await getDBClient;
-
+  static getByToken: UserTokenGetByToken = async (client, data) => {
     const userToken = await client.query<UserTokenT>({
       text: `
             SELECT * FROM lucid_user_tokens
@@ -65,9 +74,7 @@ export default class UserToken {
 
     return userToken.rows[0];
   };
-  static deleteSingle: UserTokenDeleteSingle = async (data) => {
-    const client = await getDBClient;
-
+  static deleteSingle: UserTokenDeleteSingle = async (client, data) => {
     const userToken = await client.query<UserTokenT>({
       text: `
             DELETE FROM lucid_user_tokens
@@ -78,9 +85,7 @@ export default class UserToken {
 
     return userToken.rows[0];
   };
-  static removeExpiredTokens = async () => {
-    const client = await getDBClient;
-
+  static removeExpiredTokens: UserTokenRemoveExpiredTokens = async (client) => {
     const userToken = await client.query<UserTokenT>({
       text: `
             DELETE FROM lucid_user_tokens
@@ -88,6 +93,6 @@ export default class UserToken {
         `,
     });
 
-    return userToken.rows[0];
+    return userToken.rows;
   };
 }

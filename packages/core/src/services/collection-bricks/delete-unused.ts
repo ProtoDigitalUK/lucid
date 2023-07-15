@@ -14,11 +14,11 @@ export interface ServiceData {
 }
 
 const deleteUnused = async (data: ServiceData) => {
-  const allBricks = await CollectionBrick.getAllBricks(
-    data.type,
-    data.reference_id,
-    data.brick_type
-  );
+  const allBricks = await CollectionBrick.getAllBricks({
+    type: data.type,
+    reference_id: data.reference_id,
+    brick_type: data.brick_type,
+  });
   const brickIds = allBricks.map((brick) => brick.id);
 
   // Filter out the bricks that are still in use
@@ -26,7 +26,9 @@ const deleteUnused = async (data: ServiceData) => {
 
   // Delete the bricks
   const promises = bricksToDelete.map((id) =>
-    CollectionBrick.deleteSingleBrick(id)
+    CollectionBrick.deleteSingleBrick({
+      brick_id: id,
+    })
   );
 
   try {
