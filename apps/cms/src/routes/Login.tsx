@@ -1,11 +1,18 @@
-import type { Component } from "solid-js";
-import { Link } from "@solidjs/router";
+import { type Component } from "solid-js";
+
+// Components
+import LoginForm from "@/components/Forms/LoginForm";
 
 const LoginRoute: Component = () => {
+  // ----------------------------------------
+  // Render
   return (
-    <div>
-      <h1>Login Page</h1>
-      <Link href="/">Dashboard</Link>
+    <div class="">
+      <h1 class="mb-2">Welcome back</h1>
+      <p class="mb-10">Sign in and start managing your content in style</p>
+      <div class="mb-10">
+        <LoginForm showForgotPassword={true} />
+      </div>
     </div>
   );
 };

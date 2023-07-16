@@ -10,6 +10,8 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/classnames": "^2.3.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "autoprefixer": "^10.4.14",
@@ -26,6 +28,8 @@
   },
   "dependencies": {
     "@tanstack/solid-query": "^4.29.25",
+    "classnames": "^2.3.2",
+    "solid-icons": "^1.0.11",
     "solid-js": "^1.7.6"
   }
 }
