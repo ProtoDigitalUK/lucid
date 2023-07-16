@@ -4,7 +4,7 @@ import { Link } from "@solidjs/router";
 const DashboardRoute: Component = () => {
   return (
     <div>
-      <h1>App</h1>
+      <h1 class="text-6xl font-bold text-red-700">App</h1>
       <Link href="/login">Login</Link>
     </div>
   );
