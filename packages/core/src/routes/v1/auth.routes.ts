@@ -16,7 +16,7 @@ import resetPassword from "@controllers/auth/reset-password";
 const router = Router();
 
 r(router, {
-  method: "get",
+  method: "post",
   path: "/login",
   middleware: {
     authoriseCSRF: true,
@@ -26,7 +26,7 @@ r(router, {
 });
 
 r(router, {
-  method: "get",
+  method: "post",
   path: "/logout",
   schema: logout.schema,
   controller: logout.controller,
@@ -37,7 +37,6 @@ r(router, {
   path: "/me",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
   },
   schema: getAuthenticatedUser.schema,
   controller: getAuthenticatedUser.controller,

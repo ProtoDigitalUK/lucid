@@ -13,7 +13,6 @@ r(router, {
   path: "/",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getAll.schema,
@@ -25,7 +24,6 @@ r(router, {
   path: "/:collection_key",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getSingle.schema,

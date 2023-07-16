@@ -141,7 +141,7 @@ const SettingsCollection = new CollectionBuilder("settings", {
 // Build Config
 export default buildConfig({
   host: "http://localhost:8393",
-  origin: "*",
+  origin: "http://localhost:3000",
   mode: "development",
   secret: process.env.LUCID_SECRET_KEY as string,
   postgresURL: process.env.LUCID_POSTGRES_URL as string,

@@ -19,7 +19,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     paginated: true,
   },
   schema: getMultiple.schema,
@@ -34,7 +33,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
   },
   schema: getSingle.schema,
   controller: getSingle.controller,

@@ -22,7 +22,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getSingle.schema,
@@ -37,7 +36,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getAll.schema,
@@ -53,7 +51,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getSingleSubmission.schema,
@@ -68,7 +65,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getMultipleSubmissions.schema,

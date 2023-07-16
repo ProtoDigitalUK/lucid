@@ -16,7 +16,6 @@ r(router, {
   path: "/config/:collection_key/all",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
   },
   schema: getAllConfig.schema,
   controller: getAllConfig.controller,
@@ -27,7 +26,6 @@ r(router, {
   path: "/config/:collection_key/:brick_key",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getSingleConfig.schema,

@@ -17,7 +17,6 @@ r(router, {
   path: "/",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
   },
   schema: getAll.schema,
   controller: getAll.controller,
@@ -42,7 +41,6 @@ r(router, {
   path: "/:key",
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
   },
   schema: getSingle.schema,
   controller: getSingle.controller,

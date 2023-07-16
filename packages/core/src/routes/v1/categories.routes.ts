@@ -19,7 +19,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     paginated: true,
     validateEnvironment: true,
   },
@@ -35,7 +34,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    authoriseCSRF: true,
     validateEnvironment: true,
   },
   schema: getSingle.schema,
