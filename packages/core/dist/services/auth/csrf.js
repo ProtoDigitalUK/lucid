@@ -7,7 +7,7 @@ exports.clearCSRFToken = exports.verifyCSRFToken = exports.generateCSRFToken = v
 const crypto_1 = __importDefault(require("crypto"));
 const Config_1 = __importDefault(require("../Config"));
 const generateCSRFToken = (res) => {
-    const token = crypto_1.default.getRandomValues(new Uint8Array(32)).join("");
+    const token = crypto_1.default.randomBytes(32).toString("hex");
     res.cookie("_csrf", token, {
         maxAge: 86400000 * 7,
         httpOnly: true,

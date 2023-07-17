@@ -5,7 +5,7 @@ import Config from "@services/Config";
 
 export const generateCSRFToken = (res: Response) => {
   // create a random string for CSRF token
-  const token = crypto.getRandomValues(new Uint8Array(32)).join("");
+  const token = crypto.randomBytes(32).toString("hex");
 
   // store the CSRF token a httpOnly cookie,
   res.cookie("_csrf", token, {
