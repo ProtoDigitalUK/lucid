@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import crypto from "crypto";
 // Services
 import Config from "@services/Config";
 
