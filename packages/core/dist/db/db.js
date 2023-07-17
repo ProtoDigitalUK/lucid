@@ -11,6 +11,7 @@ const initializePool = async () => {
     const config = await Config_1.default.getConfig();
     pool = new pg_1.Pool({
         connectionString: config.postgresURL,
+        max: 20,
         ssl: {
             rejectUnauthorized: false,
         },

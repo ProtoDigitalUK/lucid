@@ -19,7 +19,6 @@ const router = (0, express_1.Router)();
     },
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
         paginated: true,
         validateEnvironment: true,
     },
@@ -34,7 +33,6 @@ const router = (0, express_1.Router)();
     },
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
         validateEnvironment: true,
     },
     schema: get_single_1.default.schema,

@@ -12,7 +12,6 @@ const router = (0, express_1.Router)();
     path: "/",
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
     },
     schema: get_all_1.default.schema,
     controller: get_all_1.default.controller,

@@ -32,7 +32,6 @@ const router = (0, express_1.Router)();
     },
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
         paginated: true,
     },
     schema: get_multiple_1.default.schema,
@@ -46,7 +45,6 @@ const router = (0, express_1.Router)();
     },
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
     },
     schema: get_single_1.default.schema,
     controller: get_single_1.default.controller,

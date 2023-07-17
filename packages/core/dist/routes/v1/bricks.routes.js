@@ -13,7 +13,6 @@ const router = (0, express_1.Router)();
     path: "/config/:collection_key/all",
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
     },
     schema: get_all_1.default.schema,
     controller: get_all_1.default.controller,
@@ -23,7 +22,6 @@ const router = (0, express_1.Router)();
     path: "/config/:collection_key/:brick_key",
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
         validateEnvironment: true,
     },
     schema: get_single_1.default.schema,

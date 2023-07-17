@@ -55,12 +55,13 @@ const app = async (options: InitOptions) => {
   // ------------------------------------
   // Routes
   log.white("----------------------------------------------------");
-  app.use(
-    "/",
-    express.static(path.join(__dirname, "../cms"), { extensions: ["html"] })
-  );
   if (options.public) app.use("/api/public", express.static(options.public));
   initRoutes(app);
+  // Serve CMS
+  app.use("/", express.static(path.join(__dirname, "../cms")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../cms", "index.html"));
+  });
   log.yellow("Routes initialised");
 
   // ------------------------------------

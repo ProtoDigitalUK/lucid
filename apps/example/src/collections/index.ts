@@ -1,6 +1,6 @@
 import { CollectionBuilder } from "@lucid/core";
 
-export const pages = new CollectionBuilder("page", {
+export const Pages = new CollectionBuilder("page", {
   type: "pages",
   title: "Pages",
   singular: "Page",
@@ -22,7 +22,7 @@ export const pages = new CollectionBuilder("page", {
   ],
 });
 
-export const settings = new CollectionBuilder("settings", {
+export const Settings = new CollectionBuilder("settings", {
   type: "singlepage",
   title: "Settings",
   singular: "Setting",

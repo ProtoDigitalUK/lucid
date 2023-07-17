@@ -25,7 +25,8 @@ const app = async (options) => {
     app.use((0, cors_1.default)({
         origin: Config_1.default.origin,
         methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type", "Authorization", "_csrf"],
+        credentials: true,
     }));
     app.use((0, morgan_1.default)("dev"));
     app.use((0, cookie_parser_1.default)(Config_1.default.secret));
@@ -36,10 +37,13 @@ const app = async (options) => {
     console_log_colors_1.log.white("----------------------------------------------------");
     await (0, migration_1.default)();
     console_log_colors_1.log.white("----------------------------------------------------");
-    app.use("/", express_1.default.static(path_1.default.join(__dirname, "../cms"), { extensions: ["html"] }));
     if (options.public)
         app.use("/api/public", express_1.default.static(options.public));
     (0, index_1.default)(app);
+    app.use("/", express_1.default.static(path_1.default.join(__dirname, "../cms")));
+    app.get("*", (req, res) => {
+        res.sendFile(path_1.default.resolve(__dirname, "../cms", "index.html"));
+    });
     console_log_colors_1.log.yellow("Routes initialised");
     app.use(error_handler_1.errorLogger);
     app.use(error_handler_1.errorResponder);

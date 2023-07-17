@@ -22,6 +22,9 @@ const generateJWT = (res, user) => {
         secure: Config_1.default.mode === "production",
         sameSite: "strict",
     });
+    res.cookie("auth", true, {
+        maxAge: 86400000 * 7,
+    });
 };
 exports.generateJWT = generateJWT;
 const verifyJWT = (req) => {
@@ -49,6 +52,7 @@ const verifyJWT = (req) => {
 exports.verifyJWT = verifyJWT;
 const clearJWT = (res) => {
     res.clearCookie("_jwt");
+    res.clearCookie("auth");
 };
 exports.clearJWT = clearJWT;
 exports.default = {

@@ -15,7 +15,7 @@ const verify_reset_password_1 = __importDefault(require("../../controllers/auth/
 const reset_password_1 = __importDefault(require("../../controllers/auth/reset-password"));
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
-    method: "get",
+    method: "post",
     path: "/login",
     middleware: {
         authoriseCSRF: true,
@@ -24,7 +24,7 @@ const router = (0, express_1.Router)();
     controller: login_1.default.controller,
 });
 (0, route_1.default)(router, {
-    method: "get",
+    method: "post",
     path: "/logout",
     schema: logout_1.default.schema,
     controller: logout_1.default.controller,
@@ -34,7 +34,6 @@ const router = (0, express_1.Router)();
     path: "/me",
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
     },
     schema: get_authenticated_user_1.default.schema,
     controller: get_authenticated_user_1.default.controller,

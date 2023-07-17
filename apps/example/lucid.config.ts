@@ -1,11 +1,13 @@
 import { buildConfig } from "@lucid/core";
-import { banner, intro, defaultMeta } from "./src/bricks";
-import { pages, settings } from "./src/collections";
+import { Banner, Intro, DefaultMeta } from "./src/bricks";
+import { Pages, Settings } from "./src/collections";
+import { ContactForm } from "./src/forms";
 import path from "path";
 
 export default buildConfig({
-  origin: "*",
-  mode: "development",
+  host: "http://localhost:8393",
+  origin: "http://localhost:3000",
+  mode: "production",
   postgresURL: process.env.LUCID_POSTGRES_URL as string,
   secret: process.env.LUCID_SECRET_KEY as string,
   email: {
@@ -34,6 +36,7 @@ export default buildConfig({
       secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
     },
   },
-  collections: [pages, settings],
-  bricks: [banner, intro, defaultMeta],
+  forms: [ContactForm],
+  collections: [Pages, Settings],
+  bricks: [Banner, Intro, DefaultMeta],
 });

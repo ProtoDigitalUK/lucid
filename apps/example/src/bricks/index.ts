@@ -1,6 +1,6 @@
 import { BrickBuilder } from "@lucid/core";
 
-export const banner = new BrickBuilder("banner")
+export const Banner = new BrickBuilder("banner")
   .addTab({
     key: "content_tab",
   })
@@ -32,7 +32,7 @@ export const banner = new BrickBuilder("banner")
     description: "Make the banner fullwidth",
   });
 
-export const intro = new BrickBuilder("intro")
+export const Intro = new BrickBuilder("intro")
   .addTab({
     key: "content_tab",
   })
@@ -43,7 +43,7 @@ export const intro = new BrickBuilder("intro")
     key: "intro",
   });
 
-export const defaultMeta = new BrickBuilder("default_meta")
+export const DefaultMeta = new BrickBuilder("default_meta")
   .addText({
     key: "meta_title",
     title: "Meta Title",

@@ -13,7 +13,6 @@ const router = (0, express_1.Router)();
     path: "/",
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
         validateEnvironment: true,
     },
     schema: get_all_1.default.schema,
@@ -24,7 +23,6 @@ const router = (0, express_1.Router)();
     path: "/:collection_key",
     middleware: {
         authenticate: true,
-        authoriseCSRF: true,
         validateEnvironment: true,
     },
     schema: get_single_1.default.schema,
