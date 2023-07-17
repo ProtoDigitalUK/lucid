@@ -24,7 +24,7 @@ app.get("/send-email-custom", async (req, res) => {
   // res.send(send);
 });
 
-app.listen(8394, () => {
+app.listen(process.env.PORT || 8393, () => {
   log.white("----------------------------------------------------");
   log.yellow(`CMS started at: http://localhost:8393`);
   log.yellow(`API started at: http://localhost:8393/api`);
