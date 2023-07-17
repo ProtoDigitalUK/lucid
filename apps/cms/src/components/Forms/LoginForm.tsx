@@ -1,6 +1,6 @@
 import { type Component, createSignal, Show, createEffect } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
-import { Link } from "@solidjs/router";
+import { Link, useNavigate } from "@solidjs/router";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
 // Service
@@ -23,12 +23,14 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
   const [username, setUsername] = createSignal("");
   const [password, setPassword] = createSignal("");
 
+  const navigate = useNavigate();
+
   // ----------------------------------------
   // Queries / Mutations
   const login = createMutation({
     mutationFn: api.auth.login,
-    onSuccess: (data) => {
-      console.log("Login successful", data);
+    onSuccess: () => {
+      navigate("/");
     },
     onError: (error) => validateSetError(error, setErrors),
   });
@@ -88,13 +90,19 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
           </Link>
         </Show>
 
-        <Button
-          text="Login"
-          classes="mt-10 w-full"
-          type="submit"
-          colour="primary"
-          loading={loading}
-        />
+        <div class="mt-10 w-full">
+          <Show when={errors()}>
+            <p class="text-red-500 text-sm mb-5">{errors()?.message}</p>
+          </Show>
+
+          <Button
+            text="Login"
+            classes="w-full"
+            type="submit"
+            colour="primary"
+            loading={loading}
+          />
+        </div>
       </div>
     </Form>
   );

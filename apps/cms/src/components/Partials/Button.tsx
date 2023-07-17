@@ -3,6 +3,7 @@ import classnames from "classnames";
 
 interface ButtonProps {
   text: string;
+  onCLick?: () => void;
 
   classes?: string;
   type?: "button" | "submit" | "reset";
@@ -13,6 +14,7 @@ interface ButtonProps {
 
 const Button: Component<ButtonProps> = ({
   text,
+  onCLick,
   colour,
   classes = "",
   type = "button",
@@ -31,7 +33,11 @@ const Button: Component<ButtonProps> = ({
   // ----------------------------------------
   // Render
   return (
-    <button type={type} class={classnames(buttonClasses, classes)}>
+    <button
+      type={type}
+      class={classnames(buttonClasses, classes)}
+      onClick={onCLick}
+    >
       <Show when={loading !== undefined && loading()}>
         <div
           class={classnames(

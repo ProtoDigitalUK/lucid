@@ -6,16 +6,24 @@ import ForgotPasswordRoute from "@/routes/ForgotPassword";
 import DashboardRoute from "@/routes/Dashboard";
 // Layouts
 import AuthRoutes from "@/layouts/AuthRoutes";
+// Guards
+import Authenticated from "@/guards/Authenticated";
+import AuthLocked from "@/guards/AuthLocked";
 
 const AppRouter: Component = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" component={DashboardRoute} />
-
-        <Route path="/" component={AuthRoutes}>
-          <Route path="/login" component={LoginRoute} />
-          <Route path="/forgot-password" component={ForgotPasswordRoute} />
+        {/* Authenticated only */}
+        <Route path="/" component={Authenticated}>
+          <Route path="/" element={<DashboardRoute />} />
+        </Route>
+        {/* Non authenticated only */}
+        <Route path="/" component={AuthLocked}>
+          <Route path="/" component={AuthRoutes}>
+            <Route path="/login" component={LoginRoute} />
+            <Route path="/forgot-password" component={ForgotPasswordRoute} />
+          </Route>
         </Route>
       </Routes>
     </Router>

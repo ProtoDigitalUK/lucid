@@ -1,11 +1,13 @@
 import type { Component } from "solid-js";
-import { Link } from "@solidjs/router";
+// Components
+import LogoutButton from "@/components/Actions/LogoutButton";
 
 const DashboardRoute: Component = () => {
   return (
     <div>
       <h1 class="text-6xl font-bold text-red-700">App</h1>
-      <Link href="/login">Login</Link>
+
+      <LogoutButton classes=" w-64" />
     </div>
   );
 };
