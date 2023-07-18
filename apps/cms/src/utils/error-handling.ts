@@ -5,7 +5,7 @@ export class LucidError extends Error {
   constructor(message: string, errorRes: APIErrorResponse) {
     super(message);
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
+    // Error.captureStackTrace(this, this.constructor);
     this.errorRes = errorRes;
   }
 }

@@ -9,7 +9,7 @@ interface Params {
 const login = async (params: Params) => {
   const csrfRes = await api.auth.csrf();
 
-  return request<{ token: string }>(`/api/v1/auth/login`, {
+  return request<APIResponse<UserRes>>(`/api/v1/auth/login`, {
     method: "POST",
     body: JSON.stringify(params),
     headers: {

@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 import { Router, Routes, Route } from "@solidjs/router";
 // Layouts
-import FullHalves from "@/layouts/FullHalves";
+import AuthRoutes from "@/layouts/AuthRoutes";
 import MainLayout from "@/layouts/Main";
 // Guards
 import Authenticated from "@/guards/Authenticated";
@@ -12,6 +12,7 @@ import AuthLocked from "@/guards/AuthLocked";
 // root
 import LoginRoute from "@/routes/Login";
 import ForgotPasswordRoute from "@/routes/ForgotPassword";
+import SetupRoute from "@/routes/Setup";
 import DashboardRoute from "@/routes/Dashboard";
 
 // environments
@@ -37,9 +38,10 @@ const AppRouter: Component = () => {
         </Route>
         {/* Non authenticated only */}
         <Route path="/" component={AuthLocked}>
-          <Route path="/" component={FullHalves}>
+          <Route path="/" component={AuthRoutes}>
             <Route path="/login" component={LoginRoute} />
             <Route path="/forgot-password" component={ForgotPasswordRoute} />
+            <Route path="/setup" component={SetupRoute} />
           </Route>
         </Route>
       </Routes>
