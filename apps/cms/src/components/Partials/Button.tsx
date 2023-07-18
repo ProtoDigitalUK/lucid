@@ -1,4 +1,4 @@
-import { Component, Accessor, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import classnames from "classnames";
 
 interface ButtonProps {
@@ -9,24 +9,17 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   colour?: "primary" | "secondary" | "error";
 
-  loading?: Accessor<boolean>;
+  loading?: boolean;
 }
 
-const Button: Component<ButtonProps> = ({
-  text,
-  onCLick,
-  colour,
-  classes = "",
-  type = "button",
-  loading,
-}) => {
+const Button: Component<ButtonProps> = (props) => {
   // ----------------------------------------
   // Classes
   const buttonClasses = classnames(
     "px-10 py-3.5 focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative",
     {
       "bg-primary hover:bg-primaryH text-white ring-secondary":
-        colour === "primary",
+        props.colour === "primary",
     }
   );
 
@@ -34,23 +27,23 @@ const Button: Component<ButtonProps> = ({
   // Render
   return (
     <button
-      type={type}
-      class={classnames(buttonClasses, classes)}
-      onClick={onCLick}
+      type={props.type}
+      class={classnames(buttonClasses, props.classes)}
+      onClick={props.onCLick}
     >
-      <Show when={loading !== undefined && loading()}>
+      <Show when={props.loading !== undefined && props.loading}>
         <div
           class={classnames(
             "flex items-center justify-center absolute inset-0 z-10 rounded-md",
             {
-              "bg-primary bg-opacity-80": colour === "primary",
+              "bg-primary bg-opacity-80": props.colour === "primary",
             }
           )}
         >
           <div class="w-4 h-4 border-2 border-white rounded-full animate-spin"></div>
         </div>
       </Show>
-      {text}
+      {props.text}
     </button>
   );
 };

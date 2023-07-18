@@ -24,4 +24,5 @@ export const validateSetError = (
       errors: {},
     });
   }
+  return;
 };

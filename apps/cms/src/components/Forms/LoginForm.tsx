@@ -1,4 +1,4 @@
-import { type Component, createSignal, Show, createEffect } from "solid-js";
+import { type Component, createSignal, Show } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { Link, useNavigate } from "@solidjs/router";
 // Utils
@@ -18,7 +18,6 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
   // ----------------------------------------
   // State
   const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const [loading, setLoading] = createSignal(false);
 
   const [username, setUsername] = createSignal("");
   const [password, setPassword] = createSignal("");
@@ -34,15 +33,6 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
     },
     onError: (error) => validateSetError(error, setErrors),
   });
-
-  // ----------------------------------------
-  // Effects
-  createEffect(
-    () => {
-      setLoading(login.isLoading);
-    },
-    { defer: true }
-  );
 
   // ----------------------------------------
   // Render
@@ -64,7 +54,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         required={true}
         autoFoucs={true}
         autoComplete="username"
-        errors={errors}
+        errors={errors()?.errors?.body?.username}
       />
       <Input
         id="password"
@@ -77,7 +67,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         }}
         required={true}
         autoComplete="current-password"
-        errors={errors}
+        errors={errors()?.errors?.body?.password}
       />
       <div class="flex flex-col items-start">
         <Show when={showForgotPassword}>
@@ -100,7 +90,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
             classes="w-full"
             type="submit"
             colour="primary"
-            loading={loading}
+            loading={login.isLoading}
           />
         </div>
       </div>

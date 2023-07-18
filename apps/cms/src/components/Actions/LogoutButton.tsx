@@ -8,11 +8,9 @@ import api from "@/services/api";
 // Components
 import Button from "@/components/Partials/Button";
 
-interface LogoutButtonProps {
-  classes?: string;
-}
+interface LogoutButtonProps {}
 
-const LogoutButton: Component<LogoutButtonProps> = ({ classes = "" }) => {
+const LogoutButton: Component<LogoutButtonProps> = () => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();
@@ -35,9 +33,9 @@ const LogoutButton: Component<LogoutButtonProps> = ({ classes = "" }) => {
   return (
     <Button
       text="Logout"
-      classes={classes}
       type="submit"
       colour="primary"
+      loading={logout.isLoading}
       onCLick={() => {
         logout.mutate();
       }}

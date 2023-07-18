@@ -1,7 +1,7 @@
 import { type Component } from "solid-js";
 import { Outlet } from "@solidjs/router";
 
-const PlainFull: Component = () => {
+const FullHalves: Component = () => {
   return (
     <div class="fixed top-0 left-0 bottom-0 right-0 flex">
       <div class="w-full 3xl:w-[40%] 3xl:min-w-[800px] h-full bg-white overflow-y-auto flex items-center justify-center">
@@ -14,4 +14,4 @@ const PlainFull: Component = () => {
   );
 };
 
-export default PlainFull;
+export default FullHalves;

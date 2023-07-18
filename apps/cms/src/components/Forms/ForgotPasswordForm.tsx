@@ -32,7 +32,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
         }}
         required={true}
         autoFoucs={true}
-        errors={errors}
+        errors={errors()?.errors?.body?.email}
       />
 
       <div class="flex flex-col items-start">

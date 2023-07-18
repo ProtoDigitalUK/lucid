@@ -1,6 +1,10 @@
-import { Component, Accessor, Show, createSignal } from "solid-js";
+import { Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
-import { FaSolidTriangleExclamation } from "solid-icons/fa";
+import {
+  FaSolidTriangleExclamation,
+  FaSolidEye,
+  FaSolidEyeSlash,
+} from "solid-icons/fa";
 
 interface InputProps {
   id: string;
@@ -17,23 +21,19 @@ interface InputProps {
   autoComplete?: string;
   required?: boolean;
   disabled?: boolean;
-  errors: Accessor<APIErrorResponse | undefined>;
+  errors?: ErrorResult;
 }
 
-const Input: Component<InputProps> = ({
-  id,
-  type,
-  value,
-  onChange,
-  name,
-  copy: { label, placeholder, describedBy },
-  autoFoucs = false,
-  autoComplete = "off",
-  required = false,
-  disabled = false,
-  errors,
-}) => {
+const Input: Component<InputProps> = (props) => {
   const [inputFocus, setInputFocus] = createSignal(false);
+  const [passwordVisible, setPasswordVisible] = createSignal(false);
+
+  // ----------------------------------------
+  // Memos
+  const inputType = createMemo(() => {
+    if (props.type === "password" && passwordVisible()) return "text";
+    return props.type;
+  });
 
   // ----------------------------------------
   // Render
@@ -41,15 +41,15 @@ const Input: Component<InputProps> = ({
     <div class="mb-5 last:mb-0 w-full">
       <div
         class={classnames(
-          "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out",
+          "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",
           {
             "border-secondary bg-backgroundAccentH": inputFocus(),
-            "border-error": errors()?.errors?.body[name]?.message !== undefined,
+            "border-error": props.errors?.message !== undefined,
           }
         )}
       >
         <label
-          for={id}
+          for={props.id}
           class={classnames(
             "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
             {
@@ -57,44 +57,68 @@ const Input: Component<InputProps> = ({
             }
           )}
         >
-          {label}
-          <Show when={required}>
+          {props.copy.label}
+          <Show when={props.required}>
             <span class="text-error ml-1 inline">*</span>
           </Show>
         </label>
         <input
-          class="bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm"
-          id={id}
-          name={name}
-          type={type}
-          value={value}
-          onInput={(e) => onChange(e.currentTarget.value)}
-          placeholder={placeholder}
-          aria-describedby={describedBy ? `${id}-description` : undefined}
-          autocomplete={autoComplete}
-          autofocus={autoFoucs}
-          required={required}
-          disabled={disabled}
+          class={classnames(
+            "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium",
+            {
+              "pr-[38px]": props.type === "password",
+            }
+          )}
+          id={props.id}
+          name={props.name}
+          type={inputType()}
+          value={props.value}
+          onInput={(e) => props.onChange(e.currentTarget.value)}
+          placeholder={props.copy.placeholder}
+          aria-describedby={
+            props.copy.describedBy ? `${props.id}-description` : undefined
+          }
+          autocomplete={props.autoComplete}
+          autofocus={props.autoFoucs}
+          required={props.required}
+          disabled={props.disabled}
           onFocus={() => setInputFocus(true)}
           onBlur={() => setInputFocus(false)}
         />
+        {/* Show Password */}
+        <Show when={props.type === "password"}>
+          <button
+            type="button"
+            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-secondaryH hover:text-secondary duration-200 transition-colors"
+            onClick={() => {
+              setPasswordVisible(!passwordVisible());
+            }}
+          >
+            <Show when={passwordVisible()}>
+              <FaSolidEyeSlash size={18} class="fill-unfocused" />
+            </Show>
+            <Show when={!passwordVisible()}>
+              <FaSolidEye size={18} class="fill-unfocused" />
+            </Show>
+          </button>
+        </Show>
       </div>
 
       {/* Described By */}
-      <Show when={describedBy !== undefined}>
+      <Show when={props.copy.describedBy !== undefined}>
         <div
-          id={`${id}-description`}
+          id={`${props.id}-description`}
           class="text-sm mt-2.5 border-l-4 border-secondary pl-2.5"
         >
-          {describedBy}
+          {props.copy.describedBy}
         </div>
       </Show>
 
       {/* Errors */}
-      <Show when={errors()?.errors?.body[name]?.message !== undefined}>
-        <a class="mt-2.5 flex items-center text-sm" href={`#${id}`}>
+      <Show when={props.errors?.message !== undefined}>
+        <a class="mt-2.5 flex items-center text-sm" href={`#${props.id}`}>
           <FaSolidTriangleExclamation size={16} class="fill-error mr-2" />
-          {errors()?.errors?.body[name]?.message}
+          {props.errors?.message}
         </a>
       </Show>
     </div>

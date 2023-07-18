@@ -30,6 +30,7 @@ module.exports = {
         // Typography
         title: "#16161A",
         body: "#474D51",
+        unfocused: "#737B80",
       },
       fontFamily: {
         display: ["Archivo", "sans-serif"],
@@ -37,6 +38,9 @@ module.exports = {
       },
       screens: {
         "3xl": "1600px",
+      },
+      gridTemplateColumns: {
+        "main-layout": "auto 1fr",
       },
     },
   },
