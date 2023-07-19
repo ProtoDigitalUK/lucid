@@ -28,7 +28,7 @@ const RegisterSuperAdmin: Component<RegisterSuperAdminProps> = () => {
   // ----------------------------------------
   // Queries / Mutations
   const registerSuperAdmin = createMutation({
-    mutationFn: api.auth.login,
+    mutationFn: api.auth.registerSuperAdmin,
     onSuccess: () => {
       navigate("/");
     },
@@ -43,6 +43,9 @@ const RegisterSuperAdmin: Component<RegisterSuperAdminProps> = () => {
         registerSuperAdmin.mutate({
           username: username(),
           password: password(),
+          email: email(),
+          first_name: firstName(),
+          last_name: lastName(),
         });
       }}
     >
@@ -57,7 +60,7 @@ const RegisterSuperAdmin: Component<RegisterSuperAdminProps> = () => {
             copy={{
               label: "First Name",
             }}
-            required={true}
+            required={false}
             autoFoucs={true}
             autoComplete="given-name"
             errors={errors()?.errors?.body?.first_name}
@@ -71,7 +74,7 @@ const RegisterSuperAdmin: Component<RegisterSuperAdminProps> = () => {
             copy={{
               label: "Last Name",
             }}
-            required={true}
+            required={false}
             autoComplete="family-name"
             errors={errors()?.errors?.body?.last_name}
           />
