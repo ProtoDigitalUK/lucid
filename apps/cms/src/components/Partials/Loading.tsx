@@ -9,7 +9,7 @@ interface LoadingProps {
 const Loading: Component<LoadingProps> = (props) => {
   if (props.type === "fill") {
     return (
-      <div class="inset-0 absolute flex items-center justify-center z-50 skeleton-loader">
+      <div class="inset-0 absolute flex items-center justify-center z-50">
         <Spinner size="md" />
       </div>
     );

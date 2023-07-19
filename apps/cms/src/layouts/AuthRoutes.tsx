@@ -2,10 +2,13 @@ import { type Component, Match, Switch } from "solid-js";
 import { Outlet, useLocation } from "@solidjs/router";
 import { createQuery } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
+// Assets
+import donutLove from "@/assets/illustrations/donut-love.svg";
 // Serivces
 import api from "@/services/api";
 // Components
 import Loading from "@/components/Partials/Loading";
+import Error from "@/components/Partials/Error";
 
 const AuthRoutes: Component = () => {
   // ----------------------------------------
@@ -44,8 +47,16 @@ const AuthRoutes: Component = () => {
             <Match when={checkSetupState.isLoading}>
               <Loading type="fill" />
             </Match>
-            <Match when={checkSetupState.isError}>
-              <p>Error: error</p>
+            <Match when={!checkSetupState.isError}>
+              <Error
+                type="fill"
+                content={{
+                  image: donutLove,
+                  title: "Something went wrong",
+                  description:
+                    "An unexpected error has occurred. Please try again later.",
+                }}
+              />
             </Match>
             <Match when={checkSetupState.isSuccess}>
               <Outlet />
