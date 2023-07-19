@@ -23,10 +23,10 @@ declare const _default: {
                 value: import("zod").ZodEnum<["asc", "desc"]>;
             }, "strip", import("zod").ZodTypeAny, {
                 value: "desc" | "asc";
-                key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }, {
                 value: "desc" | "asc";
-                key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }>, "many">>;
             page: import("zod").ZodOptional<import("zod").ZodString>;
             per_page: import("zod").ZodOptional<import("zod").ZodString>;
@@ -39,7 +39,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
-                key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -52,7 +52,7 @@ declare const _default: {
             } | undefined;
             sort?: {
                 value: "desc" | "asc";
-                key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -81,10 +81,10 @@ declare const _default: {
             value: import("zod").ZodEnum<["asc", "desc"]>;
         }, "strip", import("zod").ZodTypeAny, {
             value: "desc" | "asc";
-            key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+            key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
         }, {
             value: "desc" | "asc";
-            key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+            key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
         }>, "many">>;
         page: import("zod").ZodOptional<import("zod").ZodString>;
         per_page: import("zod").ZodOptional<import("zod").ZodString>;
@@ -97,7 +97,7 @@ declare const _default: {
         } | undefined;
         sort?: {
             value: "desc" | "asc";
-            key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+            key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
         }[] | undefined;
         page?: string | undefined;
         per_page?: string | undefined;
@@ -110,7 +110,7 @@ declare const _default: {
         } | undefined;
         sort?: {
             value: "desc" | "asc";
-            key: "name" | "width" | "height" | "updated_at" | "created_at" | "mime_type" | "file_extension" | "file_size";
+            key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
         }[] | undefined;
         page?: string | undefined;
         per_page?: string | undefined;

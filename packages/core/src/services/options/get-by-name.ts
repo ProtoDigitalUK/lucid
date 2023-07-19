@@ -3,6 +3,8 @@ import { PoolClient } from "pg";
 import { LucidError, modelErrors } from "@utils/app/error-handler";
 // Models
 import Option, { OptionT } from "@db/models/Option";
+// Format
+import formatOption from "@utils/format/format-option";
 // Utils
 import convertToType from "@utils/options/convert-to-type";
 
@@ -30,7 +32,8 @@ const getByName = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return convertToType(option);
+  const convertOptionType = convertToType(option);
+  return formatOption([convertOptionType]);
 };
 
 export default getByName;

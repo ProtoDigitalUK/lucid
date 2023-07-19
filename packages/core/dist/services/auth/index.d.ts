@@ -7,7 +7,7 @@ declare const _default: {
         clearCSRFToken: (res: import("express").Response<any, Record<string, any>>) => void;
     };
     jwt: {
-        generateJWT: (res: import("express").Response<any, Record<string, any>>, user: import("../../utils/format/format-user").UserResT) => void;
+        generateJWT: (res: import("express").Response<any, Record<string, any>>, user: import("../../../../types/src/users").UserResT) => void;
         verifyJWT: (req: import("express").Request<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>) => {
             sucess: boolean;
             data: null;
@@ -21,7 +21,7 @@ declare const _default: {
         };
         clearJWT: (res: import("express").Response<any, Record<string, any>>) => void;
     };
-    login: (client: import("pg").PoolClient, data: import("./login").ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+    login: (client: import("pg").PoolClient, data: import("./login").ServiceData) => Promise<import("../../../../types/src/users").UserResT>;
     validatePassword: (data: import("./validate-password").ServiceData) => Promise<boolean>;
     sendResetPassword: (client: import("pg").PoolClient, data: import("./send-reset-password").ServiceData) => Promise<{
         message: string;

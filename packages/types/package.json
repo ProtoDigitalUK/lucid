@@ -1,0 +1,19 @@
+{
+  "name": "@lucid/types",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Contains shared type definitions for Lucid",
+  "main": "src/index.ts",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WillYallop/Lucid.git"
+  },
+  "keywords": [],
+  "author": "William Yallop",
+  "devDependencies": {},
+  "bugs": {
+    "url": "hhttps://github.com/WillYallop/Lucid/issues"
+  },
+  "homepage": "https://github.com/WillYallop/Lucid#readme"
+}

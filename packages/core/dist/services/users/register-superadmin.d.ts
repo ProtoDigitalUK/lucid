@@ -6,6 +6,6 @@ export interface ServiceData {
     first_name?: string;
     last_name?: string;
 }
-declare const registerSuperAdmin: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-user").UserResT>;
+declare const registerSuperAdmin: (client: PoolClient, data: ServiceData) => Promise<import("../../../../types/src/users").UserResT>;
 export default registerSuperAdmin;
 //# sourceMappingURL=register-superadmin.d.ts.map

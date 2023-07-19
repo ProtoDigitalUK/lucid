@@ -23,10 +23,7 @@ const AuthRoutes: Component = () => {
           key: "initial_user_created",
         }),
       onSuccess: (data) => {
-        if (
-          typeof data.data.option_value === "boolean" &&
-          data.data.option_value === false
-        ) {
+        if (!data.data.initial_user_created) {
           navigate("/setup");
         } else {
           if (location.pathname === "/setup") {
@@ -41,9 +38,9 @@ const AuthRoutes: Component = () => {
   // ----------------------------------
   // Render
   return (
-    <div class="fixed top-0 left-0 bottom-0 right-0 flex">
-      <div class="w-full 3xl:w-[40%] 3xl:min-w-[800px] h-full bg-white overflow-y-auto flex items-center justify-center">
-        <div class="m-auto px-10 py-20 w-full max-w-[600px]">
+    <div class="fixed top-0 left-0 bottom-0 right-0 flex ">
+      <div class="w-full 3xl:w-[40%] 3xl:min-w-[800px] h-full bg-white overflow-y-auto flex items-center justify-center relative">
+        <div class="m-auto px-10 py-20 w-full max-w-[600px] ">
           <Switch>
             <Match when={checkSetupState.isLoading}>
               <Loading type="fill" />
@@ -57,7 +54,9 @@ const AuthRoutes: Component = () => {
           </Switch>
         </div>
       </div>
-      <div class="hidden 3xl:block w-[60%] bg-primary"></div>
+      <div class="hidden w-[60%] bg-primary 3xl:flex items-center justify-center text-white">
+        animated background
+      </div>
     </div>
   );
 };

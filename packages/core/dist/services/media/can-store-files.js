@@ -29,7 +29,7 @@ const canStoreFiles = async (client, data) => {
     }
     const storageUsed = await (0, service_1.default)(media_1.default.getStorageUsed, false, client)();
     const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
-    if (totalSize + storageUsed > storageLimit) {
+    if (totalSize + (storageUsed || 0) > storageLimit) {
         const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;
         throw new error_handler_1.LucidError({
             type: "basic",

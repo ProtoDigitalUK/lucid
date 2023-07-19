@@ -15,14 +15,14 @@ export interface ServiceData {
 }
 
 const registerSuperAdmin = async (client: PoolClient, data: ServiceData) => {
-  const initialUserRes = await service(
+  const optionRes = await service(
     optionServices.getByName,
     false,
     client
   )({
     name: "initial_user_created",
   });
-  const resValue = initialUserRes.option_value as boolean;
+  const resValue = optionRes.initial_user_created;
 
   if (resValue) {
     throw new LucidError({

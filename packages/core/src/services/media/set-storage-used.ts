@@ -17,7 +17,7 @@ const getStorageUsed = async (client: PoolClient, data: ServiceData) => {
     client
   )();
 
-  let newValue = storageUsed + data.add;
+  let newValue = (storageUsed || 0) + data.add;
   if (data.minus !== undefined) {
     newValue = newValue - data.minus;
   }
@@ -30,7 +30,7 @@ const getStorageUsed = async (client: PoolClient, data: ServiceData) => {
     value: newValue,
     type: "number",
   });
-  return res.option_value as number;
+  return res.media_storage_used;
 };
 
 export default getStorageUsed;

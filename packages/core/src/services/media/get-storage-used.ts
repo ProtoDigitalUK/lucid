@@ -12,7 +12,7 @@ const getStorageUsed = async (client: PoolClient) => {
   )({
     name: "media_storage_used",
   });
-  return res.option_value as number;
+  return res.media_storage_used;
 };
 
 export default getStorageUsed;

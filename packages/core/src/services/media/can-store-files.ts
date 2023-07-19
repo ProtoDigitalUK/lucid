@@ -43,7 +43,7 @@ const canStoreFiles = async (client: PoolClient, data: ServiceData) => {
 
   // check files dont exceed storage limit
   const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
-  if (totalSize + storageUsed > storageLimit) {
+  if (totalSize + (storageUsed || 0) > storageLimit) {
     const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;
     throw new LucidError({
       type: "basic",

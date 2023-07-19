@@ -52,7 +52,8 @@
     "tsc-alias": "^1.8.6",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4",
-    "wrangler": "^3.1.1"
+    "wrangler": "^3.1.1",
+    "@lucid/types": "*"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.363.0",

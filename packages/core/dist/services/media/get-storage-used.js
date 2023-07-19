@@ -9,7 +9,7 @@ const getStorageUsed = async (client) => {
     const res = await (0, service_1.default)(options_1.default.getByName, false, client)({
         name: "media_storage_used",
     });
-    return res.option_value;
+    return res.media_storage_used;
 };
 exports.default = getStorageUsed;
 //# sourceMappingURL=get-storage-used.js.map

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Option_1 = __importDefault(require("../../db/models/Option"));
+const format_option_1 = __importDefault(require("../../utils/format/format-option"));
 const convert_to_type_1 = __importDefault(require("../../utils/options/convert-to-type"));
 const getByName = async (client, data) => {
     const option = await Option_1.default.getByName(client, {
@@ -24,7 +25,8 @@ const getByName = async (client, data) => {
             }),
         });
     }
-    return (0, convert_to_type_1.default)(option);
+    const convertOptionType = (0, convert_to_type_1.default)(option);
+    return (0, format_option_1.default)([convertOptionType]);
 };
 exports.default = getByName;
 //# sourceMappingURL=get-by-name.js.map

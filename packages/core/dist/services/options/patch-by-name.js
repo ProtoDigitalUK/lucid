@@ -7,6 +7,7 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const Option_1 = __importDefault(require("../../db/models/Option"));
 const convert_to_type_1 = __importDefault(require("../../utils/options/convert-to-type"));
 const convert_to_string_1 = __importDefault(require("../../utils/options/convert-to-string"));
+const format_option_1 = __importDefault(require("../../utils/format/format-option"));
 const patchByName = async (client, data) => {
     const value = (0, convert_to_string_1.default)(data.value, data.type);
     const option = await Option_1.default.patchByName(client, {
@@ -28,7 +29,8 @@ const patchByName = async (client, data) => {
             }),
         });
     }
-    return (0, convert_to_type_1.default)(option);
+    const convertOptionType = (0, convert_to_type_1.default)(option);
+    return (0, format_option_1.default)([convertOptionType]);
 };
 exports.default = patchByName;
 //# sourceMappingURL=patch-by-name.js.map

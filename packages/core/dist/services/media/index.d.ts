@@ -9,8 +9,8 @@ declare const _default: {
     updateSingle: (client: import("pg").PoolClient, data: import("./update-single").ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
     streamMedia: (data: import("./stream-media").ServiceData) => Promise<import("@aws-sdk/client-s3").GetObjectCommandOutput>;
     canStoreFiles: (client: import("pg").PoolClient, data: import("./can-store-files").ServiceData) => Promise<void>;
-    getStorageUsed: (client: import("pg").PoolClient) => Promise<number>;
-    setStorageUsed: (client: import("pg").PoolClient, data: import("./set-storage-used").ServiceData) => Promise<number>;
+    getStorageUsed: (client: import("pg").PoolClient) => Promise<number | undefined>;
+    setStorageUsed: (client: import("pg").PoolClient, data: import("./set-storage-used").ServiceData) => Promise<number | undefined>;
     getSingleById: (client: import("pg").PoolClient, data: import("./get-single-by-id").ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
     getMultipleByIds: (client: import("pg").PoolClient, data: import("./get-multiple-by-ids").ServiceData) => Promise<import("../../utils/format/format-media").MediaResT[]>;
 };

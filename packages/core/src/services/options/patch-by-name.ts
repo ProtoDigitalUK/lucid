@@ -6,6 +6,8 @@ import Option, { OptionT } from "@db/models/Option";
 // Utils
 import convertToType from "@utils/options/convert-to-type";
 import convertToString from "@utils/options/convert-to-string";
+// Format
+import formatOption from "@utils/format/format-option";
 
 export interface ServiceData {
   name: OptionT["option_name"];
@@ -37,7 +39,8 @@ const patchByName = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return convertToType(option);
+  const convertOptionType = convertToType(option);
+  return formatOption([convertOptionType]);
 };
 
 export default patchByName;

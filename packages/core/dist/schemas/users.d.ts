@@ -29,16 +29,16 @@ declare const _default: {
         }, "strip", z.ZodTypeAny, {
             email: string;
             username: string;
-            password: string;
             role_ids: number[];
+            password: string;
             first_name?: string | undefined;
             last_name?: string | undefined;
             super_admin?: boolean | undefined;
         }, {
             email: string;
             username: string;
-            password: string;
             role_ids: number[];
+            password: string;
             first_name?: string | undefined;
             last_name?: string | undefined;
             super_admin?: boolean | undefined;

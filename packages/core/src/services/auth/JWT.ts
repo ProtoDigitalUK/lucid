@@ -2,8 +2,8 @@ import { Response, Request } from "express";
 import jwt from "jsonwebtoken";
 // Services
 import Config from "@services/Config";
-// Format
-import { UserResT } from "@utils/format/format-user";
+// Types
+import { UserResT } from "@lucid/types/src/users";
 
 export const generateJWT = (res: Response, user: UserResT) => {
   const { id, email, username } = user;

@@ -8,10 +8,10 @@ const service_1 = __importDefault(require("../../utils/app/service"));
 const users_1 = __importDefault(require("../users"));
 const options_1 = __importDefault(require("../options"));
 const registerSuperAdmin = async (client, data) => {
-    const initialUserRes = await (0, service_1.default)(options_1.default.getByName, false, client)({
+    const optionRes = await (0, service_1.default)(options_1.default.getByName, false, client)({
         name: "initial_user_created",
     });
-    const resValue = initialUserRes.option_value;
+    const resValue = optionRes.initial_user_created;
     if (resValue) {
         throw new error_handler_1.LucidError({
             type: "basic",

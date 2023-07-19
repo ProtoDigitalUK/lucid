@@ -8,7 +8,7 @@ const media_1 = __importDefault(require("../media"));
 const options_1 = __importDefault(require("../options"));
 const getStorageUsed = async (client, data) => {
     const storageUsed = await (0, service_1.default)(media_1.default.getStorageUsed, false, client)();
-    let newValue = storageUsed + data.add;
+    let newValue = (storageUsed || 0) + data.add;
     if (data.minus !== undefined) {
         newValue = newValue - data.minus;
     }
@@ -17,7 +17,7 @@ const getStorageUsed = async (client, data) => {
         value: newValue,
         type: "number",
     });
-    return res.option_value;
+    return res.media_storage_used;
 };
 exports.default = getStorageUsed;
 //# sourceMappingURL=set-storage-used.js.map

@@ -5,7 +5,7 @@ export interface ServiceData {
     query: z.infer<typeof usersSchema.getMultiple.query>;
 }
 declare const getMultiple: (client: PoolClient, data: ServiceData) => Promise<{
-    data: import("../../utils/format/format-user").UserResT[];
+    data: import("../../../../types/src/users").UserResT[];
     count: number;
 }>;
 export default getMultiple;
