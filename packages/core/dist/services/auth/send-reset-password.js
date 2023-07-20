@@ -11,7 +11,7 @@ const email_1 = __importDefault(require("../email"));
 const users_1 = __importDefault(require("../users"));
 const Config_1 = __importDefault(require("../Config"));
 const sendResetPassword = async (client, data) => {
-    const successMessage = `If an account with that email exists, we sent you an email with instructions to reset your password.`;
+    const successMessage = `If an account with that email exists, we've sent you an email with instructions to reset your password.`;
     const user = await (0, service_1.default)(users_1.default.getSingleQuery, false, client)({
         email: data.email,
     });
