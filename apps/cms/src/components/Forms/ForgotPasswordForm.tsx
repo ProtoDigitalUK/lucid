@@ -1,5 +1,10 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
+import { createMutation } from "@tanstack/solid-query";
+// Utils
+import { validateSetError } from "@/utils/error-handling";
+// Service
+import api from "@/services/api";
 // Components
 import Form from "@/components/Partials/Form";
 import Input from "@/components/Inputs/Input";
@@ -18,9 +23,23 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
   const [email, setEmail] = createSignal("");
 
   // ----------------------------------------
+  // Queries / Mutations
+  const sendPasswordReset = createMutation({
+    mutationFn: api.auth.sendPasswordReset,
+    onSuccess: () => {
+      // TODO: show toast
+    },
+    onError: (error) => validateSetError(error, setErrors),
+  });
+
+  // ----------------------------------------
   // Render
   return (
-    <Form>
+    <Form
+      onSubmit={async () => {
+        sendPasswordReset.mutate({ email: email() });
+      }}
+    >
       <Input
         id="email"
         name="email"
@@ -45,12 +64,15 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
             Back to login
           </Link>
         </Show>
-        <Button
-          text="Send reset link"
-          classes="mt-10 w-full"
-          type="submit"
-          colour="primary"
-        />
+        <div class="mt-10 w-full">
+          <Button
+            text={"Send password reset"}
+            loading={sendPasswordReset.isLoading}
+            classes="w-full"
+            type="submit"
+            colour="primary"
+          />
+        </div>
       </div>
     </Form>
   );

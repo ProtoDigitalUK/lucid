@@ -10,13 +10,14 @@ interface ButtonProps {
   colour?: "primary" | "secondary" | "error";
 
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const Button: Component<ButtonProps> = (props) => {
   // ----------------------------------------
   // Classes
   const buttonClasses = classnames(
-    "px-10 py-3.5 focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative",
+    "px-10 py-3.5 focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed",
     {
       "bg-primary hover:bg-primaryH text-white ring-secondary":
         props.colour === "primary",
@@ -30,6 +31,7 @@ const Button: Component<ButtonProps> = (props) => {
       type={props.type}
       class={classnames(buttonClasses, props.classes)}
       onClick={props.onCLick}
+      disabled={props.disabled || props.loading}
     >
       <Show when={props.loading !== undefined && props.loading}>
         <div

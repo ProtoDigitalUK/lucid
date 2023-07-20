@@ -5,8 +5,6 @@ const request = async <Response>(
   url: string,
   config: RequestInit = {}
 ): Promise<Response> => {
-  console.log(import.meta.env);
-
   let fetchURL = url;
   if (!import.meta.env.PROD) {
     fetchURL = `${import.meta.env.VITE_API_DEV_URL}${url}`;

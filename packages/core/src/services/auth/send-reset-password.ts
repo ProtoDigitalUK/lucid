@@ -14,7 +14,7 @@ export interface ServiceData {
 }
 
 const sendResetPassword = async (client: PoolClient, data: ServiceData) => {
-  const successMessage = `If an account with that email exists, we sent you an email with instructions to reset your password.`;
+  const successMessage = `If an account with that email exists, we've sent you an email with instructions to reset your password.`;
 
   // -------------------------------------------
   // Check if user exists

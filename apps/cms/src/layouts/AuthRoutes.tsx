@@ -47,7 +47,7 @@ const AuthRoutes: Component = () => {
             <Match when={checkSetupState.isLoading}>
               <Loading type="fill" />
             </Match>
-            <Match when={!checkSetupState.isError}>
+            <Match when={checkSetupState.isError}>
               <Error
                 type="fill"
                 content={{

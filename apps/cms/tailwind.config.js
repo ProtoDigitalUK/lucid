@@ -21,6 +21,7 @@ module.exports = {
         border: "#D7DDE4",
 
         error: "#FC3636",
+        success: "#32AD84",
 
         // -------------------------------------
         // Backgrounds
