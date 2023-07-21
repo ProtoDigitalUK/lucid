@@ -18,6 +18,7 @@ export interface ServiceData {
   last_name?: string;
   super_admin?: boolean;
   role_ids?: number[];
+  reset_password?: boolean;
 }
 
 const registerSingle = async (
@@ -106,6 +107,7 @@ const registerSingle = async (
     super_admin: superAdmin,
     first_name: data.first_name,
     last_name: data.last_name,
+    reset_password: data.reset_password,
   });
 
   if (!user) {

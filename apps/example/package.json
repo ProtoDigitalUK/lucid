@@ -8,10 +8,20 @@
   },
   "dependencies": {
     "@lucid/core": "*",
+    "compression": "^1.7.4",
+    "connect-timeout": "^1.9.0",
+    "handlebars": "^4.7.7",
+    "response-time": "^2.3.2",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/connect-timeout": "^0.0.37",
+    "@types/handlebars": "^4.1.0",
+    "@types/response-time": "^2.3.5"
+  }
 }

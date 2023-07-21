@@ -21,7 +21,7 @@ type OptionPatchByName = (
 // -------------------------------------------
 // Option
 export type OptionT = {
-  option_name: "initial_user_created" | "media_storage_used";
+  option_name: "media_storage_used";
   option_value: boolean | number | string | object | Array<any>;
   type: "boolean" | "string" | "number" | "json";
 

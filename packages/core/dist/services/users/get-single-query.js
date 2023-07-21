@@ -17,6 +17,7 @@ const getSingleQuery = async (client, data) => {
             "created_at",
             "updated_at",
             "password",
+            "reset_password",
         ],
         exclude: undefined,
         filter: {

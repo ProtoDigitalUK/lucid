@@ -34,6 +34,7 @@ const resetPassword = async (client: PoolClient, data: ServiceData) => {
   )({
     user_id: userToken.user_id,
     password: data.password,
+    reset_password: false,
   });
 
   // -------------------------------------------

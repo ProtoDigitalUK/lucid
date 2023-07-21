@@ -1,9 +1,20 @@
 import express from "express";
-import { log } from "console-log-colors";
-import lucid from "@lucid/core";
+import timeout from "connect-timeout";
+import helmet from "helmet";
+import compression from "compression";
+import responseTime from "response-time";
+
 import path from "path";
+import { log } from "console-log-colors";
+
+import lucid from "@lucid/core";
 
 const app = express();
+
+app.use(compression());
+app.use(responseTime());
+app.use(timeout("10s"));
+app.use(helmet({}));
 
 lucid.init({
   express: app,
@@ -11,18 +22,18 @@ lucid.init({
 });
 
 // create new route /test
-app.get("/send-email-custom", async (req, res) => {
-  // const send = await lucid.sendEmail("test", {
-  //   data: {
-  //     name: "William",
-  //   },
-  //   options: {
-  //     to: "hello@williamyallop.com",
-  //     subject: "Test email",
-  //   },
-  // });
-  // res.send(send);
-});
+// app.get("/send-email-custom", async (req, res) => {
+// const send = await lucid.sendEmail("test", {
+//   data: {
+//     name: "William",
+//   },
+//   options: {
+//     to: "hello@williamyallop.com",
+//     subject: "Test email",
+//   },
+// });
+// res.send(send);
+// });
 
 app.listen(process.env.PORT || 8393, () => {
   log.white("----------------------------------------------------");

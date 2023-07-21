@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS lucid_users (
   last_name TEXT,
   password TEXT NOT NULL,
 
+  reset_password BOOLEAN DEFAULT FALSE, -- Trigger password reset on next login.
+
   delete BOOLEAN DEFAULT FALSE, -- Marked for deletion. Will be deleted on after 30 days.
   deleted_at TIMESTAMP, -- When the user was marked for deletion.
 

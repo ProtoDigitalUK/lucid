@@ -28,18 +28,6 @@ const logoutQuery = z.object({});
 const logoutParams = z.object({});
 
 // ------------------------------------
-// REGISTER SUPER ADMIN
-const registerSuperAdminBody = z.object({
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  email: z.string().email(),
-  username: z.string().min(3),
-  password: z.string().min(8),
-});
-const registerSuperAdminQuery = z.object({});
-const registerSuperAdminParams = z.object({});
-
-// ------------------------------------
 // SEND RESET PASSWORD
 const sendResetPasswordBody = z.object({
   email: z.string().email(),
@@ -87,11 +75,6 @@ export default {
     body: logoutBody,
     query: logoutQuery,
     params: logoutParams,
-  },
-  registerSuperAdmin: {
-    body: registerSuperAdminBody,
-    query: registerSuperAdminQuery,
-    params: registerSuperAdminParams,
   },
   sendResetPassword: {
     body: sendResetPasswordBody,

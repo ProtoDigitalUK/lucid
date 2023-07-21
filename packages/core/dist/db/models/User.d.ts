@@ -11,6 +11,7 @@ type UserCreateSingle = (client: PoolClient, data: {
     username: string;
     password: string;
     super_admin?: boolean;
+    reset_password?: boolean;
 }) => Promise<UserT>;
 type UserDeleteSingle = (client: PoolClient, data: {
     id: number;
@@ -22,6 +23,7 @@ type UserUpdateSingle = (client: PoolClient, data: {
     username?: string;
     email?: string;
     password?: string;
+    reset_password?: boolean;
 }) => Promise<UserT>;
 type UserGetSingle = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<UserT>;
 export type UserT = {
@@ -32,6 +34,7 @@ export type UserT = {
     first_name: string | null;
     last_name: string | null;
     password?: string;
+    reset_password: boolean;
     created_at: string;
     updated_at: string;
 };

@@ -26,7 +26,6 @@ const service = (fn, transaction, outerClient) => async (...args) => {
     }
     finally {
         if (shouldReleaseClient) {
-            console.log("releasing client");
             client.release();
         }
     }

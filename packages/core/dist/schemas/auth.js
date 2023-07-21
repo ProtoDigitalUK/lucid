@@ -19,15 +19,6 @@ const loginParams = zod_1.default.object({});
 const logoutBody = zod_1.default.object({});
 const logoutQuery = zod_1.default.object({});
 const logoutParams = zod_1.default.object({});
-const registerSuperAdminBody = zod_1.default.object({
-    first_name: zod_1.default.string().optional(),
-    last_name: zod_1.default.string().optional(),
-    email: zod_1.default.string().email(),
-    username: zod_1.default.string().min(3),
-    password: zod_1.default.string().min(8),
-});
-const registerSuperAdminQuery = zod_1.default.object({});
-const registerSuperAdminParams = zod_1.default.object({});
 const sendResetPasswordBody = zod_1.default.object({
     email: zod_1.default.string().email(),
 });
@@ -65,11 +56,6 @@ exports.default = {
         body: logoutBody,
         query: logoutQuery,
         params: logoutParams,
-    },
-    registerSuperAdmin: {
-        body: registerSuperAdminBody,
-        query: registerSuperAdminQuery,
-        params: registerSuperAdminParams,
     },
     sendResetPassword: {
         body: sendResetPasswordBody,

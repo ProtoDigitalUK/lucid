@@ -53,7 +53,6 @@ const service =
       throw error;
     } finally {
       if (shouldReleaseClient) {
-        console.log("releasing client");
         client.release();
       }
     }

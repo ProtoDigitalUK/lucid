@@ -16,6 +16,7 @@ const getMultiple = async (client, data) => {
             "first_name",
             "last_name",
             "created_at",
+            "reset_password",
         ],
         exclude: undefined,
         filter: {

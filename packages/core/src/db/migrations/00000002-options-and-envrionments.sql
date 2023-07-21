@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS lucid_options (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- inset initial_user_created flag
-INSERT INTO lucid_options (option_name, option_value, type) VALUES ('initial_user_created', 'false', 'boolean');
 INSERT INTO lucid_options (option_name, option_value, type) VALUES ('media_storage_used', '0', 'number');
 
 -- ENVIRONMENTS TABLE

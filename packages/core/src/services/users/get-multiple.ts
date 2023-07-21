@@ -25,6 +25,7 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       "first_name",
       "last_name",
       "created_at",
+      "reset_password",
     ],
     exclude: undefined,
     filter: {

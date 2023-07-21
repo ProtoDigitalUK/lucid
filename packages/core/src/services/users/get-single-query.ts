@@ -22,6 +22,7 @@ const getSingleQuery = async (client: PoolClient, data: ServiceData) => {
       "created_at",
       "updated_at",
       "password",
+      "reset_password",
     ],
     exclude: undefined,
     filter: {

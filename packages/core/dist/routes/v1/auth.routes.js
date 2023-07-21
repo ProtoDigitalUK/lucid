@@ -9,7 +9,6 @@ const login_1 = __importDefault(require("../../controllers/auth/login"));
 const logout_1 = __importDefault(require("../../controllers/auth/logout"));
 const get_authenticated_user_1 = __importDefault(require("../../controllers/auth/get-authenticated-user"));
 const get_csrf_1 = __importDefault(require("../../controllers/auth/get-csrf"));
-const register_superadmin_1 = __importDefault(require("../../controllers/auth/register-superadmin"));
 const send_reset_password_1 = __importDefault(require("../../controllers/auth/send-reset-password"));
 const verify_reset_password_1 = __importDefault(require("../../controllers/auth/verify-reset-password"));
 const reset_password_1 = __importDefault(require("../../controllers/auth/reset-password"));
@@ -43,15 +42,6 @@ const router = (0, express_1.Router)();
     path: "/csrf",
     schema: get_csrf_1.default.schema,
     controller: get_csrf_1.default.controller,
-});
-(0, route_1.default)(router, {
-    method: "post",
-    path: "/register-superadmin",
-    middleware: {
-        authoriseCSRF: true,
-    },
-    schema: register_superadmin_1.default.schema,
-    controller: register_superadmin_1.default.controller,
 });
 (0, route_1.default)(router, {
     method: "post",

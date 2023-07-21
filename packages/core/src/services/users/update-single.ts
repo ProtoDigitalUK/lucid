@@ -16,6 +16,7 @@ export interface ServiceData {
   email?: string;
   password?: string;
   role_ids?: number[];
+  reset_password?: boolean;
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
@@ -100,6 +101,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     username: data.username,
     email: data.email,
     password: hashedPassword,
+    reset_password: data.reset_password,
   });
 
   if (!userUpdate) {

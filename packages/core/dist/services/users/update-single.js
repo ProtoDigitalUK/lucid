@@ -65,6 +65,7 @@ const updateSingle = async (client, data) => {
         username: data.username,
         email: data.email,
         password: hashedPassword,
+        reset_password: data.reset_password,
     });
     if (!userUpdate) {
         throw new error_handler_1.LucidError({

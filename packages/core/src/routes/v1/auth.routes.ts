@@ -5,7 +5,6 @@ import login from "@controllers/auth/login";
 import logout from "@controllers/auth/logout";
 import getAuthenticatedUser from "@controllers/auth/get-authenticated-user";
 import getCSRF from "@controllers/auth/get-csrf";
-import registerSuperadmin from "@controllers/auth/register-superadmin";
 
 import sendResetPassword from "@controllers/auth/send-reset-password";
 import verifyResetPassword from "@controllers/auth/verify-reset-password";
@@ -47,17 +46,6 @@ r(router, {
   path: "/csrf",
   schema: getCSRF.schema,
   controller: getCSRF.controller,
-});
-
-// only used to register the first superadmin (the inital account)
-r(router, {
-  method: "post",
-  path: "/register-superadmin",
-  middleware: {
-    authoriseCSRF: true,
-  },
-  schema: registerSuperadmin.schema,
-  controller: registerSuperadmin.controller,
 });
 
 r(router, {

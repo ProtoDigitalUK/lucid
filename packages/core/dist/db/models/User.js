@@ -14,6 +14,7 @@ User.createSingle = async (client, data) => {
             "super_admin",
             "first_name",
             "last_name",
+            "reset_password",
         ],
         values: [
             data.email,
@@ -22,6 +23,7 @@ User.createSingle = async (client, data) => {
             data.super_admin,
             data.first_name,
             data.last_name,
+            data.reset_password,
         ],
     });
     const user = await client.query({
@@ -47,13 +49,21 @@ User.getMultiple = async (client, query_instance) => {
 };
 User.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
-        columns: ["first_name", "last_name", "username", "email", "password"],
+        columns: [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "password",
+            "reset_password",
+        ],
         values: [
             data.first_name,
             data.last_name,
             data.username,
             data.email,
             data.password,
+            data.reset_password,
         ],
         conditional: {
             hasValues: {

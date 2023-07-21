@@ -29,29 +29,6 @@ declare const _default: {
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
     };
-    registerSuperAdmin: {
-        body: z.ZodObject<{
-            first_name: z.ZodOptional<z.ZodString>;
-            last_name: z.ZodOptional<z.ZodString>;
-            email: z.ZodString;
-            username: z.ZodString;
-            password: z.ZodString;
-        }, "strip", z.ZodTypeAny, {
-            email: string;
-            username: string;
-            password: string;
-            first_name?: string | undefined;
-            last_name?: string | undefined;
-        }, {
-            email: string;
-            username: string;
-            password: string;
-            first_name?: string | undefined;
-            last_name?: string | undefined;
-        }>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-    };
     sendResetPassword: {
         body: z.ZodObject<{
             email: z.ZodString;
