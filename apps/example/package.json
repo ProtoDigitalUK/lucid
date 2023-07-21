@@ -10,7 +10,7 @@
     "@lucid/core": "*",
     "compression": "^1.7.4",
     "connect-timeout": "^1.9.0",
-    "handlebars": "^4.7.7",
+    "helmet": "^7.0.0",
     "response-time": "^2.3.2",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/compression": "^1.7.2",
     "@types/connect-timeout": "^0.0.37",
-    "@types/handlebars": "^4.1.0",
+    "@types/helmet": "^4.0.0",
     "@types/response-time": "^2.3.5"
   }
 }
