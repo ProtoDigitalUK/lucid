@@ -1,5 +1,7 @@
 import { Component, createEffect, createSignal, Show } from "solid-js";
 import { useLocation } from "@solidjs/router";
+// State
+import { environment } from "@/state/environment";
 
 const EnvironmentBar: Component = () => {
   // ----------------------------------
@@ -21,7 +23,7 @@ const EnvironmentBar: Component = () => {
   // Render
   return (
     <Show when={showBar()}>
-      <div class="w-[240px] bg-green-500 h-full">ddasd</div>
+      <div class="w-[240px] bg-green-500 h-full">{environment()}</div>
     </Show>
   );
 };

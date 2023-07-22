@@ -7,8 +7,8 @@ import { BrickObject } from "@db/models/CollectionBrick";
 import { CollectionResT } from "@utils/format/format-collections";
 // Services
 import collectionBricksService from "@services/collection-bricks";
-// Format
-import { EnvironmentResT } from "@utils/format/format-environment";
+// Types
+import { EnvironmentResT } from "@lucid/types/src/environments";
 
 export interface ServiceData {
   id: number;

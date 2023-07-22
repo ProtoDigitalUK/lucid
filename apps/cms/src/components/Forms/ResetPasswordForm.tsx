@@ -1,8 +1,8 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { createMutation } from "@tanstack/solid-query";
-import spawnToast from "@/utils/spawn-toast";
 // Utils
+import spawnToast from "@/utils/spawn-toast";
 import { validateSetError } from "@/utils/error-handling";
 // Service
 import api from "@/services/api";

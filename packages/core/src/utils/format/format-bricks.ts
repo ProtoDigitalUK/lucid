@@ -9,7 +9,8 @@ import createURL from "@utils/media/create-url";
 import brickConfigService from "@services/brick-config";
 // Format
 import { CollectionResT } from "./format-collections";
-import { EnvironmentResT } from "./format-environment";
+// Types
+import { EnvironmentResT } from "@lucid/types/src/environments";
 
 // ------------------------------------
 // Types
