@@ -79,12 +79,13 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
       />
       <div class="mt-10 w-full">
         <Button
-          text={"Reset Password"}
           loading={resetPassword.isLoading}
           classes="w-full"
           type="submit"
           colour="primary"
-        />
+        >
+          Reset Password
+        </Button>
       </div>
     </Form>
   );

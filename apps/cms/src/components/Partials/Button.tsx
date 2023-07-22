@@ -1,8 +1,8 @@
-import { Component, Show } from "solid-js";
+import { Component, Show, JSX } from "solid-js";
 import classnames from "classnames";
 
-interface ButtonProps {
-  text: string;
+interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
+  children: JSX.Element;
   onCLick?: () => void;
 
   classes?: string;
@@ -32,6 +32,7 @@ const Button: Component<ButtonProps> = (props) => {
       class={classnames(buttonClasses, props.classes)}
       onClick={props.onCLick}
       disabled={props.disabled || props.loading}
+      {...props}
     >
       <Show when={props.loading !== undefined && props.loading}>
         <div
@@ -45,7 +46,7 @@ const Button: Component<ButtonProps> = (props) => {
           <div class="w-4 h-4 border-2 border-white rounded-full animate-spin"></div>
         </div>
       </Show>
-      {props.text}
+      {props.children}
     </button>
   );
 };

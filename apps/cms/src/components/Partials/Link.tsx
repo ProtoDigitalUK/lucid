@@ -1,15 +1,14 @@
 import { Component, JSX } from "solid-js";
 import classnames from "classnames";
 
-interface ButtonProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
-  text: string;
-
+interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
+  children: JSX.Element;
   href?: string;
   classes?: string;
   colour?: "primary" | "secondary" | "error";
 }
 
-const Button: Component<ButtonProps> = (props) => {
+const Link: Component<LinkProps> = (props) => {
   // ----------------------------------------
   // Classes
   const linkClasses = classnames(
@@ -28,9 +27,9 @@ const Button: Component<ButtonProps> = (props) => {
       href={props.href}
       {...props}
     >
-      {props.text}
+      {props.children}
     </a>
   );
 };
 
-export default Button;
+export default Link;

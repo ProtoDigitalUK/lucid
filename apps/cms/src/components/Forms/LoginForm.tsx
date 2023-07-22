@@ -92,12 +92,13 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
           </Show>
 
           <Button
-            text="Login"
             classes="w-full"
             type="submit"
             colour="primary"
             loading={login.isLoading}
-          />
+          >
+            Login
+          </Button>
         </div>
       </div>
     </Form>

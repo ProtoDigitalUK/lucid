@@ -43,14 +43,15 @@ const LogoutButton: Component<LogoutButtonProps> = () => {
   // Render
   return (
     <Button
-      text="Logout"
       type="submit"
       colour="primary"
       loading={logout.isLoading}
       onCLick={() => {
         logout.mutate();
       }}
-    />
+    >
+      Logout
+    </Button>
   );
 };
 

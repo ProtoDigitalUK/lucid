@@ -32,11 +32,12 @@ const Error: Component<ErrorProps> = (props) => {
         <p class="">{props.content.description}</p>
         <Show when={props.link !== undefined}>
           <Link
-            text={props.link?.text || ""}
             colour={"primary"}
             classes="mt-10"
             href={props.link?.href || ""}
-          />
+          >
+            {props.link?.text || ""}
+          </Link>
         </Show>
       </div>
     </div>
