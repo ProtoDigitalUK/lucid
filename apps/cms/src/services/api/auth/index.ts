@@ -3,6 +3,8 @@ import csrf from "./csrf";
 import logout from "./logout";
 import registerSuperAdmin from "./register-superadmin";
 import sendPasswordReset from "./send-password-reset";
+import resetPassword from "./reset-password";
+import verifyResetToken from "./verify-reset-token";
 
 const exportObject = {
   login,
@@ -10,6 +12,8 @@ const exportObject = {
   logout,
   registerSuperAdmin,
   sendPasswordReset,
+  resetPassword,
+  verifyResetToken,
 };
 
 export default exportObject;

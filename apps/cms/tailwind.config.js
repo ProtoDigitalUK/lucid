@@ -22,6 +22,7 @@ module.exports = {
 
         error: "#FC3636",
         success: "#32AD84",
+        warning: "#FFC107",
 
         // -------------------------------------
         // Backgrounds
@@ -42,6 +43,10 @@ module.exports = {
       },
       gridTemplateColumns: {
         "main-layout": "auto 1fr",
+      },
+      animation: {
+        "animate-enter": "animation-enter 0.3s ease-out",
+        "animate-leave": "animation-leave 0.3s ease-out",
       },
     },
   },

@@ -7,8 +7,6 @@ export interface UserResT {
   first_name: string | null;
   last_name: string | null;
 
-  reset_password: boolean;
-
   roles?: UserPermissionsResT["roles"];
   permissions?: UserPermissionsResT["permissions"];
 

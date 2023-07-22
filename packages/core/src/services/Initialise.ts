@@ -30,7 +30,6 @@ const Initialise = async (client: PoolClient) => {
       username: "admin",
       password: "password",
       super_admin: true,
-      reset_password: true,
     });
   }
 };

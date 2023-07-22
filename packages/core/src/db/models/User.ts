@@ -21,7 +21,6 @@ type UserCreateSingle = (
     username: string;
     password: string;
     super_admin?: boolean;
-    reset_password?: boolean;
   }
 ) => Promise<UserT>;
 
@@ -39,7 +38,6 @@ type UserUpdateSingle = (
     username?: string;
     email?: string;
     password?: string;
-    reset_password?: boolean;
   }
 ) => Promise<UserT>;
 
@@ -59,8 +57,6 @@ export type UserT = {
   last_name: string | null;
   password?: string;
 
-  reset_password: boolean;
-
   created_at: string;
   updated_at: string;
 };
@@ -75,7 +71,6 @@ export default class User {
         "super_admin",
         "first_name",
         "last_name",
-        "reset_password",
       ],
       values: [
         data.email,
@@ -84,7 +79,6 @@ export default class User {
         data.super_admin,
         data.first_name,
         data.last_name,
-        data.reset_password,
       ],
     });
 
@@ -115,21 +109,13 @@ export default class User {
   };
   static updateSingle: UserUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
-      columns: [
-        "first_name",
-        "last_name",
-        "username",
-        "email",
-        "password",
-        "reset_password",
-      ],
+      columns: ["first_name", "last_name", "username", "email", "password"],
       values: [
         data.first_name,
         data.last_name,
         data.username,
         data.email,
         data.password,
-        data.reset_password,
       ],
       conditional: {
         hasValues: {

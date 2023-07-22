@@ -1,5 +1,7 @@
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import classNames from "classnames";
+// Components
+import Link from "@/components/Partials/Link";
 
 interface ErrorProps {
   type: "fill";
@@ -7,6 +9,10 @@ interface ErrorProps {
     image: string;
     title: string;
     description: string;
+  };
+  link?: {
+    text: string;
+    href: string;
   };
 }
 
@@ -17,13 +23,21 @@ const Error: Component<ErrorProps> = (props) => {
         "inset-0 absolute z-50": props.type === "fill",
       })}
     >
-      <div class="text-center">
+      <div class="text-center max-w-xl flex flex-col items-center">
         <img
           src={props.content.image}
           class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"
         />
-        <h1 class="mb-2">{props.content.title}</h1>
+        <h2 class="mb-2">{props.content.title}</h2>
         <p class="">{props.content.description}</p>
+        <Show when={props.link !== undefined}>
+          <Link
+            text={props.link?.text || ""}
+            colour={"primary"}
+            classes="mt-10"
+            href={props.link?.href || ""}
+          />
+        </Show>
       </div>
     </div>
   );

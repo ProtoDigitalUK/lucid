@@ -12,6 +12,7 @@ import AuthLocked from "@/guards/AuthLocked";
 // root
 import LoginRoute from "@/routes/Login";
 import ForgotPasswordRoute from "@/routes/ForgotPassword";
+import ResetPasswordRoute from "@/routes/ResetPassword";
 import DashboardRoute from "@/routes/Dashboard";
 
 // environments
@@ -40,6 +41,7 @@ const AppRouter: Component = () => {
           <Route path="/" component={AuthRoutes}>
             <Route path="/login" component={LoginRoute} />
             <Route path="/forgot-password" component={ForgotPasswordRoute} />
+            <Route path="/reset-password" component={ResetPasswordRoute} />
           </Route>
         </Route>
       </Routes>

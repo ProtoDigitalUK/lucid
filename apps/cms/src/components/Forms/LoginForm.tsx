@@ -3,6 +3,7 @@ import { createMutation } from "@tanstack/solid-query";
 import { Link, useNavigate } from "@solidjs/router";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
+import spawnToast from "@/utils/spawn-toast";
 // Service
 import api from "@/services/api";
 // Components
@@ -29,6 +30,11 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
   const login = createMutation({
     mutationFn: api.auth.login,
     onSuccess: () => {
+      spawnToast({
+        title: "Login successful",
+        message: "You have been logged in",
+        status: "success",
+      });
       navigate("/");
     },
     onError: (error) => validateSetError(error, setErrors),

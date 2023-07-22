@@ -45,9 +45,15 @@ const verifyResetPasswordParams = z.object({
 
 // ------------------------------------
 // RESET PASSWORD
-const resetPasswordBody = z.object({
-  password: z.string().min(8),
-});
+const resetPasswordBody = z
+  .object({
+    password: z.string().min(8),
+    password_confirmation: z.string().min(8),
+  })
+  .refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords must match",
+    path: ["password_confirmation"],
+  });
 const resetPasswordQuery = z.object({});
 const resetPasswordParams = z.object({
   token: z.string(),

@@ -1,6 +1,7 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 import { createMutation } from "@tanstack/solid-query";
+import spawnToast from "@/utils/spawn-toast";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
 // Service
@@ -27,7 +28,12 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
   const sendPasswordReset = createMutation({
     mutationFn: api.auth.sendPasswordReset,
     onSuccess: () => {
-      // TODO: show toast
+      spawnToast({
+        title: "Password reset email sent",
+        message: "Please check your email for a password reset link",
+        status: "success",
+      });
+      setEmail("");
     },
     onError: (error) => validateSetError(error, setErrors),
   });

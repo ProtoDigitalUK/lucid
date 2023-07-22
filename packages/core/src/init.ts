@@ -41,7 +41,7 @@ const app = async (options: InitOptions) => {
   app.use(
     cors({
       origin: Config.origin,
-      methods: ["GET", "POST", "PUT", "DELETE"],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
       allowedHeaders: ["Content-Type", "Authorization", "_csrf"],
       credentials: true,
     })
