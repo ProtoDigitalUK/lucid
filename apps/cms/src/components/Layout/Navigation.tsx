@@ -46,15 +46,21 @@ const Navigation: Component = () => {
   // ----------------------------------
   // Render
   return (
-    <div class="h-full flex">
+    <div class="h-full flex ">
       {/* Mainbar */}
-      <div class="bg-white w-[70px] h-full flex items-center flex-col py-5 border-r border-border">
-        <NavigationLink href="/" icon="dashboard" />
-        <NavigationLink href={getFirstEnvHref()} icon="environment" />
-        <NavigationLink href="/media" icon="media" />
-        <NavigationLink href="/users" icon="users" />
-        <NavigationLink href="/settings" icon="settings" />
-      </div>
+      <nav class="bg-white w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
+        <ul class="py-5">
+          <NavigationLink href="/" icon="dashboard" title="Home" />
+          <NavigationLink
+            href={getFirstEnvHref()}
+            icon="environment"
+            title="Environment"
+          />
+          <NavigationLink href="/media" icon="media" title="Media" />
+          <NavigationLink href="/users" icon="users" title="Users" />
+          <NavigationLink href="/settings" icon="settings" title="Settings" />
+        </ul>
+      </nav>
       {/* Sidebar */}
       <EnvironmentBar />
     </div>
