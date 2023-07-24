@@ -23,7 +23,9 @@ const EnvironmentBar: Component = () => {
   // Render
   return (
     <Show when={showBar()}>
-      <div class="w-[240px] bg-green-500 h-full">{environment()}</div>
+      <div class="w-[240px] bg-green-500 h-full">
+        <div class="h-20 w-full bg-white">{environment()}</div>
+      </div>
     </Show>
   );
 };
