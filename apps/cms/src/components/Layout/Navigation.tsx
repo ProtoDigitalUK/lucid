@@ -22,7 +22,7 @@ const Navigation: Component = () => {
 
   // ----------------------------------
   // Mutations & Queries
-  createQuery(() => ["environments.getAll"], {
+  const environments = createQuery(() => ["environments.getAll"], {
     queryFn: () => api.environments.getAll(),
     onSuccess: (data) => {
       syncEnvironment(data.data);
@@ -66,7 +66,14 @@ const Navigation: Component = () => {
     <div class="h-full flex ">
       {/* Mainbar */}
       <nav class="bg-white w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
-        <ul class="py-5">
+        <div class="h-[60px] min-h-[70px] flex items-center justify-center">
+          <img
+            src="https://placehold.co/100x100/6554FB/white"
+            alt="logo"
+            class="h-10 w-10 rounded-full"
+          />
+        </div>
+        <ul class="pb-[15px]">
           <NavigationIconLink href="/" icon="dashboard" title="Home" />
           <NavigationIconLink
             href={getFirstEnvHref()}
@@ -84,7 +91,10 @@ const Navigation: Component = () => {
         </ul>
       </nav>
       {/* Sidebar */}
-      <EnvironmentBar collections={collections.data?.data || []} />
+      <EnvironmentBar
+        collections={collections.data?.data || []}
+        environments={environments.data?.data || []}
+      />
     </div>
   );
 };
