@@ -1,19 +1,13 @@
 import { Component, Switch, Match } from "solid-js";
 import classNames from "classnames";
-import {
-  FaSolidPhotoFilm,
-  FaSolidUsers,
-  FaSolidGear,
-  FaSolidEarthEurope,
-  FaSolidHouse,
-} from "solid-icons/fa";
+import { FaSolidFile } from "solid-icons/fa";
 // Components
 import { Link } from "@solidjs/router";
 
 interface NavigationLinkProps {
   title: string;
   href: string;
-  icon: "dashboard" | "environment" | "media" | "users" | "settings";
+  icon: "page";
 }
 
 const NavigationLink: Component<NavigationLinkProps> = (props) => {
@@ -27,33 +21,22 @@ const NavigationLink: Component<NavigationLinkProps> = (props) => {
   // ----------------------------------
   // Render
   return (
-    <li class="mb-2.5 last:mb-0">
+    <li class="mb-1 last:mb-0">
       <Link
         title={props.title}
         href={props.href}
         class={classNames(
-          "w-10 h-10 focus:outline-none focus:!border-primary focus:ring-0 flex items-center justify-center bg-white rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary"
+          "h-10 w-full flex bg-white text-body fill-body hover:text-body hover:bg-backgroundAccent transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md"
         )}
-        activeClass={classNames("!border-primary")}
+        activeClass={classNames("!bg-backgroundAccent !text-title !fill-title")}
         end
       >
         <Switch>
-          <Match when={props.icon === "dashboard"}>
-            <FaSolidHouse class={iconClasses} />
-          </Match>
-          <Match when={props.icon === "environment"}>
-            <FaSolidEarthEurope class={iconClasses} />
-          </Match>
-          <Match when={props.icon === "media"}>
-            <FaSolidPhotoFilm class={iconClasses} />
-          </Match>
-          <Match when={props.icon === "users"}>
-            <FaSolidUsers class={iconClasses} />
-          </Match>
-          <Match when={props.icon === "settings"}>
-            <FaSolidGear class={iconClasses} />
+          <Match when={props.icon === "page"}>
+            <FaSolidFile class={iconClasses} />
           </Match>
         </Switch>
+        <span class="ml-2.5 block text-sm font-medium">{props.title}</span>
       </Link>
     </li>
   );

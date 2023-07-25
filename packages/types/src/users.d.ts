@@ -1,3 +1,8 @@
+import {
+  PermissionT,
+  EnvironmentPermissionT,
+} from "@lucid/core/src/services/Permissions";
+
 // User
 export interface UserResT {
   id: number;

@@ -4,8 +4,8 @@ import { EnvironmentT } from "@db/models/Environment";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
 import brickConfigService, { BrickConfigT } from "@services/brick-config";
-// Format
-import { CollectionResT } from "@utils/format/format-collections";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 
 export interface ServiceData {
   key: string;

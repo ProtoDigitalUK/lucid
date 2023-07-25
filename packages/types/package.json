@@ -11,7 +11,9 @@
   },
   "keywords": [],
   "author": "William Yallop",
-  "devDependencies": {},
+  "devDependencies": {
+    "@lucid/core": "*"
+  },
   "bugs": {
     "url": "hhttps://github.com/WillYallop/Lucid/issues"
   },

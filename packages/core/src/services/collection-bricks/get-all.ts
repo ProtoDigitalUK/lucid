@@ -6,8 +6,9 @@ import service from "@utils/app/service";
 // Serices
 import environmentsService from "@services/environments";
 // Format
-import { CollectionResT } from "@utils/format/format-collections";
 import formatBricks from "@utils/format/format-bricks";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 
 export interface ServiceData {
   reference_id: number;

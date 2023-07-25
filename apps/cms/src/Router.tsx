@@ -15,10 +15,17 @@ import ForgotPasswordRoute from "@/routes/ForgotPassword";
 import ResetPasswordRoute from "@/routes/ResetPassword";
 import DashboardRoute from "@/routes/Dashboard";
 
+// media
+import MediaListRoute from "@/routes/Media/List";
+
+// users
+import UsersListRoute from "@/routes/Users/List";
+
+// settings
+import SettingsListRoute from "@/routes/Settings/List";
+
 // environments
 import EnvCollectionsListRoute from "@/routes/Environments/Collections/List";
-import EnvFormsListRoute from "@/routes/Environments/Forms/List";
-import EnvMenusListRoute from "@/routes/Environments/Menus/List";
 
 const AppRouter: Component = () => {
   return (
@@ -29,11 +36,12 @@ const AppRouter: Component = () => {
           <Route path="/" element={<MainLayout />}>
             <Route path="/" element={<DashboardRoute />} />
             <Route
-              path="/env/:envKey/collections"
+              path="/env/:envKey/collection/:collectionKey"
               element={<EnvCollectionsListRoute />}
             />
-            <Route path="/env/:envKey/forms" element={<EnvFormsListRoute />} />
-            <Route path="/env/:envKey/menus" element={<EnvMenusListRoute />} />
+            <Route path="/media" element={<MediaListRoute />} />
+            <Route path="/users" element={<UsersListRoute />} />
+            <Route path="/settings" element={<SettingsListRoute />} />
           </Route>
         </Route>
         {/* Non authenticated only */}

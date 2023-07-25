@@ -7,12 +7,12 @@ import { EnvironmentT } from "@db/models/Environment";
 // Intenal
 import { CollectionConfigT } from "@lucid/collection-builder";
 // Utils
-import formatCollection, {
-  CollectionResT,
-} from "@utils/format/format-collections";
+import formatCollection from "@utils/format/format-collections";
 // Services
 import Config from "@services/Config";
 import brickConfigService from "@services/brick-config";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 import environmentsService from "@services/environments";
 
 export interface ServiceData {

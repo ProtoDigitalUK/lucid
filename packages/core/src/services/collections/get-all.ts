@@ -3,14 +3,14 @@ import z from "zod";
 // Schema
 import collectionSchema from "@schemas/collections";
 // Utils
-import formatCollection, {
-  CollectionResT,
-} from "@utils/format/format-collections";
+import formatCollection from "@utils/format/format-collections";
 import service from "@utils/app/service";
 // Services
 import Config from "@services/Config";
 import brickConfigService from "@services/brick-config";
 import environmentsService from "@services/environments";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 
 export interface ServiceData {
   query: z.infer<typeof collectionSchema.getAll.query>;

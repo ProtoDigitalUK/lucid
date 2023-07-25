@@ -42,7 +42,12 @@ const app = async (options: InitOptions) => {
     cors({
       origin: Config.origin,
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-      allowedHeaders: ["Content-Type", "Authorization", "_csrf"],
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "_csrf",
+        "lucid-environment",
+      ],
       credentials: true,
     })
   );

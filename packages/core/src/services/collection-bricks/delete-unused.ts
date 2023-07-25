@@ -4,8 +4,8 @@ import { LucidError } from "@utils/app/error-handler";
 import CollectionBrick from "@db/models/CollectionBrick";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-// Format
-import { CollectionResT } from "@utils/format/format-collections";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 
 export interface ServiceData {
   type: CollectionResT["type"];

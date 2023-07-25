@@ -3,11 +3,10 @@ import { PoolClient } from "pg";
 import service from "@utils/app/service";
 // Models
 import { BrickObject } from "@db/models/CollectionBrick";
-// Format
-import { CollectionResT } from "@utils/format/format-collections";
 // Services
 import collectionBricksService from "@services/collection-bricks";
 // Types
+import { CollectionResT } from "@lucid/types/src/collections";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 
 export interface ServiceData {

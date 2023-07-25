@@ -7,8 +7,8 @@ import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
 import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-// Format
-import { CollectionResT } from "@utils/format/format-collections";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 // Services
 import brickConfigService from "@services/brick-config";
 import collectionBricksService from "@services/collection-bricks";

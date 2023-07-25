@@ -7,9 +7,8 @@ import { CollectionBrickT } from "@db/models/CollectionBrick";
 import createURL from "@utils/media/create-url";
 // Services
 import brickConfigService from "@services/brick-config";
-// Format
-import { CollectionResT } from "./format-collections";
 // Types
+import { CollectionResT } from "@lucid/types/src/collections";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 
 // ------------------------------------

@@ -1,5 +1,6 @@
 import { Component, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
+import { useLocation } from "@solidjs/router";
 // Utils
 import spawnToast from "@/utils/spawn-toast";
 // Services
@@ -12,15 +13,16 @@ import {
 } from "@/state/environment";
 // Components
 import EnvironmentBar from "@/components/Groups/Navigation/EnvironmentBar";
-import NavigationLink from "@/components/Groups/Navigation/NavigationLink";
+import NavigationIconLink from "@/components/Groups/Navigation/NavigationIconLink";
 
 const Navigation: Component = () => {
   // ----------------------------------
   // Hooks & States
+  const location = useLocation();
 
   // ----------------------------------
   // Mutations & Queries
-  createQuery(() => ["environments"], {
+  createQuery(() => ["environments.getAll"], {
     queryFn: () => api.environments.getAll(),
     onSuccess: (data) => {
       syncEnvironment(data.data);
@@ -34,13 +36,28 @@ const Navigation: Component = () => {
       });
     },
   });
+  const collections = createQuery(() => ["environments.collections.getAll"], {
+    queryFn: () =>
+      api.environments.collections.getAll({
+        include: {
+          bricks: false,
+        },
+      }),
+  });
 
   // ----------------------------------
   // Memos
   const getFirstEnvHref = createMemo(() => {
-    // TODO: work out the first link based on collections, forms, menus, etc. in the environment.
-    // TODO: If no envrionemtn, take the to the create environment route.
-    return `/env/${environment()}/collections`;
+    // work out the first link based on collections, forms, menus, etc. in the environment.
+    // If no envrionemtn, take the to the create environment route.
+    let url = `/env/${environment()}/`;
+
+    if (collections.data?.data.length) {
+      url += `collection/${collections.data?.data[0].key}`;
+      return url;
+    }
+
+    return `${url}create`;
   });
 
   // ----------------------------------
@@ -50,19 +67,24 @@ const Navigation: Component = () => {
       {/* Mainbar */}
       <nav class="bg-white w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
         <ul class="py-5">
-          <NavigationLink href="/" icon="dashboard" title="Home" />
-          <NavigationLink
+          <NavigationIconLink href="/" icon="dashboard" title="Home" />
+          <NavigationIconLink
             href={getFirstEnvHref()}
             icon="environment"
             title="Environment"
+            active={location.pathname.includes("/env/")}
           />
-          <NavigationLink href="/media" icon="media" title="Media" />
-          <NavigationLink href="/users" icon="users" title="Users" />
-          <NavigationLink href="/settings" icon="settings" title="Settings" />
+          <NavigationIconLink href="/media" icon="media" title="Media" />
+          <NavigationIconLink href="/users" icon="users" title="Users" />
+          <NavigationIconLink
+            href="/settings"
+            icon="settings"
+            title="Settings"
+          />
         </ul>
       </nav>
       {/* Sidebar */}
-      <EnvironmentBar />
+      <EnvironmentBar collections={collections.data?.data || []} />
     </div>
   );
 };
