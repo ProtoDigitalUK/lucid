@@ -94,7 +94,6 @@
   }
 
   /* Animations */
-
   @keyframes animation-enter {
     0% {
       opacity: 0;

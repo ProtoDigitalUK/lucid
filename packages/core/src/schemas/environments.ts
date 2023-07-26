@@ -25,6 +25,7 @@ const migrateEnvironmentParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
+  title: z.string(),
   assigned_bricks: z.array(z.string()).optional(),
   assigned_collections: z.array(z.string()).optional(),
   assigned_forms: z.array(z.string()).optional(),
@@ -37,7 +38,11 @@ const updateSingleParams = z.object({
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  key: z.string().min(4).max(64),
+  key: z
+    .string()
+    .min(4)
+    .max(64)
+    .regex(/^[a-z-]+$/),
   title: z.string(),
   assigned_bricks: z.array(z.string()).optional(),
   assigned_collections: z.array(z.string()).optional(),

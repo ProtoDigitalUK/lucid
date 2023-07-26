@@ -1,6 +1,6 @@
-import { Component, createMemo } from "solid-js";
+import { Component, createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
-import { useLocation } from "@solidjs/router";
+import { useLocation, useParams } from "@solidjs/router";
 // Utils
 import spawnToast from "@/utils/spawn-toast";
 // Services
@@ -19,6 +19,7 @@ const Navigation: Component = () => {
   // ----------------------------------
   // Hooks & States
   const location = useLocation();
+  const params = useParams();
 
   // ----------------------------------
   // Mutations & Queries
@@ -43,6 +44,19 @@ const Navigation: Component = () => {
           bricks: false,
         },
       }),
+  });
+
+  // ----------------------------------
+  // Effects
+  createEffect(() => {
+    // get env variable from url
+    if (params.envKey) {
+      const findEnv = environments.data?.data.find(
+        (env) => env.key === params.envKey
+      );
+      if (!findEnv) return;
+      setEnvironment(findEnv.key);
+    }
   });
 
   // ----------------------------------

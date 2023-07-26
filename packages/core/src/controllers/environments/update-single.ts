@@ -20,7 +20,7 @@ const updateSingleController: Controller<
     )({
       data: {
         key: req.params.key,
-        title: undefined,
+        title: req.body.title,
         assigned_bricks: req.body.assigned_bricks,
         assigned_collections: req.body.assigned_collections,
         assigned_forms: req.body.assigned_forms,
