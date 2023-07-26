@@ -50,6 +50,8 @@ const Navigation: Component = () => {
   const getFirstEnvHref = createMemo(() => {
     // work out the first link based on collections, forms, menus, etc. in the environment.
     // If no envrionemtn, take the to the create environment route.
+    if (!environment()) return "/env/create";
+
     let url = `/env/${environment()}/`;
 
     if (collections.data?.data.length) {
@@ -57,7 +59,7 @@ const Navigation: Component = () => {
       return url;
     }
 
-    return `${url}create`;
+    return url;
   });
 
   // ----------------------------------

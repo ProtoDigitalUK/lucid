@@ -62,7 +62,6 @@ const registerSingle = async (client, data, current_user_id) => {
         super_admin: superAdmin,
         first_name: data.first_name,
         last_name: data.last_name,
-        reset_password: data.reset_password,
     });
     if (!user) {
         throw new error_handler_1.LucidError({

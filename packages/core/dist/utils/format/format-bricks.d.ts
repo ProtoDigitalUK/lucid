@@ -1,8 +1,8 @@
 import { CollectionBrickFieldsT } from "../../db/models/CollectionBrick";
 import { FieldTypes } from "@lucid/brick-builder";
 import { CollectionBrickT } from "../../db/models/CollectionBrick";
-import { CollectionResT } from "./format-collections";
-import { EnvironmentResT } from "./format-environment";
+import { CollectionResT } from "@lucid/types/src/collections";
+import { EnvironmentResT } from "@lucid/types/src/environments";
 export interface BrickResT {
     id: CollectionBrickT["id"];
     key: CollectionBrickT["brick_key"];

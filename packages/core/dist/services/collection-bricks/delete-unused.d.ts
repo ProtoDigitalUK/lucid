@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-import { CollectionResT } from "../../utils/format/format-collections";
+import { CollectionResT } from "@lucid/types/src/collections";
 export interface ServiceData {
     type: CollectionResT["type"];
     reference_id: number;

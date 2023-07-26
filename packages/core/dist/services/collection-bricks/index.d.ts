@@ -56,7 +56,7 @@ declare const _default: {
                 } & any)[] | undefined;
             })[] | undefined;
         }[];
-        collection: import("../../utils/format/format-collections").CollectionResT;
+        collection: import("../../../../types/src/collections").CollectionResT;
         environment: import("../../db/models/Environment").EnvironmentT;
     }) => Promise<void>;
 };

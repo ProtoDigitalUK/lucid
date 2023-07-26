@@ -52,12 +52,21 @@ declare const _default: {
         }>;
     };
     resetPassword: {
-        body: z.ZodObject<{
+        body: z.ZodEffects<z.ZodObject<{
             password: z.ZodString;
+            password_confirmation: z.ZodString;
         }, "strip", z.ZodTypeAny, {
             password: string;
+            password_confirmation: string;
         }, {
             password: string;
+            password_confirmation: string;
+        }>, {
+            password: string;
+            password_confirmation: string;
+        }, {
+            password: string;
+            password_confirmation: string;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{

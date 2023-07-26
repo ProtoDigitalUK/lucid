@@ -1,6 +1,7 @@
 import { Component, createMemo } from "solid-js";
 import { DropdownMenu } from "@kobalte/core";
 import { FaSolidChevronRight } from "solid-icons/fa";
+import { Link } from "@solidjs/router";
 // State
 import { environment } from "@/state/environment";
 // Types
@@ -27,9 +28,14 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
         <FaSolidChevronRight class="fill-title" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content class="bg-backgroundAccent w-[240px] p-[15px] shadow-md">
+        <DropdownMenu.Content class="bg-backgroundAccent w-[240px] p-[15px] shadow-md animate-animate-dropdown">
           <p>hello</p>
-          <button>Create environment</button>
+          <Link
+            href="/env/create"
+            class="text-sm border-border border flex w-full bg-white"
+          >
+            Create Environment
+          </Link>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

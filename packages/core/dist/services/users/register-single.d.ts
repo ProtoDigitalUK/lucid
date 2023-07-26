@@ -7,7 +7,6 @@ export interface ServiceData {
     last_name?: string;
     super_admin?: boolean;
     role_ids?: number[];
-    reset_password?: boolean;
 }
 declare const registerSingle: (client: PoolClient, data: ServiceData, current_user_id?: number) => Promise<import("../../../../types/src/users").UserResT>;
 export default registerSingle;

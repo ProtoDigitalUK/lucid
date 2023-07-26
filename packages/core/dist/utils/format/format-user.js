@@ -12,7 +12,6 @@ const formatUser = (user, permissions) => {
         permissions: permissions?.permissions,
         created_at: user.created_at,
         updated_at: user.updated_at,
-        reset_password: user.reset_password,
     };
 };
 exports.default = formatUser;

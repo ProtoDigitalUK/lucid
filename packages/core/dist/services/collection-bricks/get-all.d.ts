@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { CollectionResT } from "../../utils/format/format-collections";
+import { CollectionResT } from "@lucid/types/src/collections";
 export interface ServiceData {
     reference_id: number;
     type: CollectionResT["type"];

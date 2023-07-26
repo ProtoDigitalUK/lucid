@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 import { BrickObject } from "../../db/models/CollectionBrick";
-import { CollectionResT } from "../../utils/format/format-collections";
-import { EnvironmentResT } from "../../utils/format/format-environment";
+import { CollectionResT } from "@lucid/types/src/collections";
+import { EnvironmentResT } from "@lucid/types/src/environments";
 export interface ServiceData {
     id: number;
     builder_bricks: Array<BrickObject>;

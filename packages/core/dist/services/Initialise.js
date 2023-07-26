@@ -17,7 +17,6 @@ const Initialise = async (client) => {
             username: "admin",
             password: "password",
             super_admin: true,
-            reset_password: true,
         });
     }
 };

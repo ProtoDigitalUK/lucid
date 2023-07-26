@@ -7,7 +7,6 @@ export interface ServiceData {
     email?: string;
     password?: string;
     role_ids?: number[];
-    reset_password?: boolean;
 }
 declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../../../types/src/users").UserResT>;
 export default updateSingle;

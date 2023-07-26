@@ -7,7 +7,7 @@ declare const _default: {
     getSingle: (client: import("pg").PoolClient, data: import("./get-single").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
     toggleReadAt: (client: import("pg").PoolClient, data: import("./toggle-read-at").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
     submitForm: (client: import("pg").PoolClient, props: import("./submit-form").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
-    hasEnvironmentPermission: (client: import("pg").PoolClient, data: import("./has-environment-permission").ServiceData) => Promise<import("../../utils/format/format-environment").EnvironmentResT>;
+    hasEnvironmentPermission: (client: import("pg").PoolClient, data: import("./has-environment-permission").ServiceData) => Promise<import("../../../../types/src/environments").EnvironmentResT>;
     createSingle: (client: import("pg").PoolClient, data: import("./create-single").ServiceData) => Promise<import("../../utils/format/format-form-submission").FormSubmissionResT>;
 };
 export default _default;

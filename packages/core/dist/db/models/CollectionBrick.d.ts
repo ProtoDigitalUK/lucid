@@ -3,7 +3,7 @@ import z from "zod";
 import { FieldTypes } from "@lucid/brick-builder";
 import { BrickSchema, FieldSchema } from "../../schemas/bricks";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-import { CollectionResT } from "../../utils/format/format-collections";
+import { CollectionResT } from "@lucid/types/src/collections";
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
 type CollectionBrickGetAll = (client: PoolClient, data: {

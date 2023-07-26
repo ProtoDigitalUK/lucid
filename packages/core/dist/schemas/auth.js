@@ -29,8 +29,14 @@ const verifyResetPasswordQuery = zod_1.default.object({});
 const verifyResetPasswordParams = zod_1.default.object({
     token: zod_1.default.string(),
 });
-const resetPasswordBody = zod_1.default.object({
+const resetPasswordBody = zod_1.default
+    .object({
     password: zod_1.default.string().min(8),
+    password_confirmation: zod_1.default.string().min(8),
+})
+    .refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords must match",
+    path: ["password_confirmation"],
 });
 const resetPasswordQuery = zod_1.default.object({});
 const resetPasswordParams = zod_1.default.object({

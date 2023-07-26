@@ -45,8 +45,9 @@ module.exports = {
         "main-layout": "auto 1fr",
       },
       animation: {
-        "animate-enter": "animation-enter 0.3s ease-out",
-        "animate-leave": "animation-leave 0.3s ease-out",
+        "animate-enter": "animation-enter 0.2s ease-out",
+        "animate-leave": "animation-leave 0.2s ease-out",
+        "animate-dropdown": "animation-dropdown 0.2s ease-out",
       },
     },
   },

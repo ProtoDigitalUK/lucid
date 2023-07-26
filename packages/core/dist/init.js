@@ -28,8 +28,13 @@ const app = async (options) => {
     app.use(express_1.default.json());
     app.use((0, cors_1.default)({
         origin: Config_1.default.origin,
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization", "_csrf"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+        allowedHeaders: [
+            "Content-Type",
+            "Authorization",
+            "_csrf",
+            "lucid-environment",
+        ],
         credentials: true,
     }));
     app.use((0, morgan_1.default)("dev"));
