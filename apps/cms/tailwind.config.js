@@ -48,6 +48,7 @@ module.exports = {
         "animate-enter": "animation-enter 0.2s ease-out",
         "animate-leave": "animation-leave 0.2s ease-out",
         "animate-dropdown": "animation-dropdown 0.2s ease-out",
+        "animate-from-left": "animation-from-left 0.2s ease-out",
       },
     },
   },
