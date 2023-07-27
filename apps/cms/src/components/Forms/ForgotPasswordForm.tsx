@@ -73,7 +73,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
         <div class="mt-10 w-full">
           <Button
             loading={sendPasswordReset.isLoading}
-            class="w-full"
+            classes="w-full"
             type="submit"
             theme="primary"
           >

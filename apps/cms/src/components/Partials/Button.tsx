@@ -7,6 +7,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
 
   type?: "button" | "submit" | "reset";
   theme?: "primary" | "primary-slim-outline";
+  classes?: string;
 
   loading?: boolean;
   disabled?: boolean;
@@ -28,7 +29,7 @@ const Button: Component<ButtonProps> = (props) => {
   return (
     <button
       type={props.type}
-      class={classnames(buttonClasses)}
+      class={classnames(buttonClasses, props.classes)}
       onClick={props.onCLick}
       disabled={props.disabled || props.loading}
       {...props}

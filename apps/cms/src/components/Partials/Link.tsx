@@ -5,6 +5,7 @@ import { Link as RouterLink } from "@solidjs/router";
 interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
   children: JSX.Element;
   href?: string;
+  classes?: string;
   theme?: "primary" | "primary-slim-outline";
 }
 
@@ -23,7 +24,7 @@ const Link: Component<LinkProps> = (props) => {
   // Render
   return (
     <RouterLink
-      class={classnames(linkClasses)}
+      class={classnames(linkClasses, props.classes)}
       href={props.href || ""}
       {...props}
     >

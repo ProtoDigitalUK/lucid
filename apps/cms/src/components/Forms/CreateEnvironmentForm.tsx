@@ -108,7 +108,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           </Show>
 
           <Button
-            class="w-full"
+            classes="w-full"
             type="submit"
             theme="primary"
             loading={login.isLoading}
