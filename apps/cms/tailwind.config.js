@@ -16,6 +16,7 @@ module.exports = {
         // purple
         secondary: "#6554FB",
         secondaryH: "#594AE1",
+        secondaryText: "#FFFFFF",
 
         backgroundAccent: "#E4E9EC",
         backgroundAccentH: "#DDE2E5",

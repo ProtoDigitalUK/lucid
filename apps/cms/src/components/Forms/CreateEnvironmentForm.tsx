@@ -24,7 +24,16 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
   const [key, setKey] = createSignal("");
   const [assignedBricks, setAssignedBricks] = createSignal<
     SelectMultipleValueT[]
-  >([]);
+  >([
+    {
+      value: 1,
+      label: "Brick 1",
+    },
+    {
+      value: 2,
+      label: "Brick 2",
+    },
+  ]);
   const [assignedCollections, setAssignedCollections] = createSignal<
     SelectMultipleValueT[]
   >([]);
@@ -78,7 +87,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
       <SelectMultiple
         id="assignedBricks"
         name="assignedBricks"
-        value={assignedBricks()}
+        values={assignedBricks()}
         onChange={setAssignedBricks}
         options={[
           {
@@ -92,6 +101,34 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           {
             value: 3,
             label: "Brick 3",
+          },
+          {
+            value: 4,
+            label: "Brick 4",
+          },
+          {
+            value: 5,
+            label: "Brick 5",
+          },
+          {
+            value: 6,
+            label: "Brick 6",
+          },
+          {
+            value: 7,
+            label: "Brick 7",
+          },
+          {
+            value: 8,
+            label: "Brick 8",
+          },
+          {
+            value: 9,
+            label: "Brick 9",
+          },
+          {
+            value: 10,
+            label: "Brick 10",
           },
         ]}
         copy={{

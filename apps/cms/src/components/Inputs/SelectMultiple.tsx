@@ -1,13 +1,13 @@
-import { Component, Show, createSignal, createMemo, For } from "solid-js";
+import { Component, Show, createSignal, For, onMount } from "solid-js";
 import classnames from "classnames";
 // Components
 import {
   FaSolidTriangleExclamation,
   FaSolidCheck,
-  FaSolidCross,
+  FaSolidXmark,
   FaSolidSort,
 } from "solid-icons/fa";
-import { Select, As } from "@kobalte/core";
+import { DropdownMenu } from "@kobalte/core";
 
 export type SelectMultipleValueT = {
   value: string | number;
@@ -16,7 +16,7 @@ export type SelectMultipleValueT = {
 
 interface SelectMultipleProps {
   id: string;
-  value: SelectMultipleValueT[];
+  values: SelectMultipleValueT[];
   onChange: (value: SelectMultipleValueT[]) => void;
   options: SelectMultipleValueT[];
   name: string;
@@ -31,104 +31,157 @@ interface SelectMultipleProps {
 }
 
 const SelectMultiple: Component<SelectMultipleProps> = (props) => {
-  const [inputFocus, setInputFocus] = createSignal(false);
+  const [height, setHeight] = createSignal(0);
+  const [open, setOpen] = createSignal(true);
+  let selectContentRef: HTMLDivElement | undefined;
+
+  // ----------------------------------------
+  // Functions
+  const setValues = (value: SelectMultipleValueT[]) => {
+    props.onChange(value);
+    setHeight(selectContentRef?.clientHeight ?? 0);
+  };
+  const toggleValue = (value: SelectMultipleValueT) => {
+    const exists = props.values.find((v) => v.value === value.value);
+    if (!exists) {
+      setValues([...props.values, value]);
+    } else {
+      setValues(props.values.filter((v) => v.value !== value.value));
+    }
+  };
+
+  // ----------------------------------------
+  // Effects
+  onMount(() => {
+    if (selectContentRef) {
+      setHeight(selectContentRef.clientHeight);
+    }
+  });
 
   // ----------------------------------------
   // Render
   return (
-    <div class="mb-5 last:mb-0 w-full">
+    <div class="mb-5 last:mb-0 w-full relative">
+      {/* Select Content Overlay */}
       <div
-        class={classnames(
-          "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",
-          {
-            "border-secondary bg-backgroundAccentH": inputFocus(),
-            "border-error": props.errors?.message !== undefined,
-          }
-        )}
+        ref={selectContentRef}
+        class="pointer-events-none absolute bottom-0 left-0 right-0 w-full z-10 bg-transparent mt-1 focus:outline-none px-2.5 pb-2 rounded-b-md text-sm text-title min-h-[32px] font-medium justify-between flex "
       >
-        <label
-          for={props.id}
+        {/* Selected Items */}
+        <div class="flex flex-wrap gap-1">
+          <For each={props.values}>
+            {(value) => (
+              <span class="bg-primary pointer-events-auto hover:bg-primaryH duration-200 transition-colors rounded-md text-primaryText fill-primaryText hover:fill-error px-2 py-0.5 flex items-center text-sm focus:outline-none">
+                {value.label}
+                <button
+                  type="button"
+                  class="ml-1 duration-200 transition-colors rounded-full focus:outline-none focus:ring-1 ring-error focus:fill-error"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setValues(
+                      props.values.filter((v) => v.value !== value.value)
+                    );
+                  }}
+                >
+                  <FaSolidXmark size={16} class="" />
+                  <span class="sr-only">Remove</span>
+                </button>
+              </span>
+            )}
+          </For>
+        </div>
+        {/* Icons */}
+        <div class="flex items-center ml-2.5">
+          <Show when={props.values.length > 0}>
+            <button
+              type="button"
+              class="bg-primary pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 fill-primaryText hover:bg-error hover:fill-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error focus:fill-error"
+              onClick={() => {
+                setValues([]);
+              }}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "Backspace" ||
+                  e.key === "Delete" ||
+                  e.key === "Enter" ||
+                  e.key === " "
+                ) {
+                  setValues([]);
+                }
+              }}
+            >
+              <FaSolidXmark size={14} />
+              <span class="sr-only">Remove All</span>
+            </button>
+          </Show>
+          <FaSolidSort size={16} class="fill-title ml-1" />
+        </div>
+      </div>
+      {/* Select */}
+      <DropdownMenu.Root
+        sameWidth={true}
+        open={open()}
+        onOpenChange={setOpen}
+        flip={true}
+        gutter={5}
+      >
+        <DropdownMenu.Trigger
           class={classnames(
-            "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
+            "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative w-full group focus:outline-none focus:border-secondary focus:bg-backgroundAccentH",
             {
-              "text-secondaryH": inputFocus(),
+              "border-error": props.errors?.message !== undefined,
             }
           )}
         >
-          {props.copy.label}
-          <Show when={props.required}>
-            <span class="text-error ml-1 inline">*</span>
-          </Show>
-        </label>
-
-        <Select.Root<SelectMultipleValueT>
-          multiple
-          id={props.id}
-          value={props.value}
-          onChange={(value) => {
-            console.log(value);
-            props.onChange(value);
-          }}
-          options={props.options}
-          name={props.name}
-          placeholder={props.copy.placeholder}
-          aria-describedby={
-            props.copy.describedBy ? `${props.id}-description` : undefined
-          }
-          required={props.required}
-          disabled={props.disabled}
-          onFocus={() => setInputFocus(true)}
-          onBlur={() => setInputFocus(false)}
-          class={
-            "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium"
-          }
-          itemComponent={(props) => (
-            <Select.Item item={props.item}>
-              <Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>
-              <Select.ItemIndicator>
-                <FaSolidCheck />
-              </Select.ItemIndicator>
-            </Select.Item>
-          )}
-        >
-          <Select.Trigger asChild>
-            <As component="div">
-              <Select.Value<string>>
-                {(state) => (
-                  <>
-                    <div>
-                      <For each={state.selectedOptions()}>
-                        {(option) => (
-                          <span onPointerDown={(e) => e.stopPropagation()}>
-                            {option}
-                            <button onClick={() => state.remove(option)}>
-                              <FaSolidCross />
-                            </button>
-                          </span>
-                        )}
-                      </For>
-                    </div>
-                    <button
-                      onPointerDown={(e) => e.stopPropagation()}
-                      onClick={state.clear}
+          <label
+            for={props.id}
+            class={
+              "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out group-focus:text-secondaryH text-left"
+            }
+          >
+            {props.copy.label}
+            <Show when={props.required}>
+              <span class="text-error ml-1 inline">*</span>
+            </Show>
+          </label>
+          {/* Fake content */}
+          <div
+            class="w-full mt-1"
+            style={{
+              height: `${height()}px`,
+            }}
+          ></div>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            class="bg-primary max-h-36 overflow-y-auto p-2.5 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary rounded-md"
+            style={{
+              width: "var(--kb-popper-anchor-width)",
+            }}
+          >
+            <ul class="flex flex-col">
+              <For each={props.options}>
+                {(option) => (
+                  <li
+                    class="flex items-center justify-between text-base text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
+                    onClick={() => {
+                      toggleValue(option);
+                    }}
+                  >
+                    <span>{option.label}</span>
+                    <Show
+                      when={props.values.find((v) => v.value === option.value)}
                     >
-                      <FaSolidCross />
-                    </button>
-                  </>
+                      <FaSolidCheck size={14} class="fill-primaryText mr-2" />
+                    </Show>
+                  </li>
                 )}
-              </Select.Value>
-              <Select.Icon>
-                <FaSolidSort />
-              </Select.Icon>
-            </As>
-          </Select.Trigger>
-          <Select.Portal>
-            <Select.Content>
-              <Select.Listbox />
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-      </div>
+              </For>
+            </ul>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
 
       {/* Described By */}
       <Show when={props.copy.describedBy !== undefined}>
