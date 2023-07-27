@@ -93,6 +93,14 @@
     @apply bg-secondary text-white;
   }
 
+  /* Buttons */
+  .primary-btn {
+    @apply flex items-center px-10 py-3.5 bg-primary hover:bg-primaryH text-primaryText hover:text-white ring-secondary;
+  }
+  .primary-slim-outline-btn {
+    @apply px-2.5 py-2 bg-transparent border border-primaryA hover:bg-primaryH flex items-center fill-primaryText text-primaryText hover:text-primaryText text-sm;
+  }
+
   /* Animations */
   @keyframes animation-enter {
     0% {

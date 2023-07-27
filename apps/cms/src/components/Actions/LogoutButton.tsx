@@ -44,7 +44,7 @@ const LogoutButton: Component<LogoutButtonProps> = () => {
   return (
     <Button
       type="submit"
-      colour="primary"
+      theme="primary"
       loading={logout.isLoading}
       onCLick={() => {
         logout.mutate();

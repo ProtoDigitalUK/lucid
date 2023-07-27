@@ -12,14 +12,13 @@ module.exports = {
         primary: "#16161A",
         primaryH: "#2E2E34",
         primaryText: "#FFFFFF",
+        primaryA: "#414141",
         // purple
         secondary: "#6554FB",
         secondaryH: "#594AE1",
 
         backgroundAccent: "#E4E9EC",
         backgroundAccentH: "#DDE2E5",
-
-        middle: "#828282",
 
         border: "#D7DDE4",
 

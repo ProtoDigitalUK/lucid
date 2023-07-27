@@ -5,9 +5,8 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   children: JSX.Element;
   onCLick?: () => void;
 
-  classes?: string;
   type?: "button" | "submit" | "reset";
-  colour?: "primary" | "secondary" | "error";
+  theme?: "primary" | "primary-slim-outline";
 
   loading?: boolean;
   disabled?: boolean;
@@ -17,10 +16,10 @@ const Button: Component<ButtonProps> = (props) => {
   // ----------------------------------------
   // Classes
   const buttonClasses = classnames(
-    "px-10 py-3.5 focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed",
+    "focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed",
     {
-      "bg-primary hover:bg-primaryH text-white ring-secondary":
-        props.colour === "primary",
+      "primary-btn": props.theme === "primary",
+      "primary-slim-outline-btn": props.theme === "primary-slim-outline",
     }
   );
 
@@ -29,7 +28,7 @@ const Button: Component<ButtonProps> = (props) => {
   return (
     <button
       type={props.type}
-      class={classnames(buttonClasses, props.classes)}
+      class={classnames(buttonClasses)}
       onClick={props.onCLick}
       disabled={props.disabled || props.loading}
       {...props}
@@ -39,7 +38,7 @@ const Button: Component<ButtonProps> = (props) => {
           class={classnames(
             "flex items-center justify-center absolute inset-0 z-10 rounded-md",
             {
-              "bg-primary bg-opacity-80": props.colour === "primary",
+              "bg-primary bg-opacity-80": props.theme === "primary",
             }
           )}
         >

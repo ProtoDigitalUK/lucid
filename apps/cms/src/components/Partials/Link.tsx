@@ -1,34 +1,34 @@
 import { Component, JSX } from "solid-js";
 import classnames from "classnames";
+import { Link as RouterLink } from "@solidjs/router";
 
 interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
   children: JSX.Element;
   href?: string;
-  classes?: string;
-  colour?: "primary" | "secondary" | "error";
+  theme?: "primary" | "primary-slim-outline";
 }
 
 const Link: Component<LinkProps> = (props) => {
   // ----------------------------------------
   // Classes
   const linkClasses = classnames(
-    "block px-10 py-3.5 focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed",
+    "focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative",
     {
-      "bg-primary hover:bg-primaryH text-white hover:text-white ring-secondary":
-        props.colour === "primary",
+      "primary-btn": props.theme === "primary",
+      "primary-slim-outline-btn": props.theme === "primary-slim-outline",
     }
   );
 
   // ----------------------------------------
   // Render
   return (
-    <a
-      class={classnames(linkClasses, props.classes)}
-      href={props.href}
+    <RouterLink
+      class={classnames(linkClasses)}
+      href={props.href || ""}
       {...props}
     >
       {props.children}
-    </a>
+    </RouterLink>
   );
 };
 

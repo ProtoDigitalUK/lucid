@@ -113,9 +113,9 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           </Show>
 
           <Button
-            classes="w-full"
+            class="w-full"
             type="submit"
-            colour="primary"
+            theme="primary"
             loading={login.isLoading}
           >
             Create Environment

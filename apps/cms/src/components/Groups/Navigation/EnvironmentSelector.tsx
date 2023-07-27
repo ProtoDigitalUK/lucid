@@ -1,13 +1,15 @@
-import { Component, createMemo, For } from "solid-js";
+import { Component, createMemo, createSignal, For } from "solid-js";
 import classNames from "classnames";
-import { Link, useNavigate, useLocation, useParams } from "@solidjs/router";
+import { useNavigate, useLocation, useParams } from "@solidjs/router";
 // State
 import { environment, setEnvironment } from "@/state/environment";
 // Types
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
+import { FaSolidPlus } from "solid-icons/fa";
 import { DropdownMenu, Separator } from "@kobalte/core";
 import { FaSolidChevronRight } from "solid-icons/fa";
+import Link from "@/components/Partials/Link";
 
 interface EnvironmentSelectorProps {
   environments: EnvironmentResT[];
@@ -16,6 +18,8 @@ interface EnvironmentSelectorProps {
 const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   // ----------------------------------
   // Hooks & States
+  const [open, setOpen] = createSignal(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
@@ -43,29 +47,34 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   // ----------------------------------
   // Render
   return (
-    <DropdownMenu.Root defaultOpen>
-      <DropdownMenu.Trigger class="relative h-[60px] w-full bg-white border-b border-border mb-[15px] flex items-center justify-between px-[15px]">
+    <DropdownMenu.Root open={open()} onOpenChange={setOpen}>
+      <DropdownMenu.Trigger class="relative h-[60px] w-full bg-white border-b border-border mb-[15px] flex items-center justify-between px-[15px] focus:outline-none focus:ring-2 ring-secondary">
         <span class="text-title font-medium">{environmentData()?.title}</span>
-        <FaSolidChevronRight class="fill-title" />
+        <FaSolidChevronRight
+          class={classNames("fill-title transition-all duration-200", {
+            "transform rotate-90": open(),
+          })}
+        />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content class="bg-primary w-[240px] p-[15px] shadow-md animate-animate-dropdown">
+        <DropdownMenu.Content class="bg-primary w-[240px] p-[15px] shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary">
           <ul>
             <For each={props.environments}>
               {(env) => (
                 <li class="mb-1.5 last:mb-0">
                   <button
+                    type="button"
                     class={
-                      "text-base text-primaryText w-full text-left flex h-5"
+                      "text-base text-primaryText w-full text-left flex h-5 group "
                     }
                     onClick={() => changeEnvironment(env.key)}
                   >
                     <span
                       class={classNames(
-                        "h-full w-1 rounded-full block mr-2.5",
+                        "h-full w-1 rounded-full block mr-2.5 group-hover:bg-secondaryH duration-200 transition-colors",
                         {
                           "bg-secondary": env.key === environment(),
-                          "bg-middle": env.key !== environment(),
+                          "bg-primaryA": env.key !== environment(),
                         }
                       )}
                     ></span>
@@ -75,11 +84,9 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
               )}
             </For>
           </ul>
-          <Separator.Root class="border-middle my-2.5 w-full" />
-          <Link
-            href="/env/create"
-            class="text-sm border flex w-full bg-primary border-middle px-2.5 py-2 rounded-md text-primaryText hover:bg-primaryText hover:text-primary hover:border-primary"
-          >
+          <Separator.Root class="border-primaryA my-2.5 w-full" />
+          <Link href="/env/create" theme="primary-slim-outline">
+            <FaSolidPlus class="mr-2" />
             Create Environment
           </Link>
         </DropdownMenu.Content>
