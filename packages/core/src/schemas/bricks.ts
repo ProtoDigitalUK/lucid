@@ -34,10 +34,24 @@ export const BrickSchema = z.object({
 const getAllConfigBody = z.object({});
 const getAllConfigQuery = z.object({
   include: z.array(z.enum(["fields"])).optional(),
+  filter: z
+    .object({
+      collection_key: z.string().optional(),
+      environment_key: z.string().optional(),
+    })
+    .optional()
+    .refine(
+      (data) =>
+        (data?.collection_key && data?.environment_key) ||
+        (!data?.collection_key && !data?.environment_key),
+      {
+        message:
+          "Both collection_key and environment_key should be set or neither.",
+        path: [],
+      }
+    ),
 });
-const getAllConfigParams = z.object({
-  collection_key: z.string().nonempty(),
-});
+const getAllConfigParams = z.object({});
 
 // ------------------------------------
 // GET SINGLE CONFIG
@@ -45,7 +59,6 @@ const getSingleConfigBody = z.object({});
 const getSingleConfigQuery = z.object({});
 const getSingleConfigParams = z.object({
   brick_key: z.string().nonempty(),
-  collection_key: z.string().nonempty(),
 });
 
 // ------------------------------------

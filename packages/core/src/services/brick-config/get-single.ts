@@ -1,7 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
 // Services
 import brickConfigService from "@services/brick-config";
 
@@ -12,19 +11,22 @@ export interface ServiceData {
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
-  const allBricks = await service(
-    brickConfigService.getAll,
-    false,
-    client
-  )({
-    query: {
-      include: ["fields"],
-    },
-    collection_key: data.collection_key,
-    environment_key: data.environment_key,
+  const builderInstances = brickConfigService.getBrickConfig();
+  const instance = builderInstances.find((b) => b.key === data.brick_key);
+
+  if (!instance) {
+    throw new LucidError({
+      type: "basic",
+      name: "Brick not found",
+      message: "We could not find the brick you are looking for.",
+      status: 404,
+    });
+  }
+
+  const brick = brickConfigService.getBrickData(instance, {
+    include: ["fields"],
   });
 
-  const brick = allBricks.find((b) => b.key === data.brick_key);
   if (!brick) {
     throw new LucidError({
       type: "basic",

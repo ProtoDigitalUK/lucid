@@ -11,11 +11,8 @@
 			"item": [
 				{
 					"name": "Login",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "_csrf",
@@ -49,16 +46,14 @@
 				},
 				{
 					"name": "Logout",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -164,41 +159,6 @@
 					"response": []
 				},
 				{
-					"name": "Register Super Admin",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"password\",\r\n    \"first_name\": \"William\",\r\n    \"last_name\": \"Yallop\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/register-superadmin",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"register-superadmin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Reset Password (send email)",
 					"request": {
 						"method": "POST",
@@ -236,7 +196,7 @@
 				{
 					"name": "Reset Password (update password)",
 					"request": {
-						"method": "POST",
+						"method": "PATCH",
 						"header": [
 							{
 								"key": "_csrf",
@@ -246,7 +206,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"password\"\r\n}",
+							"raw": "{\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -254,7 +214,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/reset-password/a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663",
+							"raw": "{{BASE_URL}}/api/v1/auth/reset-password/b6ae787ea22ca3c4723aced751e43088b7da230d186d8ffd581c2bd0c82a80a2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -263,7 +223,7 @@
 								"v1",
 								"auth",
 								"reset-password",
-								"a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663"
+								"b6ae787ea22ca3c4723aced751e43088b7da230d186d8ffd581c2bd0c82a80a2"
 							]
 						}
 					},
@@ -293,7 +253,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/auth/reset-password/a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663",
+							"raw": "{{BASE_URL}}/api/v1/auth/reset-password/b6ae787ea22ca3c4723aced751e43088b7da230d186d8ffd581c2bd0c82a80a2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -302,7 +262,7 @@
 								"v1",
 								"auth",
 								"reset-password",
-								"a26539fcb55af2746eb03b96a3d71e1327dc7ab76c1201546cfb425c8ef39663"
+								"b6ae787ea22ca3c4723aced751e43088b7da230d186d8ffd581c2bd0c82a80a2"
 							]
 						}
 					},
@@ -312,42 +272,7 @@
 		},
 		{
 			"name": "Options",
-			"item": [
-				{
-					"name": "Get Single (public)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/options/public/initial_user_created",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"options",
-								"public",
-								"initial_user_created"
-							],
-							"query": [
-								{
-									"key": null,
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
+			"item": []
 		},
 		{
 			"name": "Roles",
@@ -1154,123 +1079,10 @@
 							]
 						},
 						{
-							"name": "Bricks",
-							"item": [
-								{
-									"name": "Config",
-									"item": [
-										{
-											"name": "Get All",
-											"protocolProfileBehavior": {
-												"disableBodyPruning": true
-											},
-											"request": {
-												"method": "GET",
-												"header": [
-													{
-														"key": "_csrf",
-														"value": "{{CSRF}}",
-														"type": "text"
-													},
-													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
-														"type": "text"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{BASE_URL}}/api/v1/bricks/config/page/all?include=fields",
-													"host": [
-														"{{BASE_URL}}"
-													],
-													"path": [
-														"api",
-														"v1",
-														"bricks",
-														"config",
-														"page",
-														"all"
-													],
-													"query": [
-														{
-															"key": "include",
-															"value": "fields"
-														}
-													]
-												},
-												"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
-											},
-											"response": []
-										},
-										{
-											"name": "Get Single",
-											"protocolProfileBehavior": {
-												"disableBodyPruning": true
-											},
-											"request": {
-												"method": "GET",
-												"header": [
-													{
-														"key": "_csrf",
-														"value": "{{CSRF}}",
-														"type": "text"
-													},
-													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
-														"type": "text"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{BASE_URL}}/api/v1/bricks/config/page/banner",
-													"host": [
-														"{{BASE_URL}}"
-													],
-													"path": [
-														"api",
-														"v1",
-														"bricks",
-														"config",
-														"page",
-														"banner"
-													]
-												},
-												"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
-											},
-											"response": []
-										}
-									]
-								}
-							]
-						},
-						{
 							"name": "Get All",
 							"request": {
 								"method": "GET",
 								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									},
 									{
 										"key": "lucid-environment",
 										"value": "{{LUCID_ENVIRONMENT}}",
@@ -1791,13 +1603,7 @@
 					"name": "Get All",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/environments",
 							"host": [
@@ -1851,7 +1657,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\", \"intro\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"],\r\n    \"assigned_forms\": [\"contact-form\"]\r\n}",
+							"raw": "{\r\n    \"title\": \"Staging\",\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\", \"intro\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"],\r\n    \"assigned_forms\": [\"contact-form\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1859,7 +1665,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/environments/site_prod",
+							"raw": "{{BASE_URL}}/api/v1/environments/site_stage",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1867,7 +1673,7 @@
 								"api",
 								"v1",
 								"environments",
-								"site_prod"
+								"site_stage"
 							]
 						}
 					},
@@ -1922,7 +1728,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"key\": \"site_prod\",\r\n    \"title\": \"Production\",\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"],\r\n    \"assigned_forms\": [\"contact-form\"]\r\n}",
+							"raw": "{\r\n    \"key\": \"site_stage\",\r\n    \"title\": \"Production\",\r\n    \"assigned_bricks\": [\"banner\", \"default_meta\"],\r\n    \"assigned_collections\": [\"page\", \"settings\"],\r\n    \"assigned_forms\": [\"contact-form\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1964,7 +1770,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/environments/site_prode",
+							"raw": "{{BASE_URL}}/api/v1/environments/site_prod",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1972,9 +1778,110 @@
 								"api",
 								"v1",
 								"environments",
-								"site_prode"
+								"site_prod"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bricks Config",
+			"item": [
+				{
+					"name": "Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/bricks/config",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bricks",
+								"config"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "fields",
+									"disabled": true
+								},
+								{
+									"key": "filter[environment_key]",
+									"value": "{{LUCID_ENVIRONMENT}}",
+									"disabled": true
+								},
+								{
+									"key": "filter[collection_key]",
+									"value": "page",
+									"disabled": true
+								}
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role_ids\": [1, 2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/bricks/config/banner",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bricks",
+								"config",
+								"banner"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
 					},
 					"response": []
 				}
@@ -2403,9 +2310,9 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "Update Roles",
+					"name": "Update Single",
 					"request": {
-						"method": "POST",
+						"method": "PATCH",
 						"header": [
 							{
 								"key": "_csrf",
@@ -2423,7 +2330,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/1/roles",
+							"raw": "{{BASE_URL}}/api/v1/users/8",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2431,8 +2338,7 @@
 								"api",
 								"v1",
 								"users",
-								"1",
-								"roles"
+								"8"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -2452,7 +2358,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"standard@lucid.com\",\r\n    \"username\": \"standard\",\r\n    \"password\": \"password\",\r\n    \"first_name\": \"First\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [1]\r\n}",
+							"raw": "{\r\n    \"email\": \"stand2ard@lucid.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [10]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2583,7 +2489,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/1",
+							"raw": "{{BASE_URL}}/api/v1/users/8",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2591,9 +2497,49 @@
 								"api",
 								"v1",
 								"users",
-								"1"
+								"8"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Update Me",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    \"username\": \"admin\",\r\n    \"email\": \"admin@admin.com\",\r\n    \"role_ids\": [1]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/account",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"account"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
 					},
 					"response": []
 				}

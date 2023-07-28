@@ -13,7 +13,7 @@ const router = Router();
 // Config
 r(router, {
   method: "get",
-  path: "/config/:collection_key/all",
+  path: "/config",
   middleware: {
     authenticate: true,
   },
@@ -23,10 +23,9 @@ r(router, {
 
 r(router, {
   method: "get",
-  path: "/config/:collection_key/:brick_key",
+  path: "/config/:brick_key",
   middleware: {
     authenticate: true,
-    validateEnvironment: true,
   },
   schema: getSingleConfig.schema,
   controller: getSingleConfig.controller,

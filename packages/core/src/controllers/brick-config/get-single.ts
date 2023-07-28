@@ -19,8 +19,6 @@ const getSingleController: Controller<
       false
     )({
       brick_key: req.params.brick_key,
-      collection_key: req.params.collection_key,
-      environment_key: req.headers["lucid-environment"] as string,
     });
 
     res.status(200).json(
