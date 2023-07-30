@@ -36,7 +36,7 @@ const NavigationIconLink: Component<NavigationIconLinkProps> = (props) => {
           <Link
             href={props.href}
             class={classNames(
-              "w-10 h-10 focus:outline-none focus:!border-primary focus:ring-0 flex items-center justify-center bg-white rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary",
+              "w-10 h-10 focus:outline-none focus:!border-primary focus:ring-0 flex items-center justify-center bg-container rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary",
               {
                 "!border-primary": props.active,
               }

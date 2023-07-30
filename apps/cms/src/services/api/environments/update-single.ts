@@ -1,0 +1,25 @@
+import request from "@/utils/request";
+import { EnvironmentResT } from "@lucid/types/src/environments";
+
+interface Params {
+  key: string;
+  body: {
+    title?: string;
+    assigned_bricks?: string[];
+    assigned_collections?: string[];
+    assigned_forms?: string[];
+  };
+}
+
+const updateSingle = (params: Params) => {
+  return request<APIResponse<EnvironmentResT>>({
+    url: `/api/v1/environments/${params.key}`,
+    csrf: true,
+    config: {
+      method: "PATCH",
+      body: JSON.stringify(params.body),
+    },
+  });
+};
+
+export default updateSingle;

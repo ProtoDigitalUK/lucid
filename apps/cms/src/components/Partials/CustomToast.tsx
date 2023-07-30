@@ -49,7 +49,7 @@ const CustomToast: Component<CustomToastProps> = (props) => {
   return (
     <div
       class={classNames(
-        "bg-white rounded-md p-3 drop-shadow-md w-[400px] relative overflow-hidden",
+        "bg-container rounded-md p-3 drop-shadow-md w-[400px] relative overflow-hidden",
         {
           "animate-enter": props.toast.visible,
           "animate-leave": !props.toast.visible,

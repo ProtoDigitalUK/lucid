@@ -10,10 +10,12 @@ const format_form_1 = __importDefault(require("../../utils/format/format-form"))
 const getAll = async (client, data) => {
     const formInstances = Config_1.default.forms || [];
     let formsRes = formInstances.map((form) => (0, format_form_1.default)(form));
-    const environment = await (0, service_1.default)(environments_1.default.getSingle, false, client)({
-        key: data.environment_key,
-    });
-    formsRes = formsRes.filter((form) => environment.assigned_forms.includes(form.key));
+    if (data.query.filter?.environment_key) {
+        const environment = await (0, service_1.default)(environments_1.default.getSingle, false, client)({
+            key: data.query.filter?.environment_key,
+        });
+        formsRes = formsRes.filter((form) => environment.assigned_forms.includes(form.key));
+    }
     formsRes = formsRes.map((form) => {
         if (!data.query.include?.includes("fields")) {
             delete form.fields;

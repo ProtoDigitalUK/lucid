@@ -3,9 +3,10 @@ import { EnvironmentT } from "@db/models/Environment";
 // Internal packages
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
 // Services
-import brickConfigService, { BrickConfigT } from "@services/brick-config";
+import brickConfigService from "@services/brick-config";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
+import { BrickConfigT } from "@lucid/types/src/bricks";
 
 export interface ServiceData {
   key: string;

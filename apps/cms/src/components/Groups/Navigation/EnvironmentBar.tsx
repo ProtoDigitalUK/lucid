@@ -55,33 +55,37 @@ const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
   // Render
   return (
     <Show when={showBar()}>
-      <div class="w-[240px] bg-white border-r border-border h-full">
+      <div class="w-[240px] bg-container border-r border-border h-full">
         <EnvironmentSelector environments={props.environments} />
         <nav>
           {/* Multi Collections */}
-          <NavigationLinkGroup title="Multi Collections">
-            <For each={pagesCollections()}>
-              {(collection) => (
-                <NavigationLink
-                  title={collection.title}
-                  href={`/env/${environment()}/collection/${collection.key}`}
-                  icon="page"
-                />
-              )}
-            </For>
-          </NavigationLinkGroup>
+          <Show when={pagesCollections().length > 0}>
+            <NavigationLinkGroup title="Multi Collections">
+              <For each={pagesCollections()}>
+                {(collection) => (
+                  <NavigationLink
+                    title={collection.title}
+                    href={`/env/${environment()}/collection/${collection.key}`}
+                    icon="page"
+                  />
+                )}
+              </For>
+            </NavigationLinkGroup>
+          </Show>
           {/* Single Collections */}
-          <NavigationLinkGroup title="Single Collections">
-            <For each={singlePagesCollections()}>
-              {(collection) => (
-                <NavigationLink
-                  title={collection.title}
-                  href={`/env/${environment()}/collection/${collection.key}`}
-                  icon="page"
-                />
-              )}
-            </For>
-          </NavigationLinkGroup>
+          <Show when={singlePagesCollections().length > 0}>
+            <NavigationLinkGroup title="Single Collections">
+              <For each={singlePagesCollections()}>
+                {(collection) => (
+                  <NavigationLink
+                    title={collection.title}
+                    href={`/env/${environment()}/collection/${collection.key}`}
+                    icon="page"
+                  />
+                )}
+              </For>
+            </NavigationLinkGroup>
+          </Show>
         </nav>
       </div>
     </Show>

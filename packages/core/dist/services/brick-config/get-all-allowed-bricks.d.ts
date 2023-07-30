@@ -1,7 +1,7 @@
 import { EnvironmentT } from "../../db/models/Environment";
 import { CollectionBrickConfigT } from "@lucid/collection-builder";
-import { BrickConfigT } from "../brick-config";
 import { CollectionResT } from "@lucid/types/src/collections";
+import { BrickConfigT } from "@lucid/types/src/bricks";
 export interface ServiceData {
     collection: CollectionResT;
     environment: EnvironmentT;

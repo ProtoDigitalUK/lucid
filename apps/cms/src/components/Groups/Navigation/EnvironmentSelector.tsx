@@ -6,7 +6,7 @@ import { environment, setEnvironment } from "@/state/environment";
 // Types
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
-import { FaSolidPlus } from "solid-icons/fa";
+import { FaSolidPlus, FaSolidGear } from "solid-icons/fa";
 import { DropdownMenu, Separator } from "@kobalte/core";
 import { FaSolidChevronRight } from "solid-icons/fa";
 import Link from "@/components/Partials/Link";
@@ -48,8 +48,9 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   // Render
   return (
     <DropdownMenu.Root open={open()} onOpenChange={setOpen}>
-      <DropdownMenu.Trigger class="relative h-[60px] w-full bg-white border-b border-border mb-[15px] flex items-center justify-between px-[15px] focus:outline-none focus:ring-2 ring-secondary">
+      <DropdownMenu.Trigger class="relative h-[60px] w-full bg-container border-b border-border mb-15 flex items-center justify-between px-15 focus:outline-none focus:ring-2 ring-secondary">
         <span class="text-title font-medium">{environmentData()?.title}</span>
+
         <FaSolidChevronRight
           class={classNames("fill-title transition-all duration-200", {
             "transform rotate-90": open(),
@@ -57,7 +58,7 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
         />
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content class="bg-primary w-[240px] p-[15px] shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary">
+        <DropdownMenu.Content class="bg-primary w-[240px] p-15 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary">
           <ul>
             <For each={props.environments}>
               {(env) => (
@@ -65,27 +66,47 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
                   <button
                     type="button"
                     class={
-                      "text-base text-primaryText w-full text-left flex h-5 group "
+                      "text-base text-primaryText w-full text-left flex py-0.5 group justify-between items-center relative"
                     }
-                    onClick={() => changeEnvironment(env.key)}
+                    onClick={() => {
+                      changeEnvironment(env.key);
+                      setOpen(false);
+                    }}
                   >
-                    <span
-                      class={classNames(
-                        "h-full w-1 rounded-full block mr-2.5 group-hover:bg-secondaryH duration-200 transition-colors",
-                        {
-                          "bg-secondary": env.key === environment(),
-                          "bg-primaryA": env.key !== environment(),
-                        }
-                      )}
-                    ></span>
-                    {env.title}
+                    <div class="flex items-center">
+                      <span
+                        class={classNames(
+                          "absolute left-0 top-0 bottom-0 w-1 rounded-full block group-hover:bg-secondaryH duration-200 transition-colors",
+                          {
+                            "bg-secondary": env.key === environment(),
+                            "bg-primaryA": env.key !== environment(),
+                          }
+                        )}
+                      ></span>
+                      <span class="ml-2.5">{env.title}</span>
+                    </div>
+                    <Link
+                      href={`/env/${env.key}`}
+                      class="hover:fill-secondaryH fill-primaryText ml-2"
+                    >
+                      <FaSolidGear
+                        class="duration-200 transition-colors"
+                        size={14}
+                      />
+                    </Link>
                   </button>
                 </li>
               )}
             </For>
           </ul>
           <Separator.Root class="border-primaryA my-2.5 w-full" />
-          <Link href="/env/create" theme="primary-slim-outline">
+          <Link
+            href="/env/create"
+            theme="primary-slim-outline"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
             <FaSolidPlus class="mr-2" />
             Create Environment
           </Link>

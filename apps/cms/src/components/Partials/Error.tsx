@@ -4,7 +4,7 @@ import classNames from "classnames";
 import Link from "@/components/Partials/Link";
 
 interface ErrorProps {
-  type: "fill";
+  type: "fill" | "page-layout";
   content: {
     image: string;
     title: string;
@@ -19,11 +19,12 @@ interface ErrorProps {
 const Error: Component<ErrorProps> = (props) => {
   return (
     <div
-      class={classNames("flex items-center justify-center", {
+      class={classNames("flex items-center justify-center bg-background", {
         "inset-0 absolute z-50": props.type === "fill",
+        "page-layout-full-body": props.type === "page-layout",
       })}
     >
-      <div class="text-center max-w-xl flex flex-col items-center">
+      <div class="text-center max-w-xl flex flex-col items-center p-10">
         <img
           src={props.content.image}
           class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"

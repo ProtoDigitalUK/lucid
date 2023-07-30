@@ -9,6 +9,7 @@ const getAllQuery = zod_1.default.object({
     filter: zod_1.default
         .object({
         type: zod_1.default.enum(["pages", "singlepage"]).optional(),
+        environment_key: zod_1.default.string().optional(),
     })
         .optional(),
     include: zod_1.default.array(zod_1.default.enum(["bricks"])).optional(),

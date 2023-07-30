@@ -31,7 +31,7 @@ interface SelectMultipleProps {
 }
 
 const SelectMultiple: Component<SelectMultipleProps> = (props) => {
-  const [open, setOpen] = createSignal(true);
+  const [open, setOpen] = createSignal(false);
   const [inputFocus, setInputFocus] = createSignal(false);
 
   // ----------------------------------------
@@ -51,7 +51,7 @@ const SelectMultiple: Component<SelectMultipleProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <div class="mb-5 last:mb-0 w-full relative">
+    <div class="mb-5 w-full relative">
       {/* Select Content Overlay */}
 
       {/* Select */}

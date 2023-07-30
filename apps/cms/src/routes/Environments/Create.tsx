@@ -1,22 +1,18 @@
 import { Component } from "solid-js";
 // Componetns
+import PageLayout from "@/components/Layout/PageLayout";
 import CreateEnvironment from "@/components/Forms/CreateEnvironmentForm";
 
 const CreateEnvrionemntRoute: Component = () => {
+  // ----------------------------------------
+  // Render
   return (
-    <div class="flex justify-center items-center h-screen">
-      <div class="max-w-2xl m-atuo">
-        <h1>Create Environment</h1>
-        <p>
-          Environments are a top level grouping of collections, forms and
-          bricks. With the seperation of environments, you can have multiple
-          sites/apps running on the same CMS.
-        </p>
-        <div class="mt-10">
-          <CreateEnvironment />
-        </div>
-      </div>
-    </div>
+    <PageLayout
+      title="Create Environment"
+      description="Environments are a top level grouping of collections, forms and bricks. With the seperation of environments, you can have multiple sites/apps running on the same CMS."
+    >
+      <CreateEnvironment />
+    </PageLayout>
   );
 };
 

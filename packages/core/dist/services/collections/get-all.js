@@ -13,10 +13,13 @@ const getAll = async (client, data) => {
     if (!instances)
         return [];
     let collectionsF = instances.map((collection) => (0, format_collections_1.default)(collection));
-    const environment = await (0, service_1.default)(environments_1.default.getSingle, false, client)({
-        key: data.environment_key,
-    });
-    collectionsF.filter((collection) => environment.assigned_collections.includes(collection.key));
+    let environment;
+    if (data.query.filter?.environment_key) {
+        environment = await (0, service_1.default)(environments_1.default.getSingle, false, client)({
+            key: data.query.filter?.environment_key,
+        });
+        collectionsF = collectionsF.filter((collection) => environment?.assigned_collections.includes(collection.key));
+    }
     collectionsF = filterCollections(data.query.filter, collectionsF);
     collectionsF = collectionsF.map((collection) => {
         const collectionData = {
@@ -26,7 +29,7 @@ const getAll = async (client, data) => {
             description: collection.description,
             type: collection.type,
         };
-        if (data.query.include?.includes("bricks")) {
+        if (data.query.include?.includes("bricks") && environment) {
             const collectionBricks = brick_config_1.default.getAllAllowedBricks({
                 collection,
                 environment,

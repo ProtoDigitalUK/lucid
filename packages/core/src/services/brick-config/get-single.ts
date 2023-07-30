@@ -6,8 +6,6 @@ import brickConfigService from "@services/brick-config";
 
 export interface ServiceData {
   brick_key: string;
-  collection_key: string;
-  environment_key: string;
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {

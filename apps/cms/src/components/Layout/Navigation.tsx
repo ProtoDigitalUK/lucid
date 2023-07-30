@@ -37,14 +37,21 @@ const Navigation: Component = () => {
       });
     },
   });
-  const collections = createQuery(() => ["environments.collections.getAll"], {
-    queryFn: () =>
-      api.environments.collections.getAll({
-        include: {
-          bricks: false,
-        },
-      }),
-  });
+  const collections = createQuery(
+    () => ["environments.collections.getAll", environment()],
+    {
+      queryFn: () =>
+        api.environments.collections.getAll({
+          include: {
+            bricks: false,
+          },
+          filters: {
+            environment_key: environment() as string,
+          },
+        }),
+      enabled: environment() !== undefined,
+    }
+  );
 
   // ----------------------------------
   // Effects
@@ -81,7 +88,7 @@ const Navigation: Component = () => {
   return (
     <div class="h-full flex ">
       {/* Mainbar */}
-      <nav class="bg-white w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
+      <nav class="bg-container w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
         <div class="h-[60px] min-h-[70px] flex items-center justify-center">
           <img
             src="https://placehold.co/100x100/6554FB/white"
@@ -89,7 +96,7 @@ const Navigation: Component = () => {
             class="h-10 w-10 rounded-full"
           />
         </div>
-        <ul class="pb-[15px]">
+        <ul class="pb-15">
           <NavigationIconLink href="/" icon="dashboard" title="Home" />
           <NavigationIconLink
             href={getFirstEnvHref()}

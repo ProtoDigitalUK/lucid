@@ -27,6 +27,7 @@ import SettingsListRoute from "@/routes/Settings/List";
 // environments
 import EnvCollectionsListRoute from "@/routes/Environments/Collections/List";
 import CreateEnvrionemntRoute from "@/routes/Environments/Create";
+import ManageEnvrionemntRoute from "@/routes/Environments/Manage";
 
 const AppRouter: Component = () => {
   return (
@@ -42,6 +43,7 @@ const AppRouter: Component = () => {
               element={<EnvCollectionsListRoute />}
             />
             <Route path="/env/create" element={<CreateEnvrionemntRoute />} />
+            <Route path="/env/:envKey" element={<ManageEnvrionemntRoute />} />
             {/* Media */}
             <Route path="/media" element={<MediaListRoute />} />
             {/* Users */}

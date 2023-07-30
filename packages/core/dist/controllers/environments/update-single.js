@@ -12,7 +12,7 @@ const updateSingleController = async (req, res, next) => {
         const environment = await (0, service_1.default)(environments_2.default.upsertSingle, true)({
             data: {
                 key: req.params.key,
-                title: undefined,
+                title: req.body.title,
                 assigned_bricks: req.body.assigned_bricks,
                 assigned_collections: req.body.assigned_collections,
                 assigned_forms: req.body.assigned_forms,

@@ -9,8 +9,11 @@ const verifyResetToken = (params: Params) => {
     APIResponse<{
       message: string;
     }>
-  >(`/api/v1/auth/reset-password/${params.token}`, {
-    method: "GET",
+  >({
+    url: `/api/v1/auth/reset-password/${params.token}`,
+    config: {
+      method: "GET",
+    },
   });
 };
 

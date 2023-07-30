@@ -27,15 +27,23 @@ exports.BrickSchema = zod_1.default.object({
 const getAllConfigBody = zod_1.default.object({});
 const getAllConfigQuery = zod_1.default.object({
     include: zod_1.default.array(zod_1.default.enum(["fields"])).optional(),
+    filter: zod_1.default
+        .object({
+        collection_key: zod_1.default.string().optional(),
+        environment_key: zod_1.default.string().optional(),
+    })
+        .optional()
+        .refine((data) => (data?.collection_key && data?.environment_key) ||
+        (!data?.collection_key && !data?.environment_key), {
+        message: "Both collection_key and environment_key should be set or neither.",
+        path: [],
+    }),
 });
-const getAllConfigParams = zod_1.default.object({
-    collection_key: zod_1.default.string().nonempty(),
-});
+const getAllConfigParams = zod_1.default.object({});
 const getSingleConfigBody = zod_1.default.object({});
 const getSingleConfigQuery = zod_1.default.object({});
 const getSingleConfigParams = zod_1.default.object({
     brick_key: zod_1.default.string().nonempty(),
-    collection_key: zod_1.default.string().nonempty(),
 });
 exports.default = {
     config: {

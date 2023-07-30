@@ -4,7 +4,6 @@ import collectionSchema from "../../schemas/collections";
 import { CollectionResT } from "@lucid/types/src/collections";
 export interface ServiceData {
     query: z.infer<typeof collectionSchema.getAll.query>;
-    environment_key: string;
 }
 declare const getAll: (client: PoolClient, data: ServiceData) => Promise<CollectionResT[]>;
 export default getAll;

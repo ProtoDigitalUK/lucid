@@ -1,15 +1,7 @@
-import { FormBuilderOptionsT } from "@lucid/form-builder";
 // Services
 import FormBuilder from "@lucid/form-builder";
-
-// -------------------------------------------
 // Types
-export type FormResT = {
-  key: string;
-  title: string;
-  description: string | null;
-  fields?: FormBuilderOptionsT["fields"];
-};
+import { FormResT } from "@lucid/types/src/forms";
 
 const formatForm = (instance: FormBuilder): FormResT => {
   return {

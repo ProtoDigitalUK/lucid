@@ -8,8 +8,8 @@ import bricksSchema from "@schemas/bricks";
 import brickConfigService from "@services/brick-config";
 import collectionsService from "@services/collections";
 import environmentsService from "@services/environments";
-// Service
-import { BrickConfigT } from "@services/brick-config";
+// Types
+import { BrickConfigT } from "@lucid/types/src/bricks";
 
 export interface ServiceData {
   query: z.infer<typeof bricksSchema.config.getAll.query>;

@@ -12,7 +12,6 @@ import formatForm from "@utils/format/format-form";
 
 export interface ServiceData {
   query: z.infer<typeof formsSchema.getAll.query>;
-  environment_key: string;
 }
 
 const getAll = async (client: PoolClient, data: ServiceData) => {
@@ -21,19 +20,21 @@ const getAll = async (client: PoolClient, data: ServiceData) => {
 
   let formsRes = formInstances.map((form) => formatForm(form));
 
-  // Get data
-  const environment = await service(
-    environmentsService.getSingle,
-    false,
-    client
-  )({
-    key: data.environment_key,
-  });
+  // Filter by environment
+  if (data.query.filter?.environment_key) {
+    const environment = await service(
+      environmentsService.getSingle,
+      false,
+      client
+    )({
+      key: data.query.filter?.environment_key,
+    });
 
-  // Filtered
-  formsRes = formsRes.filter((form) =>
-    environment.assigned_forms.includes(form.key)
-  );
+    // Filtered
+    formsRes = formsRes.filter((form) =>
+      environment.assigned_forms.includes(form.key)
+    );
+  }
 
   formsRes = formsRes.map((form) => {
     if (!data.query.include?.includes("fields")) {

@@ -13,7 +13,7 @@ const MainLayout: Component = (props) => {
   return (
     <div class="grid grid-cols-main-layout fixed inset-0">
       <Navigation />
-      <main class="bg-blue-400 overflow-y-auto">
+      <main class="overflow-y-auto">
         <Outlet />
       </main>
     </div>

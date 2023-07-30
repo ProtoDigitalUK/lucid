@@ -3,8 +3,7 @@ import z from "zod";
 import formsSchema from "../../schemas/forms";
 export interface ServiceData {
     query: z.infer<typeof formsSchema.getAll.query>;
-    environment_key: string;
 }
-declare const getAll: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-form").FormResT[]>;
+declare const getAll: (client: PoolClient, data: ServiceData) => Promise<import("../../../../types/src/forms").FormResT[]>;
 export default getAll;
 //# sourceMappingURL=get-all.d.ts.map

@@ -1082,15 +1082,9 @@
 							"name": "Get All",
 							"request": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
-										"type": "text"
-									}
-								],
+								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1107,7 +1101,13 @@
 										},
 										{
 											"key": "include",
-											"value": "bricks"
+											"value": "bricks",
+											"disabled": true
+										},
+										{
+											"key": "filter[environment_key]",
+											"value": "{{LUCID_ENVIRONMENT}}",
+											"disabled": true
 										}
 									]
 								},
@@ -1533,18 +1533,7 @@
 							"name": "Get All",
 							"request": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									},
-									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
-										"type": "text"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{BASE_URL}}/api/v1/forms",
 									"host": [
@@ -1560,6 +1549,11 @@
 											"key": "include",
 											"value": "fields",
 											"disabled": true
+										},
+										{
+											"key": "filter[environment_key]",
+											"value": "{{LUCID_ENVIRONMENT}}",
+											"disabled": true
 										}
 									]
 								}
@@ -1571,11 +1565,6 @@
 							"request": {
 								"method": "GET",
 								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									},
 									{
 										"key": "lucid-environment",
 										"value": "{{LUCID_ENVIRONMENT}}",
@@ -1630,7 +1619,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/environments/site_prod",
+							"raw": "{{BASE_URL}}/api/v1/environments/test-env",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1638,7 +1627,7 @@
 								"api",
 								"v1",
 								"environments",
-								"site_prod"
+								"test-env"
 							]
 						}
 					},
@@ -1665,7 +1654,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/environments/site_stage",
+							"raw": "{{BASE_URL}}/api/v1/environments/site_prod",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1673,7 +1662,7 @@
 								"api",
 								"v1",
 								"environments",
-								"site_stage"
+								"site_prod"
 							]
 						}
 					},

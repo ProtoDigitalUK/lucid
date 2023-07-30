@@ -21,6 +21,8 @@ module.exports = {
         backgroundAccent: "#E4E9EC",
         backgroundAccentH: "#DDE2E5",
 
+        container: "#FFFFFF",
+
         border: "#D7DDE4",
 
         error: "#FC3636",
@@ -52,6 +54,10 @@ module.exports = {
         "animate-leave": "animation-leave 0.2s ease-out",
         "animate-dropdown": "animation-dropdown 0.2s ease-out",
         "animate-from-left": "animation-from-left 0.2s ease-out",
+      },
+      spacing: {
+        30: "30px",
+        15: "15px",
       },
     },
   },

@@ -1,21 +1,23 @@
+import classNames from "classnames";
 import { Component } from "solid-js";
 // Components
 import Spinner from "@/components/Partials/Spinner";
 
 interface LoadingProps {
-  type: "fill";
+  type: "fill" | "page-layout";
 }
 
 const Loading: Component<LoadingProps> = (props) => {
-  if (props.type === "fill") {
-    return (
-      <div class="inset-0 absolute flex items-center justify-center z-50">
-        <Spinner size="md" />
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div
+      class={classNames("flex items-center justify-center", {
+        "page-layout-full-body": props.type === "page-layout",
+        "inset-0 absolute z-50": props.type === "fill",
+      })}
+    >
+      <Spinner size="md" />
+    </div>
+  );
 };
 
 export default Loading;

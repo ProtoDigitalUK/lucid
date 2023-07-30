@@ -12,7 +12,10 @@
   "keywords": [],
   "author": "William Yallop",
   "devDependencies": {
-    "@lucid/core": "*"
+    "@lucid/core": "*",
+    "@lucid/brick-builder": "*",
+    "@lucid/collection-builder": "*",
+    "@lucid/form-builder": "*"
   },
   "bugs": {
     "url": "hhttps://github.com/WillYallop/Lucid/issues"

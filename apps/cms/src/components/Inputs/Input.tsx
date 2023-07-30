@@ -22,6 +22,7 @@ interface InputProps {
   required?: boolean;
   disabled?: boolean;
   errors?: ErrorResult;
+  noMargin?: boolean;
 }
 
 const Input: Component<InputProps> = (props) => {
@@ -38,7 +39,12 @@ const Input: Component<InputProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <div class="mb-5 last:mb-0 w-full">
+    <div
+      class={classnames("w-full", {
+        "mb-0": props.noMargin,
+        "mb-5": !props.noMargin,
+      })}
+    >
       <div
         class={classnames(
           "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",

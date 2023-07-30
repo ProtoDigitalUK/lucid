@@ -93,6 +93,11 @@
     @apply bg-secondary text-white;
   }
 
+  /* Page Layout */
+  .page-layout-full-body {
+    min-height: calc(100vh - var(--lucid_page-layout-header-height) - 60px);
+  }
+
   /* Buttons */
   .primary-btn {
     @apply flex items-center justify-center text-center px-10 py-3.5 bg-primary hover:bg-primaryH text-primaryText hover:text-white ring-secondary;

@@ -1,13 +1,32 @@
 import helpers from "@/utils/helpers";
+import api from "@/services/api";
+import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
 import { LucidError } from "@/utils/error-handling";
 
-const request = async <Response>(
-  url: string,
-  config: RequestInit = {}
-): Promise<Response> => {
-  let fetchURL = url;
+interface RequestProps {
+  url: string;
+  query?: QueryBuilderProps;
+  csrf?: boolean;
+  config?: RequestInit;
+}
+
+const request = async <Response>(props: RequestProps): Promise<Response> => {
+  let fetchURL = props.url;
   if (!import.meta.env.PROD) {
-    fetchURL = `${import.meta.env.VITE_API_DEV_URL}${url}`;
+    fetchURL = `${import.meta.env.VITE_API_DEV_URL}${props.url}`;
+  }
+
+  if (props.query) {
+    const queryString = queryBuilder(props.query);
+    if (queryString) {
+      fetchURL = `${fetchURL}?${queryString}`;
+    }
+  }
+
+  let csrfToken: string | undefined;
+  if (props.csrf) {
+    const csrfRes = await api.auth.csrf();
+    csrfToken = csrfRes.data._csrf;
   }
 
   const fetchRes = await fetch(
@@ -17,9 +36,10 @@ const request = async <Response>(
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          _csrf: csrfToken || "",
         },
       },
-      config
+      props?.config || {}
     )
   );
   const data = await fetchRes.json();

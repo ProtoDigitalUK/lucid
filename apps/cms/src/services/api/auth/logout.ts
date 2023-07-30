@@ -5,8 +5,11 @@ const logout = () => {
     APIResponse<{
       message: string;
     }>
-  >(`/api/v1/auth/logout`, {
-    method: "POST",
+  >({
+    url: `/api/v1/auth/logout`,
+    config: {
+      method: "POST",
+    },
   });
 };
 

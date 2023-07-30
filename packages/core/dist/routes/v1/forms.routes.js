@@ -33,7 +33,6 @@ const router = (0, express_1.Router)();
     },
     middleware: {
         authenticate: true,
-        validateEnvironment: true,
     },
     schema: get_all_1.default.schema,
     controller: get_all_1.default.controller,

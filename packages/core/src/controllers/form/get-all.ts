@@ -19,7 +19,6 @@ const getAllController: Controller<
       false
     )({
       query: req.query,
-      environment_key: req.headers["lucid-environment"] as string,
     });
 
     res.status(200).json(

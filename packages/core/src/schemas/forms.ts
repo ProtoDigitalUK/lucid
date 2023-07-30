@@ -13,6 +13,11 @@ const getSingleParams = z.object({
 const getAllBody = z.object({});
 const getAllQuery = z.object({
   include: z.array(z.enum(["fields"])).optional(),
+  filter: z
+    .object({
+      environment_key: z.string().optional(),
+    })
+    .optional(),
 });
 const getAllParams = z.object({});
 

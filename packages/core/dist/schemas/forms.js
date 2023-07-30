@@ -12,6 +12,11 @@ const getSingleParams = zod_1.default.object({
 const getAllBody = zod_1.default.object({});
 const getAllQuery = zod_1.default.object({
     include: zod_1.default.array(zod_1.default.enum(["fields"])).optional(),
+    filter: zod_1.default
+        .object({
+        environment_key: zod_1.default.string().optional(),
+    })
+        .optional(),
 });
 const getAllParams = zod_1.default.object({});
 exports.default = {

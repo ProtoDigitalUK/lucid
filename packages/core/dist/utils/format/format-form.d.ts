@@ -1,11 +1,5 @@
-import { FormBuilderOptionsT } from "@lucid/form-builder";
 import FormBuilder from "@lucid/form-builder";
-export type FormResT = {
-    key: string;
-    title: string;
-    description: string | null;
-    fields?: FormBuilderOptionsT["fields"];
-};
+import { FormResT } from "@lucid/types/src/forms";
 declare const formatForm: (instance: FormBuilder) => FormResT;
 export default formatForm;
 //# sourceMappingURL=format-form.d.ts.map

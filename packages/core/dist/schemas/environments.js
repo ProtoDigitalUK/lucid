@@ -18,6 +18,7 @@ const migrateEnvironmentParams = zod_1.default.object({
     key: zod_1.default.string(),
 });
 const updateSingleBody = zod_1.default.object({
+    title: zod_1.default.string(),
     assigned_bricks: zod_1.default.array(zod_1.default.string()).optional(),
     assigned_collections: zod_1.default.array(zod_1.default.string()).optional(),
     assigned_forms: zod_1.default.array(zod_1.default.string()).optional(),
@@ -27,7 +28,11 @@ const updateSingleParams = zod_1.default.object({
     key: zod_1.default.string(),
 });
 const createSingleBody = zod_1.default.object({
-    key: zod_1.default.string().min(4).max(64),
+    key: zod_1.default
+        .string()
+        .min(4)
+        .max(64)
+        .regex(/^[a-z-]+$/),
     title: zod_1.default.string(),
     assigned_bricks: zod_1.default.array(zod_1.default.string()).optional(),
     assigned_collections: zod_1.default.array(zod_1.default.string()).optional(),

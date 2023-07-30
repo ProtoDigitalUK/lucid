@@ -48,30 +48,45 @@ declare const _default: {
             body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
             query: z.ZodObject<{
                 include: z.ZodOptional<z.ZodArray<z.ZodEnum<["fields"]>, "many">>;
+                filter: z.ZodEffects<z.ZodOptional<z.ZodObject<{
+                    collection_key: z.ZodOptional<z.ZodString>;
+                    environment_key: z.ZodOptional<z.ZodString>;
+                }, "strip", z.ZodTypeAny, {
+                    collection_key?: string | undefined;
+                    environment_key?: string | undefined;
+                }, {
+                    collection_key?: string | undefined;
+                    environment_key?: string | undefined;
+                }>>, {
+                    collection_key?: string | undefined;
+                    environment_key?: string | undefined;
+                } | undefined, {
+                    collection_key?: string | undefined;
+                    environment_key?: string | undefined;
+                } | undefined>;
             }, "strip", z.ZodTypeAny, {
                 include?: "fields"[] | undefined;
+                filter?: {
+                    collection_key?: string | undefined;
+                    environment_key?: string | undefined;
+                } | undefined;
             }, {
                 include?: "fields"[] | undefined;
+                filter?: {
+                    collection_key?: string | undefined;
+                    environment_key?: string | undefined;
+                } | undefined;
             }>;
-            params: z.ZodObject<{
-                collection_key: z.ZodString;
-            }, "strip", z.ZodTypeAny, {
-                collection_key: string;
-            }, {
-                collection_key: string;
-            }>;
+            params: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         };
         getSingle: {
             body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
             query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
             params: z.ZodObject<{
                 brick_key: z.ZodString;
-                collection_key: z.ZodString;
             }, "strip", z.ZodTypeAny, {
-                collection_key: string;
                 brick_key: string;
             }, {
-                collection_key: string;
                 brick_key: string;
             }>;
         };

@@ -7,6 +7,7 @@ const getAllQuery = z.object({
   filter: z
     .object({
       type: z.enum(["pages", "singlepage"]).optional(),
+      environment_key: z.string().optional(),
     })
     .optional(),
   include: z.array(z.enum(["bricks"])).optional(),

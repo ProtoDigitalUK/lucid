@@ -1,32 +1,31 @@
 import request from "@/utils/request";
-import queryBuilder from "@/utils/query-builder";
 import { CollectionResT } from "@lucid/types/src/collections";
-// State
-import { environment } from "@/state/environment";
 
 interface Props {
   include: {
     bricks: boolean;
   };
+  filters?: {
+    environment_key: string;
+  };
 }
 
 const getAll = (props: Props) => {
-  return request<APIResponse<CollectionResT[]>>(
-    `/api/v1/collections?${queryBuilder({
+  return request<APIResponse<CollectionResT[]>>({
+    url: `/api/v1/collections`,
+    query: {
       include: [
         {
           key: "bricks",
           include: props.include.bricks,
         },
       ],
-    })}`,
-    {
+      filters: props.filters,
+    },
+    config: {
       method: "GET",
-      headers: {
-        "lucid-environment": environment() || "",
-      },
-    }
-  );
+    },
+  });
 };
 
 export default getAll;

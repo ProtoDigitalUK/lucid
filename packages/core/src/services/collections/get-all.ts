@@ -11,10 +11,10 @@ import brickConfigService from "@services/brick-config";
 import environmentsService from "@services/environments";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
+import { EnvironmentResT } from "@lucid/types/src/environments";
 
 export interface ServiceData {
   query: z.infer<typeof collectionSchema.getAll.query>;
-  environment_key: string;
 }
 
 const getAll = async (client: PoolClient, data: ServiceData) => {
@@ -25,19 +25,23 @@ const getAll = async (client: PoolClient, data: ServiceData) => {
   let collectionsF = instances.map((collection) =>
     formatCollection(collection)
   );
-  // Get environment
-  const environment = await service(
-    environmentsService.getSingle,
-    false,
-    client
-  )({
-    key: data.environment_key,
-  });
 
-  // Filtered by assigned collections in environment
-  collectionsF.filter((collection) =>
-    environment.assigned_collections.includes(collection.key)
-  );
+  let environment: EnvironmentResT | undefined;
+  if (data.query.filter?.environment_key) {
+    // Get environment
+    environment = await service(
+      environmentsService.getSingle,
+      false,
+      client
+    )({
+      key: data.query.filter?.environment_key,
+    });
+
+    // Filtered by assigned collections in environment
+    collectionsF = collectionsF.filter((collection) =>
+      environment?.assigned_collections.includes(collection.key)
+    );
+  }
 
   collectionsF = filterCollections(data.query.filter, collectionsF);
 
@@ -50,7 +54,7 @@ const getAll = async (client: PoolClient, data: ServiceData) => {
       type: collection.type,
     };
 
-    if (data.query.include?.includes("bricks")) {
+    if (data.query.include?.includes("bricks") && environment) {
       const collectionBricks = brickConfigService.getAllAllowedBricks({
         collection,
         environment,

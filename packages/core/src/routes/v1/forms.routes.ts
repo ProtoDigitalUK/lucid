@@ -36,7 +36,6 @@ r(router, {
   },
   middleware: {
     authenticate: true,
-    validateEnvironment: true,
   },
   schema: getAll.schema,
   controller: getAll.controller,

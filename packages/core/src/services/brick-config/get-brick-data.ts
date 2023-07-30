@@ -3,8 +3,8 @@ import z from "zod";
 import { BrickBuilderT } from "@lucid/brick-builder";
 // Schema
 import bricksSchema from "@schemas/bricks";
-// Services
-import { BrickConfigT } from "@services/brick-config";
+// Types
+import { BrickConfigT } from "@lucid/types/src/bricks";
 
 export interface ServiceData {
   instance: BrickBuilderT;

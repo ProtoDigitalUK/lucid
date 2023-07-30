@@ -10,7 +10,7 @@ const get_single_1 = __importDefault(require("../../controllers/brick-config/get
 const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
-    path: "/config/:collection_key/all",
+    path: "/config",
     middleware: {
         authenticate: true,
     },
@@ -19,10 +19,9 @@ const router = (0, express_1.Router)();
 });
 (0, route_1.default)(router, {
     method: "get",
-    path: "/config/:collection_key/:brick_key",
+    path: "/config/:brick_key",
     middleware: {
         authenticate: true,
-        validateEnvironment: true,
     },
     schema: get_single_1.default.schema,
     controller: get_single_1.default.controller,

@@ -11,8 +11,6 @@ const getAllController = async (req, res, next) => {
     try {
         const bricks = await (0, service_1.default)(brick_config_1.default.getAll, false)({
             query: req.query,
-            collection_key: req.params.collection_key,
-            environment_key: req.headers["lucid-environment"],
         });
         res.status(200).json((0, build_response_1.default)(req, {
             data: bricks,

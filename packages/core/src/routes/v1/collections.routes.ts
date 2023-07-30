@@ -13,7 +13,6 @@ r(router, {
   path: "/",
   middleware: {
     authenticate: true,
-    validateEnvironment: true,
   },
   schema: getAll.schema,
   controller: getAll.controller,

@@ -26,7 +26,7 @@ const NavigationLink: Component<NavigationLinkProps> = (props) => {
         title={props.title}
         href={props.href}
         class={classNames(
-          "h-10 w-full flex bg-white text-body fill-body hover:text-body hover:bg-backgroundAccent transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md"
+          "h-10 w-full flex bg-container text-body fill-body hover:text-body hover:bg-backgroundAccent transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md"
         )}
         activeClass={classNames("!bg-backgroundAccent !text-title !fill-title")}
         end
