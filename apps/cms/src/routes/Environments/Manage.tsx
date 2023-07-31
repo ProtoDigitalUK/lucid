@@ -39,22 +39,23 @@ const ManageEnvrionemntRoute: Component = () => {
         isError: environmentData.isError,
         isSuccess: environmentData.isSuccess,
       }}
+      actions={{
+        delete: {
+          open: openDelete(),
+          setOpen: setOpenDelete,
+        },
+      }}
     >
-      <button
-        class=""
-        onClick={() => {
-          setOpenDelete(true);
-        }}
-      >
-        Delete Environment
-      </button>
+      {/* Content */}
+      <CreateEnvironment environment={environmentData.data?.data} />
+      {/* Modals */}
       <DeleteEnvironment
+        key={environmentData.data?.data.key}
         state={{
           open: openDelete(),
           setOpen: setOpenDelete,
         }}
       />
-      <CreateEnvironment environment={environmentData.data?.data} />
     </PageLayout>
   );
 };

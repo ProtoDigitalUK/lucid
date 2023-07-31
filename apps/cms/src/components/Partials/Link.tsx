@@ -3,20 +3,39 @@ import classnames from "classnames";
 import { Link as RouterLink } from "@solidjs/router";
 
 interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
+  theme:
+    | "primary"
+    | "primary-outline"
+    | "container-outline"
+    | "danger"
+    | "basic";
+  size: "x-small" | "small" | "medium" | "large" | "icon";
   children: JSX.Element;
+
   href?: string;
   classes?: string;
-  theme?: "primary" | "primary-slim-outline";
 }
 
 const Link: Component<LinkProps> = (props) => {
   // ----------------------------------------
   // Classes
   const linkClasses = classnames(
-    "focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative",
+    "flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative",
     {
-      "primary-btn": props.theme === "primary",
-      "primary-slim-outline-btn": props.theme === "primary-slim-outline",
+      "bg-primary hover:bg-primaryH text-primaryText hover:text-white fill-primaryText hover:fill-white ring-secondary":
+        props.theme === "primary",
+      "bg-transparent border border-primaryA hover:bg-primaryH fill-primaryText text-primaryText hover:text-primaryText":
+        props.theme === "primary-outline",
+      "bg-container border border-primary hover:bg-primaryH fill-primaryText text-title hover:text-primaryText":
+        props.theme === "container-outline",
+      "bg-error hover:bg-errorH text-errorText ring-secondary fill-errorText":
+        props.theme === "danger",
+      // Sizes
+      "px-2.5 py-2 text-sm": props.size === "x-small",
+      "px-5 py-2.5 text-base": props.size === "small",
+      "px-5 py-3.5 text-base": props.size === "medium",
+      "px-10 py-4 text-base": props.size === "large",
+      "w-10 h-10 p-0": props.size === "icon",
     }
   );
 

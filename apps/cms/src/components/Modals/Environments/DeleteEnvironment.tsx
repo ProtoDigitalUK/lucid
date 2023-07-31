@@ -1,8 +1,18 @@
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
+import { createMutation, useQueryClient } from "@tanstack/solid-query";
+import { useNavigate } from "@solidjs/router";
+// Services
+import api from "@/services/api";
+// State
+import { environment, setEnvironment } from "@/state/environment";
+// Utils
+import { validateSetError } from "@/utils/error-handling";
+import spawnToast from "@/utils/spawn-toast";
 // Components
 import ConfirmationModal from "@/components/Modals/ConfirmationModal";
 
 interface DeleteEnvironmentProps {
+  key?: string;
   state: {
     open: boolean;
     setOpen: (open: boolean) => void;
@@ -11,20 +21,60 @@ interface DeleteEnvironmentProps {
 
 const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
   // ------------------------------
+  // State
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = createSignal<APIErrorResponse>();
+
+  // ------------------------------
+  // Mutations
+  const deleteEnvironment = createMutation({
+    mutationFn: api.environments.deleteSingle,
+    onSuccess: (data) => {
+      spawnToast({
+        title: "Environment Deleted",
+        message: "Your environment has been deleted.",
+        status: "success",
+      });
+
+      if (data.data.key === environment()) {
+        setEnvironment(undefined);
+        navigate("/");
+      }
+
+      props.state.setOpen(false);
+
+      queryClient.invalidateQueries(["environments.getAll"]);
+      queryClient.invalidateQueries(["environments.collections.getAll"]);
+    },
+    onError: (error) => validateSetError(error, setErrors),
+  });
+
+  // ------------------------------
   // Render
   return (
     <ConfirmationModal
-      state={props.state}
+      state={{
+        open: props.state.open,
+        setOpen: props.state.setOpen,
+        isLoading: deleteEnvironment.isLoading,
+        isError: deleteEnvironment.isError,
+      }}
       content={{
-        title: "Delete Environment",
-        description:
-          "Are you sure you want to delete this environment? This action cannot be undone.",
+        title: "Delete environment",
+        description: "Are you sure you want to delete this environment?",
+        error: errors()?.message,
       }}
       onConfirm={() => {
-        console.log("Confirm");
+        if (!props.key) return console.error("No key provided");
+
+        deleteEnvironment.mutate({
+          key: props.key,
+        });
       }}
       onCancel={() => {
-        console.log("Cancel");
+        props.state.setOpen(false);
       }}
     />
   );

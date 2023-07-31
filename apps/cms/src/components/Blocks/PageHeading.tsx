@@ -1,10 +1,19 @@
 import { Component, onMount, Switch, Match, Show } from "solid-js";
+import { FaSolidTrash } from "solid-icons/fa";
+// Components
+import Button from "@/components/Partials/Button";
 
-interface PageHeadingProps {
+export interface PageHeadingProps {
   title: string;
   description?: string;
   state?: {
     isLoading?: boolean;
+  };
+  actions?: {
+    delete?: {
+      open: boolean;
+      setOpen: (open: boolean) => void;
+    };
   };
 }
 
@@ -35,7 +44,11 @@ const PageHeading: Component<PageHeadingProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <header ref={headerEle} class="p-30 border-b border-border">
+    <header
+      ref={headerEle}
+      class="p-30 border-b border-border flex justify-between items-start"
+    >
+      {/* Textarea */}
       <div class="max-w-3xl">
         <Switch>
           <Match when={props.state?.isLoading}>
@@ -53,6 +66,22 @@ const PageHeading: Component<PageHeadingProps> = (props) => {
           </Match>
         </Switch>
       </div>
+      {/* Actions */}
+      <Show when={props.actions}>
+        <div class="flex items-center justify-end ml-5">
+          <Show when={props.actions?.delete !== undefined}>
+            <Button
+              theme="danger"
+              size="icon"
+              type="button"
+              onClick={() => props.actions?.delete?.setOpen(true)}
+            >
+              <span class="sr-only">Delete</span>
+              <FaSolidTrash />
+            </Button>
+          </Show>
+        </div>
+      </Show>
     </header>
   );
 };

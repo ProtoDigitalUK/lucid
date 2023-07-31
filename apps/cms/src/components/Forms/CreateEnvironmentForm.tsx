@@ -330,11 +330,14 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
 
       <PageLayoutFooter>
         <Show when={errors() && errors()?.message}>
-          <div class="mb-5">
-            <ErrorMessage message={errors()?.message} />
-          </div>
+          <ErrorMessage theme="background" message={errors()?.message} />
         </Show>
-        <Button type="submit" theme="primary" loading={isSaving()}>
+        <Button
+          type="submit"
+          theme="primary"
+          size="medium"
+          loading={isSaving()}
+        >
           <Show when={props.environment}>Update</Show>
           <Show when={!props.environment}>Create</Show>
         </Button>

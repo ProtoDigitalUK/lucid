@@ -26,7 +26,7 @@ module.exports = {
         border: "#D7DDE4",
 
         error: "#FC3636",
-        errorH: "#E62E2E",
+        errorH: "#D92C2C",
         errorText: "#FFFFFF",
         success: "#32AD84",
         warning: "#FFC107",
@@ -56,6 +56,7 @@ module.exports = {
         "animate-leave": "animation-leave 0.2s ease-out",
         "animate-dropdown": "animation-dropdown 0.2s ease-out",
         "animate-from-left": "animation-from-left 0.2s ease-out",
+        "animate-fade-in": "animation-fade-in 0.2s ease-out",
       },
       spacing: {
         30: "30px",

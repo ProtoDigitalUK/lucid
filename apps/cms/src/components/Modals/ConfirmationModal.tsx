@@ -3,15 +3,19 @@ import { Component, Show } from "solid-js";
 import { FaSolidXmark } from "solid-icons/fa";
 import { AlertDialog } from "@kobalte/core";
 import Button from "@/components/Partials/Button";
+import ErrorMessage from "@/components/Partials/ErrorMessage";
 
 interface ConfirmationModalProps {
   state: {
     open: boolean;
     setOpen: (open: boolean) => void;
+    isLoading?: boolean;
+    isError?: boolean;
   };
   content: {
     title: string;
     description?: string;
+    error?: string;
   };
   onConfirm: () => void;
   onCancel: () => void;
@@ -26,27 +30,47 @@ const ConfirmationModal: Component<ConfirmationModalProps> = (props) => {
       onOpenChange={() => props.state.setOpen(!props.state.open)}
     >
       <AlertDialog.Portal>
-        <AlertDialog.Overlay class="fixed inset-0 bg-white bg-opacity-40" />
-        <div class="fixed inset-0 z-50 flex items-center justify-center">
-          <AlertDialog.Content class="z-50 max-w-2xl bg-container shadow-md p-30 rounded-md border-border border">
-            <div class="flex items-baseline justify-between mb-15">
+        <AlertDialog.Overlay class="fixed inset-0 bg-black bg-opacity-60 animate-animate-fade-in" />
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-15">
+          <AlertDialog.Content class="z-50 max-w-2xl w-full bg-container shadow-md rounded-md border-border border">
+            <div class="flex items-baseline justify-between p-30 border-b border-border">
               <AlertDialog.Title>{props.content.title}</AlertDialog.Title>
-              <AlertDialog.CloseButton class="alert-dialog__close-button">
+              <AlertDialog.CloseButton class="hover:fill-errorText h-8 w-8 min-w-[32px] rounded-full flex justify-center items-center bg-container hover:bg-error duration-200 transition-colors">
                 <FaSolidXmark />
               </AlertDialog.CloseButton>
             </div>
-            <Show when={props.content.description}>
-              <AlertDialog.Description>
-                {props.content.description}
-              </AlertDialog.Description>
-            </Show>
-            <div class="mt-15 pt-15 border-t border-border flex">
-              <Button theme="danger" type={"button"}>
-                Confirm
-              </Button>
-              <Button theme="primary" type={"button"} classes="ml-2.5">
-                Cancel
-              </Button>
+            <div class="p-30">
+              <Show when={props.content.description}>
+                <AlertDialog.Description>
+                  {props.content.description}
+                </AlertDialog.Description>
+              </Show>
+            </div>
+            <div class="p-30 border-t border-border ">
+              <Show when={props.state.isError && props.content.error}>
+                <ErrorMessage theme="basic" message={props.content.error} />
+              </Show>
+              <div class="flex">
+                <Button
+                  theme="danger"
+                  size="small"
+                  type={"button"}
+                  loading={props.state.isLoading}
+                  onClick={props.onConfirm}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  theme="container-outline"
+                  size="small"
+                  type={"button"}
+                  classes="ml-2.5"
+                  disabled={props.state.isLoading}
+                  onClick={props.onCancel}
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
           </AlertDialog.Content>
         </div>

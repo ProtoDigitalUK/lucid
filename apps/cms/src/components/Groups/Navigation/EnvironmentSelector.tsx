@@ -86,6 +86,8 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
                       <span class="ml-2.5">{env.title}</span>
                     </div>
                     <Link
+                      size="medium"
+                      theme="basic"
                       href={`/env/${env.key}`}
                       class="hover:fill-secondaryH fill-primaryText ml-2"
                     >
@@ -102,7 +104,8 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
           <Separator.Root class="border-primaryA my-2.5 w-full" />
           <Link
             href="/env/create"
-            theme="primary-slim-outline"
+            theme="primary-outline"
+            size="x-small"
             onClick={() => {
               setOpen(false);
             }}

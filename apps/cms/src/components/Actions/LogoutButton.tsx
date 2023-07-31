@@ -29,11 +29,6 @@ const LogoutButton: Component<LogoutButtonProps> = () => {
       navigate("/login");
     },
     onError: () => {
-      spawnToast({
-        title: "Logout failed",
-        message: "Something went wrong",
-        status: "error",
-      });
       clearCookie("auth");
       navigate("/login");
     },
@@ -45,6 +40,7 @@ const LogoutButton: Component<LogoutButtonProps> = () => {
     <Button
       type="submit"
       theme="primary"
+      size="medium"
       loading={logout.isLoading}
       onCLick={() => {
         logout.mutate();

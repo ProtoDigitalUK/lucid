@@ -1,29 +1,33 @@
-import { Component, JSXElement, Switch, Match } from "solid-js";
+import { Component, JSXElement, Switch, Match, Show } from "solid-js";
 // Components
-import PageHeading from "@/components/Blocks/PageHeading";
+import PageHeading, { PageHeadingProps } from "@/components/Blocks/PageHeading";
 import Loading from "@/components/Partials/Loading";
 
 interface PageWrapperProps {
-  title: string;
+  title?: string;
   description?: string;
   state?: {
     isLoading?: boolean;
     isError?: boolean;
     isSuccess?: boolean;
   };
+  actions?: PageHeadingProps["actions"];
   children: JSXElement;
 }
 
 const PageLayout: Component<PageWrapperProps> = (props) => {
   return (
     <div class="min-h-screen w-full relative">
-      <PageHeading
-        title={props.title}
-        description={props.description}
-        state={{
-          isLoading: props.state?.isLoading,
-        }}
-      />
+      <Show when={props.title}>
+        <PageHeading
+          title={props.title ?? ""}
+          description={props.description}
+          state={{
+            isLoading: props.state?.isLoading,
+          }}
+          actions={props.actions}
+        />
+      </Show>
       <div
         class="p-30"
         style={{

@@ -30,11 +30,6 @@ const Navigation: Component = () => {
     },
     onError: () => {
       setEnvironment(undefined);
-      spawnToast({
-        status: "error",
-        title: "Environment Error",
-        message: "There was an error while setting the environment.",
-      });
     },
   });
   const collections = createQuery(

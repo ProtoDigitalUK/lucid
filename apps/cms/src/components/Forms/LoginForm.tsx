@@ -10,6 +10,7 @@ import api from "@/services/api";
 import Form from "@/components/Partials/Form";
 import Input from "@/components/Inputs/Input";
 import Button from "@/components/Partials/Button";
+import ErrorMessage from "@/components/Partials/ErrorMessage";
 
 interface LoginFormProps {
   showForgotPassword?: boolean;
@@ -87,11 +88,12 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         </Show>
 
         <div class="mt-10 w-full">
-          <Show when={errors()}>
-            <p class="text-red-500 text-sm mb-5">{errors()?.message}</p>
+          <Show when={errors() && errors()?.message}>
+            <ErrorMessage theme="container" message={errors()?.message} />
           </Show>
 
           <Button
+            size="medium"
             classes="w-full"
             type="submit"
             theme="primary"

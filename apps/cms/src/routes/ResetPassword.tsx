@@ -31,9 +31,6 @@ const ResetPasswordRoute: Component = () => {
       api.auth.verifyResetToken({
         token: token as string,
       }),
-    onError: (data) => {
-      console.log("error", data);
-    },
     retry: 0,
   });
 
