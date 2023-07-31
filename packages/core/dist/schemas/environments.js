@@ -32,7 +32,9 @@ const createSingleBody = zod_1.default.object({
         .string()
         .min(4)
         .max(64)
-        .regex(/^[a-z-]+$/),
+        .refine((value) => /^[a-z-]+$/.test(value), {
+        message: "Invalid key format. Only lowercase letters and dashes are allowed.",
+    }),
     title: zod_1.default.string(),
     assigned_bricks: zod_1.default.array(zod_1.default.string()).optional(),
     assigned_collections: zod_1.default.array(zod_1.default.string()).optional(),

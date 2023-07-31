@@ -55,7 +55,7 @@ declare const _default: {
     };
     createSingle: {
         body: z.ZodObject<{
-            key: z.ZodString;
+            key: z.ZodEffects<z.ZodString, string, string>;
             title: z.ZodString;
             assigned_bricks: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             assigned_collections: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;

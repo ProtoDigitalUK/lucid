@@ -1,7 +1,7 @@
 declare const _default: {
     schema: {
         body: import("zod").ZodObject<{
-            key: import("zod").ZodString;
+            key: import("zod").ZodEffects<import("zod").ZodString, string, string>;
             title: import("zod").ZodString;
             assigned_bricks: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
             assigned_collections: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
@@ -23,7 +23,7 @@ declare const _default: {
         params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
     controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
-        key: import("zod").ZodString;
+        key: import("zod").ZodEffects<import("zod").ZodString, string, string>;
         title: import("zod").ZodString;
         assigned_bricks: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
         assigned_collections: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodString, "many">>;
