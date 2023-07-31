@@ -9,15 +9,20 @@ interface SpawnToastProps {
 }
 
 const spawnToast = (props: SpawnToastProps) => {
-  toast.custom((t) => (
-    <CustomToast
-      toast={t}
-      title={props.title}
-      message={props.message}
-      type={props.status || "info"}
-      duration={props.duration}
-    />
-  ));
+  toast.custom(
+    (t) => (
+      <CustomToast
+        toast={t}
+        title={props.title}
+        message={props.message}
+        type={props.status || "info"}
+        duration={props.duration}
+      />
+    ),
+    {
+      id: `${props.title}-${props.message}-${props.status}`,
+    }
+  );
 };
 
 export default spawnToast;

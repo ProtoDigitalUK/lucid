@@ -1,7 +1,7 @@
 import helpers from "@/utils/helpers";
 import api from "@/services/api";
 import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
-import { LucidError } from "@/utils/error-handling";
+import { LucidError, handleSiteErrors } from "@/utils/error-handling";
 
 interface RequestProps {
   url: string;
@@ -45,6 +45,7 @@ const request = async <Response>(props: RequestProps): Promise<Response> => {
   const data = await fetchRes.json();
   if (!fetchRes.ok) {
     const errorObj = data as APIErrorResponse;
+    handleSiteErrors(errorObj);
     throw new LucidError(errorObj.message, errorObj);
   }
 

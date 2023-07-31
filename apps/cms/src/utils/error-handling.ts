@@ -1,4 +1,5 @@
 import { Setter } from "solid-js";
+import spawnToast from "@/utils/spawn-toast";
 
 export class LucidError extends Error {
   errorRes: APIErrorResponse;
@@ -25,4 +26,12 @@ export const validateSetError = (
     });
   }
   return;
+};
+
+export const handleSiteErrors = (error: APIErrorResponse) => {
+  spawnToast({
+    title: error.name,
+    message: error.message,
+    status: "error",
+  });
 };
