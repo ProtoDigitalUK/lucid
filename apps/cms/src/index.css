@@ -105,6 +105,9 @@
   .primary-slim-outline-btn {
     @apply px-2.5 py-2 bg-transparent border border-primaryA hover:bg-primaryH flex items-center fill-primaryText text-primaryText hover:text-primaryText text-sm;
   }
+  .danger-btn {
+    @apply flex items-center justify-center text-center px-10 py-3.5  bg-error hover:bg-errorH text-errorText ring-secondary;
+  }
 
   /* Animations */
   @keyframes animation-enter {

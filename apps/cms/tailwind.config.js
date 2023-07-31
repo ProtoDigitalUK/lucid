@@ -26,6 +26,8 @@ module.exports = {
         border: "#D7DDE4",
 
         error: "#FC3636",
+        errorH: "#E62E2E",
+        errorText: "#FFFFFF",
         success: "#32AD84",
         warning: "#FFC107",
 

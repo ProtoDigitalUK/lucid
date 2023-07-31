@@ -6,7 +6,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   onCLick?: () => void;
 
   type?: "button" | "submit" | "reset";
-  theme?: "primary" | "primary-slim-outline";
+  theme?: "primary" | "primary-slim-outline" | "danger";
   classes?: string;
 
   loading?: boolean;
@@ -21,6 +21,7 @@ const Button: Component<ButtonProps> = (props) => {
     {
       "primary-btn": props.theme === "primary",
       "primary-slim-outline-btn": props.theme === "primary-slim-outline",
+      "danger-btn": props.theme === "danger",
     }
   );
 

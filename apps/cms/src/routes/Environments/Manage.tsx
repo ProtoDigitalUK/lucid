@@ -1,14 +1,20 @@
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Services
 import api from "@/services/api";
+// State
+import { environment } from "@/state/environment";
 // Components
 import PageLayout from "@/components/Layout/PageLayout";
 import CreateEnvironment from "@/components/Forms/CreateEnvironmentForm";
-// State
-import { environment } from "@/state/environment";
+// Modals
+import DeleteEnvironment from "@/components/Modals/Environments/DeleteEnvironment";
 
 const ManageEnvrionemntRoute: Component = () => {
+  // ----------------------------------------
+  // State
+  const [openDelete, setOpenDelete] = createSignal(false);
+
   // ----------------------------------------
   // Queries
   const environmentData = createQuery(
@@ -34,6 +40,20 @@ const ManageEnvrionemntRoute: Component = () => {
         isSuccess: environmentData.isSuccess,
       }}
     >
+      <button
+        class=""
+        onClick={() => {
+          setOpenDelete(true);
+        }}
+      >
+        Delete Environment
+      </button>
+      <DeleteEnvironment
+        state={{
+          open: openDelete(),
+          setOpen: setOpenDelete,
+        }}
+      />
       <CreateEnvironment environment={environmentData.data?.data} />
     </PageLayout>
   );
