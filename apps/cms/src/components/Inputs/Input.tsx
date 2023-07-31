@@ -17,6 +17,7 @@ interface InputProps {
     placeholder?: string;
     describedBy?: string;
   };
+  onBlur?: () => void;
   autoFoucs?: boolean;
   autoComplete?: string;
   required?: boolean;
@@ -89,7 +90,10 @@ const Input: Component<InputProps> = (props) => {
           required={props.required}
           disabled={props.disabled}
           onFocus={() => setInputFocus(true)}
-          onBlur={() => setInputFocus(false)}
+          onBlur={() => {
+            setInputFocus(false);
+            props.onBlur?.();
+          }}
         />
         {/* Show Password */}
         <Show when={props.type === "password"}>
@@ -122,8 +126,11 @@ const Input: Component<InputProps> = (props) => {
 
       {/* Errors */}
       <Show when={props.errors?.message !== undefined}>
-        <a class="mt-2.5 flex items-center text-sm" href={`#${props.id}`}>
-          <FaSolidTriangleExclamation size={16} class="fill-error mr-2" />
+        <a class="mt-2.5 flex items-start text-sm" href={`#${props.id}`}>
+          <FaSolidTriangleExclamation
+            size={16}
+            class="fill-error mt-[3px] mr-2"
+          />
           {props.errors?.message}
         </a>
       </Show>

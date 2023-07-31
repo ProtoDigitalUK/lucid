@@ -42,7 +42,10 @@ const createSingleBody = z.object({
     .string()
     .min(4)
     .max(64)
-    .regex(/^[a-z-]+$/),
+    .refine((value) => /^[a-z-]+$/.test(value), {
+      message:
+        "Invalid key format. Only lowercase letters and dashes are allowed.",
+    }),
   title: z.string(),
   assigned_bricks: z.array(z.string()).optional(),
   assigned_collections: z.array(z.string()).optional(),

@@ -6,7 +6,7 @@ import api from "@/services/api";
 import { environment } from "@/state/environment";
 // Components
 import PageLayout from "@/components/Layout/PageLayout";
-import CreateEnvironment from "@/components/Forms/CreateEnvironmentForm";
+import CreateEnvironment from "@/components/Forms/Environments/CreateEnvironmentForm";
 // Modals
 import DeleteEnvironment from "@/components/Modals/Environments/DeleteEnvironment";
 

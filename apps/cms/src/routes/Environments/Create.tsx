@@ -1,7 +1,7 @@
 import { Component } from "solid-js";
 // Componetns
 import PageLayout from "@/components/Layout/PageLayout";
-import CreateEnvironment from "@/components/Forms/CreateEnvironmentForm";
+import CreateEnvironment from "@/components/Forms/Environments/CreateEnvironmentForm";
 
 const CreateEnvrionemntRoute: Component = () => {
   // ----------------------------------------

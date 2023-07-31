@@ -81,8 +81,11 @@ const CheckboxInput: Component<CheckboxInputProps> = (props) => {
 
       {/* Errors */}
       <Show when={props.errors?.message !== undefined}>
-        <a class="mt-2.5 flex items-center text-sm" href={`#${props.id}`}>
-          <FaSolidTriangleExclamation size={16} class="fill-error mr-2" />
+        <a class="mt-2.5 flex items-start text-sm" href={`#${props.id}`}>
+          <FaSolidTriangleExclamation
+            size={16}
+            class="fill-error mt-[3px] mr-2"
+          />
           {props.errors?.message}
         </a>
       </Show>

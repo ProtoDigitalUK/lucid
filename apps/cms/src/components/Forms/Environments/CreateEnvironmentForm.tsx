@@ -13,6 +13,7 @@ import {
   createQuery,
   useQueryClient,
 } from "@tanstack/solid-query";
+import slugify from "slugify";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
@@ -214,7 +215,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           });
         } else {
           updateEnvironment.mutate({
-            key: key(),
+            key: props.environment.key,
             body: {
               title: title(),
               assigned_bricks: assignedBricks(),
@@ -241,6 +242,17 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           autoFoucs={true}
           errors={errors()?.errors?.body?.title}
           noMargin={true}
+          onBlur={() => {
+            if (!key()) {
+              const newKey = slugify(title(), {
+                lower: true,
+                replacement: "-",
+                strict: true,
+                remove: /[0-9]/g,
+              });
+              setKey(newKey);
+            }
+          }}
         />
         <Show when={!props.environment}>
           <Input
