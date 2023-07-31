@@ -70,7 +70,7 @@ const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
         if (!props.key) return console.error("No key provided");
 
         deleteEnvironment.mutate({
-          key: "props.key",
+          key: props.key,
         });
       }}
       onCancel={() => {
