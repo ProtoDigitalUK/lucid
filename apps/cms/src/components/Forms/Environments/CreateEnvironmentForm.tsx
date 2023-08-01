@@ -14,9 +14,11 @@ import {
   useQueryClient,
 } from "@tanstack/solid-query";
 import slugify from "slugify";
+
 // Utils
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
+import helpers from "@/utils/helpers";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 // Service
@@ -34,7 +36,7 @@ import Input from "@/components/Inputs/Input";
 import Button from "@/components/Partials/Button";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import InputGrid from "@/components/Containers/InputGrid";
-import PageLayoutFooter from "@/components/Layout/PageLayoutFooter";
+import PageFooter from "@/components/Layout/PageFooter";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 import Error from "@/components/Partials/Error";
 import CardGrid from "@/components/Containers/CardGrid";
@@ -116,6 +118,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
         message: "Your environment has been updated successfully.",
         status: "success",
       });
+      setErrors(undefined);
 
       queryClient.invalidateQueries(["environments.getSingle"]);
       queryClient.invalidateQueries(["environments.getAll"]);
@@ -168,6 +171,36 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
     }
   };
 
+  const onSubmit = async () => {
+    if (!props.environment) {
+      createEnvironment.mutate({
+        key: key(),
+        title: title(),
+        assigned_bricks: assignedBricks(),
+        assigned_collections: assignedCollections(),
+        assigned_forms: assignedForms(),
+      });
+    } else {
+      updateEnvironment.mutate({
+        key: props.environment.key,
+        body: helpers.deepDiff(
+          {
+            title: props.environment.title,
+            assigned_bricks: props.environment.assigned_bricks,
+            assigned_collections: props.environment.assigned_collections,
+            assigned_forms: props.environment.assigned_forms,
+          },
+          {
+            title: title(),
+            assigned_bricks: assignedBricks(),
+            assigned_collections: assignedCollections(),
+            assigned_forms: assignedForms(),
+          }
+        ),
+      });
+    }
+  };
+
   // ----------------------------------------
   // Effects
   createEffect(() => {
@@ -182,7 +215,6 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
   const isLoading = createMemo(() => {
     return bricks.isLoading || collections.isLoading || forms.isLoading;
   });
-
   const isSaving = createMemo(() => {
     return createEnvironment.isLoading || updateEnvironment.isLoading;
   });
@@ -203,29 +235,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
   }
 
   return (
-    <Form
-      onSubmit={async () => {
-        if (!props.environment) {
-          createEnvironment.mutate({
-            key: key(),
-            title: title(),
-            assigned_bricks: assignedBricks(),
-            assigned_collections: assignedCollections(),
-            assigned_forms: assignedForms(),
-          });
-        } else {
-          updateEnvironment.mutate({
-            key: props.environment.key,
-            body: {
-              title: title(),
-              assigned_bricks: assignedBricks(),
-              assigned_collections: assignedCollections(),
-              assigned_forms: assignedForms(),
-            },
-          });
-        }
-      }}
-    >
+    <Form onSubmit={onSubmit}>
       {/* Details */}
       <SectionHeading title="Details" />
       <InputGrid columns={3}>
@@ -340,7 +350,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
         </For>
       </CardGrid>
 
-      <PageLayoutFooter>
+      <PageFooter>
         <Show when={errors() && errors()?.message}>
           <ErrorMessage theme="background" message={errors()?.message} />
         </Show>
@@ -353,7 +363,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           <Show when={props.environment}>Update</Show>
           <Show when={!props.environment}>Create</Show>
         </Button>
-      </PageLayoutFooter>
+      </PageFooter>
     </Form>
   );
 };

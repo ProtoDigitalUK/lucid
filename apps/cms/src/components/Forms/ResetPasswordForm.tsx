@@ -35,6 +35,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         message: "Your password has been reset successfully",
         status: "success",
       });
+      setErrors(undefined);
       navigate("/login");
     },
     onError: (error) => validateSetError(error, setErrors),

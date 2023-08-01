@@ -1,13 +1,24 @@
 import helpers from "@/utils/helpers";
 import api from "@/services/api";
 import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
-import { LucidError, handleSiteErrors } from "@/utils/error-handling";
+import {
+  LucidError,
+  handleSiteErrors,
+  emptyBodyError,
+} from "@/utils/error-handling";
 
 interface RequestProps {
   url: string;
   query?: QueryBuilderProps;
   csrf?: boolean;
-  config?: RequestInit;
+  config?: RequestConfig;
+}
+
+interface RequestConfig {
+  method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+  body?: {
+    [key: string]: any;
+  };
 }
 
 const request = async <Response>(props: RequestProps): Promise<Response> => {
@@ -29,6 +40,23 @@ const request = async <Response>(props: RequestProps): Promise<Response> => {
     csrfToken = csrfRes.data._csrf;
   }
 
+  let body: string | undefined = undefined;
+  if (props.config?.body !== undefined) {
+    // if (
+    //   Object.keys(props.config.body).length === 0 &&
+    //   props.config.body.constructor === Object
+    // ) {
+    //   emptyBodyError();
+    //   throw new LucidError("Empty body", {
+    //     message: "Empty body",
+    //     name: "Empty body",
+    //     status: 400,
+    //     errors: {},
+    //   });
+    // }
+    body = JSON.stringify(props.config.body);
+  }
+
   const fetchRes = await fetch(
     fetchURL,
     helpers.deepMerge(
@@ -39,7 +67,10 @@ const request = async <Response>(props: RequestProps): Promise<Response> => {
           _csrf: csrfToken || "",
         },
       },
-      props?.config || {}
+      {
+        method: props.config?.method,
+        body,
+      }
     )
   );
   const data = await fetchRes.json();

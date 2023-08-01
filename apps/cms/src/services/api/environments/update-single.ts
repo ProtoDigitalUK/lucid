@@ -17,7 +17,7 @@ const updateSingle = (params: Params) => {
     csrf: true,
     config: {
       method: "PATCH",
-      body: JSON.stringify(params.body),
+      body: params.body,
     },
   });
 };

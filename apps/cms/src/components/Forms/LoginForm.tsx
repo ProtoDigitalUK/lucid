@@ -37,6 +37,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         status: "success",
       });
       navigate("/");
+      setErrors(undefined);
     },
     onError: (error) => validateSetError(error, setErrors),
   });

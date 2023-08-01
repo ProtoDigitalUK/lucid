@@ -37,6 +37,7 @@ const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
         message: "Your environment has been deleted.",
         status: "success",
       });
+      setErrors(undefined);
 
       if (data.data.key === environment()) {
         setEnvironment(undefined);

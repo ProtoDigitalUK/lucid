@@ -16,10 +16,10 @@ const resetPassword = async (params: Params) => {
     csrf: true,
     config: {
       method: "PATCH",
-      body: JSON.stringify({
+      body: {
         password: params.password,
         password_confirmation: params.password_confirmation,
-      }),
+      },
     },
   });
 };

@@ -34,6 +34,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
         status: "success",
       });
       setEmail("");
+      setErrors(undefined);
     },
     onError: (error) => validateSetError(error, setErrors),
   });

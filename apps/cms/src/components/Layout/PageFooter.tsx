@@ -4,7 +4,7 @@ interface PageLayoutFooterProps {
   children: JSXElement;
 }
 
-const PageLayoutFooter: Component<PageLayoutFooterProps> = (props) => {
+const PageFooter: Component<PageLayoutFooterProps> = (props) => {
   let footerEle: HTMLElement | undefined;
 
   // ----------------------------------------
@@ -23,8 +23,13 @@ const PageLayoutFooter: Component<PageLayoutFooterProps> = (props) => {
   onMount(() => {
     setFooterHeight();
     window.addEventListener("resize", setFooterHeight);
+
+    const observer = new MutationObserver(setFooterHeight);
+    observer.observe(footerEle!, { attributes: true, childList: true });
+
     return () => {
       window.removeEventListener("resize", setFooterHeight);
+      observer.disconnect();
     };
   });
 
@@ -40,4 +45,4 @@ const PageLayoutFooter: Component<PageLayoutFooterProps> = (props) => {
   );
 };
 
-export default PageLayoutFooter;
+export default PageFooter;

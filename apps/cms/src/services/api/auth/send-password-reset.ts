@@ -14,7 +14,7 @@ const sendPasswordReset = async (params: Params) => {
     csrf: true,
     config: {
       method: "POST",
-      body: JSON.stringify(params),
+      body: params,
     },
   });
 };

@@ -1,6 +1,6 @@
 import { Component, JSXElement, Switch, Match, Show } from "solid-js";
 // Components
-import PageHeading, { PageHeadingProps } from "@/components/Blocks/PageHeading";
+import PageHeading, { PageHeadingProps } from "@/components/Layout/PageHeading";
 import Loading from "@/components/Partials/Loading";
 
 interface PageWrapperProps {

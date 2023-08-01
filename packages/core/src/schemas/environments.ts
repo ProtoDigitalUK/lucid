@@ -25,7 +25,7 @@ const migrateEnvironmentParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
-  title: z.string(),
+  title: z.string().optional(),
   assigned_bricks: z.array(z.string()).optional(),
   assigned_collections: z.array(z.string()).optional(),
   assigned_forms: z.array(z.string()).optional(),

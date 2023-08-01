@@ -35,3 +35,11 @@ export const handleSiteErrors = (error: APIErrorResponse) => {
     status: "error",
   });
 };
+
+export const emptyBodyError = () => {
+  spawnToast({
+    title: "Error",
+    message: "Cannot send an empty body.",
+    status: "error",
+  });
+};
