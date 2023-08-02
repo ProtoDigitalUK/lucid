@@ -1,11 +1,6 @@
-import helpers from "@/utils/helpers";
 import api from "@/services/api";
 import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
-import {
-  LucidError,
-  handleSiteErrors,
-  emptyBodyError,
-} from "@/utils/error-handling";
+import { LucidError, handleSiteErrors } from "@/utils/error-handling";
 
 interface RequestProps {
   url: string;
@@ -42,37 +37,18 @@ const request = async <Response>(props: RequestProps): Promise<Response> => {
 
   let body: string | undefined = undefined;
   if (props.config?.body !== undefined) {
-    // if (
-    //   Object.keys(props.config.body).length === 0 &&
-    //   props.config.body.constructor === Object
-    // ) {
-    //   emptyBodyError();
-    //   throw new LucidError("Empty body", {
-    //     message: "Empty body",
-    //     name: "Empty body",
-    //     status: 400,
-    //     errors: {},
-    //   });
-    // }
     body = JSON.stringify(props.config.body);
   }
 
-  const fetchRes = await fetch(
-    fetchURL,
-    helpers.deepMerge(
-      {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          _csrf: csrfToken || "",
-        },
-      },
-      {
-        method: props.config?.method,
-        body,
-      }
-    )
-  );
+  const fetchRes = await fetch(fetchURL, {
+    method: props.config?.method,
+    body,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      _csrf: csrfToken || "",
+    },
+  });
   const data = await fetchRes.json();
   if (!fetchRes.ok) {
     const errorObj = data as APIErrorResponse;

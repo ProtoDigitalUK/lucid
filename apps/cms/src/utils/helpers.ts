@@ -21,6 +21,8 @@ const deepMerge = (obj1: GenericObject, obj2: GenericObject): GenericObject => {
   return result;
 };
 
+// ---------------------------------------------
+// Returns any updated values in obj2 compared to obj1
 const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
   const result: Partial<T> = {};
 
@@ -28,7 +30,7 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
     // @ts-ignore
     if (obj1.hasOwnProperty(key)) {
       if (Array.isArray(obj1[key])) {
-        if (JSON.stringify(obj1[key]) !== JSON.stringify(obj2[key])) {
+        if (!compareArrays(obj1[key] as any, obj2[key] as any)) {
           result[key] = obj2[key];
         }
       } else if (typeof obj1[key] === "object") {
@@ -45,7 +47,31 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
     }
   }
 
+  // go through obj2 and find keys that are not in obj1
+  for (const key in obj2) {
+    // @ts-ignore
+    if (obj2.hasOwnProperty(key)) {
+      if (!obj1[key]) {
+        result[key] = obj2[key];
+      }
+    }
+  }
+
   return result;
+};
+
+const compareArrays = (arr1: any[], arr2: any[]): boolean => {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (!arr2.includes(arr1[i])) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 const helpers = {

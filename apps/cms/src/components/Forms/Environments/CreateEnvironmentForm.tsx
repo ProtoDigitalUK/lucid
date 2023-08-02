@@ -183,20 +183,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
     } else {
       updateEnvironment.mutate({
         key: props.environment.key,
-        body: helpers.deepDiff(
-          {
-            title: props.environment.title,
-            assigned_bricks: props.environment.assigned_bricks,
-            assigned_collections: props.environment.assigned_collections,
-            assigned_forms: props.environment.assigned_forms,
-          },
-          {
-            title: title(),
-            assigned_bricks: assignedBricks(),
-            assigned_collections: assignedCollections(),
-            assigned_forms: assignedForms(),
-          }
-        ),
+        body: updateData().body,
       });
     }
   };
@@ -209,6 +196,30 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
 
   // ----------------------------------------
   // Memos
+  const updateData = createMemo(() => {
+    const body = helpers.deepDiff(
+      {
+        title: props.environment?.title,
+        assigned_bricks: props.environment?.assigned_bricks,
+        assigned_collections: props.environment?.assigned_collections,
+        assigned_forms: props.environment?.assigned_forms,
+      },
+      {
+        title: title(),
+        assigned_bricks: assignedBricks(),
+        assigned_collections: assignedCollections(),
+        assigned_forms: assignedForms(),
+      }
+    );
+    return {
+      canUpdate: Object.keys(body).length > 0,
+      body,
+    };
+  });
+  const submitIsDisabled = createMemo(() => {
+    if (!props.environment) return false;
+    return !updateData().canUpdate;
+  });
   const isError = createMemo(() => {
     return bricks.isError || collections.isError || forms.isError;
   });
@@ -359,6 +370,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           theme="primary"
           size="medium"
           loading={isSaving()}
+          disabled={submitIsDisabled()}
         >
           <Show when={props.environment}>Update</Show>
           <Show when={!props.environment}>Create</Show>
