@@ -2,6 +2,7 @@ import { Component, onMount, Switch, Match, Show } from "solid-js";
 import { FaSolidTrash } from "solid-icons/fa";
 // Components
 import Button from "@/components/Partials/Button";
+import classNames from "classnames";
 
 export interface PageHeadingProps {
   title: string;
@@ -15,6 +16,9 @@ export interface PageHeadingProps {
       setOpen: (open: boolean) => void;
     };
   };
+  options?: {
+    noBorder?: boolean;
+  };
 }
 
 const PageHeading: Component<PageHeadingProps> = (props) => {
@@ -25,7 +29,7 @@ const PageHeading: Component<PageHeadingProps> = (props) => {
   function setHeaderHeight() {
     if (headerEle) {
       document.documentElement.style.setProperty(
-        "--lucid_page-layout-header-height",
+        "--lucid-page-layout-header-height",
         `${headerEle.offsetHeight}px`
       );
     }
@@ -51,7 +55,9 @@ const PageHeading: Component<PageHeadingProps> = (props) => {
   return (
     <header
       ref={headerEle}
-      class="p-30 border-b border-border flex justify-between items-start"
+      class={classNames("p-30 border-border flex justify-between items-start", {
+        "border-b": !props.options?.noBorder,
+      })}
     >
       {/* Textarea */}
       <div class="max-w-3xl">

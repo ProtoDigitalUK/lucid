@@ -2,6 +2,7 @@ import { Component, JSXElement, Switch, Match, Show } from "solid-js";
 // Components
 import PageHeading, { PageHeadingProps } from "@/components/Layout/PageHeading";
 import Loading from "@/components/Partials/Loading";
+import classNames from "classnames";
 
 interface PageWrapperProps {
   title?: string;
@@ -13,6 +14,9 @@ interface PageWrapperProps {
   };
   actions?: PageHeadingProps["actions"];
   children: JSXElement;
+  options?: {
+    noPadding?: boolean;
+  };
 }
 
 const PageLayout: Component<PageWrapperProps> = (props) => {
@@ -26,14 +30,18 @@ const PageLayout: Component<PageWrapperProps> = (props) => {
             isLoading: props.state?.isLoading,
           }}
           actions={props.actions}
+          options={{
+            noBorder: props.options?.noPadding,
+          }}
         />
       </Show>
       <div
-        class="p-30"
-        style={{
-          "padding-bottom":
-            "calc(var(--lucid_page-layout-footer-height) + 30px)",
-        }}
+        class={classNames({
+          "p-30 pb-[calc(var(--lucid-page-layout-footer-height)+30px)]":
+            !props.options?.noPadding,
+          "pb-[var(--lucid-page-layout-footer-height)]":
+            props.options?.noPadding,
+        })}
       >
         <Switch fallback={props.children}>
           <Match when={props.state?.isLoading}>

@@ -12,6 +12,7 @@ interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
   size: "x-small" | "small" | "medium" | "large" | "icon";
   children: JSX.Element;
 
+  replace?: boolean;
   href?: string;
   classes?: string;
 }
@@ -45,6 +46,7 @@ const Link: Component<LinkProps> = (props) => {
     <RouterLink
       class={classnames(linkClasses, props.classes)}
       href={props.href || ""}
+      replace={props.replace}
       {...props}
     >
       {props.children}

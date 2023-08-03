@@ -33,20 +33,20 @@ const ConfirmationModal: Component<ConfirmationModalProps> = (props) => {
         <AlertDialog.Overlay class="fixed inset-0 bg-black bg-opacity-60 animate-animate-fade-in" />
         <div class="fixed inset-0 z-50 flex items-center justify-center p-15">
           <AlertDialog.Content class="z-50 max-w-2xl w-full bg-container shadow-md rounded-md border-border border">
-            <div class="flex items-baseline justify-between p-30 border-b border-border">
+            <div class="flex items-baseline justify-between p-15 md:p-30 border-b border-border">
               <AlertDialog.Title>{props.content.title}</AlertDialog.Title>
               <AlertDialog.CloseButton class="hover:fill-errorText h-8 w-8 min-w-[32px] rounded-full flex justify-center items-center bg-container hover:bg-error duration-200 transition-colors">
                 <FaSolidXmark />
               </AlertDialog.CloseButton>
             </div>
-            <div class="p-30">
+            <div class="p-15 md:p-30">
               <Show when={props.content.description}>
                 <AlertDialog.Description>
                   {props.content.description}
                 </AlertDialog.Description>
               </Show>
             </div>
-            <div class="p-30 border-t border-border ">
+            <div class="p-15 md:p-30 border-t border-border ">
               <Show when={props.state.isError && props.content.error}>
                 <ErrorMessage theme="basic" message={props.content.error} />
               </Show>
