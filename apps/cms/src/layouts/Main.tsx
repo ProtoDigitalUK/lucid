@@ -1,18 +1,17 @@
-import { Component, createSignal } from "solid-js";
+import { Component } from "solid-js";
 import { Outlet } from "@solidjs/router";
 // Components
-import Navigation from "@/components/Layout/Navigation";
+import Layout from "@/components/Groups/Layout";
 
 const MainLayout: Component = (props) => {
   // ------------------------------------------------------
   // State & Hooks
-  const [contentWidth, setContentWidth] = createSignal(0);
 
   // ------------------------------------------------------
   // Render
   return (
     <div class="grid grid-cols-main-layout fixed inset-0">
-      <Navigation />
+      <Layout.NavigationSidebar />
       <main class="overflow-y-auto">
         <Outlet />
       </main>

@@ -7,8 +7,7 @@ import spawnToast from "@/utils/spawn-toast";
 // Service
 import api from "@/services/api";
 // Components
-import Form from "@/components/Partials/Form";
-import Input from "@/components/Inputs/Input";
+import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 
@@ -45,12 +44,12 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
   // ----------------------------------------
   // Render
   return (
-    <Form
+    <Form.Root
       onSubmit={async () => {
         login.mutate({ username: username(), password: password() });
       }}
     >
-      <Input
+      <Form.Input
         id="username"
         name="username"
         type="text"
@@ -64,7 +63,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         autoComplete="username"
         errors={errors()?.errors?.body?.username}
       />
-      <Input
+      <Form.Input
         id="password"
         name="password"
         type="password"
@@ -104,7 +103,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
           </Button>
         </div>
       </div>
-    </Form>
+    </Form.Root>
   );
 };
 

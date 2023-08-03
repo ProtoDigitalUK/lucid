@@ -26,7 +26,7 @@ interface InputProps {
   noMargin?: boolean;
 }
 
-const Input: Component<InputProps> = (props) => {
+export const Input: Component<InputProps> = (props) => {
   const [inputFocus, setInputFocus] = createSignal(false);
   const [passwordVisible, setPasswordVisible] = createSignal(false);
 
@@ -137,5 +137,3 @@ const Input: Component<InputProps> = (props) => {
     </div>
   );
 };
-
-export default Input;

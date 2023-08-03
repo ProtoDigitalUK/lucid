@@ -13,16 +13,15 @@ import { environment } from "@/state/environment";
 import { CollectionResT } from "@lucid/types/src/collections";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
-import NavigationLink from "@/components/Groups/Navigation/NavigationLink";
-import NavigationLinkGroup from "@/components/Groups/Navigation/NavigationLinkGroup";
-import EnvironmentSelector from "@/components/Groups/Navigation/EnvironmentSelector";
+import EnvironmentSelector from "@/components/Partials/EnvironmentSelector";
+import Navigation from "@/components/Groups/Navigation";
 
 interface EnvironmentBarProps {
   collections: CollectionResT[];
   environments: EnvironmentResT[];
 }
 
-const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
+export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
   // ----------------------------------
   // Hooks & States
   const location = useLocation();
@@ -60,36 +59,34 @@ const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
         <nav>
           {/* Multi Collections */}
           <Show when={pagesCollections().length > 0}>
-            <NavigationLinkGroup title="Multi Collections">
+            <Navigation.LinkGroup title="Multi Collections">
               <For each={pagesCollections()}>
                 {(collection) => (
-                  <NavigationLink
+                  <Navigation.Link
                     title={collection.title}
                     href={`/env/${environment()}/collection/${collection.key}`}
                     icon="page"
                   />
                 )}
               </For>
-            </NavigationLinkGroup>
+            </Navigation.LinkGroup>
           </Show>
           {/* Single Collections */}
           <Show when={singlePagesCollections().length > 0}>
-            <NavigationLinkGroup title="Single Collections">
+            <Navigation.LinkGroup title="Single Collections">
               <For each={singlePagesCollections()}>
                 {(collection) => (
-                  <NavigationLink
+                  <Navigation.Link
                     title={collection.title}
                     href={`/env/${environment()}/collection/${collection.key}`}
                     icon="page"
                   />
                 )}
               </For>
-            </NavigationLinkGroup>
+            </Navigation.LinkGroup>
           </Show>
         </nav>
       </div>
     </Show>
   );
 };
-
-export default EnvironmentBar;

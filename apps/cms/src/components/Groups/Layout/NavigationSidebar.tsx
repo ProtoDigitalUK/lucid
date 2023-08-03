@@ -1,8 +1,6 @@
 import { Component, createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 import { useLocation, useParams } from "@solidjs/router";
-// Utils
-import spawnToast from "@/utils/spawn-toast";
 // Services
 import api from "@/services/api";
 // State
@@ -12,10 +10,9 @@ import {
   syncEnvironment,
 } from "@/state/environment";
 // Components
-import EnvironmentBar from "@/components/Groups/Navigation/EnvironmentBar";
-import NavigationIconLink from "@/components/Groups/Navigation/NavigationIconLink";
+import Navigation from "@/components/Groups/Navigation";
 
-const Navigation: Component = () => {
+export const NavigationSidebar: Component = () => {
   // ----------------------------------
   // Hooks & States
   const location = useLocation();
@@ -92,16 +89,16 @@ const Navigation: Component = () => {
           />
         </div>
         <ul class="pb-15">
-          <NavigationIconLink href="/" icon="dashboard" title="Home" />
-          <NavigationIconLink
+          <Navigation.IconLink href="/" icon="dashboard" title="Home" />
+          <Navigation.IconLink
             href={getFirstEnvHref()}
             icon="environment"
             title="Environment"
             active={location.pathname.includes("/env/")}
           />
-          <NavigationIconLink href="/media" icon="media" title="Media" />
-          <NavigationIconLink href="/users" icon="users" title="Users" />
-          <NavigationIconLink
+          <Navigation.IconLink href="/media" icon="media" title="Media" />
+          <Navigation.IconLink href="/users" icon="users" title="Users" />
+          <Navigation.IconLink
             href="/settings"
             icon="settings"
             title="Settings"
@@ -109,12 +106,10 @@ const Navigation: Component = () => {
         </ul>
       </nav>
       {/* Sidebar */}
-      <EnvironmentBar
+      <Navigation.EnvironmentBar
         collections={collections.data?.data || []}
         environments={environments.data?.data || []}
       />
     </div>
   );
 };
-
-export default Navigation;

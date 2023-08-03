@@ -21,7 +21,7 @@ export interface PageHeadingProps {
   };
 }
 
-const PageHeading: Component<PageHeadingProps> = (props) => {
+export const PageHeading: Component<PageHeadingProps> = (props) => {
   let headerEle: HTMLElement | undefined;
 
   // ----------------------------------------
@@ -96,5 +96,3 @@ const PageHeading: Component<PageHeadingProps> = (props) => {
     </header>
   );
 };
-
-export default PageHeading;

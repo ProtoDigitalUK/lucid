@@ -14,7 +14,6 @@ import {
   useQueryClient,
 } from "@tanstack/solid-query";
 import slugify from "slugify";
-
 // Utils
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
@@ -31,19 +30,18 @@ import { CollectionResT } from "@lucid/types/src/collections";
 import { FormResT } from "@lucid/types/src/forms";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
-import Form from "@/components/Partials/Form";
-import Input from "@/components/Inputs/Input";
+import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import InputGrid from "@/components/Containers/InputGrid";
-import PageFooter from "@/components/Layout/PageFooter";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 import Error from "@/components/Partials/Error";
 import CardGrid from "@/components/Containers/CardGrid";
+import Layout from "@/components/Groups/Layout";
 // Cards
-import EnvBrickCard from "@/components/Cards/BrickCard";
-import EnvCollectionCard from "@/components/Cards/CollectionCard";
-import EnvFormCard from "@/components/Cards/FormCard";
+import EnvBrickCard from "@/components/Partials/Cards/BrickCard";
+import EnvCollectionCard from "@/components/Partials/Cards/CollectionCard";
+import EnvFormCard from "@/components/Partials/Cards/FormCard";
 
 interface CreateEnvironmentProps {
   environment?: EnvironmentResT;
@@ -246,11 +244,11 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
   }
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form.Root onSubmit={onSubmit}>
       {/* Details */}
       <SectionHeading title="Details" />
       <InputGrid columns={3}>
-        <Input
+        <Form.Input
           id="title"
           name="title"
           type="text"
@@ -276,7 +274,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           }}
         />
         <Show when={!props.environment}>
-          <Input
+          <Form.Input
             id="key"
             name="key"
             type="text"
@@ -361,7 +359,7 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
         </For>
       </CardGrid>
 
-      <PageFooter>
+      <Layout.PageFooter>
         <Show when={errors() && errors()?.message}>
           <ErrorMessage theme="background" message={errors()?.message} />
         </Show>
@@ -375,8 +373,8 @@ const CreateEnvironment: Component<CreateEnvironmentProps> = (props) => {
           <Show when={props.environment}>Update</Show>
           <Show when={!props.environment}>Create</Show>
         </Button>
-      </PageFooter>
-    </Form>
+      </Layout.PageFooter>
+    </Form.Root>
   );
 };
 

@@ -12,14 +12,14 @@ import { Link } from "@solidjs/router";
 import { Tooltip } from "@kobalte/core";
 import TooltipContent from "@/components/Partials/TooltipContent";
 
-interface NavigationIconLinkProps {
+interface IconLinkProps {
   title: string;
   href: string;
   icon: "dashboard" | "environment" | "media" | "users" | "settings";
   active?: boolean;
 }
 
-const NavigationIconLink: Component<NavigationIconLinkProps> = (props) => {
+export const IconLink: Component<IconLinkProps> = (props) => {
   // ----------------------------------
   // Hooks & States
 
@@ -70,5 +70,3 @@ const NavigationIconLink: Component<NavigationIconLinkProps> = (props) => {
     </li>
   );
 };
-
-export default NavigationIconLink;

@@ -5,7 +5,7 @@ interface FormProps {
   children: JSXElement;
 }
 
-const Form: Component<FormProps> = ({ onSubmit, children }) => {
+export const Form: Component<FormProps> = ({ onSubmit, children }) => {
   return (
     <form
       class="w-full"
@@ -18,5 +18,3 @@ const Form: Component<FormProps> = ({ onSubmit, children }) => {
     </form>
   );
 };
-
-export default Form;

@@ -7,8 +7,7 @@ import { validateSetError } from "@/utils/error-handling";
 // Service
 import api from "@/services/api";
 // Components
-import Form from "@/components/Partials/Form";
-import Input from "@/components/Inputs/Input";
+import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";
 
 interface ResetPasswordFormProps {
@@ -44,7 +43,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <Form
+    <Form.Root
       onSubmit={async () => {
         resetPassword.mutate({
           token: props.token,
@@ -53,7 +52,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         });
       }}
     >
-      <Input
+      <Form.Input
         id="password"
         name="password"
         type="password"
@@ -66,7 +65,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         autoFoucs={true}
         errors={errors()?.errors?.body?.password}
       />
-      <Input
+      <Form.Input
         id="password_confirmation"
         name="password_confirmation"
         type="password"
@@ -89,7 +88,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
           Reset Password
         </Button>
       </div>
-    </Form>
+    </Form.Root>
   );
 };
 

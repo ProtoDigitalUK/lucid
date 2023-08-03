@@ -5,7 +5,7 @@ import { AlertDialog } from "@kobalte/core";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 
-interface ConfirmationModalProps {
+interface ConfirmationProps {
   state: {
     open: boolean;
     setOpen: (open: boolean) => void;
@@ -21,7 +21,7 @@ interface ConfirmationModalProps {
   onCancel: () => void;
 }
 
-const ConfirmationModal: Component<ConfirmationModalProps> = (props) => {
+export const Confirmation: Component<ConfirmationProps> = (props) => {
   // ------------------------------
   // Render
   return (
@@ -78,5 +78,3 @@ const ConfirmationModal: Component<ConfirmationModalProps> = (props) => {
     </AlertDialog.Root>
   );
 };
-
-export default ConfirmationModal;

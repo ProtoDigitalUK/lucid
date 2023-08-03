@@ -4,7 +4,7 @@ interface PageLayoutFooterProps {
   children: JSXElement;
 }
 
-const PageFooter: Component<PageLayoutFooterProps> = (props) => {
+export const PageFooter: Component<PageLayoutFooterProps> = (props) => {
   let footerEle: HTMLElement | undefined;
 
   // ----------------------------------------
@@ -44,5 +44,3 @@ const PageFooter: Component<PageLayoutFooterProps> = (props) => {
     </footer>
   );
 };
-
-export default PageFooter;

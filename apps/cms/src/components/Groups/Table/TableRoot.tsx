@@ -8,7 +8,7 @@ import {
   Match,
 } from "solid-js";
 // Components
-import Table from "@/components/Tables/Core";
+import Table from "@/components/Groups/Table";
 
 interface TableRootProps {
   head: {

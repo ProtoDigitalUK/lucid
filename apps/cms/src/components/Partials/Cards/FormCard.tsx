@@ -1,10 +1,8 @@
 import { Component, createMemo } from "solid-js";
 import { FormResT } from "@lucid/types/src/forms";
 import classNames from "classnames";
-// Assets
-import defaultBrickIcon from "@/assets/svgs/default-brick-icon.svg";
 // Components
-import CheckboxInput from "@/components/Inputs/Checkbox";
+import Form from "@/components/Groups/Form";
 
 interface EnvFormCardProps {
   form: FormResT;
@@ -40,7 +38,7 @@ const EnvFormCard: Component<EnvFormCardProps> = (props) => {
       <div class="w-full bg-background border-t border-border py-2.5 px-15 flex items-center justify-between">
         <span class="text-sm">Selected</span>
         <div>
-          <CheckboxInput
+          <Form.Checkbox
             id={props.form.key}
             name={props.form.key}
             value={isSelected()}

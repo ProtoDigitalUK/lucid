@@ -5,7 +5,7 @@ import api from "@/services/api";
 // State
 import { environment } from "@/state/environment";
 // Components
-import PageLayout from "@/components/Layout/PageLayout";
+import Layout from "@/components/Groups/Layout";
 import CreateEnvironment from "@/components/Forms/Environments/CreateEnvironmentForm";
 // Modals
 import DeleteEnvironment from "@/components/Modals/Environments/DeleteEnvironment";
@@ -31,7 +31,7 @@ const ManageEnvrionemntRoute: Component = () => {
   // ----------------------------------------
   // Render
   return (
-    <PageLayout
+    <Layout.PageLayout
       title={environmentData.data?.data.title || "Manage Environment"}
       description="Environments are a top level grouping of collections, forms and bricks. With the seperation of environments, you can have multiple sites/apps running on the same CMS."
       state={{
@@ -56,7 +56,7 @@ const ManageEnvrionemntRoute: Component = () => {
           setOpen: setOpenDelete,
         }}
       />
-    </PageLayout>
+    </Layout.PageLayout>
   );
 };
 

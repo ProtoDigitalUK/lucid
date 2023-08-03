@@ -1,11 +1,11 @@
 import { Component, JSX } from "solid-js";
 
-interface NavigationLinkGroupProps {
+interface LinkGroupProps {
   title: string;
   children: JSX.Element;
 }
 
-const NavigationLinkGroup: Component<NavigationLinkGroupProps> = (props) => {
+export const LinkGroup: Component<LinkGroupProps> = (props) => {
   return (
     <div class="px-15 mb-15 last:mb-0">
       <span class="mb-2.5 block text-sm text-unfocused font-light">
@@ -15,5 +15,3 @@ const NavigationLinkGroup: Component<NavigationLinkGroupProps> = (props) => {
     </div>
   );
 };
-
-export default NavigationLinkGroup;

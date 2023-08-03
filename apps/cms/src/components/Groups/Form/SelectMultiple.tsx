@@ -30,7 +30,7 @@ interface SelectMultipleProps {
   errors?: ErrorResult;
 }
 
-const SelectMultiple: Component<SelectMultipleProps> = (props) => {
+export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
   const [open, setOpen] = createSignal(false);
   const [inputFocus, setInputFocus] = createSignal(false);
 
@@ -199,5 +199,3 @@ const SelectMultiple: Component<SelectMultipleProps> = (props) => {
     </div>
   );
 };
-
-export default SelectMultiple;

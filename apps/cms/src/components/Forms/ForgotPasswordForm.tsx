@@ -7,8 +7,7 @@ import { validateSetError } from "@/utils/error-handling";
 // Service
 import api from "@/services/api";
 // Components
-import Form from "@/components/Partials/Form";
-import Input from "@/components/Inputs/Input";
+import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";
 
 interface ForgotPasswordFormProps {
@@ -42,12 +41,12 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
   // ----------------------------------------
   // Render
   return (
-    <Form
+    <Form.Root
       onSubmit={async () => {
         sendPasswordReset.mutate({ email: email() });
       }}
     >
-      <Input
+      <Form.Input
         id="email"
         name="email"
         type="email"
@@ -83,7 +82,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
           </Button>
         </div>
       </div>
-    </Form>
+    </Form.Root>
   );
 };
 

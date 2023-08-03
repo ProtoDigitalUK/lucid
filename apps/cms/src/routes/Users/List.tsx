@@ -1,14 +1,13 @@
 import { Component } from "solid-js";
 // Componetns
-import PageLayout from "@/components/Layout/PageLayout";
-
-import Table from "@/components/Tables/Core";
+import Layout from "@/components/Groups/Layout";
+import Table from "@/components/Groups/Table";
 
 const UsersListRoute: Component = () => {
   // ----------------------------------
   // Render
   return (
-    <PageLayout
+    <Layout.PageLayout
       title="User"
       description="Manage users and their permissions."
       options={{
@@ -59,7 +58,7 @@ const UsersListRoute: Component = () => {
           </>
         )}
       </Table.Root>
-    </PageLayout>
+    </Layout.PageLayout>
   );
 };
 

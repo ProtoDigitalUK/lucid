@@ -1,8 +1,9 @@
 import { Component, JSXElement, Switch, Match, Show } from "solid-js";
-// Components
-import PageHeading, { PageHeadingProps } from "@/components/Layout/PageHeading";
-import Loading from "@/components/Partials/Loading";
 import classNames from "classnames";
+// Components
+import { PageHeadingProps } from "@/components/Groups/Layout/PageHeading";
+import Loading from "@/components/Partials/Loading";
+import Layout from "@/components/Groups/Layout";
 
 interface PageWrapperProps {
   title?: string;
@@ -19,11 +20,11 @@ interface PageWrapperProps {
   };
 }
 
-const PageLayout: Component<PageWrapperProps> = (props) => {
+export const PageLayout: Component<PageWrapperProps> = (props) => {
   return (
     <div class="min-h-screen w-full relative">
       <Show when={props.title}>
-        <PageHeading
+        <Layout.PageHeading
           title={props.title ?? ""}
           description={props.description}
           state={{
@@ -56,5 +57,3 @@ const PageLayout: Component<PageWrapperProps> = (props) => {
     </div>
   );
 };
-
-export default PageLayout;

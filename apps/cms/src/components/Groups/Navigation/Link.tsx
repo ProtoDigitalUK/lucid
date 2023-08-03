@@ -10,7 +10,7 @@ interface NavigationLinkProps {
   icon: "page";
 }
 
-const NavigationLink: Component<NavigationLinkProps> = (props) => {
+export const NavigationLink: Component<NavigationLinkProps> = (props) => {
   // ----------------------------------
   // Hooks & States
 
@@ -41,5 +41,3 @@ const NavigationLink: Component<NavigationLinkProps> = (props) => {
     </li>
   );
 };
-
-export default NavigationLink;

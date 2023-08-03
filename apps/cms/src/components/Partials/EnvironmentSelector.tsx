@@ -11,8 +11,6 @@ import { DropdownMenu, Separator } from "@kobalte/core";
 import { FaSolidChevronRight } from "solid-icons/fa";
 import Link from "@/components/Partials/Link";
 
-import { Link as RouterLink } from "@solidjs/router";
-
 interface EnvironmentSelectorProps {
   environments: EnvironmentResT[];
 }

@@ -9,7 +9,7 @@ import { environment, setEnvironment } from "@/state/environment";
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
 // Components
-import ConfirmationModal from "@/components/Modals/ConfirmationModal";
+import Modal from "@/components/Groups/Modal";
 
 interface DeleteEnvironmentProps {
   key?: string;
@@ -55,7 +55,7 @@ const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
   // ------------------------------
   // Render
   return (
-    <ConfirmationModal
+    <Modal.Confirmation
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,

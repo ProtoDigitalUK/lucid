@@ -17,7 +17,7 @@ interface CheckboxInputProps {
   noMargin?: boolean;
 }
 
-const CheckboxInput: Component<CheckboxInputProps> = (props) => {
+export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
   const [inputFocus, setInputFocus] = createSignal(false);
 
   // ----------------------------------------
@@ -92,5 +92,3 @@ const CheckboxInput: Component<CheckboxInputProps> = (props) => {
     </div>
   );
 };
-
-export default CheckboxInput;
