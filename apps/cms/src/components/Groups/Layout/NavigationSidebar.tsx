@@ -1,16 +1,11 @@
 import { Component, createEffect, createMemo } from "solid-js";
-import { createQuery } from "@tanstack/solid-query";
 import { useLocation, useParams } from "@solidjs/router";
-// Services
-import api from "@/services/api";
 // State
-import {
-  environment,
-  setEnvironment,
-  syncEnvironment,
-} from "@/state/environment";
+import { environment, setEnvironment } from "@/state/environment";
 // Components
 import Navigation from "@/components/Groups/Navigation";
+// Hooks
+import Queries from "@/hooks/queries";
 
 export const NavigationSidebar: Component = () => {
   // ----------------------------------
@@ -20,27 +15,17 @@ export const NavigationSidebar: Component = () => {
 
   // ----------------------------------
   // Mutations & Queries
-  const environments = createQuery(() => ["environments.getAll"], {
-    queryFn: () => api.environments.getAll(),
-    onSuccess: (data) => {
-      syncEnvironment(data.data);
-    },
-    onError: () => {
-      setEnvironment(undefined);
-    },
-  });
-  const collections = createQuery(
-    () => ["environments.collections.getAll", environment()],
+  const environments = Queries.Environment.useGetAll();
+  const collections = Queries.Collections.useGetAll(
     {
-      queryFn: () =>
-        api.environments.collections.getAll({
-          include: {
-            bricks: false,
-          },
-          filters: {
-            environment_key: environment() as string,
-          },
-        }),
+      include: {
+        bricks: false,
+      },
+      filters: {
+        environment_key: environment() as string,
+      },
+    },
+    {
       enabled: environment() !== undefined,
     }
   );

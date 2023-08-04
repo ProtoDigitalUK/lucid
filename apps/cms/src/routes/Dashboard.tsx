@@ -1,26 +1,28 @@
 import type { Component } from "solid-js";
 // Components
 import Button from "@/components/Partials/Button";
-// Actions
-import Actions from "@/components/Actions";
+// Hooks
+import Mutations from "@/hooks/mutations";
 
 const DashboardRoute: Component = () => {
+  // ----------------------------------------
+  // Mutations
+  const logout = Mutations.Auth.useLogout();
+
+  // ----------------------------------------
+  // Render
   return (
     <div>
       <h1 class="text-6xl font-bold text-red-700">App</h1>
-      <Actions.Auth.Logout>
-        {(logout) => (
-          <Button
-            type="submit"
-            theme="primary"
-            size="medium"
-            loading={logout.isLoading}
-            onClick={logout.mutate}
-          >
-            Logout
-          </Button>
-        )}
-      </Actions.Auth.Logout>
+      <Button
+        type="submit"
+        theme="primary"
+        size="medium"
+        loading={logout.action.isLoading}
+        onClick={() => logout.action.mutate()}
+      >
+        Logout
+      </Button>
       Fugiat fugiat sit culpa qui commodo. Quis irure velit do laborum Lorem id
       elit veniam laboris ut pariatur. Duis nisi minim reprehenderit laboris ex.
       Do qui eiusmod enim tempor minim incididunt est ex laboris pariatur.

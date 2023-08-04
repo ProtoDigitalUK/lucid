@@ -1,4 +1,4 @@
-import { Component, JSXElement, createSignal, onCleanup } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
@@ -7,16 +7,7 @@ import spawnToast from "@/utils/spawn-toast";
 // Services
 import api from "@/services/api";
 
-interface ResetPasswordProps {
-  children: (props: {
-    mutate: (data: Parameters<typeof api.auth.resetPassword>[0]) => void;
-    isLoading: boolean;
-    isError: boolean;
-    errors: APIErrorResponse | undefined;
-  }) => JSXElement;
-}
-
-export const ResetPassword: Component<ResetPasswordProps> = (props) => {
+export const useLogin = () => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();
@@ -24,16 +15,16 @@ export const ResetPassword: Component<ResetPasswordProps> = (props) => {
 
   // ----------------------------------------
   // Queries / Mutations
-  const resetPassword = createMutation({
-    mutationFn: api.auth.resetPassword,
+  const login = createMutation({
+    mutationFn: api.auth.login,
     onSuccess: () => {
       spawnToast({
-        title: "Password Reset",
-        message: "Your password has been reset successfully",
+        title: "Login successful",
+        message: "You have been logged in",
         status: "success",
       });
+      navigate("/");
       setErrors(undefined);
-      navigate("/login");
     },
     onError: (error) => validateSetError(error, setErrors),
   });
@@ -45,15 +36,9 @@ export const ResetPassword: Component<ResetPasswordProps> = (props) => {
   });
 
   // ----------------------------------------
-  // Render
-  return (
-    <>
-      {props.children({
-        mutate: resetPassword.mutate,
-        isLoading: resetPassword.isLoading,
-        isError: resetPassword.isError,
-        errors: errors(),
-      })}
-    </>
-  );
+  // Return
+  return {
+    action: login,
+    errors: errors(),
+  };
 };

@@ -1,4 +1,4 @@
-import { Component, JSXElement, createSignal, onCleanup } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
@@ -6,18 +6,11 @@ import spawnToast from "@/utils/spawn-toast";
 // Services
 import api from "@/services/api";
 
-interface ForgotPasswordProps {
+interface UseForgotPasswordProps {
   onSuccess?: () => void;
-
-  children: (props: {
-    mutate: (data: Parameters<typeof api.auth.sendPasswordReset>[0]) => void;
-    isLoading: boolean;
-    isError: boolean;
-    errors: APIErrorResponse | undefined;
-  }) => JSXElement;
 }
 
-export const ForgotPassword: Component<ForgotPasswordProps> = (props) => {
+export const useForgotPassword = (props: UseForgotPasswordProps) => {
   // ----------------------------------------
   // States / Hooks
   const [errors, setErrors] = createSignal<APIErrorResponse>();
@@ -45,15 +38,9 @@ export const ForgotPassword: Component<ForgotPasswordProps> = (props) => {
   });
 
   // ----------------------------------------
-  // Render
-  return (
-    <>
-      {props.children({
-        mutate: sendPasswordReset.mutate,
-        isLoading: sendPasswordReset.isLoading,
-        isError: sendPasswordReset.isError,
-        errors: errors(),
-      })}
-    </>
-  );
+  // Return
+  return {
+    action: sendPasswordReset,
+    errors: errors(),
+  };
 };

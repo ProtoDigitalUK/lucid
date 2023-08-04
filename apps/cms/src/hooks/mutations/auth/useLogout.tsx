@@ -1,4 +1,3 @@
-import { Component, JSXElement } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
@@ -7,15 +6,7 @@ import { clearCookie } from "@/utils/cookie";
 // Services
 import api from "@/services/api";
 
-interface LogoutProps {
-  children: (props: {
-    mutate: () => void;
-    isLoading: boolean;
-    isError: boolean;
-  }) => JSXElement;
-}
-
-export const Logout: Component<LogoutProps> = (props) => {
+export const useLogout = () => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();
@@ -39,14 +30,8 @@ export const Logout: Component<LogoutProps> = (props) => {
   });
 
   // ----------------------------------------
-  // Render
-  return (
-    <>
-      {props.children({
-        mutate: logout.mutate,
-        isLoading: logout.isLoading,
-        isError: logout.isError,
-      })}
-    </>
-  );
+  // Return
+  return {
+    action: logout,
+  };
 };

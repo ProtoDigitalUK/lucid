@@ -1,4 +1,4 @@
-import { Component, JSXElement, createSignal, onCleanup } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
@@ -9,20 +9,11 @@ import { setEnvironment, environment } from "@/state/environment";
 // Services
 import api from "@/services/api";
 
-interface DeleteProps {
+interface UseDeleteProps {
   onSuccess?: () => void;
-
-  children: (props: {
-    mutate: (
-      props: Parameters<typeof api.environments.deleteSingle>[0]
-    ) => void;
-    isLoading: boolean;
-    isError: boolean;
-    errors: APIErrorResponse | undefined;
-  }) => JSXElement;
 }
 
-export const Delete: Component<DeleteProps> = (props) => {
+export const useDelete = (props: UseDeleteProps) => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();
@@ -61,15 +52,9 @@ export const Delete: Component<DeleteProps> = (props) => {
   });
 
   // ----------------------------------------
-  // Render
-  return (
-    <>
-      {props.children({
-        mutate: deleteEnvironment.mutate,
-        isLoading: deleteEnvironment.isLoading,
-        isError: deleteEnvironment.isError,
-        errors: errors(),
-      })}
-    </>
-  );
+  // Return
+  return {
+    action: deleteEnvironment,
+    errors: errors(),
+  };
 };

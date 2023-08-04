@@ -7,14 +7,11 @@ import {
   createMemo,
   createEffect,
 } from "solid-js";
-import { createQuery } from "@tanstack/solid-query";
 import slugify from "slugify";
 // Utils
 import helpers from "@/utils/helpers";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
-// Service
-import api from "@/services/api";
 // Types
 import { BrickConfigT } from "@lucid/types/src/bricks";
 import { CollectionResT } from "@lucid/types/src/collections";
@@ -33,8 +30,9 @@ import Layout from "@/components/Groups/Layout";
 import EnvBrickCard from "@/components/Cards/BrickCard";
 import EnvCollectionCard from "@/components/Cards/CollectionCard";
 import EnvFormCard from "@/components/Cards/FormCard";
-// Actions
-import Actions from "@/components/Actions";
+// Hooks
+import Queries from "@/hooks/queries";
+import Mutations from "@/hooks/mutations";
 
 interface CreateUpdateEnvFormProps {
   environment?: EnvironmentResT;
@@ -53,30 +51,26 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
   // ----------------------------------------
   // Queries
-  const bricks = createQuery(() => ["brickConfig.getAll"], {
-    queryFn: () =>
-      api.brickConfig.getAll({
-        include: {
-          fields: false,
-        },
-      }),
+  const bricks = Queries.BrickConfig.useGetAll({
+    include: {
+      fields: false,
+    },
   });
-  const collections = createQuery(() => ["environments.collections.getAll"], {
-    queryFn: () =>
-      api.environments.collections.getAll({
-        include: {
-          bricks: false,
-        },
-      }),
+  const collections = Queries.Collections.useGetAll({
+    include: {
+      bricks: false,
+    },
   });
-  const forms = createQuery(() => ["environments.forms.getAll"], {
-    queryFn: () =>
-      api.environments.forms.getAll({
-        include: {
-          fields: false,
-        },
-      }),
+  const forms = Queries.Forms.useGetAll({
+    include: {
+      fields: false,
+    },
   });
+
+  // ----------------------------------------
+  // Mutations
+  const createEnvironment = Mutations.Environment.useCreate();
+  const updateEnvironment = Mutations.Environment.useUpdate();
 
   // ----------------------------------------
   // Functions
@@ -155,11 +149,23 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
     return !updateData().canUpdate;
   });
 
+  // Query memos
   const isError = createMemo(() => {
     return bricks.isError || collections.isError || forms.isError;
   });
   const isLoading = createMemo(() => {
     return bricks.isLoading || collections.isLoading || forms.isLoading;
+  });
+
+  // Mutation memos
+  const isCreating = createMemo(() => {
+    return (
+      createEnvironment.action.isLoading || updateEnvironment.action.isLoading
+    );
+  });
+  const errors = createMemo(() => {
+    if (!props.environment) return createEnvironment.errors;
+    return updateEnvironment.errors;
   });
 
   // ----------------------------------------
@@ -178,161 +184,154 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
   }
 
   return (
-    <Actions.Environment.CreateUpdate>
-      {(createUpdate) => (
-        <Form.Root
-          onSubmit={() => {
-            if (!props.environment) {
-              createUpdate.mutate.create({
-                key: key(),
-                title: title(),
-                assigned_bricks: assignedBricks(),
-                assigned_collections: assignedCollections(),
-                assigned_forms: assignedForms(),
+    <Form.Root
+      onSubmit={() => {
+        if (!props.environment) {
+          createEnvironment.action.mutate({
+            key: key(),
+            title: title(),
+            assigned_bricks: assignedBricks(),
+            assigned_collections: assignedCollections(),
+            assigned_forms: assignedForms(),
+          });
+        } else {
+          updateEnvironment.action.mutate({
+            key: props.environment.key,
+            body: updateData().body,
+          });
+        }
+      }}
+    >
+      {/* Details */}
+      <SectionHeading title="Details" />
+      <InputGrid columns={3}>
+        <Form.Input
+          id="title"
+          name="title"
+          type="text"
+          value={title()}
+          onChange={setTitle}
+          copy={{
+            label: "Title",
+          }}
+          required={true}
+          autoFoucs={true}
+          errors={errors()?.errors?.body?.title}
+          noMargin={true}
+          onBlur={() => {
+            if (!key()) {
+              const newKey = slugify(title(), {
+                lower: true,
+                replacement: "-",
+                strict: true,
+                remove: /[0-9]/g,
               });
-            } else {
-              createUpdate.mutate.update({
-                key: props.environment.key,
-                body: updateData().body,
-              });
+              setKey(newKey);
             }
           }}
-        >
-          {/* Details */}
-          <SectionHeading title="Details" />
-          <InputGrid columns={3}>
-            <Form.Input
-              id="title"
-              name="title"
-              type="text"
-              value={title()}
-              onChange={setTitle}
-              copy={{
-                label: "Title",
-              }}
-              required={true}
-              autoFoucs={true}
-              errors={createUpdate.errors?.errors?.body?.title}
-              noMargin={true}
-              onBlur={() => {
-                if (!key()) {
-                  const newKey = slugify(title(), {
-                    lower: true,
-                    replacement: "-",
-                    strict: true,
-                    remove: /[0-9]/g,
-                  });
-                  setKey(newKey);
-                }
-              }}
+        />
+        <Show when={!props.environment}>
+          <Form.Input
+            id="key"
+            name="key"
+            type="text"
+            value={key()}
+            onChange={setKey}
+            copy={{
+              label: "Key",
+            }}
+            required={true}
+            errors={errors()?.errors?.body?.key}
+            noMargin={true}
+          />
+        </Show>
+      </InputGrid>
+
+      {/* Assigned Bricks */}
+      <SectionHeading
+        title="Bricks"
+        description="Select the bricks you wish this environment to have access to."
+      />
+      <CardGrid
+        columns={4}
+        state={{
+          isLoading: isLoading(),
+          isError: isError(),
+        }}
+      >
+        <For each={bricks.data?.data || []}>
+          {(brick) => (
+            <EnvBrickCard
+              brick={brick}
+              selectedBricks={assignedBricks()}
+              setSelected={toggleBrick}
             />
-            <Show when={!props.environment}>
-              <Form.Input
-                id="key"
-                name="key"
-                type="text"
-                value={key()}
-                onChange={setKey}
-                copy={{
-                  label: "Key",
-                }}
-                required={true}
-                errors={createUpdate.errors?.errors?.body?.key}
-                noMargin={true}
-              />
-            </Show>
-          </InputGrid>
+          )}
+        </For>
+      </CardGrid>
 
-          {/* Assigned Bricks */}
-          <SectionHeading
-            title="Bricks"
-            description="Select the bricks you wish this environment to have access to."
-          />
-          <CardGrid
-            columns={4}
-            state={{
-              isLoading: isLoading(),
-              isError: isError(),
-            }}
-          >
-            <For each={bricks.data?.data || []}>
-              {(brick) => (
-                <EnvBrickCard
-                  brick={brick}
-                  selectedBricks={assignedBricks()}
-                  setSelected={toggleBrick}
-                />
-              )}
-            </For>
-          </CardGrid>
+      {/* Assigned Collections */}
+      <SectionHeading
+        title="Collections"
+        description="Assign the collection you wish the environment to have access to."
+      />
+      <CardGrid
+        columns={4}
+        state={{
+          isLoading: isLoading(),
+          isError: isError(),
+        }}
+      >
+        <For each={collections.data?.data || []}>
+          {(collection) => (
+            <EnvCollectionCard
+              collection={collection}
+              selectedCollections={assignedCollections()}
+              setSelected={toggleCollection}
+            />
+          )}
+        </For>
+      </CardGrid>
 
-          {/* Assigned Collections */}
-          <SectionHeading
-            title="Collections"
-            description="Assign the collection you wish the environment to have access to."
-          />
-          <CardGrid
-            columns={4}
-            state={{
-              isLoading: isLoading(),
-              isError: isError(),
-            }}
-          >
-            <For each={collections.data?.data || []}>
-              {(collection) => (
-                <EnvCollectionCard
-                  collection={collection}
-                  selectedCollections={assignedCollections()}
-                  setSelected={toggleCollection}
-                />
-              )}
-            </For>
-          </CardGrid>
+      {/* Assigned Forms */}
+      <SectionHeading
+        title="Forms"
+        description="Select the forms the environment should have access to."
+      />
+      <CardGrid
+        columns={4}
+        state={{
+          isLoading: isLoading(),
+          isError: isError(),
+        }}
+      >
+        <For each={forms.data?.data || []}>
+          {(form) => (
+            <EnvFormCard
+              form={form}
+              selectedForms={assignedForms()}
+              setSelected={toggleForm}
+            />
+          )}
+        </For>
+      </CardGrid>
 
-          {/* Assigned Forms */}
-          <SectionHeading
-            title="Forms"
-            description="Select the forms the environment should have access to."
-          />
-          <CardGrid
-            columns={4}
-            state={{
-              isLoading: isLoading(),
-              isError: isError(),
-            }}
-          >
-            <For each={forms.data?.data || []}>
-              {(form) => (
-                <EnvFormCard
-                  form={form}
-                  selectedForms={assignedForms()}
-                  setSelected={toggleForm}
-                />
-              )}
-            </For>
-          </CardGrid>
-
-          <Layout.PageFooter>
-            <Show when={createUpdate.errors && createUpdate.errors?.message}>
-              <ErrorMessage
-                theme="background"
-                message={createUpdate.errors?.message}
-              />
-            </Show>
-            <Button
-              type="submit"
-              theme="primary"
-              size="medium"
-              loading={createUpdate.isLoading}
-              disabled={submitIsDisabled()}
-            >
-              <Show when={props.environment}>Update</Show>
-              <Show when={!props.environment}>Create</Show>
-            </Button>
-          </Layout.PageFooter>
-        </Form.Root>
-      )}
-    </Actions.Environment.CreateUpdate>
+      <Layout.PageFooter>
+        <Show when={errors() && errors()?.message}>
+          <ErrorMessage theme="background" message={errors()?.message} />
+        </Show>
+        <Button
+          type="submit"
+          theme="primary"
+          size="medium"
+          loading={isCreating()}
+          disabled={submitIsDisabled()}
+        >
+          <Show when={props.environment}>Update</Show>
+          <Show when={!props.environment}>Create</Show>
+        </Button>
+      </Layout.PageFooter>
+    </Form.Root>
   );
 };
 
