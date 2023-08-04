@@ -4,10 +4,10 @@ import { FaSolidTriangleExclamation, FaSolidCheck } from "solid-icons/fa";
 import { Checkbox } from "@kobalte/core";
 
 interface CheckboxInputProps {
-  id: string;
+  id?: string;
   value: boolean;
   onChange: (value: boolean) => void;
-  name: string;
+  name?: string;
   copy: {
     label?: string;
     describedBy?: string;

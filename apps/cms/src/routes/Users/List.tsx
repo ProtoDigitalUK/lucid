@@ -1,7 +1,32 @@
-import { Component } from "solid-js";
+import { Component, Index } from "solid-js";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Table from "@/components/Groups/Table";
+import UserRow from "@/components/Tables/Rows/UserRow";
+
+const users = [
+  {
+    first_name: "John",
+    last_name: "Doe",
+    role: "Admin",
+    favorite_color: "Blue",
+    notes: "",
+  },
+  {
+    first_name: "Jane",
+    last_name: "Doe",
+    role: "User",
+    favorite_color: "Red",
+    notes: "",
+  },
+  {
+    first_name: "John",
+    last_name: "Smith",
+    role: "User",
+    favorite_color: "Green",
+    notes: "",
+  },
+];
 
 const UsersListRoute: Component = () => {
   // ----------------------------------
@@ -37,25 +62,53 @@ const UsersListRoute: Component = () => {
             key: "notes",
           },
         ]}
-        caption="Users"
+        state={{
+          isLoading: false,
+          isError: false,
+          isSuccess: true,
+        }}
+        data={{
+          rows: users.length,
+          meta: {
+            path: "",
+            links: [],
+            current_page: 1,
+            per_page: 10,
+            total: 100,
+            last_page: 10,
+          },
+        }}
+        content={{
+          caption: "Users",
+        }}
+        options={{
+          isSelectable: true,
+        }}
       >
-        {({ include }) => (
-          <>
-            <tr>
-              <Table.Td include={include[0]}>James</Table.Td>
-              <Table.Td include={include[1]}>Matman</Table.Td>
-              <Table.Td include={include[2]}>Chief Sandwich Eater</Table.Td>
-              <Table.Td include={include[3]}>Lettuce Green</Table.Td>
-              <Table.Td include={include[4]}>Trek</Table.Td>
-            </tr>
-            <tr>
-              <Table.Td include={include[0]}>The</Table.Td>
-              <Table.Td include={include[1]}>Tick</Table.Td>
-              <Table.Td include={include[2]}>Crimefighter Sorta</Table.Td>
-              <Table.Td include={include[3]}>Blue</Table.Td>
-              <Table.Td include={include[4]}>The City</Table.Td>
-            </tr>
-          </>
+        {({ include, isSelectable, selected, setSelected }) => (
+          <Index each={users}>
+            {(user, i) => (
+              <Table.Tr
+                options={{
+                  isSelectable,
+                }}
+                data={{
+                  index: i,
+                  selected: selected[i],
+                }}
+                callbacks={{
+                  setSelected: setSelected,
+                }}
+              >
+                <UserRow
+                  data={{
+                    user: user(),
+                    include: include,
+                  }}
+                />
+              </Table.Tr>
+            )}
+          </Index>
         )}
       </Table.Root>
     </Layout.PageLayout>
