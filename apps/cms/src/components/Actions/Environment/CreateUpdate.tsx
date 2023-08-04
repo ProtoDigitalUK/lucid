@@ -15,7 +15,7 @@ import { setEnvironment } from "@/state/environment";
 // Services
 import api from "@/services/api";
 
-interface CreateUpdateEnvProps {
+interface CreateUpdateProps {
   children: (props: {
     mutate: {
       create: (
@@ -31,7 +31,7 @@ interface CreateUpdateEnvProps {
   }) => JSXElement;
 }
 
-export const CreateUpdateEnv: Component<CreateUpdateEnvProps> = (props) => {
+export const CreateUpdate: Component<CreateUpdateProps> = (props) => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();

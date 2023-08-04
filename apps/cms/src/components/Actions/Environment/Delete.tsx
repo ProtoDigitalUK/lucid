@@ -15,7 +15,7 @@ import { setEnvironment, environment } from "@/state/environment";
 // Services
 import api from "@/services/api";
 
-interface DeleteEnvProps {
+interface DeleteProps {
   onSuccess?: () => void;
 
   children: (props: {
@@ -28,7 +28,7 @@ interface DeleteEnvProps {
   }) => JSXElement;
 }
 
-export const DeleteEnv: Component<DeleteEnvProps> = (props) => {
+export const Delete: Component<DeleteProps> = (props) => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
-import { CreateUpdateEnv as CreateUpdate } from "./CreateUpdateEnv";
-import { DeleteEnv as Delete } from "./DeleteEnv";
+import { CreateUpdate } from "./CreateUpdate";
+import { Delete } from "./Delete";
 
 const Environment = {
   CreateUpdate,
