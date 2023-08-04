@@ -1,6 +1,5 @@
 import { Component, JSXElement, createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
-import { useNavigate } from "@solidjs/router";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
@@ -21,7 +20,6 @@ interface ForgotPasswordProps {
 export const ForgotPassword: Component<ForgotPasswordProps> = (props) => {
   // ----------------------------------------
   // States / Hooks
-  const navigate = useNavigate();
   const [errors, setErrors] = createSignal<APIErrorResponse>();
 
   // ----------------------------------------

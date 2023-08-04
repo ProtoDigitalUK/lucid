@@ -6,7 +6,7 @@ import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Service
 import api from "@/services/api";
 // Components
-import ResetPasswordForm from "@/components/Forms/ResetPasswordForm";
+import ResetPasswordForm from "@/components/Forms/Auth/ResetPasswordForm";
 import Loading from "@/components/Partials/Loading";
 import Error from "@/components/Partials/Error";
 
