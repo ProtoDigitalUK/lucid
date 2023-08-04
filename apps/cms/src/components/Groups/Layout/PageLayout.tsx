@@ -1,8 +1,7 @@
-import { Component, JSXElement, Switch, Match, Show } from "solid-js";
+import { Component, JSXElement, Show } from "solid-js";
 import classNames from "classnames";
 // Components
 import { PageHeadingProps } from "@/components/Groups/Layout/PageHeading";
-import Loading from "@/components/Partials/Loading";
 import Layout from "@/components/Groups/Layout";
 
 interface PageWrapperProps {
@@ -44,15 +43,9 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
             props.options?.noPadding,
         })}
       >
-        <Switch fallback={props.children}>
-          <Match when={props.state?.isLoading}>
-            <Loading type="page-layout" />
-          </Match>
-          <Match when={props.state?.isError}>
-            <div>error</div>
-          </Match>
-          <Match when={props.state?.isSuccess}>{props.children}</Match>
-        </Switch>
+        <Layout.PageContent state={props.state}>
+          {props.children}
+        </Layout.PageContent>
       </div>
     </div>
   );

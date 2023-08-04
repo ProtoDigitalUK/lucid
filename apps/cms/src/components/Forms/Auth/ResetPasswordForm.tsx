@@ -23,6 +23,14 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
   // Render
   return (
     <Form.Root
+      type="standard"
+      state={{
+        isLoading: resetPassword.action.isLoading,
+        errors: resetPassword.errors(),
+      }}
+      content={{
+        submit: "Reset Password",
+      }}
       onSubmit={async () => {
         resetPassword.action.mutate({
           token: props.token,
@@ -42,7 +50,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         }}
         required={true}
         autoFoucs={true}
-        errors={resetPassword.errors?.errors?.body?.password}
+        errors={resetPassword.errors()?.errors?.body?.password}
       />
       <Form.Input
         id="password_confirmation"
@@ -54,19 +62,8 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
           label: "Confirm Password",
         }}
         required={true}
-        errors={resetPassword.errors?.errors?.body?.password_confirmation}
+        errors={resetPassword.errors()?.errors?.body?.password_confirmation}
       />
-      <div class="mt-10 w-full">
-        <Button
-          size="medium"
-          loading={resetPassword.action.isLoading}
-          classes="w-full"
-          type="submit"
-          theme="primary"
-        >
-          Reset Password
-        </Button>
-      </div>
     </Form.Root>
   );
 };

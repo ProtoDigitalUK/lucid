@@ -29,6 +29,14 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
   // Render
   return (
     <Form.Root
+      type="standard"
+      state={{
+        isLoading: forgotPassword.action.isLoading,
+        errors: forgotPassword.errors(),
+      }}
+      content={{
+        submit: "Send password reset",
+      }}
       onSubmit={async () => {
         forgotPassword.action.mutate({ email: email() });
       }}
@@ -44,31 +52,17 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
         }}
         required={true}
         autoFoucs={true}
-        errors={forgotPassword.errors?.errors?.body?.email}
+        errors={forgotPassword.errors()?.errors?.body?.email}
       />
-
-      <div class="flex flex-col items-start">
-        <Show when={showBackToLogin}>
-          <Link
-            class="block text-sm mt-1 hover:text-secondaryH duration-200 transition-colors"
-            type="button"
-            href="/login"
-          >
-            Back to login
-          </Link>
-        </Show>
-        <div class="mt-10 w-full">
-          <Button
-            size="medium"
-            loading={forgotPassword.action.isLoading}
-            classes="w-full"
-            type="submit"
-            theme="primary"
-          >
-            Send password reset
-          </Button>
-        </div>
-      </div>
+      <Show when={showBackToLogin}>
+        <Link
+          class="block text-sm mt-1 hover:text-secondaryH duration-200 transition-colors"
+          type="button"
+          href="/login"
+        >
+          Back to login
+        </Link>
+      </Show>
     </Form.Root>
   );
 };

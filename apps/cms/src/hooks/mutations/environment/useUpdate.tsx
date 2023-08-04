@@ -41,6 +41,6 @@ export const useUpdate = () => {
   // Return
   return {
     action: updateEnvironment,
-    errors: errors(),
+    errors: errors,
   };
 };

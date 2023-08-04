@@ -34,7 +34,7 @@ const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
       content={{
         title: "Delete environment",
         description: "Are you sure you want to delete this environment?",
-        error: deleteEnvironment.errors?.message,
+        error: deleteEnvironment.errors()?.message,
       }}
       onConfirm={() => {
         if (!props.key) return console.error("No key provided");

@@ -1,6 +1,5 @@
-import T from "@/translations";
 import {
-  type Component,
+  Component,
   createSignal,
   Show,
   For,
@@ -10,8 +9,7 @@ import {
 import slugify from "slugify";
 // Utils
 import helpers from "@/utils/helpers";
-// Assets
-import notifySvg from "@/assets/illustrations/notify.svg";
+
 // Types
 import { BrickConfigT } from "@lucid/types/src/bricks";
 import { CollectionResT } from "@lucid/types/src/collections";
@@ -19,11 +17,8 @@ import { FormResT } from "@lucid/types/src/forms";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
 import Form from "@/components/Groups/Form";
-import Button from "@/components/Partials/Button";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import InputGrid from "@/components/Containers/InputGrid";
-import ErrorMessage from "@/components/Partials/ErrorMessage";
-import Error from "@/components/Partials/Error";
 import CardGrid from "@/components/Containers/CardGrid";
 import Layout from "@/components/Groups/Layout";
 // Cards
@@ -164,174 +159,160 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
     );
   });
   const errors = createMemo(() => {
-    if (!props.environment) return createEnvironment.errors;
-    return updateEnvironment.errors;
+    if (!props.environment) return createEnvironment.errors();
+    return updateEnvironment.errors();
   });
 
   // ----------------------------------------
   // Render
-  if (isError()) {
-    return (
-      <Error
-        type="page-layout"
-        content={{
-          image: notifySvg,
-          title: T.state.error_title,
-          description: T.state.error_message,
-        }}
-      />
-    );
-  }
-
   return (
-    <Form.Root
-      onSubmit={() => {
-        if (!props.environment) {
-          createEnvironment.action.mutate({
-            key: key(),
-            title: title(),
-            assigned_bricks: assignedBricks(),
-            assigned_collections: assignedCollections(),
-            assigned_forms: assignedForms(),
-          });
-        } else {
-          updateEnvironment.action.mutate({
-            key: props.environment.key,
-            body: updateData().body,
-          });
-        }
+    <Layout.PageContent
+      state={{
+        isError: isError(),
       }}
     >
-      {/* Details */}
-      <SectionHeading title="Details" />
-      <InputGrid columns={3}>
-        <Form.Input
-          id="title"
-          name="title"
-          type="text"
-          value={title()}
-          onChange={setTitle}
-          copy={{
-            label: "Title",
-          }}
-          required={true}
-          autoFoucs={true}
-          errors={errors()?.errors?.body?.title}
-          noMargin={true}
-          onBlur={() => {
-            if (!key()) {
-              const newKey = slugify(title(), {
-                lower: true,
-                replacement: "-",
-                strict: true,
-                remove: /[0-9]/g,
-              });
-              setKey(newKey);
-            }
-          }}
-        />
-        <Show when={!props.environment}>
+      <Form.Root
+        type={"page-layout"}
+        state={{
+          isLoading: isCreating(),
+          isDisabled: submitIsDisabled(),
+          errors: errors(),
+        }}
+        content={{
+          submit: props.environment ? "Update" : "Create",
+        }}
+        onSubmit={() => {
+          if (!props.environment) {
+            createEnvironment.action.mutate({
+              key: key(),
+              title: title(),
+              assigned_bricks: assignedBricks(),
+              assigned_collections: assignedCollections(),
+              assigned_forms: assignedForms(),
+            });
+          } else {
+            updateEnvironment.action.mutate({
+              key: props.environment.key,
+              body: updateData().body,
+            });
+          }
+        }}
+      >
+        {/* Details */}
+        <SectionHeading title="Details" />
+        <InputGrid columns={3}>
           <Form.Input
-            id="key"
-            name="key"
+            id="title"
+            name="title"
             type="text"
-            value={key()}
-            onChange={setKey}
+            value={title()}
+            onChange={setTitle}
             copy={{
-              label: "Key",
+              label: "Title",
             }}
             required={true}
-            errors={errors()?.errors?.body?.key}
+            autoFoucs={true}
+            errors={errors()?.errors?.body?.title}
             noMargin={true}
+            onBlur={() => {
+              if (!key()) {
+                const newKey = slugify(title(), {
+                  lower: true,
+                  replacement: "-",
+                  strict: true,
+                  remove: /[0-9]/g,
+                });
+                setKey(newKey);
+              }
+            }}
           />
-        </Show>
-      </InputGrid>
-
-      {/* Assigned Bricks */}
-      <SectionHeading
-        title="Bricks"
-        description="Select the bricks you wish this environment to have access to."
-      />
-      <CardGrid
-        columns={4}
-        state={{
-          isLoading: isLoading(),
-          isError: isError(),
-        }}
-      >
-        <For each={bricks.data?.data || []}>
-          {(brick) => (
-            <EnvBrickCard
-              brick={brick}
-              selectedBricks={assignedBricks()}
-              setSelected={toggleBrick}
+          <Show when={!props.environment}>
+            <Form.Input
+              id="key"
+              name="key"
+              type="text"
+              value={key()}
+              onChange={setKey}
+              copy={{
+                label: "Key",
+              }}
+              required={true}
+              errors={errors()?.errors?.body?.key}
+              noMargin={true}
             />
-          )}
-        </For>
-      </CardGrid>
+          </Show>
+        </InputGrid>
 
-      {/* Assigned Collections */}
-      <SectionHeading
-        title="Collections"
-        description="Assign the collection you wish the environment to have access to."
-      />
-      <CardGrid
-        columns={4}
-        state={{
-          isLoading: isLoading(),
-          isError: isError(),
-        }}
-      >
-        <For each={collections.data?.data || []}>
-          {(collection) => (
-            <EnvCollectionCard
-              collection={collection}
-              selectedCollections={assignedCollections()}
-              setSelected={toggleCollection}
-            />
-          )}
-        </For>
-      </CardGrid>
-
-      {/* Assigned Forms */}
-      <SectionHeading
-        title="Forms"
-        description="Select the forms the environment should have access to."
-      />
-      <CardGrid
-        columns={4}
-        state={{
-          isLoading: isLoading(),
-          isError: isError(),
-        }}
-      >
-        <For each={forms.data?.data || []}>
-          {(form) => (
-            <EnvFormCard
-              form={form}
-              selectedForms={assignedForms()}
-              setSelected={toggleForm}
-            />
-          )}
-        </For>
-      </CardGrid>
-
-      <Layout.PageFooter>
-        <Show when={errors() && errors()?.message}>
-          <ErrorMessage theme="background" message={errors()?.message} />
-        </Show>
-        <Button
-          type="submit"
-          theme="primary"
-          size="medium"
-          loading={isCreating()}
-          disabled={submitIsDisabled()}
+        {/* Assigned Bricks */}
+        <SectionHeading
+          title="Bricks"
+          description="Select the bricks you wish this environment to have access to."
+        />
+        <CardGrid
+          columns={4}
+          state={{
+            isLoading: isLoading(),
+            isError: isError(),
+          }}
         >
-          <Show when={props.environment}>Update</Show>
-          <Show when={!props.environment}>Create</Show>
-        </Button>
-      </Layout.PageFooter>
-    </Form.Root>
+          <For each={bricks.data?.data || []}>
+            {(brick) => (
+              <EnvBrickCard
+                brick={brick}
+                selectedBricks={assignedBricks()}
+                setSelected={toggleBrick}
+              />
+            )}
+          </For>
+        </CardGrid>
+
+        {/* Assigned Collections */}
+        <SectionHeading
+          title="Collections"
+          description="Assign the collection you wish the environment to have access to."
+        />
+        <CardGrid
+          columns={4}
+          state={{
+            isLoading: isLoading(),
+            isError: isError(),
+          }}
+        >
+          <For each={collections.data?.data || []}>
+            {(collection) => (
+              <EnvCollectionCard
+                collection={collection}
+                selectedCollections={assignedCollections()}
+                setSelected={toggleCollection}
+              />
+            )}
+          </For>
+        </CardGrid>
+
+        {/* Assigned Forms */}
+        <SectionHeading
+          title="Forms"
+          description="Select the forms the environment should have access to."
+        />
+        <CardGrid
+          columns={4}
+          state={{
+            isLoading: isLoading(),
+            isError: isError(),
+          }}
+        >
+          <For each={forms.data?.data || []}>
+            {(form) => (
+              <EnvFormCard
+                form={form}
+                selectedForms={assignedForms()}
+                setSelected={toggleForm}
+              />
+            )}
+          </For>
+        </CardGrid>
+      </Form.Root>
+    </Layout.PageContent>
   );
 };
 

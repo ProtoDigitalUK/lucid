@@ -55,6 +55,6 @@ export const useDelete = (props: UseDeleteProps) => {
   // Return
   return {
     action: deleteEnvironment,
-    errors: errors(),
+    errors: errors,
   };
 };

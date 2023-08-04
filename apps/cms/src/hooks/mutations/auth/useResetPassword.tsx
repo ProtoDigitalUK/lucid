@@ -39,6 +39,6 @@ export const useResetPassword = () => {
   // Return
   return {
     action: resetPassword,
-    errors: errors(),
+    errors: errors,
   };
 };

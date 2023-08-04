@@ -45,6 +45,6 @@ export const useCreate = () => {
   // Return
   return {
     action: createEnvironment,
-    errors: errors(),
+    errors: errors,
   };
 };

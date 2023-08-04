@@ -41,6 +41,6 @@ export const useForgotPassword = (props: UseForgotPasswordProps) => {
   // Return
   return {
     action: sendPasswordReset,
-    errors: errors(),
+    errors: errors,
   };
 };

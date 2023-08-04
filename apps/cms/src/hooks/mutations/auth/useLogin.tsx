@@ -39,6 +39,6 @@ export const useLogin = () => {
   // Return
   return {
     action: login,
-    errors: errors(),
+    errors: errors,
   };
 };

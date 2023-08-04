@@ -25,6 +25,14 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
   // Render
   return (
     <Form.Root
+      type="standard"
+      state={{
+        isLoading: login.action.isLoading,
+        errors: login.errors(),
+      }}
+      content={{
+        submit: "Login",
+      }}
       onSubmit={async () => {
         login.action.mutate({ username: username(), password: password() });
       }}
@@ -41,7 +49,7 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         required={true}
         autoFoucs={true}
         autoComplete="username"
-        errors={login.errors?.errors?.body?.username}
+        errors={login.errors()?.errors?.body?.username}
       />
       <Form.Input
         id="password"
@@ -54,35 +62,17 @@ const LoginForm: Component<LoginFormProps> = ({ showForgotPassword }) => {
         }}
         required={true}
         autoComplete="current-password"
-        errors={login.errors?.errors?.body?.password}
+        errors={login.errors()?.errors?.body?.password}
       />
-      <div class="flex flex-col items-start">
-        <Show when={showForgotPassword}>
-          <Link
-            class="block text-sm mt-1 hover:text-secondaryH duration-200 transition-colors"
-            type="button"
-            href="/forgot-password"
-          >
-            Forgot password?
-          </Link>
-        </Show>
-
-        <div class="mt-10 w-full">
-          <Show when={login.errors && login.errors?.message}>
-            <ErrorMessage theme="container" message={login.errors?.message} />
-          </Show>
-
-          <Button
-            size="medium"
-            classes="w-full"
-            type="submit"
-            theme="primary"
-            loading={login.action.isLoading}
-          >
-            Login
-          </Button>
-        </div>
-      </div>
+      <Show when={showForgotPassword}>
+        <Link
+          class="block text-sm mt-1 hover:text-secondaryH duration-200 transition-colors"
+          type="button"
+          href="/forgot-password"
+        >
+          Forgot password?
+        </Link>
+      </Show>
     </Form.Root>
   );
 };
