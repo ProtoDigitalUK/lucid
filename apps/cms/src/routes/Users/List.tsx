@@ -39,7 +39,7 @@ const UsersListRoute: Component = () => {
         ]}
         caption="Users"
       >
-        {(include) => (
+        {({ include }) => (
           <>
             <tr>
               <Table.Td include={include[0]}>James</Table.Td>

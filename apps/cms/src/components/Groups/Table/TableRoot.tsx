@@ -19,7 +19,7 @@ interface TableRootProps {
   }[];
 
   caption?: string;
-  children: (include: boolean[]) => JSXElement;
+  children: (props: { include: boolean[] }) => JSXElement;
 }
 
 export const TableRoot: Component<TableRootProps> = (props) => {
@@ -79,7 +79,11 @@ export const TableRoot: Component<TableRootProps> = (props) => {
             </Index>
           </tr>
         </thead>
-        <tbody>{props.children(include())}</tbody>
+        <tbody>
+          {props.children({
+            include: include(),
+          })}
+        </tbody>
       </table>
     </div>
   );

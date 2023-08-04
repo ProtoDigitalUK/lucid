@@ -1,6 +1,6 @@
 import { type Component } from "solid-js";
 // Components
-import LoginForm from "@/components/Forms/LoginForm";
+import LoginForm from "@/components/Forms/Auth/LoginForm";
 
 const LoginRoute: Component = () => {
   // ----------------------------------------

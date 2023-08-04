@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, JSXElement } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
@@ -6,12 +6,16 @@ import spawnToast from "@/utils/spawn-toast";
 import { clearCookie } from "@/utils/cookie";
 // Services
 import api from "@/services/api";
-// Components
-import Button from "@/components/Partials/Button";
 
-interface LogoutButtonProps {}
+interface LogoutProps {
+  children: (props: {
+    mutate: () => void;
+    isLoading: boolean;
+    isError: boolean;
+  }) => JSXElement;
+}
 
-const LogoutButton: Component<LogoutButtonProps> = () => {
+export const Logout: Component<LogoutProps> = (props) => {
   // ----------------------------------------
   // States / Hooks
   const navigate = useNavigate();
@@ -37,18 +41,12 @@ const LogoutButton: Component<LogoutButtonProps> = () => {
   // ----------------------------------------
   // Render
   return (
-    <Button
-      type="submit"
-      theme="primary"
-      size="medium"
-      loading={logout.isLoading}
-      onCLick={() => {
-        logout.mutate();
-      }}
-    >
-      Logout
-    </Button>
+    <>
+      {props.children({
+        mutate: logout.mutate,
+        isLoading: logout.isLoading,
+        isError: logout.isError,
+      })}
+    </>
   );
 };
-
-export default LogoutButton;

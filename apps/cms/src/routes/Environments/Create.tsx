@@ -1,7 +1,7 @@
 import { Component } from "solid-js";
 // Componetns
 import Layout from "@/components/Groups/Layout";
-import CreateEnvironment from "@/components/Forms/Environments/CreateEnvironmentForm";
+import CreateUpdateEnvForm from "@/components/Forms/Environment/CreateUpdateEnvForm";
 
 const CreateEnvrionemntRoute: Component = () => {
   // ----------------------------------------
@@ -11,7 +11,7 @@ const CreateEnvrionemntRoute: Component = () => {
       title="Create Environment"
       description="Environments are a top level grouping of collections, forms and bricks. With the seperation of environments, you can have multiple sites/apps running on the same CMS."
     >
-      <CreateEnvironment />
+      <CreateUpdateEnvForm />
     </Layout.PageLayout>
   );
 };

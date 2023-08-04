@@ -6,9 +6,9 @@ import api from "@/services/api";
 import { environment } from "@/state/environment";
 // Components
 import Layout from "@/components/Groups/Layout";
-import CreateEnvironment from "@/components/Forms/Environments/CreateEnvironmentForm";
+import CreateUpdateEnvForm from "@/components/Forms/Environment/CreateUpdateEnvForm";
 // Modals
-import DeleteEnvironment from "@/components/Modals/Environments/DeleteEnvironment";
+import DeleteEnvironment from "@/components/Modals/Environment/DeleteEnvironment";
 
 const ManageEnvrionemntRoute: Component = () => {
   // ----------------------------------------
@@ -47,7 +47,7 @@ const ManageEnvrionemntRoute: Component = () => {
       }}
     >
       {/* Content */}
-      <CreateEnvironment environment={environmentData.data?.data} />
+      <CreateUpdateEnvForm environment={environmentData.data?.data} />
       {/* Modals */}
       <DeleteEnvironment
         key={environmentData.data?.data.key}

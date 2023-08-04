@@ -1,12 +1,26 @@
 import type { Component } from "solid-js";
 // Components
-import LogoutButton from "@/components/Actions/LogoutButton";
+import Button from "@/components/Partials/Button";
+// Actions
+import Actions from "@/components/Actions";
 
 const DashboardRoute: Component = () => {
   return (
     <div>
       <h1 class="text-6xl font-bold text-red-700">App</h1>
-      <LogoutButton />
+      <Actions.Auth.Logout>
+        {(logout) => (
+          <Button
+            type="submit"
+            theme="primary"
+            size="medium"
+            loading={logout.isLoading}
+            onClick={logout.mutate}
+          >
+            Logout
+          </Button>
+        )}
+      </Actions.Auth.Logout>
       Fugiat fugiat sit culpa qui commodo. Quis irure velit do laborum Lorem id
       elit veniam laboris ut pariatur. Duis nisi minim reprehenderit laboris ex.
       Do qui eiusmod enim tempor minim incididunt est ex laboris pariatur.
