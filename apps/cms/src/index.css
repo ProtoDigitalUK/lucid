@@ -93,6 +93,10 @@
     @apply bg-secondary text-white;
   }
 
+  [data-overflowing="true"] .row-actions-td {
+    filter: drop-shadow(-5px 0px 5px rgba(0, 0, 0, 0.1));
+  }
+
   /* Page Layout */
   .page-layout-full-body {
     min-height: calc(100vh - var(--lucid-page-layout-header-height) - 60px);

@@ -24,7 +24,7 @@ export const Th: Component<ThProps> = (props) => {
   return (
     <th
       class={classNames(
-        "text-left first:pl-30 last:pr-30 px-15 hover:bg-backgroundAccent rounded-md bg-background duration-200 transition-colors whitespace-nowrap",
+        "text-left first:pl-15 md:first:pl-30 last:pr-15 md:last:pr-30 px-15 hover:bg-backgroundAccent rounded-md bg-background duration-200 transition-colors whitespace-nowrap",
         {
           hidden: props.options?.include === false,
         },

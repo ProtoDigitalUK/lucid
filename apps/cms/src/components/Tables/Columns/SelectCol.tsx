@@ -3,13 +3,13 @@ import { Component } from "solid-js";
 import Table from "@/components/Groups/Table";
 import Form from "@/components/Groups/Form";
 
-interface SelectColumnProps {
+interface SelectColProps {
   type?: "th" | "td";
   value: boolean;
   onChange: (value: boolean) => void;
 }
 
-const SelectColumn: Component<SelectColumnProps> = (props) => {
+const SelectCol: Component<SelectColProps> = (props) => {
   const Ele = props.type === "th" ? Table.Th : Table.Td;
 
   return (
@@ -28,4 +28,4 @@ const SelectColumn: Component<SelectColumnProps> = (props) => {
   );
 };
 
-export default SelectColumn;
+export default SelectCol;

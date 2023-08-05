@@ -20,6 +20,22 @@ const UserRow: Component<UserRowProps> = (props) => {
     <Table.Tr
       index={props.index}
       selected={props.selected}
+      actions={[
+        {
+          label: "Edit",
+          type: "link",
+          href: "/",
+          permission: true,
+        },
+        {
+          label: "Delete",
+          type: "button",
+          onClick: () => {
+            console.log("Delete");
+          },
+          permission: true,
+        },
+      ]}
       options={props.options}
       callbacks={props.callbacks}
     >

@@ -4,15 +4,13 @@ import {
   Show,
   createSignal,
   Index,
-  Switch,
-  Match,
   createMemo,
   createEffect,
 } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
-import SelectColumn from "@/components/Tables/Columns/SelectColumn";
+import SelectCol from "@/components/Tables/Columns/SelectCol";
 
 interface TableRootProps {
   key: string;
@@ -46,6 +44,8 @@ interface TableRootProps {
 }
 
 export const TableRoot: Component<TableRootProps> = (props) => {
+  let overflowRef: HTMLDivElement | undefined = undefined;
+
   const [include, setInclude] = createSignal<boolean[]>([]);
   const [selected, setSelected] = createSignal(
     Array.from({ length: props.rows }, () => false)
@@ -127,7 +127,21 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   // ----------------------------------------
   // Effects
   createEffect(() => {
+    const handleResize = () => {
+      if (overflowRef && overflowRef.scrollWidth > overflowRef.clientWidth) {
+        overflowRef.setAttribute("data-overflowing", "true");
+      } else {
+        overflowRef?.setAttribute("data-overflowing", "false");
+      }
+    };
+
+    handleResize();
     setInclude(getIncludeLS());
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   });
 
   // ----------------------------------------
@@ -135,17 +149,17 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   return (
     <>
       {/* Table */}
-      <div class="w-full overflow-x-auto">
-        <table class="w-full table h-auto">
+      <div class="w-full overflow-x-auto" ref={overflowRef}>
+        <table class="w-full table h-auto border-collapse">
           <Show when={props?.caption}>
-            <caption class="caption-bottom bg-primary text-primaryText py-2 text-sm">
+            <caption class="caption-bottom border-t-primary border-t-2 border-b border-b-border bg-backgroundAccent text-title  py-2 text-sm">
               {props?.caption}
             </caption>
           </Show>
           <thead class="border-y border-border">
             <tr class="h-10">
               <Show when={isSelectable()}>
-                <SelectColumn
+                <SelectCol
                   type="th"
                   value={allSelected()}
                   onChange={onSelectChange}
