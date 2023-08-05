@@ -48,7 +48,7 @@ const EnvCollectionCard: Component<EnvCollectionCardProps> = (props) => {
             id={props.collection.key}
             name={props.collection.key}
             value={isSelected()}
-            onChange={() => {}}
+            onChange={() => props.setSelected(props.collection)}
             copy={{}}
             noMargin={true}
           />

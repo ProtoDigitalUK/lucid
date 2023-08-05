@@ -42,7 +42,7 @@ const EnvFormCard: Component<EnvFormCardProps> = (props) => {
             id={props.form.key}
             name={props.form.key}
             value={isSelected()}
-            onChange={() => {}}
+            onChange={() => props.setSelected(props.form)}
             copy={{}}
             noMargin={true}
           />

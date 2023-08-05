@@ -1,3 +1,4 @@
+import T from "@/translations";
 import {
   Component,
   JSXElement,
@@ -6,11 +7,18 @@ import {
   Index,
   createMemo,
   createEffect,
+  Switch,
+  Match,
 } from "solid-js";
+// Assets
+import notifySvg from "@/assets/illustrations/notify.svg";
+import emptySvg from "@/assets/illustrations/empty.svg";
 // Components
 import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
 import SelectCol from "@/components/Tables/Columns/SelectCol";
+import LoadingRow from "@/components/Tables/Rows/LoadingRow";
+import Error from "@/components/Partials/Error";
 
 interface TableRootProps {
   key: string;
@@ -92,6 +100,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   // ----------------------------------------
   // Callbacks
   const onSelectChange = () => {
+    if (props.state.isLoading) return;
+
     if (allSelected()) {
       setSelected((prev) => {
         return prev.map(() => false);
@@ -148,71 +158,134 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   // Render
   return (
     <>
-      {/* Table */}
-      <div class="w-full overflow-x-auto" ref={overflowRef}>
-        <table class="w-full table h-auto border-collapse">
-          <Show when={props?.caption}>
-            <caption class="caption-bottom border-t-primary border-t-2 border-b border-b-border bg-backgroundAccent text-title  py-2 text-sm">
-              {props?.caption}
-            </caption>
-          </Show>
-          <thead class="border-y border-border">
-            <tr class="h-10">
-              <Show when={isSelectable()}>
-                <SelectCol
-                  type="th"
-                  value={allSelected()}
-                  onChange={onSelectChange}
-                />
+      <Switch>
+        <Match when={props.rows === 0}>
+          {/* TODO: If no filters are set, show a create button, else show a reset filter button  */}
+          <Error
+            type="table"
+            content={{
+              image: emptySvg,
+              title: T.state.no_results,
+              description: T.state.no_results_message,
+            }}
+          />
+        </Match>
+        <Match when={props.state.isError}>
+          <Error
+            type="table"
+            content={{
+              image: notifySvg,
+              title: T.state.error_title,
+              description: T.state.error_message,
+            }}
+          />
+        </Match>
+        <Match when={props.state.isSuccess || props.state.isLoading}>
+          {/* Table */}
+          <div class="w-full overflow-x-auto" ref={overflowRef}>
+            <table class="w-full table h-auto border-collapse">
+              <Show when={props?.caption}>
+                <caption class="caption-bottom border-t-primary border-t-2 border-b border-b-border bg-backgroundAccent text-title  py-2 text-sm">
+                  {props?.caption}
+                </caption>
               </Show>
-              <Index each={props.head}>
-                {(head, index) => (
-                  <Table.Th
-                    key={head().key}
-                    index={index}
-                    label={head().label}
-                    icon={head().icon}
-                    options={{
-                      include: include()[index],
-                      sortable: head().sortable,
-                    }}
-                  />
-                )}
-              </Index>
-              <Table.Th classes={"text-right right-0 hover:bg-background"}>
-                <Table.ColumnToggle
-                  columns={includeRows() || []}
-                  callbacks={{
-                    toggle: toggleInclude,
-                  }}
-                />
-              </Table.Th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.children({
-              include: include(),
-              isSelectable: isSelectable(),
-              selected: selected(),
-              setSelected: setSelectedIndex,
-            })}
-          </tbody>
-        </table>
-      </div>
-      {/* Select Action */}
-      <Show
-        when={selectedCount() > 0 && props.callbacks?.deleteRows !== undefined}
-      >
-        <Table.SelectAction
-          data={{
-            selected: selectedCount(),
-          }}
-          callbacks={{
-            reset: () => setSelected((prev) => prev.map(() => false)),
-            delete: () => props.callbacks?.deleteRows?.(),
-          }}
-        />
-      </Show>
+              <thead class="border-y border-border">
+                <tr class="h-10">
+                  <Show when={isSelectable()}>
+                    <SelectCol
+                      type="th"
+                      value={allSelected()}
+                      onChange={onSelectChange}
+                    />
+                  </Show>
+                  <Index each={props.head}>
+                    {(head, index) => (
+                      <Table.Th
+                        key={head().key}
+                        index={index}
+                        label={head().label}
+                        icon={head().icon}
+                        options={{
+                          include: include()[index],
+                          sortable: head().sortable,
+                        }}
+                      />
+                    )}
+                  </Index>
+                  <Table.Th classes={"text-right right-0 hover:bg-background"}>
+                    <Table.ColumnToggle
+                      columns={includeRows() || []}
+                      callbacks={{
+                        toggle: toggleInclude,
+                      }}
+                    />
+                  </Table.Th>
+                </tr>
+              </thead>
+              <tbody>
+                <Switch>
+                  <Match when={props.state.isLoading}>
+                    <LoadingRow
+                      columns={props.head.length}
+                      isSelectable={isSelectable()}
+                      includes={include()}
+                    />
+                    <LoadingRow
+                      columns={props.head.length}
+                      isSelectable={isSelectable()}
+                      includes={include()}
+                    />
+                    <LoadingRow
+                      columns={props.head.length}
+                      isSelectable={isSelectable()}
+                      includes={include()}
+                    />
+                    <LoadingRow
+                      columns={props.head.length}
+                      isSelectable={isSelectable()}
+                      includes={include()}
+                    />
+                    <LoadingRow
+                      columns={props.head.length}
+                      isSelectable={isSelectable()}
+                      includes={include()}
+                    />
+                    <LoadingRow
+                      columns={props.head.length}
+                      isSelectable={isSelectable()}
+                      includes={include()}
+                    />
+                  </Match>
+                  <Match when={props.state.isSuccess}>
+                    {props.children({
+                      include: include(),
+                      isSelectable: isSelectable(),
+                      selected: selected(),
+                      setSelected: setSelectedIndex,
+                    })}
+                  </Match>
+                </Switch>
+              </tbody>
+            </table>
+          </div>
+          {/* Select Action */}
+          <Show
+            when={
+              selectedCount() > 0 && props.callbacks?.deleteRows !== undefined
+            }
+          >
+            <Table.SelectAction
+              data={{
+                selected: selectedCount(),
+              }}
+              callbacks={{
+                reset: () => setSelected((prev) => prev.map(() => false)),
+                delete: () => props.callbacks?.deleteRows?.(),
+              }}
+            />
+          </Show>
+        </Match>
+      </Switch>
       {/* Pagination */}
       <Show when={props.meta}>
         <Query.Pagination

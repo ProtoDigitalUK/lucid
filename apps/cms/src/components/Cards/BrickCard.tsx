@@ -44,7 +44,7 @@ const EnvBrickCard: Component<EnvBrickCardProps> = (props) => {
             id={props.brick.key}
             name={props.brick.key}
             value={isSelected()}
-            onChange={() => {}}
+            onChange={() => props.setSelected(props.brick)}
             copy={{}}
             noMargin={true}
           />

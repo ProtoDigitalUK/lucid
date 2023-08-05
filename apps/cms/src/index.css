@@ -101,6 +101,9 @@
   .page-layout-full-body {
     min-height: calc(100vh - var(--lucid-page-layout-header-height) - 60px);
   }
+  .page-layout-table {
+    min-height: calc(100vh - var(--lucid-page-layout-header-height) - 90px);
+  }
 
   /* Animations */
   @keyframes animation-enter {

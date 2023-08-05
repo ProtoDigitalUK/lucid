@@ -46,7 +46,7 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
             e.stopPropagation();
           }}
           class={classnames(
-            `h-5 w-5 rounded-md border-border border cursor-pointer bg-backgroundAccent data-[checked]:bg-secondary data-[checked]:border-secondaryH data-[checked]:fill-secondaryText`,
+            `h-5 w-5 rounded-md border-border border-[2px] cursor-pointer hover:border-secondary bg-container data-[checked]:bg-secondary data-[checked]:border-secondaryH data-[checked]:fill-secondaryText transition-colors duration-200`,
             {
               "border-secondary": inputFocus(),
             }

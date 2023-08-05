@@ -1,6 +1,8 @@
 {
   "state": {
     "error_title": "Something went wrong",
-    "error_message": "An error has occurred. Please try again later."
+    "error_message": "An error has occurred. Please try again later.",
+    "no_results": "No results found",
+    "no_results_message": "Try adjusting your filters to find what you're looking for."
   }
 }

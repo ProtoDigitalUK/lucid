@@ -4,7 +4,7 @@ import classNames from "classnames";
 import Link from "@/components/Partials/Link";
 
 interface ErrorProps {
-  type: "fill" | "page-layout";
+  type: "fill" | "page-layout" | "table";
   content: {
     image: string;
     title: string;
@@ -22,6 +22,7 @@ const Error: Component<ErrorProps> = (props) => {
       class={classNames("flex items-center justify-center bg-background", {
         "inset-0 absolute z-50": props.type === "fill",
         "page-layout-full-body": props.type === "page-layout",
+        "border-t border-border page-layout-table": props.type === "table",
       })}
     >
       <div class="text-center max-w-xl flex flex-col items-center p-10">
