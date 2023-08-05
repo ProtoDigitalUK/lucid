@@ -1,9 +1,11 @@
-import { Component, JSXElement, Show } from "solid-js";
+import { Component, JSXElement, Show, createMemo } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 // Components
 import SelectCol from "@/components/Tables/Columns/SelectCol";
 import ActionMenuCol, {
   ActionMenuColProps,
 } from "@/components/Tables/Columns/ActionMenuCol";
+import classNames from "classnames";
 
 interface TrProps extends TableRowProps {
   actions?: ActionMenuColProps["actions"];
@@ -14,9 +16,41 @@ interface TrProps extends TableRowProps {
 
 export const Tr: Component<TrProps> = (props) => {
   // ----------------------------------------
+  // State / Hooks
+  const navigate = useNavigate();
+
+  // ----------------------------------------
+  // Memos
+  const firstPermittedAction = createMemo(() => {
+    if (props.actions) {
+      return props.actions.find((action) => {
+        return action.permission !== false;
+      });
+    }
+  });
+
+  // ----------------------------------------
   // Render
   return (
-    <tr class="bg-background hover:bg-backgroundAccent duration-200 transition-colors">
+    <tr
+      class={classNames(
+        "bg-background hover:bg-backgroundAccent duration-200 transition-colors",
+        {
+          "cursor-pointer": firstPermittedAction() !== undefined,
+        }
+      )}
+      onClick={() => {
+        const action = firstPermittedAction();
+
+        if (action) {
+          if (action?.href) {
+            navigate(action.href);
+          } else if (action.onClick) {
+            action.onClick();
+          }
+        }
+      }}
+    >
       <Show when={props.options?.isSelectable}>
         <SelectCol
           type={"td"}

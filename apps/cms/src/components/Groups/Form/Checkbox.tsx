@@ -42,6 +42,9 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
           onBlur={() => setInputFocus(false)}
         />
         <Checkbox.Control
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
           class={classnames(
             `h-5 w-5 rounded-md border-border border cursor-pointer bg-backgroundAccent data-[checked]:bg-secondary data-[checked]:border-secondaryH data-[checked]:fill-secondaryText`,
             {

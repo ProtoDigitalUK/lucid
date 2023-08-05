@@ -1,5 +1,5 @@
 import { Component, For } from "solid-js";
-import { FaSolidEllipsis } from "solid-icons/fa";
+import { FaSolidTable } from "solid-icons/fa";
 // Components
 import { DropdownMenu } from "@kobalte/core";
 import Form from "@/components/Groups/Form";
@@ -23,7 +23,7 @@ export const ColumnToggle: Component<ColumnToggleProps> = (props) => {
       <DropdownMenu.Trigger class="w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent duration-200 transition-colors focus:outline outline-secondary outline-1">
         <span class="sr-only">Toggle Column Visibility</span>
         <DropdownMenu.Icon>
-          <FaSolidEllipsis class="fill-body" />
+          <FaSolidTable class="fill-body" size={14} />
         </DropdownMenu.Icon>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>

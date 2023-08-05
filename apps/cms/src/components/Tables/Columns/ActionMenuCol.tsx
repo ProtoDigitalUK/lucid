@@ -25,16 +25,23 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
     <Switch>
       <Match when={props.actions.length > 0}>
         <Table.Td
-          classes={"row-actions-td text-right sticky right-0 bg-background"}
+          classes={
+            "row-actions-td text-right sticky right-0 bg-background pointer-events-none"
+          }
           options={{
             noMinWidth: true,
           }}
         >
           <DropdownMenu.Root>
-            <DropdownMenu.Trigger class="w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent duration-200 transition-colors focus:outline outline-secondary outline-1">
+            <DropdownMenu.Trigger
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              class="pointer-events-auto w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent duration-200 transition-colors focus:outline outline-secondary outline-1"
+            >
               <span class="sr-only">Toggle Column Visibility</span>
               <DropdownMenu.Icon>
-                <FaSolidEllipsisVertical class="fill-body" />
+                <FaSolidEllipsisVertical class="fill-body pointer-events-none" />
               </DropdownMenu.Icon>
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
@@ -48,6 +55,9 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
                             <Link
                               href={action.href || "/"}
                               class={liItemClasses}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
                             >
                               <span class="line-clamp-1 mr-2.5">
                                 {action.label}
@@ -57,7 +67,10 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
                           </Match>
                           <Match when={action.type === "button"}>
                             <button
-                              onClick={action.onClick}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                action.onClick && action.onClick();
+                              }}
                               class={liItemClasses}
                             >
                               <span class="line-clamp-1 mr-2.5">
