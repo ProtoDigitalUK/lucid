@@ -1,4 +1,5 @@
 import { Component, Index } from "solid-js";
+import { FaSolidT, FaSolidCircle, FaSolidCalendar } from "solid-icons/fa";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Table from "@/components/Groups/Table";
@@ -40,26 +41,42 @@ const UsersListRoute: Component = () => {
       }}
     >
       <Table.Root
+        key={"users.list"}
+        rows={users.length}
+        meta={{
+          path: "",
+          links: [],
+          current_page: 1,
+          per_page: 10,
+          total: 100,
+          last_page: 10,
+        }}
+        caption="Users"
         head={[
           {
             label: "First Name",
             key: "first_name",
+            icon: <FaSolidT />,
           },
           {
             label: "Last Name",
             key: "last_name",
+            icon: <FaSolidT />,
           },
           {
             label: "Role",
             key: "role",
+            icon: <FaSolidCircle />,
           },
           {
             label: "Favorite Color",
             key: "favorite_color",
+            icon: <FaSolidCalendar />,
           },
           {
             label: "Notes",
             key: "notes",
+            icon: <FaSolidCalendar />,
           },
         ]}
         state={{
@@ -67,51 +84,30 @@ const UsersListRoute: Component = () => {
           isError: false,
           isSuccess: true,
         }}
-        data={{
-          rows: users.length,
-          meta: {
-            path: "",
-            links: [],
-            current_page: 1,
-            per_page: 10,
-            total: 100,
-            last_page: 10,
-          },
-        }}
-        content={{
-          caption: "Users",
+        options={{
+          isSelectable: true,
         }}
         callbacks={{
           deleteRows: () => {
             alert("Delete rows");
           },
         }}
-        options={{
-          isSelectable: true,
-        }}
       >
         {({ include, isSelectable, selected, setSelected }) => (
           <Index each={users}>
             {(user, i) => (
-              <Table.Tr
+              <UserRow
+                index={i}
+                user={user()}
+                include={include}
+                selected={selected[i]}
                 options={{
                   isSelectable,
-                }}
-                data={{
-                  index: i,
-                  selected: selected[i],
                 }}
                 callbacks={{
                   setSelected: setSelected,
                 }}
-              >
-                <UserRow
-                  data={{
-                    user: user(),
-                    include: include,
-                  }}
-                />
-              </Table.Tr>
+              />
             )}
           </Index>
         )}

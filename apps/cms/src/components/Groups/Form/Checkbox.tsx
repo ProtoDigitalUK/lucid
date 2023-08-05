@@ -30,7 +30,7 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
       })}
     >
       <Checkbox.Root
-        class="block items-center"
+        class="flex items-center"
         required={props.required}
         name={props.name}
         checked={props.value}
@@ -58,7 +58,7 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
         {props.copy.label && (
           <Checkbox.Label
             class={classnames(
-              "text-sm transition-colors duration-200 ease-in-out",
+              "text-sm transition-colors duration-200 ease-in-out ml-2.5",
               {
                 "text-secondaryH": inputFocus(),
               }

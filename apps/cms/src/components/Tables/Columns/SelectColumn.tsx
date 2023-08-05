@@ -15,7 +15,7 @@ const SelectColumn: Component<SelectColumnProps> = (props) => {
   return (
     <Ele
       options={{
-        width: 100,
+        width: 65,
       }}
     >
       <Form.Checkbox

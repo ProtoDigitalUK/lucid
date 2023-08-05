@@ -7,6 +7,7 @@ import {
   Switch,
   Match,
   createMemo,
+  createEffect,
 } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
@@ -14,6 +15,11 @@ import Query from "@/components/Groups/Query";
 import SelectColumn from "@/components/Tables/Columns/SelectColumn";
 
 interface TableRootProps {
+  key: string;
+  rows: number;
+  meta?: APIResponse<any>["meta"];
+  caption?: string;
+
   head: {
     label: string;
     key: string;
@@ -24,13 +30,6 @@ interface TableRootProps {
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
-  };
-  data: {
-    rows: number;
-    meta?: APIResponse<any>["meta"];
-  };
-  content?: {
-    caption?: string;
   };
   options?: {
     isSelectable?: boolean;
@@ -47,19 +46,26 @@ interface TableRootProps {
 }
 
 export const TableRoot: Component<TableRootProps> = (props) => {
-  const [include, setInclude] = createSignal(props.head.map(() => true));
+  const [include, setInclude] = createSignal<boolean[]>([]);
   const [selected, setSelected] = createSignal(
-    Array.from({ length: props.data.rows }, () => false)
+    Array.from({ length: props.rows }, () => false)
   );
 
   // ----------------------------------------
   // Functions
   const toggleInclude = (index: number) => {
+    const isOnlyOne = include().filter((i) => i).length === 1;
+    if (isOnlyOne && include()[index]) {
+      return;
+    }
+
     setInclude((prev) => {
       const newInclude = [...prev];
       newInclude[index] = !newInclude[index];
       return newInclude;
     });
+
+    setIncludeLS(include());
   };
   const setSelectedIndex = (index: number) => {
     setSelected((prev) => {
@@ -67,6 +73,20 @@ export const TableRoot: Component<TableRootProps> = (props) => {
       newSelected[index] = !newSelected[index];
       return newSelected;
     });
+  };
+
+  // ----------------------------------------
+  // Local Storage
+  const getIncludeLS = () => {
+    const include = localStorage.getItem(`${props.key}-include`);
+    if (include) {
+      return JSON.parse(include);
+    } else {
+      return props.head.map(() => true);
+    }
+  };
+  const setIncludeLS = (include: boolean[]) => {
+    localStorage.setItem(`${props.key}-include`, JSON.stringify(include));
   };
 
   // ----------------------------------------
@@ -94,6 +114,21 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   const selectedCount = createMemo(() => {
     return selected().filter((s) => s).length;
   });
+  const includeRows = createMemo(() => {
+    return props.head.map((h, i) => {
+      return {
+        index: i,
+        label: h.label,
+        include: include()[i],
+      };
+    });
+  });
+
+  // ----------------------------------------
+  // Effects
+  createEffect(() => {
+    setInclude(getIncludeLS());
+  });
 
   // ----------------------------------------
   // Render
@@ -101,32 +136,14 @@ export const TableRoot: Component<TableRootProps> = (props) => {
     <>
       {/* Table */}
       <div class="w-full overflow-x-auto">
-        <div class="mb-10 border-b">
-          <Index each={include()}>
-            {(include, index) => (
-              <button
-                class="px-2 py-1 mr-2 text-sm text-gray-500 bg-gray-100 rounded hover:bg-gray-200"
-                onClick={() => toggleInclude(index)}
-              >
-                <Switch>
-                  <Match when={include()}>
-                    <span class="mr-1">Hide</span>
-                  </Match>
-                  <Match when={!include()}>
-                    <span class="mr-1">Show</span>
-                  </Match>
-                </Switch>
-              </button>
-            )}
-          </Index>
-        </div>
-
-        <table class="w-full table-fixed h-auto">
-          <Show when={props.content?.caption}>
-            <caption class="caption-bottom">{props.content?.caption}</caption>
+        <table class="w-full table h-auto">
+          <Show when={props?.caption}>
+            <caption class="caption-bottom bg-primary text-primaryText py-2 text-sm">
+              {props?.caption}
+            </caption>
           </Show>
-          <thead class="">
-            <Table.Tr>
+          <thead class="border-y border-border">
+            <tr class="h-10">
               <Show when={isSelectable()}>
                 <SelectColumn
                   type="th"
@@ -137,22 +154,26 @@ export const TableRoot: Component<TableRootProps> = (props) => {
               <Index each={props.head}>
                 {(head, index) => (
                   <Table.Th
+                    key={head().key}
+                    index={index}
+                    label={head().label}
+                    icon={head().icon}
                     options={{
                       include: include()[index],
                       sortable: head().sortable,
                     }}
-                    data={{
-                      key: head().key,
-                      index: index,
-                    }}
-                    content={{
-                      label: head().label,
-                      icon: head().icon,
-                    }}
                   />
                 )}
               </Index>
-            </Table.Tr>
+              <Table.Th classes={"text-right right-0 hover:bg-background"}>
+                <Table.ColumnToggle
+                  columns={includeRows() || []}
+                  callbacks={{
+                    toggle: toggleInclude,
+                  }}
+                />
+              </Table.Th>
+            </tr>
           </thead>
           <tbody>
             {props.children({
@@ -179,10 +200,10 @@ export const TableRoot: Component<TableRootProps> = (props) => {
         />
       </Show>
       {/* Pagination */}
-      <Show when={props.data.meta}>
+      <Show when={props.meta}>
         <Query.Pagination
           data={{
-            meta: props.data.meta as APIResponse<any>["meta"],
+            meta: props.meta as APIResponse<any>["meta"],
           }}
         />
       </Show>

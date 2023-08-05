@@ -48,7 +48,7 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   // Render
   return (
     <DropdownMenu.Root open={open()} onOpenChange={setOpen}>
-      <DropdownMenu.Trigger class="relative h-[60px] w-full bg-container border-b border-border mb-15 flex items-center justify-between px-15 focus:outline-none focus:ring-2 ring-secondary">
+      <DropdownMenu.Trigger class="relative h-[60px] w-full bg-container border-b border-border mb-15 flex items-center justify-between px-15 focus:outline-secondary">
         <span class="text-title font-medium">{environmentData()?.title}</span>
 
         <FaSolidChevronRight

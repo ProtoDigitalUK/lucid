@@ -3,6 +3,7 @@ import { Th } from "./Th";
 import { Td } from "./Td";
 import { Tr } from "./Tr";
 import { SelectAction } from "./SelectAction";
+import { ColumnToggle } from "./ColumnToggle";
 
 const Table = {
   Root,
@@ -10,6 +11,7 @@ const Table = {
   Td,
   Tr,
   SelectAction,
+  ColumnToggle,
 };
 
 export default Table;
