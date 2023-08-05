@@ -22,7 +22,7 @@ const Button: Component<ButtonProps> = (props) => {
   // ----------------------------------------
   // Classes
   const buttonClasses = classnames(
-    "flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80",
+    "flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80 font-medium",
     {
       "bg-primary hover:bg-primaryH text-primaryText hover:text-white fill-primaryText hover:fill-white ring-secondary":
         props.theme === "primary",

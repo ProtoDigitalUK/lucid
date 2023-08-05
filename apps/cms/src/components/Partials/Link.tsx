@@ -21,7 +21,7 @@ const Link: Component<LinkProps> = (props) => {
   // ----------------------------------------
   // Classes
   const linkClasses = classnames(
-    "flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative",
+    "flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative font-medium",
     {
       "bg-primary hover:bg-primaryH text-primaryText hover:text-white fill-primaryText hover:fill-white ring-secondary":
         props.theme === "primary",

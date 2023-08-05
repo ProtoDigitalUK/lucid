@@ -35,6 +35,9 @@ interface TableRootProps {
   options?: {
     isSelectable?: boolean;
   };
+  callbacks?: {
+    deleteRows?: () => void;
+  };
   children: (props: {
     include: boolean[];
     isSelectable: boolean;
@@ -88,11 +91,15 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   const allSelected = createMemo(() => {
     return selected().every((s) => s);
   });
+  const selectedCount = createMemo(() => {
+    return selected().filter((s) => s).length;
+  });
 
   // ----------------------------------------
   // Render
   return (
     <>
+      {/* Table */}
       <div class="w-full overflow-x-auto">
         <div class="mb-10 border-b">
           <Index each={include()}>
@@ -157,6 +164,21 @@ export const TableRoot: Component<TableRootProps> = (props) => {
           </tbody>
         </table>
       </div>
+      {/* Select Action */}
+      <Show
+        when={selectedCount() > 0 && props.callbacks?.deleteRows !== undefined}
+      >
+        <Table.SelectAction
+          data={{
+            selected: selectedCount(),
+          }}
+          callbacks={{
+            reset: () => setSelected((prev) => prev.map(() => false)),
+            delete: () => props.callbacks?.deleteRows?.(),
+          }}
+        />
+      </Show>
+      {/* Pagination */}
       <Show when={props.data.meta}>
         <Query.Pagination
           data={{

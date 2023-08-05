@@ -81,6 +81,11 @@ const UsersListRoute: Component = () => {
         content={{
           caption: "Users",
         }}
+        callbacks={{
+          deleteRows: () => {
+            alert("Delete rows");
+          },
+        }}
         options={{
           isSelectable: true,
         }}
