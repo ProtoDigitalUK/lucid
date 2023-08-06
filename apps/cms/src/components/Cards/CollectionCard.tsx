@@ -1,15 +1,13 @@
 import { Component, createMemo } from "solid-js";
 import { CollectionResT } from "@lucid/types/src/collections";
 import classNames from "classnames";
-// Assets
-import defaultBrickIcon from "@/assets/svgs/default-brick-icon.svg";
 // Components
 import Form from "@/components/Groups/Form";
 
 interface EnvCollectionCardProps {
   collection: CollectionResT;
   selectedCollections: string[];
-  setSelected: (collection: CollectionResT) => void;
+  setSelected: (_collection: CollectionResT) => void;
 }
 
 const EnvCollectionCard: Component<EnvCollectionCardProps> = (props) => {

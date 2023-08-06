@@ -10,6 +10,8 @@ import {
   Switch,
   Match,
 } from "solid-js";
+// Types
+import { APIResponse } from "@/types/api";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
@@ -43,11 +45,11 @@ interface TableRootProps {
   callbacks?: {
     deleteRows?: () => void;
   };
-  children: (props: {
+  children: (_props: {
     include: boolean[];
     isSelectable: boolean;
     selected: boolean[];
-    setSelected: (i: number) => void;
+    setSelected: (_i: number) => void;
   }) => JSXElement;
 }
 
@@ -55,9 +57,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   let overflowRef: HTMLDivElement | undefined = undefined;
 
   const [include, setInclude] = createSignal<boolean[]>([]);
-  const [selected, setSelected] = createSignal(
-    Array.from({ length: props.rows }, () => false)
-  );
+  const [selected, setSelected] = createSignal<boolean[]>([]);
 
   // ----------------------------------------
   // Functions
@@ -147,6 +147,12 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 
     handleResize();
     setInclude(getIncludeLS());
+
+    const selectedValues = [];
+    for (let i = 0; i < props.rows; i++) {
+      selectedValues.push(false);
+    }
+    setSelected(selectedValues);
 
     window.addEventListener("resize", handleResize);
     return () => {

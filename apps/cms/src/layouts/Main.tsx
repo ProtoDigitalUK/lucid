@@ -3,7 +3,7 @@ import { Outlet } from "@solidjs/router";
 // Components
 import Layout from "@/components/Groups/Layout";
 
-const MainLayout: Component = (props) => {
+const MainLayout: Component = () => {
   // ------------------------------------------------------
   // State & Hooks
 

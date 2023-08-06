@@ -1,5 +1,7 @@
 import { Setter } from "solid-js";
 import spawnToast from "@/utils/spawn-toast";
+// Types
+import { APIErrorResponse } from "@/types/api";
 
 export class LucidError extends Error {
   errorRes: APIErrorResponse;
@@ -13,7 +15,7 @@ export class LucidError extends Error {
 
 export const validateSetError = (
   error: any,
-  setErrors: Setter<APIErrorResponse | null>
+  setErrors: Setter<APIErrorResponse | undefined>
 ) => {
   if (error instanceof LucidError) {
     setErrors(error.errorRes);

@@ -20,6 +20,7 @@ const spawnToast = (props: SpawnToastProps) => {
       />
     ),
     {
+      // eslint-disable-next-line
       id: `${props.title}-${props.message}-${props.status}`,
     }
   );

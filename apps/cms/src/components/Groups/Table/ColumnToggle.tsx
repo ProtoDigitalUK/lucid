@@ -11,7 +11,7 @@ interface ColumnToggleProps {
     include: boolean;
   }>;
   callbacks: {
-    toggle: (index: number) => void;
+    toggle: (_index: number) => void;
   };
 }
 

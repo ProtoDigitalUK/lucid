@@ -8,6 +8,8 @@ import spawnToast from "@/utils/spawn-toast";
 import { setEnvironment, environment } from "@/state/environment";
 // Services
 import api from "@/services/api";
+// Types
+import { APIErrorResponse } from "@/types/api";
 
 interface UseDeleteProps {
   onSuccess?: () => void;

@@ -13,7 +13,7 @@ export interface PageHeadingProps {
   actions?: {
     delete?: {
       open: boolean;
-      setOpen: (open: boolean) => void;
+      setOpen: (_open: boolean) => void;
     };
   };
   options?: {
@@ -64,9 +64,9 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         <Switch>
           <Match when={props.state?.isLoading}>
             <div class="animate-pulse">
-              <div class="h-10 bg-backgroundAccent rounded-md w-1/4"></div>
-              <div class="h-4 bg-backgroundAccent rounded-md w-full mt-2"></div>
-              <div class="h-4 bg-backgroundAccent rounded-md w-full mt-2"></div>
+              <div class="h-10 bg-backgroundAccent rounded-md w-1/4" />
+              <div class="h-4 bg-backgroundAccent rounded-md w-full mt-2" />
+              <div class="h-4 bg-backgroundAccent rounded-md w-full mt-2" />
             </div>
           </Match>
           <Match when={!props.state?.isLoading}>

@@ -8,7 +8,7 @@ interface DeleteEnvironmentProps {
   key?: string;
   state: {
     open: boolean;
-    setOpen: (open: boolean) => void;
+    setOpen: (_open: boolean) => void;
   };
 }
 

@@ -2,7 +2,6 @@ import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 // Components
 import Form from "@/components/Groups/Form";
-import Button from "@/components/Partials/Button";
 // Hooks
 import Mutations from "@/hooks/mutations";
 
@@ -10,9 +9,7 @@ interface ForgotPasswordFormProps {
   showBackToLogin?: boolean;
 }
 
-const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
-  showBackToLogin,
-}) => {
+const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
   // ----------------------------------------
   // State
   const [email, setEmail] = createSignal("");
@@ -37,7 +34,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
       content={{
         submit: "Send password reset",
       }}
-      onSubmit={async () => {
+      onSubmit={() => {
         forgotPassword.action.mutate({ email: email() });
       }}
     >
@@ -54,7 +51,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = ({
         autoFoucs={true}
         errors={forgotPassword.errors()?.errors?.body?.email}
       />
-      <Show when={showBackToLogin}>
+      <Show when={props.showBackToLogin}>
         <Link
           class="block text-sm mt-1 hover:text-secondaryH duration-200 transition-colors"
           type="button"

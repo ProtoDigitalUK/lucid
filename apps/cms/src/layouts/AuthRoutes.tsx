@@ -13,10 +13,10 @@ const AuthRoutes: Component = () => {
       </div>
       <div class="hidden w-[60%] bg-primary 3xl:flex items-center justify-center text-primaryText relative">
         <span class="absolute inset-0 flex items-center">
-          <span class="block  border border-border opacity-80 w-full after:pb-[100%] after:block rotate-45 translate-x-1/2"></span>
+          <span class="block  border border-border opacity-80 w-full after:pb-[100%] after:block rotate-45 translate-x-1/2" />
         </span>
         <span class="absolute inset-0 flex items-center">
-          <span class="block  border border-border opacity-50 w-full after:pb-[100%] after:block rotate-45 translate-x-1/3"></span>
+          <span class="block  border border-border opacity-50 w-full after:pb-[100%] after:block rotate-45 translate-x-1/3" />
         </span>
       </div>
     </div>

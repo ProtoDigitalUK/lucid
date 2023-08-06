@@ -2,11 +2,13 @@ import { Component, Show, createSignal } from "solid-js";
 import classnames from "classnames";
 import { FaSolidTriangleExclamation, FaSolidCheck } from "solid-icons/fa";
 import { Checkbox } from "@kobalte/core";
+// Types
+import { ErrorResult } from "@/types/api";
 
 interface CheckboxInputProps {
   id?: string;
   value: boolean;
-  onChange: (value: boolean) => void;
+  onChange: (_value: boolean) => void;
   name?: string;
   copy: {
     label?: string;

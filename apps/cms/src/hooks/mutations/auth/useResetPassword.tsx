@@ -6,6 +6,8 @@ import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
 // Services
 import api from "@/services/api";
+// Types
+import { APIErrorResponse } from "@/types/api";
 
 export const useResetPassword = () => {
   // ----------------------------------------

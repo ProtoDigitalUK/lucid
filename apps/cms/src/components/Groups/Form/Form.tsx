@@ -3,6 +3,8 @@ import { Component, JSXElement, Switch, Match, Show } from "solid-js";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
+// Types
+import { APIErrorResponse } from "@/types/api";
 
 interface FormProps {
   type: "standard" | "page-layout";

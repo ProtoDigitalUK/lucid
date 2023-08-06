@@ -8,6 +8,8 @@ import {
   FaSolidSort,
 } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
+// Types
+import { ErrorResult } from "@/types/api";
 
 export type SelectMultipleValueT = {
   value: string | number;
@@ -17,7 +19,7 @@ export type SelectMultipleValueT = {
 interface SelectMultipleProps {
   id: string;
   values: SelectMultipleValueT[];
-  onChange: (value: SelectMultipleValueT[]) => void;
+  onChange: (_value: SelectMultipleValueT[]) => void;
   options: SelectMultipleValueT[];
   name: string;
   copy: {
@@ -144,7 +146,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
             class="absolute inset-0 w-full left-0 rounded-md focus:outline-none"
             onFocus={() => setInputFocus(true)}
             onBlur={() => setInputFocus(false)}
-          ></DropdownMenu.Trigger>
+          />
         </div>
         <DropdownMenu.Portal>
           <DropdownMenu.Content

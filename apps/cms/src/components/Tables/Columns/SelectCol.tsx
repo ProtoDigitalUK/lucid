@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, Switch, Match } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
 import Form from "@/components/Groups/Form";
@@ -6,25 +6,43 @@ import Form from "@/components/Groups/Form";
 interface SelectColProps {
   type?: "th" | "td";
   value: boolean;
-  onChange: (value: boolean) => void;
+  onChange: (_value: boolean) => void;
 }
 
 const SelectCol: Component<SelectColProps> = (props) => {
-  const Ele = props.type === "th" ? Table.Th : Table.Td;
-
+  // ----------------------------------------
+  // Render
   return (
-    <Ele
-      options={{
-        width: 65,
-      }}
-    >
-      <Form.Checkbox
-        value={props.value}
-        onChange={props.onChange}
-        copy={{}}
-        noMargin={true}
-      />
-    </Ele>
+    <Switch>
+      <Match when={props.type === "th"}>
+        <Table.Th
+          options={{
+            width: 65,
+          }}
+        >
+          <Form.Checkbox
+            value={props.value}
+            onChange={props.onChange}
+            copy={{}}
+            noMargin={true}
+          />
+        </Table.Th>
+      </Match>
+      <Match when={props.type === "td"}>
+        <Table.Td
+          options={{
+            width: 65,
+          }}
+        >
+          <Form.Checkbox
+            value={props.value}
+            onChange={props.onChange}
+            copy={{}}
+            noMargin={true}
+          />
+        </Table.Td>
+      </Match>
+    </Switch>
   );
 };
 

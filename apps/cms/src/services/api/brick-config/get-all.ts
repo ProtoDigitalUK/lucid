@@ -1,7 +1,9 @@
 import request from "@/utils/request";
+// Types
+import { APIResponse } from "@/types/api";
 import { BrickConfigT } from "@lucid/types/src/bricks";
 
-interface Props {
+interface Params {
   include: {
     fields: boolean;
   };
@@ -11,17 +13,17 @@ interface Props {
   };
 }
 
-const getAll = (props: Props) => {
+const getAll = (params: Params) => {
   return request<APIResponse<BrickConfigT[]>>({
     url: `/api/v1/bricks/config`,
     query: {
       include: [
         {
           key: "fields",
-          include: props.include.fields,
+          include: params.include.fields,
         },
       ],
-      filters: props.filters,
+      filters: params.filters,
     },
     config: {
       method: "GET",

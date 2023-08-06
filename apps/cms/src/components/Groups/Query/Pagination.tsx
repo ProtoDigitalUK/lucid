@@ -1,4 +1,6 @@
 import { Component } from "solid-js";
+// Types
+import { APIResponse } from "@/types/api";
 // Components
 import Layout from "@/components/Groups/Layout";
 
@@ -8,7 +10,7 @@ interface PaginationProps {
   };
 }
 
-export const Pagination: Component<PaginationProps> = (props) => {
+export const Pagination: Component<PaginationProps> = () => {
   return (
     <Layout.PageFooter>
       <div class="flex justify-between">

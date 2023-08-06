@@ -82,7 +82,7 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
                             "bg-primaryA": env.key !== environment(),
                           }
                         )}
-                      ></span>
+                      />
                       <span class="ml-2.5">{env.title}</span>
                     </div>
                     <Link

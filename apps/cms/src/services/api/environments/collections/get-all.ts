@@ -1,7 +1,9 @@
 import request from "@/utils/request";
+// Types
+import { APIResponse } from "@/types/api";
 import { CollectionResT } from "@lucid/types/src/collections";
 
-interface Props {
+interface Params {
   include: {
     bricks: boolean;
   };
@@ -10,17 +12,17 @@ interface Props {
   };
 }
 
-const getAll = (props: Props) => {
+const getAll = (params: Params) => {
   return request<APIResponse<CollectionResT[]>>({
     url: `/api/v1/collections`,
     query: {
       include: [
         {
           key: "bricks",
-          include: props.include.bricks,
+          include: params.include.bricks,
         },
       ],
-      filters: props.filters,
+      filters: params.filters,
     },
     config: {
       method: "GET",

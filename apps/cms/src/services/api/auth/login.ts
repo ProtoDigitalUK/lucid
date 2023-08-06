@@ -1,5 +1,6 @@
 import request from "@/utils/request";
 // Types
+import { APIResponse } from "@/types/api";
 import { UserResT } from "@lucid/types/src/users";
 
 interface Params {

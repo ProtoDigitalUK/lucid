@@ -8,7 +8,7 @@ import ErrorMessage from "@/components/Partials/ErrorMessage";
 interface ConfirmationProps {
   state: {
     open: boolean;
-    setOpen: (open: boolean) => void;
+    setOpen: (_open: boolean) => void;
     isLoading?: boolean;
     isError?: boolean;
   };

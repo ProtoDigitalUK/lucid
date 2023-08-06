@@ -1,8 +1,10 @@
 import api from "@/services/api";
 import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
 import { LucidError, handleSiteErrors } from "@/utils/error-handling";
+// Types
+import { APIErrorResponse } from "@/types/api";
 
-interface RequestProps {
+interface RequestParams {
   url: string;
   query?: QueryBuilderProps;
   csrf?: boolean;
@@ -16,32 +18,32 @@ interface RequestConfig {
   };
 }
 
-const request = async <Response>(props: RequestProps): Promise<Response> => {
-  let fetchURL = props.url;
+const request = async <Response>(params: RequestParams): Promise<Response> => {
+  let fetchURL = params.url;
   if (!import.meta.env.PROD) {
-    fetchURL = `${import.meta.env.VITE_API_DEV_URL}${props.url}`;
+    fetchURL = `${import.meta.env.VITE_API_DEV_URL}${params.url}`;
   }
 
-  if (props.query) {
-    const queryString = queryBuilder(props.query);
+  if (params.query) {
+    const queryString = queryBuilder(params.query);
     if (queryString) {
       fetchURL = `${fetchURL}?${queryString}`;
     }
   }
 
   let csrfToken: string | undefined;
-  if (props.csrf) {
+  if (params.csrf) {
     const csrfRes = await api.auth.csrf();
     csrfToken = csrfRes.data._csrf;
   }
 
   let body: string | undefined = undefined;
-  if (props.config?.body !== undefined) {
-    body = JSON.stringify(props.config.body);
+  if (params.config?.body !== undefined) {
+    body = JSON.stringify(params.config.body);
   }
 
   const fetchRes = await fetch(fetchURL, {
-    method: props.config?.method,
+    method: params.config?.method,
     body,
     credentials: "include",
     headers: {

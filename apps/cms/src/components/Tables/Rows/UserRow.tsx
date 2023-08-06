@@ -1,4 +1,6 @@
 import { Component } from "solid-js";
+// Types
+import { TableRowProps } from "@/types/components";
 // Components
 import Table from "@/components/Groups/Table";
 

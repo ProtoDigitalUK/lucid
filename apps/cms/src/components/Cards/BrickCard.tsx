@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal } from "solid-js";
+import { Component, createMemo } from "solid-js";
 import { BrickConfigT } from "@lucid/types/src/bricks";
 import classNames from "classnames";
 // Assets
@@ -9,7 +9,7 @@ import Form from "@/components/Groups/Form";
 interface EnvBrickCardProps {
   brick: BrickConfigT;
   selectedBricks: string[];
-  setSelected: (brick: BrickConfigT) => void;
+  setSelected: (_brick: BrickConfigT) => void;
 }
 
 const EnvBrickCard: Component<EnvBrickCardProps> = (props) => {

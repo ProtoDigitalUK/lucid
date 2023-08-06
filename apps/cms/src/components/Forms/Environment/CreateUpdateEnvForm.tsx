@@ -115,7 +115,7 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
   // Effects
   createEffect(() => {
     setInitialValues();
-  }, [props.environment]);
+  });
 
   // ----------------------------------------
   // Memos

@@ -1,7 +1,6 @@
 import { type Component, createSignal } from "solid-js";
 // Components
 import Form from "@/components/Groups/Form";
-import Button from "@/components/Partials/Button";
 // Hooks
 import Mutations from "@/hooks/mutations";
 
@@ -31,7 +30,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
       content={{
         submit: "Reset Password",
       }}
-      onSubmit={async () => {
+      onSubmit={() => {
         resetPassword.action.mutate({
           token: props.token,
           password: password(),

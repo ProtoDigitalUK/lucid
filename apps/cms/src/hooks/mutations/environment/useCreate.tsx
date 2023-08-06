@@ -8,6 +8,8 @@ import spawnToast from "@/utils/spawn-toast";
 import { setEnvironment } from "@/state/environment";
 // Services
 import api from "@/services/api";
+// Types
+import { APIErrorResponse } from "@/types/api";
 
 export const useCreate = () => {
   // ----------------------------------------

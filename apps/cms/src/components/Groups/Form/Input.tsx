@@ -5,11 +5,13 @@ import {
   FaSolidEye,
   FaSolidEyeSlash,
 } from "solid-icons/fa";
+// Types
+import { ErrorResult } from "@/types/api";
 
 interface InputProps {
   id: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (_value: string) => void;
   type: string;
   name: string;
   copy: {

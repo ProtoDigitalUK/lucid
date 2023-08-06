@@ -1,7 +1,9 @@
 import request from "@/utils/request";
+// Types
 import { FormResT } from "@lucid/types/src/forms";
+import { APIResponse } from "@/types/api";
 
-interface Props {
+interface Params {
   include: {
     fields: boolean;
   };
@@ -10,12 +12,12 @@ interface Props {
   };
 }
 
-const getAll = (props: Props) => {
+const getAll = (params: Params) => {
   return request<APIResponse<FormResT[]>>({
     url: `/api/v1/forms`,
     query: {
-      include: [{ key: "fields", include: props.include.fields }],
-      filters: props.filters,
+      include: [{ key: "fields", include: params.include.fields }],
+      filters: params.filters,
     },
     config: {
       method: "GET",

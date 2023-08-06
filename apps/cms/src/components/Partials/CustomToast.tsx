@@ -5,6 +5,7 @@ import {
   onCleanup,
   Switch,
   Match,
+  createMemo,
 } from "solid-js";
 import { toast, Toast } from "solid-toast";
 import classNames from "classnames";
@@ -26,9 +27,14 @@ interface CustomToastProps {
 const CustomToast: Component<CustomToastProps> = (props) => {
   // ----------------------------------------
   // State
-  const duration = props.duration || 5000;
   const [life, setLife] = createSignal(100);
   const startTime = Date.now();
+
+  // ----------------------------------------
+  // Memos
+  const duration = createMemo(() => {
+    return props.duration || 5000;
+  });
 
   // ----------------------------------------
   // Effects
@@ -37,7 +43,7 @@ const CustomToast: Component<CustomToastProps> = (props) => {
     const interval = setInterval(() => {
       const diff = Date.now() - startTime - props.toast.pauseDuration;
 
-      const percentage = (diff / duration) * 100;
+      const percentage = (diff / duration()) * 100;
       if (percentage <= 100) setLife(percentage);
     });
 
@@ -98,7 +104,7 @@ const CustomToast: Component<CustomToastProps> = (props) => {
       <span
         class="inset-0 absolute bg-border opacity-50 z-0"
         style={{ width: `${life()}%` }}
-      ></span>
+      />
     </div>
   );
 };

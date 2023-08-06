@@ -1,13 +1,17 @@
-import { Component } from "solid-js";
+import { Component, Switch, Match } from "solid-js";
 import { getCookie } from "@/utils/cookie";
 import { Navigate, Outlet } from "@solidjs/router";
 
 const AuthLocked: Component = () => {
-  if (getCookie("auth")) {
-    return <Navigate href="/" />;
-  }
-
-  return <Outlet />;
+  // ----------------------------------------
+  // Render
+  return (
+    <Switch fallback={<Outlet />}>
+      <Match when={getCookie("auth")}>
+        <Navigate href="/" />
+      </Match>
+    </Switch>
+  );
 };
 
 export default AuthLocked;

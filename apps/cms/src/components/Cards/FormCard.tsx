@@ -7,7 +7,7 @@ import Form from "@/components/Groups/Form";
 interface EnvFormCardProps {
   form: FormResT;
   selectedForms: string[];
-  setSelected: (form: FormResT) => void;
+  setSelected: (_form: FormResT) => void;
 }
 
 const EnvFormCard: Component<EnvFormCardProps> = (props) => {

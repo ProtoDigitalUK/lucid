@@ -1,4 +1,6 @@
 import request from "@/utils/request";
+// Types
+import { APIResponse } from "@/types/api";
 
 const logout = () => {
   return request<

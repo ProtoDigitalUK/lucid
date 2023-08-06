@@ -1,5 +1,7 @@
 import { Component, JSXElement, Show, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
+// Types
+import { TableRowProps } from "@/types/components";
 // Components
 import SelectCol from "@/components/Tables/Columns/SelectCol";
 import ActionMenuCol, {

@@ -1,4 +1,6 @@
 import request from "@/utils/request";
+// Types
+import { APIResponse } from "@/types/api";
 
 interface Params {
   email: string;
