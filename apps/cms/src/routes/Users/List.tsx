@@ -1,5 +1,7 @@
 import { Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCircle, FaSolidCalendar } from "solid-icons/fa";
+// Hooks
+import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Table from "@/components/Groups/Table";
@@ -30,6 +32,18 @@ const users = [
 ];
 
 const UsersListRoute: Component = () => {
+  const searchParams = useSearchParams({
+    filters: {
+      first_name: "Jogn",
+      last_name: "Test",
+      email: "",
+      username: "",
+    },
+    sorts: {
+      created_at: "desc",
+    },
+  });
+
   // ----------------------------------
   // Render
   return (
@@ -40,6 +54,24 @@ const UsersListRoute: Component = () => {
         noPadding: true,
       }}
     >
+      <button
+        onClick={() => {
+          searchParams.setParams({
+            filters: {
+              first_name: "John",
+              last_name: "Doe",
+            },
+            sorts: {
+              created_at: undefined,
+            },
+          });
+        }}
+      >
+        <span>filter</span>
+      </button>
+      <div class="w-full p-2.5 bg-container border-border border">
+        {searchParams.getQueryString()}
+      </div>
       <Table.Root
         key={"users.list"}
         rows={users.length}
