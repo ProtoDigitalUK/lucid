@@ -1,4 +1,4 @@
-interface APIResponse<Data> {
+export interface APIResponse<Data> {
   data: Data;
   meta: {
     path: string;
@@ -10,14 +10,14 @@ interface APIResponse<Data> {
   };
 }
 
-interface APIErrorResponse {
+export interface APIErrorResponse {
   status: number;
   name: string;
   message: string;
   errors: ErrorResult;
 }
 
-interface ErrorResult {
+export interface ErrorResult {
   // @ts-ignore
   code?: string;
   // @ts-ignore

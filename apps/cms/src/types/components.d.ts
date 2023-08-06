@@ -1,4 +1,4 @@
-interface TableRowProps {
+export interface TableRowProps {
   index: number;
   selected?: boolean;
 
