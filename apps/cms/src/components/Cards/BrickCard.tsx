@@ -1,4 +1,4 @@
-import { Component, createMemo } from "solid-js";
+import { Component, createMemo, createSignal } from "solid-js";
 import { BrickConfigT } from "@lucid/types/src/bricks";
 import classNames from "classnames";
 // Assets

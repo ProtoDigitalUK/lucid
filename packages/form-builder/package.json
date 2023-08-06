@@ -5,7 +5,7 @@
   "description": "Lucid CMS FormBuilder is a small package used to define the strucutre of your form data.",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "execute": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "repository": {
     "type": "git",

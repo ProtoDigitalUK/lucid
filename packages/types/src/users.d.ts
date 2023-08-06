@@ -1,7 +1,7 @@
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/core/src/services/Permissions";
+} from "../../core/src/services/Permissions";
 
 // User
 export interface UserResT {

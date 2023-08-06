@@ -5,7 +5,7 @@
   "description": "Lucid CMS CollectionBuilder is a JavaScript library that streamlines the process of defining collections within the Lucid CMS. Supporting both single page and multiple page collections, it allows developers to specify permitted 'bricks' for each collection, ensuring a custom and efficient content management process.",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "execute": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "repository": {
     "type": "git",

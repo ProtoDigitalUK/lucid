@@ -12,7 +12,6 @@
   "keywords": [],
   "author": "William Yallop",
   "devDependencies": {
-    "@lucid/core": "*",
     "@lucid/brick-builder": "*",
     "@lucid/collection-builder": "*",
     "@lucid/form-builder": "*"
