@@ -1,7 +1,7 @@
 import { Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCircle, FaSolidCalendar } from "solid-icons/fa";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import useSearchParams from "@/hooks/useSearchParams2";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Table from "@/components/Groups/Table";
@@ -34,8 +34,8 @@ const users = [
 const UsersListRoute: Component = () => {
   const searchParams = useSearchParams({
     filters: {
-      first_name: "Jogn",
-      last_name: "Test",
+      first_name: "default",
+      last_name: "default",
       email: "",
       username: "",
     },
@@ -58,8 +58,8 @@ const UsersListRoute: Component = () => {
         onClick={() => {
           searchParams.setParams({
             filters: {
-              first_name: "John",
-              last_name: "Doe",
+              first_name: "set",
+              last_name: "set",
             },
             sorts: {
               created_at: undefined,
