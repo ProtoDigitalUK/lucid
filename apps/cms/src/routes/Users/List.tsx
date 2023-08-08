@@ -57,8 +57,8 @@ const UsersListRoute: Component = () => {
     >
       <button
         class={classNames({
-          //   "bg-error": !searchParams.getSettled(),
-          //   "bg-success": searchParams.getSettled(),
+          "bg-error": !searchParams.getSettled(),
+          "bg-success": searchParams.getSettled(),
         })}
         onClick={() => {
           searchParams.setParams({
@@ -68,6 +68,10 @@ const UsersListRoute: Component = () => {
             },
             sorts: {
               created_at: undefined,
+            },
+            pagination: {
+              page: 2,
+              per_page: 20,
             },
           });
         }}

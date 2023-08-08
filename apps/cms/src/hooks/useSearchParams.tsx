@@ -1,5 +1,8 @@
-import { createMemo, createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 10;
 
 interface SearchParamsSchema {
   filters?: {
@@ -10,7 +13,7 @@ interface SearchParamsSchema {
   };
   pagination?: {
     page?: number;
-    perPage?: number;
+    per_page?: number;
   };
 }
 
@@ -23,13 +26,18 @@ const useSearchParams = (schema: SearchParamsSchema) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [getInitialValuesSet, setInitialValuesSet] = createSignal(false);
-  //   const [getSettled, setSettled] = createSignal(false);
-  //   const [getSettledTimeout, setSettledTimeout] =
-  //     createSignal<ReturnType<typeof setTimeout>>();
+  const [getSettled, setSettled] = createSignal(false);
+  const [getSettledTimeout, setSettledTimeout] =
+    createSignal<ReturnType<typeof setTimeout>>();
 
+  const [getPrevQueryString, setPrevQueryString] = createSignal("");
+  const [getQueryString, setQueryString] = createSignal("");
   const [getFilters, setFilters] = createSignal<FilterMap>(new Map());
   const [getSorts, setSorts] = createSignal<SortMap>(new Map());
+  const [getPagination, setPagination] = createSignal({
+    page: DEFAULT_PAGE,
+    per_page: DEFAULT_PER_PAGE,
+  });
 
   // -----------------------------------
   // Functions
@@ -48,6 +56,7 @@ const useSearchParams = (schema: SearchParamsSchema) => {
   const setLocation = (params: {
     filters?: SearchParamsSchema["filters"];
     sorts?: SearchParamsSchema["sorts"];
+    pagination?: SearchParamsSchema["pagination"];
   }) => {
     const searchParams = new URLSearchParams(location.search);
 
@@ -127,6 +136,20 @@ const useSearchParams = (schema: SearchParamsSchema) => {
       }
     }
 
+    // Merge pagination into search params
+    if (params.pagination) {
+      if (params.pagination.page) {
+        searchParams.set("page", params.pagination.page.toString());
+      } else {
+        searchParams.delete("page");
+      }
+      if (params.pagination.per_page) {
+        searchParams.set("per_page", params.pagination.per_page.toString());
+      } else {
+        searchParams.delete("per_page");
+      }
+    }
+
     // Set search params
     navigate(`?${searchParams.toString()}`);
   };
@@ -171,6 +194,20 @@ const useSearchParams = (schema: SearchParamsSchema) => {
       }
     }
 
+    // Set pagination
+    const page = searchParams.get("page");
+    const perPage = searchParams.get("per_page");
+    if (page) {
+      setPagination((prev) => ({ ...prev, page: Number(page) }));
+    } else {
+      setPagination((prev) => ({ ...prev, page: DEFAULT_PAGE }));
+    }
+    if (perPage) {
+      setPagination((prev) => ({ ...prev, per_page: Number(perPage) }));
+    } else {
+      setPagination((prev) => ({ ...prev, per_page: DEFAULT_PER_PAGE }));
+    }
+
     setFilters(filters);
     setSorts(sorts);
   };
@@ -201,31 +238,86 @@ const useSearchParams = (schema: SearchParamsSchema) => {
       searchParams.set("sort", sortsStr);
     }
 
-    return searchParams.toString();
+    // Set pagination
+    const pagination = getPagination();
+    if (pagination.page) {
+      searchParams.set("page", pagination.page.toString());
+    }
+    if (pagination.per_page) {
+      searchParams.set("per_page", pagination.per_page.toString());
+    }
+
+    setPrevQueryString(getQueryString());
+    setQueryString(searchParams.toString());
   };
 
   // Set initial values
-  const setInitialParams = () => {
+  const setDefaultParams = () => {
+    const searchParams = new URLSearchParams(location.search);
+
+    let hasFilters = false;
+    if (schema.filters) {
+      for (const [key] of Object.entries(schema.filters)) {
+        if (searchParams.has(`filter[${key}]`)) {
+          hasFilters = true;
+          break;
+        }
+      }
+    }
+
+    let hasSorts = false;
+    if (schema.sorts) {
+      if (searchParams.has("sort")) {
+        hasSorts = true;
+      }
+    }
+
+    let hasPagination = false;
+    if (schema.pagination) {
+      if (searchParams.has("page") || searchParams.has("per_page")) {
+        hasPagination = true;
+      }
+    }
+
+    // if either is false
+    if (hasFilters && hasSorts && hasPagination) return;
     setLocation({
-      filters: schema.filters,
-      sorts: schema.sorts,
+      filters: !hasFilters ? schema.filters : undefined,
+      sorts: !hasSorts ? schema.sorts : undefined,
+      pagination: !hasPagination ? schema.pagination : undefined,
     });
   };
 
   // -----------------------------------
-  // Memos
-  const getQueryString = createMemo(() => {
-    if (!getInitialValuesSet()) {
-      setInitialParams();
-      setInitialValuesSet(true);
-    }
+  // Effects
 
-    // on location change - update filters and sorts based on search params
-    // return query string that is built from filters and sorts signals only
+  // sync filters, sort by location and build query string
+  createEffect(() => {
+    setSettled(false);
+    setDefaultParams();
+
     const searchParams = new URLSearchParams(location.search);
     setStateFromLocation(searchParams);
 
-    return buildQueryString();
+    buildQueryString();
+  });
+
+  // handle query string settled
+  createEffect(() => {
+    const currentQueryString = getQueryString();
+
+    if (currentQueryString !== getPrevQueryString()) {
+      if (getSettledTimeout()) {
+        clearTimeout(getSettledTimeout());
+      }
+
+      const timeout = setTimeout(() => {
+        setSettled(true);
+      }, 1);
+
+      setSettledTimeout(timeout);
+      setPrevQueryString(currentQueryString);
+    }
   });
 
   // -----------------------------------
@@ -233,7 +325,7 @@ const useSearchParams = (schema: SearchParamsSchema) => {
   return {
     getFilters,
     getSorts,
-    // getSettled,
+    getSettled,
 
     // on location change - update filters and sorts based on search params
     // return query string that is built from filters and sorts signals only
