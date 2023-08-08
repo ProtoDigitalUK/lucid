@@ -1,4 +1,4 @@
-import { createMemo } from "solid-js";
+import { createMemo, createSignal } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
 
 interface SearchParamsSchema {
@@ -14,206 +14,234 @@ interface SearchParamsSchema {
   };
 }
 
+type FilterMap = Map<string, string | number | string[] | number[] | undefined>;
+type SortMap = Map<string, "asc" | "desc" | undefined>;
+
 const useSearchParams = (schema: SearchParamsSchema) => {
   // -----------------------------------
   // Hooks / State
   const location = useLocation();
   const navigate = useNavigate();
 
-  // -----------------------------------
-  // Util Functions
-  const sortOperation = (sort: "asc" | "desc") => {
-    return sort === "asc" ? "" : "-";
-  };
+  const [getInitialValuesSet, setInitialValuesSet] = createSignal(false);
+  //   const [getSettled, setSettled] = createSignal(false);
+  //   const [getSettledTimeout, setSettledTimeout] =
+  //     createSignal<ReturnType<typeof setTimeout>>();
+
+  const [getFilters, setFilters] = createSignal<FilterMap>(new Map());
+  const [getSorts, setSorts] = createSignal<SortMap>(new Map());
 
   // -----------------------------------
   // Functions
-  const navigateTo = (params: {
-    filters?: ReturnType<typeof mergeFilters>;
-    sorts?: ReturnType<typeof mergeSorts>;
-  }) => {
-    const search = mergeParams(params);
-    navigate(`${location.pathname}?${search}`);
-  };
-
-  const mergeParams = (params: {
-    filters?: ReturnType<typeof mergeFilters>;
-    sorts?: ReturnType<typeof mergeSorts>;
-  }) => {
-    const searchParams = new URLSearchParams();
-
-    // Add filters
-    params.filters?.forEach((value, key) => {
-      if (value) {
-        searchParams.set(`filter[${key}]`, value);
-      }
-    });
-
-    // Add sorts
-    const sorts: string[] = [];
-    params.sorts?.forEach((value, key) => {
-      if (value) {
-        sorts.push(`${sortOperation(value)}${key}`);
-      }
-    });
-    if (sorts.length > 0) {
-      searchParams.set("sort", sorts.join(","));
+  const filterValueToSting = (
+    value?: string | number | string[] | number[]
+  ) => {
+    if (value === undefined) return undefined;
+    else if (Array.isArray(value)) {
+      if (value.length === 0) return undefined;
+      return value.join(",");
+    } else {
+      return value.toString();
     }
-
-    return searchParams.toString();
   };
-  const mergeFilters = (filters: SearchParamsSchema["filters"]) => {
+
+  const setLocation = (params: {
+    filters?: SearchParamsSchema["filters"];
+    sorts?: SearchParamsSchema["sorts"];
+  }) => {
     const searchParams = new URLSearchParams(location.search);
-    const filterMap = new Map<string, string | undefined>();
 
-    if (schema.filters === undefined) filterMap;
-
-    for (const key in schema.filters) {
-      // Set filters from search if they are valid
-      const spValue = searchParams.get(`filter[${key}]`);
-      filterMap.set(key, spValue || undefined);
-
-      // Merge filters from param
-      if (filters) {
-        const value = filters[key];
-        if (value === undefined) {
-          filterMap.set(key, value);
-        } else if (Array.isArray(value)) {
-          if (value.length > 0) {
-            filterMap.set(key, value.join(","));
-          } else {
-            filterMap.set(key, undefined);
-          }
+    // Merge filters into search params
+    if (params.filters) {
+      for (const [key, value] of Object.entries(params.filters)) {
+        const toString = filterValueToSting(value);
+        if (toString) {
+          searchParams.set(`filter[${key}]`, toString);
         } else {
-          filterMap.set(key, value.toString());
+          searchParams.delete(`filter[${key}]`);
         }
       }
     }
 
-    return filterMap;
-  };
-  const mergeSorts = (sorts: SearchParamsSchema["sorts"]) => {
-    const searchParams = new URLSearchParams(location.search);
-    const sortsValues = new Map<string, "asc" | "desc" | undefined>();
+    // Merge sorts into search params
+    // sort=test,test2,-test3
+    if (params.sorts) {
+      const sorts: {
+        key: string;
+        value: "asc" | "desc";
+        raw: string;
+      }[] = [];
+      const currentSorts = searchParams.get("sort");
 
-    if (schema.sorts === undefined) return sortsValues;
+      // add current sorts to array
+      if (currentSorts) {
+        const currentSortArr = currentSorts.split(",");
 
-    const searchSorts = searchParams.get("sort");
-    for (const key in schema.sorts) {
-      // Set sort base from schema
-      const value = schema.sorts[key];
-      sortsValues.set(key, value);
-
-      // Add from search if it exists
-      if (searchSorts?.includes(key)) {
-        sortsValues.set(key, "asc");
-      } else if (searchSorts?.includes(`-${key}`)) {
-        sortsValues.set(key, "desc");
-      } else {
-        sortsValues.set(key, undefined);
+        currentSortArr.forEach((sort) => {
+          const sortKey = sort.startsWith("-") ? sort.slice(1) : sort;
+          if (schema.sorts && schema.sorts[sortKey] !== undefined) {
+            if (sort.startsWith("-")) {
+              sorts.push({
+                key: sort.slice(1),
+                value: "desc",
+                raw: sort,
+              });
+            } else {
+              sorts.push({
+                key: sort,
+                value: "asc",
+                raw: sort,
+              });
+            }
+          }
+        });
       }
 
-      // Add from param
-      if (sorts && sorts[key]) {
-        const value = sorts[key];
-        sortsValues.set(key, value);
+      for (const [key, value] of Object.entries(params.sorts)) {
+        if (value === undefined) {
+          const index = sorts.findIndex((sort) => sort.key === key);
+          if (index !== -1) {
+            sorts.splice(index, 1);
+          }
+        } else {
+          const index = sorts.findIndex((sort) => sort.key === key);
+          if (index !== -1) {
+            sorts[index].value = value;
+            sorts[index].raw = value === "asc" ? key : `-${key}`;
+          } else {
+            sorts.push({
+              key,
+              value,
+              raw: value === "asc" ? key : `-${key}`,
+            });
+          }
+        }
+      }
+
+      // set sorts
+      const sortsStr = sorts.map((sort) => sort.raw).join(",");
+      if (sortsStr) {
+        searchParams.set("sort", sortsStr);
+      } else {
+        searchParams.delete("sort");
       }
     }
 
-    return sortsValues;
+    // Set search params
+    navigate(`?${searchParams.toString()}`);
+  };
+  const setStateFromLocation = (searchParams: URLSearchParams) => {
+    // on location change - update filters and sorts based on search params
+    const filters = new Map();
+    const sorts = new Map();
+
+    // Set filters
+    for (const [key, value] of searchParams.entries()) {
+      if (key.startsWith("filter[")) {
+        const filterKey = key.slice(7, -1); // remove filter[ and ]
+        if (value) {
+          // covert value back to array if it was an array
+          const asArray = value.split(",");
+          if (asArray.length > 0) {
+            // if values are numbers, convert to numbers
+            const asNumber = asArray.map((val) => {
+              if (!isNaN(Number(val))) return Number(val);
+              else return val;
+            });
+            filters.set(filterKey, asNumber);
+          } else {
+            const singleValue = isNaN(Number(value)) ? value : Number(value);
+            filters.set(filterKey, singleValue);
+          }
+        }
+      }
+    }
+
+    // Set sorts
+    const sortStr = searchParams.get("sort");
+    if (sortStr) {
+      for (const [key, value] of Object.entries(schema.sorts || {})) {
+        if (sortStr.includes(`-${key}`)) {
+          sorts.set(key, value);
+        } else if (sortStr.includes(key)) {
+          sorts.set(key, value);
+        } else {
+          sorts.set(key, undefined);
+        }
+      }
+    }
+
+    setFilters(filters);
+    setSorts(sorts);
+  };
+  const buildQueryString = () => {
+    // from filters and sorts, build a query string
+    const searchParams = new URLSearchParams();
+
+    // Set filters
+    for (const [key, value] of getFilters()) {
+      const toString = filterValueToSting(value);
+      if (toString !== undefined) {
+        searchParams.set(`filter[${key}]`, toString);
+      }
+    }
+
+    // Set sorts
+    const sorts = getSorts();
+    let sortsStr = "";
+    for (const [key, value] of sorts) {
+      if (value === "asc") {
+        sortsStr += `${key},`;
+      } else if (value === "desc") {
+        sortsStr += `-${key},`;
+      }
+    }
+
+    if (sortsStr) {
+      searchParams.set("sort", sortsStr);
+    }
+
+    return searchParams.toString();
+  };
+
+  // Set initial values
+  const setInitialParams = () => {
+    setLocation({
+      filters: schema.filters,
+      sorts: schema.sorts,
+    });
   };
 
   // -----------------------------------
   // Memos
   const getQueryString = createMemo(() => {
+    if (!getInitialValuesSet()) {
+      setInitialParams();
+      setInitialValuesSet(true);
+    }
+
+    // on location change - update filters and sorts based on search params
+    // return query string that is built from filters and sorts signals only
     const searchParams = new URLSearchParams(location.search);
+    setStateFromLocation(searchParams);
 
-    // Set defauly schema values if they don't exist in the search already
-
-    // Filters
-    for (const key in schema.filters) {
-      const valExists = searchParams.get(`filter[${key}]`);
-      if (!valExists) {
-        const addValue = schema.filters[key];
-        if (addValue !== undefined && addValue !== "") {
-          if (Array.isArray(addValue)) {
-            if (addValue.length > 0) {
-              searchParams.set(`filter[${key}]`, addValue.join(","));
-            }
-          } else {
-            searchParams.set(`filter[${key}]`, addValue.toString());
-          }
-        }
-      }
-    }
-
-    // Sorts
-    const searchSorts = searchParams.get("sort");
-    for (const key in schema.sorts) {
-      if (!searchSorts?.includes(key) && !searchSorts?.includes(`-${key}`)) {
-        const addValue = schema.sorts[key];
-        if (addValue !== undefined) {
-          searchParams.append("sort", `${sortOperation(addValue)}${key}`);
-        }
-      }
-    }
-
-    return searchParams.toString();
-  });
-
-  const getFilters = createMemo(() => {
-    const searchParams = new URLSearchParams(getQueryString());
-
-    let filters: SearchParamsSchema["filters"] = {};
-    for (const key in schema.filters) {
-      const value = searchParams.get(`filter[${key}]`);
-      if (value) {
-        filters[key] = value;
-      }
-    }
-
-    return filters;
-  });
-
-  const getSorts = createMemo(() => {
-    const searchParams = new URLSearchParams(getQueryString());
-
-    let sorts: SearchParamsSchema["sorts"] = {};
-    const searchSorts = searchParams.get("sort");
-    for (const key in schema.sorts) {
-      if (searchSorts?.includes(key)) {
-        sorts[key] = "asc";
-      } else if (searchSorts?.includes(`-${key}`)) {
-        sorts[key] = "desc";
-      } else {
-        sorts[key] = undefined;
-      }
-    }
-
-    return sorts;
+    return buildQueryString();
   });
 
   // -----------------------------------
   // Return
   return {
-    // Getters
-    getQueryString,
-
     getFilters,
     getSorts,
+    // getSettled,
 
-    // Setters
-    setParams: (params: {
-      filters?: SearchParamsSchema["filters"];
-      sorts?: SearchParamsSchema["sorts"];
-    }) => {
-      const filterMap = mergeFilters(params.filters || {});
-      const sortMap = mergeSorts(params.sorts || {});
-      navigateTo({
-        filters: filterMap,
-        sorts: sortMap,
-      });
-    },
+    // on location change - update filters and sorts based on search params
+    // return query string that is built from filters and sorts signals only
+    getQueryString,
+
+    // only set the location if the params are different
+    // getQueryString handles updating the filters and sorts signals
+    setParams: setLocation,
   };
 };
 

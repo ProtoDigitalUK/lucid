@@ -1,11 +1,12 @@
 import { Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCircle, FaSolidCalendar } from "solid-icons/fa";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams2";
+import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
+import classNames from "classnames";
 
 const users = [
   {
@@ -55,6 +56,10 @@ const UsersListRoute: Component = () => {
       }}
     >
       <button
+        class={classNames({
+          //   "bg-error": !searchParams.getSettled(),
+          //   "bg-success": searchParams.getSettled(),
+        })}
         onClick={() => {
           searchParams.setParams({
             filters: {
