@@ -17,10 +17,17 @@ interface SearchParamsSchema {
   };
 }
 
+interface SearchParamsConfig {
+  singleSort?: boolean;
+}
+
 type FilterMap = Map<string, string | number | string[] | number[] | undefined>;
 type SortMap = Map<string, "asc" | "desc" | undefined>;
 
-const useSearchParams = (schema: SearchParamsSchema) => {
+const useSearchParams = (
+  schema: SearchParamsSchema,
+  options: SearchParamsConfig
+) => {
   // -----------------------------------
   // Hooks / State
   const location = useLocation();
@@ -80,49 +87,63 @@ const useSearchParams = (schema: SearchParamsSchema) => {
         value: "asc" | "desc";
         raw: string;
       }[] = [];
-      const currentSorts = searchParams.get("sort");
 
-      // add current sorts to array
-      if (currentSorts) {
-        const currentSortArr = currentSorts.split(",");
+      if (options.singleSort) {
+        // first sort from params.sort
+        const key = Object.keys(params.sorts)[0];
+        const sort = params.sorts[key];
+        if (sort) {
+          sorts.push({
+            key: key,
+            value: sort,
+            raw: sort === "asc" ? key : `-${key}`,
+          });
+        }
+      } else {
+        const currentSorts = searchParams.get("sort");
 
-        currentSortArr.forEach((sort) => {
-          const sortKey = sort.startsWith("-") ? sort.slice(1) : sort;
-          if (schema.sorts && schema.sorts[sortKey] !== undefined) {
-            if (sort.startsWith("-")) {
-              sorts.push({
-                key: sort.slice(1),
-                value: "desc",
-                raw: sort,
-              });
+        // add current sorts to array
+        if (currentSorts) {
+          const currentSortArr = currentSorts.split(",");
+
+          currentSortArr.forEach((sort) => {
+            const sortKey = sort.startsWith("-") ? sort.slice(1) : sort;
+            if (schema.sorts && schema.sorts[sortKey] !== undefined) {
+              if (sort.startsWith("-")) {
+                sorts.push({
+                  key: sort.slice(1),
+                  value: "desc",
+                  raw: sort,
+                });
+              } else {
+                sorts.push({
+                  key: sort,
+                  value: "asc",
+                  raw: sort,
+                });
+              }
+            }
+          });
+        }
+
+        for (const [key, value] of Object.entries(params.sorts)) {
+          if (value === undefined) {
+            const index = sorts.findIndex((sort) => sort.key === key);
+            if (index !== -1) {
+              sorts.splice(index, 1);
+            }
+          } else {
+            const index = sorts.findIndex((sort) => sort.key === key);
+            if (index !== -1) {
+              sorts[index].value = value;
+              sorts[index].raw = value === "asc" ? key : `-${key}`;
             } else {
               sorts.push({
-                key: sort,
-                value: "asc",
-                raw: sort,
+                key,
+                value,
+                raw: value === "asc" ? key : `-${key}`,
               });
             }
-          }
-        });
-      }
-
-      for (const [key, value] of Object.entries(params.sorts)) {
-        if (value === undefined) {
-          const index = sorts.findIndex((sort) => sort.key === key);
-          if (index !== -1) {
-            sorts.splice(index, 1);
-          }
-        } else {
-          const index = sorts.findIndex((sort) => sort.key === key);
-          if (index !== -1) {
-            sorts[index].value = value;
-            sorts[index].raw = value === "asc" ? key : `-${key}`;
-          } else {
-            sorts.push({
-              key,
-              value,
-              raw: value === "asc" ? key : `-${key}`,
-            });
           }
         }
       }
