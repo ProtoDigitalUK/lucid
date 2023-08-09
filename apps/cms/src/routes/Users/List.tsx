@@ -4,9 +4,9 @@ import { FaSolidT, FaSolidCircle, FaSolidCalendar } from "solid-icons/fa";
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
+import Query from "@/components/Groups/Query";
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
-import classNames from "classnames";
 
 const users = [
   {
@@ -55,32 +55,33 @@ const UsersListRoute: Component = () => {
         noPadding: true,
       }}
     >
-      <button
-        class={classNames({
-          "bg-error": !searchParams.getSettled(),
-          "bg-success": searchParams.getSettled(),
-        })}
-        onClick={() => {
-          searchParams.setParams({
-            filters: {
-              first_name: "set",
-              last_name: "set",
+      <Query.Row>
+        <Query.Filter
+          filters={[
+            {
+              label: "First Name",
+              key: "first_name",
+              type: "text",
             },
-            sorts: {
-              created_at: undefined,
+            {
+              label: "Last Name",
+              key: "last_name",
+              type: "text",
             },
-            pagination: {
-              page: 2,
-              per_page: 20,
+            {
+              label: "Email",
+              key: "email",
+              type: "text",
             },
-          });
-        }}
-      >
-        <span>filter</span>
-      </button>
-      <div class="w-full p-2.5 bg-container border-border border">
-        {searchParams.getQueryString()}
-      </div>
+            {
+              label: "Username",
+              key: "username",
+              type: "text",
+            },
+          ]}
+          searchParams={searchParams}
+        />
+      </Query.Row>
       <Table.Root
         key={"users.list"}
         rows={users.length}
