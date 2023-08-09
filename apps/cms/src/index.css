@@ -97,6 +97,10 @@
     filter: drop-shadow(-5px 0px 5px rgba(0, 0, 0, 0.1));
   }
 
+  .dropdown-trigger {
+    @apply duration-200 transition-colors focus:outline outline-secondary outline-1;
+  }
+
   /* Page Layout */
   .page-layout-full-body {
     min-height: calc(100vh - var(--lucid-page-layout-header-height) - 60px);

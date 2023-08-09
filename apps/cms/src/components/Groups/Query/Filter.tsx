@@ -1,9 +1,10 @@
 import { Component, Match, Switch, For } from "solid-js";
+import { FaSolidFilter } from "solid-icons/fa";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Components
 import { DropdownMenu } from "@kobalte/core";
-import { FaSolidFilter } from "solid-icons/fa";
+import DropdownContent from "@/components/Partials/DropdownContent";
 
 interface FilterItemProps {
   label: string;
@@ -57,22 +58,21 @@ export const Filter: Component<FilterProps> = (props) => {
   // Render
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger class="text-title fill-title flex items-center duration-200 transition-colors focus:outline outline-secondary outline-1">
+      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center">
         <DropdownMenu.Icon>
           <FaSolidFilter />
         </DropdownMenu.Icon>
         <span class="ml-2">Filter</span>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          as={"ul"}
-          class="bg-primary rounded-md w-[300px] p-15 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary"
-        >
-          <For each={props.filters}>
-            {(filter) => <FilterItem {...filter} />}
-          </For>
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
+      <DropdownContent
+        options={{
+          as: "ul",
+          rounded: true,
+          class: "w-[300px]",
+        }}
+      >
+        <For each={props.filters}>{(filter) => <FilterItem {...filter} />}</For>
+      </DropdownContent>
     </DropdownMenu.Root>
   );
 };

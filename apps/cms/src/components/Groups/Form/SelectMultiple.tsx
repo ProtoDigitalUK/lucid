@@ -1,5 +1,7 @@
 import { Component, Show, createSignal, For } from "solid-js";
 import classnames from "classnames";
+// Types
+import { ErrorResult } from "@/types/api";
 // Components
 import {
   FaSolidTriangleExclamation,
@@ -8,8 +10,7 @@ import {
   FaSolidSort,
 } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
-// Types
-import { ErrorResult } from "@/types/api";
+import DropdownContent from "@/components/Partials/DropdownContent";
 
 export type SelectMultipleValueT = {
   value: string | number;
@@ -148,34 +149,34 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
             onBlur={() => setInputFocus(false)}
           />
         </div>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            class="bg-primary max-h-36 overflow-y-auto p-2.5 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary rounded-md"
-            style={{
-              width: "var(--kb-popper-anchor-width)",
-            }}
-          >
-            <ul class="flex flex-col">
-              <For each={props.options}>
-                {(option) => (
-                  <li
-                    class="flex items-center justify-between text-base text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
-                    onClick={() => {
-                      toggleValue(option);
-                    }}
+
+        <DropdownContent
+          options={{
+            anchorWidth: true,
+            rounded: true,
+            class: "max-h-36 overflow-y-auto",
+          }}
+        >
+          <ul class="flex flex-col">
+            <For each={props.options}>
+              {(option) => (
+                <li
+                  class="flex items-center justify-between text-base text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
+                  onClick={() => {
+                    toggleValue(option);
+                  }}
+                >
+                  <span>{option.label}</span>
+                  <Show
+                    when={props.values.find((v) => v.value === option.value)}
                   >
-                    <span>{option.label}</span>
-                    <Show
-                      when={props.values.find((v) => v.value === option.value)}
-                    >
-                      <FaSolidCheck size={14} class="fill-primaryText mr-2" />
-                    </Show>
-                  </li>
-                )}
-              </For>
-            </ul>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
+                    <FaSolidCheck size={14} class="fill-primaryText mr-2" />
+                  </Show>
+                </li>
+              )}
+            </For>
+          </ul>
+        </DropdownContent>
       </DropdownMenu.Root>
 
       {/* Described By */}

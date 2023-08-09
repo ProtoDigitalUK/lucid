@@ -119,6 +119,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
     return props.options?.isSelectable ?? false;
   });
   const allSelected = createMemo(() => {
+    if (!selected()) return false;
+    if (selected().length === 0) return false;
     return selected().every((s) => s);
   });
   const selectedCount = createMemo(() => {

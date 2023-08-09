@@ -4,6 +4,7 @@ import { FaSolidEllipsisVertical, FaSolidChevronRight } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
 import Table from "@/components/Groups/Table";
 import { Link } from "@solidjs/router";
+import DropdownContent from "@/components/Partials/DropdownContent";
 
 export interface ActionMenuColProps {
   actions: Array<{
@@ -37,55 +38,59 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              class="pointer-events-auto w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent duration-200 transition-colors focus:outline outline-secondary outline-1"
+              class="dropdown-trigger pointer-events-auto w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent"
             >
               <span class="sr-only">Toggle Column Visibility</span>
               <DropdownMenu.Icon>
                 <FaSolidEllipsisVertical class="fill-body pointer-events-none" />
               </DropdownMenu.Icon>
             </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content class="bg-primary rounded-md w-[200px] px-2 py-1 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary">
-                <ul class="divide-primaryA divide-y">
-                  <For each={props.actions}>
-                    {(action) => (
-                      <li>
-                        <Switch>
-                          <Match when={action.type === "link"}>
-                            <Link
-                              href={action.href || "/"}
-                              class={liItemClasses}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                            >
-                              <span class="line-clamp-1 mr-2.5">
-                                {action.label}
-                              </span>
-                              <FaSolidChevronRight size={14} />
-                            </Link>
-                          </Match>
-                          <Match when={action.type === "button"}>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                action.onClick && action.onClick();
-                              }}
-                              class={liItemClasses}
-                            >
-                              <span class="line-clamp-1 mr-2.5">
-                                {action.label}
-                              </span>
-                              <FaSolidChevronRight size={14} />
-                            </button>
-                          </Match>
-                        </Switch>
-                      </li>
-                    )}
-                  </For>
-                </ul>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
+
+            <DropdownContent
+              options={{
+                class: "w-[200px] p-1.5",
+                rounded: true,
+              }}
+            >
+              <ul class="divide-primaryA divide-y">
+                <For each={props.actions}>
+                  {(action) => (
+                    <li>
+                      <Switch>
+                        <Match when={action.type === "link"}>
+                          <Link
+                            href={action.href || "/"}
+                            class={liItemClasses}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <span class="line-clamp-1 mr-2.5">
+                              {action.label}
+                            </span>
+                            <FaSolidChevronRight size={14} />
+                          </Link>
+                        </Match>
+                        <Match when={action.type === "button"}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              action.onClick && action.onClick();
+                            }}
+                            class={liItemClasses}
+                          >
+                            <span class="line-clamp-1 mr-2.5">
+                              {action.label}
+                            </span>
+                            <FaSolidChevronRight size={14} />
+                          </button>
+                        </Match>
+                      </Switch>
+                    </li>
+                  )}
+                </For>
+              </ul>
+            </DropdownContent>
           </DropdownMenu.Root>
         </Table.Td>
       </Match>
