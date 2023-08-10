@@ -39,7 +39,7 @@ const UsersListRoute: Component = () => {
         first_name: "default",
         last_name: "default",
         email: "",
-        username: "",
+        username: [],
       },
       sorts: {
         created_at: "desc",
@@ -72,17 +72,37 @@ const UsersListRoute: Component = () => {
             {
               label: "Last Name",
               key: "last_name",
-              type: "text",
+              type: "select",
+              options: [
+                {
+                  label: "One",
+                  value: "bobby",
+                },
+                {
+                  label: "Two",
+                  value: "johnny",
+                },
+              ],
             },
             {
               label: "Email",
               key: "email",
-              type: "text",
+              type: "boolean",
             },
             {
               label: "Username",
               key: "username",
-              type: "text",
+              type: "multi-select",
+              options: [
+                {
+                  label: "One",
+                  value: "bobby",
+                },
+                {
+                  label: "Two",
+                  value: "johnny",
+                },
+              ],
             },
           ]}
           searchParams={searchParams}

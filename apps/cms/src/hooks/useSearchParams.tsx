@@ -185,8 +185,10 @@ const useSearchParams = (
         const filterKey = key.slice(7, -1); // remove filter[ and ]
         if (value) {
           // covert value back to array if it was an array
-          const asArray = value.split(",");
-          if (asArray.length > 0) {
+
+          // if schema filter value type is array, convert to array
+          if (schema.filters && Array.isArray(schema.filters[filterKey])) {
+            const asArray = value.split(",");
             // if values are numbers, convert to numbers
             const asNumber = asArray.map((val) => {
               if (!isNaN(Number(val))) return Number(val);

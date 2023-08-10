@@ -11,6 +11,7 @@ import {
 } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
+import classNames from "classnames";
 
 export type SelectMultipleValueT = {
   value: string | number;
@@ -23,14 +24,15 @@ interface SelectMultipleProps {
   onChange: (_value: SelectMultipleValueT[]) => void;
   options: SelectMultipleValueT[];
   name: string;
-  copy: {
-    label: string;
+  copy?: {
+    label?: string;
     placeholder?: string;
     describedBy?: string;
   };
   required?: boolean;
   disabled?: boolean;
   errors?: ErrorResult;
+  noMargin?: boolean;
 }
 
 export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
@@ -54,9 +56,12 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <div class="mb-5 w-full relative">
-      {/* Select Content Overlay */}
-
+    <div
+      class={classnames("w-full", {
+        "mb-0": props.noMargin,
+        "mb-5": !props.noMargin,
+      })}
+    >
       {/* Select */}
       <DropdownMenu.Root
         sameWidth={true}
@@ -75,22 +80,32 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
           )}
         >
           {/* Label */}
-          <label
-            for={props.id}
-            class={classnames(
-              "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
+          <Show when={props.copy?.label !== undefined}>
+            <label
+              for={props.id}
+              class={classnames(
+                "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
+                {
+                  "text-secondaryH": inputFocus(),
+                }
+              )}
+            >
+              {props.copy?.label}
+              <Show when={props.required}>
+                <span class="text-error ml-1 inline">*</span>
+              </Show>
+            </label>
+          </Show>
+          {/* Select */}
+          <div
+            class={classNames(
+              "w-full pointer-events-none z-10 bg-transparent focus:outline-none px-2.5 pb-2 rounded-b-md text-sm text-title  font-medium justify-between flex ",
               {
-                "text-secondaryH": inputFocus(),
+                "pt-2 min-h-[40px]": props.copy?.label === undefined,
+                "min-h-[32px] mt-1": props.copy?.label !== undefined,
               }
             )}
           >
-            {props.copy.label}
-            <Show when={props.required}>
-              <span class="text-error ml-1 inline">*</span>
-            </Show>
-          </label>
-          {/* Select */}
-          <div class="w-full pointer-events-none z-10 bg-transparent mt-1 focus:outline-none px-2.5 pb-2 rounded-b-md text-sm text-title min-h-[32px] font-medium justify-between flex ">
             {/* Selected Items */}
             <div class="flex flex-wrap gap-1">
               <For each={props.values}>
@@ -149,12 +164,11 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
             onBlur={() => setInputFocus(false)}
           />
         </div>
-
         <DropdownContent
           options={{
             anchorWidth: true,
             rounded: true,
-            class: "max-h-36 overflow-y-auto",
+            class: "max-h-36 overflow-y-auto !p-1.5",
           }}
         >
           <ul class="flex flex-col">
@@ -180,12 +194,12 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
       </DropdownMenu.Root>
 
       {/* Described By */}
-      <Show when={props.copy.describedBy !== undefined}>
+      <Show when={props.copy?.describedBy !== undefined}>
         <div
           id={`${props.id}-description`}
           class="text-sm mt-2.5 border-l-4 border-secondary pl-2.5"
         >
-          {props.copy.describedBy}
+          {props.copy?.describedBy}
         </div>
       </Show>
 

@@ -14,13 +14,14 @@ interface InputProps {
   onChange: (_value: string) => void;
   type: string;
   name: string;
-  copy: {
-    label: string;
+  copy?: {
+    label?: string;
     placeholder?: string;
     describedBy?: string;
   };
   onBlur?: () => void;
   autoFoucs?: boolean;
+  onKeyUp?: (_e: KeyboardEvent) => void;
   autoComplete?: string;
   required?: boolean;
   disabled?: boolean;
@@ -57,25 +58,28 @@ export const Input: Component<InputProps> = (props) => {
           }
         )}
       >
-        <label
-          for={props.id}
-          class={classnames(
-            "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
-            {
-              "text-secondaryH": inputFocus(),
-            }
-          )}
-        >
-          {props.copy.label}
-          <Show when={props.required}>
-            <span class="text-error ml-1 inline">*</span>
-          </Show>
-        </label>
+        <Show when={props.copy?.label !== undefined}>
+          <label
+            for={props.id}
+            class={classnames(
+              "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
+              {
+                "text-secondaryH": inputFocus(),
+              }
+            )}
+          >
+            {props.copy?.label}
+            <Show when={props.required}>
+              <span class="text-error ml-1 inline">*</span>
+            </Show>
+          </label>
+        </Show>
         <input
           class={classnames(
             "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium",
             {
               "pr-[38px]": props.type === "password",
+              "pt-2": props.copy?.label === undefined,
             }
           )}
           id={props.id}
@@ -83,15 +87,16 @@ export const Input: Component<InputProps> = (props) => {
           type={inputType()}
           value={props.value}
           onInput={(e) => props.onChange(e.currentTarget.value)}
-          placeholder={props.copy.placeholder}
+          placeholder={props.copy?.placeholder}
           aria-describedby={
-            props.copy.describedBy ? `${props.id}-description` : undefined
+            props.copy?.describedBy ? `${props.id}-description` : undefined
           }
           autocomplete={props.autoComplete}
           autofocus={props.autoFoucs}
           required={props.required}
           disabled={props.disabled}
           onFocus={() => setInputFocus(true)}
+          onKeyUp={props.onKeyUp}
           onBlur={() => {
             setInputFocus(false);
             props.onBlur?.();
@@ -117,12 +122,12 @@ export const Input: Component<InputProps> = (props) => {
       </div>
 
       {/* Described By */}
-      <Show when={props.copy.describedBy !== undefined}>
+      <Show when={props.copy?.describedBy !== undefined}>
         <div
           id={`${props.id}-description`}
           class="text-sm mt-2.5 border-l-4 border-secondary pl-2.5"
         >
-          {props.copy.describedBy}
+          {props.copy?.describedBy}
         </div>
       </Show>
 
