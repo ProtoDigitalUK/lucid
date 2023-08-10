@@ -96,7 +96,7 @@ export const Input: Component<InputProps> = (props) => {
           required={props.required}
           disabled={props.disabled}
           onFocus={() => setInputFocus(true)}
-          onKeyUp={props.onKeyUp}
+          onKeyUp={(e) => props.onKeyUp?.(e)}
           onBlur={() => {
             setInputFocus(false);
             props.onBlur?.();
