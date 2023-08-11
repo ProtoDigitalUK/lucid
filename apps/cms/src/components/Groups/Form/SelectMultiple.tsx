@@ -175,7 +175,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
             <For each={props.options}>
               {(option) => (
                 <li
-                  class="flex items-center justify-between text-base text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
+                  class="flex items-center justify-between text-sm text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
                   onClick={() => {
                     toggleValue(option);
                   }}

@@ -7,7 +7,8 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
     | "primary-outline"
     | "container-outline"
     | "danger"
-    | "basic";
+    | "basic"
+    | "secondary-toggle";
   size: "x-small" | "small" | "medium" | "large" | "icon";
   children: JSX.Element;
 
@@ -16,6 +17,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   classes?: string;
   loading?: boolean;
   disabled?: boolean;
+  active?: boolean;
 }
 
 const Button: Component<ButtonProps> = (props) => {
@@ -33,6 +35,14 @@ const Button: Component<ButtonProps> = (props) => {
           props.theme === "container-outline",
         "bg-error hover:bg-errorH text-errorText ring-secondary fill-errorText":
           props.theme === "danger",
+
+        // Toggles
+        "ring-secondary": props.theme === "secondary-toggle",
+        "bg-primary text-primaryText fill-primaryText hover:bg-primaryH border-primaryA border":
+          props.theme === "secondary-toggle" && !props.active,
+        "bg-secondary text-secondaryText fill-secondaryText hover:bg-secondaryH border-secondary border":
+          props.theme === "secondary-toggle" && props.active,
+
         // Sizes
         "px-2.5 py-2 text-sm": props.size === "x-small",
         "px-5 py-2.5 text-base": props.size === "small",

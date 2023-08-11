@@ -4,9 +4,14 @@ import { useLocation, useNavigate } from "@solidjs/router";
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
 
+type FilterValues = string | number | string[] | number[] | boolean | undefined;
+
 interface SearchParamsSchema {
   filters?: {
-    [key: string]: string | number | string[] | number[] | undefined;
+    [key: string]: {
+      value: FilterValues;
+      type: "text" | "boolean" | "array";
+    };
   };
   sorts?: {
     [key: string]: "asc" | "desc" | undefined;
@@ -49,10 +54,12 @@ const useSearchParams = (
   // -----------------------------------
   // Functions
   const filterValueToSting = (
-    value?: string | number | string[] | number[]
+    value?: string | number | string[] | number[] | boolean
   ) => {
     if (value === undefined) return undefined;
-    else if (Array.isArray(value)) {
+    else if (typeof value === "boolean") {
+      return value ? "1" : "0";
+    } else if (Array.isArray(value)) {
       if (value.length === 0) return undefined;
       return value.join(",");
     } else {
@@ -61,7 +68,9 @@ const useSearchParams = (
   };
 
   const setLocation = (params: {
-    filters?: SearchParamsSchema["filters"];
+    filters?: {
+      [key: string]: FilterValues;
+    };
     sorts?: SearchParamsSchema["sorts"];
     pagination?: SearchParamsSchema["pagination"];
   }) => {
@@ -183,22 +192,25 @@ const useSearchParams = (
     for (const [key, value] of searchParams.entries()) {
       if (key.startsWith("filter[")) {
         const filterKey = key.slice(7, -1); // remove filter[ and ]
-        if (value) {
-          // covert value back to array if it was an array
 
-          // if schema filter value type is array, convert to array
-          if (schema.filters && Array.isArray(schema.filters[filterKey])) {
-            const asArray = value.split(",");
-            // if values are numbers, convert to numbers
-            const asNumber = asArray.map((val) => {
-              if (!isNaN(Number(val))) return Number(val);
-              else return val;
-            });
-            filters.set(filterKey, asNumber);
-          } else {
-            const singleValue = isNaN(Number(value)) ? value : Number(value);
-            filters.set(filterKey, singleValue);
-          }
+        // If schema filter value is boolean, convert to boolean
+        if (schema.filters && schema.filters[filterKey].type === "boolean") {
+          if (value === "1") filters.set(filterKey, true);
+          else if (value === "0") filters.set(filterKey, false);
+          else filters.set(filterKey, undefined);
+        }
+        // if schema filter value type is array, convert to array
+        else if (schema.filters && schema.filters[filterKey].type === "array") {
+          const asArray = value.split(",");
+          // if values are numbers, convert to numbers
+          const asNumber = asArray.map((val) => {
+            if (!isNaN(Number(val))) return Number(val);
+            else return val;
+          });
+          filters.set(filterKey, asNumber);
+        } else {
+          const singleValue = isNaN(Number(value)) ? value : Number(value);
+          filters.set(filterKey, singleValue);
         }
       }
     }
@@ -304,8 +316,19 @@ const useSearchParams = (
 
     // if either is false
     if (hasFilters && hasSorts && hasPagination) return;
+
+    // convert schema filters to object of values;
+    const filters: {
+      [key: string]: FilterValues;
+    } = {};
+    if (schema.filters) {
+      for (const pair of Object.entries(schema.filters)) {
+        filters.key = pair[1].value;
+      }
+    }
+
     setLocation({
-      filters: !hasFilters ? schema.filters : undefined,
+      filters: !hasFilters ? filters : undefined,
       sorts: !hasSorts ? schema.sorts : undefined,
       pagination: !hasPagination ? schema.pagination : undefined,
     });

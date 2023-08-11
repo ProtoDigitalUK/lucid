@@ -36,14 +36,25 @@ const UsersListRoute: Component = () => {
   const searchParams = useSearchParams(
     {
       filters: {
-        first_name: "default",
-        last_name: "default",
-        email: "",
-        username: [],
+        first_name: {
+          value: "",
+          type: "text",
+        },
+        last_name: {
+          value: "",
+          type: "text",
+        },
+        email: {
+          value: undefined,
+          type: "boolean",
+        },
+        username: {
+          value: [],
+          type: "array",
+        },
       },
       sorts: {
-        created_at: "desc",
-        testing_sort: "asc",
+        created_at: undefined,
       },
     },
     {
