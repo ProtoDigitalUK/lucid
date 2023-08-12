@@ -4,46 +4,37 @@ import { useLocation, useNavigate } from "@solidjs/router";
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
 
-type FilterValues = string | number | string[] | number[] | boolean | undefined;
+type FilterValues = string | number | (string | number)[] | boolean | undefined;
 
 interface SearchParamsSchema {
-  filters?: {
-    [key: string]: {
-      value: FilterValues;
-      type: "text" | "boolean" | "array";
-    };
-  };
-  sorts?: {
-    [key: string]: "asc" | "desc" | undefined;
-  };
-  pagination?: {
-    page?: number;
-    per_page?: number;
-  };
+  filters?: Record<
+    string,
+    { value: FilterValues; type: "text" | "number" | "boolean" | "array" }
+  >;
+  sorts?: Record<string, "asc" | "desc" | undefined>;
+  pagination?: { page?: number; per_page?: number };
 }
 
 interface SearchParamsConfig {
   singleSort?: boolean;
 }
 
-type FilterMap = Map<string, string | number | string[] | number[] | undefined>;
+type FilterMap = Map<string, FilterValues>;
 type SortMap = Map<string, "asc" | "desc" | undefined>;
 
 const useSearchParams = (
   schema: SearchParamsSchema,
   options: SearchParamsConfig
 ) => {
-  // -----------------------------------
-  // Hooks / State
   const location = useLocation();
   const navigate = useNavigate();
 
   const [getSettled, setSettled] = createSignal(false);
   const [getSettledTimeout, setSettledTimeout] =
     createSignal<ReturnType<typeof setTimeout>>();
-
   const [getPrevQueryString, setPrevQueryString] = createSignal("");
   const [getQueryString, setQueryString] = createSignal("");
+  const [getInitialParams, setInitialParams] = createSignal(false);
   const [getFilters, setFilters] = createSignal<FilterMap>(new Map());
   const [getSorts, setSorts] = createSignal<SortMap>(new Map());
   const [getPagination, setPagination] = createSignal({
@@ -51,20 +42,11 @@ const useSearchParams = (
     per_page: DEFAULT_PER_PAGE,
   });
 
-  // -----------------------------------
-  // Functions
-  const filterValueToSting = (
-    value?: string | number | string[] | number[] | boolean
-  ) => {
+  const filterValueToString = (value?: FilterValues) => {
     if (value === undefined) return undefined;
-    else if (typeof value === "boolean") {
-      return value ? "1" : "0";
-    } else if (Array.isArray(value)) {
-      if (value.length === 0) return undefined;
-      return value.join(",");
-    } else {
-      return value.toString();
-    }
+    if (typeof value === "boolean") return value ? "1" : "0";
+    if (Array.isArray(value)) return value.length ? value.join(",") : undefined;
+    return value.toString();
   };
 
   const setLocation = (params: {
@@ -79,7 +61,7 @@ const useSearchParams = (
     // Merge filters into search params
     if (params.filters) {
       for (const [key, value] of Object.entries(params.filters)) {
-        const toString = filterValueToSting(value);
+        const toString = filterValueToString(value);
         if (toString) {
           searchParams.set(`filter[${key}]`, toString);
         } else {
@@ -181,13 +163,28 @@ const useSearchParams = (
     }
 
     // Set search params
-    navigate(`?${searchParams.toString()}`);
+    if (searchParams.toString()) navigate(`?${searchParams.toString()}`);
+    else navigate(location.pathname);
   };
   const setStateFromLocation = (searchParams: URLSearchParams) => {
     // on location change - update filters and sorts based on search params
-    const filters = new Map();
-    const sorts = new Map();
+    const filters = new Map<string, FilterValues>();
+    const sorts = new Map<string, "asc" | "desc" | undefined>();
 
+    // --------------------
+    // Set maps
+    if (schema.filters) {
+      for (const [key] of Object.entries(schema.filters)) {
+        filters.set(key, undefined);
+      }
+    }
+    if (schema.sorts) {
+      for (const [key] of Object.entries(schema.sorts)) {
+        sorts.set(key, undefined);
+      }
+    }
+
+    // --------------------
     // Set filters
     for (const [key, value] of searchParams.entries()) {
       if (key.startsWith("filter[")) {
@@ -208,27 +205,39 @@ const useSearchParams = (
             else return val;
           });
           filters.set(filterKey, asNumber);
-        } else {
+        } else if (
+          schema.filters &&
+          schema.filters[filterKey].type === "text"
+        ) {
+          filters.set(filterKey, value);
+        } else if (
+          schema.filters &&
+          schema.filters[filterKey].type === "number"
+        ) {
           const singleValue = isNaN(Number(value)) ? value : Number(value);
           filters.set(filterKey, singleValue);
         }
       }
     }
 
+    // --------------------
     // Set sorts
     const sortStr = searchParams.get("sort");
     if (sortStr) {
-      for (const [key, value] of Object.entries(schema.sorts || {})) {
-        if (sortStr.includes(`-${key}`)) {
-          sorts.set(key, value);
-        } else if (sortStr.includes(key)) {
-          sorts.set(key, value);
+      // split by comma
+      const sortArr = sortStr.split(",");
+      for (let i = 0; i < sortArr.length; i++) {
+        const sort = sortArr[i];
+        if (sort.startsWith("-")) {
+          const sortKey = sort.slice(1);
+          sorts.set(sortKey, "desc");
         } else {
-          sorts.set(key, undefined);
+          sorts.set(sort, "asc");
         }
       }
     }
 
+    // --------------------
     // Set pagination
     const page = searchParams.get("page");
     const perPage = searchParams.get("per_page");
@@ -243,6 +252,8 @@ const useSearchParams = (
       setPagination((prev) => ({ ...prev, per_page: DEFAULT_PER_PAGE }));
     }
 
+    // --------------------
+    // Set signals
     setFilters(filters);
     setSorts(sorts);
   };
@@ -252,7 +263,7 @@ const useSearchParams = (
 
     // Set filters
     for (const [key, value] of getFilters()) {
-      const toString = filterValueToSting(value);
+      const toString = filterValueToString(value);
       if (toString !== undefined) {
         searchParams.set(`filter[${key}]`, toString);
       }
@@ -286,8 +297,10 @@ const useSearchParams = (
     setQueryString(searchParams.toString());
   };
 
-  // Set initial values
   const setDefaultParams = () => {
+    if (getInitialParams()) return;
+    setInitialParams(true);
+
     const searchParams = new URLSearchParams(location.search);
 
     let hasFilters = false;
@@ -321,9 +334,10 @@ const useSearchParams = (
     const filters: {
       [key: string]: FilterValues;
     } = {};
+
     if (schema.filters) {
-      for (const pair of Object.entries(schema.filters)) {
-        filters.key = pair[1].value;
+      for (const [key, value] of Object.entries(schema.filters)) {
+        filters[`${key}`] = value.value;
       }
     }
 
@@ -333,9 +347,6 @@ const useSearchParams = (
       pagination: !hasPagination ? schema.pagination : undefined,
     });
   };
-
-  // -----------------------------------
-  // Effects
 
   // sync filters, sort by location and build query string
   createEffect(() => {
@@ -366,19 +377,11 @@ const useSearchParams = (
     }
   });
 
-  // -----------------------------------
-  // Return
   return {
     getFilters,
     getSorts,
     getSettled,
-
-    // on location change - update filters and sorts based on search params
-    // return query string that is built from filters and sorts signals only
     getQueryString,
-
-    // only set the location if the params are different
-    // getQueryString handles updating the filters and sorts signals
     setParams: setLocation,
   };
 };

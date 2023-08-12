@@ -30,7 +30,7 @@ interface FilterItemProps {
   searchParams: ReturnType<typeof useSearchParams>;
 }
 
-interface FilterProps {
+export interface FilterProps {
   filters: Array<FilterItemProps["filter"]>;
   searchParams: ReturnType<typeof useSearchParams>;
 }
@@ -68,6 +68,10 @@ const FilterItem: Component<FilterItemProps> = (props) => {
       );
     } else if (typeof filter === "boolean") {
       setBoolValue(filter);
+    } else {
+      setValue("");
+      setMultiValue([]);
+      setBoolValue(undefined);
     }
   });
 
@@ -84,7 +88,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
       const values = multiValue().map((v) => v.value);
       props.searchParams.setParams({
         filters: {
-          [props.filter.key]: values as string[] | number[],
+          [props.filter.key]: values,
         },
       });
     } else if (props.filter.type === "boolean") {

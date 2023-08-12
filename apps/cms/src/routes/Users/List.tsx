@@ -37,7 +37,7 @@ const UsersListRoute: Component = () => {
     {
       filters: {
         first_name: {
-          value: "",
+          value: "John",
           type: "text",
         },
         last_name: {
@@ -55,6 +55,7 @@ const UsersListRoute: Component = () => {
       },
       sorts: {
         created_at: undefined,
+        updated_at: undefined,
       },
     },
     {
@@ -72,53 +73,61 @@ const UsersListRoute: Component = () => {
         noPadding: true,
       }}
     >
-      <Query.Row>
-        <Query.Filter
-          filters={[
-            {
-              label: "First Name",
-              key: "first_name",
-              type: "text",
-            },
-            {
-              label: "Last Name",
-              key: "last_name",
-              type: "select",
-              options: [
-                {
-                  label: "One",
-                  value: "bobby",
-                },
-                {
-                  label: "Two",
-                  value: "johnny",
-                },
-              ],
-            },
-            {
-              label: "Email",
-              key: "email",
-              type: "boolean",
-            },
-            {
-              label: "Username",
-              key: "username",
-              type: "multi-select",
-              options: [
-                {
-                  label: "One",
-                  value: "bobby",
-                },
-                {
-                  label: "Two",
-                  value: "johnny",
-                },
-              ],
-            },
-          ]}
-          searchParams={searchParams}
-        />
-      </Query.Row>
+      <Query.Row
+        searchParams={searchParams}
+        filters={[
+          {
+            label: "First Name",
+            key: "first_name",
+            type: "text",
+          },
+          {
+            label: "Last Name",
+            key: "last_name",
+            type: "select",
+            options: [
+              {
+                label: "One",
+                value: "bobby",
+              },
+              {
+                label: "Two",
+                value: "johnny",
+              },
+            ],
+          },
+          {
+            label: "Email",
+            key: "email",
+            type: "boolean",
+          },
+          {
+            label: "Username",
+            key: "username",
+            type: "multi-select",
+            options: [
+              {
+                label: "One",
+                value: "bobby",
+              },
+              {
+                label: "Two",
+                value: "johnny",
+              },
+            ],
+          },
+        ]}
+        sorts={[
+          {
+            label: "Created At",
+            key: "created_at",
+          },
+          {
+            label: "Updated At",
+            key: "updated_at",
+          },
+        ]}
+      />
       <Table.Root
         key={"users.list"}
         rows={users.length}
