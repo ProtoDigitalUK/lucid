@@ -127,6 +127,7 @@ const UsersListRoute: Component = () => {
             key: "updated_at",
           },
         ]}
+        perPage={[]}
       />
       <Table.Root
         key={"users.list"}

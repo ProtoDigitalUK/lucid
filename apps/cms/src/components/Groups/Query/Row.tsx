@@ -10,6 +10,7 @@ import Query from "@/components/Groups/Query";
 interface QueryRowProps {
   filters?: FilterProps["filters"];
   sorts?: SortProps["sorts"];
+  perPage?: Array<number>;
   searchParams: ReturnType<typeof useSearchParams>;
 }
 
@@ -26,6 +27,14 @@ export const QueryRow: Component<QueryRowProps> = (props) => {
         <Show when={props.sorts !== undefined}>
           <Query.Sort
             sorts={props.sorts as SortProps["sorts"]}
+            searchParams={props.searchParams}
+          />
+        </Show>
+      </div>
+      <div>
+        <Show when={props.perPage !== undefined}>
+          <Query.PerPage
+            options={props.perPage?.length === 0 ? undefined : props.perPage}
             searchParams={props.searchParams}
           />
         </Show>

@@ -380,6 +380,7 @@ const useSearchParams = (
   return {
     getFilters,
     getSorts,
+    getPagination,
     getSettled,
     getQueryString,
     setParams: setLocation,

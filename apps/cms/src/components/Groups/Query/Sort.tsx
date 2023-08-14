@@ -93,7 +93,7 @@ export const Sort: Component<SortProps> = (props) => {
   // Render
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center">
+      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-sm font-display">
         <DropdownMenu.Icon>
           <FaSolidSort />
         </DropdownMenu.Icon>
