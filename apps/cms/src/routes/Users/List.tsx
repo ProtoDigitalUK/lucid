@@ -15,6 +15,8 @@ const users = [
     role: "Admin",
     favorite_color: "Blue",
     notes: "",
+    created_at: "2021-01-01T00:00:00.000000Z",
+    updated_at: "2021-01-01T00:00:00.000000Z",
   },
   {
     first_name: "Jane",
@@ -22,6 +24,8 @@ const users = [
     role: "User",
     favorite_color: "Red",
     notes: "",
+    created_at: "2021-01-01T00:00:00.000000Z",
+    updated_at: "2021-01-01T00:00:00.000000Z",
   },
   {
     first_name: "John",
@@ -29,6 +33,8 @@ const users = [
     role: "User",
     favorite_color: "Green",
     notes: "",
+    created_at: "2021-01-01T00:00:00.000000Z",
+    updated_at: "2021-01-01T00:00:00.000000Z",
   },
 ];
 
@@ -167,6 +173,18 @@ const UsersListRoute: Component = () => {
             label: "Notes",
             key: "notes",
             icon: <FaSolidCalendar />,
+          },
+          {
+            label: "Created At",
+            key: "created_at",
+            icon: <FaSolidCalendar />,
+            sortable: true,
+          },
+          {
+            label: "Updated At",
+            key: "updated_at",
+            icon: <FaSolidCalendar />,
+            sortable: true,
           },
         ]}
         state={{

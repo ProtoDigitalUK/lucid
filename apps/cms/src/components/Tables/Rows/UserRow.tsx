@@ -11,6 +11,8 @@ interface UserRowProps extends TableRowProps {
     role: string;
     favorite_color: string;
     notes: string;
+    created_at: string;
+    updated_at: string;
   };
   include: boolean[];
 }
@@ -75,6 +77,20 @@ const UserRow: Component<UserRowProps> = (props) => {
         }}
       >
         {props.user.notes}
+      </Table.Td>
+      <Table.Td
+        options={{
+          include: props?.include[5],
+        }}
+      >
+        {props.user.created_at}
+      </Table.Td>
+      <Table.Td
+        options={{
+          include: props?.include[6],
+        }}
+      >
+        {props.user.updated_at}
       </Table.Td>
     </Table.Tr>
   );

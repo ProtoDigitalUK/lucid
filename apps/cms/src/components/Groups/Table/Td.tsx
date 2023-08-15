@@ -30,7 +30,7 @@ export const Td: Component<TdProps> = (props) => {
       }}
     >
       <div
-        class={classNames("min-h-[40px] py-2", {
+        class={classNames("min-h-[40px] py-2 text-sm text-body", {
           "w-full min-w-[100px]":
             props.options?.width === undefined && !props.options?.noMinWidth,
         })}

@@ -216,6 +216,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
                         index={index}
                         label={head().label}
                         icon={head().icon}
+                        searchParams={props.searchParams}
                         options={{
                           include: include()[index],
                           sortable: head().sortable,
