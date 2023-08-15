@@ -141,6 +141,7 @@ const UsersListRoute: Component = () => {
           last_page: 10,
         }}
         caption="Users"
+        searchParams={searchParams}
         head={[
           {
             label: "First Name",

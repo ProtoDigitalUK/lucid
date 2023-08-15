@@ -12,6 +12,8 @@ import {
 } from "solid-js";
 // Types
 import { APIResponse } from "@/types/api";
+// Hooks
+import useSearchParams from "@/hooks/useSearchParams";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
@@ -27,6 +29,7 @@ interface TableRootProps {
   rows: number;
   meta?: APIResponse<any>["meta"];
   caption?: string;
+  searchParams: ReturnType<typeof useSearchParams>;
 
   head: {
     label: string;
@@ -296,11 +299,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
       </Switch>
       {/* Pagination */}
       <Show when={props.meta}>
-        <Query.Pagination
-          data={{
-            meta: props.meta as APIResponse<any>["meta"],
-          }}
-        />
+        <Query.Pagination meta={props.meta} searchParams={props.searchParams} />
       </Show>
     </>
   );

@@ -10,6 +10,7 @@
   "license": "MIT",
   "devDependencies": {
     "@lucid/types": "*",
+    "@solid-primitives/map": "^0.4.7",
     "@tailwindcss/typography": "^0.5.9",
     "@types/classnames": "^2.3.1",
     "@typescript-eslint/parser": "^6.2.1",
@@ -27,7 +28,7 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
-    "@kobalte/core": "^0.9.8",
+    "@kobalte/core": "^0.10.0",
     "@solidjs/router": "^0.8.2",
     "@tanstack/solid-query": "^4.29.25",
     "classnames": "^2.3.2",
