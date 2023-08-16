@@ -60,8 +60,8 @@ export const Th: Component<ThProps> = (props) => {
           <Switch>
             <Match when={props.options?.sortable !== true}>
               <div class="flex items-center">
-                <span class="text-sm mr-2.5 fill-title">{props?.icon}</span>
-                <span class="text-sm text-title">{props?.label}</span>
+                <span class="text-sm mr-2.5 fill-body">{props?.icon}</span>
+                <span class="text-sm text-body">{props?.label}</span>
               </div>
             </Match>
             <Match when={props.options?.sortable === true}>
@@ -88,8 +88,8 @@ export const Th: Component<ThProps> = (props) => {
                 }}
               >
                 <div class="flex items-center">
-                  <span class="text-sm mr-2.5 fill-title">{props?.icon}</span>
-                  <span class="text-sm text-title">{props?.label}</span>
+                  <span class="text-sm mr-2.5 fill-body">{props?.icon}</span>
+                  <span class="text-sm text-body">{props?.label}</span>
                 </div>
                 <Switch>
                   <Match when={sort() === "desc" || sort() === "asc"}>

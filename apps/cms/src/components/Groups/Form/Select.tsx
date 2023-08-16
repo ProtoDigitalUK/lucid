@@ -1,8 +1,9 @@
-import { Component, Show, createSignal, For } from "solid-js";
+import { Component, createSignal, For } from "solid-js";
 import classnames from "classnames";
-import { FaSolidTriangleExclamation } from "solid-icons/fa";
 // Types
 import { ErrorResult } from "@/types/api";
+// Components
+import Form from "@/components/Groups/Form";
 
 interface SelectProps {
   id: string;
@@ -43,22 +44,12 @@ export const Select: Component<SelectProps> = (props) => {
           }
         )}
       >
-        <Show when={props.copy?.label !== undefined}>
-          <label
-            for={props.id}
-            class={classnames(
-              "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
-              {
-                "text-secondaryH": inputFocus(),
-              }
-            )}
-          >
-            {props.copy?.label}
-            <Show when={props.required}>
-              <span class="text-error ml-1 inline">*</span>
-            </Show>
-          </label>
-        </Show>
+        <Form.Label
+          id={props.id}
+          label={props.copy?.label}
+          focused={inputFocus()}
+          required={props.required}
+        />
         <select
           class={classnames(
             "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium",
@@ -87,27 +78,8 @@ export const Select: Component<SelectProps> = (props) => {
           </For>
         </select>
       </div>
-
-      {/* Described By */}
-      <Show when={props.copy?.describedBy !== undefined}>
-        <div
-          id={`${props.id}-description`}
-          class="text-sm mt-2.5 border-l-4 border-secondary pl-2.5"
-        >
-          {props.copy?.describedBy}
-        </div>
-      </Show>
-
-      {/* Errors */}
-      <Show when={props.errors?.message !== undefined}>
-        <a class="mt-2.5 flex items-start text-sm" href={`#${props.id}`}>
-          <FaSolidTriangleExclamation
-            size={16}
-            class="fill-error mt-[3px] mr-2"
-          />
-          {props.errors?.message}
-        </a>
-      </Show>
+      <Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
+      <Form.ErrorMessage id={props.id} errors={props.errors} />
     </div>
   );
 };

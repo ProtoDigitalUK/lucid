@@ -1,17 +1,13 @@
 import { Component, Show, createSignal, For } from "solid-js";
-import classnames from "classnames";
+import classNames from "classnames";
 // Types
 import { ErrorResult } from "@/types/api";
 // Components
-import {
-  FaSolidTriangleExclamation,
-  FaSolidCheck,
-  FaSolidXmark,
-  FaSolidSort,
-} from "solid-icons/fa";
+import { FaSolidCheck, FaSolidXmark, FaSolidSort } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
-import classNames from "classnames";
+// Components
+import Form from "@/components/Groups/Form";
 
 export type SelectMultipleValueT = {
   value: string | number;
@@ -57,7 +53,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
   // Render
   return (
     <div
-      class={classnames("w-full", {
+      class={classNames("w-full", {
         "mb-0": props.noMargin,
         "mb-5": !props.noMargin,
       })}
@@ -71,7 +67,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
         gutter={5}
       >
         <div
-          class={classnames(
+          class={classNames(
             "relative flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out w-full group",
             {
               "border-error": props.errors?.message !== undefined,
@@ -80,22 +76,11 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
           )}
         >
           {/* Label */}
-          <Show when={props.copy?.label !== undefined}>
-            <label
-              for={props.id}
-              class={classnames(
-                "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
-                {
-                  "text-secondaryH": inputFocus(),
-                }
-              )}
-            >
-              {props.copy?.label}
-              <Show when={props.required}>
-                <span class="text-error ml-1 inline">*</span>
-              </Show>
-            </label>
-          </Show>
+          <Form.Label
+            id={props.id}
+            label={props.copy?.label}
+            required={props.required}
+          />
           {/* Select */}
           <div
             class={classNames(
@@ -193,26 +178,8 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
         </DropdownContent>
       </DropdownMenu.Root>
 
-      {/* Described By */}
-      <Show when={props.copy?.describedBy !== undefined}>
-        <div
-          id={`${props.id}-description`}
-          class="text-sm mt-2.5 border-l-4 border-secondary pl-2.5"
-        >
-          {props.copy?.describedBy}
-        </div>
-      </Show>
-
-      {/* Errors */}
-      <Show when={props.errors?.message !== undefined}>
-        <a class="mt-2.5 flex items-start text-sm" href={`#${props.id}`}>
-          <FaSolidTriangleExclamation
-            size={16}
-            class="fill-error mt-[3px] mr-2"
-          />
-          {props.errors?.message}
-        </a>
-      </Show>
+      <Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
+      <Form.ErrorMessage id={props.id} errors={props.errors} />
     </div>
   );
 };
