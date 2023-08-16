@@ -7,9 +7,10 @@ import {
   createEffect,
 } from "solid-js";
 import slugify from "slugify";
+// Services
+import api from "@/services/api";
 // Utils
 import helpers from "@/utils/helpers";
-
 // Types
 import { BrickConfigT } from "@lucid/types/src/bricks";
 import { CollectionResT } from "@lucid/types/src/collections";
@@ -26,7 +27,6 @@ import EnvBrickCard from "@/components/Cards/BrickCard";
 import EnvCollectionCard from "@/components/Cards/CollectionCard";
 import EnvFormCard from "@/components/Cards/FormCard";
 // Hooks
-import Queries from "@/hooks/queries";
 import Mutations from "@/hooks/mutations";
 
 interface CreateUpdateEnvFormProps {
@@ -46,19 +46,25 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
   // ----------------------------------------
   // Queries
-  const bricks = Queries.BrickConfig.useGetAll({
-    include: {
-      fields: false,
+  const bricks = api.brickConfig.useGetAll({
+    queryParams: {
+      include: {
+        fields: false,
+      },
     },
   });
-  const collections = Queries.Collections.useGetAll({
-    include: {
-      bricks: false,
+  const collections = api.environments.collections.useGetAll({
+    queryParams: {
+      include: {
+        bricks: false,
+      },
     },
   });
-  const forms = Queries.Forms.useGetAll({
-    include: {
-      fields: false,
+  const forms = api.environments.forms.useGetAll({
+    queryParams: {
+      include: {
+        fields: false,
+      },
     },
   });
 

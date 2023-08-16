@@ -4,7 +4,7 @@ import logout from "./logout";
 import registerSuperAdmin from "./register-superadmin";
 import sendPasswordReset from "./send-password-reset";
 import resetPassword from "./reset-password";
-import verifyResetToken from "./verify-reset-token";
+import useVerifyResetToken from "./useVerifyResetToken";
 
 const exportObject = {
   login,
@@ -13,7 +13,7 @@ const exportObject = {
   registerSuperAdmin,
   sendPasswordReset,
   resetPassword,
-  verifyResetToken,
+  useVerifyResetToken,
 };
 
 export default exportObject;

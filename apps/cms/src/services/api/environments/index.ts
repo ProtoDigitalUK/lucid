@@ -1,5 +1,5 @@
-import getSingle from "./get-single";
-import getAll from "./get-all";
+import useGetSingle from "./useGetSingle";
+import useGetAll from "./useGetAll";
 import createSingle from "./create-single";
 import updateSingle from "./update-single";
 import deleteSingle from "./delete-single";
@@ -8,9 +8,9 @@ import collections from "./collections";
 import forms from "./forms";
 
 const exportObject = {
-  getAll,
+  useGetAll,
+  useGetSingle,
   createSingle,
-  getSingle,
   updateSingle,
   deleteSingle,
   collections,

@@ -1,4 +1,6 @@
 import { Component, createSignal } from "solid-js";
+// Services
+import api from "@/services/api";
 // State
 import { environment } from "@/state/environment";
 // Components
@@ -6,8 +8,6 @@ import Layout from "@/components/Groups/Layout";
 import CreateUpdateEnvForm from "@/components/Forms/Environment/CreateUpdateEnvForm";
 // Modals
 import DeleteEnvironment from "@/components/Modals/Environment/DeleteEnvironment";
-// Hooks
-import Queries from "@/hooks/queries";
 
 const ManageEnvrionemntRoute: Component = () => {
   // ----------------------------------------
@@ -16,14 +16,14 @@ const ManageEnvrionemntRoute: Component = () => {
 
   // ----------------------------------------
   // Queries
-  const environmentData = Queries.Environment.useGetSingle(
-    {
-      key: environment() as string,
+  const environmentData = api.environments.useGetSingle({
+    queryParams: {
+      location: {
+        environment_key: environment,
+      },
     },
-    {
-      enabled: environment() !== undefined,
-    }
-  );
+    enabled: () => environment() !== undefined,
+  });
 
   // ----------------------------------------
   // Render

@@ -1,11 +1,11 @@
 import { Component, createEffect, createMemo } from "solid-js";
 import { useLocation, useParams } from "@solidjs/router";
+// Services
+import api from "@/services/api";
 // State
 import { environment, setEnvironment } from "@/state/environment";
 // Components
 import Navigation from "@/components/Groups/Navigation";
-// Hooks
-import Queries from "@/hooks/queries";
 
 export const NavigationSidebar: Component = () => {
   // ----------------------------------
@@ -15,9 +15,11 @@ export const NavigationSidebar: Component = () => {
 
   // ----------------------------------
   // Mutations & Queries
-  const environments = Queries.Environment.useGetAll();
-  const collections = Queries.Collections.useGetAll(
-    {
+  const environments = api.environments.useGetAll({
+    queryParams: {},
+  });
+  const collections = api.environments.collections.useGetAll({
+    queryParams: {
       include: {
         bricks: false,
       },
@@ -25,10 +27,8 @@ export const NavigationSidebar: Component = () => {
         environment_key: environment,
       },
     },
-    {
-      enabled: environment() !== undefined,
-    }
-  );
+    enabled: () => environment() !== undefined,
+  });
 
   // ----------------------------------
   // Effects

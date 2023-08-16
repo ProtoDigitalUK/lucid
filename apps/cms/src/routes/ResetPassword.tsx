@@ -1,13 +1,13 @@
 import { Component, Switch, Match } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
+// Services
+import api from "@/services/api";
 // Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Components
 import ResetPasswordForm from "@/components/Forms/Auth/ResetPasswordForm";
 import Loading from "@/components/Partials/Loading";
 import Error from "@/components/Partials/Error";
-// Hooks
-import Queries from "@/hooks/queries";
 
 const ResetPasswordRoute: Component = () => {
   // ----------------------------------------
@@ -25,14 +25,14 @@ const ResetPasswordRoute: Component = () => {
 
   // ----------------------------------------
   // Queries / Mutations
-  const checkToken = Queries.Auth.useVerifyResetToken(
-    {
-      token: token as string,
+  const checkToken = api.auth.useVerifyResetToken({
+    queryParams: {
+      location: {
+        token: token as string,
+      },
     },
-    {
-      enabled: token !== null,
-    }
-  );
+    enabled: () => token !== null,
+  });
 
   // ----------------------------------------
   // Render
