@@ -3,12 +3,12 @@ import request from "@/utils/request";
 import { APIResponse } from "@/types/api";
 import { CollectionResT } from "@lucid/types/src/collections";
 
-interface Params {
+export interface Params {
   include: {
     bricks: boolean;
   };
   filters?: {
-    environment_key: string;
+    environment_key?: string;
   };
 }
 

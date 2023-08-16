@@ -1,3 +1,7 @@
+import { Accessor } from "solid-js";
+
+// ---------------------------------------------
+//
 type GenericObject = { [key: string]: any };
 
 const deepMerge = (obj1: GenericObject, obj2: GenericObject): GenericObject => {
@@ -72,9 +76,15 @@ const compareArrays = (arr1: any[], arr2: any[]): boolean => {
   return true;
 };
 
+// ---------------------------------------------
+// Resolve signals and return the value
+const resolveValue = <T>(value: Accessor<T> | T): T =>
+  typeof value === "function" ? (value as any)() : value;
+
 const helpers = {
   deepMerge,
   deepDiff,
+  resolveValue,
 };
 
 export default helpers;

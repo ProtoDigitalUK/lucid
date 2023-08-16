@@ -22,7 +22,7 @@ export const NavigationSidebar: Component = () => {
         bricks: false,
       },
       filters: {
-        environment_key: environment() as string,
+        environment_key: environment,
       },
     },
     {
