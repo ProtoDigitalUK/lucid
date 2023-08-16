@@ -8,7 +8,15 @@ import Query from "@/components/Groups/Query";
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
 
-const users = [
+const users: Array<{
+  first_name: string;
+  last_name: string;
+  role: string;
+  favorite_color: string;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}> = [
   {
     first_name: "John",
     last_name: "Doe",
@@ -78,63 +86,65 @@ const UsersListRoute: Component = () => {
       options={{
         noPadding: true,
       }}
+      headingChildren={
+        <Query.Row
+          searchParams={searchParams}
+          filters={[
+            {
+              label: "First Name",
+              key: "first_name",
+              type: "text",
+            },
+            {
+              label: "Last Name",
+              key: "last_name",
+              type: "select",
+              options: [
+                {
+                  label: "One",
+                  value: "bobby",
+                },
+                {
+                  label: "Two",
+                  value: "johnny",
+                },
+              ],
+            },
+            {
+              label: "Email",
+              key: "email",
+              type: "boolean",
+            },
+            {
+              label: "Username",
+              key: "username",
+              type: "multi-select",
+              options: [
+                {
+                  label: "One",
+                  value: "bobby",
+                },
+                {
+                  label: "Two",
+                  value: "johnny",
+                },
+              ],
+            },
+          ]}
+          sorts={[
+            {
+              label: "Created At",
+              key: "created_at",
+            },
+            {
+              label: "Updated At",
+              key: "updated_at",
+            },
+          ]}
+          perPage={[]}
+        />
+      }
     >
-      <Query.Row
-        searchParams={searchParams}
-        filters={[
-          {
-            label: "First Name",
-            key: "first_name",
-            type: "text",
-          },
-          {
-            label: "Last Name",
-            key: "last_name",
-            type: "select",
-            options: [
-              {
-                label: "One",
-                value: "bobby",
-              },
-              {
-                label: "Two",
-                value: "johnny",
-              },
-            ],
-          },
-          {
-            label: "Email",
-            key: "email",
-            type: "boolean",
-          },
-          {
-            label: "Username",
-            key: "username",
-            type: "multi-select",
-            options: [
-              {
-                label: "One",
-                value: "bobby",
-              },
-              {
-                label: "Two",
-                value: "johnny",
-              },
-            ],
-          },
-        ]}
-        sorts={[
-          {
-            label: "Created At",
-            key: "created_at",
-          },
-          {
-            label: "Updated At",
-            key: "updated_at",
-          },
-        ]}
-        perPage={[]}
-      />
       <Table.Root
         key={"users.list"}
         rows={users.length}

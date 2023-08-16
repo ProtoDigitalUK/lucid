@@ -1,4 +1,4 @@
-import { Component, Show } from "solid-js";
+import { Component, JSXElement, Show } from "solid-js";
 import classNames from "classnames";
 // Components
 import Link from "@/components/Partials/Link";
@@ -14,6 +14,7 @@ interface ErrorProps {
     text: string;
     href: string;
   };
+  children?: JSXElement;
 }
 
 const Error: Component<ErrorProps> = (props) => {
@@ -41,6 +42,9 @@ const Error: Component<ErrorProps> = (props) => {
           >
             {props.link?.text || ""}
           </Link>
+        </Show>
+        <Show when={props.children}>
+          <div class="mt-10">{props.children}</div>
         </Show>
       </div>
     </div>

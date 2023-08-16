@@ -27,7 +27,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
   // Render
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-sm font-display">
+      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-base font-display">
         <span class="mr-2">
           Per page <b>{currentPerPage()}</b>
         </span>

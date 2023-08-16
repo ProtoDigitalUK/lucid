@@ -103,10 +103,16 @@
 
   /* Page Layout */
   .page-layout-full-body {
-    min-height: calc(100vh - var(--lucid-page-layout-header-height) - 60px);
+    min-height: calc(
+      100vh - var(--lucid-page-layout-header-height) -
+        var(--lucid-page-layout-footer-height)
+    );
   }
   .page-layout-table {
-    min-height: calc(100vh - var(--lucid-page-layout-header-height) - 90px);
+    min-height: calc(
+      100vh - var(--lucid-page-layout-header-height) -
+        var(--lucid-page-layout-footer-height)
+    );
   }
 
   /* Animations */

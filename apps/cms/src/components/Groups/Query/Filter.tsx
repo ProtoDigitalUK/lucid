@@ -240,7 +240,7 @@ export const Filter: Component<FilterProps> = (props) => {
   // Render
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-sm font-medium font-display">
+      <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-base font-display">
         <DropdownMenu.Icon>
           <FaSolidFilter />
         </DropdownMenu.Icon>

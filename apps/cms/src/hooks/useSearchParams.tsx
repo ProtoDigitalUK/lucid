@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createMemo, createSignal } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
 
 const DEFAULT_PAGE = 1;
@@ -348,6 +348,17 @@ const useSearchParams = (
     });
   };
 
+  const resetFilters = () => {
+    const filters = getFilters();
+    let filterValues: {
+      [key: string]: FilterValues;
+    } = {};
+    for (const [key] of filters) {
+      filterValues[key] = undefined;
+    }
+    setLocation({ filters: filterValues });
+  };
+
   // sync filters, sort by location and build query string
   createEffect(() => {
     setSettled(false);
@@ -377,6 +388,15 @@ const useSearchParams = (
     }
   });
 
+  // Util memos
+  const hasFiltersApplied = createMemo(() => {
+    const filters = getFilters();
+    for (const inst of filters) {
+      if (inst[1] !== undefined) return true;
+    }
+    return false;
+  });
+
   return {
     getFilters,
     getSorts,
@@ -384,6 +404,9 @@ const useSearchParams = (
     getSettled,
     getQueryString,
     setParams: setLocation,
+
+    hasFiltersApplied,
+    resetFilters,
   };
 };
 

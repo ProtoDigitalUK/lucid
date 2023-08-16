@@ -23,6 +23,7 @@ import Query from "@/components/Groups/Query";
 import SelectCol from "@/components/Tables/Columns/SelectCol";
 import LoadingRow from "@/components/Tables/Rows/LoadingRow";
 import Error from "@/components/Partials/Error";
+import Button from "@/components/Partials/Button";
 
 interface TableRootProps {
   key: string;
@@ -171,7 +172,6 @@ export const TableRoot: Component<TableRootProps> = (props) => {
     <>
       <Switch>
         <Match when={props.rows === 0}>
-          {/* TODO: If no filters are set, show a create button, else show a reset filter button  */}
           <Error
             type="table"
             content={{
@@ -179,7 +179,20 @@ export const TableRoot: Component<TableRootProps> = (props) => {
               title: T.state.no_results,
               description: T.state.no_results_message,
             }}
-          />
+          >
+            <Show when={props.searchParams.hasFiltersApplied()}>
+              <Button
+                type="submit"
+                theme="primary"
+                size="medium"
+                onClick={() => {
+                  props.searchParams.resetFilters();
+                }}
+              >
+                Reset Filters
+              </Button>
+            </Show>
+          </Error>
         </Match>
         <Match when={props.state.isError}>
           <Error

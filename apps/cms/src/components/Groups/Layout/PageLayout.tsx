@@ -14,6 +14,7 @@ interface PageWrapperProps {
   };
   actions?: PageHeadingProps["actions"];
   children: JSXElement;
+  headingChildren?: JSXElement;
   options?: {
     noPadding?: boolean;
   };
@@ -33,7 +34,9 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
           options={{
             noBorder: props.options?.noPadding,
           }}
-        />
+        >
+          {props.headingChildren}
+        </Layout.PageHeading>
       </Show>
       <div
         class={classNames({
