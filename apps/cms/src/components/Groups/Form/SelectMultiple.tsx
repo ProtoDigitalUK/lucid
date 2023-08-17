@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, Show, createSignal, For } from "solid-js";
 import classNames from "classnames";
 // Types
@@ -109,7 +110,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
                       }}
                     >
                       <FaSolidXmark size={16} class="" />
-                      <span class="sr-only">Remove</span>
+                      <span class="sr-only">{T("remove")}</span>
                     </button>
                   </span>
                 )}
@@ -136,7 +137,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
                   }}
                 >
                   <FaSolidXmark size={14} />
-                  <span class="sr-only">Remove All</span>
+                  <span class="sr-only">{T("remove_all")}</span>
                 </button>
               </Show>
               <FaSolidSort size={16} class="fill-title ml-1" />

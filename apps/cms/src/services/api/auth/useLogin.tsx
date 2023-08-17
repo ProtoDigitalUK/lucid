@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
@@ -39,8 +40,8 @@ const useLogin = () => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Login successful",
-          message: "You have been logged in",
+          title: T("login_success_toast_title"),
+          message: T("login_success_toast_message"),
           status: "success",
         });
         navigate("/");

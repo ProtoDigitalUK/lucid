@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
@@ -43,8 +44,8 @@ const useDeleteSingle = (props: UseDeleteProps) => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Environment Deleted",
-          message: "Your environment has been deleted.",
+          title: T("environment_deleted_toast_title"),
+          message: T("environment_deleted_toast_message"),
           status: "success",
         });
         setErrors(undefined);

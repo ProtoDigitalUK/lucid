@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 // Services
@@ -32,7 +33,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
         errors: forgotPassword.errors(),
       }}
       content={{
-        submit: "Send password reset",
+        submit: T("send_password_reset"),
       }}
       onSubmit={() => {
         forgotPassword.action.mutate({ email: email() });
@@ -45,7 +46,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
         value={email()}
         onChange={setEmail}
         copy={{
-          label: "Email",
+          label: T("email"),
         }}
         required={true}
         autoFoucs={true}
@@ -57,7 +58,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
           type="button"
           href="/login"
         >
-          Back to login
+          {T("back_to_login")}
         </Link>
       </Show>
     </Form.Root>

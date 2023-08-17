@@ -1,4 +1,3 @@
-import T from "@/translations";
 import { Component, Switch, Match } from "solid-js";
 import classNames from "classnames";
 import {
@@ -62,7 +61,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
           </Link>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <TooltipContent text={T(props.title)} />
+          <TooltipContent text={props.title} />
         </Tooltip.Portal>
       </Tooltip.Root>
     </li>

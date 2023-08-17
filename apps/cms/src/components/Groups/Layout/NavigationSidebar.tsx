@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createEffect, createMemo } from "solid-js";
 import { useLocation, useParams } from "@solidjs/router";
 // Services
@@ -74,19 +75,19 @@ export const NavigationSidebar: Component = () => {
           />
         </div>
         <ul class="pb-15">
-          <Navigation.IconLink href="/" icon="dashboard" title="home" />
+          <Navigation.IconLink href="/" icon="dashboard" title={T("home")} />
           <Navigation.IconLink
             href={getFirstEnvHref()}
             icon="environment"
-            title="environment"
+            title={T("environment")}
             active={location.pathname.includes("/env/")}
           />
-          <Navigation.IconLink href="/media" icon="media" title="media" />
-          <Navigation.IconLink href="/users" icon="users" title="users" />
+          <Navigation.IconLink href="/media" icon="media" title={T("media")} />
+          <Navigation.IconLink href="/users" icon="users" title={T("users")} />
           <Navigation.IconLink
             href="/settings"
             icon="settings"
-            title="settings"
+            title={T("settings")}
           />
         </ul>
       </nav>

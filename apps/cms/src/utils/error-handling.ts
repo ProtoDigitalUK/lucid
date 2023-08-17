@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Setter } from "solid-js";
 import spawnToast from "@/utils/spawn-toast";
 // Types
@@ -22,8 +23,8 @@ export const validateSetError = (
   } else {
     setErrors({
       status: 500,
-      name: "Error",
-      message: "An unknown error occurred.",
+      name: T("error"),
+      message: T("unknown_error_message"),
       errors: {},
     });
   }
@@ -40,8 +41,8 @@ export const handleSiteErrors = (error: APIErrorResponse) => {
 
 export const emptyBodyError = () => {
   spawnToast({
-    title: "Error",
-    message: "Cannot send an empty body.",
+    title: T("error"),
+    message: T("empty_body_error_message"),
     status: "error",
   });
 };

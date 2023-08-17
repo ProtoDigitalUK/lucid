@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createMemo } from "solid-js";
 import { FormResT } from "@lucid/types/src/forms";
 import classNames from "classnames";
@@ -36,7 +37,7 @@ const EnvFormCard: Component<EnvFormCardProps> = (props) => {
         )}
       </div>
       <div class="w-full bg-background border-t border-border py-2.5 px-15 flex items-center justify-between">
-        <span class="text-sm">Selected</span>
+        <span class="text-sm">{T("selected")}</span>
         <div>
           <Form.Checkbox
             id={props.form.key}

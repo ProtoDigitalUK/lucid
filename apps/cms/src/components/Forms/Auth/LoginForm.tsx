@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 // Services
@@ -42,7 +43,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
         value={username()}
         onChange={setUsername}
         copy={{
-          label: "Username",
+          label: T("username"),
         }}
         required={true}
         autoFoucs={true}
@@ -56,7 +57,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
         value={password()}
         onChange={setPassword}
         copy={{
-          label: "Password",
+          label: T("password"),
         }}
         required={true}
         autoComplete="current-password"
@@ -68,7 +69,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
           type="button"
           href="/forgot-password"
         >
-          Forgot password?
+          {T("forgot_password")}
         </Link>
       </Show>
     </Form.Root>

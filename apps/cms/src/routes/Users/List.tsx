@@ -92,12 +92,12 @@ const UsersListRoute: Component = () => {
           searchParams={searchParams}
           filters={[
             {
-              label: "First Name",
+              label: T("first_name"),
               key: "first_name",
               type: "text",
             },
             {
-              label: "Last Name",
+              label: T("last_name"),
               key: "last_name",
               type: "select",
               options: [
@@ -112,12 +112,12 @@ const UsersListRoute: Component = () => {
               ],
             },
             {
-              label: "Email",
+              label: T("email"),
               key: "email",
               type: "boolean",
             },
             {
-              label: "Username",
+              label: T("username"),
               key: "username",
               type: "multi-select",
               options: [
@@ -134,11 +134,11 @@ const UsersListRoute: Component = () => {
           ]}
           sorts={[
             {
-              label: "Created At",
+              label: T("created_at"),
               key: "created_at",
             },
             {
-              label: "Updated At",
+              label: T("updated_at"),
               key: "updated_at",
             },
           ]}
@@ -157,21 +157,20 @@ const UsersListRoute: Component = () => {
           total: 100,
           last_page: 10,
         }}
-        caption="Users"
         searchParams={searchParams}
         head={[
           {
-            label: "First Name",
+            label: T("first_name"),
             key: "first_name",
             icon: <FaSolidT />,
           },
           {
-            label: "Last Name",
+            label: T("last_name"),
             key: "last_name",
             icon: <FaSolidT />,
           },
           {
-            label: "Role",
+            label: T("role"),
             key: "role",
             icon: <FaSolidCircle />,
           },
@@ -186,13 +185,13 @@ const UsersListRoute: Component = () => {
             icon: <FaSolidCalendar />,
           },
           {
-            label: "Created At",
+            label: T("created_at"),
             key: "created_at",
             icon: <FaSolidCalendar />,
             sortable: true,
           },
           {
-            label: "Updated At",
+            label: T("updated_at"),
             key: "updated_at",
             icon: <FaSolidCalendar />,
             sortable: true,

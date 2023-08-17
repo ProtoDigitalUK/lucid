@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
@@ -44,8 +45,8 @@ const useCreateSingle = () => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Environment Created",
-          message: "Your environment has been created successfully.",
+          title: T("environment_created_toast_title"),
+          message: T("environment_created_toast_message"),
           status: "success",
         });
         setEnvironment(data.data.key);

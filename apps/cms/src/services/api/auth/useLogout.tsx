@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
@@ -32,8 +33,8 @@ const useLogout = () => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Logout successful",
-          message: "You have been logged out",
+          title: T("logout_success_toast_title"),
+          message: T("logout_success_toast_message"),
           status: "success",
         });
         navigate("/login");

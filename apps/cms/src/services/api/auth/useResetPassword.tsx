@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
@@ -45,8 +46,8 @@ const useResetPassword = () => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Password Reset",
-          message: "Your password has been reset successfully",
+          title: T("password_reset_success_toast_title"),
+          message: T("password_reset_success_toast_message"),
           status: "success",
         });
         setErrors(undefined);

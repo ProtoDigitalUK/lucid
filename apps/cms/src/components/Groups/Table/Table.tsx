@@ -189,7 +189,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
                   props.searchParams.resetFilters();
                 }}
               >
-                Reset Filters
+                {T("reset_filters")}
               </Button>
             </Show>
           </Error>

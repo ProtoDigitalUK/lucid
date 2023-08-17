@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, Switch, Match } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
 // Services
@@ -46,20 +47,21 @@ const ResetPasswordRoute: Component = () => {
           type={"fill"}
           content={{
             image: notifyIllustration,
-            title: "The token you provided is invalid.",
-            description:
-              "The token you provided is invalid or expired. Please ensure you have copied the link correctly, or request a new password reset link.",
+            title: T("token_provided_invalid"),
+            description: T("token_provided_invalid_description"),
           }}
           link={{
-            text: "Back to login",
+            text: T("back_to_login"),
             href: "/login",
           }}
         />
       </Match>
       <Match when={checkToken.isSuccess}>
-        <h1 class="mb-2 text-center 3xl:text-left">Reset your password</h1>
+        <h1 class="mb-2 text-center 3xl:text-left">
+          {T("reset_password_route_title")}
+        </h1>
         <p class="mb-10 text-center 3xl:text-left">
-          Enter your new password below
+          {T("reset_password_route_description")}
         </p>
         <div class="mb-10">
           <ResetPasswordForm token={token as string} />

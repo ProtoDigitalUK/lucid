@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createMemo } from "solid-js";
 import { BrickConfigT } from "@lucid/types/src/bricks";
 import classNames from "classnames";
@@ -38,7 +39,7 @@ const EnvBrickCard: Component<EnvBrickCardProps> = (props) => {
         <h3 class="text-base">{props.brick.title}</h3>
       </div>
       <div class="w-full bg-background border-t border-border py-2.5 px-15 flex items-center justify-between">
-        <span class="text-sm">Selected</span>
+        <span class="text-sm">{T("selected")}</span>
         <div>
           <Form.Checkbox
             id={props.brick.key}

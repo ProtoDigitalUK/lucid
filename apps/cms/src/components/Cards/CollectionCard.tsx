@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createMemo } from "solid-js";
 import { CollectionResT } from "@lucid/types/src/collections";
 import classNames from "classnames";
@@ -40,7 +41,7 @@ const EnvCollectionCard: Component<EnvCollectionCardProps> = (props) => {
         )}
       </div>
       <div class="w-full bg-background border-t border-border py-2.5 px-15 flex items-center justify-between">
-        <span class="text-sm">Selected</span>
+        <span class="text-sm">{T("selected")}</span>
         <div>
           <Form.Checkbox
             id={props.collection.key}

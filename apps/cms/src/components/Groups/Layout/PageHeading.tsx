@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, onMount, Switch, Match, Show, JSXElement } from "solid-js";
 import { FaSolidTrash } from "solid-icons/fa";
 // Components
@@ -89,7 +90,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
                 type="button"
                 onClick={() => props.actions?.delete?.setOpen(true)}
               >
-                <span class="sr-only">Delete</span>
+                <span class="sr-only">{T("delete")}</span>
                 <FaSolidTrash />
               </Button>
             </Show>

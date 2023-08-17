@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component } from "solid-js";
 // Components
 import Button from "@/components/Partials/Button";
@@ -21,10 +22,10 @@ export const SelectAction: Component<SelectActionProps> = (props) => {
         <p class="text-sm">
           <span class="font-bold">
             {props.data.selected > 1
-              ? `${props.data.selected} items`
-              : "1 item"}
+              ? `${props.data.selected} ${T("items")}}`
+              : `1 ${T("item")}`}
           </span>{" "}
-          selected
+          {T("selected")}
         </p>
         <div class="ml-15 flex">
           <Button
@@ -33,7 +34,7 @@ export const SelectAction: Component<SelectActionProps> = (props) => {
             classes="!py-1"
             onClick={props.callbacks.reset}
           >
-            reset
+            {T("reset")}
           </Button>
           <Button
             classes="ml-2.5 !py-1"
@@ -41,7 +42,7 @@ export const SelectAction: Component<SelectActionProps> = (props) => {
             size="x-small"
             onClick={props.callbacks.delete}
           >
-            Delete
+            {T("delete")}
           </Button>
         </div>
       </div>

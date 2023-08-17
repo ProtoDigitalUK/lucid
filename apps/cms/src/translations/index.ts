@@ -1,5 +1,5 @@
 // Translation files
-import enGb from "./en-gb";
+import enGb from "./en-gb.json";
 
 const T = (key: string, data?: Record<string, string | number>) => {
   const selectedLang = enGb;

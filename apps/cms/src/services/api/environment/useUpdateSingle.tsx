@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
@@ -42,8 +43,8 @@ const useUpdateSingle = () => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Environment Updated",
-          message: "Your environment has been updated successfully.",
+          title: T("environment_updated_toast_title"),
+          message: T("environment_updated_toast_message"),
           status: "success",
         });
         setErrors(undefined);

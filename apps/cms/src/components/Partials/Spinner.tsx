@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component } from "solid-js";
 import classNames from "classnames";
 
@@ -28,7 +29,10 @@ const Spinner: Component<SpinnerProps> = (props) => {
           fill="currentFill"
         />
       </svg>
-      <span class="sr-only">Loading...</span>
+      <span class="sr-only">
+        {T("loading")}
+        {T("ellipsis")}
+      </span>
     </div>
   );
 };

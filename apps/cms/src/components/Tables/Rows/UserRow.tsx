@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component } from "solid-js";
 // Types
 import { TableRowProps } from "@/types/components";
@@ -26,13 +27,13 @@ const UserRow: Component<UserRowProps> = (props) => {
       selected={props.selected}
       actions={[
         {
-          label: "Edit",
+          label: T("edit"),
           type: "link",
           href: "/",
           permission: true,
         },
         {
-          label: "Delete",
+          label: T("delete"),
           type: "button",
           onClick: () => {
             console.log("Delete");

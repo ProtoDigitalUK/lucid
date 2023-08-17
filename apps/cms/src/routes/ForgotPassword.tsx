@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component } from "solid-js";
 
 // Components
@@ -8,9 +9,11 @@ const ForgotPasswordRoute: Component = () => {
   // Render
   return (
     <>
-      <h1 class="mb-2 text-center 3xl:text-left">Forgot Password</h1>
+      <h1 class="mb-2 text-center 3xl:text-left">
+        {T("forgot_password_route_title")}
+      </h1>
       <p class="mb-10 text-center 3xl:text-left">
-        Enter your email address and we'll send you a link to reset your
+        {T("forgot_password_route_description")}
       </p>
       <div class="mb-10">
         <ForgotPasswordForm showBackToLogin={true} />

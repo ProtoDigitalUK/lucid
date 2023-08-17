@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, For, Switch, Match } from "solid-js";
 import { FaSolidEllipsisVertical, FaSolidChevronRight } from "solid-icons/fa";
 // Components
@@ -40,7 +41,7 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
               }}
               class="dropdown-trigger pointer-events-auto w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent"
             >
-              <span class="sr-only">Toggle Column Visibility</span>
+              <span class="sr-only">{T("show_options")}</span>
               <DropdownMenu.Icon>
                 <FaSolidEllipsisVertical class="fill-body pointer-events-none" />
               </DropdownMenu.Icon>

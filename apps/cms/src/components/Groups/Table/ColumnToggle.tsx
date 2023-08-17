@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, For } from "solid-js";
 import { FaSolidTable } from "solid-icons/fa";
 // Components
@@ -22,7 +23,7 @@ export const ColumnToggle: Component<ColumnToggleProps> = (props) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger class="dropdown-trigger w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent">
-        <span class="sr-only">Toggle Column Visibility</span>
+        <span class="sr-only">{T("toggle_col_visibility")}</span>
         <DropdownMenu.Icon>
           <FaSolidTable class="fill-body" size={14} />
         </DropdownMenu.Icon>

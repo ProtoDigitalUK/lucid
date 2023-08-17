@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
 // Components
 import Form from "@/components/Groups/Form";
@@ -28,7 +29,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         errors: resetPassword.errors(),
       }}
       content={{
-        submit: "Reset Password",
+        submit: T("reset_password"),
       }}
       onSubmit={() => {
         resetPassword.action.mutate({
@@ -45,7 +46,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         value={password()}
         onChange={setPassword}
         copy={{
-          label: "Password",
+          label: T("password"),
         }}
         required={true}
         autoFoucs={true}
@@ -58,7 +59,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
         value={passwordConfirmation()}
         onChange={setPasswordConfirmation}
         copy={{
-          label: "Confirm Password",
+          label: T("confirm_password"),
         }}
         required={true}
         errors={resetPassword.errors()?.errors?.body?.password_confirmation}

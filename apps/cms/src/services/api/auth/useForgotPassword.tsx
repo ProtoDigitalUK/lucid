@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 // Utils
@@ -42,8 +43,8 @@ const useForgotPassword = (props: UseForgotPasswordProps) => {
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: "Password reset email sent",
-          message: "Please check your email for a password reset link",
+          title: T("password_reset_toast_title"),
+          message: T("password_reset_toast_message"),
           status: "success",
         });
         setErrors(undefined);
