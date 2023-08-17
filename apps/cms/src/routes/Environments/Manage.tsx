@@ -17,7 +17,7 @@ const ManageEnvrionemntRoute: Component = () => {
 
   // ----------------------------------------
   // Queries
-  const environmentData = api.environments.useGetSingle({
+  const environmentData = api.environment.useGetSingle({
     queryParams: {
       location: {
         environment_key: environment,

@@ -1,10 +1,10 @@
 import auth from "./auth";
-import environments from "./environments";
+import environment from "./environment";
 import brickConfig from "./brick-config";
 
 const exportObject = {
   auth,
-  environments,
+  environment,
   brickConfig,
 };
 

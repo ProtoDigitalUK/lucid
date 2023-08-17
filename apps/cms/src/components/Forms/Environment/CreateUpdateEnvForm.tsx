@@ -52,14 +52,14 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
       },
     },
   });
-  const collections = api.environments.collections.useGetAll({
+  const collections = api.environment.collections.useGetAll({
     queryParams: {
       include: {
         bricks: false,
       },
     },
   });
-  const forms = api.environments.forms.useGetAll({
+  const forms = api.environment.forms.useGetAll({
     queryParams: {
       include: {
         fields: false,
@@ -69,8 +69,8 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
   // ----------------------------------------
   // Mutations
-  const createEnvironment = api.environments.useCreateSingle();
-  const updateEnvironment = api.environments.useUpdateSingle();
+  const createEnvironment = api.environment.useCreateSingle();
+  const updateEnvironment = api.environment.useUpdateSingle();
 
   // ----------------------------------------
   // Functions

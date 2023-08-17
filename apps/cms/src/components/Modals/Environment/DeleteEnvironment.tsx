@@ -16,7 +16,7 @@ interface DeleteEnvironmentProps {
 const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
   // ----------------------------------------
   // Mutations
-  const deleteEnvironment = api.environments.useDeleteSingle({
+  const deleteEnvironment = api.environment.useDeleteSingle({
     onSuccess: () => {
       props.state.setOpen(false);
     },

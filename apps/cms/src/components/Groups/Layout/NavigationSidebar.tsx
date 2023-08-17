@@ -15,10 +15,10 @@ export const NavigationSidebar: Component = () => {
 
   // ----------------------------------
   // Mutations & Queries
-  const environments = api.environments.useGetAll({
+  const environments = api.environment.useGetAll({
     queryParams: {},
   });
-  const collections = api.environments.collections.useGetAll({
+  const collections = api.environment.collections.useGetAll({
     queryParams: {
       include: {
         bricks: false,
