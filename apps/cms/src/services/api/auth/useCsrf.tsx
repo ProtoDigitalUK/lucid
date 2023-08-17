@@ -1,34 +1,41 @@
 import { createSignal, onCleanup } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
-import { useNavigate } from "@solidjs/router";
 // Utils
 import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
-// Services
-import api from "@/services/api";
+import request from "@/utils/request";
 // Types
+import { APIResponse } from "@/types/api";
 import { APIErrorResponse } from "@/types/api";
 
-export const useLogin = () => {
+export const csrfReq = () => {
+  return request<
+    APIResponse<{
+      _csrf: string;
+    }>
+  >({
+    url: `/api/v1/auth/csrf`,
+    config: {
+      method: "GET",
+    },
+  });
+};
+
+const useCsrf = () => {
   // ----------------------------------------
   // States / Hooks
-  const navigate = useNavigate();
   const [errors, setErrors] = createSignal<APIErrorResponse>();
 
   // ----------------------------------------
   // Queries / Mutations
-  const login = createMutation({
-    mutationFn: api.auth.login,
-    onSuccess: () => {
-      spawnToast({
-        title: "Login successful",
-        message: "You have been logged in",
-        status: "success",
-      });
-      navigate("/");
-      setErrors(undefined);
+  const csrf = createMutation({
+    mutationFn: csrfReq,
+    onSettled: (data, error) => {
+      if (data) {
+        setErrors(undefined);
+      } else if (error) {
+        validateSetError(error, setErrors);
+      }
     },
-    onError: (error) => validateSetError(error, setErrors),
   });
 
   // ----------------------------------------
@@ -40,7 +47,9 @@ export const useLogin = () => {
   // ----------------------------------------
   // Return
   return {
-    action: login,
+    action: csrf,
     errors: errors,
   };
 };
+
+export default useCsrf;
