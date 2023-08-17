@@ -12,7 +12,7 @@ const Authenticated: Component<AuthenticatedProps> = () => {
   return (
     <Switch fallback={<Outlet />}>
       <Match when={!getCookie("auth")}>
-        <Navigate href="/" />
+        <Navigate href="/login" />
       </Match>
     </Switch>
   );
