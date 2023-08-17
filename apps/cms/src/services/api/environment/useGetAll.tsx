@@ -1,7 +1,9 @@
-import { createMemo } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
+// State
+import { syncEnvironment } from "@/state/environment";
 // Types
 import { APIResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";
@@ -20,7 +22,7 @@ const useGetAll = (params: {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["environments.getAll", key()], {
+  const query = createQuery(() => ["environments.getAll", key()], {
     queryFn: () =>
       request<APIResponse<EnvironmentResT[]>>({
         url: `/api/v1/environments`,
@@ -32,6 +34,15 @@ const useGetAll = (params: {
       return params.enabled ? params.enabled() : true;
     },
   });
+
+  // Effects
+  createEffect(() => {
+    if (query.isSuccess) {
+      syncEnvironment(query.data?.data);
+    }
+  });
+
+  return query;
 };
 
 export default useGetAll;
