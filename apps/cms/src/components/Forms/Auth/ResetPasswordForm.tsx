@@ -1,8 +1,8 @@
 import { type Component, createSignal } from "solid-js";
 // Components
 import Form from "@/components/Groups/Form";
-// Hooks
-import Mutations from "@/hooks/mutations";
+// Services
+import api from "@/services/api";
 
 interface ResetPasswordFormProps {
   token: string;
@@ -16,7 +16,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 
   // ----------------------------------------
   // Mutations
-  const resetPassword = Mutations.Auth.useResetPassword();
+  const resetPassword = api.auth.useResetPassword();
 
   // ----------------------------------------
   // Render

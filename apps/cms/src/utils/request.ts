@@ -1,8 +1,10 @@
-import api from "@/services/api";
+// Utils
 import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
 import { LucidError, handleSiteErrors } from "@/utils/error-handling";
 // Types
 import { APIErrorResponse } from "@/types/api";
+// Services
+import { csrfReq } from "@/services/api/auth/useCsrf";
 
 interface RequestParams {
   url: string;
@@ -33,7 +35,7 @@ const request = async <Response>(params: RequestParams): Promise<Response> => {
 
   let csrfToken: string | undefined;
   if (params.csrf) {
-    const csrfRes = await api.auth.csrf();
+    const csrfRes = await csrfReq();
     csrfToken = csrfRes.data._csrf;
   }
 

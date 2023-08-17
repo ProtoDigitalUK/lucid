@@ -1,9 +1,9 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
+// Services
+import api from "@/services/api";
 // Components
 import Form from "@/components/Groups/Form";
-// Hooks
-import Mutations from "@/hooks/mutations";
 
 interface ForgotPasswordFormProps {
   showBackToLogin?: boolean;
@@ -16,7 +16,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 
   // ----------------------------------------
   // Mutations
-  const forgotPassword = Mutations.Auth.useForgotPassword({
+  const forgotPassword = api.auth.useForgotPassword({
     onSuccess: () => {
       setEmail("");
     },

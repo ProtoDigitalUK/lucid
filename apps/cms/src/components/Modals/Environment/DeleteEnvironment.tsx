@@ -1,8 +1,8 @@
 import { Component } from "solid-js";
 // Components
 import Modal from "@/components/Groups/Modal";
-// Hooks
-import Mutations from "@/hooks/mutations";
+// Services
+import api from "@/services/api";
 
 interface DeleteEnvironmentProps {
   key?: string;
@@ -15,7 +15,7 @@ interface DeleteEnvironmentProps {
 const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
   // ----------------------------------------
   // Mutations
-  const deleteEnvironment = Mutations.Environment.useDelete({
+  const deleteEnvironment = api.environments.useDeleteSingle({
     onSuccess: () => {
       props.state.setOpen(false);
     },

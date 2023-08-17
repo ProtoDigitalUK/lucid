@@ -26,8 +26,6 @@ import Layout from "@/components/Groups/Layout";
 import EnvBrickCard from "@/components/Cards/BrickCard";
 import EnvCollectionCard from "@/components/Cards/CollectionCard";
 import EnvFormCard from "@/components/Cards/FormCard";
-// Hooks
-import Mutations from "@/hooks/mutations";
 
 interface CreateUpdateEnvFormProps {
   environment?: EnvironmentResT;
@@ -70,8 +68,8 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
   // ----------------------------------------
   // Mutations
-  const createEnvironment = Mutations.Environment.useCreate();
-  const updateEnvironment = Mutations.Environment.useUpdate();
+  const createEnvironment = api.environments.useCreateSingle();
+  const updateEnvironment = api.environments.useUpdateSingle();
 
   // ----------------------------------------
   // Functions

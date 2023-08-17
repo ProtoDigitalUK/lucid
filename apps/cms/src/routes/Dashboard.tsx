@@ -1,13 +1,13 @@
 import type { Component } from "solid-js";
+// Services
+import api from "@/services/api";
 // Components
 import Button from "@/components/Partials/Button";
-// Hooks
-import Mutations from "@/hooks/mutations";
 
 const DashboardRoute: Component = () => {
   // ----------------------------------------
   // Mutations
-  const logout = Mutations.Auth.useLogout();
+  const logout = api.auth.useLogout();
 
   // ----------------------------------------
   // Render

@@ -1,9 +1,9 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
+// Services
+import api from "@/services/api";
 // Components
 import Form from "@/components/Groups/Form";
-// Hooks
-import Mutations from "@/hooks/mutations";
 
 interface LoginFormProps {
   showForgotPassword?: boolean;
@@ -17,7 +17,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 
   // ----------------------------------------
   // Mutations
-  const login = Mutations.Auth.useLogin();
+  const login = api.auth.useLogin();
 
   // ----------------------------------------
   // Render

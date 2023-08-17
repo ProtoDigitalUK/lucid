@@ -1,18 +1,16 @@
-import login from "./login";
-import csrf from "./csrf";
-import logout from "./logout";
-import registerSuperAdmin from "./register-superadmin";
-import sendPasswordReset from "./send-password-reset";
-import resetPassword from "./reset-password";
+import useLogin from "./useLogin";
+import useCsrf from "./useCsrf";
+import useLogout from "./useLogout";
+import useForgotPassword from "./useForgotPassword";
+import useResetPassword from "./useResetPassword";
 import useVerifyResetToken from "./useVerifyResetToken";
 
 const exportObject = {
-  login,
-  csrf,
-  logout,
-  registerSuperAdmin,
-  sendPasswordReset,
-  resetPassword,
+  useLogin,
+  useCsrf,
+  useLogout,
+  useForgotPassword,
+  useResetPassword,
   useVerifyResetToken,
 };
 
