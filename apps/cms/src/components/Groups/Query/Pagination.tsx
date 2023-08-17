@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createMemo, createSignal } from "solid-js";
+import { Component, createEffect, createMemo, createSignal } from "solid-js";
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
 // Types
 import { APIResponse } from "@/types/api";
@@ -15,18 +15,22 @@ interface PaginationProps {
 }
 
 export const Pagination: Component<PaginationProps> = (props) => {
-  const [page, setPage] = createSignal(props.meta?.current_page || 1);
+  const [page, setPage] = createSignal(1);
 
   // -------------------------------------
   // Memos
   const textData = createMemo(() => {
-    const { meta } = props;
-
     return {
-      page: meta?.current_page || 1,
-      lastPage: meta?.last_page || 1,
-      total: meta?.total || 1,
+      page: props.meta?.current_page || 1,
+      lastPage: props.meta?.last_page || 1,
+      total: props.meta?.total || 1,
     };
+  });
+
+  // -------------------------------------
+  // Effects
+  createEffect(() => {
+    setPage(props.meta?.current_page || 1);
   });
 
   // -------------------------------------
