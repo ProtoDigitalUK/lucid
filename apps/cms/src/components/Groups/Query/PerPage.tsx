@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, For, createMemo } from "solid-js";
 import { FaSolidSort } from "solid-icons/fa";
 // Hooks
@@ -29,7 +30,9 @@ export const PerPage: Component<PerPageProps> = (props) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-base font-display">
         <span class="mr-2">
-          Per page <b>{currentPerPage()}</b>
+          {T("per_page", {
+            count: currentPerPage(),
+          })}
         </span>
         <DropdownMenu.Icon>
           <FaSolidSort />

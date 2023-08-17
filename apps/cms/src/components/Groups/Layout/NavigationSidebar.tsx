@@ -74,19 +74,19 @@ export const NavigationSidebar: Component = () => {
           />
         </div>
         <ul class="pb-15">
-          <Navigation.IconLink href="/" icon="dashboard" title="Home" />
+          <Navigation.IconLink href="/" icon="dashboard" title="home" />
           <Navigation.IconLink
             href={getFirstEnvHref()}
             icon="environment"
-            title="Environment"
+            title="environment"
             active={location.pathname.includes("/env/")}
           />
-          <Navigation.IconLink href="/media" icon="media" title="Media" />
-          <Navigation.IconLink href="/users" icon="users" title="Users" />
+          <Navigation.IconLink href="/media" icon="media" title="media" />
+          <Navigation.IconLink href="/users" icon="users" title="users" />
           <Navigation.IconLink
             href="/settings"
             icon="settings"
-            title="Settings"
+            title="settings"
           />
         </ul>
       </nav>

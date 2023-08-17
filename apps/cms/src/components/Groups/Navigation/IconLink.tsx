@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, Switch, Match } from "solid-js";
 import classNames from "classnames";
 import {
@@ -20,9 +21,6 @@ interface IconLinkProps {
 }
 
 export const IconLink: Component<IconLinkProps> = (props) => {
-  // ----------------------------------
-  // Hooks & States
-
   // ----------------------------------
   // Classes
   const iconClasses = classNames("w-5 h-5 text-white");
@@ -64,7 +62,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
           </Link>
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <TooltipContent text={props.title} />
+          <TooltipContent text={T(props.title)} />
         </Tooltip.Portal>
       </Tooltip.Root>
     </li>

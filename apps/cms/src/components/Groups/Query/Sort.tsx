@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, For, Switch, createMemo, Match } from "solid-js";
 import { FaSolidSort, FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
 // Hooks
@@ -97,7 +98,7 @@ export const Sort: Component<SortProps> = (props) => {
         <DropdownMenu.Icon>
           <FaSolidSort />
         </DropdownMenu.Icon>
-        <span class="ml-2">Sort</span>
+        <span class="ml-2">{T("sort")}</span>
       </DropdownMenu.Trigger>
       <DropdownContent
         options={{

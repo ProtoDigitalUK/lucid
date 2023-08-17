@@ -1,3 +1,4 @@
+import T from "@/translations";
 import {
   Component,
   Match,
@@ -195,7 +196,9 @@ const FilterItem: Component<FilterItemProps> = (props) => {
                 setFilterParam();
               }}
             >
-              {props.filter.options ? props.filter.options[0].label : "Active"}
+              {props.filter.options
+                ? props.filter.options[0].label
+                : T("active")}
             </Button>
             <Button
               theme="secondary-toggle"
@@ -213,7 +216,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
             >
               {props.filter.options
                 ? props.filter.options[0].label
-                : "Inactive"}
+                : T("inactive")}
             </Button>
           </div>
         </Match>
@@ -244,7 +247,7 @@ export const Filter: Component<FilterProps> = (props) => {
         <DropdownMenu.Icon>
           <FaSolidFilter />
         </DropdownMenu.Icon>
-        <span class="ml-2">Filter</span>
+        <span class="ml-2">{T("filter")}</span>
       </DropdownMenu.Trigger>
       <DropdownContent
         options={{

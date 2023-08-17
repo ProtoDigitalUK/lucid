@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createMemo, createSignal } from "solid-js";
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
 // Types
@@ -19,14 +20,6 @@ export const Pagination: Component<PaginationProps> = (props) => {
   // -------------------------------------
   // Memos
   const textData = createMemo(() => {
-    /*
-    path: string;
-    links: Array<{}>;
-    current_page: number | null;
-    per_page: number | null;
-    total: number | null;
-    last_page: number | null;
-    */
     const { meta } = props;
 
     return {
@@ -42,8 +35,11 @@ export const Pagination: Component<PaginationProps> = (props) => {
     <Layout.PageFooter>
       <div class="flex md:flex-row flex-col justify-between md:items-center">
         <span class="text-sm text-body md:mb-0 mb-2">
-          Showing {textData().page} to {textData().lastPage} of{" "}
-          {textData().total} results
+          {T("pagination_text", {
+            page: textData().page,
+            lastPage: textData().lastPage,
+            total: textData().total,
+          })}
         </span>
         <KobPagination.Root
           class="flex [&>ul]:flex [&>ul]:border [&>ul]:border-border [&>ul]:rounded-md [&>ul]:overflow-hidden"

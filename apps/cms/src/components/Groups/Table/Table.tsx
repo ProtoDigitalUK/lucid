@@ -176,8 +176,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
             type="table"
             content={{
               image: emptySvg,
-              title: T.state.no_results,
-              description: T.state.no_results_message,
+              title: T("no_results"),
+              description: T("no_results_message"),
             }}
           >
             <Show when={props.searchParams.hasFiltersApplied()}>
@@ -199,8 +199,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
             type="table"
             content={{
               image: notifySvg,
-              title: T.state.error_title,
-              description: T.state.error_message,
+              title: T("error_title"),
+              description: T("error_message"),
             }}
           />
         </Match>

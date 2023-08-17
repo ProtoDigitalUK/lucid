@@ -1,3 +1,4 @@
+import T from "@/translations";
 import {
   Component,
   createSignal,
@@ -183,7 +184,7 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
           errors: errors(),
         }}
         content={{
-          submit: props.environment ? "Update" : "Create",
+          submit: props.environment ? T("update") : T("create"),
         }}
         onSubmit={() => {
           if (!props.environment) {
@@ -203,7 +204,7 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
         }}
       >
         {/* Details */}
-        <SectionHeading title="Details" />
+        <SectionHeading title={T("details")} />
         <InputGrid columns={3}>
           <Form.Input
             id="title"
@@ -212,7 +213,7 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
             value={title()}
             onChange={setTitle}
             copy={{
-              label: "Title",
+              label: T("title"),
             }}
             required={true}
             autoFoucs={true}
@@ -238,7 +239,7 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
               value={key()}
               onChange={setKey}
               copy={{
-                label: "Key",
+                label: T("key"),
               }}
               required={true}
               errors={errors()?.errors?.body?.key}
@@ -249,8 +250,8 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
         {/* Assigned Bricks */}
         <SectionHeading
-          title="Bricks"
-          description="Select the bricks you wish this environment to have access to."
+          title={T("bricks")}
+          description={T("assign_bricks_description")}
         />
         <CardGrid
           columns={4}
@@ -272,8 +273,8 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
         {/* Assigned Collections */}
         <SectionHeading
-          title="Collections"
-          description="Assign the collection you wish the environment to have access to."
+          title={T("collections")}
+          description={T("assign_collections_description")}
         />
         <CardGrid
           columns={4}
@@ -295,8 +296,8 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
 
         {/* Assigned Forms */}
         <SectionHeading
-          title="Forms"
-          description="Select the forms the environment should have access to."
+          title={T("forms")}
+          description={T("assign_forms_description")}
         />
         <CardGrid
           columns={4}

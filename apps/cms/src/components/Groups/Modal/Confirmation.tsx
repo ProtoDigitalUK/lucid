@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, Show } from "solid-js";
 // Components
 import { FaSolidXmark } from "solid-icons/fa";
@@ -58,7 +59,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
                   loading={props.state.isLoading}
                   onClick={props.onConfirm}
                 >
-                  Confirm
+                  {T("confirm")}
                 </Button>
                 <Button
                   theme="container-outline"
@@ -68,7 +69,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
                   disabled={props.state.isLoading}
                   onClick={props.onCancel}
                 >
-                  Cancel
+                  {T("cancel")}
                 </Button>
               </div>
             </div>

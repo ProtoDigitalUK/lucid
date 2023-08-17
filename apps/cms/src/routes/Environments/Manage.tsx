@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
@@ -29,8 +30,10 @@ const ManageEnvrionemntRoute: Component = () => {
   // Render
   return (
     <Layout.PageLayout
-      title={environmentData.data?.data.title || "Manage Environment"}
-      description="Environments are a top level grouping of collections, forms and bricks. With the seperation of environments, you can have multiple sites/apps running on the same CMS."
+      title={T("manage_environment_route_title", {
+        title: environmentData.data?.data.title ?? "",
+      })}
+      description={T("manage_environment_route_description")}
       state={{
         isLoading: environmentData.isLoading,
         isError: environmentData.isError,

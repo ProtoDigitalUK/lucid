@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component } from "solid-js";
 // Components
 import Modal from "@/components/Groups/Modal";
@@ -32,8 +33,8 @@ const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
         isError: deleteEnvironment.action.isError,
       }}
       content={{
-        title: "Delete environment",
-        description: "Are you sure you want to delete this environment?",
+        title: T("delete_environment_modal_title"),
+        description: T("delete_environment_modal_description"),
         error: deleteEnvironment.errors()?.message,
       }}
       onConfirm={() => {

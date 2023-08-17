@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createMemo, createSignal, For } from "solid-js";
 import classNames from "classnames";
 import { useNavigate, useLocation, useParams } from "@solidjs/router";
@@ -116,7 +117,7 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
           }}
         >
           <FaSolidPlus class="mr-2" />
-          Create Environment
+          {T("create_environment")}
         </Link>
       </DropdownContent>
     </DropdownMenu.Root>

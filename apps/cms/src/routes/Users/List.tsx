@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCircle, FaSolidCalendar } from "solid-icons/fa";
 // Hooks
@@ -81,8 +82,8 @@ const UsersListRoute: Component = () => {
   // Render
   return (
     <Layout.PageLayout
-      title="User"
-      description="Manage users and their permissions."
+      title={T("users_route_title")}
+      description={T("users_route_description")}
       options={{
         noPadding: true,
       }}

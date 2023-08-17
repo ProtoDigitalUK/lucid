@@ -1,3 +1,4 @@
+import T from "@/translations";
 import {
   Component,
   createEffect,
@@ -59,7 +60,7 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
         <nav>
           {/* Multi Collections */}
           <Show when={pagesCollections().length > 0}>
-            <Navigation.LinkGroup title="Multi Collections">
+            <Navigation.LinkGroup title={T("multi_collections")}>
               <For each={pagesCollections()}>
                 {(collection) => (
                   <Navigation.Link
@@ -73,7 +74,7 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
           </Show>
           {/* Single Collections */}
           <Show when={singlePagesCollections().length > 0}>
-            <Navigation.LinkGroup title="Single Collections">
+            <Navigation.LinkGroup title={T("single_collections")}>
               <For each={singlePagesCollections()}>
                 {(collection) => (
                   <Navigation.Link
