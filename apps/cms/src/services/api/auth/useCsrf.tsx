@@ -7,8 +7,13 @@ import request from "@/utils/request";
 import { APIResponse } from "@/types/api";
 import { APIErrorResponse } from "@/types/api";
 
-export const csrfReq = () => {
-  return request<
+export const csrfReq = async () => {
+  const csrfToken = sessionStorage.getItem("_csrf");
+  if (csrfToken) {
+    return csrfToken;
+  }
+
+  const res = await request<
     APIResponse<{
       _csrf: string;
     }>
@@ -18,6 +23,13 @@ export const csrfReq = () => {
       method: "GET",
     },
   });
+
+  if (res.data) {
+    sessionStorage.setItem("_csrf", res.data._csrf);
+    return res.data._csrf;
+  }
+
+  return null;
 };
 
 const useCsrf = () => {
@@ -29,6 +41,7 @@ const useCsrf = () => {
   // Queries / Mutations
   const csrf = createMutation({
     mutationFn: csrfReq,
+
     onSettled: (data, error) => {
       if (data) {
         setErrors(undefined);

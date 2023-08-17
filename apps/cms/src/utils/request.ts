@@ -33,10 +33,9 @@ const request = async <Response>(params: RequestParams): Promise<Response> => {
     }
   }
 
-  let csrfToken: string | undefined;
+  let csrfToken: string | null = null;
   if (params.csrf) {
-    const csrfRes = await csrfReq();
-    csrfToken = csrfRes.data._csrf;
+    csrfToken = await csrfReq();
   }
 
   let body: string | undefined = undefined;

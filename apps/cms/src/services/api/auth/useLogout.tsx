@@ -37,6 +37,7 @@ const useLogout = () => {
           status: "success",
         });
         navigate("/login");
+        sessionStorage.removeItem("_csrf");
       } else if (error) {
         clearCookie("auth");
         navigate("/login");
