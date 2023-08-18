@@ -68,6 +68,9 @@
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
 
+  "update_role_panel_title": "Edit {{name}} Role",
+  "update_role_panel_description": "Update the permissions for the {{name}} role.",
+
   "password_reset_toast_title": "Password reset email sent",
   "password_reset_toast_message": "Please check your email for a password reset link",
   "login_success_toast_title": "Login successful",

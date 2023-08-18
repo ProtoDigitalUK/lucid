@@ -1,5 +1,7 @@
 import { Component, Show } from "solid-js";
 import classNames from "classnames";
+// Components
+import { Alert } from "@kobalte/core";
 
 interface ErrorMessageProps {
   message?: string;
@@ -11,7 +13,7 @@ const ErrorMessage: Component<ErrorMessageProps> = (props) => {
   // Render
   return (
     <Show when={props.message}>
-      <div
+      <Alert.Root
         class={classNames("mb-5 last:mb-0", {
           "bg-container rounded-r-md border-l-4 border-l-error p-2.5 border border-border":
             props.theme === "background", // on background colour
@@ -26,7 +28,7 @@ const ErrorMessage: Component<ErrorMessageProps> = (props) => {
         >
           {props.message}
         </p>
-      </div>
+      </Alert.Root>
     </Show>
   );
 };

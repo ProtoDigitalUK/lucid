@@ -1,5 +1,7 @@
 import T from "@/translations";
 import { Component } from "solid-js";
+// Hooks
+import useRowTarget from "@/hooks/useRowTarget";
 // Types
 import { TableRowProps } from "@/types/components";
 import { RoleResT } from "@lucid/types/src/roles";
@@ -11,6 +13,7 @@ import DateCol from "../Columns/DateCol";
 interface RoleRowProps extends TableRowProps {
   role: RoleResT;
   include: boolean[];
+  rowTarget: ReturnType<typeof useRowTarget>;
 }
 
 const RoleRow: Component<RoleRowProps> = (props) => {
@@ -24,7 +27,10 @@ const RoleRow: Component<RoleRowProps> = (props) => {
         {
           label: T("edit"),
           type: "button",
-          onClick: () => {},
+          onClick: () => {
+            props.rowTarget.setTargetId(props.role.id);
+            props.rowTarget.setTrigger("update", true);
+          },
         },
       ]}
       options={props.options}

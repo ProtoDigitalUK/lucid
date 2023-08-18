@@ -52,11 +52,17 @@ module.exports = {
         "main-layout": "auto 1fr",
       },
       animation: {
-        "animate-enter": "animation-enter 0.2s ease-out",
-        "animate-leave": "animation-leave 0.2s ease-out",
-        "animate-dropdown": "animation-dropdown 0.2s ease-out",
-        "animate-from-left": "animation-from-left 0.2s ease-out",
-        "animate-fade-in": "animation-fade-in 0.2s ease-out",
+        "animate-enter": "animation-enter 0.2s ease",
+        "animate-leave": "animation-leave 0.2s ease",
+        "animate-dropdown": "animation-dropdown 0.2s ease",
+        "animate-from-left": "animation-from-left 0.2s ease",
+
+        "animate-fade-out": "animation-fade-out 0.2s ease",
+        "animate-fade-in": "animation-fade-in 0.2s ease",
+
+        "animate-slide-from-right-in": "animate-slide-from-right-in 200ms ease",
+        "animate-slide-from-right-out":
+          "animate-slide-from-right-out 200ms ease 100ms forwards",
       },
       spacing: {
         30: "30px",
