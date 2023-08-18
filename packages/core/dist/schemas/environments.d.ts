@@ -29,17 +29,17 @@ declare const _default: {
     };
     updateSingle: {
         body: z.ZodObject<{
-            title: z.ZodString;
+            title: z.ZodOptional<z.ZodString>;
             assigned_bricks: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             assigned_collections: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             assigned_forms: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         }, "strip", z.ZodTypeAny, {
-            title: string;
+            title?: string | undefined;
             assigned_bricks?: string[] | undefined;
             assigned_collections?: string[] | undefined;
             assigned_forms?: string[] | undefined;
         }, {
-            title: string;
+            title?: string | undefined;
             assigned_bricks?: string[] | undefined;
             assigned_collections?: string[] | undefined;
             assigned_forms?: string[] | undefined;

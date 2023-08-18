@@ -2,6 +2,6 @@ import { PoolClient } from "pg";
 export interface ServiceData {
     id: number;
 }
-declare const deleteSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/Role").RoleT>;
+declare const deleteSingle: (client: PoolClient, data: ServiceData) => Promise<import("@lucid/types/src/roles").RoleResT>;
 export default deleteSingle;
 //# sourceMappingURL=delete-single.d.ts.map

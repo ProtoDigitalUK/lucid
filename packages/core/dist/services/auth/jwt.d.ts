@@ -1,4 +1,3 @@
-/// <reference types="qs" />
 import { Response, Request } from "express";
 import { UserResT } from "@lucid/types/src/users";
 export declare const generateJWT: (res: Response, user: UserResT) => void;

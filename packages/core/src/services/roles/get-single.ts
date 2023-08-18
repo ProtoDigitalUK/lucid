@@ -3,6 +3,8 @@ import { PoolClient } from "pg";
 import { LucidError } from "@utils/app/error-handler";
 // Models
 import Role from "@db/models/Role";
+// Format
+import formatRole from "@utils/format/format-roles";
 
 export interface ServiceData {
   id: number;
@@ -22,7 +24,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return role;
+  return formatRole(role);
 };
 
 export default getSingle;

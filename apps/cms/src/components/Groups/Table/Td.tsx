@@ -30,10 +30,13 @@ export const Td: Component<TdProps> = (props) => {
       }}
     >
       <div
-        class={classNames("min-h-[40px] py-2 text-sm text-body", {
-          "w-full min-w-[100px]":
-            props.options?.width === undefined && !props.options?.noMinWidth,
-        })}
+        class={classNames(
+          "min-h-[50px] py-2 text-base text-title flex items-center",
+          {
+            "w-full min-w-[150px]":
+              props.options?.width === undefined && !props.options?.noMinWidth,
+          }
+        )}
       >
         {props.children}
       </div>

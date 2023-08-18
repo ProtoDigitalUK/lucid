@@ -31,23 +31,23 @@ const UserRow: Component<UserRowProps> = (props) => {
     >
       <TextCol
         text={props.user.username}
-        options={{ include: props?.include[1] }}
+        options={{ include: props?.include[0] }}
       />
       <TextCol
         text={props.user.first_name}
-        options={{ include: props?.include[2] }}
+        options={{ include: props?.include[1] }}
       />
       <TextCol
         text={props.user.last_name}
-        options={{ include: props?.include[3] }}
+        options={{ include: props?.include[2] }}
       />
       <TextCol
         text={props.user.email}
-        options={{ include: props?.include[4] }}
+        options={{ include: props?.include[3] }}
       />
       <DateCol
         date={props.user.created_at}
-        options={{ include: props?.include[5] }}
+        options={{ include: props?.include[4] }}
       />
     </Table.Tr>
   );

@@ -7,6 +7,7 @@ const query_helpers_1 = require("../../utils/app/query-helpers");
 const service_1 = __importDefault(require("../../utils/app/service"));
 const Role_1 = __importDefault(require("../../db/models/Role"));
 const role_permissions_1 = __importDefault(require("../role-permissions"));
+const format_roles_1 = __importDefault(require("../../utils/format/format-roles"));
 const getMultiple = async (client, data) => {
     const { filter, sort, page, per_page, include } = data.query;
     const SelectQuery = new query_helpers_1.SelectQueryBuilder({
@@ -52,7 +53,7 @@ const getMultiple = async (client, data) => {
         });
     }
     return {
-        data: roles.data,
+        data: roles.data.map((role) => (0, format_roles_1.default)(role)),
         count: roles.count,
     };
 };

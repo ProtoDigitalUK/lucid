@@ -65,7 +65,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
         isSuccess: users.isSuccess,
       }}
       options={{
-        isSelectable: true,
+        isSelectable: false,
       }}
       callbacks={{
         deleteRows: () => {

@@ -21,6 +21,9 @@ import MediaListRoute from "@/routes/Media/List";
 // users
 import UsersListRoute from "@/routes/Users/List";
 
+// roles
+import RolesListRoute from "@/routes/Roles/List";
+
 // settings
 import SettingsListRoute from "@/routes/Settings/List";
 
@@ -48,6 +51,8 @@ const AppRouter: Component = () => {
             <Route path="/media" element={<MediaListRoute />} />
             {/* Users */}
             <Route path="/users" element={<UsersListRoute />} />
+            {/* Roles */}
+            <Route path="/roles" element={<RolesListRoute />} />
             {/* Settings */}
             <Route path="/settings" element={<SettingsListRoute />} />
           </Route>

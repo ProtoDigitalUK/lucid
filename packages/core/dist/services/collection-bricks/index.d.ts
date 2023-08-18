@@ -15,7 +15,7 @@ declare const _default: {
             id?: number | undefined;
             fields?: ({
                 key: string;
-                type: import("../../../../brick-builder/src").FieldTypesEnum;
+                type: import("@lucid/brick-builder").FieldTypesEnum;
                 fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
@@ -24,7 +24,7 @@ declare const _default: {
             } & {
                 items?: ({
                     key: string;
-                    type: import("../../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -38,7 +38,7 @@ declare const _default: {
             id?: number | undefined;
             fields?: ({
                 key: string;
-                type: import("../../../../brick-builder/src").FieldTypesEnum;
+                type: import("@lucid/brick-builder").FieldTypesEnum;
                 fields_id?: number | undefined;
                 parent_repeater?: number | undefined;
                 group_position?: number | undefined;
@@ -47,7 +47,7 @@ declare const _default: {
             } & {
                 items?: ({
                     key: string;
-                    type: import("../../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -56,7 +56,7 @@ declare const _default: {
                 } & any)[] | undefined;
             })[] | undefined;
         }[];
-        collection: import("../../../../types/src/collections").CollectionResT;
+        collection: import("@lucid/types/src/collections").CollectionResT;
         environment: import("../../db/models/Environment").EnvironmentT;
     }) => Promise<void>;
 };

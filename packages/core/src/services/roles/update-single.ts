@@ -7,6 +7,8 @@ import Role from "@db/models/Role";
 // Serivces
 import roleServices from "@services/roles";
 import rolePermServices from "@services/role-permissions";
+// Format
+import formatRole from "@utils/format/format-roles";
 
 export interface ServiceData {
   id: number;
@@ -69,7 +71,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return role;
+  return formatRole(role);
 };
 
 export default updateSingle;

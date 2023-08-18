@@ -1,4 +1,4 @@
-import { Component, Index } from "solid-js";
+import { Component, Index, Show } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
 
@@ -13,13 +13,15 @@ const LoadingRow: Component<LoadingRowProps> = (props) => {
   // Render
   return (
     <tr class="bg-background">
-      <Table.Td
-        options={{
-          width: 65,
-        }}
-      >
-        <div class="w-full h-5 bg-backgroundAccent rounded-md animate-pulse" />
-      </Table.Td>
+      <Show when={props.isSelectable}>
+        <Table.Td
+          options={{
+            width: 65,
+          }}
+        >
+          <div class="w-full h-5 bg-backgroundAccent rounded-md animate-pulse" />
+        </Table.Td>
+      </Show>
       <Index each={Array.from({ length: props.columns })}>
         {(_, i) => (
           <Table.Td

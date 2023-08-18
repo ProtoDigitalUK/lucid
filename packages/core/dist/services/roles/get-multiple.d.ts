@@ -5,7 +5,7 @@ export interface ServiceData {
     query: z.infer<typeof rolesSchema.getMultiple.query>;
 }
 declare const getMultiple: (client: PoolClient, data: ServiceData) => Promise<{
-    data: import("../../db/models/Role").RoleT[];
+    data: import("@lucid/types/src/roles").RoleResT[];
     count: number;
 }>;
 export default getMultiple;

@@ -84,6 +84,7 @@ export const NavigationSidebar: Component = () => {
           />
           <Navigation.IconLink href="/media" icon="media" title={T("media")} />
           <Navigation.IconLink href="/users" icon="users" title={T("users")} />
+          <Navigation.IconLink href="/roles" icon="roles" title={T("roles")} />
           <Navigation.IconLink
             href="/settings"
             icon="settings"

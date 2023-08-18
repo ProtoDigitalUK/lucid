@@ -1,12 +1,12 @@
 declare const _default: {
-    createSingle: (client: import("pg").PoolClient, data: import("./create-single").ServiceData) => Promise<import("../../db/models/Role").RoleT>;
-    deleteSingle: (client: import("pg").PoolClient, data: import("./delete-single").ServiceData) => Promise<import("../../db/models/Role").RoleT>;
+    createSingle: (client: import("pg").PoolClient, data: import("./create-single").ServiceData) => Promise<import("@lucid/types/src/roles").RoleResT>;
+    deleteSingle: (client: import("pg").PoolClient, data: import("./delete-single").ServiceData) => Promise<import("@lucid/types/src/roles").RoleResT>;
     getMultiple: (client: import("pg").PoolClient, data: import("./get-multiple").ServiceData) => Promise<{
-        data: import("../../db/models/Role").RoleT[];
+        data: import("@lucid/types/src/roles").RoleResT[];
         count: number;
     }>;
-    getSingle: (client: import("pg").PoolClient, data: import("./get-single").ServiceData) => Promise<import("../../db/models/Role").RoleT>;
-    updateSingle: (client: import("pg").PoolClient, data: import("./update-single").ServiceData) => Promise<import("../../db/models/Role").RoleT>;
+    getSingle: (client: import("pg").PoolClient, data: import("./get-single").ServiceData) => Promise<import("@lucid/types/src/roles").RoleResT>;
+    updateSingle: (client: import("pg").PoolClient, data: import("./update-single").ServiceData) => Promise<import("@lucid/types/src/roles").RoleResT>;
     checkNameIsUnique: (client: import("pg").PoolClient, data: import("./check-name-unique").ServiceData) => Promise<never>;
     validatePermissions: (client: import("pg").PoolClient, permGroup: {
         permissions: string[];

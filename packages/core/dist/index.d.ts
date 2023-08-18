@@ -1,4 +1,3 @@
-/// <reference types="express" />
 import init from "./init";
 import { ConfigT, buildConfig } from "./services/Config";
 import BrickBuilder from "@lucid/brick-builder";

@@ -1,4 +1,3 @@
-/// <reference types="qs" />
 import { Request, Response } from "express";
 export declare const generateCSRFToken: (res: Response) => string;
 export declare const verifyCSRFToken: (req: Request) => boolean;

@@ -8,6 +8,7 @@ const service_1 = __importDefault(require("../../utils/app/service"));
 const Role_1 = __importDefault(require("../../db/models/Role"));
 const roles_1 = __importDefault(require("../roles"));
 const role_permissions_1 = __importDefault(require("../role-permissions"));
+const format_roles_1 = __importDefault(require("../../utils/format/format-roles"));
 const updateSingle = async (client, data) => {
     const parsePermissions = await (0, service_1.default)(roles_1.default.validatePermissions, false, client)(data.permission_groups);
     if (data.name) {
@@ -39,7 +40,7 @@ const updateSingle = async (client, data) => {
             permissions: parsePermissions,
         });
     }
-    return role;
+    return (0, format_roles_1.default)(role);
 };
 exports.default = updateSingle;
 //# sourceMappingURL=update-single.js.map

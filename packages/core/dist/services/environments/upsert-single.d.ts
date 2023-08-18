@@ -9,6 +9,6 @@ export interface ServiceData {
     };
     create: boolean;
 }
-declare const upsertSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../../../types/src/environments").EnvironmentResT>;
+declare const upsertSingle: (client: PoolClient, data: ServiceData) => Promise<import("@lucid/types/src/environments").EnvironmentResT>;
 export default upsertSingle;
 //# sourceMappingURL=upsert-single.d.ts.map

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const error_handler_1 = require("../../utils/app/error-handler");
 const Role_1 = __importDefault(require("../../db/models/Role"));
+const format_roles_1 = __importDefault(require("../../utils/format/format-roles"));
 const getSingle = async (client, data) => {
     const role = await Role_1.default.getSingle(client, {
         id: data.id,
@@ -17,7 +18,7 @@ const getSingle = async (client, data) => {
             status: 500,
         });
     }
-    return role;
+    return (0, format_roles_1.default)(role);
 };
 exports.default = getSingle;
 //# sourceMappingURL=get-single.js.map

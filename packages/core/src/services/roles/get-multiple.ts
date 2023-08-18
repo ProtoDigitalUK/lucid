@@ -8,6 +8,8 @@ import Role from "@db/models/Role";
 // Schema
 import rolesSchema from "@schemas/roles";
 import rolePermService from "@services/role-permissions";
+// Format
+import formatRole from "@utils/format/format-roles";
 
 export interface ServiceData {
   query: z.infer<typeof rolesSchema.getMultiple.query>;
@@ -69,7 +71,7 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
   }
 
   return {
-    data: roles.data,
+    data: roles.data.map((role) => formatRole(role)),
     count: roles.count,
   };
 };

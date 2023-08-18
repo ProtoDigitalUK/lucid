@@ -7,7 +7,7 @@ declare const _default: {
                 key: z.ZodString;
                 fields: z.ZodOptional<z.ZodArray<z.ZodType<{
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -16,7 +16,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -25,7 +25,7 @@ declare const _default: {
                     } & any)[] | undefined;
                 }, z.ZodTypeDef, {
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -34,7 +34,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -47,7 +47,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -56,7 +56,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -69,7 +69,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -78,7 +78,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -92,7 +92,7 @@ declare const _default: {
                 key: z.ZodString;
                 fields: z.ZodOptional<z.ZodArray<z.ZodType<{
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -101,7 +101,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -110,7 +110,7 @@ declare const _default: {
                     } & any)[] | undefined;
                 }, z.ZodTypeDef, {
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -119,7 +119,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -132,7 +132,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -141,7 +141,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -154,7 +154,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -163,7 +163,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -178,7 +178,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -187,7 +187,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -201,7 +201,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -210,7 +210,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -225,7 +225,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -234,7 +234,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;
@@ -248,7 +248,7 @@ declare const _default: {
                 id?: number | undefined;
                 fields?: ({
                     key: string;
-                    type: import("../../../brick-builder/src").FieldTypesEnum;
+                    type: import("@lucid/brick-builder").FieldTypesEnum;
                     fields_id?: number | undefined;
                     parent_repeater?: number | undefined;
                     group_position?: number | undefined;
@@ -257,7 +257,7 @@ declare const _default: {
                 } & {
                     items?: ({
                         key: string;
-                        type: import("../../../brick-builder/src").FieldTypesEnum;
+                        type: import("@lucid/brick-builder").FieldTypesEnum;
                         fields_id?: number | undefined;
                         parent_repeater?: number | undefined;
                         group_position?: number | undefined;

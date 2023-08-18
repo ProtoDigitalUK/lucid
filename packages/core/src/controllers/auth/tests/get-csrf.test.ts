@@ -1,3 +1,4 @@
+import "@types/jest";
 import request from "supertest";
 // import { config } from "@root/dev";
 import app from "@root/init";

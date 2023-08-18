@@ -44,7 +44,7 @@ export const Th: Component<ThProps> = (props) => {
   return (
     <th
       class={classNames(
-        "text-left first:pl-15 md:first:pl-30 relative last:pr-15 md:last:pr-30 px-15 hover:bg-backgroundAccent rounded-md bg-background duration-200 transition-colors whitespace-nowrap",
+        "text-left first:pl-15 md:first:pl-30 relative last:pr-15 md:last:pr-30 px-15 hover:bg-backgroundAccent rounded-md bg-background bg-clip-padding border-b border-border duration-200 transition-colors whitespace-nowrap",
         {
           hidden: props.options?.include === false,
         },
@@ -60,13 +60,15 @@ export const Th: Component<ThProps> = (props) => {
           <Switch>
             <Match when={props.options?.sortable !== true}>
               <div class="flex items-center">
-                <span class="text-sm mr-2.5 fill-body">{props?.icon}</span>
-                <span class="text-sm text-body">{props?.label}</span>
+                <span class="text-base mr-2.5 fill-body">{props?.icon}</span>
+                <span class="text-base text-body font-display">
+                  {props?.label}
+                </span>
               </div>
             </Match>
             <Match when={props.options?.sortable === true}>
               <button
-                class="justify-between flex items-center"
+                class="justify-between flex items-center w-full"
                 onClick={() => {
                   if (props.searchParams === undefined) return;
                   if (props.key === undefined) return;
@@ -88,8 +90,10 @@ export const Th: Component<ThProps> = (props) => {
                 }}
               >
                 <div class="flex items-center">
-                  <span class="text-sm mr-2.5 fill-body">{props?.icon}</span>
-                  <span class="text-sm text-body">{props?.label}</span>
+                  <span class="text-base mr-2.5 fill-body">{props?.icon}</span>
+                  <span class="text-base text-body font-display">
+                    {props?.label}
+                  </span>
                 </div>
                 <Switch>
                   <Match when={sort() === "desc" || sort() === "asc"}>

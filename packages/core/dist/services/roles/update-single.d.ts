@@ -7,6 +7,6 @@ export interface ServiceData {
         permissions: string[];
     }>;
 }
-declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../db/models/Role").RoleT>;
+declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("@lucid/types/src/roles").RoleResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

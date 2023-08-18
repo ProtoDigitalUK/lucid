@@ -23,9 +23,7 @@ type RoleGetSingleByName = (client: PoolClient, data: {
 }) => Promise<RoleT>;
 export type RoleT = {
     id: number;
-    environment_key: string;
-    user_id: string;
-    role_id: string;
+    name: string;
     permissions: {
         id: RolePermissionT["id"];
         permission: RolePermissionT["permission"];
