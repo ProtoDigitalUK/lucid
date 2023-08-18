@@ -31,7 +31,7 @@ const useGetSingle = (params: {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["environments.getSingle", key()], {
+  return createQuery(() => ["environment.getSingle", key()], {
     queryFn: () =>
       request<APIResponse<EnvironmentResT>>({
         url: `/api/v1/environments/${queryParams().location.environment_key}`,

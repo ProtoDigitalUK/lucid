@@ -49,9 +49,9 @@ const useUpdateSingle = () => {
         });
         setErrors(undefined);
 
-        queryClient.invalidateQueries(["environments.getSingle"]);
-        queryClient.invalidateQueries(["environments.getAll"]);
-        queryClient.invalidateQueries(["environments.collections.getAll"]);
+        queryClient.invalidateQueries(["environment.getSingle"]);
+        queryClient.invalidateQueries(["environment.getAll"]);
+        queryClient.invalidateQueries(["environment.collections.getAll"]);
       } else if (error) {
         validateSetError(error, setErrors);
       }

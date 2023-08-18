@@ -1108,6 +1108,11 @@
 											"key": "filter[environment_key]",
 											"value": "{{LUCID_ENVIRONMENT}}",
 											"disabled": true
+										},
+										{
+											"key": "filter[environment_key]",
+											"value": "test-env",
+											"disabled": true
 										}
 									]
 								},
@@ -2409,13 +2414,7 @@
 					"name": "Get Multiple",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/users?sort=created_at",
 							"host": [

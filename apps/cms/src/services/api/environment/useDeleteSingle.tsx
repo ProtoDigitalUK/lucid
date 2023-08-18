@@ -57,8 +57,8 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 
         props.onSuccess?.();
 
-        queryClient.invalidateQueries(["environments.getAll"]);
-        queryClient.invalidateQueries(["environments.collections.getAll"]);
+        queryClient.invalidateQueries(["environment.getAll"]);
+        queryClient.invalidateQueries(["environment.collections.getAll"]);
       } else if (error) {
         validateSetError(error, setErrors);
       }

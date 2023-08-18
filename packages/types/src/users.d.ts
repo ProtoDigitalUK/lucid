@@ -16,7 +16,7 @@ export interface UserResT {
   permissions?: UserPermissionsResT["permissions"];
 
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 // User Permissions

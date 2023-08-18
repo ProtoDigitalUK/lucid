@@ -40,7 +40,7 @@ const useGetAll = (params: {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["environments.collections.getAll", key()], {
+  return createQuery(() => ["environment.collections.getAll", key()], {
     queryFn: () =>
       request<APIResponse<CollectionResT[]>>({
         url: `/api/v1/collections`,

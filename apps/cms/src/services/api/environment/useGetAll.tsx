@@ -22,7 +22,7 @@ const useGetAll = (params: {
     return JSON.stringify(queryParams());
   });
 
-  const query = createQuery(() => ["environments.getAll", key()], {
+  const query = createQuery(() => ["environment.getAll", key()], {
     queryFn: () =>
       request<APIResponse<EnvironmentResT[]>>({
         url: `/api/v1/environments`,

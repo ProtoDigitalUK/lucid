@@ -52,8 +52,8 @@ const useCreateSingle = () => {
         setEnvironment(data.data.key);
         navigate(`/env/${data.data.key}`);
 
-        queryClient.invalidateQueries(["environments.getAll"]);
-        queryClient.invalidateQueries(["environments.collections.getAll"]);
+        queryClient.invalidateQueries(["environment.getAll"]);
+        queryClient.invalidateQueries(["environment.collections.getAll"]);
       } else if (error) {
         validateSetError(error, setErrors);
       }

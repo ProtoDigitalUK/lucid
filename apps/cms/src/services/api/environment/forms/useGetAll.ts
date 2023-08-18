@@ -40,7 +40,7 @@ const useGetAll = (params: {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["environments.forms.getAll", key()], {
+  return createQuery(() => ["environment.forms.getAll", key()], {
     queryFn: () =>
       request<APIResponse<FormResT[]>>({
         url: `/api/v1/forms`,

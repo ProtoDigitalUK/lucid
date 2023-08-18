@@ -1,20 +1,12 @@
-import T from "@/translations";
 import { Component } from "solid-js";
 // Types
 import { TableRowProps } from "@/types/components";
+import { UserResT } from "@lucid/types/src/users";
 // Components
 import Table from "@/components/Groups/Table";
 
 interface UserRowProps extends TableRowProps {
-  user: {
-    first_name: string;
-    last_name: string;
-    role: string;
-    favorite_color: string;
-    notes: string;
-    created_at: string;
-    updated_at: string;
-  };
+  user: UserResT;
   include: boolean[];
 }
 
@@ -25,22 +17,7 @@ const UserRow: Component<UserRowProps> = (props) => {
     <Table.Tr
       index={props.index}
       selected={props.selected}
-      actions={[
-        {
-          label: T("edit"),
-          type: "link",
-          href: "/",
-          permission: true,
-        },
-        {
-          label: T("delete"),
-          type: "button",
-          onClick: () => {
-            console.log("Delete");
-          },
-          permission: true,
-        },
-      ]}
+      actions={[]}
       options={props.options}
       callbacks={props.callbacks}
     >
@@ -63,35 +40,14 @@ const UserRow: Component<UserRowProps> = (props) => {
           include: props?.include[2],
         }}
       >
-        {props.user.role}
+        {props.user.email}
       </Table.Td>
       <Table.Td
         options={{
           include: props?.include[3],
         }}
       >
-        {props.user.favorite_color}
-      </Table.Td>
-      <Table.Td
-        options={{
-          include: props?.include[4],
-        }}
-      >
-        {props.user.notes}
-      </Table.Td>
-      <Table.Td
-        options={{
-          include: props?.include[5],
-        }}
-      >
         {props.user.created_at}
-      </Table.Td>
-      <Table.Td
-        options={{
-          include: props?.include[6],
-        }}
-      >
-        {props.user.updated_at}
       </Table.Td>
     </Table.Tr>
   );

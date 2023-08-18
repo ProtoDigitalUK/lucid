@@ -281,6 +281,7 @@ const useSearchParams = (
     }
 
     if (sortsStr) {
+      sortsStr = sortsStr.slice(0, -1); // remove last comma
       searchParams.set("sort", sortsStr);
     }
 

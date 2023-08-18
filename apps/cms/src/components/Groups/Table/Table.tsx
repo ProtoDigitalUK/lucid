@@ -171,7 +171,17 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   return (
     <>
       <Switch>
-        <Match when={props.rows === 0}>
+        <Match when={props.state.isError}>
+          <Error
+            type="table"
+            content={{
+              image: notifySvg,
+              title: T("error_title"),
+              description: T("error_message"),
+            }}
+          />
+        </Match>
+        <Match when={props.rows === 0 && props.state.isLoading === false}>
           <Error
             type="table"
             content={{
@@ -193,16 +203,6 @@ export const TableRoot: Component<TableRootProps> = (props) => {
               </Button>
             </Show>
           </Error>
-        </Match>
-        <Match when={props.state.isError}>
-          <Error
-            type="table"
-            content={{
-              image: notifySvg,
-              title: T("error_title"),
-              description: T("error_message"),
-            }}
-          />
         </Match>
         <Match when={props.state.isSuccess || props.state.isLoading}>
           {/* Table */}
