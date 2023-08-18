@@ -33,6 +33,11 @@ const UsersTable: Component<UsersTableProps> = (props) => {
       searchParams={props.searchParams}
       head={[
         {
+          label: T("username"),
+          key: "username",
+          icon: <FaSolidT />,
+        },
+        {
           label: T("first_name"),
           key: "first_name",
           icon: <FaSolidT />,

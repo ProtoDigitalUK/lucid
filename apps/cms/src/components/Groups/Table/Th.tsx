@@ -66,7 +66,7 @@ export const Th: Component<ThProps> = (props) => {
             </Match>
             <Match when={props.options?.sortable === true}>
               <button
-                class="justify-between absolute inset-0 px-15 flex items-center"
+                class="justify-between flex items-center"
                 onClick={() => {
                   if (props.searchParams === undefined) return;
                   if (props.key === undefined) return;
