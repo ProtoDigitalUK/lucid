@@ -9,9 +9,9 @@ const SkeletonCard: Component<SkeletonCardProps> = (props) => {
     <li class={"bg-container p-15 border-border border rounded-md"}>
       <Switch>
         <Match when={props.size === "small"}>
-          <span class="animate-pulse block h-3 rounded-md bg-backgroundAccent w-1/4 mb-1" />
-          <span class="animate-pulse block h-3 rounded-md bg-backgroundAccent w-2/4 mb-2.5" />
-          <span class="animate-pulse block h-7 rounded-md bg-backgroundAccent w-full" />
+          <span class="skeleton block h-3 w-1/4 mb-1" />
+          <span class="skeleton block h-3 w-2/4 mb-2.5" />
+          <span class="skeleton block h-7 w-full" />
         </Match>
       </Switch>
     </li>

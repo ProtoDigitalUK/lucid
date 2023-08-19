@@ -6,7 +6,7 @@ import api from "@/services/api";
 import { environment } from "@/state/environment";
 // Components
 import Layout from "@/components/Groups/Layout";
-import CreateUpdateEnvForm from "@/components/Forms/Environment/CreateUpdateEnvForm";
+import UpsertEnvForm from "@/components/Forms/Environment/UpsertEnvForm";
 // Modals
 import DeleteEnvironment from "@/components/Modals/Environment/DeleteEnvironment";
 
@@ -47,7 +47,7 @@ const ManageEnvrionemntRoute: Component = () => {
       }}
     >
       {/* Content */}
-      <CreateUpdateEnvForm environment={environmentData.data?.data} />
+      <UpsertEnvForm environment={environmentData.data?.data} />
       {/* Modals */}
       <DeleteEnvironment
         key={environmentData.data?.data.key}

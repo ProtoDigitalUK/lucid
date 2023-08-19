@@ -2,7 +2,7 @@ import T from "@/translations";
 import { Component } from "solid-js";
 // Componetns
 import Layout from "@/components/Groups/Layout";
-import CreateUpdateEnvForm from "@/components/Forms/Environment/CreateUpdateEnvForm";
+import UpsertEnvForm from "@/components/Forms/Environment/UpsertEnvForm";
 
 const CreateEnvrionemntRoute: Component = () => {
   // ----------------------------------------
@@ -12,7 +12,7 @@ const CreateEnvrionemntRoute: Component = () => {
       title={T("create_environment_route_title")}
       description={T("create_environment_route_description")}
     >
-      <CreateUpdateEnvForm />
+      <UpsertEnvForm />
     </Layout.PageLayout>
   );
 };

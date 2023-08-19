@@ -8,8 +8,8 @@ interface UseRowTargetProps {
   triggers: Record<string, boolean>;
 }
 
-const useRowTarget = (props: UseRowTargetProps) => {
-  const [getTriggers, setTriggers] = createSignal(props.triggers);
+const useRowTarget = (config: UseRowTargetProps) => {
+  const [getTriggers, setTriggers] = createSignal(config.triggers);
   const [getTargetId, setTargetId] = createSignal<number>();
 
   return {

@@ -31,7 +31,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
       onOpenChange={() => props.state.setOpen(!props.state.open)}
     >
       <AlertDialog.Portal>
-        <AlertDialog.Overlay class="fixed inset-0 bg-primary bg-opacity-60 animate-animate-fade-in" />
+        <AlertDialog.Overlay class="fixed inset-0 bg-primary bg-opacity-60 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
         <div class="fixed inset-0 z-50 flex items-center justify-center p-15">
           <AlertDialog.Content class="z-50 max-w-2xl w-full bg-container shadow-md rounded-md border-border border">
             <div class="flex items-baseline justify-between p-15 md:p-30 border-b border-border">

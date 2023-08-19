@@ -73,8 +73,6 @@ const buildLinks = (
   url.searchParams.delete("page");
   links.first = url.toString();
 
-  console.log(typeof page, typeof totalPages);
-
   // Set Last
   if (page !== String(totalPages))
     url.searchParams.set("page", String(totalPages));

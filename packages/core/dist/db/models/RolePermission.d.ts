@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { PermissionT, EnvironmentPermissionT } from "../../services/Permissions";
+import { PermissionT, EnvironmentPermissionT } from "@lucid/types/src/permissions";
 type RolePermissionCreateSingle = (client: PoolClient, data: {
     role_id: number;
     permission: PermissionT | EnvironmentPermissionT;

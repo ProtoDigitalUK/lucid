@@ -7,8 +7,11 @@ import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
 import validateEnvironment from "@middleware/validate-environment";
 import permissions from "@middleware/permissions";
-// Services
-import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
+// Types
+import {
+  PermissionT,
+  EnvironmentPermissionT,
+} from "@lucid/types/src/permissions";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,

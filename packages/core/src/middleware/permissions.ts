@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
 import { LucidError } from "@utils/app/error-handler";
-import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
 import service from "@utils/app/service";
 // Serivces
 import usersServices from "@services/users";
+// Types
+import {
+  PermissionT,
+  EnvironmentPermissionT,
+} from "@lucid/types/src/permissions";
 
 const throwPermissionError = () => {
   throw new LucidError({

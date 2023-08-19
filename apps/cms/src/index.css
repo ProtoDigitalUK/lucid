@@ -100,6 +100,9 @@
   .dropdown-trigger {
     @apply duration-200 transition-colors focus:outline outline-secondary outline-1;
   }
+  .skeleton {
+    @apply bg-backgroundAccent rounded-md animate-pulse;
+  }
 
   /* Page Layout */
   .page-layout-full-body {

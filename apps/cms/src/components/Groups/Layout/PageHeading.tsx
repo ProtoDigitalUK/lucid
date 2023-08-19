@@ -66,10 +66,10 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         <div class="max-w-3xl w-full">
           <Switch>
             <Match when={props.state?.isLoading}>
-              <div class="animate-pulse w-full">
-                <div class="h-10 bg-backgroundAccent rounded-md w-1/4" />
-                <div class="h-4 bg-backgroundAccent rounded-md w-full mt-2" />
-                <div class="h-4 bg-backgroundAccent rounded-md w-full mt-2" />
+              <div class="w-full">
+                <div class="h-10 skeleton w-1/4" />
+                <div class="h-4 skeleton w-full mt-2" />
+                <div class="h-4 skeleton w-full mt-2" />
               </div>
             </Match>
             <Match when={!props.state?.isLoading}>

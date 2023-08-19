@@ -7,10 +7,12 @@ import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
 import service from "@utils/app/service";
 // Services
 import environmentsService from "@services/environments";
-import Permissions, {
+import Permissions from "@services/Permissions";
+// Types
+import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@services/Permissions";
+} from "@lucid/types/src/permissions";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body

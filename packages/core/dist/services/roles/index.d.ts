@@ -12,7 +12,7 @@ declare const _default: {
         permissions: string[];
         environment_key?: string | undefined;
     }[]) => Promise<{
-        permission: import("../Permissions").PermissionT | import("../Permissions").EnvironmentPermissionT;
+        permission: import("@lucid/types/src/permissions").PermissionT | import("@lucid/types/src/permissions").EnvironmentPermissionT;
         environment_key?: string | undefined;
     }[]>;
 };

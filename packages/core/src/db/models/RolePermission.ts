@@ -1,7 +1,11 @@
 import { PoolClient } from "pg";
 // Utils
 import { queryDataFormat } from "@utils/app/query-helpers";
-import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
+// Types
+import {
+  PermissionT,
+  EnvironmentPermissionT,
+} from "@lucid/types/src/permissions";
 
 // -------------------------------------------
 // Types

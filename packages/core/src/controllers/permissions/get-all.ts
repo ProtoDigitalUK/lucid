@@ -3,6 +3,8 @@ import buildResponse from "@utils/app/build-response";
 import Permissions from "@services/Permissions";
 // Schema
 import permissionsSchema from "@schemas/permissions";
+// Format
+import formatPermissions from "@utils/format/format-permissions";
 
 // --------------------------------------------------
 // Controller
@@ -12,7 +14,7 @@ const getAllController: Controller<
   typeof permissionsSchema.getAll.query
 > = async (req, res, next) => {
   try {
-    const permissionsRes = Permissions.formattedPermissions;
+    const permissionsRes = formatPermissions(Permissions.raw);
 
     res.status(200).json(
       buildResponse(req, {

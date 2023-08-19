@@ -19,7 +19,7 @@ const LoadingRow: Component<LoadingRowProps> = (props) => {
             width: 65,
           }}
         >
-          <div class="w-full h-5 bg-backgroundAccent rounded-md animate-pulse" />
+          <div class="w-full h-5 skeletone" />
         </Table.Td>
       </Show>
       <Index each={Array.from({ length: props.columns })}>
@@ -29,7 +29,7 @@ const LoadingRow: Component<LoadingRowProps> = (props) => {
               include: props.includes[i],
             }}
           >
-            <div class="w-full h-5 bg-backgroundAccent rounded-md animate-pulse" />
+            <div class="w-full h-5 skeleton" />
           </Table.Td>
         )}
       </Index>
@@ -38,7 +38,7 @@ const LoadingRow: Component<LoadingRowProps> = (props) => {
           noMinWidth: true,
         }}
       >
-        <div class="w-full h-5 bg-backgroundAccent rounded-md animate-pulse" />
+        <div class="w-full h-5 skeleton" />
       </Table.Td>
     </tr>
   );

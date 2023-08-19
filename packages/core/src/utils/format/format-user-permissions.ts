@@ -1,13 +1,15 @@
 // Models
 import { UserRolePermissionRes } from "@db/models/UserRole";
-// Services
-import { PermissionT, EnvironmentPermissionT } from "@services/Permissions";
 // Types
 import {
   UserPermissionsResT,
   UserRoleResT,
   UserEnvrionmentResT,
 } from "@lucid/types/src/users";
+import {
+  PermissionT,
+  EnvironmentPermissionT,
+} from "@lucid/types/src/permissions";
 
 const formatUserPermissions = (
   permissionRes: Array<UserRolePermissionRes>

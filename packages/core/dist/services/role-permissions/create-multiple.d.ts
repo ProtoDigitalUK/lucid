@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { PermissionT, EnvironmentPermissionT } from "../Permissions";
+import { PermissionT, EnvironmentPermissionT } from "@lucid/types/src/permissions";
 export interface ServiceData {
     role_id: number;
     permissions: Array<{

@@ -28,11 +28,11 @@ import EnvBrickCard from "@/components/Cards/BrickCard";
 import EnvCollectionCard from "@/components/Cards/CollectionCard";
 import EnvFormCard from "@/components/Cards/FormCard";
 
-interface CreateUpdateEnvFormProps {
+interface UpsertEnvFormProps {
   environment?: EnvironmentResT;
 }
 
-const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
+const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
   // ----------------------------------------
   // State
   const [title, setTitle] = createSignal("");
@@ -321,4 +321,4 @@ const CreateUpdateEnvForm: Component<CreateUpdateEnvFormProps> = (props) => {
   );
 };
 
-export default CreateUpdateEnvForm;
+export default UpsertEnvForm;
