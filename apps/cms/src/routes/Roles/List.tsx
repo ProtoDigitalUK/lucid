@@ -1,15 +1,17 @@
 import T from "@/translations";
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import RolesTable from "@/components/Tables/RolesTable";
+import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
 
 const RolesListRoute: Component = () => {
   // ----------------------------------
   // Hooks & State
+  const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
   const searchParams = useSearchParams(
     {
       filters: {
@@ -37,6 +39,12 @@ const RolesListRoute: Component = () => {
       options={{
         noPadding: true,
       }}
+      actions={{
+        create: {
+          open: openCreateRolePanel(),
+          setOpen: setOpenCreateRolePanel,
+        },
+      }}
       headingChildren={
         <Query.Row
           searchParams={searchParams}
@@ -62,6 +70,10 @@ const RolesListRoute: Component = () => {
       }
     >
       <RolesTable searchParams={searchParams} />
+      <UpsertRolePanel
+        open={openCreateRolePanel()}
+        setOpen={setOpenCreateRolePanel}
+      />
     </Layout.PageLayout>
   );
 };

@@ -9,7 +9,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Table from "@/components/Groups/Table";
 import RoleRow from "@/components/Tables/Rows/RoleRow";
-import UpdateRole from "@/components/Panels/Role/UpdateRole";
+import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
 
 interface RolesTableProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -94,7 +94,7 @@ const RolesTable: Component<RolesTableProps> = (props) => {
         )}
       </Table.Root>
       <Show when={rowTarget.getTargetId() !== undefined}>
-        <UpdateRole
+        <UpsertRolePanel
           id={rowTarget.getTargetId() as number}
           open={rowTarget.getTriggers().update}
           setOpen={(state: boolean) => {

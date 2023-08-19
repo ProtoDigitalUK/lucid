@@ -3,7 +3,7 @@ import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
 // Types
-import { RoleResT } from "@lucid/types/src/roles";
+import { PermissionsResT } from "@lucid/types/src/permissions";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {}
@@ -22,7 +22,7 @@ const useGetAll = (params: {
 
   return createQuery(() => ["permissions.getAll", key()], {
     queryFn: () =>
-      request<APIResponse<RoleResT[]>>({
+      request<APIResponse<PermissionsResT>>({
         url: `/api/v1/permissions`,
         query: queryParams(),
         config: {

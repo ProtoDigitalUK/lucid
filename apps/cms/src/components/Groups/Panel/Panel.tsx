@@ -7,29 +7,42 @@ import {
   createSignal,
   Switch,
   Match,
+  createEffect,
 } from "solid-js";
 import { FaSolidArrowLeft } from "solid-icons/fa";
 // Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
+// Types
+import { APIErrorResponse } from "@/types/api";
 // Components
 import { Dialog } from "@kobalte/core";
 import Loading from "@/components/Partials/Loading";
 import Error from "@/components/Partials/Error";
+import Button from "@/components/Partials/Button";
+import ErrorMessage from "@/components/Partials/ErrorMessage";
 
 interface PanelProps {
-  state: {
-    open: boolean;
-    setOpen: (_open: boolean) => void;
+  open: boolean;
+  setOpen: (_open: boolean) => void;
+  onSubmit?: () => void;
+
+  fetchState?: {
     isLoading?: boolean;
     isError?: boolean;
+  };
+  mutateState?: {
+    isLoading?: boolean;
+    isError?: boolean;
+    isDisabled?: boolean;
+    errors: APIErrorResponse | undefined;
   };
   content: {
     title: string;
     description?: string;
-    error?: string;
+    fetchError?: string;
+    submit?: string;
   };
   children: JSXElement;
-  footer: JSXElement;
 }
 
 export const Panel: Component<PanelProps> = (props) => {
@@ -39,25 +52,37 @@ export const Panel: Component<PanelProps> = (props) => {
 
   // ------------------------------
   // Refs
-  let headerRef: HTMLDivElement | undefined = undefined;
-  let footerRef: HTMLDivElement | undefined = undefined;
+  let headerRef: HTMLDivElement | undefined;
+  let footerRef: HTMLDivElement | undefined;
 
   // ------------------------------
-  // Mount
-  onMount(() => {
+  // Functions
+  const setBodyHeightValue = () => {
     setTimeout(() => {
       if (headerRef && footerRef) {
         setBodyMinHeight(headerRef.offsetHeight + footerRef.offsetHeight);
       }
     });
+  };
+
+  // ------------------------------
+  // Mount
+  onMount(() => {
+    setBodyHeightValue();
+  });
+
+  // ------------------------------
+  // Effects
+  createEffect(() => {
+    if (props.open) setBodyHeightValue();
   });
 
   // ------------------------------
   // Render
   return (
     <Dialog.Root
-      open={props.state.open}
-      onOpenChange={() => props.state.setOpen(!props.state.open)}
+      open={props.open}
+      onOpenChange={() => props.setOpen(!props.open)}
     >
       <Dialog.Portal>
         <Dialog.Overlay class="fixed inset-0 bg-primary bg-opacity-60 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
@@ -74,13 +99,13 @@ export const Panel: Component<PanelProps> = (props) => {
                 </Dialog.CloseButton>
               </div>
               <Switch>
-                <Match when={props.state.isLoading}>
+                <Match when={props.fetchState?.isLoading}>
                   <div class="w-full">
                     <div class="h-8 skeleton w-1/4" />
                     <div class="h-6 skeleton w-full mt-2" />
                   </div>
                 </Match>
-                <Match when={!props.state.isLoading}>
+                <Match when={!props.fetchState?.isLoading}>
                   <Dialog.Title>{props.content.title}</Dialog.Title>
                   <Show when={props.content.description}>
                     <Dialog.Description class="block mt-1">
@@ -96,18 +121,33 @@ export const Panel: Component<PanelProps> = (props) => {
                 "min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
               }}
             >
-              <Switch fallback={props.children}>
-                <Match when={props.state.isLoading}>
+              <Switch>
+                <Match
+                  when={
+                    !props.fetchState?.isLoading && !props.fetchState?.isError
+                  }
+                >
+                  <form
+                    class="w-full"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (props.onSubmit) props.onSubmit();
+                    }}
+                  >
+                    {props.children}
+                  </form>
+                </Match>
+                <Match when={props.fetchState?.isLoading}>
                   <Loading type="fill" />
                 </Match>
-                <Match when={props.state.isError}>
+                <Match when={props.fetchState?.isError}>
                   <div class="min-h-[300px]">
                     <Error
                       type={"fill"}
                       content={{
                         image: notifyIllustration,
-                        title: props.content.error || T("error_title"),
-                        description: props.content.error
+                        title: props.content.fetchError || T("error_title"),
+                        description: props.content.fetchError
                           ? ""
                           : T("error_message"),
                       }}
@@ -116,11 +156,40 @@ export const Panel: Component<PanelProps> = (props) => {
                 </Match>
               </Switch>
             </div>
-            <Show when={props.footer !== undefined}>
-              <div ref={footerRef} class="p-30 border-t">
-                {props.footer}
+            <div ref={footerRef} class="p-30 border-t">
+              <Show
+                when={
+                  props.mutateState?.errors &&
+                  props.mutateState?.errors?.message
+                }
+              >
+                <ErrorMessage
+                  theme="background"
+                  message={props.mutateState?.errors?.message}
+                />
+              </Show>
+              <div class="flex justify-end">
+                <Button
+                  size="medium"
+                  theme="container-outline"
+                  onClick={() => props.setOpen(false)}
+                >
+                  {T("close")}
+                </Button>
+                <Show when={props.content.submit}>
+                  <Button
+                    type="submit"
+                    theme="primary"
+                    size="medium"
+                    classes="ml-15"
+                    loading={props.mutateState?.isLoading}
+                    disabled={props.mutateState?.isDisabled}
+                  >
+                    {props.content.submit}
+                  </Button>
+                </Show>
               </div>
-            </Show>
+            </div>
           </Dialog.Content>
         </div>
       </Dialog.Portal>

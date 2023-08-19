@@ -17,6 +17,10 @@ export interface PageHeadingProps {
       open: boolean;
       setOpen: (_open: boolean) => void;
     };
+    create?: {
+      open: boolean;
+      setOpen: (_open: boolean) => void;
+    };
   };
   options?: {
     noBorder?: boolean;
@@ -83,6 +87,18 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         {/* Actions */}
         <Show when={props.actions}>
           <div class="flex items-center justify-end ml-5">
+            <Show when={props.actions?.create !== undefined}>
+              <Button
+                type="submit"
+                theme="primary"
+                size="medium"
+                onClick={() => {
+                  props.actions?.create?.setOpen(true);
+                }}
+              >
+                {T("create")}
+              </Button>
+            </Show>
             <Show when={props.actions?.delete !== undefined}>
               <Button
                 theme="danger"
