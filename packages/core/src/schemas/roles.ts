@@ -18,12 +18,14 @@ const createSingleParams = z.object({});
 // UPDATE SINGLE
 const updateSingleBody = z.object({
   name: z.string().min(2).optional(),
-  permission_groups: z.array(
-    z.object({
-      environment_key: z.string().optional(),
-      permissions: z.array(z.string()),
-    })
-  ),
+  permission_groups: z
+    .array(
+      z.object({
+        environment_key: z.string().optional(),
+        permissions: z.array(z.string()),
+      })
+    )
+    .optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

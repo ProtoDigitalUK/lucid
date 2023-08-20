@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 export interface ServiceData {
     id: number;
     name?: string;
-    permission_groups: Array<{
+    permission_groups?: Array<{
         environment_key?: string;
         permissions: string[];
     }>;

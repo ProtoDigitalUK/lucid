@@ -1,14 +1,16 @@
 import T from "@/translations";
 import {
+  Accessor,
   Component,
   For,
   createEffect,
   createMemo,
   createSignal,
-  Show,
 } from "solid-js";
 // Services
 import api from "@/services/api";
+// Utils
+import helpers from "@/utils/helpers";
 // Components
 import Panel from "@/components/Groups/Panel";
 import PermissionGroup, {
@@ -19,7 +21,7 @@ import Form from "@/components/Groups/Form";
 import InputGrid from "@/components/Containers/InputGrid";
 
 interface UpsertRolePanelProps {
-  id?: number;
+  id?: Accessor<number | undefined>;
   open: boolean;
   setOpen: (_state: boolean) => void;
 }
@@ -27,7 +29,6 @@ interface UpsertRolePanelProps {
 const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   // ---------------------------------
   // State
-  const [initialValuesSet, setInitialValuesSet] = createSignal<boolean>(false);
   const [selectedPermissions, setSelectedPermissions] = createSignal<
     SelectedPermissions[]
   >([]);
@@ -38,7 +39,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   const role = api.roles.useGetSingle({
     queryParams: {
       location: {
-        role_id: props.id as number,
+        role_id: props.id as Accessor<number | undefined>,
       },
     },
     enabled: () => props.open && props.id !== undefined,
@@ -50,21 +51,90 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
     queryParams: {},
   });
 
+  // ----------------------------------------
+  // Mutations
+  const createRole = api.roles.useCreateSingle({
+    onSuccess: () => {
+      props.setOpen(false);
+    },
+  });
+  const updateRole = api.roles.useUpdateSingle({
+    onSuccess: () => {
+      props.setOpen(false);
+    },
+  });
+
+  // ---------------------------------
+  // Functions
+  const toggleMultiplePermissions = (permissions: SelectedPermissions[]) => {
+    const newSelectedPermissions = selectedPermissions();
+
+    for (let i = 0; i < permissions.length; i++) {
+      const permissionIndex = newSelectedPermissions.findIndex(
+        (selectedPermission) =>
+          selectedPermission.permission === permissions[i].permission &&
+          selectedPermission.environment === permissions[i].environment
+      );
+      if (permissionIndex !== -1) {
+        newSelectedPermissions.splice(permissionIndex, 1);
+      } else {
+        newSelectedPermissions.push(permissions[i]);
+      }
+    }
+
+    setSelectedPermissions([...newSelectedPermissions]);
+  };
+  const resPermsToSelectedFormat = () => {
+    if (role.data?.data.permissions) {
+      return role.data?.data.permissions.map((permission) => {
+        return {
+          environment: permission.environment_key,
+          permission: permission.permission,
+        };
+      });
+    }
+    return [];
+  };
+
+  const buildPermissionsArr = (permissions: SelectedPermissions[]) => {
+    const permArr: Array<{
+      environment_key?: string;
+      permissions: string[];
+    }> = [];
+
+    const globalPerms = permissions.filter(
+      (selectedPermission) => selectedPermission.environment === null
+    );
+    if (globalPerms.length > 0) {
+      permArr.push({
+        permissions: globalPerms.map((perm) => perm.permission),
+      });
+    }
+
+    if (environments.data?.data !== undefined) {
+      for (let i = 0; i < environments.data?.data.length; i++) {
+        const envPerms = permissions.filter(
+          (selectedPermission) =>
+            selectedPermission.environment === environments.data?.data[i].key
+        );
+        if (envPerms.length > 0) {
+          permArr.push({
+            environment_key: environments.data?.data[i].key,
+            permissions: envPerms.map((perm) => perm.permission),
+          });
+        }
+      }
+    }
+
+    return permArr;
+  };
+
   // ---------------------------------
   // Effects
   createEffect(() => {
-    if (!initialValuesSet() && !role.isLoading && !role.isError) {
-      if (role.data?.data.permissions) {
-        setSelectedPermissions(
-          role.data?.data.permissions.map((permission) => {
-            return {
-              environment: permission.environment_key,
-              permission: permission.permission,
-            };
-          })
-        );
-      }
-      setInitialValuesSet(true);
+    if (!role.isLoading && !role.isError && props.open) {
+      setSelectedPermissions(resPermsToSelectedFormat());
+      setName(role.data?.data.name || "");
     }
   });
 
@@ -98,26 +168,31 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
     return T("update");
   });
 
-  // ---------------------------------
-  // Functions
-  const toggleMultiplePermissions = (permissions: SelectedPermissions[]) => {
-    const newSelectedPermissions = selectedPermissions();
-
-    for (let i = 0; i < permissions.length; i++) {
-      const permissionIndex = newSelectedPermissions.findIndex(
-        (selectedPermission) =>
-          selectedPermission.permission === permissions[i].permission &&
-          selectedPermission.environment === permissions[i].environment
-      );
-      if (permissionIndex !== -1) {
-        newSelectedPermissions.splice(permissionIndex, 1);
-      } else {
-        newSelectedPermissions.push(permissions[i]);
+  const updateData = createMemo(() => {
+    return helpers.updateData(
+      {
+        name: role.data?.data.name,
+        permission_groups: buildPermissionsArr(resPermsToSelectedFormat()),
+      },
+      {
+        name: getName(),
+        permission_groups: buildPermissionsArr(selectedPermissions()),
       }
-    }
+    );
+  });
+  const submitIsDisabled = createMemo(() => {
+    if (!props.id) return false;
+    return !updateData().changed;
+  });
 
-    setSelectedPermissions([...newSelectedPermissions]);
-  };
+  // Mutation memos
+  const isCreating = createMemo(() => {
+    return createRole.action.isLoading || updateRole.action.isLoading;
+  });
+  const errors = createMemo(() => {
+    if (!props.id) return createRole.errors();
+    return updateRole.errors();
+  });
 
   // ---------------------------------
   // Return
@@ -125,10 +200,33 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
     <Panel.Root
       open={props.open}
       setOpen={props.setOpen}
-      onSubmit={() => {}}
+      onSubmit={() => {
+        if (!props.id) {
+          createRole.action.mutate({
+            name: getName(),
+            permission_groups: buildPermissionsArr(selectedPermissions()),
+          });
+        } else {
+          updateRole.action.mutate({
+            id: props.id() as number,
+            body: updateData().data,
+          });
+        }
+      }}
+      reset={() => {
+        setSelectedPermissions([]);
+        setName("");
+        createRole.reset();
+        updateRole.reset();
+      }}
       fetchState={{
         isLoading: isLoading(),
         isError: isError(),
+      }}
+      mutateState={{
+        isLoading: isCreating(),
+        isDisabled: submitIsDisabled(),
+        errors: errors(),
       }}
       content={{
         title: panelTitle(),
@@ -137,25 +235,23 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
       }}
     >
       {/* Details */}
-      <Show when={!props.id}>
-        <SectionHeading title={T("details")} />
-        <InputGrid columns={2}>
-          <Form.Input
-            id="key"
-            name="key"
-            type="text"
-            value={getName()}
-            onChange={setName}
-            copy={{
-              label: T("name"),
-            }}
-            required={true}
-            // errors={errors()?.errors?.body?.key}
-            noMargin={true}
-          />
-        </InputGrid>
-      </Show>
-
+      <SectionHeading title={T("details")} />
+      <InputGrid columns={2}>
+        <Form.Input
+          id="name"
+          name="name"
+          type="text"
+          value={getName()}
+          onChange={setName}
+          copy={{
+            label: T("name"),
+          }}
+          required={true}
+          errors={errors()?.errors?.body?.name}
+          noMargin={true}
+        />
+      </InputGrid>
+      {/* Global perms */}
       <PermissionGroup
         title={T("global_permissions")}
         options={permissions.data?.data.global || []}
@@ -164,6 +260,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
         toggleMultiplePermissions={toggleMultiplePermissions}
         environment={null}
       />
+      {/* Env Perms */}
       <For each={environments.data?.data}>
         {(environment) => (
           <PermissionGroup

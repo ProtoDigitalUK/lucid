@@ -13,19 +13,13 @@ import formatRole from "@utils/format/format-roles";
 export interface ServiceData {
   id: number;
   name?: string;
-  permission_groups: Array<{
+  permission_groups?: Array<{
     environment_key?: string;
     permissions: string[];
   }>;
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
-  const parsePermissions = await service(
-    roleServices.validatePermissions,
-    false,
-    client
-  )(data.permission_groups);
-
   if (data.name) {
     await service(
       roleServices.checkNameIsUnique,
@@ -40,7 +34,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     id: data.id,
     data: {
       name: data.name,
-      permission_groups: data.permission_groups,
+      updated_at: new Date().toISOString(),
     },
   });
 
@@ -53,22 +47,30 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  if (data.permission_groups.length > 0) {
+  if (data.permission_groups !== undefined) {
+    const parsePermissions = await service(
+      roleServices.validatePermissions,
+      false,
+      client
+    )(data.permission_groups);
+
     await service(
       rolePermServices.deleteAll,
       false,
       client
     )({
-      role_id: role.id,
+      role_id: data.id,
     });
-    await service(
-      rolePermServices.createMultiple,
-      false,
-      client
-    )({
-      role_id: role.id,
-      permissions: parsePermissions,
-    });
+    if (data.permission_groups.length > 0) {
+      await service(
+        rolePermServices.createMultiple,
+        false,
+        client
+      )({
+        role_id: data.id,
+        permissions: parsePermissions,
+      });
+    }
   }
 
   return formatRole(role);

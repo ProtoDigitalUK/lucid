@@ -1,4 +1,5 @@
 import { Accessor } from "solid-js";
+import equal from "fast-deep-equal";
 
 // ---------------------------------------------
 //
@@ -33,7 +34,7 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
   for (const key in obj1) {
     if (Object.prototype.hasOwnProperty.call(obj1, key)) {
       if (Array.isArray(obj1[key])) {
-        if (!compareArrays(obj1[key] as any, obj2[key] as any)) {
+        if (!equal(obj1[key], obj2[key])) {
           result[key] = obj2[key];
         }
       } else if (typeof obj1[key] === "object") {
@@ -61,19 +62,12 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
 
   return result;
 };
-
-const compareArrays = (arr1: any[], arr2: any[]): boolean => {
-  if (arr1.length !== arr2.length) {
-    return false;
-  }
-
-  for (let i = 0; i < arr1.length; i++) {
-    if (!arr2.includes(arr1[i])) {
-      return false;
-    }
-  }
-
-  return true;
+const updateData = <T>(obj1: T, obj2: T) => {
+  const result = deepDiff(obj1, obj2);
+  return {
+    changed: Object.keys(result).length > 0,
+    data: result,
+  };
 };
 
 // ---------------------------------------------
@@ -84,6 +78,7 @@ const resolveValue = <T>(value: Accessor<T> | T): T =>
 const helpers = {
   deepMerge,
   deepDiff,
+  updateData,
   resolveValue,
 };
 

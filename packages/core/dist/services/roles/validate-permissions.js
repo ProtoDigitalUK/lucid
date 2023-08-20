@@ -8,6 +8,8 @@ const service_1 = __importDefault(require("../../utils/app/service"));
 const environments_1 = __importDefault(require("../environments"));
 const Permissions_1 = __importDefault(require("../Permissions"));
 const validatePermissions = async (client, permGroup) => {
+    if (permGroup.length === 0)
+        return [];
     const permissionSet = Permissions_1.default.permissions;
     const environmentsRes = await (0, service_1.default)(environments_1.default.getAll, false, client)();
     const validPermissions = [];

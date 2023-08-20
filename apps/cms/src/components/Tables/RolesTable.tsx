@@ -95,7 +95,7 @@ const RolesTable: Component<RolesTableProps> = (props) => {
       </Table.Root>
       <Show when={rowTarget.getTargetId() !== undefined}>
         <UpsertRolePanel
-          id={rowTarget.getTargetId() as number}
+          id={rowTarget.getTargetId}
           open={rowTarget.getTriggers().update}
           setOpen={(state: boolean) => {
             rowTarget.setTrigger("update", state);

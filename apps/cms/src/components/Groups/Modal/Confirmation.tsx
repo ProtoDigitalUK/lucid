@@ -49,7 +49,9 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
             </div>
             <div class="p-15 md:p-30 border-t border-border ">
               <Show when={props.state.isError && props.content.error}>
-                <ErrorMessage theme="basic" message={props.content.error} />
+                <div class="mb-5">
+                  <ErrorMessage theme="basic" message={props.content.error} />
+                </div>
               </Show>
               <div class="flex">
                 <Button

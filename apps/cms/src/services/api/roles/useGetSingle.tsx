@@ -9,7 +9,7 @@ import { APIResponse } from "@/types/api";
 
 interface QueryParams {
   location: {
-    role_id: Accessor<number> | number;
+    role_id: Accessor<number | undefined>;
   };
 }
 
@@ -29,7 +29,7 @@ const useGetSingle = (params: {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["roles.getMultiple", key()], {
+  return createQuery(() => ["roles.getSingle", key()], {
     queryFn: () =>
       request<APIResponse<RoleResT>>({
         url: `/api/v1/roles/${queryParams().location.role_id}`,

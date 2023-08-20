@@ -45,7 +45,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
         options={{ include: props?.include[1] }}
       />
       <DateCol
-        date={props.role.created_at}
+        date={props.role.updated_at}
         options={{ include: props?.include[2] }}
       />
     </Table.Tr>

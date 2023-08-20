@@ -10,7 +10,6 @@ const roles_1 = __importDefault(require("../roles"));
 const role_permissions_1 = __importDefault(require("../role-permissions"));
 const format_roles_1 = __importDefault(require("../../utils/format/format-roles"));
 const updateSingle = async (client, data) => {
-    const parsePermissions = await (0, service_1.default)(roles_1.default.validatePermissions, false, client)(data.permission_groups);
     if (data.name) {
         await (0, service_1.default)(roles_1.default.checkNameIsUnique, false, client)({
             name: data.name,
@@ -20,7 +19,7 @@ const updateSingle = async (client, data) => {
         id: data.id,
         data: {
             name: data.name,
-            permission_groups: data.permission_groups,
+            updated_at: new Date().toISOString(),
         },
     });
     if (!role) {
@@ -31,14 +30,17 @@ const updateSingle = async (client, data) => {
             status: 500,
         });
     }
-    if (data.permission_groups.length > 0) {
+    if (data.permission_groups !== undefined) {
+        const parsePermissions = await (0, service_1.default)(roles_1.default.validatePermissions, false, client)(data.permission_groups);
         await (0, service_1.default)(role_permissions_1.default.deleteAll, false, client)({
-            role_id: role.id,
+            role_id: data.id,
         });
-        await (0, service_1.default)(role_permissions_1.default.createMultiple, false, client)({
-            role_id: role.id,
-            permissions: parsePermissions,
-        });
+        if (data.permission_groups.length > 0) {
+            await (0, service_1.default)(role_permissions_1.default.createMultiple, false, client)({
+                role_id: data.id,
+                permissions: parsePermissions,
+            });
+        }
     }
     return (0, format_roles_1.default)(role);
 };

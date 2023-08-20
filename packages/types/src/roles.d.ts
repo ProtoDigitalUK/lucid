@@ -2,7 +2,7 @@ export interface RoleResT {
   id: number;
   name: string;
 
-  permissions: {
+  permissions?: {
     id: RolePermissionT["id"];
     permission: RolePermissionT["permission"];
     environment_key: RolePermissionT["environment_key"];

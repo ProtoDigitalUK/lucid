@@ -136,6 +136,10 @@
   "environment_deleted_toast_message": "The environment has been deleted",
   "environment_updated_toast_title": "Environment updated",
   "environment_updated_toast_message": "The environment has been updated",
+  "role_created_toast_title": "Role created",
+  "role_created_toast_message": "The role has been created",
+  "role_update_toast_title": "Role updated",
+  "role_update_toast_message": "{{name}} has been updated",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",

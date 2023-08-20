@@ -22,6 +22,8 @@ const validatePermissions = async (
   client: PoolClient,
   permGroup: SchemaPermissions
 ) => {
+  if (permGroup.length === 0) return [];
+
   const permissionSet = Permissions.permissions;
   const environmentsRes = await service(
     environmentsService.getAll,

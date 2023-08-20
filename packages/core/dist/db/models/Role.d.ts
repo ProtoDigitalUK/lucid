@@ -13,7 +13,10 @@ type RoleGetMultiple = (client: PoolClient, query_instance: SelectQueryBuilder) 
 }>;
 type RoleUpdateSingle = (client: PoolClient, data: {
     id: number;
-    data: z.infer<typeof roleSchema.updateSingle.body>;
+    data: {
+        name?: string;
+        updated_at: string;
+    };
 }) => Promise<RoleT>;
 type RoleGetSingle = (client: PoolClient, data: {
     id: number;
@@ -24,7 +27,7 @@ type RoleGetSingleByName = (client: PoolClient, data: {
 export type RoleT = {
     id: number;
     name: string;
-    permissions: {
+    permissions?: {
         id: RolePermissionT["id"];
         permission: RolePermissionT["permission"];
         environment_key: RolePermissionT["environment_key"];

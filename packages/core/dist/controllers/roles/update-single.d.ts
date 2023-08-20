@@ -2,7 +2,7 @@ declare const _default: {
     schema: {
         body: import("zod").ZodObject<{
             name: import("zod").ZodOptional<import("zod").ZodString>;
-            permission_groups: import("zod").ZodArray<import("zod").ZodObject<{
+            permission_groups: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
                 environment_key: import("zod").ZodOptional<import("zod").ZodString>;
                 permissions: import("zod").ZodArray<import("zod").ZodString, "many">;
             }, "strip", import("zod").ZodTypeAny, {
@@ -11,19 +11,19 @@ declare const _default: {
             }, {
                 permissions: string[];
                 environment_key?: string | undefined;
-            }>, "many">;
+            }>, "many">>;
         }, "strip", import("zod").ZodTypeAny, {
-            permission_groups: {
+            name?: string | undefined;
+            permission_groups?: {
                 permissions: string[];
                 environment_key?: string | undefined;
-            }[];
-            name?: string | undefined;
+            }[] | undefined;
         }, {
-            permission_groups: {
+            name?: string | undefined;
+            permission_groups?: {
                 permissions: string[];
                 environment_key?: string | undefined;
-            }[];
-            name?: string | undefined;
+            }[] | undefined;
         }>;
         query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
         params: import("zod").ZodObject<{
@@ -42,7 +42,7 @@ declare const _default: {
         id: string;
     }>, import("zod").ZodObject<{
         name: import("zod").ZodOptional<import("zod").ZodString>;
-        permission_groups: import("zod").ZodArray<import("zod").ZodObject<{
+        permission_groups: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
             environment_key: import("zod").ZodOptional<import("zod").ZodString>;
             permissions: import("zod").ZodArray<import("zod").ZodString, "many">;
         }, "strip", import("zod").ZodTypeAny, {
@@ -51,19 +51,19 @@ declare const _default: {
         }, {
             permissions: string[];
             environment_key?: string | undefined;
-        }>, "many">;
+        }>, "many">>;
     }, "strip", import("zod").ZodTypeAny, {
-        permission_groups: {
+        name?: string | undefined;
+        permission_groups?: {
             permissions: string[];
             environment_key?: string | undefined;
-        }[];
-        name?: string | undefined;
+        }[] | undefined;
     }, {
-        permission_groups: {
+        name?: string | undefined;
+        permission_groups?: {
             permissions: string[];
             environment_key?: string | undefined;
-        }[];
-        name?: string | undefined;
+        }[] | undefined;
     }>, import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>>;
 };
 export default _default;

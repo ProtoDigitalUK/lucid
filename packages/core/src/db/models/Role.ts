@@ -33,7 +33,10 @@ type RoleUpdateSingle = (
   client: PoolClient,
   data: {
     id: number;
-    data: z.infer<typeof roleSchema.updateSingle.body>;
+    data: {
+      name?: string;
+      updated_at: string;
+    };
   }
 ) => Promise<RoleT>;
 
@@ -57,7 +60,7 @@ export type RoleT = {
   id: number;
   name: string;
 
-  permissions: {
+  permissions?: {
     id: RolePermissionT["id"];
     permission: RolePermissionT["permission"];
     environment_key: RolePermissionT["environment_key"];
@@ -109,8 +112,8 @@ export default class Role {
   };
   static updateSingle: RoleUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
-      columns: ["name"],
-      values: [data.data.name],
+      columns: ["name", "updated_at"],
+      values: [data.data.name, data.data.updated_at],
     });
 
     const roleRes = await client.query<RoleT>({

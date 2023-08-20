@@ -125,7 +125,7 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
   // ----------------------------------------
   // Memos
   const updateData = createMemo(() => {
-    const body = helpers.deepDiff(
+    return helpers.updateData(
       {
         title: props.environment?.title,
         assigned_bricks: props.environment?.assigned_bricks,
@@ -139,14 +139,10 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
         assigned_forms: assignedForms(),
       }
     );
-    return {
-      canUpdate: Object.keys(body).length > 0,
-      body,
-    };
   });
   const submitIsDisabled = createMemo(() => {
     if (!props.environment) return false;
-    return !updateData().canUpdate;
+    return !updateData().changed;
   });
 
   // Query memos
@@ -198,7 +194,7 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
           } else {
             updateEnvironment.action.mutate({
               key: props.environment.key,
-              body: updateData().body,
+              body: updateData().data,
             });
           }
         }}

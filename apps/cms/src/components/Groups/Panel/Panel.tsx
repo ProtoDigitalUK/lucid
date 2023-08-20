@@ -25,6 +25,7 @@ interface PanelProps {
   open: boolean;
   setOpen: (_open: boolean) => void;
   onSubmit?: () => void;
+  reset: () => void;
 
   fetchState?: {
     isLoading?: boolean;
@@ -74,7 +75,10 @@ export const Panel: Component<PanelProps> = (props) => {
   // ------------------------------
   // Effects
   createEffect(() => {
-    if (props.open) setBodyHeightValue();
+    if (props.open) {
+      props.reset();
+      setBodyHeightValue();
+    }
   });
 
   // ------------------------------
@@ -115,81 +119,80 @@ export const Panel: Component<PanelProps> = (props) => {
                 </Match>
               </Switch>
             </div>
-            <div
-              class="p-30 relative"
-              style={{
-                "min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
+            <form
+              class="w-full"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (props.onSubmit) props.onSubmit();
               }}
             >
-              <Switch>
-                <Match
-                  when={
-                    !props.fetchState?.isLoading && !props.fetchState?.isError
-                  }
-                >
-                  <form
-                    class="w-full"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      if (props.onSubmit) props.onSubmit();
-                    }}
-                  >
-                    {props.children}
-                  </form>
-                </Match>
-                <Match when={props.fetchState?.isLoading}>
-                  <Loading type="fill" />
-                </Match>
-                <Match when={props.fetchState?.isError}>
-                  <div class="min-h-[300px]">
-                    <Error
-                      type={"fill"}
-                      content={{
-                        image: notifyIllustration,
-                        title: props.content.fetchError || T("error_title"),
-                        description: props.content.fetchError
-                          ? ""
-                          : T("error_message"),
-                      }}
-                    />
-                  </div>
-                </Match>
-              </Switch>
-            </div>
-            <div ref={footerRef} class="p-30 border-t">
-              <Show
-                when={
-                  props.mutateState?.errors &&
-                  props.mutateState?.errors?.message
-                }
+              <div
+                class="p-30 relative"
+                style={{
+                  "min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
+                }}
               >
-                <ErrorMessage
-                  theme="background"
-                  message={props.mutateState?.errors?.message}
-                />
-              </Show>
-              <div class="flex justify-end">
-                <Button
-                  size="medium"
-                  theme="container-outline"
-                  onClick={() => props.setOpen(false)}
-                >
-                  {T("close")}
-                </Button>
-                <Show when={props.content.submit}>
-                  <Button
-                    type="submit"
-                    theme="primary"
-                    size="medium"
-                    classes="ml-15"
-                    loading={props.mutateState?.isLoading}
-                    disabled={props.mutateState?.isDisabled}
-                  >
-                    {props.content.submit}
-                  </Button>
-                </Show>
+                <Switch fallback={props.children}>
+                  <Match when={props.fetchState?.isLoading}>
+                    <Loading type="fill" />
+                  </Match>
+                  <Match when={props.fetchState?.isError}>
+                    <div class="min-h-[300px]">
+                      <Error
+                        type={"fill"}
+                        content={{
+                          image: notifyIllustration,
+                          title: props.content.fetchError || T("error_title"),
+                          description: props.content.fetchError
+                            ? ""
+                            : T("error_message"),
+                        }}
+                      />
+                    </div>
+                  </Match>
+                </Switch>
               </div>
-            </div>
+              <div
+                ref={footerRef}
+                class="p-30 border-t flex justify-between items-center"
+              >
+                <Switch fallback={<span />}>
+                  <Match
+                    when={
+                      props.mutateState?.errors &&
+                      props.mutateState?.errors?.message
+                    }
+                  >
+                    <ErrorMessage
+                      theme="basic"
+                      message={props.mutateState?.errors?.message}
+                    />
+                  </Match>
+                </Switch>
+                <div class="flex min-w-max pl-5">
+                  <Button
+                    size="medium"
+                    theme="container-outline"
+                    type="button"
+                    onClick={() => props.setOpen(false)}
+                  >
+                    {T("close")}
+                  </Button>
+                  <Show when={props.content.submit}>
+                    <Button
+                      type="submit"
+                      theme="primary"
+                      size="medium"
+                      classes="ml-15"
+                      loading={props.mutateState?.isLoading}
+                      disabled={props.mutateState?.isDisabled}
+                    >
+                      {props.content.submit}
+                    </Button>
+                  </Show>
+                </div>
+              </div>
+            </form>
           </Dialog.Content>
         </div>
       </Dialog.Portal>

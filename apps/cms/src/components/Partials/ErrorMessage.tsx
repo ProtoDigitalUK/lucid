@@ -14,10 +14,10 @@ const ErrorMessage: Component<ErrorMessageProps> = (props) => {
   return (
     <Show when={props.message}>
       <Alert.Root
-        class={classNames("mb-5 last:mb-0", {
-          "bg-container rounded-r-md border-l-4 border-l-error p-2.5 border border-border":
+        class={classNames("", {
+          "bg-container rounded-r-md border-l-4 border-l-error p-2.5 border border-border mb-5 last:mb-0":
             props.theme === "background", // on background colour
-          "bg-backgroundAccent rounded-r-md border-l-4 border-l-error p-2.5 bg-opacity-40 border-border border":
+          "bg-backgroundAccent rounded-r-md border-l-4 border-l-error p-2.5 bg-opacity-40 border-border border mb-5 last:mb-0":
             props.theme === "container", // on container colour
         })}
       >

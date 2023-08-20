@@ -32,7 +32,7 @@ declare const _default: {
     updateSingle: {
         body: z.ZodObject<{
             name: z.ZodOptional<z.ZodString>;
-            permission_groups: z.ZodArray<z.ZodObject<{
+            permission_groups: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 environment_key: z.ZodOptional<z.ZodString>;
                 permissions: z.ZodArray<z.ZodString, "many">;
             }, "strip", z.ZodTypeAny, {
@@ -41,19 +41,19 @@ declare const _default: {
             }, {
                 permissions: string[];
                 environment_key?: string | undefined;
-            }>, "many">;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
-            permission_groups: {
+            name?: string | undefined;
+            permission_groups?: {
                 permissions: string[];
                 environment_key?: string | undefined;
-            }[];
-            name?: string | undefined;
+            }[] | undefined;
         }, {
-            permission_groups: {
+            name?: string | undefined;
+            permission_groups?: {
                 permissions: string[];
                 environment_key?: string | undefined;
-            }[];
-            name?: string | undefined;
+            }[] | undefined;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{

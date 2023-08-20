@@ -40,8 +40,8 @@ Role.getMultiple = async (client, query_instance) => {
 };
 Role.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
-        columns: ["name"],
-        values: [data.data.name],
+        columns: ["name", "updated_at"],
+        values: [data.data.name, data.data.updated_at],
     });
     const roleRes = await client.query({
         text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
