@@ -8,6 +8,7 @@ import {
   Switch,
   Match,
   createEffect,
+  createMemo,
 } from "solid-js";
 import { FaSolidArrowLeft } from "solid-icons/fa";
 // Assets
@@ -50,6 +51,7 @@ export const Panel: Component<PanelProps> = (props) => {
   // ------------------------------
   // State
   const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
+  const [getIsLoading, setIsLoading] = createSignal(true);
 
   // ------------------------------
   // Refs
@@ -65,6 +67,11 @@ export const Panel: Component<PanelProps> = (props) => {
       }
     });
   };
+  const setIsLoadingValue = (value: boolean) => {
+    setTimeout(() => {
+      setIsLoading(value);
+    }, 200);
+  };
 
   // ------------------------------
   // Mount
@@ -79,6 +86,13 @@ export const Panel: Component<PanelProps> = (props) => {
       props.reset();
       setBodyHeightValue();
     }
+    setIsLoadingValue(!props.open);
+  });
+
+  // ------------------------------
+  // Memos
+  const isLoading = createMemo(() => {
+    return props.fetchState?.isLoading || getIsLoading();
   });
 
   // ------------------------------
@@ -103,13 +117,13 @@ export const Panel: Component<PanelProps> = (props) => {
                 </Dialog.CloseButton>
               </div>
               <Switch>
-                <Match when={props.fetchState?.isLoading}>
+                <Match when={isLoading()}>
                   <div class="w-full">
                     <div class="h-8 skeleton w-1/4" />
                     <div class="h-6 skeleton w-full mt-2" />
                   </div>
                 </Match>
-                <Match when={!props.fetchState?.isLoading}>
+                <Match when={!isLoading()}>
                   <Dialog.Title>{props.content.title}</Dialog.Title>
                   <Show when={props.content.description}>
                     <Dialog.Description class="block mt-1">
@@ -133,7 +147,7 @@ export const Panel: Component<PanelProps> = (props) => {
                 }}
               >
                 <Switch fallback={props.children}>
-                  <Match when={props.fetchState?.isLoading}>
+                  <Match when={isLoading()}>
                     <Loading type="fill" />
                   </Match>
                   <Match when={props.fetchState?.isError}>
