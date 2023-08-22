@@ -51,7 +51,6 @@ export const Panel: Component<PanelProps> = (props) => {
   // ------------------------------
   // State
   const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
-  const [getIsLoading, setIsLoading] = createSignal(true);
 
   // ------------------------------
   // Refs
@@ -67,11 +66,6 @@ export const Panel: Component<PanelProps> = (props) => {
       }
     });
   };
-  const setIsLoadingValue = (value: boolean) => {
-    setTimeout(() => {
-      setIsLoading(value);
-    }, 200);
-  };
 
   // ------------------------------
   // Mount
@@ -86,13 +80,13 @@ export const Panel: Component<PanelProps> = (props) => {
       props.reset();
       setBodyHeightValue();
     }
-    setIsLoadingValue(!props.open);
   });
 
   // ------------------------------
   // Memos
   const isLoading = createMemo(() => {
-    return props.fetchState?.isLoading || getIsLoading();
+    if (!props.open) return false;
+    return props.fetchState?.isLoading;
   });
 
   // ------------------------------
