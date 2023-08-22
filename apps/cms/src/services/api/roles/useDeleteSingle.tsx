@@ -7,30 +7,28 @@ import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 // Types
 import { APIResponse, APIErrorResponse } from "@/types/api";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { RoleResT } from "@lucid/types/src/roles";
 
 interface Params {
-  key: string;
-  body: {
-    title?: string;
-    assigned_bricks?: string[];
-    assigned_collections?: string[];
-    assigned_forms?: string[];
-  };
+  id: number;
 }
 
-export const updateSingleReq = (params: Params) => {
-  return request<APIResponse<EnvironmentResT>>({
-    url: `/api/v1/environments/${params.key}`,
+export const deleteSingleReq = (params: Params) => {
+  return request<APIResponse<RoleResT>>({
+    url: `/api/v1/roles/${params.id}`,
     csrf: true,
     config: {
-      method: "PATCH",
-      body: params.body,
+      method: "DELETE",
     },
   });
 };
 
-const useUpdateSingle = () => {
+interface UseDeleteProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+const useDeleteSingle = (props: UseDeleteProps) => {
   // ----------------------------------------
   // States / Hooks
   const [errors, setErrors] = createSignal<APIErrorResponse>();
@@ -38,22 +36,22 @@ const useUpdateSingle = () => {
 
   // ----------------------------------------
   // Queries / Mutations
-  const updateEnvironment = createMutation({
-    mutationFn: updateSingleReq,
+  const deleteRole = createMutation({
+    mutationFn: deleteSingleReq,
     onSettled: (data, error) => {
       if (data) {
         spawnToast({
-          title: T("environment_updated_toast_title"),
-          message: T("environment_updated_toast_message"),
+          title: T("role_deleted_toast_title"),
+          message: T("role_deleted_toast_message"),
           status: "success",
         });
         setErrors(undefined);
-
-        queryClient.invalidateQueries(["environment.getSingle"]);
-        queryClient.invalidateQueries(["environment.getAll"]);
-        queryClient.invalidateQueries(["environment.collections.getAll"]);
+        props.onSuccess?.();
+        queryClient.invalidateQueries(["roles.getMultiple"]);
+        queryClient.invalidateQueries(["roles.getSingle"]);
       } else if (error) {
         validateSetError(error, setErrors);
+        props.onError?.();
       }
     },
   });
@@ -67,13 +65,13 @@ const useUpdateSingle = () => {
   // ----------------------------------------
   // Return
   return {
-    action: updateEnvironment,
+    action: deleteRole,
     errors: errors,
     reset: () => {
       setErrors(undefined);
-      updateEnvironment.reset();
+      deleteRole.reset();
     },
   };
 };
 
-export default useUpdateSingle;
+export default useDeleteSingle;

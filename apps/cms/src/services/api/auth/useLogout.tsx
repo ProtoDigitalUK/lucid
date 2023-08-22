@@ -50,6 +50,9 @@ const useLogout = () => {
   // Return
   return {
     action: logout,
+    reset: () => {
+      logout.reset();
+    },
   };
 };
 

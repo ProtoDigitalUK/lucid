@@ -10,6 +10,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Table from "@/components/Groups/Table";
 import RoleRow from "@/components/Tables/Rows/RoleRow";
 import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
+import DeleteRole from "@/components/Modals/Role/DeleteRole";
 
 interface RolesTableProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -21,6 +22,7 @@ const RolesTable: Component<RolesTableProps> = (props) => {
   const rowTarget = useRowTarget({
     triggers: {
       update: false,
+      delete: false,
     },
   });
 
@@ -96,9 +98,20 @@ const RolesTable: Component<RolesTableProps> = (props) => {
       <Show when={rowTarget.getTargetId() !== undefined}>
         <UpsertRolePanel
           id={rowTarget.getTargetId}
-          open={rowTarget.getTriggers().update}
-          setOpen={(state: boolean) => {
-            rowTarget.setTrigger("update", state);
+          state={{
+            open: rowTarget.getTriggers().update,
+            setOpen: (state: boolean) => {
+              rowTarget.setTrigger("update", state);
+            },
+          }}
+        />
+        <DeleteRole
+          id={rowTarget.getTargetId()}
+          state={{
+            open: rowTarget.getTriggers().delete,
+            setOpen: (state: boolean) => {
+              rowTarget.setTrigger("delete", state);
+            },
           }}
         />
       </Show>

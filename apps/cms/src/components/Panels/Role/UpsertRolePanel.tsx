@@ -22,8 +22,10 @@ import InputGrid from "@/components/Containers/InputGrid";
 
 interface UpsertRolePanelProps {
   id?: Accessor<number | undefined>;
-  open: boolean;
-  setOpen: (_state: boolean) => void;
+  state: {
+    open: boolean;
+    setOpen: (_state: boolean) => void;
+  };
 }
 
 const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
@@ -42,7 +44,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
         role_id: props.id as Accessor<number | undefined>,
       },
     },
-    enabled: () => props.open && props.id !== undefined,
+    enabled: () => props.state.open && props.id !== undefined,
   });
   const permissions = api.permissions.useGetAll({
     queryParams: {},
@@ -55,12 +57,12 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   // Mutations
   const createRole = api.roles.useCreateSingle({
     onSuccess: () => {
-      props.setOpen(false);
+      props.state.setOpen(false);
     },
   });
   const updateRole = api.roles.useUpdateSingle({
     onSuccess: () => {
-      props.setOpen(false);
+      props.state.setOpen(false);
     },
   });
 
@@ -132,7 +134,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   // ---------------------------------
   // Effects
   createEffect(() => {
-    if (!role.isLoading && !role.isError && props.open) {
+    if (!role.isLoading && !role.isError && props.state.open) {
       setSelectedPermissions(resPermsToSelectedFormat());
       setName(role.data?.data.name || "");
     }
@@ -198,8 +200,8 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   // Return
   return (
     <Panel.Root
-      open={props.open}
-      setOpen={props.setOpen}
+      open={props.state.open}
+      setOpen={props.state.setOpen}
       onSubmit={() => {
         if (!props.id) {
           createRole.action.mutate({

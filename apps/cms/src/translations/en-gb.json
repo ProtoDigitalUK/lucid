@@ -116,6 +116,8 @@
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
+  "delete_role_modal_title": "Delete Role",
+  "delete_role_modal_description": "Are you sure you want to delete this role?",
 
   "update_role_panel_title": "Edit {{name}} Role",
   "update_role_panel_description": "Update the permissions for the {{name}} role.",
@@ -140,6 +142,8 @@
   "role_created_toast_message": "The role has been created",
   "role_update_toast_title": "Role updated",
   "role_update_toast_message": "{{name}} has been updated",
+  "role_deleted_toast_title": "Role deleted",
+  "role_deleted_toast_message": "The role has been deleted",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",

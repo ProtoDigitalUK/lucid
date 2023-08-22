@@ -71,8 +71,10 @@ const RolesListRoute: Component = () => {
     >
       <RolesTable searchParams={searchParams} />
       <UpsertRolePanel
-        open={openCreateRolePanel()}
-        setOpen={setOpenCreateRolePanel}
+        state={{
+          open: openCreateRolePanel(),
+          setOpen: setOpenCreateRolePanel,
+        }}
       />
     </Layout.PageLayout>
   );

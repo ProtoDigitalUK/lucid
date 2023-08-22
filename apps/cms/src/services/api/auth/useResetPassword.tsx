@@ -69,6 +69,10 @@ const useResetPassword = () => {
   return {
     action: resetPassword,
     errors: errors,
+    reset: () => {
+      setErrors(undefined);
+      resetPassword.reset();
+    },
   };
 };
 

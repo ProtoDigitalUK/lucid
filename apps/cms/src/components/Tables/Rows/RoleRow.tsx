@@ -32,6 +32,14 @@ const RoleRow: Component<RoleRowProps> = (props) => {
             props.rowTarget.setTrigger("update", true);
           },
         },
+        {
+          label: T("delete"),
+          type: "button",
+          onClick: () => {
+            props.rowTarget.setTargetId(props.role.id);
+            props.rowTarget.setTrigger("delete", true);
+          },
+        },
       ]}
       options={props.options}
       callbacks={props.callbacks}

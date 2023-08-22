@@ -66,6 +66,10 @@ const useForgotPassword = (props: UseForgotPasswordProps) => {
   return {
     action: sendPasswordReset,
     errors: errors,
+    reset: () => {
+      setErrors(undefined);
+      sendPasswordReset.reset();
+    },
   };
 };
 

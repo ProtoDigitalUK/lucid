@@ -28,6 +28,7 @@ export const deleteSingleReq = (params: Params) => {
 
 interface UseDeleteProps {
   onSuccess?: () => void;
+  onError?: () => void;
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
@@ -61,6 +62,7 @@ const useDeleteSingle = (props: UseDeleteProps) => {
         queryClient.invalidateQueries(["environment.collections.getAll"]);
       } else if (error) {
         validateSetError(error, setErrors);
+        props.onError?.();
       }
     },
   });
@@ -76,6 +78,10 @@ const useDeleteSingle = (props: UseDeleteProps) => {
   return {
     action: deleteEnvironment,
     errors: errors,
+    reset: () => {
+      setErrors(undefined);
+      deleteEnvironment.reset();
+    },
   };
 };
 

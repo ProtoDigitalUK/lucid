@@ -71,6 +71,10 @@ const useCreateSingle = () => {
   return {
     action: createEnvironment,
     errors: errors,
+    reset: () => {
+      setErrors(undefined);
+      createEnvironment.reset();
+    },
   };
 };
 

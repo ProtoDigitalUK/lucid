@@ -63,6 +63,10 @@ const useLogin = () => {
   return {
     action: login,
     errors: errors,
+    reset: () => {
+      setErrors(undefined);
+      login.reset();
+    },
   };
 };
 
