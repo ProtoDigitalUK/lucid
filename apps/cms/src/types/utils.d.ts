@@ -1,5 +1,5 @@
 interface QueryHook<T> {
   queryParams: T;
-  key?: () => any;
+  key?: () => unknown;
   enabled?: () => boolean;
 }

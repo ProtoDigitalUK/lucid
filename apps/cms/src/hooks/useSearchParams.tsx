@@ -351,7 +351,7 @@ const useSearchParams = (
 
   const resetFilters = () => {
     const filters = getFilters();
-    let filterValues: {
+    const filterValues: {
       [key: string]: FilterValues;
     } = {};
     for (const [key] of filters) {

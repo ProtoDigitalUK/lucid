@@ -3,7 +3,8 @@ import equal from "fast-deep-equal";
 
 // ---------------------------------------------
 //
-type GenericObject = { [key: string]: any };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GenericObject = Record<string, any>;
 
 const deepMerge = (obj1: GenericObject, obj2: GenericObject): GenericObject => {
   const result: GenericObject = { ...obj1 };
@@ -73,6 +74,7 @@ const updateData = <T>(obj1: T, obj2: T) => {
 // ---------------------------------------------
 // Resolve signals and return the value
 const resolveValue = <T>(value: Accessor<T> | T): T =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   typeof value === "function" ? (value as any)() : value;
 
 const helpers = {

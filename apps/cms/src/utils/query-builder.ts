@@ -3,7 +3,7 @@ export interface QueryBuilderProps {
   filters?: {
     [key: string]: string | number | string[] | number[] | undefined | null;
   };
-  sort?: {};
+  sort?: Record<string, string>;
   perPage?: number;
   page?: number;
   include?: {
@@ -35,7 +35,7 @@ const queryBuilder = (query: QueryBuilderProps) => {
   // Append filters query
   if (query.filters !== undefined && Object.keys(query.filters).length > 0) {
     Object.keys(query.filters).forEach((key) => {
-      let value = query.filters ? query.filters[key] : "";
+      const value = query.filters ? query.filters[key] : "";
       if (value === undefined || value === null) return;
 
       if (Array.isArray(value)) {

@@ -15,7 +15,7 @@ export class LucidError extends Error {
 }
 
 export const validateSetError = (
-  error: any,
+  error: unknown,
   setErrors: Setter<APIErrorResponse | undefined>
 ) => {
   if (error instanceof LucidError) {

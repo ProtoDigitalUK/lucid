@@ -28,7 +28,7 @@ import Button from "@/components/Partials/Button";
 interface TableRootProps {
   key: string;
   rows: number;
-  meta?: APIResponse<any>["meta"];
+  meta?: APIResponse<unknown>["meta"];
   caption?: string;
   searchParams: ReturnType<typeof useSearchParams>;
 
@@ -58,6 +58,7 @@ interface TableRootProps {
 }
 
 export const TableRoot: Component<TableRootProps> = (props) => {
+  // eslint-disable-next-line
   let overflowRef: HTMLDivElement | undefined = undefined;
 
   const [include, setInclude] = createSignal<boolean[]>([]);

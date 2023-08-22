@@ -16,7 +16,7 @@ import Layout from "@/components/Groups/Layout";
 import { Pagination as KobPagination } from "@kobalte/core";
 
 interface PaginationProps {
-  meta?: APIResponse<any>["meta"];
+  meta?: APIResponse<unknown>["meta"];
   searchParams: ReturnType<typeof useSearchParams>;
 }
 
