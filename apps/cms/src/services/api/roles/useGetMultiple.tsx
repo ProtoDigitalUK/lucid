@@ -18,10 +18,7 @@ interface QueryParams {
   };
 }
 
-const useGetMultiple = (params: {
-  queryParams: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetMultiple = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       queryString: helpers.resolveValue(params.queryParams?.queryString),
@@ -33,11 +30,11 @@ const useGetMultiple = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["roles.getMultiple", key()], {
+  return createQuery(() => ["roles.getMultiple", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<RoleResT[]>>({
         url: `/api/v1/roles`,

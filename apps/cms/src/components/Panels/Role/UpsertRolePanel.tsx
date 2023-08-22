@@ -44,6 +44,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
         role_id: props.id as Accessor<number | undefined>,
       },
     },
+    key: () => props.state.open,
     enabled: () => props.state.open && props.id !== undefined,
   });
   const permissions = api.permissions.useGetAll({
@@ -134,7 +135,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   // ---------------------------------
   // Effects
   createEffect(() => {
-    if (!role.isLoading && !role.isError && props.state.open) {
+    if (role.isSuccess) {
       setSelectedPermissions(resPermsToSelectedFormat());
       setName(role.data?.data.name || "");
     }

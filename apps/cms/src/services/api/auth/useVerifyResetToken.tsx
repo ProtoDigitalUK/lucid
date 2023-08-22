@@ -11,10 +11,7 @@ interface QueryParams {
   };
 }
 
-const useVerifyResetToken = (params: {
-  queryParams?: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       location: {
@@ -23,27 +20,30 @@ const useVerifyResetToken = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["auth.verifyResetToken", key()], {
-    queryFn: () =>
-      request<
-        APIResponse<{
-          message: string;
-        }>
-      >({
-        url: `/api/v1/auth/reset-password/${queryParams().location.token}`,
-        config: {
-          method: "GET",
-        },
-      }),
-    retry: 0,
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  });
+  return createQuery(
+    () => ["auth.verifyResetToken", queryKey(), params.key?.()],
+    {
+      queryFn: () =>
+        request<
+          APIResponse<{
+            message: string;
+          }>
+        >({
+          url: `/api/v1/auth/reset-password/${queryParams().location.token}`,
+          config: {
+            method: "GET",
+          },
+        }),
+      retry: 0,
+      get enabled() {
+        return params.enabled ? params.enabled() : true;
+      },
+    }
+  );
 };
 
 export default useVerifyResetToken;

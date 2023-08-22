@@ -36,7 +36,7 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   // Functions
   const changeEnvironment = (envKey: string) => {
     if (params.envKey !== undefined) {
-      let newPath = location.pathname.replace(
+      const newPath = location.pathname.replace(
         /\/env\/[a-z-_]+/,
         `/env/${envKey}`
       );

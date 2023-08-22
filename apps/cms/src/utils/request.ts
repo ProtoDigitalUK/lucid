@@ -16,7 +16,7 @@ interface RequestParams {
 interface RequestConfig {
   method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
   body?: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

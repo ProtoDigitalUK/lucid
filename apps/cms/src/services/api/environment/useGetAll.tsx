@@ -10,30 +10,30 @@ import { EnvironmentResT } from "@lucid/types/src/environments";
 
 interface QueryParams {}
 
-const useGetAll = (params: {
-  queryParams?: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetAll = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {};
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  const query = createQuery(() => ["environment.getAll", key()], {
-    queryFn: () =>
-      request<APIResponse<EnvironmentResT[]>>({
-        url: `/api/v1/environments`,
-        config: {
-          method: "GET",
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  });
+  const query = createQuery(
+    () => ["environment.getAll", queryKey(), params.key?.()],
+    {
+      queryFn: () =>
+        request<APIResponse<EnvironmentResT[]>>({
+          url: `/api/v1/environments`,
+          config: {
+            method: "GET",
+          },
+        }),
+      get enabled() {
+        return params.enabled ? params.enabled() : true;
+      },
+    }
+  );
 
   // Effects
   createEffect(() => {

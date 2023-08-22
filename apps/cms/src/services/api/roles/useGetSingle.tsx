@@ -13,10 +13,7 @@ interface QueryParams {
   };
 }
 
-const useGetSingle = (params: {
-  queryParams: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetSingle = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       location: {
@@ -25,11 +22,11 @@ const useGetSingle = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["roles.getSingle", key()], {
+  return createQuery(() => ["roles.getSingle", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<RoleResT>>({
         url: `/api/v1/roles/${queryParams().location.role_id}`,

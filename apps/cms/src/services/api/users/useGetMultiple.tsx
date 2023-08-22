@@ -17,10 +17,7 @@ interface QueryParams {
   };
 }
 
-const useGetMultiple = (params: {
-  queryParams: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetMultiple = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       queryString: helpers.resolveValue(params.queryParams?.queryString),
@@ -35,11 +32,11 @@ const useGetMultiple = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["users.getMultiple", key()], {
+  return createQuery(() => ["users.getMultiple", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<UserResT[]>>({
         url: `/api/v1/users`,

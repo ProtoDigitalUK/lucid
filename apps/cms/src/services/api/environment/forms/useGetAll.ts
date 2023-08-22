@@ -16,10 +16,7 @@ interface QueryParams {
   };
 }
 
-const useGetAll = (params: {
-  queryParams: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetAll = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       include: [
@@ -36,23 +33,26 @@ const useGetAll = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["environment.forms.getAll", key()], {
-    queryFn: () =>
-      request<APIResponse<FormResT[]>>({
-        url: `/api/v1/forms`,
-        query: queryParams(),
-        config: {
-          method: "GET",
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  });
+  return createQuery(
+    () => ["environment.forms.getAll", queryKey(), params.key?.()],
+    {
+      queryFn: () =>
+        request<APIResponse<FormResT[]>>({
+          url: `/api/v1/forms`,
+          query: queryParams(),
+          config: {
+            method: "GET",
+          },
+        }),
+      get enabled() {
+        return params.enabled ? params.enabled() : true;
+      },
+    }
+  );
 };
 
 export default useGetAll;

@@ -17,10 +17,7 @@ interface QueryParams {
   };
 }
 
-const useGetAll = (params: {
-  queryParams: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetAll = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       include: [
@@ -40,11 +37,11 @@ const useGetAll = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["brickConfig.getAll", key()], {
+  return createQuery(() => ["brickConfig.getAll", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<BrickConfigT[]>>({
         url: `/api/v1/bricks/config`,

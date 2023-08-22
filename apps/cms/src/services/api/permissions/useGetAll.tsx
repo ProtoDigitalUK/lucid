@@ -8,19 +8,16 @@ import { APIResponse } from "@/types/api";
 
 interface QueryParams {}
 
-const useGetAll = (params: {
-  queryParams: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetAll = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {};
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["permissions.getAll", key()], {
+  return createQuery(() => ["permissions.getAll", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<PermissionsResT>>({
         url: `/api/v1/permissions`,

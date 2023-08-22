@@ -13,10 +13,7 @@ interface QueryParams {
   };
 }
 
-const useGetSingle = (params: {
-  queryParams?: QueryParams;
-  enabled?: () => boolean;
-}) => {
+const useGetSingle = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
       location: {
@@ -27,22 +24,25 @@ const useGetSingle = (params: {
     };
   });
 
-  const key = createMemo(() => {
+  const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["environment.getSingle", key()], {
-    queryFn: () =>
-      request<APIResponse<EnvironmentResT>>({
-        url: `/api/v1/environments/${queryParams().location.environment_key}`,
-        config: {
-          method: "GET",
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  });
+  return createQuery(
+    () => ["environment.getSingle", queryKey(), params.key?.()],
+    {
+      queryFn: () =>
+        request<APIResponse<EnvironmentResT>>({
+          url: `/api/v1/environments/${queryParams().location.environment_key}`,
+          config: {
+            method: "GET",
+          },
+        }),
+      get enabled() {
+        return params.enabled ? params.enabled() : true;
+      },
+    }
+  );
 };
 
 export default useGetSingle;
