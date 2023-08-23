@@ -1,9 +1,20 @@
 import T from "@/translations";
-import { Component, Accessor, createMemo } from "solid-js";
+import {
+  Component,
+  Accessor,
+  createMemo,
+  createSignal,
+  createEffect,
+} from "solid-js";
 // Services
 import api from "@/services/api";
+// Hooks
+import helpers from "@/utils/helpers";
+// Types
+import { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 // Components
 import Panel from "@/components/Groups/Panel";
+import Form from "@/components/Groups/Form";
 
 interface UpdateUserPanelProps {
   id: Accessor<number | undefined>;
@@ -14,6 +25,12 @@ interface UpdateUserPanelProps {
 }
 
 const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
+  // ------------------------------
+  // State
+  const [getSelectedRoles, setSelectedRoles] = createSignal<
+    SelectMultipleValueT[]
+  >([]);
+
   // ---------------------------------
   // Queries
   const roles = api.roles.useGetMultiple({
@@ -33,13 +50,45 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
   });
 
   // ---------------------------------
+  // Mutations
+  const updateUser = api.users.useUpdateSingle({
+    onSuccess: () => {
+      props.state.setOpen(false);
+    },
+  });
+
+  // ---------------------------------
+  // Effects
+  createEffect(() => {
+    if (user.isSuccess) {
+      setSelectedRoles(
+        user.data?.data.roles?.map((role) => {
+          return {
+            value: role.id,
+            label: role.name,
+          };
+        }) || []
+      );
+    }
+  });
+
+  // ---------------------------------
   // Memos
   const isLoading = createMemo(() => {
     return user.isLoading || roles.isLoading;
   });
-
   const isError = createMemo(() => {
     return user.isError || roles.isError;
+  });
+  const updateData = createMemo(() => {
+    return helpers.updateData(
+      {
+        role_ids: user.data?.data.roles?.map((role) => role.id),
+      },
+      {
+        role_ids: getSelectedRoles().map((role) => role.value) as number[],
+      }
+    );
   });
 
   // ---------------------------------
@@ -49,27 +98,46 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
       open={props.state.open}
       setOpen={props.state.setOpen}
       onSubmit={() => {
-        alert("submit");
+        updateUser.action.mutate({
+          id: props.id() as number,
+          body: updateData().data,
+        });
       }}
       reset={() => {
-        // updateUser.reset();
+        updateUser.reset();
       }}
       fetchState={{
         isLoading: isLoading(),
         isError: isError(),
       }}
-      // mutateState={{
-      //   isLoading: isCreating(),
-      //   isDisabled: submitIsDisabled(),
-      //   errors: errors(),
-      // }}
+      mutateState={{
+        isLoading: updateUser.action.isLoading,
+        isDisabled: !updateData().changed,
+        errors: updateUser.errors(),
+      }}
       content={{
         title: T("update_user_panel_title"),
         description: T("update_user_panel_description"),
         submit: T("update"),
       }}
     >
-      hello
+      <Form.SelectMultiple
+        id="roles"
+        values={getSelectedRoles()}
+        onChange={setSelectedRoles}
+        name={"roles"}
+        copy={{
+          label: T("roles"),
+        }}
+        options={
+          roles.data?.data.map((role) => {
+            return {
+              value: role.id,
+              label: role.name,
+            };
+          }) || []
+        }
+      />
     </Panel.Root>
   );
 };

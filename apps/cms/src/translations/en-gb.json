@@ -146,6 +146,8 @@
   "role_update_toast_message": "{{name}} has been updated",
   "role_deleted_toast_title": "Role deleted",
   "role_deleted_toast_message": "The role has been deleted",
+  "user_update_toast_title": "User updated",
+  "user_update_toast_message": "User has been updated",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",

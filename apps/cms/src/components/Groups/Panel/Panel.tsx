@@ -86,6 +86,7 @@ export const Panel: Component<PanelProps> = (props) => {
   // Memos
   const isLoading = createMemo(() => {
     if (!props.open) return false;
+    setBodyHeightValue();
     return props.fetchState?.isLoading;
   });
 
@@ -98,7 +99,7 @@ export const Panel: Component<PanelProps> = (props) => {
     >
       <Dialog.Portal>
         <Dialog.Overlay class="fixed inset-0 bg-primary bg-opacity-60 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
-        <div class="fixed inset-0 z-50 flex justify-end">
+        <div class="fixed inset-0 z-40 flex justify-end">
           <Dialog.Content class="w-full max-w-[800px] bg-white animate-animate-slide-from-right-out data-[expanded]:animate-animate-slide-from-right-in outline-none overflow-y-auto">
             <div
               ref={headerRef}
@@ -160,46 +161,48 @@ export const Panel: Component<PanelProps> = (props) => {
                   </Match>
                 </Switch>
               </div>
-              <div
-                ref={footerRef}
-                class="p-30 border-t flex justify-between items-center"
-              >
-                <Switch fallback={<span />}>
-                  <Match
-                    when={
-                      props.mutateState?.errors &&
-                      props.mutateState?.errors?.message
-                    }
-                  >
-                    <ErrorMessage
-                      theme="basic"
-                      message={props.mutateState?.errors?.message}
-                    />
-                  </Match>
-                </Switch>
-                <div class="flex min-w-max pl-5">
-                  <Button
-                    size="medium"
-                    theme="container-outline"
-                    type="button"
-                    onClick={() => props.setOpen(false)}
-                  >
-                    {T("close")}
-                  </Button>
-                  <Show when={props.content.submit}>
-                    <Button
-                      type="submit"
-                      theme="primary"
-                      size="medium"
-                      classes="ml-15"
-                      loading={props.mutateState?.isLoading}
-                      disabled={props.mutateState?.isDisabled}
+              <Show when={!isLoading()}>
+                <div
+                  ref={footerRef}
+                  class="p-30 border-t flex justify-between items-center"
+                >
+                  <Switch fallback={<span />}>
+                    <Match
+                      when={
+                        props.mutateState?.errors &&
+                        props.mutateState?.errors?.message
+                      }
                     >
-                      {props.content.submit}
+                      <ErrorMessage
+                        theme="basic"
+                        message={props.mutateState?.errors?.message}
+                      />
+                    </Match>
+                  </Switch>
+                  <div class="flex min-w-max pl-5">
+                    <Button
+                      size="medium"
+                      theme="container-outline"
+                      type="button"
+                      onClick={() => props.setOpen(false)}
+                    >
+                      {T("close")}
                     </Button>
-                  </Show>
+                    <Show when={props.content.submit}>
+                      <Button
+                        type="submit"
+                        theme="primary"
+                        size="medium"
+                        classes="ml-15"
+                        loading={props.mutateState?.isLoading}
+                        disabled={props.mutateState?.isDisabled}
+                      >
+                        {props.content.submit}
+                      </Button>
+                    </Show>
+                  </div>
                 </div>
-              </div>
+              </Show>
             </form>
           </Dialog.Content>
         </div>

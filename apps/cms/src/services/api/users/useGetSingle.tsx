@@ -26,7 +26,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["users.getMultiple", queryKey(), params.key?.()], {
+  return createQuery(() => ["users.getSingle", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<UserResT>>({
         url: `/api/v1/users/${queryParams().location.user_id}`,
