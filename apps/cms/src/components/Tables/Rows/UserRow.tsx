@@ -1,7 +1,10 @@
+import T from "@/translations";
 import { Component } from "solid-js";
 // Types
 import { TableRowProps } from "@/types/components";
 import { UserResT } from "@lucid/types/src/users";
+// Hooks
+import useRowTarget from "@/hooks/useRowTarget";
 // Components
 import Table from "@/components/Groups/Table";
 import TextCol from "@/components/Tables/Columns/TextCol";
@@ -10,6 +13,7 @@ import DateCol from "../Columns/DateCol";
 interface UserRowProps extends TableRowProps {
   user: UserResT;
   include: boolean[];
+  rowTarget: ReturnType<typeof useRowTarget>;
 }
 
 const UserRow: Component<UserRowProps> = (props) => {
@@ -21,9 +25,12 @@ const UserRow: Component<UserRowProps> = (props) => {
       selected={props.selected}
       actions={[
         {
-          label: "Edit",
-          type: "link",
-          href: `/users/${props.user.id}`,
+          label: T("edit"),
+          type: "button",
+          onClick: () => {
+            props.rowTarget.setTargetId(props.user.id);
+            props.rowTarget.setTrigger("update", true);
+          },
         },
       ]}
       options={props.options}

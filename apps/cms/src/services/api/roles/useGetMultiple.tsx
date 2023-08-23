@@ -16,6 +16,7 @@ interface QueryParams {
     role_ids?: Accessor<number>;
     name?: Accessor<string>;
   };
+  perPage?: number;
 }
 
 const useGetMultiple = (params: QueryHook<QueryParams>) => {
@@ -27,6 +28,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
         name: helpers.resolveValue(params.queryParams?.filters?.name),
         role_ids: helpers.resolveValue(params.queryParams?.filters?.role_ids),
       },
+      perPage: params.queryParams.perPage,
     };
   });
 
