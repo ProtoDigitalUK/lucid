@@ -1,11 +1,12 @@
 import T from "@/translations";
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import UsersTable from "@/components/Tables/UsersTable";
+import CreateUserPanel from "@/components/Panels/User/CreateUserPanel";
 
 const UsersListRoute: Component = () => {
   // ----------------------------------
@@ -38,6 +39,7 @@ const UsersListRoute: Component = () => {
       singleSort: true,
     }
   );
+  const [openCreateUserPanel, setOpenCreateUserPanel] = createSignal(false);
 
   // ----------------------------------
   // Render
@@ -47,6 +49,12 @@ const UsersListRoute: Component = () => {
       description={T("users_route_description")}
       options={{
         noPadding: true,
+      }}
+      actions={{
+        create: {
+          open: openCreateUserPanel(),
+          setOpen: setOpenCreateUserPanel,
+        },
       }}
       headingChildren={
         <Query.Row
@@ -84,6 +92,12 @@ const UsersListRoute: Component = () => {
       }
     >
       <UsersTable searchParams={searchParams} />
+      <CreateUserPanel
+        state={{
+          open: openCreateUserPanel(),
+          setOpen: setOpenCreateUserPanel,
+        }}
+      />
     </Layout.PageLayout>
   );
 };

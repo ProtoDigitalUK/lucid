@@ -11,7 +11,6 @@ import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
 const RolesListRoute: Component = () => {
   // ----------------------------------
   // Hooks & State
-  const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
   const searchParams = useSearchParams(
     {
       filters: {
@@ -29,6 +28,7 @@ const RolesListRoute: Component = () => {
       singleSort: true,
     }
   );
+  const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
 
   // ----------------------------------
   // Render
