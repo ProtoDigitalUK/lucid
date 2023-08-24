@@ -15,6 +15,7 @@ const useRowTarget = (config: UseRowTargetProps) => {
   return {
     getTriggers,
     setTrigger: (key: string, state: boolean) => {
+      if (state === false) setTargetId(undefined);
       setTriggers((prev) => {
         return {
           ...prev,

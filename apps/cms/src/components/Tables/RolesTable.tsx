@@ -106,7 +106,7 @@ const RolesTable: Component<RolesTableProps> = (props) => {
           }}
         />
         <DeleteRole
-          id={rowTarget.getTargetId()}
+          id={rowTarget.getTargetId}
           state={{
             open: rowTarget.getTriggers().delete,
             setOpen: (state: boolean) => {

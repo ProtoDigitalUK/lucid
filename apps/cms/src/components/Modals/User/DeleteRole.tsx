@@ -5,7 +5,7 @@ import Modal from "@/components/Groups/Modal";
 // Services
 import api from "@/services/api";
 
-interface DeleteRoleProps {
+interface DeleteUserProps {
   id: Accessor<number | undefined>;
   state: {
     open: boolean;
@@ -13,10 +13,10 @@ interface DeleteRoleProps {
   };
 }
 
-const DeleteRole: Component<DeleteRoleProps> = (props) => {
+const DeleteUser: Component<DeleteUserProps> = (props) => {
   // ----------------------------------------
   // Mutations
-  const deleteRole = api.roles.useDeleteSingle({
+  const deleteUser = api.users.useDeleteSingle({
     onSuccess: () => {
       props.state.setOpen(false);
     },
@@ -29,27 +29,27 @@ const DeleteRole: Component<DeleteRoleProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deleteRole.action.isLoading,
-        isError: deleteRole.action.isError,
+        isLoading: deleteUser.action.isLoading,
+        isError: deleteUser.action.isError,
       }}
       content={{
-        title: T("delete_role_modal_title"),
-        description: T("delete_role_modal_description"),
-        error: deleteRole.errors()?.message,
+        title: T("delete_user_modal_title"),
+        description: T("delete_user_modal_description"),
+        error: deleteUser.errors()?.message,
       }}
       onConfirm={() => {
         const id = props.id();
         if (!id) return console.error("No id provided");
-        deleteRole.action.mutate({
+        deleteUser.action.mutate({
           id: id,
         });
       }}
       onCancel={() => {
         props.state.setOpen(false);
-        deleteRole.reset();
+        deleteUser.reset();
       }}
     />
   );
 };
 
-export default DeleteRole;
+export default DeleteUser;

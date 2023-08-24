@@ -11,6 +11,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";
 import UpdateUserPanel from "@/components/Panels/User/UpdateUserPanel";
+import DeleteUser from "@/components/Modals/User/DeleteRole";
 
 interface UsersTableProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -22,6 +23,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
   const rowTarget = useRowTarget({
     triggers: {
       update: false,
+      delete: false,
     },
   });
 
@@ -112,6 +114,15 @@ const UsersTable: Component<UsersTableProps> = (props) => {
             open: rowTarget.getTriggers().update,
             setOpen: (state: boolean) => {
               rowTarget.setTrigger("update", state);
+            },
+          }}
+        />
+        <DeleteUser
+          id={rowTarget.getTargetId}
+          state={{
+            open: rowTarget.getTriggers().delete,
+            setOpen: (state: boolean) => {
+              rowTarget.setTrigger("delete", state);
             },
           }}
         />
