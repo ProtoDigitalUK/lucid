@@ -40,6 +40,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
       },
       perPage: -1,
     },
+    enabled: () => !props.id(),
   });
   const user = api.users.useGetSingle({
     queryParams: {
@@ -47,6 +48,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
         user_id: props.id,
       },
     },
+    enabled: () => !!props.id(),
   });
 
   // ---------------------------------

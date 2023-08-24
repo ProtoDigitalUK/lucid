@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Index, Show } from "solid-js";
+import { Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCalendar } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
@@ -95,26 +95,24 @@ const RolesTable: Component<RolesTableProps> = (props) => {
           </Index>
         )}
       </Table.Root>
-      <Show when={rowTarget.getTargetId() !== undefined}>
-        <UpsertRolePanel
-          id={rowTarget.getTargetId}
-          state={{
-            open: rowTarget.getTriggers().update,
-            setOpen: (state: boolean) => {
-              rowTarget.setTrigger("update", state);
-            },
-          }}
-        />
-        <DeleteRole
-          id={rowTarget.getTargetId}
-          state={{
-            open: rowTarget.getTriggers().delete,
-            setOpen: (state: boolean) => {
-              rowTarget.setTrigger("delete", state);
-            },
-          }}
-        />
-      </Show>
+      <UpsertRolePanel
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().update,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("update", state);
+          },
+        }}
+      />
+      <DeleteRole
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().delete,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("delete", state);
+          },
+        }}
+      />
     </>
   );
 };

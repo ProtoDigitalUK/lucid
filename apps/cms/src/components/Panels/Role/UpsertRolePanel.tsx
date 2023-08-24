@@ -49,9 +49,11 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
   });
   const permissions = api.permissions.useGetAll({
     queryParams: {},
+    enabled: () => props.state.open,
   });
   const environments = api.environment.useGetAll({
     queryParams: {},
+    enabled: () => props.state.open,
   });
 
   // ----------------------------------------

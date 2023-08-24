@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Index, Show } from "solid-js";
+import { Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidEnvelope } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
@@ -107,26 +107,24 @@ const UsersTable: Component<UsersTableProps> = (props) => {
           </Index>
         )}
       </Table.Root>
-      <Show when={rowTarget.getTargetId() !== undefined}>
-        <UpdateUserPanel
-          id={rowTarget.getTargetId}
-          state={{
-            open: rowTarget.getTriggers().update,
-            setOpen: (state: boolean) => {
-              rowTarget.setTrigger("update", state);
-            },
-          }}
-        />
-        <DeleteUser
-          id={rowTarget.getTargetId}
-          state={{
-            open: rowTarget.getTriggers().delete,
-            setOpen: (state: boolean) => {
-              rowTarget.setTrigger("delete", state);
-            },
-          }}
-        />
-      </Show>
+      <UpdateUserPanel
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().update,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("update", state);
+          },
+        }}
+      />
+      <DeleteUser
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().delete,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("delete", state);
+          },
+        }}
+      />
     </>
   );
 };
