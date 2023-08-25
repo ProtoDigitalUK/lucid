@@ -11,9 +11,17 @@ type AuthStore = {
   user: UserResT | null;
   isAuthenticated: () => boolean;
 
-  hasPerm: (_perm: PermissionT) => boolean;
-  hasEnvPerm: (_key: string, _perm: EnvironmentPermissionT) => boolean;
-  hasSomeEnvPerms: (_key: string) => boolean;
+  hasPermission: (_perm: PermissionT[]) => {
+    all: boolean;
+    some: boolean;
+  };
+  hasEnvPermission: (
+    _perm: EnvironmentPermissionT[],
+    _key: string
+  ) => {
+    all: boolean;
+    some: boolean;
+  };
 };
 
 const [get, set] = createStore<AuthStore>({
@@ -25,29 +33,26 @@ const [get, set] = createStore<AuthStore>({
 
   // -----------------
   // Permissions
-  hasPerm(perm: PermissionT) {
+  hasPermission(perm: PermissionT[]) {
     const userPerms = this.user?.permissions?.global;
-    if (!userPerms) return false;
+    if (!userPerms) return { all: false, some: false };
 
-    return userPerms.includes(perm);
+    const all = perm.every((p) => userPerms.includes(p));
+    const some = perm.some((p) => userPerms.includes(p));
+
+    return { all, some };
   },
-  hasEnvPerm(key: string, perm: EnvironmentPermissionT) {
+  hasEnvPermission(perm: EnvironmentPermissionT[], key: string) {
     const userEnvPerms = this.user?.permissions?.environments;
-    if (!userEnvPerms) return false;
+    if (!userEnvPerms) return { all: false, some: false };
 
     const envPerm = userEnvPerms.find((env) => env.key === key);
-    if (!envPerm) return false;
+    if (!envPerm) return { all: false, some: false };
 
-    return envPerm.permissions.includes(perm);
-  },
-  hasSomeEnvPerms(key: string) {
-    const userEnvPerms = this.user?.permissions?.environments;
-    if (!userEnvPerms) return false;
+    const all = perm.every((p) => envPerm.permissions.includes(p));
+    const some = perm.some((p) => envPerm.permissions.includes(p));
 
-    const envPerm = userEnvPerms.find((env) => env.key === key);
-    if (!envPerm) return false;
-
-    return envPerm.permissions.length > 0;
+    return { all, some };
   },
 });
 
