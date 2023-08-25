@@ -1,7 +1,4 @@
-import {
-  PermissionT,
-  EnvironmentPermissionT,
-} from "../../core/src/services/Permissions";
+import { PermissionT, EnvironmentPermissionT } from "./permissions.d.ts";
 
 // User
 export interface UserResT {

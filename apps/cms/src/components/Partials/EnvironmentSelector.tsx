@@ -2,8 +2,8 @@ import T from "@/translations";
 import { Component, createMemo, createSignal, For } from "solid-js";
 import classNames from "classnames";
 import { useNavigate, useLocation, useParams } from "@solidjs/router";
-// State
-import { environment, setEnvironment } from "@/state/environment";
+// Store
+import { environment, setEnvironment } from "@/store/environmentStore";
 // Types
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components

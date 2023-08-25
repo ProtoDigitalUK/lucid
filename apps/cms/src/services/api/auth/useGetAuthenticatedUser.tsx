@@ -1,5 +1,7 @@
-import { createMemo } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
+// Store
+import userStore from "@/store/userStore";
 // Utils
 import request from "@/utils/request";
 // Types
@@ -17,18 +19,29 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["users.getSingle", queryKey(), params.key?.()], {
-    queryFn: () =>
-      request<APIResponse<UserResT>>({
-        url: `/api/v1/auth/me`,
-        config: {
-          method: "GET",
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
+  const query = createQuery(
+    () => ["users.getSingle", queryKey(), params.key?.()],
+    {
+      queryFn: () =>
+        request<APIResponse<UserResT>>({
+          url: `/api/v1/auth/me`,
+          config: {
+            method: "GET",
+          },
+        }),
+      get enabled() {
+        return params.enabled ? params.enabled() : true;
+      },
+    }
+  );
+
+  createEffect(() => {
+    if (query.isSuccess) {
+      userStore.set("user", query.data.data);
+    }
   });
+
+  return query;
 };
 
 export default useGetAuthenticatedUser;

@@ -3,8 +3,8 @@ import { Component, createEffect, createMemo } from "solid-js";
 import { useLocation, useParams } from "@solidjs/router";
 // Services
 import api from "@/services/api";
-// State
-import { environment, setEnvironment } from "@/state/environment";
+// Store
+import { environment, setEnvironment } from "@/store/environmentStore";
 // Components
 import Navigation from "@/components/Groups/Navigation";
 

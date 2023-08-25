@@ -1,5 +1,7 @@
 import T from "@/translations";
 import { Component, Show, createMemo, createSignal } from "solid-js";
+// Store
+import userStore from "@/store/userStore";
 // Services
 import api from "@/services/api";
 // Types
@@ -38,9 +40,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
       },
       perPage: -1,
     },
-  });
-  const authenticatedUser = api.auth.useGetAuthenticatedUser({
-    queryParams: {},
+    enabled: () => props.state.open,
   });
 
   // ---------------------------------
@@ -57,10 +57,10 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
   // ---------------------------------
   // Memos
   const isLoading = createMemo(() => {
-    return roles.isLoading || authenticatedUser.isLoading;
+    return roles.isLoading;
   });
   const isError = createMemo(() => {
-    return roles.isError || authenticatedUser.isError;
+    return roles.isError;
   });
 
   // ---------------------------------
@@ -77,7 +77,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
             username: getUsername(),
             first_name: getFirstName() || undefined,
             last_name: getLastName() || undefined,
-            super_admin: authenticatedUser.data?.data.super_admin
+            super_admin: userStore.get.user?.super_admin
               ? getIsSuperAdmin()
               : undefined,
             role_ids: getSelectedRoles().map((role) => role.value) as number[],
@@ -193,7 +193,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
         }
         errors={createUser.errors()?.errors?.body?.role_ids}
       />
-      <Show when={authenticatedUser.data?.data.super_admin}>
+      <Show when={userStore.get.user?.super_admin}>
         <Form.Checkbox
           id="super_admin"
           value={getIsSuperAdmin()}

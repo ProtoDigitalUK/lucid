@@ -16,7 +16,8 @@ export const sendPasswordResetReq = (params: Params) => {
   return request<
     APIResponse<{
       message: string;
-    }>
+    }>,
+    Params
   >({
     url: `/api/v1/auth/reset-password`,
     csrf: true,

@@ -8,8 +8,8 @@ import {
   createMemo,
 } from "solid-js";
 import { useLocation } from "@solidjs/router";
-// State
-import { environment } from "@/state/environment";
+// Store
+import { environment } from "@/store/environmentStore";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
 import { EnvironmentResT } from "@lucid/types/src/environments";

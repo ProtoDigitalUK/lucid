@@ -6,21 +6,21 @@ import { APIErrorResponse } from "@/types/api";
 // Services
 import { csrfReq } from "@/services/api/auth/useCsrf";
 
-interface RequestParams {
+interface RequestParams<Data> {
   url: string;
   query?: QueryBuilderProps;
   csrf?: boolean;
-  config?: RequestConfig;
+  config?: RequestConfig<Data>;
 }
 
-interface RequestConfig {
+interface RequestConfig<Data> {
   method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
-  body?: {
-    [key: string]: unknown;
-  };
+  body?: Data;
 }
 
-const request = async <Response>(params: RequestParams): Promise<Response> => {
+const request = async <Response, Data = unknown>(
+  params: RequestParams<Data>
+): Promise<Response> => {
   let fetchURL = params.url;
   if (!import.meta.env.PROD) {
     fetchURL = `${import.meta.env.VITE_API_DEV_URL}${params.url}`;

@@ -6,8 +6,8 @@ import { useNavigate } from "@solidjs/router";
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
-// State
-import { setEnvironment } from "@/state/environment";
+// Store
+import { setEnvironment } from "@/store/environmentStore";
 // Types
 import { APIResponse, APIErrorResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";
@@ -21,7 +21,7 @@ interface Params {
 }
 
 export const createSingleReq = (params: Params) => {
-  return request<APIResponse<EnvironmentResT>>({
+  return request<APIResponse<EnvironmentResT>, Params>({
     url: `/api/v1/environments`,
     csrf: true,
     config: {

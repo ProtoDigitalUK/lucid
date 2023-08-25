@@ -2,8 +2,8 @@ import T from "@/translations";
 import { Component, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
-// State
-import { environment } from "@/state/environment";
+// Store
+import { environment } from "@/store/environmentStore";
 // Components
 import Layout from "@/components/Groups/Layout";
 import UpsertEnvForm from "@/components/Forms/Environment/UpsertEnvForm";

@@ -2,8 +2,8 @@ import { createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-// State
-import { syncEnvironment } from "@/state/environment";
+// Store
+import { syncEnvironment } from "@/store/environmentStore";
 // Types
 import { APIResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";

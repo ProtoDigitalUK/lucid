@@ -6,8 +6,8 @@ import { useNavigate } from "@solidjs/router";
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
-// State
-import { setEnvironment, environment } from "@/state/environment";
+// Store
+import { setEnvironment, environment } from "@/store/environmentStore";
 // Types
 import { APIResponse, APIErrorResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";
