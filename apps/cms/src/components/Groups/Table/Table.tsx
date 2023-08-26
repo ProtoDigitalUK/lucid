@@ -17,6 +17,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
+import noPermission from "@/assets/illustrations/no-permission.svg";
 // Components
 import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
@@ -28,6 +29,7 @@ import Button from "@/components/Partials/Button";
 interface TableRootProps {
   key: string;
   rows: number;
+  permission?: boolean;
   meta?: APIResponse<unknown>["meta"];
   caption?: string;
   searchParams: ReturnType<typeof useSearchParams>;
@@ -172,6 +174,16 @@ export const TableRoot: Component<TableRootProps> = (props) => {
   return (
     <>
       <Switch>
+        <Match when={props.permission === false}>
+          <Error
+            type="table"
+            content={{
+              image: noPermission,
+              title: T("no_permission"),
+              description: T("no_permission_description"),
+            }}
+          />
+        </Match>
         <Match when={props.state.isError}>
           <Error
             type="table"

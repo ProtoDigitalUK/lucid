@@ -26,9 +26,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/:collection_key",
-  permissions: {
-    environments: ["read_content"],
-  },
   middleware: {
     authenticate: true,
     validateEnvironment: true,

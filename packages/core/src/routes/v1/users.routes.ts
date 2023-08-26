@@ -56,9 +56,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/",
-  permissions: {
-    global: ["read_users"],
-  },
   middleware: {
     authenticate: true,
     paginated: true,
@@ -70,9 +67,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/:id",
-  permissions: {
-    global: ["read_users"],
-  },
   middleware: {
     authenticate: true,
   },

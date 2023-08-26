@@ -16,10 +16,12 @@ export interface PageHeadingProps {
     delete?: {
       open: boolean;
       setOpen: (_open: boolean) => void;
+      permission?: boolean;
     };
     create?: {
       open: boolean;
       setOpen: (_open: boolean) => void;
+      permission?: boolean;
     };
   };
   options?: {
@@ -87,7 +89,12 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         {/* Actions */}
         <Show when={props.actions}>
           <div class="flex items-center justify-end ml-5">
-            <Show when={props.actions?.create !== undefined}>
+            <Show
+              when={
+                props.actions?.create !== undefined &&
+                props.actions.create.permission !== false
+              }
+            >
               <Button
                 type="submit"
                 theme="primary"
@@ -99,7 +106,12 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
                 {T("create")}
               </Button>
             </Show>
-            <Show when={props.actions?.delete !== undefined}>
+            <Show
+              when={
+                props.actions?.delete !== undefined &&
+                props.actions.delete.permission !== false
+              }
+            >
               <Button
                 theme="danger"
                 size="icon"

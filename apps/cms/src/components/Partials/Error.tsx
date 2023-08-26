@@ -32,7 +32,7 @@ const Error: Component<ErrorProps> = (props) => {
           class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"
         />
         <h2 class="mb-2">{props.content.title}</h2>
-        <p class="">{props.content.description}</p>
+        <p class="max-w-[400px]">{props.content.description}</p>
         <Show when={props.link !== undefined}>
           <Link
             theme={"primary"}

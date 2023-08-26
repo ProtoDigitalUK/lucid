@@ -1,5 +1,4 @@
 import { createStore } from "solid-js/store";
-import { getCookie } from "@/utils/cookie";
 // Types
 import { UserResT } from "@lucid/types/src/users";
 import {
@@ -9,7 +8,7 @@ import {
 
 type AuthStore = {
   user: UserResT | null;
-  isAuthenticated: () => boolean;
+  reset: () => void;
 
   hasPermission: (_perm: PermissionT[]) => {
     all: boolean;
@@ -26,9 +25,8 @@ type AuthStore = {
 
 const [get, set] = createStore<AuthStore>({
   user: null,
-  isAuthenticated() {
-    const authCookie = getCookie("auth");
-    return authCookie !== null;
+  reset() {
+    set("user", null);
   },
 
   // -----------------

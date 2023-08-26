@@ -42,7 +42,7 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
         class={classNames({
           "p-30 pb-[calc(var(--lucid-page-layout-footer-height)+30px)]":
             !props.options?.noPadding,
-          "pb-[var(--lucid-page-layout-footer-height)]":
+          "pb-[var(--lucid-page-layout-footer-height)] ":
             props.options?.noPadding,
         })}
       >

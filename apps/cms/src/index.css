@@ -53,6 +53,11 @@
   font-display: swap;
 }
 
+:root {
+  --lucid-page-layout-footer-height: 0px;
+  --lucid-page-layout-header-height: 0px;
+}
+
 @layer base {
   /* Typography */
   h1 {

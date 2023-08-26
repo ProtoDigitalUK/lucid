@@ -14,9 +14,6 @@ const router = Router();
 r(router, {
   method: "get",
   path: "/",
-  permissions: {
-    environments: ["read_content"],
-  },
   middleware: {
     authenticate: true,
     paginated: true,
@@ -29,9 +26,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/:id",
-  permissions: {
-    environments: ["read_content"],
-  },
   middleware: {
     authenticate: true,
     validateEnvironment: true,
@@ -44,7 +38,7 @@ r(router, {
   method: "post",
   path: "/",
   permissions: {
-    environments: ["create_content"],
+    environments: ["create_category"],
   },
   middleware: {
     authenticate: true,
@@ -59,7 +53,7 @@ r(router, {
   method: "patch",
   path: "/:id",
   permissions: {
-    environments: ["update_content"],
+    environments: ["update_category"],
   },
   middleware: {
     authenticate: true,
@@ -74,7 +68,7 @@ r(router, {
   method: "delete",
   path: "/:id",
   permissions: {
-    environments: ["delete_content"],
+    environments: ["delete_category"],
   },
   middleware: {
     authenticate: true,

@@ -7,25 +7,15 @@ export default class Permissions {
     return {
       users: {
         key: "users_permissions",
-        permissions: [
-          "create_user",
-          "read_users",
-          "update_user",
-          "delete_user",
-        ],
+        permissions: ["create_user", "update_user", "delete_user"],
       },
       roles: {
         key: "roles_permissions",
-        permissions: ["create_role", "read_role", "update_role", "delete_role"],
+        permissions: ["create_role", "update_role", "delete_role"],
       },
       media: {
         key: "media_permissions",
-        permissions: [
-          "create_media",
-          "read_media",
-          "update_media",
-          "delete_media",
-        ],
+        permissions: ["create_media", "update_media", "delete_media"],
       },
       settings: {
         key: "settings_permissions",
@@ -48,7 +38,6 @@ export default class Permissions {
         key: "content_permissions",
         permissions: [
           "create_content",
-          "read_content",
           "update_content",
           "delete_content",
           "publish_content",
@@ -57,16 +46,11 @@ export default class Permissions {
       },
       category: {
         key: "category_permissions",
-        permissions: [
-          "create_category",
-          "read_category",
-          "update_category",
-          "delete_category",
-        ],
+        permissions: ["create_category", "update_category", "delete_category"],
       },
       menu: {
         key: "menu_permissions",
-        permissions: ["create_menu", "read_menu", "update_menu", "delete_menu"],
+        permissions: ["create_menu", "update_menu", "delete_menu"],
       },
       form_submissions: {
         key: "form_submissions_permissions",

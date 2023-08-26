@@ -1,5 +1,7 @@
 import T from "@/translations";
 import { Component, createSignal } from "solid-js";
+// Store
+import userStore from "@/store/userStore";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
@@ -54,6 +56,7 @@ const UsersListRoute: Component = () => {
         create: {
           open: openCreateUserPanel(),
           setOpen: setOpenCreateUserPanel,
+          permission: userStore.get.hasPermission(["create_user"]).all,
         },
       }}
       headingChildren={

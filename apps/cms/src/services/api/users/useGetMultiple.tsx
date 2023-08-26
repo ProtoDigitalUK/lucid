@@ -36,6 +36,10 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     return JSON.stringify(queryParams());
   });
 
+  const isEnabled = createMemo(() => {
+    return params.enabled ? params.enabled() : true;
+  });
+
   return createQuery(() => ["users.getMultiple", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<UserResT[]>>({
@@ -46,7 +50,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
         },
       }),
     get enabled() {
-      return params.enabled ? params.enabled() : true;
+      return isEnabled();
     },
   });
 };

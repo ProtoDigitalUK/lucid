@@ -44,9 +44,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/:id",
-  permissions: {
-    environments: ["read_menu"],
-  },
   middleware: {
     authenticate: true,
     validateEnvironment: true,
@@ -58,9 +55,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/",
-  permissions: {
-    environments: ["read_menu"],
-  },
   middleware: {
     authenticate: true,
     paginated: true,

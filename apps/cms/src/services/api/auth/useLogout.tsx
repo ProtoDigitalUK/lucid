@@ -1,6 +1,8 @@
 import T from "@/translations";
 import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
+// Store
+import userStore from "@/store/userStore";
 // Utils
 import spawnToast from "@/utils/spawn-toast";
 import { clearCookie } from "@/utils/cookie";
@@ -37,6 +39,7 @@ const useLogout = () => {
           message: T("logout_success_toast_message"),
           status: "success",
         });
+        userStore.get.reset();
         navigate("/login");
         sessionStorage.removeItem("_csrf");
       } else if (error) {
