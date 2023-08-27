@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { useNavigate, useLocation, useParams } from "@solidjs/router";
 // Store
 import { environment, setEnvironment } from "@/store/environmentStore";
+import userStore from "@/store/userStore";
 // Types
 import { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
@@ -115,6 +116,7 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
           onClick={() => {
             setOpen(false);
           }}
+          permission={userStore.get.hasPermission(["create_environment"]).all}
         >
           <FaSolidPlus class="mr-2" />
           {T("create_environment")}

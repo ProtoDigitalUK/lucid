@@ -1,6 +1,8 @@
+import T from "@/translations";
 import { Component, JSX, createMemo } from "solid-js";
 import classnames from "classnames";
 import { Link as RouterLink } from "@solidjs/router";
+import spawnToast from "@/utils/spawn-toast";
 
 interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
   theme:
@@ -15,6 +17,7 @@ interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
   replace?: boolean;
   href?: string;
   classes?: string;
+  permission?: boolean;
 }
 
 const Link: Component<LinkProps> = (props) => {
@@ -38,6 +41,7 @@ const Link: Component<LinkProps> = (props) => {
         "px-5 py-3.5 text-base": props.size === "medium",
         "px-10 py-4 text-base": props.size === "large",
         "w-10 h-10 p-0": props.size === "icon",
+        "opacity-50 cursor-not-allowed": props.permission === false,
       }
     );
   });
@@ -50,6 +54,17 @@ const Link: Component<LinkProps> = (props) => {
       href={props.href || ""}
       replace={props.replace}
       {...props}
+      onClick={(e) => {
+        if (props.permission === false) {
+          spawnToast({
+            title: T("no_permission_toast_title"),
+            message: T("no_permission_toast_message"),
+            status: "warning",
+          });
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
     >
       {props.children}
     </RouterLink>

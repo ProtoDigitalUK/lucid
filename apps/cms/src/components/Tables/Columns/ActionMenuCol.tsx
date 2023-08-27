@@ -1,6 +1,8 @@
 import T from "@/translations";
 import { Component, For, Switch, Match } from "solid-js";
 import { FaSolidEllipsisVertical, FaSolidChevronRight } from "solid-icons/fa";
+import classNames from "classnames";
+import spawnToast from "@/utils/spawn-toast";
 // Components
 import { DropdownMenu } from "@kobalte/core";
 import Table from "@/components/Groups/Table";
@@ -56,14 +58,28 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
               <ul class="divide-primaryA divide-y">
                 <For each={props.actions}>
                   {(action) => (
-                    <li>
+                    <li
+                      class={classNames({
+                        "opacity-50": action.permission === false,
+                      })}
+                    >
                       <Switch>
                         <Match when={action.type === "link"}>
                           <Link
                             href={action.href || "/"}
-                            class={liItemClasses}
+                            class={classNames(liItemClasses, {
+                              "cursor-not-allowed": action.permission === false,
+                            })}
                             onClick={(e) => {
                               e.stopPropagation();
+                              if (action.permission === false) {
+                                spawnToast({
+                                  title: T("no_permission_toast_title"),
+                                  message: T("no_permission_toast_message"),
+                                  status: "warning",
+                                });
+                                e.preventDefault();
+                              }
                             }}
                           >
                             <span class="line-clamp-1 mr-2.5">
@@ -76,9 +92,19 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
+                              if (action.permission === false) {
+                                spawnToast({
+                                  title: T("no_permission_toast_title"),
+                                  message: T("no_permission_toast_message"),
+                                  status: "warning",
+                                });
+                                return;
+                              }
                               action.onClick && action.onClick();
                             }}
-                            class={liItemClasses}
+                            class={classNames(liItemClasses, {
+                              "cursor-not-allowed": action.permission === false,
+                            })}
                           >
                             <span class="line-clamp-1 mr-2.5">
                               {action.label}

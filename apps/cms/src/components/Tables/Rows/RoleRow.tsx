@@ -5,6 +5,8 @@ import useRowTarget from "@/hooks/useRowTarget";
 // Types
 import { TableRowProps } from "@/types/components";
 import { RoleResT } from "@lucid/types/src/roles";
+// Store
+import userStore from "@/store/userStore";
 // Components
 import Table from "@/components/Groups/Table";
 import TextCol from "@/components/Tables/Columns/TextCol";
@@ -31,6 +33,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
             props.rowTarget.setTargetId(props.role.id);
             props.rowTarget.setTrigger("update", true);
           },
+          permission: userStore.get.hasPermission(["update_role"]).all,
         },
         {
           label: T("delete"),
@@ -39,6 +42,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
             props.rowTarget.setTargetId(props.role.id);
             props.rowTarget.setTrigger("delete", true);
           },
+          permission: userStore.get.hasPermission(["delete_role"]).all,
         },
       ]}
       options={props.options}

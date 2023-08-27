@@ -3,6 +3,8 @@ import { Component } from "solid-js";
 // Types
 import { TableRowProps } from "@/types/components";
 import { UserResT } from "@lucid/types/src/users";
+// Store
+import userStore from "@/store/userStore";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 // Components
@@ -31,6 +33,7 @@ const UserRow: Component<UserRowProps> = (props) => {
             props.rowTarget.setTargetId(props.user.id);
             props.rowTarget.setTrigger("update", true);
           },
+          permission: userStore.get.hasPermission(["update_user"]).all,
         },
         {
           label: T("delete"),
@@ -39,6 +42,7 @@ const UserRow: Component<UserRowProps> = (props) => {
             props.rowTarget.setTargetId(props.user.id);
             props.rowTarget.setTrigger("delete", true);
           },
+          permission: userStore.get.hasPermission(["delete_user"]).all,
         },
       ]}
       options={props.options}

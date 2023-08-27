@@ -2,6 +2,8 @@ import T from "@/translations";
 import { Component, createSignal } from "solid-js";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
+// Store
+import userStore from "@/store/userStore";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
@@ -43,6 +45,7 @@ const RolesListRoute: Component = () => {
         create: {
           open: openCreateRolePanel(),
           setOpen: setOpenCreateRolePanel,
+          permission: userStore.get.hasPermission(["create_role"]).all,
         },
       }}
       headingChildren={
