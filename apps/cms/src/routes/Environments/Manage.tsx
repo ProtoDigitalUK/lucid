@@ -4,6 +4,7 @@ import { Component, createSignal } from "solid-js";
 import api from "@/services/api";
 // Store
 import { environment } from "@/store/environmentStore";
+import userStore from "@/store/userStore";
 // Components
 import Layout from "@/components/Groups/Layout";
 import UpsertEnvForm from "@/components/Forms/Environment/UpsertEnvForm";
@@ -43,6 +44,7 @@ const ManageEnvrionemntRoute: Component = () => {
         delete: {
           open: openDelete(),
           setOpen: setOpenDelete,
+          permission: userStore.get.hasPermission(["delete_environment"]).all,
         },
       }}
     >

@@ -11,7 +11,7 @@ interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
     | "container-outline"
     | "danger"
     | "basic";
-  size: "x-small" | "small" | "medium" | "large" | "icon";
+  size: "x-small" | "small" | "medium" | "large" | "icon" | "auto";
   children: JSX.Element;
 
   replace?: boolean;
@@ -41,7 +41,8 @@ const Link: Component<LinkProps> = (props) => {
         "px-5 py-3.5 text-base": props.size === "medium",
         "px-10 py-4 text-base": props.size === "large",
         "w-10 h-10 p-0": props.size === "icon",
-        "opacity-50 cursor-not-allowed": props.permission === false,
+        "p-1": props.size === "auto",
+        "opacity-80 cursor-not-allowed": props.permission === false,
       }
     );
   });

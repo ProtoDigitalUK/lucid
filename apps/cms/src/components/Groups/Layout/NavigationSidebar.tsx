@@ -1,6 +1,8 @@
 import T from "@/translations";
 import { Component, createEffect, createMemo } from "solid-js";
 import { useLocation, useParams } from "@solidjs/router";
+// Store
+import userStore from "@/store/userStore";
 // Services
 import api from "@/services/api";
 // Store
@@ -83,8 +85,30 @@ export const NavigationSidebar: Component = () => {
             active={location.pathname.includes("/env/")}
           />
           <Navigation.IconLink href="/media" icon="media" title={T("media")} />
-          <Navigation.IconLink href="/users" icon="users" title={T("users")} />
-          <Navigation.IconLink href="/roles" icon="roles" title={T("roles")} />
+          <Navigation.IconLink
+            href="/users"
+            icon="users"
+            title={T("users")}
+            permission={
+              userStore.get.hasPermission([
+                "create_user",
+                "update_user",
+                "delete_user",
+              ]).some
+            }
+          />
+          <Navigation.IconLink
+            href="/roles"
+            icon="roles"
+            title={T("roles")}
+            permission={
+              userStore.get.hasPermission([
+                "create_role",
+                "update_role",
+                "delete_role",
+              ]).some
+            }
+          />
           <Navigation.IconLink
             href="/settings"
             icon="settings"

@@ -32,6 +32,8 @@ const [get, set] = createStore<AuthStore>({
   // -----------------
   // Permissions
   hasPermission(perm: PermissionT[]) {
+    if (this.user?.super_admin) return { all: true, some: true };
+
     const userPerms = this.user?.permissions?.global;
     if (!userPerms) return { all: false, some: false };
 
@@ -41,6 +43,8 @@ const [get, set] = createStore<AuthStore>({
     return { all, some };
   },
   hasEnvPermission(perm: EnvironmentPermissionT[], key: string) {
+    if (this.user?.super_admin) return { all: true, some: true };
+
     const userEnvPerms = this.user?.permissions?.environments;
     if (!userEnvPerms) return { all: false, some: false };
 

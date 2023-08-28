@@ -14,9 +14,6 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/",
-    permissions: {
-        environments: ["read_content"],
-    },
     middleware: {
         authenticate: true,
         paginated: true,
@@ -28,9 +25,6 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/:id",
-    permissions: {
-        environments: ["read_content"],
-    },
     middleware: {
         authenticate: true,
         validateEnvironment: true,
@@ -42,7 +36,7 @@ const router = (0, express_1.Router)();
     method: "post",
     path: "/",
     permissions: {
-        environments: ["create_content"],
+        environments: ["create_category"],
     },
     middleware: {
         authenticate: true,
@@ -56,7 +50,7 @@ const router = (0, express_1.Router)();
     method: "patch",
     path: "/:id",
     permissions: {
-        environments: ["update_content"],
+        environments: ["update_category"],
     },
     middleware: {
         authenticate: true,
@@ -70,7 +64,7 @@ const router = (0, express_1.Router)();
     method: "delete",
     path: "/:id",
     permissions: {
-        environments: ["delete_content"],
+        environments: ["delete_category"],
     },
     middleware: {
         authenticate: true,

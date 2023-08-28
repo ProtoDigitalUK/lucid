@@ -31,9 +31,6 @@ r(router, {
 r(router, {
   method: "get",
   path: "/",
-  permissions: {
-    environments: ["read_form_submissions"],
-  },
   middleware: {
     authenticate: true,
   },

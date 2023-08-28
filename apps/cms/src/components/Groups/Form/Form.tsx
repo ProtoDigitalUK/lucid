@@ -16,6 +16,7 @@ interface FormProps {
   content: {
     submit: string;
   };
+  permission?: boolean;
   onSubmit?: () => void;
   children: JSXElement;
 }
@@ -50,6 +51,7 @@ export const Form: Component<FormProps> = (props) => {
               theme="primary"
               loading={props.state.isLoading}
               disabled={props.state.isDisabled}
+              permission={props.permission}
             >
               {props.content.submit}
             </Button>
@@ -70,6 +72,7 @@ export const Form: Component<FormProps> = (props) => {
               size="medium"
               loading={props.state.isLoading}
               disabled={props.state.isDisabled}
+              permission={props.permission}
             >
               {props.content.submit}
             </Button>

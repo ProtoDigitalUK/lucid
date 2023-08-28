@@ -1,5 +1,7 @@
+import T from "@/translations";
 import { Component, Show, JSX, createMemo } from "solid-js";
 import classnames from "classnames";
+import spawnToast from "@/utils/spawn-toast";
 
 interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   theme:
@@ -9,7 +11,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
     | "danger"
     | "basic"
     | "secondary-toggle";
-  size: "x-small" | "small" | "medium" | "large" | "icon";
+  size: "x-small" | "small" | "medium" | "large" | "icon" | "auto";
   children: JSX.Element;
 
   onCLick?: () => void;
@@ -18,6 +20,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   disabled?: boolean;
   active?: boolean;
+  permission?: boolean;
 }
 
 const Button: Component<ButtonProps> = (props) => {
@@ -49,6 +52,8 @@ const Button: Component<ButtonProps> = (props) => {
         "px-5 py-3.5 text-base": props.size === "medium",
         "px-10 py-4 text-base": props.size === "large",
         "w-10 h-10 p-0": props.size === "icon",
+        "p-1": props.size === "auto",
+        "opacity-80 cursor-not-allowed": props.permission === false,
       }
     );
   });
@@ -59,7 +64,20 @@ const Button: Component<ButtonProps> = (props) => {
     <button
       type={props.type}
       class={classnames(classes(), props.classes)}
-      onClick={() => props.onCLick && props.onCLick()}
+      onClick={(e) => {
+        if (props.permission === false) {
+          spawnToast({
+            title: T("no_permission_toast_title"),
+            message: T("no_permission_toast_message"),
+            status: "warning",
+          });
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+
+        props.onCLick && props.onCLick();
+      }}
       disabled={props.disabled || props.loading}
       {...props}
     >

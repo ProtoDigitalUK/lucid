@@ -8,6 +8,8 @@ import {
   createEffect,
 } from "solid-js";
 import slugify from "slugify";
+// Store
+import userStore from "@/store/userStore";
 // Services
 import api from "@/services/api";
 // Utils
@@ -144,6 +146,12 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
     if (!props.environment) return false;
     return !updateData().changed;
   });
+  const hasPermission = createMemo(() => {
+    if (props.environment) {
+      return userStore.get.hasPermission(["update_environment"]).all;
+    }
+    return userStore.get.hasPermission(["create_environment"]).all;
+  });
 
   // Query memos
   const isError = createMemo(() => {
@@ -174,6 +182,7 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
     >
       <Form.Root
         type={"page-layout"}
+        permission={hasPermission()}
         state={{
           isLoading: isCreating(),
           isDisabled: submitIsDisabled(),

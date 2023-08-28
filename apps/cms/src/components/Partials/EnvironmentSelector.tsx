@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createMemo, createSignal, For } from "solid-js";
+import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import classNames from "classnames";
 import { useNavigate, useLocation, useParams } from "@solidjs/router";
 // Store
@@ -92,35 +92,45 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
                     />
                     <span class="ml-2.5">{env.title}</span>
                   </div>
-                  <Link
-                    size="medium"
-                    theme="basic"
-                    href={`/env/${env.key}`}
-                    class="hover:fill-secondaryH fill-primaryText ml-2"
+                  <Show
+                    when={
+                      userStore.get.hasPermission([
+                        "update_environment",
+                        "delete_environment",
+                      ]).some
+                    }
                   >
-                    <FaSolidGear
-                      class="duration-200 transition-colors"
-                      size={14}
-                    />
-                  </Link>
+                    <Link
+                      size="auto"
+                      theme="basic"
+                      href={`/env/${env.key}`}
+                      classes="hover:fill-secondaryH fill-primaryText ml-2"
+                    >
+                      <FaSolidGear
+                        class="duration-200 transition-colors"
+                        size={14}
+                      />
+                    </Link>
+                  </Show>
                 </button>
               </li>
             )}
           </For>
         </ul>
-        <Separator.Root class="border-primaryA my-2.5 w-full" />
-        <Link
-          href="/env/create"
-          theme="primary-outline"
-          size="x-small"
-          onClick={() => {
-            setOpen(false);
-          }}
-          permission={userStore.get.hasPermission(["create_environment"]).all}
-        >
-          <FaSolidPlus class="mr-2" />
-          {T("create_environment")}
-        </Link>
+        <Show when={userStore.get.hasPermission(["create_environment"]).all}>
+          <Separator.Root class="border-primaryA my-2.5 w-full" />
+          <Link
+            href="/env/create"
+            theme="primary-outline"
+            size="x-small"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <FaSolidPlus class="mr-2" />
+            {T("create_environment")}
+          </Link>
+        </Show>
       </DropdownContent>
     </DropdownMenu.Root>
   );

@@ -42,9 +42,6 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/:id",
-    permissions: {
-        environments: ["read_menu"],
-    },
     middleware: {
         authenticate: true,
         validateEnvironment: true,
@@ -55,9 +52,6 @@ const router = (0, express_1.Router)();
 (0, route_1.default)(router, {
     method: "get",
     path: "/",
-    permissions: {
-        environments: ["read_menu"],
-    },
     middleware: {
         authenticate: true,
         paginated: true,
