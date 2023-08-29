@@ -65,6 +65,11 @@
   "remove": "Remove",
   "remove_all": "Remove All",
   "name": "Name",
+  "file_extension": "File Extension",
+  "file_size": "File Size",
+  "width": "Width",
+  "height": "Height",
+  "mime_type": "Mime Type",
   "users_permissions": "User Permissions",
   "roles_permissions": "Role Permissions",
   "media_permissions": "Media Permissions",
@@ -170,5 +175,7 @@
   "create_environment_route_title": "Create Environment",
   "create_environment_route_description": "Environments are a top level grouping of collections, forms and bricks. With the seperation of environments, you can have multiple sites/apps running on the same CMS.",
   "users_route_title": "Users",
-  "users_route_description": "Manage users and their permissions."
+  "users_route_description": "Manage users and their permissions.",
+  "media_route_title": "Media",
+  "media_route_description": "Manage your media library."
 }

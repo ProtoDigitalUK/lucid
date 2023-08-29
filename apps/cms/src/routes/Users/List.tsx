@@ -51,6 +51,7 @@ const UsersListRoute: Component = () => {
       description={T("users_route_description")}
       options={{
         noPadding: true,
+        noBorder: true,
       }}
       actions={{
         create: {
