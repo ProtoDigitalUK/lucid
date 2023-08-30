@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "77ac344e-d810-4dc9-a078-808a82a307eb",
+		"_postman_id": "af61e3d2-424e-46dd-84e8-723bdf15b4d0",
 		"name": "Headless/Core",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20656721"
@@ -133,7 +133,8 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"url": {
@@ -355,7 +356,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/roles/1",
+							"raw": "{{BASE_URL}}/api/v1/roles/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -363,7 +364,7 @@
 								"api",
 								"v1",
 								"roles",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -382,7 +383,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Admin\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\", \"create_user\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Admin\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"update_user\", \"create_user\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_stage\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -417,7 +418,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\", \"assign_role\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_prod\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Test\",\r\n    \"permission_groups\": [\r\n        {\r\n            \"permissions\": [\"create_role\", \"read_role\",\"update_role\", \"delete_role\"]\r\n        },\r\n        {\r\n            \"environment_key\": \"site_stage\",\r\n            \"permissions\": [\"create_content\", \"read_content\"]\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1912,7 +1913,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/rumham3.png"
+									"src": "/C:/Users/wyall/Desktop/artworks-CkobL8z3RkKJsZqI-4vZ3aw-t500x500.jpg"
 								}
 							]
 						},
@@ -1985,13 +1986,7 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "",

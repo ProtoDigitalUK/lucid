@@ -4,6 +4,7 @@ import brickConfig from "./brick-config";
 import users from "./users";
 import roles from "./roles";
 import permissions from "./permissions";
+import media from "./media";
 
 const exportObject = {
   auth,
@@ -12,6 +13,7 @@ const exportObject = {
   users,
   roles,
   permissions,
+  media,
 };
 
 export default exportObject;

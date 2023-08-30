@@ -116,12 +116,6 @@
         var(--lucid-page-layout-footer-height)
     );
   }
-  .page-layout-table {
-    min-height: calc(
-      100vh - var(--lucid-page-layout-header-height) -
-        var(--lucid-page-layout-footer-height)
-    );
-  }
 
   /* Animations */
   @keyframes animation-enter {

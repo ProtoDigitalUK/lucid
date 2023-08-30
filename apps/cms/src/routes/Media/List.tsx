@@ -5,6 +5,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
+import MediaGrid from "@/components/Grids/MediaGrid";
 
 const MediaListRoute: Component = () => {
   // ----------------------------------
@@ -44,7 +45,7 @@ const MediaListRoute: Component = () => {
       title={T("media_route_title")}
       description={T("media_route_description")}
       options={{
-        noPadding: true,
+        noPadding: false,
       }}
       headingChildren={
         <Query.Row
@@ -99,7 +100,7 @@ const MediaListRoute: Component = () => {
         />
       }
     >
-      media grid
+      <MediaGrid searchParams={searchParams} />
     </Layout.PageLayout>
   );
 };

@@ -16,10 +16,9 @@ import { CollectionBrickConfigT } from "@lucid/collection-builder";
 import brickConfigService from "@services/brick-config";
 import pageService from "@services/pages";
 import medias from "@services/media";
-// Format
-import { MediaResT } from "@utils/format/format-media";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
+import { MediaResT } from "@lucid/types/src/media";
 
 // ------------------------------------
 // Interfaces

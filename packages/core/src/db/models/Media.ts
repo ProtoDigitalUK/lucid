@@ -118,11 +118,11 @@ export default class Media {
   };
   static getMultiple: MediaGetMultiple = async (client, query_instance) => {
     const mediasRes = client.query<MediaT>({
-      text: `SELECT${query_instance.query.select}FROMlucid_media${query_instance.query.where}${query_instance.query.order}${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM lucid_media ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_media.id)FROMlucid_media${query_instance.query.where} `,
+      text: `SELECT COUNT(DISTINCT lucid_media.id) FROM lucid_media ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 

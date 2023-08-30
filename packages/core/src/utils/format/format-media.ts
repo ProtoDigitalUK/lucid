@@ -1,25 +1,8 @@
 import { MediaT } from "@db/models/Media";
 // Utils
 import createURL from "@utils/media/create-url";
-
-// -------------------------------------------
 // Types
-export interface MediaResT {
-  id: number;
-  key: string;
-  url: string;
-  name: string;
-  alt: string | null;
-  meta: {
-    mime_type: string;
-    file_extension: string;
-    file_size: number;
-    width: number | null;
-    height: number | null;
-  };
-  created_at: string;
-  updated_at: string;
-}
+import { MediaResT } from "@lucid/types/src/media";
 
 const formatMedia = (media: MediaT): MediaResT => {
   return {

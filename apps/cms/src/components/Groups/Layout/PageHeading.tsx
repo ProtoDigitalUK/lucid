@@ -67,7 +67,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         "border-b": !props.options?.noBorder,
       })}
     >
-      <div class={"p-30 flex justify-between items-start"}>
+      <div class={"p-15 md:p-30 flex justify-between items-start"}>
         {/* Textarea */}
         <div class="max-w-3xl w-full">
           <Switch>

@@ -23,7 +23,7 @@ const Error: Component<ErrorProps> = (props) => {
       class={classNames("flex items-center justify-center bg-background", {
         "inset-0 absolute z-50": props.type === "fill",
         "page-layout-full-body": props.type === "page-layout",
-        "border-t border-border page-layout-table": props.type === "table",
+        "border-t border-border page-layout-full-body": props.type === "table",
       })}
     >
       <div class="text-center max-w-xl flex flex-col items-center p-10">
