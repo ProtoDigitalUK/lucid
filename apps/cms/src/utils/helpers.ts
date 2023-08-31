@@ -2,7 +2,6 @@ import { Accessor } from "solid-js";
 import equal from "fast-deep-equal";
 
 // ---------------------------------------------
-//
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GenericObject = Record<string, any>;
 
@@ -77,11 +76,21 @@ const resolveValue = <T>(value: Accessor<T> | T): T =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   typeof value === "function" ? (value as any)() : value;
 
+// ---------------------------------------------
+// Bytes to human readable format
+const bytesToSize = (bytes: number): string => {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  if (bytes === 0) return "0 Byte";
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${Math.round(bytes / Math.pow(1024, i))} ${sizes[i]}`;
+};
+
 const helpers = {
   deepMerge,
   deepDiff,
   updateData,
   resolveValue,
+  bytesToSize,
 };
 
 export default helpers;

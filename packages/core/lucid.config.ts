@@ -140,7 +140,7 @@ const SettingsCollection = new CollectionBuilder("settings", {
 // ------------------------------------
 // Build Config
 export default buildConfig({
-  host: "http://localhost:3000",
+  host: "http://localhost:8393",
   origin: "http://localhost:3000",
   mode: "development",
   secret: process.env.LUCID_SECRET_KEY as string,

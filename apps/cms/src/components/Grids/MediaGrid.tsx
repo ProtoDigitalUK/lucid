@@ -5,6 +5,7 @@ import api from "@/services/api";
 import useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Grid from "@/components/Groups/Grid";
+import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
 
 interface MediaGridProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -31,8 +32,9 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
         isSuccess: media.isSuccess,
       }}
       searchParams={props.searchParams}
+      loadingCard={<MediaCardLoading />}
     >
-      <For each={media.data?.data}>{(item) => <li>{item.name}</li>}</For>
+      <For each={media.data?.data}>{(item) => <MediaCard media={item} />}</For>
     </Grid.Root>
   );
 };
