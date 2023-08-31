@@ -12,6 +12,8 @@ const streamSingleController: Controller<
   typeof mediaSchema.streamSingle.query
 > = async (req, res, next) => {
   try {
+    console.log(req.query);
+
     // GET MEDIA
     const response = await mediaService.streamMedia({
       key: req.params.key,

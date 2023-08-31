@@ -2,9 +2,11 @@ import T from "@/translations";
 import {
   Component,
   Show,
+  Switch,
   createEffect,
   createMemo,
   createSignal,
+  Match,
 } from "solid-js";
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
 // Types
@@ -29,7 +31,7 @@ export const Pagination: Component<PaginationProps> = (props) => {
     return {
       page: props.meta?.current_page || 1,
       lastPage: props.meta?.last_page || 1,
-      total: props.meta?.total || 1,
+      total: props.meta?.total || 0,
     };
   });
   const lastPage = createMemo(() => {
@@ -48,11 +50,16 @@ export const Pagination: Component<PaginationProps> = (props) => {
     <Layout.PageFooter>
       <div class="flex md:flex-row flex-col justify-between md:items-center">
         <span class="text-sm text-body md:mb-0 mb-2">
-          {T("pagination_text", {
-            page: textData().page,
-            lastPage: textData().lastPage,
-            total: textData().total,
-          })}
+          <Switch>
+            <Match when={textData().total === 0}>{T("pagination_empty")}</Match>
+            <Match when={textData().total > 0}>
+              {T("pagination_text", {
+                page: textData().page,
+                lastPage: textData().lastPage,
+                total: textData().total,
+              })}
+            </Match>
+          </Switch>
         </span>
         <Show when={lastPage() > 1}>
           <KobPagination.Root

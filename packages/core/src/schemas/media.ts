@@ -12,7 +12,18 @@ const createSingleParams = z.object({});
 // ------------------------------------
 // STREAM SINGLE
 const streamSingleBody = z.object({});
-const streamSingleQuery = z.object({});
+const streamSingleQuery = z.object({
+  width: z.string().optional(),
+  height: z.string().optional(),
+  format: z
+    .union([
+      z.literal("jpeg"),
+      z.literal("png"),
+      z.literal("webp"),
+      z.literal("avif"),
+    ])
+    .optional(),
+});
 const streamSingleParams = z.object({
   key: z.string(),
 });

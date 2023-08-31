@@ -114,12 +114,12 @@ const validate =
       const parseData: {
         body?: any;
         query?: {
-          include?: any;
-          exclude?: any;
-          filter?: any;
-          sort?: any;
-          page?: any;
-          per_page?: any;
+          include?: ReturnType<typeof buildInclude>;
+          exclude?: ReturnType<typeof buildExclude>;
+          filter?: ReturnType<typeof buildFilter>;
+          sort?: ReturnType<typeof buildSort>;
+          page?: ReturnType<typeof buildPage>;
+          per_page?: ReturnType<typeof buildPerPage>;
         };
         params?: any;
       } = {};
@@ -133,6 +133,7 @@ const validate =
         sort: buildSort(req.query),
         page: buildPage(req.query),
         per_page: buildPerPage(req.query),
+        ...req.query,
       };
 
       if (Object.keys(parseData).length === 0) return next();

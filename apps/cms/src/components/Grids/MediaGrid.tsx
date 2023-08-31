@@ -32,6 +32,7 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
         isSuccess: media.isSuccess,
       }}
       searchParams={props.searchParams}
+      meta={media.data?.meta}
       loadingCard={<MediaCardLoading />}
     >
       <For each={media.data?.data}>{(item) => <MediaCard media={item} />}</For>

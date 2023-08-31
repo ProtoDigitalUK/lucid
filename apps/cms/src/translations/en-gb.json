@@ -116,6 +116,7 @@
   "password_description": "Ensure your password is at least 8 characters long.",
   "no_permission": "You do not have permission.",
   "no_permission_description": "Please contact your administrator if you believe this is an error.",
+  "pagination_empty": "No entries found",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",

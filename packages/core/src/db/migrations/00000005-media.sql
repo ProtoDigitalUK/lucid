@@ -14,3 +14,8 @@ CREATE TABLE IF NOT EXISTS lucid_media (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS lucid_processed_images (
+  key TEXT NOT NULL PRIMARY KEY,
+  media_key TEXT NOT NULL REFERENCES lucid_media(key)
+)
