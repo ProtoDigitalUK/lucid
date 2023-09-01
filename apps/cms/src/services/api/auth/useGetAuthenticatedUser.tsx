@@ -4,6 +4,8 @@ import { createQuery } from "@tanstack/solid-query";
 import userStore from "@/store/userStore";
 // Utils
 import request from "@/utils/request";
+// Services
+import api from "@/services/api";
 // Types
 import { UserResT } from "@lucid/types/src/users";
 import { APIResponse } from "@/types/api";
@@ -18,6 +20,8 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
   const queryKey = createMemo(() => {
     return JSON.stringify(queryParams());
   });
+
+  const logout = api.auth.useLogout();
 
   const query = createQuery(
     () => ["users.getSingle", queryKey(), params.key?.()],
@@ -38,6 +42,9 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
   createEffect(() => {
     if (query.isSuccess) {
       userStore.set("user", query.data.data);
+    }
+    if (query.isError) {
+      logout.action.mutate();
     }
   });
 

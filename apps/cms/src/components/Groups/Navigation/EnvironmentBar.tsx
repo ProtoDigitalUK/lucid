@@ -54,7 +54,7 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
   // ----------------------------------
   // Render
   return (
-    <Show when={showBar()}>
+    <Show when={showBar() && environment() !== undefined}>
       <div class="w-[240px] bg-container border-r border-border h-full">
         <EnvironmentSelector environments={props.environments} />
         <nav>

@@ -39,17 +39,8 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
           {props.headingChildren}
         </Layout.PageHeading>
       </Show>
-      <div
-        class={classNames({
-          "p-15 md:p-30 pb-[calc(var(--lucid-page-layout-footer-height)+30px)]":
-            !props.options?.noPadding,
-          "pb-[var(--lucid-page-layout-footer-height)] ":
-            props.options?.noPadding,
-        })}
-      >
-        <Layout.PageContent state={props.state}>
-          {props.children}
-        </Layout.PageContent>
+      <div class={classNames("pb-[var(--lucid-page-layout-footer-height)]")}>
+        {props.children}
       </div>
     </div>
   );

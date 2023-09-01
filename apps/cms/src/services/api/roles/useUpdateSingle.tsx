@@ -58,6 +58,7 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
         props?.onSuccess && props.onSuccess();
         queryClient.invalidateQueries(["roles.getMultiple"]);
         queryClient.invalidateQueries(["roles.getSingle"]);
+        queryClient.invalidateQueries(["users.getSingle"]);
       } else if (error) {
         props?.onError && props.onError();
         validateSetError(error, setErrors);

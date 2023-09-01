@@ -106,6 +106,20 @@ const buildPerPage = (query: z.infer<typeof querySchema>) => {
 };
 
 // ------------------------------------
+// Functions
+const addRemainingQuery = (req: Request) => {
+  const remainingQuery = Object.fromEntries(
+    Object.entries(req.query).filter(
+      ([key]) =>
+        !["include", "exclude", "filter", "sort", "page", "per_page"].includes(
+          key
+        )
+    )
+  );
+  return remainingQuery;
+};
+
+// ------------------------------------
 // Validate Middleware
 const validate =
   (schema: AnyZodObject) =>
@@ -133,7 +147,7 @@ const validate =
         sort: buildSort(req.query),
         page: buildPage(req.query),
         per_page: buildPerPage(req.query),
-        ...req.query,
+        ...addRemainingQuery(req),
       };
 
       if (Object.keys(parseData).length === 0) return next();

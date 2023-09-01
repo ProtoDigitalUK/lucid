@@ -51,7 +51,12 @@ export const NavigationSidebar: Component = () => {
   const getFirstEnvHref = createMemo(() => {
     // work out the first link based on collections, forms, menus, etc. in the environment.
     // If no envrionemtn, take the to the create environment route.
-    if (!environment()) return "/env/create";
+
+    if (!environment()) {
+      if (userStore.get.hasPermission(["create_environment"]).all)
+        return "/env/create";
+      return "/";
+    }
 
     let url = `/env/${environment()}/`;
 
@@ -61,6 +66,11 @@ export const NavigationSidebar: Component = () => {
     }
 
     return url;
+  });
+  const showEnvLink = createMemo(() => {
+    if (userStore.get.hasPermission(["create_environment"]).all) return true;
+    if (!environment()) return false;
+    return true;
   });
 
   // ----------------------------------
@@ -83,6 +93,7 @@ export const NavigationSidebar: Component = () => {
             icon="environment"
             title={T("environment")}
             active={location.pathname.includes("/env/")}
+            permission={showEnvLink()}
           />
           <Navigation.IconLink href="/media" icon="media" title={T("media")} />
           <Navigation.IconLink

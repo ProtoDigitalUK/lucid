@@ -19,7 +19,7 @@ export const PageContent: Component<PageLayoutContentProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <Switch fallback={props.children}>
+    <Switch fallback={<div class="p-15 md:p-30">{props.children}</div>}>
       <Match when={props.state?.isLoading}>
         <Loading type="page-layout" />
       </Match>
@@ -33,7 +33,9 @@ export const PageContent: Component<PageLayoutContentProps> = (props) => {
           }}
         />
       </Match>
-      <Match when={props.state?.isSuccess}>{props.children}</Match>
+      <Match when={props.state?.isSuccess}>
+        <div class="p-15 md:p-30">{props.children}</div>
+      </Match>
     </Switch>
   );
 };
