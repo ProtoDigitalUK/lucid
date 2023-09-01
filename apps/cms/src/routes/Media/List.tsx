@@ -100,7 +100,9 @@ const MediaListRoute: Component = () => {
         />
       }
     >
-      <MediaGrid searchParams={searchParams} />
+      <Layout.PageContent>
+        <MediaGrid searchParams={searchParams} />
+      </Layout.PageContent>
     </Layout.PageLayout>
   );
 };

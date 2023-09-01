@@ -2019,7 +2019,7 @@
 								},
 								{
 									"key": "filter[mime_type]",
-									"value": "image/jpeg,image/png",
+									"value": "image/jpeg",
 									"disabled": true
 								},
 								{
@@ -2569,6 +2569,98 @@
 			"item": []
 		},
 		{
+			"name": "CDN",
+			"item": [
+				{
+					"name": "Stream Media",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Rum Ham",
+									"type": "text"
+								},
+								{
+									"key": "alt",
+									"value": "A ham baked in rum, floating on the ocean surface",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": [
+										"/C:/Users/wyall/Desktop/rumham.jpg",
+										"/C:/Users/wyall/Desktop/rumham2.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/media/rum-ham-1693420536178",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"media",
+								"rum-ham-1693420536178"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Steam Media - Process",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8393/api/media/rum-ham-1693582243727?width=100&height=200&format=avif",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8393",
+							"path": [
+								"api",
+								"media",
+								"rum-ham-1693582243727"
+							],
+							"query": [
+								{
+									"key": "width",
+									"value": "100"
+								},
+								{
+									"key": "height",
+									"value": "200"
+								},
+								{
+									"key": "format",
+									"value": "avif"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Public",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -2607,66 +2699,13 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/api/public/rumham.jpg",
+					"raw": "{{BASE_URL}}/public/rumham.jpg",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"api",
 						"public",
 						"rumham.jpg"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Stream Media",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "_csrf",
-						"value": "{{CSRF}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "Rum Ham",
-							"type": "text"
-						},
-						{
-							"key": "alt",
-							"value": "A ham baked in rum, floating on the ocean surface",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "file",
-							"type": "file",
-							"src": [
-								"/C:/Users/wyall/Desktop/rumham.jpg",
-								"/C:/Users/wyall/Desktop/rumham2.jpg"
-							]
-						}
-					]
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/api/media/rum-ham-1688821181131",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"api",
-						"media",
-						"rum-ham-1688821181131"
 					]
 				}
 			},

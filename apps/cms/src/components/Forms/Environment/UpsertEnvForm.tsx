@@ -24,7 +24,6 @@ import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import InputGrid from "@/components/Containers/InputGrid";
 import CardGrid from "@/components/Containers/CardGrid";
-import Layout from "@/components/Groups/Layout";
 // Cards
 import EnvBrickCard from "@/components/Cards/BrickCard";
 import EnvCollectionCard from "@/components/Cards/CollectionCard";
@@ -175,154 +174,151 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <Layout.PageContent
-      state={{
+    <Form.Root
+      type={"page-layout"}
+      permission={hasPermission()}
+      queryState={{
         isError: isError(),
       }}
+      state={{
+        isLoading: isCreating(),
+        isDisabled: submitIsDisabled(),
+        errors: errors(),
+      }}
+      content={{
+        submit: props.environment ? T("update") : T("create"),
+      }}
+      onSubmit={() => {
+        if (!props.environment) {
+          createEnvironment.action.mutate({
+            key: key(),
+            title: title(),
+            assigned_bricks: assignedBricks(),
+            assigned_collections: assignedCollections(),
+            assigned_forms: assignedForms(),
+          });
+        } else {
+          updateEnvironment.action.mutate({
+            key: props.environment.key,
+            body: updateData().data,
+          });
+        }
+      }}
     >
-      <Form.Root
-        type={"page-layout"}
-        permission={hasPermission()}
-        state={{
-          isLoading: isCreating(),
-          isDisabled: submitIsDisabled(),
-          errors: errors(),
-        }}
-        content={{
-          submit: props.environment ? T("update") : T("create"),
-        }}
-        onSubmit={() => {
-          if (!props.environment) {
-            createEnvironment.action.mutate({
-              key: key(),
-              title: title(),
-              assigned_bricks: assignedBricks(),
-              assigned_collections: assignedCollections(),
-              assigned_forms: assignedForms(),
-            });
-          } else {
-            updateEnvironment.action.mutate({
-              key: props.environment.key,
-              body: updateData().data,
-            });
-          }
-        }}
-      >
-        {/* Details */}
-        <SectionHeading title={T("details")} />
-        <InputGrid columns={3}>
+      {/* Details */}
+      <SectionHeading title={T("details")} />
+      <InputGrid columns={3}>
+        <Form.Input
+          id="title"
+          name="title"
+          type="text"
+          value={title()}
+          onChange={setTitle}
+          copy={{
+            label: T("title"),
+          }}
+          required={true}
+          autoFoucs={true}
+          errors={errors()?.errors?.body?.title}
+          noMargin={true}
+          onBlur={() => {
+            if (!key()) {
+              const newKey = slugify(title(), {
+                lower: true,
+                replacement: "-",
+                strict: true,
+                remove: /[0-9]/g,
+              });
+              setKey(newKey);
+            }
+          }}
+        />
+        <Show when={!props.environment}>
           <Form.Input
-            id="title"
-            name="title"
+            id="key"
+            name="key"
             type="text"
-            value={title()}
-            onChange={setTitle}
+            value={key()}
+            onChange={setKey}
             copy={{
-              label: T("title"),
+              label: T("key"),
             }}
             required={true}
-            autoFoucs={true}
-            errors={errors()?.errors?.body?.title}
+            errors={errors()?.errors?.body?.key}
             noMargin={true}
-            onBlur={() => {
-              if (!key()) {
-                const newKey = slugify(title(), {
-                  lower: true,
-                  replacement: "-",
-                  strict: true,
-                  remove: /[0-9]/g,
-                });
-                setKey(newKey);
-              }
-            }}
           />
-          <Show when={!props.environment}>
-            <Form.Input
-              id="key"
-              name="key"
-              type="text"
-              value={key()}
-              onChange={setKey}
-              copy={{
-                label: T("key"),
-              }}
-              required={true}
-              errors={errors()?.errors?.body?.key}
-              noMargin={true}
+        </Show>
+      </InputGrid>
+
+      {/* Assigned Bricks */}
+      <SectionHeading
+        title={T("bricks")}
+        description={T("assign_bricks_description")}
+      />
+      <CardGrid
+        columns={4}
+        state={{
+          isLoading: isLoading(),
+          isError: isError(),
+        }}
+      >
+        <For each={bricks.data?.data || []}>
+          {(brick) => (
+            <EnvBrickCard
+              brick={brick}
+              selectedBricks={assignedBricks()}
+              setSelected={toggleBrick}
             />
-          </Show>
-        </InputGrid>
+          )}
+        </For>
+      </CardGrid>
 
-        {/* Assigned Bricks */}
-        <SectionHeading
-          title={T("bricks")}
-          description={T("assign_bricks_description")}
-        />
-        <CardGrid
-          columns={4}
-          state={{
-            isLoading: isLoading(),
-            isError: isError(),
-          }}
-        >
-          <For each={bricks.data?.data || []}>
-            {(brick) => (
-              <EnvBrickCard
-                brick={brick}
-                selectedBricks={assignedBricks()}
-                setSelected={toggleBrick}
-              />
-            )}
-          </For>
-        </CardGrid>
+      {/* Assigned Collections */}
+      <SectionHeading
+        title={T("collections")}
+        description={T("assign_collections_description")}
+      />
+      <CardGrid
+        columns={4}
+        state={{
+          isLoading: isLoading(),
+          isError: isError(),
+        }}
+      >
+        <For each={collections.data?.data || []}>
+          {(collection) => (
+            <EnvCollectionCard
+              collection={collection}
+              selectedCollections={assignedCollections()}
+              setSelected={toggleCollection}
+            />
+          )}
+        </For>
+      </CardGrid>
 
-        {/* Assigned Collections */}
-        <SectionHeading
-          title={T("collections")}
-          description={T("assign_collections_description")}
-        />
-        <CardGrid
-          columns={4}
-          state={{
-            isLoading: isLoading(),
-            isError: isError(),
-          }}
-        >
-          <For each={collections.data?.data || []}>
-            {(collection) => (
-              <EnvCollectionCard
-                collection={collection}
-                selectedCollections={assignedCollections()}
-                setSelected={toggleCollection}
-              />
-            )}
-          </For>
-        </CardGrid>
-
-        {/* Assigned Forms */}
-        <SectionHeading
-          title={T("forms")}
-          description={T("assign_forms_description")}
-        />
-        <CardGrid
-          columns={4}
-          state={{
-            isLoading: isLoading(),
-            isError: isError(),
-          }}
-        >
-          <For each={forms.data?.data || []}>
-            {(form) => (
-              <EnvFormCard
-                form={form}
-                selectedForms={assignedForms()}
-                setSelected={toggleForm}
-              />
-            )}
-          </For>
-        </CardGrid>
-      </Form.Root>
-    </Layout.PageContent>
+      {/* Assigned Forms */}
+      <SectionHeading
+        title={T("forms")}
+        description={T("assign_forms_description")}
+      />
+      <CardGrid
+        columns={4}
+        state={{
+          isLoading: isLoading(),
+          isError: isError(),
+        }}
+      >
+        <For each={forms.data?.data || []}>
+          {(form) => (
+            <EnvFormCard
+              form={form}
+              selectedForms={assignedForms()}
+              setSelected={toggleForm}
+            />
+          )}
+        </For>
+      </CardGrid>
+    </Form.Root>
   );
 };
 

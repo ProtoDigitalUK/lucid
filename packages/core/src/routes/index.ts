@@ -17,12 +17,12 @@ import forms from "@routes/v1/forms.routes";
 import options from "@routes/v1/options.routes";
 import account from "@routes/v1/account.routes";
 // CDN
-import assets from "@routes/root/media.routes";
+import cdn from "@routes/v1/cdn.routes";
 
 const initRoutes = (app: any) => {
-  // Root
-  app.use("/api/media", assets);
   // Version 1
+  app.use("/cdn/v1", cdn);
+  // API
   app.use("/api/v1/auth", auth);
   app.use("/api/v1/health", health);
   app.use("/api/v1/categories", categories);

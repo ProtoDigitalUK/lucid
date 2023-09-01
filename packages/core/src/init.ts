@@ -74,7 +74,7 @@ const app = async (options: InitOptions) => {
   // ------------------------------------
   // Routes
   log.white("----------------------------------------------------");
-  if (options.public) app.use("/api/public", express.static(options.public));
+  if (options.public) app.use("/public", express.static(options.public));
   initRoutes(app);
   // Serve CMS
   app.use("/", express.static(path.join(__dirname, "../cms")));
