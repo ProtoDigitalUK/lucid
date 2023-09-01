@@ -11,7 +11,12 @@ const createSingleBody = zod_1.default.object({
 const createSingleQuery = zod_1.default.object({});
 const createSingleParams = zod_1.default.object({});
 const streamSingleBody = zod_1.default.object({});
-const streamSingleQuery = zod_1.default.object({});
+const streamSingleQuery = zod_1.default.object({
+    width: zod_1.default.string().optional(),
+    height: zod_1.default.string().optional(),
+    format: zod_1.default.enum(["jpeg", "png", "webp", "avif"]).optional(),
+    fallback: zod_1.default.enum(["1", "0"]).optional(),
+});
 const streamSingleParams = zod_1.default.object({
     key: zod_1.default.string(),
 });

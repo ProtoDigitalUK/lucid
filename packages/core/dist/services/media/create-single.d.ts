@@ -5,6 +5,6 @@ export interface ServiceData {
     alt?: string;
     files?: fileUpload.FileArray | null | undefined;
 }
-declare const createSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
+declare const createSingle: (client: PoolClient, data: ServiceData) => Promise<import("@lucid/types/src/media").MediaResT>;
 export default createSingle;
 //# sourceMappingURL=create-single.d.ts.map

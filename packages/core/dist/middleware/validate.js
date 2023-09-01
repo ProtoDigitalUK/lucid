@@ -83,6 +83,10 @@ const buildPerPage = (query) => {
     }
     return per_page;
 };
+const addRemainingQuery = (req) => {
+    const remainingQuery = Object.fromEntries(Object.entries(req.query).filter(([key]) => !["include", "exclude", "filter", "sort", "page", "per_page"].includes(key)));
+    return remainingQuery;
+};
 const validate = (schema) => async (req, res, next) => {
     try {
         const parseData = {};
@@ -95,6 +99,7 @@ const validate = (schema) => async (req, res, next) => {
             sort: buildSort(req.query),
             page: buildPage(req.query),
             per_page: buildPerPage(req.query),
+            ...addRemainingQuery(req),
         };
         if (Object.keys(parseData).length === 0)
             return next();

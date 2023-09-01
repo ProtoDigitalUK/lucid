@@ -161,6 +161,7 @@ export default buildConfig({
   media: {
     storageLimit: 5368709120,
     maxFileSize: 20777216,
+    fallbackImage: undefined,
     store: {
       service: "cloudflare",
       cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,

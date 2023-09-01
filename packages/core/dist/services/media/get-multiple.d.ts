@@ -5,7 +5,7 @@ export interface ServiceData {
     query: z.infer<typeof mediaSchema.getMultiple.query>;
 }
 declare const getMultiple: (client: PoolClient, data: ServiceData) => Promise<{
-    data: import("../../utils/format/format-media").MediaResT[];
+    data: import("@lucid/types/src/media").MediaResT[];
     count: number;
 }>;
 export default getMultiple;

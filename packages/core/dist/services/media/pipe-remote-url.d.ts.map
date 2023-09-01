@@ -1,0 +1,1 @@
+{"version":3,"file":"pipe-remote-url.d.ts","sourceRoot":"","sources":["../../../src/services/media/pipe-remote-url.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAEnC,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;IACZ,GAAG,EAAE,QAAQ,CAAC;IACd,YAAY,CAAC,EAAE,MAAM,CAAC;CACvB;AAED,QAAA,MAAM,aAAa,SAAU,WAAW,SAwCvC,CAAC;AAEF,eAAe,aAAa,CAAC"}

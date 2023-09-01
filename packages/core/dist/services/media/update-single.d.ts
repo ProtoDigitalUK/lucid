@@ -8,6 +8,6 @@ export interface ServiceData {
         files: fileUpload.FileArray | null | undefined;
     };
 }
-declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("../../utils/format/format-media").MediaResT>;
+declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("@lucid/types/src/media").MediaResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

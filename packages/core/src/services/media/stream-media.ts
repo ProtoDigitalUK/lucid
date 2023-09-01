@@ -1,20 +1,51 @@
-import getS3Client from "@utils/app/s3-client";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import z from "zod";
+import { Response } from "express";
+// Utils
+import service from "@utils/app/service";
+// Types
+import { Readable } from "stream";
+// Schema
+import mediaSchema from "@schemas/media";
 // Services
-import Config from "@services/Config";
+import mediaService from "@services/media";
 
 export interface ServiceData {
   key: string;
+  query: z.infer<typeof mediaSchema.streamSingle.query>;
+  res: Response;
 }
 
-const streamMedia = async (data: ServiceData) => {
-  const S3 = await getS3Client;
+export interface ResponseT {
+  contentLength?: number;
+  contentType?: string;
+  body?: Readable;
+}
 
-  const command = new GetObjectCommand({
-    Bucket: Config.media.store.bucket,
-    Key: data.key,
-  });
-  return S3.send(command);
+const streamMedia = async (
+  data: ServiceData
+): Promise<ResponseT | undefined> => {
+  try {
+    // --------------------------------------------------
+    // Stream iamge from S3/R2
+    if (
+      data.query?.format === undefined &&
+      data.query?.width === undefined &&
+      data.query?.height === undefined
+    ) {
+      return await mediaService.getS3Object({
+        key: data.key,
+      });
+    }
+
+    // --------------------------------------------------
+    // Process image
+    return await service(mediaService.processImage, false)(data);
+  } catch (err) {
+    await mediaService.streamErrorImage({
+      fallback: data.query?.fallback,
+      res: data.res,
+    });
+  }
 };
 
 export default streamMedia;

@@ -9,6 +9,10 @@ import getStorageUsed from "./get-storage-used";
 import setStorageUsed from "./set-storage-used";
 import getSingleById from "./get-single-by-id";
 import getMultipleByIds from "./get-multiple-by-ids";
+import streamErrorImage from "./stream-error-image";
+import processImage from "./process-image";
+import getS3Object from "./get-s3-object";
+import pipeRemoteURL from "./pipe-remote-url";
 
 export default {
   createSingle,
@@ -22,4 +26,8 @@ export default {
   setStorageUsed,
   getSingleById,
   getMultipleByIds,
+  streamErrorImage,
+  processImage,
+  getS3Object,
+  pipeRemoteURL,
 };

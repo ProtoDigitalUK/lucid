@@ -50,7 +50,7 @@ const app = async (options) => {
     console_log_colors_1.log.yellow("Start up tasks complete");
     console_log_colors_1.log.white("----------------------------------------------------");
     if (options.public)
-        app.use("/api/public", express_1.default.static(options.public));
+        app.use("/public", express_1.default.static(options.public));
     (0, index_1.default)(app);
     app.use("/", express_1.default.static(path_1.default.join(__dirname, "../cms")));
     app.get("*", (req, res) => {

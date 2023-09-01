@@ -14,4 +14,4 @@ const router = (0, express_1.Router)();
     controller: stream_single_1.default.controller,
 });
 exports.default = router;
-//# sourceMappingURL=media.routes.js.map
+//# sourceMappingURL=cdn.routes.js.map

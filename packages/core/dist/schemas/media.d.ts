@@ -16,7 +16,22 @@ declare const _default: {
     };
     streamSingle: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
-        query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
+        query: z.ZodObject<{
+            width: z.ZodOptional<z.ZodString>;
+            height: z.ZodOptional<z.ZodString>;
+            format: z.ZodOptional<z.ZodEnum<["jpeg", "png", "webp", "avif"]>>;
+            fallback: z.ZodOptional<z.ZodEnum<["1", "0"]>>;
+        }, "strip", z.ZodTypeAny, {
+            width?: string | undefined;
+            height?: string | undefined;
+            format?: "jpeg" | "png" | "webp" | "avif" | undefined;
+            fallback?: "1" | "0" | undefined;
+        }, {
+            width?: string | undefined;
+            height?: string | undefined;
+            format?: "jpeg" | "png" | "webp" | "avif" | undefined;
+            fallback?: "1" | "0" | undefined;
+        }>;
         params: z.ZodObject<{
             key: z.ZodString;
         }, "strip", z.ZodTypeAny, {

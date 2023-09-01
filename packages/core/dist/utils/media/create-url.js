@@ -8,7 +8,7 @@ const createURL = (key) => {
     if (!key) {
         return undefined;
     }
-    return `${Config_1.default.host}/api/media/${key}`;
+    return `${Config_1.default.host}/cdn/v1/${key}`;
 };
 exports.default = createURL;
 //# sourceMappingURL=create-url.js.map

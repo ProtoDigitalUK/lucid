@@ -24,6 +24,7 @@ const configSchema = z.object({
   media: z.object({
     storageLimit: z.number().optional(),
     maxFileSize: z.number().optional(),
+    fallbackImage: z.union([z.string(), z.boolean()]).optional(),
     store: z.object({
       service: z.enum(["aws", "cloudflare"]),
       cloudflareAccountId: z.string().optional(),
@@ -65,6 +66,7 @@ export type ConfigT = {
   media: {
     storageLimit?: number;
     maxFileSize?: number;
+    fallbackImage?: string | false;
     store: {
       service: "aws" | "cloudflare";
       cloudflareAccountId?: string;
@@ -188,6 +190,7 @@ export default class Config {
     return {
       storageLimit: media?.storageLimit || C.media.storageLimit,
       maxFileSize: media?.maxFileSize || C.media.maxFileSize,
+      fallbackImage: media?.fallbackImage,
       store: {
         service: media?.store.service,
         cloudflareAccountId: media?.store.cloudflareAccountId,

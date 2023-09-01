@@ -14,6 +14,10 @@ const get_storage_used_1 = __importDefault(require("./get-storage-used"));
 const set_storage_used_1 = __importDefault(require("./set-storage-used"));
 const get_single_by_id_1 = __importDefault(require("./get-single-by-id"));
 const get_multiple_by_ids_1 = __importDefault(require("./get-multiple-by-ids"));
+const steam_error_image_1 = __importDefault(require("./steam-error-image"));
+const process_image_1 = __importDefault(require("./process-image"));
+const get_s3_object_1 = __importDefault(require("./get-s3-object"));
+const pipe_remote_url_1 = __importDefault(require("./pipe-remote-url"));
 exports.default = {
     createSingle: create_single_1.default,
     deleteSingle: delete_single_1.default,
@@ -26,5 +30,9 @@ exports.default = {
     setStorageUsed: set_storage_used_1.default,
     getSingleById: get_single_by_id_1.default,
     getMultipleByIds: get_multiple_by_ids_1.default,
+    streamErrorImage: steam_error_image_1.default,
+    processImage: process_image_1.default,
+    getS3Object: get_s3_object_1.default,
+    pipeRemoteURL: pipe_remote_url_1.default,
 };
 //# sourceMappingURL=index.js.map

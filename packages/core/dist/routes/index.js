@@ -20,9 +20,9 @@ const emails_routes_1 = __importDefault(require("./v1/emails.routes"));
 const forms_routes_1 = __importDefault(require("./v1/forms.routes"));
 const options_routes_1 = __importDefault(require("./v1/options.routes"));
 const account_routes_1 = __importDefault(require("./v1/account.routes"));
-const media_routes_2 = __importDefault(require("./root/media.routes"));
+const cdn_routes_1 = __importDefault(require("./v1/cdn.routes"));
 const initRoutes = (app) => {
-    app.use("/api/media", media_routes_2.default);
+    app.use("/cdn/v1", cdn_routes_1.default);
     app.use("/api/v1/auth", auth_routes_1.default);
     app.use("/api/v1/health", health_routes_1.default);
     app.use("/api/v1/categories", categories_routes_1.default);

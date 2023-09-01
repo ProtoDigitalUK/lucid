@@ -9,14 +9,19 @@ const streamSingleController = async (req, res, next) => {
     try {
         const response = await media_2.default.streamMedia({
             key: req.params.key,
+            query: req.query,
+            res,
         });
-        res.setHeader("Content-Disposition", `inline; filename="${req.params.key}"`);
         res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-        if (response.ContentLength)
-            res.setHeader("Content-Length", response.ContentLength);
-        if (response.ContentType)
-            res.setHeader("Content-Type", response.ContentType);
-        response.Body.pipe(res);
+        if (response !== undefined) {
+            res.setHeader("Content-Disposition", `inline; filename="${req.params.key}"`);
+            if (response?.contentLength)
+                res.setHeader("Content-Length", response.contentLength);
+            if (response?.contentType)
+                res.setHeader("Content-Type", response.contentType);
+            if (response?.body !== undefined)
+                response.body.pipe(res);
+        }
     }
     catch (error) {
         next(error);
