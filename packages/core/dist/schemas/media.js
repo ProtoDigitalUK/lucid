@@ -53,12 +53,12 @@ const getMultipleParams = zod_1.default.object({});
 const getSingleBody = zod_1.default.object({});
 const getSingleQuery = zod_1.default.object({});
 const getSingleParams = zod_1.default.object({
-    key: zod_1.default.string(),
+    id: zod_1.default.string(),
 });
 const deleteSingleBody = zod_1.default.object({});
 const deleteSingleQuery = zod_1.default.object({});
 const deleteSingleParams = zod_1.default.object({
-    key: zod_1.default.string(),
+    id: zod_1.default.string(),
 });
 const updateSingleBody = zod_1.default.object({
     name: zod_1.default.string().optional(),
@@ -66,12 +66,12 @@ const updateSingleBody = zod_1.default.object({
 });
 const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({
-    key: zod_1.default.string(),
+    id: zod_1.default.string(),
 });
 const clearSingleProcessedBody = zod_1.default.object({});
 const clearSingleProcessedQuery = zod_1.default.object({});
 const clearSingleProcessedParams = zod_1.default.object({
-    key: zod_1.default.string(),
+    id: zod_1.default.string(),
 });
 const clearAllProcessedBody = zod_1.default.object({});
 const clearAllProcessedQuery = zod_1.default.object({});

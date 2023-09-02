@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 export interface ServiceData {
-    key: string;
+    id: number;
 }
 declare const deleteSingle: (client: PoolClient, data: ServiceData) => Promise<undefined>;
 export default deleteSingle;

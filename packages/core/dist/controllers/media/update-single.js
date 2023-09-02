@@ -10,7 +10,7 @@ const media_2 = __importDefault(require("../../services/media"));
 const updateSingleController = async (req, res, next) => {
     try {
         const media = await (0, service_1.default)(media_2.default.updateSingle, true)({
-            key: req.params.key,
+            id: parseInt(req.params.id),
             data: {
                 name: req.body.name,
                 alt: req.body.alt,

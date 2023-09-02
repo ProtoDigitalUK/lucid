@@ -10,7 +10,7 @@ const media_2 = __importDefault(require("../../services/media"));
 const deleteSingleController = async (req, res, next) => {
     try {
         const media = await (0, service_1.default)(media_2.default.deleteSingle, true)({
-            key: req.params.key,
+            id: parseInt(req.params.id),
         });
         res.status(200).json((0, build_response_1.default)(req, {
             data: media,

@@ -18,7 +18,7 @@ const deleteSingleController: Controller<
       mediaService.deleteSingle,
       true
     )({
-      key: req.params.key,
+      id: parseInt(req.params.id),
     });
 
     res.status(200).json(

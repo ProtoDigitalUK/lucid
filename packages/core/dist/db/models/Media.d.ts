@@ -32,6 +32,7 @@ type MediaUpdateSingle = (client: PoolClient, data: {
     name?: string;
     alt?: string;
     meta?: MediaMetaDataT;
+    newKey?: string;
 }) => Promise<{
     key: MediaT["key"];
 }>;

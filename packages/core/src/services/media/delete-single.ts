@@ -1,6 +1,5 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
 import service from "@utils/app/service";
 // Models
 import Media from "@db/models/Media";
@@ -8,36 +7,35 @@ import Media from "@db/models/Media";
 import mediaService from "@services/media";
 import s3Service from "@services/s3";
 // Format
-import formatMedia from "@utils/format/format-media";
 import processedImagesService from "@services/processed-images";
 
 export interface ServiceData {
-  key: string;
+  id: number;
 }
 
 const deleteSingle = async (client: PoolClient, data: ServiceData) => {
+  // Get single by ID
+  const media = await service(
+    mediaService.getSingle,
+    false,
+    client
+  )({
+    id: data.id,
+  });
+
   // Remove all processed images
   await service(
     processedImagesService.clearSingle,
     false,
     client
   )({
-    key: data.key,
+    id: media.id,
   });
 
   // Delete media
-  const media = await Media.deleteSingle(client, {
-    key: data.key,
+  await Media.deleteSingle(client, {
+    key: media.key,
   });
-
-  if (!media) {
-    throw new LucidError({
-      type: "basic",
-      name: "Media not found",
-      message: "Media not found",
-      status: 404,
-    });
-  }
 
   await s3Service.deleteObject({
     key: media.key,
@@ -50,7 +48,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     add: 0,
-    minus: media.file_size,
+    minus: media.meta.file_size,
   });
 
   return undefined;

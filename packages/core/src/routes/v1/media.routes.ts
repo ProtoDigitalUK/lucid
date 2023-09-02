@@ -54,7 +54,7 @@ r(router, {
 
 r(router, {
   method: "get",
-  path: "/:key",
+  path: "/:id",
   middleware: {
     authenticate: true,
   },
@@ -64,7 +64,7 @@ r(router, {
 
 r(router, {
   method: "delete",
-  path: "/:key",
+  path: "/:id",
   permissions: {
     global: ["delete_media"],
   },
@@ -78,7 +78,7 @@ r(router, {
 
 r(router, {
   method: "patch",
-  path: "/:key",
+  path: "/:id",
   permissions: {
     global: ["update_media"],
   },
@@ -92,7 +92,7 @@ r(router, {
 
 r(router, {
   method: "delete",
-  path: "/:key/processed",
+  path: "/:id/processed",
   permissions: {
     global: ["update_media"],
   },

@@ -12,19 +12,19 @@ declare const _default: {
         }>;
         query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
         params: import("zod").ZodObject<{
-            key: import("zod").ZodString;
+            id: import("zod").ZodString;
         }, "strip", import("zod").ZodTypeAny, {
-            key: string;
+            id: string;
         }, {
-            key: string;
+            id: string;
         }>;
     };
     controller: Controller<import("zod").ZodObject<{
-        key: import("zod").ZodString;
+        id: import("zod").ZodString;
     }, "strip", import("zod").ZodTypeAny, {
-        key: string;
+        id: string;
     }, {
-        key: string;
+        id: string;
     }>, import("zod").ZodObject<{
         name: import("zod").ZodOptional<import("zod").ZodString>;
         alt: import("zod").ZodOptional<import("zod").ZodString>;

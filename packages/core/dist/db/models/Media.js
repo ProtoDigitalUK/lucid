@@ -96,6 +96,7 @@ Media.updateSingle = async (client, data) => {
             "file_size",
             "width",
             "height",
+            "key",
         ],
         values: [
             data.name,
@@ -105,6 +106,7 @@ Media.updateSingle = async (client, data) => {
             data.meta?.size,
             data.meta?.width,
             data.meta?.height,
+            data.newKey,
         ],
         conditional: {
             hasValues: {

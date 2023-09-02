@@ -10,7 +10,7 @@ const processed_images_1 = __importDefault(require("../../services/processed-ima
 const clearSingleProcessedController = async (req, res, next) => {
     try {
         await (0, service_1.default)(processed_images_1.default.clearSingle, false)({
-            key: req.params.key,
+            id: parseInt(req.params.id),
         });
         res.status(200).json((0, build_response_1.default)(req, {
             data: undefined,

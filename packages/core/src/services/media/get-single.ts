@@ -7,12 +7,12 @@ import Media from "@db/models/Media";
 import formatMedia from "@utils/format/format-media";
 
 export interface ServiceData {
-  key: string;
+  id: number;
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
-  const media = await Media.getSingle(client, {
-    key: data.key,
+  const media = await Media.getSingleById(client, {
+    id: data.id,
   });
 
   if (!media) {

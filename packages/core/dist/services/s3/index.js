@@ -6,9 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const save_object_1 = __importDefault(require("./save-object"));
 const delete_object_1 = __importDefault(require("./delete-object"));
 const delete_objects_1 = __importDefault(require("./delete-objects"));
+const update_object_key_1 = __importDefault(require("./update-object-key"));
 exports.default = {
     saveObject: save_object_1.default,
     deleteObject: delete_object_1.default,
     deleteObjects: delete_objects_1.default,
+    updateObjectKey: update_object_key_1.default,
 };
 //# sourceMappingURL=index.js.map

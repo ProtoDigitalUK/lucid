@@ -62,7 +62,7 @@ const getMultipleParams = z.object({});
 const getSingleBody = z.object({});
 const getSingleQuery = z.object({});
 const getSingleParams = z.object({
-  key: z.string(),
+  id: z.string(),
 });
 
 // ------------------------------------
@@ -70,7 +70,7 @@ const getSingleParams = z.object({
 const deleteSingleBody = z.object({});
 const deleteSingleQuery = z.object({});
 const deleteSingleParams = z.object({
-  key: z.string(),
+  id: z.string(),
 });
 
 // ------------------------------------
@@ -81,7 +81,7 @@ const updateSingleBody = z.object({
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({
-  key: z.string(),
+  id: z.string(),
 });
 
 // ------------------------------------
@@ -89,7 +89,7 @@ const updateSingleParams = z.object({
 const clearSingleProcessedBody = z.object({});
 const clearSingleProcessedQuery = z.object({});
 const clearSingleProcessedParams = z.object({
-  key: z.string(),
+  id: z.string(),
 });
 
 // ------------------------------------

@@ -7,13 +7,15 @@ import s3Service from "@services/s3";
 const clearAll = async (client: PoolClient) => {
   const processedImages = await ProcessedImage.getAll(client);
 
-  await s3Service.deleteObjects({
-    objects: processedImages.map((processedImage) => ({
-      key: processedImage.key,
-    })),
-  });
+  if (processedImages.length > 0) {
+    await s3Service.deleteObjects({
+      objects: processedImages.map((processedImage) => ({
+        key: processedImage.key,
+      })),
+    });
 
-  await ProcessedImage.deleteAll(client);
+    await ProcessedImage.deleteAll(client);
+  }
 
   return;
 };

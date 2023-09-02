@@ -1963,7 +1963,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1693680104063",
+							"raw": "{{BASE_URL}}/api/v1/media/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1971,7 +1971,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1693680104063"
+								"3"
 							]
 						}
 					},
@@ -2064,7 +2064,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688491954013",
+							"raw": "{{BASE_URL}}/api/v1/media/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2072,7 +2072,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1688491954013"
+								"3"
 							]
 						}
 					},
@@ -2099,7 +2099,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1693679997940",
+							"raw": "{{BASE_URL}}/api/v1/media/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2107,7 +2107,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1693679997940"
+								"3"
 							]
 						}
 					},
@@ -2134,7 +2134,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1693678967266/processed",
+							"raw": "{{BASE_URL}}/api/v1/media/3/processed",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2142,7 +2142,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1693678967266",
+								"3",
 								"processed"
 							]
 						}
@@ -2679,14 +2679,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693678967266",
+							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693682404103",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"rum-ham-1693678967266"
+								"rum-ham-1693682404103"
 							]
 						}
 					},

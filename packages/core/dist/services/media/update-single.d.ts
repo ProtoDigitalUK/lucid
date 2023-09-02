@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 import fileUpload from "express-fileupload";
 export interface ServiceData {
-    key: string;
+    id: number;
     data: {
         name?: string;
         alt?: string;

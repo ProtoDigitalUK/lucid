@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/services/s3/index.ts"],"names":[],"mappings":";;;;;AAAA,gEAAuC;AACvC,oEAA2C;AAC3C,sEAA6C;AAE7C,kBAAe;IACb,UAAU,EAAV,qBAAU;IACV,YAAY,EAAZ,uBAAY;IACZ,aAAa,EAAb,wBAAa;CACd,CAAC"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/services/s3/index.ts"],"names":[],"mappings":";;;;;AAAA,gEAAuC;AACvC,oEAA2C;AAC3C,sEAA6C;AAC7C,4EAAkD;AAElD,kBAAe;IACb,UAAU,EAAV,qBAAU;IACV,YAAY,EAAZ,uBAAY;IACZ,aAAa,EAAb,wBAAa;IACb,eAAe,EAAf,2BAAe;CAChB,CAAC"}

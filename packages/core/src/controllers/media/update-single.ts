@@ -18,7 +18,7 @@ const updateSingleController: Controller<
       mediaService.updateSingle,
       true
     )({
-      key: req.params.key,
+      id: parseInt(req.params.id),
       data: {
         name: req.body.name,
         alt: req.body.alt,

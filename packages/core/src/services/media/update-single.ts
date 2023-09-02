@@ -12,7 +12,7 @@ import s3Service from "@services/s3";
 import processedImagesService from "@services/processed-images";
 
 export interface ServiceData {
-  key: string;
+  id: number;
   data: {
     name?: string;
     alt?: string;
@@ -28,12 +28,13 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     false,
     client
   )({
-    key: data.key,
+    id: data.id,
   });
 
   // -------------------------------------------
   // Update Media
   let meta: MediaMetaDataT | undefined = undefined;
+  let newKey: string | undefined = undefined;
   if (data.data.files && data.data.files["file"]) {
     const files = helpers.formatReqFiles(data.data.files);
     const firstFile = files[0];
@@ -51,10 +52,31 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     // -------------------------------------------
     // Upload to S3
     meta = await helpers.getMetaData(firstFile);
+    newKey = helpers.uniqueKey(data.data.name || firstFile.name);
+
+    const updateKeyRes = await s3Service.updateObjectKey({
+      oldKey: media.key,
+      newKey: newKey,
+    });
+
+    if (updateKeyRes.$metadata.httpStatusCode !== 200) {
+      throw new LucidError({
+        type: "basic",
+        name: "Error updating file",
+        message: "There was an error updating the file.",
+        status: 500,
+        errors: modelErrors({
+          file: {
+            code: "required",
+            message: "There was an error updating the file.",
+          },
+        }),
+      });
+    }
 
     const response = await s3Service.saveObject({
       type: "file",
-      key: media.key,
+      key: newKey,
       file: firstFile,
       meta,
     });
@@ -92,17 +114,18 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       false,
       client
     )({
-      key: media.key,
+      id: media.id,
     });
   }
 
   // -------------------------------------------
   // Update Media Row
   const mediaUpdate = await Media.updateSingle(client, {
-    key: data.key,
+    key: media.key,
     name: data.data.name,
     alt: data.data.alt,
     meta: meta,
+    newKey: newKey,
   });
 
   if (!mediaUpdate) {

@@ -17,5 +17,5 @@ CREATE TABLE IF NOT EXISTS lucid_media (
 
 CREATE TABLE IF NOT EXISTS lucid_processed_images (
   key TEXT NOT NULL PRIMARY KEY,
-  media_key TEXT REFERENCES lucid_media(key) ON DELETE SET NULL
+  media_key TEXT REFERENCES lucid_media(key) ON DELETE SET NULL ON UPDATE CASCADE
 )

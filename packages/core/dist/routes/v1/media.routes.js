@@ -51,7 +51,7 @@ const router = (0, express_1.Router)();
 });
 (0, route_1.default)(router, {
     method: "get",
-    path: "/:key",
+    path: "/:id",
     middleware: {
         authenticate: true,
     },
@@ -60,7 +60,7 @@ const router = (0, express_1.Router)();
 });
 (0, route_1.default)(router, {
     method: "delete",
-    path: "/:key",
+    path: "/:id",
     permissions: {
         global: ["delete_media"],
     },
@@ -73,7 +73,7 @@ const router = (0, express_1.Router)();
 });
 (0, route_1.default)(router, {
     method: "patch",
-    path: "/:key",
+    path: "/:id",
     permissions: {
         global: ["update_media"],
     },
@@ -86,7 +86,7 @@ const router = (0, express_1.Router)();
 });
 (0, route_1.default)(router, {
     method: "delete",
-    path: "/:key/processed",
+    path: "/:id/processed",
     permissions: {
         global: ["update_media"],
     },

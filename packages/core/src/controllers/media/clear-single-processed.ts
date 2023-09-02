@@ -18,7 +18,7 @@ const clearSingleProcessedController: Controller<
       processedImagesService.clearSingle,
       false
     )({
-      key: req.params.key,
+      id: parseInt(req.params.id),
     });
 
     res.status(200).json(

@@ -60,6 +60,7 @@ type MediaUpdateSingle = (
     name?: string;
     alt?: string;
     meta?: MediaMetaDataT;
+    newKey?: string;
   }
 ) => Promise<{
   key: MediaT["key"];
@@ -191,6 +192,7 @@ export default class Media {
         "file_size",
         "width",
         "height",
+        "key",
       ],
       values: [
         data.name,
@@ -200,6 +202,7 @@ export default class Media {
         data.meta?.size,
         data.meta?.width,
         data.meta?.height,
+        data.newKey,
       ],
       conditional: {
         hasValues: {

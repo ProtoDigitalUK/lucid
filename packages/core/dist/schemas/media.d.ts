@@ -107,22 +107,22 @@ declare const _default: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{
-            key: z.ZodString;
+            id: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            key: string;
+            id: string;
         }, {
-            key: string;
+            id: string;
         }>;
     };
     deleteSingle: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{
-            key: z.ZodString;
+            id: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            key: string;
+            id: string;
         }, {
-            key: string;
+            id: string;
         }>;
     };
     updateSingle: {
@@ -138,22 +138,22 @@ declare const _default: {
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{
-            key: z.ZodString;
+            id: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            key: string;
+            id: string;
         }, {
-            key: string;
+            id: string;
         }>;
     };
     clearSingleProcessed: {
         body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{
-            key: z.ZodString;
+            id: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            key: string;
+            id: string;
         }, {
-            key: string;
+            id: string;
         }>;
     };
     clearAllProcessed: {
