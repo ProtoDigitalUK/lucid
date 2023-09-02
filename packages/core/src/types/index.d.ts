@@ -24,7 +24,7 @@ declare global {
   type Controller<ParamsT, BodyT, QueryT> = (
     req: Request<z.infer<ParamsT>, any, z.infer<BodyT>, z.infer<QueryT>>,
     res: Response<ResponseBody>,
-    next: (error: Error) => void
+    next: NextFunction
   ) => void;
 
   interface ResponseBody {

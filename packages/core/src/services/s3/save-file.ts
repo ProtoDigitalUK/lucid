@@ -7,8 +7,11 @@ import { type MediaMetaDataT } from "@utils/media/helpers";
 import Config from "@services/Config";
 
 export interface ServiceData {
+  type: "file" | "buffer";
+
   key: string;
-  file: fileUpload.UploadedFile;
+  file?: fileUpload.UploadedFile;
+  buffer?: Buffer;
   meta: MediaMetaDataT;
 }
 
@@ -18,7 +21,7 @@ const saveFile = async (data: ServiceData) => {
   const command = new PutObjectCommand({
     Bucket: Config.media.store.bucket,
     Key: data.key,
-    Body: data.file.data,
+    Body: data.type === "file" ? data.file?.data : data.buffer,
     ContentType: data.meta.mimeType,
     Metadata: {
       width: data.meta.width?.toString() || "",

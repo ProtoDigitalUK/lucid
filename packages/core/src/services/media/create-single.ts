@@ -54,6 +54,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   const key = helpers.uniqueKey(data.name || firstFile.name);
   const meta = await helpers.getMetaData(firstFile);
   const response = await s3Service.saveFile({
+    type: "file",
     key: key,
     file: firstFile,
     meta,

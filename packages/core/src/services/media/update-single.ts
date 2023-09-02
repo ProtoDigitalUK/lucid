@@ -52,6 +52,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     meta = await helpers.getMetaData(firstFile);
 
     const response = await s3Service.saveFile({
+      type: "file",
       key: media.key,
       file: firstFile,
       meta,

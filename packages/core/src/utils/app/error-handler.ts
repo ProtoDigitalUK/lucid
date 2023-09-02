@@ -114,7 +114,7 @@ class RuntimeError extends Error {
 
 // ------------------------------------
 // Util Functions
-const decodeError = (error: Error) => {
+export const decodeError = (error: Error) => {
   if (error instanceof LucidError) {
     return {
       name: error.name,

@@ -1,18 +1,17 @@
 import z from "zod";
-import { Response } from "express";
-// Utils
-import service from "@utils/app/service";
 // Types
 import { Readable } from "stream";
 // Schema
 import mediaSchema from "@schemas/media";
+// Utils
+import helpers from "@utils/media/helpers";
+import service from "@utils/app/service";
 // Services
 import mediaService from "@services/media";
 
 export interface ServiceData {
   key: string;
   query: z.infer<typeof mediaSchema.streamSingle.query>;
-  res: Response;
 }
 
 export interface ResponseT {
@@ -24,26 +23,37 @@ export interface ResponseT {
 const streamMedia = async (
   data: ServiceData
 ): Promise<ResponseT | undefined> => {
-  try {
-    // --------------------------------------------------
-    // Stream iamge from S3/R2
-    if (
-      data.query?.format === undefined &&
-      data.query?.width === undefined &&
-      data.query?.height === undefined
-    ) {
-      return await mediaService.getS3Object({
-        key: data.key,
-      });
-    }
+  // --------------------------------------------------
+  // Stream iamge from S3/R2
+  if (
+    data.query?.format === undefined &&
+    data.query?.width === undefined &&
+    data.query?.height === undefined
+  ) {
+    return await mediaService.getS3Object({
+      key: data.key,
+    });
+  }
 
-    // --------------------------------------------------
-    // Process image
-    return await service(mediaService.processImage, false)(data);
+  // --------------------------------------------------
+  // Process image
+  const processKey = helpers.createProcessKey({
+    key: data.key,
+    query: data.query,
+  });
+
+  try {
+    return await mediaService.getS3Object({
+      key: processKey,
+    });
   } catch (err) {
-    await mediaService.streamErrorImage({
-      fallback: data.query?.fallback,
-      res: data.res,
+    return await service(
+      mediaService.processImage,
+      false
+    )({
+      key: data.key,
+      processKey: processKey,
+      options: data.query,
     });
   }
 };

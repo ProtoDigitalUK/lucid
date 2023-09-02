@@ -1,16 +1,26 @@
-import { PoolClient } from "pg";
 import z from "zod";
-import getS3Client from "@utils/app/s3-client";
+
+// Utils
+import helpers from "@utils/media/helpers";
 // Types
-import { Readable } from "stream";
+import { PoolClient } from "pg";
+import { Readable, PassThrough } from "stream";
 // Schema
 import mediaSchema from "@schemas/media";
 // Services
-import Media from "@services/media";
+import mediaService from "@services/media";
+import s3Service from "@services/s3";
+// Models
+import ProcessedImage from "@db/models/ProcessedImage";
+// Workers
+import useProcessImage, {
+  ProcessImageSuccessRes,
+} from "@root/workers/process-image";
 
 export interface ServiceData {
   key: string;
-  query: z.infer<typeof mediaSchema.streamSingle.query>;
+  processKey: string;
+  options: z.infer<typeof mediaSchema.streamSingle.query>;
 }
 
 export interface Response {
@@ -19,32 +29,58 @@ export interface Response {
   body: Readable;
 }
 
+const saveAndRegister = async (
+  client: PoolClient,
+  data: ServiceData,
+  image: ProcessImageSuccessRes["data"]
+) => {
+  try {
+    await s3Service.saveFile({
+      type: "buffer",
+      key: data.processKey,
+      buffer: image.buffer,
+      meta: {
+        mimeType: image.mimeType,
+        fileExtension: image.extension,
+        size: image.size,
+        width: image.width,
+        height: image.height,
+      },
+    });
+
+    await ProcessedImage.createSingle(client, {
+      key: data.processKey,
+      media_key: data.key,
+    });
+  } catch (err) {
+    // console.log(err);
+    // fail silently
+  }
+};
+
 const processImage = async (
   client: PoolClient,
   data: ServiceData
 ): Promise<Response> => {
-  const S3 = await getS3Client;
+  const s3Response = await mediaService.getS3Object({
+    key: data.key,
+  });
 
-  // build image key (processed/key.format.width.height)
-  const key = `processed/${data.key}`;
-  if (data.query.format) key.concat(`.${data.query.format}`);
-  if (data.query.width) key.concat(`.${data.query.width}`);
-  if (data.query.height) key.concat(`.${data.query.height}`);
+  const processRes = await useProcessImage({
+    buffer: await helpers.streamToBuffer(s3Response.body),
+    options: data.options,
+  });
 
-  // get image from s3/r2
-  try {
-    return Media.getS3Object({
-      key: key,
-    });
-  } catch (err) {
-    // process image
+  const stream = new PassThrough();
+  stream.end(Buffer.from(processRes.buffer));
 
-    return {
-      contentLength: 0,
-      contentType: "",
-      body: new Readable(),
-    };
-  }
+  saveAndRegister(client, data, processRes);
+
+  return {
+    contentLength: processRes.size,
+    contentType: processRes.mimeType,
+    body: stream,
+  };
 };
 
 export default processImage;

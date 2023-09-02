@@ -1,52 +1,73 @@
 import https from "https";
-import { Response } from "express";
 
 export interface ServiceData {
   url: string;
-  res: Response;
   redirections?: number;
 }
 
-const pipeRemoteURL = (data: ServiceData) => {
-  https
-    .get(data.url, (response) => {
-      const { statusCode } = response;
-      const redirections = data?.redirections || 0;
+export interface PipeRemoteURLResponse {
+  buffer: Buffer;
+  contentType: string | undefined;
+}
 
-      if (
-        statusCode &&
-        statusCode >= 300 &&
-        statusCode < 400 &&
-        response.headers.location &&
-        redirections < 5
-      ) {
-        // Handle redirect, increase the redirection count, and try again
-        pipeRemoteURL({
-          url: response.headers.location,
-          res: data.res,
-          redirections: redirections + 1,
+const pipeRemoteURL = (data: ServiceData): Promise<PipeRemoteURLResponse> => {
+  return new Promise((resolve, reject) => {
+    https
+      .get(data.url, (response) => {
+        const { statusCode } = response;
+        const redirections = data?.redirections || 0;
+
+        if (
+          statusCode &&
+          statusCode >= 300 &&
+          statusCode < 400 &&
+          response.headers.location &&
+          redirections < 5
+        ) {
+          // Handle redirect, increase the redirection count, and try again
+          pipeRemoteURL({
+            url: response.headers.location,
+            redirections: redirections + 1,
+          })
+            .then(resolve)
+            .catch(reject);
+          return;
+        }
+
+        if (statusCode !== 200) {
+          reject(new Error(`Request failed. Status code: ${statusCode}`));
+          return;
+        }
+
+        // verify content type is an image
+        const contentType = response.headers["content-type"];
+
+        if (contentType && !contentType.includes("image")) {
+          reject(new Error("Content type is not an image"));
+          return;
+        }
+
+        const chunks: Uint8Array[] = [];
+
+        response.on("data", (chunk) => {
+          chunks.push(chunk);
         });
-        return;
-      }
 
-      if (statusCode !== 200) {
-        throw new Error(`Request failed. Status code: ${statusCode}`);
-      }
+        response.on("end", () => {
+          resolve({
+            buffer: Buffer.concat(chunks),
+            contentType,
+          });
+        });
 
-      const contentType = response.headers["content-type"];
-      if (contentType) {
-        data.res.setHeader("Content-Type", contentType);
-      }
-
-      response.on("error", (error) => {
-        throw new Error("Error fetching the fallback image");
+        response.on("error", (error) => {
+          reject(new Error("Error fetching the fallback image"));
+        });
+      })
+      .on("error", (error) => {
+        reject(new Error("Error with the HTTPS request"));
       });
-
-      response.pipe(data.res);
-    })
-    .on("error", (error) => {
-      throw new Error("Error with the HTTPS request");
-    });
+  });
 };
 
 export default pipeRemoteURL;

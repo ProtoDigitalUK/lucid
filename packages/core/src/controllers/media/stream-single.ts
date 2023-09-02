@@ -14,7 +14,6 @@ const streamSingleController: Controller<
     const response = await mediaService.streamMedia({
       key: req.params.key,
       query: req.query,
-      res,
     });
 
     // --------------------------------------------------
@@ -34,7 +33,12 @@ const streamSingleController: Controller<
       if (response?.body !== undefined) response.body.pipe(res);
     }
   } catch (error) {
-    next(error as Error);
+    await mediaService.streamErrorImage({
+      fallback: req.query?.fallback,
+      error: error as Error,
+      res: res,
+      next: next,
+    });
   }
 };
 
