@@ -1,9 +1,12 @@
-import { Response } from "express";
+/// <reference types="node" />
 export interface ServiceData {
     url: string;
-    res: Response;
     redirections?: number;
 }
-declare const pipeRemoteURL: (data: ServiceData) => void;
+export interface PipeRemoteURLResponse {
+    buffer: Buffer;
+    contentType: string | undefined;
+}
+declare const pipeRemoteURL: (data: ServiceData) => Promise<PipeRemoteURLResponse>;
 export default pipeRemoteURL;
 //# sourceMappingURL=pipe-remote-url.d.ts.map

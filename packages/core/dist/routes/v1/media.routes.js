@@ -10,7 +10,22 @@ const get_multiple_1 = __importDefault(require("../../controllers/media/get-mult
 const get_single_1 = __importDefault(require("../../controllers/media/get-single"));
 const delete_single_1 = __importDefault(require("../../controllers/media/delete-single"));
 const update_single_1 = __importDefault(require("../../controllers/media/update-single"));
+const clear_single_processed_1 = __importDefault(require("../../controllers/media/clear-single-processed"));
+const clear_all_processed_1 = __importDefault(require("../../controllers/media/clear-all-processed"));
 const router = (0, express_1.Router)();
+(0, route_1.default)(router, {
+    method: "delete",
+    path: "/processed",
+    permissions: {
+        global: ["update_media"],
+    },
+    middleware: {
+        authenticate: true,
+        authoriseCSRF: true,
+    },
+    schema: clear_all_processed_1.default.schema,
+    controller: clear_all_processed_1.default.controller,
+});
 (0, route_1.default)(router, {
     method: "post",
     path: "/",
@@ -68,6 +83,19 @@ const router = (0, express_1.Router)();
     },
     schema: update_single_1.default.schema,
     controller: update_single_1.default.controller,
+});
+(0, route_1.default)(router, {
+    method: "delete",
+    path: "/:key/processed",
+    permissions: {
+        global: ["update_media"],
+    },
+    middleware: {
+        authenticate: true,
+        authoriseCSRF: true,
+    },
+    schema: clear_single_processed_1.default.schema,
+    controller: clear_single_processed_1.default.controller,
 });
 exports.default = router;
 //# sourceMappingURL=media.routes.js.map

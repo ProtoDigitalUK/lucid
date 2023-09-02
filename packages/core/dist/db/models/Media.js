@@ -81,7 +81,7 @@ Media.deleteSingle = async (client, data) => {
           lucid_media
         WHERE
           key = $1
-        RETURNING *`,
+        RETURNING key, file_size`,
         values: [data.key],
     });
     return media.rows[0];
@@ -119,7 +119,7 @@ Media.updateSingle = async (client, data) => {
             ${columns.formatted.update} 
           WHERE 
             key = $${aliases.value.length + 1}
-          RETURNING *`,
+          RETURNING key`,
         values: [...values.value, data.key],
     });
     return mediaRes.rows[0];

@@ -1,7 +1,9 @@
-import saveFile from "./save-file";
-import deleteFile from "./delete-file";
+import saveObject from "./save-object";
+import deleteObject from "./delete-object";
+import deleteObjects from "./delete-objects";
 
 export default {
-  saveFile,
-  deleteFile,
+  saveObject,
+  deleteObject,
+  deleteObjects,
 };

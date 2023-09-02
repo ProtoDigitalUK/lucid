@@ -15,7 +15,7 @@ export interface ServiceData {
   meta: MediaMetaDataT;
 }
 
-const saveFile = async (data: ServiceData) => {
+const saveObject = async (data: ServiceData) => {
   const S3 = await getS3Client;
 
   const command = new PutObjectCommand({
@@ -32,4 +32,4 @@ const saveFile = async (data: ServiceData) => {
   return S3.send(command);
 };
 
-export default saveFile;
+export default saveObject;

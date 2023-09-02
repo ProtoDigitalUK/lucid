@@ -85,6 +85,20 @@ const updateSingleParams = z.object({
 });
 
 // ------------------------------------
+// CLEAR SINGLE PROCESSED IMAGES
+const clearSingleProcessedBody = z.object({});
+const clearSingleProcessedQuery = z.object({});
+const clearSingleProcessedParams = z.object({
+  key: z.string(),
+});
+
+// ------------------------------------
+// CLEAR ALL PROCESSED IMAGES
+const clearAllProcessedBody = z.object({});
+const clearAllProcessedQuery = z.object({});
+const clearAllProcessedParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -116,5 +130,15 @@ export default {
     body: updateSingleBody,
     query: updateSingleQuery,
     params: updateSingleParams,
+  },
+  clearSingleProcessed: {
+    body: clearSingleProcessedBody,
+    query: clearSingleProcessedQuery,
+    params: clearSingleProcessedParams,
+  },
+  clearAllProcessed: {
+    body: clearAllProcessedBody,
+    query: clearAllProcessedQuery,
+    params: clearAllProcessedParams,
   },
 };

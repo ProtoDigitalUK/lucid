@@ -42,10 +42,32 @@ const formatReqFiles = (files) => {
         return [file];
     }
 };
+const createProcessKey = (data) => {
+    let key = `processed/${data.key}`;
+    if (data.query.format)
+        key = key.concat(`.${data.query.format}`);
+    if (data.query.quality)
+        key = key.concat(`.${data.query.quality}`);
+    if (data.query.width)
+        key = key.concat(`.${data.query.width}`);
+    if (data.query.height)
+        key = key.concat(`.${data.query.height}`);
+    return key;
+};
+const streamToBuffer = (readable) => {
+    return new Promise((resolve, reject) => {
+        const chunks = [];
+        readable.on("data", (chunk) => chunks.push(chunk));
+        readable.on("end", () => resolve(Buffer.concat(chunks)));
+        readable.on("error", reject);
+    });
+};
 const helpers = {
     uniqueKey,
     getMetaData,
     formatReqFiles,
+    createProcessKey,
+    streamToBuffer,
 };
 exports.default = helpers;
 //# sourceMappingURL=helpers.js.map

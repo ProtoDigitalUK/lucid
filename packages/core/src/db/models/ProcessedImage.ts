@@ -12,6 +12,20 @@ type ProcessImageCreateSingle = (
   }
 ) => Promise<ProcessedImageT>;
 
+type ProcessImageGetAllByMediaKey = (
+  client: PoolClient,
+  data: {
+    media_key: string;
+  }
+) => Promise<ProcessedImageT[]>;
+
+type ProcessImageDeleteAllByMediaKey = (
+  client: PoolClient,
+  data: {
+    media_key: string;
+  }
+) => Promise<ProcessedImageT[]>;
+
 // -------------------------------------------
 // Processed imaged
 export type ProcessedImageT = {
@@ -34,5 +48,41 @@ export default class ProcessedImage {
     });
 
     return processedImage.rows[0];
+  };
+  static getAllByMediaKey: ProcessImageGetAllByMediaKey = async (
+    client,
+    data
+  ) => {
+    const processedImages = await client.query<ProcessedImageT>({
+      text: `SELECT * FROM lucid_processed_images WHERE media_key = $1`,
+      values: [data.media_key],
+    });
+
+    return processedImages.rows;
+  };
+  static deleteAllByMediaKey: ProcessImageDeleteAllByMediaKey = async (
+    client,
+    data
+  ) => {
+    const processedImages = await client.query<ProcessedImageT>({
+      text: `DELETE FROM lucid_processed_images WHERE media_key = $1`,
+      values: [data.media_key],
+    });
+
+    return processedImages.rows;
+  };
+  static getAll = async (client: PoolClient) => {
+    const processedImages = await client.query<ProcessedImageT>({
+      text: `SELECT * FROM lucid_processed_images`,
+    });
+
+    return processedImages.rows;
+  };
+  static deleteAll = async (client: PoolClient) => {
+    const processedImages = await client.query<ProcessedImageT>({
+      text: `DELETE FROM lucid_processed_images`,
+    });
+
+    return processedImages.rows;
   };
 }

@@ -9,6 +9,7 @@ import Media from "@db/models/Media";
 // Services
 import mediaService from "@services/media";
 import s3Service from "@services/s3";
+import processedImagesService from "@services/processed-images";
 
 export interface ServiceData {
   key: string;
@@ -51,7 +52,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     // Upload to S3
     meta = await helpers.getMetaData(firstFile);
 
-    const response = await s3Service.saveFile({
+    const response = await s3Service.saveObject({
       type: "file",
       key: media.key,
       file: firstFile,
@@ -83,6 +84,16 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       add: meta.size,
       minus: media.meta.file_size,
     });
+
+    // -------------------------------------------
+    // Remove all processed images
+    await service(
+      processedImagesService.clearSingle,
+      false,
+      client
+    )({
+      key: media.key,
+    });
   }
 
   // -------------------------------------------
@@ -105,13 +116,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
 
   // -------------------------------------------
   // Get Single
-  return await service(
-    mediaService.getSingle,
-    false,
-    client
-  )({
-    key: mediaUpdate.key,
-  });
+  return undefined;
 };
 
 export default updateSingle;

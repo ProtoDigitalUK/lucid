@@ -48,7 +48,10 @@ type MediaGetMultipleByIds = (
 type MediaDeleteSingle = (
   client: PoolClient,
   data: { key: string }
-) => Promise<MediaT>;
+) => Promise<{
+  key: MediaT["key"];
+  file_size: MediaT["file_size"];
+}>;
 
 type MediaUpdateSingle = (
   client: PoolClient,
@@ -58,7 +61,9 @@ type MediaUpdateSingle = (
     alt?: string;
     meta?: MediaMetaDataT;
   }
-) => Promise<MediaT>;
+) => Promise<{
+  key: MediaT["key"];
+}>;
 
 // -------------------------------------------
 // Media
@@ -160,12 +165,15 @@ export default class Media {
     return media.rows[0];
   };
   static deleteSingle: MediaDeleteSingle = async (client, data) => {
-    const media = await client.query<MediaT>({
+    const media = await client.query<{
+      key: MediaT["key"];
+      file_size: MediaT["file_size"];
+    }>({
       text: `DELETE FROM
           lucid_media
         WHERE
           key = $1
-        RETURNING *`,
+        RETURNING key, file_size`,
       values: [data.key],
     });
 
@@ -200,14 +208,16 @@ export default class Media {
       },
     });
 
-    const mediaRes = await client.query<MediaT>({
+    const mediaRes = await client.query<{
+      key: MediaT["key"];
+    }>({
       text: `UPDATE 
             lucid_media 
           SET 
             ${columns.formatted.update} 
           WHERE 
             key = $${aliases.value.length + 1}
-          RETURNING *`,
+          RETURNING key`,
       values: [...values.value, data.key],
     });
 

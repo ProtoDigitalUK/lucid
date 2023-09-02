@@ -53,7 +53,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   // Generate key and save file
   const key = helpers.uniqueKey(data.name || firstFile.name);
   const meta = await helpers.getMetaData(firstFile);
-  const response = await s3Service.saveFile({
+  const response = await s3Service.saveObject({
     type: "file",
     key: key,
     file: firstFile,
@@ -85,7 +85,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!media) {
-    await s3Service.deleteFile({
+    await s3Service.deleteObject({
       key,
     });
     throw new LucidError({

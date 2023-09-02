@@ -32,7 +32,8 @@ const createSingle = async (client, data) => {
     });
     const key = helpers_1.default.uniqueKey(data.name || firstFile.name);
     const meta = await helpers_1.default.getMetaData(firstFile);
-    const response = await s3_1.default.saveFile({
+    const response = await s3_1.default.saveObject({
+        type: "file",
         key: key,
         file: firstFile,
         meta,
@@ -59,7 +60,7 @@ const createSingle = async (client, data) => {
         meta: meta,
     });
     if (!media) {
-        await s3_1.default.deleteFile({
+        await s3_1.default.deleteObject({
             key,
         });
         throw new error_handler_1.LucidError({

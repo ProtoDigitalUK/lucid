@@ -6,7 +6,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _LucidError_instances, _LucidError_formatZodErrors;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.invalidPathHandler = exports.errorResponder = exports.errorLogger = exports.modelErrors = exports.RuntimeError = exports.LucidError = void 0;
+exports.invalidPathHandler = exports.errorResponder = exports.errorLogger = exports.modelErrors = exports.RuntimeError = exports.LucidError = exports.decodeError = void 0;
 const console_log_colors_1 = require("console-log-colors");
 const DEFAULT_ERROR = {
     name: "Error",
@@ -99,6 +99,7 @@ const decodeError = (error) => {
         code: DEFAULT_ERROR.code,
     };
 };
+exports.decodeError = decodeError;
 const modelErrors = (error) => {
     return {
         body: error,
@@ -106,13 +107,13 @@ const modelErrors = (error) => {
 };
 exports.modelErrors = modelErrors;
 const errorLogger = (error, req, res, next) => {
-    const { message, status } = decodeError(error);
+    const { message, status } = (0, exports.decodeError)(error);
     console.error((0, console_log_colors_1.red)(`${status} - ${message}`));
     next(error);
 };
 exports.errorLogger = errorLogger;
 const errorResponder = (error, req, res, next) => {
-    const { name, message, status, errors, code } = decodeError(error);
+    const { name, message, status, errors, code } = (0, exports.decodeError)(error);
     const response = Object.fromEntries(Object.entries({
         code,
         status,

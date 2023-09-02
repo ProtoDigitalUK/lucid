@@ -9,12 +9,23 @@ import mediaService from "@services/media";
 import s3Service from "@services/s3";
 // Format
 import formatMedia from "@utils/format/format-media";
+import processedImagesService from "@services/processed-images";
 
 export interface ServiceData {
   key: string;
 }
 
 const deleteSingle = async (client: PoolClient, data: ServiceData) => {
+  // Remove all processed images
+  await service(
+    processedImagesService.clearSingle,
+    false,
+    client
+  )({
+    key: data.key,
+  });
+
+  // Delete media
   const media = await Media.deleteSingle(client, {
     key: data.key,
   });
@@ -28,9 +39,10 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  await s3Service.deleteFile({
+  await s3Service.deleteObject({
     key: media.key,
   });
+
   // update storage used
   await service(
     mediaService.setStorageUsed,
@@ -41,7 +53,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     minus: media.file_size,
   });
 
-  return formatMedia(media);
+  return undefined;
 };
 
 export default deleteSingle;

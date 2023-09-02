@@ -1947,25 +1947,23 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Rum Ham 2",
-									"type": "text",
-									"disabled": true
+									"value": "Wolevito",
+									"type": "text"
 								},
 								{
 									"key": "alt",
 									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/rumham3.png"
+									"src": "/C:/Users/wyall/Desktop/danny-devito.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1688307767893",
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1693680104063",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1973,7 +1971,7 @@
 								"api",
 								"v1",
 								"media",
-								"rum-ham-1688307767893"
+								"rum-ham-1693680104063"
 							]
 						}
 					},
@@ -2101,7 +2099,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/ocean-video-1688315789383",
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1693679997940",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2109,7 +2107,78 @@
 								"api",
 								"v1",
 								"media",
-								"ocean-video-1688315789383"
+								"rum-ham-1693679997940"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Processed Images Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/rum-ham-1693678967266/processed",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"rum-ham-1693678967266",
+								"processed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Processed Images All",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/processed",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"processed"
 							]
 						}
 					},
@@ -2610,14 +2679,72 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/media/rum-ham-1693420536178",
+							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693678967266",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
-								"api",
-								"media",
-								"rum-ham-1693420536178"
+								"cdn",
+								"v1",
+								"rum-ham-1693678967266"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stream Media - Fallback",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Rum Ham",
+									"type": "text"
+								},
+								{
+									"key": "alt",
+									"value": "A ham baked in rum, floating on the ocean surface",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": [
+										"/C:/Users/wyall/Desktop/rumham.jpg",
+										"/C:/Users/wyall/Desktop/rumham2.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-16935822437227?fallback=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cdn",
+								"v1",
+								"rum-ham-16935822437227"
+							],
+							"query": [
+								{
+									"key": "fallback",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -2625,25 +2752,34 @@
 				},
 				{
 					"name": "Steam Media - Process",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8393/api/media/rum-ham-1693582243727?width=100&height=200&format=avif",
-							"protocol": "http",
+							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693679314563?width=200&height=200&format=avif&quality=90",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8393",
 							"path": [
-								"api",
-								"media",
-								"rum-ham-1693582243727"
+								"cdn",
+								"v1",
+								"rum-ham-1693679314563"
 							],
 							"query": [
 								{
 									"key": "width",
-									"value": "100"
+									"value": "200"
 								},
 								{
 									"key": "height",
@@ -2652,6 +2788,10 @@
 								{
 									"key": "format",
 									"value": "avif"
+								},
+								{
+									"key": "quality",
+									"value": "90"
 								}
 							]
 						}

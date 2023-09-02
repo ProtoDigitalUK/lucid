@@ -15,6 +15,7 @@ const streamSingleQuery = zod_1.default.object({
     width: zod_1.default.string().optional(),
     height: zod_1.default.string().optional(),
     format: zod_1.default.enum(["jpeg", "png", "webp", "avif"]).optional(),
+    quality: zod_1.default.string().optional(),
     fallback: zod_1.default.enum(["1", "0"]).optional(),
 });
 const streamSingleParams = zod_1.default.object({
@@ -67,6 +68,14 @@ const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({
     key: zod_1.default.string(),
 });
+const clearSingleProcessedBody = zod_1.default.object({});
+const clearSingleProcessedQuery = zod_1.default.object({});
+const clearSingleProcessedParams = zod_1.default.object({
+    key: zod_1.default.string(),
+});
+const clearAllProcessedBody = zod_1.default.object({});
+const clearAllProcessedQuery = zod_1.default.object({});
+const clearAllProcessedParams = zod_1.default.object({});
 exports.default = {
     createSingle: {
         body: createSingleBody,
@@ -97,6 +106,16 @@ exports.default = {
         body: updateSingleBody,
         query: updateSingleQuery,
         params: updateSingleParams,
+    },
+    clearSingleProcessed: {
+        body: clearSingleProcessedBody,
+        query: clearSingleProcessedQuery,
+        params: clearSingleProcessedParams,
+    },
+    clearAllProcessed: {
+        body: clearAllProcessedBody,
+        query: clearAllProcessedQuery,
+        params: clearAllProcessedParams,
     },
 };
 //# sourceMappingURL=media.js.map

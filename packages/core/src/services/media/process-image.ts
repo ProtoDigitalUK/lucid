@@ -35,7 +35,7 @@ const saveAndRegister = async (
   image: ProcessImageSuccessRes["data"]
 ) => {
   try {
-    await s3Service.saveFile({
+    await s3Service.saveObject({
       type: "buffer",
       key: data.processKey,
       buffer: image.buffer,

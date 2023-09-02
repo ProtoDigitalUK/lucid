@@ -9,6 +9,7 @@ const service_1 = __importDefault(require("../../utils/app/service"));
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../media"));
 const s3_1 = __importDefault(require("../s3"));
+const processed_images_1 = __importDefault(require("../processed-images"));
 const updateSingle = async (client, data) => {
     const media = await (0, service_1.default)(media_1.default.getSingle, false, client)({
         key: data.key,
@@ -21,7 +22,8 @@ const updateSingle = async (client, data) => {
             files,
         });
         meta = await helpers_1.default.getMetaData(firstFile);
-        const response = await s3_1.default.saveFile({
+        const response = await s3_1.default.saveObject({
+            type: "file",
             key: media.key,
             file: firstFile,
             meta,
@@ -44,6 +46,9 @@ const updateSingle = async (client, data) => {
             add: meta.size,
             minus: media.meta.file_size,
         });
+        await (0, service_1.default)(processed_images_1.default.clearSingle, false, client)({
+            key: media.key,
+        });
     }
     const mediaUpdate = await Media_1.default.updateSingle(client, {
         key: data.key,
@@ -59,9 +64,7 @@ const updateSingle = async (client, data) => {
             status: 500,
         });
     }
-    return await (0, service_1.default)(media_1.default.getSingle, false, client)({
-        key: mediaUpdate.key,
-    });
+    return undefined;
 };
 exports.default = updateSingle;
 //# sourceMappingURL=update-single.js.map

@@ -2,7 +2,7 @@ import { Request } from "express";
 interface BuildResponseParams {
     data: Array<any> | {
         [key: string]: any;
-    };
+    } | undefined;
     pagination?: {
         count: number;
         page: string;

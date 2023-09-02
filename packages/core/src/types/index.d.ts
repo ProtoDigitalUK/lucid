@@ -28,7 +28,7 @@ declare global {
   ) => void;
 
   interface ResponseBody {
-    data: Array<any> | { [key: string]: any };
+    data: Array<any> | { [key: string]: any } | undefined;
     links?: {
       first: string | null;
       last: string | null;

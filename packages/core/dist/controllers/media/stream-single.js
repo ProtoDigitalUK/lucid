@@ -10,7 +10,6 @@ const streamSingleController = async (req, res, next) => {
         const response = await media_2.default.streamMedia({
             key: req.params.key,
             query: req.query,
-            res,
         });
         res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
         if (response !== undefined) {
@@ -24,7 +23,12 @@ const streamSingleController = async (req, res, next) => {
         }
     }
     catch (error) {
-        next(error);
+        await media_2.default.streamErrorImage({
+            fallback: req.query?.fallback,
+            error: error,
+            res: res,
+            next: next,
+        });
     }
 };
 exports.default = {

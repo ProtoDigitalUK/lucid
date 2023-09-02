@@ -25,6 +25,13 @@ declare class LucidError extends Error {
 declare class RuntimeError extends Error {
     constructor(message: string);
 }
+export declare const decodeError: (error: Error) => {
+    name: string;
+    message: string;
+    status: number;
+    errors: ErrorResult | null;
+    code: "csrf" | null | undefined;
+};
 declare const modelErrors: (error: ErrorResult) => ErrorResult;
 declare const errorLogger: (error: Error, req: Request, res: Response, next: NextFunction) => void;
 declare const errorResponder: (error: Error, req: Request, res: Response, next: NextFunction) => void;

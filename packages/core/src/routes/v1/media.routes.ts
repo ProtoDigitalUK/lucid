@@ -6,10 +6,26 @@ import getMultiple from "@controllers/media/get-multiple";
 import getSingle from "@controllers/media/get-single";
 import deleteSingle from "@controllers/media/delete-single";
 import updateSingle from "@controllers/media/update-single";
+import clearSingleProcessed from "@controllers/media/clear-single-processed";
+import clearAllProcessed from "@controllers/media/clear-all-processed";
 
 // ------------------------------------
 // Router
 const router = Router();
+
+r(router, {
+  method: "delete",
+  path: "/processed",
+  permissions: {
+    global: ["update_media"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: clearAllProcessed.schema,
+  controller: clearAllProcessed.controller,
+});
 
 r(router, {
   method: "post",
@@ -72,6 +88,20 @@ r(router, {
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/:key/processed",
+  permissions: {
+    global: ["update_media"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: clearSingleProcessed.schema,
+  controller: clearSingleProcessed.controller,
 });
 
 export default router;

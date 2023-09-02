@@ -5,16 +5,19 @@ declare const _default: {
             width: import("zod").ZodOptional<import("zod").ZodString>;
             height: import("zod").ZodOptional<import("zod").ZodString>;
             format: import("zod").ZodOptional<import("zod").ZodEnum<["jpeg", "png", "webp", "avif"]>>;
+            quality: import("zod").ZodOptional<import("zod").ZodString>;
             fallback: import("zod").ZodOptional<import("zod").ZodEnum<["1", "0"]>>;
         }, "strip", import("zod").ZodTypeAny, {
             width?: string | undefined;
             height?: string | undefined;
             format?: "jpeg" | "png" | "webp" | "avif" | undefined;
+            quality?: string | undefined;
             fallback?: "1" | "0" | undefined;
         }, {
             width?: string | undefined;
             height?: string | undefined;
             format?: "jpeg" | "png" | "webp" | "avif" | undefined;
+            quality?: string | undefined;
             fallback?: "1" | "0" | undefined;
         }>;
         params: import("zod").ZodObject<{
@@ -35,16 +38,19 @@ declare const _default: {
         width: import("zod").ZodOptional<import("zod").ZodString>;
         height: import("zod").ZodOptional<import("zod").ZodString>;
         format: import("zod").ZodOptional<import("zod").ZodEnum<["jpeg", "png", "webp", "avif"]>>;
+        quality: import("zod").ZodOptional<import("zod").ZodString>;
         fallback: import("zod").ZodOptional<import("zod").ZodEnum<["1", "0"]>>;
     }, "strip", import("zod").ZodTypeAny, {
         width?: string | undefined;
         height?: string | undefined;
         format?: "jpeg" | "png" | "webp" | "avif" | undefined;
+        quality?: string | undefined;
         fallback?: "1" | "0" | undefined;
     }, {
         width?: string | undefined;
         height?: string | undefined;
         format?: "jpeg" | "png" | "webp" | "avif" | undefined;
+        quality?: string | undefined;
         fallback?: "1" | "0" | undefined;
     }>>;
 };

@@ -1,11 +1,12 @@
 /// <reference types="node" />
-import { PoolClient } from "pg";
 import z from "zod";
+import { PoolClient } from "pg";
 import { Readable } from "stream";
 import mediaSchema from "../../schemas/media";
 export interface ServiceData {
     key: string;
-    query: z.infer<typeof mediaSchema.streamSingle.query>;
+    processKey: string;
+    options: z.infer<typeof mediaSchema.streamSingle.query>;
 }
 export interface Response {
     contentLength?: number;

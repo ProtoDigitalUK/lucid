@@ -1,6 +1,7 @@
 declare const _default: {
-    saveFile: (data: import("./save-file").ServiceData) => Promise<import("@aws-sdk/client-s3").PutObjectCommandOutput>;
-    deleteFile: (data: import("./delete-file").ServiceData) => Promise<import("@aws-sdk/client-s3").DeleteObjectCommandOutput>;
+    saveObject: (data: import("./save-object").ServiceData) => Promise<import("@aws-sdk/client-s3").PutObjectCommandOutput>;
+    deleteObject: (data: import("./delete-object").ServiceData) => Promise<import("@aws-sdk/client-s3").DeleteObjectCommandOutput>;
+    deleteObjects: (data: import("./delete-objects").ServiceData) => Promise<import("@aws-sdk/client-s3").DeleteObjectsCommandOutput>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

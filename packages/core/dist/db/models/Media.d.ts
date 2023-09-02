@@ -23,13 +23,18 @@ type MediaGetMultipleByIds = (client: PoolClient, data: {
 }) => Promise<MediaT[]>;
 type MediaDeleteSingle = (client: PoolClient, data: {
     key: string;
-}) => Promise<MediaT>;
+}) => Promise<{
+    key: MediaT["key"];
+    file_size: MediaT["file_size"];
+}>;
 type MediaUpdateSingle = (client: PoolClient, data: {
     key: string;
     name?: string;
     alt?: string;
     meta?: MediaMetaDataT;
-}) => Promise<MediaT>;
+}) => Promise<{
+    key: MediaT["key"];
+}>;
 export type MediaT = {
     id: number;
     key: string;

@@ -8,8 +8,11 @@ const service_1 = __importDefault(require("../../utils/app/service"));
 const Media_1 = __importDefault(require("../../db/models/Media"));
 const media_1 = __importDefault(require("../media"));
 const s3_1 = __importDefault(require("../s3"));
-const format_media_1 = __importDefault(require("../../utils/format/format-media"));
+const processed_images_1 = __importDefault(require("../processed-images"));
 const deleteSingle = async (client, data) => {
+    await (0, service_1.default)(processed_images_1.default.clearSingle, false, client)({
+        key: data.key,
+    });
     const media = await Media_1.default.deleteSingle(client, {
         key: data.key,
     });
@@ -21,14 +24,14 @@ const deleteSingle = async (client, data) => {
             status: 404,
         });
     }
-    await s3_1.default.deleteFile({
+    await s3_1.default.deleteObject({
         key: media.key,
     });
     await (0, service_1.default)(media_1.default.setStorageUsed, false, client)({
         add: 0,
         minus: media.file_size,
     });
-    return (0, format_media_1.default)(media);
+    return undefined;
 };
 exports.default = deleteSingle;
 //# sourceMappingURL=delete-single.js.map

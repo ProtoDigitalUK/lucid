@@ -5,7 +5,7 @@ import Config from "@services/Config";
 // --------------------------------------------------
 // Types
 interface BuildResponseParams {
-  data: Array<any> | { [key: string]: any };
+  data: Array<any> | { [key: string]: any } | undefined;
   pagination?: {
     count: number;
     page: string;

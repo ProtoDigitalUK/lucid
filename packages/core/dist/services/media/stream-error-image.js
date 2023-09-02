@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const error_handler_1 = require("../../utils/app/error-handler");
+const error_handler_2 = require("../../utils/app/error-handler");
 const Config_1 = __importDefault(require("../Config"));
 const media_1 = __importDefault(require("../media"));
 const pipeLocalImage = (res) => {
@@ -16,23 +17,30 @@ const pipeLocalImage = (res) => {
     steam.pipe(res);
 };
 const streamErrorImage = async (data) => {
+    const error = (0, error_handler_2.decodeError)(data.error);
+    if (error.status !== 404) {
+        data.next(data.error);
+        return;
+    }
     if (Config_1.default.media.fallbackImage === false || data.fallback === "0") {
-        throw new error_handler_1.LucidError({
+        data.next(new error_handler_1.LucidError({
             type: "basic",
             name: "Error",
             message: "We're sorry, but this image is not available.",
             status: 404,
-        });
+        }));
+        return;
     }
     if (Config_1.default.media.fallbackImage === undefined) {
         pipeLocalImage(data.res);
         return;
     }
     try {
-        media_1.default.pipeRemoteURL({
+        const { buffer, contentType } = await media_1.default.pipeRemoteURL({
             url: Config_1.default.media.fallbackImage,
-            res: data.res,
         });
+        data.res.setHeader("Content-Type", contentType || "image/jpeg");
+        data.res.send(buffer);
     }
     catch (err) {
         pipeLocalImage(data.res);
@@ -40,4 +48,4 @@ const streamErrorImage = async (data) => {
     }
 };
 exports.default = streamErrorImage;
-//# sourceMappingURL=steam-error-image.js.map
+//# sourceMappingURL=stream-error-image.js.map

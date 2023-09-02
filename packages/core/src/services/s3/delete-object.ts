@@ -8,14 +8,15 @@ export interface ServiceData {
   key: string;
 }
 
-const deleteFile = async (data: ServiceData) => {
+const deleteObject = async (data: ServiceData) => {
   const S3 = await getS3Client;
 
   const command = new DeleteObjectCommand({
     Bucket: Config.media.store.bucket,
     Key: data.key,
   });
+
   return S3.send(command);
 };
 
-export default deleteFile;
+export default deleteObject;

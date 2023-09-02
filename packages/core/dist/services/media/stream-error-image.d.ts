@@ -1,8 +1,10 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 export interface ServiceData {
     fallback?: "1" | "0";
+    error: Error;
     res: Response;
+    next: NextFunction;
 }
 declare const streamErrorImage: (data: ServiceData) => Promise<void>;
 export default streamErrorImage;
-//# sourceMappingURL=steam-error-image.d.ts.map
+//# sourceMappingURL=stream-error-image.d.ts.map
