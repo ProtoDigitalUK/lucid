@@ -24,7 +24,7 @@ const login = async (client: PoolClient, data: ServiceData) => {
     throw new LucidError({
       type: "basic",
       name: "User Not Found",
-      message: "The email or password you entered is incorrect.",
+      message: "The username or password you entered is incorrect.",
       status: 500,
     });
   }
@@ -38,7 +38,7 @@ const login = async (client: PoolClient, data: ServiceData) => {
     throw new LucidError({
       type: "basic",
       name: "User Not Found",
-      message: "The email or password you entered is incorrect.",
+      message: "The username or password you entered is incorrect.",
       status: 500,
     });
   }
