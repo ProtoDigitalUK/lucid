@@ -34,6 +34,7 @@ r(router, {
     global: ["create_media"],
   },
   middleware: {
+    fileUpload: true,
     authenticate: true,
     authoriseCSRF: true,
   },
@@ -83,6 +84,7 @@ r(router, {
     global: ["update_media"],
   },
   middleware: {
+    fileUpload: true,
     authenticate: true,
     authoriseCSRF: true,
   },

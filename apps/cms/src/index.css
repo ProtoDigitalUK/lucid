@@ -109,6 +109,12 @@
     @apply bg-backgroundAccent rounded-md animate-pulse;
   }
 
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   /* Page Layout */
   .page-layout {
     min-height: calc(100vh - var(--lucid-page-layout-header-height));

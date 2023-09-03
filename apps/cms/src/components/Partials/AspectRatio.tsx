@@ -3,6 +3,7 @@ import { Component, JSXElement } from "solid-js";
 
 interface AspectRatioProps {
   ratio: "1:1" | "4:3" | "16:9" | "21:9";
+  innerClass?: string;
   children: JSXElement;
 }
 
@@ -18,7 +19,9 @@ const AspectRatio: Component<AspectRatioProps> = (props) => {
         "after:pb-[42.85%]": props.ratio === "21:9",
       })}
     >
-      <div class="absolute inset-0">{props.children}</div>
+      <div class={classNames("absolute inset-0", props.innerClass)}>
+        {props.children}
+      </div>
     </div>
   );
 };

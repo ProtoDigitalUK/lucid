@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
-import fileUpload from "express-fileupload";
+// import fileUpload from "express-fileupload";
 import { log } from "console-log-colors";
 // Core
 import { initializePool } from "@db/db";
@@ -53,11 +53,11 @@ const app = async (options: InitOptions) => {
   );
   app.use(morgan("dev"));
   app.use(cookieParser(Config.secret));
-  app.use(
-    fileUpload({
-      debug: Config.mode === "development",
-    })
-  );
+  // app.use(
+  //   fileUpload({
+  //     debug: Config.mode === "development",
+  //   })
+  // );
   log.yellow("Middleware configured");
 
   // ------------------------------------

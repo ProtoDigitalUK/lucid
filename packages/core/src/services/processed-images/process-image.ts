@@ -68,6 +68,15 @@ const processImage = async (
     key: data.key,
   });
 
+  // if resposne is not an image, return the original
+  if (!s3Response.contentType?.startsWith("image/")) {
+    return {
+      contentLength: s3Response.contentLength,
+      contentType: s3Response.contentType,
+      body: s3Response.body,
+    };
+  }
+
   // Check if this image has reached the max number of processes
   try {
     await processedImagesService.getSingleCount(client, {

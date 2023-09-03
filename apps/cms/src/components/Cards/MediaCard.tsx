@@ -1,4 +1,11 @@
 import { Component, Switch, Match } from "solid-js";
+import {
+  FaSolidFileZipper,
+  FaSolidFileAudio,
+  FaSolidFileVideo,
+  FaSolidFile,
+  FaSolidFileLines,
+} from "solid-icons/fa";
 // Types
 import { MediaResT } from "@lucid/types/src/media";
 // Utils
@@ -33,28 +40,55 @@ const MediaCard: Component<MediaCardProps> = (props) => {
   // ----------------------------------
   // Return
   return (
-    <li class="bg-container border-border border rounded-md">
+    <li class="bg-container border-border border rounded-md group overflow-hidden">
       {/* Image */}
-      <AspectRatio ratio="16:9">
+      <AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
         <Switch>
           <Match when={props.media.type === "image"}>
             <Image
-              classes={"rounded-t-md"}
+              classes={
+                "rounded-t-md group-hover:scale-110 transition duration-100 backface-hidden"
+              }
               src={`${props.media.url}?width=400`}
               alt={props.media.alt || props.media.name}
               loading="lazy"
             />
           </Match>
+          <Match when={props.media.type === "archive"}>
+            <div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
+              <FaSolidFileZipper size={40} class="fill-primary opacity-40" />
+            </div>
+          </Match>
+          <Match when={props.media.type === "audio"}>
+            <div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
+              <FaSolidFileAudio size={40} class="fill-primary opacity-40" />
+            </div>
+          </Match>
+          <Match when={props.media.type === "video"}>
+            <div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
+              <FaSolidFileVideo size={40} class="fill-primary opacity-40" />
+            </div>
+          </Match>
+          <Match when={props.media.type === "document"}>
+            <div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
+              <FaSolidFileLines size={40} class="fill-primary opacity-40" />
+            </div>
+          </Match>
+          <Match when={props.media.type === "unknown"}>
+            <div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
+              <FaSolidFile size={40} class="fill-primary opacity-40" />
+            </div>
+          </Match>
         </Switch>
-        <div class="inset-0 absolute flex gap-2.5 items-end p-15">
+        <span class="inset-0 top-auto absolute flex gap-1 p-15">
           <Pill theme="primary">
             {helpers.bytesToSize(props.media.meta.file_size)}
           </Pill>
           <Pill theme="primary">{props.media.meta.file_extension}</Pill>
-        </div>
+        </span>
       </AspectRatio>
       {/* Content */}
-      <div class="p-15">
+      <div class="p-15 border-t border-border">
         <h3 class="mb-0.5 line-clamp-1">{props.media.name}</h3>
         <ClickToCopy
           type="simple"

@@ -7,6 +7,7 @@ import authoriseCSRF from "@middleware/authorise-csrf";
 import paginated from "@middleware/paginated";
 import validateEnvironment from "@middleware/validate-environment";
 import permissions from "@middleware/permissions";
+import fileUpload from "@middleware/file-upload";
 // Types
 import {
   PermissionT,
@@ -27,6 +28,7 @@ type Route = <
       environments?: EnvironmentPermissionT[];
     };
     middleware?: {
+      fileUpload?: boolean;
       authenticate?: boolean;
       authoriseCSRF?: boolean;
       paginated?: boolean;
@@ -56,6 +58,11 @@ const route: Route = (router, props) => {
   // set middleware for authorisation (CSRF)
   if (props.middleware?.authoriseCSRF) {
     middleware.push(authoriseCSRF);
+  }
+
+  // set middleware for file upload
+  if (props.middleware?.fileUpload) {
+    middleware.push(fileUpload);
   }
 
   // set middleware for validation

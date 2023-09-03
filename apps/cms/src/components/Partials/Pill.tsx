@@ -12,7 +12,7 @@ const Pill: Component<PillProps> = (props) => {
   return (
     <span
       class={classNames(
-        "rounded-full px-3 py-1 text-xs font-medium inline-flex",
+        "rounded-full px-3 py-1 text-xs font-medium inline-flex whitespace-nowrap",
         {
           "bg-primary text-primaryText": props.theme === "primary",
           "bg-secondary text-secondaryText": props.theme === "secondary",
