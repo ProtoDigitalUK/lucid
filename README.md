@@ -1,9 +1,5 @@
 ![Lucid, a Headless CMS](https://github.com/WillYallop/Lucid/blob/master/banner.jpg?raw=true)
 
-# Lucid
-
-A modern headless CMS offering a delightful developer experience. Tailor Lucid seamlessly to your client and frontend requirements with our expressive brick, collection, and form builders.
-
 ## Installation
 
 ```bash
