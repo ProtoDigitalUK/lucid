@@ -4,6 +4,7 @@ export interface MediaResT {
   url: string;
   name: string;
   alt: string | null;
+  type: "image" | "video" | "audio" | "document" | "archive" | "unknown";
   meta: {
     mime_type: string;
     file_extension: string;

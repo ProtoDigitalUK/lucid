@@ -10,6 +10,7 @@ import mediaSchema from "@schemas/media";
 // Services
 import mediaService from "@services/media";
 import s3Service from "@services/s3";
+import processedImagesService from "@services/processed-images";
 // Models
 import ProcessedImage from "@db/models/ProcessedImage";
 // Workers
@@ -62,9 +63,24 @@ const processImage = async (
   client: PoolClient,
   data: ServiceData
 ): Promise<Response> => {
+  // Process and save image
   const s3Response = await mediaService.getS3Object({
     key: data.key,
   });
+
+  // Check if this image has reached the max number of processes
+  try {
+    await processedImagesService.getSingleCount(client, {
+      key: data.key,
+    });
+  } catch (err) {
+    // TODO: add warning log system and record this
+    return {
+      contentLength: s3Response.contentLength,
+      contentType: s3Response.contentType,
+      body: s3Response.body,
+    };
+  }
 
   const processRes = await useProcessImage({
     buffer: await helpers.streamToBuffer(s3Response.body),

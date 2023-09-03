@@ -26,6 +26,13 @@ type ProcessImageDeleteAllByMediaKey = (
   }
 ) => Promise<ProcessedImageT[]>;
 
+type ProcessImageGetAllByMediaKeyCount = (
+  client: PoolClient,
+  data: {
+    media_key: string;
+  }
+) => Promise<number>;
+
 // -------------------------------------------
 // Processed imaged
 export type ProcessedImageT = {
@@ -49,6 +56,7 @@ export default class ProcessedImage {
 
     return processedImage.rows[0];
   };
+
   static getAllByMediaKey: ProcessImageGetAllByMediaKey = async (
     client,
     data
@@ -71,6 +79,7 @@ export default class ProcessedImage {
 
     return processedImages.rows;
   };
+
   static getAll = async (client: PoolClient) => {
     const processedImages = await client.query<ProcessedImageT>({
       text: `SELECT * FROM lucid_processed_images`,
@@ -84,5 +93,19 @@ export default class ProcessedImage {
     });
 
     return processedImages.rows;
+  };
+
+  static getAllByMediaKeyCount: ProcessImageGetAllByMediaKeyCount = async (
+    client,
+    data
+  ) => {
+    const processedImages = await client.query<{
+      count: number;
+    }>({
+      text: `SELECT COUNT(*) FROM lucid_processed_images WHERE media_key = $1`,
+      values: [data.media_key],
+    });
+
+    return processedImages.rows[0].count;
   };
 }

@@ -53,6 +53,8 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   // Generate key and save file
   const key = helpers.uniqueKey(data.name || firstFile.name);
   const meta = await helpers.getMetaData(firstFile);
+  const type = helpers.getMediaType(meta.mimeType);
+
   const response = await s3Service.saveObject({
     type: "file",
     key: key,
@@ -81,6 +83,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     name: data.name || firstFile.name,
     alt: data.alt,
     etag: response.ETag?.replace(/"/g, ""),
+    type: type,
     meta: meta,
   });
 

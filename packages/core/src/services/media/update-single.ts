@@ -6,6 +6,8 @@ import { LucidError, modelErrors } from "@utils/app/error-handler";
 import service from "@utils/app/service";
 // Models
 import Media from "@db/models/Media";
+// Types
+import { MediaResT } from "@lucid/types/src/media";
 // Services
 import mediaService from "@services/media";
 import s3Service from "@services/s3";
@@ -35,6 +37,8 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // Update Media
   let meta: MediaMetaDataT | undefined = undefined;
   let newKey: string | undefined = undefined;
+  let newType: MediaResT["type"] | undefined = undefined;
+
   if (data.data.files && data.data.files["file"]) {
     const files = helpers.formatReqFiles(data.data.files);
     const firstFile = files[0];
@@ -53,6 +57,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     // Upload to S3
     meta = await helpers.getMetaData(firstFile);
     newKey = helpers.uniqueKey(data.data.name || firstFile.name);
+    newType = helpers.getMediaType(meta.mimeType);
 
     const updateKeyRes = await s3Service.updateObjectKey({
       oldKey: media.key,
@@ -125,6 +130,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     name: data.data.name,
     alt: data.data.alt,
     meta: meta,
+    type: newType,
     newKey: newKey,
   });
 

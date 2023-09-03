@@ -2,6 +2,8 @@ import { PoolClient } from "pg";
 // Utils
 import { type MediaMetaDataT } from "@utils/media/helpers";
 import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+// Types
+import { MediaResT } from "@lucid/types/src/media";
 
 // -------------------------------------------
 // Types
@@ -10,6 +12,7 @@ type MediaCreateSingle = (
   data: {
     key: string;
     name: string;
+    type: MediaResT["type"];
     etag?: string;
     alt?: string;
     meta: MediaMetaDataT;
@@ -58,6 +61,7 @@ type MediaUpdateSingle = (
   data: {
     key: string;
     name?: string;
+    type?: MediaResT["type"];
     alt?: string;
     meta?: MediaMetaDataT;
     newKey?: string;
@@ -73,6 +77,7 @@ export type MediaT = {
   key: string;
   e_tag: string;
 
+  type: MediaResT["type"];
   name: string;
   alt: string | null;
 
@@ -94,6 +99,7 @@ export default class Media {
       columns: [
         "key",
         "e_tag",
+        "type",
         "name",
         "alt",
         "mime_type",
@@ -105,6 +111,7 @@ export default class Media {
       values: [
         data.key,
         data.etag,
+        data.type,
         data.name,
         data.alt,
         data.meta.mimeType,
@@ -187,6 +194,7 @@ export default class Media {
       columns: [
         "name",
         "alt",
+        "type",
         "mime_type",
         "file_extension",
         "file_size",
@@ -197,6 +205,7 @@ export default class Media {
       values: [
         data.name,
         data.alt,
+        data.type,
         data.meta?.mimeType,
         data.meta?.fileExtension,
         data.meta?.size,

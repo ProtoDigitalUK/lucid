@@ -22,6 +22,7 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       "id",
       "key",
       "e_tag",
+      "type",
       "name",
       "alt",
       "mime_type",

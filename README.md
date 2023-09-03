@@ -46,6 +46,7 @@ export default buildConfig({
     storageLimit: 5368709120,
     maxFileSize: 20777216,
     fallbackImage: "https://picsum.photos/600/400", // false to throw 404, undefined for default and URL string for custom
+    processedImageLimit: 5, // the total number of processed images to store per image
     store: {
       service: "cloudflare",
       cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,

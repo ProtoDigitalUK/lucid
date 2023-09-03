@@ -8,6 +8,7 @@ import helpers from "@utils/media/helpers";
 import service from "@utils/app/service";
 // Services
 import mediaService from "@services/media";
+import processedImageService from "@services/processed-images";
 
 export interface ServiceData {
   key: string;
@@ -48,7 +49,7 @@ const streamMedia = async (
     });
   } catch (err) {
     return await service(
-      mediaService.processImage,
+      processedImageService.processImage,
       false
     )({
       key: data.key,

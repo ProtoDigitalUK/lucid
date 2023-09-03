@@ -6,6 +6,8 @@ import z from "zod";
 import { Readable } from "stream";
 // Schema
 import mediaSchema from "@schemas/media";
+// Types
+import { MediaResT } from "@lucid/types/src/media";
 
 // -------------------------------------------
 // Types
@@ -92,6 +94,24 @@ const streamToBuffer = (readable: Readable): Promise<Buffer> => {
   });
 };
 
+// Workout media type
+const getMediaType = (mimeType: string): MediaResT["type"] => {
+  const normalizedMimeType = mimeType.toLowerCase();
+
+  if (normalizedMimeType.includes("image")) return "image";
+  if (normalizedMimeType.includes("video")) return "video";
+  if (normalizedMimeType.includes("audio")) return "audio";
+  if (
+    normalizedMimeType.includes("pdf") ||
+    normalizedMimeType.startsWith("application/vnd")
+  )
+    return "document";
+  if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
+    return "archive";
+
+  return "unknown";
+};
+
 // -------------------------------------------
 const helpers = {
   uniqueKey,
@@ -99,6 +119,7 @@ const helpers = {
   formatReqFiles,
   createProcessKey,
   streamToBuffer,
+  getMediaType,
 };
 
 export default helpers;
