@@ -162,6 +162,7 @@
   "user_deleted_toast_message": "The user has been deleted",
   "no_permission_toast_title": "No permission",
   "no_permission_toast_message": "Your don't have permission to perform this action. Contact an admin if you think there is a mistake",
+  "copy_to_clipboard_toast_title": "Copied to clipboard",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",

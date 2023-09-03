@@ -3,7 +3,7 @@ import CustomToast from "@/components/Partials/CustomToast";
 
 interface SpawnToastProps {
   title: string;
-  message: string;
+  message?: string;
   status?: "success" | "error" | "warning" | "info";
   duration?: number;
 }

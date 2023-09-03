@@ -6,6 +6,7 @@ import {
   Switch,
   Match,
   createMemo,
+  Show,
 } from "solid-js";
 import { toast, Toast } from "solid-toast";
 import classNames from "classnames";
@@ -18,7 +19,7 @@ import {
 
 interface CustomToastProps {
   title: string;
-  message: string;
+  message?: string;
   type: "success" | "error" | "warning" | "info";
   toast: Toast;
   duration?: number;
@@ -91,7 +92,9 @@ const CustomToast: Component<CustomToastProps> = (props) => {
         </span>
         <div class="ml-2.5">
           <p class="text-sm font-bold mb-1">{props.title}</p>
-          <p class="text-sm">{props.message}</p>
+          <Show when={props.message}>
+            <p class="text-sm">{props.message}</p>
+          </Show>
         </div>
       </div>
       <button
