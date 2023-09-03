@@ -48,16 +48,14 @@ const ManageEnvrionemntRoute: Component = () => {
         },
       }}
     >
-      <Layout.PageContent>
-        <UpsertEnvForm environment={environmentData.data?.data} />
-        <DeleteEnvironment
-          key={environmentData.data?.data.key}
-          state={{
-            open: openDelete(),
-            setOpen: setOpenDelete,
-          }}
-        />
-      </Layout.PageContent>
+      <UpsertEnvForm environment={environmentData.data?.data} />
+      <DeleteEnvironment
+        key={environmentData.data?.data.key}
+        state={{
+          open: openDelete(),
+          setOpen: setOpenDelete,
+        }}
+      />
     </Layout.PageLayout>
   );
 };

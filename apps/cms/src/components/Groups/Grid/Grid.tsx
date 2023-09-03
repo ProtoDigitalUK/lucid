@@ -13,6 +13,7 @@ import Query from "@/components/Groups/Query";
 import Error from "@/components/Partials/Error";
 import Button from "@/components/Partials/Button";
 import SkeletonCard from "@/components/Cards/SkeletonCard";
+import Layout from "@/components/Groups/Layout";
 
 interface GridRootProps {
   items: number;
@@ -78,35 +79,37 @@ export const GridRoot: Component<GridRootProps> = (props) => {
           </Error>
         </Match>
         <Match when={props.state.isSuccess || props.state.isLoading}>
-          <ul class="grid grid-cols-4 gap-15">
-            <Switch>
-              <Match when={props.state.isLoading}>
-                <Switch>
-                  <Match when={props.loadingCard}>
-                    {props.loadingCard}
-                    {props.loadingCard}
-                    {props.loadingCard}
-                    {props.loadingCard}
-                    {props.loadingCard}
-                    {props.loadingCard}
-                    {props.loadingCard}
-                    {props.loadingCard}
-                  </Match>
-                  <Match when={!props.loadingCard}>
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                    <SkeletonCard size="medium" />
-                  </Match>
-                </Switch>
-              </Match>
-              <Match when={props.state.isSuccess}>{props.children}</Match>
-            </Switch>
-          </ul>
+          <Layout.PageContent>
+            <ul class="grid grid-cols-4 gap-15">
+              <Switch>
+                <Match when={props.state.isLoading}>
+                  <Switch>
+                    <Match when={props.loadingCard}>
+                      {props.loadingCard}
+                      {props.loadingCard}
+                      {props.loadingCard}
+                      {props.loadingCard}
+                      {props.loadingCard}
+                      {props.loadingCard}
+                      {props.loadingCard}
+                      {props.loadingCard}
+                    </Match>
+                    <Match when={!props.loadingCard}>
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                      <SkeletonCard size="medium" />
+                    </Match>
+                  </Switch>
+                </Match>
+                <Match when={props.state.isSuccess}>{props.children}</Match>
+              </Switch>
+            </ul>
+          </Layout.PageContent>
         </Match>
       </Switch>
       {/* Pagination */}

@@ -1,12 +1,9 @@
--- create enum for media types
-CREATE TYPE lucid_media_type AS ENUM ('image', 'video', 'audio', 'document', 'archive', 'unknown');
-
 CREATE TABLE IF NOT EXISTS lucid_media (
   id SERIAL PRIMARY KEY,
   key TEXT NOT NULL UNIQUE,
   e_tag TEXT,
 
-  type lucid_media_type NOT NULL,
+  type TEXT NOT NULL,
   mime_type TEXT NOT NULL,
   file_extension TEXT NOT NULL,
   file_size INTEGER NOT NULL,

@@ -51,10 +51,10 @@ export const Form: Component<FormProps> = (props) => {
             if (props.onSubmit) props.onSubmit();
           }}
         >
-          {props.children}
           <Switch>
             {/* Standard Submit */}
             <Match when={props.type === "standard"}>
+              {props.children}
               <div class="mt-10 w-full">
                 <Show when={props.state.errors && props.state.errors?.message}>
                   <ErrorMessage
@@ -78,6 +78,7 @@ export const Form: Component<FormProps> = (props) => {
             </Match>
             {/* Page Layout Submit */}
             <Match when={props.type === "page-layout"}>
+              <Layout.PageContent>{props.children}</Layout.PageContent>
               <Layout.PageFooter>
                 <Show when={props.state.errors && props.state.errors?.message}>
                   <ErrorMessage

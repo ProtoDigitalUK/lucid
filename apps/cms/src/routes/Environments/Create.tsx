@@ -12,9 +12,7 @@ const CreateEnvrionemntRoute: Component = () => {
       title={T("create_environment_route_title")}
       description={T("create_environment_route_description")}
     >
-      <Layout.PageContent>
-        <UpsertEnvForm />
-      </Layout.PageContent>
+      <UpsertEnvForm />
     </Layout.PageLayout>
   );
 };

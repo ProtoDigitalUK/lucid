@@ -44,9 +44,6 @@ const MediaListRoute: Component = () => {
     <Layout.PageLayout
       title={T("media_route_title")}
       description={T("media_route_description")}
-      options={{
-        noPadding: false,
-      }}
       headingChildren={
         <Query.Row
           searchParams={searchParams}

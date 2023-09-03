@@ -110,6 +110,9 @@
   }
 
   /* Page Layout */
+  .page-layout {
+    min-height: calc(100vh - var(--lucid-page-layout-header-height));
+  }
   .page-layout-full-body {
     min-height: calc(
       100vh - var(--lucid-page-layout-header-height) -
