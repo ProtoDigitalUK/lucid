@@ -1,18 +1,20 @@
-# Lucid Headless CMS
+![Lucid, a Headless CMS](https://github.com/WillYallop/Lucid/blob/master/banner.jpg?raw=true)
 
-> IN ACTIVE DEVELOPMENT
+# Lucid
 
-- [BrickBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/brick-builder)
-- [CollectionBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/collection-builder)
-- [FormBuilder](https://github.com/WillYallop/Lucid/tree/master/packages/form-builder)
-
-- [Core](https://github.com/WillYallop/Lucid/tree/master/packages/core)
+A modern headless CMS offering a delightful developer experience. Tailor Lucid seamlessly to your client and frontend requirements with our expressive brick, collection, and form builders.
 
 ## Installation
 
 ```bash
 npm install @lucid/core
 ```
+
+## Builders
+
+- [Brick Builder](https://github.com/WillYallop/Lucid/tree/master/packages/brick-builder)
+- [Collection Builder](https://github.com/WillYallop/Lucid/tree/master/packages/collection-builder)
+- [Form Builder](https://github.com/WillYallop/Lucid/tree/master/packages/form-builder)
 
 ## lucid.config.ts/js
 
@@ -46,7 +48,7 @@ export default buildConfig({
     storageLimit: 5368709120,
     maxFileSize: 20777216,
     fallbackImage: "https://picsum.photos/600/400", // false to throw 404, undefined for default and URL string for custom
-    processedImageLimit: 5, // the total number of processed images to store per image
+    processedImageLimit: 10, // the total number of processed images to store per image
     store: {
       service: "cloudflare",
       cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID as string,
