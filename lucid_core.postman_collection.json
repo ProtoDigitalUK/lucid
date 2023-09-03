@@ -2423,7 +2423,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"stand2ard@lucid.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [10]\r\n}",
+							"raw": "{\r\n    \"email\": \"stand2ard@lucid.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [10]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

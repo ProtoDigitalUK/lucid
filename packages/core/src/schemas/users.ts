@@ -13,15 +13,21 @@ const updateSingleParams = z.object({
 
 // ------------------------------------
 // CREATE USER
-const createSingleBody = z.object({
-  email: z.string().email(),
-  username: z.string(),
-  password: z.string().min(8),
-  role_ids: z.array(z.number()),
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  super_admin: z.boolean().optional(),
-});
+const createSingleBody = z
+  .object({
+    email: z.string().email(),
+    username: z.string(),
+    password: z.string().min(8),
+    password_confirmation: z.string().min(8),
+    role_ids: z.array(z.number()),
+    first_name: z.string().optional(),
+    last_name: z.string().optional(),
+    super_admin: z.boolean().optional(),
+  })
+  .refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords must match",
+    path: ["password_confirmation"],
+  });
 const createSingleQuery = z.object({});
 const createSingleParams = z.object({});
 

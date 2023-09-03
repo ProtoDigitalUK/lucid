@@ -29,6 +29,8 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
   const [getLastName, setLastName] = createSignal<string>("");
   const [getEmail, setEmail] = createSignal<string>("");
   const [getPassword, setPassword] = createSignal<string>("");
+  const [getPasswordConfirmation, setPasswordConfirmation] =
+    createSignal<string>("");
   const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<boolean>(false);
 
   // ---------------------------------
@@ -74,6 +76,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
           body: {
             email: getEmail(),
             password: getPassword(),
+            password_confirmation: getPasswordConfirmation(),
             username: getUsername(),
             first_name: getFirstName() || undefined,
             last_name: getLastName() || undefined,
@@ -168,11 +171,24 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
           type="password"
           copy={{
             label: T("password"),
-            describedBy: T("password_description"),
           }}
           noMargin={true}
           required={true}
           errors={createUser.errors()?.errors?.body?.password}
+        />
+        <Form.Input
+          id="password_confirmation"
+          value={getPasswordConfirmation()}
+          onChange={setPasswordConfirmation}
+          name={"password_confirmation"}
+          type="password"
+          copy={{
+            label: T("password_confirmation"),
+            describedBy: T("password_description"),
+          }}
+          noMargin={true}
+          required={true}
+          errors={createUser.errors()?.errors?.body?.password_confirmation}
         />
       </InputGrid>
       <Form.SelectMultiple
