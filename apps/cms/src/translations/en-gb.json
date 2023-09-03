@@ -124,6 +124,7 @@
   "document": "Document",
   "archive": "Archive",
   "unknown": "Unknown",
+  "no_options_available": "No options available",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",

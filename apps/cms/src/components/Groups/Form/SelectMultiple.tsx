@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Show, createSignal, For } from "solid-js";
+import { Component, Show, createSignal, For, Switch, Match } from "solid-js";
 import classNames from "classnames";
 // Types
 import { ErrorResult } from "@/types/api";
@@ -157,25 +157,36 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
             class: "max-h-36 overflow-y-auto z-50 !p-1.5",
           }}
         >
-          <ul class="flex flex-col">
-            <For each={props.options}>
-              {(option) => (
-                <li
-                  class="flex items-center justify-between text-sm text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
-                  onClick={() => {
-                    toggleValue(option);
-                  }}
-                >
-                  <span>{option.label}</span>
-                  <Show
-                    when={props.values.find((v) => v.value === option.value)}
-                  >
-                    <FaSolidCheck size={14} class="fill-primaryText mr-2" />
-                  </Show>
-                </li>
-              )}
-            </For>
-          </ul>
+          <Switch>
+            <Match when={props.options.length > 0}>
+              <ul class="flex flex-col">
+                <For each={props.options}>
+                  {(option) => (
+                    <li
+                      class="flex items-center justify-between text-sm text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
+                      onClick={() => {
+                        toggleValue(option);
+                      }}
+                    >
+                      <span>{option.label}</span>
+                      <Show
+                        when={props.values.find(
+                          (v) => v.value === option.value
+                        )}
+                      >
+                        <FaSolidCheck size={14} class="fill-primaryText mr-2" />
+                      </Show>
+                    </li>
+                  )}
+                </For>
+              </ul>
+            </Match>
+            <Match when={props.options.length === 0}>
+              <span class="text-primaryText w-full block px-2.5 py-1">
+                {T("no_options_available")}
+              </span>
+            </Match>
+          </Switch>
         </DropdownContent>
       </DropdownMenu.Root>
 
