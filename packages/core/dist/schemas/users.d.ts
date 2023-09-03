@@ -21,10 +21,11 @@ declare const _default: {
         }>;
     };
     createSingle: {
-        body: z.ZodObject<{
+        body: z.ZodEffects<z.ZodObject<{
             email: z.ZodString;
             username: z.ZodString;
             password: z.ZodString;
+            password_confirmation: z.ZodString;
             role_ids: z.ZodArray<z.ZodNumber, "many">;
             first_name: z.ZodOptional<z.ZodString>;
             last_name: z.ZodOptional<z.ZodString>;
@@ -34,6 +35,7 @@ declare const _default: {
             username: string;
             role_ids: number[];
             password: string;
+            password_confirmation: string;
             first_name?: string | undefined;
             last_name?: string | undefined;
             super_admin?: boolean | undefined;
@@ -42,6 +44,25 @@ declare const _default: {
             username: string;
             role_ids: number[];
             password: string;
+            password_confirmation: string;
+            first_name?: string | undefined;
+            last_name?: string | undefined;
+            super_admin?: boolean | undefined;
+        }>, {
+            email: string;
+            username: string;
+            role_ids: number[];
+            password: string;
+            password_confirmation: string;
+            first_name?: string | undefined;
+            last_name?: string | undefined;
+            super_admin?: boolean | undefined;
+        }, {
+            email: string;
+            username: string;
+            role_ids: number[];
+            password: string;
+            password_confirmation: string;
             first_name?: string | undefined;
             last_name?: string | undefined;
             super_admin?: boolean | undefined;

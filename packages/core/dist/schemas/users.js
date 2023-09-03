@@ -12,14 +12,20 @@ const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({
     id: zod_1.default.string(),
 });
-const createSingleBody = zod_1.default.object({
+const createSingleBody = zod_1.default
+    .object({
     email: zod_1.default.string().email(),
     username: zod_1.default.string(),
     password: zod_1.default.string().min(8),
+    password_confirmation: zod_1.default.string().min(8),
     role_ids: zod_1.default.array(zod_1.default.number()),
     first_name: zod_1.default.string().optional(),
     last_name: zod_1.default.string().optional(),
     super_admin: zod_1.default.boolean().optional(),
+})
+    .refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords must match",
+    path: ["password_confirmation"],
 });
 const createSingleQuery = zod_1.default.object({});
 const createSingleParams = zod_1.default.object({});

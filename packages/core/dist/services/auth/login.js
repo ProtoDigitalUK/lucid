@@ -15,7 +15,7 @@ const login = async (client, data) => {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Not Found",
-            message: "The email or password you entered is incorrect.",
+            message: "The username or password you entered is incorrect.",
             status: 500,
         });
     }
@@ -27,7 +27,7 @@ const login = async (client, data) => {
         throw new error_handler_1.LucidError({
             type: "basic",
             name: "User Not Found",
-            message: "The email or password you entered is incorrect.",
+            message: "The username or password you entered is incorrect.",
             status: 500,
         });
     }

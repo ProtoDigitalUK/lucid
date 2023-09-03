@@ -1,9 +1,10 @@
 declare const _default: {
     schema: {
-        body: import("zod").ZodObject<{
+        body: import("zod").ZodEffects<import("zod").ZodObject<{
             email: import("zod").ZodString;
             username: import("zod").ZodString;
             password: import("zod").ZodString;
+            password_confirmation: import("zod").ZodString;
             role_ids: import("zod").ZodArray<import("zod").ZodNumber, "many">;
             first_name: import("zod").ZodOptional<import("zod").ZodString>;
             last_name: import("zod").ZodOptional<import("zod").ZodString>;
@@ -13,6 +14,7 @@ declare const _default: {
             username: string;
             role_ids: number[];
             password: string;
+            password_confirmation: string;
             first_name?: string | undefined;
             last_name?: string | undefined;
             super_admin?: boolean | undefined;
@@ -21,6 +23,25 @@ declare const _default: {
             username: string;
             role_ids: number[];
             password: string;
+            password_confirmation: string;
+            first_name?: string | undefined;
+            last_name?: string | undefined;
+            super_admin?: boolean | undefined;
+        }>, {
+            email: string;
+            username: string;
+            role_ids: number[];
+            password: string;
+            password_confirmation: string;
+            first_name?: string | undefined;
+            last_name?: string | undefined;
+            super_admin?: boolean | undefined;
+        }, {
+            email: string;
+            username: string;
+            role_ids: number[];
+            password: string;
+            password_confirmation: string;
             first_name?: string | undefined;
             last_name?: string | undefined;
             super_admin?: boolean | undefined;
@@ -28,10 +49,11 @@ declare const _default: {
         query: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
         params: import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>;
     };
-    controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodObject<{
+    controller: Controller<import("zod").ZodObject<{}, "strip", import("zod").ZodTypeAny, {}, {}>, import("zod").ZodEffects<import("zod").ZodObject<{
         email: import("zod").ZodString;
         username: import("zod").ZodString;
         password: import("zod").ZodString;
+        password_confirmation: import("zod").ZodString;
         role_ids: import("zod").ZodArray<import("zod").ZodNumber, "many">;
         first_name: import("zod").ZodOptional<import("zod").ZodString>;
         last_name: import("zod").ZodOptional<import("zod").ZodString>;
@@ -41,6 +63,7 @@ declare const _default: {
         username: string;
         role_ids: number[];
         password: string;
+        password_confirmation: string;
         first_name?: string | undefined;
         last_name?: string | undefined;
         super_admin?: boolean | undefined;
@@ -49,6 +72,25 @@ declare const _default: {
         username: string;
         role_ids: number[];
         password: string;
+        password_confirmation: string;
+        first_name?: string | undefined;
+        last_name?: string | undefined;
+        super_admin?: boolean | undefined;
+    }>, {
+        email: string;
+        username: string;
+        role_ids: number[];
+        password: string;
+        password_confirmation: string;
+        first_name?: string | undefined;
+        last_name?: string | undefined;
+        super_admin?: boolean | undefined;
+    }, {
+        email: string;
+        username: string;
+        role_ids: number[];
+        password: string;
+        password_confirmation: string;
         first_name?: string | undefined;
         last_name?: string | undefined;
         super_admin?: boolean | undefined;
