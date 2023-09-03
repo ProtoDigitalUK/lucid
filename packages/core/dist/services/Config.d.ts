@@ -14,6 +14,7 @@ export type ConfigT = {
         storageLimit?: number;
         maxFileSize?: number;
         fallbackImage?: string | false;
+        processedImageLimit?: number;
         store: {
             service: "aws" | "cloudflare";
             cloudflareAccountId?: string;
@@ -51,6 +52,7 @@ export default class Config {
         storageLimit: number;
         maxFileSize: number;
         fallbackImage: string | false | undefined;
+        processedImageLimit: number;
         store: {
             service: "aws" | "cloudflare";
             cloudflareAccountId: string | undefined;

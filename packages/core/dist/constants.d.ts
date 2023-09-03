@@ -6,6 +6,7 @@ declare const _default: {
     media: {
         storageLimit: number;
         maxFileSize: number;
+        processedImageLimit: number;
     };
     locations: {
         resetPassword: string;

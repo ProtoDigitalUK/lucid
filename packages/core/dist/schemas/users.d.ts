@@ -3,10 +3,13 @@ declare const _default: {
     updateSingle: {
         body: z.ZodObject<{
             role_ids: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
+            super_admin: z.ZodOptional<z.ZodBoolean>;
         }, "strip", z.ZodTypeAny, {
             role_ids?: number[] | undefined;
+            super_admin?: boolean | undefined;
         }, {
             role_ids?: number[] | undefined;
+            super_admin?: boolean | undefined;
         }>;
         query: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
         params: z.ZodObject<{

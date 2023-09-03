@@ -61,12 +61,16 @@ const UserRow: Component<UserRowProps> = (props) => {
         options={{ include: props?.include[2] }}
       />
       <TextCol
-        text={props.user.email}
+        text={props.user.super_admin ? T("yes") : T("no")}
         options={{ include: props?.include[3] }}
+      />
+      <TextCol
+        text={props.user.email}
+        options={{ include: props?.include[4] }}
       />
       <DateCol
         date={props.user.created_at}
-        options={{ include: props?.include[4] }}
+        options={{ include: props?.include[5] }}
       />
     </Table.Tr>
   );

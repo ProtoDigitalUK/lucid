@@ -3,6 +3,7 @@ import fileUpload from "express-fileupload";
 import z from "zod";
 import { Readable } from "stream";
 import mediaSchema from "../../schemas/media";
+import { MediaResT } from "@lucid/types/src/media";
 export interface MediaMetaDataT {
     mimeType: string;
     fileExtension: string;
@@ -20,6 +21,7 @@ declare const helpers: {
     formatReqFiles: (files: fileUpload.FileArray) => fileUpload.UploadedFile[];
     createProcessKey: (data: CreateProcessKeyT) => string;
     streamToBuffer: (readable: Readable) => Promise<Buffer>;
+    getMediaType: (mimeType: string) => MediaResT["type"];
 };
 export default helpers;
 //# sourceMappingURL=helpers.d.ts.map

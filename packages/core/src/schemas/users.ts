@@ -4,6 +4,7 @@ import z from "zod";
 // UPDATE SINGLE
 const updateSingleBody = z.object({
   role_ids: z.array(z.number()).optional(),
+  super_admin: z.boolean().optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

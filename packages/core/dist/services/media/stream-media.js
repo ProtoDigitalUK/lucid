@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const helpers_1 = __importDefault(require("../../utils/media/helpers"));
 const service_1 = __importDefault(require("../../utils/app/service"));
 const media_1 = __importDefault(require("../media"));
+const processed_images_1 = __importDefault(require("../processed-images"));
 const streamMedia = async (data) => {
     if (data.query?.format === undefined &&
         data.query?.width === undefined &&
@@ -24,7 +25,7 @@ const streamMedia = async (data) => {
         });
     }
     catch (err) {
-        return await (0, service_1.default)(media_1.default.processImage, false)({
+        return await (0, service_1.default)(processed_images_1.default.processImage, false)({
             key: data.key,
             processKey: processKey,
             options: data.query,

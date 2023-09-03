@@ -13,6 +13,7 @@ interface Params {
   id: number;
   body: {
     role_ids?: number[];
+    super_admin?: boolean;
   };
 }
 

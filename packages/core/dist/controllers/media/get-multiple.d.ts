@@ -6,16 +6,19 @@ declare const _default: {
                 name: import("zod").ZodOptional<import("zod").ZodString>;
                 key: import("zod").ZodOptional<import("zod").ZodString>;
                 mime_type: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
+                type: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
                 file_extension: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
             }, "strip", import("zod").ZodTypeAny, {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             }, {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             }>>;
             sort: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
@@ -35,6 +38,7 @@ declare const _default: {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             } | undefined;
             sort?: {
@@ -48,6 +52,7 @@ declare const _default: {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             } | undefined;
             sort?: {
@@ -64,16 +69,19 @@ declare const _default: {
             name: import("zod").ZodOptional<import("zod").ZodString>;
             key: import("zod").ZodOptional<import("zod").ZodString>;
             mime_type: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
+            type: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
             file_extension: import("zod").ZodOptional<import("zod").ZodUnion<[import("zod").ZodString, import("zod").ZodArray<import("zod").ZodString, "many">]>>;
         }, "strip", import("zod").ZodTypeAny, {
             name?: string | undefined;
             key?: string | undefined;
             mime_type?: string | string[] | undefined;
+            type?: string | string[] | undefined;
             file_extension?: string | string[] | undefined;
         }, {
             name?: string | undefined;
             key?: string | undefined;
             mime_type?: string | string[] | undefined;
+            type?: string | string[] | undefined;
             file_extension?: string | string[] | undefined;
         }>>;
         sort: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodObject<{
@@ -93,6 +101,7 @@ declare const _default: {
             name?: string | undefined;
             key?: string | undefined;
             mime_type?: string | string[] | undefined;
+            type?: string | string[] | undefined;
             file_extension?: string | string[] | undefined;
         } | undefined;
         sort?: {
@@ -106,6 +115,7 @@ declare const _default: {
             name?: string | undefined;
             key?: string | undefined;
             mime_type?: string | string[] | undefined;
+            type?: string | string[] | undefined;
             file_extension?: string | string[] | undefined;
         } | undefined;
         sort?: {

@@ -5,9 +5,12 @@ import {
   createMemo,
   createSignal,
   createEffect,
+  Show,
 } from "solid-js";
 // Services
 import api from "@/services/api";
+// Store
+import userStore from "@/store/userStore";
 // Hooks
 import helpers from "@/utils/helpers";
 // Types
@@ -30,6 +33,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
   const [getSelectedRoles, setSelectedRoles] = createSignal<
     SelectMultipleValueT[]
   >([]);
+  const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<boolean>(false);
 
   // ---------------------------------
   // Queries
@@ -71,6 +75,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
           };
         }) || []
       );
+      setIsSuperAdmin(user.data?.data.super_admin || false);
     }
   });
 
@@ -86,9 +91,11 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
     return helpers.updateData(
       {
         role_ids: user.data?.data.roles?.map((role) => role.id),
+        super_admin: user.data?.data.super_admin,
       },
       {
         role_ids: getSelectedRoles().map((role) => role.value) as number[],
+        super_admin: getIsSuperAdmin(),
       }
     );
   });
@@ -139,7 +146,20 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
             };
           }) || []
         }
+        errors={updateUser.errors()?.errors?.body?.role_ids}
       />
+      <Show when={userStore.get.user?.super_admin}>
+        <Form.Checkbox
+          id="super_admin"
+          value={getIsSuperAdmin()}
+          onChange={setIsSuperAdmin}
+          name={"super_admin"}
+          copy={{
+            label: T("is_super_admin"),
+          }}
+          errors={updateUser.errors()?.errors?.body?.super_admin}
+        />
+      </Show>
     </Panel.Root>
   );
 };

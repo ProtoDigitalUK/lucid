@@ -9,6 +9,7 @@ type Route = <ParamsT extends z.ZodTypeAny, BodyT extends z.ZodTypeAny, QueryT e
         environments?: EnvironmentPermissionT[];
     };
     middleware?: {
+        fileUpload?: boolean;
         authenticate?: boolean;
         authoriseCSRF?: boolean;
         paginated?: boolean;

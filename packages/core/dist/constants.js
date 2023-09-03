@@ -8,6 +8,7 @@ exports.default = {
     media: {
         storageLimit: 5368709120,
         maxFileSize: 16777216,
+        processedImageLimit: 10,
     },
     locations: {
         resetPassword: "/reset-password",

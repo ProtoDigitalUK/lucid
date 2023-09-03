@@ -16,9 +16,14 @@ export interface ServiceData {
   email?: string;
   password?: string;
   role_ids?: number[];
+  super_admin?: boolean;
 }
 
-const updateSingle = async (client: PoolClient, data: ServiceData) => {
+const updateSingle = async (
+  client: PoolClient,
+  data: ServiceData,
+  current_user_id?: number
+) => {
   // -------------------------------------------
   // Check if user exists
   const user = await service(
@@ -86,13 +91,28 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  // -------------------------------------------
-  // Update User
   let hashedPassword = undefined;
   if (data.password) {
     hashedPassword = await argon2.hash(data.password);
   }
 
+  let superAdmin = data.super_admin;
+  if (current_user_id !== undefined && superAdmin !== undefined) {
+    const currentUser = await service(
+      usersServices.getSingle,
+      false,
+      client
+    )({
+      user_id: current_user_id,
+    });
+
+    if (!currentUser.super_admin) {
+      superAdmin = undefined;
+    }
+  }
+
+  // -------------------------------------------
+  // Update User
   const userUpdate = await User.updateSingle(client, {
     user_id: data.user_id,
     first_name: data.first_name,
@@ -100,6 +120,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     username: data.username,
     email: data.email,
     password: hashedPassword,
+    super_admin: superAdmin,
   });
 
   if (!userUpdate) {

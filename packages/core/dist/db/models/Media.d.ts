@@ -1,9 +1,11 @@
 import { PoolClient } from "pg";
 import { type MediaMetaDataT } from "../../utils/media/helpers";
 import { SelectQueryBuilder } from "../../utils/app/query-helpers";
+import { MediaResT } from "@lucid/types/src/media";
 type MediaCreateSingle = (client: PoolClient, data: {
     key: string;
     name: string;
+    type: MediaResT["type"];
     etag?: string;
     alt?: string;
     meta: MediaMetaDataT;
@@ -30,6 +32,7 @@ type MediaDeleteSingle = (client: PoolClient, data: {
 type MediaUpdateSingle = (client: PoolClient, data: {
     key: string;
     name?: string;
+    type?: MediaResT["type"];
     alt?: string;
     meta?: MediaMetaDataT;
     newKey?: string;
@@ -40,6 +43,7 @@ export type MediaT = {
     id: number;
     key: string;
     e_tag: string;
+    type: MediaResT["type"];
     name: string;
     alt: string | null;
     mime_type: string;

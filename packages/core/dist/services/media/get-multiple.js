@@ -13,6 +13,7 @@ const getMultiple = async (client, data) => {
             "id",
             "key",
             "e_tag",
+            "type",
             "name",
             "alt",
             "mime_type",
@@ -26,6 +27,11 @@ const getMultiple = async (client, data) => {
         filter: {
             data: filter,
             meta: {
+                type: {
+                    operator: "=",
+                    type: "text",
+                    columnType: "standard",
+                },
                 name: {
                     operator: "%",
                     type: "text",

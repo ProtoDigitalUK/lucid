@@ -2019,7 +2019,7 @@
 								},
 								{
 									"key": "filter[mime_type]",
-									"value": "image/jpeg",
+									"value": "image/jpeg,image/png",
 									"disabled": true
 								},
 								{
@@ -2035,6 +2035,11 @@
 								{
 									"key": "sort",
 									"value": "created_at,updated_at,name,file_size,width,height,mime_type,file_extension",
+									"disabled": true
+								},
+								{
+									"key": "filter[type]",
+									"value": "image,video",
 									"disabled": true
 								}
 							]
@@ -2382,7 +2387,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"role_ids\": [1]\r\n}",
+							"raw": "{\r\n    \"role_ids\": [1],\r\n    \"super_admin\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2390,7 +2395,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/8",
+							"raw": "{{BASE_URL}}/api/v1/users/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2398,7 +2403,7 @@
 								"api",
 								"v1",
 								"users",
-								"8"
+								"1"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."

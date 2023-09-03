@@ -62,6 +62,11 @@ const UsersTable: Component<UsersTableProps> = (props) => {
             icon: <FaSolidT />,
           },
           {
+            label: T("super_admin"),
+            key: "super_admin",
+            icon: <FaSolidT />,
+          },
+          {
             label: T("email"),
             key: "email",
             icon: <FaSolidEnvelope />,

@@ -7,7 +7,8 @@ export interface ServiceData {
     email?: string;
     password?: string;
     role_ids?: number[];
+    super_admin?: boolean;
 }
-declare const updateSingle: (client: PoolClient, data: ServiceData) => Promise<import("@lucid/types/src/users").UserResT>;
+declare const updateSingle: (client: PoolClient, data: ServiceData, current_user_id?: number) => Promise<import("@lucid/types/src/users").UserResT>;
 export default updateSingle;
 //# sourceMappingURL=update-single.d.ts.map

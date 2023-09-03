@@ -14,17 +14,17 @@ const updateMeController: Controller<
   typeof accountSchema.updateMe.query
 > = async (req, res, next) => {
   try {
-    const userRoles = await service(
-      usersService.updateSingle,
-      true
-    )({
-      user_id: req.auth.id,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      username: req.body.username,
-      email: req.body.email,
-      role_ids: req.body.role_ids,
-    });
+    const userRoles = await service(usersService.updateSingle, true)(
+      {
+        user_id: req.auth.id,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        username: req.body.username,
+        email: req.body.email,
+        role_ids: req.body.role_ids,
+      },
+      req.auth.id
+    );
 
     res.status(200).json(
       buildResponse(req, {

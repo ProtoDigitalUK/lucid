@@ -16,6 +16,7 @@ const updateSingle = async (client, data) => {
     });
     let meta = undefined;
     let newKey = undefined;
+    let newType = undefined;
     if (data.data.files && data.data.files["file"]) {
         const files = helpers_1.default.formatReqFiles(data.data.files);
         const firstFile = files[0];
@@ -24,6 +25,7 @@ const updateSingle = async (client, data) => {
         });
         meta = await helpers_1.default.getMetaData(firstFile);
         newKey = helpers_1.default.uniqueKey(data.data.name || firstFile.name);
+        newType = helpers_1.default.getMediaType(meta.mimeType);
         const updateKeyRes = await s3_1.default.updateObjectKey({
             oldKey: media.key,
             newKey: newKey,
@@ -75,6 +77,7 @@ const updateSingle = async (client, data) => {
         name: data.data.name,
         alt: data.data.alt,
         meta: meta,
+        type: newType,
         newKey: newKey,
     });
     if (!mediaUpdate) {

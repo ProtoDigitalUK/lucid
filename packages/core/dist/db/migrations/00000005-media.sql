@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS lucid_media (
   key TEXT NOT NULL UNIQUE,
   e_tag TEXT,
 
+  type TEXT NOT NULL,
   mime_type TEXT NOT NULL,
   file_extension TEXT NOT NULL,
   file_size INTEGER NOT NULL,

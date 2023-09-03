@@ -9,7 +9,7 @@ declare const _default: {
         data: import("@lucid/types/src/users").UserResT[];
         count: number;
     }>;
-    updateSingle: (client: import("pg").PoolClient, data: import("./update-single").ServiceData) => Promise<import("@lucid/types/src/users").UserResT>;
+    updateSingle: (client: import("pg").PoolClient, data: import("./update-single").ServiceData, current_user_id?: number | undefined) => Promise<import("@lucid/types/src/users").UserResT>;
     getSingleQuery: (client: import("pg").PoolClient, data: import("./get-single-query").ServiceData) => Promise<import("../../db/models/User").UserT>;
 };
 export default _default;

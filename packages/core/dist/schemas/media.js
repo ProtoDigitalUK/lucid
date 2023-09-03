@@ -28,6 +28,7 @@ const getMultipleQuery = zod_1.default.object({
         name: zod_1.default.string().optional(),
         key: zod_1.default.string().optional(),
         mime_type: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
+        type: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
         file_extension: zod_1.default.union([zod_1.default.string(), zod_1.default.array(zod_1.default.string())]).optional(),
     })
         .optional(),

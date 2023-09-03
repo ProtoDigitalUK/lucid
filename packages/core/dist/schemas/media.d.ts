@@ -50,16 +50,19 @@ declare const _default: {
                 name: z.ZodOptional<z.ZodString>;
                 key: z.ZodOptional<z.ZodString>;
                 mime_type: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
+                type: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
                 file_extension: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>>;
             }, "strip", z.ZodTypeAny, {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             }, {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             }>>;
             sort: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -79,6 +82,7 @@ declare const _default: {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             } | undefined;
             sort?: {
@@ -92,6 +96,7 @@ declare const _default: {
                 name?: string | undefined;
                 key?: string | undefined;
                 mime_type?: string | string[] | undefined;
+                type?: string | string[] | undefined;
                 file_extension?: string | string[] | undefined;
             } | undefined;
             sort?: {

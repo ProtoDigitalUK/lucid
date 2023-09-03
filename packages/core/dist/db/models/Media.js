@@ -10,6 +10,7 @@ Media.createSingle = async (client, data) => {
         columns: [
             "key",
             "e_tag",
+            "type",
             "name",
             "alt",
             "mime_type",
@@ -21,6 +22,7 @@ Media.createSingle = async (client, data) => {
         values: [
             data.key,
             data.etag,
+            data.type,
             data.name,
             data.alt,
             data.meta.mimeType,
@@ -91,6 +93,7 @@ Media.updateSingle = async (client, data) => {
         columns: [
             "name",
             "alt",
+            "type",
             "mime_type",
             "file_extension",
             "file_size",
@@ -101,6 +104,7 @@ Media.updateSingle = async (client, data) => {
         values: [
             data.name,
             data.alt,
+            data.type,
             data.meta?.mimeType,
             data.meta?.fileExtension,
             data.meta?.size,

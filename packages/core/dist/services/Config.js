@@ -53,6 +53,7 @@ const configSchema = zod_1.default.object({
         storageLimit: zod_1.default.number().optional(),
         maxFileSize: zod_1.default.number().optional(),
         fallbackImage: zod_1.default.union([zod_1.default.string(), zod_1.default.boolean()]).optional(),
+        processedImageLimit: zod_1.default.number().optional(),
         store: zod_1.default.object({
             service: zod_1.default.enum(["aws", "cloudflare"]),
             cloudflareAccountId: zod_1.default.string().optional(),
@@ -94,6 +95,7 @@ class Config {
             storageLimit: media?.storageLimit || constants_1.default.media.storageLimit,
             maxFileSize: media?.maxFileSize || constants_1.default.media.maxFileSize,
             fallbackImage: media?.fallbackImage,
+            processedImageLimit: media?.processedImageLimit || constants_1.default.media.processedImageLimit,
             store: {
                 service: media?.store.service,
                 cloudflareAccountId: media?.store.cloudflareAccountId,

@@ -33,6 +33,7 @@ const router = (0, express_1.Router)();
         global: ["create_media"],
     },
     middleware: {
+        fileUpload: true,
         authenticate: true,
         authoriseCSRF: true,
     },
@@ -78,6 +79,7 @@ const router = (0, express_1.Router)();
         global: ["update_media"],
     },
     middleware: {
+        fileUpload: true,
         authenticate: true,
         authoriseCSRF: true,
     },

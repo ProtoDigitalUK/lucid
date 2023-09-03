@@ -14,7 +14,6 @@ declare const _default: {
     getSingleById: (client: import("pg").PoolClient, data: import("./get-single-by-id").ServiceData) => Promise<import("@lucid/types/src/media").MediaResT>;
     getMultipleByIds: (client: import("pg").PoolClient, data: import("./get-multiple-by-ids").ServiceData) => Promise<import("@lucid/types/src/media").MediaResT[]>;
     streamErrorImage: (data: import("./stream-error-image").ServiceData) => Promise<void>;
-    processImage: (client: import("pg").PoolClient, data: import("./process-image").ServiceData) => Promise<import("./process-image").Response>;
     getS3Object: (data: import("./get-s3-object").ServiceData) => Promise<import("./get-s3-object").Response>;
     pipeRemoteURL: (data: import("./pipe-remote-url").ServiceData) => Promise<import("./pipe-remote-url").PipeRemoteURLResponse>;
 };

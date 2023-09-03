@@ -22,7 +22,10 @@ type UserUpdateSingle = (client: PoolClient, data: {
     username?: string;
     email?: string;
     password?: string;
-}) => Promise<UserT>;
+    super_admin?: boolean;
+}) => Promise<{
+    id: UserT["id"];
+}>;
 type UserGetSingle = (client: PoolClient, query_instance: SelectQueryBuilder) => Promise<UserT>;
 export type UserT = {
     id: number;

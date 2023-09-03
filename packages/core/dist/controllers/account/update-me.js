@@ -16,7 +16,7 @@ const updateMeController = async (req, res, next) => {
             username: req.body.username,
             email: req.body.email,
             role_ids: req.body.role_ids,
-        });
+        }, req.auth.id);
         res.status(200).json((0, build_response_1.default)(req, {
             data: userRoles,
         }));

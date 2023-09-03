@@ -62,12 +62,28 @@ const streamToBuffer = (readable) => {
         readable.on("error", reject);
     });
 };
+const getMediaType = (mimeType) => {
+    const normalizedMimeType = mimeType.toLowerCase();
+    if (normalizedMimeType.includes("image"))
+        return "image";
+    if (normalizedMimeType.includes("video"))
+        return "video";
+    if (normalizedMimeType.includes("audio"))
+        return "audio";
+    if (normalizedMimeType.includes("pdf") ||
+        normalizedMimeType.startsWith("application/vnd"))
+        return "document";
+    if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
+        return "archive";
+    return "unknown";
+};
 const helpers = {
     uniqueKey,
     getMetaData,
     formatReqFiles,
     createProcessKey,
     streamToBuffer,
+    getMediaType,
 };
 exports.default = helpers;
 //# sourceMappingURL=helpers.js.map

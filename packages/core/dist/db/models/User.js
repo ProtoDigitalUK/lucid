@@ -47,13 +47,21 @@ User.getMultiple = async (client, query_instance) => {
 };
 User.updateSingle = async (client, data) => {
     const { columns, aliases, values } = (0, query_helpers_1.queryDataFormat)({
-        columns: ["first_name", "last_name", "username", "email", "password"],
+        columns: [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "password",
+            "super_admin",
+        ],
         values: [
             data.first_name,
             data.last_name,
             data.username,
             data.email,
             data.password,
+            data.super_admin,
         ],
         conditional: {
             hasValues: {
@@ -62,7 +70,7 @@ User.updateSingle = async (client, data) => {
         },
     });
     const page = await client.query({
-        text: `UPDATE lucid_users SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
+        text: `UPDATE lucid_users SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING id`,
         values: [...values.value, data.user_id],
     });
     return page.rows[0];

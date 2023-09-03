@@ -32,6 +32,7 @@ const createSingle = async (client, data) => {
     });
     const key = helpers_1.default.uniqueKey(data.name || firstFile.name);
     const meta = await helpers_1.default.getMetaData(firstFile);
+    const type = helpers_1.default.getMediaType(meta.mimeType);
     const response = await s3_1.default.saveObject({
         type: "file",
         key: key,
@@ -57,6 +58,7 @@ const createSingle = async (client, data) => {
         name: data.name || firstFile.name,
         alt: data.alt,
         etag: response.ETag?.replace(/"/g, ""),
+        type: type,
         meta: meta,
     });
     if (!media) {

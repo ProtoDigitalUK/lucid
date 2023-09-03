@@ -7,6 +7,7 @@ const helpers_1 = __importDefault(require("../../utils/media/helpers"));
 const stream_1 = require("stream");
 const media_1 = __importDefault(require("../media"));
 const s3_1 = __importDefault(require("../s3"));
+const processed_images_1 = __importDefault(require("../processed-images"));
 const ProcessedImage_1 = __importDefault(require("../../db/models/ProcessedImage"));
 const process_image_1 = __importDefault(require("../../workers/process-image"));
 const saveAndRegister = async (client, data, image) => {
@@ -35,6 +36,25 @@ const processImage = async (client, data) => {
     const s3Response = await media_1.default.getS3Object({
         key: data.key,
     });
+    if (!s3Response.contentType?.startsWith("image/")) {
+        return {
+            contentLength: s3Response.contentLength,
+            contentType: s3Response.contentType,
+            body: s3Response.body,
+        };
+    }
+    try {
+        await processed_images_1.default.getSingleCount(client, {
+            key: data.key,
+        });
+    }
+    catch (err) {
+        return {
+            contentLength: s3Response.contentLength,
+            contentType: s3Response.contentType,
+            body: s3Response.body,
+        };
+    }
     const processRes = await (0, process_image_1.default)({
         buffer: await helpers_1.default.streamToBuffer(s3Response.body),
         options: data.options,

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = __importDefault(require("zod"));
 const updateSingleBody = zod_1.default.object({
     role_ids: zod_1.default.array(zod_1.default.number()).optional(),
+    super_admin: zod_1.default.boolean().optional(),
 });
 const updateSingleQuery = zod_1.default.object({});
 const updateSingleParams = zod_1.default.object({

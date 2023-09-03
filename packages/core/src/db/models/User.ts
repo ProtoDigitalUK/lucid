@@ -38,8 +38,11 @@ type UserUpdateSingle = (
     username?: string;
     email?: string;
     password?: string;
+    super_admin?: boolean;
   }
-) => Promise<UserT>;
+) => Promise<{
+  id: UserT["id"];
+}>;
 
 type UserGetSingle = (
   client: PoolClient,
@@ -109,13 +112,21 @@ export default class User {
   };
   static updateSingle: UserUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
-      columns: ["first_name", "last_name", "username", "email", "password"],
+      columns: [
+        "first_name",
+        "last_name",
+        "username",
+        "email",
+        "password",
+        "super_admin",
+      ],
       values: [
         data.first_name,
         data.last_name,
         data.username,
         data.email,
         data.password,
+        data.super_admin,
       ],
       conditional: {
         hasValues: {
@@ -126,10 +137,12 @@ export default class User {
 
     // -------------------------------------------
     // Update page
-    const page = await client.query<UserT>({
+    const page = await client.query<{
+      id: UserT["id"];
+    }>({
       text: `UPDATE lucid_users SET ${columns.formatted.update} WHERE id = $${
         aliases.value.length + 1
-      } RETURNING *`,
+      } RETURNING id`,
       values: [...values.value, data.user_id],
     });
 

@@ -8,7 +8,7 @@ const error_handler_1 = require("../../utils/app/error-handler");
 const service_1 = __importDefault(require("../../utils/app/service"));
 const User_1 = __importDefault(require("../../db/models/User"));
 const users_1 = __importDefault(require("../users"));
-const updateSingle = async (client, data) => {
+const updateSingle = async (client, data, current_user_id) => {
     const user = await (0, service_1.default)(users_1.default.getSingle, false, client)({
         user_id: data.user_id,
     });
@@ -58,6 +58,15 @@ const updateSingle = async (client, data) => {
     if (data.password) {
         hashedPassword = await argon2_1.default.hash(data.password);
     }
+    let superAdmin = data.super_admin;
+    if (current_user_id !== undefined && superAdmin !== undefined) {
+        const currentUser = await (0, service_1.default)(users_1.default.getSingle, false, client)({
+            user_id: current_user_id,
+        });
+        if (!currentUser.super_admin) {
+            superAdmin = undefined;
+        }
+    }
     const userUpdate = await User_1.default.updateSingle(client, {
         user_id: data.user_id,
         first_name: data.first_name,
@@ -65,6 +74,7 @@ const updateSingle = async (client, data) => {
         username: data.username,
         email: data.email,
         password: hashedPassword,
+        super_admin: superAdmin,
     });
     if (!userUpdate) {
         throw new error_handler_1.LucidError({

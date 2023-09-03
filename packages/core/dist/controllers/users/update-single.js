@@ -12,7 +12,8 @@ const updateSingleController = async (req, res, next) => {
         const userRoles = await (0, service_1.default)(users_2.default.updateSingle, true)({
             user_id: parseInt(req.params.id),
             role_ids: req.body.role_ids,
-        });
+            super_admin: req.body.super_admin,
+        }, req.auth.id);
         res.status(200).json((0, build_response_1.default)(req, {
             data: userRoles,
         }));
