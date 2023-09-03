@@ -36,6 +36,11 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     filter: {
       data: filter,
       meta: {
+        type: {
+          operator: "=",
+          type: "text",
+          columnType: "standard",
+        },
         name: {
           operator: "%",
           type: "text",

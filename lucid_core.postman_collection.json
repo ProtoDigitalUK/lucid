@@ -1901,7 +1901,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Rum Ham",
+									"value": "Wolvito",
 									"type": "text"
 								},
 								{
@@ -1913,7 +1913,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/artworks-CkobL8z3RkKJsZqI-4vZ3aw-t500x500.jpg"
+									"src": "/C:/Users/wyall/Desktop/danny-devito.jpg"
 								}
 							]
 						},
@@ -1953,17 +1953,19 @@
 								{
 									"key": "alt",
 									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/danny-devito.jpg"
+									"src": "/C:/Users/wyall/Desktop/danny-devito.jpg",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/3",
+							"raw": "{{BASE_URL}}/api/v1/media/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1971,7 +1973,7 @@
 								"api",
 								"v1",
 								"media",
-								"3"
+								"2"
 							]
 						}
 					},
@@ -2064,7 +2066,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/3",
+							"raw": "{{BASE_URL}}/api/v1/media/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2072,7 +2074,7 @@
 								"api",
 								"v1",
 								"media",
-								"3"
+								"2"
 							]
 						}
 					},
@@ -2099,7 +2101,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/3",
+							"raw": "{{BASE_URL}}/api/v1/media/8",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2107,7 +2109,7 @@
 								"api",
 								"v1",
 								"media",
-								"3"
+								"8"
 							]
 						}
 					},
@@ -2679,14 +2681,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693682404103",
+							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693731021922",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"rum-ham-1693682404103"
+								"rum-ham-1693731021922"
 							]
 						}
 					},
@@ -2767,14 +2769,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693679314563?width=200&height=200&format=avif&quality=90",
+							"raw": "{{BASE_URL}}/cdn/v1/zip-media-1693751471632?width=200&height=200&format=avif&quality=90",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"rum-ham-1693679314563"
+								"zip-media-1693751471632"
 							],
 							"query": [
 								{

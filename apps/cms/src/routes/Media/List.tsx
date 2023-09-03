@@ -21,16 +21,18 @@ const MediaListRoute: Component = () => {
           value: "",
           type: "text",
         },
+        type: {
+          value: "",
+          type: "array",
+        },
       },
       sorts: {
-        created_at: undefined,
-        updated_at: "desc",
         name: undefined,
         file_size: undefined,
         width: undefined,
         height: undefined,
-        mime_type: undefined,
-        file_extension: undefined,
+        created_at: undefined,
+        updated_at: "desc",
       },
     },
     {
@@ -54,20 +56,43 @@ const MediaListRoute: Component = () => {
               type: "text",
             },
             {
+              label: T("type"),
+              key: "type",
+              type: "multi-select",
+              options: [
+                {
+                  label: T("image"),
+                  value: "image",
+                },
+                {
+                  label: T("video"),
+                  value: "video",
+                },
+                {
+                  label: T("audio"),
+                  value: "audio",
+                },
+                {
+                  label: T("document"),
+                  value: "document",
+                },
+                {
+                  label: T("archive"),
+                  value: "archive",
+                },
+                {
+                  label: T("unknown"),
+                  value: "unknown",
+                },
+              ],
+            },
+            {
               label: T("file_extension"),
               key: "file_extension",
               type: "text",
             },
           ]}
           sorts={[
-            {
-              label: T("created_at"),
-              key: "created_at",
-            },
-            {
-              label: T("updated_at"),
-              key: "updated_at",
-            },
             {
               label: T("name"),
               key: "name",
@@ -85,12 +110,12 @@ const MediaListRoute: Component = () => {
               key: "height",
             },
             {
-              label: T("mime_type"),
-              key: "mime_type",
+              label: T("created_at"),
+              key: "created_at",
             },
             {
-              label: T("file_extension"),
-              key: "file_extension",
+              label: T("updated_at"),
+              key: "updated_at",
             },
           ]}
           perPage={[]}

@@ -32,6 +32,7 @@ const getMultipleQuery = z.object({
       name: z.string().optional(),
       key: z.string().optional(),
       mime_type: z.union([z.string(), z.array(z.string())]).optional(),
+      type: z.union([z.string(), z.array(z.string())]).optional(),
       file_extension: z.union([z.string(), z.array(z.string())]).optional(),
     })
     .optional(),

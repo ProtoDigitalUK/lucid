@@ -12,8 +12,9 @@ interface QueryParams {
   filters?: {
     name?: Accessor<string>;
     key?: Accessor<string>;
-    mime_type: Accessor<string>;
-    file_extension: Accessor<string>;
+    mime_type?: Accessor<string>;
+    file_extension?: Accessor<string>;
+    type?: Accessor<string | string[]>;
   };
   perPage?: number;
 }
@@ -29,6 +30,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
         file_extension: helpers.resolveValue(
           params.queryParams?.filters?.file_extension
         ),
+        type: helpers.resolveValue(params.queryParams?.filters?.type),
       },
       perPage: params.queryParams.perPage,
     };
