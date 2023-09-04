@@ -191,5 +191,7 @@
   "users_route_title": "Users",
   "users_route_description": "Manage users and their permissions.",
   "media_route_title": "Media",
-  "media_route_description": "Manage your media library."
+  "media_route_description": "Manage your media library.",
+  "settings_route_title": "Settings",
+  "settings_route_description": "Manage your settings."
 }
