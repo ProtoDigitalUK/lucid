@@ -75,7 +75,7 @@ Menu.getMultiple = async (client, query_instance) => {
     const data = await Promise.all([menus, count]);
     return {
         data: data[0].rows,
-        count: parseInt(data[1].rows[0].count),
+        count: Number(data[1].rows[0].count),
     };
 };
 Menu.updateSingle = async (client, data) => {

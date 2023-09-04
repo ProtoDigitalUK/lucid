@@ -42,7 +42,7 @@ User.getMultiple = async (client, query_instance) => {
     const data = await Promise.all([users, count]);
     return {
         data: data[0].rows,
-        count: parseInt(data[1].rows[0].count),
+        count: Number(data[1].rows[0].count),
     };
 };
 User.updateSingle = async (client, data) => {

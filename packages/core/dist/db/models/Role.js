@@ -35,7 +35,7 @@ Role.getMultiple = async (client, query_instance) => {
     const data = await Promise.all([roles, count]);
     return {
         data: data[0].rows,
-        count: parseInt(data[1].rows[0].count),
+        count: Number(data[1].rows[0].count),
     };
 };
 Role.updateSingle = async (client, data) => {

@@ -77,7 +77,7 @@ const buildResponse = (req, params) => {
     };
     let links = buildLinks(req, params);
     return {
-        data: params.data,
+        data: params.data || null,
         meta: meta,
         links,
     };

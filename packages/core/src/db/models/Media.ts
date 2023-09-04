@@ -143,7 +143,7 @@ export default class Media {
 
     return {
       data: data[0].rows,
-      count: parseInt(data[1].rows[0].count),
+      count: Number(data[1].rows[0].count),
     };
   };
   static getSingle: MediaGetSingle = async (client, data) => {

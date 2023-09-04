@@ -12,6 +12,7 @@ type ProcessImageDeleteAllByMediaKey = (client: PoolClient, data: {
 type ProcessImageGetAllByMediaKeyCount = (client: PoolClient, data: {
     media_key: string;
 }) => Promise<number>;
+type ProcessImageGetAllCount = (client: PoolClient) => Promise<number>;
 export type ProcessedImageT = {
     key: string;
     media_key: string;
@@ -23,6 +24,7 @@ export default class ProcessedImage {
     static getAll: (client: PoolClient) => Promise<ProcessedImageT[]>;
     static deleteAll: (client: PoolClient) => Promise<ProcessedImageT[]>;
     static getAllByMediaKeyCount: ProcessImageGetAllByMediaKeyCount;
+    static getAllCount: ProcessImageGetAllCount;
 }
 export {};
 //# sourceMappingURL=ProcessedImage.d.ts.map

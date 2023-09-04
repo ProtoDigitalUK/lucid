@@ -89,7 +89,7 @@ export default class Category {
 
     return {
       data: data[0].rows,
-      count: parseInt(data[1].rows[0].count),
+      count: Number(data[1].rows[0].count),
     };
   };
   static getSingle: CategoryGetSingle = async (client, data) => {

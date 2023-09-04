@@ -34,7 +34,7 @@ Page.getMultiple = async (client, query_instance) => {
     const data = await Promise.all([pages, count]);
     return {
         data: data[0].rows,
-        count: parseInt(data[1].rows[0].count),
+        count: Number(data[1].rows[0].count),
     };
 };
 Page.getSingle = async (client, query_instance) => {
@@ -153,7 +153,7 @@ Page.getSlugCount = async (client, data) => {
         ${data.parent_id ? `AND parent_id = $4` : `AND parent_id IS NULL`}`,
         values: values,
     });
-    return parseInt(slugCount.rows[0].count);
+    return Number(slugCount.rows[0].count);
 };
 Page.getNonCurrentHomepages = async (client, data) => {
     const result = await client.query({
@@ -167,7 +167,7 @@ Page.checkSlugExistence = async (client, data) => {
         text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
         values: [data.slug, data.id, data.environment_key],
     });
-    return slugExists.rows[0].count > 0;
+    return Number(slugExists.rows[0].count) > 0;
 };
 Page.updatePageToNonHomepage = async (client, data) => {
     const updateRes = await client.query({

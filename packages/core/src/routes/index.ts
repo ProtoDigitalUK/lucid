@@ -16,6 +16,7 @@ import emails from "@routes/v1/emails.routes";
 import forms from "@routes/v1/forms.routes";
 import options from "@routes/v1/options.routes";
 import account from "@routes/v1/account.routes";
+import settings from "@routes/v1/settings.routes";
 // CDN
 import cdn from "@routes/v1/cdn.routes";
 
@@ -40,6 +41,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/forms", forms);
   app.use("/api/v1/options", options);
   app.use("/api/v1/account", account);
+  app.use("/api/v1/settings", settings);
 };
 
 export default initRoutes;

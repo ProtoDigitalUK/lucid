@@ -20,6 +20,7 @@ const emails_routes_1 = __importDefault(require("./v1/emails.routes"));
 const forms_routes_1 = __importDefault(require("./v1/forms.routes"));
 const options_routes_1 = __importDefault(require("./v1/options.routes"));
 const account_routes_1 = __importDefault(require("./v1/account.routes"));
+const settings_routes_1 = __importDefault(require("./v1/settings.routes"));
 const cdn_routes_1 = __importDefault(require("./v1/cdn.routes"));
 const initRoutes = (app) => {
     app.use("/cdn/v1", cdn_routes_1.default);
@@ -40,6 +41,7 @@ const initRoutes = (app) => {
     app.use("/api/v1/forms", forms_routes_1.default);
     app.use("/api/v1/options", options_routes_1.default);
     app.use("/api/v1/account", account_routes_1.default);
+    app.use("/api/v1/settings", settings_routes_1.default);
 };
 exports.default = initRoutes;
 //# sourceMappingURL=index.js.map

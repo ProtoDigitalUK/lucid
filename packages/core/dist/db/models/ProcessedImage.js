@@ -47,7 +47,13 @@ ProcessedImage.getAllByMediaKeyCount = async (client, data) => {
         text: `SELECT COUNT(*) FROM lucid_processed_images WHERE media_key = $1`,
         values: [data.media_key],
     });
-    return processedImages.rows[0].count;
+    return Number(processedImages.rows[0].count);
+};
+ProcessedImage.getAllCount = async (client) => {
+    const processedImages = await client.query({
+        text: `SELECT COUNT(*) FROM lucid_processed_images`,
+    });
+    return Number(processedImages.rows[0].count);
 };
 exports.default = ProcessedImage;
 //# sourceMappingURL=ProcessedImage.js.map

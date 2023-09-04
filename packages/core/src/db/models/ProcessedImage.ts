@@ -33,6 +33,8 @@ type ProcessImageGetAllByMediaKeyCount = (
   }
 ) => Promise<number>;
 
+type ProcessImageGetAllCount = (client: PoolClient) => Promise<number>;
+
 // -------------------------------------------
 // Processed imaged
 export type ProcessedImageT = {
@@ -100,12 +102,21 @@ export default class ProcessedImage {
     data
   ) => {
     const processedImages = await client.query<{
-      count: number;
+      count: string;
     }>({
       text: `SELECT COUNT(*) FROM lucid_processed_images WHERE media_key = $1`,
       values: [data.media_key],
     });
 
-    return processedImages.rows[0].count;
+    return Number(processedImages.rows[0].count);
+  };
+  static getAllCount: ProcessImageGetAllCount = async (client) => {
+    const processedImages = await client.query<{
+      count: string;
+    }>({
+      text: `SELECT COUNT(*) FROM lucid_processed_images`,
+    });
+
+    return Number(processedImages.rows[0].count);
   };
 }
