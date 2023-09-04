@@ -2642,7 +2642,34 @@
 		},
 		{
 			"name": "Settings",
-			"item": []
+			"item": [
+				{
+					"name": "Get Settings",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/settings",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "CDN",
@@ -2654,13 +2681,7 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -2706,13 +2727,7 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -2814,36 +2829,10 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "_csrf",
-						"value": "{{CSRF}}",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "Rum Ham",
-							"type": "text"
-						},
-						{
-							"key": "alt",
-							"value": "A ham baked in rum, floating on the ocean surface",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "file",
-							"type": "file",
-							"src": [
-								"/C:/Users/wyall/Desktop/rumham.jpg",
-								"/C:/Users/wyall/Desktop/rumham2.jpg"
-							]
-						}
-					]
+					"formdata": []
 				},
 				"url": {
 					"raw": "{{BASE_URL}}/public/rumham.jpg",
