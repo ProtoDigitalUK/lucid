@@ -13,9 +13,22 @@ const SettingsListRoute: Component = () => {
       options={{
         noPadding: true,
       }}
-      headingChildren={<>gello</>}
+      headingChildren={
+        <Layout.NavigationTabs
+          tabs={[
+            {
+              label: T("general"),
+              href: "/settings",
+            },
+            {
+              label: T("integrations"),
+              href: "/settings/integrations",
+            },
+          ]}
+        />
+      }
     >
-      body
+      ge
     </Layout.PageLayout>
   );
 };

@@ -42,7 +42,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
                 }
               )}
               activeClass={!props.active ? "!border-primary" : ""}
-              end
+              end={props.href === "/"}
             >
               <Switch>
                 <Match when={props.icon === "dashboard"}>

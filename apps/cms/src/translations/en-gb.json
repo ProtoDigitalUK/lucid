@@ -129,6 +129,8 @@
   "yes": "Yes",
   "no": "No",
   "password_confirmation": "Password Confirmation",
+  "general": "General",
+  "integrations": "Integrations",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
