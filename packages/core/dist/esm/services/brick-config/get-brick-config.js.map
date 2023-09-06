@@ -1,0 +1,1 @@
+{"version":3,"file":"get-brick-config.js","sourceRoot":"","sources":["../../../../src/services/brick-config/get-brick-config.ts"],"names":[],"mappings":"AACA,OAAO,MAAM,MAAM,qBAAqB,CAAC;AAIzC,MAAM,cAAc,GAAG,GAAoB,EAAE;IAC3C,MAAM,cAAc,GAAG,MAAM,CAAC,MAAM,CAAC;IAErC,IAAI,CAAC,cAAc,EAAE;QACnB,OAAO,EAAE,CAAC;KACX;SAAM;QACL,OAAO,cAAc,CAAC;KACvB;AACH,CAAC,CAAC;AAEF,eAAe,cAAc,CAAC"}

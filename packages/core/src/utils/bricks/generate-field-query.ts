@@ -1,7 +1,7 @@
 // Utils
-import { queryDataFormat } from "@utils/app/query-helpers";
+import { queryDataFormat } from "@utils/app/query-helpers.js";
 // Models
-import { BrickFieldObject } from "@db/models/CollectionBrick";
+import { BrickFieldObject } from "@db/models/CollectionBrick.js";
 
 export interface ServiceData {
   brick_id: number;

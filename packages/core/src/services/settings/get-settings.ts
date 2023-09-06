@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import optionsService from "@services/options";
-import Config from "@services/Config";
+import optionsService from "@services/options/index.js";
+import Config from "@services/Config.js";
 // Models
-import ProcessedImage from "@db/models/ProcessedImage";
+import ProcessedImage from "@db/models/ProcessedImage.js";
 // Types
-import { SettingsResT } from "@lucid/types/src/settings";
+import { SettingsResT } from "@lucid/types/src/settings.js";
 
 export interface ServiceData {
   id: number;

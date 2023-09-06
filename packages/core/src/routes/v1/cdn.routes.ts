@@ -1,7 +1,7 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import streamSingle from "@controllers/media/stream-single";
+import streamSingle from "@controllers/media/stream-single.js";
 
 // ------------------------------------
 // Router

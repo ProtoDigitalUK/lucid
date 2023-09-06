@@ -1,17 +1,17 @@
 import { PoolClient } from "pg";
 import fileUpload from "express-fileupload";
 // Utils
-import helpers, { type MediaMetaDataT } from "@utils/media/helpers";
-import { LucidError, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import helpers, { type MediaMetaDataT } from "@utils/media/helpers.js";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import Media from "@db/models/Media";
+import Media from "@db/models/Media.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@lucid/types/src/media.js";
 // Services
-import mediaService from "@services/media";
-import s3Service from "@services/s3";
-import processedImagesService from "@services/processed-images";
+import mediaService from "@services/media/index.js";
+import s3Service from "@services/s3/index.js";
+import processedImagesService from "@services/processed-images/index.js";
 
 export interface ServiceData {
   id: number;

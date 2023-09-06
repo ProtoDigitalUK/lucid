@@ -1,7 +1,7 @@
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 // Internal packages
-import { BrickBuilderT } from "@lucid/brick-builder";
+import { BrickBuilderT } from "@builders/brick-builder/index.js";
 
 const getBrickConfig = (): BrickBuilderT[] => {
   const brickInstances = Config.bricks;

@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Models
-import Media from "@db/models/Media";
+import Media from "@db/models/Media.js";
 // Format
-import formatMedia from "@utils/format/format-media";
+import formatMedia from "@utils/format/format-media.js";
 
 export interface ServiceData {
   ids: number[];

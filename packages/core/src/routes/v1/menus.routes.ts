@@ -1,11 +1,11 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import createSingle from "@controllers/menu/create-single";
-import deleteSingle from "@controllers/menu/delete-single";
-import getSingle from "@controllers/menu/get-single";
-import getMultiple from "@controllers/menu/get-multiple";
-import updateSingle from "@controllers/menu/update-single";
+import createSingle from "@controllers/menu/create-single.js";
+import deleteSingle from "@controllers/menu/delete-single.js";
+import getSingle from "@controllers/menu/get-single.js";
+import getMultiple from "@controllers/menu/get-multiple.js";
+import updateSingle from "@controllers/menu/update-single.js";
 
 // ------------------------------------
 // Router

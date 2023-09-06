@@ -1,5 +1,5 @@
-import getSingle from "./get-single";
-import updateSingle from "./update-single";
+import getSingle from "./get-single.js";
+import updateSingle from "./update-single.js";
 
 export default {
   getSingle,

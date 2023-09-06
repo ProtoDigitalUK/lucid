@@ -2,13 +2,13 @@ import z from "zod";
 // Types
 import { Readable } from "stream";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 // Utils
-import helpers from "@utils/media/helpers";
-import service from "@utils/app/service";
+import helpers from "@utils/media/helpers.js";
+import service from "@utils/app/service.js";
 // Services
-import mediaService from "@services/media";
-import processedImageService from "@services/processed-images";
+import mediaService from "@services/media/index.js";
+import processedImageService from "@services/processed-images/index.js";
 
 export interface ServiceData {
   key: string;

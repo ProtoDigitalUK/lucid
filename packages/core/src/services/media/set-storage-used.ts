@@ -1,9 +1,9 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import mediaService from "@services/media";
-import optionService from "@services/options";
+import mediaService from "@services/media/index.js";
+import optionService from "@services/options/index.js";
 
 export interface ServiceData {
   add: number;

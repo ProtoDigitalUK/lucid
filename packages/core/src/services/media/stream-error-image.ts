@@ -3,11 +3,11 @@ import https from "https";
 import path from "path";
 import { NextFunction, Response } from "express";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import { decodeError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
+import { decodeError } from "@utils/app/error-handler.js";
 // Services
-import Config from "@services/Config";
-import mediaService from "@services/media";
+import Config from "@services/Config.js";
+import mediaService from "@services/media/index.js";
 
 export interface ServiceData {
   fallback?: "1" | "0";

@@ -1,7 +1,7 @@
-import createMultiple from "./create-multiple";
-import deleteMultiple from "./delete-multiple";
-import deleteAll from "./delete-all";
-import getAll from "./get-all";
+import createMultiple from "./create-multiple.js";
+import deleteMultiple from "./delete-multiple.js";
+import deleteAll from "./delete-all.js";
+import getAll from "./get-all.js";
 
 export default {
   createMultiple,

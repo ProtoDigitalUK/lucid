@@ -1,10 +1,10 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import getMultiple from "@controllers/email/get-multiple";
-import getSingle from "@controllers/email/get-single";
-import deleteSingle from "@controllers/email/delete-single";
-import resendSingle from "@controllers/email/resend-single";
+import getMultiple from "@controllers/email/get-multiple.js";
+import getSingle from "@controllers/email/get-single.js";
+import deleteSingle from "@controllers/email/delete-single.js";
+import resendSingle from "@controllers/email/resend-single.js";
 
 // ------------------------------------
 // Router

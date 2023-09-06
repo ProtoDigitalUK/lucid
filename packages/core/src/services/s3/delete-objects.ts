@@ -1,8 +1,8 @@
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 // Utils
-import getS3Client from "@utils/app/s3-client";
+import getS3Client from "@utils/app/s3-client.js";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 export interface ServiceData {
   objects: Array<{

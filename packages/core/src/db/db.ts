@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 let pool: Pool;
 

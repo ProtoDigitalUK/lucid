@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Models
-import User from "@db/models/User";
+import User from "@db/models/User.js";
 
 export interface ServiceData {
   user_id?: number;

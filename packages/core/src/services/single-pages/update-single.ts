@@ -1,16 +1,16 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Models
-import SinglePage from "@db/models/SinglePage";
+import SinglePage from "@db/models/SinglePage.js";
 // Schema
-import { BrickSchema } from "@schemas/bricks";
+import { BrickSchema } from "@schemas/bricks.js";
 // Services
-import environmentsService from "@services/environments";
-import collectionsService from "@services/collections";
-import collectionBricksService from "@services/collection-bricks";
-import singlePageService from "@services/single-pages";
+import environmentsService from "@services/environments/index.js";
+import collectionsService from "@services/collections/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
+import singlePageService from "@services/single-pages/index.js";
 
 export interface ServiceData {
   environment_key: string;

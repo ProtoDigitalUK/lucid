@@ -1,5 +1,5 @@
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 const createURL = (key?: string) => {
   if (!key) {

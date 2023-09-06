@@ -1,10 +1,10 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import ProcessedImage from "@db/models/ProcessedImage";
+import ProcessedImage from "@db/models/ProcessedImage.js";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 export interface ServiceData {
   key: string;

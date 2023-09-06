@@ -1,10 +1,10 @@
 import z from "zod";
 // Internal packages
-import { BrickBuilderT } from "@lucid/brick-builder";
+import { BrickBuilderT } from "@builders/brick-builder/index.js";
 // Schema
-import bricksSchema from "@schemas/bricks";
+import bricksSchema from "@schemas/bricks.js";
 // Types
-import { BrickConfigT } from "@lucid/types/src/bricks";
+import { BrickConfigT } from "@lucid/types/src/bricks.js";
 
 export interface ServiceData {
   instance: BrickBuilderT;

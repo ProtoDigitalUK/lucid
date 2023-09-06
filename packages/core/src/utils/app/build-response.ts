@@ -1,6 +1,6 @@
 import { Request } from "express";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 // --------------------------------------------------
 // Types

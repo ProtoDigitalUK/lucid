@@ -1,7 +1,7 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import getSettings from "@controllers/settings/get-settings";
+import getSettings from "@controllers/settings/get-settings.js";
 
 // ------------------------------------
 // Router

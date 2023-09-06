@@ -1,9 +1,12 @@
 import { PoolClient } from "pg";
 // Utils
-import { type MediaMetaDataT } from "@utils/media/helpers";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import { type MediaMetaDataT } from "@utils/media/helpers.js";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@lucid/types/src/media.js";
 
 // -------------------------------------------
 // Types

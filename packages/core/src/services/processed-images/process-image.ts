@@ -1,22 +1,22 @@
 import z from "zod";
 
 // Utils
-import helpers from "@utils/media/helpers";
+import helpers from "@utils/media/helpers.js";
 // Types
 import { PoolClient } from "pg";
 import { Readable, PassThrough } from "stream";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 // Services
-import mediaService from "@services/media";
-import s3Service from "@services/s3";
-import processedImagesService from "@services/processed-images";
+import mediaService from "@services/media/index.js";
+import s3Service from "@services/s3/index.js";
+import processedImagesService from "@services/processed-images/index.js";
 // Models
-import ProcessedImage from "@db/models/ProcessedImage";
+import ProcessedImage from "@db/models/ProcessedImage.js";
 // Workers
 import useProcessImage, {
   ProcessImageSuccessRes,
-} from "@root/workers/process-image";
+} from "@root/workers/process-image.js";
 
 export interface ServiceData {
   key: string;

@@ -1,18 +1,18 @@
 import { Router } from "express";
 import z from "zod";
 // Middleware
-import validate from "@middleware/validate";
-import authenticate from "@middleware/authenticate";
-import authoriseCSRF from "@middleware/authorise-csrf";
-import paginated from "@middleware/paginated";
-import validateEnvironment from "@middleware/validate-environment";
-import permissions from "@middleware/permissions";
-import fileUpload from "@middleware/file-upload";
+import validate from "@middleware/validate.js";
+import authenticate from "@middleware/authenticate.js";
+import authoriseCSRF from "@middleware/authorise-csrf.js";
+import paginated from "@middleware/paginated.js";
+import validateEnvironment from "@middleware/validate-environment.js";
+import permissions from "@middleware/permissions.js";
+import fileUpload from "@middleware/file-upload.js";
 // Types
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions";
+} from "@lucid/types/src/permissions.js";
 
 type Route = <
   ParamsT extends z.ZodTypeAny,

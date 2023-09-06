@@ -2,10 +2,10 @@ import fs from "fs-extra";
 import path from "path";
 import { PoolClient } from "pg";
 import { green } from "console-log-colors";
-import { RuntimeError } from "@utils/app/error-handler";
-import { getDBClient } from "@db/db";
+import { RuntimeError } from "@utils/app/error-handler.js";
+import { getDBClient } from "@db/db.js";
 // Models
-import Migration from "@db/models/Migration";
+import Migration from "@db/models/Migration.js";
 
 const getOutstandingMigrations = async (client: PoolClient) => {
   // Get all migration sql files

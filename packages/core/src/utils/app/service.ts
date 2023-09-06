@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import { getDBClient } from "@db/db";
+import { getDBClient } from "@db/db.js";
 
 /**
  * This module exports a higher-order function `service` which is used to

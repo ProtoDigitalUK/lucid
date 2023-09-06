@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
-import slugify from "slugify";
+import slug from "slug";
 // Models
-import Page from "@db/models/Page";
+import Page from "@db/models/Page.js";
 
 export interface ServiceData {
   slug: string;
@@ -18,7 +18,7 @@ const buildUniqueSlug = async (client: PoolClient, data: ServiceData) => {
   }
 
   // Sanitize slug with slugify
-  data.slug = slugify(data.slug, { lower: true, strict: true });
+  data.slug = slug(data.slug, { lower: true });
 
   const slugCount = await Page.getSlugCount(client, {
     slug: data.slug,

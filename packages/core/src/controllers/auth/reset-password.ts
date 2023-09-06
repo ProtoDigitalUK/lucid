@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import service from "@utils/app/service";
+import buildResponse from "@utils/app/build-response.js";
+import service from "@utils/app/service.js";
 // Schema
-import authSchema from "@schemas/auth";
+import authSchema from "@schemas/auth.js";
 // Services
-import authService from "@services/auth";
+import authService from "@services/auth/index.js";
 
 // --------------------------------------------------
 // Controller

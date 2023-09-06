@@ -3,7 +3,7 @@ import Handlebars from "handlebars";
 import mjml2html from "mjml";
 import path from "path";
 // Models
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 export interface renderTemplateDataT {
   [key: string]: any;

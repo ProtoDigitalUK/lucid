@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 import fileUpload from "express-fileupload";
 // Utils
-import service from "@utils/app/service";
-import { LucidError, modelErrors } from "@utils/app/error-handler";
+import service from "@utils/app/service.js";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 // Services
-import Config from "@services/Config";
-import mediaService from "@services/media";
+import Config from "@services/Config.js";
+import mediaService from "@services/media/index.js";
 
 export interface ServiceData {
   files: fileUpload.UploadedFile[];

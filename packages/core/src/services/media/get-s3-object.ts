@@ -1,11 +1,11 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import getS3Client from "@utils/app/s3-client";
+import getS3Client from "@utils/app/s3-client.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Types
 import { Readable } from "stream";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 export interface ServiceData {
   key: string;

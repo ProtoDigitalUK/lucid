@@ -1,11 +1,11 @@
-import deleteSingle from "./delete-single";
-import getMultiple from "./get-multiple";
-import getSingle from "./get-single";
-import resendSingle from "./resend-single";
-import createSingle from "./create-single";
-import updateSingle from "./update-single";
-import renderTemplate from "./render-template";
-import { sendEmailExternal, sendEmailInternal } from "./send-email";
+import deleteSingle from "./delete-single.js";
+import getMultiple from "./get-multiple.js";
+import getSingle from "./get-single.js";
+import resendSingle from "./resend-single.js";
+import createSingle from "./create-single.js";
+import updateSingle from "./update-single.js";
+import renderTemplate from "./render-template.js";
+import { sendEmailExternal, sendEmailInternal } from "./send-email.js";
 
 export default {
   deleteSingle,

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Models
-import RolePermission from "@db/models/RolePermission";
+import RolePermission from "@db/models/RolePermission.js";
 
 export interface ServiceData {
   role_id: number;

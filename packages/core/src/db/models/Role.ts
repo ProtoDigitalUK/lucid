@@ -1,11 +1,14 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Schema
-import roleSchema from "@schemas/roles";
+import roleSchema from "@schemas/roles.js";
 // Models
-import { RolePermissionT } from "@db/models/RolePermission";
+import { RolePermissionT } from "@db/models/RolePermission.js";
 // Utils
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 
 // -------------------------------------------
 // Types

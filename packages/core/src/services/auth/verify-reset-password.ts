@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Serices
-import userTokensServices from "@services/user-tokens";
+import userTokensServices from "@services/user-tokens/index.js";
 
 export interface ServiceData {
   token: string;

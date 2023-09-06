@@ -1,5 +1,5 @@
 // Models
-import { MenuT, MenuItemT } from "@db/models/Menu";
+import { MenuT, MenuItemT } from "@db/models/Menu.js";
 
 // -------------------------------------------
 // Types

@@ -1,14 +1,14 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Schema
-import formsSchema from "@schemas/forms";
+import formsSchema from "@schemas/forms.js";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import Config from "@services/Config";
-import environmentsService from "@services/environments";
+import Config from "@services/Config.js";
+import environmentsService from "@services/environments/index.js";
 // Format
-import formatForm from "@utils/format/format-form";
+import formatForm from "@utils/format/format-form.js";
 
 export interface ServiceData {
   query: z.infer<typeof formsSchema.getAll.query>;

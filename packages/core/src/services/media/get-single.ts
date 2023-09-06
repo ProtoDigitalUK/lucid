@@ -1,10 +1,10 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import Media from "@db/models/Media";
+import Media from "@db/models/Media.js";
 // Format
-import formatMedia from "@utils/format/format-media";
+import formatMedia from "@utils/format/format-media.js";
 
 export interface ServiceData {
   id: number;

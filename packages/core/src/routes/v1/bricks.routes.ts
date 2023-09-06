@@ -1,10 +1,10 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
 
 // Config
-import getAllConfig from "@controllers/brick-config/get-all";
-import getSingleConfig from "@controllers/brick-config/get-single";
+import getAllConfig from "@controllers/brick-config/get-all.js";
+import getSingleConfig from "@controllers/brick-config/get-single.js";
 
 // ------------------------------------
 // Router

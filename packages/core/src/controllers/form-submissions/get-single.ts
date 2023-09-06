@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import service from "@utils/app/service";
+import buildResponse from "@utils/app/build-response.js";
+import service from "@utils/app/service.js";
 // Schema
-import formSubmissionsSchema from "@schemas/form-submissions";
+import formSubmissionsSchema from "@schemas/form-submissions.js";
 // Services
-import formSubService from "@services/form-submissions";
+import formSubService from "@services/form-submissions/index.js";
 
 // --------------------------------------------------
 // Controller

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import updateMe from "@controllers/account/update-me";
+import updateMe from "@controllers/account/update-me.js";
 
 // ------------------------------------
 // Router

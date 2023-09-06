@@ -1,0 +1,83 @@
+import slug from "slug";
+import mime from "mime-types";
+import sharp from "sharp";
+const uniqueKey = (name) => {
+    const slugVal = slug(name, {
+        lower: true,
+    });
+    return `${slugVal}-${Date.now()}`;
+};
+const getMetaData = async (file) => {
+    const fileExtension = mime.extension(file.mimetype);
+    const mimeType = file.mimetype;
+    const size = file.size;
+    let width = null;
+    let height = null;
+    try {
+        const metaData = await sharp(file.data).metadata();
+        width = metaData.width;
+        height = metaData.height;
+    }
+    catch (error) { }
+    return {
+        mimeType: mimeType,
+        fileExtension: fileExtension || "",
+        size: size,
+        width: width || null,
+        height: height || null,
+    };
+};
+const formatReqFiles = (files) => {
+    const file = files["file"];
+    if (Array.isArray(file)) {
+        return file;
+    }
+    else {
+        return [file];
+    }
+};
+const createProcessKey = (data) => {
+    let key = `processed/${data.key}`;
+    if (data.query.format)
+        key = key.concat(`.${data.query.format}`);
+    if (data.query.quality)
+        key = key.concat(`.${data.query.quality}`);
+    if (data.query.width)
+        key = key.concat(`.${data.query.width}`);
+    if (data.query.height)
+        key = key.concat(`.${data.query.height}`);
+    return key;
+};
+const streamToBuffer = (readable) => {
+    return new Promise((resolve, reject) => {
+        const chunks = [];
+        readable.on("data", (chunk) => chunks.push(chunk));
+        readable.on("end", () => resolve(Buffer.concat(chunks)));
+        readable.on("error", reject);
+    });
+};
+const getMediaType = (mimeType) => {
+    const normalizedMimeType = mimeType.toLowerCase();
+    if (normalizedMimeType.includes("image"))
+        return "image";
+    if (normalizedMimeType.includes("video"))
+        return "video";
+    if (normalizedMimeType.includes("audio"))
+        return "audio";
+    if (normalizedMimeType.includes("pdf") ||
+        normalizedMimeType.startsWith("application/vnd"))
+        return "document";
+    if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
+        return "archive";
+    return "unknown";
+};
+const helpers = {
+    uniqueKey,
+    getMetaData,
+    formatReqFiles,
+    createProcessKey,
+    streamToBuffer,
+    getMediaType,
+};
+export default helpers;
+//# sourceMappingURL=helpers.js.map

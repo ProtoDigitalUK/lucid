@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Models
-import User from "@db/models/User";
+import User from "@db/models/User.js";
 // Schema
-import usersSchema from "@schemas/users";
+import usersSchema from "@schemas/users.js";
 // Format
-import formatUser from "@utils/format/format-user";
+import formatUser from "@utils/format/format-user.js";
 
 export interface ServiceData {
   query: z.infer<typeof usersSchema.getMultiple.query>;

@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Models
-import Page from "@db/models/Page";
+import Page from "@db/models/Page.js";
 // Format
-import formatPage from "@utils/format/format-page";
+import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   ids: Array<number>;

@@ -1,13 +1,13 @@
-import slugify from "slugify";
+import slug from "slug";
 import fileUpload from "express-fileupload";
 import mime from "mime-types";
 import sharp from "sharp";
 import z from "zod";
 import { Readable } from "stream";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@lucid/types/src/media.js";
 
 // -------------------------------------------
 // Types
@@ -29,11 +29,10 @@ export interface CreateProcessKeyT {
 
 // Generate a unique key for a media item
 const uniqueKey = (name: string) => {
-  const slug = slugify(name, {
+  const slugVal = slug(name, {
     lower: true,
-    strict: true,
   });
-  return `${slug}-${Date.now()}`;
+  return `${slugVal}-${Date.now()}`;
 };
 
 // Get meta data from a file

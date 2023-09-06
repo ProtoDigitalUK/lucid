@@ -1,15 +1,15 @@
 import { PoolClient } from "pg";
-import slugify from "slugify";
+import slug from "slug";
 // Models
-import Environment from "@db/models/Environment";
+import Environment from "@db/models/Environment.js";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Services
-import environmentsService from "@services/environments";
-import Config from "@services/Config";
+import environmentsService from "@services/environments/index.js";
+import Config from "@services/Config.js";
 // Format
-import formatEnvironment from "@utils/format/format-environment";
+import formatEnvironment from "@utils/format/format-environment.js";
 
 export interface ServiceData {
   data: {
@@ -99,7 +99,7 @@ const checkAssignedForms = async (assigned_forms: string[]) => {
 
 const upsertSingle = async (client: PoolClient, data: ServiceData) => {
   const key = data.create
-    ? slugify(data.data.key, { lower: true })
+    ? slug(data.data.key, { lower: true })
     : data.data.key;
 
   // if create false, check if environment exists

@@ -1,7 +1,7 @@
-import createMultiple from "./create-multiple";
-import verifyCategoriesInCollection from "./verify-cateogies-in-collection";
-import deleteMultiple from "./delete-multiple";
-import updateMultiple from "./update-multiple";
+import createMultiple from "./create-multiple.js";
+import verifyCategoriesInCollection from "./verify-cateogies-in-collection.js";
+import deleteMultiple from "./delete-multiple.js";
+import updateMultiple from "./update-multiple.js";
 
 export default {
   createMultiple,

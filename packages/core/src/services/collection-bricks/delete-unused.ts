@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import CollectionBrick from "@db/models/CollectionBrick";
+import CollectionBrick from "@db/models/CollectionBrick.js";
 // Internal packages
-import { CollectionBrickConfigT } from "@lucid/collection-builder";
+import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@lucid/types/src/collections.js";
 
 export interface ServiceData {
   type: CollectionResT["type"];

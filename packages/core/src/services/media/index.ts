@@ -1,17 +1,17 @@
-import createSingle from "./create-single";
-import deleteSingle from "./delete-single";
-import getMultiple from "./get-multiple";
-import getSingle from "./get-single";
-import updateSingle from "./update-single";
-import streamMedia from "./stream-media";
-import canStoreFiles from "./can-store-files";
-import getStorageUsed from "./get-storage-used";
-import setStorageUsed from "./set-storage-used";
-import getSingleById from "./get-single-by-id";
-import getMultipleByIds from "./get-multiple-by-ids";
-import streamErrorImage from "./stream-error-image";
-import getS3Object from "./get-s3-object";
-import pipeRemoteURL from "./pipe-remote-url";
+import createSingle from "./create-single.js";
+import deleteSingle from "./delete-single.js";
+import getMultiple from "./get-multiple.js";
+import getSingle from "./get-single.js";
+import updateSingle from "./update-single.js";
+import streamMedia from "./stream-media.js";
+import canStoreFiles from "./can-store-files.js";
+import getStorageUsed from "./get-storage-used.js";
+import setStorageUsed from "./set-storage-used.js";
+import getSingleById from "./get-single-by-id.js";
+import getMultipleByIds from "./get-multiple-by-ids.js";
+import streamErrorImage from "./stream-error-image.js";
+import getS3Object from "./get-s3-object.js";
+import pipeRemoteURL from "./pipe-remote-url.js";
 
 export default {
   createSingle,

@@ -1,13 +1,13 @@
-import createSingle from "./create-single";
-import deleteSingle from "./delete-single";
-import getMultiple from "./get-multiple";
-import getSingle from "./get-single";
-import updateSingle from "./update-single";
-import checkPageExists from "./check-page-exists";
-import buildUniqueSlug from "./build-unique-slug";
-import parentChecks from "./parent-checks";
-import resetHomepages from "./reset-homepages";
-import getMultipleById from "./get-multiple-by-id";
+import createSingle from "./create-single.js";
+import deleteSingle from "./delete-single.js";
+import getMultiple from "./get-multiple.js";
+import getSingle from "./get-single.js";
+import updateSingle from "./update-single.js";
+import checkPageExists from "./check-page-exists.js";
+import buildUniqueSlug from "./build-unique-slug.js";
+import parentChecks from "./parent-checks.js";
+import resetHomepages from "./reset-homepages.js";
+import getMultipleById from "./get-multiple-by-id.js";
 
 export default {
   createSingle,

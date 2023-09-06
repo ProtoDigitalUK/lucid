@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Models
-import UserToken from "@db/models/UserToken";
+import UserToken from "@db/models/UserToken.js";
 
 export interface ServiceData {
   id: number;

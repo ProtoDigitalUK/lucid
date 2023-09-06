@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 import { add } from "date-fns";
-import C from "@root/constants";
+import C from "@root/constants.js";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Serices
-import userTokensServices from "@services/user-tokens";
-import emailServices from "@services/email";
-import usersServices from "@services/users";
-import Config from "@services/Config";
+import userTokensServices from "@services/user-tokens/index.js";
+import emailServices from "@services/email/index.js";
+import usersServices from "@services/users/index.js";
+import Config from "@services/Config.js";
 
 export interface ServiceData {
   email: string;

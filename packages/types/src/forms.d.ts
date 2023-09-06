@@ -1,4 +1,4 @@
-import { FormBuilderOptionsT } from "@lucid/form-builder";
+import { FormBuilderOptionsT } from "../../core/src/builders/form-builder/index.js";
 
 export interface FormResT {
   key: string;

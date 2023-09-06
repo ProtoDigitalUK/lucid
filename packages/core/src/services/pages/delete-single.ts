@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import Page from "@db/models/Page";
+import Page from "@db/models/Page.js";
 // Services
-import pageServices from "@services/pages";
+import pageServices from "@services/pages/index.js";
 // Format
-import formatPage from "@utils/format/format-page";
+import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   id: number;

@@ -1,16 +1,16 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
-import service from "@utils/app/service";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+import service from "@utils/app/service.js";
 // Models
-import Menu, { MenuItemT } from "@db/models/Menu";
+import Menu, { MenuItemT } from "@db/models/Menu.js";
 // Schema
-import menusSchema from "@schemas/menus";
+import menusSchema from "@schemas/menus.js";
 // Services
-import menuServices from "@services/menu";
+import menuServices from "@services/menu/index.js";
 // Format
-import formatMenu from "@utils/format/format-menu";
+import formatMenu from "@utils/format/format-menu.js";
 
 export interface ServiceData {
   query: z.infer<typeof menusSchema.getMultiple.query>;

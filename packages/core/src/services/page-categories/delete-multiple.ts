@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import PageCategory from "@db/models/PageCategory";
+import PageCategory from "@db/models/PageCategory.js";
 
 export interface ServiceData {
   page_id: number;

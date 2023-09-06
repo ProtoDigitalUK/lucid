@@ -1,0 +1,1 @@
+{"version":3,"file":"get-single.d.ts","sourceRoot":"","sources":["../../../../src/services/roles/get-single.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAQhC,MAAM,WAAW,WAAW;IAC1B,EAAE,EAAE,MAAM,CAAC;CACZ;AAED,QAAA,MAAM,SAAS,WAAkB,UAAU,QAAQ,WAAW,uDAe7D,CAAC;AAEF,eAAe,SAAS,CAAC"}

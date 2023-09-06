@@ -1,7 +1,7 @@
-import saveObject from "./save-object";
-import deleteObject from "./delete-object";
-import deleteObjects from "./delete-objects";
-import updateObjectKey from "./update-object-key";
+import saveObject from "./save-object.js";
+import deleteObject from "./delete-object.js";
+import deleteObjects from "./delete-objects.js";
+import updateObjectKey from "./update-object-key.js";
 
 export default {
   saveObject,

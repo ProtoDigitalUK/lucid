@@ -1,9 +1,9 @@
-import deleteSingle from "./delete-single";
-import getSingle from "./get-single";
-import getAll from "./get-all";
-import migrateEnvironment from "./migrate-environment";
-import upsertSingle from "./upsert-single";
-import checkKeyExists from "./check-key-exists";
+import deleteSingle from "./delete-single.js";
+import getSingle from "./get-single.js";
+import getAll from "./get-all.js";
+import migrateEnvironment from "./migrate-environment.js";
+import upsertSingle from "./upsert-single.js";
+import checkKeyExists from "./check-key-exists.js";
 
 export default {
   deleteSingle,

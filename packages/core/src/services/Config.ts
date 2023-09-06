@@ -1,14 +1,14 @@
 import fs from "fs-extra";
 import path from "path";
 import z from "zod";
-import { RuntimeError } from "@utils/app/error-handler";
+import { RuntimeError } from "@utils/app/error-handler.js";
 import { bgRed } from "console-log-colors";
-import C from "@root/constants";
+import C from "@root/constants.js";
 import { fromZodError } from "zod-validation-error";
 // Internal packages
-import { BrickBuilderT } from "@lucid/brick-builder";
-import { CollectionBuilderT } from "@lucid/collection-builder";
-import { FormBuilderT } from "@lucid/form-builder";
+import { BrickBuilderT } from "@builders/brick-builder/index.js";
+import { CollectionBuilderT } from "@builders/collection-builder/index.js";
+import { FormBuilderT } from "@builders/form-builder/index.js";
 
 // -------------------------------------------
 // Config

@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Models
-import ProcessedImage from "@db/models/ProcessedImage";
+import ProcessedImage from "@db/models/ProcessedImage.js";
 // Services
-import s3Service from "@services/s3";
-import mediaService from "@services/media";
+import s3Service from "@services/s3/index.js";
+import mediaService from "@services/media/index.js";
 
 export interface ServiceData {
   id: number;

@@ -1,8 +1,8 @@
-import { MediaT } from "@db/models/Media";
+import { MediaT } from "@db/models/Media.js";
 // Utils
-import createURL from "@utils/media/create-url";
+import createURL from "@utils/media/create-url.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@lucid/types/src/media.js";
 
 const formatMedia = (media: MediaT): MediaResT => {
   return {

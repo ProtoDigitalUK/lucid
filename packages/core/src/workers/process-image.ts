@@ -4,7 +4,7 @@ import { parentPort, Worker } from "worker_threads";
 import path from "path";
 import mime from "mime-types";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 
 interface WorkerData {
   buffer: Buffer;

@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Services
-import brickConfigService from "@services/brick-config";
+import brickConfigService from "@services/brick-config/index.js";
 
 export interface ServiceData {
   brick_key: string;

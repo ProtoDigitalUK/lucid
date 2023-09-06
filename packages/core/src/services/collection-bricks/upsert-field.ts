@@ -1,11 +1,13 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
-import { LucidError } from "@utils/app/error-handler";
+import service from "@utils/app/service.js";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import CollectionBrick, { BrickFieldObject } from "@db/models/CollectionBrick";
+import CollectionBrick, {
+  BrickFieldObject,
+} from "@db/models/CollectionBrick.js";
 // Services
-import collectionBricksService from "@services/collection-bricks";
+import collectionBricksService from "@services/collection-bricks/index.js";
 
 export interface ServiceData {
   brick_id: number;

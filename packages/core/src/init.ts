@@ -6,19 +6,19 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { log } from "console-log-colors";
 // Core
-import { initializePool } from "@db/db";
-import migrateDB from "@db/migration";
-import initRoutes from "@routes/index";
+import { initializePool } from "@db/db.js";
+import migrateDB from "@db/migration.js";
+import initRoutes from "@routes/index.js";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 import {
   errorLogger,
   errorResponder,
   invalidPathHandler,
-} from "@utils/app/error-handler";
+} from "@utils/app/error-handler.js";
 // Service
-import Config from "@services/Config";
-import Initialise from "@services/Initialise";
+import Config from "@services/Config.js";
+import Initialise from "@services/Initialise.js";
 
 const app = async (options: InitOptions) => {
   const app = options.express;

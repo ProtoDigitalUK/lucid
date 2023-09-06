@@ -1,12 +1,12 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Serices
-import Config from "@services/Config";
-import environmentsService from "@services/environments";
+import Config from "@services/Config.js";
+import environmentsService from "@services/environments/index.js";
 // Format
-import formatForm from "@utils/format/format-form";
+import formatForm from "@utils/format/format-form.js";
 
 export interface ServiceData {
   key: string;

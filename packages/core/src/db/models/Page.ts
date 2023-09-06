@@ -1,10 +1,13 @@
 import { PoolClient } from "pg";
 // Models
-import { BrickObject } from "@db/models/CollectionBrick";
+import { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 // Format
-import { BrickResT } from "@utils/format/format-bricks";
+import { BrickResT } from "@utils/format/format-bricks.js";
 
 // -------------------------------------------
 // Types
