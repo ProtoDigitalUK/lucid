@@ -3,6 +3,8 @@ import timeout from "connect-timeout";
 import helmet from "helmet";
 import compression from "compression";
 import responseTime from "response-time";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 import path from "path";
 import { log } from "console-log-colors";
@@ -16,9 +18,14 @@ app.use(responseTime());
 app.use(timeout("10s"));
 app.use(helmet({}));
 
+const publicPath = path.join(
+  dirname(fileURLToPath(import.meta.url)),
+  "../public"
+);
+
 lucid.init({
   express: app,
-  public: path.join(__dirname, "../public"),
+  public: publicPath,
 });
 
 // create new route /test

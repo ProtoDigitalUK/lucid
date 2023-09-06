@@ -12,17 +12,13 @@
     "lucid.config.ts"
   ],
   "compilerOptions": {
-    "module": "CommonJS",
-    // "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "outDir": "./dist/cjs",
-
-    // "module": "NodeNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
     "target": "ESNext",
     "rootDir": "./src",
     "baseUrl": "./src",
-    // "outDir": ".temp",
+    "outDir": "./dist",
     "paths": {
       "@controllers/*": ["controllers/*"],
       "@middleware/*": ["middleware/*"],

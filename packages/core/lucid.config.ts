@@ -1,6 +1,6 @@
-import { buildConfig, BrickBuilder, CollectionBuilder } from "./src/index";
+import { buildConfig, BrickBuilder, CollectionBuilder } from "./src/index.js";
 import z from "zod";
-import { ContactForm } from "./src/dev";
+import { ContactForm } from "./src/dev.js";
 
 // ------------------------------------
 // Define Bricks

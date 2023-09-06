@@ -15,7 +15,7 @@
     "@solid-primitives/map": "^0.4.7",
     "@tailwindcss/typography": "^0.5.9",
     "@types/classnames": "^2.3.1",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.4.1",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.46.0",

@@ -5,6 +5,7 @@ import { RuntimeError } from "@utils/app/error-handler.js";
 import { bgRed } from "console-log-colors";
 import C from "@root/constants.js";
 import { fromZodError } from "zod-validation-error";
+import { pathToFileURL } from "url";
 // Internal packages
 import { BrickBuilderT } from "@builders/brick-builder/index.js";
 import { CollectionBuilderT } from "@builders/collection-builder/index.js";
@@ -173,7 +174,8 @@ export default class Config {
     }
 
     const configPath = Config.findPath(process.cwd());
-    let configModule = await import(configPath);
+    const configUrl = pathToFileURL(configPath).href;
+    let configModule = await import(configUrl);
     let config = configModule.default as ConfigT;
 
     Config._configCache = config;

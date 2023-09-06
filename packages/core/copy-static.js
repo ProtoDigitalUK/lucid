@@ -8,17 +8,15 @@ const directoriesToCopy = [
   },
   {
     dir: "src/db/migrations",
-    dest: "db/migrations",
+    dest: "migrations",
   },
 ];
 
 const copyStatic = () => {
   directoriesToCopy.forEach((item) => {
     const source = join(process.cwd(), item.dir);
-    // const destinationEsm = join(process.cwd(), "dist", "esm", item.dest);
-    const destinationCjs = join(process.cwd(), "dist", "cjs", item.dest);
-    // fs.copySync(source, destinationEsm);
-    fs.copySync(source, destinationCjs);
+    const dest = join(process.cwd(), "dist", item.dest);
+    fs.copySync(source, dest);
   });
 };
 

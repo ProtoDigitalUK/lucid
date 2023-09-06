@@ -4,12 +4,18 @@ import { PoolClient } from "pg";
 import { green } from "console-log-colors";
 import { RuntimeError } from "@utils/app/error-handler.js";
 import { getDBClient } from "@db/db.js";
+// Utils
+import getDirName from "@utils/app/get-dirname.js";
 // Models
 import Migration from "@db/models/Migration.js";
 
+const currentDir = getDirName(import.meta.url);
+
 const getOutstandingMigrations = async (client: PoolClient) => {
   // Get all migration sql files
-  const migrationFiles = await fs.readdir(path.join(__dirname, "./migrations"));
+  const migrationFiles = await fs.readdir(
+    path.join(currentDir, "./migrations")
+  );
 
   // Get all migrations from database
   const migrations = await Migration.all(client);
@@ -23,7 +29,7 @@ const getOutstandingMigrations = async (client: PoolClient) => {
     .map((migrationFile) => ({
       file: migrationFile,
       sql: fs.readFileSync(
-        path.join(__dirname, "./migrations", migrationFile),
+        path.join(currentDir, "./migrations", migrationFile),
         "utf-8"
       ),
     }))

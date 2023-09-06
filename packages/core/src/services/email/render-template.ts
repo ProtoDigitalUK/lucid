@@ -2,8 +2,12 @@ import fs from "fs-extra";
 import Handlebars from "handlebars";
 import mjml2html from "mjml";
 import path from "path";
+// Utils
+import getDirName from "@utils/app/get-dirname.js";
 // Models
 import Config from "@services/Config.js";
+
+const currentDir = getDirName(import.meta.url);
 
 export interface renderTemplateDataT {
   [key: string]: any;
@@ -12,7 +16,7 @@ export interface renderTemplateDataT {
 const getTemplateData = async (template: string) => {
   // if file exists, return the file
   const templatePath = path.join(
-    __dirname,
+    currentDir,
     `../../../templates/${template}.mjml`
   );
   if (await fs.pathExists(templatePath)) {

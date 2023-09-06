@@ -4,9 +4,12 @@ import { NextFunction, Response } from "express";
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
 import { decodeError } from "@utils/app/error-handler.js";
+import getDirName from "@utils/app/get-dirname.js";
 // Services
 import Config from "@services/Config.js";
 import mediaService from "@services/media/index.js";
+
+const currentDir = getDirName(import.meta.url);
 
 export interface ServiceData {
   fallback?: "1" | "0";
@@ -16,7 +19,7 @@ export interface ServiceData {
 }
 
 const pipeLocalImage = (res: Response) => {
-  let pathVal = path.join(__dirname, "../../assets/404.jpg");
+  let pathVal = path.join(currentDir, "../../assets/404.jpg");
   let contentType = "image/jpeg";
 
   const steam = fs.createReadStream(pathVal);

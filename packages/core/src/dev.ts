@@ -1,14 +1,16 @@
 import express from "express";
 import z from "zod";
 import { log } from "console-log-colors";
-import lucid, { FormBuilder, submitForm } from "./index";
+import lucid, { FormBuilder, submitForm } from "./index.js";
 import path from "path";
+import getDirName from "@utils/app/get-dirname.js";
 
 const app = express();
+const currentDir = getDirName(import.meta.url);
 
 lucid.init({
   express: app,
-  public: path.join(__dirname, "../public"),
+  public: path.join(currentDir, "../public"),
 });
 
 // ------------------------------------

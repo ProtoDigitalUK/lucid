@@ -11,7 +11,7 @@ import migrateDB from "@db/migration.js";
 import initRoutes from "@routes/index.js";
 // Utils
 import service from "@utils/app/service.js";
-import getDirName from "./utils/app/dirname.js";
+import getDirName from "@utils/app/get-dirname.js";
 import {
   errorLogger,
   errorResponder,
@@ -20,6 +20,8 @@ import {
 // Service
 import Config from "@services/Config.js";
 import Initialise from "@services/Initialise.js";
+
+const currentDir = getDirName(import.meta.url);
 
 const app = async (options: InitOptions) => {
   const app = options.express;
@@ -72,9 +74,9 @@ const app = async (options: InitOptions) => {
   if (options.public) app.use("/public", express.static(options.public));
   initRoutes(app);
   // Serve CMS
-  app.use("/", express.static(path.join(__dirname, "../cms")));
+  app.use("/", express.static(path.join(currentDir, "../cms")));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../cms", "index.html"));
+    res.sendFile(path.resolve(currentDir, "../cms", "index.html"));
   });
   log.yellow("Routes initialised");
 
