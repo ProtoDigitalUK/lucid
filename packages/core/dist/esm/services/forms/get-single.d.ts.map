@@ -1,1 +1,0 @@
-{"version":3,"file":"get-single.d.ts","sourceRoot":"","sources":["../../../../src/services/forms/get-single.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAUhC,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;IACZ,eAAe,EAAE,MAAM,CAAC;CACzB;AAED,QAAA,MAAM,SAAS,WAAkB,UAAU,QAAQ,WAAW,0DA8B7D,CAAC;AAEF,eAAe,SAAS,CAAC"}

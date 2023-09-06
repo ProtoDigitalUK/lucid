@@ -1,4 +1,4 @@
-require("dotenv").config();
+import("dotenv/config.js");
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
@@ -11,6 +11,7 @@ import migrateDB from "@db/migration.js";
 import initRoutes from "@routes/index.js";
 // Utils
 import service from "@utils/app/service.js";
+import getDirName from "./utils/app/dirname.js";
 import {
   errorLogger,
   errorResponder,

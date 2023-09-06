@@ -1,1 +1,0 @@
-{"version":3,"file":"delete-single.d.ts","sourceRoot":"","sources":["../../../../src/services/categories/delete-single.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAMhC,MAAM,WAAW,WAAW;IAC1B,EAAE,EAAE,MAAM,CAAC;IACX,eAAe,EAAE,MAAM,CAAC;CACzB;AAED,QAAA,MAAM,YAAY,WAAkB,UAAU,QAAQ,WAAW,wDAgBhE,CAAC;AAEF,eAAe,YAAY,CAAC"}

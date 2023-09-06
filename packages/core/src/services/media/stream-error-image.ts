@@ -1,5 +1,4 @@
 import fs from "fs-extra";
-import https from "https";
 import path from "path";
 import { NextFunction, Response } from "express";
 // Utils

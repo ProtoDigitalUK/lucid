@@ -1,1 +1,0 @@
-{"version":3,"file":"update-object-key.d.ts","sourceRoot":"","sources":["../../../../src/services/s3/update-object-key.ts"],"names":[],"mappings":"AAMA,MAAM,WAAW,WAAW;IAC1B,MAAM,EAAE,MAAM,CAAC;IACf,MAAM,EAAE,MAAM,CAAC;CAChB;AAED,QAAA,MAAM,eAAe,SAAgB,WAAW,kEAoB/C,CAAC;AAEF,eAAe,eAAe,CAAC"}

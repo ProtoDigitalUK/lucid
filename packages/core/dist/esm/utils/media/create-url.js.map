@@ -1,1 +1,0 @@
-{"version":3,"file":"create-url.js","sourceRoot":"","sources":["../../../../src/utils/media/create-url.ts"],"names":[],"mappings":"AACA,OAAO,MAAM,MAAM,qBAAqB,CAAC;AAEzC,MAAM,SAAS,GAAG,CAAC,GAAY,EAAE,EAAE;IACjC,IAAI,CAAC,GAAG,EAAE;QACR,OAAO,SAAS,CAAC;KAClB;IACD,OAAO,GAAG,MAAM,CAAC,IAAI,WAAW,GAAG,EAAE,CAAC;AACxC,CAAC,CAAC;AAEF,eAAe,SAAS,CAAC"}

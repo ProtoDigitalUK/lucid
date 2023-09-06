@@ -1,1 +1,0 @@
-{"version":3,"file":"delete-object.d.ts","sourceRoot":"","sources":["../../../../src/services/s3/delete-object.ts"],"names":[],"mappings":"AAMA,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,YAAY,SAAgB,WAAW,oEAS5C,CAAC;AAEF,eAAe,YAAY,CAAC"}

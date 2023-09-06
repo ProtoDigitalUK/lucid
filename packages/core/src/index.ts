@@ -1,4 +1,4 @@
-require("dotenv").config();
+import("dotenv/config.js");
 import init from "./init.js";
 // Models
 import { ConfigT, buildConfig } from "@services/Config.js";

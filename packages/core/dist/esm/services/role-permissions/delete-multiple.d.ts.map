@@ -1,1 +1,0 @@
-{"version":3,"file":"delete-multiple.d.ts","sourceRoot":"","sources":["../../../../src/services/role-permissions/delete-multiple.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAIhC,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,EAAE,CAAC;CACf;AAED,QAAA,MAAM,cAAc,WAAkB,UAAU,QAAQ,WAAW,sEAUlE,CAAC;AAEF,eAAe,cAAc,CAAC"}

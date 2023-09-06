@@ -1,1 +1,0 @@
-{"version":3,"file":"get-health.js","sourceRoot":"","sources":["../../../../src/services/health/get-health.ts"],"names":[],"mappings":"AAEA,MAAM,SAAS,GAAG,KAAK,EAAE,IAAiB,EAAE,EAAE;IAC5C,OAAO;QACL,GAAG,EAAE,IAAI;QACT,EAAE,EAAE,IAAI;KACT,CAAC;AACJ,CAAC,CAAC;AAEF,eAAe,SAAS,CAAC"}
