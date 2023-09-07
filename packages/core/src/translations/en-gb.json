@@ -1,0 +1,4 @@
+{
+  "db_connection_error": "Unexpected error on idle client",
+  "db_connection_pool_not_initialised": "Database connection pool is not initialised. Call initialisePool() before getDBClient()."
+}

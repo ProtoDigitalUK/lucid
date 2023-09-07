@@ -14,6 +14,29 @@ import path6 from "path";
 import cookieParser from "cookie-parser";
 import { log } from "console-log-colors";
 
+// src/translations/en-gb.json
+var en_gb_default = {
+  db_connection_error: "Unexpected error on idle client",
+  db_connection_pool_not_initialised: "Database connection pool is not initialised. Call initialisePool() before getDBClient()."
+};
+
+// src/translations/index.ts
+var selectedLang = en_gb_default;
+var T = (key, data) => {
+  const translation = selectedLang[key];
+  if (!translation) {
+    return key;
+  }
+  if (!data) {
+    return translation;
+  }
+  return translation.replace(
+    /\{\{(\w+)\}\}/g,
+    (match, p1) => data[p1]
+  );
+};
+var translations_default = T;
+
 // src/db/db.ts
 import pg from "pg";
 
@@ -395,7 +418,7 @@ var buildConfig = (config) => {
 // src/db/db.ts
 var { Pool } = pg;
 var poolVal;
-var initializePool = async () => {
+var initialisePool = async () => {
   const config = await Config.getConfig();
   poolVal = new Pool({
     connectionString: config.postgresURL,
@@ -405,15 +428,13 @@ var initializePool = async () => {
     }
   });
   poolVal.on("error", (err) => {
-    console.error("Unexpected error on idle client", err);
+    console.error(translations_default("db_connection_error"), err);
     process.exit(-1);
   });
 };
 var getDBClient = () => {
   if (!poolVal) {
-    throw new Error(
-      "Database connection pool is not initialized. Call initializePool() before getDBClient()."
-    );
+    throw new Error(translations_default("db_connection_pool_not_initialised"));
   }
   return poolVal.connect();
 };
@@ -12588,7 +12609,7 @@ var app = async (options) => {
   const app2 = options.express;
   await Config.cachedConfig();
   log.white("----------------------------------------------------");
-  await initializePool();
+  await initialisePool();
   log.yellow("Database initialised");
   log.white("----------------------------------------------------");
   app2.use(express.json());

@@ -29,6 +29,7 @@
       "@db/*": ["db/*"],
       "@schemas/*": ["schemas/*"],
       "@builders/*": ["builders/*"],
+      "@translations/*": ["translations/*"],
       "@root/*": ["*"]
     },
     "typeRoots": ["src/types/types/*"],

@@ -6,7 +6,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { log } from "console-log-colors";
 // Core
-import { initializePool } from "@db/db.js";
+import { initialisePool } from "@db/db.js";
 import migrateDB from "@db/migration.js";
 import initRoutes from "@routes/index.js";
 // Utils
@@ -33,7 +33,7 @@ const app = async (options: InitOptions) => {
   // ------------------------------------
   // INitialise app
   log.white("----------------------------------------------------");
-  await initializePool();
+  await initialisePool();
   log.yellow("Database initialised");
 
   // ------------------------------------
