@@ -404,6 +404,10 @@ var initializePool = async () => {
       rejectUnauthorized: false
     }
   });
+  poolVal.on("error", (err) => {
+    console.error("Unexpected error on idle client", err);
+    process.exit(-1);
+  });
 };
 var getDBClient = () => {
   if (!poolVal) {
@@ -498,6 +502,8 @@ var migrate = async () => {
   } catch (err) {
     new RuntimeError(err.message);
     process.exit(1);
+  } finally {
+    client.release();
   }
 };
 var migration_default = migrate;
@@ -3004,9 +3010,9 @@ var sendEmailAction = async (template, params) => {
   }
 };
 var sendEmailExternal = async (template, params, track) => {
-  const client = await getDBClient();
   const result = await sendEmailAction(template, params);
   if (track) {
+    const client = await getDBClient();
     try {
       await client.query("BEGIN");
       await createEmailRow(client, {

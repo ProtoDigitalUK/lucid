@@ -142,11 +142,10 @@ export const sendEmailExternal = async (
   params: EmailParamsT,
   track?: boolean
 ) => {
-  const client = await getDBClient();
-
   const result = await sendEmailAction(template, params);
 
   if (track) {
+    const client = await getDBClient();
     try {
       await client.query("BEGIN");
 

@@ -68,6 +68,8 @@ const migrate = async () => {
   } catch (err) {
     new RuntimeError((err as Error).message);
     process.exit(1);
+  } finally {
+    client.release();
   }
 };
 
