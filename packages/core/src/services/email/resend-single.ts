@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import emailsService from "@services/email";
+import emailsService from "@services/email/index.js";
 
 export interface ServiceData {
   id: number;

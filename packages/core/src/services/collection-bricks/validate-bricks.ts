@@ -1,24 +1,24 @@
 import { PoolClient } from "pg";
-import { LucidError, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick";
-import { EnvironmentT } from "@db/models/Environment";
-import { PageT } from "@db/models/Page";
+import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick.js";
+import { EnvironmentT } from "@db/models/Environment.js";
+import { PageT } from "@db/models/Page.js";
 // Internal packages
 import BrickBuilder, {
   ValidationProps,
   MediaReferenceData,
   LinkReferenceData,
-} from "@lucid/brick-builder";
-import { CollectionBrickConfigT } from "@lucid/collection-builder";
+} from "@builders/brick-builder/index.js";
+import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Services
-import brickConfigService from "@services/brick-config";
-import pageService from "@services/pages";
-import medias from "@services/media";
+import brickConfigService from "@services/brick-config/index.js";
+import pageService from "@services/pages/index.js";
+import medias from "@services/media/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
-import { MediaResT } from "@lucid/types/src/media";
+import { CollectionResT } from "@lucid/types/src/collections.js";
+import { MediaResT } from "@lucid/types/src/media.js";
 
 // ------------------------------------
 // Interfaces

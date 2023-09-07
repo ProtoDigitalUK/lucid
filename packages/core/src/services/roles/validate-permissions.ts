@@ -1,18 +1,22 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Schema
-import roleSchema from "@schemas/roles";
+import roleSchema from "@schemas/roles.js";
 // Utils
-import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import {
+  LucidError,
+  ErrorResult,
+  modelErrors,
+} from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Services
-import environmentsService from "@services/environments";
-import Permissions from "@services/Permissions";
+import environmentsService from "@services/environments/index.js";
+import Permissions from "@services/Permissions.js";
 // Types
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions";
+} from "@lucid/types/src/permissions.js";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body

@@ -1,4 +1,4 @@
-import { OptionT } from "@db/models/Option";
+import { OptionT } from "@db/models/Option.js";
 
 const convertToType = (option: OptionT): OptionT => {
   switch (option.type) {

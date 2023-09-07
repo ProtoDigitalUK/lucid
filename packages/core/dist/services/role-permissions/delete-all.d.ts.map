@@ -1,1 +1,0 @@
-{"version":3,"file":"delete-all.d.ts","sourceRoot":"","sources":["../../../src/services/role-permissions/delete-all.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAIhC,MAAM,WAAW,WAAW;IAC1B,OAAO,EAAE,MAAM,CAAC;CACjB;AAED,QAAA,MAAM,SAAS,WAAkB,UAAU,QAAQ,WAAW,mEAM7D,CAAC;AAEF,eAAe,SAAS,CAAC"}

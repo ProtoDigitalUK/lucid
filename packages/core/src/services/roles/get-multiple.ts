@@ -1,15 +1,15 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
-import service from "@utils/app/service";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+import service from "@utils/app/service.js";
 // Models
-import Role from "@db/models/Role";
+import Role from "@db/models/Role.js";
 // Schema
-import rolesSchema from "@schemas/roles";
-import rolePermService from "@services/role-permissions";
+import rolesSchema from "@schemas/roles.js";
+import rolePermService from "@services/role-permissions/index.js";
 // Format
-import formatRole from "@utils/format/format-roles";
+import formatRole from "@utils/format/format-roles.js";
 
 export interface ServiceData {
   query: z.infer<typeof rolesSchema.getMultiple.query>;

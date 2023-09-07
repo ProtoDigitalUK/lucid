@@ -1,4 +1,7 @@
-import { CustomField, BrickConfigOptionsT } from "@lucid/brick-builder";
+import {
+  CustomField,
+  BrickConfigOptionsT,
+} from "../../core/src/builders/brick-builder/index.js";
 
 export interface BrickConfigT {
   key: string;

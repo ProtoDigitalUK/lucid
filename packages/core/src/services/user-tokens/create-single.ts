@@ -1,9 +1,9 @@
 import { PoolClient } from "pg";
 import crypto from "crypto";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import UserToken, { UserTokenT } from "@db/models/UserToken";
+import UserToken, { UserTokenT } from "@db/models/UserToken.js";
 
 export interface ServiceData {
   user_id: number;

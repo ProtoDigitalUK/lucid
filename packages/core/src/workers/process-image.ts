@@ -3,8 +3,12 @@ import sharp from "sharp";
 import { parentPort, Worker } from "worker_threads";
 import path from "path";
 import mime from "mime-types";
+// Utils
+import getDirName from "@utils/app/get-dirname.js";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
+
+const currentDir = getDirName(import.meta.url);
 
 interface WorkerData {
   buffer: Buffer;
@@ -74,7 +78,7 @@ parentPort?.on("message", async (data: WorkerData) => {
 const useProcessImage = async (
   data: WorkerData
 ): Promise<ProcessImageSuccessRes["data"]> => {
-  const worker = new Worker(path.join(__dirname, "process-image.ts"));
+  const worker = new Worker(path.join(currentDir, "process-image.ts"));
 
   return new Promise((resolve, reject) => {
     worker.on(

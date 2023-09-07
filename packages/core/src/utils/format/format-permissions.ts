@@ -1,4 +1,7 @@
-import { PermissionGroup, PermissionsResT } from "@lucid/types/src/permissions";
+import {
+  PermissionGroup,
+  PermissionsResT,
+} from "@lucid/types/src/permissions.js";
 
 const formatPermissions = (
   permissions: Record<string, PermissionGroup>

@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import Permissions from "@services/Permissions";
+import buildResponse from "@utils/app/build-response.js";
+import Permissions from "@services/Permissions.js";
 // Schema
-import permissionsSchema from "@schemas/permissions";
+import permissionsSchema from "@schemas/permissions.js";
 // Format
-import formatPermissions from "@utils/format/format-permissions";
+import formatPermissions from "@utils/format/format-permissions.js";
 
 // --------------------------------------------------
 // Controller

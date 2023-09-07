@@ -1,13 +1,15 @@
-import { Pool } from "pg";
+import pg from "pg";
+import type { Pool as PoolT } from "pg";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
-let pool: Pool;
+const { Pool } = pg;
+let poolVal: PoolT;
 
 const initializePool = async () => {
   const config = await Config.getConfig();
 
-  pool = new Pool({
+  poolVal = new Pool({
     connectionString: config.postgresURL,
     max: 20,
     ssl: {
@@ -17,12 +19,12 @@ const initializePool = async () => {
 };
 
 const getDBClient = () => {
-  if (!pool) {
+  if (!poolVal) {
     throw new Error(
       "Database connection pool is not initialized. Call initializePool() before getDBClient()."
     );
   }
-  return pool.connect();
+  return poolVal.connect();
 };
 
 export { initializePool, getDBClient };

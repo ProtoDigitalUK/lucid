@@ -1,6 +1,6 @@
 import { S3Client, S3ClientConfig } from "@aws-sdk/client-s3";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 const getS3Client = async () => {
   const config = await Config.getConfig();

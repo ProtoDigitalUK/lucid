@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 // Models
-import RolePermission from "@db/models/RolePermission";
+import RolePermission from "@db/models/RolePermission.js";
 // Types
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions";
+} from "@lucid/types/src/permissions.js";
 
 export interface ServiceData {
   role_id: number;

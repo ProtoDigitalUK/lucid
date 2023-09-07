@@ -1,4 +1,4 @@
-import getHealth from "./get-health";
+import getHealth from "./get-health.js";
 
 export default {
   getHealth,

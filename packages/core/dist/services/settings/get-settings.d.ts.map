@@ -1,1 +1,0 @@
-{"version":3,"file":"get-settings.d.ts","sourceRoot":"","sources":["../../../src/services/settings/get-settings.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAShC,OAAO,EAAE,YAAY,EAAE,MAAM,2BAA2B,CAAC;AAEzD,MAAM,WAAW,WAAW;IAC1B,EAAE,EAAE,MAAM,CAAC;CACZ;AAED,QAAA,MAAM,WAAW,WAAkB,UAAU,KAAG,QAAQ,YAAY,CAyBnE,CAAC;AAEF,eAAe,WAAW,CAAC"}

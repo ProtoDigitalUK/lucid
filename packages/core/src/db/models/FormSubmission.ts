@@ -1,6 +1,9 @@
 import { PoolClient } from "pg";
 // Utils
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 
 // -------------------------------------------
 // Types

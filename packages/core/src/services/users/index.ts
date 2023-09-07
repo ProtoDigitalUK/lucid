@@ -1,12 +1,12 @@
-import updateRoles from "./update-roles";
-import getPermissions from "./get-permissions";
-import getSingle from "./get-single";
-import registerSingle from "./register-single";
-import checkIfUserExists from "./check-if-user-exists";
-import deleteSingle from "./delete-single";
-import getMultiple from "./get-multiple";
-import updateSingle from "./update-single";
-import getSingleQuery from "./get-single-query";
+import updateRoles from "./update-roles.js";
+import getPermissions from "./get-permissions.js";
+import getSingle from "./get-single.js";
+import registerSingle from "./register-single.js";
+import checkIfUserExists from "./check-if-user-exists.js";
+import deleteSingle from "./delete-single.js";
+import getMultiple from "./get-multiple.js";
+import updateSingle from "./update-single.js";
+import getSingleQuery from "./get-single-query.js";
 
 export default {
   updateRoles,

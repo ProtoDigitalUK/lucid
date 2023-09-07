@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import service from "@utils/app/service";
+import buildResponse from "@utils/app/build-response.js";
+import service from "@utils/app/service.js";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 // Services
-import mediaService from "@services/media";
+import mediaService from "@services/media/index.js";
 
 // --------------------------------------------------
 // Controller

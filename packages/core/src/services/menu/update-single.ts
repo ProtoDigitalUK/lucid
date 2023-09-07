@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import Menu, { MenuItemT } from "@db/models/Menu";
+import Menu from "@db/models/Menu.js";
 // Schema
-import { MenuItemUpdate } from "@schemas/menus";
+import { MenuItemUpdate } from "@schemas/menus.js";
 // Serices
-import menuServices from "@services/menu";
+import menuServices from "@services/menu/index.js";
 
 export interface ServiceData {
   environment_key: string;

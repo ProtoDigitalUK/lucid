@@ -1,7 +1,7 @@
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 // Services
-import mediaService from "@services/media";
+import mediaService from "@services/media/index.js";
 
 // --------------------------------------------------
 // Controller

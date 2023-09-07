@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import z, { AnyZodObject } from "zod";
-import constants from "@root/constants";
+import constants from "@root/constants.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 
 // ------------------------------------
 // Schemas

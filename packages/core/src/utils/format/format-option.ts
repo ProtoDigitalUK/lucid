@@ -1,6 +1,6 @@
-import { OptionT } from "@db/models/Option";
+import { OptionT } from "@db/models/Option.js";
 // Types
-import { OptionsResT } from "@lucid/types/src/options";
+import { OptionsResT } from "@lucid/types/src/options.js";
 
 const formatOptions = (options: OptionT[]): OptionsResT => {
   const formattedOptions: OptionsResT = {};

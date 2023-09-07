@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import service from "@utils/app/service";
+import buildResponse from "@utils/app/build-response.js";
+import service from "@utils/app/service.js";
 // Schema
-import singlePageSchema from "@schemas/single-page";
+import singlePageSchema from "@schemas/single-page.js";
 // Services
-import singlePagesService from "@services/single-pages";
+import singlePagesService from "@services/single-pages/index.js";
 
 // --------------------------------------------------
 // Controller

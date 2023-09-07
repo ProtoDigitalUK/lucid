@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 // Models
-import Category from "@db/models/Category";
+import Category from "@db/models/Category.js";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Services
-import collectionsService from "@services/collections";
+import collectionsService from "@services/collections/index.js";
 
 export interface ServiceData {
   environment_key: string;

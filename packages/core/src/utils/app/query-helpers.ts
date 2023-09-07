@@ -1,5 +1,3 @@
-import { LucidError } from "@utils/app/error-handler";
-
 // -------------------------------------------
 // Formats data for a query and removes undefined values and their corresponding columns
 

@@ -1,15 +1,19 @@
 // Models
-import { CollectionBrickFieldsT } from "@db/models/CollectionBrick";
+import { CollectionBrickFieldsT } from "@db/models/CollectionBrick.js";
 // Internal packages
-import { FieldTypes, BrickBuilderT, CustomField } from "@lucid/brick-builder";
-import { CollectionBrickT } from "@db/models/CollectionBrick";
+import {
+  FieldTypes,
+  BrickBuilderT,
+  CustomField,
+} from "@builders/brick-builder/index.js";
+import { CollectionBrickT } from "@db/models/CollectionBrick.js";
 // Utils
-import createURL from "@utils/media/create-url";
+import createURL from "@utils/media/create-url.js";
 // Services
-import brickConfigService from "@services/brick-config";
+import brickConfigService from "@services/brick-config/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { CollectionResT } from "@lucid/types/src/collections.js";
+import { EnvironmentResT } from "@lucid/types/src/environments.js";
 
 // ------------------------------------
 // Types

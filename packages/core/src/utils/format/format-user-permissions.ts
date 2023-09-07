@@ -1,15 +1,15 @@
 // Models
-import { UserRolePermissionRes } from "@db/models/UserRole";
+import { UserRolePermissionRes } from "@db/models/UserRole.js";
 // Types
 import {
   UserPermissionsResT,
   UserRoleResT,
   UserEnvrionmentResT,
-} from "@lucid/types/src/users";
+} from "@lucid/types/src/users.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions";
+} from "@lucid/types/src/permissions.js";
 
 const formatUserPermissions = (
   permissionRes: Array<UserRolePermissionRes>

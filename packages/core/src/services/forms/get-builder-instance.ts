@@ -1,7 +1,7 @@
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 
 export interface ServiceData {
   form_key: string;

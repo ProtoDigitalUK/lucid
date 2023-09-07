@@ -1,12 +1,12 @@
 // Models
-import { EnvironmentT } from "@db/models/Environment";
+import { EnvironmentT } from "@db/models/Environment.js";
 // Internal packages
-import { CollectionBrickConfigT } from "@lucid/collection-builder";
+import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Services
-import brickConfigService from "@services/brick-config";
+import brickConfigService from "@services/brick-config/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
-import { BrickConfigT } from "@lucid/types/src/bricks";
+import { CollectionResT } from "@lucid/types/src/collections.js";
+import { BrickConfigT } from "@lucid/types/src/bricks.js";
 
 export interface ServiceData {
   key: string;

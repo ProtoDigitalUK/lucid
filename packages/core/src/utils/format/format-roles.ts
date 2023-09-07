@@ -1,7 +1,7 @@
 // Models
-import { RoleT } from "@db/models/Role";
+import { RoleT } from "@db/models/Role.js";
 // Types
-import { RoleResT } from "@lucid/types/src/roles";
+import { RoleResT } from "@lucid/types/src/roles.js";
 
 const formatRole = (role: RoleT): RoleResT => {
   let roleF: RoleResT = {

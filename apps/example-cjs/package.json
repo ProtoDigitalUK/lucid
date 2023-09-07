@@ -1,0 +1,29 @@
+{
+  "name": "example-cjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon"
+  },
+  "dependencies": {
+    "@lucid/core": "*",
+    "compression": "^1.7.4",
+    "connect-timeout": "^1.9.0",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.0.0",
+    "response-time": "^2.3.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/connect-timeout": "^0.0.37",
+    "@types/helmet": "^4.0.0",
+    "@types/response-time": "^2.3.5",
+    "nodemon": "^3.0.1"
+  }
+}

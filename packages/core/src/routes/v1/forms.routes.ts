@@ -1,13 +1,13 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import getSingle from "@controllers/form/get-single";
-import getAll from "@controllers/form/get-all";
+import getSingle from "@controllers/form/get-single.js";
+import getAll from "@controllers/form/get-all.js";
 // Submissions
-import getSingleSubmission from "@controllers/form-submissions/get-single";
-import getMultipleSubmissions from "@controllers/form-submissions/get-multiple";
-import toggleReadAtSubmissions from "@controllers/form-submissions/toggle-read-at";
-import deleteSingleSubmission from "@controllers/form-submissions/delete-single";
+import getSingleSubmission from "@controllers/form-submissions/get-single.js";
+import getMultipleSubmissions from "@controllers/form-submissions/get-multiple.js";
+import toggleReadAtSubmissions from "@controllers/form-submissions/toggle-read-at.js";
+import deleteSingleSubmission from "@controllers/form-submissions/delete-single.js";
 
 // ------------------------------------
 // Router

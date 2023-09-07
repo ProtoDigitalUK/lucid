@@ -1,7 +1,7 @@
-import clearSingle from "./clear-single";
-import clearAll from "./clear-all";
-import processImage from "./process-image";
-import getSingleCount from "./get-single-count";
+import clearSingle from "./clear-single.js";
+import clearAll from "./clear-all.js";
+import processImage from "./process-image.js";
+import getSingleCount from "./get-single-count.js";
 
 export default {
   clearSingle,

@@ -1,6 +1,6 @@
-import getSingle from "./get-single";
-import getAll from "./get-all";
-import getBuilderInstance from "./get-builder-instance";
+import getSingle from "./get-single.js";
+import getAll from "./get-all.js";
+import getBuilderInstance from "./get-builder-instance.js";
 
 export default {
   getSingle,

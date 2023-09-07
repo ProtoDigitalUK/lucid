@@ -1,5 +1,5 @@
 // Models
-// import Environment from "@db/models/Environment";
+// import Environment from "@db/models/Environment.js";
 
 export interface ServiceData {}
 

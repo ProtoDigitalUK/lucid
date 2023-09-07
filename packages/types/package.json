@@ -12,9 +12,6 @@
   "keywords": [],
   "author": "William Yallop",
   "devDependencies": {
-    "@lucid/brick-builder": "*",
-    "@lucid/collection-builder": "*",
-    "@lucid/form-builder": "*"
   },
   "bugs": {
     "url": "hhttps://github.com/WillYallop/Lucid/issues"

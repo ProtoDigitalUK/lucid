@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import service from "@utils/app/service";
+import buildResponse from "@utils/app/build-response.js";
+import service from "@utils/app/service.js";
 // Schema
-import categorySchema from "@schemas/categories";
+import categorySchema from "@schemas/categories.js";
 // Serives
-import categoriesService from "@services/categories";
+import categoriesService from "@services/categories/index.js";
 
 // --------------------------------------------------
 // Controller

@@ -1,17 +1,17 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick";
-import { EnvironmentT } from "@db/models/Environment";
+import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick.js";
+import { EnvironmentT } from "@db/models/Environment.js";
 // Internal packages
-import { CollectionBrickConfigT } from "@lucid/collection-builder";
+import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@lucid/types/src/collections.js";
 // Services
-import brickConfigService from "@services/brick-config";
-import collectionBricksService from "@services/collection-bricks";
+import brickConfigService from "@services/brick-config/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
 
 export interface ServiceData {
   reference_id: number;

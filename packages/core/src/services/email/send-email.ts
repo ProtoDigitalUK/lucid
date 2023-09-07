@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 import nodemailer from "nodemailer";
-import { getDBClient } from "@db/db";
+import { getDBClient } from "@db/db.js";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import Config from "@services/Config";
-import emailsService from "@services/email";
+import Config from "@services/Config.js";
+import emailsService from "@services/email/index.js";
 
 export interface EmailParamsT {
   data: {

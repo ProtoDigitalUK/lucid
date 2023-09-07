@@ -1,1 +1,0 @@
-{"version":3,"file":"delete-single.js","sourceRoot":"","sources":["../../../src/services/user-tokens/delete-single.ts"],"names":[],"mappings":";;;;;AAEA,qEAA6C;AAM7C,MAAM,YAAY,GAAG,KAAK,EAAE,MAAkB,EAAE,IAAiB,EAAE,EAAE;IACnE,MAAM,SAAS,GAAG,MAAM,mBAAS,CAAC,YAAY,CAAC,MAAM,EAAE;QACrD,EAAE,EAAE,IAAI,CAAC,EAAE;KACZ,CAAC,CAAC;IAEH,OAAO,SAAS,CAAC;AACnB,CAAC,CAAC;AAEF,kBAAe,YAAY,CAAC"}

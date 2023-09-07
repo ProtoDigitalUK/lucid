@@ -1,8 +1,8 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import getAll from "@controllers/collections/get-all";
-import getSingle from "@controllers/collections/get-single";
+import getAll from "@controllers/collections/get-all.js";
+import getSingle from "@controllers/collections/get-single.js";
 
 // ------------------------------------
 // Router

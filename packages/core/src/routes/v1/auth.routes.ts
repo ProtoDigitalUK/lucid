@@ -1,14 +1,14 @@
 import { Router } from "express";
-import r from "@utils/app/route";
+import r from "@utils/app/route.js";
 // Controller
-import login from "@controllers/auth/login";
-import logout from "@controllers/auth/logout";
-import getAuthenticatedUser from "@controllers/auth/get-authenticated-user";
-import getCSRF from "@controllers/auth/get-csrf";
+import login from "@controllers/auth/login.js";
+import logout from "@controllers/auth/logout.js";
+import getAuthenticatedUser from "@controllers/auth/get-authenticated-user.js";
+import getCSRF from "@controllers/auth/get-csrf.js";
 
-import sendResetPassword from "@controllers/auth/send-reset-password";
-import verifyResetPassword from "@controllers/auth/verify-reset-password";
-import resetPassword from "@controllers/auth/reset-password";
+import sendResetPassword from "@controllers/auth/send-reset-password.js";
+import verifyResetPassword from "@controllers/auth/verify-reset-password.js";
+import resetPassword from "@controllers/auth/reset-password.js";
 
 // ------------------------------------
 // Router

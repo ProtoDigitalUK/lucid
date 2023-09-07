@@ -1,21 +1,21 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 
 // Models
-import Page from "@db/models/Page";
+import Page from "@db/models/Page.js";
 // Schema
-import { BrickSchema } from "@schemas/bricks";
+import { BrickSchema } from "@schemas/bricks.js";
 // Services
-import collectionsService from "@services/collections";
-import environmentsService from "@services/environments";
-import collectionBricksService from "@services/collection-bricks";
-import pageCategoryService from "@services/page-categories";
-import pageServices from "@services/pages";
+import collectionsService from "@services/collections/index.js";
+import environmentsService from "@services/environments/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
+import pageCategoryService from "@services/page-categories/index.js";
+import pageServices from "@services/pages/index.js";
 // Format
-import formatPage from "@utils/format/format-page";
+import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   id: number;

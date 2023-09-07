@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Models
-import UserRole from "@db/models/UserRole";
+import UserRole from "@db/models/UserRole.js";
 // Format
-import formatUserPermissions from "@utils/format/format-user-permissions";
+import formatUserPermissions from "@utils/format/format-user-permissions.js";
 
 export interface ServiceData {
   user_id: number;

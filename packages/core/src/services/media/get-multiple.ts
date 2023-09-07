@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Models
-import Media from "@db/models/Media";
+import Media from "@db/models/Media.js";
 // Schema
-import mediaSchema from "@schemas/media";
+import mediaSchema from "@schemas/media.js";
 // Format
-import formatMedia from "@utils/format/format-media";
+import formatMedia from "@utils/format/format-media.js";
 
 export interface ServiceData {
   query: z.infer<typeof mediaSchema.getMultiple.query>;

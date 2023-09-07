@@ -1,8 +1,8 @@
-import createSingle from "./create-single";
-import deleteSingle from "./delete-single";
-import getMultiple from "./get-multiple";
-import getSingle from "./get-single";
-import updateSingle from "./update-single";
+import createSingle from "./create-single.js";
+import deleteSingle from "./delete-single.js";
+import getMultiple from "./get-multiple.js";
+import getSingle from "./get-single.js";
+import updateSingle from "./update-single.js";
 
 export default {
   createSingle,

@@ -1,17 +1,17 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Models
-import FormSubmission, { FormDataT } from "@db/models/FormSubmission";
+import FormSubmission, { FormDataT } from "@db/models/FormSubmission.js";
 // Schema
-import formSubmissionsSchema from "@schemas/form-submissions";
+import formSubmissionsSchema from "@schemas/form-submissions.js";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
-import service from "@utils/app/service";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+import service from "@utils/app/service.js";
 // Services
-import formSubService from "@services/form-submissions";
-import formsService from "@services/forms";
+import formSubService from "@services/form-submissions/index.js";
+import formsService from "@services/forms/index.js";
 // Format
-import formatFormSubmission from "@utils/format/format-form-submission";
+import formatFormSubmission from "@utils/format/format-form-submission.js";
 
 export interface ServiceData {
   query: z.infer<typeof formSubmissionsSchema.getMultiple.query>;
