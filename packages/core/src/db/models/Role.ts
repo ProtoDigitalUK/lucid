@@ -1,11 +1,14 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Schema
-import roleSchema from "@schemas/roles";
+import roleSchema from "@schemas/roles.js";
 // Models
-import { RolePermissionT } from "@db/models/RolePermission";
+import { RolePermissionT } from "@db/models/RolePermission.js";
 // Utils
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 
 // -------------------------------------------
 // Types
@@ -107,7 +110,7 @@ export default class Role {
 
     return {
       data: data[0].rows,
-      count: parseInt(data[1].rows[0].count),
+      count: Number(data[1].rows[0].count),
     };
   };
   static updateSingle: RoleUpdateSingle = async (client, data) => {

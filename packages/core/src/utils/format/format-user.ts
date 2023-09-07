@@ -1,7 +1,7 @@
 // Models
-import { UserT } from "@db/models/User";
+import { UserT } from "@db/models/User.js";
 // Types
-import { UserPermissionsResT, UserResT } from "@lucid/types/src/users";
+import { UserPermissionsResT, UserResT } from "@lucid/types/src/users.js";
 
 const formatUser = (
   user: UserT,

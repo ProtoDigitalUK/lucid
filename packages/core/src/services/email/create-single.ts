@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import Email from "@db/models/Email";
+import Email from "@db/models/Email.js";
 
 export interface ServiceData {
   from_address?: string;

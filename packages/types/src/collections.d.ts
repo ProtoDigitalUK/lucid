@@ -1,5 +1,5 @@
 // Internal
-import { CollectionConfigT } from "@lucid/collection-builder";
+import { CollectionConfigT } from "../../core/src/builders/collection-builder/index.js";
 
 export interface CollectionResT {
   key: CollectionConfigT["key"];

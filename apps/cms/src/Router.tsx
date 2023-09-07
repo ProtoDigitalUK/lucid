@@ -55,6 +55,10 @@ const AppRouter: Component = () => {
             <Route path="/roles" element={<RolesListRoute />} />
             {/* Settings */}
             <Route path="/settings" element={<SettingsListRoute />} />
+            <Route
+              path="/settings/integrations"
+              element={<SettingsListRoute />}
+            />
           </Route>
         </Route>
         {/* Non authenticated only */}

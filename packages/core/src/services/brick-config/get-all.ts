@@ -1,15 +1,15 @@
 import { PoolClient } from "pg";
 import z from "zod";
 //  Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Schema
-import bricksSchema from "@schemas/bricks";
+import bricksSchema from "@schemas/bricks.js";
 // Services
-import brickConfigService from "@services/brick-config";
-import collectionsService from "@services/collections";
-import environmentsService from "@services/environments";
+import brickConfigService from "@services/brick-config/index.js";
+import collectionsService from "@services/collections/index.js";
+import environmentsService from "@services/environments/index.js";
 // Types
-import { BrickConfigT } from "@lucid/types/src/bricks";
+import { BrickConfigT } from "@lucid/types/src/bricks.js";
 
 export interface ServiceData {
   query: z.infer<typeof bricksSchema.config.getAll.query>;

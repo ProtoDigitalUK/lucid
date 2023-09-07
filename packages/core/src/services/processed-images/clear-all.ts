@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Models
-import ProcessedImage from "@db/models/ProcessedImage";
+import ProcessedImage from "@db/models/ProcessedImage.js";
 // Services
-import s3Service from "@services/s3";
+import s3Service from "@services/s3/index.js";
 
 const clearAll = async (client: PoolClient) => {
   const processedImages = await ProcessedImage.getAll(client);

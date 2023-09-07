@@ -1,6 +1,6 @@
-import { PermissionGroup } from "@lucid/types/src/permissions";
+import { PermissionGroup } from "@lucid/types/src/permissions.js";
 // Format
-import formatPermissions from "@utils/format/format-permissions";
+import formatPermissions from "@utils/format/format-permissions.js";
 
 export default class Permissions {
   static get raw(): Record<string, PermissionGroup> {

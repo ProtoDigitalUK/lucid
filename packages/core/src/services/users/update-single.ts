@@ -1,12 +1,16 @@
 import { PoolClient } from "pg";
 import argon2 from "argon2";
 // Utils
-import { LucidError, ErrorResult, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import {
+  LucidError,
+  ErrorResult,
+  modelErrors,
+} from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import User from "@db/models/User";
+import User from "@db/models/User.js";
 // Serices
-import usersServices from "@services/users";
+import usersServices from "@services/users/index.js";
 
 export interface ServiceData {
   user_id: number;

@@ -1,7 +1,7 @@
 // Services
-import FormBuilder from "@lucid/form-builder";
+import FormBuilder from "@builders/form-builder/index.js";
 // Types
-import { FormResT } from "@lucid/types/src/forms";
+import { FormResT } from "@lucid/types/src/forms.js";
 
 const formatForm = (instance: FormBuilder): FormResT => {
   return {

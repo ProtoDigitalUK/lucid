@@ -1,10 +1,10 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Serices
-import authServices from "@services/auth";
-import usersServices from "@services/users";
+import authServices from "@services/auth/index.js";
+import usersServices from "@services/users/index.js";
 
 export interface ServiceData {
   username: string;

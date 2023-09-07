@@ -1,14 +1,15 @@
 import fs from "fs-extra";
 import path from "path";
 import z from "zod";
-import { RuntimeError } from "@utils/app/error-handler";
+import { RuntimeError } from "@utils/app/error-handler.js";
 import { bgRed } from "console-log-colors";
-import C from "@root/constants";
+import C from "@root/constants.js";
 import { fromZodError } from "zod-validation-error";
+import { pathToFileURL } from "url";
 // Internal packages
-import { BrickBuilderT } from "@lucid/brick-builder";
-import { CollectionBuilderT } from "@lucid/collection-builder";
-import { FormBuilderT } from "@lucid/form-builder";
+import { BrickBuilderT } from "@builders/brick-builder/index.js";
+import { CollectionBuilderT } from "@builders/collection-builder/index.js";
+import { FormBuilderT } from "@builders/form-builder/index.js";
 
 // -------------------------------------------
 // Config
@@ -110,7 +111,7 @@ export default class Config {
       if (error instanceof z.ZodError) {
         const validationError = fromZodError(error);
         const message = validationError.message.split("Validation error: ")[1];
-        console.error(bgRed(`Config validation error: ${message}`));
+        console.log(bgRed(message));
         process.exit(1);
       } else {
         throw error;
@@ -167,17 +168,32 @@ export default class Config {
   static getConfig = async (): Promise<ConfigT> => {
     return await Config.cacheConfig();
   };
+  static getConfigESM = async (path: string) => {
+    const configUrl = pathToFileURL(path).href;
+    const configModule = await import(configUrl);
+    const config = configModule.default as ConfigT;
+    return config;
+  };
+  static getConfigCJS = async (path: string) => {
+    const configModule = await require(path);
+    const config = configModule.default as ConfigT;
+    return config;
+  };
   static cacheConfig = async (): Promise<ConfigT> => {
     if (Config.configCache) {
       return Config.configCache;
     }
 
     const configPath = Config.findPath(process.cwd());
-    let configModule = await import(configPath);
-    let config = configModule.default as ConfigT;
+    let config: ConfigT;
+
+    try {
+      config = await Config.getConfigESM(configPath);
+    } catch (error) {
+      config = await Config.getConfigCJS(configPath);
+    }
 
     Config._configCache = config;
-
     return config;
   };
   // getters

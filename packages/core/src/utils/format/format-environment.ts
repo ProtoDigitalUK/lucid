@@ -1,6 +1,6 @@
 // Models
-import { EnvironmentT } from "@db/models/Environment";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { EnvironmentT } from "@db/models/Environment.js";
+import { EnvironmentResT } from "@lucid/types/src/environments.js";
 
 const formatEnvironment = (environment: EnvironmentT): EnvironmentResT => {
   return {

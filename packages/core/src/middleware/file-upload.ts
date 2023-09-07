@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import expressFileUpload from "express-fileupload";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 const fileUpload = async (req: Request, res: Response, next: NextFunction) => {
   // ------------------------------------

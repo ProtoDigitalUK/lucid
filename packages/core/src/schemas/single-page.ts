@@ -1,6 +1,6 @@
 import z from "zod";
 // Schema
-import { BrickSchema } from "@schemas/bricks";
+import { BrickSchema } from "@schemas/bricks.js";
 
 // ------------------------------------
 // UPDATE SINGLE

@@ -1,14 +1,14 @@
 import { PoolClient } from "pg";
 // Models
-import CollectionBrick from "@db/models/CollectionBrick";
+import CollectionBrick from "@db/models/CollectionBrick.js";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Serices
-import environmentsService from "@services/environments";
+import environmentsService from "@services/environments/index.js";
 // Format
-import formatBricks from "@utils/format/format-bricks";
+import formatBricks from "@utils/format/format-bricks.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@lucid/types/src/collections.js";
 
 export interface ServiceData {
   reference_id: number;

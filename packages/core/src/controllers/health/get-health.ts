@@ -1,9 +1,9 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
+import buildResponse from "@utils/app/build-response.js";
 // Schema
-import healthSchema from "@schemas/health";
+import healthSchema from "@schemas/health.js";
 // Serives
-import healthService from "@services/health";
+import healthService from "@services/health/index.js";
 
 // --------------------------------------------------
 // Controller

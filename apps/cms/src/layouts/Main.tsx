@@ -26,7 +26,7 @@ const MainLayout: Component = () => {
           <Match when={authenticatedUser.isLoading}>
             <div class="fixed inset-0 z-50 bg-primary flex items-center justify-center">
               <div class="absolute inset-0 z-20 flex-col flex items-center justify-center">
-                <Spinner size="lg" />
+                <Spinner size="md" />
                 <h1 class="text-2xl font-bold text-primaryText mt-5">
                   Loading
                 </h1>

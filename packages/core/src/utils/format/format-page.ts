@@ -1,4 +1,4 @@
-import { PageT } from "@db/models/Page";
+import { PageT } from "@db/models/Page.js";
 
 const formatPage = (data: PageT) => {
   // Categories

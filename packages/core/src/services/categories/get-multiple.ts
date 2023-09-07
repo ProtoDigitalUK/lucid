@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Models
-import Category from "@db/models/Category";
+import Category from "@db/models/Category.js";
 // Schema
-import categorySchema from "@schemas/categories";
+import categorySchema from "@schemas/categories.js";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 
 export interface ServiceData {
   environment_key: string;

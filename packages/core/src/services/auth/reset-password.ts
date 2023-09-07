@@ -1,10 +1,10 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Serices
-import userTokensServices from "@services/user-tokens";
-import emailServices from "@services/email";
-import userServices from "@services/users";
+import userTokensServices from "@services/user-tokens/index.js";
+import emailServices from "@services/email/index.js";
+import userServices from "@services/users/index.js";
 
 export interface ServiceData {
   token: string;

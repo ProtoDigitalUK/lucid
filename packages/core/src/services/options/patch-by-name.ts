@@ -1,13 +1,13 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 // Models
-import Option, { OptionT } from "@db/models/Option";
+import Option, { OptionT } from "@db/models/Option.js";
 // Utils
-import convertToType from "@utils/options/convert-to-type";
-import convertToString from "@utils/options/convert-to-string";
+import convertToType from "@utils/options/convert-to-type.js";
+import convertToString from "@utils/options/convert-to-string.js";
 // Format
-import formatOption from "@utils/format/format-option";
+import formatOption from "@utils/format/format-option.js";
 
 export interface ServiceData {
   name: OptionT["option_name"];

@@ -1,10 +1,13 @@
 import { PoolClient } from "pg";
 // Models
-import { BrickObject } from "@db/models/CollectionBrick";
+import { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 // Format
-import { BrickResT } from "@utils/format/format-bricks";
+import { BrickResT } from "@utils/format/format-bricks.js";
 
 // -------------------------------------------
 // Types
@@ -172,7 +175,7 @@ export default class Page {
 
     return {
       data: data[0].rows,
-      count: parseInt(data[1].rows[0].count),
+      count: Number(data[1].rows[0].count),
     };
   };
   static getSingle: PageGetSingle = async (client, query_instance) => {
@@ -304,7 +307,7 @@ export default class Page {
       values: values,
     });
 
-    return parseInt(slugCount.rows[0].count);
+    return Number(slugCount.rows[0].count);
   };
   static getNonCurrentHomepages: PageGetNonCurrentHomepages = async (
     client,
@@ -317,11 +320,13 @@ export default class Page {
     return result.rows;
   };
   static checkSlugExistence: PageCheckSlugExistence = async (client, data) => {
-    const slugExists = await client.query({
+    const slugExists = await client.query<{
+      count: string;
+    }>({
       text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
       values: [data.slug, data.id, data.environment_key],
     });
-    return slugExists.rows[0].count > 0;
+    return Number(slugExists.rows[0].count) > 0;
   };
   static updatePageToNonHomepage: PageUpdatePageToNonHomepage = async (
     client,

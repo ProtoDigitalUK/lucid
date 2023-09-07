@@ -1,15 +1,15 @@
 import { PoolClient } from "pg";
 import z from "zod";
-import { FieldTypes } from "@lucid/brick-builder";
+import { FieldTypes } from "@builders/brick-builder/index.js";
 // Utils
-import { queryDataFormat } from "@utils/app/query-helpers";
-import generateFieldQuery from "@utils/bricks/generate-field-query";
+import { queryDataFormat } from "@utils/app/query-helpers.js";
+import generateFieldQuery from "@utils/bricks/generate-field-query.js";
 // Schema
-import { BrickSchema, FieldSchema } from "@schemas/bricks";
+import { BrickSchema, FieldSchema } from "@schemas/bricks.js";
 // Internal packages
-import { CollectionBrickConfigT } from "@lucid/collection-builder";
+import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@lucid/types/src/collections.js";
 
 // -------------------------------------------
 // Types

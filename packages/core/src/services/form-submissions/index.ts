@@ -1,10 +1,10 @@
-import deleteSingle from "./delete-single";
-import getMultiple from "./get-multiple";
-import getSingle from "./get-single";
-import toggleReadAt from "./toggle-read-at";
-import submitForm from "./submit-form";
-import hasEnvironmentPermission from "./has-environment-permission";
-import createSingle from "./create-single";
+import deleteSingle from "./delete-single.js";
+import getMultiple from "./get-multiple.js";
+import getSingle from "./get-single.js";
+import toggleReadAt from "./toggle-read-at.js";
+import submitForm from "./submit-form.js";
+import hasEnvironmentPermission from "./has-environment-permission.js";
+import createSingle from "./create-single.js";
 
 export default {
   deleteSingle,

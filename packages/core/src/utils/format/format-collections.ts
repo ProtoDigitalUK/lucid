@@ -1,7 +1,7 @@
 // Services
-import { CollectionBuilderT } from "@lucid/collection-builder";
+import { CollectionBuilderT } from "@builders/collection-builder/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@lucid/types/src/collections.js";
 
 const formatCollection = (instance: CollectionBuilderT): CollectionResT => {
   return {

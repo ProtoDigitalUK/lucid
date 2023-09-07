@@ -1,9 +1,9 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
+import buildResponse from "@utils/app/build-response.js";
 // Schema
-import environmentSchema from "@schemas/environments";
+import environmentSchema from "@schemas/environments.js";
 // Services
-import environmentsService from "@services/environments";
+import environmentsService from "@services/environments/index.js";
 
 // --------------------------------------------------
 // Controller

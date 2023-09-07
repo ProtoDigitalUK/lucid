@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Services
-import authService from "@services/auth";
+import authService from "@services/auth/index.js";
 
 const authoriseCSRF = async (
   req: Request,

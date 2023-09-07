@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import constants from "@root/constants";
+import constants from "@root/constants.js";
 
 const paginated = async (req: Request, res: Response, next: NextFunction) => {
   try {

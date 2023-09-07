@@ -1,10 +1,10 @@
 // Utils
-import buildResponse from "@utils/app/build-response";
-import service from "@utils/app/service";
+import buildResponse from "@utils/app/build-response.js";
+import service from "@utils/app/service.js";
 // Schema
-import bricksSchema from "@schemas/bricks";
+import bricksSchema from "@schemas/bricks.js";
 // Services
-import brickConfigService from "@services/brick-config";
+import brickConfigService from "@services/brick-config/index.js";
 
 // --------------------------------------------------
 // Controller

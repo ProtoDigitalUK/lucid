@@ -1,10 +1,10 @@
 import { PoolClient } from "pg";
-import { getDBClient } from "@db/db";
-import FormBuilder from "@lucid/form-builder";
+import { getDBClient } from "@db/db.js";
+import FormBuilder from "@builders/form-builder/index.js";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import formSubService from "@services/form-submissions";
+import formSubService from "@services/form-submissions/index.js";
 
 export interface ServiceData {
   environment_key: string;

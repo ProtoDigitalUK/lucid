@@ -1,12 +1,12 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Models
-import { MenuItemT } from "@db/models/Menu";
+import { MenuItemT } from "@db/models/Menu.js";
 // Schema
-import { MenuItemUpdate } from "@schemas/menus";
+import { MenuItemUpdate } from "@schemas/menus.js";
 // Serivces
-import menuService from "@services/menu";
+import menuService from "@services/menu/index.js";
 
 export interface ServiceData {
   menu_id: number;

@@ -1,6 +1,6 @@
 import { Request } from "express";
 // Services
-import Config from "@services/Config";
+import Config from "@services/Config.js";
 
 // --------------------------------------------------
 // Types
@@ -117,7 +117,7 @@ const buildResponse: BuildResponseT = (req, params) => {
   let links = buildLinks(req, params);
 
   return {
-    data: params.data,
+    data: params.data || null,
     meta: meta,
     links,
   };

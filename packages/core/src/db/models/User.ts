@@ -1,6 +1,9 @@
 import { PoolClient } from "pg";
 // Utils
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 
 // -------------------------------------------
 // Types
@@ -107,7 +110,7 @@ export default class User {
 
     return {
       data: data[0].rows,
-      count: parseInt(data[1].rows[0].count),
+      count: Number(data[1].rows[0].count),
     };
   };
   static updateSingle: UserUpdateSingle = async (client, data) => {

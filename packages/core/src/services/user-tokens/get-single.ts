@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler";
+import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import UserToken, { UserTokenT } from "@db/models/UserToken";
+import UserToken, { UserTokenT } from "@db/models/UserToken.js";
 
 export interface ServiceData {
   token_type: UserTokenT["token_type"];

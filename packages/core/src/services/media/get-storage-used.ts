@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import service from "@utils/app/service";
+import service from "@utils/app/service.js";
 // Services
-import optionServices from "@services/options";
+import optionServices from "@services/options/index.js";
 
 const getStorageUsed = async (client: PoolClient) => {
   const res = await service(

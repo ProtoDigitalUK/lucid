@@ -1,11 +1,11 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Models
-import Email from "@db/models/Email";
+import Email from "@db/models/Email.js";
 // Schema
-import emailsSchema from "@schemas/email";
+import emailsSchema from "@schemas/email.js";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 
 export interface ServiceData {
   query: z.infer<typeof emailsSchema.getMultiple.query>;

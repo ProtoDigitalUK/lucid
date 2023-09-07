@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
-import slugify from "slugify";
+import slug from "slug";
 // Models
-import Page from "@db/models/Page";
+import Page from "@db/models/Page.js";
 
 export interface ServiceData {
   current: number;
@@ -19,7 +19,7 @@ const resetHomepages = async (client: PoolClient, data: ServiceData) => {
   });
 
   const updatePromises = homepages.map(async (homepage) => {
-    let newSlug = slugify(homepage.title, { lower: true, strict: true });
+    let newSlug = slug(homepage.title, { lower: true });
     const slugExists = await Page.checkSlugExistence(client, {
       slug: newSlug,
       id: homepage.id,

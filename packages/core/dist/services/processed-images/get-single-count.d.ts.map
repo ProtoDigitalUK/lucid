@@ -1,1 +1,0 @@
-{"version":3,"file":"get-single-count.d.ts","sourceRoot":"","sources":["../../../src/services/processed-images/get-single-count.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,IAAI,CAAC;AAQhC,MAAM,WAAW,WAAW;IAC1B,GAAG,EAAE,MAAM,CAAC;CACb;AAED,QAAA,MAAM,cAAc,WAAkB,UAAU,QAAQ,WAAW,oBAiBlE,CAAC;AAEF,eAAe,cAAc,CAAC"}

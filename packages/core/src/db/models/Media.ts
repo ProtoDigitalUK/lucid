@@ -1,9 +1,12 @@
 import { PoolClient } from "pg";
 // Utils
-import { type MediaMetaDataT } from "@utils/media/helpers";
-import { queryDataFormat, SelectQueryBuilder } from "@utils/app/query-helpers";
+import { type MediaMetaDataT } from "@utils/media/helpers.js";
+import {
+  queryDataFormat,
+  SelectQueryBuilder,
+} from "@utils/app/query-helpers.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@lucid/types/src/media.js";
 
 // -------------------------------------------
 // Types
@@ -143,7 +146,7 @@ export default class Media {
 
     return {
       data: data[0].rows,
-      count: parseInt(data[1].rows[0].count),
+      count: Number(data[1].rows[0].count),
     };
   };
   static getSingle: MediaGetSingle = async (client, data) => {

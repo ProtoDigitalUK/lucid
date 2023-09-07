@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Models
-import Environment from "@db/models/Environment";
+import Environment from "@db/models/Environment.js";
 // Format
-import formatEnvironment from "@utils/format/format-environment";
+import formatEnvironment from "@utils/format/format-environment.js";
 
 const getAll = async (client: PoolClient) => {
   const environmentsRes = await Environment.getAll(client);

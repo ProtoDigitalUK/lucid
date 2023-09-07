@@ -1,1 +1,0 @@
-{"version":3,"file":"authenticate.d.ts","sourceRoot":"","sources":["../../src/middleware/authenticate.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAM1D,QAAA,MAAM,YAAY,QACX,OAAO,OACP,QAAQ,QACP,YAAY,kBAiBnB,CAAC;AAEF,eAAe,YAAY,CAAC"}

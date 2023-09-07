@@ -1,8 +1,8 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 // Models
-import Role from "@db/models/Role";
+import Role from "@db/models/Role.js";
 
 export interface ServiceData {
   name: string;

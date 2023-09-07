@@ -1,7 +1,7 @@
 // Models
-import { FormDataT, FormSubmissionsT } from "@db/models/FormSubmission";
+import { FormDataT, FormSubmissionsT } from "@db/models/FormSubmission.js";
 // Extenal Packages
-import FormBuilder from "@lucid/form-builder";
+import FormBuilder from "@builders/form-builder/index.js";
 
 // ----------------
 // Types

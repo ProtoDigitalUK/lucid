@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Models
-import Menu from "@db/models/Menu";
+import Menu from "@db/models/Menu.js";
 
 export interface ServiceData {
   menu_ids: number[];

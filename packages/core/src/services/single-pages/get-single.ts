@@ -1,12 +1,12 @@
 import { PoolClient } from "pg";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
-import service from "@utils/app/service";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+import service from "@utils/app/service.js";
 // Models
-import SinglePage from "@db/models/SinglePage";
+import SinglePage from "@db/models/SinglePage.js";
 // Services
-import collectionsService from "@services/collections";
-import collectionBricksService from "@services/collection-bricks";
+import collectionsService from "@services/collections/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
 
 export interface ServiceData {
   environment_key: string;

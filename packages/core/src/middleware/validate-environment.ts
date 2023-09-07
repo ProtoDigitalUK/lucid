@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { LucidError, modelErrors } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Services
-import environmentsService from "@services/environments";
+import environmentsService from "@services/environments/index.js";
 
 // ------------------------------------
 // Validate Environment Middleware

@@ -1,4 +1,4 @@
-import { OptionT } from "@db/models/Option";
+import { OptionT } from "@db/models/Option.js";
 
 const convertToString = (
   value: OptionT["option_value"],

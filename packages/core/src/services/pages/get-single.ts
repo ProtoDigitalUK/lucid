@@ -1,18 +1,18 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers";
-import { LucidError } from "@utils/app/error-handler";
-import service from "@utils/app/service";
+import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+import { LucidError } from "@utils/app/error-handler.js";
+import service from "@utils/app/service.js";
 // Models
-import Page from "@db/models/Page";
+import Page from "@db/models/Page.js";
 // Schema
-import pagesSchema from "@schemas/pages";
+import pagesSchema from "@schemas/pages.js";
 // Services
-import collectionsService from "@services/collections";
-import collectionBricksService from "@services/collection-bricks";
+import collectionsService from "@services/collections/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
 // Format
-import formatPage from "@utils/format/format-page";
+import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   query: z.infer<typeof pagesSchema.getSingle.query>;

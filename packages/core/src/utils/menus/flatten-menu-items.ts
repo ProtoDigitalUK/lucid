@@ -1,5 +1,5 @@
 // Services
-import { MenuItem } from "@schemas/menus";
+import { MenuItem } from "@schemas/menus.js";
 
 const flattenMenuItems = (items: MenuItem[]) => {
   const flattenedItems: MenuItem[] = [];
