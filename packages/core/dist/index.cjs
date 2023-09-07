@@ -301,7 +301,7 @@ var Config = class _Config {
   // -------------------------------------------
   // Functions
   static getConfig = async () => {
-    return await _Config.cacheConfig();
+    return await _Config.cachedConfig();
   };
   static getConfigESM = async (path7) => {
     const configUrl = (0, import_url.pathToFileURL)(path7).href;
@@ -314,7 +314,7 @@ var Config = class _Config {
     const config = configModule.default;
     return config;
   };
-  static cacheConfig = async () => {
+  static cachedConfig = async () => {
     if (_Config.configCache) {
       return _Config.configCache;
     }
@@ -329,6 +329,18 @@ var Config = class _Config {
     return config;
   };
   // getters
+  static get defaultConfig() {
+    return {
+      forms: [],
+      collections: [],
+      bricks: [],
+      media: {
+        storageLimit: constants_default.media.storageLimit,
+        maxFileSize: constants_default.media.maxFileSize,
+        processedImageLimit: constants_default.media.processedImageLimit
+      }
+    };
+  }
   static get configCache() {
     return _Config._configCache;
   }
@@ -12607,7 +12619,7 @@ import("dotenv/config.js");
 var currentDir5 = get_dirname_default(importMetaUrl);
 var app = async (options) => {
   const app2 = options.express;
-  await Config.cacheConfig();
+  await Config.cachedConfig();
   import_console_log_colors4.log.white("----------------------------------------------------");
   await initializePool();
   import_console_log_colors4.log.yellow("Database initialised");

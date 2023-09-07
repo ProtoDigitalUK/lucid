@@ -337,44 +337,207 @@ declare class BrickBuilder {
 }
 type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 
-type ConfigT = {
-    host: string;
-    origin: string;
-    mode: "development" | "production";
-    postgresURL: string;
-    secret: string;
-    forms?: FormBuilderT[];
-    collections?: CollectionBuilderT[];
-    bricks?: BrickBuilderT[];
-    media: {
-        storageLimit?: number;
-        maxFileSize?: number;
-        fallbackImage?: string | false;
-        processedImageLimit?: number;
-        store: {
+declare const configSchema: z.ZodObject<{
+    host: z.ZodString;
+    origin: z.ZodString;
+    mode: z.ZodEnum<["development", "production"]>;
+    postgresURL: z.ZodString;
+    secret: z.ZodString;
+    forms: z.ZodOptional<z.ZodArray<z.ZodAny, "many">>;
+    collections: z.ZodOptional<z.ZodArray<z.ZodAny, "many">>;
+    bricks: z.ZodOptional<z.ZodArray<z.ZodAny, "many">>;
+    media: z.ZodObject<{
+        storageLimit: z.ZodOptional<z.ZodNumber>;
+        maxFileSize: z.ZodOptional<z.ZodNumber>;
+        fallbackImage: z.ZodOptional<z.ZodUnion<[z.ZodString, z.ZodBoolean]>>;
+        processedImageLimit: z.ZodOptional<z.ZodNumber>;
+        store: z.ZodObject<{
+            service: z.ZodEnum<["aws", "cloudflare"]>;
+            cloudflareAccountId: z.ZodOptional<z.ZodString>;
+            region: z.ZodString;
+            bucket: z.ZodString;
+            accessKeyId: z.ZodString;
+            secretAccessKey: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
             service: "aws" | "cloudflare";
-            cloudflareAccountId?: string;
-            region?: string;
+            region: string;
             bucket: string;
             accessKeyId: string;
             secretAccessKey: string;
+            cloudflareAccountId?: string | undefined;
+        }, {
+            service: "aws" | "cloudflare";
+            region: string;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+            cloudflareAccountId?: string | undefined;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        store: {
+            service: "aws" | "cloudflare";
+            region: string;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+            cloudflareAccountId?: string | undefined;
         };
-    };
-    email?: {
+        storageLimit?: number | undefined;
+        maxFileSize?: number | undefined;
+        fallbackImage?: string | boolean | undefined;
+        processedImageLimit?: number | undefined;
+    }, {
+        store: {
+            service: "aws" | "cloudflare";
+            region: string;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+            cloudflareAccountId?: string | undefined;
+        };
+        storageLimit?: number | undefined;
+        maxFileSize?: number | undefined;
+        fallbackImage?: string | boolean | undefined;
+        processedImageLimit?: number | undefined;
+    }>;
+    email: z.ZodOptional<z.ZodObject<{
+        from: z.ZodObject<{
+            name: z.ZodString;
+            email: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            email: string;
+        }, {
+            name: string;
+            email: string;
+        }>;
+        templateDir: z.ZodOptional<z.ZodString>;
+        smtp: z.ZodOptional<z.ZodObject<{
+            host: z.ZodString;
+            port: z.ZodNumber;
+            user: z.ZodString;
+            pass: z.ZodString;
+            secure: z.ZodOptional<z.ZodBoolean>;
+        }, "strip", z.ZodTypeAny, {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean | undefined;
+        }, {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean | undefined;
+        }>>;
+    }, "strip", z.ZodTypeAny, {
         from: {
             name: string;
             email: string;
         };
-        templateDir?: string;
+        templateDir?: string | undefined;
         smtp?: {
             host: string;
             port: number;
             user: string;
             pass: string;
-            secure?: boolean;
+            secure?: boolean | undefined;
+        } | undefined;
+    }, {
+        from: {
+            name: string;
+            email: string;
         };
+        templateDir?: string | undefined;
+        smtp?: {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean | undefined;
+        } | undefined;
+    }>>;
+}, "strip", z.ZodTypeAny, {
+    media: {
+        store: {
+            service: "aws" | "cloudflare";
+            region: string;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+            cloudflareAccountId?: string | undefined;
+        };
+        storageLimit?: number | undefined;
+        maxFileSize?: number | undefined;
+        fallbackImage?: string | boolean | undefined;
+        processedImageLimit?: number | undefined;
     };
-};
+    host: string;
+    origin: string;
+    mode: "development" | "production";
+    postgresURL: string;
+    secret: string;
+    forms?: any[] | undefined;
+    collections?: any[] | undefined;
+    bricks?: any[] | undefined;
+    email?: {
+        from: {
+            name: string;
+            email: string;
+        };
+        templateDir?: string | undefined;
+        smtp?: {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean | undefined;
+        } | undefined;
+    } | undefined;
+}, {
+    media: {
+        store: {
+            service: "aws" | "cloudflare";
+            region: string;
+            bucket: string;
+            accessKeyId: string;
+            secretAccessKey: string;
+            cloudflareAccountId?: string | undefined;
+        };
+        storageLimit?: number | undefined;
+        maxFileSize?: number | undefined;
+        fallbackImage?: string | boolean | undefined;
+        processedImageLimit?: number | undefined;
+    };
+    host: string;
+    origin: string;
+    mode: "development" | "production";
+    postgresURL: string;
+    secret: string;
+    forms?: any[] | undefined;
+    collections?: any[] | undefined;
+    bricks?: any[] | undefined;
+    email?: {
+        from: {
+            name: string;
+            email: string;
+        };
+        templateDir?: string | undefined;
+        smtp?: {
+            host: string;
+            port: number;
+            user: string;
+            pass: string;
+            secure?: boolean | undefined;
+        } | undefined;
+    } | undefined;
+}>;
+interface ConfigT extends z.infer<typeof configSchema> {
+    forms?: FormBuilderT[];
+    collections?: CollectionBuilderT[];
+    bricks?: BrickBuilderT[];
+}
 declare const buildConfig: (config: ConfigT) => ConfigT;
 
 declare const sendEmail: (template: string, params: EmailParamsT, track?: boolean | undefined) => Promise<{

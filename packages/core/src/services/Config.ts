@@ -56,44 +56,11 @@ const configSchema = z.object({
     .optional(),
 });
 
-export type ConfigT = {
-  host: string;
-  origin: string;
-  mode: "development" | "production";
-  postgresURL: string;
-  secret: string;
+export interface ConfigT extends z.infer<typeof configSchema> {
   forms?: FormBuilderT[];
   collections?: CollectionBuilderT[];
   bricks?: BrickBuilderT[];
-  media: {
-    storageLimit?: number;
-    maxFileSize?: number;
-    fallbackImage?: string | false;
-    processedImageLimit?: number;
-    store: {
-      service: "aws" | "cloudflare";
-      cloudflareAccountId?: string;
-      region?: string;
-      bucket: string;
-      accessKeyId: string;
-      secretAccessKey: string;
-    };
-  };
-  email?: {
-    from: {
-      name: string;
-      email: string;
-    };
-    templateDir?: string;
-    smtp?: {
-      host: string;
-      port: number;
-      user: string;
-      pass: string;
-      secure?: boolean;
-    };
-  };
-};
+}
 
 export default class Config {
   // Cache for configuration
@@ -166,7 +133,7 @@ export default class Config {
   // -------------------------------------------
   // Functions
   static getConfig = async (): Promise<ConfigT> => {
-    return await Config.cacheConfig();
+    return await Config.cachedConfig();
   };
   static getConfigESM = async (path: string) => {
     const configUrl = pathToFileURL(path).href;
@@ -179,7 +146,7 @@ export default class Config {
     const config = configModule.default as ConfigT;
     return config;
   };
-  static cacheConfig = async (): Promise<ConfigT> => {
+  static cachedConfig = async (): Promise<ConfigT> => {
     if (Config.configCache) {
       return Config.configCache;
     }
@@ -197,6 +164,19 @@ export default class Config {
     return config;
   };
   // getters
+  static get defaultConfig() {
+    return {
+      forms: [],
+      collections: [],
+      bricks: [],
+      media: {
+        storageLimit: C.media.storageLimit,
+        maxFileSize: C.media.maxFileSize,
+        processedImageLimit: C.media.processedImageLimit,
+      },
+    };
+  }
+
   static get configCache() {
     return Config._configCache as ConfigT;
   }

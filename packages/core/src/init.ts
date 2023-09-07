@@ -28,7 +28,7 @@ const app = async (options: InitOptions) => {
 
   // ------------------------------------
   // Config
-  await Config.cacheConfig();
+  await Config.cachedConfig();
 
   // ------------------------------------
   // INitialise app
