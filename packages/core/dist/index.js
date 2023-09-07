@@ -1,3 +1,11 @@
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined")
+    return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+
 // src/init.ts
 import express from "express";
 import morgan from "morgan";
@@ -209,7 +217,7 @@ var Config = class _Config {
       if (error instanceof z.ZodError) {
         const validationError = fromZodError(error);
         const message = validationError.message.split("Validation error: ")[1];
-        console.error(bgRed2(`Config validation error: ${message}`));
+        console.log(bgRed2(message));
         process.exit(1);
       } else {
         throw error;
@@ -256,14 +264,28 @@ var Config = class _Config {
   static getConfig = async () => {
     return await _Config.cacheConfig();
   };
+  static getConfigESM = async (path7) => {
+    const configUrl = pathToFileURL(path7).href;
+    const configModule = await import(configUrl);
+    const config = configModule.default;
+    return config;
+  };
+  static getConfigCJS = async (path7) => {
+    const configModule = await __require(path7);
+    const config = configModule.default;
+    return config;
+  };
   static cacheConfig = async () => {
     if (_Config.configCache) {
       return _Config.configCache;
     }
     const configPath = _Config.findPath(process.cwd());
-    const configUrl = pathToFileURL(configPath).href;
-    let configModule = await import(configUrl);
-    let config = configModule.default;
+    let config;
+    try {
+      config = await _Config.getConfigESM(configPath);
+    } catch (error) {
+      config = await _Config.getConfigCJS(configPath);
+    }
     _Config._configCache = config;
     return config;
   };
@@ -12742,3 +12764,4 @@ export {
   sendEmail,
   submitForm2 as submitForm
 };
+//# sourceMappingURL=index.js.map

@@ -256,7 +256,7 @@ var Config = class _Config {
       if (error instanceof import_zod.default.ZodError) {
         const validationError = (0, import_zod_validation_error.fromZodError)(error);
         const message = validationError.message.split("Validation error: ")[1];
-        console.error((0, import_console_log_colors2.bgRed)(`Config validation error: ${message}`));
+        console.log((0, import_console_log_colors2.bgRed)(message));
         process.exit(1);
       } else {
         throw error;
@@ -303,14 +303,28 @@ var Config = class _Config {
   static getConfig = async () => {
     return await _Config.cacheConfig();
   };
+  static getConfigESM = async (path7) => {
+    const configUrl = (0, import_url.pathToFileURL)(path7).href;
+    const configModule = await import(configUrl);
+    const config = configModule.default;
+    return config;
+  };
+  static getConfigCJS = async (path7) => {
+    const configModule = await require(path7);
+    const config = configModule.default;
+    return config;
+  };
   static cacheConfig = async () => {
     if (_Config.configCache) {
       return _Config.configCache;
     }
     const configPath = _Config.findPath(process.cwd());
-    const configUrl = (0, import_url.pathToFileURL)(configPath).href;
-    let configModule = await import(configUrl);
-    let config = configModule.default;
+    let config;
+    try {
+      config = await _Config.getConfigESM(configPath);
+    } catch (error) {
+      config = await _Config.getConfigCJS(configPath);
+    }
     _Config._configCache = config;
     return config;
   };
@@ -12789,3 +12803,4 @@ var src_default = {
   sendEmail,
   submitForm
 });
+//# sourceMappingURL=index.cjs.map

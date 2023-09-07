@@ -1,13 +1,9 @@
+require("dotenv").config();
 import { buildConfig } from "@lucid/core";
-import {
-  BannerBrick,
-  IntroBrick,
-  DefaultMetaBrick,
-} from "./src/bricks/index.js";
-import { PageCollection, SettingsCollection } from "./src/collections/index.js";
-import { ContactForm } from "./src/forms/index.js";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
+import { BannerBrick, IntroBrick, DefaultMetaBrick } from "./src/bricks";
+import { PageCollection, SettingsCollection } from "./src/collections";
+import { ContactForm } from "./src/forms";
+import path from "path";
 
 export default buildConfig({
   host: "http://localhost:8393",
@@ -20,10 +16,7 @@ export default buildConfig({
       name: "Lucid CMS",
       email: "hello@lucidcms.com",
     },
-    templateDir: path.join(
-      dirname(fileURLToPath(import.meta.url)),
-      "./templates"
-    ),
+    templateDir: path.join(__dirname, "./templates"),
     smtp: {
       host: "127.0.0.1",
       port: 6969,

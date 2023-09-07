@@ -3,14 +3,12 @@ import timeout from "connect-timeout";
 import helmet from "helmet";
 import compression from "compression";
 import responseTime from "response-time";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 import path from "path";
 import { log } from "console-log-colors";
 
 import lucid, { sendEmail, submitForm } from "@lucid/core";
-import { ContactForm } from "./forms/index.js";
+import { ContactForm } from "./forms";
 
 const app = express();
 
@@ -23,14 +21,9 @@ app.use(
   })
 );
 
-const publicPath = path.join(
-  dirname(fileURLToPath(import.meta.url)),
-  "../public"
-);
-
 lucid.init({
   express: app,
-  public: publicPath,
+  public: path.join(__dirname, "../public"),
 });
 
 // create new route /test

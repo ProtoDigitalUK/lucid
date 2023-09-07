@@ -111,7 +111,7 @@ export default class Config {
       if (error instanceof z.ZodError) {
         const validationError = fromZodError(error);
         const message = validationError.message.split("Validation error: ")[1];
-        console.error(bgRed(`Config validation error: ${message}`));
+        console.log(bgRed(message));
         process.exit(1);
       } else {
         throw error;
@@ -168,18 +168,32 @@ export default class Config {
   static getConfig = async (): Promise<ConfigT> => {
     return await Config.cacheConfig();
   };
+  static getConfigESM = async (path: string) => {
+    const configUrl = pathToFileURL(path).href;
+    const configModule = await import(configUrl);
+    const config = configModule.default as ConfigT;
+    return config;
+  };
+  static getConfigCJS = async (path: string) => {
+    const configModule = await require(path);
+    const config = configModule.default as ConfigT;
+    return config;
+  };
   static cacheConfig = async (): Promise<ConfigT> => {
     if (Config.configCache) {
       return Config.configCache;
     }
 
     const configPath = Config.findPath(process.cwd());
-    const configUrl = pathToFileURL(configPath).href;
-    let configModule = await import(configUrl);
-    let config = configModule.default as ConfigT;
+    let config: ConfigT;
+
+    try {
+      config = await Config.getConfigESM(configPath);
+    } catch (error) {
+      config = await Config.getConfigCJS(configPath);
+    }
 
     Config._configCache = config;
-
     return config;
   };
   // getters
