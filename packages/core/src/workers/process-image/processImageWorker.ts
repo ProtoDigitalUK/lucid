@@ -1,16 +1,11 @@
 import z from "zod";
 import sharp from "sharp";
-import { parentPort, Worker } from "worker_threads";
-import path from "path";
+import { parentPort } from "worker_threads";
 import mime from "mime-types";
-// Utils
-import getDirName from "@utils/app/get-dirname.js";
 // Schema
 import mediaSchema from "@schemas/media.js";
 
-const currentDir = getDirName(import.meta.url);
-
-interface WorkerData {
+export interface WorkerData {
   buffer: Buffer;
   options: z.infer<typeof mediaSchema.streamSingle.query>;
 }
@@ -27,7 +22,7 @@ export interface ProcessImageSuccessRes {
   };
 }
 
-interface ProcessImageErrorRes {
+export interface ProcessImageErrorRes {
   success: false;
   error: string;
 }
@@ -74,26 +69,3 @@ parentPort?.on("message", async (data: WorkerData) => {
     parentPort?.postMessage(response);
   }
 });
-
-const useProcessImage = async (
-  data: WorkerData
-): Promise<ProcessImageSuccessRes["data"]> => {
-  const worker = new Worker(path.join(currentDir, "process-image.ts"));
-
-  return new Promise((resolve, reject) => {
-    worker.on(
-      "message",
-      (message: ProcessImageSuccessRes | ProcessImageErrorRes) => {
-        if (message.success) {
-          resolve(message.data);
-        } else {
-          reject(new Error(message.error));
-        }
-      }
-    );
-
-    worker.postMessage(data);
-  });
-};
-
-export default useProcessImage;

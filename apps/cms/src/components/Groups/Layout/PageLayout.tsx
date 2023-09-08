@@ -28,7 +28,6 @@ interface PageWrapperProps {
   children: JSXElement;
   headingChildren?: JSXElement;
   options?: {
-    noPadding?: boolean;
     noBorder?: boolean;
   };
 }

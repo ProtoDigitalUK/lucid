@@ -5,6 +5,7 @@ import users from "./users";
 import roles from "./roles";
 import permissions from "./permissions";
 import media from "./media";
+import settings from "./settings";
 
 const exportObject = {
   auth,
@@ -14,6 +15,7 @@ const exportObject = {
   roles,
   permissions,
   media,
+  settings,
 };
 
 export default exportObject;

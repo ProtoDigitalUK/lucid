@@ -50,7 +50,6 @@ const UsersListRoute: Component = () => {
       title={T("users_route_title")}
       description={T("users_route_description")}
       options={{
-        noPadding: true,
         noBorder: true,
       }}
       actions={{

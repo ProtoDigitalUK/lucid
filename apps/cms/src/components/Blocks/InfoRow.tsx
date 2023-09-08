@@ -13,8 +13,8 @@ const InfoRow: Component<InfoRowProps> = (props) => {
   // Render
   return (
     <Show when={props.permission !== false}>
-      <div class="w-full grid grid-cols-4 gap-10">
-        <div class="col-span-1">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-15 lg:gap-10 mb-30 last:mb-0">
+        <div class="md:col-span-1">
           <h2 class="text-lg mb-1">{props.title}</h2>
           <Show when={props.description}>
             <p class="text-sm">{props.description}</p>
@@ -30,7 +30,7 @@ const InfoRowContent: Component<InfoRowProps> = (props) => {
   // ----------------------------------------
   // Render
   return (
-    <div class="col-span-3 bg-container p-15 rounded-md">
+    <div class="md:col-span-2 lg:col-span-3 bg-container p-15 rounded-md border border-border">
       <h3 class="text-base mb-1">{props.title}</h3>
       <Show when={props.description}>
         <p class="text-sm">{props.description}</p>

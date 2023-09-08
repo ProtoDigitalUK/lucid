@@ -14,9 +14,8 @@ import processedImagesService from "@services/processed-images/index.js";
 // Models
 import ProcessedImage from "@db/models/ProcessedImage.js";
 // Workers
-import useProcessImage, {
-  ProcessImageSuccessRes,
-} from "@root/workers/process-image.js";
+import useProcessImage from "@root/workers/process-image/useProcessImage.js";
+import type { ProcessImageSuccessRes } from "@root/workers/process-image/processImageWorker.js";
 
 export interface ServiceData {
   key: string;

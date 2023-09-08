@@ -39,7 +39,6 @@ const RolesListRoute: Component = () => {
       title={T("roles_route_title")}
       description={T("roles_route_description")}
       options={{
-        noPadding: true,
         noBorder: true,
       }}
       actions={{

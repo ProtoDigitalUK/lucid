@@ -7237,51 +7237,14 @@ var clear_all_default = clearAll;
 // src/services/processed-images/process-image.ts
 var import_stream = require("stream");
 
-// src/workers/process-image.ts
-var import_sharp2 = __toESM(require("sharp"), 1);
+// src/workers/process-image/useProcessImage.ts
 var import_worker_threads = require("worker_threads");
 var import_path5 = __toESM(require("path"), 1);
-var import_mime_types2 = __toESM(require("mime-types"), 1);
 var currentDir3 = get_dirname_default(importMetaUrl);
-import_worker_threads.parentPort?.on("message", async (data) => {
-  try {
-    const transform = (0, import_sharp2.default)(data.buffer);
-    if (data.options.format) {
-      transform.toFormat(data.options.format, {
-        quality: data.options.quality ? parseInt(data.options.quality) : 80
-      });
-    }
-    if (data.options.width || data.options.height) {
-      transform.resize({
-        width: data.options.width ? parseInt(data.options.width) : void 0,
-        height: data.options.height ? parseInt(data.options.height) : void 0
-      });
-    }
-    const outputBuffer = await transform.toBuffer();
-    const meta = await (0, import_sharp2.default)(outputBuffer).metadata();
-    const mimeType = import_mime_types2.default.lookup(data.options.format || "jpg") || "image/jpeg";
-    const response = {
-      success: true,
-      data: {
-        buffer: outputBuffer,
-        mimeType,
-        size: outputBuffer.length,
-        width: meta.width || null,
-        height: meta.height || null,
-        extension: import_mime_types2.default.extension(mimeType) || ""
-      }
-    };
-    import_worker_threads.parentPort?.postMessage(response);
-  } catch (error) {
-    const response = {
-      success: false,
-      error: error.message
-    };
-    import_worker_threads.parentPort?.postMessage(response);
-  }
-});
 var useProcessImage = async (data) => {
-  const worker = new import_worker_threads.Worker(import_path5.default.join(currentDir3, "process-image.ts"));
+  const worker = new import_worker_threads.Worker(
+    import_path5.default.join(currentDir3, "workers/process-image/processImageWorker.cjs")
+  );
   return new Promise((resolve, reject) => {
     worker.on(
       "message",
@@ -7296,7 +7259,7 @@ var useProcessImage = async (data) => {
     worker.postMessage(data);
   });
 };
-var process_image_default = useProcessImage;
+var useProcessImage_default = useProcessImage;
 
 // src/services/processed-images/process-image.ts
 var saveAndRegister = async (client, data, image) => {
@@ -7342,7 +7305,7 @@ var processImage = async (client, data) => {
       body: s3Response.body
     };
   }
-  const processRes = await process_image_default({
+  const processRes = await useProcessImage_default({
     buffer: await helpers_default.streamToBuffer(s3Response.body),
     options: data.options
   });
@@ -7355,7 +7318,7 @@ var processImage = async (client, data) => {
     body: stream
   };
 };
-var process_image_default2 = processImage;
+var process_image_default = processImage;
 
 // src/services/processed-images/get-single-count.ts
 var getSingleCount = async (client, data) => {
@@ -7379,7 +7342,7 @@ var get_single_count_default = getSingleCount;
 var processed_images_default = {
   clearSingle: clear_single_default,
   clearAll: clear_all_default,
-  processImage: process_image_default2,
+  processImage: process_image_default,
   getSingleCount: get_single_count_default
 };
 

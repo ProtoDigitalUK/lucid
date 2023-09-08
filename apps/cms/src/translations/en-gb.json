@@ -131,6 +131,14 @@
   "password_confirmation": "Password Confirmation",
   "general": "General",
   "integrations": "Integrations",
+  "processed_images": "Processed Images",
+  "processed_images_setting_message": "Each image can have a maximum of {{limit}} processed images. These do not count towards your storage limit",
+  "clear_all": "Clear all",
+  "clear_all_processed_images_setting_message": "After clearing all your processed images, it's recommended to review each page of your client(s) to reprocess the images. The first load will take longer since that's when processing occurs.",
+  "clear_all_processed_images_button": "Clear all {{count}} images",
+  "storage_breakdown": "Storage Breakdown",
+  "storage_breakdown_setting_message": "See your used and remaining storage",
+  "storage_remaining_title": "{{storage}} remaining",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
@@ -138,6 +146,8 @@
   "delete_role_modal_description": "Are you sure you want to delete this role?",
   "delete_user_modal_title": "Delete User",
   "delete_user_modal_description": "Are you sure you want to delete this user?",
+  "clear_all_processed_images_modal_title": "Clear all processed images",
+  "clear_all_processed_images_modal_description": "Are you sure you want to clear all processed images?",
 
   "update_role_panel_title": "Edit {{name}} Role",
   "update_role_panel_description": "Update the permissions for the {{name}} role.",
@@ -177,6 +187,8 @@
   "no_permission_toast_title": "No permission",
   "no_permission_toast_message": "Your don't have permission to perform this action. Contact an admin if you think there is a mistake",
   "copy_to_clipboard_toast_title": "Copied to clipboard",
+  "delete_processed_images_toast_title": "Processed images deleted",
+  "delete_processed_images_toast_message": "Processed images have been deleted",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",
