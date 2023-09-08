@@ -20,8 +20,8 @@ export const NavigationTabs: Component<NavigationTabsProps> = (props) => {
           {(tab) => (
             <li class="mr-15">
               <Link
-                class="h-10"
-                activeClass="border-b-2 border-secondary"
+                class="flex pb-2.5 font-medium text-body border-b-2 border-transparent hover:border-secondary transition-colors duration-200"
+                activeClass="!border-secondary text-title"
                 href={tab.href || "#"}
                 onClick={tab.onClick}
                 end

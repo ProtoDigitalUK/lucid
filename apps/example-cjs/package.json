@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "nodemon"
+    "dev:test": "nodemon"
   },
   "dependencies": {
     "@lucid/core": "*",
