@@ -6,6 +6,7 @@ interface LabelProps {
   label?: string;
   focused?: boolean;
   required?: boolean;
+  noPadding?: boolean;
 }
 
 export const Label: Component<LabelProps> = (props) => {
@@ -14,9 +15,11 @@ export const Label: Component<LabelProps> = (props) => {
       <label
         for={props.id}
         class={classnames(
-          "block pt-2 px-2.5 text-sm transition-colors duration-200 ease-in-out",
+          "block text-sm transition-colors duration-200 ease-in-out",
           {
             "text-secondaryH": props.focused,
+            "pt-2 px-2.5": props.noPadding !== true,
+            "mb-2": props.noPadding === true,
           }
         )}
       >

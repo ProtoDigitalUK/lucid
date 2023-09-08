@@ -207,5 +207,7 @@
   "media_route_title": "Media",
   "media_route_description": "Manage your media library.",
   "settings_route_title": "Settings",
-  "settings_route_description": "Manage your settings."
+  "settings_route_description": "Manage your settings.",
+  "dashboard_route_title": "Welcome back{{name}}",
+  "dashboard_route_description": "Here is an overview of your most recent activity, content, media and some quick links to navigate the CMS."
 }

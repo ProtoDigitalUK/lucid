@@ -69,7 +69,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
     >
       <div class={"p-15 md:p-30 flex justify-between items-start"}>
         {/* Textarea */}
-        <div class="max-w-3xl w-full">
+        <div class="max-w-4xl w-full">
           <Switch>
             <Match when={props.state?.isLoading}>
               <div class="w-full">
