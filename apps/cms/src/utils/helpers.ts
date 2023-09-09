@@ -1,5 +1,7 @@
 import { Accessor } from "solid-js";
 import equal from "fast-deep-equal";
+// Types
+import { MediaResT } from "@lucid/types/src/media";
 
 // ---------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,12 +89,32 @@ const bytesToSize = (bytes?: number | null): string => {
   return `${Math.round(bytes / Math.pow(1024, i))} ${sizes[i]}`;
 };
 
+// ---------------------------------------------
+// Get media type from mime type
+const getMediaType = (mimeType: string): MediaResT["type"] => {
+  const normalizedMimeType = mimeType.toLowerCase();
+
+  if (normalizedMimeType.includes("image")) return "image";
+  if (normalizedMimeType.includes("video")) return "video";
+  if (normalizedMimeType.includes("audio")) return "audio";
+  if (
+    normalizedMimeType.includes("pdf") ||
+    normalizedMimeType.startsWith("application/vnd")
+  )
+    return "document";
+  if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
+    return "archive";
+
+  return "unknown";
+};
+
 const helpers = {
   deepMerge,
   deepDiff,
   updateData,
   resolveValue,
   bytesToSize,
+  getMediaType,
 };
 
 export default helpers;
