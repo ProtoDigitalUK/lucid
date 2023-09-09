@@ -14,7 +14,9 @@ interface ClickToCopyProps {
 const ClickToCopy: Component<ClickToCopyProps> = (props) => {
   // ----------------------------------
   // Functions
-  const copyToClipboard = () => {
+  const copyToClipboard = (e: Event) => {
+    e.stopPropagation();
+
     navigator.clipboard.writeText(props.value);
     spawnToast({
       title: T("copy_to_clipboard_toast_title"),
@@ -29,7 +31,7 @@ const ClickToCopy: Component<ClickToCopyProps> = (props) => {
       <Match when={props.type === "simple"}>
         <button
           onClick={copyToClipboard}
-          class="duration-200 transition-colors flex items-center max-w-full text-title fill-title whitespace-nowrap text-base hover:text-secondaryH hover:fill-secondaryH"
+          class="duration-200 cursor-copy transition-colors flex items-center max-w-full text-title fill-title whitespace-nowrap text-base hover:text-secondaryH hover:fill-secondaryH"
         >
           <FaSolidCopy class="mr-2" />
           <span class="text-ellipsis overflow-hidden">{props.text}</span>

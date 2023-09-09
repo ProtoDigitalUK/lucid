@@ -1,3 +1,4 @@
+import T from "@/translations";
 import {
   Component,
   Switch,
@@ -33,9 +34,9 @@ export interface SingleFileUploadProps {
     setRemovedCurrent: (_value: boolean) => void;
   };
   currentFile?: {
-    type: MediaResT["type"];
-    url: string;
-    name: string;
+    type?: MediaResT["type"];
+    url?: string;
+    name?: string;
   };
   disableRemoveCurrent?: boolean;
 
@@ -74,7 +75,10 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
     inputRef!.click();
   };
   const downloadFile = () => {
-    window.open(props.currentFile?.url, "_blank");
+    const url = props.currentFile?.url?.includes("?")
+      ? props.currentFile.url.split("?")[0]
+      : props.currentFile?.url;
+    window.open(url, "_blank");
   };
   const uploadFile = () => {
     clearFile();
@@ -183,30 +187,32 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
             <div class="w-full h-full flex justify-center items-center flex-col p-15 md:p-30">
               <FaSolidArrowUpFromBracket class="w-7 h-7 mx-auto fill-unfocused mb-5" />
               <p class="text-center text-base font-medium text-title">
-                Drag & drop your file/image or{" "}
+                {T("drag_and_drop_file_or")}{" "}
                 <button
+                  type="button"
                   onClick={openFileBrowser}
                   class="text-secondary font-medium font-display"
                 >
-                  upload here
+                  {T("upload_here")}
                 </button>
               </p>
               <Show when={props.currentFile !== undefined}>
                 <div class="mt-5 text-center flex flex-col items-center">
                   <Show when={props.disableRemoveCurrent !== true}>
                     <p class="text-sm">
-                      If left blank, the current file will be removed
+                      {T("if_left_blank_file_will_be_removed")}
                     </p>
                   </Show>
 
                   <button
+                    type="button"
                     onClick={undoToCurrentFile}
                     class="text-unfocused fill-unfocused font-medium text-sm font-display flex items-center mt-2"
                   >
                     <FaSolidArrowRotateLeft class="mr-2 text-sm" />
                     <Switch fallback={"keep current file"}>
                       <Match when={props.disableRemoveCurrent === true}>
-                        Back to current file
+                        {T("back_to_current_file")}
                       </Match>
                     </Switch>
                   </button>
@@ -294,6 +300,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
               src={props.data.url}
               class="w-full h-full object-contain"
               controls
+              preload="none"
             />
           </div>
         </Match>
@@ -318,6 +325,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
       >
         <Show when={props.actions.downloadFile !== undefined}>
           <button
+            type="button"
             class={classNames(actionButtonClasses)}
             onClick={() => {
               if (props.actions.downloadFile !== undefined)
@@ -325,20 +333,22 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
             }}
           >
             <FaSolidMagnifyingGlass class="block md:mr-2 fill-primaryText" />
-            <span class="hidden md:inline">Preview</span>
+            <span class="hidden md:inline">{T("preview")}</span>
           </button>
         </Show>
         <button
+          type="button"
           class={classNames(actionButtonClasses)}
           onClick={() => {
             props.actions.uploadFile();
           }}
         >
           <FaSolidArrowUpFromBracket class="block md:mr-2 fill-primaryText" />
-          <span class="hidden md:inline">Choose file</span>
+          <span class="hidden md:inline">{T("choose_file")}</span>
         </button>
         <Show when={props.actions.clearFile !== undefined}>
           <button
+            type="button"
             class={classNames(actionButtonClasses)}
             onClick={() => {
               if (props.actions.clearFile !== undefined)
@@ -346,7 +356,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
             }}
           >
             <FaSolidXmark class="block md:mr-2 fill-primaryText" />
-            <span class="hidden md:inline">Remove</span>
+            <span class="hidden md:inline">{T("remove")}</span>
           </button>
         </Show>
       </div>

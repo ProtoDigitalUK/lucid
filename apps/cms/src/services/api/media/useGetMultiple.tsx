@@ -40,7 +40,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     return JSON.stringify(queryParams());
   });
 
-  return createQuery(() => ["roles.getMultiple", queryKey(), params.key?.()], {
+  return createQuery(() => ["media.getMultiple", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<MediaResT[]>>({
         url: `/api/v1/media`,

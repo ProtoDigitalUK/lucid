@@ -15,7 +15,8 @@ interface RequestParams<Data> {
 
 interface RequestConfig<Data> {
   method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
-  body?: Data;
+  body?: Data | FormData;
+  headers?: Record<string, string>;
 }
 
 const request = async <Response, Data = unknown>(
@@ -38,19 +39,28 @@ const request = async <Response, Data = unknown>(
     csrfToken = await csrfReq();
   }
 
-  let body: string | undefined = undefined;
+  let body: string | undefined | FormData = undefined;
   if (params.config?.body !== undefined) {
-    body = JSON.stringify(params.config.body);
+    if (params.config.body instanceof FormData) {
+      body = params.config.body;
+    } else {
+      body = JSON.stringify(params.config.body);
+    }
+  }
+
+  const headers: Record<string, string> = params.config?.headers || {};
+  if (typeof body === "string") {
+    headers["Content-Type"] = "application/json";
+  }
+  if (csrfToken) {
+    headers._csrf = csrfToken;
   }
 
   const fetchRes = await fetch(fetchURL, {
     method: params.config?.method,
     body,
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      _csrf: csrfToken || "",
-    },
+    headers: headers,
   });
   const data = await fetchRes.json();
   if (!fetchRes.ok) {

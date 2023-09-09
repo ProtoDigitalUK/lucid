@@ -25,7 +25,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
         show_in_table: z.ZodOptional<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -37,7 +37,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
         show_in_table?: boolean | undefined;
     }, {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -52,7 +52,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
     title: string;
     fields: {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -68,7 +68,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
     title: string;
     fields: {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;

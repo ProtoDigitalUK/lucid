@@ -332,19 +332,27 @@ const useSearchParams = (
     if (hasFilters && hasSorts && hasPagination) return;
 
     // convert schema filters to object of values;
-    const filters: {
-      [key: string]: FilterValues;
-    } = {};
-
+    const filters: Record<string, FilterValues> = {};
     if (schema.filters) {
       for (const [key, value] of Object.entries(schema.filters)) {
         filters[`${key}`] = value.value;
       }
     }
 
+    // Find first sort with value
+    const sorts = Object.entries(schema.sorts || {}).reduce(
+      (acc, [key, value]) => {
+        if (value) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {} as Record<string, "asc" | "desc" | undefined>
+    );
+
     setLocation({
       filters: !hasFilters ? filters : undefined,
-      sorts: !hasSorts ? schema.sorts : undefined,
+      sorts: !hasSorts ? sorts : undefined,
       pagination: !hasPagination ? schema.pagination : undefined,
     });
   };

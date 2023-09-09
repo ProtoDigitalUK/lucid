@@ -7784,7 +7784,7 @@ import fs4 from "fs-extra";
 import path5 from "path";
 var currentDir4 = get_dirname_default(import.meta.url);
 var pipeLocalImage = (res) => {
-  let pathVal = path5.join(currentDir4, "../../assets/404.jpg");
+  let pathVal = path5.join(currentDir4, "./assets/404.jpg");
   let contentType = "image/jpeg";
   const steam = fs4.createReadStream(pathVal);
   res.setHeader("Content-Type", contentType);

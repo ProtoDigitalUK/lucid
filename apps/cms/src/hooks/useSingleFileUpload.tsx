@@ -17,12 +17,15 @@ interface UseSingleFileUploadProps {
   noMargin?: SingleFileUploadProps["noMargin"];
 }
 
-const useSingleFileUpload = (props: UseSingleFileUploadProps) => {
+const useSingleFileUpload = (data: UseSingleFileUploadProps) => {
   // ----------------------------------------
   // State
   const [getFile, setGetFile] = createSignal<File | null>(null);
   const [getRemovedCurrent, setGetRemovedCurrent] =
     createSignal<boolean>(false);
+  const [getCurrentFile, setCurrentFile] = createSignal<
+    SingleFileUploadProps["currentFile"]
+  >(data.currentFile);
 
   // ----------------------------------------
   // Render
@@ -31,6 +34,13 @@ const useSingleFileUpload = (props: UseSingleFileUploadProps) => {
     setGetFile,
     getRemovedCurrent,
     setGetRemovedCurrent,
+    getCurrentFile,
+    setCurrentFile,
+    reset: () => {
+      setGetFile(null);
+      setGetRemovedCurrent(false);
+      setCurrentFile(data.currentFile);
+    },
     Render: () => (
       <Form.SingleFileUpload
         state={{
@@ -39,7 +49,8 @@ const useSingleFileUpload = (props: UseSingleFileUploadProps) => {
           removedCurrent: getRemovedCurrent(),
           setRemovedCurrent: setGetRemovedCurrent,
         }}
-        {...props}
+        currentFile={getCurrentFile()}
+        {...data}
       />
     ),
   };

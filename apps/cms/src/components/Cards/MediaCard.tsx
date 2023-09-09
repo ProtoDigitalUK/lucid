@@ -8,6 +8,8 @@ import {
 } from "solid-icons/fa";
 // Types
 import { MediaResT } from "@lucid/types/src/media";
+// Hooks
+import useRowTarget from "@/hooks/useRowTarget";
 // Utils
 import helpers from "@/utils/helpers";
 // Components
@@ -18,6 +20,7 @@ import ClickToCopy from "@/components/Partials/ClickToCopy";
 
 interface MediaCardProps {
   media: MediaResT;
+  rowTarget: ReturnType<typeof useRowTarget>;
 }
 
 export const MediaCardLoading: Component = () => {
@@ -40,7 +43,13 @@ const MediaCard: Component<MediaCardProps> = (props) => {
   // ----------------------------------
   // Return
   return (
-    <li class="bg-container border-border border rounded-md group overflow-hidden">
+    <li
+      class="bg-container border-border border rounded-md group overflow-hidden cursor-pointer"
+      onClick={() => {
+        props.rowTarget.setTargetId(props.media.id);
+        props.rowTarget.setTrigger("update", true);
+      }}
+    >
       {/* Image */}
       <AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
         <Switch>

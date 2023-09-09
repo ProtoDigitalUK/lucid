@@ -7823,7 +7823,7 @@ var import_fs_extra4 = __toESM(require("fs-extra"), 1);
 var import_path6 = __toESM(require("path"), 1);
 var currentDir4 = get_dirname_default(importMetaUrl);
 var pipeLocalImage = (res) => {
-  let pathVal = import_path6.default.join(currentDir4, "../../assets/404.jpg");
+  let pathVal = import_path6.default.join(currentDir4, "./assets/404.jpg");
   let contentType = "image/jpeg";
   const steam = import_fs_extra4.default.createReadStream(pathVal);
   res.setHeader("Content-Type", contentType);

@@ -19,7 +19,7 @@ export interface ServiceData {
 }
 
 const pipeLocalImage = (res: Response) => {
-  let pathVal = path.join(currentDir, "../../assets/404.jpg");
+  let pathVal = path.join(currentDir, "./assets/404.jpg");
   let contentType = "image/jpeg";
 
   const steam = fs.createReadStream(pathVal);

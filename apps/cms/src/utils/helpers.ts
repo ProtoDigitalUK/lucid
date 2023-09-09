@@ -55,10 +55,11 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
 
   // go through obj2 and find keys that are not in obj1
   for (const key in obj2) {
-    if (Object.prototype.hasOwnProperty.call(obj2, key)) {
-      if (!obj1[key]) {
-        result[key] = obj2[key];
-      }
+    if (
+      Object.prototype.hasOwnProperty.call(obj2, key) &&
+      !Object.prototype.hasOwnProperty.call(obj1, key)
+    ) {
+      result[key] = obj2[key];
     }
   }
 
@@ -66,6 +67,7 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
 };
 const updateData = <T>(obj1: T, obj2: T) => {
   const result = deepDiff(obj1, obj2);
+
   return {
     changed: Object.keys(result).length > 0,
     data: result,
@@ -91,7 +93,8 @@ const bytesToSize = (bytes?: number | null): string => {
 
 // ---------------------------------------------
 // Get media type from mime type
-const getMediaType = (mimeType: string): MediaResT["type"] => {
+const getMediaType = (mimeType?: string): MediaResT["type"] => {
+  if (!mimeType) return "unknown";
   const normalizedMimeType = mimeType.toLowerCase();
 
   if (normalizedMimeType.includes("image")) return "image";
