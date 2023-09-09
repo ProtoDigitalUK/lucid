@@ -169,6 +169,8 @@
   "create_user_panel_description": "Create a new user with the details you require.",
   "update_media_panel_title": "Update Media",
   "update_media_panel_description": "Update the media entry.",
+  "create_media_panel_title": "Create Media",
+  "create_media_panel_description": "Create a new media entry with the details you require.",
 
   "password_reset_toast_title": "Password reset email sent",
   "password_reset_toast_message": "Please check your email for a password reset link",
@@ -203,6 +205,8 @@
   "delete_processed_images_toast_message": "Processed images have been deleted",
   "media_update_toast_title": "Media updated",
   "media_update_toast_message": "Media has been updated",
+  "media_create_toast_title": "Media created",
+  "media_create_toast_message": "Media has been created",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",

@@ -1,6 +1,7 @@
-import { createSignal } from "solid-js";
+import { Accessor, createSignal } from "solid-js";
 // Types
 import { SingleFileUploadProps } from "@/components/Groups/Form/SingleFileUpload";
+import { APIErrorResponse } from "@/types/api";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -13,7 +14,7 @@ interface UseSingleFileUploadProps {
   accept?: SingleFileUploadProps["accept"];
   required?: SingleFileUploadProps["required"];
   disabled?: SingleFileUploadProps["disabled"];
-  errors?: SingleFileUploadProps["errors"];
+  errors?: Accessor<APIErrorResponse | undefined>;
   noMargin?: SingleFileUploadProps["noMargin"];
 }
 
@@ -50,7 +51,17 @@ const useSingleFileUpload = (data: UseSingleFileUploadProps) => {
           setRemovedCurrent: setGetRemovedCurrent,
         }}
         currentFile={getCurrentFile()}
-        {...data}
+        disableRemoveCurrent={data.disableRemoveCurrent}
+        id={data.id}
+        name={data.name}
+        copy={data.copy}
+        accept={data.accept}
+        required={data.required}
+        disabled={data.disabled}
+        errors={
+          data.errors ? data.errors()?.errors?.body[data.name] : undefined
+        }
+        noMargin={data.noMargin}
       />
     ),
   };

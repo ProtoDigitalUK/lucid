@@ -1,11 +1,12 @@
 import T from "@/translations";
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import MediaGrid from "@/components/Grids/MediaGrid";
+import CreateMediaPanel from "@/components/Panels/Media/CreateMediaPanel";
 
 const MediaListRoute: Component = () => {
   // ----------------------------------
@@ -34,11 +35,16 @@ const MediaListRoute: Component = () => {
         created_at: undefined,
         updated_at: "desc",
       },
+      pagination: {
+        per_page: 20,
+      },
     },
     {
       singleSort: true,
     }
   );
+  const [getOpenCreateMediaPanel, setOpenCreateMediaPanel] =
+    createSignal<boolean>(false);
 
   // ----------------------------------
   // Render
@@ -118,11 +124,23 @@ const MediaListRoute: Component = () => {
               key: "updated_at",
             },
           ]}
-          perPage={[]}
+          perPage={[10, 20, 40]}
         />
       }
+      actions={{
+        create: {
+          open: getOpenCreateMediaPanel(),
+          setOpen: setOpenCreateMediaPanel,
+        },
+      }}
     >
       <MediaGrid searchParams={searchParams} />
+      <CreateMediaPanel
+        state={{
+          open: getOpenCreateMediaPanel(),
+          setOpen: setOpenCreateMediaPanel,
+        }}
+      />
     </Layout.PageLayout>
   );
 };
