@@ -49,7 +49,7 @@ const resetPassword = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Send the password reset email
   await service(
-    emailServices.sendEmailInternal,
+    emailServices.sendInternal,
     false,
     client
   )({

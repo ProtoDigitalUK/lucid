@@ -4,7 +4,7 @@ import Email from "@db/models/Email.js";
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
 // Services
-import emailsService from "@services/email/index.js";
+import emailService from "@services/email/index.js";
 
 export interface ServiceData {
   id: number;
@@ -24,7 +24,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  const html = await emailsService.renderTemplate(
+  const html = await emailService.renderTemplate(
     email.template,
     email.data || {}
   );

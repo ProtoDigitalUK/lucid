@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Utils
 import service from "@utils/app/service.js";
 // Services
-import emailsService from "@services/email/index.js";
+import emailServices from "@services/email/index.js";
 
 export interface ServiceData {
   id: number;
@@ -10,14 +10,14 @@ export interface ServiceData {
 
 const resendSingle = async (client: PoolClient, data: ServiceData) => {
   const email = await service(
-    emailsService.getSingle,
+    emailServices.getSingle,
     false,
     client
   )({
     id: data.id,
   });
 
-  const status = await emailsService.sendEmailInternal(client, {
+  const status = await emailServices.sendInternal(client, {
     template: email.template,
     params: {
       data: email.data || {},
@@ -34,18 +34,7 @@ const resendSingle = async (client: PoolClient, data: ServiceData) => {
     id: data.id,
   });
 
-  const updatedEmail = await service(
-    emailsService.getSingle,
-    false,
-    client
-  )({
-    id: data.id,
-  });
-
-  return {
-    status,
-    email: updatedEmail,
-  };
+  return status;
 };
 
 export default resendSingle;

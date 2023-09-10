@@ -4,7 +4,7 @@ import service from "@utils/app/service.js";
 // Schema
 import emailsSchema from "@schemas/email.js";
 // Services
-import emailsService from "@services/email/index.js";
+import emailService from "@services/email/index.js";
 
 // --------------------------------------------------
 // Controller
@@ -15,7 +15,7 @@ const getMultipleController: Controller<
 > = async (req, res, next) => {
   try {
     const emailsRes = await service(
-      emailsService.getMultiple,
+      emailService.getMultiple,
       false
     )({
       query: req.query,

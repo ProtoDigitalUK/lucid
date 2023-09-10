@@ -98,7 +98,7 @@ declare class FormBuilder {
     }>;
 }
 
-interface ServiceData {
+interface ServiceData$1 {
     environment_key: string;
     form: FormBuilder;
     data: {
@@ -106,7 +106,7 @@ interface ServiceData {
     };
 }
 
-interface EmailParamsT {
+interface ServiceData {
     data: {
         [key: string]: any;
     };
@@ -540,11 +540,11 @@ interface ConfigT extends z.infer<typeof configSchema> {
 }
 declare const buildConfig: (config: ConfigT) => ConfigT;
 
-declare const sendEmail: (template: string, params: EmailParamsT, track?: boolean | undefined) => Promise<{
+declare const sendEmail: (template: string, params: ServiceData, track?: boolean | undefined) => Promise<{
     success: boolean;
     message: string;
 }>;
-declare const submitForm: (props: ServiceData) => Promise<void>;
+declare const submitForm: (props: ServiceData$1) => Promise<void>;
 
 declare const _default: {
     init: (options: InitOptions) => Promise<express.Express>;

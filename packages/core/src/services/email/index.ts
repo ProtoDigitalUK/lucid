@@ -5,7 +5,9 @@ import resendSingle from "./resend-single.js";
 import createSingle from "./create-single.js";
 import updateSingle from "./update-single.js";
 import renderTemplate from "./render-template.js";
-import { sendEmailExternal, sendEmailInternal } from "./send-email.js";
+import sendEmail from "./send-email.js";
+import sendInternal from "./send-internal.js";
+import sendExternal from "./send-external.js";
 
 export default {
   deleteSingle,
@@ -15,6 +17,7 @@ export default {
   createSingle,
   updateSingle,
   renderTemplate,
-  sendEmailExternal,
-  sendEmailInternal,
+  sendExternal,
+  sendEmail,
+  sendInternal,
 };

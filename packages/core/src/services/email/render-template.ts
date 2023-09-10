@@ -15,10 +15,7 @@ export interface renderTemplateDataT {
 
 const getTemplateData = async (template: string) => {
   // if file exists, return the file
-  const templatePath = path.join(
-    currentDir,
-    `../../../templates/${template}.mjml`
-  );
+  const templatePath = path.join(currentDir, `../templates/${template}.mjml`);
   if (await fs.pathExists(templatePath)) {
     return fs.readFile(templatePath, "utf-8");
   }

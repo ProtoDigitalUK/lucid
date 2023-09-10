@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import timeout from "connect-timeout";
 import helmet from "helmet";
 import compression from "compression";
@@ -34,8 +34,9 @@ lucid.init({
   public: publicPath,
 });
 
-// create new route /test
-app.get("/test", async (req, res, next) => {
+const router = Router();
+
+router.post("/send-email", async (req, res, next) => {
   try {
     const data = {
       name: "John Doe",
@@ -51,24 +52,30 @@ app.get("/test", async (req, res, next) => {
     }
 
     // save form data & send email
-    const submission = await submitForm({
-      environment_key: "site_prod",
-      form: ContactForm,
-      data,
-    });
-    sendEmail("contact-form", {
-      data: data,
-      options: {
-        to: "",
-        subject: "New contact form submission",
-      },
-    });
+    // const submission = await submitForm({
+    //   environment_key: "production",
+    //   form: ContactForm,
+    //   data,
+    // });
 
-    res.json({ submission });
+    const emailRes = await sendEmail(
+      "contact-form",
+      {
+        data: data,
+        options: {
+          to: data.email,
+          subject: "New contact form submission",
+        },
+      },
+      true
+    );
+
+    res.json(emailRes);
   } catch (error) {
     next(error as Error);
   }
 });
+app.use(router);
 
 app.listen(process.env.PORT || 8393, () => {
   log.white("----------------------------------------------------");

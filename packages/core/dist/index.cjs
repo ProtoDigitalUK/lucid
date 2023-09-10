@@ -36,7 +36,7 @@ __export(src_exports, {
   buildConfig: () => buildConfig,
   default: () => src_default,
   init: () => init_default,
-  sendEmail: () => sendEmail,
+  sendEmail: () => sendEmail2,
   submitForm: () => submitForm2
 });
 module.exports = __toCommonJS(src_exports);
@@ -2902,7 +2902,7 @@ var resendSingle = async (client, data) => {
   )({
     id: data.id
   });
-  const status = await email_default.sendEmailInternal(client, {
+  const status = await email_default.sendInternal(client, {
     template: email.template,
     params: {
       data: email.data || {},
@@ -2918,17 +2918,7 @@ var resendSingle = async (client, data) => {
     },
     id: data.id
   });
-  const updatedEmail = await service_default(
-    email_default.getSingle,
-    false,
-    client
-  )({
-    id: data.id
-  });
-  return {
-    status,
-    email: updatedEmail
-  };
+  return status;
 };
 var resend_single_default = resendSingle;
 
@@ -2974,10 +2964,7 @@ var import_mjml = __toESM(require("mjml"), 1);
 var import_path4 = __toESM(require("path"), 1);
 var currentDir2 = get_dirname_default(importMetaUrl);
 var getTemplateData = async (template) => {
-  const templatePath = import_path4.default.join(
-    currentDir2,
-    `../../../templates/${template}.mjml`
-  );
+  const templatePath = import_path4.default.join(currentDir2, `../templates/${template}.mjml`);
   if (await import_fs_extra3.default.pathExists(templatePath)) {
     return import_fs_extra3.default.readFile(templatePath, "utf-8");
   }
@@ -3000,24 +2987,7 @@ var render_template_default = renderTemplate;
 
 // src/services/email/send-email.ts
 var import_nodemailer = __toESM(require("nodemailer"), 1);
-var createEmailRow = async (client, data) => {
-  await service_default(
-    email_default.createSingle,
-    false,
-    client
-  )({
-    from_address: data.options.from,
-    from_name: data.options.fromName,
-    to_address: data.options.to,
-    subject: data.options.subject,
-    cc: data.options.cc,
-    bcc: data.options.bcc,
-    template: data.template,
-    data: data.data,
-    delivery_status: data.delivery_status
-  });
-};
-var sendEmailAction = async (template, params) => {
+var sendEmail = async (template, params) => {
   let fromName = params.options?.fromName || Config.email?.from?.name;
   let from = params.options?.from || Config.email?.from?.email;
   const mailOptions = {
@@ -3061,6 +3031,7 @@ var sendEmailAction = async (template, params) => {
       options: mailOptions
     };
   } catch (error) {
+    console.log(error);
     const err = error;
     return {
       success: false,
@@ -3069,40 +3040,27 @@ var sendEmailAction = async (template, params) => {
     };
   }
 };
-var sendEmailExternal = async (template, params, track) => {
-  const result = await sendEmailAction(template, params);
-  if (track) {
-    const client = await getDBClient();
-    try {
-      await client.query("BEGIN");
-      await createEmailRow(client, {
-        template,
-        options: result.options,
-        delivery_status: result.success ? "sent" : "failed",
-        data: params.data
-      });
-      await client.query("COMMIT");
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
-  return {
-    success: result.success,
-    message: result.message
-  };
-};
-var sendEmailInternal = async (client, data) => {
-  const result = await sendEmailAction(data.template, data.params);
+var send_email_default = sendEmail;
+
+// src/services/email/send-internal.ts
+var sendInternal = async (client, data) => {
+  const result = await email_default.sendEmail(data.template, data.params);
   if (data.track) {
     if (!data.id) {
-      await createEmailRow(client, {
+      await service_default(
+        email_default.createSingle,
+        false,
+        client
+      )({
+        from_address: result.options.from,
+        from_name: result.options.fromName,
+        to_address: result.options.to,
+        subject: result.options.subject,
+        cc: result.options.cc,
+        bcc: result.options.bcc,
         template: data.template,
-        options: result.options,
-        delivery_status: result.success ? "sent" : "failed",
-        data: data.params.data
+        data: data.params.data,
+        delivery_status: result.success ? "sent" : "failed"
       });
     } else {
       await service_default(
@@ -3124,6 +3082,44 @@ var sendEmailInternal = async (client, data) => {
     message: result.message
   };
 };
+var send_internal_default = sendInternal;
+
+// src/services/email/send-external.ts
+var sendExternal = async (template, params, track) => {
+  const result = await email_default.sendEmail(template, params);
+  if (track) {
+    const client = await getDBClient();
+    try {
+      await client.query("BEGIN");
+      await service_default(
+        email_default.createSingle,
+        false,
+        client
+      )({
+        from_address: result.options.from,
+        from_name: result.options.fromName,
+        to_address: result.options.to,
+        subject: result.options.subject,
+        cc: result.options.cc,
+        bcc: result.options.bcc,
+        template,
+        data: params.data,
+        delivery_status: result.success ? "sent" : "failed"
+      });
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+  return {
+    success: result.success,
+    message: result.message
+  };
+};
+var send_external_default = sendExternal;
 
 // src/services/email/index.ts
 var email_default = {
@@ -3134,8 +3130,9 @@ var email_default = {
   createSingle: create_single_default3,
   updateSingle: update_single_default3,
   renderTemplate: render_template_default,
-  sendEmailExternal,
-  sendEmailInternal
+  sendExternal: send_external_default,
+  sendEmail: send_email_default,
+  sendInternal: send_internal_default
 };
 
 // src/services/auth/send-reset-password.ts
@@ -3164,7 +3161,7 @@ var sendResetPassword = async (client, data) => {
     expiry_date: expiryDate
   });
   await service_default(
-    email_default.sendEmailInternal,
+    email_default.sendInternal,
     false,
     client
   )({
@@ -3225,7 +3222,7 @@ var resetPassword = async (client, data) => {
     id: userToken.id
   });
   await service_default(
-    email_default.sendEmailInternal,
+    email_default.sendInternal,
     false,
     client
   )({
@@ -12790,7 +12787,7 @@ var FormBuilder = class {
 
 // src/index.ts
 import("dotenv/config.js");
-var sendEmail = email_default.sendEmailExternal;
+var sendEmail2 = email_default.sendExternal;
 var submitForm2 = submitFormExternal;
 var src_default = {
   init: init_default
