@@ -19,7 +19,7 @@ const DropdownContent: Component<DropdownContentProps> = (props) => {
       <DropdownMenu.Content
         as={props.options?.as}
         class={classNames(
-          "bg-primary p-15 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary",
+          "bg-primary border border-primaryH p-15 shadow-md animate-animate-dropdown focus:outline-none focus:ring-2 ring-secondary",
           {
             "rounded-md": props.options?.rounded,
           },

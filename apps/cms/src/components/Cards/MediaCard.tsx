@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, Switch, Match } from "solid-js";
 import {
   FaSolidFileZipper,
@@ -17,6 +18,7 @@ import AspectRatio from "@/components/Partials/AspectRatio";
 import Pill from "@/components/Partials/Pill";
 import Image from "@/components/Partials/Image";
 import ClickToCopy from "@/components/Partials/ClickToCopy";
+import ActionDropdown from "@/components/Partials/ActionDropdown";
 
 interface MediaCardProps {
   media: MediaResT;
@@ -44,12 +46,46 @@ const MediaCard: Component<MediaCardProps> = (props) => {
   // Return
   return (
     <li
-      class="bg-container border-border border rounded-md group overflow-hidden cursor-pointer"
+      class="bg-container border-border border rounded-md group overflow-hidden cursor-pointer relative"
       onClick={() => {
         props.rowTarget.setTargetId(props.media.id);
         props.rowTarget.setTrigger("update", true);
       }}
     >
+      <div class="absolute top-15 right-15 z-10">
+        <ActionDropdown
+          actions={[
+            {
+              label: T("edit"),
+              type: "button",
+              onClick: () => {
+                props.rowTarget.setTargetId(props.media.id);
+                props.rowTarget.setTrigger("update", true);
+              },
+            },
+            {
+              label: T("clear_processed"),
+              type: "button",
+              onClick: () => {
+                props.rowTarget.setTargetId(props.media.id);
+                props.rowTarget.setTrigger("clear", true);
+              },
+              hide: props.media.type !== "image",
+            },
+            {
+              label: T("delete"),
+              type: "button",
+              onClick: () => {
+                props.rowTarget.setTargetId(props.media.id);
+                props.rowTarget.setTrigger("delete", true);
+              },
+            },
+          ]}
+          options={{
+            border: true,
+          }}
+        />
+      </div>
       {/* Image */}
       <AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
         <Switch>

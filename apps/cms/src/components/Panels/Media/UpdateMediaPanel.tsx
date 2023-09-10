@@ -56,9 +56,9 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
   const MediaFile = useSingleFileUpload({
     id: "file",
     disableRemoveCurrent: true,
-    name: "file-file",
+    name: "file",
     required: true,
-    errors: updateMedia.errors()?.errors?.body?.file,
+    errors: updateMedia.errors,
     noMargin: false,
   });
 

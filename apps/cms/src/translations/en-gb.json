@@ -149,6 +149,7 @@
   "meta": "Meta",
   "dimensions": "Dimensions",
   "extension": "Extension",
+  "clear_processed": "Clear processed",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
@@ -158,6 +159,10 @@
   "delete_user_modal_description": "Are you sure you want to delete this user?",
   "clear_all_processed_images_modal_title": "Clear all processed images",
   "clear_all_processed_images_modal_description": "Are you sure you want to clear all processed images?",
+  "delete_media_modal_title": "Delete Media",
+  "delete_media_modal_description": "Are you sure you want to delete this media?",
+  "clear_processed_images_modal_title": "Clear processed images",
+  "clear_processed_images_modal_description": "Are you sure you want to clear the processed images for this media?",
 
   "update_role_panel_title": "Edit {{name}} Role",
   "update_role_panel_description": "Update the permissions for the {{name}} role.",
@@ -207,6 +212,8 @@
   "media_update_toast_message": "Media has been updated",
   "media_create_toast_title": "Media created",
   "media_create_toast_message": "Media has been created",
+  "media_deleted_toast_title": "Media deleted",
+  "media_deleted_toast_message": "The media has been deleted",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",

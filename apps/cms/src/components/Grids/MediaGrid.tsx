@@ -8,6 +8,8 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
 import UpdateMediaPanel from "@/components/Panels/Media/UpdateMediaPanel";
+import DeleteMedia from "@/components/Modals/Media/DeleteMedia";
+import ClearProcessedMedia from "@/components/Modals/Media/ClearProcessedImages";
 
 interface MediaGridProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -19,6 +21,8 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
   const rowTarget = useRowTarget({
     triggers: {
       update: false,
+      delete: false,
+      clear: false,
     },
   });
 
@@ -50,12 +54,31 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
           {(item) => <MediaCard media={item} rowTarget={rowTarget} />}
         </For>
       </Grid.Root>
+
       <UpdateMediaPanel
         id={rowTarget.getTargetId}
         state={{
           open: rowTarget.getTriggers().update,
           setOpen: (state: boolean) => {
             rowTarget.setTrigger("update", state);
+          },
+        }}
+      />
+      <DeleteMedia
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().delete,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("delete", state);
+          },
+        }}
+      />
+      <ClearProcessedMedia
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().clear,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("clear", state);
           },
         }}
       />

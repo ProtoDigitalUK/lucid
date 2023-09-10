@@ -4,13 +4,12 @@ import { useNavigate } from "@solidjs/router";
 import { TableRowProps } from "@/types/components";
 // Components
 import SelectCol from "@/components/Tables/Columns/SelectCol";
-import ActionMenuCol, {
-  ActionMenuColProps,
-} from "@/components/Tables/Columns/ActionMenuCol";
+import ActionMenuCol from "@/components/Tables/Columns/ActionMenuCol";
+import { ActionDropdownProps } from "@/components/Partials/ActionDropdown";
 import classNames from "classnames";
 
 interface TrProps extends TableRowProps {
-  actions?: ActionMenuColProps["actions"];
+  actions?: ActionDropdownProps["actions"];
   children: JSXElement;
 }
 
