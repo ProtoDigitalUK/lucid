@@ -29,6 +29,9 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       "delivery_status",
       "created_at",
       "updated_at",
+      "type",
+      "email_hash",
+      "sent_count",
     ],
     filter: {
       data: filter,

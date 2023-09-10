@@ -18,11 +18,15 @@ type EmailCreateSingle = (
     bcc?: string;
     template: string;
     delivery_status: "sent" | "failed" | "pending";
+    type: "internal" | "external";
     data?: {
       [key: string]: any;
     };
+    email_hash: string;
   }
-) => Promise<EmailT>;
+) => Promise<{
+  id: EmailT["id"];
+}>;
 
 type EmailGetMultiple = (
   client: PoolClient,
@@ -39,8 +43,11 @@ type EmailUpdateSingle = (
     from_address?: string;
     from_name?: string;
     delivery_status?: "sent" | "failed" | "pending";
+    sent_count?: number;
   }
-) => Promise<EmailT>;
+) => Promise<{
+  id: EmailT["id"];
+}>;
 
 type EmailGetSingle = (
   client: PoolClient,
@@ -69,9 +76,10 @@ export type EmailT = {
 
   delivery_status: "sent" | "failed" | "pending";
   template: string;
-  data?: {
-    [key: string]: any;
-  };
+  data?: Record<string, any>;
+  type: "internal" | "external";
+  email_hash: string;
+  sent_count: number;
 
   created_at: string;
   updated_at: string;
@@ -93,6 +101,8 @@ export default class Email {
       template,
       delivery_status,
       data: templateData,
+      type,
+      email_hash,
     } = data;
 
     // -------------------------------------------
@@ -108,6 +118,8 @@ export default class Email {
         "template",
         "data",
         "delivery_status",
+        "type",
+        "email_hash",
       ],
       values: [
         from_address,
@@ -119,11 +131,19 @@ export default class Email {
         template,
         templateData,
         delivery_status,
+        type,
+        email_hash,
       ],
     });
 
-    const email = await client.query<EmailT>({
-      text: `INSERT INTO lucid_emails (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+    const email = await client.query<{
+      id: EmailT["id"];
+    }>({
+      text: `INSERT INTO lucid_emails (${columns.formatted.insert})
+        VALUES (${aliases.formatted.insert}) 
+        ON CONFLICT (email_hash)
+        DO UPDATE SET sent_count = lucid_emails.sent_count + 1
+        RETURNING id`,
       values: values.value,
     });
 
@@ -176,8 +196,13 @@ export default class Email {
   };
   static updateSingle: EmailUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
-      columns: ["from_address", "from_name", "delivery_status"],
-      values: [data.from_address, data.from_name, data.delivery_status],
+      columns: ["from_address", "from_name", "delivery_status", "sent_count"],
+      values: [
+        data.from_address,
+        data.from_name,
+        data.delivery_status,
+        data.sent_count,
+      ],
       conditional: {
         hasValues: {
           updated_at: new Date().toISOString(),
@@ -185,14 +210,16 @@ export default class Email {
       },
     });
 
-    const email = await client.query<EmailT>({
+    const email = await client.query<{
+      id: EmailT["id"];
+    }>({
       text: `UPDATE 
         lucid_emails 
         SET 
           ${columns.formatted.update} 
         WHERE 
           id = $${aliases.value.length + 1}
-        RETURNING *`,
+        RETURNING id`,
       values: [...values.value, data.id],
     });
 

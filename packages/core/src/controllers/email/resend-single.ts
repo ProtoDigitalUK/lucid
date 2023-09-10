@@ -4,7 +4,7 @@ import service from "@utils/app/service.js";
 // Schema
 import emailsSchema from "@schemas/email.js";
 // Services
-import emailService from "@services/email/index.js";
+import emailServices from "@services/email/index.js";
 
 // --------------------------------------------------
 // Controller
@@ -15,7 +15,7 @@ const resendSingleController: Controller<
 > = async (req, res, next) => {
   try {
     const email = await service(
-      emailService.resendSingle,
+      emailServices.resendSingle,
       true
     )({
       id: parseInt(req.params.id),

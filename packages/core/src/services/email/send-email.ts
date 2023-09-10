@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 // Services
 import Config from "@services/Config.js";
-import emailService from "@services/email/index.js";
+import emailServices from "@services/email/index.js";
 
 export interface ServiceData {
   data: {
@@ -18,15 +18,6 @@ export interface ServiceData {
     replyTo?: string;
   };
 }
-// export interface MailOptionsT {
-//   to?: string;
-//   subject?: string;
-//   from?: string;
-//   fromName?: string;
-//   cc?: string;
-//   bcc?: string;
-//   replyTo?: string;
-// }
 
 const sendEmail = async (template: string, params: ServiceData) => {
   let fromName = params.options?.fromName || Config.email?.from?.name;
@@ -44,7 +35,7 @@ const sendEmail = async (template: string, params: ServiceData) => {
   };
 
   try {
-    const html = await emailService.renderTemplate(template, params.data);
+    const html = await emailServices.renderTemplate(template, params.data);
 
     // Check if SMTP config exists
     const smptConfig = Config.email?.smtp;
@@ -81,7 +72,6 @@ const sendEmail = async (template: string, params: ServiceData) => {
       options: mailOptions,
     };
   } catch (error) {
-    console.log(error);
     const err = error as Error;
     return {
       success: false,

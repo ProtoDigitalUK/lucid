@@ -1,5 +1,9 @@
-require("dotenv").config();
-import { Client } from "pg";
+import dotenv from "dotenv";
+dotenv.config();
+
+import pkg from "pg";
+
+const { Client } = pkg;
 
 const client = new Client({
   connectionString: process.env.LUCID_POSTGRES_URL,

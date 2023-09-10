@@ -10,6 +10,7 @@ export interface ServiceData {
     from_address?: string;
     from_name?: string;
     delivery_status?: "sent" | "failed" | "pending";
+    sent_count?: number;
   };
 }
 
@@ -19,6 +20,7 @@ const updatteSingle = async (client: PoolClient, data: ServiceData) => {
     from_address: data.data.from_address,
     from_name: data.data.from_name,
     delivery_status: data.data.delivery_status,
+    sent_count: data.data.sent_count,
   });
 
   if (!email) {

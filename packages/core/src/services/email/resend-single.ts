@@ -15,6 +15,7 @@ const resendSingle = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     id: data.id,
+    renderTemplate: false,
   });
 
   const status = await emailServices.sendInternal(client, {
@@ -31,7 +32,7 @@ const resendSingle = async (client: PoolClient, data: ServiceData) => {
         replyTo: email.from_address || undefined,
       },
     },
-    id: data.id,
+    email: email,
   });
 
   return status;

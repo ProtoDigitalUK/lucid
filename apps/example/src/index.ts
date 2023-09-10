@@ -58,17 +58,13 @@ router.post("/send-email", async (req, res, next) => {
     //   data,
     // });
 
-    const emailRes = await sendEmail(
-      "contact-form",
-      {
-        data: data,
-        options: {
-          to: data.email,
-          subject: "New contact form submission",
-        },
+    const emailRes = await sendEmail("contact-form", {
+      data: data,
+      options: {
+        to: data.email,
+        subject: "New contact form submission from your website",
       },
-      true
-    );
+    });
 
     res.json(emailRes);
   } catch (error) {

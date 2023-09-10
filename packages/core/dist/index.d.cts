@@ -540,7 +540,7 @@ interface ConfigT extends z.infer<typeof configSchema> {
 }
 declare const buildConfig: (config: ConfigT) => ConfigT;
 
-declare const sendEmail: (template: string, params: ServiceData, track?: boolean | undefined) => Promise<{
+declare const sendEmail: (template: string, params: ServiceData) => Promise<{
     success: boolean;
     message: string;
 }>;

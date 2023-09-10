@@ -2587,7 +2587,7 @@ var validatePassword = async (data) => {
 var validate_password_default = validatePassword;
 
 // src/services/auth/send-reset-password.ts
-var import_date_fns = require("date-fns");
+var import_date_fns2 = require("date-fns");
 
 // src/services/user-tokens/create-single.ts
 var import_crypto2 = __toESM(require("crypto"), 1);
@@ -2713,7 +2713,9 @@ var Email = class {
       bcc,
       template,
       delivery_status,
-      data: templateData
+      data: templateData,
+      type,
+      email_hash
     } = data;
     const { columns, aliases, values } = queryDataFormat({
       columns: [
@@ -2725,7 +2727,9 @@ var Email = class {
         "bcc",
         "template",
         "data",
-        "delivery_status"
+        "delivery_status",
+        "type",
+        "email_hash"
       ],
       values: [
         from_address,
@@ -2736,11 +2740,17 @@ var Email = class {
         bcc,
         template,
         templateData,
-        delivery_status
+        delivery_status,
+        type,
+        email_hash
       ]
     });
     const email = await client.query({
-      text: `INSERT INTO lucid_emails (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO lucid_emails (${columns.formatted.insert})
+        VALUES (${aliases.formatted.insert}) 
+        ON CONFLICT (email_hash)
+        DO UPDATE SET sent_count = lucid_emails.sent_count + 1
+        RETURNING id`,
       values: values.value
     });
     return email.rows[0];
@@ -2785,8 +2795,13 @@ var Email = class {
   };
   static updateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
-      columns: ["from_address", "from_name", "delivery_status"],
-      values: [data.from_address, data.from_name, data.delivery_status],
+      columns: ["from_address", "from_name", "delivery_status", "sent_count"],
+      values: [
+        data.from_address,
+        data.from_name,
+        data.delivery_status,
+        data.sent_count
+      ],
       conditional: {
         hasValues: {
           updated_at: (/* @__PURE__ */ new Date()).toISOString()
@@ -2800,7 +2815,7 @@ var Email = class {
           ${columns.formatted.update} 
         WHERE 
           id = $${aliases.value.length + 1}
-        RETURNING *`,
+        RETURNING id`,
       values: [...values.value, data.id]
     });
     return email.rows[0];
@@ -2840,7 +2855,10 @@ var getMultiple3 = async (client, data) => {
       "data",
       "delivery_status",
       "created_at",
-      "updated_at"
+      "updated_at",
+      "type",
+      "email_hash",
+      "sent_count"
     ],
     filter: {
       data: filter,
@@ -2884,6 +2902,9 @@ var getSingle5 = async (client, data) => {
       status: 404
     });
   }
+  if (!data.renderTemplate) {
+    return email;
+  }
   const html = await email_default.renderTemplate(
     email.template,
     email.data || {}
@@ -2900,7 +2921,8 @@ var resendSingle = async (client, data) => {
     false,
     client
   )({
-    id: data.id
+    id: data.id,
+    renderTemplate: false
   });
   const status = await email_default.sendInternal(client, {
     template: email.template,
@@ -2916,15 +2938,33 @@ var resendSingle = async (client, data) => {
         replyTo: email.from_address || void 0
       }
     },
-    id: data.id
+    email
   });
   return status;
 };
 var resend_single_default = resendSingle;
 
 // src/services/email/create-single.ts
+var import_date_fns = require("date-fns");
+var import_crypto3 = __toESM(require("crypto"), 1);
 var createSingle3 = async (client, data) => {
-  const email = await Email.createSingle(client, data);
+  const date = (0, import_date_fns.format)(/* @__PURE__ */ new Date(), "dd/MM/yyyy");
+  const currentHour = (0, import_date_fns.getHours)(/* @__PURE__ */ new Date());
+  const hashString = `${JSON.stringify(data)}${data.template}${date}${currentHour}`;
+  const hash = import_crypto3.default.createHash("sha256").update(hashString).digest("hex");
+  const email = await Email.createSingle(client, {
+    from_address: data.from_address,
+    from_name: data.from_name,
+    to_address: data.to_address,
+    subject: data.subject,
+    cc: data.cc,
+    bcc: data.bcc,
+    template: data.template,
+    data: data.data,
+    delivery_status: data.delivery_status,
+    type: data.type,
+    email_hash: hash
+  });
   if (!email) {
     throw new LucidError({
       type: "basic",
@@ -2943,7 +2983,8 @@ var updatteSingle = async (client, data) => {
     id: data.id,
     from_address: data.data.from_address,
     from_name: data.data.from_name,
-    delivery_status: data.data.delivery_status
+    delivery_status: data.data.delivery_status,
+    sent_count: data.data.sent_count
   });
   if (!email) {
     throw new LucidError({
@@ -3031,7 +3072,6 @@ var sendEmail = async (template, params) => {
       options: mailOptions
     };
   } catch (error) {
-    console.log(error);
     const err = error;
     return {
       success: false,
@@ -3045,37 +3085,37 @@ var send_email_default = sendEmail;
 // src/services/email/send-internal.ts
 var sendInternal = async (client, data) => {
   const result = await email_default.sendEmail(data.template, data.params);
-  if (data.track) {
-    if (!data.id) {
-      await service_default(
-        email_default.createSingle,
-        false,
-        client
-      )({
+  if (data.email !== void 0) {
+    await service_default(
+      email_default.updateSingle,
+      false,
+      client
+    )({
+      id: data.email.id,
+      data: {
         from_address: result.options.from,
         from_name: result.options.fromName,
-        to_address: result.options.to,
-        subject: result.options.subject,
-        cc: result.options.cc,
-        bcc: result.options.bcc,
-        template: data.template,
-        data: data.params.data,
-        delivery_status: result.success ? "sent" : "failed"
-      });
-    } else {
-      await service_default(
-        email_default.updateSingle,
-        false,
-        client
-      )({
-        id: data.id,
-        data: {
-          from_address: result.options.from,
-          from_name: result.options.fromName,
-          delivery_status: result.success ? "sent" : "failed"
-        }
-      });
-    }
+        delivery_status: result.success ? "sent" : "failed",
+        sent_count: data.email.sent_count + 1
+      }
+    });
+  } else {
+    await service_default(
+      email_default.createSingle,
+      false,
+      client
+    )({
+      from_address: result.options.from,
+      from_name: result.options.fromName,
+      to_address: result.options.to,
+      subject: result.options.subject,
+      cc: result.options.cc,
+      bcc: result.options.bcc,
+      template: data.template,
+      data: data.params.data,
+      delivery_status: result.success ? "sent" : "failed",
+      type: "internal"
+    });
   }
   return {
     success: result.success,
@@ -3085,35 +3125,23 @@ var sendInternal = async (client, data) => {
 var send_internal_default = sendInternal;
 
 // src/services/email/send-external.ts
-var sendExternal = async (template, params, track) => {
+var sendExternal = async (template, params) => {
   const result = await email_default.sendEmail(template, params);
-  if (track) {
-    const client = await getDBClient();
-    try {
-      await client.query("BEGIN");
-      await service_default(
-        email_default.createSingle,
-        false,
-        client
-      )({
-        from_address: result.options.from,
-        from_name: result.options.fromName,
-        to_address: result.options.to,
-        subject: result.options.subject,
-        cc: result.options.cc,
-        bcc: result.options.bcc,
-        template,
-        data: params.data,
-        delivery_status: result.success ? "sent" : "failed"
-      });
-      await client.query("COMMIT");
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
+  await service_default(
+    email_default.createSingle,
+    false
+  )({
+    from_address: result.options.from,
+    from_name: result.options.fromName,
+    to_address: result.options.to,
+    subject: result.options.subject,
+    cc: result.options.cc,
+    bcc: result.options.bcc,
+    template,
+    data: params.data,
+    delivery_status: result.success ? "sent" : "failed",
+    type: "external"
+  });
   return {
     success: result.success,
     message: result.message
@@ -3150,7 +3178,7 @@ var sendResetPassword = async (client, data) => {
       message: successMessage
     };
   }
-  const expiryDate = (0, import_date_fns.add)(/* @__PURE__ */ new Date(), { hours: 1 }).toISOString();
+  const expiryDate = (0, import_date_fns2.add)(/* @__PURE__ */ new Date(), { hours: 1 }).toISOString();
   const userToken = await service_default(
     user_tokens_default.createSingle,
     false,
@@ -11416,7 +11444,8 @@ var getSingleController11 = async (req, res, next) => {
       email_default.getSingle,
       false
     )({
-      id: parseInt(req.params.id)
+      id: parseInt(req.params.id),
+      renderTemplate: true
     });
     res.status(200).json(
       build_response_default(req, {
