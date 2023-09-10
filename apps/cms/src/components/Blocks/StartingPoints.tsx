@@ -33,6 +33,21 @@ const items = [
     description: "Get a birds-eye-view of your procrastination.",
     background: "bg-purple-500",
   },
+  {
+    title: "Create a Board",
+    description: "Track tasks in different stages of your project.",
+    background: "bg-blue-500",
+  },
+  {
+    title: "Create a Spreadsheet",
+    description: "Lots of numbers and things — good for nerds.",
+    background: "bg-indigo-500",
+  },
+  {
+    title: "Create a Timeline",
+    description: "Get a birds-eye-view of your procrastination.",
+    background: "bg-purple-500",
+  },
 ];
 
 const StartingPoints: Component = () => {
@@ -40,7 +55,10 @@ const StartingPoints: Component = () => {
   // Render
   return (
     <div class="mb-30">
-      <ul role="list" class="grid grid-cols-1 gap-6 pb-5 sm:grid-cols-2">
+      <ul
+        role="list"
+        class="grid grid-cols-1 gap-6 pb-5 sm:grid-cols-2 lg:grid-cols-3"
+      >
         <For each={items}>
           {(item) => (
             <li class="flow-root">
