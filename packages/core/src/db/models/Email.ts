@@ -23,6 +23,7 @@ type EmailCreateSingle = (
       [key: string]: any;
     };
     email_hash: string;
+    sent_count: number;
   }
 ) => Promise<{
   id: EmailT["id"];
@@ -101,6 +102,7 @@ export default class Email {
       data: templateData,
       type,
       email_hash,
+      sent_count,
     } = data;
 
     // -------------------------------------------
@@ -118,6 +120,7 @@ export default class Email {
         "delivery_status",
         "type",
         "email_hash",
+        "sent_count",
       ],
       values: [
         from_address,
@@ -131,6 +134,7 @@ export default class Email {
         delivery_status,
         type,
         email_hash,
+        sent_count,
       ],
     });
 

@@ -42,6 +42,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     delivery_status: data.delivery_status,
     type: data.type,
     email_hash: hash,
+    sent_count: data.delivery_status === "sent" ? 1 : 0,
   });
 
   if (!email) {

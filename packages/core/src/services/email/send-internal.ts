@@ -28,7 +28,9 @@ const sendInternal = async (client: PoolClient, data: ServiceData) => {
         from_address: result.options.from,
         from_name: result.options.fromName,
         delivery_status: result.success ? "sent" : "failed",
-        sent_count: data.email.sent_count + 1,
+        sent_count: result.success
+          ? data.email.sent_count + 1
+          : data.email.sent_count,
       },
     });
   } else {

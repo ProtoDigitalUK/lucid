@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS lucid_emails (
   template TEXT NOT NULL,
   data JSONB,
   type TEXT NOT NULL,
-  sent_count INTEGER NOT NULL DEFAULT 1,
+  sent_count INTEGER NOT NULL DEFAULT 0,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

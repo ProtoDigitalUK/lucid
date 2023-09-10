@@ -2676,7 +2676,8 @@ var Email = class {
       delivery_status,
       data: templateData,
       type,
-      email_hash
+      email_hash,
+      sent_count
     } = data;
     const { columns, aliases, values } = queryDataFormat({
       columns: [
@@ -2690,7 +2691,8 @@ var Email = class {
         "data",
         "delivery_status",
         "type",
-        "email_hash"
+        "email_hash",
+        "sent_count"
       ],
       values: [
         from_address,
@@ -2703,7 +2705,8 @@ var Email = class {
         templateData,
         delivery_status,
         type,
-        email_hash
+        email_hash,
+        sent_count
       ]
     });
     const email = await client.query({
@@ -2966,7 +2969,8 @@ var createSingle3 = async (client, data) => {
     data: data.data,
     delivery_status: data.delivery_status,
     type: data.type,
-    email_hash: hash
+    email_hash: hash,
+    sent_count: data.delivery_status === "sent" ? 1 : 0
   });
   if (!email) {
     throw new LucidError({
@@ -3099,7 +3103,7 @@ var sendInternal = async (client, data) => {
         from_address: result.options.from,
         from_name: result.options.fromName,
         delivery_status: result.success ? "sent" : "failed",
-        sent_count: data.email.sent_count + 1
+        sent_count: result.success ? data.email.sent_count + 1 : data.email.sent_count
       }
     });
   } else {
