@@ -95,7 +95,18 @@ export const NavigationSidebar: Component = () => {
             active={location.pathname.includes("/env/")}
             permission={showEnvLink()}
           />
-          <Navigation.IconLink href="/media" icon="media" title={T("media")} />
+          <Navigation.IconLink
+            href="/media"
+            icon="media"
+            title={T("media")}
+            permission={
+              userStore.get.hasPermission([
+                "create_media",
+                "update_media",
+                "delete_media",
+              ]).some
+            }
+          />
           <Navigation.IconLink
             href="/users"
             icon="users"

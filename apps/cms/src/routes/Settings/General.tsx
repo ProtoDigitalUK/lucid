@@ -2,6 +2,8 @@ import T from "@/translations";
 import { Component, createMemo, createSignal } from "solid-js";
 // Utils
 import helpers from "@/utils/helpers";
+// Store
+import userStore from "@/store/userStore";
 // Components
 import InfoRow from "@/components/Blocks/InfoRow";
 import Button from "@/components/Partials/Button";
@@ -44,11 +46,12 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
         >
           <Button
             size="small"
-            type="submit"
+            type="button"
             theme="danger"
             onClick={() => {
               setOpenClearAllProcessedImages(true);
             }}
+            permission={userStore.get.hasPermission(["update_media"]).all}
           >
             {T("clear_all_processed_images_button", {
               count: props.settings?.media.processed_images.total || 0,

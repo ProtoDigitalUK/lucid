@@ -2,6 +2,8 @@ import T from "@/translations";
 import { Component, createSignal } from "solid-js";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
+// Store
+import userStore from "@/store/userStore";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
@@ -131,6 +133,7 @@ const MediaListRoute: Component = () => {
         create: {
           open: getOpenCreateMediaPanel(),
           setOpen: setOpenCreateMediaPanel,
+          permission: userStore.get.hasPermission(["create_media"]).all,
         },
       }}
     >

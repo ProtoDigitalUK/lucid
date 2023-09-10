@@ -14,7 +14,7 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   size: "x-small" | "small" | "medium" | "large" | "icon" | "auto";
   children: JSX.Element;
 
-  onCLick?: () => void;
+  onClick?: () => void;
   type?: "button" | "submit" | "reset";
   classes?: string;
   loading?: boolean;
@@ -59,27 +59,31 @@ const Button: Component<ButtonProps> = (props) => {
   });
 
   // ----------------------------------------
+  // Functions
+  const buttonOnClick = (e: MouseEvent) => {
+    if (props.permission === false) {
+      spawnToast({
+        title: T("no_permission_toast_title"),
+        message: T("no_permission_toast_message"),
+        status: "warning",
+      });
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
+    props.onClick && props.onClick();
+  };
+
+  // ----------------------------------------
   // Render
   return (
     <button
+      {...props}
       type={props.type}
       class={classnames(classes(), props.classes)}
-      onClick={(e) => {
-        if (props.permission === false) {
-          spawnToast({
-            title: T("no_permission_toast_title"),
-            message: T("no_permission_toast_message"),
-            status: "warning",
-          });
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
-
-        props.onCLick && props.onCLick();
-      }}
+      onClick={buttonOnClick}
       disabled={props.disabled || props.loading}
-      {...props}
     >
       <Show when={props.loading !== undefined && props.loading}>
         <div
