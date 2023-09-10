@@ -20,6 +20,7 @@ app.use(timeout("10s"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
+    contentSecurityPolicy: false,
   })
 );
 
