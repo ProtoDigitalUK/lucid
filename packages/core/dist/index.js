@@ -2800,6 +2800,33 @@ var deleteSingle5 = async (client, data) => {
 };
 var delete_single_default5 = deleteSingle5;
 
+// src/utils/format/format-emails.ts
+var formatEmails = (email, html) => {
+  return {
+    id: email.id,
+    mail_details: {
+      from: {
+        address: email.from_address,
+        name: email.from_name
+      },
+      to: email.to_address,
+      subject: email.subject,
+      cc: email.cc,
+      bcc: email.bcc,
+      template: email.template
+    },
+    data: email.data,
+    delivery_status: email.delivery_status,
+    type: email.type,
+    email_hash: email.email_hash,
+    sent_count: email.sent_count,
+    html,
+    created_at: email.created_at,
+    updated_at: email.updated_at
+  };
+};
+var format_emails_default = formatEmails;
+
 // src/services/email/get-multiple.ts
 var getMultiple3 = async (client, data) => {
   const { filter, sort, page, per_page } = data.query;
@@ -2835,7 +2862,17 @@ var getMultiple3 = async (client, data) => {
           columnType: "standard"
         },
         delivery_status: {
-          operator: "ILIKE",
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        },
+        type: {
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        },
+        template: {
+          operator: "%",
           type: "text",
           columnType: "standard"
         }
@@ -2846,7 +2883,10 @@ var getMultiple3 = async (client, data) => {
     per_page
   });
   const emails = await Email.getMultiple(client, SelectQuery);
-  return emails;
+  return {
+    data: emails.data.map((email) => format_emails_default(email)),
+    count: emails.count
+  };
 };
 var get_multiple_default3 = getMultiple3;
 
@@ -2864,27 +2904,29 @@ var getSingle5 = async (client, data) => {
     });
   }
   if (!data.renderTemplate) {
-    return email;
+    return format_emails_default(email);
   }
   const html = await email_default.renderTemplate(
     email.template,
     email.data || {}
   );
-  email.html = html;
-  return email;
+  return format_emails_default(email, html);
 };
 var get_single_default5 = getSingle5;
 
 // src/services/email/resend-single.ts
 var resendSingle = async (client, data) => {
-  const email = await service_default(
-    email_default.getSingle,
-    false,
-    client
-  )({
-    id: data.id,
-    renderTemplate: false
+  const email = await Email.getSingle(client, {
+    id: data.id
   });
+  if (!email) {
+    throw new LucidError({
+      type: "basic",
+      name: "Email",
+      message: "Email not found",
+      status: 404
+    });
+  }
   const status = await email_default.sendInternal(client, {
     template: email.template,
     params: {
@@ -11320,11 +11362,14 @@ var getMultipleQuery7 = z18.object({
   filter: z18.object({
     to_address: z18.string().optional(),
     subject: z18.string().optional(),
-    delivery_status: z18.union([z18.string(), z18.array(z18.string())]).optional()
+    delivery_status: z18.union([z18.string(), z18.array(z18.string())]).optional(),
+    type: z18.union([z18.string(), z18.array(z18.string())]).optional(),
+    // internal | external
+    template: z18.string().optional()
   }).optional(),
   sort: z18.array(
     z18.object({
-      key: z18.enum(["created_at", "updated_at"]),
+      key: z18.enum(["created_at", "updated_at", "sent_count"]),
       value: z18.enum(["asc", "desc"])
     })
   ).optional(),

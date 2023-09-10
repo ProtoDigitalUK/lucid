@@ -9,12 +9,14 @@ const getMultipleQuery = z.object({
       to_address: z.string().optional(),
       subject: z.string().optional(),
       delivery_status: z.union([z.string(), z.array(z.string())]).optional(),
+      type: z.union([z.string(), z.array(z.string())]).optional(), // internal | external
+      template: z.string().optional(),
     })
     .optional(),
   sort: z
     .array(
       z.object({
-        key: z.enum(["created_at", "updated_at"]),
+        key: z.enum(["created_at", "updated_at", "sent_count"]),
         value: z.enum(["asc", "desc"]),
       })
     )

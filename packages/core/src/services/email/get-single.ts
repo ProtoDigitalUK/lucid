@@ -5,10 +5,11 @@ import Email from "@db/models/Email.js";
 import { LucidError } from "@utils/app/error-handler.js";
 // Services
 import emailServices from "@services/email/index.js";
+// Format
+import formatEmails from "@utils/format/format-emails.js";
 
 export interface ServiceData {
   id: number;
-
   renderTemplate: boolean;
 }
 
@@ -27,16 +28,15 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   }
 
   if (!data.renderTemplate) {
-    return email;
+    return formatEmails(email);
   }
 
   const html = await emailServices.renderTemplate(
     email.template,
     email.data || {}
   );
-  email.html = html;
 
-  return email;
+  return formatEmails(email, html);
 };
 
 export default getSingle;

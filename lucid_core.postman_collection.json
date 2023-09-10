@@ -1176,7 +1176,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"key\": \"footer-3\",\n    \"name\": \"Footer Navigation\",\n    // \"description\": \"Used accross the site in the header.\",\n    \"items\": [\n        {\n            \"url\": \"\",\n            \"page_id\": 1,\n            \"name\": \"Homepage\",\n            \"target\": \"_self\",\n            \"meta\": {\n                \"test\": true\n            }\n            // \"children\": []\n        },\n        {\n            \"url\": \"\",\n            \"page_id\": 2,\n            \"name\": \"About\",\n            \"target\": \"_blank\",\n            \"meta\": {\n                \"test\": true\n            },\n            \"children\": [\n                {\n                    \"url\": \"\",\n                    \"name\": \"Services\",\n                    \"target\": \"_blank\",\n                    \"children\": [\n                        {\n                            \"url\": \"\",\n                            \"name\": \"Services Test\",\n                            \"target\": \"_blank\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+									"raw": "{\n    \"key\": \"Header\",\n    \"name\": \"Footer Navigation\",\n    // \"description\": \"Used accross the site in the header.\",\n    \"items\": [\n        {\n            // \"url\": \"\",\n            \"page_id\": 1,\n            \"name\": \"Homepage\",\n            // \"target\": \"_self\",\n            \"meta\": {\n                \"test\": true\n            }\n            // \"children\": []\n        },\n        {\n            // \"url\": \"\",\n            \"page_id\": 2,\n            \"name\": \"About\",\n            \"target\": \"_blank\",\n            \"children\": [\n                {\n                    \"url\": \"https://example.com\",\n                    \"name\": \"Services\",\n                    \"target\": \"_blank\",\n                    \"children\": [\n                        {\n                            \"url\": \"https://example.com\",\n                            \"name\": \"Services Test\",\n                            \"target\": \"_blank\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1329,11 +1329,6 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									},
-									{
 										"key": "lucid-environment",
 										"value": "{{LUCID_ENVIRONMENT}}",
 										"type": "text"
@@ -1402,7 +1397,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions?sort=created_at",
+											"raw": "{{BASE_URL}}/api/v1/forms/contact-form/submissions?sort=created_at&include=fields",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -1425,8 +1420,7 @@
 												},
 												{
 													"key": "include",
-													"value": "fields",
-													"disabled": true
+													"value": "fields"
 												}
 											]
 										}
@@ -1901,8 +1895,9 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Wolvito",
-									"type": "text"
+									"value": "I have no file",
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "alt",
@@ -1913,7 +1908,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/danny-devito.jpg"
+									"src": "/C:/Users/wyall/Desktop/Group 122.jpg"
 								}
 							]
 						},
@@ -1948,7 +1943,8 @@
 								{
 									"key": "name",
 									"value": "Wolevito",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "alt",
@@ -1959,13 +1955,13 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/danny-devito.jpg",
+									"src": "/C:/Users/wyall/Desktop/Group 122.jpg",
 									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/2",
+							"raw": "{{BASE_URL}}/api/v1/media/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1973,7 +1969,7 @@
 								"api",
 								"v1",
 								"media",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -2054,13 +2050,7 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "_csrf",
-								"value": "{{CSRF}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -2207,7 +2197,8 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -2220,7 +2211,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/emails",
+							"raw": "{{BASE_URL}}/api/v1/emails?sort=-created_at",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2246,13 +2237,22 @@
 									"disabled": true
 								},
 								{
-									"key": "sort",
-									"value": "-created_at",
+									"key": "filter[type]",
+									"value": "external,internal",
+									"disabled": true
+								},
+								{
+									"key": "filter[template]",
+									"value": "reset-password",
 									"disabled": true
 								},
 								{
 									"key": "sort",
-									"value": "created_at,updated_at",
+									"value": "-created_at"
+								},
+								{
+									"key": "sort",
+									"value": "created_at,updated_at,sent_count",
 									"disabled": true
 								}
 							]
@@ -2364,6 +2364,23 @@
 								"emails",
 								"1",
 								"resend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Testing Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/send-email",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"send-email"
 							]
 						}
 					},

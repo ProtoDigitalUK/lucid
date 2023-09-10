@@ -1,6 +1,8 @@
 import { PoolClient } from "pg";
+// Models
+import Email from "@db/models/Email.js";
 // Utils
-import service from "@utils/app/service.js";
+import { LucidError } from "@utils/app/error-handler.js";
 // Services
 import emailServices from "@services/email/index.js";
 
@@ -9,15 +11,18 @@ export interface ServiceData {
 }
 
 const resendSingle = async (client: PoolClient, data: ServiceData) => {
-  const email = await service(
-    emailServices.getSingle,
-    false,
-    client
-  )({
+  const email = await Email.getSingle(client, {
     id: data.id,
-    renderTemplate: false,
   });
 
+  if (!email) {
+    throw new LucidError({
+      type: "basic",
+      name: "Email",
+      message: "Email not found",
+      status: 404,
+    });
+  }
   const status = await emailServices.sendInternal(client, {
     template: email.template,
     params: {

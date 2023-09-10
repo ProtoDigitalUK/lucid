@@ -83,8 +83,6 @@ export type EmailT = {
 
   created_at: string;
   updated_at: string;
-
-  html?: string;
 };
 
 export default class Email {
