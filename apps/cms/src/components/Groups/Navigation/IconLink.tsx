@@ -7,6 +7,7 @@ import {
   FaSolidEarthEurope,
   FaSolidHouse,
   FaSolidUserLock,
+  FaSolidEnvelope,
 } from "solid-icons/fa";
 // Components
 import { Link } from "@solidjs/router";
@@ -16,7 +17,14 @@ import TooltipContent from "@/components/Partials/TooltipContent";
 interface IconLinkProps {
   title: string;
   href: string;
-  icon: "dashboard" | "environment" | "media" | "users" | "settings" | "roles";
+  icon:
+    | "dashboard"
+    | "environment"
+    | "media"
+    | "users"
+    | "settings"
+    | "roles"
+    | "email";
   active?: boolean;
   permission?: boolean;
 }
@@ -62,6 +70,9 @@ export const IconLink: Component<IconLinkProps> = (props) => {
                 </Match>
                 <Match when={props.icon === "roles"}>
                   <FaSolidUserLock class={iconClasses} />
+                </Match>
+                <Match when={props.icon === "email"}>
+                  <FaSolidEnvelope class={iconClasses} />
                 </Match>
               </Switch>
             </Link>

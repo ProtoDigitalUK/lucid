@@ -6,6 +6,7 @@ import roles from "./roles";
 import permissions from "./permissions";
 import media from "./media";
 import settings from "./settings";
+import email from "./email";
 
 const exportObject = {
   auth,
@@ -16,6 +17,7 @@ const exportObject = {
   permissions,
   media,
   settings,
+  email,
 };
 
 export default exportObject;

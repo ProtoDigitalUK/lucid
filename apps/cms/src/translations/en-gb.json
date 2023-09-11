@@ -150,6 +150,20 @@
   "dimensions": "Dimensions",
   "extension": "Extension",
   "clear_processed": "Clear processed",
+  "sent_count": "Sent Count",
+  "internal": "Internal",
+  "external": "External",
+  "sent": "Sent",
+  "failed": "Failed",
+  "pending": "Pending",
+  "status": "Status",
+  "template": "Template",
+  "subject": "Subject",
+  "to": "To",
+  "emails": "Emails",
+  "first_attempt": "First Attempt",
+  "last_attempt": "Last Attempt",
+  "from": "From",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
@@ -234,5 +248,7 @@
   "settings_route_title": "Settings",
   "settings_route_description": "Manage your settings.",
   "dashboard_route_title": "Welcome back{{name}}",
-  "dashboard_route_description": "Here is an overview of your most recent activity, content, media and some quick links to navigate the CMS."
+  "dashboard_route_description": "Here is an overview of your most recent activity, content, media and some quick links to navigate the CMS.",
+  "email_route_title": "Emails",
+  "email_route_description": "Preview and manage every email sent from the CMS."
 }

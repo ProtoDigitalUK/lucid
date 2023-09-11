@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { Component, JSXElement } from "solid-js";
 
-interface PillProps {
-  theme: "primary" | "secondary" | "grey";
+export interface PillProps {
+  theme: "primary" | "secondary" | "grey" | "green" | "red";
   children: JSXElement;
 }
 
@@ -17,6 +17,8 @@ const Pill: Component<PillProps> = (props) => {
           "bg-primary text-primaryText": props.theme === "primary",
           "bg-secondary text-secondaryText": props.theme === "secondary",
           "bg-backgroundAccent text-title": props.theme === "grey",
+          "bg-success text-white": props.theme === "green",
+          "bg-error text-white": props.theme === "red",
         }
       )}
     >

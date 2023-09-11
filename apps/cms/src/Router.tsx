@@ -27,6 +27,9 @@ import RolesListRoute from "@/routes/Roles/List";
 // settings
 import SettingsListRoute from "@/routes/Settings/List";
 
+// emails
+import EmailListRoute from "@/routes/Emails/List";
+
 // environments
 import EnvCollectionsListRoute from "@/routes/Environments/Collections/List";
 import CreateEnvrionemntRoute from "@/routes/Environments/Create";
@@ -53,6 +56,8 @@ const AppRouter: Component = () => {
             <Route path="/users" element={<UsersListRoute />} />
             {/* Roles */}
             <Route path="/roles" element={<RolesListRoute />} />
+            {/* Emails */}
+            <Route path="/emails" element={<EmailListRoute />} />
             {/* Settings */}
             <Route path="/settings" element={<SettingsListRoute />} />
             <Route

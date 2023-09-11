@@ -132,6 +132,12 @@ export const NavigationSidebar: Component = () => {
             }
           />
           <Navigation.IconLink
+            href="/emails"
+            icon="email"
+            title={T("emails")}
+            permission={true}
+          />
+          <Navigation.IconLink
             href="/settings"
             icon="settings"
             title={T("settings")}
