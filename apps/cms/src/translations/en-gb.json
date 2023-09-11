@@ -164,6 +164,9 @@
   "first_attempt": "First Attempt",
   "last_attempt": "Last Attempt",
   "from": "From",
+  "data": "Data",
+  "resend": "Resend",
+  "view_data": "View data",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
@@ -190,6 +193,7 @@
   "update_media_panel_description": "Update the media entry.",
   "create_media_panel_title": "Create Media",
   "create_media_panel_description": "Create a new media entry with the details you require.",
+  "preview_email_panel_title": "Preview Email",
 
   "password_reset_toast_title": "Password reset email sent",
   "password_reset_toast_message": "Please check your email for a password reset link",

@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component } from "solid-js";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
@@ -25,6 +26,16 @@ const EmailRow: Component<EmailRowProps> = (props) => {
       selected={props.selected}
       options={props.options}
       callbacks={props.callbacks}
+      actions={[
+        {
+          label: T("preview"),
+          type: "button",
+          onClick: () => {
+            props.rowTarget.setTargetId(props.email.id);
+            props.rowTarget.setTrigger("preview", true);
+          },
+        },
+      ]}
     >
       <PillCol
         text={props.email.delivery_status}

@@ -103,7 +103,7 @@ const EmailListRoute: Component = () => {
                 },
                 {
                   label: T("external"),
-                  value: "sms",
+                  value: "external",
                 },
               ],
             },

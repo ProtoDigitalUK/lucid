@@ -14,6 +14,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Table from "@/components/Groups/Table";
 import EmailRow from "@/components/Tables/Rows/EmailRow";
+import PreviewEmailPanel from "../Panels/Email/PreviewEmailPanel";
 
 interface EmailsTableProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -125,6 +126,15 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
           </Index>
         )}
       </Table.Root>
+      <PreviewEmailPanel
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().preview,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("preview", state);
+          },
+        }}
+      />
     </>
   );
 };
