@@ -28,13 +28,13 @@ declare const _default: {
             height?: string | undefined;
             format?: "jpeg" | "png" | "webp" | "avif" | undefined;
             quality?: string | undefined;
-            fallback?: "0" | "1" | undefined;
+            fallback?: "1" | "0" | undefined;
         }, {
             width?: string | undefined;
             height?: string | undefined;
             format?: "jpeg" | "png" | "webp" | "avif" | undefined;
             quality?: string | undefined;
-            fallback?: "0" | "1" | undefined;
+            fallback?: "1" | "0" | undefined;
         }>;
         params: z.ZodObject<{
             key: z.ZodString;
@@ -70,11 +70,11 @@ declare const _default: {
                 key: z.ZodEnum<["created_at", "updated_at", "name", "file_size", "width", "height", "mime_type", "file_extension"]>;
                 value: z.ZodEnum<["asc", "desc"]>;
             }, "strip", z.ZodTypeAny, {
-                value: "asc" | "desc";
-                key: "name" | "width" | "height" | "mime_type" | "file_extension" | "created_at" | "updated_at" | "file_size";
+                value: "desc" | "asc";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }, {
-                value: "asc" | "desc";
-                key: "name" | "width" | "height" | "mime_type" | "file_extension" | "created_at" | "updated_at" | "file_size";
+                value: "desc" | "asc";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }>, "many">>;
             page: z.ZodOptional<z.ZodString>;
             per_page: z.ZodOptional<z.ZodString>;
@@ -87,8 +87,8 @@ declare const _default: {
                 file_extension?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
-                key: "name" | "width" | "height" | "mime_type" | "file_extension" | "created_at" | "updated_at" | "file_size";
+                value: "desc" | "asc";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;
@@ -101,8 +101,8 @@ declare const _default: {
                 file_extension?: string | string[] | undefined;
             } | undefined;
             sort?: {
-                value: "asc" | "desc";
-                key: "name" | "width" | "height" | "mime_type" | "file_extension" | "created_at" | "updated_at" | "file_size";
+                value: "desc" | "asc";
+                key: "name" | "width" | "height" | "created_at" | "updated_at" | "mime_type" | "file_extension" | "file_size";
             }[] | undefined;
             page?: string | undefined;
             per_page?: string | undefined;

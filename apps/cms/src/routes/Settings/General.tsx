@@ -25,6 +25,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
   // ----------------------------------------
   // Memos
   const percentUsed = createMemo(() => {
+    if (props.settings?.media.storage_remaining === null) return 0;
     const total = props.settings?.media.storage_limit || 0;
     const remaining = props.settings?.media.storage_remaining || 0;
     return Math.floor(((total - remaining) / total) * 100);
