@@ -232,6 +232,10 @@
   "media_create_toast_message": "Media has been created",
   "media_deleted_toast_title": "Media deleted",
   "media_deleted_toast_message": "The media has been deleted",
+  "email_deleted_toast_title": "Email deleted",
+  "email_deleted_toast_message": "The email has been deleted",
+  "email_resent_toast_title": "Email resent",
+  "email_resent_toast_message": "The email has been resent",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",
