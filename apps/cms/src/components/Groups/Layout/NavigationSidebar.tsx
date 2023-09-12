@@ -135,7 +135,7 @@ export const NavigationSidebar: Component = () => {
             href="/emails"
             icon="email"
             title={T("emails")}
-            permission={true}
+            permission={userStore.get.hasPermission(["read_email"]).all}
           />
           <Navigation.IconLink
             href="/settings"

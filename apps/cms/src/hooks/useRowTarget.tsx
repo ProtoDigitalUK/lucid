@@ -4,17 +4,19 @@
 */
 import { createSignal } from "solid-js";
 
-interface UseRowTargetProps {
-  triggers: Record<string, boolean>;
+interface UseRowTargetProps<T extends string | number | symbol> {
+  triggers: Record<T, boolean>;
 }
 
-const useRowTarget = (config: UseRowTargetProps) => {
+const useRowTarget = <T extends string | number | symbol>(
+  config: UseRowTargetProps<T>
+) => {
   const [getTriggers, setTriggers] = createSignal(config.triggers);
   const [getTargetId, setTargetId] = createSignal<number>();
 
   return {
     getTriggers,
-    setTrigger: (key: string, state: boolean) => {
+    setTrigger: (key: T, state: boolean) => {
       setTriggers((prev) => {
         return {
           ...prev,

@@ -15,7 +15,7 @@ import DateCol from "../Columns/DateCol";
 interface RoleRowProps extends TableRowProps {
   role: RoleResT;
   include: boolean[];
-  rowTarget: ReturnType<typeof useRowTarget>;
+  rowTarget: ReturnType<typeof useRowTarget<"update" | "delete">>;
 }
 
 const RoleRow: Component<RoleRowProps> = (props) => {

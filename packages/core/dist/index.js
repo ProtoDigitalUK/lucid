@@ -2791,7 +2791,7 @@ var deleteSingle5 = async (client, data) => {
   const email = await Email.deleteSingle(client, {
     id: data.id
   });
-  if (email) {
+  if (!email) {
     throw new LucidError({
       type: "basic",
       name: "Email",

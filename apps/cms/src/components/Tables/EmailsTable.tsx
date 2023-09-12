@@ -15,6 +15,8 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Table from "@/components/Groups/Table";
 import EmailRow from "@/components/Tables/Rows/EmailRow";
 import PreviewEmailPanel from "../Panels/Email/PreviewEmailPanel";
+import DeleteEmail from "@/components/Modals/Email/DeleteEmail";
+import ResendEmail from "@/components/Modals/Email/ResendEmail";
 
 interface EmailsTableProps {
   searchParams: ReturnType<typeof useSearchParams>;
@@ -26,6 +28,8 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
   const rowTarget = useRowTarget({
     triggers: {
       preview: false,
+      delete: false,
+      resend: false,
     },
   });
 
@@ -132,6 +136,24 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
           open: rowTarget.getTriggers().preview,
           setOpen: (state: boolean) => {
             rowTarget.setTrigger("preview", state);
+          },
+        }}
+      />
+      <DeleteEmail
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().delete,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("delete", state);
+          },
+        }}
+      />
+      <ResendEmail
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().resend,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("resend", state);
           },
         }}
       />

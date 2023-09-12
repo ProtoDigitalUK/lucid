@@ -25,7 +25,7 @@ import classNames from "classnames";
 
 interface MediaCardProps {
   media: MediaResT;
-  rowTarget: ReturnType<typeof useRowTarget>;
+  rowTarget: ReturnType<typeof useRowTarget<"clear" | "delete" | "update">>;
 }
 
 export const MediaCardLoading: Component = () => {

@@ -13,7 +13,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     id: data.id,
   });
 
-  if (email) {
+  if (!email) {
     throw new LucidError({
       type: "basic",
       name: "Email",

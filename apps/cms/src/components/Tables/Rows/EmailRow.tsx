@@ -5,6 +5,8 @@ import useRowTarget from "@/hooks/useRowTarget";
 // Types
 import { TableRowProps } from "@/types/components";
 import { EmailResT } from "@lucid/types/src/email";
+// Stores
+import userStore from "@/store/userStore";
 // Components
 import Table from "@/components/Groups/Table";
 import TextCol from "@/components/Tables/Columns/TextCol";
@@ -14,7 +16,7 @@ import PillCol from "@/components/Tables/Columns/PillCol";
 interface EmailRowProps extends TableRowProps {
   email: EmailResT;
   include: boolean[];
-  rowTarget: ReturnType<typeof useRowTarget>;
+  rowTarget: ReturnType<typeof useRowTarget<"preview" | "resend" | "delete">>;
 }
 
 const EmailRow: Component<EmailRowProps> = (props) => {
@@ -34,6 +36,25 @@ const EmailRow: Component<EmailRowProps> = (props) => {
             props.rowTarget.setTargetId(props.email.id);
             props.rowTarget.setTrigger("preview", true);
           },
+          permission: userStore.get.hasPermission(["read_email"]).all,
+        },
+        {
+          label: T("resend"),
+          type: "button",
+          onClick: () => {
+            props.rowTarget.setTargetId(props.email.id);
+            props.rowTarget.setTrigger("resend", true);
+          },
+          permission: userStore.get.hasPermission(["send_email"]).all,
+        },
+        {
+          label: T("delete"),
+          type: "button",
+          onClick: () => {
+            props.rowTarget.setTargetId(props.email.id);
+            props.rowTarget.setTrigger("delete", true);
+          },
+          permission: userStore.get.hasPermission(["delete_email"]).all,
         },
       ]}
     >

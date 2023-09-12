@@ -7,6 +7,7 @@ import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 
 interface ConfirmationProps {
+  theme?: "primary" | "danger";
   state: {
     open: boolean;
     setOpen: (_open: boolean) => void;
@@ -55,7 +56,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
               </Show>
               <div class="flex">
                 <Button
-                  theme="danger"
+                  theme={props.theme || "danger"}
                   size="small"
                   type={"button"}
                   loading={props.state.isLoading}
