@@ -3,8 +3,6 @@ import { Component, Accessor } from "solid-js";
 // Services
 import api from "@/services/api";
 // Utils
-// import helpers from "@/utils/helpers";
-// import dateHelpers from "@/utils/date-helpers";
 // Components
 import Panel from "@/components/Groups/Panel";
 import SectionHeading from "@/components/Blocks/SectionHeading";
@@ -38,17 +36,18 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
       open={props.state.open}
       setOpen={props.state.setOpen}
       reset={() => {}}
+      hideFooter={true}
       fetchState={{
         isLoading: email.isLoading,
         isError: email.isError,
       }}
       content={{
         title: T("preview_email_panel_title"),
-        submit: T("resend"),
       }}
     >
       <SectionHeading title={T("details")} />
       <DetailsList
+        type="text"
         items={[
           {
             label: T("subject"),

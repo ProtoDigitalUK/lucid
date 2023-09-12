@@ -181,6 +181,7 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
       </Show>
       <SectionHeading title={T("meta")} />
       <DetailsList
+        type="text"
         items={[
           {
             label: T("file_size"),

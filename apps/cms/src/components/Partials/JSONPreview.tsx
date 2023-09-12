@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { FaSolidChevronDown } from "solid-icons/fa";
+import { FaSolidChevronRight } from "solid-icons/fa";
 // Components
 import { Collapsible } from "@kobalte/core";
 
@@ -13,9 +13,9 @@ const JSONPreview: Component<JSONPreviewProps> = (props) => {
   // Render
   return (
     <Collapsible.Root class="bg-backgroundAccent rounded-md mb-30 last:mb-0">
-      <Collapsible.Trigger class="w-full flex justify-between p-15 text-title font-medium text-sm">
+      <Collapsible.Trigger class="w-full flex justify-between items-center p-15 text-title font-medium text-sm">
         <span>{props.title}</span>
-        <FaSolidChevronDown class="" />
+        <FaSolidChevronRight class={"h-3 w-3"} />
       </Collapsible.Trigger>
       <Collapsible.Content class="p-15 bg-backgroundAccentH rounded-b-md overflow-scroll">
         <pre class="text-xs text-title">

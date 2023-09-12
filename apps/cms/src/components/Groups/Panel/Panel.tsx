@@ -27,6 +27,7 @@ interface PanelProps {
   setOpen: (_open: boolean) => void;
   onSubmit?: () => void;
   reset: () => void;
+  hideFooter?: boolean;
 
   fetchState?: {
     isLoading?: boolean;
@@ -61,8 +62,10 @@ export const Panel: Component<PanelProps> = (props) => {
   // Functions
   const setBodyHeightValue = () => {
     setTimeout(() => {
-      if (headerRef && footerRef) {
-        setBodyMinHeight(headerRef.offsetHeight + footerRef.offsetHeight);
+      if (headerRef || footerRef) {
+        setBodyMinHeight(
+          (headerRef?.offsetHeight || 0) + (footerRef?.offsetHeight || 0)
+        );
       }
     });
   };
@@ -103,7 +106,7 @@ export const Panel: Component<PanelProps> = (props) => {
           <Dialog.Content class="w-full max-w-[800px] bg-white animate-animate-slide-from-right-out data-[expanded]:animate-animate-slide-from-right-in outline-none overflow-y-auto">
             <div
               ref={headerRef}
-              class="bg-background p-30 border-b border-border"
+              class="bg-background p-15 md:p-30 border-b border-border"
             >
               <div class="w-full mb-2.5">
                 <Dialog.CloseButton class="flex items-center text-sm text-title">
@@ -136,7 +139,7 @@ export const Panel: Component<PanelProps> = (props) => {
               }}
             >
               <div
-                class="p-30 relative"
+                class="p-15 md:p-30 relative"
                 style={{
                   "min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
                 }}
@@ -161,10 +164,10 @@ export const Panel: Component<PanelProps> = (props) => {
                   </Match>
                 </Switch>
               </div>
-              <Show when={!isLoading()}>
+              <Show when={!isLoading() && !props.hideFooter}>
                 <div
                   ref={footerRef}
-                  class="p-30 border-t flex justify-between items-center"
+                  class="p-15 md:p-30 border-t flex justify-between items-center"
                 >
                   <Switch fallback={<span />}>
                     <Match
