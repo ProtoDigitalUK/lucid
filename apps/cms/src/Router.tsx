@@ -32,6 +32,7 @@ import EmailListRoute from "@/routes/Emails/List";
 
 // environments
 import EnvCollectionsListRoute from "@/routes/Environments/Collections/List";
+import EnvCollectionsSingleRoute from "./routes/Environments/Collections/Single";
 import CreateEnvrionemntRoute from "@/routes/Environments/Create";
 import ManageEnvrionemntRoute from "@/routes/Environments/Manage";
 
@@ -47,6 +48,10 @@ const AppRouter: Component = () => {
             <Route
               path="/env/:envKey/collection/:collectionKey"
               element={<EnvCollectionsListRoute />}
+            />
+            <Route
+              path={`/env/:envKey/:collectionKey`}
+              element={<EnvCollectionsSingleRoute />}
             />
             <Route path="/env/create" element={<CreateEnvrionemntRoute />} />
             <Route path="/env/:envKey" element={<ManageEnvrionemntRoute />} />

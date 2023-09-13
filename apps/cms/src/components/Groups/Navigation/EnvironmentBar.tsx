@@ -79,7 +79,7 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
                 {(collection) => (
                   <Navigation.Link
                     title={collection.title}
-                    href={`/env/${environment()}/collection/${collection.key}`}
+                    href={`/env/${environment()}/${collection.key}`}
                     icon="page"
                   />
                 )}
