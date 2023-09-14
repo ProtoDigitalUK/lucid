@@ -242,6 +242,8 @@
   "email_deleted_toast_message": "The email has been deleted",
   "email_resent_toast_title": "Email resent",
   "email_resent_toast_message": "The email has been resent",
+  "email_resent_toast_erro_title": "Email resend error",
+  "email_resent_toast_error_message": "There was an error resending the email",
 
   "roles_route_title": "Roles",
   "roles_route_description": "Create and manage roles",
