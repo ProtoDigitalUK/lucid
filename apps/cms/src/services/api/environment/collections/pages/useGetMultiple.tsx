@@ -7,20 +7,27 @@ import helpers from "@/utils/helpers";
 import { environment } from "@/store/environmentStore";
 // Types
 import { APIResponse } from "@/types/api";
-import { CollectionResT } from "@lucid/types/src/collections";
 
 interface QueryParams {
-  location: {
+  filters?: {
     collection_key?: Accessor<string | undefined> | string;
+    title?: Accessor<string | undefined> | string;
+    slug?: Accessor<string | undefined> | string;
+    category_id?: Accessor<string[] | undefined> | string[];
   };
 }
 
-const useGetSingle = (params: QueryHook<QueryParams>) => {
+const useGetMultiple = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
-      location: {
+      filters: {
         collection_key: helpers.resolveValue(
-          params.queryParams.location.collection_key
+          params.queryParams.filters?.collection_key
+        ),
+        title: helpers.resolveValue(params.queryParams.filters?.title),
+        slug: helpers.resolveValue(params.queryParams.filters?.slug),
+        category_id: helpers.resolveValue(
+          params.queryParams.filters?.category_id
         ),
       },
       headers: {
@@ -34,11 +41,16 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
   });
 
   return createQuery(
-    () => ["environment.collections.getSingle", queryKey(), params.key?.()],
+    () => [
+      "environment.collections.pages.getMultiple",
+      queryKey(),
+      params.key?.(),
+    ],
     {
       queryFn: () =>
-        request<APIResponse<CollectionResT>>({
-          url: `/api/v1/collections/${queryParams().location.collection_key}`,
+        request<APIResponse<Record<string, string>>>({
+          url: `/api/v1/pages`,
+          query: queryParams(),
           config: {
             method: "GET",
             headers: queryParams().headers,
@@ -51,4 +63,4 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
   );
 };
 
-export default useGetSingle;
+export default useGetMultiple;
