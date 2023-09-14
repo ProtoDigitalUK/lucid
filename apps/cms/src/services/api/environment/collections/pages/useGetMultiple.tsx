@@ -7,6 +7,7 @@ import helpers from "@/utils/helpers";
 import { environment } from "@/store/environmentStore";
 // Types
 import { APIResponse } from "@/types/api";
+import { CollectionPagesResT } from "@lucid/types/src/collections";
 
 interface QueryParams {
   filters?: {
@@ -48,7 +49,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     ],
     {
       queryFn: () =>
-        request<APIResponse<Record<string, string>>>({
+        request<APIResponse<CollectionPagesResT>>({
           url: `/api/v1/pages`,
           query: queryParams(),
           config: {

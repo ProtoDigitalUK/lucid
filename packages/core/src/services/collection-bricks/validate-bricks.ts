@@ -4,7 +4,6 @@ import service from "@utils/app/service.js";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick.js";
 import { EnvironmentT } from "@db/models/Environment.js";
-import { PageT } from "@db/models/Page.js";
 // Internal packages
 import BrickBuilder, {
   ValidationProps,
@@ -19,6 +18,7 @@ import medias from "@services/media/index.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { MediaResT } from "@lucid/types/src/media.js";
+import { CollectionPagesResT } from "@lucid/types/src/collections.js";
 
 // ------------------------------------
 // Interfaces
@@ -149,7 +149,7 @@ const validateBricksGroup = async (data: {
   environment: EnvironmentT;
   collection: CollectionResT;
   media: MediaResT[];
-  pages: PageT[];
+  pages: CollectionPagesResT[];
 }) => {
   const errors: BrickErrors[] = [];
   let hasErrors = false;

@@ -39,7 +39,7 @@ const deepDiff = <T>(obj1: T, obj2: T): Partial<T> => {
         if (!equal(obj1[key], obj2[key])) {
           result[key] = obj2[key];
         }
-      } else if (typeof obj1[key] === "object") {
+      } else if (typeof obj1[key] === "object" && obj1[key] !== null) {
         const diff = deepDiff(obj1[key], obj2[key]);
         if (Object.keys(diff).length > 0) {
           // @ts-ignore
