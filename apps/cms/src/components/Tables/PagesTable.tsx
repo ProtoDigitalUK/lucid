@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { Component, Index } from "solid-js";
-import { FaSolidT, FaSolidCalendar } from "solid-icons/fa";
+import { FaSolidT, FaSolidCalendar, FaSolidCircle } from "solid-icons/fa";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
 // Services
@@ -45,7 +45,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
   return (
     <>
       <Table.Root
-        key={"collections.pages.list"}
+        key={`collections.pages.list.${environment()}.${props.collection.key}`}
         rows={pages.data?.data.length || 0}
         meta={pages.data?.meta}
         searchParams={props.searchParams}
@@ -54,6 +54,11 @@ const PagesTable: Component<PagesTableProps> = (props) => {
             label: T("title"),
             key: "title",
             icon: <FaSolidT />,
+          },
+          {
+            label: T("status"),
+            key: "published",
+            icon: <FaSolidCircle />,
           },
           {
             label: T("created_at"),
@@ -73,7 +78,10 @@ const PagesTable: Component<PagesTableProps> = (props) => {
           isSuccess: pages.isSuccess,
         }}
         options={{
-          isSelectable: false,
+          isSelectable: true,
+        }}
+        callbacks={{
+          deleteRows: () => {},
         }}
       >
         {({ include, isSelectable, selected, setSelected }) => (

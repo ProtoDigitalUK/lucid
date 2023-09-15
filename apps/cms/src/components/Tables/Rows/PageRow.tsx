@@ -12,8 +12,9 @@ import {
 import userStore from "@/store/userStore";
 // Components
 import Table from "@/components/Groups/Table";
-import TextCol from "@/components/Tables/Columns/TextCol";
+import PageTitleCol from "@/components/Tables/Columns/PageTitleCol";
 import DateCol from "@/components/Tables/Columns/DateCol";
+import PillCol from "../Columns/PillCol";
 
 interface PageRowProps extends TableRowProps {
   page: CollectionPagesResT;
@@ -56,9 +57,15 @@ const PageRow: Component<PageRowProps> = (props) => {
         },
       ]}
     >
-      <TextCol
-        text={props.page.title}
-        options={{ include: props?.include[0], maxLines: 2 }}
+      <PageTitleCol
+        title={props.page.title}
+        fullSlug={props.page.full_slug}
+        options={{ include: props?.include[0] }}
+      />
+      <PillCol
+        theme={props.page.published ? "secondary" : "warning"}
+        text={props.page.published ? T("published") : T("draft")}
+        options={{ include: props?.include[1] }}
       />
       <DateCol
         date={props.page.created_at}

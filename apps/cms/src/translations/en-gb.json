@@ -169,6 +169,8 @@
   "view_data": "View data",
   "slug": "Slug",
   "category": "Category",
+  "published": "Published",
+  "draft": "Draft",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
