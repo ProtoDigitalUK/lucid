@@ -5,11 +5,14 @@ import { Component, createSignal } from "solid-js";
 import api from "@/services/api";
 // Store
 import userStore from "@/store/userStore";
+// Types
+import { CollectionResT } from "@lucid/types/src/collections";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
+import PagesTable from "@/components/Tables/PagesTable";
 
 const EnvCollectionsListRoute: Component = () => {
   // ----------------------------------
@@ -106,7 +109,10 @@ const EnvCollectionsListRoute: Component = () => {
         />
       }
     >
-      hello
+      <PagesTable
+        searchParams={searchParams}
+        collection={collection.data?.data as CollectionResT}
+      />
     </Layout.PageLayout>
   );
 };

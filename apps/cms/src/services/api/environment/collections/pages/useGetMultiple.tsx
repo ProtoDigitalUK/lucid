@@ -10,6 +10,7 @@ import { APIResponse } from "@/types/api";
 import { CollectionPagesResT } from "@lucid/types/src/collections";
 
 interface QueryParams {
+  queryString?: Accessor<string>;
   filters?: {
     collection_key?: Accessor<string | undefined> | string;
     title?: Accessor<string | undefined> | string;
@@ -21,6 +22,7 @@ interface QueryParams {
 const useGetMultiple = (params: QueryHook<QueryParams>) => {
   const queryParams = createMemo(() => {
     return {
+      queryString: helpers.resolveValue(params.queryParams?.queryString),
       filters: {
         collection_key: helpers.resolveValue(
           params.queryParams.filters?.collection_key
@@ -49,7 +51,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     ],
     {
       queryFn: () =>
-        request<APIResponse<CollectionPagesResT>>({
+        request<APIResponse<CollectionPagesResT[]>>({
           url: `/api/v1/pages`,
           query: queryParams(),
           config: {
