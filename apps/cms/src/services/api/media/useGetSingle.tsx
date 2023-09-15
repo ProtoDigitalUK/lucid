@@ -2,7 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { MediaResT } from "@lucid/types/src/media";
 import { APIResponse } from "@/types/api";
@@ -14,22 +14,17 @@ interface QueryParams {
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      location: {
-        id: helpers.resolveValue(params.queryParams?.location?.id),
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(() => ["media.getSingle", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<MediaResT>>({
-        url: `/api/v1/media/${queryParams().location.id}`,
+        url: `/api/v1/media/${queryParams().location?.id}`,
         config: {
           method: "GET",
         },

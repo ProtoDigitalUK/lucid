@@ -33,6 +33,9 @@ const PagesTable: Component<PagesTableProps> = (props) => {
   const pages = api.environment.collections.pages.useGetMultiple({
     queryParams: {
       queryString: props.searchParams.getQueryString,
+      headers: {
+        "lucid-environment": environment,
+      },
     },
     enabled: () => props.searchParams.getSettled(),
   });

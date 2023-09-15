@@ -1,15 +1,13 @@
 export interface QueryBuilderProps {
   queryString?: string;
-  filters?: {
-    [key: string]: string | number | string[] | number[] | undefined | null;
-  };
+  filters?: Record<
+    string,
+    string | number | string[] | number[] | undefined | null
+  >;
   sort?: Record<string, string>;
   perPage?: number;
   page?: number;
-  include?: {
-    key: string;
-    include: boolean;
-  }[];
+  include?: Record<string, boolean>;
 }
 
 const queryBuilder = (query: QueryBuilderProps) => {
@@ -17,19 +15,15 @@ const queryBuilder = (query: QueryBuilderProps) => {
   const params = new URLSearchParams(query.queryString || "");
 
   // Append include query
-  if (
-    query.include !== undefined &&
-    query.include.length > 0 &&
-    query.include.some((item) => item.include)
-  ) {
+  if (query.include !== undefined && Object.keys(query.include).length > 0) {
     let includeString = params.get("include") || "";
-    query.include.forEach((item) => {
-      if (item.include) {
-        includeString += `${item.key},`;
+    Object.keys(query.include).forEach((key) => {
+      if (query.include && query.include[key]) {
+        includeString += `${key},`;
       }
     });
     includeString = includeString.slice(0, -1);
-    params.append("include", includeString);
+    if (includeString.length > 0) params.append("include", includeString);
   }
 
   // Append filters query

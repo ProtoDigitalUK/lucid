@@ -32,7 +32,7 @@ const DashboardRoute: Component = () => {
           theme="primary"
           size="medium"
           loading={logout.action.isLoading}
-          onClick={() => logout.action.mutate()}
+          onClick={() => logout.action.mutate({})}
         >
           {T("logout")}
         </Button>

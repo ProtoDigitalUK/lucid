@@ -1,12 +1,9 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { UserResT } from "@lucid/types/src/users";
 
 interface Params {
@@ -29,49 +26,18 @@ interface UseDeleteProps {
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
-
-  // ----------------------------------------
-  // Queries / Mutations
-  const deleteUser = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
     mutationFn: deleteSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("user_deleted_toast_title"),
-          message: T("user_deleted_toast_message"),
-          status: "success",
-        });
-        setErrors(undefined);
-        props.onSuccess?.();
-        queryClient.invalidateQueries(["users.getMultiple"]);
-        queryClient.invalidateQueries(["users.getSingle"]);
-      } else if (error) {
-        validateSetError(error, setErrors);
-        props.onError?.();
-      }
+    successToast: {
+      title: T("user_deleted_toast_title"),
+      message: T("user_deleted_toast_message"),
     },
+    invalidates: ["users.getMultiple", "users.getSingle"],
+    onSuccess: props.onSuccess,
+    onError: props.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: deleteUser,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      deleteUser.reset();
-    },
-  };
 };
 
 export default useDeleteSingle;

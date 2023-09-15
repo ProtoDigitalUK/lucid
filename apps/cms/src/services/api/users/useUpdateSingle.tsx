@@ -1,12 +1,9 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { UserResT } from "@lucid/types/src/users";
 
 interface Params {
@@ -34,48 +31,18 @@ interface UseUpdateSingleProps {
 }
 
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
-
-  // ----------------------------------------
-  // Queries / Mutations
-  const updateUser = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
     mutationFn: updateSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("user_update_toast_title"),
-          message: T("user_update_toast_message"),
-          status: "success",
-        });
-        props?.onSuccess && props.onSuccess();
-        queryClient.invalidateQueries(["users.getMultiple"]);
-        queryClient.invalidateQueries(["users.getSingle"]);
-      } else if (error) {
-        props?.onError && props.onError();
-        validateSetError(error, setErrors);
-      }
+    successToast: {
+      title: T("user_update_toast_title"),
+      message: T("user_update_toast_message"),
     },
+    invalidates: ["users.getMultiple", "users.getSingle"],
+    onSuccess: props?.onSuccess,
+    onError: props?.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: updateUser,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      updateUser.reset();
-    },
-  };
 };
 
 export default useUpdateSingle;

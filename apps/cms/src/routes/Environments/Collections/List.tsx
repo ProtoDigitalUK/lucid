@@ -5,6 +5,7 @@ import { Component, createSignal } from "solid-js";
 import api from "@/services/api";
 // Store
 import userStore from "@/store/userStore";
+import { environment } from "@/store/environmentStore";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
 // Hooks
@@ -50,6 +51,9 @@ const EnvCollectionsListRoute: Component = () => {
     queryParams: {
       location: {
         collection_key: props.collectionKey,
+      },
+      headers: {
+        "lucid-environment": environment,
       },
     },
     enabled: () => !!props.collectionKey,

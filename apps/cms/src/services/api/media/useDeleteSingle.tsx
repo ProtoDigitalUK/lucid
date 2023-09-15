@@ -1,12 +1,9 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { RoleResT } from "@lucid/types/src/roles";
 
 interface Params {
@@ -29,48 +26,18 @@ interface UseDeleteProps {
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
-
-  // ----------------------------------------
-  // Queries / Mutations
-  const deleteMedia = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<Params, APIResponse<RoleResT>>({
     mutationFn: deleteSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("media_deleted_toast_title"),
-          message: T("media_deleted_toast_message"),
-          status: "success",
-        });
-        setErrors(undefined);
-        props.onSuccess?.();
-        queryClient.invalidateQueries(["media.getMultiple"]);
-      } else if (error) {
-        validateSetError(error, setErrors);
-        props.onError?.();
-      }
+    successToast: {
+      title: T("media_deleted_toast_title"),
+      message: T("media_deleted_toast_message"),
     },
+    invalidates: ["media.getMultiple"],
+    onSuccess: props.onSuccess,
+    onError: props.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: deleteMedia,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      deleteMedia.reset();
-    },
-  };
 };
 
 export default useDeleteSingle;

@@ -2,9 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
-// Store
-import { environment } from "@/store/environmentStore";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
 import { CollectionResT } from "@lucid/types/src/collections";
@@ -13,32 +11,25 @@ interface QueryParams {
   location: {
     collection_key?: Accessor<string | undefined> | string;
   };
+  headers: {
+    "lucid-environment": Accessor<string | undefined> | string;
+  };
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      location: {
-        collection_key: helpers.resolveValue(
-          params.queryParams.location.collection_key
-        ),
-      },
-      headers: {
-        "lucid-environment": helpers.resolveValue(environment) || "",
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(
     () => ["environment.collections.getSingle", queryKey(), params.key?.()],
     {
       queryFn: () =>
         request<APIResponse<CollectionResT>>({
-          url: `/api/v1/collections/${queryParams().location.collection_key}`,
+          url: `/api/v1/collections/${queryParams().location?.collection_key}`,
           config: {
             method: "GET",
             headers: queryParams().headers,

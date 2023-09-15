@@ -4,6 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import userStore from "@/store/userStore";
 // Utils
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Services
 import api from "@/services/api";
 // Types
@@ -13,13 +14,10 @@ import { APIResponse } from "@/types/api";
 interface QueryParams {}
 
 const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {};
-  });
-
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
   const logout = api.auth.useLogout();
 
@@ -44,7 +42,7 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
       userStore.set("user", query.data.data);
     }
     if (query.isError) {
-      logout.action.mutate();
+      logout.action.mutate({});
     }
   });
 

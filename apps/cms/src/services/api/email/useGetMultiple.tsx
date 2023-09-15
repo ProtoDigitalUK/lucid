@@ -2,7 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { EmailResT } from "@lucid/types/src/email";
 import { APIResponse } from "@/types/api";
@@ -20,28 +20,13 @@ interface QueryParams {
 }
 
 const useGetMultiple = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      queryString: helpers.resolveValue(params.queryParams?.queryString),
-      filters: {
-        to_address: helpers.resolveValue(
-          params.queryParams?.filters?.to_address
-        ),
-        subject: helpers.resolveValue(params.queryParams?.filters?.subject),
-        delivery_status: helpers.resolveValue(
-          params.queryParams?.filters?.delivery_status
-        ),
-        type: helpers.resolveValue(params.queryParams?.filters?.type),
-        template: helpers.resolveValue(params.queryParams?.filters?.template),
-      },
-      perPage: params.queryParams.perPage,
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(() => ["email.getMultiple", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<EmailResT[]>>({

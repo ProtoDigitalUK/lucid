@@ -1,12 +1,11 @@
 import T from "@/translations";
-import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Store
 import userStore from "@/store/userStore";
 // Utils
-import spawnToast from "@/utils/spawn-toast";
 import { clearCookie } from "@/utils/cookie";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
 
@@ -23,40 +22,40 @@ export const logoutReq = () => {
   });
 };
 
-const useLogout = () => {
-  // ----------------------------------------
-  // States / Hooks
+interface UseLogoutProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+const useLogout = (props?: UseLogoutProps) => {
   const navigate = useNavigate();
 
-  // ----------------------------------------
-  // Queries / Mutations
-  const logout = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<
+    unknown,
+    APIResponse<{
+      message: string;
+    }>
+  >({
     mutationFn: logoutReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("logout_success_toast_title"),
-          message: T("logout_success_toast_message"),
-          status: "success",
-        });
-        userStore.get.reset();
-        navigate("/login");
-        sessionStorage.removeItem("_csrf");
-      } else if (error) {
-        clearCookie("auth");
-        navigate("/login");
-      }
+    successToast: {
+      title: T("logout_success_toast_title"),
+      message: T("logout_success_toast_message"),
+    },
+    invalidates: ["roles.getMultiple", "roles.getSingle"],
+    onSuccess: () => {
+      userStore.get.reset();
+      navigate("/login");
+      sessionStorage.removeItem("_csrf");
+      props?.onSuccess?.();
+    },
+    onError: () => {
+      clearCookie("auth");
+      navigate("/login");
+      props?.onError?.();
     },
   });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: logout,
-    reset: () => {
-      logout.reset();
-    },
-  };
 };
 
 export default useLogout;

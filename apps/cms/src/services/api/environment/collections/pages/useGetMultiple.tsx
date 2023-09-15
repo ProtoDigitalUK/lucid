@@ -2,9 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
-// Store
-import { environment } from "@/store/environmentStore";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
 import { CollectionPagesResT } from "@lucid/types/src/collections";
@@ -17,32 +15,19 @@ interface QueryParams {
     slug?: Accessor<string | undefined> | string;
     category_id?: Accessor<string[] | undefined> | string[];
   };
+  headers: {
+    "lucid-environment": Accessor<string | undefined> | string;
+  };
 }
 
 const useGetMultiple = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      queryString: helpers.resolveValue(params.queryParams?.queryString),
-      filters: {
-        collection_key: helpers.resolveValue(
-          params.queryParams.filters?.collection_key
-        ),
-        title: helpers.resolveValue(params.queryParams.filters?.title),
-        slug: helpers.resolveValue(params.queryParams.filters?.slug),
-        category_id: helpers.resolveValue(
-          params.queryParams.filters?.category_id
-        ),
-      },
-      headers: {
-        "lucid-environment": helpers.resolveValue(environment) || "",
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(
     () => [
       "environment.collections.pages.getMultiple",

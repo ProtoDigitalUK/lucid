@@ -2,7 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";
@@ -14,26 +14,20 @@ interface QueryParams {
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      location: {
-        environment_key: helpers.resolveValue(
-          params.queryParams?.location?.environment_key
-        ),
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(
     () => ["environment.getSingle", queryKey(), params.key?.()],
     {
       queryFn: () =>
         request<APIResponse<EnvironmentResT>>({
-          url: `/api/v1/environments/${queryParams().location.environment_key}`,
+          url: `/api/v1/environments/${queryParams().location
+            ?.environment_key}`,
           config: {
             method: "GET",
           },

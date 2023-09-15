@@ -2,6 +2,7 @@ import { createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Store
 import { syncEnvironment } from "@/store/environmentStore";
 // Types
@@ -11,13 +12,10 @@ import { EnvironmentResT } from "@lucid/types/src/environments";
 interface QueryParams {}
 
 const useGetAll = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {};
-  });
-
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
   const query = createQuery(
     () => ["environment.getAll", queryKey(), params.key?.()],

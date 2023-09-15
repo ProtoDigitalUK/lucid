@@ -2,6 +2,7 @@ import { createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
 
@@ -12,18 +13,13 @@ interface QueryParams {
 }
 
 const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      location: {
-        token: params.queryParams?.location?.token,
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(
     () => ["auth.verifyResetToken", queryKey(), params.key?.()],
     {
@@ -33,7 +29,7 @@ const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
             message: string;
           }>
         >({
-          url: `/api/v1/auth/reset-password/${queryParams().location.token}`,
+          url: `/api/v1/auth/reset-password/${queryParams().location?.token}`,
           config: {
             method: "GET",
           },

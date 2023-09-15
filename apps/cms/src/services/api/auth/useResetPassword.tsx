@@ -1,13 +1,10 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIErrorResponse, APIResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 
 interface Params {
   token: string;
@@ -33,47 +30,36 @@ export const resetPasswordReq = async (params: Params) => {
   });
 };
 
-const useResetPassword = () => {
-  // ----------------------------------------
-  // States / Hooks
+interface UseResetPasswordProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+const useResetPassword = (props?: UseResetPasswordProps) => {
   const navigate = useNavigate();
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
 
-  // ----------------------------------------
-  // Queries / Mutations
-  const resetPassword = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<
+    Params,
+    APIResponse<{
+      message: string;
+    }>
+  >({
     mutationFn: resetPasswordReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("password_reset_success_toast_title"),
-          message: T("password_reset_success_toast_message"),
-          status: "success",
-        });
-        setErrors(undefined);
-        navigate("/login");
-      } else if (error) {
-        validateSetError(error, setErrors);
-      }
+    successToast: {
+      title: T("password_reset_success_toast_title"),
+      message: T("password_reset_success_toast_message"),
+    },
+    invalidates: ["roles.getMultiple", "roles.getSingle"],
+    onSuccess: () => {
+      navigate("/login");
+      props?.onSuccess?.();
+    },
+    onError: () => {
+      props?.onError?.();
     },
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: resetPassword,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      resetPassword.reset();
-    },
-  };
 };
 
 export default useResetPassword;

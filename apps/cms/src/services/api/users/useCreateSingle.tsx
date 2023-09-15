@@ -1,12 +1,9 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { UserResT } from "@lucid/types/src/users";
 
 interface Params {
@@ -39,47 +36,18 @@ interface UseUpdateSingleProps {
 }
 
 const useCreateSingle = (props?: UseUpdateSingleProps) => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
-
-  // ----------------------------------------
-  // Queries / Mutations
-  const createUser = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
     mutationFn: createSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("user_create_toast_title"),
-          message: T("user_create_toast_message"),
-          status: "success",
-        });
-        props?.onSuccess && props.onSuccess();
-        queryClient.invalidateQueries(["users.getMultiple"]);
-      } else if (error) {
-        props?.onError && props.onError();
-        validateSetError(error, setErrors);
-      }
+    successToast: {
+      title: T("user_create_toast_title"),
+      message: T("user_create_toast_message"),
     },
+    invalidates: ["users.getMultiple"],
+    onSuccess: props?.onSuccess,
+    onError: props?.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: createUser,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      createUser.reset();
-    },
-  };
 };
 
 export default useCreateSingle;

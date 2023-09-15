@@ -1,11 +1,8 @@
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { APIErrorResponse } from "@/types/api";
 
 export const csrfReq = async () => {
   const csrfToken = sessionStorage.getItem("_csrf");
@@ -32,37 +29,19 @@ export const csrfReq = async () => {
   return null;
 };
 
-const useCsrf = () => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
+interface UseCSRFProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+}
 
-  // ----------------------------------------
-  // Queries / Mutations
-  const csrf = createMutation({
+const useCsrf = (props: UseCSRFProps) => {
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<unknown, string | null>({
     mutationFn: csrfReq,
-
-    onSettled: (data, error) => {
-      if (data) {
-        setErrors(undefined);
-      } else if (error) {
-        validateSetError(error, setErrors);
-      }
-    },
+    onSuccess: props.onSuccess,
+    onError: props.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: csrf,
-    errors: errors,
-  };
 };
 
 export default useCsrf;

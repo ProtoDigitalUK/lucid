@@ -1,12 +1,9 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { RoleResT } from "@lucid/types/src/roles";
 
 interface Params {
@@ -34,47 +31,18 @@ interface UseCreateSingleProps {
 }
 
 const useCreateSingle = (props?: UseCreateSingleProps) => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
-
-  // ----------------------------------------
-  // Queries / Mutations
-  const createRole = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<Params, APIResponse<RoleResT>>({
     mutationFn: createSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("role_created_toast_title"),
-          message: T("role_created_toast_message"),
-          status: "success",
-        });
-        props?.onSuccess && props.onSuccess();
-        queryClient.invalidateQueries(["roles.getMultiple"]);
-      } else if (error) {
-        props?.onError && props.onError();
-        validateSetError(error, setErrors);
-      }
+    successToast: {
+      title: T("role_created_toast_title"),
+      message: T("role_created_toast_message"),
     },
+    invalidates: ["roles.getMultiple"],
+    onSuccess: props?.onSuccess,
+    onError: props?.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: createRole,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      createRole.reset();
-    },
-  };
 };
 
 export default useCreateSingle;

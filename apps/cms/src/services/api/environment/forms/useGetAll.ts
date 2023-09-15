@@ -2,41 +2,26 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { FormResT } from "@lucid/types/src/forms";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {
-  include: {
-    fields: boolean;
-  };
+  include: Record<"fields", boolean>;
   filters?: {
     environment_key?: Accessor<string | undefined>;
   };
 }
 
 const useGetAll = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      include: [
-        {
-          key: "fields",
-          include: params.queryParams.include.fields,
-        },
-      ],
-      filters: {
-        environment_key: helpers.resolveValue(
-          params.queryParams.filters?.environment_key
-        ),
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(
     () => ["environment.forms.getAll", queryKey(), params.key?.()],
     {

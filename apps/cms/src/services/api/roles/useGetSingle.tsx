@@ -2,7 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { RoleResT } from "@lucid/types/src/roles";
 import { APIResponse } from "@/types/api";
@@ -14,22 +14,17 @@ interface QueryParams {
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      location: {
-        role_id: helpers.resolveValue(params.queryParams?.location?.role_id),
-      },
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(() => ["roles.getSingle", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<RoleResT>>({
-        url: `/api/v1/roles/${queryParams().location.role_id}`,
+        url: `/api/v1/roles/${queryParams().location?.role_id}`,
         config: {
           method: "GET",
         },

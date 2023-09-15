@@ -1,15 +1,12 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Store
 import { setEnvironment } from "@/store/environmentStore";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 
 interface Params {
@@ -31,51 +28,35 @@ export const createSingleReq = (params: Params) => {
   });
 };
 
-const useCreateSingle = () => {
-  // ----------------------------------------
-  // States / Hooks
+interface UseCreateSingleProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+}
+
+const useCreateSingle = (props?: UseCreateSingleProps) => {
   const navigate = useNavigate();
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
 
-  // ----------------------------------------
-  // Queries / Mutations
-  const createEnvironment = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<
+    Params,
+    APIResponse<EnvironmentResT>
+  >({
     mutationFn: createSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("environment_created_toast_title"),
-          message: T("environment_created_toast_message"),
-          status: "success",
-        });
-        setEnvironment(data.data.key);
-        navigate(`/env/${data.data.key}`);
-
-        queryClient.invalidateQueries(["environment.getAll"]);
-        queryClient.invalidateQueries(["environment.collections.getAll"]);
-      } else if (error) {
-        validateSetError(error, setErrors);
-      }
+    successToast: {
+      title: T("environment_created_toast_title"),
+      message: T("environment_created_toast_message"),
+    },
+    invalidates: ["environment.getAll", "environment.collections.getAll"],
+    onSuccess: (data) => {
+      setEnvironment(data.data.key);
+      navigate(`/env/${data.data.key}`);
+      props?.onSuccess?.();
+    },
+    onError: () => {
+      props?.onError?.();
     },
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: createEnvironment,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      createEnvironment.reset();
-    },
-  };
 };
 
 export default useCreateSingle;

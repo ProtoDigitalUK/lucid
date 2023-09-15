@@ -1,15 +1,12 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { useNavigate } from "@solidjs/router";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Store
 import { setEnvironment, environment } from "@/store/environmentStore";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { EnvironmentResT } from "@lucid/types/src/environments";
 
 interface Params {
@@ -32,57 +29,29 @@ interface UseDeleteProps {
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
-  // ----------------------------------------
-  // States / Hooks
   const navigate = useNavigate();
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
 
-  // ----------------------------------------
-  // Queries / Mutations
-  const deleteEnvironment = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<
+    Params,
+    APIResponse<EnvironmentResT>
+  >({
     mutationFn: deleteSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("environment_deleted_toast_title"),
-          message: T("environment_deleted_toast_message"),
-          status: "success",
-        });
-        setErrors(undefined);
-
-        if (data.data.key === environment()) {
-          setEnvironment(undefined);
-          navigate("/");
-        }
-
-        props.onSuccess?.();
-
-        queryClient.invalidateQueries(["environment.getAll"]);
-        queryClient.invalidateQueries(["environment.collections.getAll"]);
-      } else if (error) {
-        validateSetError(error, setErrors);
-        props.onError?.();
+    successToast: {
+      title: T("environment_deleted_toast_title"),
+      message: T("environment_deleted_toast_message"),
+    },
+    invalidates: ["environment.getAll", "environment.collections.getAll"],
+    onSuccess: (data) => {
+      props.onSuccess?.();
+      if (data.data.key === environment()) {
+        setEnvironment(undefined);
+        navigate("/");
       }
     },
+    onError: props.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: deleteEnvironment,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      deleteEnvironment.reset();
-    },
-  };
 };
 
 export default useDeleteSingle;

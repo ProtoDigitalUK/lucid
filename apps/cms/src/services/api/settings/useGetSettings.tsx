@@ -2,6 +2,7 @@ import { createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { SettingsResT } from "@lucid/types/src/settings";
 import { APIResponse } from "@/types/api";
@@ -9,14 +10,13 @@ import { APIResponse } from "@/types/api";
 interface QueryParams {}
 
 const useGetSettings = (params?: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {};
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params?.queryParams || {})
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(
     () => ["settings.getSettings", queryKey(), params?.key?.()],
     {

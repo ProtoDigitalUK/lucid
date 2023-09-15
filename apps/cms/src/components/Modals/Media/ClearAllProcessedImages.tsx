@@ -39,7 +39,7 @@ const ClearAllProcessedImages: Component<ClearAllProcessedImagesProps> = (
         error: clearAllProcessedImages.errors()?.message,
       }}
       onConfirm={() => {
-        clearAllProcessedImages.action.mutate();
+        clearAllProcessedImages.action.mutate({});
       }}
       onCancel={() => {
         props.state.setOpen(false);

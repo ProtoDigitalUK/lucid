@@ -2,7 +2,7 @@ import { createMemo, Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
-import helpers from "@/utils/helpers";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { MediaResT } from "@lucid/types/src/media";
 import { APIResponse } from "@/types/api";
@@ -20,26 +20,13 @@ interface QueryParams {
 }
 
 const useGetMultiple = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() => {
-    return {
-      queryString: helpers.resolveValue(params.queryParams?.queryString),
-      filters: {
-        name: helpers.resolveValue(params.queryParams?.filters?.name),
-        key: helpers.resolveValue(params.queryParams?.filters?.key),
-        mime_type: helpers.resolveValue(params.queryParams?.filters?.mime_type),
-        file_extension: helpers.resolveValue(
-          params.queryParams?.filters?.file_extension
-        ),
-        type: helpers.resolveValue(params.queryParams?.filters?.type),
-      },
-      perPage: params.queryParams.perPage,
-    };
-  });
+  const queryParams = createMemo(() =>
+    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
+  );
+  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const queryKey = createMemo(() => {
-    return JSON.stringify(queryParams());
-  });
-
+  // -----------------------------
+  // Query
   return createQuery(() => ["media.getMultiple", queryKey(), params.key?.()], {
     queryFn: () =>
       request<APIResponse<MediaResT[]>>({

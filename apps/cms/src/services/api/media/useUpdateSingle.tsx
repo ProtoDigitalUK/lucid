@@ -1,13 +1,10 @@
 import T from "@/translations";
-import { createSignal, onCleanup } from "solid-js";
-import { createMutation, useQueryClient } from "@tanstack/solid-query";
 // Utils
-import { validateSetError } from "@/utils/error-handling";
-import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 import objectToFormData from "@/utils/object-to-formdata";
+import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse, APIErrorResponse } from "@/types/api";
+import { APIResponse } from "@/types/api";
 import { MediaResT } from "@lucid/types/src/media";
 
 interface Params {
@@ -36,48 +33,18 @@ interface UseUpdateSingleProps {
 }
 
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
-  // ----------------------------------------
-  // States / Hooks
-  const [errors, setErrors] = createSignal<APIErrorResponse>();
-  const queryClient = useQueryClient();
-
-  // ----------------------------------------
-  // Queries / Mutations
-  const updateMedia = createMutation({
+  // -----------------------------
+  // Mutation
+  return serviceHelpers.useMutationWrapper<Params, APIResponse<MediaResT>>({
     mutationFn: updateSingleReq,
-    onSettled: (data, error) => {
-      if (data) {
-        spawnToast({
-          title: T("media_update_toast_title"),
-          message: T("media_update_toast_message"),
-          status: "success",
-        });
-        props?.onSuccess && props.onSuccess();
-        queryClient.invalidateQueries(["media.getMultiple"]);
-        queryClient.invalidateQueries(["media.getSingle"]);
-      } else if (error) {
-        props?.onError && props.onError();
-        validateSetError(error, setErrors);
-      }
+    successToast: {
+      title: T("media_update_toast_title"),
+      message: T("media_update_toast_message"),
     },
+    invalidates: ["media.getMultiple", "media.getSingle"],
+    onSuccess: props?.onSuccess,
+    onError: props?.onError,
   });
-
-  // ----------------------------------------
-  // On Cleanup
-  onCleanup(() => {
-    setErrors(undefined);
-  });
-
-  // ----------------------------------------
-  // Return
-  return {
-    action: updateMedia,
-    errors: errors,
-    reset: () => {
-      setErrors(undefined);
-      updateMedia.reset();
-    },
-  };
 };
 
 export default useUpdateSingle;
