@@ -29,3 +29,14 @@ export interface CollectionPagesResT {
   builder_bricks?: Array<BrickResT> | null;
   fixed_bricks?: Array<BrickResT> | null;
 }
+
+export interface CollectionCategoriesResT {
+  id: number;
+  environment_key: string;
+  collection_key: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+}

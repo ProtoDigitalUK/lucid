@@ -557,7 +557,8 @@ var buildFilter = (query) => {
     if (v.includes(",")) {
       filter[key] = v.split(",");
     } else {
-      filter[key] = v;
+      if (v !== "")
+        filter[key] = v;
     }
   });
   return filter;
@@ -4045,7 +4046,7 @@ var Category = class {
       ]
     });
     const res = await client.query({
-      text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
       values: values.value
     });
     return res.rows[0];
@@ -4053,7 +4054,7 @@ var Category = class {
   static updateSingle = async (client, data) => {
     const category = await client.query({
       name: "update-category",
-      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
+      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING id`,
       values: [
         data.title,
         data.slug,
@@ -4067,7 +4068,7 @@ var Category = class {
   static deleteSingle = async (client, data) => {
     const category = await client.query({
       name: "delete-category",
-      text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
+      text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING id`,
       values: [data.id, data.environment_key]
     });
     return category.rows[0];
@@ -4434,7 +4435,7 @@ var createSingle4 = async (client, data) => {
       status: 500
     });
   }
-  return category;
+  return void 0;
 };
 var create_single_default4 = createSingle4;
 
@@ -4452,9 +4453,15 @@ var deleteSingle6 = async (client, data) => {
       status: 500
     });
   }
-  return category;
+  return void 0;
 };
 var delete_single_default6 = deleteSingle6;
+
+// src/utils/format/format-category.ts
+var formatCategory = (category) => {
+  return category;
+};
+var format_category_default = formatCategory;
 
 // src/services/categories/get-multiple.ts
 var getMultiple4 = async (client, data) => {
@@ -4498,7 +4505,11 @@ var getMultiple4 = async (client, data) => {
     page,
     per_page
   });
-  return await Category.getMultiple(client, SelectQuery);
+  const categories = await Category.getMultiple(client, SelectQuery);
+  return {
+    data: categories.data.map((cat) => format_category_default(cat)),
+    count: categories.count
+  };
 };
 var get_multiple_default4 = getMultiple4;
 
@@ -4522,7 +4533,7 @@ var getSingle8 = async (client, data) => {
       })
     });
   }
-  return category;
+  return format_category_default(category);
 };
 var get_single_default8 = getSingle8;
 
@@ -4558,13 +4569,22 @@ var updateSingle3 = async (client, data) => {
       });
     }
   }
-  return await Category.updateSingle(client, {
+  const category = await Category.updateSingle(client, {
     environment_key: data.environment_key,
     id: data.id,
     title: data.data.title,
     slug: data.data.slug,
     description: data.data.description
   });
+  if (!category) {
+    throw new LucidError({
+      type: "basic",
+      name: "Category Not Updated",
+      message: "There was an error updating the category.",
+      status: 500
+    });
+  }
+  return void 0;
 };
 var update_single_default4 = updateSingle3;
 

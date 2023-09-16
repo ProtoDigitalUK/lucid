@@ -5,15 +5,13 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { CollectionPagesResT } from "@lucid/types/src/collections";
+import { CollectionCategoriesResT } from "@lucid/types/src/collections";
 
 interface QueryParams {
   queryString?: Accessor<string>;
   filters?: {
-    collection_key?: Accessor<string | undefined> | string;
     title?: Accessor<string | undefined> | string;
-    slug?: Accessor<string | undefined> | string;
-    category_id?: Accessor<string[] | undefined> | string[];
+    collection_key?: Accessor<string | undefined> | string;
   };
   headers: {
     "lucid-environment": Accessor<string | undefined> | string;
@@ -31,14 +29,14 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
   // Query
   return createQuery(
     () => [
-      "environment.collections.pages.getMultiple",
+      "environment.collections.categories.getMultiple",
       queryKey(),
       params.key?.(),
     ],
     {
       queryFn: () =>
-        request<APIResponse<CollectionPagesResT[]>>({
-          url: `/api/v1/pages`,
+        request<APIResponse<CollectionCategoriesResT[]>>({
+          url: `/api/v1/categories`,
           query: queryParams(),
           config: {
             method: "GET",

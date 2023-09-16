@@ -17,7 +17,7 @@ interface QueryParams {
   location?: Record<string, QueryParamsValueT>;
   headers?: Record<string, QueryParamsValueT>;
   include?: Record<string, boolean>;
-  perPage?: number;
+  perPage?: Accessor<number> | number;
 }
 
 interface MutationWrapperProps<Params, Response> {
@@ -47,7 +47,7 @@ const resolveObject = (obj?: Record<string, QueryParamsValueT>) => {
 
 // Get query params
 const getQueryParams = <T extends QueryParams>(params: T) => {
-  const { queryString, filters, location, headers, include } = params;
+  const { queryString, filters, location, headers, include, perPage } = params;
 
   return {
     queryString: helpers.resolveValue(queryString) as string,
@@ -55,6 +55,7 @@ const getQueryParams = <T extends QueryParams>(params: T) => {
     location: resolveObject(location),
     headers: resolveObject(headers) as Record<string, string>,
     include: resolveObject(include) as Record<string, boolean>,
+    perPage: helpers.resolveValue(perPage) as number,
   };
 };
 

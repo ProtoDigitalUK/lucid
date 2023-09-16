@@ -70,6 +70,9 @@ export const Input: Component<InputProps> = (props) => {
               "pt-2": props.copy?.label === undefined,
             }
           )}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+          }}
           id={props.id}
           name={props.name}
           type={inputType()}

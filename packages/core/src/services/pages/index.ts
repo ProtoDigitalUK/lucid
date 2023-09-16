@@ -8,6 +8,7 @@ import buildUniqueSlug from "./build-unique-slug.js";
 import parentChecks from "./parent-checks.js";
 import resetHomepages from "./reset-homepages.js";
 import getMultipleById from "./get-multiple-by-id.js";
+import checkPageCollection from "./check-page-collection.js";
 
 export default {
   createSingle,
@@ -20,4 +21,5 @@ export default {
   parentChecks,
   resetHomepages,
   getMultipleById,
+  checkPageCollection,
 };

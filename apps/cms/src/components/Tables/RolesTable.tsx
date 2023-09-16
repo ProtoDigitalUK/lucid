@@ -31,7 +31,7 @@ const RolesTable: Component<RolesTableProps> = (props) => {
   const roles = api.roles.useGetMultiple({
     queryParams: {
       queryString: props.searchParams.getQueryString,
-      includes: {
+      include: {
         permissions: false,
       },
     },

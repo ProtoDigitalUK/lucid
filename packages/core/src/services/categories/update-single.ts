@@ -51,13 +51,24 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     }
   }
 
-  return await Category.updateSingle(client, {
+  const category = await Category.updateSingle(client, {
     environment_key: data.environment_key,
     id: data.id,
     title: data.data.title,
     slug: data.data.slug,
     description: data.data.description,
   });
+
+  if (!category) {
+    throw new LucidError({
+      type: "basic",
+      name: "Category Not Updated",
+      message: "There was an error updating the category.",
+      status: 500,
+    });
+  }
+
+  return undefined;
 };
 
 export default updateSingle;

@@ -25,7 +25,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
         show_in_table: z.ZodOptional<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -37,7 +37,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
         show_in_table?: boolean | undefined;
     }, {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -52,7 +52,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
     title: string;
     fields: {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -68,7 +68,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
     title: string;
     fields: {
         name: string;
-        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
+        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -136,21 +136,21 @@ declare const CollectionOptionsSchema: z.ZodObject<{
         type: z.ZodEnum<["builder", "fixed"]>;
         position: z.ZodOptional<z.ZodEnum<["standard", "bottom", "top", "sidebar"]>>;
     }, "strip", z.ZodTypeAny, {
-        type: "builder" | "fixed";
         key: string;
+        type: "builder" | "fixed";
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }, {
-        type: "builder" | "fixed";
         key: string;
+        type: "builder" | "fixed";
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    type: "pages" | "singlepage";
     title: string;
+    type: "pages" | "singlepage";
     singular: string;
     bricks: {
-        type: "builder" | "fixed";
         key: string;
+        type: "builder" | "fixed";
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }[];
     description?: string | undefined;
@@ -158,12 +158,12 @@ declare const CollectionOptionsSchema: z.ZodObject<{
     disableHomepage?: boolean | undefined;
     disableParent?: boolean | undefined;
 }, {
-    type: "pages" | "singlepage";
     title: string;
+    type: "pages" | "singlepage";
     singular: string;
     bricks: {
-        type: "builder" | "fixed";
         key: string;
+        type: "builder" | "fixed";
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }[];
     description?: string | undefined;

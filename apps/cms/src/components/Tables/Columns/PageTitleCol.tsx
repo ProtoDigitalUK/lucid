@@ -1,10 +1,11 @@
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
 
 interface PageTitleColProps {
   title: string;
   fullSlug: string;
+  homepage: boolean;
   options?: {
     include?: boolean;
   };
@@ -20,7 +21,12 @@ const PageTitleCol: Component<PageTitleColProps> = (props) => {
       }}
     >
       <div class="flex flex-col">
-        <span>{props.title}</span>
+        <span class="flex items-center">
+          {props.title}
+          <Show when={props.homepage}>
+            <span class="ml-1 text-xs text-unfocused">- homepage</span>
+          </Show>
+        </span>
         <span class="text-sm mt-1 text-unfocused">{props.fullSlug}</span>
       </div>
     </Table.Td>

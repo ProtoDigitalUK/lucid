@@ -30,7 +30,7 @@ const buildFilter = (query: z.infer<typeof querySchema>) => {
     if (v.includes(",")) {
       filter[key] = v.split(",");
     } else {
-      filter[key] = v;
+      if (v !== "") filter[key] = v;
     }
   });
 

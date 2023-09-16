@@ -3,6 +3,8 @@ import { PoolClient } from "pg";
 import Category from "@db/models/Category.js";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+// Format
+import formatCategory from "@utils/format/format-category.js";
 
 export interface ServiceData {
   environment_key: string;
@@ -30,7 +32,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return category;
+  return formatCategory(category);
 };
 
 export default getSingle;

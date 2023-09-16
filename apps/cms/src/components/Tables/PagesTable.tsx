@@ -14,6 +14,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Table from "@/components/Groups/Table";
 import PageRow from "@/components/Tables/Rows/PageRow";
+import DeletePage from "@/components/Modals/Pages/DeletePage";
 
 interface PagesTableProps {
   collection: CollectionResT;
@@ -115,6 +116,16 @@ const PagesTable: Component<PagesTableProps> = (props) => {
           </Index>
         )}
       </Table.Root>
+      <DeletePage
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().delete,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("delete", state);
+          },
+        }}
+        collection={props.collection}
+      />
     </>
   );
 };

@@ -32,7 +32,9 @@ type CategoryCreateSingle = (
     slug: string;
     description?: string;
   }
-) => Promise<CategoryT>;
+) => Promise<{
+  id: CategoryT["id"];
+}>;
 
 type CategoryUpdateSingle = (
   client: PoolClient,
@@ -43,7 +45,9 @@ type CategoryUpdateSingle = (
     slug?: string;
     description?: string;
   }
-) => Promise<CategoryT>;
+) => Promise<{
+  id: CategoryT["id"];
+}>;
 
 type CategoryDeleteSingle = (
   client: PoolClient,
@@ -51,7 +55,9 @@ type CategoryDeleteSingle = (
     environment_key: string;
     id: number;
   }
-) => Promise<CategoryT>;
+) => Promise<{
+  id: CategoryT["id"];
+}>;
 
 type CategoryIsSlugUniqueInCollection = (
   client: PoolClient,
@@ -121,17 +127,21 @@ export default class Category {
       ],
     });
 
-    const res = await client.query<CategoryT>({
-      text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+    const res = await client.query<{
+      id: CategoryT["id"];
+    }>({
+      text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
       values: values.value,
     });
 
     return res.rows[0];
   };
   static updateSingle: CategoryUpdateSingle = async (client, data) => {
-    const category = await client.query<CategoryT>({
+    const category = await client.query<{
+      id: CategoryT["id"];
+    }>({
       name: "update-category",
-      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING *`,
+      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING id`,
       values: [
         data.title,
         data.slug,
@@ -144,9 +154,11 @@ export default class Category {
     return category.rows[0];
   };
   static deleteSingle: CategoryDeleteSingle = async (client, data) => {
-    const category = await client.query<CategoryT>({
+    const category = await client.query<{
+      id: CategoryT["id"];
+    }>({
       name: "delete-category",
-      text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING *`,
+      text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING id`,
       values: [data.id, data.environment_key],
     });
 

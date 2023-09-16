@@ -1,4 +1,7 @@
 {
   "db_connection_error": "Unexpected error on idle client",
-  "db_connection_pool_not_initialised": "Database connection pool is not initialised. Call initialisePool() before getDBClient()."
+  "db_connection_pool_not_initialised": "Database connection pool is not initialised. Call initialisePool() before getDBClient().",
+  "error_creating_page": "Error creating page",
+  "error_creating_page_homepage_disabled": "The current pages collection does not allow creating a homepage",
+  "error_creating_page_parents_disabled": "The current pages collection does not allow creating a page with parents"
 }

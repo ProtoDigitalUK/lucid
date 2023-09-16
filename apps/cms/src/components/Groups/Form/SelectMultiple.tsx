@@ -162,11 +162,12 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
               <ul class="flex flex-col">
                 <For each={props.options}>
                   {(option) => (
-                    <li
+                    <DropdownMenu.Item
                       class="flex items-center justify-between text-sm text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
-                      onClick={() => {
+                      onSelect={() => {
                         toggleValue(option);
                       }}
+                      closeOnSelect={false}
                     >
                       <span>{option.label}</span>
                       <Show
@@ -176,13 +177,13 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
                       >
                         <FaSolidCheck size={14} class="fill-primaryText mr-2" />
                       </Show>
-                    </li>
+                    </DropdownMenu.Item>
                   )}
                 </For>
               </ul>
             </Match>
             <Match when={props.options.length === 0}>
-              <span class="text-primaryText w-full block px-2.5 py-1">
+              <span class="text-primaryText w-full block px-2.5 py-1 text-sm">
                 {T("no_options_available")}
               </span>
             </Match>

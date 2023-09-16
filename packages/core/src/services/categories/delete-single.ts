@@ -24,7 +24,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return category;
+  return undefined;
 };
 
 export default deleteSingle;

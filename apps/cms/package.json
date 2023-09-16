@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@kobalte/core": "^0.10.0",
+    "@solid-primitives/scheduled": "^1.4.1",
     "@solidjs/router": "^0.8.2",
     "@tanstack/solid-query": "^4.29.25",
     "classnames": "^2.3.2",

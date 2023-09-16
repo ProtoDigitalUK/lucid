@@ -119,7 +119,10 @@ const FilterItem: Component<FilterItemProps> = (props) => {
   // ----------------------------------
   // Render
   return (
-    <li class="mb-2 last-of-type:mb-0">
+    <DropdownMenu.Item
+      class="mb-2 last-of-type:mb-0 focus:outline-none"
+      closeOnSelect={false}
+    >
       <label
         for={`${props.filter.key}-${props.filter.type}`}
         class="text-primaryText flex items-center justify-between text-sm mb-2"
@@ -172,7 +175,8 @@ const FilterItem: Component<FilterItemProps> = (props) => {
             id={`${props.filter.key}-${props.filter.type}`}
             value={value()}
             onChange={(value) => {
-              setValue(value);
+              if (!value) setValue("");
+              else setValue(value.toString());
               setFilterParam();
             }}
             name={`${props.filter.key}-${props.filter.type}`}
@@ -234,7 +238,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
           />
         </Match>
       </Switch>
-    </li>
+    </DropdownMenu.Item>
   );
 };
 

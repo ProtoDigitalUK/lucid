@@ -63,6 +63,18 @@ const EnvCollectionsListRoute: Component = () => {
     },
     enabled: () => !!collectionKey(),
   });
+  const categories = api.environment.collections.categories.useGetMultiple({
+    queryParams: {
+      filters: {
+        collection_key: collectionKey,
+      },
+      headers: {
+        "lucid-environment": environment,
+      },
+      perPage: -1,
+    },
+    enabled: () => !!collectionKey(),
+  });
 
   // ----------------------------------
   // Render
@@ -86,7 +98,9 @@ const EnvCollectionsListRoute: Component = () => {
             ["create_content"],
             environment() || ""
           ).all,
-          label: T("create_page"),
+          label: T("create_dynamic", {
+            name: collection.data?.data.singular || "",
+          }),
         },
       }}
       headingChildren={
@@ -107,6 +121,11 @@ const EnvCollectionsListRoute: Component = () => {
               label: T("category"),
               key: "category_id",
               type: "multi-select",
+              options:
+                categories.data?.data.map((cat) => ({
+                  label: cat.title,
+                  value: String(cat.id),
+                })) || [],
             },
           ]}
           sorts={[

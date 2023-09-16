@@ -6,6 +6,8 @@ import Category from "@db/models/Category.js";
 import categorySchema from "@schemas/categories.js";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+// Format
+import formatCategory from "@utils/format/format-category.js";
 
 export interface ServiceData {
   environment_key: string;
@@ -55,7 +57,12 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     per_page: per_page,
   });
 
-  return await Category.getMultiple(client, SelectQuery);
+  const categories = await Category.getMultiple(client, SelectQuery);
+
+  return {
+    data: categories.data.map((cat) => formatCategory(cat)),
+    count: categories.count,
+  };
 };
 
 export default getMultiple;

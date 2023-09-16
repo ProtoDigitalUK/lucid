@@ -9,13 +9,10 @@ import Page from "@db/models/Page.js";
 // Schema
 import { BrickSchema } from "@schemas/bricks.js";
 // Services
-import collectionsService from "@services/collections/index.js";
 import environmentsService from "@services/environments/index.js";
 import collectionBricksService from "@services/collection-bricks/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
 import pageServices from "@services/pages/index.js";
-// Format
-import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   id: number;
@@ -55,13 +52,14 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       key: data.environment_key,
     }),
     service(
-      collectionsService.getSingle,
+      pageServices.checkPageCollection,
       false,
       client
     )({
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
-      type: "pages",
+      homepage: data.homepage,
+      parent_id: data.parent_id,
     }),
   ]);
 

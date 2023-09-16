@@ -44,7 +44,7 @@ const queryBuilder = (query: QueryBuilderProps) => {
 
   // Append perPage query
   if (query.perPage !== undefined) {
-    params.append("perPage", query.perPage.toString());
+    params.append("per_page", query.perPage.toString());
   }
 
   return params.toString();
