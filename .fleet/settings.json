@@ -1,6 +1,0 @@
-{
-    "nodejs.typescript.rebuildOnChanges": false,
-    "nodejs.editor.formatOnSave.prettier.mode": "Enabled",
-    "nodejs.editor.formatOnSave.eslint.mode": "Auto",
-    "backend.maxHeapSizeMb": 2487
-}
