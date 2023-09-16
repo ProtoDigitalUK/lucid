@@ -25,7 +25,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
         show_in_table: z.ZodOptional<z.ZodBoolean>;
     }, "strip", z.ZodTypeAny, {
         name: string;
-        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
+        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -37,7 +37,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
         show_in_table?: boolean | undefined;
     }, {
         name: string;
-        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
+        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -52,7 +52,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
     title: string;
     fields: {
         name: string;
-        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
+        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -68,7 +68,7 @@ declare const FormBuilderOptionsSchema: z.ZodObject<{
     title: string;
     fields: {
         name: string;
-        type: "number" | "text" | "checkbox" | "select" | "textarea" | "date" | "radio";
+        type: "number" | "date" | "text" | "checkbox" | "select" | "textarea" | "radio";
         label: string;
         zod?: any;
         placeholder?: string | undefined;
@@ -129,41 +129,47 @@ declare const CollectionOptionsSchema: z.ZodObject<{
     singular: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
     path: z.ZodOptional<z.ZodString>;
+    disableHomepage: z.ZodOptional<z.ZodBoolean>;
+    disableParent: z.ZodOptional<z.ZodBoolean>;
     bricks: z.ZodArray<z.ZodObject<{
         key: z.ZodString;
         type: z.ZodEnum<["builder", "fixed"]>;
         position: z.ZodOptional<z.ZodEnum<["standard", "bottom", "top", "sidebar"]>>;
     }, "strip", z.ZodTypeAny, {
-        key: string;
         type: "builder" | "fixed";
+        key: string;
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }, {
-        key: string;
         type: "builder" | "fixed";
+        key: string;
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
-    title: string;
     type: "pages" | "singlepage";
+    title: string;
     singular: string;
     bricks: {
-        key: string;
         type: "builder" | "fixed";
+        key: string;
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }[];
     description?: string | undefined;
     path?: string | undefined;
+    disableHomepage?: boolean | undefined;
+    disableParent?: boolean | undefined;
 }, {
-    title: string;
     type: "pages" | "singlepage";
+    title: string;
     singular: string;
     bricks: {
-        key: string;
         type: "builder" | "fixed";
+        key: string;
         position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
     }[];
     description?: string | undefined;
     path?: string | undefined;
+    disableHomepage?: boolean | undefined;
+    disableParent?: boolean | undefined;
 }>;
 type CollectionConfigT = z.infer<typeof CollectionOptionsSchema>;
 type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;

@@ -1,6 +1,7 @@
 import T from "@/translations";
-import { Component, Index } from "solid-js";
+import { Component, Index, createMemo } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidCircle } from "solid-icons/fa";
+import { useParams } from "@solidjs/router";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
 // Services
@@ -21,7 +22,8 @@ interface PagesTableProps {
 
 const PagesTable: Component<PagesTableProps> = (props) => {
   // ----------------------------------
-  // Hooks
+  // State & Hooks
+  const params = useParams();
   const rowTarget = useRowTarget({
     triggers: {
       delete: false,
@@ -29,10 +31,17 @@ const PagesTable: Component<PagesTableProps> = (props) => {
   });
 
   // ----------------------------------
+  // Memos
+  const collectionKey = createMemo(() => params.collectionKey);
+
+  // ----------------------------------
   // Queries
   const pages = api.environment.collections.pages.useGetMultiple({
     queryParams: {
       queryString: props.searchParams.getQueryString,
+      filters: {
+        collection_key: collectionKey,
+      },
       headers: {
         "lucid-environment": environment,
       },

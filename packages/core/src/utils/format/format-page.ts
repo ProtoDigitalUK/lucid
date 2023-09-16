@@ -39,7 +39,7 @@ const formatPage = (
     res.categories = res.categories[0] === null ? [] : res.categories;
   }
   // Full Slug
-  if (res.full_slug) {
+  if (res.full_slug && !res.homepage) {
     // append collection path
     const collection = collections.find(
       (collection) => collection.key === res.collection_key

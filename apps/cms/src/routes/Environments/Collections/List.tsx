@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { useParams } from "@solidjs/router";
-import { Component, createSignal } from "solid-js";
+import { Component, createMemo, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
 // Store
@@ -19,7 +19,7 @@ import CreatePagePanel from "@/components/Panels/Pages/CreatePagePanel";
 const EnvCollectionsListRoute: Component = () => {
   // ----------------------------------
   // State & Hooks
-  const props = useParams();
+  const params = useParams();
   const searchParams = useSearchParams(
     {
       filters: {
@@ -47,17 +47,21 @@ const EnvCollectionsListRoute: Component = () => {
   const [getOpenCreatePanel, setOpenCreatePanel] = createSignal(false);
 
   // ----------------------------------
+  // Memos
+  const collectionKey = createMemo(() => params.collectionKey);
+
+  // ----------------------------------
   // Queries
   const collection = api.environment.collections.useGetSingle({
     queryParams: {
       location: {
-        collection_key: props.collectionKey,
+        collection_key: collectionKey,
       },
       headers: {
         "lucid-environment": environment,
       },
     },
-    enabled: () => !!props.collectionKey,
+    enabled: () => !!collectionKey(),
   });
 
   // ----------------------------------
@@ -80,7 +84,7 @@ const EnvCollectionsListRoute: Component = () => {
           setOpen: setOpenCreatePanel,
           permission: userStore.get.hasEnvPermission(
             ["create_content"],
-            props.envKey
+            environment() || ""
           ).all,
           label: T("create_page"),
         },

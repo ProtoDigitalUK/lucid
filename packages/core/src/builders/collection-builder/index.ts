@@ -6,6 +6,8 @@ const CollectionOptionsSchema = z.object({
   singular: z.string(),
   description: z.string().optional(),
   path: z.string().optional(),
+  disableHomepage: z.boolean().optional(),
+  disableParent: z.boolean().optional(),
   bricks: z.array(
     z.object({
       key: z.string(),

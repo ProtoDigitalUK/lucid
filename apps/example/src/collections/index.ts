@@ -27,6 +27,8 @@ export const BlogCollection = new CollectionBuilder("blog", {
   title: "Blogs",
   singular: "Blog",
   path: "/blog",
+  disableHomepage: true,
+  disableParent: true,
   bricks: [
     {
       key: "banner",

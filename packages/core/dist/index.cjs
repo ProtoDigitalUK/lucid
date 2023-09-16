@@ -56,7 +56,10 @@ var import_console_log_colors4 = require("console-log-colors");
 // src/translations/en-gb.json
 var en_gb_default = {
   db_connection_error: "Unexpected error on idle client",
-  db_connection_pool_not_initialised: "Database connection pool is not initialised. Call initialisePool() before getDBClient()."
+  db_connection_pool_not_initialised: "Database connection pool is not initialised. Call initialisePool() before getDBClient().",
+  error_creating_page: "Error creating page",
+  error_creating_page_homepage_disabled: "The current pages collection does not allow creating a homepage",
+  error_creating_page_parents_disabled: "The current pages collection does not allow creating a page with parents"
 };
 
 // src/translations/index.ts
@@ -4133,12 +4136,7 @@ var Category = class {
 var formatCollection = (instance) => {
   return {
     key: instance.key,
-    title: instance.config.title,
-    singular: instance.config.singular,
-    description: instance.config.description,
-    type: instance.config.type,
-    bricks: instance.config.bricks,
-    path: instance.config.path
+    ...instance.config
   };
 };
 var format_collections_default = formatCollection;
@@ -5761,13 +5759,14 @@ var createSingle5 = async (client, data) => {
   const parentId = data.homepage ? void 0 : data.parent_id;
   const checks = Promise.all([
     service_default(
-      collections_default.getSingle,
+      pages_default2.checkPageCollection,
       false,
       client
     )({
       collection_key: data.collection_key,
       environment_key: data.environment_key,
-      type: "pages"
+      homepage: data.homepage,
+      parent_id: parentId
     }),
     parentId === void 0 ? Promise.resolve(void 0) : service_default(
       pages_default2.parentChecks,
@@ -5885,7 +5884,7 @@ var formatPage = (data, collections) => {
   if (res.categories) {
     res.categories = res.categories[0] === null ? [] : res.categories;
   }
-  if (res.full_slug) {
+  if (res.full_slug && !res.homepage) {
     const collection = collections.find(
       (collection2) => collection2.key === res.collection_key
     );
@@ -8418,13 +8417,14 @@ var updateSingle5 = async (client, data) => {
       key: data.environment_key
     }),
     service_default(
-      collections_default.getSingle,
+      pages_default2.checkPageCollection,
       false,
       client
     )({
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
-      type: "pages"
+      homepage: data.homepage,
+      parent_id: data.parent_id
     })
   ]);
   const parentId = data.homepage ? void 0 : data.parent_id;
@@ -8616,6 +8616,37 @@ var getMultipleById = async (client, data) => {
 };
 var get_multiple_by_id_default = getMultipleById;
 
+// src/services/pages/check-page-collection.ts
+var checkPageCollection = async (client, data) => {
+  const collection = await service_default(
+    collections_default.getSingle,
+    false,
+    client
+  )({
+    collection_key: data.collection_key,
+    environment_key: data.environment_key,
+    type: "pages"
+  });
+  if (collection.disableHomepage === true && data.homepage === true) {
+    throw new LucidError({
+      type: "basic",
+      name: translations_default("error_creating_page"),
+      message: translations_default("error_creating_page_homepage_disabled"),
+      status: 500
+    });
+  }
+  if (collection.disableParent === true && data.parent_id !== void 0) {
+    throw new LucidError({
+      type: "basic",
+      name: translations_default("error_creating_page"),
+      message: translations_default("error_creating_page_parents_disabled"),
+      status: 500
+    });
+  }
+  return collection;
+};
+var check_page_collection_default = checkPageCollection;
+
 // src/services/pages/index.ts
 var pages_default2 = {
   createSingle: create_single_default6,
@@ -8627,7 +8658,8 @@ var pages_default2 = {
   buildUniqueSlug: build_unique_slug_default,
   parentChecks: parent_checks_default,
   resetHomepages: reset_homepages_default,
-  getMultipleById: get_multiple_by_id_default
+  getMultipleById: get_multiple_by_id_default,
+  checkPageCollection: check_page_collection_default
 };
 
 // src/controllers/pages/create-single.ts
@@ -12769,6 +12801,8 @@ var CollectionOptionsSchema = import_zod23.default.object({
   singular: import_zod23.default.string(),
   description: import_zod23.default.string().optional(),
   path: import_zod23.default.string().optional(),
+  disableHomepage: import_zod23.default.boolean().optional(),
+  disableParent: import_zod23.default.boolean().optional(),
   bricks: import_zod23.default.array(
     import_zod23.default.object({
       key: import_zod23.default.string(),
