@@ -6,8 +6,6 @@ import service from "@utils/app/service.js";
 import Page from "@db/models/Page.js";
 // Services
 import pageServices from "@services/pages/index.js";
-// Format
-import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   id: number;
@@ -39,7 +37,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return formatPage(page);
+  return undefined;
 };
 
 export default deleteSingle;

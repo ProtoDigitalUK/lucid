@@ -18,7 +18,7 @@ import medias from "@services/media/index.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { MediaResT } from "@lucid/types/src/media.js";
-import { CollectionPagesResT } from "@lucid/types/src/collections.js";
+import { PageT } from "@db/models/Page.js";
 
 // ------------------------------------
 // Interfaces
@@ -149,7 +149,9 @@ const validateBricksGroup = async (data: {
   environment: EnvironmentT;
   collection: CollectionResT;
   media: MediaResT[];
-  pages: CollectionPagesResT[];
+  pages: {
+    id: PageT["id"];
+  }[];
 }) => {
   const errors: BrickErrors[] = [];
   let hasErrors = false;

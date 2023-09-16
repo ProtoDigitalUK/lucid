@@ -123,24 +123,55 @@ interface ServiceData {
 
 declare const app: (options: InitOptions) => Promise<express__default.Express>;
 
-interface CollectionOptions {
-    type: "pages" | "singlepage";
+declare const CollectionOptionsSchema: z.ZodObject<{
+    type: z.ZodEnum<["pages", "singlepage"]>;
+    title: z.ZodString;
+    singular: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    path: z.ZodOptional<z.ZodString>;
+    bricks: z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        type: z.ZodEnum<["builder", "fixed"]>;
+        position: z.ZodOptional<z.ZodEnum<["standard", "bottom", "top", "sidebar"]>>;
+    }, "strip", z.ZodTypeAny, {
+        key: string;
+        type: "builder" | "fixed";
+        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+    }, {
+        key: string;
+        type: "builder" | "fixed";
+        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+    }>, "many">;
+}, "strip", z.ZodTypeAny, {
     title: string;
+    type: "pages" | "singlepage";
     singular: string;
-    description: string | undefined;
-    bricks: Array<CollectionBrickConfigT>;
-}
-interface CollectionBrickConfigT {
-    key: string;
-    type: "builder" | "fixed";
-    position?: "standard" | "bottom" | "top" | "sidebar";
-}
+    bricks: {
+        key: string;
+        type: "builder" | "fixed";
+        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+    }[];
+    description?: string | undefined;
+    path?: string | undefined;
+}, {
+    title: string;
+    type: "pages" | "singlepage";
+    singular: string;
+    bricks: {
+        key: string;
+        type: "builder" | "fixed";
+        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+    }[];
+    description?: string | undefined;
+    path?: string | undefined;
+}>;
+type CollectionConfigT = z.infer<typeof CollectionOptionsSchema>;
 type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 declare class CollectionBuilder {
     #private;
     key: string;
-    config: CollectionOptions;
-    constructor(key: string, options: CollectionOptions);
+    config: CollectionConfigT;
+    constructor(key: string, options: CollectionConfigT);
 }
 
 interface BrickConfigOptionsT {

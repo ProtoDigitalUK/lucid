@@ -6,6 +6,10 @@ import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 import Page from "@db/models/Page.js";
 // Schema
 import pagesSchema from "@schemas/pages.js";
+// Utils
+import service from "@utils/app/service.js";
+// Services
+import collectionsService from "@services/collections/index.js";
 // Format
 import formatPage from "@utils/format/format-page.js";
 
@@ -76,11 +80,20 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     per_page: per_page,
   });
 
-  const pages = await Page.getMultiple(client, SelectQuery);
+  const response = await Promise.all([
+    Page.getMultiple(client, SelectQuery),
+    service(
+      collectionsService.getAll,
+      false,
+      client
+    )({
+      query: {},
+    }),
+  ]);
 
   return {
-    data: pages.data.map((page) => formatPage(page)),
-    count: pages.count,
+    data: response[0].data.map((page) => formatPage(page, response[1])),
+    count: response[0].count,
   };
 };
 

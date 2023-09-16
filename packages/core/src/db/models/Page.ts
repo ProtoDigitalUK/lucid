@@ -56,7 +56,9 @@ type PageCreateSingle = (
     parent_id?: number;
     category_ids?: Array<number>;
   }
-) => Promise<PageT>;
+) => Promise<{
+  id: PageT["id"];
+}>;
 
 type PageUpdateSingle = (
   client: PoolClient,
@@ -75,12 +77,16 @@ type PageUpdateSingle = (
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
   }
-) => Promise<PageT>;
+) => Promise<{
+  id: PageT["id"];
+}>;
 
 type PageDeleteSingle = (
   client: PoolClient,
   data: { id: number }
-) => Promise<PageT>;
+) => Promise<{
+  id: PageT["id"];
+}>;
 
 type PageGetMultipleByIds = (
   client: PoolClient,
@@ -88,7 +94,11 @@ type PageGetMultipleByIds = (
     ids: Array<number>;
     environment_key: string;
   }
-) => Promise<PageT[]>;
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
 
 type PageGetNonCurrentHomepages = (
   client: PoolClient,
@@ -195,8 +205,10 @@ export default class Page {
     return page.rows[0];
   };
   static createSingle: PageCreateSingle = async (client, data) => {
-    const page = await client.query<PageT>({
-      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+    const page = await client.query<{
+      id: PageT["id"];
+    }>({
+      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
       values: [
         data.environment_key,
         data.title,
@@ -243,26 +255,32 @@ export default class Page {
 
     // -------------------------------------------
     // Update page
-    const page = await client.query<PageT>({
+    const page = await client.query<{
+      id: PageT["id"];
+    }>({
       text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${
         aliases.value.length + 1
-      } RETURNING *`,
+      } RETURNING id`,
       values: [...values.value, data.id],
     });
 
     return page.rows[0];
   };
   static deleteSingle: PageDeleteSingle = async (client, data) => {
-    const page = await client.query<PageT>({
-      text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
+    const page = await client.query<{
+      id: PageT["id"];
+    }>({
+      text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING id`,
       values: [data.id],
     });
 
     return page.rows[0];
   };
   static getMultipleByIds: PageGetMultipleByIds = async (client, data) => {
-    const pages = await client.query<PageT>({
-      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
+    const pages = await client.query<{
+      id: PageT["id"];
+    }>({
+      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2 RETURNING id`,
       values: [data.ids, data.environment_key],
     });
 

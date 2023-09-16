@@ -4,7 +4,11 @@ import {
   IntroBrick,
   DefaultMetaBrick,
 } from "./src/bricks/index.js";
-import { PageCollection, SettingsCollection } from "./src/collections/index.js";
+import {
+  PageCollection,
+  SettingsCollection,
+  BlogCollection,
+} from "./src/collections/index.js";
 import { ContactForm } from "./src/forms/index.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -46,6 +50,6 @@ export default buildConfig({
     },
   },
   forms: [ContactForm],
-  collections: [PageCollection, SettingsCollection],
+  collections: [PageCollection, SettingsCollection, BlogCollection],
   bricks: [BannerBrick, IntroBrick, DefaultMetaBrick],
 });

@@ -22,6 +22,7 @@ export interface PageHeadingProps {
       open: boolean;
       setOpen: (_open: boolean) => void;
       permission?: boolean;
+      label?: string;
     };
   };
   options?: {
@@ -103,7 +104,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
                   props.actions?.create?.setOpen(true);
                 }}
               >
-                {T("create")}
+                {props.actions?.create?.label ?? T("create")}
               </Button>
             </Show>
             <Show

@@ -1,8 +1,6 @@
 import { PoolClient } from "pg";
 // Models
 import Page from "@db/models/Page.js";
-// Format
-import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   ids: Array<number>;
@@ -15,7 +13,7 @@ const getMultipleById = async (client: PoolClient, data: ServiceData) => {
     environment_key: data.environment_key,
   });
 
-  return pages.map((page) => formatPage(page));
+  return pages;
 };
 
 export default getMultipleById;

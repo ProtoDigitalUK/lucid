@@ -159,7 +159,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     }),
   ]);
 
-  return formatPage(page);
+  return undefined;
 };
 
 export default updateSingle;

@@ -4135,9 +4135,10 @@ var formatCollection = (instance) => {
     key: instance.key,
     title: instance.config.title,
     singular: instance.config.singular,
-    description: instance.config.description || null,
+    description: instance.config.description,
     type: instance.config.type,
-    bricks: instance.config.bricks
+    bricks: instance.config.bricks,
+    path: instance.config.path
   };
 };
 var format_collections_default = formatCollection;
@@ -4396,11 +4397,8 @@ var getAll4 = async (client, data) => {
   collectionsF = filterCollections(data.query.filter, collectionsF);
   collectionsF = collectionsF.map((collection) => {
     const collectionData = {
-      key: collection.key,
-      title: collection.title,
-      singular: collection.singular,
-      description: collection.description,
-      type: collection.type
+      ...collection,
+      bricks: []
     };
     if (data.query.include?.includes("bricks") && environment) {
       const collectionBricks = brick_config_default.getAllAllowedBricks({
@@ -5471,7 +5469,7 @@ var Page = class {
   };
   static createSingle = async (client, data) => {
     const page = await client.query({
-      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
       values: [
         data.environment_key,
         data.title,
@@ -5515,21 +5513,21 @@ var Page = class {
       }
     });
     const page = await client.query({
-      text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING *`,
+      text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${aliases.value.length + 1} RETURNING id`,
       values: [...values.value, data.id]
     });
     return page.rows[0];
   };
   static deleteSingle = async (client, data) => {
     const page = await client.query({
-      text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING *`,
+      text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING id`,
       values: [data.id]
     });
     return page.rows[0];
   };
   static getMultipleByIds = async (client, data) => {
     const pages = await client.query({
-      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
+      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2 RETURNING id`,
       values: [data.ids, data.environment_key]
     });
     return pages.rows;
@@ -5758,40 +5756,6 @@ var page_categories_default = {
   updateMultiple: update_multiple_default
 };
 
-// src/utils/format/format-page.ts
-var formatPage = (data) => {
-  const res = {
-    id: data.id,
-    environment_key: data.environment_key,
-    parent_id: data.parent_id,
-    collection_key: data.collection_key,
-    title: data.title,
-    slug: data.slug,
-    full_slug: data.full_slug,
-    homepage: data.homepage,
-    excerpt: data.excerpt,
-    created_by: data.created_by,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    published: data.published,
-    published_at: data.published_at,
-    published_by: data.published_by,
-    categories: data.categories,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks
-  };
-  if (res.categories) {
-    res.categories = res.categories[0] === null ? [] : res.categories;
-  }
-  if (res.full_slug) {
-    if (!data.full_slug.startsWith("/")) {
-      res.full_slug = "/" + res.full_slug;
-    }
-  }
-  return res;
-};
-var format_page_default = formatPage;
-
 // src/services/pages/create-single.ts
 var createSingle5 = async (client, data) => {
   const parentId = data.homepage ? void 0 : data.parent_id;
@@ -5867,7 +5831,7 @@ var createSingle5 = async (client, data) => {
     }) : Promise.resolve()
   ];
   await Promise.all(operations);
-  return format_page_default(page);
+  return void 0;
 };
 var create_single_default6 = createSingle5;
 
@@ -5892,9 +5856,50 @@ var deleteSingle7 = async (client, data) => {
       status: 500
     });
   }
-  return format_page_default(page);
+  return void 0;
 };
 var delete_single_default8 = deleteSingle7;
+
+// src/utils/format/format-page.ts
+var formatPage = (data, collections) => {
+  const res = {
+    id: data.id,
+    environment_key: data.environment_key,
+    parent_id: data.parent_id,
+    collection_key: data.collection_key,
+    title: data.title,
+    slug: data.slug,
+    full_slug: data.full_slug,
+    homepage: data.homepage,
+    excerpt: data.excerpt,
+    created_by: data.created_by,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    published: data.published,
+    published_at: data.published_at,
+    published_by: data.published_by,
+    categories: data.categories,
+    builder_bricks: data.builder_bricks,
+    fixed_bricks: data.fixed_bricks
+  };
+  if (res.categories) {
+    res.categories = res.categories[0] === null ? [] : res.categories;
+  }
+  if (res.full_slug) {
+    const collection = collections.find(
+      (collection2) => collection2.key === res.collection_key
+    );
+    if (collection && collection.path) {
+      res.full_slug = `${collection.path}/${res.full_slug}`;
+    }
+    if (!res.full_slug.startsWith("/")) {
+      res.full_slug = "/" + res.full_slug;
+    }
+    res.full_slug = res.full_slug.replace(/\/+/g, "/");
+  }
+  return res;
+};
+var format_page_default = formatPage;
 
 // src/services/pages/get-multiple.ts
 var getMultiple5 = async (client, data) => {
@@ -5956,10 +5961,19 @@ var getMultiple5 = async (client, data) => {
     page,
     per_page
   });
-  const pages = await Page.getMultiple(client, SelectQuery);
+  const response = await Promise.all([
+    Page.getMultiple(client, SelectQuery),
+    service_default(
+      collections_default.getAll,
+      false,
+      client
+    )({
+      query: {}
+    })
+  ]);
   return {
-    data: pages.data.map((page2) => format_page_default(page2)),
-    count: pages.count
+    data: response[0].data.map((page2) => format_page_default(page2, response[1])),
+    count: response[0].count
   };
 };
 var get_multiple_default6 = getMultiple5;
@@ -8358,16 +8372,16 @@ var getSingle10 = async (client, data) => {
       status: 404
     });
   }
+  const collection = await service_default(
+    collections_default.getSingle,
+    false,
+    client
+  )({
+    collection_key: page.collection_key,
+    environment_key: page.environment_key,
+    type: "pages"
+  });
   if (include && include.includes("bricks")) {
-    const collection = await service_default(
-      collections_default.getSingle,
-      false,
-      client
-    )({
-      collection_key: page.collection_key,
-      environment_key: page.environment_key,
-      type: "pages"
-    });
     const pageBricks = await service_default(
       collection_bricks_default.getAll,
       false,
@@ -8381,7 +8395,7 @@ var getSingle10 = async (client, data) => {
     page.builder_bricks = pageBricks.builder_bricks;
     page.fixed_bricks = pageBricks.fixed_bricks;
   }
-  return format_page_default(page);
+  return format_page_default(page, [collection]);
 };
 var get_single_default11 = getSingle10;
 
@@ -8493,7 +8507,7 @@ var updateSingle5 = async (client, data) => {
       environment
     })
   ]);
-  return format_page_default(page);
+  return void 0;
 };
 var update_single_default7 = updateSingle5;
 
@@ -8598,7 +8612,7 @@ var getMultipleById = async (client, data) => {
     ids: data.ids,
     environment_key: data.environment_key
   });
-  return pages.map((page) => format_page_default(page));
+  return pages;
 };
 var get_multiple_by_id_default = getMultipleById;
 
@@ -12754,6 +12768,7 @@ var CollectionOptionsSchema = import_zod23.default.object({
   title: import_zod23.default.string(),
   singular: import_zod23.default.string(),
   description: import_zod23.default.string().optional(),
+  path: import_zod23.default.string().optional(),
   bricks: import_zod23.default.array(
     import_zod23.default.object({
       key: import_zod23.default.string(),

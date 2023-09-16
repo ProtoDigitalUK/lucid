@@ -8,8 +8,6 @@ import Page from "@db/models/Page.js";
 import collectionsService from "@services/collections/index.js";
 import pageServices from "@services/pages/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
-// Format
-import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   environment_key: string;
@@ -116,7 +114,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   ];
   await Promise.all(operations);
 
-  return formatPage(page);
+  return undefined;
 };
 
 export default createSingle;

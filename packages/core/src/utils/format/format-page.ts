@@ -1,7 +1,14 @@
 import { PageT } from "@db/models/Page.js";
-import { CollectionPagesResT } from "@lucid/types/src/collections.js";
+// Types
+import {
+  CollectionPagesResT,
+  CollectionResT,
+} from "@lucid/types/src/collections.js";
 
-const formatPage = (data: PageT): CollectionPagesResT => {
+const formatPage = (
+  data: PageT,
+  collections: CollectionResT[]
+): CollectionPagesResT => {
   const res: CollectionPagesResT = {
     id: data.id,
     environment_key: data.environment_key,
@@ -33,9 +40,17 @@ const formatPage = (data: PageT): CollectionPagesResT => {
   }
   // Full Slug
   if (res.full_slug) {
-    if (!data.full_slug.startsWith("/")) {
+    // append collection path
+    const collection = collections.find(
+      (collection) => collection.key === res.collection_key
+    );
+    if (collection && collection.path) {
+      res.full_slug = `${collection.path}/${res.full_slug}`;
+    }
+    if (!res.full_slug.startsWith("/")) {
       res.full_slug = "/" + res.full_slug;
     }
+    res.full_slug = res.full_slug.replace(/\/+/g, "/");
   }
 
   return res;

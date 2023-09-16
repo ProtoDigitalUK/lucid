@@ -8,9 +8,10 @@ const formatCollection = (instance: CollectionBuilderT): CollectionResT => {
     key: instance.key,
     title: instance.config.title,
     singular: instance.config.singular,
-    description: instance.config.description || null,
+    description: instance.config.description,
     type: instance.config.type,
     bricks: instance.config.bricks,
+    path: instance.config.path,
   };
 };
 

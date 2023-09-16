@@ -47,11 +47,8 @@ const getAll = async (client: PoolClient, data: ServiceData) => {
 
   collectionsF = collectionsF.map((collection) => {
     const collectionData: CollectionResT = {
-      key: collection.key,
-      title: collection.title,
-      singular: collection.singular,
-      description: collection.description,
-      type: collection.type,
+      ...collection,
+      bricks: [],
     };
 
     if (data.query.include?.includes("bricks") && environment) {

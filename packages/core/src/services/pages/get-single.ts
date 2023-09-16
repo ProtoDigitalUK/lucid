@@ -77,17 +77,17 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  if (include && include.includes("bricks")) {
-    const collection = await service(
-      collectionsService.getSingle,
-      false,
-      client
-    )({
-      collection_key: page.collection_key,
-      environment_key: page.environment_key,
-      type: "pages",
-    });
+  const collection = await service(
+    collectionsService.getSingle,
+    false,
+    client
+  )({
+    collection_key: page.collection_key,
+    environment_key: page.environment_key,
+    type: "pages",
+  });
 
+  if (include && include.includes("bricks")) {
     const pageBricks = await service(
       collectionBricksService.getAll,
       false,
@@ -102,7 +102,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     page.fixed_bricks = pageBricks.fixed_bricks;
   }
 
-  return formatPage(page);
+  return formatPage(page, [collection]);
 };
 
 export default getSingle;

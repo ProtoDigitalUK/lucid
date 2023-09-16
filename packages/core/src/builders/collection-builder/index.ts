@@ -5,6 +5,7 @@ const CollectionOptionsSchema = z.object({
   title: z.string(),
   singular: z.string(),
   description: z.string().optional(),
+  path: z.string().optional(),
   bricks: z.array(
     z.object({
       key: z.string(),
@@ -16,27 +17,9 @@ const CollectionOptionsSchema = z.object({
 
 // ------------------------------------
 // Types & Interfaces
-export interface CollectionConfigT {
-  key: string;
-  title: string;
-  singular: string;
-  description: string | null;
-  type: "pages" | "singlepage";
-  bricks: Array<CollectionBrickConfigT>;
-}
 
-export interface CollectionOptions {
-  type: "pages" | "singlepage";
-  title: string;
-  singular: string;
-  description: string | undefined;
-  bricks: Array<CollectionBrickConfigT>;
-}
-export interface CollectionBrickConfigT {
-  key: string;
-  type: "builder" | "fixed";
-  position?: "standard" | "bottom" | "top" | "sidebar";
-}
+export type CollectionConfigT = z.infer<typeof CollectionOptionsSchema>;
+export type CollectionBrickConfigT = CollectionConfigT["bricks"][0];
 
 export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 
@@ -44,8 +27,8 @@ export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;
 // Collection Builder
 export default class CollectionBuilder {
   key: string;
-  config: CollectionOptions;
-  constructor(key: string, options: CollectionOptions) {
+  config: CollectionConfigT;
+  constructor(key: string, options: CollectionConfigT) {
     this.key = key;
     this.config = options;
 
@@ -94,7 +77,7 @@ export default class CollectionBuilder {
 
   // ------------------------------------
   // Private Methods
-  #validateOptions = (options: CollectionOptions) => {
+  #validateOptions = (options: CollectionConfigT) => {
     try {
       CollectionOptionsSchema.parse(options);
     } catch (err) {

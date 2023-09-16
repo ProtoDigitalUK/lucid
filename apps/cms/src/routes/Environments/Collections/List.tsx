@@ -14,6 +14,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import PagesTable from "@/components/Tables/PagesTable";
+import CreatePagePanel from "@/components/Panels/Pages/CreatePagePanel";
 
 const EnvCollectionsListRoute: Component = () => {
   // ----------------------------------
@@ -81,6 +82,7 @@ const EnvCollectionsListRoute: Component = () => {
             ["create_content"],
             props.envKey
           ).all,
+          label: T("create_page"),
         },
       }}
       headingChildren={
@@ -115,6 +117,13 @@ const EnvCollectionsListRoute: Component = () => {
     >
       <PagesTable
         searchParams={searchParams}
+        collection={collection.data?.data as CollectionResT}
+      />
+      <CreatePagePanel
+        state={{
+          open: getOpenCreatePanel(),
+          setOpen: setOpenCreatePanel,
+        }}
         collection={collection.data?.data as CollectionResT}
       />
     </Layout.PageLayout>

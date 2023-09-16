@@ -22,6 +22,28 @@ export const PageCollection = new CollectionBuilder("page", {
   ],
 });
 
+export const BlogCollection = new CollectionBuilder("blog", {
+  type: "pages",
+  title: "Blogs",
+  singular: "Blog",
+  path: "/blog",
+  bricks: [
+    {
+      key: "banner",
+      type: "builder",
+    },
+    {
+      key: "intro",
+      type: "builder",
+    },
+    {
+      key: "default_meta",
+      type: "fixed",
+      position: "bottom",
+    },
+  ],
+});
+
 export const SettingsCollection = new CollectionBuilder("settings", {
   type: "singlepage",
   title: "Settings",
