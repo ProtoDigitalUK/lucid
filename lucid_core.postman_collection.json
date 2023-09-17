@@ -754,7 +754,7 @@
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages?sort=created_at",
+													"raw": "{{BASE_URL}}/api/v1/pages?sort=created_at&per_page=-1",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -775,7 +775,7 @@
 														},
 														{
 															"key": "filter[title]",
-															"value": "",
+															"value": "My Fi",
 															"disabled": true
 														},
 														{
@@ -795,8 +795,7 @@
 														},
 														{
 															"key": "per_page",
-															"value": "1",
-															"disabled": true
+															"value": "-1"
 														}
 													]
 												}
@@ -820,7 +819,7 @@
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/1?include=bricks",
+													"raw": "{{BASE_URL}}/api/v1/pages/4",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -828,12 +827,13 @@
 														"api",
 														"v1",
 														"pages",
-														"1"
+														"4"
 													],
 													"query": [
 														{
 															"key": "include",
-															"value": "bricks"
+															"value": "bricks",
+															"disabled": true
 														}
 													]
 												}
@@ -858,7 +858,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"title\": \"Homepage 4\",\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    // \"parent_id\": 2,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"raw": "{\n    \"title\": \"Dog Walking\",\n    \"slug\": \"cat-walking\",\n    // \"homepage\": true,\n    \"parent_id\": 12,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -985,7 +985,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/32",
+													"raw": "{{BASE_URL}}/api/v1/pages/28",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -993,7 +993,46 @@
 														"api",
 														"v1",
 														"pages",
-														"32"
+														"28"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Multiple",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"ids\": []\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages"
 													]
 												}
 											},
@@ -1138,7 +1177,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/settings",
+									"raw": "{{BASE_URL}}/api/v1/collections/page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1146,7 +1185,7 @@
 										"api",
 										"v1",
 										"collections",
-										"settings"
+										"page"
 									]
 								},
 								"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -2404,7 +2443,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"role_ids\": [1],\r\n    \"super_admin\": true\r\n}",
+							"raw": "{\r\n    \"role_ids\": [2]\r\n    // \"super_admin\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2412,7 +2451,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/1",
+							"raw": "{{BASE_URL}}/api/v1/users/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2420,7 +2459,7 @@
 								"api",
 								"v1",
 								"users",
-								"1"
+								"2"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -2565,7 +2604,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/8",
+							"raw": "{{BASE_URL}}/api/v1/users/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2573,7 +2612,7 @@
 								"api",
 								"v1",
 								"users",
-								"8"
+								"2"
 							]
 						}
 					},

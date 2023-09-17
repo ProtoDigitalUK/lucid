@@ -9,6 +9,7 @@ import parentChecks from "./parent-checks.js";
 import resetHomepages from "./reset-homepages.js";
 import checkPageCollection from "./check-page-collection.js";
 import checkParentAncestry from "./check-parent-ancestry.js";
+import deleteMultiple from "./delete-multiple.js";
 
 export default {
   createSingle,
@@ -22,4 +23,5 @@ export default {
   resetHomepages,
   checkPageCollection,
   checkParentAncestry,
+  deleteMultiple,
 };

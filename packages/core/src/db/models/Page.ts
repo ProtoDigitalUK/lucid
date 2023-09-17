@@ -88,6 +88,15 @@ type PageDeleteSingle = (
   id: PageT["id"];
 }>;
 
+type PageDeleteMultiple = (
+  client: PoolClient,
+  data: { ids: Array<number> }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
 type PageGetMultipleByIds = (
   client: PoolClient,
   data: {
@@ -287,6 +296,16 @@ export default class Page {
     });
 
     return page.rows[0];
+  };
+  static deleteMultiple: PageDeleteMultiple = async (client, data) => {
+    const pages = await client.query<{
+      id: PageT["id"];
+    }>({
+      text: `DELETE FROM lucid_pages WHERE id = ANY($1) RETURNING id`,
+      values: [data.ids],
+    });
+
+    return pages.rows;
   };
   static getMultipleByIds: PageGetMultipleByIds = async (client, data) => {
     const pages = await client.query<{

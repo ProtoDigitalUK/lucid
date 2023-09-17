@@ -5360,6 +5360,11 @@ var deleteSingleQuery2 = z9.object({});
 var deleteSingleParams2 = z9.object({
   id: z9.string()
 });
+var deleteMultipleBody = z9.object({
+  ids: z9.array(z9.number())
+});
+var deleteMultipleQuery = z9.object({});
+var deleteMultipleParams = z9.object({});
 var pages_default = {
   getMultiple: {
     body: getMultipleBody2,
@@ -5385,6 +5390,11 @@ var pages_default = {
     body: deleteSingleBody2,
     query: deleteSingleQuery2,
     params: deleteSingleParams2
+  },
+  deleteMultiple: {
+    body: deleteMultipleBody,
+    query: deleteMultipleQuery,
+    params: deleteMultipleParams
   }
 };
 
@@ -5494,6 +5504,13 @@ var Page = class {
       values: [data.id]
     });
     return page.rows[0];
+  };
+  static deleteMultiple = async (client, data) => {
+    const pages = await client.query({
+      text: `DELETE FROM lucid_pages WHERE id = ANY($1) RETURNING id`,
+      values: [data.ids]
+    });
+    return pages.rows;
   };
   static getMultipleByIds = async (client, data) => {
     const pages = await client.query({
@@ -7593,6 +7610,23 @@ var checkParentAncestry = async (client, data) => {
 };
 var check_parent_ancestry_default = checkParentAncestry;
 
+// src/services/pages/delete-multiple.ts
+var deleteMultiple3 = async (client, data) => {
+  const page = await Page.deleteMultiple(client, {
+    ids: data.ids
+  });
+  if (page.length !== data.ids.length) {
+    throw new LucidError({
+      type: "basic",
+      name: "Pages Not Deleted",
+      message: "There was an error deleting some or all of the pages",
+      status: 500
+    });
+  }
+  return void 0;
+};
+var delete_multiple_default3 = deleteMultiple3;
+
 // src/services/pages/index.ts
 var pages_default2 = {
   createSingle: create_single_default6,
@@ -7605,7 +7639,8 @@ var pages_default2 = {
   parentChecks: parent_checks_default,
   resetHomepages: reset_homepages_default,
   checkPageCollection: check_page_collection_default,
-  checkParentAncestry: check_parent_ancestry_default
+  checkParentAncestry: check_parent_ancestry_default,
+  deleteMultiple: delete_multiple_default3
 };
 
 // src/controllers/pages/create-single.ts
@@ -7751,6 +7786,29 @@ var delete_single_default9 = {
   controller: deleteSingleController2
 };
 
+// src/controllers/pages/delete-multiple.ts
+var deleteMultipleController = async (req, res, next) => {
+  try {
+    const page = await service_default(
+      pages_default2.deleteMultiple,
+      false
+    )({
+      ids: req.body.ids
+    });
+    res.status(200).json(
+      build_response_default(req, {
+        data: page
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+var delete_multiple_default4 = {
+  schema: pages_default.deleteMultiple,
+  controller: deleteMultipleController
+};
+
 // src/routes/v1/pages.routes.ts
 var router4 = Router4();
 route_default(router4, {
@@ -7815,6 +7873,20 @@ route_default(router4, {
   },
   schema: delete_single_default9.schema,
   controller: delete_single_default9.controller
+});
+route_default(router4, {
+  method: "delete",
+  path: "/",
+  permissions: {
+    environments: ["delete_content"]
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true
+  },
+  schema: delete_multiple_default4.schema,
+  controller: delete_multiple_default4.controller
 });
 var pages_routes_default = router4;
 

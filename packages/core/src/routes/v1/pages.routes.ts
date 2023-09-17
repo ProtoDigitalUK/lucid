@@ -6,6 +6,7 @@ import getMultiple from "@controllers/pages/get-multiple.js";
 import getSingle from "@controllers/pages/get-single.js";
 import updateSingle from "@controllers/pages/update-single.js";
 import deleteSingle from "@controllers/pages/delete-single.js";
+import deleteMultiple from "@controllers/pages/delete-multiple.js";
 
 // ------------------------------------
 // Router
@@ -77,6 +78,21 @@ r(router, {
   },
   schema: deleteSingle.schema,
   controller: deleteSingle.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/",
+  permissions: {
+    environments: ["delete_content"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: deleteMultiple.schema,
+  controller: deleteMultiple.controller,
 });
 
 export default router;

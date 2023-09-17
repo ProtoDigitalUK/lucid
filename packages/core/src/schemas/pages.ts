@@ -79,6 +79,14 @@ const deleteSingleParams = z.object({
 });
 
 // ------------------------------------
+// DELETE MULTIPLE
+const deleteMultipleBody = z.object({
+  ids: z.array(z.number()),
+});
+const deleteMultipleQuery = z.object({});
+const deleteMultipleParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   getMultiple: {
@@ -105,5 +113,10 @@ export default {
     body: deleteSingleBody,
     query: deleteSingleQuery,
     params: deleteSingleParams,
+  },
+  deleteMultiple: {
+    body: deleteMultipleBody,
+    query: deleteMultipleQuery,
+    params: deleteMultipleParams,
   },
 };
