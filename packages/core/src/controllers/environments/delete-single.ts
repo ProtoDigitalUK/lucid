@@ -16,7 +16,7 @@ const deleteSingleController: Controller<
   try {
     const environment = await service(
       environmentsService.deleteSingle,
-      true
+      false
     )({
       key: req.params.key,
     });

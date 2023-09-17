@@ -14,7 +14,7 @@ const updateMeController: Controller<
   typeof accountSchema.updateMe.query
 > = async (req, res, next) => {
   try {
-    const userRoles = await service(usersService.updateSingle, true)(
+    const userRoles = await service(usersService.updateSingle, false)(
       {
         user_id: req.auth.id,
         first_name: req.body.first_name,

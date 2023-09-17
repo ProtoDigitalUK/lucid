@@ -16,7 +16,7 @@ const getSingleController: Controller<
   try {
     const singlepage = await service(
       singlePagesService.getSingle,
-      true
+      false
     )({
       user_id: req.auth.id,
       environment_key: req.headers["lucid-environment"] as string,

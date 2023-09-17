@@ -25,34 +25,31 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   // If the page is a homepage, set the parent_id to undefined
   const parentId = data.homepage ? undefined : data.parent_id;
 
-  // Start checks that do not depend on each other in parallel
-  const checks = Promise.all([
-    service(
-      pageServices.checkPageCollection,
-      false,
-      client
-    )({
-      collection_key: data.collection_key,
-      environment_key: data.environment_key,
-      homepage: data.homepage,
-      parent_id: parentId,
-    }),
-    parentId === undefined
-      ? Promise.resolve(undefined) // If the page is a homepage, set the parent_id to undefined
-      : service(
-          pageServices.parentChecks,
-          false,
-          client
-        )({
-          parent_id: parentId,
-          environment_key: data.environment_key,
-          collection_key: data.collection_key,
-        }),
-  ]);
-  await checks;
+  // Parallel Checks
+  const checkPageCollectionPromise = service(
+    pageServices.checkPageCollection,
+    false,
+    client
+  )({
+    collection_key: data.collection_key,
+    environment_key: data.environment_key,
+    homepage: data.homepage,
+    parent_id: parentId,
+  });
 
-  // Check if slug is unique
-  const slug = await service(
+  const parentCheckPromise = parentId
+    ? service(
+        pageServices.parentChecks,
+        false,
+        client
+      )({
+        parent_id: parentId,
+        environment_key: data.environment_key,
+        collection_key: data.collection_key,
+      })
+    : Promise.resolve();
+
+  const buildUniqueSlugPromise = service(
     pageServices.buildUniqueSlug,
     false,
     client
@@ -63,6 +60,13 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     collection_key: data.collection_key,
     parent_id: parentId,
   });
+
+  // Await all parallel checks and also get the slug
+  const [_, __, slug] = await Promise.all([
+    checkPageCollectionPromise,
+    parentCheckPromise,
+    buildUniqueSlugPromise,
+  ]);
 
   // -------------------------------------------
   // Create page
@@ -88,31 +92,31 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  // Start operations that do not depend on each other in parallel
-  const operations = [
-    data.category_ids
-      ? service(
-          pageCategoryService.createMultiple,
-          false,
-          client
-        )({
-          page_id: page.id,
-          category_ids: data.category_ids,
-          collection_key: data.collection_key,
-        })
-      : Promise.resolve(),
-    data.homepage
-      ? service(
-          pageServices.resetHomepages,
-          false,
-          client
-        )({
-          current: page.id,
-          environment_key: data.environment_key,
-        })
-      : Promise.resolve(),
-  ];
-  await Promise.all(operations);
+  // Parallel Operations
+  const pageCategoryServicePromise = data.category_ids
+    ? service(
+        pageCategoryService.createMultiple,
+        false,
+        client
+      )({
+        page_id: page.id,
+        category_ids: data.category_ids,
+        collection_key: data.collection_key,
+      })
+    : Promise.resolve();
+
+  const resetHomepagesPromise = data.homepage
+    ? service(
+        pageServices.resetHomepages,
+        false,
+        client
+      )({
+        current: page.id,
+        environment_key: data.environment_key,
+      })
+    : Promise.resolve();
+
+  await Promise.all([pageCategoryServicePromise, resetHomepagesPromise]);
 
   return undefined;
 };

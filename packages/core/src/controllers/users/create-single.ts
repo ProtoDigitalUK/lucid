@@ -14,7 +14,7 @@ const createSingleController: Controller<
   typeof usersSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const user = await service(usersService.registerSingle, true)(
+    const user = await service(usersService.registerSingle, false)(
       {
         email: req.body.email,
         username: req.body.username,

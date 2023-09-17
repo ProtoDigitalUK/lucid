@@ -16,7 +16,7 @@ const deleteSingleController: Controller<
   try {
     const category = await service(
       categoriesService.deleteSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),

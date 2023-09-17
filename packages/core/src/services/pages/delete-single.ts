@@ -1,29 +1,14 @@
 import { PoolClient } from "pg";
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
-import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
-// Services
-import pageServices from "@services/pages/index.js";
 
 export interface ServiceData {
   id: number;
-  environment_key: string;
 }
 
 const deleteSingle = async (client: PoolClient, data: ServiceData) => {
-  // -------------------------------------------
-  // Checks
-  await service(
-    pageServices.checkPageExists,
-    false,
-    client
-  )({
-    id: data.id,
-    environment_key: data.environment_key,
-  });
-
   const page = await Page.deleteSingle(client, {
     id: data.id,
   });

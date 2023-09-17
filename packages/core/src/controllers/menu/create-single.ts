@@ -16,7 +16,7 @@ const createSingleController: Controller<
   try {
     const menu = await service(
       menusService.createSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"] as string,
       key: req.body.key,

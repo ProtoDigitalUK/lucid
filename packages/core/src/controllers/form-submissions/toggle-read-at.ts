@@ -16,7 +16,7 @@ const toggleReadAtController: Controller<
   try {
     const formSubmission = await service(
       formSubService.toggleReadAt,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,

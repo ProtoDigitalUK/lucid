@@ -16,7 +16,7 @@ const updateSingleController: Controller<
   try {
     const role = await service(
       rolesService.updateSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       name: req.body.name,

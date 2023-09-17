@@ -798,8 +798,9 @@ var service = (fn, transaction, outerClient) => async (...args) => {
       await client.query("COMMIT");
     return result;
   } catch (error) {
-    if (transaction)
+    if (transaction) {
       await client.query("ROLLBACK");
+    }
     throw error;
   } finally {
     if (shouldReleaseClient) {
@@ -813,10 +814,16 @@ var service_default = service;
 var UserRole = class {
   static getAll = async (client, data) => {
     const userRoles = await client.query({
-      text: `
-        SELECT * FROM lucid_user_roles
-        WHERE user_id = $1
-      `,
+      text: `SELECT 
+          lucid_user_roles.id AS id,
+          lucid_user_roles.role_id AS role_id,
+          lucid_roles.name AS name
+      FROM 
+          lucid_user_roles
+      INNER JOIN 
+          lucid_roles ON lucid_user_roles.role_id = lucid_roles.id
+      WHERE 
+          lucid_user_roles.user_id = $1;`,
       values: [data.user_id]
     });
     return userRoles.rows;
@@ -1963,15 +1970,7 @@ var updateRoles = async (client, data) => {
 var update_roles_default = updateRoles;
 
 // src/utils/format/format-user-permissions.ts
-var formatUserPermissions = (permissionRes) => {
-  const roles = permissionRes.map((permission) => {
-    return {
-      id: permission.role_id,
-      name: permission.role_name
-    };
-  }).filter((role, index, self) => {
-    return index === self.findIndex((r) => r.id === role.id);
-  });
+var formatUserPermissions = (roles, permissionRes) => {
   const environments = [];
   const permissions2 = [];
   permissionRes.forEach((permission) => {
@@ -1999,7 +1998,10 @@ var formatUserPermissions = (permissionRes) => {
     }
   });
   return {
-    roles,
+    roles: roles.map((role) => ({
+      id: role.id,
+      name: role.name
+    })),
     permissions: {
       global: permissions2,
       environments
@@ -2010,19 +2012,14 @@ var format_user_permissions_default = formatUserPermissions;
 
 // src/services/users/get-permissions.ts
 var getPermissions = async (client, data) => {
-  const userPermissions = await UserRole.getPermissions(client, {
+  const userRoles = UserRole.getAll(client, {
     user_id: data.user_id
   });
-  if (!userPermissions) {
-    return {
-      roles: [],
-      permissions: {
-        global: [],
-        environments: []
-      }
-    };
-  }
-  return format_user_permissions_default(userPermissions);
+  const userPermissions = UserRole.getPermissions(client, {
+    user_id: data.user_id
+  });
+  const [roles, permissions2] = await Promise.all([userRoles, userPermissions]);
+  return format_user_permissions_default(roles, permissions2);
 };
 var get_permissions_default = getPermissions;
 
@@ -2473,13 +2470,7 @@ var updateSingle2 = async (client, data, current_user_id) => {
       role_ids: data.role_ids
     });
   }
-  return await service_default(
-    users_default.getSingle,
-    false,
-    client
-  )({
-    user_id: data.user_id
-  });
+  return void 0;
 };
 var update_single_default2 = updateSingle2;
 
@@ -3832,7 +3823,7 @@ var resetPasswordController = async (req, res, next) => {
   try {
     const resetPassword2 = await service_default(
       auth_default.resetPassword,
-      true
+      false
     )({
       token: req.params.token,
       password: req.body.password
@@ -4670,7 +4661,7 @@ var createSingleControllers = async (req, res, next) => {
   try {
     const category = await service_default(
       categories_default2.createSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"],
       collection_key: req.body.collection_key,
@@ -4697,7 +4688,7 @@ var updateSingleController = async (req, res, next) => {
   try {
     const category = await service_default(
       categories_default2.updateSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"],
       id: parseInt(req.params.id),
@@ -4726,7 +4717,7 @@ var deleteSingleController = async (req, res, next) => {
   try {
     const category = await service_default(
       categories_default2.deleteSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"],
       id: parseInt(req.params.id)
@@ -5777,29 +5768,26 @@ var page_categories_default = {
 // src/services/pages/create-single.ts
 var createSingle5 = async (client, data) => {
   const parentId = data.homepage ? void 0 : data.parent_id;
-  const checks = Promise.all([
-    service_default(
-      pages_default2.checkPageCollection,
-      false,
-      client
-    )({
-      collection_key: data.collection_key,
-      environment_key: data.environment_key,
-      homepage: data.homepage,
-      parent_id: parentId
-    }),
-    parentId === void 0 ? Promise.resolve(void 0) : service_default(
-      pages_default2.parentChecks,
-      false,
-      client
-    )({
-      parent_id: parentId,
-      environment_key: data.environment_key,
-      collection_key: data.collection_key
-    })
-  ]);
-  await checks;
-  const slug5 = await service_default(
+  const checkPageCollectionPromise = service_default(
+    pages_default2.checkPageCollection,
+    false,
+    client
+  )({
+    collection_key: data.collection_key,
+    environment_key: data.environment_key,
+    homepage: data.homepage,
+    parent_id: parentId
+  });
+  const parentCheckPromise = parentId ? service_default(
+    pages_default2.parentChecks,
+    false,
+    client
+  )({
+    parent_id: parentId,
+    environment_key: data.environment_key,
+    collection_key: data.collection_key
+  }) : Promise.resolve();
+  const buildUniqueSlugPromise = service_default(
     pages_default2.buildUniqueSlug,
     false,
     client
@@ -5810,6 +5798,11 @@ var createSingle5 = async (client, data) => {
     collection_key: data.collection_key,
     parent_id: parentId
   });
+  const [_, __, slug5] = await Promise.all([
+    checkPageCollectionPromise,
+    parentCheckPromise,
+    buildUniqueSlugPromise
+  ]);
   const page = await Page.createSingle(client, {
     environment_key: data.environment_key,
     title: data.title,
@@ -5830,40 +5823,30 @@ var createSingle5 = async (client, data) => {
       status: 500
     });
   }
-  const operations = [
-    data.category_ids ? service_default(
-      page_categories_default.createMultiple,
-      false,
-      client
-    )({
-      page_id: page.id,
-      category_ids: data.category_ids,
-      collection_key: data.collection_key
-    }) : Promise.resolve(),
-    data.homepage ? service_default(
-      pages_default2.resetHomepages,
-      false,
-      client
-    )({
-      current: page.id,
-      environment_key: data.environment_key
-    }) : Promise.resolve()
-  ];
-  await Promise.all(operations);
+  const pageCategoryServicePromise = data.category_ids ? service_default(
+    page_categories_default.createMultiple,
+    false,
+    client
+  )({
+    page_id: page.id,
+    category_ids: data.category_ids,
+    collection_key: data.collection_key
+  }) : Promise.resolve();
+  const resetHomepagesPromise = data.homepage ? service_default(
+    pages_default2.resetHomepages,
+    false,
+    client
+  )({
+    current: page.id,
+    environment_key: data.environment_key
+  }) : Promise.resolve();
+  await Promise.all([pageCategoryServicePromise, resetHomepagesPromise]);
   return void 0;
 };
 var create_single_default6 = createSingle5;
 
 // src/services/pages/delete-single.ts
 var deleteSingle7 = async (client, data) => {
-  await service_default(
-    pages_default2.checkPageExists,
-    false,
-    client
-  )({
-    id: data.id,
-    environment_key: data.environment_key
-  });
   const page = await Page.deleteSingle(client, {
     id: data.id
   });
@@ -8687,7 +8670,7 @@ var createSingleController = async (req, res, next) => {
   try {
     const page = await service_default(
       pages_default2.createSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"],
       title: req.body.title,
@@ -8807,10 +8790,9 @@ var deleteSingleController2 = async (req, res, next) => {
   try {
     const page = await service_default(
       pages_default2.deleteSingle,
-      true
+      false
     )({
-      id: parseInt(req.params.id),
-      environment_key: req.headers["lucid-environment"]
+      id: parseInt(req.params.id)
     });
     res.status(200).json(
       build_response_default(req, {
@@ -9127,7 +9109,7 @@ var getSingleController3 = async (req, res, next) => {
   try {
     const singlepage = await service_default(
       single_pages_default.getSingle,
-      true
+      false
     )({
       user_id: req.auth.id,
       environment_key: req.headers["lucid-environment"],
@@ -9401,7 +9383,7 @@ var updateSingleController4 = async (req, res, next) => {
   try {
     const environment = await service_default(
       environments_default.upsertSingle,
-      true
+      false
     )({
       data: {
         key: req.params.key,
@@ -9431,7 +9413,7 @@ var createSingleController2 = async (req, res, next) => {
   try {
     const environment = await service_default(
       environments_default.upsertSingle,
-      true
+      false
     )({
       data: {
         key: req.body.key,
@@ -9461,7 +9443,7 @@ var deleteSingleController3 = async (req, res, next) => {
   try {
     const environment = await service_default(
       environments_default.deleteSingle,
-      true
+      false
     )({
       key: req.params.key
     });
@@ -9662,7 +9644,7 @@ var createSingleController3 = async (req, res, next) => {
   try {
     const role = await service_default(
       roles_default.createSingle,
-      true
+      false
     )({
       name: req.body.name,
       permission_groups: req.body.permission_groups
@@ -9686,7 +9668,7 @@ var deleteSingleController4 = async (req, res, next) => {
   try {
     const role = await service_default(
       roles_default.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id)
     });
@@ -9709,7 +9691,7 @@ var updateSingleController5 = async (req, res, next) => {
   try {
     const role = await service_default(
       roles_default.updateSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       name: req.body.name,
@@ -9929,7 +9911,7 @@ var users_default2 = {
 // src/controllers/users/update-single.ts
 var updateSingleController6 = async (req, res, next) => {
   try {
-    const userRoles = await service_default(users_default.updateSingle, true)(
+    const userRoles = await service_default(users_default.updateSingle, false)(
       {
         user_id: parseInt(req.params.id),
         role_ids: req.body.role_ids,
@@ -9954,7 +9936,7 @@ var update_single_default13 = {
 // src/controllers/users/create-single.ts
 var createSingleController4 = async (req, res, next) => {
   try {
-    const user = await service_default(users_default.registerSingle, true)(
+    const user = await service_default(users_default.registerSingle, false)(
       {
         email: req.body.email,
         username: req.body.username,
@@ -9985,7 +9967,7 @@ var deleteSingleController5 = async (req, res, next) => {
   try {
     const user = await service_default(
       users_default.deleteSingle,
-      true
+      false
     )({
       user_id: parseInt(req.params.id)
     });
@@ -10910,7 +10892,7 @@ var createSingleController5 = async (req, res, next) => {
   try {
     const menu = await service_default(
       menu_default.createSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"],
       key: req.body.key,
@@ -10937,7 +10919,7 @@ var deleteSingleController6 = async (req, res, next) => {
   try {
     const menu = await service_default(
       menu_default.deleteSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"],
       id: parseInt(req.params.id)
@@ -11228,7 +11210,7 @@ var createSingleController6 = async (req, res, next) => {
   try {
     const media = await service_default(
       media_default.createSingle,
-      true
+      false
     )({
       name: req.body.name,
       alt: req.body.alt,
@@ -11304,7 +11286,7 @@ var deleteSingleController7 = async (req, res, next) => {
   try {
     const media = await service_default(
       media_default.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id)
     });
@@ -11327,7 +11309,7 @@ var updateSingleController8 = async (req, res, next) => {
   try {
     const media = await service_default(
       media_default.updateSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       data: {
@@ -11601,7 +11583,7 @@ var deleteSingleController8 = async (req, res, next) => {
   try {
     const email = await service_default(
       email_default.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id)
     });
@@ -11624,7 +11606,7 @@ var resendSingleController = async (req, res, next) => {
   try {
     const email = await service_default(
       email_default.resendSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id)
     });
@@ -12396,7 +12378,7 @@ var toggleReadAtController = async (req, res, next) => {
   try {
     const formSubmission = await service_default(
       form_submissions_default2.toggleReadAt,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,
@@ -12421,7 +12403,7 @@ var deleteSingleController9 = async (req, res, next) => {
   try {
     const formSubmission = await service_default(
       form_submissions_default2.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       form_key: req.params.form_key,
@@ -12551,7 +12533,7 @@ var account_default = {
 // src/controllers/account/update-me.ts
 var updateMeController = async (req, res, next) => {
   try {
-    const userRoles = await service_default(users_default.updateSingle, true)(
+    const userRoles = await service_default(users_default.updateSingle, false)(
       {
         user_id: req.auth.id,
         first_name: req.body.first_name,

@@ -14,7 +14,7 @@ const updateSingleController: Controller<
   typeof usersSchema.updateSingle.query
 > = async (req, res, next) => {
   try {
-    const userRoles = await service(usersService.updateSingle, true)(
+    const userRoles = await service(usersService.updateSingle, false)(
       {
         user_id: parseInt(req.params.id),
         role_ids: req.body.role_ids,

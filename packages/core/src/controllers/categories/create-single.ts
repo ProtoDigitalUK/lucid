@@ -16,7 +16,7 @@ const createSingleControllers: Controller<
   try {
     const category = await service(
       categoriesService.createSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"] as string,
       collection_key: req.body.collection_key,

@@ -1,9 +1,8 @@
 // Models
-import { UserRolePermissionRes } from "@db/models/UserRole.js";
+import type { UserRolePermissionRes } from "@db/models/UserRole.js";
 // Types
 import {
   UserPermissionsResT,
-  UserRoleResT,
   UserEnvrionmentResT,
 } from "@lucid/types/src/users.js";
 import {
@@ -12,19 +11,13 @@ import {
 } from "@lucid/types/src/permissions.js";
 
 const formatUserPermissions = (
+  roles: {
+    id: number;
+    name: string;
+    role_id: number;
+  }[],
   permissionRes: Array<UserRolePermissionRes>
 ): UserPermissionsResT => {
-  const roles: UserRoleResT[] = permissionRes
-    .map((permission) => {
-      return {
-        id: permission.role_id,
-        name: permission.role_name,
-      };
-    })
-    .filter((role, index, self) => {
-      return index === self.findIndex((r) => r.id === role.id);
-    });
-
   const environments: UserEnvrionmentResT[] = [];
   const permissions: PermissionT[] = [];
 
@@ -58,7 +51,10 @@ const formatUserPermissions = (
   });
 
   return {
-    roles: roles,
+    roles: roles.map((role) => ({
+      id: role.id,
+      name: role.name,
+    })),
     permissions: {
       global: permissions,
       environments: environments,

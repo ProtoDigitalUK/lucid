@@ -16,7 +16,7 @@ const updateSingleController: Controller<
   try {
     const category = await service(
       categoriesService.updateSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),

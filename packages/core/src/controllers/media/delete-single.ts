@@ -16,7 +16,7 @@ const deleteSingleController: Controller<
   try {
     const media = await service(
       mediaService.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
     });

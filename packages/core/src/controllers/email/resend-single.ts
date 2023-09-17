@@ -16,7 +16,7 @@ const resendSingleController: Controller<
   try {
     const email = await service(
       emailServices.resendSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
     });

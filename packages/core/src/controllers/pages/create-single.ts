@@ -16,7 +16,7 @@ const createSingleController: Controller<
   try {
     const page = await service(
       pagesService.createSingle,
-      true
+      false
     )({
       environment_key: req.headers["lucid-environment"] as string,
       title: req.body.title,

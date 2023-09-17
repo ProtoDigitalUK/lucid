@@ -16,7 +16,7 @@ const updateSingleController: Controller<
   try {
     const media = await service(
       mediaService.updateSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
       data: {

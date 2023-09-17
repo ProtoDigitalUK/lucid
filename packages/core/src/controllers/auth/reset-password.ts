@@ -16,7 +16,7 @@ const resetPasswordController: Controller<
   try {
     const resetPassword = await service(
       authService.resetPassword,
-      true
+      false
     )({
       token: req.params.token,
       password: req.body.password,

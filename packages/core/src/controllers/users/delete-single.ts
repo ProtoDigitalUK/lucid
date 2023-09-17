@@ -16,7 +16,7 @@ const deleteSingleController: Controller<
   try {
     const user = await service(
       usersService.deleteSingle,
-      true
+      false
     )({
       user_id: parseInt(req.params.id),
     });

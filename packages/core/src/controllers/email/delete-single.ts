@@ -16,7 +16,7 @@ const deleteSingleController: Controller<
   try {
     const email = await service(
       emailServices.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
     });

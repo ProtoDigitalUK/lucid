@@ -16,10 +16,9 @@ const deleteSingleController: Controller<
   try {
     const page = await service(
       pagesService.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
-      environment_key: req.headers["lucid-environment"] as string,
     });
 
     res.status(200).json(

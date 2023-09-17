@@ -9,21 +9,16 @@ export interface ServiceData {
 }
 
 const getPermissions = async (client: PoolClient, data: ServiceData) => {
-  const userPermissions = await UserRole.getPermissions(client, {
+  const userRoles = UserRole.getAll(client, {
+    user_id: data.user_id,
+  });
+  const userPermissions = UserRole.getPermissions(client, {
     user_id: data.user_id,
   });
 
-  if (!userPermissions) {
-    return {
-      roles: [],
-      permissions: {
-        global: [],
-        environments: [],
-      },
-    };
-  }
+  const [roles, permissions] = await Promise.all([userRoles, userPermissions]);
 
-  return formatUserPermissions(userPermissions);
+  return formatUserPermissions(roles, permissions);
 };
 
 export default getPermissions;

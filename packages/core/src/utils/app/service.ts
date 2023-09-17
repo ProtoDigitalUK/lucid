@@ -49,7 +49,9 @@ const service =
       if (transaction) await client.query("COMMIT");
       return result;
     } catch (error) {
-      if (transaction) await client.query("ROLLBACK");
+      if (transaction) {
+        await client.query("ROLLBACK");
+      }
       throw error;
     } finally {
       if (shouldReleaseClient) {

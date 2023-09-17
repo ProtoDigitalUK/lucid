@@ -7,7 +7,13 @@ type UserRoleGetAll = (
   data: {
     user_id: number;
   }
-) => Promise<UserRoleT[]>;
+) => Promise<
+  {
+    id: number;
+    name: string;
+    role_id: number;
+  }[]
+>;
 
 type UserRoleUpdate = (
   client: PoolClient,
@@ -54,11 +60,21 @@ export type UserRoleT = {
 
 export default class UserRole {
   static getAll: UserRoleGetAll = async (client, data) => {
-    const userRoles = await client.query<UserRoleT>({
-      text: `
-        SELECT * FROM lucid_user_roles
-        WHERE user_id = $1
-      `,
+    const userRoles = await client.query<{
+      id: number;
+      role_id: number;
+      name: string;
+    }>({
+      text: `SELECT 
+          lucid_user_roles.id AS id,
+          lucid_user_roles.role_id AS role_id,
+          lucid_roles.name AS name
+      FROM 
+          lucid_user_roles
+      INNER JOIN 
+          lucid_roles ON lucid_user_roles.role_id = lucid_roles.id
+      WHERE 
+          lucid_user_roles.user_id = $1;`,
       values: [data.user_id],
     });
 

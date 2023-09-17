@@ -16,7 +16,7 @@ const createSingleController: Controller<
   try {
     const media = await service(
       mediaService.createSingle,
-      true
+      false
     )({
       name: req.body.name,
       alt: req.body.alt,

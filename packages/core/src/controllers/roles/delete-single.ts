@@ -16,7 +16,7 @@ const deleteSingleController: Controller<
   try {
     const role = await service(
       rolesService.deleteSingle,
-      true
+      false
     )({
       id: parseInt(req.params.id),
     });

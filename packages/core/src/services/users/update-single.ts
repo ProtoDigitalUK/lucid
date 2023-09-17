@@ -151,13 +151,7 @@ const updateSingle = async (
 
   // -------------------------------------------
   // Return User
-  return await service(
-    usersServices.getSingle,
-    false,
-    client
-  )({
-    user_id: data.user_id,
-  });
+  return undefined;
 };
 
 export default updateSingle;

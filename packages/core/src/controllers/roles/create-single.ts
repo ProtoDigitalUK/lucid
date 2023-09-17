@@ -16,7 +16,7 @@ const createSingleController: Controller<
   try {
     const role = await service(
       rolesService.createSingle,
-      true
+      false
     )({
       name: req.body.name,
       permission_groups: req.body.permission_groups,

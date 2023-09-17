@@ -16,7 +16,7 @@ const updateSingleController: Controller<
   try {
     const environment = await service(
       environmentsService.upsertSingle,
-      true
+      false
     )({
       data: {
         key: req.params.key,
