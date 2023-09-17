@@ -1,9 +1,8 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
-
 // Models
 import Page from "@db/models/Page.js";
 // Schema
@@ -22,7 +21,7 @@ export interface ServiceData {
   title?: string;
   slug?: string;
   homepage?: boolean;
-  parent_id?: number;
+  parent_id?: number | null;
   category_ids?: number[];
   published?: boolean;
   excerpt?: string;
@@ -42,6 +41,22 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     environment_key: data.environment_key,
   });
 
+  // Check if the page is a parent of itself
+  if (currentPage.id === data.parent_id) {
+    throw new LucidError({
+      type: "basic",
+      name: "Page Not Updated",
+      message: "A page cannot be its own parent",
+      status: 400,
+      errors: modelErrors({
+        parent_id: {
+          code: "invalid",
+          message: `A page cannot be its own parent`,
+        },
+      }),
+    });
+  }
+
   // Start checks that do not depend on each other in parallel
   const [environment, collection] = await Promise.all([
     service(
@@ -59,14 +74,14 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
       homepage: data.homepage,
-      parent_id: data.parent_id,
+      parent_id: data.parent_id || undefined,
     }),
   ]);
 
   // If the page is a homepage, set the parent_id to undefined
   const parentId = data.homepage ? undefined : data.parent_id;
   if (parentId) {
-    await service(
+    const parentChecks = service(
       pageServices.parentChecks,
       false,
       client
@@ -75,19 +90,33 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       environment_key: data.environment_key,
       collection_key: currentPage.collection_key,
     });
+    const ancestryChecks = service(
+      pageServices.checkParentAncestry,
+      false,
+      client
+    )({
+      page_id: data.id,
+      parent_id: parentId,
+    });
+    await Promise.all([parentChecks, ancestryChecks]);
   }
 
   // validate bricks
-  await service(
-    collectionBricksService.validateBricks,
-    false,
-    client
-  )({
-    builder_bricks: data.builder_bricks || [],
-    fixed_bricks: data.fixed_bricks || [],
-    collection: collection,
-    environment: environment,
-  });
+  if (
+    (data.builder_bricks && data.builder_bricks.length > 0) ||
+    (data.fixed_bricks && data.fixed_bricks.length > 0)
+  ) {
+    await service(
+      collectionBricksService.validateBricks,
+      false,
+      client
+    )({
+      builder_bricks: data.builder_bricks || [],
+      fixed_bricks: data.fixed_bricks || [],
+      collection: collection,
+      environment: environment,
+    });
+  }
 
   let newSlug = undefined;
   if (data.slug) {
@@ -101,7 +130,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       homepage: data.homepage || false,
       environment_key: data.environment_key,
       collection_key: currentPage.collection_key,
-      parent_id: parentId,
+      parent_id: parentId || undefined,
     });
   }
 

@@ -14,7 +14,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import PagesTable from "@/components/Tables/PagesTable";
-import CreatePagePanel from "@/components/Panels/Pages/CreatePagePanel";
+import CreateUpdatePagePanel from "@/components/Panels/Pages/CreateUpdatePagePanel";
 
 const EnvCollectionsListRoute: Component = () => {
   // ----------------------------------
@@ -142,7 +142,7 @@ const EnvCollectionsListRoute: Component = () => {
         searchParams={searchParams}
         collection={collection.data?.data as CollectionResT}
       />
-      <CreatePagePanel
+      <CreateUpdatePagePanel
         state={{
           open: getOpenCreatePanel(),
           setOpen: setOpenCreatePanel,

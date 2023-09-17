@@ -6,6 +6,8 @@ import {
   Show,
   For,
   createMemo,
+  Switch,
+  Match,
 } from "solid-js";
 import { useLocation } from "@solidjs/router";
 // Store
@@ -20,6 +22,10 @@ import Navigation from "@/components/Groups/Navigation";
 interface EnvironmentBarProps {
   collections: CollectionResT[];
   environments: EnvironmentResT[];
+  state: {
+    isLoading: boolean;
+    isError: boolean;
+  };
 }
 
 export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
@@ -57,35 +63,54 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
     <Show when={showBar() && environment() !== undefined}>
       <div class="w-[240px] bg-container border-r border-border h-full">
         <EnvironmentSelector environments={props.environments} />
-        <nav>
-          {/* Multi Collections */}
-          <Show when={pagesCollections().length > 0}>
-            <Navigation.LinkGroup title={T("multi_collections")}>
-              <For each={pagesCollections()}>
-                {(collection) => (
-                  <Navigation.Link
-                    title={collection.title}
-                    href={`/env/${environment()}/collection/${collection.key}`}
-                    icon="page"
-                  />
-                )}
-              </For>
-            </Navigation.LinkGroup>
-          </Show>
-          {/* Single Collections */}
-          <Show when={singlePagesCollections().length > 0}>
-            <Navigation.LinkGroup title={T("single_collections")}>
-              <For each={singlePagesCollections()}>
-                {(collection) => (
-                  <Navigation.Link
-                    title={collection.title}
-                    href={`/env/${environment()}/${collection.key}`}
-                    icon="page"
-                  />
-                )}
-              </For>
-            </Navigation.LinkGroup>
-          </Show>
+        <nav class="relative">
+          <Switch>
+            <Match when={props.state.isLoading}>
+              <div class="px-15">
+                <span class="skeleton block h-12 w-full mb-2.5" />
+                <span class="skeleton block h-12 w-full mb-2.5" />
+                <span class="skeleton block h-12 w-full mb-2.5" />
+                <span class="skeleton block h-12 w-full mb-2.5" />
+                <span class="skeleton block h-12 w-full mb-2.5" />
+                <span class="skeleton block h-12 w-full mb-2.5" />
+              </div>
+            </Match>
+            <Match when={props.state.isError}>
+              <></>
+            </Match>
+            <Match when={true}>
+              {/* Multi Collections */}
+              <Show when={pagesCollections().length > 0}>
+                <Navigation.LinkGroup title={T("multi_collections")}>
+                  <For each={pagesCollections()}>
+                    {(collection) => (
+                      <Navigation.Link
+                        title={collection.title}
+                        href={`/env/${environment()}/collection/${
+                          collection.key
+                        }`}
+                        icon="page"
+                      />
+                    )}
+                  </For>
+                </Navigation.LinkGroup>
+              </Show>
+              {/* Single Collections */}
+              <Show when={singlePagesCollections().length > 0}>
+                <Navigation.LinkGroup title={T("single_collections")}>
+                  <For each={singlePagesCollections()}>
+                    {(collection) => (
+                      <Navigation.Link
+                        title={collection.title}
+                        href={`/env/${environment()}/${collection.key}`}
+                        icon="page"
+                      />
+                    )}
+                  </For>
+                </Navigation.LinkGroup>
+              </Show>
+            </Match>
+          </Switch>
         </nav>
       </div>
     </Show>

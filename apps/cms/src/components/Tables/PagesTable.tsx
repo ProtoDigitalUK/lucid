@@ -15,6 +15,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Table from "@/components/Groups/Table";
 import PageRow from "@/components/Tables/Rows/PageRow";
 import DeletePage from "@/components/Modals/Pages/DeletePage";
+import CreateUpdatePagePanel from "../Panels/Pages/CreateUpdatePagePanel";
 
 interface PagesTableProps {
   collection: CollectionResT;
@@ -28,6 +29,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
   const rowTarget = useRowTarget({
     triggers: {
       delete: false,
+      update: false,
     },
   });
 
@@ -116,6 +118,16 @@ const PagesTable: Component<PagesTableProps> = (props) => {
           </Index>
         )}
       </Table.Root>
+      <CreateUpdatePagePanel
+        id={rowTarget.getTargetId}
+        state={{
+          open: rowTarget.getTriggers().update,
+          setOpen: (state: boolean) => {
+            rowTarget.setTrigger("update", state);
+          },
+        }}
+        collection={props.collection}
+      />
       <DeletePage
         id={rowTarget.getTargetId}
         state={{

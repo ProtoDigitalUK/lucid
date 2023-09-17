@@ -70,7 +70,7 @@ type PageUpdateSingle = (
     title?: string;
     slug?: string;
     homepage?: boolean;
-    parent_id?: number;
+    parent_id?: number | null;
     category_ids?: Array<number>;
     published?: boolean;
     excerpt?: string;
@@ -124,6 +124,18 @@ type PageUpdatePageToNonHomepage = (
     slug: string;
   }
 ) => Promise<PageT>;
+
+type PageCheckParentAncestry = (
+  client: PoolClient,
+  data: {
+    page_id: number;
+    parent_id: number;
+  }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
 
 // -------------------------------------------
 // Page
@@ -280,7 +292,7 @@ export default class Page {
     const pages = await client.query<{
       id: PageT["id"];
     }>({
-      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2 RETURNING id`,
+      text: `SELECT id FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
       values: [data.ids, data.environment_key],
     });
 
@@ -356,5 +368,31 @@ export default class Page {
     });
 
     return updateRes.rows[0];
+  };
+  static checkParentAncestry: PageCheckParentAncestry = async (
+    client,
+    data
+  ) => {
+    const page = await client.query<{
+      id: PageT["id"];
+    }>({
+      text: `WITH RECURSIVE ancestry AS (
+          SELECT id, parent_id
+          FROM lucid_pages
+          WHERE id = $1
+    
+          UNION ALL
+    
+          SELECT p.id, p.parent_id
+          FROM lucid_pages p
+          JOIN ancestry a ON p.id = a.parent_id
+        )
+        SELECT id
+        FROM ancestry
+        WHERE id = $2`,
+      values: [data.parent_id, data.page_id],
+    });
+
+    return page.rows;
   };
 }

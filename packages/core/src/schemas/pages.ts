@@ -58,7 +58,7 @@ const updateSingleBody = z.object({
   title: z.string().optional(),
   slug: z.string().optional(),
   homepage: z.boolean().optional(),
-  parent_id: z.number().optional(),
+  parent_id: z.number().nullable().optional(),
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
   excerpt: z.string().optional(),

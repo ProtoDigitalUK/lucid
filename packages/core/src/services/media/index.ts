@@ -8,7 +8,6 @@ import canStoreFiles from "./can-store-files.js";
 import getStorageUsed from "./get-storage-used.js";
 import setStorageUsed from "./set-storage-used.js";
 import getSingleById from "./get-single-by-id.js";
-import getMultipleByIds from "./get-multiple-by-ids.js";
 import streamErrorImage from "./stream-error-image.js";
 import getS3Object from "./get-s3-object.js";
 import pipeRemoteURL from "./pipe-remote-url.js";
@@ -24,7 +23,6 @@ export default {
   getStorageUsed,
   setStorageUsed,
   getSingleById,
-  getMultipleByIds,
   streamErrorImage,
   getS3Object,
   pipeRemoteURL,

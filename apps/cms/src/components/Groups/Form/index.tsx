@@ -1,6 +1,7 @@
 import { Form as Root } from "./Form";
 import { CheckboxInput as Checkbox } from "./Checkbox";
 import { Input } from "./Input";
+import { Textarea } from "./Textarea";
 import { Select } from "./Select";
 import { SelectMultiple } from "./SelectMultiple";
 import { SingleFileUpload } from "./SingleFileUpload";
@@ -13,6 +14,7 @@ const Form = {
   Root,
   Checkbox,
   Input,
+  Textarea,
   Select,
   SelectMultiple,
   SingleFileUpload,

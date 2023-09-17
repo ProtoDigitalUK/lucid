@@ -1,12 +1,14 @@
 import T from "@/translations";
 import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import classNames from "classnames";
-import { useNavigate, useLocation, useParams } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 // Store
 import { environment, setEnvironment } from "@/store/environmentStore";
 import userStore from "@/store/userStore";
+// Utils
+import helpers from "@/utils/helpers";
 // Types
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import type { EnvironmentResT } from "@lucid/types/src/environments";
 // Components
 import { FaSolidPlus, FaSolidGear } from "solid-icons/fa";
 import { DropdownMenu, Separator } from "@kobalte/core";
@@ -24,7 +26,6 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   const [open, setOpen] = createSignal(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
   const params = useParams();
 
   // ----------------------------------
@@ -37,11 +38,12 @@ const EnvironmentSelector: Component<EnvironmentSelectorProps> = (props) => {
   // Functions
   const changeEnvironment = (envKey: string) => {
     if (params.envKey !== undefined) {
-      const newPath = location.pathname.replace(
-        /\/env\/[a-z-_]+/,
-        `/env/${envKey}`
-      );
-      navigate(newPath, { replace: true });
+      const url = helpers.getFirstEnvLink({
+        collections: [],
+        canCreate: userStore.get.hasPermission(["create_environment"]).all,
+        environment: envKey,
+      });
+      navigate(url, { replace: true });
     } else {
       setEnvironment(envKey);
     }

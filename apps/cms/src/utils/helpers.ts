@@ -1,7 +1,8 @@
 import { Accessor } from "solid-js";
 import equal from "fast-deep-equal";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import type { MediaResT } from "@lucid/types/src/media";
+import type { CollectionResT } from "@lucid/types/src/collections";
 
 // ---------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,6 +112,43 @@ const getMediaType = (mimeType?: string): MediaResT["type"] => {
   return "unknown";
 };
 
+// ---------------------------------------------
+// Get first env link
+const getFirstEnvLink = (data: {
+  collections: CollectionResT[];
+  canCreate: boolean;
+  environment?: string;
+}) => {
+  // work out the first link based on collections, forms, menus, etc. in the environment.
+  // If no envrionemtn, take the to the create environment route.
+
+  if (!data.environment) {
+    if (data.canCreate) return "/env/create";
+    return "/";
+  }
+
+  let url = `/env/${data.environment}/`;
+
+  const pagesCollections = data.collections.filter(
+    (collection) => collection.type === "pages"
+  );
+  const singlePagesCollections = data.collections.filter(
+    (collection) => collection.type === "singlepage"
+  );
+
+  if (pagesCollections.length) {
+    url += `collection/${data.collections[0].key}`;
+    return url;
+  }
+
+  if (singlePagesCollections.length) {
+    url += `${data.collections[0].key}`;
+    return url;
+  }
+
+  return url;
+};
+
 const helpers = {
   deepMerge,
   deepDiff,
@@ -118,6 +156,7 @@ const helpers = {
   resolveValue,
   bytesToSize,
   getMediaType,
+  getFirstEnvLink,
 };
 
 export default helpers;

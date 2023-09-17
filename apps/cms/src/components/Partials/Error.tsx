@@ -6,7 +6,7 @@ import Link from "@/components/Partials/Link";
 interface ErrorProps {
   type: "fill" | "page-layout" | "table";
   content: {
-    image: string;
+    image?: string;
     title: string;
     description: string;
   };
@@ -27,10 +27,12 @@ const Error: Component<ErrorProps> = (props) => {
       })}
     >
       <div class="text-center max-w-xl flex flex-col items-center p-10">
-        <img
-          src={props.content.image}
-          class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"
-        />
+        <Show when={props.content.image}>
+          <img
+            src={props.content.image}
+            class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"
+          />
+        </Show>
         <h2 class="mb-2">{props.content.title}</h2>
         <p class="max-w-[400px]">{props.content.description}</p>
         <Show when={props.link !== undefined}>

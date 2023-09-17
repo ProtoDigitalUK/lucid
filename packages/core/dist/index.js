@@ -5344,7 +5344,7 @@ var updateSingleBody2 = z9.object({
   title: z9.string().optional(),
   slug: z9.string().optional(),
   homepage: z9.boolean().optional(),
-  parent_id: z9.number().optional(),
+  parent_id: z9.number().nullable().optional(),
   category_ids: z9.array(z9.number()).optional(),
   published: z9.boolean().optional(),
   excerpt: z9.string().optional(),
@@ -5497,7 +5497,7 @@ var Page = class {
   };
   static getMultipleByIds = async (client, data) => {
     const pages = await client.query({
-      text: `SELECT * FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2 RETURNING id`,
+      text: `SELECT id FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
       values: [data.ids, data.environment_key]
     });
     return pages.rows;
@@ -5561,6 +5561,26 @@ var Page = class {
       values: [data.id, data.slug]
     });
     return updateRes.rows[0];
+  };
+  static checkParentAncestry = async (client, data) => {
+    const page = await client.query({
+      text: `WITH RECURSIVE ancestry AS (
+          SELECT id, parent_id
+          FROM lucid_pages
+          WHERE id = $1
+    
+          UNION ALL
+    
+          SELECT p.id, p.parent_id
+          FROM lucid_pages p
+          JOIN ancestry a ON p.id = a.parent_id
+        )
+        SELECT id
+        FROM ancestry
+        WHERE id = $2`,
+      values: [data.parent_id, data.page_id]
+    });
+    return page.rows;
   };
 };
 
@@ -6784,88 +6804,6 @@ var deleteUnused = async (client, data) => {
 };
 var delete_unused_default = deleteUnused;
 
-// src/utils/media/helpers.ts
-import slug2 from "slug";
-import mime from "mime-types";
-import sharp from "sharp";
-var uniqueKey = (name) => {
-  const slugVal = slug2(name, {
-    lower: true
-  });
-  return `${slugVal}-${Date.now()}`;
-};
-var getMetaData = async (file) => {
-  const fileExtension = mime.extension(file.mimetype);
-  const mimeType = file.mimetype;
-  const size = file.size;
-  let width = null;
-  let height = null;
-  try {
-    const metaData = await sharp(file.data).metadata();
-    width = metaData.width;
-    height = metaData.height;
-  } catch (error) {
-  }
-  return {
-    mimeType,
-    fileExtension: fileExtension || "",
-    size,
-    width: width || null,
-    height: height || null
-  };
-};
-var formatReqFiles = (files) => {
-  const file = files["file"];
-  if (Array.isArray(file)) {
-    return file;
-  } else {
-    return [file];
-  }
-};
-var createProcessKey = (data) => {
-  let key = `processed/${data.key}`;
-  if (data.query.format)
-    key = key.concat(`.${data.query.format}`);
-  if (data.query.quality)
-    key = key.concat(`.${data.query.quality}`);
-  if (data.query.width)
-    key = key.concat(`.${data.query.width}`);
-  if (data.query.height)
-    key = key.concat(`.${data.query.height}`);
-  return key;
-};
-var streamToBuffer = (readable) => {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    readable.on("data", (chunk) => chunks.push(chunk));
-    readable.on("end", () => resolve(Buffer.concat(chunks)));
-    readable.on("error", reject);
-  });
-};
-var getMediaType = (mimeType) => {
-  const normalizedMimeType = mimeType.toLowerCase();
-  if (normalizedMimeType.includes("image"))
-    return "image";
-  if (normalizedMimeType.includes("video"))
-    return "video";
-  if (normalizedMimeType.includes("audio"))
-    return "audio";
-  if (normalizedMimeType.includes("pdf") || normalizedMimeType.startsWith("application/vnd"))
-    return "document";
-  if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
-    return "archive";
-  return "unknown";
-};
-var helpers = {
-  uniqueKey,
-  getMetaData,
-  formatReqFiles,
-  createProcessKey,
-  streamToBuffer,
-  getMediaType
-};
-var helpers_default = helpers;
-
 // src/db/models/Media.ts
 var Media = class {
   static createSingle = async (client, data) => {
@@ -7007,100 +6945,6 @@ var Media = class {
   };
 };
 
-// src/services/s3/save-object.ts
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-
-// src/utils/app/s3-client.ts
-import { S3Client } from "@aws-sdk/client-s3";
-var getS3Client = async () => {
-  const config = await Config.getConfig();
-  const s3Config = {
-    region: config.media.store.region,
-    credentials: {
-      accessKeyId: config.media.store.accessKeyId,
-      secretAccessKey: config.media.store.secretAccessKey
-    }
-  };
-  if (config.media.store.service === "cloudflare") {
-    s3Config.endpoint = `https://${config.media.store.cloudflareAccountId}.r2.cloudflarestorage.com`;
-  }
-  return new S3Client(s3Config);
-};
-var s3_client_default = getS3Client();
-
-// src/services/s3/save-object.ts
-var saveObject = async (data) => {
-  const S3 = await s3_client_default;
-  const command = new PutObjectCommand({
-    Bucket: Config.media.store.bucket,
-    Key: data.key,
-    Body: data.type === "file" ? data.file?.data : data.buffer,
-    ContentType: data.meta.mimeType,
-    Metadata: {
-      width: data.meta.width?.toString() || "",
-      height: data.meta.height?.toString() || "",
-      extension: data.meta.fileExtension
-    }
-  });
-  return S3.send(command);
-};
-var save_object_default = saveObject;
-
-// src/services/s3/delete-object.ts
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-var deleteObject = async (data) => {
-  const S3 = await s3_client_default;
-  const command = new DeleteObjectCommand({
-    Bucket: Config.media.store.bucket,
-    Key: data.key
-  });
-  return S3.send(command);
-};
-var delete_object_default = deleteObject;
-
-// src/services/s3/delete-objects.ts
-import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
-var deleteObjects = async (data) => {
-  const S3 = await s3_client_default;
-  const command = new DeleteObjectsCommand({
-    Bucket: Config.media.store.bucket,
-    Delete: {
-      Objects: data.objects.map((object) => ({
-        Key: object.key
-      }))
-    }
-  });
-  return S3.send(command);
-};
-var delete_objects_default = deleteObjects;
-
-// src/services/s3/update-object-key.ts
-import { DeleteObjectCommand as DeleteObjectCommand2, CopyObjectCommand } from "@aws-sdk/client-s3";
-var updateObjectKey = async (data) => {
-  const S3 = await s3_client_default;
-  const copyCommand = new CopyObjectCommand({
-    Bucket: Config.media.store.bucket,
-    CopySource: `${Config.media.store.bucket}/${data.oldKey}`,
-    Key: data.newKey
-  });
-  const res = await S3.send(copyCommand);
-  const command = new DeleteObjectCommand2({
-    Bucket: Config.media.store.bucket,
-    Key: data.oldKey
-  });
-  await S3.send(command);
-  return res;
-};
-var update_object_key_default = updateObjectKey;
-
-// src/services/s3/index.ts
-var s3_default = {
-  saveObject: save_object_default,
-  deleteObject: delete_object_default,
-  deleteObjects: delete_objects_default,
-  updateObjectKey: update_object_key_default
-};
-
 // src/utils/format/format-media.ts
 var formatMedia = (media) => {
   return {
@@ -7122,902 +6966,6 @@ var formatMedia = (media) => {
   };
 };
 var format_media_default = formatMedia;
-
-// src/services/media/create-single.ts
-var createSingle6 = async (client, data) => {
-  if (!data.files || !data.files["file"]) {
-    throw new LucidError({
-      type: "basic",
-      name: "No files provided",
-      message: "No files provided",
-      status: 400,
-      errors: modelErrors({
-        file: {
-          code: "required",
-          message: "No files provided"
-        }
-      })
-    });
-  }
-  const files = helpers_default.formatReqFiles(data.files);
-  const firstFile = files[0];
-  await service_default(
-    media_default.canStoreFiles,
-    false,
-    client
-  )({
-    files
-  });
-  const key = helpers_default.uniqueKey(data.name || firstFile.name);
-  const meta = await helpers_default.getMetaData(firstFile);
-  const type = helpers_default.getMediaType(meta.mimeType);
-  const response = await s3_default.saveObject({
-    type: "file",
-    key,
-    file: firstFile,
-    meta
-  });
-  if (response.$metadata.httpStatusCode !== 200) {
-    throw new LucidError({
-      type: "basic",
-      name: "Error saving file",
-      message: "Error saving file",
-      status: 500,
-      errors: modelErrors({
-        file: {
-          code: "required",
-          message: "Error saving file"
-        }
-      })
-    });
-  }
-  const media = await Media.createSingle(client, {
-    key,
-    name: data.name || firstFile.name,
-    alt: data.alt,
-    etag: response.ETag?.replace(/"/g, ""),
-    type,
-    meta
-  });
-  if (!media) {
-    await s3_default.deleteObject({
-      key
-    });
-    throw new LucidError({
-      type: "basic",
-      name: "Error saving file",
-      message: "Error saving file",
-      status: 500,
-      errors: modelErrors({
-        file: {
-          code: "required",
-          message: "Error saving file"
-        }
-      })
-    });
-  }
-  await service_default(
-    media_default.setStorageUsed,
-    false,
-    client
-  )({
-    add: meta.size
-  });
-  return format_media_default(media);
-};
-var create_single_default7 = createSingle6;
-
-// src/db/models/ProcessedImage.ts
-var ProcessedImage = class {
-  static createSingle = async (client, data) => {
-    const { columns, aliases, values } = queryDataFormat({
-      columns: ["key", "media_key"],
-      values: [data.key, data.media_key]
-    });
-    const processedImage = await client.query({
-      text: `INSERT INTO lucid_processed_images (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING key`,
-      values: values.value
-    });
-    return processedImage.rows[0];
-  };
-  static getAllByMediaKey = async (client, data) => {
-    const processedImages = await client.query({
-      text: `SELECT * FROM lucid_processed_images WHERE media_key = $1`,
-      values: [data.media_key]
-    });
-    return processedImages.rows;
-  };
-  static deleteAllByMediaKey = async (client, data) => {
-    const processedImages = await client.query({
-      text: `DELETE FROM lucid_processed_images WHERE media_key = $1`,
-      values: [data.media_key]
-    });
-    return processedImages.rows;
-  };
-  static getAll = async (client) => {
-    const processedImages = await client.query({
-      text: `SELECT * FROM lucid_processed_images`
-    });
-    return processedImages.rows;
-  };
-  static deleteAll = async (client) => {
-    const processedImages = await client.query({
-      text: `DELETE FROM lucid_processed_images`
-    });
-    return processedImages.rows;
-  };
-  static getAllByMediaKeyCount = async (client, data) => {
-    const processedImages = await client.query({
-      text: `SELECT COUNT(*) FROM lucid_processed_images WHERE media_key = $1`,
-      values: [data.media_key]
-    });
-    return Number(processedImages.rows[0].count);
-  };
-  static getAllCount = async (client) => {
-    const processedImages = await client.query({
-      text: `SELECT COUNT(*) FROM lucid_processed_images`
-    });
-    return Number(processedImages.rows[0].count);
-  };
-};
-
-// src/services/processed-images/clear-single.ts
-var clearSingle = async (client, data) => {
-  const media = await service_default(
-    media_default.getSingle,
-    false,
-    client
-  )({
-    id: data.id
-  });
-  const processedImages = await ProcessedImage.getAllByMediaKey(client, {
-    media_key: media.key
-  });
-  if (processedImages.length > 0) {
-    await s3_default.deleteObjects({
-      objects: processedImages.map((processedImage) => ({
-        key: processedImage.key
-      }))
-    });
-    await ProcessedImage.deleteAllByMediaKey(client, {
-      media_key: media.key
-    });
-  }
-  return;
-};
-var clear_single_default = clearSingle;
-
-// src/services/processed-images/clear-all.ts
-var clearAll = async (client) => {
-  const processedImages = await ProcessedImage.getAll(client);
-  if (processedImages.length > 0) {
-    await s3_default.deleteObjects({
-      objects: processedImages.map((processedImage) => ({
-        key: processedImage.key
-      }))
-    });
-    await ProcessedImage.deleteAll(client);
-  }
-  return;
-};
-var clear_all_default = clearAll;
-
-// src/services/processed-images/process-image.ts
-import { PassThrough } from "stream";
-
-// src/workers/process-image/useProcessImage.ts
-import { Worker } from "worker_threads";
-import path4 from "path";
-var currentDir3 = get_dirname_default(import.meta.url);
-var useProcessImage = async (data) => {
-  const worker = new Worker(
-    path4.join(currentDir3, "workers/process-image/processImageWorker.cjs")
-  );
-  return new Promise((resolve, reject) => {
-    worker.on(
-      "message",
-      (message) => {
-        if (message.success) {
-          resolve(message.data);
-        } else {
-          reject(new Error(message.error));
-        }
-      }
-    );
-    worker.postMessage(data);
-  });
-};
-var useProcessImage_default = useProcessImage;
-
-// src/services/processed-images/process-image.ts
-var saveAndRegister = async (client, data, image) => {
-  try {
-    await s3_default.saveObject({
-      type: "buffer",
-      key: data.processKey,
-      buffer: image.buffer,
-      meta: {
-        mimeType: image.mimeType,
-        fileExtension: image.extension,
-        size: image.size,
-        width: image.width,
-        height: image.height
-      }
-    });
-    await ProcessedImage.createSingle(client, {
-      key: data.processKey,
-      media_key: data.key
-    });
-  } catch (err) {
-  }
-};
-var processImage = async (client, data) => {
-  const s3Response = await media_default.getS3Object({
-    key: data.key
-  });
-  if (!s3Response.contentType?.startsWith("image/")) {
-    return {
-      contentLength: s3Response.contentLength,
-      contentType: s3Response.contentType,
-      body: s3Response.body
-    };
-  }
-  try {
-    await processed_images_default.getSingleCount(client, {
-      key: data.key
-    });
-  } catch (err) {
-    return {
-      contentLength: s3Response.contentLength,
-      contentType: s3Response.contentType,
-      body: s3Response.body
-    };
-  }
-  const processRes = await useProcessImage_default({
-    buffer: await helpers_default.streamToBuffer(s3Response.body),
-    options: data.options
-  });
-  const stream = new PassThrough();
-  stream.end(Buffer.from(processRes.buffer));
-  saveAndRegister(client, data, processRes);
-  return {
-    contentLength: processRes.size,
-    contentType: processRes.mimeType,
-    body: stream
-  };
-};
-var process_image_default = processImage;
-
-// src/services/processed-images/get-single-count.ts
-var getSingleCount = async (client, data) => {
-  const limit = Config.media.processedImageLimit;
-  const count = await ProcessedImage.getAllByMediaKeyCount(client, {
-    media_key: data.key
-  });
-  if (count >= limit) {
-    throw new LucidError({
-      type: "basic",
-      name: "Processed image limit reached",
-      message: `The processed image limit of ${limit} has been reached for this image.`,
-      status: 400
-    });
-  }
-  return count;
-};
-var get_single_count_default = getSingleCount;
-
-// src/services/processed-images/index.ts
-var processed_images_default = {
-  clearSingle: clear_single_default,
-  clearAll: clear_all_default,
-  processImage: process_image_default,
-  getSingleCount: get_single_count_default
-};
-
-// src/services/media/delete-single.ts
-var deleteSingle8 = async (client, data) => {
-  const media = await service_default(
-    media_default.getSingle,
-    false,
-    client
-  )({
-    id: data.id
-  });
-  await service_default(
-    processed_images_default.clearSingle,
-    false,
-    client
-  )({
-    id: media.id
-  });
-  await Media.deleteSingle(client, {
-    key: media.key
-  });
-  await s3_default.deleteObject({
-    key: media.key
-  });
-  await service_default(
-    media_default.setStorageUsed,
-    false,
-    client
-  )({
-    add: 0,
-    minus: media.meta.file_size
-  });
-  return void 0;
-};
-var delete_single_default9 = deleteSingle8;
-
-// src/services/media/get-multiple.ts
-var getMultiple6 = async (client, data) => {
-  const { filter, sort, page, per_page } = data.query;
-  const SelectQuery = new SelectQueryBuilder({
-    columns: [
-      "id",
-      "key",
-      "e_tag",
-      "type",
-      "name",
-      "alt",
-      "mime_type",
-      "file_extension",
-      "file_size",
-      "width",
-      "height",
-      "created_at",
-      "updated_at"
-    ],
-    filter: {
-      data: filter,
-      meta: {
-        type: {
-          operator: "=",
-          type: "text",
-          columnType: "standard"
-        },
-        name: {
-          operator: "%",
-          type: "text",
-          columnType: "standard"
-        },
-        key: {
-          operator: "%",
-          type: "text",
-          columnType: "standard"
-        },
-        mime_type: {
-          operator: "=",
-          type: "text",
-          columnType: "standard"
-        },
-        file_extension: {
-          operator: "=",
-          type: "text",
-          columnType: "standard"
-        }
-      }
-    },
-    sort,
-    page,
-    per_page
-  });
-  const mediasRes = await Media.getMultiple(client, SelectQuery);
-  return {
-    data: mediasRes.data.map((media) => format_media_default(media)),
-    count: mediasRes.count
-  };
-};
-var get_multiple_default7 = getMultiple6;
-
-// src/services/media/get-single.ts
-var getSingle9 = async (client, data) => {
-  const media = await Media.getSingleById(client, {
-    id: data.id
-  });
-  if (!media) {
-    throw new LucidError({
-      type: "basic",
-      name: "Media not found",
-      message: "We couldn't find the media you were looking for.",
-      status: 404
-    });
-  }
-  return format_media_default(media);
-};
-var get_single_default10 = getSingle9;
-
-// src/services/media/update-single.ts
-var updateSingle4 = async (client, data) => {
-  const media = await service_default(
-    media_default.getSingle,
-    false,
-    client
-  )({
-    id: data.id
-  });
-  let meta = void 0;
-  let newKey = void 0;
-  let newType = void 0;
-  if (data.data.files && data.data.files["file"]) {
-    const files = helpers_default.formatReqFiles(data.data.files);
-    const firstFile = files[0];
-    await service_default(
-      media_default.canStoreFiles,
-      false,
-      client
-    )({
-      files
-    });
-    meta = await helpers_default.getMetaData(firstFile);
-    newKey = helpers_default.uniqueKey(data.data.name || firstFile.name);
-    newType = helpers_default.getMediaType(meta.mimeType);
-    const updateKeyRes = await s3_default.updateObjectKey({
-      oldKey: media.key,
-      newKey
-    });
-    if (updateKeyRes.$metadata.httpStatusCode !== 200) {
-      throw new LucidError({
-        type: "basic",
-        name: "Error updating file",
-        message: "There was an error updating the file.",
-        status: 500,
-        errors: modelErrors({
-          file: {
-            code: "required",
-            message: "There was an error updating the file."
-          }
-        })
-      });
-    }
-    const response = await s3_default.saveObject({
-      type: "file",
-      key: newKey,
-      file: firstFile,
-      meta
-    });
-    if (response.$metadata.httpStatusCode !== 200) {
-      throw new LucidError({
-        type: "basic",
-        name: "Error updating file",
-        message: "There was an error updating the file.",
-        status: 500,
-        errors: modelErrors({
-          file: {
-            code: "required",
-            message: "There was an error updating the file."
-          }
-        })
-      });
-    }
-    await service_default(
-      media_default.setStorageUsed,
-      false,
-      client
-    )({
-      add: meta.size,
-      minus: media.meta.file_size
-    });
-    await service_default(
-      processed_images_default.clearSingle,
-      false,
-      client
-    )({
-      id: media.id
-    });
-  }
-  const mediaUpdate = await Media.updateSingle(client, {
-    key: media.key,
-    name: data.data.name,
-    alt: data.data.alt,
-    meta,
-    type: newType,
-    newKey
-  });
-  if (!mediaUpdate) {
-    throw new LucidError({
-      type: "basic",
-      name: "Error updating media",
-      message: "There was an error updating the media.",
-      status: 500
-    });
-  }
-  return void 0;
-};
-var update_single_default6 = updateSingle4;
-
-// src/services/media/stream-media.ts
-var streamMedia = async (data) => {
-  if (data.query?.format === void 0 && data.query?.width === void 0 && data.query?.height === void 0) {
-    return await media_default.getS3Object({
-      key: data.key
-    });
-  }
-  const processKey = helpers_default.createProcessKey({
-    key: data.key,
-    query: data.query
-  });
-  try {
-    return await media_default.getS3Object({
-      key: processKey
-    });
-  } catch (err) {
-    return await service_default(
-      processed_images_default.processImage,
-      false
-    )({
-      key: data.key,
-      processKey,
-      options: data.query
-    });
-  }
-};
-var stream_media_default = streamMedia;
-
-// src/services/media/can-store-files.ts
-var canStoreFiles = async (client, data) => {
-  const { storageLimit, maxFileSize } = Config.media;
-  for (let i = 0; i < data.files.length; i++) {
-    const file = data.files[i];
-    if (file.size > maxFileSize) {
-      const message = `File ${file.name} is too large. Max file size is ${maxFileSize} bytes.`;
-      throw new LucidError({
-        type: "basic",
-        name: "Error saving file",
-        message,
-        status: 500,
-        errors: modelErrors({
-          file: {
-            code: "storage_limit",
-            message
-          }
-        })
-      });
-    }
-  }
-  const storageUsed = await service_default(
-    media_default.getStorageUsed,
-    false,
-    client
-  )();
-  const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
-  if (totalSize + (storageUsed || 0) > storageLimit) {
-    const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;
-    throw new LucidError({
-      type: "basic",
-      name: "Error saving file",
-      message,
-      status: 500,
-      errors: modelErrors({
-        file: {
-          code: "storage_limit",
-          message
-        }
-      })
-    });
-  }
-};
-var can_store_files_default = canStoreFiles;
-
-// src/db/models/Option.ts
-var Option = class {
-  static getByName = async (client, data) => {
-    const options = await client.query({
-      text: `SELECT * FROM lucid_options WHERE option_name = $1`,
-      values: [data.name]
-    });
-    return options.rows[0];
-  };
-  static patchByName = async (client, data) => {
-    const options = await client.query({
-      text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
-      values: [data.value, data.type, data.name]
-    });
-    return options.rows[0];
-  };
-};
-
-// src/utils/format/format-option.ts
-var formatOptions = (options) => {
-  const formattedOptions = {};
-  options.forEach((option) => {
-    formattedOptions[option.option_name] = option.option_value;
-  });
-  return formattedOptions;
-};
-var format_option_default = formatOptions;
-
-// src/utils/options/convert-to-type.ts
-var convertToType = (option) => {
-  switch (option.type) {
-    case "boolean":
-      option.option_value = option.option_value === "true" ? true : false;
-      break;
-    case "number":
-      option.option_value = parseInt(option.option_value);
-      break;
-    case "json":
-      option.option_value = JSON.parse(option.option_value);
-      break;
-    default:
-      option.option_value;
-      break;
-  }
-  return option;
-};
-var convert_to_type_default = convertToType;
-
-// src/services/options/get-by-name.ts
-var getByName = async (client, data) => {
-  const option = await Option.getByName(client, {
-    name: data.name
-  });
-  if (!option) {
-    throw new LucidError({
-      type: "basic",
-      name: "Option Not Found",
-      message: "There was an error finding the option.",
-      status: 500,
-      errors: modelErrors({
-        option_name: {
-          code: "not_found",
-          message: "Option not found."
-        }
-      })
-    });
-  }
-  const convertOptionType = convert_to_type_default(option);
-  return format_option_default([convertOptionType]);
-};
-var get_by_name_default = getByName;
-
-// src/utils/options/convert-to-string.ts
-var convertToString = (value, type) => {
-  switch (type) {
-    case "boolean":
-      value = value ? "true" : "false";
-      break;
-    case "json":
-      value = JSON.stringify(value);
-      break;
-    default:
-      value = value.toString();
-      break;
-  }
-  return value;
-};
-var convert_to_string_default = convertToString;
-
-// src/services/options/patch-by-name.ts
-var patchByName = async (client, data) => {
-  const value = convert_to_string_default(data.value, data.type);
-  const option = await Option.patchByName(client, {
-    name: data.name,
-    value,
-    type: data.type
-  });
-  if (!option) {
-    throw new LucidError({
-      type: "basic",
-      name: "Option Not Found",
-      message: "There was an error patching the option.",
-      status: 500,
-      errors: modelErrors({
-        option_name: {
-          code: "not_found",
-          message: "Option not found."
-        }
-      })
-    });
-  }
-  const convertOptionType = convert_to_type_default(option);
-  return format_option_default([convertOptionType]);
-};
-var patch_by_name_default = patchByName;
-
-// src/services/options/index.ts
-var options_default = {
-  getByName: get_by_name_default,
-  patchByName: patch_by_name_default
-};
-
-// src/services/media/get-storage-used.ts
-var getStorageUsed = async (client) => {
-  const res = await service_default(
-    options_default.getByName,
-    false,
-    client
-  )({
-    name: "media_storage_used"
-  });
-  return res.media_storage_used;
-};
-var get_storage_used_default = getStorageUsed;
-
-// src/services/media/set-storage-used.ts
-var getStorageUsed2 = async (client, data) => {
-  const storageUsed = await service_default(
-    media_default.getStorageUsed,
-    false,
-    client
-  )();
-  let newValue = (storageUsed || 0) + data.add;
-  if (data.minus !== void 0) {
-    newValue = newValue - data.minus;
-  }
-  const res = await service_default(
-    options_default.patchByName,
-    false,
-    client
-  )({
-    name: "media_storage_used",
-    value: newValue,
-    type: "number"
-  });
-  return res.media_storage_used;
-};
-var set_storage_used_default = getStorageUsed2;
-
-// src/services/media/get-single-by-id.ts
-var getSingleById = async (client, data) => {
-  const media = await Media.getSingle(client, {
-    key: data.key
-  });
-  if (!media) {
-    throw new LucidError({
-      type: "basic",
-      name: "Media not found",
-      message: "We couldn't find the media you were looking for.",
-      status: 404
-    });
-  }
-  return format_media_default(media);
-};
-var get_single_by_id_default = getSingleById;
-
-// src/services/media/get-multiple-by-ids.ts
-var getMultipleByIds = async (client, data) => {
-  const mediasRes = await Media.getMultipleByIds(client, {
-    ids: data.ids
-  });
-  if (!mediasRes) {
-    return [];
-  }
-  return mediasRes.map((media) => format_media_default(media));
-};
-var get_multiple_by_ids_default = getMultipleByIds;
-
-// src/services/media/stream-error-image.ts
-import fs4 from "fs-extra";
-import path5 from "path";
-var currentDir4 = get_dirname_default(import.meta.url);
-var pipeLocalImage = (res) => {
-  let pathVal = path5.join(currentDir4, "./assets/404.jpg");
-  let contentType = "image/jpeg";
-  const steam = fs4.createReadStream(pathVal);
-  res.setHeader("Content-Type", contentType);
-  steam.pipe(res);
-};
-var streamErrorImage = async (data) => {
-  const error = decodeError(data.error);
-  if (error.status !== 404) {
-    data.next(data.error);
-    return;
-  }
-  if (Config.media.fallbackImage === false || data.fallback === "0") {
-    data.next(
-      new LucidError({
-        type: "basic",
-        name: "Error",
-        message: "We're sorry, but this image is not available.",
-        status: 404
-      })
-    );
-    return;
-  }
-  if (Config.media.fallbackImage === void 0) {
-    pipeLocalImage(data.res);
-    return;
-  }
-  try {
-    const { buffer, contentType } = await media_default.pipeRemoteURL({
-      url: Config.media.fallbackImage
-    });
-    data.res.setHeader("Content-Type", contentType || "image/jpeg");
-    data.res.send(buffer);
-  } catch (err) {
-    pipeLocalImage(data.res);
-    return;
-  }
-};
-var stream_error_image_default = streamErrorImage;
-
-// src/services/media/get-s3-object.ts
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-var getS3Object = async (data) => {
-  try {
-    const S3 = await s3_client_default;
-    const command = new GetObjectCommand({
-      Bucket: Config.media.store.bucket,
-      Key: data.key
-    });
-    const res = await S3.send(command);
-    return {
-      contentLength: res.ContentLength,
-      contentType: res.ContentType,
-      body: res.Body
-    };
-  } catch (err) {
-    const error = err;
-    throw new LucidError({
-      type: "basic",
-      name: error.name || "Error",
-      message: error.message || "An error occurred",
-      status: error.message === "The specified key does not exist." ? 404 : 500
-    });
-  }
-};
-var get_s3_object_default = getS3Object;
-
-// src/services/media/pipe-remote-url.ts
-import https from "https";
-var pipeRemoteURL = (data) => {
-  return new Promise((resolve, reject) => {
-    https.get(data.url, (response) => {
-      const { statusCode } = response;
-      const redirections = data?.redirections || 0;
-      if (statusCode && statusCode >= 300 && statusCode < 400 && response.headers.location && redirections < 5) {
-        pipeRemoteURL({
-          url: response.headers.location,
-          redirections: redirections + 1
-        }).then(resolve).catch(reject);
-        return;
-      }
-      if (statusCode !== 200) {
-        reject(new Error(`Request failed. Status code: ${statusCode}`));
-        return;
-      }
-      const contentType = response.headers["content-type"];
-      if (contentType && !contentType.includes("image")) {
-        reject(new Error("Content type is not an image"));
-        return;
-      }
-      const chunks = [];
-      response.on("data", (chunk) => {
-        chunks.push(chunk);
-      });
-      response.on("end", () => {
-        resolve({
-          buffer: Buffer.concat(chunks),
-          contentType
-        });
-      });
-      response.on("error", (error) => {
-        reject(new Error("Error fetching the fallback image"));
-      });
-    }).on("error", (error) => {
-      reject(new Error("Error with the HTTPS request"));
-    });
-  });
-};
-var pipe_remote_url_default = pipeRemoteURL;
-
-// src/services/media/index.ts
-var media_default = {
-  createSingle: create_single_default7,
-  deleteSingle: delete_single_default9,
-  getMultiple: get_multiple_default7,
-  getSingle: get_single_default10,
-  updateSingle: update_single_default6,
-  streamMedia: stream_media_default,
-  canStoreFiles: can_store_files_default,
-  getStorageUsed: get_storage_used_default,
-  setStorageUsed: set_storage_used_default,
-  getSingleById: get_single_by_id_default,
-  getMultipleByIds: get_multiple_by_ids_default,
-  streamErrorImage: stream_error_image_default,
-  getS3Object: get_s3_object_default,
-  pipeRemoteURL: pipe_remote_url_default
-};
 
 // src/services/collection-bricks/validate-bricks.ts
 var flattenAllBricks = (builder_bricks, fixed_bricks) => {
@@ -8190,14 +7138,13 @@ var getAllMedia = async (client, fields) => {
     const ids = getIDs.filter((id) => id !== void 0).filter(
       (value, index, self) => self.indexOf(value) === index
     );
-    const media = await service_default(
-      media_default.getMultipleByIds,
-      false,
-      client
-    )({
+    const mediasRes = await Media.getMultipleByIds(client, {
       ids
     });
-    return media;
+    if (!mediasRes) {
+      return [];
+    }
+    return mediasRes.map((media) => format_media_default(media));
   } catch (err) {
     return [];
   }
@@ -8212,14 +7159,13 @@ var getAllPages = async (client, fields, environment_key) => {
     const ids = getIDs.filter((id) => id !== void 0).filter(
       (value, index, self) => self.indexOf(value) === index
     );
-    const pages = await service_default(
-      pages_default2.getMultipleById,
-      false,
-      client
-    )({
+    const pages = await Page.getMultipleByIds(client, {
       ids,
       environment_key
     });
+    if (!pages) {
+      return [];
+    }
     return pages;
   } catch (err) {
     return [];
@@ -8283,7 +7229,7 @@ var collection_bricks_default = {
 };
 
 // src/services/pages/get-single.ts
-var getSingle10 = async (client, data) => {
+var getSingle9 = async (client, data) => {
   const { include } = data.query;
   const SelectQuery = new SelectQueryBuilder({
     columns: [
@@ -8360,10 +7306,10 @@ var getSingle10 = async (client, data) => {
   }
   return format_page_default(page, [collection]);
 };
-var get_single_default11 = getSingle10;
+var get_single_default10 = getSingle9;
 
 // src/services/pages/update-single.ts
-var updateSingle5 = async (client, data) => {
+var updateSingle4 = async (client, data) => {
   const currentPage = await service_default(
     pages_default2.checkPageExists,
     false,
@@ -8372,6 +7318,20 @@ var updateSingle5 = async (client, data) => {
     id: data.id,
     environment_key: data.environment_key
   });
+  if (currentPage.id === data.parent_id) {
+    throw new LucidError({
+      type: "basic",
+      name: "Page Not Updated",
+      message: "A page cannot be its own parent",
+      status: 400,
+      errors: modelErrors({
+        parent_id: {
+          code: "invalid",
+          message: `A page cannot be its own parent`
+        }
+      })
+    });
+  }
   const [environment, collection] = await Promise.all([
     service_default(
       environments_default.getSingle,
@@ -8388,12 +7348,12 @@ var updateSingle5 = async (client, data) => {
       collection_key: currentPage.collection_key,
       environment_key: data.environment_key,
       homepage: data.homepage,
-      parent_id: data.parent_id
+      parent_id: data.parent_id || void 0
     })
   ]);
   const parentId = data.homepage ? void 0 : data.parent_id;
   if (parentId) {
-    await service_default(
+    const parentChecks2 = service_default(
       pages_default2.parentChecks,
       false,
       client
@@ -8402,17 +7362,28 @@ var updateSingle5 = async (client, data) => {
       environment_key: data.environment_key,
       collection_key: currentPage.collection_key
     });
+    const ancestryChecks = service_default(
+      pages_default2.checkParentAncestry,
+      false,
+      client
+    )({
+      page_id: data.id,
+      parent_id: parentId
+    });
+    await Promise.all([parentChecks2, ancestryChecks]);
   }
-  await service_default(
-    collection_bricks_default.validateBricks,
-    false,
-    client
-  )({
-    builder_bricks: data.builder_bricks || [],
-    fixed_bricks: data.fixed_bricks || [],
-    collection,
-    environment
-  });
+  if (data.builder_bricks && data.builder_bricks.length > 0 || data.fixed_bricks && data.fixed_bricks.length > 0) {
+    await service_default(
+      collection_bricks_default.validateBricks,
+      false,
+      client
+    )({
+      builder_bricks: data.builder_bricks || [],
+      fixed_bricks: data.fixed_bricks || [],
+      collection,
+      environment
+    });
+  }
   let newSlug = void 0;
   if (data.slug) {
     newSlug = await service_default(
@@ -8424,7 +7395,7 @@ var updateSingle5 = async (client, data) => {
       homepage: data.homepage || false,
       environment_key: data.environment_key,
       collection_key: currentPage.collection_key,
-      parent_id: parentId
+      parent_id: parentId || void 0
     });
   }
   const page = await Page.updateSingle(client, {
@@ -8473,7 +7444,7 @@ var updateSingle5 = async (client, data) => {
   ]);
   return void 0;
 };
-var update_single_default7 = updateSingle5;
+var update_single_default6 = updateSingle4;
 
 // src/services/pages/check-page-exists.ts
 var checkPageExists = async (client, data) => {
@@ -8494,12 +7465,12 @@ var checkPageExists = async (client, data) => {
 var check_page_exists_default = checkPageExists;
 
 // src/services/pages/build-unique-slug.ts
-import slug3 from "slug";
+import slug2 from "slug";
 var buildUniqueSlug = async (client, data) => {
   if (data.homepage) {
     return "/";
   }
-  data.slug = slug3(data.slug, { lower: true });
+  data.slug = slug2(data.slug, { lower: true });
   const slugCount = await Page.getSlugCount(client, {
     slug: data.slug,
     environment_key: data.environment_key,
@@ -8545,14 +7516,14 @@ var parentChecks = async (client, data) => {
 var parent_checks_default = parentChecks;
 
 // src/services/pages/reset-homepages.ts
-import slug4 from "slug";
+import slug3 from "slug";
 var resetHomepages = async (client, data) => {
   const homepages = await Page.getNonCurrentHomepages(client, {
     current_id: data.current,
     environment_key: data.environment_key
   });
   const updatePromises = homepages.map(async (homepage) => {
-    let newSlug = slug4(homepage.title, { lower: true });
+    let newSlug = slug3(homepage.title, { lower: true });
     const slugExists = await Page.checkSlugExistence(client, {
       slug: newSlug,
       id: homepage.id,
@@ -8569,16 +7540,6 @@ var resetHomepages = async (client, data) => {
   await Promise.all(updatePromises);
 };
 var reset_homepages_default = resetHomepages;
-
-// src/services/pages/get-multiple-by-id.ts
-var getMultipleById = async (client, data) => {
-  const pages = await Page.getMultipleByIds(client, {
-    ids: data.ids,
-    environment_key: data.environment_key
-  });
-  return pages;
-};
-var get_multiple_by_id_default = getMultipleById;
 
 // src/services/pages/check-page-collection.ts
 var checkPageCollection = async (client, data) => {
@@ -8611,19 +7572,40 @@ var checkPageCollection = async (client, data) => {
 };
 var check_page_collection_default = checkPageCollection;
 
+// src/services/pages/check-parent-ancestry.ts
+var checkParentAncestry = async (client, data) => {
+  const results = await Page.checkParentAncestry(client, data);
+  if (results.length > 0) {
+    throw new LucidError({
+      type: "basic",
+      name: "Page Not Updated",
+      message: "An error occurred while updating the page.",
+      status: 400,
+      errors: modelErrors({
+        parent_id: {
+          code: "invalid",
+          message: "The page you are trying to set as the parent is currently a child of this page."
+        }
+      })
+    });
+  }
+  return;
+};
+var check_parent_ancestry_default = checkParentAncestry;
+
 // src/services/pages/index.ts
 var pages_default2 = {
   createSingle: create_single_default6,
   deleteSingle: delete_single_default8,
   getMultiple: get_multiple_default6,
-  getSingle: get_single_default11,
-  updateSingle: update_single_default7,
+  getSingle: get_single_default10,
+  updateSingle: update_single_default6,
   checkPageExists: check_page_exists_default,
   buildUniqueSlug: build_unique_slug_default,
   parentChecks: parent_checks_default,
   resetHomepages: reset_homepages_default,
-  getMultipleById: get_multiple_by_id_default,
-  checkPageCollection: check_page_collection_default
+  checkPageCollection: check_page_collection_default,
+  checkParentAncestry: check_parent_ancestry_default
 };
 
 // src/controllers/pages/create-single.ts
@@ -8653,7 +7635,7 @@ var createSingleController = async (req, res, next) => {
     next(error);
   }
 };
-var create_single_default8 = {
+var create_single_default7 = {
   schema: pages_default.createSingle,
   controller: createSingleController
 };
@@ -8682,7 +7664,7 @@ var getMultipleController2 = async (req, res, next) => {
     next(error);
   }
 };
-var get_multiple_default8 = {
+var get_multiple_default7 = {
   schema: pages_default.getMultiple,
   controller: getMultipleController2
 };
@@ -8707,7 +7689,7 @@ var getSingleController2 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default12 = {
+var get_single_default11 = {
   schema: pages_default.getSingle,
   controller: getSingleController2
 };
@@ -8741,7 +7723,7 @@ var updateSingleController2 = async (req, res, next) => {
     next(error);
   }
 };
-var update_single_default8 = {
+var update_single_default7 = {
   schema: pages_default.updateSingle,
   controller: updateSingleController2
 };
@@ -8764,7 +7746,7 @@ var deleteSingleController2 = async (req, res, next) => {
     next(error);
   }
 };
-var delete_single_default10 = {
+var delete_single_default9 = {
   schema: pages_default.deleteSingle,
   controller: deleteSingleController2
 };
@@ -8782,8 +7764,8 @@ route_default(router4, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: create_single_default8.schema,
-  controller: create_single_default8.controller
+  schema: create_single_default7.schema,
+  controller: create_single_default7.controller
 });
 route_default(router4, {
   method: "get",
@@ -8793,8 +7775,8 @@ route_default(router4, {
     paginated: true,
     validateEnvironment: true
   },
-  schema: get_multiple_default8.schema,
-  controller: get_multiple_default8.controller
+  schema: get_multiple_default7.schema,
+  controller: get_multiple_default7.controller
 });
 route_default(router4, {
   method: "get",
@@ -8803,8 +7785,8 @@ route_default(router4, {
     authenticate: true,
     validateEnvironment: true
   },
-  schema: get_single_default12.schema,
-  controller: get_single_default12.controller
+  schema: get_single_default11.schema,
+  controller: get_single_default11.controller
 });
 route_default(router4, {
   method: "patch",
@@ -8817,8 +7799,8 @@ route_default(router4, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: update_single_default8.schema,
-  controller: update_single_default8.controller
+  schema: update_single_default7.schema,
+  controller: update_single_default7.controller
 });
 route_default(router4, {
   method: "delete",
@@ -8831,8 +7813,8 @@ route_default(router4, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: delete_single_default10.schema,
-  controller: delete_single_default10.controller
+  schema: delete_single_default9.schema,
+  controller: delete_single_default9.controller
 });
 var pages_routes_default = router4;
 
@@ -8897,7 +7879,7 @@ var SinglePage = class {
 };
 
 // src/services/single-pages/get-single.ts
-var getSingle11 = async (client, data) => {
+var getSingle10 = async (client, data) => {
   const collection = await service_default(
     collections_default.getSingle,
     false,
@@ -8965,10 +7947,10 @@ var getSingle11 = async (client, data) => {
   }
   return singlepage;
 };
-var get_single_default13 = getSingle11;
+var get_single_default12 = getSingle10;
 
 // src/services/single-pages/update-single.ts
-var updateSingle6 = async (client, data) => {
+var updateSingle5 = async (client, data) => {
   const environment = await service_default(
     environments_default.getSingle,
     false,
@@ -9030,12 +8012,12 @@ var updateSingle6 = async (client, data) => {
     include_bricks: true
   });
 };
-var update_single_default9 = updateSingle6;
+var update_single_default8 = updateSingle5;
 
 // src/services/single-pages/index.ts
 var single_pages_default = {
-  getSingle: get_single_default13,
-  updateSingle: update_single_default9
+  getSingle: get_single_default12,
+  updateSingle: update_single_default8
 };
 
 // src/controllers/single-pages/update-single.ts
@@ -9060,7 +8042,7 @@ var updateSingleController3 = async (req, res, next) => {
     next(error);
   }
 };
-var update_single_default10 = {
+var update_single_default9 = {
   schema: single_page_default.updateSingle,
   controller: updateSingleController3
 };
@@ -9086,7 +8068,7 @@ var getSingleController3 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default14 = {
+var get_single_default13 = {
   schema: single_page_default.getSingle,
   controller: getSingleController3
 };
@@ -9104,8 +8086,8 @@ route_default(router5, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: update_single_default10.schema,
-  controller: update_single_default10.controller
+  schema: update_single_default9.schema,
+  controller: update_single_default9.controller
 });
 route_default(router5, {
   method: "get",
@@ -9114,8 +8096,8 @@ route_default(router5, {
     authenticate: true,
     validateEnvironment: true
   },
-  schema: get_single_default14.schema,
-  controller: get_single_default14.controller
+  schema: get_single_default13.schema,
+  controller: get_single_default13.controller
 });
 var single_pages_routes_default = router5;
 
@@ -9193,7 +8175,7 @@ var getSingleController4 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default15 = {
+var get_single_default14 = {
   schema: collections_default2.getSingle,
   controller: getSingleController4
 };
@@ -9216,8 +8198,8 @@ route_default(router6, {
     authenticate: true,
     validateEnvironment: true
   },
-  schema: get_single_default15.schema,
-  controller: get_single_default15.controller
+  schema: get_single_default14.schema,
+  controller: get_single_default14.controller
 });
 var collections_routes_default = router6;
 
@@ -9334,7 +8316,7 @@ var getSingleController5 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default16 = {
+var get_single_default15 = {
   schema: environments_default2.getSingle,
   controller: getSingleController5
 };
@@ -9364,7 +8346,7 @@ var updateSingleController4 = async (req, res, next) => {
     next(error);
   }
 };
-var update_single_default11 = {
+var update_single_default10 = {
   schema: environments_default2.updateSingle,
   controller: updateSingleController4
 };
@@ -9394,7 +8376,7 @@ var createSingleController2 = async (req, res, next) => {
     next(error);
   }
 };
-var create_single_default9 = {
+var create_single_default8 = {
   schema: environments_default2.createSingle,
   controller: createSingleController2
 };
@@ -9417,7 +8399,7 @@ var deleteSingleController3 = async (req, res, next) => {
     next(error);
   }
 };
-var delete_single_default11 = {
+var delete_single_default10 = {
   schema: environments_default2.deleteSingle,
   controller: deleteSingleController3
 };
@@ -9463,8 +8445,8 @@ route_default(router7, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: delete_single_default11.schema,
-  controller: delete_single_default11.controller
+  schema: delete_single_default10.schema,
+  controller: delete_single_default10.controller
 });
 route_default(router7, {
   method: "get",
@@ -9472,8 +8454,8 @@ route_default(router7, {
   middleware: {
     authenticate: true
   },
-  schema: get_single_default16.schema,
-  controller: get_single_default16.controller
+  schema: get_single_default15.schema,
+  controller: get_single_default15.controller
 });
 route_default(router7, {
   method: "patch",
@@ -9485,8 +8467,8 @@ route_default(router7, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: update_single_default11.schema,
-  controller: update_single_default11.controller
+  schema: update_single_default10.schema,
+  controller: update_single_default10.controller
 });
 route_default(router7, {
   method: "post",
@@ -9498,8 +8480,8 @@ route_default(router7, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: create_single_default9.schema,
-  controller: create_single_default9.controller
+  schema: create_single_default8.schema,
+  controller: create_single_default8.controller
 });
 route_default(router7, {
   method: "post",
@@ -9619,7 +8601,7 @@ var createSingleController3 = async (req, res, next) => {
     next(error);
   }
 };
-var create_single_default10 = {
+var create_single_default9 = {
   schema: roles_default2.createSingle,
   controller: createSingleController3
 };
@@ -9642,7 +8624,7 @@ var deleteSingleController4 = async (req, res, next) => {
     next(error);
   }
 };
-var delete_single_default12 = {
+var delete_single_default11 = {
   schema: roles_default2.deleteSingle,
   controller: deleteSingleController4
 };
@@ -9667,7 +8649,7 @@ var updateSingleController5 = async (req, res, next) => {
     next(error);
   }
 };
-var update_single_default12 = {
+var update_single_default11 = {
   schema: roles_default2.updateSingle,
   controller: updateSingleController5
 };
@@ -9695,7 +8677,7 @@ var getMultipleController3 = async (req, res, next) => {
     next(error);
   }
 };
-var get_multiple_default9 = {
+var get_multiple_default8 = {
   schema: roles_default2.getMultiple,
   controller: getMultipleController3
 };
@@ -9718,7 +8700,7 @@ var getSingleController6 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default17 = {
+var get_single_default16 = {
   schema: roles_default2.getSingle,
   controller: getSingleController6
 };
@@ -9732,8 +8714,8 @@ route_default(router8, {
     authenticate: true,
     paginated: true
   },
-  schema: get_multiple_default9.schema,
-  controller: get_multiple_default9.controller
+  schema: get_multiple_default8.schema,
+  controller: get_multiple_default8.controller
 });
 route_default(router8, {
   method: "get",
@@ -9741,8 +8723,8 @@ route_default(router8, {
   middleware: {
     authenticate: true
   },
-  schema: get_single_default17.schema,
-  controller: get_single_default17.controller
+  schema: get_single_default16.schema,
+  controller: get_single_default16.controller
 });
 route_default(router8, {
   method: "post",
@@ -9754,8 +8736,8 @@ route_default(router8, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: create_single_default10.schema,
-  controller: create_single_default10.controller
+  schema: create_single_default9.schema,
+  controller: create_single_default9.controller
 });
 route_default(router8, {
   method: "delete",
@@ -9767,8 +8749,8 @@ route_default(router8, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: delete_single_default12.schema,
-  controller: delete_single_default12.controller
+  schema: delete_single_default11.schema,
+  controller: delete_single_default11.controller
 });
 route_default(router8, {
   method: "patch",
@@ -9780,8 +8762,8 @@ route_default(router8, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: update_single_default12.schema,
-  controller: update_single_default12.controller
+  schema: update_single_default11.schema,
+  controller: update_single_default11.controller
 });
 var roles_routes_default = router8;
 
@@ -9889,7 +8871,7 @@ var updateSingleController6 = async (req, res, next) => {
     next(error);
   }
 };
-var update_single_default13 = {
+var update_single_default12 = {
   schema: users_default2.updateSingle,
   controller: updateSingleController6
 };
@@ -9918,7 +8900,7 @@ var createSingleController4 = async (req, res, next) => {
     next(error);
   }
 };
-var create_single_default11 = {
+var create_single_default10 = {
   schema: users_default2.createSingle,
   controller: createSingleController4
 };
@@ -9941,7 +8923,7 @@ var deleteSingleController5 = async (req, res, next) => {
     next(error);
   }
 };
-var delete_single_default13 = {
+var delete_single_default12 = {
   schema: users_default2.deleteSingle,
   controller: deleteSingleController5
 };
@@ -9969,7 +8951,7 @@ var getMultipleController4 = async (req, res, next) => {
     next(error);
   }
 };
-var get_multiple_default10 = {
+var get_multiple_default9 = {
   schema: users_default2.getMultiple,
   controller: getMultipleController4
 };
@@ -9992,7 +8974,7 @@ var getSingleController7 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default18 = {
+var get_single_default17 = {
   schema: users_default2.getSingle,
   controller: getSingleController7
 };
@@ -10009,8 +8991,8 @@ route_default(router9, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: update_single_default13.schema,
-  controller: update_single_default13.controller
+  schema: update_single_default12.schema,
+  controller: update_single_default12.controller
 });
 route_default(router9, {
   method: "post",
@@ -10022,8 +9004,8 @@ route_default(router9, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: create_single_default11.schema,
-  controller: create_single_default11.controller
+  schema: create_single_default10.schema,
+  controller: create_single_default10.controller
 });
 route_default(router9, {
   method: "delete",
@@ -10035,8 +9017,8 @@ route_default(router9, {
     authenticate: true,
     authoriseCSRF: true
   },
-  schema: delete_single_default13.schema,
-  controller: delete_single_default13.controller
+  schema: delete_single_default12.schema,
+  controller: delete_single_default12.controller
 });
 route_default(router9, {
   method: "get",
@@ -10045,8 +9027,8 @@ route_default(router9, {
     authenticate: true,
     paginated: true
   },
-  schema: get_multiple_default10.schema,
-  controller: get_multiple_default10.controller
+  schema: get_multiple_default9.schema,
+  controller: get_multiple_default9.controller
 });
 route_default(router9, {
   method: "get",
@@ -10054,8 +9036,8 @@ route_default(router9, {
   middleware: {
     authenticate: true
   },
-  schema: get_single_default18.schema,
-  controller: get_single_default18.controller
+  schema: get_single_default17.schema,
+  controller: get_single_default17.controller
 });
 var users_routes_default = router9;
 
@@ -10150,7 +9132,7 @@ var getSingleController8 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default19 = {
+var get_single_default18 = {
   schema: bricks_default.config.getSingle,
   controller: getSingleController8
 };
@@ -10172,8 +9154,8 @@ route_default(router11, {
   middleware: {
     authenticate: true
   },
-  schema: get_single_default19.schema,
-  controller: get_single_default19.controller
+  schema: get_single_default18.schema,
+  controller: get_single_default18.controller
 });
 var bricks_routes_default = router11;
 
@@ -10466,7 +9448,7 @@ var formatMenu = (menu, items) => {
 var format_menu_default = formatMenu;
 
 // src/services/menu/create-single.ts
-var createSingle7 = async (client, data) => {
+var createSingle6 = async (client, data) => {
   await service_default(
     menu_default.checkKeyUnique,
     false,
@@ -10508,10 +9490,10 @@ var createSingle7 = async (client, data) => {
   });
   return format_menu_default(menu, menuItems);
 };
-var create_single_default12 = createSingle7;
+var create_single_default11 = createSingle6;
 
 // src/services/menu/delete-single.ts
-var deleteSingle9 = async (client, data) => {
+var deleteSingle8 = async (client, data) => {
   const menu = await Menu.deleteSingle(client, {
     environment_key: data.environment_key,
     id: data.id
@@ -10526,10 +9508,10 @@ var deleteSingle9 = async (client, data) => {
   }
   return menu;
 };
-var delete_single_default14 = deleteSingle9;
+var delete_single_default13 = deleteSingle8;
 
 // src/services/menu/get-multiple.ts
-var getMultiple7 = async (client, data) => {
+var getMultiple6 = async (client, data) => {
   const { filter, sort, include, page, per_page } = data.query;
   const SelectQuery = new SelectQueryBuilder({
     columns: [
@@ -10580,10 +9562,10 @@ var getMultiple7 = async (client, data) => {
     count: menus.count
   };
 };
-var get_multiple_default11 = getMultiple7;
+var get_multiple_default10 = getMultiple6;
 
 // src/services/menu/get-single.ts
-var getSingle12 = async (client, data) => {
+var getSingle11 = async (client, data) => {
   const menu = await Menu.getSingle(client, {
     environment_key: data.environment_key,
     id: data.id
@@ -10605,10 +9587,10 @@ var getSingle12 = async (client, data) => {
   });
   return format_menu_default(menu, menuItems);
 };
-var get_single_default20 = getSingle12;
+var get_single_default19 = getSingle11;
 
 // src/services/menu/update-single.ts
-var updateSingle7 = async (client, data) => {
+var updateSingle6 = async (client, data) => {
   const getMenu = await service_default(
     menu_default.getSingle,
     false,
@@ -10681,7 +9663,7 @@ var updateSingle7 = async (client, data) => {
     environment_key: data.environment_key
   });
 };
-var update_single_default14 = updateSingle7;
+var update_single_default13 = updateSingle6;
 
 // src/services/menu/check-key-unique.ts
 var checkKeyUnique = async (client, data) => {
@@ -10835,11 +9817,11 @@ var upsert_item_default = upsertItem;
 
 // src/services/menu/index.ts
 var menu_default = {
-  createSingle: create_single_default12,
-  deleteSingle: delete_single_default14,
-  getMultiple: get_multiple_default11,
-  getSingle: get_single_default20,
-  updateSingle: update_single_default14,
+  createSingle: create_single_default11,
+  deleteSingle: delete_single_default13,
+  getMultiple: get_multiple_default10,
+  getSingle: get_single_default19,
+  updateSingle: update_single_default13,
   checkKeyUnique: check_key_unique_default,
   getItems: get_items_default,
   getSingleItem: get_single_item_default,
@@ -10870,7 +9852,7 @@ var createSingleController5 = async (req, res, next) => {
     next(error);
   }
 };
-var create_single_default13 = {
+var create_single_default12 = {
   schema: menus_default.createSingle,
   controller: createSingleController5
 };
@@ -10894,7 +9876,7 @@ var deleteSingleController6 = async (req, res, next) => {
     next(error);
   }
 };
-var delete_single_default15 = {
+var delete_single_default14 = {
   schema: menus_default.deleteSingle,
   controller: deleteSingleController6
 };
@@ -10918,7 +9900,7 @@ var getSingleController9 = async (req, res, next) => {
     next(error);
   }
 };
-var get_single_default21 = {
+var get_single_default20 = {
   schema: menus_default.getSingle,
   controller: getSingleController9
 };
@@ -10947,7 +9929,7 @@ var getMultipleController5 = async (req, res, next) => {
     next(error);
   }
 };
-var get_multiple_default12 = {
+var get_multiple_default11 = {
   schema: menus_default.getMultiple,
   controller: getMultipleController5
 };
@@ -10975,7 +9957,7 @@ var updateSingleController7 = async (req, res, next) => {
     next(error);
   }
 };
-var update_single_default15 = {
+var update_single_default14 = {
   schema: menus_default.updateSingle,
   controller: updateSingleController7
 };
@@ -10993,8 +9975,8 @@ route_default(router12, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: create_single_default13.schema,
-  controller: create_single_default13.controller
+  schema: create_single_default12.schema,
+  controller: create_single_default12.controller
 });
 route_default(router12, {
   method: "delete",
@@ -11007,8 +9989,8 @@ route_default(router12, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: delete_single_default15.schema,
-  controller: delete_single_default15.controller
+  schema: delete_single_default14.schema,
+  controller: delete_single_default14.controller
 });
 route_default(router12, {
   method: "get",
@@ -11017,8 +9999,8 @@ route_default(router12, {
     authenticate: true,
     validateEnvironment: true
   },
-  schema: get_single_default21.schema,
-  controller: get_single_default21.controller
+  schema: get_single_default20.schema,
+  controller: get_single_default20.controller
 });
 route_default(router12, {
   method: "get",
@@ -11028,8 +10010,8 @@ route_default(router12, {
     paginated: true,
     validateEnvironment: true
   },
-  schema: get_multiple_default12.schema,
-  controller: get_multiple_default12.controller
+  schema: get_multiple_default11.schema,
+  controller: get_multiple_default11.controller
 });
 route_default(router12, {
   method: "patch",
@@ -11042,8 +10024,8 @@ route_default(router12, {
     authoriseCSRF: true,
     validateEnvironment: true
   },
-  schema: update_single_default15.schema,
-  controller: update_single_default15.controller
+  schema: update_single_default14.schema,
+  controller: update_single_default14.controller
 });
 var menus_routes_default = router12;
 
@@ -11123,7 +10105,7 @@ var clearSingleProcessedParams = z17.object({
 var clearAllProcessedBody = z17.object({});
 var clearAllProcessedQuery = z17.object({});
 var clearAllProcessedParams = z17.object({});
-var media_default2 = {
+var media_default = {
   createSingle: {
     body: createSingleBody7,
     query: createSingleQuery7,
@@ -11166,11 +10148,1070 @@ var media_default2 = {
   }
 };
 
+// src/utils/media/helpers.ts
+import slug4 from "slug";
+import mime from "mime-types";
+import sharp from "sharp";
+var uniqueKey = (name) => {
+  const slugVal = slug4(name, {
+    lower: true
+  });
+  return `${slugVal}-${Date.now()}`;
+};
+var getMetaData = async (file) => {
+  const fileExtension = mime.extension(file.mimetype);
+  const mimeType = file.mimetype;
+  const size = file.size;
+  let width = null;
+  let height = null;
+  try {
+    const metaData = await sharp(file.data).metadata();
+    width = metaData.width;
+    height = metaData.height;
+  } catch (error) {
+  }
+  return {
+    mimeType,
+    fileExtension: fileExtension || "",
+    size,
+    width: width || null,
+    height: height || null
+  };
+};
+var formatReqFiles = (files) => {
+  const file = files["file"];
+  if (Array.isArray(file)) {
+    return file;
+  } else {
+    return [file];
+  }
+};
+var createProcessKey = (data) => {
+  let key = `processed/${data.key}`;
+  if (data.query.format)
+    key = key.concat(`.${data.query.format}`);
+  if (data.query.quality)
+    key = key.concat(`.${data.query.quality}`);
+  if (data.query.width)
+    key = key.concat(`.${data.query.width}`);
+  if (data.query.height)
+    key = key.concat(`.${data.query.height}`);
+  return key;
+};
+var streamToBuffer = (readable) => {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    readable.on("data", (chunk) => chunks.push(chunk));
+    readable.on("end", () => resolve(Buffer.concat(chunks)));
+    readable.on("error", reject);
+  });
+};
+var getMediaType = (mimeType) => {
+  const normalizedMimeType = mimeType.toLowerCase();
+  if (normalizedMimeType.includes("image"))
+    return "image";
+  if (normalizedMimeType.includes("video"))
+    return "video";
+  if (normalizedMimeType.includes("audio"))
+    return "audio";
+  if (normalizedMimeType.includes("pdf") || normalizedMimeType.startsWith("application/vnd"))
+    return "document";
+  if (normalizedMimeType.includes("zip") || normalizedMimeType.includes("tar"))
+    return "archive";
+  return "unknown";
+};
+var helpers = {
+  uniqueKey,
+  getMetaData,
+  formatReqFiles,
+  createProcessKey,
+  streamToBuffer,
+  getMediaType
+};
+var helpers_default = helpers;
+
+// src/services/s3/save-object.ts
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+
+// src/utils/app/s3-client.ts
+import { S3Client } from "@aws-sdk/client-s3";
+var getS3Client = async () => {
+  const config = await Config.getConfig();
+  const s3Config = {
+    region: config.media.store.region,
+    credentials: {
+      accessKeyId: config.media.store.accessKeyId,
+      secretAccessKey: config.media.store.secretAccessKey
+    }
+  };
+  if (config.media.store.service === "cloudflare") {
+    s3Config.endpoint = `https://${config.media.store.cloudflareAccountId}.r2.cloudflarestorage.com`;
+  }
+  return new S3Client(s3Config);
+};
+var s3_client_default = getS3Client();
+
+// src/services/s3/save-object.ts
+var saveObject = async (data) => {
+  const S3 = await s3_client_default;
+  const command = new PutObjectCommand({
+    Bucket: Config.media.store.bucket,
+    Key: data.key,
+    Body: data.type === "file" ? data.file?.data : data.buffer,
+    ContentType: data.meta.mimeType,
+    Metadata: {
+      width: data.meta.width?.toString() || "",
+      height: data.meta.height?.toString() || "",
+      extension: data.meta.fileExtension
+    }
+  });
+  return S3.send(command);
+};
+var save_object_default = saveObject;
+
+// src/services/s3/delete-object.ts
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+var deleteObject = async (data) => {
+  const S3 = await s3_client_default;
+  const command = new DeleteObjectCommand({
+    Bucket: Config.media.store.bucket,
+    Key: data.key
+  });
+  return S3.send(command);
+};
+var delete_object_default = deleteObject;
+
+// src/services/s3/delete-objects.ts
+import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
+var deleteObjects = async (data) => {
+  const S3 = await s3_client_default;
+  const command = new DeleteObjectsCommand({
+    Bucket: Config.media.store.bucket,
+    Delete: {
+      Objects: data.objects.map((object) => ({
+        Key: object.key
+      }))
+    }
+  });
+  return S3.send(command);
+};
+var delete_objects_default = deleteObjects;
+
+// src/services/s3/update-object-key.ts
+import { DeleteObjectCommand as DeleteObjectCommand2, CopyObjectCommand } from "@aws-sdk/client-s3";
+var updateObjectKey = async (data) => {
+  const S3 = await s3_client_default;
+  const copyCommand = new CopyObjectCommand({
+    Bucket: Config.media.store.bucket,
+    CopySource: `${Config.media.store.bucket}/${data.oldKey}`,
+    Key: data.newKey
+  });
+  const res = await S3.send(copyCommand);
+  const command = new DeleteObjectCommand2({
+    Bucket: Config.media.store.bucket,
+    Key: data.oldKey
+  });
+  await S3.send(command);
+  return res;
+};
+var update_object_key_default = updateObjectKey;
+
+// src/services/s3/index.ts
+var s3_default = {
+  saveObject: save_object_default,
+  deleteObject: delete_object_default,
+  deleteObjects: delete_objects_default,
+  updateObjectKey: update_object_key_default
+};
+
+// src/services/media/create-single.ts
+var createSingle7 = async (client, data) => {
+  if (!data.files || !data.files["file"]) {
+    throw new LucidError({
+      type: "basic",
+      name: "No files provided",
+      message: "No files provided",
+      status: 400,
+      errors: modelErrors({
+        file: {
+          code: "required",
+          message: "No files provided"
+        }
+      })
+    });
+  }
+  const files = helpers_default.formatReqFiles(data.files);
+  const firstFile = files[0];
+  await service_default(
+    media_default2.canStoreFiles,
+    false,
+    client
+  )({
+    files
+  });
+  const key = helpers_default.uniqueKey(data.name || firstFile.name);
+  const meta = await helpers_default.getMetaData(firstFile);
+  const type = helpers_default.getMediaType(meta.mimeType);
+  const response = await s3_default.saveObject({
+    type: "file",
+    key,
+    file: firstFile,
+    meta
+  });
+  if (response.$metadata.httpStatusCode !== 200) {
+    throw new LucidError({
+      type: "basic",
+      name: "Error saving file",
+      message: "Error saving file",
+      status: 500,
+      errors: modelErrors({
+        file: {
+          code: "required",
+          message: "Error saving file"
+        }
+      })
+    });
+  }
+  const media = await Media.createSingle(client, {
+    key,
+    name: data.name || firstFile.name,
+    alt: data.alt,
+    etag: response.ETag?.replace(/"/g, ""),
+    type,
+    meta
+  });
+  if (!media) {
+    await s3_default.deleteObject({
+      key
+    });
+    throw new LucidError({
+      type: "basic",
+      name: "Error saving file",
+      message: "Error saving file",
+      status: 500,
+      errors: modelErrors({
+        file: {
+          code: "required",
+          message: "Error saving file"
+        }
+      })
+    });
+  }
+  await service_default(
+    media_default2.setStorageUsed,
+    false,
+    client
+  )({
+    add: meta.size
+  });
+  return format_media_default(media);
+};
+var create_single_default13 = createSingle7;
+
+// src/db/models/ProcessedImage.ts
+var ProcessedImage = class {
+  static createSingle = async (client, data) => {
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["key", "media_key"],
+      values: [data.key, data.media_key]
+    });
+    const processedImage = await client.query({
+      text: `INSERT INTO lucid_processed_images (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING key`,
+      values: values.value
+    });
+    return processedImage.rows[0];
+  };
+  static getAllByMediaKey = async (client, data) => {
+    const processedImages = await client.query({
+      text: `SELECT * FROM lucid_processed_images WHERE media_key = $1`,
+      values: [data.media_key]
+    });
+    return processedImages.rows;
+  };
+  static deleteAllByMediaKey = async (client, data) => {
+    const processedImages = await client.query({
+      text: `DELETE FROM lucid_processed_images WHERE media_key = $1`,
+      values: [data.media_key]
+    });
+    return processedImages.rows;
+  };
+  static getAll = async (client) => {
+    const processedImages = await client.query({
+      text: `SELECT * FROM lucid_processed_images`
+    });
+    return processedImages.rows;
+  };
+  static deleteAll = async (client) => {
+    const processedImages = await client.query({
+      text: `DELETE FROM lucid_processed_images`
+    });
+    return processedImages.rows;
+  };
+  static getAllByMediaKeyCount = async (client, data) => {
+    const processedImages = await client.query({
+      text: `SELECT COUNT(*) FROM lucid_processed_images WHERE media_key = $1`,
+      values: [data.media_key]
+    });
+    return Number(processedImages.rows[0].count);
+  };
+  static getAllCount = async (client) => {
+    const processedImages = await client.query({
+      text: `SELECT COUNT(*) FROM lucid_processed_images`
+    });
+    return Number(processedImages.rows[0].count);
+  };
+};
+
+// src/services/processed-images/clear-single.ts
+var clearSingle = async (client, data) => {
+  const media = await service_default(
+    media_default2.getSingle,
+    false,
+    client
+  )({
+    id: data.id
+  });
+  const processedImages = await ProcessedImage.getAllByMediaKey(client, {
+    media_key: media.key
+  });
+  if (processedImages.length > 0) {
+    await s3_default.deleteObjects({
+      objects: processedImages.map((processedImage) => ({
+        key: processedImage.key
+      }))
+    });
+    await ProcessedImage.deleteAllByMediaKey(client, {
+      media_key: media.key
+    });
+  }
+  return;
+};
+var clear_single_default = clearSingle;
+
+// src/services/processed-images/clear-all.ts
+var clearAll = async (client) => {
+  const processedImages = await ProcessedImage.getAll(client);
+  if (processedImages.length > 0) {
+    await s3_default.deleteObjects({
+      objects: processedImages.map((processedImage) => ({
+        key: processedImage.key
+      }))
+    });
+    await ProcessedImage.deleteAll(client);
+  }
+  return;
+};
+var clear_all_default = clearAll;
+
+// src/services/processed-images/process-image.ts
+import { PassThrough } from "stream";
+
+// src/workers/process-image/useProcessImage.ts
+import { Worker } from "worker_threads";
+import path4 from "path";
+var currentDir3 = get_dirname_default(import.meta.url);
+var useProcessImage = async (data) => {
+  const worker = new Worker(
+    path4.join(currentDir3, "workers/process-image/processImageWorker.cjs")
+  );
+  return new Promise((resolve, reject) => {
+    worker.on(
+      "message",
+      (message) => {
+        if (message.success) {
+          resolve(message.data);
+        } else {
+          reject(new Error(message.error));
+        }
+      }
+    );
+    worker.postMessage(data);
+  });
+};
+var useProcessImage_default = useProcessImage;
+
+// src/services/processed-images/process-image.ts
+var saveAndRegister = async (client, data, image) => {
+  try {
+    await s3_default.saveObject({
+      type: "buffer",
+      key: data.processKey,
+      buffer: image.buffer,
+      meta: {
+        mimeType: image.mimeType,
+        fileExtension: image.extension,
+        size: image.size,
+        width: image.width,
+        height: image.height
+      }
+    });
+    await ProcessedImage.createSingle(client, {
+      key: data.processKey,
+      media_key: data.key
+    });
+  } catch (err) {
+  }
+};
+var processImage = async (client, data) => {
+  const s3Response = await media_default2.getS3Object({
+    key: data.key
+  });
+  if (!s3Response.contentType?.startsWith("image/")) {
+    return {
+      contentLength: s3Response.contentLength,
+      contentType: s3Response.contentType,
+      body: s3Response.body
+    };
+  }
+  try {
+    await processed_images_default.getSingleCount(client, {
+      key: data.key
+    });
+  } catch (err) {
+    return {
+      contentLength: s3Response.contentLength,
+      contentType: s3Response.contentType,
+      body: s3Response.body
+    };
+  }
+  const processRes = await useProcessImage_default({
+    buffer: await helpers_default.streamToBuffer(s3Response.body),
+    options: data.options
+  });
+  const stream = new PassThrough();
+  stream.end(Buffer.from(processRes.buffer));
+  saveAndRegister(client, data, processRes);
+  return {
+    contentLength: processRes.size,
+    contentType: processRes.mimeType,
+    body: stream
+  };
+};
+var process_image_default = processImage;
+
+// src/services/processed-images/get-single-count.ts
+var getSingleCount = async (client, data) => {
+  const limit = Config.media.processedImageLimit;
+  const count = await ProcessedImage.getAllByMediaKeyCount(client, {
+    media_key: data.key
+  });
+  if (count >= limit) {
+    throw new LucidError({
+      type: "basic",
+      name: "Processed image limit reached",
+      message: `The processed image limit of ${limit} has been reached for this image.`,
+      status: 400
+    });
+  }
+  return count;
+};
+var get_single_count_default = getSingleCount;
+
+// src/services/processed-images/index.ts
+var processed_images_default = {
+  clearSingle: clear_single_default,
+  clearAll: clear_all_default,
+  processImage: process_image_default,
+  getSingleCount: get_single_count_default
+};
+
+// src/services/media/delete-single.ts
+var deleteSingle9 = async (client, data) => {
+  const media = await service_default(
+    media_default2.getSingle,
+    false,
+    client
+  )({
+    id: data.id
+  });
+  await service_default(
+    processed_images_default.clearSingle,
+    false,
+    client
+  )({
+    id: media.id
+  });
+  await Media.deleteSingle(client, {
+    key: media.key
+  });
+  await s3_default.deleteObject({
+    key: media.key
+  });
+  await service_default(
+    media_default2.setStorageUsed,
+    false,
+    client
+  )({
+    add: 0,
+    minus: media.meta.file_size
+  });
+  return void 0;
+};
+var delete_single_default15 = deleteSingle9;
+
+// src/services/media/get-multiple.ts
+var getMultiple7 = async (client, data) => {
+  const { filter, sort, page, per_page } = data.query;
+  const SelectQuery = new SelectQueryBuilder({
+    columns: [
+      "id",
+      "key",
+      "e_tag",
+      "type",
+      "name",
+      "alt",
+      "mime_type",
+      "file_extension",
+      "file_size",
+      "width",
+      "height",
+      "created_at",
+      "updated_at"
+    ],
+    filter: {
+      data: filter,
+      meta: {
+        type: {
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        },
+        name: {
+          operator: "%",
+          type: "text",
+          columnType: "standard"
+        },
+        key: {
+          operator: "%",
+          type: "text",
+          columnType: "standard"
+        },
+        mime_type: {
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        },
+        file_extension: {
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        }
+      }
+    },
+    sort,
+    page,
+    per_page
+  });
+  const mediasRes = await Media.getMultiple(client, SelectQuery);
+  return {
+    data: mediasRes.data.map((media) => format_media_default(media)),
+    count: mediasRes.count
+  };
+};
+var get_multiple_default12 = getMultiple7;
+
+// src/services/media/get-single.ts
+var getSingle12 = async (client, data) => {
+  const media = await Media.getSingleById(client, {
+    id: data.id
+  });
+  if (!media) {
+    throw new LucidError({
+      type: "basic",
+      name: "Media not found",
+      message: "We couldn't find the media you were looking for.",
+      status: 404
+    });
+  }
+  return format_media_default(media);
+};
+var get_single_default21 = getSingle12;
+
+// src/services/media/update-single.ts
+var updateSingle7 = async (client, data) => {
+  const media = await service_default(
+    media_default2.getSingle,
+    false,
+    client
+  )({
+    id: data.id
+  });
+  let meta = void 0;
+  let newKey = void 0;
+  let newType = void 0;
+  if (data.data.files && data.data.files["file"]) {
+    const files = helpers_default.formatReqFiles(data.data.files);
+    const firstFile = files[0];
+    await service_default(
+      media_default2.canStoreFiles,
+      false,
+      client
+    )({
+      files
+    });
+    meta = await helpers_default.getMetaData(firstFile);
+    newKey = helpers_default.uniqueKey(data.data.name || firstFile.name);
+    newType = helpers_default.getMediaType(meta.mimeType);
+    const updateKeyRes = await s3_default.updateObjectKey({
+      oldKey: media.key,
+      newKey
+    });
+    if (updateKeyRes.$metadata.httpStatusCode !== 200) {
+      throw new LucidError({
+        type: "basic",
+        name: "Error updating file",
+        message: "There was an error updating the file.",
+        status: 500,
+        errors: modelErrors({
+          file: {
+            code: "required",
+            message: "There was an error updating the file."
+          }
+        })
+      });
+    }
+    const response = await s3_default.saveObject({
+      type: "file",
+      key: newKey,
+      file: firstFile,
+      meta
+    });
+    if (response.$metadata.httpStatusCode !== 200) {
+      throw new LucidError({
+        type: "basic",
+        name: "Error updating file",
+        message: "There was an error updating the file.",
+        status: 500,
+        errors: modelErrors({
+          file: {
+            code: "required",
+            message: "There was an error updating the file."
+          }
+        })
+      });
+    }
+    await service_default(
+      media_default2.setStorageUsed,
+      false,
+      client
+    )({
+      add: meta.size,
+      minus: media.meta.file_size
+    });
+    await service_default(
+      processed_images_default.clearSingle,
+      false,
+      client
+    )({
+      id: media.id
+    });
+  }
+  const mediaUpdate = await Media.updateSingle(client, {
+    key: media.key,
+    name: data.data.name,
+    alt: data.data.alt,
+    meta,
+    type: newType,
+    newKey
+  });
+  if (!mediaUpdate) {
+    throw new LucidError({
+      type: "basic",
+      name: "Error updating media",
+      message: "There was an error updating the media.",
+      status: 500
+    });
+  }
+  return void 0;
+};
+var update_single_default15 = updateSingle7;
+
+// src/services/media/stream-media.ts
+var streamMedia = async (data) => {
+  if (data.query?.format === void 0 && data.query?.width === void 0 && data.query?.height === void 0) {
+    return await media_default2.getS3Object({
+      key: data.key
+    });
+  }
+  const processKey = helpers_default.createProcessKey({
+    key: data.key,
+    query: data.query
+  });
+  try {
+    return await media_default2.getS3Object({
+      key: processKey
+    });
+  } catch (err) {
+    return await service_default(
+      processed_images_default.processImage,
+      false
+    )({
+      key: data.key,
+      processKey,
+      options: data.query
+    });
+  }
+};
+var stream_media_default = streamMedia;
+
+// src/services/media/can-store-files.ts
+var canStoreFiles = async (client, data) => {
+  const { storageLimit, maxFileSize } = Config.media;
+  for (let i = 0; i < data.files.length; i++) {
+    const file = data.files[i];
+    if (file.size > maxFileSize) {
+      const message = `File ${file.name} is too large. Max file size is ${maxFileSize} bytes.`;
+      throw new LucidError({
+        type: "basic",
+        name: "Error saving file",
+        message,
+        status: 500,
+        errors: modelErrors({
+          file: {
+            code: "storage_limit",
+            message
+          }
+        })
+      });
+    }
+  }
+  const storageUsed = await service_default(
+    media_default2.getStorageUsed,
+    false,
+    client
+  )();
+  const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
+  if (totalSize + (storageUsed || 0) > storageLimit) {
+    const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;
+    throw new LucidError({
+      type: "basic",
+      name: "Error saving file",
+      message,
+      status: 500,
+      errors: modelErrors({
+        file: {
+          code: "storage_limit",
+          message
+        }
+      })
+    });
+  }
+};
+var can_store_files_default = canStoreFiles;
+
+// src/db/models/Option.ts
+var Option = class {
+  static getByName = async (client, data) => {
+    const options = await client.query({
+      text: `SELECT * FROM lucid_options WHERE option_name = $1`,
+      values: [data.name]
+    });
+    return options.rows[0];
+  };
+  static patchByName = async (client, data) => {
+    const options = await client.query({
+      text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
+      values: [data.value, data.type, data.name]
+    });
+    return options.rows[0];
+  };
+};
+
+// src/utils/format/format-option.ts
+var formatOptions = (options) => {
+  const formattedOptions = {};
+  options.forEach((option) => {
+    formattedOptions[option.option_name] = option.option_value;
+  });
+  return formattedOptions;
+};
+var format_option_default = formatOptions;
+
+// src/utils/options/convert-to-type.ts
+var convertToType = (option) => {
+  switch (option.type) {
+    case "boolean":
+      option.option_value = option.option_value === "true" ? true : false;
+      break;
+    case "number":
+      option.option_value = parseInt(option.option_value);
+      break;
+    case "json":
+      option.option_value = JSON.parse(option.option_value);
+      break;
+    default:
+      option.option_value;
+      break;
+  }
+  return option;
+};
+var convert_to_type_default = convertToType;
+
+// src/services/options/get-by-name.ts
+var getByName = async (client, data) => {
+  const option = await Option.getByName(client, {
+    name: data.name
+  });
+  if (!option) {
+    throw new LucidError({
+      type: "basic",
+      name: "Option Not Found",
+      message: "There was an error finding the option.",
+      status: 500,
+      errors: modelErrors({
+        option_name: {
+          code: "not_found",
+          message: "Option not found."
+        }
+      })
+    });
+  }
+  const convertOptionType = convert_to_type_default(option);
+  return format_option_default([convertOptionType]);
+};
+var get_by_name_default = getByName;
+
+// src/utils/options/convert-to-string.ts
+var convertToString = (value, type) => {
+  switch (type) {
+    case "boolean":
+      value = value ? "true" : "false";
+      break;
+    case "json":
+      value = JSON.stringify(value);
+      break;
+    default:
+      value = value.toString();
+      break;
+  }
+  return value;
+};
+var convert_to_string_default = convertToString;
+
+// src/services/options/patch-by-name.ts
+var patchByName = async (client, data) => {
+  const value = convert_to_string_default(data.value, data.type);
+  const option = await Option.patchByName(client, {
+    name: data.name,
+    value,
+    type: data.type
+  });
+  if (!option) {
+    throw new LucidError({
+      type: "basic",
+      name: "Option Not Found",
+      message: "There was an error patching the option.",
+      status: 500,
+      errors: modelErrors({
+        option_name: {
+          code: "not_found",
+          message: "Option not found."
+        }
+      })
+    });
+  }
+  const convertOptionType = convert_to_type_default(option);
+  return format_option_default([convertOptionType]);
+};
+var patch_by_name_default = patchByName;
+
+// src/services/options/index.ts
+var options_default = {
+  getByName: get_by_name_default,
+  patchByName: patch_by_name_default
+};
+
+// src/services/media/get-storage-used.ts
+var getStorageUsed = async (client) => {
+  const res = await service_default(
+    options_default.getByName,
+    false,
+    client
+  )({
+    name: "media_storage_used"
+  });
+  return res.media_storage_used;
+};
+var get_storage_used_default = getStorageUsed;
+
+// src/services/media/set-storage-used.ts
+var getStorageUsed2 = async (client, data) => {
+  const storageUsed = await service_default(
+    media_default2.getStorageUsed,
+    false,
+    client
+  )();
+  let newValue = (storageUsed || 0) + data.add;
+  if (data.minus !== void 0) {
+    newValue = newValue - data.minus;
+  }
+  const res = await service_default(
+    options_default.patchByName,
+    false,
+    client
+  )({
+    name: "media_storage_used",
+    value: newValue,
+    type: "number"
+  });
+  return res.media_storage_used;
+};
+var set_storage_used_default = getStorageUsed2;
+
+// src/services/media/get-single-by-id.ts
+var getSingleById = async (client, data) => {
+  const media = await Media.getSingle(client, {
+    key: data.key
+  });
+  if (!media) {
+    throw new LucidError({
+      type: "basic",
+      name: "Media not found",
+      message: "We couldn't find the media you were looking for.",
+      status: 404
+    });
+  }
+  return format_media_default(media);
+};
+var get_single_by_id_default = getSingleById;
+
+// src/services/media/stream-error-image.ts
+import fs4 from "fs-extra";
+import path5 from "path";
+var currentDir4 = get_dirname_default(import.meta.url);
+var pipeLocalImage = (res) => {
+  let pathVal = path5.join(currentDir4, "./assets/404.jpg");
+  let contentType = "image/jpeg";
+  const steam = fs4.createReadStream(pathVal);
+  res.setHeader("Content-Type", contentType);
+  steam.pipe(res);
+};
+var streamErrorImage = async (data) => {
+  const error = decodeError(data.error);
+  if (error.status !== 404) {
+    data.next(data.error);
+    return;
+  }
+  if (Config.media.fallbackImage === false || data.fallback === "0") {
+    data.next(
+      new LucidError({
+        type: "basic",
+        name: "Error",
+        message: "We're sorry, but this image is not available.",
+        status: 404
+      })
+    );
+    return;
+  }
+  if (Config.media.fallbackImage === void 0) {
+    pipeLocalImage(data.res);
+    return;
+  }
+  try {
+    const { buffer, contentType } = await media_default2.pipeRemoteURL({
+      url: Config.media.fallbackImage
+    });
+    data.res.setHeader("Content-Type", contentType || "image/jpeg");
+    data.res.send(buffer);
+  } catch (err) {
+    pipeLocalImage(data.res);
+    return;
+  }
+};
+var stream_error_image_default = streamErrorImage;
+
+// src/services/media/get-s3-object.ts
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+var getS3Object = async (data) => {
+  try {
+    const S3 = await s3_client_default;
+    const command = new GetObjectCommand({
+      Bucket: Config.media.store.bucket,
+      Key: data.key
+    });
+    const res = await S3.send(command);
+    return {
+      contentLength: res.ContentLength,
+      contentType: res.ContentType,
+      body: res.Body
+    };
+  } catch (err) {
+    const error = err;
+    throw new LucidError({
+      type: "basic",
+      name: error.name || "Error",
+      message: error.message || "An error occurred",
+      status: error.message === "The specified key does not exist." ? 404 : 500
+    });
+  }
+};
+var get_s3_object_default = getS3Object;
+
+// src/services/media/pipe-remote-url.ts
+import https from "https";
+var pipeRemoteURL = (data) => {
+  return new Promise((resolve, reject) => {
+    https.get(data.url, (response) => {
+      const { statusCode } = response;
+      const redirections = data?.redirections || 0;
+      if (statusCode && statusCode >= 300 && statusCode < 400 && response.headers.location && redirections < 5) {
+        pipeRemoteURL({
+          url: response.headers.location,
+          redirections: redirections + 1
+        }).then(resolve).catch(reject);
+        return;
+      }
+      if (statusCode !== 200) {
+        reject(new Error(`Request failed. Status code: ${statusCode}`));
+        return;
+      }
+      const contentType = response.headers["content-type"];
+      if (contentType && !contentType.includes("image")) {
+        reject(new Error("Content type is not an image"));
+        return;
+      }
+      const chunks = [];
+      response.on("data", (chunk) => {
+        chunks.push(chunk);
+      });
+      response.on("end", () => {
+        resolve({
+          buffer: Buffer.concat(chunks),
+          contentType
+        });
+      });
+      response.on("error", (error) => {
+        reject(new Error("Error fetching the fallback image"));
+      });
+    }).on("error", (error) => {
+      reject(new Error("Error with the HTTPS request"));
+    });
+  });
+};
+var pipe_remote_url_default = pipeRemoteURL;
+
+// src/services/media/index.ts
+var media_default2 = {
+  createSingle: create_single_default13,
+  deleteSingle: delete_single_default15,
+  getMultiple: get_multiple_default12,
+  getSingle: get_single_default21,
+  updateSingle: update_single_default15,
+  streamMedia: stream_media_default,
+  canStoreFiles: can_store_files_default,
+  getStorageUsed: get_storage_used_default,
+  setStorageUsed: set_storage_used_default,
+  getSingleById: get_single_by_id_default,
+  streamErrorImage: stream_error_image_default,
+  getS3Object: get_s3_object_default,
+  pipeRemoteURL: pipe_remote_url_default
+};
+
 // src/controllers/media/create-single.ts
 var createSingleController6 = async (req, res, next) => {
   try {
     const media = await service_default(
-      media_default.createSingle,
+      media_default2.createSingle,
       false
     )({
       name: req.body.name,
@@ -11187,7 +11228,7 @@ var createSingleController6 = async (req, res, next) => {
   }
 };
 var create_single_default14 = {
-  schema: media_default2.createSingle,
+  schema: media_default.createSingle,
   controller: createSingleController6
 };
 
@@ -11195,7 +11236,7 @@ var create_single_default14 = {
 var getMultipleController6 = async (req, res, next) => {
   try {
     const mediasRes = await service_default(
-      media_default.getMultiple,
+      media_default2.getMultiple,
       false
     )({
       query: req.query
@@ -11215,7 +11256,7 @@ var getMultipleController6 = async (req, res, next) => {
   }
 };
 var get_multiple_default13 = {
-  schema: media_default2.getMultiple,
+  schema: media_default.getMultiple,
   controller: getMultipleController6
 };
 
@@ -11223,7 +11264,7 @@ var get_multiple_default13 = {
 var getSingleController10 = async (req, res, next) => {
   try {
     const media = await service_default(
-      media_default.getSingle,
+      media_default2.getSingle,
       false
     )({
       id: parseInt(req.params.id)
@@ -11238,7 +11279,7 @@ var getSingleController10 = async (req, res, next) => {
   }
 };
 var get_single_default22 = {
-  schema: media_default2.getSingle,
+  schema: media_default.getSingle,
   controller: getSingleController10
 };
 
@@ -11246,7 +11287,7 @@ var get_single_default22 = {
 var deleteSingleController7 = async (req, res, next) => {
   try {
     const media = await service_default(
-      media_default.deleteSingle,
+      media_default2.deleteSingle,
       false
     )({
       id: parseInt(req.params.id)
@@ -11261,7 +11302,7 @@ var deleteSingleController7 = async (req, res, next) => {
   }
 };
 var delete_single_default16 = {
-  schema: media_default2.deleteSingle,
+  schema: media_default.deleteSingle,
   controller: deleteSingleController7
 };
 
@@ -11269,7 +11310,7 @@ var delete_single_default16 = {
 var updateSingleController8 = async (req, res, next) => {
   try {
     const media = await service_default(
-      media_default.updateSingle,
+      media_default2.updateSingle,
       false
     )({
       id: parseInt(req.params.id),
@@ -11289,7 +11330,7 @@ var updateSingleController8 = async (req, res, next) => {
   }
 };
 var update_single_default16 = {
-  schema: media_default2.updateSingle,
+  schema: media_default.updateSingle,
   controller: updateSingleController8
 };
 
@@ -11312,7 +11353,7 @@ var clearSingleProcessedController = async (req, res, next) => {
   }
 };
 var clear_single_processed_default = {
-  schema: media_default2.clearSingleProcessed,
+  schema: media_default.clearSingleProcessed,
   controller: clearSingleProcessedController
 };
 
@@ -11330,7 +11371,7 @@ var clearAllProcessedController = async (req, res, next) => {
   }
 };
 var clear_all_processed_default = {
-  schema: media_default2.clearAllProcessed,
+  schema: media_default.clearAllProcessed,
   controller: clearAllProcessedController
 };
 
@@ -12617,7 +12658,7 @@ import { Router as Router19 } from "express";
 // src/controllers/media/stream-single.ts
 var streamSingleController = async (req, res, next) => {
   try {
-    const response = await media_default.streamMedia({
+    const response = await media_default2.streamMedia({
       key: req.params.key,
       query: req.query
     });
@@ -12635,7 +12676,7 @@ var streamSingleController = async (req, res, next) => {
         response.body.pipe(res);
     }
   } catch (error) {
-    await media_default.streamErrorImage({
+    await media_default2.streamErrorImage({
       fallback: req.query?.fallback,
       error,
       res,
@@ -12644,7 +12685,7 @@ var streamSingleController = async (req, res, next) => {
   }
 };
 var stream_single_default = {
-  schema: media_default2.streamSingle,
+  schema: media_default.streamSingle,
   controller: streamSingleController
 };
 

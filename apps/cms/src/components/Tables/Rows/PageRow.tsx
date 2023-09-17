@@ -21,7 +21,7 @@ interface PageRowProps extends TableRowProps {
   collection: CollectionResT;
   environmentKey: string;
   include: boolean[];
-  rowTarget: ReturnType<typeof useRowTarget<"delete">>;
+  rowTarget: ReturnType<typeof useRowTarget<"delete" | "update">>;
 }
 
 const PageRow: Component<PageRowProps> = (props) => {
@@ -38,6 +38,18 @@ const PageRow: Component<PageRowProps> = (props) => {
           label: T("edit"),
           type: "link",
           href: `/env/${props.environmentKey}/collection/${props.collection.key}/${props.page.id}`,
+          permission: userStore.get.hasEnvPermission(
+            ["update_content"],
+            props.environmentKey
+          ).all,
+        },
+        {
+          label: T("quick_edit"),
+          type: "button",
+          onClick: () => {
+            props.rowTarget.setTargetId(props.page.id);
+            props.rowTarget.setTrigger("update", true);
+          },
           permission: userStore.get.hasEnvPermission(
             ["update_content"],
             props.environmentKey

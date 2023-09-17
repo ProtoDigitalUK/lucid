@@ -13,6 +13,7 @@ interface PageSearchSelectProps {
   value: ValueT;
   setValue: (_value: ValueT) => void;
   collectionKey: string;
+  excludeIds?: Array<number | undefined | null>;
   name: string;
   id: string;
   copy?: SelectProps["copy"];
@@ -54,6 +55,7 @@ const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
       options={
         pages.data?.data
           .filter((page) => page.homepage !== true)
+          .filter((page) => !props.excludeIds?.includes(page.id))
           .map((page) => ({
             value: page.id,
             label: page.title,

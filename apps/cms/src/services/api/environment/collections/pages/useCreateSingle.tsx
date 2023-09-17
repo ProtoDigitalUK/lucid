@@ -38,16 +38,24 @@ export const createSingleReq = (params: Params) => {
 interface UseCreateSingleProps {
   onSuccess?: () => void;
   onError?: () => void;
+  collectionName: string;
 }
 
-const useCreateSingle = (props?: UseCreateSingleProps) => {
+const useCreateSingle = (props: UseCreateSingleProps) => {
   // -----------------------------
   // Mutation
   return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
     mutationFn: createSingleReq,
     successToast: {
-      title: T("page_create_toast_title"),
-      message: T("page_create_toast_message"),
+      title: T("create_toast_title", {
+        name: props.collectionName,
+      }),
+      message: T("create_toast_message", {
+        name: {
+          value: props.collectionName,
+          toLowerCase: true,
+        },
+      }),
     },
     invalidates: ["environment.collections.pages.getMultiple"],
     onSuccess: props?.onSuccess,

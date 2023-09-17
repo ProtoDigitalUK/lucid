@@ -1,9 +1,10 @@
 import { PoolClient } from "pg";
 import { LucidError, modelErrors } from "@utils/app/error-handler.js";
-import service from "@utils/app/service.js";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick.js";
 import { EnvironmentT } from "@db/models/Environment.js";
+import Media from "@db/models/Media.js";
+import Page from "@db/models/Page.js";
 // Internal packages
 import BrickBuilder, {
   ValidationProps,
@@ -13,12 +14,12 @@ import BrickBuilder, {
 import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Services
 import brickConfigService from "@services/brick-config/index.js";
-import pageService from "@services/pages/index.js";
-import medias from "@services/media/index.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { MediaResT } from "@lucid/types/src/media.js";
 import { PageT } from "@db/models/Page.js";
+// Format
+import formatMedia from "@utils/format/format-media.js";
 
 // ------------------------------------
 // Interfaces
@@ -268,14 +269,15 @@ const getAllMedia = async (client: PoolClient, fields: BrickFieldObject[]) => {
         (value, index, self) => self.indexOf(value) === index
       ) as number[];
 
-    const media = await service(
-      medias.getMultipleByIds,
-      false,
-      client
-    )({
+    const mediasRes = await Media.getMultipleByIds(client, {
       ids: ids,
     });
-    return media;
+
+    if (!mediasRes) {
+      return [];
+    }
+
+    return mediasRes.map((media) => formatMedia(media));
   } catch (err) {
     return [];
   }
@@ -297,14 +299,14 @@ const getAllPages = async (
         (value, index, self) => self.indexOf(value) === index
       ) as number[];
 
-    const pages = await service(
-      pageService.getMultipleById,
-      false,
-      client
-    )({
-      ids,
-      environment_key,
+    const pages = await Page.getMultipleByIds(client, {
+      ids: ids,
+      environment_key: environment_key,
     });
+    if (!pages) {
+      return [];
+    }
+
     return pages;
   } catch (err) {
     return [];

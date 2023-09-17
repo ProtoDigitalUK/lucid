@@ -25,6 +25,7 @@ const DeletePage: Component<DeletePageProps> = (props) => {
     onSuccess: () => {
       props.state.setOpen(false);
     },
+    collectionName: props.collection.singular,
   });
 
   // ------------------------------

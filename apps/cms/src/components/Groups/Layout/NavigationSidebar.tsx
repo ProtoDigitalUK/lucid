@@ -3,6 +3,8 @@ import { Component, createEffect, createMemo } from "solid-js";
 import { useLocation, useParams } from "@solidjs/router";
 // Store
 import userStore from "@/store/userStore";
+// Utils
+import helpers from "@/utils/helpers";
 // Services
 import api from "@/services/api";
 // Store
@@ -21,6 +23,7 @@ export const NavigationSidebar: Component = () => {
   const environments = api.environment.useGetAll({
     queryParams: {},
   });
+
   const collections = api.environment.collections.useGetAll({
     queryParams: {
       include: {
@@ -49,28 +52,24 @@ export const NavigationSidebar: Component = () => {
   // ----------------------------------
   // Memos
   const getFirstEnvHref = createMemo(() => {
-    // work out the first link based on collections, forms, menus, etc. in the environment.
-    // If no envrionemtn, take the to the create environment route.
-
-    if (!environment()) {
-      if (userStore.get.hasPermission(["create_environment"]).all)
-        return "/env/create";
-      return "/";
-    }
-
-    let url = `/env/${environment()}/`;
-
-    if (collections.data?.data.length) {
-      url += `collection/${collections.data?.data[0].key}`;
-      return url;
-    }
-
-    return url;
+    return helpers.getFirstEnvLink({
+      collections: collections.data?.data || [],
+      canCreate: userStore.get.hasPermission(["create_environment"]).all,
+      environment: environment(),
+    });
   });
+
   const showEnvLink = createMemo(() => {
     if (userStore.get.hasPermission(["create_environment"]).all) return true;
     if (!environment()) return false;
     return true;
+  });
+
+  const envBarIsLoading = createMemo(() => {
+    return collections.isLoading || environments.isLoading;
+  });
+  const envBarIsError = createMemo(() => {
+    return collections.isError || environments.isError;
   });
 
   // ----------------------------------
@@ -148,6 +147,10 @@ export const NavigationSidebar: Component = () => {
       <Navigation.EnvironmentBar
         collections={collections.data?.data || []}
         environments={environments.data?.data || []}
+        state={{
+          isLoading: envBarIsLoading(),
+          isError: envBarIsError(),
+        }}
       />
     </div>
   );

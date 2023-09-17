@@ -7,17 +7,31 @@ import { APIResponse } from "@/types/api";
 
 interface Params {
   id: number;
+  body: {
+    title?: string;
+    slug?: string;
+    homepage?: boolean;
+    excerpt?: string;
+    published?: boolean;
+    parent_id?: number | null;
+    category_ids?: number[];
+
+    // TODO: Add types
+    builder_bricks?: [];
+    fixed_bricks?: [];
+  };
   headers: {
     "lucid-environment": string;
   };
 }
 
-export const deleteSingleReq = (params: Params) => {
+export const updateSingleReq = (params: Params) => {
   return request<APIResponse<null>>({
     url: `/api/v1/pages/${params.id}`,
     csrf: true,
     config: {
-      method: "DELETE",
+      method: "PATCH",
+      body: params.body,
       headers: {
         "lucid-environment": params.headers["lucid-environment"],
       },
@@ -25,32 +39,35 @@ export const deleteSingleReq = (params: Params) => {
   });
 };
 
-interface UseDeleteProps {
+interface UseUpdateSingleProps {
   onSuccess?: () => void;
   onError?: () => void;
   collectionName: string;
 }
 
-const useDeleteSingle = (props: UseDeleteProps) => {
+const useUpdateSingle = (props: UseUpdateSingleProps) => {
   // -----------------------------
   // Mutation
   return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
-    mutationFn: deleteSingleReq,
+    mutationFn: updateSingleReq,
     successToast: {
-      title: T("deleted_toast_title", {
+      title: T("update_toast_title", {
         name: props.collectionName,
       }),
-      message: T("deleted_toast_message", {
+      message: T("update_toast_message", {
         name: {
           value: props.collectionName,
           toLowerCase: true,
         },
       }),
     },
-    invalidates: ["environment.collections.pages.getMultiple"],
-    onSuccess: props.onSuccess,
-    onError: props.onError,
+    invalidates: [
+      "environment.collections.pages.getMultiple",
+      "environment.collections.pages.getSingle",
+    ],
+    onSuccess: props?.onSuccess,
+    onError: props?.onError,
   });
 };
 
-export default useDeleteSingle;
+export default useUpdateSingle;
