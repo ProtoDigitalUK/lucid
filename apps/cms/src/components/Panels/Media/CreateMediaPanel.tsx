@@ -68,6 +68,9 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
       }}
       reset={() => {
         createMedia.reset();
+        MediaFile.reset();
+        setName(undefined);
+        setAlt(undefined);
       }}
       mutateState={{
         isLoading: createMedia.action.isLoading,
