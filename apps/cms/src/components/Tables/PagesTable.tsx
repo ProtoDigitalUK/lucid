@@ -53,6 +53,13 @@ const PagesTable: Component<PagesTableProps> = (props) => {
   });
 
   // ----------------------------------
+  // Mutations
+  const deleteMultiplePages =
+    api.environment.collections.pages.useDeleteMultiple({
+      collectionName: props.collection.singular,
+    });
+
+  // ----------------------------------
   // Render
   return (
     <>
@@ -93,7 +100,22 @@ const PagesTable: Component<PagesTableProps> = (props) => {
           isSelectable: true,
         }}
         callbacks={{
-          deleteRows: () => {},
+          deleteRows: async (selected) => {
+            const ids: number[] = [];
+            for (const i in selected) {
+              if (selected[i] && pages.data?.data[i].id) {
+                ids.push(pages.data?.data[i].id);
+              }
+            }
+            await deleteMultiplePages.action.mutateAsync({
+              body: {
+                ids: ids,
+              },
+              headers: {
+                "lucid-environment": environment() || "",
+              },
+            });
+          },
         }}
       >
         {({ include, isSelectable, selected, setSelected }) => (

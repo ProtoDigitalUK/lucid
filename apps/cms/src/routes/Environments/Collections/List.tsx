@@ -37,7 +37,7 @@ const EnvCollectionsListRoute: Component = () => {
         },
       },
       sorts: {
-        created_at: undefined,
+        created_at: "desc",
       },
     },
     {
@@ -63,6 +63,7 @@ const EnvCollectionsListRoute: Component = () => {
     },
     enabled: () => !!collectionKey(),
   });
+
   const categories = api.environment.collections.categories.useGetMultiple({
     queryParams: {
       filters: {

@@ -49,7 +49,7 @@ interface TableRootProps {
     isSelectable?: boolean;
   };
   callbacks?: {
-    deleteRows?: () => void;
+    deleteRows?: (_selected: boolean[]) => Promise<void>;
   };
   children: (_props: {
     include: boolean[];
@@ -318,7 +318,12 @@ export const TableRoot: Component<TableRootProps> = (props) => {
               }}
               callbacks={{
                 reset: () => setSelected((prev) => prev.map(() => false)),
-                delete: () => props.callbacks?.deleteRows?.(),
+                delete: async () => {
+                  if (props.callbacks?.deleteRows) {
+                    await props.callbacks.deleteRows(selected());
+                    setSelected((prev) => prev.map(() => false));
+                  }
+                },
               }}
             />
           </Show>
