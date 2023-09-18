@@ -7,10 +7,22 @@ import getSingle from "@controllers/pages/get-single.js";
 import updateSingle from "@controllers/pages/update-single.js";
 import deleteSingle from "@controllers/pages/delete-single.js";
 import deleteMultiple from "@controllers/pages/delete-multiple.js";
+import getAllValidParents from "@controllers/pages/get-all-valid-parents.js";
 
 // ------------------------------------
 // Router
 const router = Router();
+
+r(router, {
+  method: "get",
+  path: "/parents",
+  middleware: {
+    authenticate: true,
+    validateEnvironment: true,
+  },
+  schema: getAllValidParents.schema,
+  controller: getAllValidParents.controller,
+});
 
 r(router, {
   method: "post",

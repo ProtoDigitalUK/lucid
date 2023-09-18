@@ -803,6 +803,49 @@
 											"response": []
 										},
 										{
+											"name": "Get All Valid Parents",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"page_id\": 2,\n    \"collection_key\": \"page\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/parents",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"parents"
+													]
+												}
+											},
+											"response": []
+										},
+										{
 											"name": "Get Single",
 											"request": {
 												"method": "GET",

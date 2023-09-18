@@ -87,6 +87,15 @@ const deleteMultipleQuery = z.object({});
 const deleteMultipleParams = z.object({});
 
 // ------------------------------------
+// GET ALL VALID PARENTS
+const getAllValidParentsBody = z.object({
+  page_id: z.number(),
+  collection_key: z.string(),
+});
+const getAllValidParentsQuery = z.object({});
+const getAllValidParentsParams = z.object({});
+
+// ------------------------------------
 // EXPORT
 export default {
   getMultiple: {
@@ -118,5 +127,10 @@ export default {
     body: deleteMultipleBody,
     query: deleteMultipleQuery,
     params: deleteMultipleParams,
+  },
+  getAllValidParents: {
+    body: getAllValidParentsBody,
+    query: getAllValidParentsQuery,
+    params: getAllValidParentsParams,
   },
 };

@@ -5365,6 +5365,12 @@ var deleteMultipleBody = z9.object({
 });
 var deleteMultipleQuery = z9.object({});
 var deleteMultipleParams = z9.object({});
+var getAllValidParentsBody = z9.object({
+  page_id: z9.number(),
+  collection_key: z9.string()
+});
+var getAllValidParentsQuery = z9.object({});
+var getAllValidParentsParams = z9.object({});
 var pages_default = {
   getMultiple: {
     body: getMultipleBody2,
@@ -5395,6 +5401,11 @@ var pages_default = {
     body: deleteMultipleBody,
     query: deleteMultipleQuery,
     params: deleteMultipleParams
+  },
+  getAllValidParents: {
+    body: getAllValidParentsBody,
+    query: getAllValidParentsQuery,
+    params: getAllValidParentsParams
   }
 };
 
@@ -5596,6 +5607,30 @@ var Page = class {
         FROM ancestry
         WHERE id = $2`,
       values: [data.parent_id, data.page_id]
+    });
+    return page.rows;
+  };
+  static getValidParents = async (client, data) => {
+    const page = await client.query({
+      text: `WITH RECURSIVE ancestry AS (
+            SELECT id, parent_id
+            FROM lucid_pages
+            WHERE id = $1
+        
+            UNION ALL
+        
+            SELECT p.id, p.parent_id
+            FROM lucid_pages p
+            JOIN ancestry a ON p.id = a.parent_id
+        )
+        SELECT id, title
+        FROM lucid_pages
+        WHERE id NOT IN (SELECT id FROM ancestry)
+        AND homepage = FALSE
+        AND id != $1
+        AND environment_key = $2
+        AND collection_key = $3`,
+      values: [data.page_id, data.environment_key, data.collection_key]
     });
     return page.rows;
   };
@@ -7627,6 +7662,17 @@ var deleteMultiple3 = async (client, data) => {
 };
 var delete_multiple_default3 = deleteMultiple3;
 
+// src/services/pages/get-all-valid-parents.ts
+var getAllValidParents = async (client, data) => {
+  const results = await Page.getValidParents(client, {
+    page_id: data.page_id,
+    environment_key: data.environment_key,
+    collection_key: data.collection_key
+  });
+  return results;
+};
+var get_all_valid_parents_default = getAllValidParents;
+
 // src/services/pages/index.ts
 var pages_default2 = {
   createSingle: create_single_default6,
@@ -7640,7 +7686,8 @@ var pages_default2 = {
   resetHomepages: reset_homepages_default,
   checkPageCollection: check_page_collection_default,
   checkParentAncestry: check_parent_ancestry_default,
-  deleteMultiple: delete_multiple_default3
+  deleteMultiple: delete_multiple_default3,
+  getAllValidParents: get_all_valid_parents_default
 };
 
 // src/controllers/pages/create-single.ts
@@ -7809,8 +7856,43 @@ var delete_multiple_default4 = {
   controller: deleteMultipleController
 };
 
+// src/controllers/pages/get-all-valid-parents.ts
+var getAllValidParentsController = async (req, res, next) => {
+  try {
+    const pages = await service_default(
+      pages_default2.getAllValidParents,
+      false
+    )({
+      page_id: req.body.page_id,
+      environment_key: req.headers["lucid-environment"],
+      collection_key: req.body.collection_key
+    });
+    res.status(200).json(
+      build_response_default(req, {
+        data: pages
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+var get_all_valid_parents_default2 = {
+  schema: pages_default.getAllValidParents,
+  controller: getAllValidParentsController
+};
+
 // src/routes/v1/pages.routes.ts
 var router4 = Router4();
+route_default(router4, {
+  method: "get",
+  path: "/parents",
+  middleware: {
+    authenticate: true,
+    validateEnvironment: true
+  },
+  schema: get_all_valid_parents_default2.schema,
+  controller: get_all_valid_parents_default2.controller
+});
 route_default(router4, {
   method: "post",
   path: "/",

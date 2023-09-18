@@ -146,6 +146,19 @@ type PageCheckParentAncestry = (
   }[]
 >;
 
+type PageGetValidParents = (
+  client: PoolClient,
+  data: {
+    page_id: number;
+    environment_key: string;
+    collection_key: string;
+  }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
 // -------------------------------------------
 // Page
 export type PageT = {
@@ -410,6 +423,34 @@ export default class Page {
         FROM ancestry
         WHERE id = $2`,
       values: [data.parent_id, data.page_id],
+    });
+
+    return page.rows;
+  };
+  static getValidParents: PageGetValidParents = async (client, data) => {
+    const page = await client.query<{
+      id: PageT["id"];
+      title: PageT["title"];
+    }>({
+      text: `WITH RECURSIVE ancestry AS (
+            SELECT id, parent_id
+            FROM lucid_pages
+            WHERE id = $1
+        
+            UNION ALL
+        
+            SELECT p.id, p.parent_id
+            FROM lucid_pages p
+            JOIN ancestry a ON p.id = a.parent_id
+        )
+        SELECT id, title
+        FROM lucid_pages
+        WHERE id NOT IN (SELECT id FROM ancestry)
+        AND homepage = FALSE
+        AND id != $1
+        AND environment_key = $2
+        AND collection_key = $3`,
+      values: [data.page_id, data.environment_key, data.collection_key],
     });
 
     return page.rows;
