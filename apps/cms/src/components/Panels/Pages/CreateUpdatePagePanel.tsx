@@ -68,6 +68,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       perPage: -1,
     },
   });
+
   const page = api.environment.collections.pages.useGetSingle({
     queryParams: {
       location: {
@@ -102,6 +103,11 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   // Memos
   const hideSetParentPage = createMemo(() => {
     return props.collection.disableHomepage === true || getIsHomepage();
+  });
+
+  const hideSlugInput = createMemo(() => {
+    if (panelMode() === "create") return false;
+    return getIsHomepage();
   });
 
   const updateData = createMemo(() => {
@@ -206,6 +212,12 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     }
   });
 
+  createEffect(() => {
+    if (panelMode() === "update" && getIsHomepage()) {
+      setSlug(page.data?.data.slug || "");
+    }
+  });
+
   // ---------------------------------
   // Functions
   const setSlugFromTitle = () => {
@@ -281,18 +293,20 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         onBlur={setSlugFromTitle}
         errors={mutateErrors()?.errors?.body?.title}
       />
-      <Form.Input
-        id="slug"
-        value={getSlug() || ""}
-        onChange={setSlug}
-        name={"slug"}
-        type="text"
-        copy={{
-          label: T("slug"),
-          describedBy: T("page_slug_description"),
-        }}
-        errors={createPage.errors()?.errors?.body?.slug}
-      />
+      <Show when={!hideSlugInput()}>
+        <Form.Input
+          id="slug"
+          value={getSlug() || ""}
+          onChange={setSlug}
+          name={"slug"}
+          type="text"
+          copy={{
+            label: T("slug"),
+            describedBy: T("page_slug_description"),
+          }}
+          errors={createPage.errors()?.errors?.body?.slug}
+        />
+      </Show>
       <Form.Textarea
         id="excerpt"
         value={getExcerpt() || ""}

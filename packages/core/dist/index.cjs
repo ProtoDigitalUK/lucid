@@ -7448,7 +7448,7 @@ var updateSingle4 = async (client, data) => {
       client
     )({
       slug: data.slug,
-      homepage: data.homepage || false,
+      homepage: data.homepage || currentPage.homepage,
       environment_key: data.environment_key,
       collection_key: currentPage.collection_key,
       parent_id: parentId || void 0
