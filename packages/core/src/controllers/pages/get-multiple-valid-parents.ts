@@ -8,24 +8,29 @@ import pagesService from "@services/pages/index.js";
 
 // --------------------------------------------------
 // Controller
-const getAllValidParentsController: Controller<
-  typeof pagesSchema.getAllValidParents.params,
-  typeof pagesSchema.getAllValidParents.body,
-  typeof pagesSchema.getAllValidParents.query
+const getMultipleValidParentsController: Controller<
+  typeof pagesSchema.getMultipleValidParents.params,
+  typeof pagesSchema.getMultipleValidParents.body,
+  typeof pagesSchema.getMultipleValidParents.query
 > = async (req, res, next) => {
   try {
-    const pages = await service(
-      pagesService.getAllValidParents,
+    const pagesRes = await service(
+      pagesService.getMultipleValidParents,
       false
     )({
       page_id: Number(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
-      collection_key: req.params.collection_key,
+      query: req.query,
     });
 
     res.status(200).json(
       buildResponse(req, {
-        data: pages,
+        data: pagesRes.data,
+        pagination: {
+          count: pagesRes.count,
+          page: req.query.page as string,
+          per_page: req.query.per_page as string,
+        },
       })
     );
   } catch (error) {
@@ -36,6 +41,6 @@ const getAllValidParentsController: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: pagesSchema.getAllValidParents,
-  controller: getAllValidParentsController,
+  schema: pagesSchema.getMultipleValidParents,
+  controller: getMultipleValidParentsController,
 };

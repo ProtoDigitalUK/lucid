@@ -24,6 +24,7 @@ import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import PageSearchSelect from "@/components/Partials/SearchSelects/PageSearchSelect";
+import ValidParentPageSearchSelect from "@/components/Partials/SearchSelects/ValidParentPageSearchSelect";
 
 interface CreateUpdatePagePanelProps {
   id?: Accessor<number | undefined>;
@@ -90,20 +91,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     enabled: () => panelMode() === "update" && !!props.id?.(),
   });
 
-  const validParents = api.environment.collections.pages.useGetValidParents({
-    queryParams: {
-      location: {
-        collection_key: props.collection.key,
-        id: props?.id,
-      },
-      headers: {
-        "lucid-environment": environment,
-      },
-    },
-    enabled: () =>
-      panelMode() === "update" && !!props.id?.() && !hideSetParentPage(),
-  });
-
   // ---------------------------------
   // Mutations
   const createPage = api.environment.collections.pages.useCreateSingle({
@@ -152,12 +139,12 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
   const fetchIsLoading = createMemo(() => {
     if (panelMode() === "create") return categories.isLoading;
-    return categories.isLoading || page.isLoading || validParents.isLoading;
+    return categories.isLoading || page.isLoading;
   });
 
   const fetchIsError = createMemo(() => {
     if (panelMode() === "create") return categories.isError;
-    return categories.isError || page.isError || validParents.isError;
+    return categories.isError || page.isError;
   });
 
   const mutateIsLoading = createMemo(() => {
@@ -363,20 +350,16 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
             />
           </Match>
           <Match when={panelMode() === "update"}>
-            <Form.Select
-              id={"parent_id"}
+            <ValidParentPageSearchSelect
+              pageId={props.id?.() as number}
+              id="parent_id"
+              name="parent_id"
+              collectionKey={props.collection.key}
               value={getParentId()}
-              onChange={setParentId}
+              setValue={setParentId}
               copy={{
                 label: T("parent_page"),
               }}
-              name={"parent_id"}
-              options={
-                validParents.data?.data.map((page) => ({
-                  value: page.id,
-                  label: page.title,
-                })) || []
-              }
               errors={mutateErrors()?.errors?.body?.parent_id}
             />
           </Match>

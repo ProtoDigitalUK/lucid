@@ -88,11 +88,19 @@ const deleteMultipleParams = z.object({});
 
 // ------------------------------------
 // GET ALL VALID PARENTS
-const getAllValidParentsBody = z.object({});
-const getAllValidParentsQuery = z.object({});
-const getAllValidParentsParams = z.object({
+const getMultipleValidParentsBody = z.object({});
+const getMultipleValidParentsQuery = z.object({
+  filter: z
+    .object({
+      collection_key: z.union([z.string(), z.array(z.string())]).optional(),
+      title: z.string().optional(),
+    })
+    .optional(),
+  page: z.string().optional(),
+  per_page: z.string().optional(),
+});
+const getMultipleValidParentsParams = z.object({
   id: z.string(),
-  collection_key: z.string(),
 });
 
 // ------------------------------------
@@ -128,9 +136,9 @@ export default {
     query: deleteMultipleQuery,
     params: deleteMultipleParams,
   },
-  getAllValidParents: {
-    body: getAllValidParentsBody,
-    query: getAllValidParentsQuery,
-    params: getAllValidParentsParams,
+  getMultipleValidParents: {
+    body: getMultipleValidParentsBody,
+    query: getMultipleValidParentsQuery,
+    params: getMultipleValidParentsParams,
   },
 };

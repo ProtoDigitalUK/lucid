@@ -47,9 +47,11 @@ const formatPage = (
     if (collection && collection.path) {
       res.full_slug = `${collection.path}/${res.full_slug}`;
     }
+    // add leading slash
     if (!res.full_slug.startsWith("/")) {
       res.full_slug = "/" + res.full_slug;
     }
+    // remove double slashes
     res.full_slug = res.full_slug.replace(/\/+/g, "/");
   }
 

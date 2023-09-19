@@ -803,35 +803,18 @@
 											"response": []
 										},
 										{
-											"name": "Get All Valid Parents",
-											"protocolProfileBehavior": {
-												"disableBodyPruning": true
-											},
+											"name": "Get Multiple Valid Parents",
 											"request": {
 												"method": "GET",
 												"header": [
-													{
-														"key": "_csrf",
-														"value": "{{CSRF}}",
-														"type": "text"
-													},
 													{
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"page_id\": 2,\n    \"collection_key\": \"page\"\n}",
-													"options": {
-														"raw": {
-															"language": "json"
-														}
-													}
-												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/parents",
+													"raw": "{{BASE_URL}}/api/v1/pages/8/valid-parents?filter[collection_key]=page&filter[title]",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -839,7 +822,28 @@
 														"api",
 														"v1",
 														"pages",
-														"parents"
+														"8",
+														"valid-parents"
+													],
+													"query": [
+														{
+															"key": "filter[collection_key]",
+															"value": "page"
+														},
+														{
+															"key": "filter[title]",
+															"value": null
+														},
+														{
+															"key": "page",
+															"value": "1",
+															"disabled": true
+														},
+														{
+															"key": "per_page",
+															"value": "4",
+															"disabled": true
+														}
 													]
 												}
 											},

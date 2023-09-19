@@ -150,14 +150,12 @@ type PageGetValidParents = (
   client: PoolClient,
   data: {
     page_id: number;
-    environment_key: string;
-    collection_key: string;
+    query_instance: SelectQueryBuilder;
   }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
+) => Promise<{
+  data: PageT[];
+  count: number;
+}>;
 
 // -------------------------------------------
 // Page
@@ -428,10 +426,7 @@ export default class Page {
     return page.rows;
   };
   static getValidParents: PageGetValidParents = async (client, data) => {
-    const page = await client.query<{
-      id: PageT["id"];
-      title: PageT["title"];
-    }>({
+    const pages = client.query<PageT>({
       text: `WITH RECURSIVE descendants AS (
             SELECT id, parent_id 
             FROM lucid_pages 
@@ -443,17 +438,43 @@ export default class Page {
             FROM lucid_pages lp
             JOIN descendants d ON lp.parent_id = d.id
         )
-
-        SELECT id, title, slug, full_slug 
-        FROM lucid_pages 
-        WHERE id NOT IN (SELECT id FROM descendants)
-        AND id != $1
-        AND homepage = FALSE
-        AND environment_key = $2
-        AND collection_key = $3`,
-      values: [data.page_id, data.environment_key, data.collection_key],
+        
+        SELECT
+          ${data.query_instance.query.select}
+        FROM 
+          lucid_pages 
+        ${data.query_instance.query.where}
+        ${data.query_instance.query.order}
+        ${data.query_instance.query.pagination}`,
+      values: data.query_instance.values,
     });
 
-    return page.rows;
+    const count = client.query<{ count: string }>({
+      text: `WITH RECURSIVE descendants AS (
+            SELECT id, parent_id 
+            FROM lucid_pages 
+            WHERE parent_id = $1
+
+            UNION ALL
+
+            SELECT lp.id, lp.parent_id 
+            FROM lucid_pages lp
+            JOIN descendants d ON lp.parent_id = d.id
+        )
+ 
+        SELECT 
+          COUNT(*) 
+        FROM 
+          lucid_pages
+        ${data.query_instance.query.where}`,
+      values: data.query_instance.countValues,
+    });
+
+    const resData = await Promise.all([pages, count]);
+
+    return {
+      data: resData[0].rows,
+      count: Number(resData[1].rows[0].count),
+    };
   };
 }

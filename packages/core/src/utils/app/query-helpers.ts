@@ -135,6 +135,9 @@ interface SelectQueryBuilderConfig {
   }[];
   page?: string;
   per_page?: string;
+
+  where?: string[];
+  values?: Array<string | number | boolean | Array<string | number | boolean>>;
 }
 
 export class SelectQueryBuilder {
@@ -151,6 +154,8 @@ export class SelectQueryBuilder {
     [];
   constructor(config: SelectQueryBuilderConfig) {
     this.config = config;
+    this.values = config.values || [];
+
     this.#buildSelect();
     this.#buildFilter();
     this.#buildOrder();
@@ -175,7 +180,7 @@ export class SelectQueryBuilder {
     }
   }
   #buildFilter() {
-    const filterClauses: Array<string> = [];
+    const filterClauses: Array<string> = this.config.where || [];
 
     if (!this.config.filter?.data) {
       this.query.where = "";

@@ -11,7 +11,10 @@ interface QueryParams {
   queryString?: Accessor<string>;
   location: {
     id?: Accessor<number | undefined> | number;
-    collection_key: Accessor<string | undefined> | string;
+  };
+  filters?: {
+    collection_key?: Accessor<string | undefined> | string;
+    title?: Accessor<string | undefined> | string;
   };
   headers: {
     "lucid-environment": Accessor<string | undefined> | string;
@@ -36,8 +39,7 @@ const useGetValidParents = (params: QueryHook<QueryParams>) => {
     {
       queryFn: () =>
         request<APIResponse<CollectionPagesResT[]>>({
-          url: `/api/v1/pages/${queryParams().location
-            ?.collection_key}/${queryParams().location?.id}/valid-parents`,
+          url: `/api/v1/pages/${queryParams().location?.id}/valid-parents`,
           query: queryParams(),
           config: {
             method: "GET",

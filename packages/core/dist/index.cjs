@@ -952,6 +952,7 @@ var SelectQueryBuilder = class {
   values = [];
   constructor(config) {
     this.config = config;
+    this.values = config.values || [];
     this.#buildSelect();
     this.#buildFilter();
     this.#buildOrder();
@@ -973,7 +974,7 @@ var SelectQueryBuilder = class {
     }
   }
   #buildFilter() {
-    const filterClauses = [];
+    const filterClauses = this.config.where || [];
     if (!this.config.filter?.data) {
       this.query.where = "";
       this.values = [];
@@ -5404,11 +5405,17 @@ var deleteMultipleBody = import_zod9.default.object({
 });
 var deleteMultipleQuery = import_zod9.default.object({});
 var deleteMultipleParams = import_zod9.default.object({});
-var getAllValidParentsBody = import_zod9.default.object({});
-var getAllValidParentsQuery = import_zod9.default.object({});
-var getAllValidParentsParams = import_zod9.default.object({
-  id: import_zod9.default.string(),
-  collection_key: import_zod9.default.string()
+var getMultipleValidParentsBody = import_zod9.default.object({});
+var getMultipleValidParentsQuery = import_zod9.default.object({
+  filter: import_zod9.default.object({
+    collection_key: import_zod9.default.union([import_zod9.default.string(), import_zod9.default.array(import_zod9.default.string())]).optional(),
+    title: import_zod9.default.string().optional()
+  }).optional(),
+  page: import_zod9.default.string().optional(),
+  per_page: import_zod9.default.string().optional()
+});
+var getMultipleValidParentsParams = import_zod9.default.object({
+  id: import_zod9.default.string()
 });
 var pages_default = {
   getMultiple: {
@@ -5441,10 +5448,10 @@ var pages_default = {
     query: deleteMultipleQuery,
     params: deleteMultipleParams
   },
-  getAllValidParents: {
-    body: getAllValidParentsBody,
-    query: getAllValidParentsQuery,
-    params: getAllValidParentsParams
+  getMultipleValidParents: {
+    body: getMultipleValidParentsBody,
+    query: getMultipleValidParentsQuery,
+    params: getMultipleValidParentsParams
   }
 };
 
@@ -5650,7 +5657,7 @@ var Page = class {
     return page.rows;
   };
   static getValidParents = async (client, data) => {
-    const page = await client.query({
+    const pages = client.query({
       text: `WITH RECURSIVE descendants AS (
             SELECT id, parent_id 
             FROM lucid_pages 
@@ -5662,17 +5669,41 @@ var Page = class {
             FROM lucid_pages lp
             JOIN descendants d ON lp.parent_id = d.id
         )
-
-        SELECT id, title, slug, full_slug 
-        FROM lucid_pages 
-        WHERE id NOT IN (SELECT id FROM descendants)
-        AND id != $1
-        AND homepage = FALSE
-        AND environment_key = $2
-        AND collection_key = $3`,
-      values: [data.page_id, data.environment_key, data.collection_key]
+        
+        SELECT
+          ${data.query_instance.query.select}
+        FROM 
+          lucid_pages 
+        ${data.query_instance.query.where}
+        ${data.query_instance.query.order}
+        ${data.query_instance.query.pagination}`,
+      values: data.query_instance.values
     });
-    return page.rows;
+    const count = client.query({
+      text: `WITH RECURSIVE descendants AS (
+            SELECT id, parent_id 
+            FROM lucid_pages 
+            WHERE parent_id = $1
+
+            UNION ALL
+
+            SELECT lp.id, lp.parent_id 
+            FROM lucid_pages lp
+            JOIN descendants d ON lp.parent_id = d.id
+        )
+ 
+        SELECT 
+          COUNT(*) 
+        FROM 
+          lucid_pages
+        ${data.query_instance.query.where}`,
+      values: data.query_instance.countValues
+    });
+    const resData = await Promise.all([pages, count]);
+    return {
+      data: resData[0].rows,
+      count: Number(resData[1].rows[0].count)
+    };
   };
 };
 
@@ -7702,16 +7733,82 @@ var deleteMultiple3 = async (client, data) => {
 };
 var delete_multiple_default3 = deleteMultiple3;
 
-// src/services/pages/get-all-valid-parents.ts
-var getAllValidParents = async (client, data) => {
-  const results = await Page.getValidParents(client, {
-    page_id: data.page_id,
-    environment_key: data.environment_key,
-    collection_key: data.collection_key
+// src/services/pages/get-multiple-valid-parents.ts
+var getMultipleValidParents = async (client, data) => {
+  const { filter, sort, page, per_page } = data.query;
+  const SelectQuery = new SelectQueryBuilder({
+    columns: [
+      "id",
+      "environment_key",
+      "collection_key",
+      "parent_id",
+      "title",
+      "slug",
+      "full_slug",
+      "homepage",
+      "excerpt",
+      "published",
+      "published_at",
+      "published_by",
+      "created_by",
+      "created_at",
+      "updated_at"
+    ],
+    exclude: void 0,
+    filter: {
+      data: {
+        ...filter,
+        environment_key: data.environment_key,
+        homepage: "false"
+      },
+      meta: {
+        collection_key: {
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        },
+        title: {
+          operator: "%",
+          type: "text",
+          columnType: "standard"
+        },
+        environment_key: {
+          operator: "=",
+          type: "text",
+          columnType: "standard"
+        },
+        homepage: {
+          operator: "=",
+          type: "boolean",
+          columnType: "standard"
+        }
+      }
+    },
+    values: [data.page_id],
+    where: ["id NOT IN (SELECT id FROM descendants)", "id != $1"],
+    sort,
+    page,
+    per_page
   });
-  return results;
+  const response = await Promise.all([
+    Page.getValidParents(client, {
+      page_id: data.page_id,
+      query_instance: SelectQuery
+    }),
+    service_default(
+      collections_default.getAll,
+      false,
+      client
+    )({
+      query: {}
+    })
+  ]);
+  return {
+    data: response[0].data.map((page2) => format_page_default(page2, response[1])),
+    count: response[0].count
+  };
 };
-var get_all_valid_parents_default = getAllValidParents;
+var get_multiple_valid_parents_default = getMultipleValidParents;
 
 // src/services/pages/index.ts
 var pages_default2 = {
@@ -7727,7 +7824,7 @@ var pages_default2 = {
   checkPageCollection: check_page_collection_default,
   checkParentAncestry: check_parent_ancestry_default,
   deleteMultiple: delete_multiple_default3,
-  getAllValidParents: get_all_valid_parents_default
+  getMultipleValidParents: get_multiple_valid_parents_default
 };
 
 // src/controllers/pages/create-single.ts
@@ -7896,42 +7993,48 @@ var delete_multiple_default4 = {
   controller: deleteMultipleController
 };
 
-// src/controllers/pages/get-all-valid-parents.ts
-var getAllValidParentsController = async (req, res, next) => {
+// src/controllers/pages/get-multiple-valid-parents.ts
+var getMultipleValidParentsController = async (req, res, next) => {
   try {
-    const pages = await service_default(
-      pages_default2.getAllValidParents,
+    const pagesRes = await service_default(
+      pages_default2.getMultipleValidParents,
       false
     )({
       page_id: Number(req.params.id),
       environment_key: req.headers["lucid-environment"],
-      collection_key: req.params.collection_key
+      query: req.query
     });
     res.status(200).json(
       build_response_default(req, {
-        data: pages
+        data: pagesRes.data,
+        pagination: {
+          count: pagesRes.count,
+          page: req.query.page,
+          per_page: req.query.per_page
+        }
       })
     );
   } catch (error) {
     next(error);
   }
 };
-var get_all_valid_parents_default2 = {
-  schema: pages_default.getAllValidParents,
-  controller: getAllValidParentsController
+var get_multiple_valid_parents_default2 = {
+  schema: pages_default.getMultipleValidParents,
+  controller: getMultipleValidParentsController
 };
 
 // src/routes/v1/pages.routes.ts
 var router4 = (0, import_express4.Router)();
 route_default(router4, {
   method: "get",
-  path: "/:collection_key/:id/valid-parents",
+  path: "/:id/valid-parents",
   middleware: {
     authenticate: true,
-    validateEnvironment: true
+    validateEnvironment: true,
+    paginated: true
   },
-  schema: get_all_valid_parents_default2.schema,
-  controller: get_all_valid_parents_default2.controller
+  schema: get_multiple_valid_parents_default2.schema,
+  controller: get_multiple_valid_parents_default2.controller
 });
 route_default(router4, {
   method: "post",

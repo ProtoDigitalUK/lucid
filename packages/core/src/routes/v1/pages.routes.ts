@@ -7,7 +7,7 @@ import getSingle from "@controllers/pages/get-single.js";
 import updateSingle from "@controllers/pages/update-single.js";
 import deleteSingle from "@controllers/pages/delete-single.js";
 import deleteMultiple from "@controllers/pages/delete-multiple.js";
-import getAllValidParents from "@controllers/pages/get-all-valid-parents.js";
+import getMultipleValidParents from "@controllers/pages/get-multiple-valid-parents.js";
 
 // ------------------------------------
 // Router
@@ -15,13 +15,14 @@ const router = Router();
 
 r(router, {
   method: "get",
-  path: "/:collection_key/:id/valid-parents",
+  path: "/:id/valid-parents",
   middleware: {
     authenticate: true,
     validateEnvironment: true,
+    paginated: true,
   },
-  schema: getAllValidParents.schema,
-  controller: getAllValidParents.controller,
+  schema: getMultipleValidParents.schema,
+  controller: getMultipleValidParents.controller,
 });
 
 r(router, {

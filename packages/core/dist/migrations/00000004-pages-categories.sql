@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE INDEX idx_lucid_pages_collection_key ON lucid_pages(collection_key);
+
 -- create full_slug
 CREATE OR REPLACE FUNCTION update_full_slug() RETURNS trigger AS $$
 DECLARE
