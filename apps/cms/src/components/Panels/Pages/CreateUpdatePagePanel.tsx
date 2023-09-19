@@ -6,6 +6,8 @@ import {
   Show,
   createEffect,
   Accessor,
+  Switch,
+  Match,
 } from "solid-js";
 import slugify from "slugify";
 // Services
@@ -49,10 +51,14 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   >([]);
 
   // ---------------------------------
-  // Mode
+  // Memos
   const panelMode = createMemo(() => {
     if (props.id === undefined) return "create";
     return "update";
+  });
+
+  const hideSetParentPage = createMemo(() => {
+    return props.collection.disableHomepage === true || getIsHomepage();
   });
 
   // ---------------------------------
@@ -84,6 +90,20 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     enabled: () => panelMode() === "update" && !!props.id?.(),
   });
 
+  const validParents = api.environment.collections.pages.useGetValidParents({
+    queryParams: {
+      location: {
+        collection_key: props.collection.key,
+        id: props?.id,
+      },
+      headers: {
+        "lucid-environment": environment,
+      },
+    },
+    enabled: () =>
+      panelMode() === "update" && !!props.id?.() && !hideSetParentPage(),
+  });
+
   // ---------------------------------
   // Mutations
   const createPage = api.environment.collections.pages.useCreateSingle({
@@ -92,6 +112,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     },
     collectionName: props.collection.singular,
   });
+
   const updatePage = api.environment.collections.pages.useUpdateSingle({
     onSuccess: () => {
       props.state.setOpen(false);
@@ -101,10 +122,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
   // ---------------------------------
   // Memos
-  const hideSetParentPage = createMemo(() => {
-    return props.collection.disableHomepage === true || getIsHomepage();
-  });
-
   const hideSlugInput = createMemo(() => {
     if (panelMode() === "create") return false;
     return getIsHomepage();
@@ -135,12 +152,12 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
   const fetchIsLoading = createMemo(() => {
     if (panelMode() === "create") return categories.isLoading;
-    return categories.isLoading || page.isLoading;
+    return categories.isLoading || page.isLoading || validParents.isLoading;
   });
 
   const fetchIsError = createMemo(() => {
     if (panelMode() === "create") return categories.isError;
-    return categories.isError || page.isError;
+    return categories.isError || page.isError || validParents.isError;
   });
 
   const mutateIsLoading = createMemo(() => {
@@ -331,17 +348,39 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         />
       </Show>
       <Show when={!hideSetParentPage()}>
-        <PageSearchSelect
-          id="parent_id"
-          name="parent_id"
-          collectionKey={props.collection.key}
-          value={getParentId()}
-          setValue={setParentId}
-          copy={{
-            label: T("parent_page"),
-          }}
-          errors={mutateErrors()?.errors?.body?.parent_id}
-        />
+        <Switch>
+          <Match when={panelMode() === "create"}>
+            <PageSearchSelect
+              id="parent_id"
+              name="parent_id"
+              collectionKey={props.collection.key}
+              value={getParentId()}
+              setValue={setParentId}
+              copy={{
+                label: T("parent_page"),
+              }}
+              errors={mutateErrors()?.errors?.body?.parent_id}
+            />
+          </Match>
+          <Match when={panelMode() === "update"}>
+            <Form.Select
+              id={"parent_id"}
+              value={getParentId()}
+              onChange={setParentId}
+              copy={{
+                label: T("parent_page"),
+              }}
+              name={"parent_id"}
+              options={
+                validParents.data?.data.map((page) => ({
+                  value: page.id,
+                  label: page.title,
+                })) || []
+              }
+              errors={mutateErrors()?.errors?.body?.parent_id}
+            />
+          </Match>
+        </Switch>
       </Show>
       <Form.SelectMultiple
         id="category_ids"

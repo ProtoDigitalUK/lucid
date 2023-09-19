@@ -141,7 +141,7 @@ export const Select: Component<SelectProps> = (props) => {
           options={{
             anchorWidth: true,
             rounded: true,
-            class: "max-h-36 overflow-y-auto z-50 !p-1.5",
+            class: "max-h-80 overflow-y-auto z-50 !p-1.5",
           }}
         >
           <Show when={props.search !== undefined}>

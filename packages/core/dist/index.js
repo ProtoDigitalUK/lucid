@@ -5365,12 +5365,12 @@ var deleteMultipleBody = z9.object({
 });
 var deleteMultipleQuery = z9.object({});
 var deleteMultipleParams = z9.object({});
-var getAllValidParentsBody = z9.object({
-  page_id: z9.number(),
+var getAllValidParentsBody = z9.object({});
+var getAllValidParentsQuery = z9.object({});
+var getAllValidParentsParams = z9.object({
+  id: z9.string(),
   collection_key: z9.string()
 });
-var getAllValidParentsQuery = z9.object({});
-var getAllValidParentsParams = z9.object({});
 var pages_default = {
   getMultiple: {
     body: getMultipleBody2,
@@ -5612,22 +5612,23 @@ var Page = class {
   };
   static getValidParents = async (client, data) => {
     const page = await client.query({
-      text: `WITH RECURSIVE ancestry AS (
-            SELECT id, parent_id
-            FROM lucid_pages
-            WHERE id = $1
-        
+      text: `WITH RECURSIVE descendants AS (
+            SELECT id, parent_id 
+            FROM lucid_pages 
+            WHERE parent_id = $1
+
             UNION ALL
-        
-            SELECT p.id, p.parent_id
-            FROM lucid_pages p
-            JOIN ancestry a ON p.id = a.parent_id
+
+            SELECT lp.id, lp.parent_id 
+            FROM lucid_pages lp
+            JOIN descendants d ON lp.parent_id = d.id
         )
-        SELECT id, title
-        FROM lucid_pages
-        WHERE id NOT IN (SELECT id FROM ancestry)
-        AND homepage = FALSE
+
+        SELECT id, title, slug, full_slug 
+        FROM lucid_pages 
+        WHERE id NOT IN (SELECT id FROM descendants)
         AND id != $1
+        AND homepage = FALSE
         AND environment_key = $2
         AND collection_key = $3`,
       values: [data.page_id, data.environment_key, data.collection_key]
@@ -7863,9 +7864,9 @@ var getAllValidParentsController = async (req, res, next) => {
       pages_default2.getAllValidParents,
       false
     )({
-      page_id: req.body.page_id,
+      page_id: Number(req.params.id),
       environment_key: req.headers["lucid-environment"],
-      collection_key: req.body.collection_key
+      collection_key: req.params.collection_key
     });
     res.status(200).json(
       build_response_default(req, {
@@ -7885,7 +7886,7 @@ var get_all_valid_parents_default2 = {
 var router4 = Router4();
 route_default(router4, {
   method: "get",
-  path: "/parents",
+  path: "/:collection_key/:id/valid-parents",
   middleware: {
     authenticate: true,
     validateEnvironment: true

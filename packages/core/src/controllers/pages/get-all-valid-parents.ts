@@ -18,9 +18,9 @@ const getAllValidParentsController: Controller<
       pagesService.getAllValidParents,
       false
     )({
-      page_id: req.body.page_id,
+      page_id: Number(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
-      collection_key: req.body.collection_key,
+      collection_key: req.params.collection_key,
     });
 
     res.status(200).json(

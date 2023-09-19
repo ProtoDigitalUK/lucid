@@ -432,22 +432,23 @@ export default class Page {
       id: PageT["id"];
       title: PageT["title"];
     }>({
-      text: `WITH RECURSIVE ancestry AS (
-            SELECT id, parent_id
-            FROM lucid_pages
-            WHERE id = $1
-        
+      text: `WITH RECURSIVE descendants AS (
+            SELECT id, parent_id 
+            FROM lucid_pages 
+            WHERE parent_id = $1
+
             UNION ALL
-        
-            SELECT p.id, p.parent_id
-            FROM lucid_pages p
-            JOIN ancestry a ON p.id = a.parent_id
+
+            SELECT lp.id, lp.parent_id 
+            FROM lucid_pages lp
+            JOIN descendants d ON lp.parent_id = d.id
         )
-        SELECT id, title
-        FROM lucid_pages
-        WHERE id NOT IN (SELECT id FROM ancestry)
-        AND homepage = FALSE
+
+        SELECT id, title, slug, full_slug 
+        FROM lucid_pages 
+        WHERE id NOT IN (SELECT id FROM descendants)
         AND id != $1
+        AND homepage = FALSE
         AND environment_key = $2
         AND collection_key = $3`,
       values: [data.page_id, data.environment_key, data.collection_key],

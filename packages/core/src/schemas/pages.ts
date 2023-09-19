@@ -88,12 +88,12 @@ const deleteMultipleParams = z.object({});
 
 // ------------------------------------
 // GET ALL VALID PARENTS
-const getAllValidParentsBody = z.object({
-  page_id: z.number(),
+const getAllValidParentsBody = z.object({});
+const getAllValidParentsQuery = z.object({});
+const getAllValidParentsParams = z.object({
+  id: z.string(),
   collection_key: z.string(),
 });
-const getAllValidParentsQuery = z.object({});
-const getAllValidParentsParams = z.object({});
 
 // ------------------------------------
 // EXPORT

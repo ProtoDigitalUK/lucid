@@ -15,7 +15,7 @@ const router = Router();
 
 r(router, {
   method: "get",
-  path: "/parents",
+  path: "/:collection_key/:id/valid-parents",
   middleware: {
     authenticate: true,
     validateEnvironment: true,
