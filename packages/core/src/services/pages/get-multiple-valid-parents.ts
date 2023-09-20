@@ -39,7 +39,7 @@ const getMultipleValidParents = async (
       "excerpt",
       "published",
       "published_at",
-      "published_by",
+      "author_id",
       "created_by",
       "created_at",
       "updated_at",

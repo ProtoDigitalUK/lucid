@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS lucid_pages (
   
   published BOOLEAN DEFAULT FALSE,
   published_at TIMESTAMP,
-  published_by INT REFERENCES lucid_users(id) ON DELETE SET NULL,
+  author_id INT REFERENCES lucid_users(id) ON DELETE SET NULL,
 
   created_by INT REFERENCES lucid_users(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT NOW(),

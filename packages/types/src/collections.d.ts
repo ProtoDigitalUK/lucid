@@ -23,7 +23,7 @@ export interface CollectionPagesResT {
 
   published: boolean;
   published_at: string | null;
-  published_by: number | null;
+  author_id: number | null;
 
   categories?: Array<number> | null;
   builder_bricks?: Array<BrickResT> | null;

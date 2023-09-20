@@ -16,12 +16,12 @@ import pageServices from "@services/pages/index.js";
 export interface ServiceData {
   id: number;
   environment_key: string;
-  userId: number;
 
   title?: string;
   slug?: string;
   homepage?: boolean;
   parent_id?: number | null;
+  author_id?: number | null;
   category_ids?: number[];
   published?: boolean;
   excerpt?: string;
@@ -138,7 +138,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   const page = await Page.updateSingle(client, {
     id: data.id,
     environment_key: data.environment_key,
-    userId: data.userId,
 
     title: data.title,
     slug: newSlug,
@@ -146,6 +145,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     parent_id: parentId,
     category_ids: data.category_ids,
     published: data.published,
+    author_id: data.author_id,
     excerpt: data.excerpt,
     builder_bricks: data.builder_bricks,
     fixed_bricks: data.fixed_bricks,

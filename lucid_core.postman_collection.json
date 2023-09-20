@@ -814,7 +814,7 @@
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/8/valid-parents?filter[collection_key]=page&filter[title]",
+													"raw": "{{BASE_URL}}/api/v1/pages/7/valid-parents",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -822,17 +822,19 @@
 														"api",
 														"v1",
 														"pages",
-														"8",
+														"7",
 														"valid-parents"
 													],
 													"query": [
 														{
-															"key": "filter[collection_key]",
-															"value": "page"
+															"key": "filter[title]",
+															"value": "Ser",
+															"disabled": true
 														},
 														{
-															"key": "filter[title]",
-															"value": null
+															"key": "filter[collection_key]",
+															"value": "page",
+															"disabled": true
 														},
 														{
 															"key": "page",
@@ -961,6 +963,46 @@
 														"v1",
 														"pages",
 														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Single Simple",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "_csrf",
+														"value": "{{CSRF}}",
+														"type": "text"
+													},
+													{
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"author_id\": 2\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/v1/pages/2",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"pages",
+														"2"
 													]
 												}
 											},

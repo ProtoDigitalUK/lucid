@@ -5346,6 +5346,7 @@ var updateSingleBody2 = z9.object({
   slug: z9.string().optional(),
   homepage: z9.boolean().optional(),
   parent_id: z9.number().nullable().optional(),
+  author_id: z9.number().nullable().optional(),
   category_ids: z9.array(z9.number()).optional(),
   published: z9.boolean().optional(),
   excerpt: z9.string().optional(),
@@ -5490,7 +5491,7 @@ var Page = class {
         "excerpt",
         "published",
         "published_at",
-        "published_by",
+        "author_id",
         "parent_id",
         "homepage"
       ],
@@ -5500,7 +5501,7 @@ var Page = class {
         data.excerpt,
         data.published,
         data.published ? /* @__PURE__ */ new Date() : null,
-        data.published ? data.userId : null,
+        data.author_id,
         data.parent_id,
         data.homepage
       ],
@@ -5944,7 +5945,7 @@ var formatPage = (data, collections) => {
     updated_at: data.updated_at,
     published: data.published,
     published_at: data.published_at,
-    published_by: data.published_by,
+    author_id: data.author_id,
     categories: data.categories,
     builder_bricks: data.builder_bricks,
     fixed_bricks: data.fixed_bricks
@@ -5984,7 +5985,7 @@ var getMultiple5 = async (client, data) => {
       "excerpt",
       "published",
       "published_at",
-      "published_by",
+      "author_id",
       "created_by",
       "created_at",
       "updated_at"
@@ -7328,7 +7329,7 @@ var getSingle9 = async (client, data) => {
       "excerpt",
       "published",
       "published_at",
-      "published_by",
+      "author_id",
       "created_by",
       "created_at",
       "updated_at"
@@ -7485,13 +7486,13 @@ var updateSingle4 = async (client, data) => {
   const page = await Page.updateSingle(client, {
     id: data.id,
     environment_key: data.environment_key,
-    userId: data.userId,
     title: data.title,
     slug: newSlug,
     homepage: data.homepage,
     parent_id: parentId,
     category_ids: data.category_ids,
     published: data.published,
+    author_id: data.author_id,
     excerpt: data.excerpt,
     builder_bricks: data.builder_bricks,
     fixed_bricks: data.fixed_bricks
@@ -7710,7 +7711,7 @@ var getMultipleValidParents = async (client, data) => {
       "excerpt",
       "published",
       "published_at",
-      "published_by",
+      "author_id",
       "created_by",
       "created_at",
       "updated_at"
@@ -7883,11 +7884,11 @@ var updateSingleController2 = async (req, res, next) => {
     )({
       id: parseInt(req.params.id),
       environment_key: req.headers["lucid-environment"],
-      userId: req.auth.id,
       title: req.body.title,
       slug: req.body.slug,
       homepage: req.body.homepage,
       parent_id: req.body.parent_id,
+      author_id: req.body.author_id,
       category_ids: req.body.category_ids,
       published: req.body.published,
       excerpt: req.body.excerpt,

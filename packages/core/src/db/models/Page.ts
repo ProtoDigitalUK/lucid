@@ -65,7 +65,6 @@ type PageUpdateSingle = (
   data: {
     id: number;
     environment_key: string;
-    userId: number;
 
     title?: string;
     slug?: string;
@@ -73,6 +72,7 @@ type PageUpdateSingle = (
     parent_id?: number | null;
     category_ids?: Array<number>;
     published?: boolean;
+    author_id?: number | null;
     excerpt?: string;
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
@@ -177,7 +177,7 @@ export type PageT = {
 
   published: boolean;
   published_at: string | null;
-  published_by: number | null;
+  author_id: number | null;
 
   created_by: number | null;
   created_at: string;
@@ -264,7 +264,7 @@ export default class Page {
         "excerpt",
         "published",
         "published_at",
-        "published_by",
+        "author_id",
         "parent_id",
         "homepage",
       ],
@@ -274,7 +274,7 @@ export default class Page {
         data.excerpt,
         data.published,
         data.published ? new Date() : null,
-        data.published ? data.userId : null,
+        data.author_id,
         data.parent_id,
         data.homepage,
       ],

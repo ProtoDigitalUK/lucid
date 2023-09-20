@@ -27,7 +27,7 @@ const formatPage = (
 
     published: data.published,
     published_at: data.published_at,
-    published_by: data.published_by,
+    author_id: data.author_id,
 
     categories: data.categories,
     builder_bricks: data.builder_bricks,
