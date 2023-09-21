@@ -26,7 +26,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   // Build Query Data and Query
   const SelectQuery = new SelectQueryBuilder({
     columns: [
-      "id",
+      "lucid_pages.id",
       "environment_key",
       "collection_key",
       "parent_id",
@@ -39,17 +39,17 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       "published_at",
       "author_id",
       "created_by",
-      "created_at",
-      "updated_at",
+      "lucid_pages.created_at",
+      "lucid_pages.updated_at",
     ],
     exclude: undefined,
     filter: {
       data: {
-        id: data.id.toString(),
+        "lucid_pages.id": data.id.toString(),
         environment_key: data.environment_key,
       },
       meta: {
-        id: {
+        "lucid_pages.id": {
           operator: "=",
           type: "int",
           columnType: "standard",

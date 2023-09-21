@@ -5462,13 +5462,19 @@ var Page = class {
     const pages = client.query({
       text: `SELECT
           ${query_instance.query.select},
+          lucid_users.email AS author_email,
+          lucid_users.username AS author_username,
+          lucid_users.first_name AS author_first_name,
+          lucid_users.last_name AS author_last_name,
           COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        LEFT JOIN
+          lucid_users ON lucid_pages.author_id = lucid_users.id
         ${query_instance.query.where}
-        GROUP BY lucid_pages.id
+        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name
         ${query_instance.query.order}
         ${query_instance.query.pagination}`,
       values: query_instance.values
@@ -5494,13 +5500,19 @@ var Page = class {
     const page = await client.query({
       text: `SELECT
         ${query_instance.query.select},
+        lucid_users.email AS author_email,
+        lucid_users.username AS author_username,
+        lucid_users.first_name AS author_first_name,
+        lucid_users.last_name AS author_last_name,
         COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        LEFT JOIN
+          lucid_users ON lucid_pages.author_id = lucid_users.id
         ${query_instance.query.where}
-        GROUP BY lucid_pages.id`,
+        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name`,
       values: query_instance.values
     });
     return page.rows[0];
@@ -5969,7 +5981,7 @@ var delete_single_default8 = deleteSingle7;
 
 // src/utils/format/format-page.ts
 var formatPage = (data, collections) => {
-  const res = {
+  let res = {
     id: data.id,
     environment_key: data.environment_key,
     parent_id: data.parent_id,
@@ -5982,13 +5994,22 @@ var formatPage = (data, collections) => {
     created_by: data.created_by,
     created_at: data.created_at,
     updated_at: data.updated_at,
+    author: null,
     published: data.published,
     published_at: data.published_at,
-    author_id: data.author_id,
     categories: data.categories,
     builder_bricks: data.builder_bricks,
     fixed_bricks: data.fixed_bricks
   };
+  if (data.author_id) {
+    res.author = {
+      id: data.author_id,
+      email: data.author_email,
+      first_name: data.author_first_name,
+      last_name: data.author_last_name,
+      username: data.author_username
+    };
+  }
   if (res.categories) {
     res.categories = res.categories[0] === null ? [] : res.categories;
   }
@@ -6013,7 +6034,7 @@ var getMultiple5 = async (client, data) => {
   const { filter, sort, page, per_page } = data.query;
   const SelectQuery = new SelectQueryBuilder({
     columns: [
-      "id",
+      "lucid_pages.id",
       "environment_key",
       "collection_key",
       "parent_id",
@@ -6026,8 +6047,8 @@ var getMultiple5 = async (client, data) => {
       "published_at",
       "author_id",
       "created_by",
-      "created_at",
-      "updated_at"
+      "lucid_pages.created_at",
+      "lucid_pages.updated_at"
     ],
     exclude: void 0,
     filter: {
@@ -7357,7 +7378,7 @@ var getSingle9 = async (client, data) => {
   const { include } = data.query;
   const SelectQuery = new SelectQueryBuilder({
     columns: [
-      "id",
+      "lucid_pages.id",
       "environment_key",
       "collection_key",
       "parent_id",
@@ -7370,17 +7391,17 @@ var getSingle9 = async (client, data) => {
       "published_at",
       "author_id",
       "created_by",
-      "created_at",
-      "updated_at"
+      "lucid_pages.created_at",
+      "lucid_pages.updated_at"
     ],
     exclude: void 0,
     filter: {
       data: {
-        id: data.id.toString(),
+        "lucid_pages.id": data.id.toString(),
         environment_key: data.environment_key
       },
       meta: {
-        id: {
+        "lucid_pages.id": {
           operator: "=",
           type: "int",
           columnType: "standard"

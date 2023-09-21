@@ -179,6 +179,11 @@ export type PageT = {
   published_at: string | null;
   author_id: number | null;
 
+  author_email: string | null;
+  author_username: string | null;
+  author_first_name: string | null;
+  author_last_name: string | null;
+
   created_by: number | null;
   created_at: string;
   updated_at: string;
@@ -189,13 +194,19 @@ export default class Page {
     const pages = client.query<PageT>({
       text: `SELECT
           ${query_instance.query.select},
+          lucid_users.email AS author_email,
+          lucid_users.username AS author_username,
+          lucid_users.first_name AS author_first_name,
+          lucid_users.last_name AS author_last_name,
           COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        LEFT JOIN
+          lucid_users ON lucid_pages.author_id = lucid_users.id
         ${query_instance.query.where}
-        GROUP BY lucid_pages.id
+        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name
         ${query_instance.query.order}
         ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -224,13 +235,19 @@ export default class Page {
     const page = await client.query<PageT>({
       text: `SELECT
         ${query_instance.query.select},
+        lucid_users.email AS author_email,
+        lucid_users.username AS author_username,
+        lucid_users.first_name AS author_first_name,
+        lucid_users.last_name AS author_last_name,
         COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        LEFT JOIN
+          lucid_users ON lucid_pages.author_id = lucid_users.id
         ${query_instance.query.where}
-        GROUP BY lucid_pages.id`,
+        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name`,
       values: query_instance.values,
     });
 

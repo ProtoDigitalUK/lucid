@@ -24,7 +24,7 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
   // Build Query Data and Query
   const SelectQuery = new SelectQueryBuilder({
     columns: [
-      "id",
+      "lucid_pages.id",
       "environment_key",
       "collection_key",
       "parent_id",
@@ -37,8 +37,8 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       "published_at",
       "author_id",
       "created_by",
-      "created_at",
-      "updated_at",
+      "lucid_pages.created_at",
+      "lucid_pages.updated_at",
     ],
     exclude: undefined,
     filter: {
