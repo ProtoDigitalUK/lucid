@@ -103,7 +103,16 @@ export const Panel: Component<PanelProps> = (props) => {
       <Dialog.Portal>
         <Dialog.Overlay class="fixed inset-0 bg-primary bg-opacity-60 animate-animate-fade-out data-[expanded]:animate-animate-fade-in" />
         <div class="fixed inset-0 z-40 flex justify-end">
-          <Dialog.Content class="w-full max-w-[800px] bg-white animate-animate-slide-from-right-out data-[expanded]:animate-animate-slide-from-right-in outline-none overflow-y-auto">
+          <Dialog.Content
+            class="w-full max-w-[800px] bg-white animate-animate-slide-from-right-out data-[expanded]:animate-animate-slide-from-right-in outline-none overflow-y-auto"
+            onPointerDownOutside={(e) => {
+              const target = e.target as HTMLElement;
+              if (target.hasAttribute("data-panel-ignore")) {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            }}
+          >
             <div
               ref={headerRef}
               class="bg-background p-15 md:p-30 border-b border-border"

@@ -6,8 +6,8 @@ import { ContactForm } from "./src/forms";
 import path from "path";
 
 export default buildConfig({
-  host: "http://localhost:8393",
-  origin: "http://localhost:3000",
+  host: process.env.LUCID_HOST as string,
+  origin: process.env.LUCID_ORIGIN as string,
   mode: "development",
   postgresURL: process.env.LUCID_POSTGRES_URL as string,
   secret: process.env.LUCID_SECRET_KEY as string,

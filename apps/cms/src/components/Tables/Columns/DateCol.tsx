@@ -27,7 +27,7 @@ const DateCol: Component<TextColProps> = (props) => {
         include: props?.options?.include,
       }}
     >
-      <span class="whitespace-nowrap">{date() || "~"}</span>
+      <span class="whitespace-nowrap">{date() || "-"}</span>
     </Table.Td>
   );
 };

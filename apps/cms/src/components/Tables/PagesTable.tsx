@@ -1,6 +1,11 @@
 import T from "@/translations";
 import { Component, Index, createMemo } from "solid-js";
-import { FaSolidT, FaSolidCalendar, FaSolidCircle } from "solid-icons/fa";
+import {
+  FaSolidT,
+  FaSolidCalendar,
+  FaSolidCircle,
+  FaSolidUser,
+} from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections";
@@ -78,6 +83,11 @@ const PagesTable: Component<PagesTableProps> = (props) => {
             label: T("status"),
             key: "published",
             icon: <FaSolidCircle />,
+          },
+          {
+            label: T("author"),
+            key: "author",
+            icon: <FaSolidUser />,
           },
           {
             label: T("created_at"),

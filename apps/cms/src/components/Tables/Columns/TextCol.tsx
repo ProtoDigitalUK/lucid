@@ -28,7 +28,7 @@ const TextCol: Component<TextColProps> = (props) => {
           "line-clamp-4": props?.options?.maxLines === 4,
         })}
       >
-        {props.text || "~"}
+        {props.text || "-"}
       </span>
     </Table.Td>
   );

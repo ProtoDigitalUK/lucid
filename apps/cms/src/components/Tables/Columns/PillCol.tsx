@@ -24,7 +24,7 @@ const PillCol: Component<PillColProps> = (props) => {
         <Match when={props.text !== undefined}>
           <Pill theme={props.theme || "grey"}>{props.text}</Pill>
         </Match>
-        <Match when={props.text === undefined}>{"~"}</Match>
+        <Match when={props.text === undefined}>{"-"}</Match>
       </Switch>
     </Table.Td>
   );

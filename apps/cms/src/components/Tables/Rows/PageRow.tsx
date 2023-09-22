@@ -14,7 +14,8 @@ import userStore from "@/store/userStore";
 import Table from "@/components/Groups/Table";
 import PageTitleCol from "@/components/Tables/Columns/PageTitleCol";
 import DateCol from "@/components/Tables/Columns/DateCol";
-import PillCol from "../Columns/PillCol";
+import PillCol from "@/components/Tables/Columns/PillCol";
+import AuthorCol from "@/components/Tables/Columns/AuthorCol";
 
 interface PageRowProps extends TableRowProps {
   page: CollectionPagesResT;
@@ -80,13 +81,17 @@ const PageRow: Component<PageRowProps> = (props) => {
         text={props.page.published ? T("published") : T("draft")}
         options={{ include: props?.include[1] }}
       />
-      <DateCol
-        date={props.page.created_at}
+      <AuthorCol
+        author={props.page.author}
         options={{ include: props?.include[2] }}
       />
       <DateCol
-        date={props.page.updated_at}
+        date={props.page.created_at}
         options={{ include: props?.include[3] }}
+      />
+      <DateCol
+        date={props.page.updated_at}
+        options={{ include: props?.include[4] }}
       />
     </Table.Tr>
   );

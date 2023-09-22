@@ -3,6 +3,7 @@ import equal from "fast-deep-equal";
 // Types
 import type { MediaResT } from "@lucid/types/src/media";
 import type { CollectionResT } from "@lucid/types/src/collections";
+import type { UserResT } from "@lucid/types/src/users";
 
 // ---------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -149,6 +150,40 @@ const getFirstEnvLink = (data: {
   return url;
 };
 
+// ---------------------------------------------
+// Format user name
+const formatUserName = (user: {
+  username: UserResT["username"];
+  first_name?: UserResT["first_name"];
+  last_name?: UserResT["last_name"];
+}): string => {
+  if (user.first_name && user.last_name) {
+    return `${user.first_name} ${user.last_name} - (${user.username})`;
+  } else if (user.first_name) {
+    return `${user.first_name} - (${user.username})`;
+  } else {
+    return user.username;
+  }
+};
+
+// ---------------------------------------------
+// Format User Initials
+const formatUserInitials = (user: {
+  first_name?: UserResT["first_name"];
+  last_name?: UserResT["last_name"];
+  username: UserResT["username"];
+}): string => {
+  if (user.first_name && user.last_name) {
+    return `${user.first_name[0]}${user.last_name[0]}`;
+  } else if (user.first_name) {
+    return `${user.first_name[0]}${user.first_name[1]}`;
+  } else {
+    return `${user.username[0]}${user.username[1]}`;
+  }
+};
+
+// ---------------------------------------------
+// Exports
 const helpers = {
   deepMerge,
   deepDiff,
@@ -157,6 +192,8 @@ const helpers = {
   bytesToSize,
   getMediaType,
   getFirstEnvLink,
+  formatUserName,
+  formatUserInitials,
 };
 
 export default helpers;

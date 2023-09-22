@@ -25,6 +25,7 @@ import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import PageSearchSelect from "@/components/Partials/SearchSelects/PageSearchSelect";
 import ValidParentPageSearchSelect from "@/components/Partials/SearchSelects/ValidParentPageSearchSelect";
+import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSelect";
 
 interface CreateUpdatePagePanelProps {
   id?: Accessor<number | undefined>;
@@ -50,6 +51,9 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   const [getSelectedCategories, setSelectedCategories] = createSignal<
     SelectMultipleValueT[]
   >([]);
+  const [getSelectedAuthor, setSelectedAuthor] = createSignal<
+    number | undefined
+  >(undefined);
 
   // ---------------------------------
   // Memos
@@ -123,6 +127,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         parent_id: page.data?.data.parent_id || null,
         category_ids: page.data?.data.categories || [],
         excerpt: page.data?.data.excerpt || "",
+        author_id: page.data?.data.author?.id || null,
       },
       {
         title: getTitle(),
@@ -133,6 +138,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
           (cat) => cat.value
         ) as number[],
         excerpt: getExcerpt(),
+        author_id: getSelectedAuthor() || null,
       }
     );
   });
@@ -207,6 +213,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
             };
           }) || []
       );
+      setSelectedAuthor(page.data?.data.author?.id || undefined);
     }
   });
 
@@ -277,6 +284,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       mutateState={{
         isLoading: mutateIsLoading(),
         errors: mutateErrors(),
+        isDisabled: panelMode() === "update" && !updateData().changed,
       }}
       fetchState={{
         isLoading: fetchIsLoading(),
@@ -383,6 +391,18 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         }
         errors={mutateErrors()?.errors?.body?.category_ids}
       />
+      <Show when={panelMode() === "update"}>
+        <UserSearchSelect
+          id="author_id"
+          name="author_id"
+          value={getSelectedAuthor()}
+          setValue={setSelectedAuthor}
+          copy={{
+            label: T("author"),
+          }}
+          errors={mutateErrors()?.errors?.body?.author_id}
+        />
+      </Show>
     </Panel.Root>
   );
 };

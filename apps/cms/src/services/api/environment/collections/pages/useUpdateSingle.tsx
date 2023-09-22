@@ -15,6 +15,7 @@ interface Params {
     published?: boolean;
     parent_id?: number | null;
     category_ids?: number[];
+    author_id?: number | null;
 
     // TODO: Add types
     builder_bricks?: [];

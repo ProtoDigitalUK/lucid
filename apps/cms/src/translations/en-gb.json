@@ -185,6 +185,7 @@
   "page_slug_description": "A good slug should be short, descriptive and contain keywords relevant to the page. It should be lowercase and contain hyphens instead of spaces. Any special characters including a slash will be removed.",
   "quick_edit": "Quick Edit",
   "excerpt": "Excerpt",
+  "author": "Author",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",
