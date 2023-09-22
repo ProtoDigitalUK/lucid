@@ -31,8 +31,9 @@ import SettingsListRoute from "@/routes/Settings/List";
 import EmailListRoute from "@/routes/Emails/List";
 
 // environments
-import EnvCollectionsListRoute from "@/routes/Environments/Collections/List";
-import EnvCollectionsSingleRoute from "./routes/Environments/Collections/Single";
+import EnvCollectionsPagesListRoute from "@/routes/Environments/Collections/Pages/List";
+import EnvCollectionsPagesEditRoute from "@/routes/Environments/Collections/Pages/Edit";
+import EnvCollectionsSinglePageEditRoute from "./routes/Environments/Collections/SinglePage/Edit";
 import CreateEnvrionemntRoute from "@/routes/Environments/Create";
 import ManageEnvrionemntRoute from "@/routes/Environments/Manage";
 
@@ -47,11 +48,15 @@ const AppRouter: Component = () => {
             {/* Environments */}
             <Route
               path="/env/:envKey/collection/:collectionKey"
-              element={<EnvCollectionsListRoute />}
+              element={<EnvCollectionsPagesListRoute />}
+            />
+            <Route
+              path="/env/:envKey/collection/:collectionKey/:id"
+              element={<EnvCollectionsPagesEditRoute />}
             />
             <Route
               path={`/env/:envKey/:collectionKey`}
-              element={<EnvCollectionsSingleRoute />}
+              element={<EnvCollectionsSinglePageEditRoute />}
             />
             <Route path="/env/create" element={<CreateEnvrionemntRoute />} />
             <Route path="/env/:envKey" element={<ManageEnvrionemntRoute />} />

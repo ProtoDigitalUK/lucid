@@ -16,7 +16,7 @@ import Query from "@/components/Groups/Query";
 import PagesTable from "@/components/Tables/PagesTable";
 import CreateUpdatePagePanel from "@/components/Panels/Pages/CreateUpdatePagePanel";
 
-const EnvCollectionsListRoute: Component = () => {
+const EnvCollectionsPagesListRoute: Component = () => {
   // ----------------------------------
   // State & Hooks
   const params = useParams();
@@ -154,4 +154,4 @@ const EnvCollectionsListRoute: Component = () => {
   );
 };
 
-export default EnvCollectionsListRoute;
+export default EnvCollectionsPagesListRoute;

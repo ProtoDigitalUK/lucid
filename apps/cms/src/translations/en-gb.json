@@ -296,5 +296,6 @@
   "dashboard_route_title": "Welcome back{{name}}",
   "dashboard_route_description": "Here is an overview of your most recent activity, content, media and some quick links to navigate the CMS.",
   "email_route_title": "Emails",
-  "email_route_description": "Preview and manage every email sent from the CMS."
+  "email_route_description": "Preview and manage every email sent from the CMS.",
+  "edit_page_route_title": "Edit Page"
 }

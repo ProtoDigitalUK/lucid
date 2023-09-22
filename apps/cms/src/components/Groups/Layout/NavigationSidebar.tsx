@@ -1,6 +1,8 @@
 import T from "@/translations";
 import { Component, createEffect, createMemo } from "solid-js";
 import { useLocation, useParams } from "@solidjs/router";
+// Assets
+import LogoIcon from "@/assets/svgs/logo-icon.svg";
 // Store
 import userStore from "@/store/userStore";
 // Utils
@@ -79,11 +81,7 @@ export const NavigationSidebar: Component = () => {
       {/* Mainbar */}
       <nav class="bg-container w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
         <div class="h-[60px] min-h-[70px] flex items-center justify-center">
-          <img
-            src="https://placehold.co/100x100/6554FB/white"
-            alt="logo"
-            class="h-10 w-10 rounded-full"
-          />
+          <img src={LogoIcon} alt="logo" class="h-10 w-10 rounded-full" />
         </div>
         <ul class="pb-15">
           <Navigation.IconLink href="/" icon="dashboard" title={T("home")} />

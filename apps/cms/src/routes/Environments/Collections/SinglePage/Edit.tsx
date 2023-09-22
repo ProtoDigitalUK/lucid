@@ -1,16 +1,16 @@
 import { Component } from "solid-js";
 import { useParams } from "@solidjs/router";
 
-const EnvCollectionsSingleRoute: Component = () => {
+const EnvCollectionsSinglePageEditRoute: Component = () => {
   const props = useParams();
 
   // ----------------------------------
   // Render
   return (
     <div>
-      <h1>Environment Collections Single: {props.collectionKey}</h1>
+      <h1>Environment Collections Single Page Edit: {props.collectionKey}</h1>
     </div>
   );
 };
 
-export default EnvCollectionsSingleRoute;
+export default EnvCollectionsSinglePageEditRoute;

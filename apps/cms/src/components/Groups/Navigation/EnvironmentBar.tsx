@@ -9,7 +9,7 @@ import {
   Switch,
   Match,
 } from "solid-js";
-import { useLocation } from "@solidjs/router";
+import { useLocation, useParams } from "@solidjs/router";
 // Store
 import { environment } from "@/store/environmentStore";
 // Types
@@ -32,11 +32,18 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
   // ----------------------------------
   // Hooks & States
   const location = useLocation();
+  const params = useParams();
   const [showBar, setShowBar] = createSignal(false);
 
   // ----------------------------------
   // Effects
   createEffect(() => {
+    // Hides the bar when editing a single page of collection type pages
+    if (params.id !== undefined) {
+      setShowBar(false);
+      return;
+    }
+
     if (location.pathname.includes("/env/")) {
       setShowBar(true);
     } else {
