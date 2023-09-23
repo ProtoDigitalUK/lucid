@@ -3276,13 +3276,20 @@ var resetPassword = async (client, data) => {
     token_type: "password_reset",
     token: data.token
   });
-  const user = await service_default(
+  await service_default(
     users_default.updateSingle,
     false,
     client
   )({
     user_id: userToken.user_id,
     password: data.password
+  });
+  const user = await service_default(
+    users_default.getSingle,
+    false,
+    client
+  )({
+    user_id: userToken.user_id
   });
   await service_default(
     user_tokens_default.deleteSingle,
@@ -13130,7 +13137,7 @@ var CollectionOptionsSchema = import_zod23.default.object({
     import_zod23.default.object({
       key: import_zod23.default.string(),
       type: import_zod23.default.enum(["builder", "fixed"]),
-      position: import_zod23.default.enum(["standard", "bottom", "top", "sidebar"]).optional()
+      position: import_zod23.default.enum(["bottom", "top", "sidebar"]).optional()
     })
   )
 });
@@ -13163,7 +13170,7 @@ var CollectionBuilder = class {
   #addBrickDefaults = () => {
     this.config.bricks = this.config.bricks.map((brick) => {
       if (brick.type === "fixed" && !brick.position) {
-        brick.position = "standard";
+        brick.position = "bottom";
       }
       return brick;
     });

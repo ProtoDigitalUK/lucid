@@ -4,10 +4,8 @@ import { Component } from "solid-js";
 import useRowTarget from "@/hooks/useRowTarget";
 // Types
 import { TableRowProps } from "@/types/components";
-import {
-  CollectionPagesResT,
-  CollectionResT,
-} from "@lucid/types/src/collections";
+import type { CollectionResT } from "@lucid/types/src/collections";
+import type { PagesResT } from "@lucid/types/src/pages";
 // Stores
 import userStore from "@/store/userStore";
 // Components
@@ -18,7 +16,7 @@ import PillCol from "@/components/Tables/Columns/PillCol";
 import AuthorCol from "@/components/Tables/Columns/AuthorCol";
 
 interface PageRowProps extends TableRowProps {
-  page: CollectionPagesResT;
+  page: PagesResT;
   collection: CollectionResT;
   environmentKey: string;
   include: boolean[];

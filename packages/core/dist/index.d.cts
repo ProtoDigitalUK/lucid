@@ -134,15 +134,15 @@ declare const CollectionOptionsSchema: z.ZodObject<{
     bricks: z.ZodArray<z.ZodObject<{
         key: z.ZodString;
         type: z.ZodEnum<["builder", "fixed"]>;
-        position: z.ZodOptional<z.ZodEnum<["standard", "bottom", "top", "sidebar"]>>;
+        position: z.ZodOptional<z.ZodEnum<["bottom", "top", "sidebar"]>>;
     }, "strip", z.ZodTypeAny, {
         key: string;
         type: "builder" | "fixed";
-        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+        position?: "bottom" | "top" | "sidebar" | undefined;
     }, {
         key: string;
         type: "builder" | "fixed";
-        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+        position?: "bottom" | "top" | "sidebar" | undefined;
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     title: string;
@@ -151,7 +151,7 @@ declare const CollectionOptionsSchema: z.ZodObject<{
     bricks: {
         key: string;
         type: "builder" | "fixed";
-        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+        position?: "bottom" | "top" | "sidebar" | undefined;
     }[];
     description?: string | undefined;
     path?: string | undefined;
@@ -164,7 +164,7 @@ declare const CollectionOptionsSchema: z.ZodObject<{
     bricks: {
         key: string;
         type: "builder" | "fixed";
-        position?: "standard" | "bottom" | "top" | "sidebar" | undefined;
+        position?: "bottom" | "top" | "sidebar" | undefined;
     }[];
     description?: string | undefined;
     path?: string | undefined;

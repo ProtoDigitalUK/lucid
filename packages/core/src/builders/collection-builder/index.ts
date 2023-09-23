@@ -12,7 +12,7 @@ const CollectionOptionsSchema = z.object({
     z.object({
       key: z.string(),
       type: z.enum(["builder", "fixed"]),
-      position: z.enum(["standard", "bottom", "top", "sidebar"]).optional(),
+      position: z.enum(["bottom", "top", "sidebar"]).optional(),
     })
   ),
 });
@@ -65,7 +65,7 @@ export default class CollectionBuilder {
     // add default position to fixed bricks
     this.config.bricks = this.config.bricks.map((brick) => {
       if (brick.type === "fixed" && !brick.position) {
-        brick.position = "standard";
+        brick.position = "bottom";
       }
       return brick;
     });

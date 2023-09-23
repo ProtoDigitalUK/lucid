@@ -27,13 +27,21 @@ const resetPassword = async (client: PoolClient, data: ServiceData) => {
 
   // -------------------------------------------
   // Update the user's password
-  const user = await service(
+  await service(
     userServices.updateSingle,
     false,
     client
   )({
     user_id: userToken.user_id,
     password: data.password,
+  });
+
+  const user = await service(
+    userServices.getSingle,
+    false,
+    client
+  )({
+    user_id: userToken.user_id,
   });
 
   // -------------------------------------------

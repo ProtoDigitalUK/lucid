@@ -55,7 +55,6 @@ export const SettingsCollection = new CollectionBuilder("settings", {
     {
       key: "default_meta",
       type: "fixed",
-      position: "standard",
     },
   ],
 });

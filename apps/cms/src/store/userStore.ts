@@ -6,7 +6,7 @@ import {
   EnvironmentPermissionT,
 } from "@lucid/types/src/permissions";
 
-type AuthStore = {
+type UserStoreT = {
   user: UserResT | null;
   reset: () => void;
 
@@ -23,7 +23,7 @@ type AuthStore = {
   };
 };
 
-const [get, set] = createStore<AuthStore>({
+const [get, set] = createStore<UserStoreT>({
   user: null,
   reset() {
     set("user", null);

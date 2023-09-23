@@ -1,15 +1,10 @@
 import { PageT } from "@db/models/Page.js";
 // Types
-import {
-  CollectionPagesResT,
-  CollectionResT,
-} from "@lucid/types/src/collections.js";
+import type { CollectionResT } from "@lucid/types/src/collections.js";
+import type { PagesResT } from "@lucid/types/src/pages.js";
 
-const formatPage = (
-  data: PageT,
-  collections: CollectionResT[]
-): CollectionPagesResT => {
-  let res: CollectionPagesResT = {
+const formatPage = (data: PageT, collections: CollectionResT[]): PagesResT => {
+  let res: PagesResT = {
     id: data.id,
     environment_key: data.environment_key,
     parent_id: data.parent_id,

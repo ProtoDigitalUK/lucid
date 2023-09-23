@@ -304,6 +304,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         }}
         onBlur={setSlugFromTitle}
         errors={mutateErrors()?.errors?.body?.title}
+        required={true}
       />
       <Show when={!hideSlugInput()}>
         <Form.Input
@@ -317,6 +318,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
             describedBy: T("page_slug_description"),
           }}
           errors={createPage.errors()?.errors?.body?.slug}
+          required={true}
         />
       </Show>
       <Form.Textarea

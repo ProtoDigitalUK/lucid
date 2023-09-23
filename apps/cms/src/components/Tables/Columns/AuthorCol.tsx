@@ -1,12 +1,12 @@
 import { Component, Switch, Match } from "solid-js";
 // Types
-import type { CollectionPagesResT } from "@lucid/types/src/collections";
+import type { PagesResT } from "@lucid/types/src/pages";
 // Components
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";
 
 interface AuthorColProps {
-  author: CollectionPagesResT["author"];
+  author: PagesResT["author"];
   options?: {
     include?: boolean;
   };

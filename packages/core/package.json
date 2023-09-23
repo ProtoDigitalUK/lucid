@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsc && tsup",
     "dev": "tsup --watch",
     "lint": "eslint --fix ./src/*.ts",
     "test": "jest --silent --coverage --detectOpenHandles",

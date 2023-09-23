@@ -3237,13 +3237,20 @@ var resetPassword = async (client, data) => {
     token_type: "password_reset",
     token: data.token
   });
-  const user = await service_default(
+  await service_default(
     users_default.updateSingle,
     false,
     client
   )({
     user_id: userToken.user_id,
     password: data.password
+  });
+  const user = await service_default(
+    users_default.getSingle,
+    false,
+    client
+  )({
+    user_id: userToken.user_id
   });
   await service_default(
     user_tokens_default.deleteSingle,
@@ -13091,7 +13098,7 @@ var CollectionOptionsSchema = z23.object({
     z23.object({
       key: z23.string(),
       type: z23.enum(["builder", "fixed"]),
-      position: z23.enum(["standard", "bottom", "top", "sidebar"]).optional()
+      position: z23.enum(["bottom", "top", "sidebar"]).optional()
     })
   )
 });
@@ -13124,7 +13131,7 @@ var CollectionBuilder = class {
   #addBrickDefaults = () => {
     this.config.bricks = this.config.bricks.map((brick) => {
       if (brick.type === "fixed" && !brick.position) {
-        brick.position = "standard";
+        brick.position = "bottom";
       }
       return brick;
     });

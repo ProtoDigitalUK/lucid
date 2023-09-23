@@ -4,8 +4,8 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
-import { CollectionPagesResT } from "@lucid/types/src/collections";
+import type { APIResponse } from "@/types/api";
+import type { PagesResT } from "@lucid/types/src/pages";
 
 interface QueryParams {
   location: {
@@ -35,7 +35,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     ],
     {
       queryFn: () =>
-        request<APIResponse<CollectionPagesResT>>({
+        request<APIResponse<PagesResT>>({
           url: `/api/v1/pages/${queryParams().location?.id}`,
           config: {
             method: "GET",

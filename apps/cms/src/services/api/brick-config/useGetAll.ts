@@ -10,8 +10,8 @@ import { BrickConfigT } from "@lucid/types/src/bricks";
 interface QueryParams {
   include: Record<"fields", boolean>;
   filters?: {
-    environment_key: Accessor<string | undefined>;
-    collection_key: Accessor<string | undefined>;
+    environment_key?: Accessor<string | undefined>;
+    collection_key?: Accessor<string | undefined>;
   };
 }
 
