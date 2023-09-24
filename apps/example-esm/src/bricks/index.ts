@@ -4,7 +4,7 @@ export const BannerBrick = new BrickBuilder("banner", {
   preview: {
     mode: "image",
     image: {
-      url: "/api/public/rumham.jpg",
+      url: "/public/rumham.jpg",
     },
   },
 })
