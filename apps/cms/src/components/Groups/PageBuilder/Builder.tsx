@@ -9,6 +9,7 @@ import builderStore from "@/store/builderStore";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import BrickPreview from "@/components/Partials/BrickPreview";
+import DragDropZone from "@/components/Partials/DragDropZone";
 
 interface BuilderProps {
   state: {
@@ -86,23 +87,29 @@ export const Builder: Component<BuilderProps> = (props) => {
           >
             <FaSolidPlus class="w-4 h-4 fill-title" />
           </button>
-          <ol class="my-5 w-full">
-            <For each={builderStore.get.builder_bricks}>
-              {(brick, i) => (
-                <PageBuilder.BrickRow
-                  type="builder"
-                  data={{
-                    brick: brick,
-                    index: i(),
-                    brickConfig: props.data.brickConfig,
-                  }}
-                  callbacks={{
-                    setHighlightedBrick,
-                  }}
-                />
-              )}
-            </For>
-          </ol>
+          <DragDropZone>
+            {({ setDraggingIndex, setDraggingOverIndex }) => (
+              <ol class="my-5 w-full">
+                <For each={builderStore.get.builder_bricks}>
+                  {(brick, i) => (
+                    <PageBuilder.BrickRow
+                      type="builder"
+                      data={{
+                        brick: brick,
+                        index: i(),
+                        brickConfig: props.data.brickConfig,
+                      }}
+                      callbacks={{
+                        setHighlightedBrick,
+                        setDraggingIndex,
+                        setDraggingOverIndex,
+                      }}
+                    />
+                  )}
+                </For>
+              </ol>
+            )}
+          </DragDropZone>
           <button
             class={addBrickBtnClasses}
             onClick={() => props.state.setOpenSelectBrick(true)}

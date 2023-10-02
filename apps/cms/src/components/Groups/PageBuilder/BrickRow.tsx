@@ -17,6 +17,8 @@ interface BrickRowProps {
   };
   callbacks: {
     setHighlightedBrick: Setter<string | undefined>;
+    setDraggingIndex: Setter<number | undefined>;
+    setDraggingOverIndex: Setter<number | undefined>;
   };
 }
 
@@ -33,6 +35,7 @@ export const BrickRow: Component<BrickRowProps> = (props) => {
   // Render
   return (
     <li
+      id={`brick-${props.data.brick.key}-${props.data.index}`}
       class="w-full relative h-10 bg-primaryA2 mb-15 last:mb-0 rounded-md flex items-center cursor-pointer"
       onMouseOver={() => {
         props.callbacks.setHighlightedBrick(props.data.brick.key);
@@ -40,6 +43,21 @@ export const BrickRow: Component<BrickRowProps> = (props) => {
       onMouseLeave={() => {
         props.callbacks.setHighlightedBrick(undefined);
       }}
+      onDragStart={() => {
+        props.callbacks.setDraggingIndex(props.data.index);
+        props.callbacks.setDraggingOverIndex(props.data.index);
+      }}
+      onDragEnd={() => {
+        props.callbacks.setDraggingIndex(undefined);
+        props.callbacks.setDraggingOverIndex(undefined);
+      }}
+      onDragEnter={() => {
+        props.callbacks.setDraggingOverIndex(props.data.index);
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+      }}
+      draggable={props.type === "builder"}
     >
       {/* Grab/Locked */}
       <div
