@@ -1,14 +1,21 @@
-import { Component, createSignal, createMemo, createEffect } from "solid-js";
+import {
+  Component,
+  createSignal,
+  createMemo,
+  createEffect,
+  onMount,
+} from "solid-js";
 import { useParams } from "@solidjs/router";
 // Services
 import api from "@/services/api";
 // Stores
 import { environment } from "@/store/environmentStore";
+import builderStore from "@/store/builderStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
-import SelectBrick from "@/components/Modals/Bricks/SelectBrick";
+import AddBrick from "@/components/Modals/Bricks/AddBrick";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
@@ -115,6 +122,12 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   });
 
   // ----------------------------------
+  // On Mount
+  onMount(() => {
+    builderStore.get.reset();
+  });
+
+  // ----------------------------------
   // Render
   return (
     <>
@@ -148,8 +161,11 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         {/* Build */}
         <div class="h-full w-full p-15 pl-0">
           <div class="w-full h-full bg-primary rounded-md brick-pattern relative">
-            <div class="absolute inset-0 overflow-y-scroll z-10 right-[165px] flex flex-col justify-center items-center p-15">
+            <div class="absolute inset-0 overflow-y-scroll z-10 right-[165px] p-15 flex  items-center">
               <PageBuilder.Builder
+                data={{
+                  brickConfig: brickConfig.data?.data || [],
+                }}
                 state={{
                   setOpenSelectBrick: setSelectBrickOpen,
                 }}
@@ -161,13 +177,11 @@ const EnvCollectionsPagesEditRoute: Component = () => {
           </div>
         </div>
       </div>
-      <SelectBrick
+      {/* Modals */}
+      <AddBrick
         state={{
           open: getSelectBrickOpen(),
           setOpen: setSelectBrickOpen,
-        }}
-        callbacks={{
-          selectBrick: () => {},
         }}
         data={{
           collection: collection.data?.data,

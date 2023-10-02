@@ -2,7 +2,7 @@ import { createStore } from "solid-js/store";
 // Types
 import type { BrickFieldT } from "@lucid/types/src/pages";
 
-interface BrickDataT {
+export interface BrickDataT {
   key: string;
   fields: Array<BrickFieldT>;
 }
@@ -13,15 +13,17 @@ type BuilderStoreT = {
   // functions
   reset: () => void;
 
-  addBrick: (props: {
+  addBrick: (_props: {
     brick: BrickDataT;
     type: "builder_bricks" | "fixed_bricks";
   }) => void;
-  removeBrick: (props: {
+
+  removeBrick: (_props: {
     index: number;
     type: "builder_bricks" | "fixed_bricks";
   }) => void;
-  updateBrick: (props: {
+
+  updateBrick: (_props: {
     brick: BrickDataT;
     index: number;
     type: "builder_bricks" | "fixed_bricks";
@@ -36,18 +38,19 @@ const [get, set] = createStore<BuilderStoreT>({
     set("builder_bricks", []);
     set("fixed_bricks", []);
   },
+
   addBrick({ brick, type }) {
-    const bricks = get[type];
-    bricks.push(brick);
-    set(type, bricks);
+    set(type, [...get[type], brick]);
   },
+
   removeBrick({ index, type }) {
-    const bricks = get[type];
+    const bricks = [...get[type]];
     bricks.splice(index, 1);
     set(type, bricks);
   },
+
   updateBrick({ brick, index, type }) {
-    const bricks = get[type];
+    const bricks = [...get[type]];
     bricks[index] = brick;
     set(type, bricks);
   },

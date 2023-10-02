@@ -1,24 +1,20 @@
 import { Component, For, createSignal, createMemo, Show } from "solid-js";
 import { FaSolidMagnifyingGlass, FaSolidXmark } from "solid-icons/fa";
+import classNames from "classnames";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
 import type { CollectionResT } from "@lucid/types/src/collections";
-// Assets
-import brickPlaceholder from "@/assets/images/brick-placeholder.jpg";
 import brickIcon from "@/assets/svgs/default-brick-icon.svg";
+// Store
+import builderStore from "@/store/builderStore";
 // Components
-import { Image } from "@kobalte/core";
 import Modal from "@/components/Groups/Modal";
-import AspectRatio from "@/components/Partials/AspectRatio";
-import classNames from "classnames";
+import BrickPreview from "@/components/Partials/BrickPreview";
 
-interface SelectBrickProps {
+interface AddBrickProps {
   state: {
     open: boolean;
     setOpen: (_open: boolean) => void;
-  };
-  callbacks: {
-    selectBrick: (_brickConfig: BrickConfigT) => void;
   };
   data: {
     collection?: CollectionResT;
@@ -26,7 +22,7 @@ interface SelectBrickProps {
   };
 }
 
-const SelectBrick: Component<SelectBrickProps> = (props) => {
+const AddBrick: Component<AddBrickProps> = (props) => {
   // ------------------------------
   // State
   const [getHighlightedBrick, setHighlightedBrick] = createSignal<
@@ -123,7 +119,13 @@ const SelectBrick: Component<SelectBrickProps> = (props) => {
                     onMouseOver={() => setHighlightedBrick(brickConfig.key)}
                     onFocus={() => setHighlightedBrick(brickConfig.key)}
                     onClick={() => {
-                      props.callbacks.selectBrick(brickConfig);
+                      builderStore.get.addBrick({
+                        brick: {
+                          key: brickConfig.key,
+                          fields: [],
+                        },
+                        type: "builder_bricks",
+                      });
                       props.state.setOpen(false);
                     }}
                   >
@@ -143,25 +145,11 @@ const SelectBrick: Component<SelectBrickProps> = (props) => {
         <div class="w-[60%] p-15 h-full pl-0">
           <div class="bg-backgroundAccent h-full rounded-md flex items-center justify-center">
             <div class="w-[80%]">
-              <AspectRatio ratio="16:9">
-                <Image.Root
-                  fallbackDelay={100}
-                  class="w-full h-full rounded-md overflow-hidden block"
-                >
-                  <Image.Img
-                    src={highlightedBrick()?.preview?.image?.url}
-                    alt={highlightedBrick()?.title}
-                    loading="lazy"
-                  />
-                  <Image.Fallback class="">
-                    <img
-                      src={brickPlaceholder}
-                      alt="Brick Placeholder"
-                      loading="lazy"
-                    />
-                  </Image.Fallback>
-                </Image.Root>
-              </AspectRatio>
+              <BrickPreview
+                data={{
+                  brick: highlightedBrick(),
+                }}
+              />
             </div>
           </div>
         </div>
@@ -170,4 +158,4 @@ const SelectBrick: Component<SelectBrickProps> = (props) => {
   );
 };
 
-export default SelectBrick;
+export default AddBrick;

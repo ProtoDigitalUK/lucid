@@ -36,6 +36,7 @@
   "confirm_password": "Confirm Password",
   "email": "Email",
   "roles": "Roles",
+  "update_brick": "Update Brick",
   "reset_password": "Reset Password",
   "back_to_login": "Back to Login",
   "forgot_password": "Forgot Password?",

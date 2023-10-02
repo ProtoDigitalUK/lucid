@@ -14,6 +14,7 @@ module.exports = {
         primaryH: "#2E2E34",
         primaryText: "#FFFFFF",
         primaryA: "#414141",
+        primaryA2: "#343439",
         // purple
         secondary: "#6554FB",
         secondaryH: "#594AE1",
