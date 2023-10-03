@@ -26,9 +26,15 @@ const BrickPreview: Component<BrickPreviewProps> = (props) => {
           src={props.data.brick?.preview?.image?.url}
           alt={props.data.brick?.title}
           loading="lazy"
+          class="w-full h-full object-cover"
         />
         <Image.Fallback class="">
-          <img src={brickPlaceholder} alt="Brick Placeholder" loading="lazy" />
+          <img
+            src={brickPlaceholder}
+            class="w-full h-full object-cover"
+            alt="Brick Placeholder"
+            loading="lazy"
+          />
         </Image.Fallback>
       </Image.Root>
     </AspectRatio>

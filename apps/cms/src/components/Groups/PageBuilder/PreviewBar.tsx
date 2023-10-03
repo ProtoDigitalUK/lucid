@@ -53,7 +53,7 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
       {/* Builder */}
       <div>
         <Show when={fixedTopBricks().length > 0}>
-          <span class="w-10 h-px bg-white block mx-auto mb-2.5"></span>
+          <span class="w-10 h-px bg-white block mx-auto mb-2.5" />
         </Show>
         <DragDropZone
           zoneId="builder-preview"
@@ -84,7 +84,7 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
           )}
         </DragDropZone>
         <Show when={fixedBottomBricks().length > 0}>
-          <span class="w-10 h-px bg-white block mx-auto mt-2.5"></span>
+          <span class="w-10 h-px bg-white block mx-auto mt-2.5" />
         </Show>
       </div>
       {/* Fixed - Bottom */}
