@@ -1,10 +1,4 @@
-import {
-  Component,
-  createSignal,
-  createMemo,
-  createEffect,
-  onMount,
-} from "solid-js";
+import { Component, createSignal, createMemo, createEffect } from "solid-js";
 import { useParams } from "@solidjs/router";
 // Services
 import api from "@/services/api";
@@ -99,7 +93,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // ---------------------------------
   // Effects
   createEffect(() => {
-    if (page.isSuccess && categories.isSuccess) {
+    if (page.isSuccess && categories.isSuccess && collection.isSuccess) {
+      builderStore.get.reset();
+
       setTitle(page.data?.data.title || "");
       setSlug(page.data?.data.slug || "");
       setParentId(page.data?.data.parent_id || undefined);
@@ -118,11 +114,8 @@ const EnvCollectionsPagesEditRoute: Component = () => {
           }) || []
       );
       setSelectedAuthor(page.data?.data.author?.id || undefined);
-    }
-  });
 
-  createEffect(() => {
-    if (collection.isSuccess) {
+      // Set fixed
       builderStore.set(
         "fixedBricks",
         collection.data.data.bricks
@@ -138,12 +131,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
           })
       );
     }
-  });
-
-  // ----------------------------------
-  // On Mount
-  onMount(() => {
-    builderStore.get.reset();
   });
 
   // ----------------------------------

@@ -4,7 +4,7 @@ export const BannerBrick = new BrickBuilder("banner", {
   preview: {
     mode: "image",
     image: {
-      url: "/public/rumham.jpg",
+      url: "https://lucid-dev.up.railway.app/public/banner-brick.png",
     },
   },
 })
@@ -39,7 +39,14 @@ export const BannerBrick = new BrickBuilder("banner", {
     description: "Make the banner fullwidth",
   });
 
-export const IntroBrick = new BrickBuilder("intro")
+export const IntroBrick = new BrickBuilder("intro", {
+  preview: {
+    mode: "image",
+    image: {
+      url: "https://lucid-dev.up.railway.app/public/introduction-brick.png",
+    },
+  },
+})
   .addTab({
     key: "content_tab",
   })
