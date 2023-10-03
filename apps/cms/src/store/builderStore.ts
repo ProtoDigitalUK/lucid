@@ -28,6 +28,12 @@ type BuilderStoreT = {
     index: number;
     type: "builder_bricks" | "fixed_bricks";
   }) => void;
+
+  sortOrder: (_props: {
+    type: "builder_bricks" | "fixed_bricks";
+    from: number;
+    to: number;
+  }) => void;
 };
 
 const [get, set] = createStore<BuilderStoreT>({
@@ -52,6 +58,12 @@ const [get, set] = createStore<BuilderStoreT>({
   updateBrick({ brick, index, type }) {
     const bricks = [...get[type]];
     bricks[index] = brick;
+    set(type, bricks);
+  },
+
+  sortOrder({ type, from, to }) {
+    const bricks = [...get[type]];
+    bricks.splice(to, 0, bricks.splice(from, 1)[0]);
     set(type, bricks);
   },
 });

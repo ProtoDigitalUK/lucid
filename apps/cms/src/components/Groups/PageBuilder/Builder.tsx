@@ -87,8 +87,17 @@ export const Builder: Component<BuilderProps> = (props) => {
           >
             <FaSolidPlus class="w-4 h-4 fill-title" />
           </button>
-          <DragDropZone>
-            {({ setDraggingIndex, setDraggingOverIndex }) => (
+          <DragDropZone
+            zoneId="builder-main"
+            sortOrder={(index, targetIndex) => {
+              builderStore.get.sortOrder({
+                type: "builder_bricks",
+                from: index,
+                to: targetIndex,
+              });
+            }}
+          >
+            {({ dropZone }) => (
               <ol class="my-5 w-full">
                 <For each={builderStore.get.builder_bricks}>
                   {(brick, i) => (
@@ -101,8 +110,7 @@ export const Builder: Component<BuilderProps> = (props) => {
                       }}
                       callbacks={{
                         setHighlightedBrick,
-                        setDraggingIndex,
-                        setDraggingOverIndex,
+                        dropZone,
                       }}
                     />
                   )}
