@@ -124,7 +124,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
                           key: brickConfig.key,
                           fields: [],
                         },
-                        type: "builder_bricks",
+                        type: "builderBricks",
                       });
                       props.state.setOpen(false);
                     }}

@@ -18,7 +18,8 @@ interface BrickRowProps {
   };
   callbacks: {
     setHighlightedBrick: Setter<string | undefined>;
-    dropZone: DropZoneCBT;
+    setShowBrickPreview: Setter<boolean>;
+    dropZone?: DropZoneCBT;
   };
 }
 
@@ -35,28 +36,29 @@ export const BrickRow: Component<BrickRowProps> = (props) => {
   // Render
   return (
     <li
-      data-zoneId={props.callbacks.dropZone.zoneId}
+      data-zoneId={props.callbacks.dropZone?.zoneId}
       class={classNames(
-        "w-full relative h-10 bg-primaryA2 mb-15 last:mb-0 rounded-md flex items-center cursor-pointer",
+        "w-full relative h-10 bg-primaryA2 mb-15 last:mb-0 rounded-md flex items-center cursor-pointer transition-opacity duration-200",
         {
           "opacity-60":
-            props.callbacks.dropZone.getDraggingIndex() === props.data.index,
+            props.callbacks.dropZone?.getDraggingIndex() === props.data.index,
         }
       )}
       onMouseOver={() => {
         props.callbacks.setHighlightedBrick(props.data.brick.key);
+        props.callbacks.setShowBrickPreview(true);
       }}
       onMouseLeave={() => {
-        props.callbacks.setHighlightedBrick(undefined);
+        props.callbacks.setShowBrickPreview(false);
       }}
       onDragStart={(e) =>
-        props.callbacks.dropZone.onDragStart(e, props.data.index)
+        props.callbacks.dropZone?.onDragStart(e, props.data.index)
       }
-      onDragEnd={(e) => props.callbacks.dropZone.onDragEnd(e)}
+      onDragEnd={(e) => props.callbacks.dropZone?.onDragEnd(e)}
       onDragEnter={(e) =>
-        props.callbacks.dropZone.onDragEnter(e, props.data.index)
+        props.callbacks.dropZone?.onDragEnter(e, props.data.index)
       }
-      onDragOver={(e) => props.callbacks.dropZone.onDragOver(e)}
+      onDragOver={(e) => props.callbacks.dropZone?.onDragOver(e)}
     >
       {/* Grab/Locked */}
       <div
@@ -68,16 +70,16 @@ export const BrickRow: Component<BrickRowProps> = (props) => {
         )}
         onMouseOver={(e) => {
           e.stopPropagation();
-          props.callbacks.setHighlightedBrick(undefined);
+          props.callbacks.setShowBrickPreview(false);
         }}
         onDragStart={(e) =>
-          props.callbacks.dropZone.onDragStart(e, props.data.index)
+          props.callbacks.dropZone?.onDragStart(e, props.data.index)
         }
-        onDragEnd={(e) => props.callbacks.dropZone.onDragEnd(e)}
+        onDragEnd={(e) => props.callbacks.dropZone?.onDragEnd(e)}
         onDragEnter={(e) =>
-          props.callbacks.dropZone.onDragEnter(e, props.data.index)
+          props.callbacks.dropZone?.onDragEnter(e, props.data.index)
         }
-        onDragOver={(e) => props.callbacks.dropZone.onDragOver(e)}
+        onDragOver={(e) => props.callbacks.dropZone?.onDragOver(e)}
         draggable={props.type === "builder"}
       >
         <Switch>
@@ -100,14 +102,16 @@ export const BrickRow: Component<BrickRowProps> = (props) => {
           class="absolute right-15 top-1/2 -translate-y-1/2 fill-white bg-white bg-opacity-20 hover:bg-opacity-30 duration-200 transition-all hover:fill-error rounded-full h-6 w-6 flex items-center justify-center"
           onMouseOver={(e) => {
             e.stopPropagation();
-            props.callbacks.setHighlightedBrick(undefined);
+            props.callbacks.setShowBrickPreview(false);
           }}
           onClick={(e) => {
             e.stopPropagation();
             builderStore.get.removeBrick({
-              type: "builder_bricks",
+              type: "builderBricks",
               index: props.data.index,
             });
+            props.callbacks.setHighlightedBrick(undefined);
+            props.callbacks.setShowBrickPreview(false);
           }}
         >
           <FaSolidXmark class="duration-200" />

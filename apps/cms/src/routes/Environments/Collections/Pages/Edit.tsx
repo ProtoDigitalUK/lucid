@@ -121,6 +121,25 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     }
   });
 
+  createEffect(() => {
+    if (collection.isSuccess) {
+      builderStore.set(
+        "fixedBricks",
+        collection.data.data.bricks
+          .filter((brick) => brick.type === "fixed")
+          .map((brick) => {
+            return {
+              key: brick.key,
+              fields: [],
+              position: (brick.position === "top" ? "top" : "bottom") as
+                | "top"
+                | "bottom",
+            };
+          })
+      );
+    }
+  });
+
   // ----------------------------------
   // On Mount
   onMount(() => {

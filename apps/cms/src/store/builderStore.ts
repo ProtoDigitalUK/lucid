@@ -7,42 +7,46 @@ export interface BrickDataT {
   fields: Array<BrickFieldT>;
 }
 
+export interface FixedBrickDataT extends BrickDataT {
+  position: "top" | "bottom";
+}
+
 type BuilderStoreT = {
-  builder_bricks: Array<BrickDataT>;
-  fixed_bricks: Array<BrickDataT>;
+  builderBricks: Array<BrickDataT>;
+  fixedBricks: Array<FixedBrickDataT>;
   // functions
   reset: () => void;
 
   addBrick: (_props: {
     brick: BrickDataT;
-    type: "builder_bricks" | "fixed_bricks";
+    type: "builderBricks" | "fixedBricks";
   }) => void;
 
   removeBrick: (_props: {
     index: number;
-    type: "builder_bricks" | "fixed_bricks";
+    type: "builderBricks" | "fixedBricks";
   }) => void;
 
   updateBrick: (_props: {
     brick: BrickDataT;
     index: number;
-    type: "builder_bricks" | "fixed_bricks";
+    type: "builderBricks" | "fixedBricks";
   }) => void;
 
   sortOrder: (_props: {
-    type: "builder_bricks" | "fixed_bricks";
+    type: "builderBricks" | "fixedBricks";
     from: number;
     to: number;
   }) => void;
 };
 
 const [get, set] = createStore<BuilderStoreT>({
-  builder_bricks: [],
-  fixed_bricks: [],
+  builderBricks: [],
+  fixedBricks: [],
 
   reset() {
-    set("builder_bricks", []);
-    set("fixed_bricks", []);
+    set("builderBricks", []);
+    set("fixedBricks", []);
   },
 
   addBrick({ brick, type }) {
