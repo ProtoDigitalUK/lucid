@@ -90,46 +90,81 @@ export default class CollectionBrick {
       values: [data.ids],
     });
   };
-  static createSingleBrick: CollectionBrickCreateSingle = async (
+  static createMultipleBricks: CollectionBrickCreateMultiple = async (
     client,
     data
   ) => {
+    // If no bricks to update, early return.
+    if (data.bricks.length === 0) return [];
+
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+
+    const totalFields = 4;
+
+    const aliases = data.bricks
+      .map((_, index) => {
+        return `($${index * totalFields + 1}, $${index * totalFields + 2}, $${
+          index * totalFields + 3
+        }, $${index * totalFields + 4})`;
+      })
+      .join(", ");
+
+    const dataValues = data.bricks.flatMap((brick) => {
+      return [brick.key, brick.type, data.reference_id, brick.order];
+    });
 
     const brickRes = await client.query<{
       id: CollectionBrickT["id"];
+      brick_order: CollectionBrickFieldsT["brick_order"];
+      brick_key: CollectionBrickFieldsT["key"];
     }>(
       `INSERT INTO 
         lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
       VALUES 
-        ($1, $2, $3, $4)
-      RETURNING id`,
-      [data.brick.key, data.brick.type, data.reference_id, data.brick.order]
+        ${aliases}
+      RETURNING id, brick_order, brick_key`,
+      dataValues
     );
 
-    return brickRes.rows[0];
+    return brickRes.rows;
   };
-  static updateSingleBrick: CollectionBrickUpdateSingle = async (
+  static updateMultipleBrickOrders: CollectionBrickUpdateMultiple = async (
     client,
-    data
+    bricks
   ) => {
-    const brickRes = await client.query<{
+    // If no bricks to update, early return.
+    if (bricks.length === 0) return [];
+
+    // Construct a VALUES table to be used for the update
+    const valuesTable = bricks
+      .map((_, index) => {
+        return `($${index * 2 + 1}::int, $${index * 2 + 2}::int)`;
+      })
+      .join(", ");
+
+    const dataValues = bricks.flatMap((brick) => {
+      return [brick.id, brick.order];
+    });
+
+    const result = await client.query<{
       id: CollectionBrickT["id"];
+      brick_order: CollectionBrickT["brick_order"];
     }>(
-      `UPDATE 
-        lucid_collection_bricks 
-      SET 
-        brick_order = $1
-      WHERE 
-        id = $2
-      AND
-        brick_type = $3
-      RETURNING id`,
-      [data.brick.order, data.brick.id, data.brick.type]
+      `WITH data_values AS (
+            VALUES 
+            ${valuesTable}
+        ) AS (id, brick_order)
+        UPDATE lucid_collection_bricks
+        SET brick_order = data_values.brick_order
+        FROM data_values
+        WHERE lucid_collection_bricks.id = data_values.id
+        RETURNING lucid_collection_bricks.id, brick_order`,
+      dataValues
     );
 
-    return brickRes.rows[0];
+    return result.rows;
   };
+
   // -------------------------------------------
   // Fields
 }
@@ -177,3 +212,31 @@ type CollectionBrickUpdateSingle = (
 ) => Promise<{
   id: CollectionBrickT["id"];
 }>;
+
+type CollectionBrickCreateMultiple = (
+  client: PoolClient,
+  data: {
+    type: CollectionResT["type"];
+    reference_id: number;
+    bricks: BrickObject[];
+  }
+) => Promise<
+  {
+    id: CollectionBrickT["id"];
+    brick_order: CollectionBrickT["brick_order"];
+    brick_key: CollectionBrickFieldsT["key"];
+  }[]
+>;
+
+type CollectionBrickUpdateMultiple = (
+  client: PoolClient,
+  bricks: {
+    id: CollectionBrickT["id"];
+    order: number;
+  }[]
+) => Promise<
+  {
+    id: CollectionBrickT["id"];
+    brick_order: CollectionBrickT["brick_order"];
+  }[]
+>;

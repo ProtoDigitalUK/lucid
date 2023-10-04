@@ -17,7 +17,7 @@ const T = (
 
   return translation.replace(
     /\{\{(\w+)\}\}/g,
-    (match, p1) => data[p1 as keyof typeof data] as string
+    (_, p1) => data[p1 as keyof typeof data] as string
   );
 };
 

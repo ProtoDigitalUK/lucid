@@ -59,7 +59,9 @@ var en_gb_default = {
   db_connection_pool_not_initialised: "Database connection pool is not initialised. Call initialisePool() before getDBClient().",
   error_creating_page: "Error creating page",
   error_creating_page_homepage_disabled: "The current pages collection does not allow creating a homepage",
-  error_creating_page_parents_disabled: "The current pages collection does not allow creating a page with parents"
+  error_creating_page_parents_disabled: "The current pages collection does not allow creating a page with parents",
+  error_saving_bricks: "Error saving bricks",
+  error_saving_page_duplicate_order: "Duplicate builder orders found: {{order}}"
 };
 
 // src/translations/index.ts
@@ -74,7 +76,7 @@ var T = (key, data) => {
   }
   return translation.replace(
     /\{\{(\w+)\}\}/g,
-    (match, p1) => data[p1]
+    (_, p1) => data[p1]
   );
 };
 var translations_default = T;
@@ -7458,39 +7460,90 @@ var CollectionBrick2 = class {
       values: [data.ids]
     });
   };
-  static createSingleBrick = async (client, data) => {
+  static createMultipleBricks = async (client, data) => {
+    if (data.bricks.length === 0)
+      return [];
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const totalFields = 4;
+    const aliases = data.bricks.map((_, index) => {
+      return `($${index * totalFields + 1}, $${index * totalFields + 2}, $${index * totalFields + 3}, $${index * totalFields + 4})`;
+    }).join(", ");
+    const dataValues = data.bricks.flatMap((brick) => {
+      return [brick.key, brick.type, data.reference_id, brick.order];
+    });
     const brickRes = await client.query(
       `INSERT INTO 
         lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
       VALUES 
-        ($1, $2, $3, $4)
-      RETURNING id`,
-      [data.brick.key, data.brick.type, data.reference_id, data.brick.order]
+        ${aliases}
+      RETURNING id, brick_order, brick_key`,
+      dataValues
     );
-    return brickRes.rows[0];
+    return brickRes.rows;
   };
-  static updateSingleBrick = async (client, data) => {
-    const brickRes = await client.query(
-      `UPDATE 
-        lucid_collection_bricks 
-      SET 
-        brick_order = $1
-      WHERE 
-        id = $2
-      AND
-        brick_type = $3
-      RETURNING id`,
-      [data.brick.order, data.brick.id, data.brick.type]
+  static updateMultipleBrickOrders = async (client, bricks) => {
+    if (bricks.length === 0)
+      return [];
+    const valuesTable = bricks.map((_, index) => {
+      return `($${index * 2 + 1}::int, $${index * 2 + 2}::int)`;
+    }).join(", ");
+    const dataValues = bricks.flatMap((brick) => {
+      return [brick.id, brick.order];
+    });
+    const result = await client.query(
+      `WITH data_values AS (
+            VALUES 
+            ${valuesTable}
+        ) AS (id, brick_order)
+        UPDATE lucid_collection_bricks
+        SET brick_order = data_values.brick_order
+        FROM data_values
+        WHERE lucid_collection_bricks.id = data_values.id
+        RETURNING lucid_collection_bricks.id, brick_order`,
+      dataValues
     );
-    return brickRes.rows[0];
+    return result.rows;
   };
   // -------------------------------------------
   // Fields
 };
 
+// src/services/collection-bricks/new/checks/check-duplicate-orders.ts
+var checkDuplicateOrders = (bricks) => {
+  const builderOrders = bricks.filter((brick) => brick.type === "builder").map((brick) => brick.order);
+  const fixedOrders = bricks.filter((brick) => brick.type === "fixed").map((brick) => brick.order);
+  const builderOrderDuplicates = builderOrders.filter(
+    (order, index) => builderOrders.indexOf(order) !== index
+  );
+  const fixedOrderDuplicates = fixedOrders.filter(
+    (order, index) => fixedOrders.indexOf(order) !== index
+  );
+  if (builderOrderDuplicates.length > 0) {
+    throw new LucidError({
+      type: "basic",
+      name: translations_default("error_saving_bricks"),
+      message: translations_default("error_saving_page_duplicate_order", {
+        order: builderOrderDuplicates.join(", ")
+      }),
+      status: 400
+    });
+  }
+  if (fixedOrderDuplicates.length > 0) {
+    throw new LucidError({
+      type: "basic",
+      name: translations_default("error_saving_bricks"),
+      message: translations_default("error_saving_page_duplicate_order", {
+        order: fixedOrderDuplicates.join(", ")
+      }),
+      status: 400
+    });
+  }
+};
+var check_duplicate_orders_default = checkDuplicateOrders;
+
 // src/services/collection-bricks/new/update-multiple.ts
 var updateMultiple3 = async (client, data) => {
+  check_duplicate_orders_default(data.bricks);
   const existingBricks = await CollectionBrick2.getAllBricks(client, {
     type: data.type,
     reference_id: data.id
@@ -7500,21 +7553,28 @@ var updateMultiple3 = async (client, data) => {
       return !data.bricks.some((b) => b.id === brick.id);
     }).map((brick) => brick.id)
   });
-  const updatedBricks = await Promise.all(
-    data.bricks.map((brick) => {
-      if (brick.id === void 0) {
-        return CollectionBrick2.createSingleBrick(client, {
-          type: data.type,
-          reference_id: data.id,
-          brick
-        });
-      } else {
-        return CollectionBrick2.updateSingleBrick(client, {
-          brick
-        });
-      }
-    }) || []
-  );
+  const newBricks = await CollectionBrick2.createMultipleBricks(client, {
+    type: data.type,
+    reference_id: data.id,
+    bricks: data.bricks.filter((brick) => brick.id === void 0) || []
+  });
+  const updateIds = data.bricks.filter((brick) => brick.id !== void 0) || [];
+  data.bricks = data.bricks.map((brick) => {
+    const newBrick = newBricks.find(
+      (b) => b.brick_key === brick.key && b.brick_order === brick.order
+    );
+    if (newBrick) {
+      brick.id = newBrick.id;
+    }
+    return brick;
+  });
+  const updateData = await Promise.all([
+    CollectionBrick2.updateMultipleBrickOrders(
+      client,
+      updateIds
+    )
+    // TODO: Update fields
+  ]);
   return [];
 };
 var update_multiple_default3 = updateMultiple3;

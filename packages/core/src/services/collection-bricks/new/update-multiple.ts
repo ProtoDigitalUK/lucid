@@ -3,6 +3,8 @@ import { PoolClient } from "pg";
 import { CollectionResT } from "@lucid/types/src/collections.js";
 // Models
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrickNew.js";
+// Checks
+import checkDuplicateOrders from "@services/collection-bricks/new/checks/check-duplicate-orders.js";
 
 export interface ServiceData {
   id: number;
@@ -13,10 +15,12 @@ export interface ServiceData {
 }
 
 const updateMultiple = async (client: PoolClient, data: ServiceData) => {
-  // Validate the data (leave this for now)
+  // ---------------------------------------------------------------------------------------------------------------------------------
+  // Validation & Checks
+  checkDuplicateOrders(data.bricks);
 
-  // -------------------------------------------
-  // Bricks
+  // ---------------------------------------------------------------------------------------------------------------------------------
+  // Clear Old Data
 
   // Get all the bricks for this collection and work out which ones need to be deleted.
   const existingBricks = await CollectionBrick.getAllBricks(client, {
@@ -33,25 +37,41 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
       .map((brick) => brick.id),
   });
 
-  // Upsert all the bricks
-  const updatedBricks = await Promise.all(
-    data.bricks.map((brick) => {
-      if (brick.id === undefined) {
-        return CollectionBrick.createSingleBrick(client, {
-          type: data.type,
-          reference_id: data.id,
-          brick: brick,
-        });
-      } else {
-        return CollectionBrick.updateSingleBrick(client, {
-          brick: brick,
-        });
-      }
-    }) || []
-  );
+  // ---------------------------------------------------------------------------------------------------------------------------------
+  // Update/Create Data
 
-  // -------------------------------------------
-  // Fields
+  // Create all new bricks
+  const newBricks = await CollectionBrick.createMultipleBricks(client, {
+    type: data.type,
+    reference_id: data.id,
+    bricks: data.bricks.filter((brick) => brick.id === undefined) || [],
+  });
+
+  // Get the bricks that need to be updated
+  const updateIds = data.bricks.filter((brick) => brick.id !== undefined) || [];
+
+  // Update new bricks with their new ids
+  data.bricks = data.bricks.map((brick) => {
+    const newBrick = newBricks.find(
+      (b) => b.brick_key === brick.key && b.brick_order === brick.order
+    );
+    if (newBrick) {
+      brick.id = newBrick.id;
+    }
+    return brick;
+  });
+
+  // Update all bricks that already exist, along with all fields
+  const updateData = await Promise.all([
+    CollectionBrick.updateMultipleBrickOrders(
+      client,
+      updateIds as {
+        id: number;
+        order: number;
+      }[]
+    ),
+    // TODO: Update fields
+  ]);
 
   return [];
 };
