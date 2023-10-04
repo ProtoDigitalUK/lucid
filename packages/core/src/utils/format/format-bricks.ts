@@ -1,12 +1,11 @@
 // Models
 import { CollectionBrickFieldsT } from "@db/models/CollectionBrick.js";
-// Internal packages
+// Builders
 import {
   FieldTypes,
   BrickBuilderT,
   CustomField,
 } from "@builders/brick-builder/index.js";
-import { CollectionBrickT } from "@db/models/CollectionBrick.js";
 // Utils
 import createURL from "@utils/media/create-url.js";
 // Services
@@ -14,55 +13,7 @@ import brickConfigService from "@services/brick-config/index.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { EnvironmentResT } from "@lucid/types/src/environments.js";
-
-// ------------------------------------
-// Types
-export interface BrickResT {
-  id: CollectionBrickT["id"];
-  key: CollectionBrickT["brick_key"];
-  order: CollectionBrickT["brick_order"];
-  type: CollectionBrickT["brick_type"];
-  fields: Array<{
-    fields_id: number;
-    key: string;
-    type: FieldTypes;
-    value?:
-      | string
-      | number
-      | boolean
-      | null
-      | LinkValueT
-      | MediaValueT
-      | PageLinkValueT;
-    items?: Array<Array<BrickResT["fields"][0]>>;
-  }>;
-}
-
-export interface PageLinkValueT {
-  id: number;
-  target?: "_blank" | "_self";
-  title?: string;
-  slug?: string;
-  full_slug?: string;
-}
-
-export interface LinkValueT {
-  target?: "_blank" | "_self";
-  url?: string;
-}
-
-export interface MediaValueT {
-  id: number;
-  url?: string;
-  key?: string;
-  mime_type?: string;
-  file_extension?: string;
-  file_size?: number;
-  width?: number;
-  height?: number;
-  name?: string;
-  alt?: string;
-}
+import { BrickResT } from "@lucid/types/src/bricks.js";
 
 // -------------------------------------------
 // Custom Field Specific Fields
@@ -78,11 +29,11 @@ const specificFieldValues = (
       break;
     }
     case "text": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "wysiwyg": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "media": {
@@ -101,31 +52,31 @@ const specificFieldValues = (
       break;
     }
     case "number": {
-      value = field?.int_value || builderField.default || 0;
+      value = field?.int_value || builderField.default;
       break;
     }
     case "checkbox": {
-      value = field?.bool_value || builderField.default || false;
+      value = field?.bool_value || builderField.default;
       break;
     }
     case "select": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "textarea": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "json": {
-      value = field?.json_value || builderField.default || {};
+      value = field?.json_value || builderField.default;
       break;
     }
     case "colour": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "datetime": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "pagelink": {

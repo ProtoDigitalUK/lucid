@@ -177,7 +177,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                 }}
               />
             </div>
-            <div class="absolute top-15 right-15 bottom-15 w-[150px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
+            <div class="absolute top-15 right-15 bottom-15 w-[120px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
               <PageBuilder.PreviewBar
                 data={{
                   brickConfig: brickConfig.data?.data || [],

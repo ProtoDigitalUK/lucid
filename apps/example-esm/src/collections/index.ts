@@ -15,6 +15,10 @@ export const PageCollection = new CollectionBuilder("page", {
       type: "builder",
     },
     {
+      key: "testing",
+      type: "builder",
+    },
+    {
       key: "default_meta",
       type: "fixed",
       position: "bottom",

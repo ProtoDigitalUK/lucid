@@ -149,6 +149,9 @@ const AddBrick: Component<AddBrickProps> = (props) => {
                 data={{
                   brick: highlightedBrick(),
                 }}
+                options={{
+                  rounded: true,
+                }}
               />
             </div>
           </div>

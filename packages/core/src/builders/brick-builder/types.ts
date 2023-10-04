@@ -4,10 +4,7 @@ import z from "zod";
 // Types & Interfaces
 export interface BrickConfigOptionsT {
   preview?: {
-    mode: "image";
-    image?: {
-      url: string;
-    };
+    image?: string;
   };
 }
 
@@ -52,7 +49,7 @@ export interface CustomField {
   description?: CustomFieldConfig["description"];
   placeholder?: string;
   fields?: Array<CustomField>;
-  default?: string | boolean;
+  default?: defaultFieldValues;
 
   options?: Array<{
     label: string;
@@ -104,13 +101,12 @@ export interface CustomFieldConfig {
   key: string;
   title?: string;
   description?: string;
-  validation?: {
-    required?: boolean;
-  };
 }
 
 // text field
-export interface TabConfig extends CustomFieldConfig {}
+export interface TabConfig extends CustomFieldConfig {
+  title: string;
+}
 export interface TextConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
@@ -171,7 +167,9 @@ export interface TextareaConfig extends CustomFieldConfig {
   };
 }
 export interface JSONConfig extends CustomFieldConfig {
-  default?: string;
+  default?: {
+    [key: string]: any;
+  };
   placeholder?: string;
   validation?: {
     required?: boolean;
@@ -218,3 +216,14 @@ export type FieldConfigs =
   | ColourConfig
   | DateTimeConfig
   | PageLinkConfig;
+
+export type defaultFieldValues =
+  | TextConfig["default"]
+  | WysiwygConfig["default"]
+  | NumberConfig["default"]
+  | CheckboxConfig["default"]
+  | SelectConfig["default"]
+  | TextareaConfig["default"]
+  | JSONConfig["default"]
+  | ColourConfig["default"]
+  | DateTimeConfig["default"];

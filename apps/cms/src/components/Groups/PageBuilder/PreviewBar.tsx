@@ -132,11 +132,14 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
   return (
     <li
       data-zoneId={props.callbacks?.dropZone?.zoneId}
-      class={classNames("mb-2 last:mb-0 transition-opacity duration-200", {
-        "opacity-60":
-          props.callbacks?.dropZone?.getDraggingIndex() === props.data.index,
-        "cursor-grab": props.type === "builder",
-      })}
+      class={classNames(
+        "mb-2 last:mb-0 transition-opacity duration-200 rounded-md overflow-hidden",
+        {
+          "opacity-60":
+            props.callbacks?.dropZone?.getDraggingIndex() === props.data.index,
+          "cursor-grab": props.type === "builder",
+        }
+      )}
       onDragStart={(e) =>
         props.callbacks?.dropZone?.onDragStart(e, props.data.index)
       }

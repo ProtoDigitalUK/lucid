@@ -3,8 +3,8 @@ import { PoolClient } from "pg";
 import { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
-// Format
-import { BrickResT } from "@utils/format/format-bricks.js";
+// Types
+import { BrickResT } from "@lucid/types/src/bricks.js";
 
 // -------------------------------------------
 // Types

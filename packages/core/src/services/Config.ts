@@ -152,8 +152,9 @@ export default class Config {
     }
 
     const configPath = Config.findPath(process.cwd());
-    let config: ConfigT;
+    let config: ConfigT; // = await Config.getConfigESM(configPath);
 
+    // TODO: Return to this, if validation failure happens on config files default function export, it trys to use cjs loader. Not indeded.
     try {
       config = await Config.getConfigESM(configPath);
     } catch (error) {

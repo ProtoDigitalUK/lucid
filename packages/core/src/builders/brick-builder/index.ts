@@ -25,6 +25,7 @@ import {
   ValidationProps,
   MediaReferenceData,
   LinkReferenceData,
+  defaultFieldValues,
 } from "./types.js";
 
 // ------------------------------------
@@ -36,7 +37,9 @@ const baseCustomFieldSchema = z.object({
   description: z.string().optional(),
   placeholder: z.string().optional(),
   // boolean or string
-  default: z.union([z.boolean(), z.string()]).optional(),
+  default: z
+    .union([z.boolean(), z.string(), z.number(), z.undefined(), z.object({})])
+    .optional(),
   options: z
     .array(
       z.object({
@@ -509,6 +512,7 @@ export default class BrickBuilder {
       type: type,
       title: config.title || this.#keyToTitle(config.key),
       ...(noUndefinedConfig as CustomFieldConfig),
+      default: this.#setFieldDefaults(type, config),
     };
 
     const validation = baseCustomFieldSchema.safeParse(data);
@@ -517,6 +521,52 @@ export default class BrickBuilder {
     }
 
     this.fields.set(config.key, data);
+  }
+  #setFieldDefaults(
+    type: FieldTypes,
+    config: FieldConfigs
+  ): defaultFieldValues {
+    switch (type) {
+      case "tab": {
+        break;
+      }
+      case "text": {
+        return (config as TextConfig).default || "";
+      }
+      case "wysiwyg": {
+        return (config as WysiwygConfig).default || "";
+      }
+      case "media": {
+        return undefined;
+      }
+      case "number": {
+        return (config as NumberConfig).default || 0;
+      }
+      case "checkbox": {
+        return (config as CheckboxConfig).default || false;
+      }
+      case "select": {
+        return (config as SelectConfig).default || "";
+      }
+      case "textarea": {
+        return (config as TextareaConfig).default || "";
+      }
+      case "json": {
+        return (config as JSONConfig).default || {};
+      }
+      case "colour": {
+        return (config as ColourConfig).default || "";
+      }
+      case "datetime": {
+        return (config as DateTimeConfig).default || "";
+      }
+      case "pagelink": {
+        return undefined;
+      }
+      case "link": {
+        return undefined;
+      }
+    }
   }
   #checkKeyDuplication(key: string) {
     if (this.fields.has(key)) {

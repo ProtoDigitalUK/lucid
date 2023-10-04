@@ -208,7 +208,7 @@ export const Builder: Component<BuilderProps> = (props) => {
       {/* Preview */}
       <div
         class={classNames(
-          "fixed top-0 left-0 z-50 bg-container w-52 rounded-md pointer-events-none transition-opacity duration-200",
+          "fixed top-0 left-0 z-50 bg-container w-52 rounded-md overflow-hidden pointer-events-none transition-opacity duration-200",
           {
             "opacity-0": !showBrickPreview(),
             "opacity-100": showBrickPreview(),

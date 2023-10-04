@@ -3,6 +3,7 @@ import {
   BannerBrick,
   IntroBrick,
   DefaultMetaBrick,
+  TestingBrick,
 } from "./src/bricks/index.js";
 import {
   PageCollection,
@@ -51,5 +52,5 @@ export default buildConfig({
   },
   forms: [ContactForm],
   collections: [PageCollection, SettingsCollection, BlogCollection],
-  bricks: [BannerBrick, IntroBrick, DefaultMetaBrick],
+  bricks: [BannerBrick, IntroBrick, DefaultMetaBrick, TestingBrick],
 });

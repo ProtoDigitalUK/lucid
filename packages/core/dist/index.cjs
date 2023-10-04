@@ -4875,7 +4875,7 @@ var baseCustomFieldSchema = import_zod7.default.object({
   description: import_zod7.default.string().optional(),
   placeholder: import_zod7.default.string().optional(),
   // boolean or string
-  default: import_zod7.default.union([import_zod7.default.boolean(), import_zod7.default.string()]).optional(),
+  default: import_zod7.default.union([import_zod7.default.boolean(), import_zod7.default.string(), import_zod7.default.number(), import_zod7.default.undefined(), import_zod7.default.object({})]).optional(),
   options: import_zod7.default.array(
     import_zod7.default.object({
       label: import_zod7.default.string(),
@@ -5280,13 +5280,57 @@ var BrickBuilder = class {
     const data = {
       type,
       title: config.title || this.#keyToTitle(config.key),
-      ...noUndefinedConfig
+      ...noUndefinedConfig,
+      default: this.#setFieldDefaults(type, config)
     };
     const validation = baseCustomFieldSchema.safeParse(data);
     if (!validation.success) {
       throw new Error(validation.error.message);
     }
     this.fields.set(config.key, data);
+  }
+  #setFieldDefaults(type, config) {
+    switch (type) {
+      case "tab": {
+        break;
+      }
+      case "text": {
+        return config.default || "";
+      }
+      case "wysiwyg": {
+        return config.default || "";
+      }
+      case "media": {
+        return void 0;
+      }
+      case "number": {
+        return config.default || 0;
+      }
+      case "checkbox": {
+        return config.default || false;
+      }
+      case "select": {
+        return config.default || "";
+      }
+      case "textarea": {
+        return config.default || "";
+      }
+      case "json": {
+        return config.default || {};
+      }
+      case "colour": {
+        return config.default || "";
+      }
+      case "datetime": {
+        return config.default || "";
+      }
+      case "pagelink": {
+        return void 0;
+      }
+      case "link": {
+        return void 0;
+      }
+    }
   }
   #checkKeyDuplication(key) {
     if (this.fields.has(key)) {
@@ -6713,11 +6757,11 @@ var specificFieldValues = (type, builderField, field) => {
       break;
     }
     case "text": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "wysiwyg": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "media": {
@@ -6736,31 +6780,31 @@ var specificFieldValues = (type, builderField, field) => {
       break;
     }
     case "number": {
-      value = field?.int_value || builderField.default || 0;
+      value = field?.int_value || builderField.default;
       break;
     }
     case "checkbox": {
-      value = field?.bool_value || builderField.default || false;
+      value = field?.bool_value || builderField.default;
       break;
     }
     case "select": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "textarea": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "json": {
-      value = field?.json_value || builderField.default || {};
+      value = field?.json_value || builderField.default;
       break;
     }
     case "colour": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "datetime": {
-      value = field?.text_value || builderField.default || "";
+      value = field?.text_value || builderField.default;
       break;
     }
     case "pagelink": {

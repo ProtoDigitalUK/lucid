@@ -14,6 +14,7 @@ import LoginRoute from "@/routes/Login";
 import ForgotPasswordRoute from "@/routes/ForgotPassword";
 import ResetPasswordRoute from "@/routes/ResetPassword";
 import DashboardRoute from "@/routes/Dashboard";
+import TestRoute from "@/routes/Test";
 
 // media
 import MediaListRoute from "@/routes/Media/List";
@@ -45,6 +46,7 @@ const AppRouter: Component = () => {
         <Route path="/" component={Authenticated}>
           <Route path="/" element={<MainLayout />}>
             <Route path="/" element={<DashboardRoute />} />
+            <Route path="/test" element={<TestRoute />} />
             {/* Environments */}
             <Route
               path="/env/:envKey/collection/:collectionKey"

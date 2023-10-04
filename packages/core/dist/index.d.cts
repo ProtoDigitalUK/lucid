@@ -182,10 +182,7 @@ declare class CollectionBuilder {
 
 interface BrickConfigOptionsT {
     preview?: {
-        mode: "image";
-        image?: {
-            url: string;
-        };
+        image?: string;
     };
 }
 type FieldTypes = "tab" | "text" | "wysiwyg" | "media" | "repeater" | "number" | "checkbox" | "select" | "textarea" | "json" | "colour" | "datetime" | "pagelink" | "link";
@@ -196,7 +193,7 @@ interface CustomField {
     description?: CustomFieldConfig["description"];
     placeholder?: string;
     fields?: Array<CustomField>;
-    default?: string | boolean;
+    default?: defaultFieldValues;
     options?: Array<{
         label: string;
         value: string;
@@ -238,11 +235,9 @@ interface CustomFieldConfig {
     key: string;
     title?: string;
     description?: string;
-    validation?: {
-        required?: boolean;
-    };
 }
 interface TabConfig extends CustomFieldConfig {
+    title: string;
 }
 interface TextConfig extends CustomFieldConfig {
     default?: string;
@@ -307,7 +302,9 @@ interface TextareaConfig extends CustomFieldConfig {
     };
 }
 interface JSONConfig extends CustomFieldConfig {
-    default?: string;
+    default?: {
+        [key: string]: any;
+    };
     placeholder?: string;
     validation?: {
         required?: boolean;
@@ -340,6 +337,7 @@ interface LinkConfig extends CustomFieldConfig {
         required?: boolean;
     };
 }
+type defaultFieldValues = TextConfig["default"] | WysiwygConfig["default"] | NumberConfig["default"] | CheckboxConfig["default"] | SelectConfig["default"] | TextareaConfig["default"] | JSONConfig["default"] | ColourConfig["default"] | DateTimeConfig["default"];
 
 declare class BrickBuilder {
     #private;

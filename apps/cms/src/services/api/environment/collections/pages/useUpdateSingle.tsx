@@ -4,6 +4,18 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
+import { BrickStoreFieldT } from "@/store/builderStore";
+
+export interface BrickUpdateFieldT {
+  group_position?: number;
+  parent_repeater?: number;
+  fields_id?: BrickStoreFieldT["fields_id"];
+  key: BrickStoreFieldT["key"];
+  type: BrickStoreFieldT["type"];
+  value?: BrickStoreFieldT["value"];
+  target?: "_blank" | "_self";
+  items?: BrickUpdateFieldT[];
+}
 
 interface Params {
   id: number;
@@ -17,9 +29,16 @@ interface Params {
     category_ids?: number[];
     author_id?: number | null;
 
-    // TODO: Add types
-    builder_bricks?: [];
-    fixed_bricks?: [];
+    builder_bricks?: Array<{
+      id?: number;
+      key: string;
+      fields: Array<BrickUpdateFieldT>;
+    }>;
+    fixed_bricks?: Array<{
+      id?: number;
+      key: string;
+      fields: Array<BrickUpdateFieldT>;
+    }>;
   };
   headers: {
     "lucid-environment": string;

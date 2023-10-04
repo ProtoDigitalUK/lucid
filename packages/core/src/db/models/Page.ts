@@ -6,8 +6,8 @@ import {
   queryDataFormat,
   SelectQueryBuilder,
 } from "@utils/app/query-helpers.js";
-// Format
-import { BrickResT } from "@utils/format/format-bricks.js";
+// Types
+import { BrickResT } from "@lucid/types/src/bricks.js";
 
 // -------------------------------------------
 // Types

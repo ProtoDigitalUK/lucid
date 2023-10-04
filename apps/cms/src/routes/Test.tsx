@@ -1,0 +1,175 @@
+import { Component, createMemo, onMount } from "solid-js";
+// Types
+import { BrickConfigT } from "@lucid/types/src/bricks";
+// Store
+import builderStore from "@/store/builderStore";
+// Components
+import PageBuilder from "@/components/Groups/PageBuilder";
+
+const TESTING_CONFIG: BrickConfigT = {
+  key: "testing",
+  title: "Testing",
+  preview: {
+    image:
+      "https://usersnap.com/blog/wp-content/uploads/2021/03/7-Common-Types-of-Software-Testing@1x-1280x720.png",
+  },
+  fields: [
+    {
+      type: "tab",
+      title: "Content",
+      key: "content_tab",
+      fields: [
+        {
+          type: "text",
+          title: "Text Key",
+          key: "text-key",
+          description: "Testing title",
+          default: "",
+        },
+        {
+          type: "wysiwyg",
+          title: "Wysiwyg Key",
+          key: "wysiwyg-key",
+          default: "",
+        },
+        {
+          type: "media",
+          title: "Media Key",
+          key: "media-key",
+        },
+        {
+          type: "repeater",
+          title: "Repeater Key",
+          key: "repeater-key",
+          fields: [
+            {
+              type: "text",
+              title: "Repeater Title",
+              key: "repeater-title",
+              default: "",
+            },
+          ],
+        },
+        {
+          type: "number",
+          title: "Number Key",
+          key: "number-key",
+          default: 0,
+        },
+        {
+          type: "checkbox",
+          title: "Checkbox Key",
+          key: "checkbox-key",
+          default: false,
+        },
+        {
+          type: "select",
+          title: "Select Key",
+          key: "select-key",
+          options: [
+            {
+              label: "Option 1",
+              value: "option-1",
+            },
+            {
+              label: "Option 2",
+              value: "option-2",
+            },
+            {
+              label: "Option 3",
+              value: "option-3",
+            },
+          ],
+          default: "",
+        },
+        {
+          type: "textarea",
+          title: "Textarea Key",
+          key: "textarea-key",
+          default: "",
+        },
+      ],
+    },
+    {
+      type: "tab",
+      title: "Advanced",
+      key: "advanced_tab",
+      fields: [
+        {
+          type: "json",
+          title: "Json Key",
+          key: "json-key",
+          default: {},
+        },
+        {
+          type: "colour",
+          title: "Colour Key",
+          key: "colour-key",
+          default: "",
+        },
+        {
+          type: "datetime",
+          title: "Datetime Key",
+          key: "datetime-key",
+          default: "",
+        },
+        {
+          type: "pagelink",
+          title: "Page Link Key",
+          key: "page-link-key",
+        },
+        {
+          type: "link",
+          title: "Link Key",
+          key: "link-key",
+        },
+      ],
+    },
+  ],
+};
+
+const TestRoute: Component = () => {
+  // ------------------------------------
+  // Mount
+  onMount(() => {
+    builderStore.get.reset();
+
+    builderStore.get.addBrick({
+      type: "builderBricks",
+      brick: {
+        key: "testing",
+        fields: [],
+      },
+      config: TESTING_CONFIG,
+    });
+  });
+
+  // ------------------------------------
+  // Memos
+  const builderBricks = createMemo(() => builderStore.get.builderBricks);
+  const firstBrick = createMemo(() => builderBricks()[0]);
+
+  // ------------------------------------
+  // Render
+  return (
+    <>
+      <div class="border-b border-border mb-2.5 pb-2.5">
+        <h1>Test</h1>
+        <p>You have {builderBricks().length} builder brick:</p>
+      </div>
+      <div>
+        <h2 class="mb-2.5">First Brick: {firstBrick()?.key}</h2>
+
+        <PageBuilder.BrickBody
+          data={{
+            index: 0,
+            brick: firstBrick(),
+            config: TESTING_CONFIG,
+          }}
+        />
+      </div>
+    </>
+  );
+};
+
+export default TestRoute;

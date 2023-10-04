@@ -33,13 +33,4 @@ export interface PagesResT {
   fixed_bricks?: Array<BrickResT> | null;
 }
 
-export interface BrickFieldT {
-  fields_id?: number;
-  parent_repeater?: number;
-  group_position?: number;
-  key: string;
-  type: FieldTypes;
-  value?: any;
-  target?: "_blank" | "_self";
-  items?: BrickFieldT[];
-}
+export type FieldTypes = FieldTypes;
