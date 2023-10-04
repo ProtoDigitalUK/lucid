@@ -150,15 +150,15 @@ export default class CollectionBrick {
       id: CollectionBrickT["id"];
       brick_order: CollectionBrickT["brick_order"];
     }>(
-      `WITH data_values AS (
+      `WITH data_values (id, brick_order) AS (
             VALUES 
             ${valuesTable}
-        ) AS (id, brick_order)
-        UPDATE lucid_collection_bricks
-        SET brick_order = data_values.brick_order
-        FROM data_values
-        WHERE lucid_collection_bricks.id = data_values.id
-        RETURNING lucid_collection_bricks.id, brick_order`,
+        ) 
+      UPDATE lucid_collection_bricks
+      SET brick_order = data_values.brick_order
+      FROM data_values
+      WHERE lucid_collection_bricks.id = data_values.id
+      RETURNING lucid_collection_bricks.id, lucid_collection_bricks.brick_order`,
       dataValues
     );
 
