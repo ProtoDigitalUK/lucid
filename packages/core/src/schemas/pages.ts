@@ -1,6 +1,6 @@
 import z from "zod";
 // Schema
-import { BrickSchema } from "@schemas/bricks.js";
+import { BrickSchema, BrickSchemaNew } from "@schemas/bricks.js";
 
 // ------------------------------------
 // GET MULTIPLE
@@ -72,6 +72,17 @@ const updateSingleParams = z.object({
 });
 
 // ------------------------------------
+// UPDATE SINGLE BRICKS
+const updateSingleBricksBody = z.object({
+  bricks: z.array(BrickSchemaNew),
+});
+const updateSingleBricksQuery = z.object({});
+const updateSingleBricksParams = z.object({
+  id: z.string(),
+  collection_key: z.string(),
+});
+
+// ------------------------------------
 // DELETE SINGLE
 const deleteSingleBody = z.object({});
 const deleteSingleQuery = z.object({});
@@ -126,6 +137,11 @@ export default {
     body: updateSingleBody,
     query: updateSingleQuery,
     params: updateSingleParams,
+  },
+  updateSingleBricks: {
+    body: updateSingleBricksBody,
+    query: updateSingleBricksQuery,
+    params: updateSingleBricksParams,
   },
   deleteSingle: {
     body: deleteSingleBody,

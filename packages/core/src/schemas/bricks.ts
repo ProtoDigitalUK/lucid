@@ -30,6 +30,27 @@ export const BrickSchema = z.object({
 });
 
 // ------------------------------------
+// New UPDATE BRICKS / FIELDS
+
+const FieldSchemaNew = z.object({
+  key: z.string(),
+  type: FieldTypesSchema,
+  value: z.any(),
+
+  id: z.number().optional(),
+  group: z.number().optional(),
+  repeater: z.string().optional(),
+});
+
+export const BrickSchemaNew = z.object({
+  id: z.number().optional(),
+  key: z.string(),
+  order: z.number(),
+  type: z.union([z.literal("builder"), z.literal("fixed")]),
+  fields: z.array(FieldSchemaNew).optional(),
+});
+
+// ------------------------------------
 // GET ALL CONFIG
 const getAllConfigBody = z.object({});
 const getAllConfigQuery = z.object({

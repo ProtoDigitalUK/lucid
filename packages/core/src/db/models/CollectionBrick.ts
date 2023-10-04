@@ -5,7 +5,7 @@ import { FieldTypes } from "@builders/brick-builder/index.js";
 import { queryDataFormat } from "@utils/app/query-helpers.js";
 import generateFieldQuery from "@utils/bricks/generate-field-query.js";
 // Schema
-import { BrickSchema, FieldSchema } from "@schemas/bricks.js";
+import { BrickSchema, BrickSchemaNew, FieldSchema } from "@schemas/bricks.js";
 // Internal packages
 import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Types
@@ -15,6 +15,7 @@ import { CollectionResT } from "@lucid/types/src/collections.js";
 // Types
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
+export type BrickObjectNew = z.infer<typeof BrickSchemaNew>;
 
 // Functions
 type CollectionBrickGetAll = (

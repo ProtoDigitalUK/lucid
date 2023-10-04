@@ -5319,6 +5319,21 @@ var BrickSchema = z8.object({
   key: z8.string(),
   fields: z8.array(FieldSchema).optional()
 });
+var FieldSchemaNew = z8.object({
+  key: z8.string(),
+  type: FieldTypesSchema,
+  value: z8.any(),
+  id: z8.number().optional(),
+  group: z8.number().optional(),
+  repeater: z8.string().optional()
+});
+var BrickSchemaNew = z8.object({
+  id: z8.number().optional(),
+  key: z8.string(),
+  order: z8.number(),
+  type: z8.union([z8.literal("builder"), z8.literal("fixed")]),
+  fields: z8.array(FieldSchemaNew).optional()
+});
 var getAllConfigBody = z8.object({});
 var getAllConfigQuery = z8.object({
   include: z8.array(z8.enum(["fields"])).optional(),
@@ -5408,6 +5423,14 @@ var updateSingleQuery2 = z9.object({});
 var updateSingleParams2 = z9.object({
   id: z9.string()
 });
+var updateSingleBricksBody = z9.object({
+  bricks: z9.array(BrickSchemaNew)
+});
+var updateSingleBricksQuery = z9.object({});
+var updateSingleBricksParams = z9.object({
+  id: z9.string(),
+  collection_key: z9.string()
+});
 var deleteSingleBody2 = z9.object({});
 var deleteSingleQuery2 = z9.object({});
 var deleteSingleParams2 = z9.object({
@@ -5450,6 +5473,11 @@ var pages_default = {
     body: updateSingleBody2,
     query: updateSingleQuery2,
     params: updateSingleParams2
+  },
+  updateSingleBricks: {
+    body: updateSingleBricksBody,
+    query: updateSingleBricksQuery,
+    params: updateSingleBricksParams
   },
   deleteSingle: {
     body: deleteSingleBody2,
@@ -7373,6 +7401,90 @@ var validateBricks = async (client, data) => {
 };
 var validate_bricks_default = validateBricks;
 
+// src/db/models/CollectionBrickNew.ts
+var CollectionBrick2 = class {
+  // -------------------------------------------
+  // Collection Brick
+  static getAllBricks = async (client, data) => {
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const collectionBrickIds = await client.query({
+      text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1`,
+      values: [data.reference_id]
+    });
+    return collectionBrickIds.rows;
+  };
+  static deleteMultipleBricks = async (client, data) => {
+    await client.query({
+      text: `DELETE FROM lucid_collection_bricks WHERE id = ANY($1)`,
+      values: [data.ids]
+    });
+  };
+  static createSingleBrick = async (client, data) => {
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const brickRes = await client.query(
+      `INSERT INTO 
+        lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
+      VALUES 
+        ($1, $2, $3, $4)
+      RETURNING id`,
+      [data.brick.key, data.brick.type, data.reference_id, data.brick.order]
+    );
+    return brickRes.rows[0];
+  };
+  static updateSingleBrick = async (client, data) => {
+    const brickRes = await client.query(
+      `UPDATE 
+        lucid_collection_bricks 
+      SET 
+        brick_order = $1
+      WHERE 
+        id = $2
+      AND
+        brick_type = $3
+      RETURNING id`,
+      [data.brick.order, data.brick.id, data.brick.type]
+    );
+    return brickRes.rows[0];
+  };
+  // -------------------------------------------
+  // Fields
+};
+
+// src/services/collection-bricks/new/update-multiple.ts
+var updateMultiple3 = async (client, data) => {
+  const existingBricks = await CollectionBrick2.getAllBricks(client, {
+    type: data.type,
+    reference_id: data.id
+  });
+  await CollectionBrick2.deleteMultipleBricks(client, {
+    ids: existingBricks.filter((brick) => {
+      return !data.bricks.some((b) => b.id === brick.id);
+    }).map((brick) => brick.id)
+  });
+  const updatedBricks = await Promise.all(
+    data.bricks.map((brick) => {
+      if (brick.id === void 0) {
+        return CollectionBrick2.createSingleBrick(client, {
+          type: data.type,
+          reference_id: data.id,
+          brick
+        });
+      } else {
+        return CollectionBrick2.updateSingleBrick(client, {
+          brick
+        });
+      }
+    }) || []
+  );
+  return [];
+};
+var update_multiple_default3 = updateMultiple3;
+
+// src/services/collection-bricks/new/index.ts
+var new_default = {
+  updateMultiple: update_multiple_default3
+};
+
 // src/services/collection-bricks/index.ts
 var collection_bricks_default = {
   updateMultiple: update_multiple_default2,
@@ -7382,7 +7494,8 @@ var collection_bricks_default = {
   upsertField: upsert_field_default,
   getAll: get_all_default5,
   deleteUnused: delete_unused_default,
-  validateBricks: validate_bricks_default
+  validateBricks: validate_bricks_default,
+  newF: new_default
 };
 
 // src/services/pages/get-single.ts
@@ -8057,6 +8170,33 @@ var get_multiple_valid_parents_default2 = {
   controller: getMultipleValidParentsController
 };
 
+// src/controllers/pages/update-single-bricks.ts
+var updateSingleBricksController = async (req, res, next) => {
+  try {
+    const bricks = await service_default(
+      collection_bricks_default.newF.updateMultiple,
+      true
+    )({
+      id: parseInt(req.params.id),
+      type: "pages",
+      environment_key: req.headers["lucid-environment"],
+      collection_key: req.params.collection_key,
+      bricks: req.body.bricks
+    });
+    res.status(200).json(
+      build_response_default(req, {
+        data: bricks
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+var update_single_bricks_default = {
+  schema: pages_default.updateSingleBricks,
+  controller: updateSingleBricksController
+};
+
 // src/routes/v1/pages.routes.ts
 var router4 = Router4();
 route_default(router4, {
@@ -8118,6 +8258,20 @@ route_default(router4, {
   },
   schema: update_single_default7.schema,
   controller: update_single_default7.controller
+});
+route_default(router4, {
+  method: "patch",
+  path: "/:collection_key/:id/bricks",
+  permissions: {
+    environments: ["update_content"]
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true
+  },
+  schema: update_single_bricks_default.schema,
+  controller: update_single_bricks_default.controller
 });
 route_default(router4, {
   method: "delete",

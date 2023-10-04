@@ -5358,6 +5358,21 @@ var BrickSchema = import_zod8.default.object({
   key: import_zod8.default.string(),
   fields: import_zod8.default.array(FieldSchema).optional()
 });
+var FieldSchemaNew = import_zod8.default.object({
+  key: import_zod8.default.string(),
+  type: FieldTypesSchema,
+  value: import_zod8.default.any(),
+  id: import_zod8.default.number().optional(),
+  group: import_zod8.default.number().optional(),
+  repeater: import_zod8.default.string().optional()
+});
+var BrickSchemaNew = import_zod8.default.object({
+  id: import_zod8.default.number().optional(),
+  key: import_zod8.default.string(),
+  order: import_zod8.default.number(),
+  type: import_zod8.default.union([import_zod8.default.literal("builder"), import_zod8.default.literal("fixed")]),
+  fields: import_zod8.default.array(FieldSchemaNew).optional()
+});
 var getAllConfigBody = import_zod8.default.object({});
 var getAllConfigQuery = import_zod8.default.object({
   include: import_zod8.default.array(import_zod8.default.enum(["fields"])).optional(),
@@ -5447,6 +5462,14 @@ var updateSingleQuery2 = import_zod9.default.object({});
 var updateSingleParams2 = import_zod9.default.object({
   id: import_zod9.default.string()
 });
+var updateSingleBricksBody = import_zod9.default.object({
+  bricks: import_zod9.default.array(BrickSchemaNew)
+});
+var updateSingleBricksQuery = import_zod9.default.object({});
+var updateSingleBricksParams = import_zod9.default.object({
+  id: import_zod9.default.string(),
+  collection_key: import_zod9.default.string()
+});
 var deleteSingleBody2 = import_zod9.default.object({});
 var deleteSingleQuery2 = import_zod9.default.object({});
 var deleteSingleParams2 = import_zod9.default.object({
@@ -5489,6 +5512,11 @@ var pages_default = {
     body: updateSingleBody2,
     query: updateSingleQuery2,
     params: updateSingleParams2
+  },
+  updateSingleBricks: {
+    body: updateSingleBricksBody,
+    query: updateSingleBricksQuery,
+    params: updateSingleBricksParams
   },
   deleteSingle: {
     body: deleteSingleBody2,
@@ -7412,6 +7440,90 @@ var validateBricks = async (client, data) => {
 };
 var validate_bricks_default = validateBricks;
 
+// src/db/models/CollectionBrickNew.ts
+var CollectionBrick2 = class {
+  // -------------------------------------------
+  // Collection Brick
+  static getAllBricks = async (client, data) => {
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const collectionBrickIds = await client.query({
+      text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1`,
+      values: [data.reference_id]
+    });
+    return collectionBrickIds.rows;
+  };
+  static deleteMultipleBricks = async (client, data) => {
+    await client.query({
+      text: `DELETE FROM lucid_collection_bricks WHERE id = ANY($1)`,
+      values: [data.ids]
+    });
+  };
+  static createSingleBrick = async (client, data) => {
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const brickRes = await client.query(
+      `INSERT INTO 
+        lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
+      VALUES 
+        ($1, $2, $3, $4)
+      RETURNING id`,
+      [data.brick.key, data.brick.type, data.reference_id, data.brick.order]
+    );
+    return brickRes.rows[0];
+  };
+  static updateSingleBrick = async (client, data) => {
+    const brickRes = await client.query(
+      `UPDATE 
+        lucid_collection_bricks 
+      SET 
+        brick_order = $1
+      WHERE 
+        id = $2
+      AND
+        brick_type = $3
+      RETURNING id`,
+      [data.brick.order, data.brick.id, data.brick.type]
+    );
+    return brickRes.rows[0];
+  };
+  // -------------------------------------------
+  // Fields
+};
+
+// src/services/collection-bricks/new/update-multiple.ts
+var updateMultiple3 = async (client, data) => {
+  const existingBricks = await CollectionBrick2.getAllBricks(client, {
+    type: data.type,
+    reference_id: data.id
+  });
+  await CollectionBrick2.deleteMultipleBricks(client, {
+    ids: existingBricks.filter((brick) => {
+      return !data.bricks.some((b) => b.id === brick.id);
+    }).map((brick) => brick.id)
+  });
+  const updatedBricks = await Promise.all(
+    data.bricks.map((brick) => {
+      if (brick.id === void 0) {
+        return CollectionBrick2.createSingleBrick(client, {
+          type: data.type,
+          reference_id: data.id,
+          brick
+        });
+      } else {
+        return CollectionBrick2.updateSingleBrick(client, {
+          brick
+        });
+      }
+    }) || []
+  );
+  return [];
+};
+var update_multiple_default3 = updateMultiple3;
+
+// src/services/collection-bricks/new/index.ts
+var new_default = {
+  updateMultiple: update_multiple_default3
+};
+
 // src/services/collection-bricks/index.ts
 var collection_bricks_default = {
   updateMultiple: update_multiple_default2,
@@ -7421,7 +7533,8 @@ var collection_bricks_default = {
   upsertField: upsert_field_default,
   getAll: get_all_default5,
   deleteUnused: delete_unused_default,
-  validateBricks: validate_bricks_default
+  validateBricks: validate_bricks_default,
+  newF: new_default
 };
 
 // src/services/pages/get-single.ts
@@ -8096,6 +8209,33 @@ var get_multiple_valid_parents_default2 = {
   controller: getMultipleValidParentsController
 };
 
+// src/controllers/pages/update-single-bricks.ts
+var updateSingleBricksController = async (req, res, next) => {
+  try {
+    const bricks = await service_default(
+      collection_bricks_default.newF.updateMultiple,
+      true
+    )({
+      id: parseInt(req.params.id),
+      type: "pages",
+      environment_key: req.headers["lucid-environment"],
+      collection_key: req.params.collection_key,
+      bricks: req.body.bricks
+    });
+    res.status(200).json(
+      build_response_default(req, {
+        data: bricks
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+var update_single_bricks_default = {
+  schema: pages_default.updateSingleBricks,
+  controller: updateSingleBricksController
+};
+
 // src/routes/v1/pages.routes.ts
 var router4 = (0, import_express4.Router)();
 route_default(router4, {
@@ -8157,6 +8297,20 @@ route_default(router4, {
   },
   schema: update_single_default7.schema,
   controller: update_single_default7.controller
+});
+route_default(router4, {
+  method: "patch",
+  path: "/:collection_key/:id/bricks",
+  permissions: {
+    environments: ["update_content"]
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true
+  },
+  schema: update_single_bricks_default.schema,
+  controller: update_single_bricks_default.controller
 });
 route_default(router4, {
   method: "delete",

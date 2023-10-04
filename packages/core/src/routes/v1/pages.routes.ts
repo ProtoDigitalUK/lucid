@@ -8,6 +8,7 @@ import updateSingle from "@controllers/pages/update-single.js";
 import deleteSingle from "@controllers/pages/delete-single.js";
 import deleteMultiple from "@controllers/pages/delete-multiple.js";
 import getMultipleValidParents from "@controllers/pages/get-multiple-valid-parents.js";
+import updateSingleBricksController from "@controllers/pages/update-single-bricks.js";
 
 // ------------------------------------
 // Router
@@ -76,6 +77,21 @@ r(router, {
   },
   schema: updateSingle.schema,
   controller: updateSingle.controller,
+});
+
+r(router, {
+  method: "patch",
+  path: "/:collection_key/:id/bricks",
+  permissions: {
+    environments: ["update_content"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true,
+  },
+  schema: updateSingleBricksController.schema,
+  controller: updateSingleBricksController.controller,
 });
 
 r(router, {

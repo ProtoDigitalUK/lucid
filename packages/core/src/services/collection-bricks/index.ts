@@ -7,6 +7,8 @@ import getAll from "./get-all.js";
 import deleteUnused from "./delete-unused.js";
 import validateBricks from "./validate-bricks.js";
 
+import newF from "./new/index.js";
+
 export default {
   updateMultiple,
   upsertSingle,
@@ -16,4 +18,5 @@ export default {
   getAll,
   deleteUnused,
   validateBricks,
+  newF,
 };
