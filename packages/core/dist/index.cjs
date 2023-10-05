@@ -59,7 +59,11 @@ var en_gb_default = {
   db_connection_pool_not_initialised: "Database connection pool is not initialised. Call initialisePool() before getDBClient().",
   error_creating_page: "Error creating page",
   error_creating_page_homepage_disabled: "The current pages collection does not allow creating a homepage",
-  error_creating_page_parents_disabled: "The current pages collection does not allow creating a page with parents"
+  error_creating_page_parents_disabled: "The current pages collection does not allow creating a page with parents",
+  error_saving_bricks: "Error saving bricks",
+  error_saving_page_duplicate_order: "Duplicate builder orders found: {{order}}",
+  error_saving_page_brick_not_in_collection: "The brick '{{key}}' of type '{{type}}' is not allowed in this collection. Check your assigned bricks in the collection and environment.",
+  error_saving_page_brick_couldnt_find_brick_config: "We couln't find the brick config for the brick key of: '{{key}}'. Ensure you are using the correct key for the brick defined in your lucid.config file."
 };
 
 // src/translations/index.ts
@@ -74,7 +78,7 @@ var T = (key, data) => {
   }
   return translation.replace(
     /\{\{(\w+)\}\}/g,
-    (match, p1) => data[p1]
+    (_, p1) => data[p1]
   );
 };
 var translations_default = T;
@@ -1072,6 +1076,20 @@ var SelectQueryBuilder = class {
     }
     return this.values;
   }
+};
+var aliasGenerator = (config) => {
+  const aliases = [];
+  const colLength = config.columns.length;
+  for (let i = 0; i < config.rows; i++) {
+    const row = [];
+    for (let j = 0; j < colLength; j++) {
+      row.push(
+        `$${i * colLength + j + 1}${config.columns[j].type ? `::${config.columns[j].type}` : ""}`
+      );
+    }
+    aliases.push(`(${row.join(", ")})`);
+  }
+  return aliases.join(", ");
 };
 
 // src/db/models/Role.ts
@@ -5094,11 +5112,11 @@ var BrickBuilder = class {
     textarea: "string",
     colour: "string",
     datetime: "string",
-    link: "string",
+    link: "object",
     wysiwyg: "string",
     select: "string",
     number: "number",
-    pagelink: "number",
+    pagelink: "object",
     checkbox: "boolean"
   };
   fieldValidation({
@@ -5244,6 +5262,8 @@ var BrickBuilder = class {
   }
   #validateLinkTarget(referenceData) {
     const allowedValues = ["_self", "_blank"];
+    if (!referenceData.target)
+      return;
     if (!allowedValues.includes(referenceData.target)) {
       throw new ValidationError(
         `Please set the target to one of the following: ${allowedValues.join(
@@ -5341,21 +5361,34 @@ var BrickBuilder = class {
 
 // src/schemas/bricks.ts
 var FieldTypesSchema = import_zod8.default.nativeEnum(FieldTypesEnum);
-var baseFieldSchema = import_zod8.default.object({
-  fields_id: import_zod8.default.number().optional(),
-  parent_repeater: import_zod8.default.number().optional(),
-  group_position: import_zod8.default.number().optional(),
+var FieldSchema = import_zod8.default.object({
   key: import_zod8.default.string(),
   type: FieldTypesSchema,
-  value: import_zod8.default.any(),
-  target: import_zod8.default.any().optional()
-});
-var FieldSchema = baseFieldSchema.extend({
-  items: import_zod8.default.lazy(() => FieldSchema.array().optional())
+  value: import_zod8.default.union([
+    import_zod8.default.string(),
+    import_zod8.default.boolean(),
+    import_zod8.default.number(),
+    import_zod8.default.object({
+      id: import_zod8.default.number().nullable(),
+      target: import_zod8.default.string().nullable().optional(),
+      label: import_zod8.default.string().nullable().optional()
+    }),
+    import_zod8.default.object({
+      url: import_zod8.default.string().nullable(),
+      target: import_zod8.default.string().nullable().optional(),
+      label: import_zod8.default.string().nullable().optional()
+    }),
+    import_zod8.default.object({}).optional()
+  ]),
+  fields_id: import_zod8.default.number().optional(),
+  group: import_zod8.default.number().optional(),
+  repeater: import_zod8.default.string().optional()
 });
 var BrickSchema = import_zod8.default.object({
   id: import_zod8.default.number().optional(),
   key: import_zod8.default.string(),
+  order: import_zod8.default.number(),
+  type: import_zod8.default.union([import_zod8.default.literal("builder"), import_zod8.default.literal("fixed")]),
   fields: import_zod8.default.array(FieldSchema).optional()
 });
 var getAllConfigBody = import_zod8.default.object({});
@@ -5439,13 +5472,19 @@ var updateSingleBody2 = import_zod9.default.object({
   author_id: import_zod9.default.number().nullable().optional(),
   category_ids: import_zod9.default.array(import_zod9.default.number()).optional(),
   published: import_zod9.default.boolean().optional(),
-  excerpt: import_zod9.default.string().optional(),
-  builder_bricks: import_zod9.default.array(BrickSchema).optional(),
-  fixed_bricks: import_zod9.default.array(BrickSchema).optional()
+  excerpt: import_zod9.default.string().optional()
 });
 var updateSingleQuery2 = import_zod9.default.object({});
 var updateSingleParams2 = import_zod9.default.object({
   id: import_zod9.default.string()
+});
+var updateSingleBricksBody = import_zod9.default.object({
+  bricks: import_zod9.default.array(BrickSchema)
+});
+var updateSingleBricksQuery = import_zod9.default.object({});
+var updateSingleBricksParams = import_zod9.default.object({
+  id: import_zod9.default.string(),
+  collection_key: import_zod9.default.string()
 });
 var deleteSingleBody2 = import_zod9.default.object({});
 var deleteSingleQuery2 = import_zod9.default.object({});
@@ -5489,6 +5528,11 @@ var pages_default = {
     body: updateSingleBody2,
     query: updateSingleQuery2,
     params: updateSingleParams2
+  },
+  updateSingleBricks: {
+    body: updateSingleBricksBody,
+    query: updateSingleBricksQuery,
+    params: updateSingleBricksParams
   },
   deleteSingle: {
     body: deleteSingleBody2,
@@ -6049,8 +6093,7 @@ var formatPage = (data, collections) => {
     published: data.published,
     published_at: data.published_at,
     categories: data.categories,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks
+    bricks: data.bricks
   };
   if (data.author_id) {
     res.author = {
@@ -6064,17 +6107,22 @@ var formatPage = (data, collections) => {
   if (res.categories) {
     res.categories = res.categories[0] === null ? [] : res.categories;
   }
-  if (res.full_slug && !res.homepage) {
+  res.full_slug = formatFullSlug(data, collections);
+  return res;
+};
+var formatFullSlug = (data, collections) => {
+  let res = data.full_slug || "";
+  if (res && !data.homepage) {
     const collection = collections.find(
-      (collection2) => collection2.key === res.collection_key
+      (collection2) => collection2.key === data.collection_key
     );
     if (collection && collection.path) {
-      res.full_slug = `${collection.path}/${res.full_slug}`;
+      res = `${collection.path}/${res}`;
     }
-    if (!res.full_slug.startsWith("/")) {
-      res.full_slug = "/" + res.full_slug;
+    if (!res.startsWith("/")) {
+      res = "/" + res;
     }
-    res.full_slug = res.full_slug.replace(/\/+/g, "/");
+    res = res.replace(/\/+/g, "/");
   }
   return res;
 };
@@ -6157,206 +6205,6 @@ var getMultiple5 = async (client, data) => {
 };
 var get_multiple_default6 = getMultiple5;
 
-// src/services/collection-bricks/update-multiple.ts
-var updateMultiple2 = async (client, data) => {
-  const builderBricksPromise = data.builder_bricks.map(
-    (brick, index) => service_default(
-      collection_bricks_default.upsertSingle,
-      false,
-      client
-    )({
-      reference_id: data.id,
-      brick,
-      brick_type: "builder",
-      order: index,
-      environment: data.environment,
-      collection: data.collection
-    })
-  ) || [];
-  const fixedBricksPromise = data.fixed_bricks.map(
-    (brick, index) => service_default(
-      collection_bricks_default.upsertSingle,
-      false,
-      client
-    )({
-      reference_id: data.id,
-      brick,
-      brick_type: "fixed",
-      order: index,
-      environment: data.environment,
-      collection: data.collection
-    })
-  ) || [];
-  const [buildBrickRes, fixedBrickRes] = await Promise.all([
-    Promise.all(builderBricksPromise),
-    Promise.all(fixedBricksPromise)
-  ]);
-  const builderIds = buildBrickRes.map((brickId) => brickId);
-  const fixedIds = fixedBrickRes.map((brickId) => brickId);
-  if (builderIds.length > 0)
-    await service_default(
-      collection_bricks_default.deleteUnused,
-      false,
-      client
-    )({
-      type: data.collection.type,
-      reference_id: data.id,
-      brick_ids: builderIds,
-      brick_type: "builder"
-    });
-  if (fixedIds.length > 0)
-    await service_default(
-      collection_bricks_default.deleteUnused,
-      false,
-      client
-    )({
-      type: data.collection.type,
-      reference_id: data.id,
-      brick_ids: fixedIds,
-      brick_type: "fixed"
-    });
-};
-var update_multiple_default2 = updateMultiple2;
-
-// src/utils/bricks/generate-field-query.ts
-var valueKey = (type) => {
-  switch (type) {
-    case "text":
-      return "text_value";
-    case "wysiwyg":
-      return "text_value";
-    case "media":
-      return "media_id";
-    case "number":
-      return "int_value";
-    case "checkbox":
-      return "bool_value";
-    case "select":
-      return "text_value";
-    case "textarea":
-      return "text_value";
-    case "json":
-      return "json_value";
-    case "pagelink":
-      return "page_link_id";
-    case "link":
-      return "text_value";
-    case "datetime":
-      return "text_value";
-    case "colour":
-      return "text_value";
-    default:
-      return "text_value";
-  }
-};
-var generateFieldQuery = (data) => {
-  const brickField = data.data;
-  switch (brickField.type) {
-    case "link": {
-      if (data.mode === "create") {
-        return queryDataFormat({
-          columns: [
-            "collection_brick_id",
-            "key",
-            "type",
-            "text_value",
-            "json_value",
-            "parent_repeater",
-            "group_position"
-          ],
-          values: [
-            data.brick_id,
-            brickField.key,
-            brickField.type,
-            brickField.value,
-            {
-              target: brickField.target
-            },
-            brickField.parent_repeater,
-            brickField.group_position
-          ]
-        });
-      } else {
-        return queryDataFormat({
-          columns: ["text_value", "json_value", "group_position"],
-          values: [
-            brickField.value,
-            {
-              target: brickField.target
-            },
-            brickField.group_position
-          ]
-        });
-      }
-    }
-    case "pagelink": {
-      if (data.mode === "create") {
-        return queryDataFormat({
-          columns: [
-            "collection_brick_id",
-            "key",
-            "type",
-            "page_link_id",
-            "json_value",
-            "parent_repeater",
-            "group_position"
-          ],
-          values: [
-            data.brick_id,
-            brickField.key,
-            brickField.type,
-            brickField.value,
-            {
-              target: brickField.target
-            },
-            brickField.parent_repeater,
-            brickField.group_position
-          ]
-        });
-      } else {
-        return queryDataFormat({
-          columns: ["page_link_id", "json_value", "group_position"],
-          values: [
-            brickField.value,
-            {
-              target: brickField.target
-            },
-            brickField.group_position
-          ]
-        });
-      }
-    }
-    default: {
-      if (data.mode === "create") {
-        return queryDataFormat({
-          columns: [
-            "collection_brick_id",
-            "key",
-            "type",
-            valueKey(brickField.type),
-            "parent_repeater",
-            "group_position"
-          ],
-          values: [
-            data.brick_id,
-            brickField.key,
-            brickField.type,
-            brickField.value,
-            brickField.parent_repeater,
-            brickField.group_position
-          ]
-        });
-      } else {
-        return queryDataFormat({
-          columns: [valueKey(brickField.type), "group_position"],
-          values: [brickField.value, brickField.group_position]
-        });
-      }
-    }
-  }
-};
-var generate_field_query_default = generateFieldQuery;
-
 // src/db/models/CollectionBrick.ts
 var CollectionBrick = class {
   static getAll = async (client, data) => {
@@ -6368,7 +6216,9 @@ var CollectionBrick = class {
           json_build_object(
             'title', lucid_pages.title,
             'slug', lucid_pages.slug,
-            'full_slug', lucid_pages.full_slug
+            'full_slug', lucid_pages.full_slug,
+            'homepage', lucid_pages.homepage,
+            'collection_key', lucid_pages.collection_key
           ) as linked_page,
           json_build_object(
             'key', lucid_media.key,
@@ -6403,602 +6253,303 @@ var CollectionBrick = class {
     return brickFields.rows;
   };
   // -------------------------------------------
-  // Page Brick
-  static createSingleBrick = async (client, data) => {
+  // Collection Brick
+  static getAllBricks = async (client, data) => {
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const collectionBrickIds = await client.query({
+      text: `SELECT 
+        lucid_collection_bricks.id,
+        COALESCE(json_agg(
+          json_build_object('id', lucid_fields.fields_id) 
+        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields
+      FROM lucid_collection_bricks 
+      LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id
+      WHERE ${referenceKey} = $1
+      GROUP BY lucid_collection_bricks.id`,
+      values: [data.reference_id]
+    });
+    return collectionBrickIds.rows;
+  };
+  static deleteMultipleBricks = async (client, data) => {
+    await client.query({
+      text: `DELETE FROM lucid_collection_bricks WHERE id = ANY($1)`,
+      values: [data.ids]
+    });
+  };
+  static createMultipleBricks = async (client, data) => {
+    if (data.bricks.length === 0)
+      return [];
+    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "brick_key"
+        },
+        {
+          key: "brick_type"
+        },
+        {
+          key: referenceKey
+        },
+        {
+          key: "brick_order"
+        }
+      ],
+      rows: data.bricks.length
+    });
+    const dataValues = data.bricks.flatMap((brick) => {
+      return [brick.key, brick.type, data.reference_id, brick.order];
+    });
     const brickRes = await client.query(
       `INSERT INTO 
         lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
       VALUES 
-        ($1, $2, $3, $4)
-      RETURNING *`,
-      [data.brick.key, data.brick_type, data.reference_id, data.order]
+        ${aliases}
+      RETURNING id, brick_order, brick_key`,
+      dataValues
     );
-    return brickRes.rows[0];
+    return brickRes.rows;
   };
-  static updateSingleBrick = async (client, data) => {
-    const brickRes = await client.query(
-      `UPDATE 
-        lucid_collection_bricks 
-      SET 
-        brick_order = $1
-      WHERE 
-        id = $2
-      AND
-        brick_type = $3
-      RETURNING *`,
-      [data.order, data.brick.id, data.brick_type]
+  static updateMultipleBrickOrders = async (client, bricks) => {
+    if (bricks.length === 0)
+      return [];
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "id",
+          type: "int"
+        },
+        {
+          key: "brick_order",
+          type: "int"
+        }
+      ],
+      rows: bricks.length
+    });
+    const dataValues = bricks.flatMap((brick) => {
+      return [brick.id, brick.order];
+    });
+    const result = await client.query(
+      `WITH data_values (id, brick_order) AS (
+            VALUES 
+            ${aliases}
+        ) 
+      UPDATE lucid_collection_bricks
+      SET brick_order = data_values.brick_order
+      FROM data_values
+      WHERE lucid_collection_bricks.id = data_values.id
+      RETURNING lucid_collection_bricks.id, lucid_collection_bricks.brick_order`,
+      dataValues
     );
-    return brickRes.rows[0];
-  };
-  static getAllBricks = async (client, data) => {
-    const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
-    const collectionBrickIds = await client.query({
-      text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1 AND brick_type = $2`,
-      values: [data.reference_id, data.brick_type]
-    });
-    return collectionBrickIds.rows;
-  };
-  static deleteSingleBrick = async (client, data) => {
-    const brickRes = await client.query({
-      text: `DELETE FROM lucid_collection_bricks WHERE id = $1 RETURNING *`,
-      values: [data.brick_id]
-    });
-    return brickRes.rows[0];
+    return result.rows;
   };
   // -------------------------------------------
   // Fields
-  static updateField = async (client, data) => {
-    const { columns, aliases, values } = generate_field_query_default({
-      brick_id: data.brick_id,
-      data: data.field,
-      mode: "update"
+  static deleteMultipleBrickFields = async (client, data) => {
+    await client.query({
+      text: `DELETE FROM lucid_fields WHERE fields_id = ANY($1)`,
+      values: [data.ids]
     });
-    const fieldRes = await client.query({
-      text: `UPDATE lucid_fields SET ${columns.formatted.update} WHERE fields_id = $${aliases.value.length + 1} RETURNING *`,
-      values: [...values.value, data.field.fields_id]
-    });
-    return fieldRes.rows[0];
   };
-  static createField = async (client, data) => {
-    const { columns, aliases, values } = generate_field_query_default({
-      brick_id: data.brick_id,
-      data: data.field,
-      mode: "create"
-    });
-    const fieldRes = await client.query({
-      text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
-      values: values.value
-    });
-    return fieldRes.rows[0];
-  };
-  static checkFieldExists = async (client, data) => {
-    let queryText = "SELECT EXISTS(SELECT 1 FROM lucid_fields WHERE collection_brick_id = $1 AND key = $2 AND type = $3";
-    let queryValues = [data.brick_id, data.key, data.type];
-    if (data.parent_repeater !== void 0) {
-      queryText += " AND parent_repeater = $4";
-      queryValues.push(data.parent_repeater);
-    }
-    if (data.group_position !== void 0) {
-      queryText += " AND group_position = $5";
-      queryValues.push(data.group_position);
-    }
-    queryText += ")";
-    const res = await client.query({
-      text: queryText,
-      values: queryValues
-    });
-    return res.rows[0].exists;
-  };
-  // -------------------------------------------
-  // Repeater Field
-  static updateRepeater = async (client, data) => {
-    const repeaterRes = await client.query({
-      text: `UPDATE lucid_fields SET group_position = $1 WHERE fields_id = $2 RETURNING *`,
-      values: [data.field.group_position, data.field.fields_id]
-    });
-    return repeaterRes.rows[0];
-  };
-  static createRepeater = async (client, data) => {
-    const { columns, aliases, values } = queryDataFormat({
+  static createMultipleBrickFields = async (client, data) => {
+    if (data.fields.length === 0)
+      return void 0;
+    const aliases = aliasGenerator({
       columns: [
-        "collection_brick_id",
-        "key",
-        "type",
-        "parent_repeater",
-        "group_position"
+        {
+          key: "collection_brick_id"
+        },
+        {
+          key: "repeater_key"
+        },
+        {
+          key: "key"
+        },
+        {
+          key: "type"
+        },
+        {
+          key: "group_position"
+        },
+        {
+          key: "text_value"
+        },
+        {
+          key: "int_value"
+        },
+        {
+          key: "bool_value"
+        },
+        {
+          key: "json_value"
+        },
+        {
+          key: "page_link_id"
+        },
+        {
+          key: "media_id"
+        }
       ],
-      values: [
-        data.brick_id,
-        data.field.key,
-        data.field.type,
-        data.field.parent_repeater,
-        data.field.group_position
-      ]
+      rows: data.fields.length
     });
-    const repeaterRes = await client.query({
-      text: `INSERT INTO lucid_fields (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
-      values: values.value
+    const dataValues = data.fields.flatMap((field) => {
+      return [
+        field.collection_brick_id,
+        field.repeater_key,
+        field.key,
+        field.type,
+        field.group_position,
+        field.text_value,
+        field.int_value,
+        field.bool_value,
+        field.json_value,
+        field.page_link_id,
+        field.media_id
+      ];
     });
-    return repeaterRes.rows[0];
+    await client.query(
+      `INSERT INTO 
+          lucid_fields (collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+        VALUES 
+          ${aliases}`,
+      dataValues
+    );
+  };
+  static updateMultipleBrickFields = async (client, data) => {
+    if (data.fields.length === 0)
+      return void 0;
+    const aliases = aliasGenerator({
+      columns: [
+        { key: "fields_id", type: "int" },
+        { key: "collection_brick_id", type: "int" },
+        { key: "repeater_key", type: "text" },
+        { key: "key", type: "text" },
+        { key: "type", type: "text" },
+        { key: "group_position", type: "int" },
+        { key: "text_value", type: "text" },
+        { key: "int_value", type: "int" },
+        { key: "bool_value", type: "bool" },
+        { key: "json_value", type: "jsonb" },
+        { key: "page_link_id", type: "int" },
+        { key: "media_id", type: "int" }
+      ],
+      rows: data.fields.length
+    });
+    const dataValues = data.fields.flatMap((field) => {
+      return [
+        field.fields_id,
+        field.collection_brick_id,
+        field.repeater_key,
+        field.key,
+        field.type,
+        field.group_position,
+        field.text_value,
+        field.int_value,
+        field.bool_value,
+        field.json_value,
+        field.page_link_id,
+        field.media_id
+      ];
+    });
+    await client.query({
+      text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+            VALUES ${aliases}
+          )
+          UPDATE lucid_fields
+          SET
+            text_value = data_values.text_value,
+            int_value = data_values.int_value,
+            bool_value = data_values.bool_value,
+            json_value = data_values.json_value,
+            page_link_id = data_values.page_link_id,
+            media_id = data_values.media_id
+          FROM data_values
+          WHERE lucid_fields.fields_id = data_values.fields_id;`,
+      values: dataValues
+    });
   };
 };
 
-// src/services/collection-bricks/upsert-single.ts
-var upsertSingleWithFields = async (client, data) => {
-  const promises = [];
-  const allowed = brick_config_default.isBrickAllowed({
-    key: data.brick.key,
-    type: data.brick_type,
-    environment: data.environment,
-    collection: data.collection
-  });
-  if (!allowed.allowed) {
-    throw new LucidError({
-      type: "basic",
-      name: "Brick not allowed",
-      message: `The brick "${data.brick.key}" of type "${data.brick_type}" is not allowed in this collection. Check your assigned bricks in the collection and environment.`,
-      status: 500
-    });
-  }
-  let brickId = data.brick.id;
-  if (brickId) {
-    const brickRes = await CollectionBrick.updateSingleBrick(client, {
-      order: data.order,
-      brick: data.brick,
-      brick_type: data.brick_type
-    });
-    brickId = brickRes.id;
-    if (!brickRes) {
-      throw new LucidError({
-        type: "basic",
-        name: "Page Brick Update Error",
-        message: "Could not update page brick",
-        status: 500
-      });
-    }
-  } else {
-    const brickRes = await CollectionBrick.createSingleBrick(client, {
-      type: data.collection.type,
-      reference_id: data.reference_id,
-      order: data.order,
-      brick: data.brick,
-      brick_type: data.brick_type
-    });
-    brickId = brickRes.id;
-    if (!brickRes) {
-      throw new LucidError({
-        type: "basic",
-        name: "Page Brick Create Error",
-        message: "Could not create page brick",
-        status: 500
-      });
-    }
-  }
-  if (!data.brick.fields)
-    return brickId;
-  for (const field of data.brick.fields) {
-    if (field.type === "tab")
-      continue;
-    if (field.type === "repeater")
-      promises.push(
-        service_default(
-          collection_bricks_default.upsertRepeater,
-          false,
-          client
-        )({
-          brick_id: brickId,
-          data: field
-        })
-      );
-    else
-      promises.push(
-        service_default(
-          collection_bricks_default.upsertField,
-          false,
-          client
-        )({
-          brick_id: brickId,
-          data: field
-        })
-      );
-  }
-  await Promise.all(promises);
-  return brickId;
-};
-var upsert_single_default2 = upsertSingleWithFields;
-
-// src/services/collection-bricks/upsert-repeater.ts
-var upsertRepeater = async (client, data) => {
-  let repeaterId;
-  const brickField = data.data;
-  if (brickField.fields_id && brickField.group_position !== void 0) {
-    const repeaterRes = await CollectionBrick.updateRepeater(client, {
-      field: brickField
-    });
-    repeaterId = repeaterRes.fields_id;
-  } else {
-    await service_default(
-      collection_bricks_default.checkFieldExists,
-      false,
-      client
-    )({
-      brick_id: data.brick_id,
-      key: brickField.key,
-      type: brickField.type,
-      parent_repeater: brickField.parent_repeater,
-      group_position: brickField.group_position,
-      create: true
-    });
-    const repeaterRes = await CollectionBrick.createRepeater(client, {
-      brick_id: data.brick_id,
-      field: brickField
-    });
-    repeaterId = repeaterRes.fields_id;
-  }
-  if (!brickField.items)
-    return;
-  const promises = [];
-  for (let i = 0; i < brickField.items.length; i++) {
-    const item = brickField.items[i];
-    if (item.type === "tab")
-      continue;
-    item.parent_repeater = repeaterId;
-    if (item.type === "repeater") {
-      promises.push(
-        service_default(
-          collection_bricks_default.upsertRepeater,
-          false,
-          client
-        )({
-          brick_id: data.brick_id,
-          data: item
-        })
-      );
-      continue;
-    }
-    promises.push(
-      service_default(
-        collection_bricks_default.upsertField,
-        false,
-        client
-      )({
-        brick_id: data.brick_id,
-        data: item
-      })
-    );
-  }
-  await Promise.all(promises);
-};
-var upsert_repeater_default = upsertRepeater;
-
-// src/services/collection-bricks/check-field-exists.ts
-var checkFieldExists = async (client, data) => {
-  const repeaterExists = await CollectionBrick.checkFieldExists(client, {
-    brick_id: data.brick_id,
-    key: data.key,
-    type: data.type,
-    parent_repeater: data.parent_repeater,
-    group_position: data.group_position
-  });
-  if (!repeaterExists && !data.create) {
-    throw new LucidError({
-      type: "basic",
-      name: "Field Not Found",
-      message: `The field cannot be updated because it does not exist.`,
-      status: 409
-    });
-  } else if (repeaterExists && data.create) {
-    throw new LucidError({
-      type: "basic",
-      name: "Field Already Exists",
-      message: `The field cannot be created because it already exists.`,
-      status: 409
-    });
-  }
-};
-var check_field_exists_default = checkFieldExists;
-
-// src/services/collection-bricks/upsert-field.ts
-var upsertField = async (client, data) => {
-  let fieldId;
-  const brickField = data.data;
-  await service_default(
-    collection_bricks_default.checkFieldExists,
-    false,
-    client
-  )({
-    brick_id: data.brick_id,
-    key: brickField.key,
-    type: brickField.type,
-    parent_repeater: brickField.parent_repeater,
-    group_position: brickField.group_position,
-    create: brickField.fields_id !== void 0 ? false : true
-  });
-  if (brickField.fields_id) {
-    const fieldRes = await CollectionBrick.updateField(client, {
-      brick_id: data.brick_id,
-      field: brickField
-    });
-    fieldId = fieldRes.fields_id;
-  } else {
-    const fieldRes = await CollectionBrick.createField(client, {
-      brick_id: data.brick_id,
-      field: brickField
-    });
-    if (!fieldRes) {
-      throw new LucidError({
-        type: "basic",
-        name: "Field Create Error",
-        message: `Could not create field "${brickField.key}" for brick "${data.brick_id}".`,
-        status: 500
-      });
-    }
-    fieldId = fieldRes.fields_id;
-  }
-  return fieldId;
-};
-var upsert_field_default = upsertField;
-
-// src/utils/media/create-url.ts
-var createURL = (key) => {
-  if (!key) {
-    return void 0;
-  }
-  return `${Config.host}/cdn/v1/${key}`;
-};
-var create_url_default = createURL;
-
-// src/utils/format/format-bricks.ts
-var specificFieldValues = (type, builderField, field) => {
-  let value = null;
+// src/utils/bricks/format-upsert-fields.ts
+var valueKey = (type) => {
   switch (type) {
-    case "tab": {
-      break;
-    }
-    case "text": {
-      value = field?.text_value || builderField.default;
-      break;
-    }
-    case "wysiwyg": {
-      value = field?.text_value || builderField.default;
-      break;
-    }
-    case "media": {
-      value = {
-        id: field?.media_id || void 0,
-        url: create_url_default(field?.media.key || void 0),
-        key: field?.media.key || void 0,
-        mime_type: field?.media.mime_type || void 0,
-        file_extension: field?.media.file_extension || void 0,
-        file_size: field?.media.file_size || void 0,
-        width: field?.media.width || void 0,
-        height: field?.media.height || void 0,
-        name: field?.media.name || void 0,
-        alt: field?.media.alt || void 0
+    case "text":
+      return "text_value";
+    case "wysiwyg":
+      return "text_value";
+    case "media":
+      return "media_id";
+    case "number":
+      return "int_value";
+    case "checkbox":
+      return "bool_value";
+    case "select":
+      return "text_value";
+    case "textarea":
+      return "text_value";
+    case "json":
+      return "json_value";
+    case "pagelink":
+      return "page_link_id";
+    case "link":
+      return "text_value";
+    case "datetime":
+      return "text_value";
+    case "colour":
+      return "text_value";
+    default:
+      return "text_value";
+  }
+};
+var fieldTypeValues = (field) => {
+  switch (field.type) {
+    case "link": {
+      const value = field.value;
+      return {
+        text_value: value.url,
+        json_value: {
+          target: value.target,
+          label: value.label
+        }
       };
-      break;
-    }
-    case "number": {
-      value = field?.int_value || builderField.default;
-      break;
-    }
-    case "checkbox": {
-      value = field?.bool_value || builderField.default;
-      break;
-    }
-    case "select": {
-      value = field?.text_value || builderField.default;
-      break;
-    }
-    case "textarea": {
-      value = field?.text_value || builderField.default;
-      break;
-    }
-    case "json": {
-      value = field?.json_value || builderField.default;
-      break;
-    }
-    case "colour": {
-      value = field?.text_value || builderField.default;
-      break;
-    }
-    case "datetime": {
-      value = field?.text_value || builderField.default;
-      break;
     }
     case "pagelink": {
-      value = {
-        id: field?.page_link_id || void 0,
-        target: field?.json_value.target || "_self",
-        title: field?.linked_page.title || void 0,
-        full_slug: field?.linked_page.full_slug || void 0,
-        slug: field?.linked_page.slug || void 0
+      const value = field.value;
+      return {
+        page_link_id: value.id,
+        json_value: {
+          target: value.target,
+          label: value.label
+        }
       };
-      break;
     }
-    case "link": {
-      value = {
-        target: field?.json_value.target || "_self",
-        url: field?.text_value || builderField.default || ""
+    default: {
+      return {
+        [valueKey(field.type)]: field.value
       };
-      break;
     }
   }
-  return { value };
 };
-var buildFieldTree = (brickId, fields, builderInstance) => {
-  const brickFields = fields.filter(
-    (field) => field.collection_brick_id === brickId
-  );
-  const basicFieldTree = builderInstance.basicFieldTree;
-  const fieldRes = buildFields(brickFields, basicFieldTree);
-  return fieldRes;
-};
-var buildFields = (brickFields, fields) => {
-  const fieldObjs = [];
-  fields.forEach((field) => {
-    const brickField = brickFields.find((bField) => bField.key === field.key);
-    const { value } = specificFieldValues(field.type, field, brickField);
-    if (!brickField) {
-      const fieldObj = {
-        fields_id: -1,
-        // use a sentinel value for non-existing fields
-        key: field.key,
-        type: field.type
-      };
-      if (value !== null)
-        fieldObj.value = value;
-      fieldObjs.push(fieldObj);
-    } else {
-      if (field.type === "repeater") {
-        fieldObjs.push({
-          fields_id: brickField.fields_id,
-          key: brickField.key,
-          type: brickField.type,
-          items: buildFieldGroups(brickFields, field.fields || [])
-        });
-      } else {
-        const fieldObj = {
-          fields_id: brickField.fields_id,
-          key: brickField.key,
-          type: brickField.type
-        };
-        if (value !== null)
-          fieldObj.value = value;
-        fieldObjs.push(fieldObj);
-      }
-    }
-  });
-  return fieldObjs;
-};
-var buildFieldGroups = (data, fields) => {
-  const groupMap = /* @__PURE__ */ new Map();
-  let maxGroupPosition = 0;
-  for (const datum of data) {
-    if (datum.group_position !== null) {
-      const group = groupMap.get(datum.group_position) || [];
-      group.push(datum);
-      groupMap.set(datum.group_position, group);
-      maxGroupPosition = Math.max(maxGroupPosition, datum.group_position);
-    }
-  }
-  const output = [];
-  for (let i = 1; i <= maxGroupPosition; i++) {
-    const group = groupMap.get(i) || [];
-    const outputGroup = buildFields(group, fields);
-    output.push(outputGroup);
-  }
-  const grouplessData = groupMap.get(null) || [];
-  if (grouplessData.length > 0) {
-    const lastGroup = output[output.length - 1];
-    lastGroup.push(...buildFields(grouplessData, fields));
-  }
-  return output;
-};
-var buildBrickStructure = (brickFields) => {
-  const brickStructure = [];
-  brickFields.forEach((brickField) => {
-    const brickStructureIndex = brickStructure.findIndex(
-      (brick) => brick.id === brickField.id
-    );
-    if (brickStructureIndex === -1) {
-      brickStructure.push({
-        id: brickField.id,
-        key: brickField.brick_key,
-        order: brickField.brick_order,
-        type: brickField.brick_type,
-        fields: []
-      });
-    }
-  });
-  return brickStructure;
-};
-var formatBricks = async (data) => {
-  const builderInstances = brick_config_default.getBrickConfig();
-  if (!builderInstances)
-    return [];
-  if (!data.environment)
-    return [];
-  const brickStructure = buildBrickStructure(data.brick_fields).filter(
-    (brick) => {
-      const allowed = brick_config_default.isBrickAllowed({
-        key: brick.key,
-        type: brick.type,
-        environment: data.environment,
-        collection: data.collection
-      });
-      return allowed.allowed;
-    }
-  );
-  brickStructure.forEach((brick) => {
-    const instance = builderInstances.find((b) => b.key === brick.key);
-    if (!instance)
-      return;
-    brick.fields = buildFieldTree(brick.id, data.brick_fields, instance);
-  });
-  return brickStructure;
-};
-var format_bricks_default = formatBricks;
-
-// src/services/collection-bricks/get-all.ts
-var getAll5 = async (client, data) => {
-  const brickFields = await CollectionBrick.getAll(client, {
-    reference_id: data.reference_id,
-    type: data.type
-  });
-  if (!brickFields) {
+var formatUpsertFields = (brick) => {
+  return brick.fields?.map((field) => {
     return {
-      builder_bricks: [],
-      fixed_bricks: []
+      fields_id: field.fields_id,
+      collection_brick_id: brick.id,
+      repeater_key: field.repeater,
+      key: field.key,
+      type: field.type,
+      group_position: field.group,
+      text_value: null,
+      int_value: null,
+      bool_value: null,
+      json_value: null,
+      page_link_id: null,
+      media_id: null,
+      ...fieldTypeValues(field)
     };
-  }
-  const environment = await service_default(
-    environments_default.getSingle,
-    false,
-    client
-  )({
-    key: data.environment_key
-  });
-  const formmatedBricks = await format_bricks_default({
-    brick_fields: brickFields,
-    environment_key: data.environment_key,
-    collection: data.collection,
-    environment
-  });
-  return {
-    builder_bricks: formmatedBricks.filter((brick) => brick.type === "builder"),
-    fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder")
-  };
+  }) || [];
 };
-var get_all_default5 = getAll5;
-
-// src/services/collection-bricks/delete-unused.ts
-var deleteUnused = async (client, data) => {
-  const allBricks = await CollectionBrick.getAllBricks(client, {
-    type: data.type,
-    reference_id: data.reference_id,
-    brick_type: data.brick_type
-  });
-  const brickIds = allBricks.map((brick) => brick.id);
-  const bricksToDelete = brickIds.filter((id) => !data.brick_ids.includes(id));
-  const promises = bricksToDelete.map(
-    (id) => CollectionBrick.deleteSingleBrick(client, {
-      brick_id: id
-    })
-  );
-  try {
-    await Promise.all(promises);
-  } catch (err) {
-    throw new LucidError({
-      type: "basic",
-      name: "Brick Delete Error",
-      message: `There was an error deleting bricks for "${data.type}" of ID "${data.reference_id}"!`,
-      status: 500
-    });
-  }
-};
-var delete_unused_default = deleteUnused;
+var format_upsert_fields_default = formatUpsertFields;
 
 // src/db/models/Media.ts
 var Media = class {
@@ -7141,6 +6692,15 @@ var Media = class {
   };
 };
 
+// src/utils/media/create-url.ts
+var createURL = (key) => {
+  if (!key) {
+    return void 0;
+  }
+  return `${Config.host}/cdn/v1/${key}`;
+};
+var create_url_default = createURL;
+
 // src/utils/format/format-media.ts
 var formatMedia = (media) => {
   return {
@@ -7163,132 +6723,64 @@ var formatMedia = (media) => {
 };
 var format_media_default = formatMedia;
 
-// src/services/collection-bricks/validate-bricks.ts
-var flattenAllBricks = (builder_bricks, fixed_bricks) => {
-  if (!builder_bricks && !fixed_bricks)
-    return {
-      builder_bricks: [],
-      fixed_bricks: [],
-      flat_fields: []
-    };
-  const builderBricks = [];
-  const fixedBricks = [];
-  const flatBricks = [];
-  for (let brick of builder_bricks) {
-    const flatFields = flattenBricksFields(brick.fields);
-    builderBricks.push({
-      brick_key: brick.key,
-      flat_fields: flatFields
-    });
-    flatBricks.push(...flatFields);
-  }
-  for (let brick of fixed_bricks) {
-    const flatFields = flattenBricksFields(brick.fields);
-    fixedBricks.push({
-      brick_key: brick.key,
-      flat_fields: flatFields
-    });
-    flatBricks.push(...flatFields);
-  }
-  return {
-    builder_bricks: builderBricks,
-    fixed_bricks: fixedBricks,
-    flat_fields: flatBricks
-  };
-};
-var flattenBricksFields = (fields) => {
-  let flatFields = [];
-  if (!fields)
-    return flatFields;
-  for (let brick of fields) {
-    let flatBrick = {
-      fields_id: brick.fields_id,
-      parent_repeater: brick.parent_repeater,
-      key: brick.key,
-      type: brick.type,
-      value: brick.value,
-      target: brick.target,
-      group_position: brick.group_position
-    };
-    Object.keys(flatBrick).forEach(
-      // @ts-ignore
-      (key) => flatBrick[key] === void 0 && delete flatBrick[key]
-    );
-    flatFields.push(flatBrick);
-    if (brick.items) {
-      flatFields = flatFields.concat(flattenBricksFields(brick.items));
-    }
-  }
-  return flatFields;
-};
-var errorKey = (key, group_position) => {
-  return group_position ? `${key}[${group_position}]` : key;
-};
-var buildErrorObject = (brickErrors) => {
-  const errorObject = {};
-  brickErrors.forEach((brick, index) => {
-    const brickKeyWithIndex = `${brick.key}[${index}]`;
-    errorObject[brickKeyWithIndex] = {};
-    brick.errors.forEach((error) => {
-      const brickObj = errorObject[brickKeyWithIndex];
-      brickObj[error.key] = {
-        code: "invalid",
-        message: error.message || "Invalid value."
-      };
-    });
-  });
-  return errorObject;
-};
-var validateBricksGroup = async (data) => {
+// src/services/collection-bricks/checks/check-validate-bricks.ts
+var validateBrickData = async (data) => {
   const errors = [];
   let hasErrors = false;
   for (let i = 0; i < data.bricks.length; i++) {
     const brick = data.bricks[i];
     const brickErrors = {
-      key: brick.brick_key,
+      key: brick.key,
       errors: []
     };
-    const instance = data.builderInstances.find(
-      (b) => b.key === brick.brick_key
-    );
+    const instance = data.builderInstances.find((b) => b.key === brick.key);
     if (!instance) {
       throw new LucidError({
         type: "basic",
-        name: "Brick not found",
-        message: "We could not find the brick you are looking for.",
-        status: 404
+        name: translations_default("error_saving_bricks"),
+        message: translations_default("error_saving_page_brick_couldnt_find_brick_config", {
+          key: brick.key
+        }),
+        status: 400
       });
     }
     const allowed = brick_config_default.isBrickAllowed({
-      key: brick.brick_key,
-      type: data.type,
+      key: brick.key,
+      type: brick.type,
       environment: data.environment,
       collection: data.collection
     });
     if (!allowed.allowed) {
       throw new LucidError({
         type: "basic",
-        name: "Brick not allowed",
-        message: `The brick "${brick.brick_key}" of type "${data.type}" is not allowed in this collection. Check your assigned bricks in the collection and environment.`,
-        status: 500
+        name: translations_default("error_saving_bricks"),
+        message: translations_default("error_saving_page_brick_not_in_collection", {
+          key: brick.key,
+          type: brick.type
+        }),
+        status: 400
       });
     }
-    const flatFields = brick.flat_fields;
+    const flatFields = brick.fields || [];
     for (let j = 0; j < flatFields.length; j++) {
       const field = flatFields[j];
       let referenceData = void 0;
       switch (field.type) {
         case "link": {
+          const value = field.value;
           referenceData = {
-            target: field.target
+            target: value?.target,
+            label: value?.label
           };
           break;
         }
         case "pagelink": {
-          const page = data.pages.find((p) => p.id === field.value);
+          const value = field.value;
+          const page = data.pages.find((p) => p.id === value.id);
           if (page) {
             referenceData = {
-              target: field.target
+              target: value?.target,
+              label: value?.label
             };
           }
           break;
@@ -7314,7 +6806,7 @@ var validateBricksGroup = async (data) => {
       });
       if (err.valid === false) {
         brickErrors.errors.push({
-          key: errorKey(field.key, field.group_position),
+          key: errorKey(field.key, field.group),
           message: err.message
         });
         hasErrors = true;
@@ -7323,6 +6815,29 @@ var validateBricksGroup = async (data) => {
     errors.push(brickErrors);
   }
   return { errors, hasErrors };
+};
+var errorKey = (key, group_position) => {
+  return group_position ? `${key}[${group_position}]` : key;
+};
+var buildErrorObject = (brickErrors) => {
+  const errorObject = {};
+  brickErrors.forEach((brick, index) => {
+    const brickKeyWithIndex = `${brick.key}[${index}]`;
+    errorObject[brickKeyWithIndex] = {};
+    brick.errors.forEach((error) => {
+      const brickObj = errorObject[brickKeyWithIndex];
+      brickObj[error.key] = {
+        code: "invalid",
+        message: error.message || "Invalid value."
+      };
+    });
+  });
+  return errorObject;
+};
+var flattenAllFields = (bricks) => {
+  return bricks.map((brick) => {
+    return brick.fields || [];
+  }).flat() || [];
 };
 var getAllMedia = async (client, fields) => {
   try {
@@ -7349,7 +6864,8 @@ var getAllPages = async (client, fields, environment_key) => {
   try {
     const getIDs = fields.map((field) => {
       if (field.type === "pagelink") {
-        return field.value;
+        const value = field.value;
+        return value?.id;
       }
     });
     const ids = getIDs.filter((id) => id !== void 0).filter(
@@ -7368,60 +6884,350 @@ var getAllPages = async (client, fields, environment_key) => {
   }
 };
 var validateBricks = async (client, data) => {
+  const flatFields = flattenAllFields(data.bricks);
   const builderInstances = brick_config_default.getBrickConfig();
-  const bricksFlattened = flattenAllBricks(
-    data.builder_bricks,
-    data.fixed_bricks
-  );
-  const pageMediaPromises = await Promise.all([
-    getAllMedia(client, bricksFlattened.flat_fields),
-    getAllPages(client, bricksFlattened.flat_fields, data.environment.key)
+  const [environment, collection, media, pages] = await Promise.all([
+    environments_default.getSingle(client, {
+      key: data.environment_key
+    }),
+    service_default(
+      collections_default.getSingle,
+      false,
+      client
+    )({
+      collection_key: data.collection_key,
+      environment_key: data.environment_key,
+      type: data.type
+    }),
+    getAllMedia(client, flatFields),
+    getAllPages(client, flatFields, data.environment_key)
   ]);
-  const media = pageMediaPromises[0];
-  const pages = pageMediaPromises[1];
-  const { errors: builderErrors, hasErrors: builderHasErrors } = await validateBricksGroup({
-    bricks: bricksFlattened.builder_bricks,
+  const { errors, hasErrors } = await validateBrickData({
+    bricks: data.bricks,
     builderInstances,
-    collection: data.collection,
-    environment: data.environment,
-    type: "builder",
+    collection,
+    environment,
     media,
     pages
   });
-  const { errors: fixedErrors, hasErrors: fixedHasErrors } = await validateBricksGroup({
-    bricks: bricksFlattened.fixed_bricks,
-    builderInstances,
-    collection: data.collection,
-    environment: data.environment,
-    type: "fixed",
-    media,
-    pages
-  });
-  if (builderHasErrors || fixedHasErrors) {
+  if (hasErrors) {
     throw new LucidError({
       type: "basic",
       name: "Validation Error",
       message: "There was an error validating your bricks.",
       status: 400,
       errors: modelErrors({
-        builder_bricks: buildErrorObject(builderErrors),
-        fixed_bricks: buildErrorObject(fixedErrors)
+        bricks: buildErrorObject(errors)
       })
     });
   }
 };
-var validate_bricks_default = validateBricks;
+var check_validate_bricks_default = validateBricks;
+
+// src/services/collection-bricks/checks/check-duplicate-orders.ts
+var checkDuplicateOrders = (bricks) => {
+  const builderOrders = bricks.filter((brick) => brick.type === "builder").map((brick) => brick.order);
+  const fixedOrders = bricks.filter((brick) => brick.type === "fixed").map((brick) => brick.order);
+  const builderOrderDuplicates = builderOrders.filter(
+    (order, index) => builderOrders.indexOf(order) !== index
+  );
+  const fixedOrderDuplicates = fixedOrders.filter(
+    (order, index) => fixedOrders.indexOf(order) !== index
+  );
+  if (builderOrderDuplicates.length > 0) {
+    throw new LucidError({
+      type: "basic",
+      name: translations_default("error_saving_bricks"),
+      message: translations_default("error_saving_page_duplicate_order", {
+        order: builderOrderDuplicates.join(", ")
+      }),
+      status: 400
+    });
+  }
+  if (fixedOrderDuplicates.length > 0) {
+    throw new LucidError({
+      type: "basic",
+      name: translations_default("error_saving_bricks"),
+      message: translations_default("error_saving_page_duplicate_order", {
+        order: fixedOrderDuplicates.join(", ")
+      }),
+      status: 400
+    });
+  }
+};
+var check_duplicate_orders_default = checkDuplicateOrders;
+
+// src/services/collection-bricks/update-multiple.ts
+var updateMultiple2 = async (client, data) => {
+  check_duplicate_orders_default(data.bricks);
+  await service_default(check_validate_bricks_default, false, client)(data);
+  const existingBricks = await CollectionBrick.getAllBricks(client, {
+    type: data.type,
+    reference_id: data.id
+  });
+  const bricksToUpdate = data.bricks.filter((brick) => brick.id !== void 0);
+  const bricksToCreate = data.bricks.filter((brick) => brick.id === void 0);
+  const deleteFieldIds = getFieldsToDelete(existingBricks, bricksToUpdate);
+  const [_, newBricks] = await Promise.all([
+    CollectionBrick.deleteMultipleBrickFields(client, {
+      ids: deleteFieldIds
+    }),
+    CollectionBrick.createMultipleBricks(client, {
+      type: data.type,
+      reference_id: data.id,
+      bricks: bricksToCreate
+    })
+  ]);
+  assignIdsToNewBricks(data.bricks, newBricks);
+  const fields = data.bricks.map(format_upsert_fields_default).flat();
+  await Promise.all([
+    CollectionBrick.updateMultipleBrickOrders(
+      client,
+      bricksToUpdate
+    ),
+    CollectionBrick.updateMultipleBrickFields(client, {
+      fields: fields.filter((field) => field.fields_id !== void 0)
+    }),
+    CollectionBrick.createMultipleBrickFields(client, {
+      fields: fields.filter((field) => field.fields_id === void 0)
+    }),
+    CollectionBrick.deleteMultipleBricks(client, {
+      ids: existingBricks.filter((brick) => !bricksToUpdate.some((b) => b.id === brick.id)).map((brick) => brick.id)
+    })
+  ]);
+  return void 0;
+};
+function getFieldsToDelete(existingBricks, bricksToUpdate) {
+  const deleteFieldIds = [];
+  const updateIdsSet = new Set(bricksToUpdate.map((b) => b.id));
+  existingBricks.forEach((brick) => {
+    if (updateIdsSet.has(brick.id)) {
+      const currentBrickFields = brick.fields || [];
+      currentBrickFields.forEach((field) => {
+        if (!bricksToUpdate.some(
+          (b) => b.fields && b.fields.some((f) => f.fields_id === field.id)
+        )) {
+          deleteFieldIds.push(field.id);
+        }
+      });
+    }
+  });
+  return deleteFieldIds;
+}
+function assignIdsToNewBricks(bricks, newBricks) {
+  bricks.forEach((brick) => {
+    const matchingNewBrick = newBricks.find(
+      (b) => b.brick_key === brick.key && b.brick_order === brick.order
+    );
+    if (matchingNewBrick) {
+      brick.id = matchingNewBrick.id;
+    }
+  });
+}
+var update_multiple_default2 = updateMultiple2;
+
+// src/utils/format/format-bricks.ts
+var specificFieldValues = (type, collection, builderField, field) => {
+  let value = null;
+  let meta = null;
+  switch (type) {
+    case "tab": {
+      break;
+    }
+    case "text": {
+      value = field?.text_value || builderField?.default;
+      break;
+    }
+    case "wysiwyg": {
+      value = field?.text_value || builderField?.default;
+      break;
+    }
+    case "media": {
+      value = field?.media_id || void 0;
+      meta = {
+        id: field?.media_id || void 0,
+        url: create_url_default(field?.media.key || void 0),
+        key: field?.media.key || void 0,
+        mime_type: field?.media.mime_type || void 0,
+        file_extension: field?.media.file_extension || void 0,
+        file_size: field?.media.file_size || void 0,
+        width: field?.media.width || void 0,
+        height: field?.media.height || void 0,
+        name: field?.media.name || void 0,
+        alt: field?.media.alt || void 0
+      };
+      break;
+    }
+    case "number": {
+      value = field?.int_value || builderField?.default;
+      break;
+    }
+    case "checkbox": {
+      value = field?.bool_value || builderField?.default;
+      break;
+    }
+    case "select": {
+      value = field?.text_value || builderField?.default;
+      break;
+    }
+    case "textarea": {
+      value = field?.text_value || builderField?.default;
+      break;
+    }
+    case "json": {
+      value = field?.json_value || builderField?.default;
+      break;
+    }
+    case "colour": {
+      value = field?.text_value || builderField?.default;
+      break;
+    }
+    case "datetime": {
+      value = field?.text_value || builderField?.default;
+      break;
+    }
+    case "pagelink": {
+      value = {
+        id: field?.page_link_id || void 0,
+        target: field?.json_value.target || "_self",
+        label: field?.json_value.label || field?.linked_page.title || void 0
+      };
+      meta = {
+        full_slug: formatFullSlug(
+          {
+            full_slug: field?.linked_page.full_slug || void 0,
+            homepage: field?.linked_page.homepage || void 0,
+            collection_key: field?.linked_page.collection_key || void 0
+          },
+          [collection]
+        ) || void 0,
+        slug: field?.linked_page.slug || void 0
+      };
+      break;
+    }
+    case "link": {
+      value = {
+        url: field?.text_value || builderField?.default || "",
+        target: field?.json_value.target || "_self",
+        label: field?.json_value.label || void 0
+      };
+      break;
+    }
+  }
+  return { value, meta };
+};
+var formatFields = ({
+  brickFields,
+  builderInstance,
+  collection
+}) => {
+  const fieldObjs = [];
+  const fields = builderInstance?.basicFieldTree;
+  if (!fields)
+    return fieldObjs;
+  fields.forEach((field) => {
+    const brickField = brickFields.find((bField) => bField.key === field.key);
+    const { value, meta } = specificFieldValues(
+      field.type,
+      collection,
+      field,
+      brickField
+    );
+    if (brickField) {
+      let fieldsData = {
+        fields_id: brickField.fields_id,
+        key: brickField.key,
+        type: brickField.type
+      };
+      if (brickField.repeater_key)
+        fieldsData.repeater = brickField.repeater_key;
+      if (brickField.group_position)
+        fieldsData.group = brickField.group_position;
+      if (meta)
+        fieldsData.meta = meta;
+      if (value)
+        fieldsData.value = value;
+      fieldObjs.push(fieldsData);
+    }
+  });
+  return fieldObjs;
+};
+var buildBrickStructure = (brickFields) => {
+  const brickStructure = [];
+  brickFields.forEach((brickField) => {
+    const brickStructureIndex = brickStructure.findIndex(
+      (brick) => brick.id === brickField.id
+    );
+    if (brickStructureIndex === -1) {
+      brickStructure.push({
+        id: brickField.id,
+        key: brickField.brick_key,
+        order: brickField.brick_order,
+        type: brickField.brick_type,
+        fields: []
+      });
+    }
+  });
+  return brickStructure;
+};
+var formatBricks = (data) => {
+  const builderInstances = brick_config_default.getBrickConfig();
+  if (!builderInstances)
+    return [];
+  if (!data.environment)
+    return [];
+  return buildBrickStructure(data.brick_fields).filter((brick) => {
+    const allowed = brick_config_default.isBrickAllowed({
+      key: brick.key,
+      type: brick.type,
+      environment: data.environment,
+      collection: data.collection
+    });
+    return allowed.allowed;
+  }).map((brick) => {
+    const instance = builderInstances.find((b) => b.key === brick.key);
+    return {
+      ...brick,
+      fields: formatFields({
+        brickFields: data.brick_fields.filter(
+          (field) => field.collection_brick_id === brick.id
+        ) || [],
+        builderInstance: instance,
+        collection: data.collection
+      })
+    };
+  });
+};
+var format_bricks_default = formatBricks;
+
+// src/services/collection-bricks/get-all.ts
+var getAll5 = async (client, data) => {
+  const brickFields = await CollectionBrick.getAll(client, {
+    reference_id: data.reference_id,
+    type: data.type
+  });
+  if (!brickFields)
+    return [];
+  const environment = await service_default(
+    environments_default.getSingle,
+    false,
+    client
+  )({
+    key: data.environment_key
+  });
+  return format_bricks_default({
+    brick_fields: brickFields,
+    environment_key: data.environment_key,
+    collection: data.collection,
+    environment
+  });
+};
+var get_all_default5 = getAll5;
 
 // src/services/collection-bricks/index.ts
 var collection_bricks_default = {
   updateMultiple: update_multiple_default2,
-  upsertSingle: upsert_single_default2,
-  upsertRepeater: upsert_repeater_default,
-  checkFieldExists: check_field_exists_default,
-  upsertField: upsert_field_default,
-  getAll: get_all_default5,
-  deleteUnused: delete_unused_default,
-  validateBricks: validate_bricks_default
+  getAll: get_all_default5
 };
 
 // src/services/pages/get-single.ts
@@ -7497,8 +7303,7 @@ var getSingle9 = async (client, data) => {
       environment_key: data.environment_key,
       collection
     });
-    page.builder_bricks = pageBricks.builder_bricks;
-    page.fixed_bricks = pageBricks.fixed_bricks;
+    page.bricks = pageBricks;
   }
   return format_page_default(page, [collection]);
 };
@@ -7528,25 +7333,6 @@ var updateSingle4 = async (client, data) => {
       })
     });
   }
-  const [environment, collection] = await Promise.all([
-    service_default(
-      environments_default.getSingle,
-      false,
-      client
-    )({
-      key: data.environment_key
-    }),
-    service_default(
-      pages_default2.checkPageCollection,
-      false,
-      client
-    )({
-      collection_key: currentPage.collection_key,
-      environment_key: data.environment_key,
-      homepage: data.homepage,
-      parent_id: data.parent_id || void 0
-    })
-  ]);
   const parentId = data.homepage ? void 0 : data.parent_id;
   if (parentId) {
     const parentChecks2 = service_default(
@@ -7567,18 +7353,6 @@ var updateSingle4 = async (client, data) => {
       parent_id: parentId
     });
     await Promise.all([parentChecks2, ancestryChecks]);
-  }
-  if (data.builder_bricks && data.builder_bricks.length > 0 || data.fixed_bricks && data.fixed_bricks.length > 0) {
-    await service_default(
-      collection_bricks_default.validateBricks,
-      false,
-      client
-    )({
-      builder_bricks: data.builder_bricks || [],
-      fixed_bricks: data.fixed_bricks || [],
-      collection,
-      environment
-    });
   }
   let newSlug = void 0;
   if (data.slug) {
@@ -7604,9 +7378,7 @@ var updateSingle4 = async (client, data) => {
     category_ids: data.category_ids,
     published: data.published,
     author_id: data.author_id,
-    excerpt: data.excerpt,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks
+    excerpt: data.excerpt
   });
   if (!page) {
     throw new LucidError({
@@ -7616,8 +7388,8 @@ var updateSingle4 = async (client, data) => {
       status: 500
     });
   }
-  await Promise.all([
-    data.category_ids ? service_default(
+  if (data.category_ids) {
+    await service_default(
       page_categories_default.updateMultiple,
       false,
       client
@@ -7625,19 +7397,8 @@ var updateSingle4 = async (client, data) => {
       page_id: page.id,
       category_ids: data.category_ids,
       collection_key: currentPage.collection_key
-    }) : Promise.resolve(),
-    service_default(
-      collection_bricks_default.updateMultiple,
-      false,
-      client
-    )({
-      id: page.id,
-      builder_bricks: data.builder_bricks || [],
-      fixed_bricks: data.fixed_bricks || [],
-      collection,
-      environment
-    })
-  ]);
+    });
+  }
   return void 0;
 };
 var update_single_default6 = updateSingle4;
@@ -8002,9 +7763,7 @@ var updateSingleController2 = async (req, res, next) => {
       author_id: req.body.author_id,
       category_ids: req.body.category_ids,
       published: req.body.published,
-      excerpt: req.body.excerpt,
-      builder_bricks: req.body.builder_bricks,
-      fixed_bricks: req.body.fixed_bricks
+      excerpt: req.body.excerpt
     });
     res.status(200).json(
       build_response_default(req, {
@@ -8096,6 +7855,33 @@ var get_multiple_valid_parents_default2 = {
   controller: getMultipleValidParentsController
 };
 
+// src/controllers/pages/update-single-bricks.ts
+var updateSingleBricksController = async (req, res, next) => {
+  try {
+    const page = await service_default(
+      collection_bricks_default.updateMultiple,
+      true
+    )({
+      id: parseInt(req.params.id),
+      environment_key: req.headers["lucid-environment"],
+      collection_key: req.params.collection_key,
+      bricks: req.body.bricks,
+      type: "pages"
+    });
+    res.status(200).json(
+      build_response_default(req, {
+        data: page
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+var update_single_bricks_default = {
+  schema: pages_default.updateSingleBricks,
+  controller: updateSingleBricksController
+};
+
 // src/routes/v1/pages.routes.ts
 var router4 = (0, import_express4.Router)();
 route_default(router4, {
@@ -8159,6 +7945,20 @@ route_default(router4, {
   controller: update_single_default7.controller
 });
 route_default(router4, {
+  method: "patch",
+  path: "/:collection_key/:id/bricks",
+  permissions: {
+    environments: ["update_content"]
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+    validateEnvironment: true
+  },
+  schema: update_single_bricks_default.schema,
+  controller: update_single_bricks_default.controller
+});
+route_default(router4, {
   method: "delete",
   path: "/:id",
   permissions: {
@@ -8194,8 +7994,7 @@ var import_express5 = require("express");
 // src/schemas/single-page.ts
 var import_zod10 = __toESM(require("zod"), 1);
 var updateSingleBody3 = import_zod10.default.object({
-  builder_bricks: import_zod10.default.array(BrickSchema).optional(),
-  fixed_bricks: import_zod10.default.array(BrickSchema).optional()
+  bricks: import_zod10.default.array(BrickSchema)
 });
 var updateSingleQuery3 = import_zod10.default.object({});
 var updateSingleParams3 = import_zod10.default.object({
@@ -8234,14 +8033,14 @@ var SinglePage = class {
   };
   static createSingle = async (client, data) => {
     const res = await client.query({
-      text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING *`,
+      text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING id`,
       values: [data.environment_key, data.collection_key, data.user_id]
     });
     return res.rows[0];
   };
   static updateSingle = async (client, data) => {
     const updateSinglePage = await client.query({
-      text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,
+      text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING id`,
       values: [data.user_id, data.id]
     });
     return updateSinglePage.rows[0];
@@ -8296,13 +8095,11 @@ var getSingle10 = async (client, data) => {
     singlepage = await SinglePage.createSingle(client, {
       user_id: data.user_id,
       environment_key: data.environment_key,
-      collection_key: data.collection_key,
-      builder_bricks: [],
-      fixed_bricks: []
+      collection_key: data.collection_key
     });
   }
   if (data.include_bricks) {
-    const pageBricks = await service_default(
+    const bricks = await service_default(
       collection_bricks_default.getAll,
       false,
       client
@@ -8312,8 +8109,7 @@ var getSingle10 = async (client, data) => {
       environment_key: data.environment_key,
       collection
     });
-    singlepage.builder_bricks = pageBricks.builder_bricks;
-    singlepage.fixed_bricks = pageBricks.fixed_bricks;
+    singlepage.bricks = bricks;
   }
   return singlepage;
 };
@@ -8321,14 +8117,14 @@ var get_single_default12 = getSingle10;
 
 // src/services/single-pages/update-single.ts
 var updateSingle5 = async (client, data) => {
-  const environment = await service_default(
+  await service_default(
     environments_default.getSingle,
     false,
     client
   )({
     key: data.environment_key
   });
-  const collection = await service_default(
+  await service_default(
     collections_default.getSingle,
     false,
     client
@@ -8347,40 +8143,21 @@ var updateSingle5 = async (client, data) => {
     collection_key: data.collection_key
   });
   await service_default(
-    collection_bricks_default.validateBricks,
-    false,
+    collection_bricks_default.updateMultiple,
+    true,
     client
   )({
-    builder_bricks: data.builder_bricks || [],
-    fixed_bricks: data.fixed_bricks || [],
-    collection,
-    environment
+    id: getSinglepage.id,
+    environment_key: data.environment_key,
+    collection_key: data.collection_key,
+    bricks: data.bricks,
+    type: "singlepage"
   });
-  const singlepage = await SinglePage.updateSingle(client, {
+  await SinglePage.updateSingle(client, {
     id: getSinglepage.id,
     user_id: data.user_id
   });
-  await service_default(
-    collection_bricks_default.updateMultiple,
-    false,
-    client
-  )({
-    id: singlepage.id,
-    builder_bricks: data.builder_bricks || [],
-    fixed_bricks: data.fixed_bricks || [],
-    collection,
-    environment
-  });
-  return await service_default(
-    single_pages_default.getSingle,
-    false,
-    client
-  )({
-    user_id: data.user_id,
-    environment_key: data.environment_key,
-    collection_key: data.collection_key,
-    include_bricks: true
-  });
+  return void 0;
 };
 var update_single_default8 = updateSingle5;
 
@@ -8400,8 +8177,7 @@ var updateSingleController3 = async (req, res, next) => {
       user_id: req.auth.id,
       environment_key: req.headers["lucid-environment"],
       collection_key: req.params.collection_key,
-      builder_bricks: req.body.builder_bricks,
-      fixed_bricks: req.body.fixed_bricks
+      bricks: req.body.bricks
     });
     res.status(200).json(
       build_response_default(req, {

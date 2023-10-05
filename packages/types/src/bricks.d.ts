@@ -22,9 +22,14 @@ export type BrickFieldValueT =
   | boolean
   | null
   | undefined
+  | {
+      [key: string]: any;
+    }
   | LinkValueT
   | MediaValueT
   | PageLinkValueT;
+
+export type BrickFieldMetaT = null | undefined | MediaMetaT | PageLinkMetaT;
 
 export interface BrickResT {
   id: CollectionBrickT["id"];
@@ -35,26 +40,33 @@ export interface BrickResT {
     fields_id: number;
     key: string;
     type: FieldTypes;
+    repeater?: string | null;
+    group?: number | null;
     value?: BrickFieldValueT;
-    items?: Array<Array<BrickResT["fields"][0]>>;
+    meta?: BrickFieldMetaT;
   }>;
 }
 
 export interface PageLinkValueT {
-  id: number;
-  target?: "_blank" | "_self";
-  title?: string;
+  id: number | null;
+  target?: string | null;
+  label?: string | null;
+}
+
+export interface PageLinkMetaT {
   slug?: string;
   full_slug?: string;
 }
 
 export interface LinkValueT {
-  target?: "_blank" | "_self";
-  url?: string;
+  url: string | null;
+  target?: string | null;
+  label?: string | null;
 }
 
-export interface MediaValueT {
-  id: number;
+export type MediaValueT = number;
+export interface MediaMetaT {
+  id?: number;
   url?: string;
   key?: string;
   mime_type?: string;

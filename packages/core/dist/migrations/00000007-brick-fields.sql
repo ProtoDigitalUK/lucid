@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS lucid_collection_bricks (
 CREATE TABLE IF NOT EXISTS lucid_fields (
   fields_id SERIAL PRIMARY KEY,
   collection_brick_id INT REFERENCES lucid_collection_bricks(id) ON DELETE CASCADE,
-  parent_repeater INT REFERENCES lucid_fields(fields_id) ON DELETE CASCADE,
+  repeater_key TEXT,
 
   key TEXT NOT NULL,
   type TEXT NOT NULL,

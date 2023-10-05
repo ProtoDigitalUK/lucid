@@ -29,8 +29,7 @@ export interface PagesResT {
   } | null;
 
   categories?: Array<number> | null;
-  builder_bricks?: Array<BrickResT> | null;
-  fixed_bricks?: Array<BrickResT> | null;
+  bricks?: Array<BrickResT> | null;
 }
 
 export type FieldTypes = FieldTypes;

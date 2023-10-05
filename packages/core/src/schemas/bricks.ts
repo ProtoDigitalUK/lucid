@@ -4,28 +4,37 @@ import { FieldTypesEnum } from "@builders/brick-builder/index.js";
 const FieldTypesSchema = z.nativeEnum(FieldTypesEnum);
 
 // ------------------------------------
-// CREATE & UPDATE BRICKS / FIELDS
-const baseFieldSchema = z.object({
-  fields_id: z.number().optional(),
-  parent_repeater: z.number().optional(),
-  group_position: z.number().optional(),
+// UPDATE BRICKS / FIELDS
+export const FieldSchema = z.object({
   key: z.string(),
   type: FieldTypesSchema,
-  value: z.any(),
-  target: z.any().optional(),
-});
+  value: z.union([
+    z.string(),
+    z.boolean(),
+    z.number(),
+    z.object({
+      id: z.number().nullable(),
+      target: z.string().nullable().optional(),
+      label: z.string().nullable().optional(),
+    }),
+    z.object({
+      url: z.string().nullable(),
+      target: z.string().nullable().optional(),
+      label: z.string().nullable().optional(),
+    }),
+    z.object({}).optional(),
+  ]),
 
-type Field = z.infer<typeof baseFieldSchema> & {
-  items?: Field[];
-};
-
-export const FieldSchema: z.ZodType<Field> = baseFieldSchema.extend({
-  items: z.lazy(() => FieldSchema.array().optional()),
+  fields_id: z.number().optional(),
+  group: z.number().optional(),
+  repeater: z.string().optional(),
 });
 
 export const BrickSchema = z.object({
   id: z.number().optional(),
   key: z.string(),
+  order: z.number(),
+  type: z.union([z.literal("builder"), z.literal("fixed")]),
   fields: z.array(FieldSchema).optional(),
 });
 

@@ -86,7 +86,8 @@ export interface ValidationResponse {
 }
 
 export interface LinkReferenceData {
-  target: string;
+  target?: string | null;
+  label?: string | null;
 }
 
 export interface MediaReferenceData {

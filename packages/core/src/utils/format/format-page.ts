@@ -26,8 +26,7 @@ const formatPage = (data: PageT, collections: CollectionResT[]): PagesResT => {
     published_at: data.published_at,
 
     categories: data.categories,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks,
+    bricks: data.bricks,
   };
 
   // Author
@@ -46,20 +45,36 @@ const formatPage = (data: PageT, collections: CollectionResT[]): PagesResT => {
     res.categories = res.categories[0] === null ? [] : res.categories;
   }
   // Full Slug
-  if (res.full_slug && !res.homepage) {
+  res.full_slug = formatFullSlug(data, collections);
+
+  return res;
+};
+
+export const formatFullSlug = (
+  data: {
+    full_slug?: string;
+    homepage?: boolean;
+    collection_key?: string;
+  },
+  collections: CollectionResT[]
+): string => {
+  let res = data.full_slug || "";
+
+  // Full Slug
+  if (res && !data.homepage) {
     // append collection path
     const collection = collections.find(
-      (collection) => collection.key === res.collection_key
+      (collection) => collection.key === data.collection_key
     );
     if (collection && collection.path) {
-      res.full_slug = `${collection.path}/${res.full_slug}`;
+      res = `${collection.path}/${res}`;
     }
     // add leading slash
-    if (!res.full_slug.startsWith("/")) {
-      res.full_slug = "/" + res.full_slug;
+    if (!res.startsWith("/")) {
+      res = "/" + res;
     }
     // remove double slashes
-    res.full_slug = res.full_slug.replace(/\/+/g, "/");
+    res = res.replace(/\/+/g, "/");
   }
 
   return res;

@@ -1,15 +1,10 @@
 import { PoolClient } from "pg";
-import z from "zod";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
-// Schema
-import { BrickSchema } from "@schemas/bricks.js";
 // Services
-import environmentsService from "@services/environments/index.js";
-import collectionBricksService from "@services/collection-bricks/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
 import pageServices from "@services/pages/index.js";
 
@@ -25,8 +20,6 @@ export interface ServiceData {
   category_ids?: number[];
   published?: boolean;
   excerpt?: string;
-  builder_bricks?: z.infer<typeof BrickSchema>[];
-  fixed_bricks?: z.infer<typeof BrickSchema>[];
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
@@ -57,27 +50,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  // Start checks that do not depend on each other in parallel
-  const [environment, collection] = await Promise.all([
-    service(
-      environmentsService.getSingle,
-      false,
-      client
-    )({
-      key: data.environment_key,
-    }),
-    service(
-      pageServices.checkPageCollection,
-      false,
-      client
-    )({
-      collection_key: currentPage.collection_key,
-      environment_key: data.environment_key,
-      homepage: data.homepage,
-      parent_id: data.parent_id || undefined,
-    }),
-  ]);
-
   // If the page is a homepage, set the parent_id to undefined
   const parentId = data.homepage ? undefined : data.parent_id;
   if (parentId) {
@@ -99,23 +71,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       parent_id: parentId,
     });
     await Promise.all([parentChecks, ancestryChecks]);
-  }
-
-  // validate bricks
-  if (
-    (data.builder_bricks && data.builder_bricks.length > 0) ||
-    (data.fixed_bricks && data.fixed_bricks.length > 0)
-  ) {
-    await service(
-      collectionBricksService.validateBricks,
-      false,
-      client
-    )({
-      builder_bricks: data.builder_bricks || [],
-      fixed_bricks: data.fixed_bricks || [],
-      collection: collection,
-      environment: environment,
-    });
   }
 
   let newSlug = undefined;
@@ -147,8 +102,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     published: data.published,
     author_id: data.author_id,
     excerpt: data.excerpt,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks,
   });
 
   if (!page) {
@@ -161,30 +114,17 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   }
 
   // Update categories and bricks
-  await Promise.all([
-    data.category_ids
-      ? service(
-          pageCategoryService.updateMultiple,
-          false,
-          client
-        )({
-          page_id: page.id,
-          category_ids: data.category_ids,
-          collection_key: currentPage.collection_key,
-        })
-      : Promise.resolve(),
-    service(
-      collectionBricksService.updateMultiple,
+  if (data.category_ids) {
+    await service(
+      pageCategoryService.updateMultiple,
       false,
       client
     )({
-      id: page.id,
-      builder_bricks: data.builder_bricks || [],
-      fixed_bricks: data.fixed_bricks || [],
-      collection: collection,
-      environment: environment,
-    }),
-  ]);
+      page_id: page.id,
+      category_ids: data.category_ids,
+      collection_key: currentPage.collection_key,
+    });
+  }
 
   return undefined;
 };

@@ -29,8 +29,6 @@ const updateSingleController: Controller<
       category_ids: req.body.category_ids,
       published: req.body.published,
       excerpt: req.body.excerpt,
-      builder_bricks: req.body.builder_bricks,
-      fixed_bricks: req.body.fixed_bricks,
     });
 
     res.status(200).json(

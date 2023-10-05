@@ -1,28 +1,25 @@
 import { PoolClient } from "pg";
-import z from "zod";
 // Utils
 import service from "@utils/app/service.js";
 // Models
 import SinglePage from "@db/models/SinglePage.js";
-// Schema
-import { BrickSchema } from "@schemas/bricks.js";
+import { BrickObject } from "@db/models/CollectionBrick.js";
 // Services
 import environmentsService from "@services/environments/index.js";
 import collectionsService from "@services/collections/index.js";
-import collectionBricksService from "@services/collection-bricks/index.js";
 import singlePageService from "@services/single-pages/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
 
 export interface ServiceData {
   environment_key: string;
   collection_key: string;
   user_id: number;
-  builder_bricks?: z.infer<typeof BrickSchema>[];
-  fixed_bricks?: z.infer<typeof BrickSchema>[];
+  bricks: Array<BrickObject>;
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
   // Used to check if we have access to the collection
-  const environment = await service(
+  await service(
     environmentsService.getSingle,
     false,
     client
@@ -30,7 +27,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     key: data.environment_key,
   });
 
-  const collection = await service(
+  await service(
     collectionsService.getSingle,
     false,
     client
@@ -52,50 +49,26 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     collection_key: data.collection_key,
   });
 
-  // -------------------------------------------
-  // validate bricks
   await service(
-    collectionBricksService.validateBricks,
-    false,
+    collectionBricksService.updateMultiple,
+    true,
     client
   )({
-    builder_bricks: data.builder_bricks || [],
-    fixed_bricks: data.fixed_bricks || [],
-    collection: collection,
-    environment: environment,
+    id: getSinglepage.id,
+    environment_key: data.environment_key,
+    collection_key: data.collection_key,
+    bricks: data.bricks,
+    type: "singlepage",
   });
 
   // -------------------------------------------
   // Update Single Page
-  const singlepage = await SinglePage.updateSingle(client, {
+  await SinglePage.updateSingle(client, {
     id: getSinglepage.id,
     user_id: data.user_id,
   });
 
-  // -------------------------------------------
-  // Update/Create Bricks
-  await service(
-    collectionBricksService.updateMultiple,
-    false,
-    client
-  )({
-    id: singlepage.id,
-    builder_bricks: data.builder_bricks || [],
-    fixed_bricks: data.fixed_bricks || [],
-    collection: collection,
-    environment: environment,
-  });
-
-  return await service(
-    singlePageService.getSingle,
-    false,
-    client
-  )({
-    user_id: data.user_id,
-    environment_key: data.environment_key,
-    collection_key: data.collection_key,
-    include_bricks: true,
-  });
+  return undefined;
 };
 
 export default updateSingle;

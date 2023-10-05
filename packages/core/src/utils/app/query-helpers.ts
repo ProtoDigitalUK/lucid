@@ -302,3 +302,34 @@ export class SelectQueryBuilder {
     return this.values;
   }
 }
+
+// -------------------------------------------
+// Generates alias form multi insert queries
+
+interface AliasGeneratorConfig {
+  columns: Array<{
+    key: string;
+    type?: "int" | "text" | "bool" | "jsonb" | "timestamp";
+  }>;
+  rows: number;
+}
+
+export const aliasGenerator = (config: AliasGeneratorConfig) => {
+  const aliases = [];
+
+  const colLength = config.columns.length;
+
+  for (let i = 0; i < config.rows; i++) {
+    const row = [];
+    for (let j = 0; j < colLength; j++) {
+      row.push(
+        `$${i * colLength + j + 1}${
+          config.columns[j].type ? `::${config.columns[j].type}` : ""
+        }`
+      );
+    }
+    aliases.push(`(${row.join(", ")})`);
+  }
+
+  return aliases.join(", ");
+};

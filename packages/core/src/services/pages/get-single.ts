@@ -98,8 +98,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       environment_key: data.environment_key,
       collection: collection,
     });
-    page.builder_bricks = pageBricks.builder_bricks;
-    page.fixed_bricks = pageBricks.fixed_bricks;
+    page.bricks = pageBricks;
   }
 
   return formatPage(page, [collection]);
