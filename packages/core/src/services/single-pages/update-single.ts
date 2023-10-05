@@ -49,8 +49,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     collection_key: data.collection_key,
   });
 
-  console.log(getSinglepage, "getSinglepage");
-
   await service(
     collectionBricksService.updateMultiple,
     true,

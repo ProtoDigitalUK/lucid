@@ -17,24 +17,13 @@ export interface ServiceData {
   collection: CollectionResT;
 }
 
-/*
-    Get all bricks for a page, of either type "builder" or "fixed", along with all of its fields.
-
-    Then format the bricks and fields into a format that can be used by the frontend.
-*/
-
 const getAll = async (client: PoolClient, data: ServiceData) => {
   const brickFields = await CollectionBrick.getAll(client, {
     reference_id: data.reference_id,
     type: data.type,
   });
 
-  if (!brickFields) {
-    return {
-      builder_bricks: [],
-      fixed_bricks: [],
-    };
-  }
+  if (!brickFields) return [];
 
   const environment = await service(
     environmentsService.getSingle,
@@ -44,17 +33,12 @@ const getAll = async (client: PoolClient, data: ServiceData) => {
     key: data.environment_key,
   });
 
-  const formmatedBricks = await formatBricks({
+  return formatBricks({
     brick_fields: brickFields,
     environment_key: data.environment_key,
     collection: data.collection,
     environment: environment,
   });
-
-  return {
-    builder_bricks: formmatedBricks.filter((brick) => brick.type === "builder"),
-    fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder"),
-  };
 };
 
 export default getAll;

@@ -8,8 +8,22 @@ const FieldTypesSchema = z.nativeEnum(FieldTypesEnum);
 export const FieldSchema = z.object({
   key: z.string(),
   type: FieldTypesSchema,
-  value: z.any(),
-  target: z.any().optional(),
+  value: z.union([
+    z.string(),
+    z.boolean(),
+    z.number(),
+    z.object({
+      id: z.number().nullable(),
+      target: z.string().nullable().optional(),
+      label: z.string().nullable().optional(),
+    }),
+    z.object({
+      url: z.string().nullable(),
+      target: z.string().nullable().optional(),
+      label: z.string().nullable().optional(),
+    }),
+    z.object({}).optional(),
+  ]),
 
   fields_id: z.number().optional(),
   group: z.number().optional(),

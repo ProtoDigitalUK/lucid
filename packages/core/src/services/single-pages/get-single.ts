@@ -69,13 +69,11 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       user_id: data.user_id,
       environment_key: data.environment_key,
       collection_key: data.collection_key,
-      builder_bricks: [],
-      fixed_bricks: [],
     });
   }
 
   if (data.include_bricks) {
-    const pageBricks = await service(
+    const bricks = await service(
       collectionBricksService.getAll,
       false,
       client
@@ -85,8 +83,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       environment_key: data.environment_key,
       collection: collection,
     });
-    singlepage.builder_bricks = pageBricks.builder_bricks;
-    singlepage.fixed_bricks = pageBricks.fixed_bricks;
+    singlepage.bricks = bricks;
   }
 
   return singlepage;

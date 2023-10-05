@@ -5073,11 +5073,11 @@ var BrickBuilder = class {
     textarea: "string",
     colour: "string",
     datetime: "string",
-    link: "string",
+    link: "object",
     wysiwyg: "string",
     select: "string",
     number: "number",
-    pagelink: "number",
+    pagelink: "object",
     checkbox: "boolean"
   };
   fieldValidation({
@@ -5223,6 +5223,8 @@ var BrickBuilder = class {
   }
   #validateLinkTarget(referenceData) {
     const allowedValues = ["_self", "_blank"];
+    if (!referenceData.target)
+      return;
     if (!allowedValues.includes(referenceData.target)) {
       throw new ValidationError(
         `Please set the target to one of the following: ${allowedValues.join(
@@ -5323,8 +5325,22 @@ var FieldTypesSchema = z8.nativeEnum(FieldTypesEnum);
 var FieldSchema = z8.object({
   key: z8.string(),
   type: FieldTypesSchema,
-  value: z8.any(),
-  target: z8.any().optional(),
+  value: z8.union([
+    z8.string(),
+    z8.boolean(),
+    z8.number(),
+    z8.object({
+      id: z8.number().nullable(),
+      target: z8.string().nullable().optional(),
+      label: z8.string().nullable().optional()
+    }),
+    z8.object({
+      url: z8.string().nullable(),
+      target: z8.string().nullable().optional(),
+      label: z8.string().nullable().optional()
+    }),
+    z8.object({}).optional()
+  ]),
   fields_id: z8.number().optional(),
   group: z8.number().optional(),
   repeater: z8.string().optional()
@@ -6038,8 +6054,7 @@ var formatPage = (data, collections) => {
     published: data.published,
     published_at: data.published_at,
     categories: data.categories,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks
+    bricks: data.bricks
   };
   if (data.author_id) {
     res.author = {
@@ -6053,17 +6068,22 @@ var formatPage = (data, collections) => {
   if (res.categories) {
     res.categories = res.categories[0] === null ? [] : res.categories;
   }
-  if (res.full_slug && !res.homepage) {
+  res.full_slug = formatFullSlug(data, collections);
+  return res;
+};
+var formatFullSlug = (data, collections) => {
+  let res = data.full_slug || "";
+  if (res && !data.homepage) {
     const collection = collections.find(
-      (collection2) => collection2.key === res.collection_key
+      (collection2) => collection2.key === data.collection_key
     );
     if (collection && collection.path) {
-      res.full_slug = `${collection.path}/${res.full_slug}`;
+      res = `${collection.path}/${res}`;
     }
-    if (!res.full_slug.startsWith("/")) {
-      res.full_slug = "/" + res.full_slug;
+    if (!res.startsWith("/")) {
+      res = "/" + res;
     }
-    res.full_slug = res.full_slug.replace(/\/+/g, "/");
+    res = res.replace(/\/+/g, "/");
   }
   return res;
 };
@@ -6157,7 +6177,9 @@ var CollectionBrick = class {
           json_build_object(
             'title', lucid_pages.title,
             'slug', lucid_pages.slug,
-            'full_slug', lucid_pages.full_slug
+            'full_slug', lucid_pages.full_slug,
+            'homepage', lucid_pages.homepage,
+            'collection_key', lucid_pages.collection_key
           ) as linked_page,
           json_build_object(
             'key', lucid_media.key,
@@ -6443,18 +6465,22 @@ var valueKey = (type) => {
 var fieldTypeValues = (field) => {
   switch (field.type) {
     case "link": {
+      const value = field.value;
       return {
-        text_value: field.value,
+        text_value: value.url,
         json_value: {
-          target: field.target
+          target: value.target,
+          label: value.label
         }
       };
     }
     case "pagelink": {
+      const value = field.value;
       return {
-        page_link_id: field.value,
+        page_link_id: value.id,
         json_value: {
-          target: field.target
+          target: value.target,
+          label: value.label
         }
       };
     }
@@ -6702,16 +6728,20 @@ var validateBrickData = async (data) => {
       let referenceData = void 0;
       switch (field.type) {
         case "link": {
+          const value = field.value;
           referenceData = {
-            target: field.target
+            target: value?.target,
+            label: value?.label
           };
           break;
         }
         case "pagelink": {
-          const page = data.pages.find((p) => p.id === field.value);
+          const value = field.value;
+          const page = data.pages.find((p) => p.id === value.id);
           if (page) {
             referenceData = {
-              target: field.target
+              target: value?.target,
+              label: value?.label
             };
           }
           break;
@@ -6795,7 +6825,8 @@ var getAllPages = async (client, fields, environment_key) => {
   try {
     const getIDs = fields.map((field) => {
       if (field.type === "pagelink") {
-        return field.value;
+        const value = field.value;
+        return value?.id;
       }
     });
     const ids = getIDs.filter((id) => id !== void 0).filter(
@@ -6957,22 +6988,24 @@ function assignIdsToNewBricks(bricks, newBricks) {
 var update_multiple_default2 = updateMultiple2;
 
 // src/utils/format/format-bricks.ts
-var specificFieldValues = (type, builderField, field) => {
+var specificFieldValues = (type, collection, builderField, field) => {
   let value = null;
+  let meta = null;
   switch (type) {
     case "tab": {
       break;
     }
     case "text": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "wysiwyg": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "media": {
-      value = {
+      value = field?.media_id || void 0;
+      meta = {
         id: field?.media_id || void 0,
         url: create_url_default(field?.media.key || void 0),
         key: field?.media.key || void 0,
@@ -6987,121 +7020,98 @@ var specificFieldValues = (type, builderField, field) => {
       break;
     }
     case "number": {
-      value = field?.int_value || builderField.default;
+      value = field?.int_value || builderField?.default;
       break;
     }
     case "checkbox": {
-      value = field?.bool_value || builderField.default;
+      value = field?.bool_value || builderField?.default;
       break;
     }
     case "select": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "textarea": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "json": {
-      value = field?.json_value || builderField.default;
+      value = field?.json_value || builderField?.default;
       break;
     }
     case "colour": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "datetime": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "pagelink": {
       value = {
         id: field?.page_link_id || void 0,
         target: field?.json_value.target || "_self",
-        title: field?.linked_page.title || void 0,
-        full_slug: field?.linked_page.full_slug || void 0,
+        label: field?.json_value.label || field?.linked_page.title || void 0
+      };
+      meta = {
+        full_slug: formatFullSlug(
+          {
+            full_slug: field?.linked_page.full_slug || void 0,
+            homepage: field?.linked_page.homepage || void 0,
+            collection_key: field?.linked_page.collection_key || void 0
+          },
+          [collection]
+        ) || void 0,
         slug: field?.linked_page.slug || void 0
       };
       break;
     }
     case "link": {
       value = {
+        url: field?.text_value || builderField?.default || "",
         target: field?.json_value.target || "_self",
-        url: field?.text_value || builderField.default || ""
+        label: field?.json_value.label || void 0
       };
       break;
     }
   }
-  return { value };
+  return { value, meta };
 };
-var buildFieldTree = (brickId, fields, builderInstance) => {
-  const brickFields = fields.filter(
-    (field) => field.collection_brick_id === brickId
-  );
-  const basicFieldTree = builderInstance.basicFieldTree;
-  const fieldRes = buildFields(brickFields, basicFieldTree);
-  return fieldRes;
-};
-var buildFields = (brickFields, fields) => {
+var formatFields = ({
+  brickFields,
+  builderInstance,
+  collection
+}) => {
   const fieldObjs = [];
+  const fields = builderInstance?.basicFieldTree;
+  if (!fields)
+    return fieldObjs;
   fields.forEach((field) => {
     const brickField = brickFields.find((bField) => bField.key === field.key);
-    const { value } = specificFieldValues(field.type, field, brickField);
-    if (!brickField) {
-      const fieldObj = {
-        fields_id: -1,
-        // use a sentinel value for non-existing fields
-        key: field.key,
-        type: field.type
+    const { value, meta } = specificFieldValues(
+      field.type,
+      collection,
+      field,
+      brickField
+    );
+    if (brickField) {
+      let fieldsData = {
+        fields_id: brickField.fields_id,
+        key: brickField.key,
+        type: brickField.type
       };
-      if (value !== null)
-        fieldObj.value = value;
-      fieldObjs.push(fieldObj);
-    } else {
-      if (field.type === "repeater") {
-        fieldObjs.push({
-          fields_id: brickField.fields_id,
-          key: brickField.key,
-          type: brickField.type,
-          items: buildFieldGroups(brickFields, field.fields || [])
-        });
-      } else {
-        const fieldObj = {
-          fields_id: brickField.fields_id,
-          key: brickField.key,
-          type: brickField.type
-        };
-        if (value !== null)
-          fieldObj.value = value;
-        fieldObjs.push(fieldObj);
-      }
+      if (brickField.repeater_key)
+        fieldsData.repeater = brickField.repeater_key;
+      if (brickField.group_position)
+        fieldsData.group = brickField.group_position;
+      if (meta)
+        fieldsData.meta = meta;
+      if (value)
+        fieldsData.value = value;
+      fieldObjs.push(fieldsData);
     }
   });
   return fieldObjs;
-};
-var buildFieldGroups = (data, fields) => {
-  const groupMap = /* @__PURE__ */ new Map();
-  let maxGroupPosition = 0;
-  for (const datum of data) {
-    if (datum.group_position !== null) {
-      const group = groupMap.get(datum.group_position) || [];
-      group.push(datum);
-      groupMap.set(datum.group_position, group);
-      maxGroupPosition = Math.max(maxGroupPosition, datum.group_position);
-    }
-  }
-  const output = [];
-  for (let i = 1; i <= maxGroupPosition; i++) {
-    const group = groupMap.get(i) || [];
-    const outputGroup = buildFields(group, fields);
-    output.push(outputGroup);
-  }
-  const grouplessData = groupMap.get(null) || [];
-  if (grouplessData.length > 0) {
-    const lastGroup = output[output.length - 1];
-    lastGroup.push(...buildFields(grouplessData, fields));
-  }
-  return output;
 };
 var buildBrickStructure = (brickFields) => {
   const brickStructure = [];
@@ -7121,30 +7131,33 @@ var buildBrickStructure = (brickFields) => {
   });
   return brickStructure;
 };
-var formatBricks = async (data) => {
+var formatBricks = (data) => {
   const builderInstances = brick_config_default.getBrickConfig();
   if (!builderInstances)
     return [];
   if (!data.environment)
     return [];
-  const brickStructure = buildBrickStructure(data.brick_fields).filter(
-    (brick) => {
-      const allowed = brick_config_default.isBrickAllowed({
-        key: brick.key,
-        type: brick.type,
-        environment: data.environment,
-        collection: data.collection
-      });
-      return allowed.allowed;
-    }
-  );
-  brickStructure.forEach((brick) => {
+  return buildBrickStructure(data.brick_fields).filter((brick) => {
+    const allowed = brick_config_default.isBrickAllowed({
+      key: brick.key,
+      type: brick.type,
+      environment: data.environment,
+      collection: data.collection
+    });
+    return allowed.allowed;
+  }).map((brick) => {
     const instance = builderInstances.find((b) => b.key === brick.key);
-    if (!instance)
-      return;
-    brick.fields = buildFieldTree(brick.id, data.brick_fields, instance);
+    return {
+      ...brick,
+      fields: formatFields({
+        brickFields: data.brick_fields.filter(
+          (field) => field.collection_brick_id === brick.id
+        ) || [],
+        builderInstance: instance,
+        collection: data.collection
+      })
+    };
   });
-  return brickStructure;
 };
 var format_bricks_default = formatBricks;
 
@@ -7154,12 +7167,8 @@ var getAll5 = async (client, data) => {
     reference_id: data.reference_id,
     type: data.type
   });
-  if (!brickFields) {
-    return {
-      builder_bricks: [],
-      fixed_bricks: []
-    };
-  }
+  if (!brickFields)
+    return [];
   const environment = await service_default(
     environments_default.getSingle,
     false,
@@ -7167,16 +7176,12 @@ var getAll5 = async (client, data) => {
   )({
     key: data.environment_key
   });
-  const formmatedBricks = await format_bricks_default({
+  return format_bricks_default({
     brick_fields: brickFields,
     environment_key: data.environment_key,
     collection: data.collection,
     environment
   });
-  return {
-    builder_bricks: formmatedBricks.filter((brick) => brick.type === "builder"),
-    fixed_bricks: formmatedBricks.filter((brick) => brick.type !== "builder")
-  };
 };
 var get_all_default5 = getAll5;
 
@@ -7259,8 +7264,7 @@ var getSingle9 = async (client, data) => {
       environment_key: data.environment_key,
       collection
     });
-    page.builder_bricks = pageBricks.builder_bricks;
-    page.fixed_bricks = pageBricks.fixed_bricks;
+    page.bricks = pageBricks;
   }
   return format_page_default(page, [collection]);
 };
@@ -8052,13 +8056,11 @@ var getSingle10 = async (client, data) => {
     singlepage = await SinglePage.createSingle(client, {
       user_id: data.user_id,
       environment_key: data.environment_key,
-      collection_key: data.collection_key,
-      builder_bricks: [],
-      fixed_bricks: []
+      collection_key: data.collection_key
     });
   }
   if (data.include_bricks) {
-    const pageBricks = await service_default(
+    const bricks = await service_default(
       collection_bricks_default.getAll,
       false,
       client
@@ -8068,8 +8070,7 @@ var getSingle10 = async (client, data) => {
       environment_key: data.environment_key,
       collection
     });
-    singlepage.builder_bricks = pageBricks.builder_bricks;
-    singlepage.fixed_bricks = pageBricks.fixed_bricks;
+    singlepage.bricks = bricks;
   }
   return singlepage;
 };
@@ -8102,7 +8103,6 @@ var updateSingle5 = async (client, data) => {
     environment_key: data.environment_key,
     collection_key: data.collection_key
   });
-  console.log(getSinglepage, "getSinglepage");
   await service_default(
     collection_bricks_default.updateMultiple,
     true,

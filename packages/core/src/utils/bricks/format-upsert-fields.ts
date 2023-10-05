@@ -4,6 +4,8 @@ import {
   BrickObject,
   BrickFieldUpdateObject,
 } from "@db/models/CollectionBrick.js";
+// Types
+import { PageLinkValueT, LinkValueT } from "@lucid/types/src/bricks.js";
 
 const valueKey = (type: BrickFieldObject["type"]) => {
   switch (type) {
@@ -39,18 +41,22 @@ const valueKey = (type: BrickFieldObject["type"]) => {
 const fieldTypeValues = (field: BrickFieldObject) => {
   switch (field.type) {
     case "link": {
+      const value = field.value as LinkValueT;
       return {
-        text_value: field.value,
+        text_value: value.url,
         json_value: {
-          target: field.target,
+          target: value.target,
+          label: value.label,
         },
       };
     }
     case "pagelink": {
+      const value = field.value as PageLinkValueT;
       return {
-        page_link_id: field.value,
+        page_link_id: value.id,
         json_value: {
-          target: field.target,
+          target: value.target,
+          label: value.label,
         },
       };
     }

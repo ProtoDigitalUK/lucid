@@ -19,6 +19,7 @@ import environmentsService from "@services/environments/index.js";
 import brickConfigService from "@services/brick-config/index.js";
 import collectionsService from "@services/collections/index.js";
 // Types
+import { PageLinkValueT, LinkValueT } from "@lucid/types/src/bricks.js";
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { MediaResT } from "@lucid/types/src/media.js";
 import { PageT } from "@db/models/Page.js";
@@ -103,16 +104,20 @@ const validateBrickData = async (data: {
 
       switch (field.type) {
         case "link": {
+          const value = field.value as LinkValueT;
           referenceData = {
-            target: field.target,
+            target: value?.target,
+            label: value?.label,
           } as LinkReferenceData;
           break;
         }
         case "pagelink": {
-          const page = data.pages.find((p) => p.id === field.value);
+          const value = field.value as PageLinkValueT;
+          const page = data.pages.find((p) => p.id === value.id);
           if (page) {
             referenceData = {
-              target: field.target,
+              target: value?.target,
+              label: value?.label,
             } as LinkReferenceData;
           }
           break;
@@ -225,7 +230,8 @@ const getAllPages = async (
   try {
     const getIDs = fields.map((field) => {
       if (field.type === "pagelink") {
-        return field.value;
+        const value = field.value as PageLinkValueT;
+        return value?.id;
       }
     });
     const ids = getIDs

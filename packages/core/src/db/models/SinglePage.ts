@@ -1,6 +1,4 @@
 import { PoolClient } from "pg";
-// Models
-import { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Types
@@ -19,12 +17,8 @@ type SinglePageCreateSingle = (
     user_id: number;
     environment_key: string;
     collection_key: string;
-    builder_bricks?: Array<BrickObject>;
-    fixed_bricks?: Array<BrickObject>;
   }
-) => Promise<{
-  id: SinglePageT["id"];
-}>;
+) => Promise<SinglePageT>;
 
 type SinglePageUpdateSingle = (
   client: PoolClient,
@@ -41,8 +35,7 @@ export type SinglePageT = {
   environment_key: string;
   collection_key: string;
 
-  builder_bricks?: Array<BrickResT> | null;
-  fixed_bricks?: Array<BrickResT> | null;
+  bricks?: Array<BrickResT>;
 
   created_at: string;
   updated_at: string;
@@ -63,9 +56,7 @@ export default class SinglePage {
     return singlepage.rows[0];
   };
   static createSingle: SinglePageCreateSingle = async (client, data) => {
-    const res = await client.query<{
-      id: SinglePageT["id"];
-    }>({
+    const res = await client.query<SinglePageT>({
       text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING id`,
       values: [data.environment_key, data.collection_key, data.user_id],
     });

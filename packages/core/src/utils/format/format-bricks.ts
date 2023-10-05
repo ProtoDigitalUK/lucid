@@ -10,34 +10,43 @@ import {
 import createURL from "@utils/media/create-url.js";
 // Services
 import brickConfigService from "@services/brick-config/index.js";
+// Format
+import { formatFullSlug } from "@utils/format/format-page.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { EnvironmentResT } from "@lucid/types/src/environments.js";
-import { BrickResT } from "@lucid/types/src/bricks.js";
+import {
+  BrickResT,
+  BrickFieldValueT,
+  BrickFieldMetaT,
+} from "@lucid/types/src/bricks.js";
 
 // -------------------------------------------
 // Custom Field Specific Fields
 const specificFieldValues = (
   type: FieldTypes,
-  builderField: CustomField,
+  collection: CollectionResT,
+  builderField?: CustomField,
   field?: CollectionBrickFieldsT
 ) => {
-  let value: BrickResT["fields"][0]["value"] = null;
+  let value: BrickFieldValueT = null;
+  let meta: BrickFieldMetaT = null;
 
   switch (type) {
     case "tab": {
       break;
     }
     case "text": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "wysiwyg": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "media": {
-      value = {
+      value = field?.media_id || undefined;
+      meta = {
         id: field?.media_id || undefined,
         url: createURL(field?.media.key || undefined),
         key: field?.media.key || undefined,
@@ -52,150 +61,110 @@ const specificFieldValues = (
       break;
     }
     case "number": {
-      value = field?.int_value || builderField.default;
+      value = field?.int_value || builderField?.default;
       break;
     }
     case "checkbox": {
-      value = field?.bool_value || builderField.default;
+      value = field?.bool_value || builderField?.default;
       break;
     }
     case "select": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "textarea": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "json": {
-      value = field?.json_value || builderField.default;
+      value = field?.json_value || builderField?.default;
       break;
     }
     case "colour": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "datetime": {
-      value = field?.text_value || builderField.default;
+      value = field?.text_value || builderField?.default;
       break;
     }
     case "pagelink": {
       value = {
         id: field?.page_link_id || undefined,
         target: field?.json_value.target || "_self",
-        title: field?.linked_page.title || undefined,
-        full_slug: field?.linked_page.full_slug || undefined,
+        label: field?.json_value.label || field?.linked_page.title || undefined,
+      };
+      meta = {
+        full_slug:
+          formatFullSlug(
+            {
+              full_slug: field?.linked_page.full_slug || undefined,
+              homepage: field?.linked_page.homepage || undefined,
+              collection_key: field?.linked_page.collection_key || undefined,
+            },
+            [collection]
+          ) || undefined,
         slug: field?.linked_page.slug || undefined,
       };
       break;
     }
     case "link": {
       value = {
+        url: field?.text_value || builderField?.default || "",
         target: field?.json_value.target || "_self",
-        url: field?.text_value || (builderField.default as string) || "",
+        label: field?.json_value.label || undefined,
       };
       break;
     }
   }
 
-  return { value };
+  return { value, meta };
 };
 
 // -------------------------------------------
-// Build field tree
-const buildFieldTree = (
-  brickId: number,
-  fields: CollectionBrickFieldsT[],
-  builderInstance: BrickBuilderT
-): BrickResT["fields"] => {
-  // filter out the fields specific to this brick
-  const brickFields = fields.filter(
-    (field) => field.collection_brick_id === brickId
-  );
-  const basicFieldTree = builderInstance.basicFieldTree;
-
-  const fieldRes = buildFields(brickFields, basicFieldTree);
-  return fieldRes;
-};
-
-const buildFields = (
-  brickFields: CollectionBrickFieldsT[],
-  fields: CustomField[]
-): BrickResT["fields"] => {
+// Format fields
+const formatFields = ({
+  brickFields,
+  builderInstance,
+  collection,
+}: {
+  brickFields: CollectionBrickFieldsT[];
+  builderInstance?: BrickBuilderT;
+  collection: CollectionResT;
+}): BrickResT["fields"] => {
   const fieldObjs: BrickResT["fields"] = [];
+
+  const fields = builderInstance?.basicFieldTree;
+  if (!fields) return fieldObjs;
+
   fields.forEach((field) => {
     // find the corresponding field in our brick fields
     const brickField = brickFields.find((bField) => bField.key === field.key);
+    const { value, meta } = specificFieldValues(
+      field.type,
+      collection,
+      field,
+      brickField
+    );
 
-    const { value } = specificFieldValues(field.type, field, brickField);
-
-    // if a field doesn't exist in the brick fields, use the default value from the instance
-    if (!brickField) {
-      const fieldObj: BrickResT["fields"][0] = {
-        fields_id: -1, // use a sentinel value for non-existing fields
-        key: field.key,
-        type: field.type as FieldTypes,
+    if (brickField) {
+      let fieldsData: BrickResT["fields"][0] = {
+        fields_id: brickField.fields_id,
+        key: brickField.key,
+        type: brickField.type,
       };
-      if (value !== null) fieldObj.value = value;
-      fieldObjs.push(fieldObj);
-    } else {
-      // if the field is a repeater, call buildFieldTree recursively on its fields
-      if (field.type === "repeater") {
-        fieldObjs.push({
-          fields_id: brickField.fields_id,
-          key: brickField.key,
-          type: brickField.type,
-          items: buildFieldGroups(brickFields, field.fields || []),
-        });
-      } else {
-        // add the field to the response
-        const fieldObj: BrickResT["fields"][0] = {
-          fields_id: brickField.fields_id,
-          key: brickField.key,
-          type: brickField.type,
-        };
-        if (value !== null) fieldObj.value = value;
-        fieldObjs.push(fieldObj);
-      }
+      if (brickField.repeater_key)
+        fieldsData.repeater = brickField.repeater_key;
+      if (brickField.group_position)
+        fieldsData.group = brickField.group_position;
+      if (meta) fieldsData.meta = meta;
+      if (value) fieldsData.value = value;
+
+      fieldObjs.push(fieldsData);
     }
   });
+
   return fieldObjs;
-};
-
-// Determine max groups in repeater
-const buildFieldGroups = (
-  data: CollectionBrickFieldsT[],
-  fields: CustomField[]
-) => {
-  // Group data by group_position
-  const groupMap = new Map<number | null, CollectionBrickFieldsT[]>();
-  let maxGroupPosition = 0;
-
-  for (const datum of data) {
-    if (datum.group_position !== null) {
-      const group = groupMap.get(datum.group_position) || [];
-      group.push(datum);
-      groupMap.set(datum.group_position, group);
-      maxGroupPosition = Math.max(maxGroupPosition, datum.group_position);
-    }
-  }
-
-  // Convert each group to the desired output format
-  const output: BrickResT["fields"][0]["items"] = [];
-  for (let i = 1; i <= maxGroupPosition; i++) {
-    const group = groupMap.get(i) || [];
-    const outputGroup = buildFields(group, fields);
-    output.push(outputGroup);
-  }
-
-  // Handle data without a group_position
-  const grouplessData = groupMap.get(null) || [];
-  if (grouplessData.length > 0) {
-    const lastGroup = output[output.length - 1];
-    lastGroup.push(...buildFields(grouplessData, fields));
-  }
-
-  return output;
 };
 
 // -------------------------------------------
@@ -223,20 +192,20 @@ const buildBrickStructure = (brickFields: CollectionBrickFieldsT[]) => {
 
 // -------------------------------------------
 // Format response
-const formatBricks = async (data: {
+const formatBricks = (data: {
   brick_fields: CollectionBrickFieldsT[];
   environment_key: string;
   collection: CollectionResT;
   environment: EnvironmentResT;
-}) => {
+}): BrickResT[] => {
   // Get all config
   const builderInstances = brickConfigService.getBrickConfig();
   if (!builderInstances) return [];
   if (!data.environment) return [];
 
   // Build the base brick structure
-  const brickStructure = buildBrickStructure(data.brick_fields).filter(
-    (brick) => {
+  return buildBrickStructure(data.brick_fields)
+    .filter((brick) => {
       const allowed = brickConfigService.isBrickAllowed({
         key: brick.key,
         type: brick.type,
@@ -244,20 +213,22 @@ const formatBricks = async (data: {
         collection: data.collection,
       });
       return allowed.allowed;
-    }
-  );
+    })
+    .map((brick) => {
+      const instance = builderInstances.find((b) => b.key === brick.key);
 
-  // Build the field tree
-  brickStructure.forEach((brick) => {
-    // If the brick doesn't have a corresponding builder instance, skip it
-    const instance = builderInstances.find((b) => b.key === brick.key);
-    if (!instance) return;
-
-    // Build the field tree
-    brick.fields = buildFieldTree(brick.id, data.brick_fields, instance);
-  });
-
-  return brickStructure;
+      return {
+        ...brick,
+        fields: formatFields({
+          brickFields:
+            data.brick_fields.filter(
+              (field) => field.collection_brick_id === brick.id
+            ) || [],
+          builderInstance: instance,
+          collection: data.collection,
+        }),
+      };
+    });
 };
 
 export default formatBricks;

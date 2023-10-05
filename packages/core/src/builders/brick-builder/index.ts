@@ -288,19 +288,21 @@ export default class BrickBuilder {
   }
   // ------------------------------------
   // Field Type Validation
-  private fieldTypeToDataType: Record<string, "string" | "number" | "boolean"> =
-    {
-      text: "string",
-      textarea: "string",
-      colour: "string",
-      datetime: "string",
-      link: "string",
-      wysiwyg: "string",
-      select: "string",
-      number: "number",
-      pagelink: "number",
-      checkbox: "boolean",
-    };
+  private fieldTypeToDataType: Record<
+    string,
+    "string" | "number" | "boolean" | "object"
+  > = {
+    text: "string",
+    textarea: "string",
+    colour: "string",
+    datetime: "string",
+    link: "object",
+    wysiwyg: "string",
+    select: "string",
+    number: "number",
+    pagelink: "object",
+    checkbox: "boolean",
+  };
   fieldValidation({
     type,
     key,
@@ -468,6 +470,7 @@ export default class BrickBuilder {
   }
   #validateLinkTarget(referenceData: LinkReferenceData) {
     const allowedValues = ["_self", "_blank"];
+    if (!referenceData.target) return;
     if (!allowedValues.includes(referenceData.target)) {
       throw new ValidationError(
         `Please set the target to one of the following: ${allowedValues.join(

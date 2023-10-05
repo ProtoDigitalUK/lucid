@@ -1,6 +1,4 @@
 import { PoolClient } from "pg";
-// Models
-import { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
 import {
   queryDataFormat,
@@ -74,8 +72,6 @@ type PageUpdateSingle = (
     published?: boolean;
     author_id?: number | null;
     excerpt?: string;
-    builder_bricks?: Array<BrickObject>;
-    fixed_bricks?: Array<BrickObject>;
   }
 ) => Promise<{
   id: PageT["id"];
@@ -172,8 +168,7 @@ export type PageT = {
   excerpt: string | null;
   categories?: Array<number> | null;
 
-  builder_bricks?: Array<BrickResT> | null;
-  fixed_bricks?: Array<BrickResT> | null;
+  bricks?: Array<BrickResT> | null;
 
   published: boolean;
   published_at: string | null;
