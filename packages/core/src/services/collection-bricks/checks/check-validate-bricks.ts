@@ -4,10 +4,7 @@ import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 // Utils
 import service from "@utils/app/service.js";
 // Models
-import {
-  BrickObject,
-  BrickFieldObject,
-} from "@db/models/CollectionBrickNew.js";
+import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick.js";
 import { EnvironmentT } from "@db/models/Environment.js";
 import Media from "@db/models/Media.js";
 import Page from "@db/models/Page.js";

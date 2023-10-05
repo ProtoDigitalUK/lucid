@@ -2,7 +2,7 @@ import T from "@translations/index.js";
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
 // Models
-import { BrickObject } from "@db/models/CollectionBrickNew.js";
+import { BrickObject } from "@db/models/CollectionBrick.js";
 
 // If two have the same order of the same type, then we need to throw an error
 

@@ -1,6 +1,6 @@
 import z from "zod";
 // Schema
-import { BrickSchema, BrickSchemaNew } from "@schemas/bricks.js";
+import { BrickSchema } from "@schemas/bricks.js";
 
 // ------------------------------------
 // GET MULTIPLE
@@ -63,8 +63,6 @@ const updateSingleBody = z.object({
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
   excerpt: z.string().optional(),
-  builder_bricks: z.array(BrickSchema).optional(),
-  fixed_bricks: z.array(BrickSchema).optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({
@@ -74,7 +72,7 @@ const updateSingleParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE BRICKS
 const updateSingleBricksBody = z.object({
-  bricks: z.array(BrickSchemaNew),
+  bricks: z.array(BrickSchema),
 });
 const updateSingleBricksQuery = z.object({});
 const updateSingleBricksParams = z.object({

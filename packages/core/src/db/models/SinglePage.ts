@@ -22,7 +22,9 @@ type SinglePageCreateSingle = (
     builder_bricks?: Array<BrickObject>;
     fixed_bricks?: Array<BrickObject>;
   }
-) => Promise<SinglePageT>;
+) => Promise<{
+  id: SinglePageT["id"];
+}>;
 
 type SinglePageUpdateSingle = (
   client: PoolClient,
@@ -61,8 +63,10 @@ export default class SinglePage {
     return singlepage.rows[0];
   };
   static createSingle: SinglePageCreateSingle = async (client, data) => {
-    const res = await client.query<SinglePageT>({
-      text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING *`,
+    const res = await client.query<{
+      id: SinglePageT["id"];
+    }>({
+      text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING id`,
       values: [data.environment_key, data.collection_key, data.user_id],
     });
 
@@ -70,7 +74,7 @@ export default class SinglePage {
   };
   static updateSingle: SinglePageUpdateSingle = async (client, data) => {
     const updateSinglePage = await client.query<SinglePageT>({
-      text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING *`,
+      text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING id`,
       values: [data.user_id, data.id],
     });
 

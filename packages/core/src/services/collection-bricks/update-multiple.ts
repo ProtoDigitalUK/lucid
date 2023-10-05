@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 // Models
-import CollectionBrick, { BrickObject } from "@db/models/CollectionBrickNew.js";
+import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
 import formatUpsertFields from "@utils/bricks/format-upsert-fields.js";
 import service from "@utils/app/service.js";

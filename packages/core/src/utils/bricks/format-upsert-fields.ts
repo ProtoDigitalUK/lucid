@@ -3,7 +3,7 @@ import {
   BrickFieldObject,
   BrickObject,
   BrickFieldUpdateObject,
-} from "@db/models/CollectionBrickNew.js";
+} from "@db/models/CollectionBrick.js";
 
 const valueKey = (type: BrickFieldObject["type"]) => {
   switch (type) {

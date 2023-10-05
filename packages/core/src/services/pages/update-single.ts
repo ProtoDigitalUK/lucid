@@ -5,8 +5,6 @@ import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
 // Services
-import environmentsService from "@services/environments/index.js";
-import collectionBricksService from "@services/collection-bricks/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
 import pageServices from "@services/pages/index.js";
 
@@ -51,27 +49,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       }),
     });
   }
-
-  // Start checks that do not depend on each other in parallel
-  const [environment, collection] = await Promise.all([
-    service(
-      environmentsService.getSingle,
-      false,
-      client
-    )({
-      key: data.environment_key,
-    }),
-    service(
-      pageServices.checkPageCollection,
-      false,
-      client
-    )({
-      collection_key: currentPage.collection_key,
-      environment_key: data.environment_key,
-      homepage: data.homepage,
-      parent_id: data.parent_id || undefined,
-    }),
-  ]);
 
   // If the page is a homepage, set the parent_id to undefined
   const parentId = data.homepage ? undefined : data.parent_id;
@@ -137,19 +114,17 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   }
 
   // Update categories and bricks
-  await Promise.all([
-    data.category_ids
-      ? service(
-          pageCategoryService.updateMultiple,
-          false,
-          client
-        )({
-          page_id: page.id,
-          category_ids: data.category_ids,
-          collection_key: currentPage.collection_key,
-        })
-      : Promise.resolve(),
-  ]);
+  if (data.category_ids) {
+    await service(
+      pageCategoryService.updateMultiple,
+      false,
+      client
+    )({
+      page_id: page.id,
+      category_ids: data.category_ids,
+      collection_key: currentPage.collection_key,
+    });
+  }
 
   return undefined;
 };
