@@ -134,6 +134,57 @@ const formatFields = ({
 }): BrickResT["fields"] => {
   const fieldObjs: BrickResT["fields"] = [];
 
+  const fields = builderInstance?.flatFields;
+  if (!fields) return fieldObjs;
+
+  fields.forEach((field) => {
+    const matchingBrickFields = brickFields.filter(
+      (bField) => bField.key === field.key
+    );
+
+    matchingBrickFields.forEach((brickField) => {
+      const { value, meta } = specificFieldValues(
+        field.type,
+        collection,
+        field,
+        brickField
+      );
+
+      if (brickField.type === "tab") return;
+      if (brickField.type === "repeater") return;
+
+      if (brickField) {
+        let fieldsData: BrickResT["fields"][0] = {
+          fields_id: brickField.fields_id,
+          key: brickField.key,
+          type: brickField.type,
+        };
+        if (brickField.repeater_key)
+          fieldsData.repeater = brickField.repeater_key;
+        if (brickField.group_position !== null)
+          fieldsData.group = brickField.group_position;
+        if (meta) fieldsData.meta = meta;
+        if (value) fieldsData.value = value;
+
+        fieldObjs.push(fieldsData);
+      }
+    });
+  });
+
+  return fieldObjs;
+};
+
+const formatFieldsNew = ({
+  brickFields,
+  builderInstance,
+  collection,
+}: {
+  brickFields: CollectionBrickFieldsT[];
+  builderInstance?: BrickBuilderT;
+  collection: CollectionResT;
+}): BrickResT["fields"] => {
+  const fieldObjs: BrickResT["fields"] = [];
+
   const fields = builderInstance?.basicFieldTree;
   if (!fields) return fieldObjs;
 

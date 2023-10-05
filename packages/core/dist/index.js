@@ -7083,33 +7083,41 @@ var formatFields = ({
   collection
 }) => {
   const fieldObjs = [];
-  const fields = builderInstance?.basicFieldTree;
+  const fields = builderInstance?.flatFields;
   if (!fields)
     return fieldObjs;
   fields.forEach((field) => {
-    const brickField = brickFields.find((bField) => bField.key === field.key);
-    const { value, meta } = specificFieldValues(
-      field.type,
-      collection,
-      field,
-      brickField
+    const matchingBrickFields = brickFields.filter(
+      (bField) => bField.key === field.key
     );
-    if (brickField) {
-      let fieldsData = {
-        fields_id: brickField.fields_id,
-        key: brickField.key,
-        type: brickField.type
-      };
-      if (brickField.repeater_key)
-        fieldsData.repeater = brickField.repeater_key;
-      if (brickField.group_position)
-        fieldsData.group = brickField.group_position;
-      if (meta)
-        fieldsData.meta = meta;
-      if (value)
-        fieldsData.value = value;
-      fieldObjs.push(fieldsData);
-    }
+    matchingBrickFields.forEach((brickField) => {
+      const { value, meta } = specificFieldValues(
+        field.type,
+        collection,
+        field,
+        brickField
+      );
+      if (brickField.type === "tab")
+        return;
+      if (brickField.type === "repeater")
+        return;
+      if (brickField) {
+        let fieldsData = {
+          fields_id: brickField.fields_id,
+          key: brickField.key,
+          type: brickField.type
+        };
+        if (brickField.repeater_key)
+          fieldsData.repeater = brickField.repeater_key;
+        if (brickField.group_position !== null)
+          fieldsData.group = brickField.group_position;
+        if (meta)
+          fieldsData.meta = meta;
+        if (value)
+          fieldsData.value = value;
+        fieldObjs.push(fieldsData);
+      }
+    });
   });
   return fieldObjs;
 };
