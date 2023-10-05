@@ -1,13 +1,14 @@
 import { PoolClient } from "pg";
 import z from "zod";
 import { FieldTypes } from "@builders/brick-builder/index.js";
+// Utils
+import { aliasGenerator } from "@utils/app/query-helpers.js";
 // Schema
-import { BrickSchemaNew, FieldSchema } from "@schemas/bricks.js";
+import { BrickSchemaNew, FieldSchemaNew } from "@schemas/bricks.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 // Builders
 import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
-import { type } from "os";
 
 // -------------------------------------------
 // Collection Brick
@@ -73,9 +74,18 @@ export default class CollectionBrick {
 
     // Fetch all bricks for the page
     const collectionBrickIds = await client.query<{
-      id: CollectionBrickT["id"];
+      id: number;
+      fields: { id: number }[];
     }>({
-      text: `SELECT id FROM lucid_collection_bricks WHERE ${referenceKey} = $1`,
+      text: `SELECT 
+        lucid_collection_bricks.id,
+        COALESCE(json_agg(
+          json_build_object('id', lucid_fields.fields_id) 
+        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields
+      FROM lucid_collection_bricks 
+      LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id
+      WHERE ${referenceKey} = $1
+      GROUP BY lucid_collection_bricks.id`,
       values: [data.reference_id],
     });
 
@@ -99,16 +109,23 @@ export default class CollectionBrick {
 
     const referenceKey = data.type === "pages" ? "page_id" : "singlepage_id";
 
-    const totalFields = 4;
-
-    const aliases = data.bricks
-      .map((_, index) => {
-        return `($${index * totalFields + 1}, $${index * totalFields + 2}, $${
-          index * totalFields + 3
-        }, $${index * totalFields + 4})`;
-      })
-      .join(", ");
-
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "brick_key",
+        },
+        {
+          key: "brick_type",
+        },
+        {
+          key: referenceKey,
+        },
+        {
+          key: "brick_order",
+        },
+      ],
+      rows: data.bricks.length,
+    });
     const dataValues = data.bricks.flatMap((brick) => {
       return [brick.key, brick.type, data.reference_id, brick.order];
     });
@@ -136,11 +153,19 @@ export default class CollectionBrick {
     if (bricks.length === 0) return [];
 
     // Construct a VALUES table to be used for the update
-    const valuesTable = bricks
-      .map((_, index) => {
-        return `($${index * 2 + 1}::int, $${index * 2 + 2}::int)`;
-      })
-      .join(", ");
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "id",
+          type: "int",
+        },
+        {
+          key: "brick_order",
+          type: "int",
+        },
+      ],
+      rows: bricks.length,
+    });
 
     const dataValues = bricks.flatMap((brick) => {
       return [brick.id, brick.order];
@@ -152,7 +177,7 @@ export default class CollectionBrick {
     }>(
       `WITH data_values (id, brick_order) AS (
             VALUES 
-            ${valuesTable}
+            ${aliases}
         ) 
       UPDATE lucid_collection_bricks
       SET brick_order = data_values.brick_order
@@ -167,12 +192,157 @@ export default class CollectionBrick {
 
   // -------------------------------------------
   // Fields
+  static deleteMultipleBrickFields: CollectionBrickDeleteMultipleFields =
+    async (client, data) => {
+      await client.query({
+        text: `DELETE FROM lucid_fields WHERE fields_id = ANY($1)`,
+        values: [data.ids],
+      });
+    };
+  static createMultipleBrickFields: CollectionBrickCreateMultipleFields =
+    async (client, data) => {
+      if (data.fields.length === 0) return undefined;
+
+      const aliases = aliasGenerator({
+        columns: [
+          {
+            key: "collection_brick_id",
+          },
+          {
+            key: "repeater_key",
+          },
+          {
+            key: "key",
+          },
+          {
+            key: "type",
+          },
+          {
+            key: "group_position",
+          },
+          {
+            key: "text_value",
+          },
+          {
+            key: "int_value",
+          },
+          {
+            key: "bool_value",
+          },
+          {
+            key: "json_value",
+          },
+          {
+            key: "page_link_id",
+          },
+          {
+            key: "media_id",
+          },
+        ],
+        rows: data.fields.length,
+      });
+      const dataValues = data.fields.flatMap((field) => {
+        return [
+          field.collection_brick_id,
+          field.repeater_key,
+          field.key,
+          field.type,
+          field.group_position,
+          field.text_value,
+          field.int_value,
+          field.bool_value,
+          field.json_value,
+          field.page_link_id,
+          field.media_id,
+        ];
+      });
+
+      await client.query(
+        `INSERT INTO 
+          lucid_fields (collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+        VALUES 
+          ${aliases}`,
+        dataValues
+      );
+    };
+  static updateMultipleBrickFields: CollectionBrickUpdateMultipleFields =
+    async (client, data) => {
+      if (data.fields.length === 0) return undefined;
+
+      // Construct the VALUES table to be used for the update
+      const aliases = aliasGenerator({
+        columns: [
+          { key: "fields_id", type: "int" },
+          { key: "collection_brick_id", type: "int" },
+          { key: "repeater_key", type: "text" },
+          { key: "key", type: "text" },
+          { key: "type", type: "text" },
+          { key: "group_position", type: "int" },
+          { key: "text_value", type: "text" },
+          { key: "int_value", type: "int" },
+          { key: "bool_value", type: "bool" },
+          { key: "json_value", type: "jsonb" },
+          { key: "page_link_id", type: "int" },
+          { key: "media_id", type: "int" },
+        ],
+        rows: data.fields.length,
+      });
+
+      const dataValues = data.fields.flatMap((field) => {
+        return [
+          field.fields_id,
+          field.collection_brick_id,
+          field.repeater_key,
+          field.key,
+          field.type,
+          field.group_position,
+          field.text_value,
+          field.int_value,
+          field.bool_value,
+          field.json_value,
+          field.page_link_id,
+          field.media_id,
+        ];
+      });
+
+      await client.query({
+        text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+            VALUES ${aliases}
+          )
+          UPDATE lucid_fields
+          SET
+            text_value = data_values.text_value,
+            int_value = data_values.int_value,
+            bool_value = data_values.bool_value,
+            json_value = data_values.json_value,
+            page_link_id = data_values.page_link_id,
+            media_id = data_values.media_id
+          FROM data_values
+          WHERE lucid_fields.fields_id = data_values.fields_id;`,
+        values: dataValues,
+      });
+    };
 }
 
 // -------------------------------------------
 // Types
-export type BrickFieldObject = z.infer<typeof FieldSchema>;
+export type BrickFieldObject = z.infer<typeof FieldSchemaNew>;
 export type BrickObject = z.infer<typeof BrickSchemaNew>;
+
+export type BrickFieldUpdateObject = {
+  fields_id?: number | undefined;
+  collection_brick_id: number;
+  repeater_key?: string | undefined;
+  key: string;
+  type: FieldTypes;
+  group_position?: number | undefined;
+  text_value: string | null;
+  int_value: number | null;
+  bool_value: boolean | null;
+  json_value: any | null;
+  page_link_id: number | null;
+  media_id: number | null;
+};
 
 type CollectionBrickGetAllBricks = (
   client: PoolClient,
@@ -183,6 +353,7 @@ type CollectionBrickGetAllBricks = (
 ) => Promise<
   {
     id: CollectionBrickT["id"];
+    fields: { id: CollectionBrickFieldsT["id"] }[];
   }[]
 >;
 
@@ -192,26 +363,6 @@ type CollectionBrickDeleteMultipleBricks = (
     ids: CollectionBrickT["id"][];
   }
 ) => Promise<void>;
-
-type CollectionBrickCreateSingle = (
-  client: PoolClient,
-  data: {
-    type: CollectionResT["type"];
-    reference_id: number;
-    brick: BrickObject;
-  }
-) => Promise<{
-  id: CollectionBrickT["id"];
-}>;
-
-type CollectionBrickUpdateSingle = (
-  client: PoolClient,
-  data: {
-    brick: BrickObject;
-  }
-) => Promise<{
-  id: CollectionBrickT["id"];
-}>;
 
 type CollectionBrickCreateMultiple = (
   client: PoolClient,
@@ -240,3 +391,24 @@ type CollectionBrickUpdateMultiple = (
     brick_order: CollectionBrickT["brick_order"];
   }[]
 >;
+
+type CollectionBrickUpdateMultipleFields = (
+  client: PoolClient,
+  data: {
+    fields: BrickFieldUpdateObject[];
+  }
+) => Promise<void>;
+
+type CollectionBrickCreateMultipleFields = (
+  client: PoolClient,
+  data: {
+    fields: BrickFieldUpdateObject[];
+  }
+) => Promise<void>;
+
+type CollectionBrickDeleteMultipleFields = (
+  client: PoolClient,
+  data: {
+    ids: CollectionBrickFieldsT["id"][];
+  }
+) => Promise<void>;

@@ -5,5 +5,7 @@
   "error_creating_page_homepage_disabled": "The current pages collection does not allow creating a homepage",
   "error_creating_page_parents_disabled": "The current pages collection does not allow creating a page with parents",
   "error_saving_bricks": "Error saving bricks",
-  "error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}"
+  "error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}",
+  "error_saving_page_brick_not_in_collection": "The brick '{{key}}' of type '{{type}}' is not allowed in this collection. Check your assigned bricks in the collection and environment.",
+  "error_saving_page_brick_couldnt_find_brick_config": "We couln't find the brick config for the brick key of: '{{key}}'. Ensure you are using the correct key for the brick defined in your lucid.config file."
 }

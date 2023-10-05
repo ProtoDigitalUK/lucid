@@ -1,12 +1,9 @@
 import { PoolClient } from "pg";
-import z from "zod";
 // Utils
 import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
-// Schema
-import { BrickSchema } from "@schemas/bricks.js";
 // Services
 import environmentsService from "@services/environments/index.js";
 import collectionBricksService from "@services/collection-bricks/index.js";
@@ -25,8 +22,6 @@ export interface ServiceData {
   category_ids?: number[];
   published?: boolean;
   excerpt?: string;
-  builder_bricks?: z.infer<typeof BrickSchema>[];
-  fixed_bricks?: z.infer<typeof BrickSchema>[];
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
@@ -101,23 +96,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     await Promise.all([parentChecks, ancestryChecks]);
   }
 
-  // validate bricks
-  if (
-    (data.builder_bricks && data.builder_bricks.length > 0) ||
-    (data.fixed_bricks && data.fixed_bricks.length > 0)
-  ) {
-    await service(
-      collectionBricksService.validateBricks,
-      false,
-      client
-    )({
-      builder_bricks: data.builder_bricks || [],
-      fixed_bricks: data.fixed_bricks || [],
-      collection: collection,
-      environment: environment,
-    });
-  }
-
   let newSlug = undefined;
   if (data.slug) {
     // Check if slug is unique
@@ -147,8 +125,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     published: data.published,
     author_id: data.author_id,
     excerpt: data.excerpt,
-    builder_bricks: data.builder_bricks,
-    fixed_bricks: data.fixed_bricks,
   });
 
   if (!page) {
@@ -173,17 +149,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
           collection_key: currentPage.collection_key,
         })
       : Promise.resolve(),
-    service(
-      collectionBricksService.updateMultiple,
-      false,
-      client
-    )({
-      id: page.id,
-      builder_bricks: data.builder_bricks || [],
-      fixed_bricks: data.fixed_bricks || [],
-      collection: collection,
-      environment: environment,
-    }),
   ]);
 
   return undefined;

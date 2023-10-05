@@ -32,12 +32,13 @@ export const BrickSchema = z.object({
 // ------------------------------------
 // New UPDATE BRICKS / FIELDS
 
-const FieldSchemaNew = z.object({
+export const FieldSchemaNew = z.object({
   key: z.string(),
   type: FieldTypesSchema,
   value: z.any(),
+  target: z.any().optional(),
 
-  id: z.number().optional(),
+  fields_id: z.number().optional(),
   group: z.number().optional(),
   repeater: z.string().optional(),
 });
