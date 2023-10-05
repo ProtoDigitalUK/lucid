@@ -8102,9 +8102,11 @@ var updateSingle5 = async (client, data) => {
     environment_key: data.environment_key,
     collection_key: data.collection_key
   });
+  console.log(getSinglepage, "getSinglepage");
   await service_default(
     collection_bricks_default.updateMultiple,
-    true
+    true,
+    client
   )({
     id: getSinglepage.id,
     environment_key: data.environment_key,
