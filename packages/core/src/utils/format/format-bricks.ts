@@ -161,58 +161,15 @@ const formatFields = ({
         };
         if (brickField.repeater_key)
           fieldsData.repeater = brickField.repeater_key;
-        if (brickField.group_position !== null)
-          fieldsData.group = brickField.group_position;
+        const groupVal =
+          brickField.group?.filter((group) => group !== null) || [];
+        if (groupVal.length > 0) fieldsData.group = groupVal;
         if (meta) fieldsData.meta = meta;
         if (value) fieldsData.value = value;
 
         fieldObjs.push(fieldsData);
       }
     });
-  });
-
-  return fieldObjs;
-};
-
-const formatFieldsNew = ({
-  brickFields,
-  builderInstance,
-  collection,
-}: {
-  brickFields: CollectionBrickFieldsT[];
-  builderInstance?: BrickBuilderT;
-  collection: CollectionResT;
-}): BrickResT["fields"] => {
-  const fieldObjs: BrickResT["fields"] = [];
-
-  const fields = builderInstance?.basicFieldTree;
-  if (!fields) return fieldObjs;
-
-  fields.forEach((field) => {
-    // find the corresponding field in our brick fields
-    const brickField = brickFields.find((bField) => bField.key === field.key);
-    const { value, meta } = specificFieldValues(
-      field.type,
-      collection,
-      field,
-      brickField
-    );
-
-    if (brickField) {
-      let fieldsData: BrickResT["fields"][0] = {
-        fields_id: brickField.fields_id,
-        key: brickField.key,
-        type: brickField.type,
-      };
-      if (brickField.repeater_key)
-        fieldsData.repeater = brickField.repeater_key;
-      if (brickField.group_position)
-        fieldsData.group = brickField.group_position;
-      if (meta) fieldsData.meta = meta;
-      if (value) fieldsData.value = value;
-
-      fieldObjs.push(fieldsData);
-    }
   });
 
   return fieldObjs;

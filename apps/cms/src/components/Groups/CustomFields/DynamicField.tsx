@@ -1,8 +1,6 @@
 import { Component, For, Match, Switch, Show } from "solid-js";
 // Types
 import { CustomFieldT } from "@lucid/types/src/bricks";
-// Utils
-import brickHelpers from "@/utils/brick-helpers";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 
@@ -11,7 +9,11 @@ interface DynamicFieldProps {
     type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     field: CustomFieldT;
+    repeater?: string;
+    group?: number[];
     activeTab?: string;
+
+    depth?: number;
   };
 }
 
@@ -36,24 +38,25 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
         </Show>
       </Match>
       <Match when={props.data.field.type === "repeater"}>
-        <div>repeater</div>
+        <CustomFields.RepeaterGroup
+          data={{
+            type: props.data.type,
+            brickIndex: props.data.brickIndex,
+            field: props.data.field,
+            depth: props.data.depth || 0,
+            group: props.data.group || [],
+          }}
+        />
       </Match>
       <Match when={props.data.field.type === "text"}>
         <CustomFields.TextField
           data={{
             type: props.data.type,
             brickIndex: props.data.brickIndex,
+            key: props.data.field.key,
+            repeater: props.data.repeater,
+            group: props.data.group,
             field: props.data.field,
-          }}
-          callbacks={{
-            onChange: (value: string) => {
-              brickHelpers.updateFieldValue({
-                type: "builderBricks",
-                index: props.data.brickIndex,
-                key: props.data.field.key,
-                value: value,
-              });
-            },
           }}
         />
       </Match>

@@ -26,6 +26,13 @@ export const TestingBrick = new BrickBuilder("testing", {
   .addText({
     key: "repeater-title",
   })
+  .addRepeater({
+    key: "repeater-key-nested",
+  })
+  .addText({
+    key: "repeater-title-nested",
+  })
+  .endRepeater()
   .endRepeater()
   .addNumber({
     key: "number-key",

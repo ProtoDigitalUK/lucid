@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS lucid_fields (
 
   key TEXT NOT NULL,
   type TEXT NOT NULL,
-  group_position INT,
+  group INTEGER[],
 
   text_value TEXT,
   int_value INT,

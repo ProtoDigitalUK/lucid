@@ -26,7 +26,7 @@ export const FieldSchema = z.object({
   ]),
 
   fields_id: z.number().optional(),
-  group: z.number().optional(),
+  group: z.array(z.number()).optional(),
   repeater: z.string().optional(),
 });
 

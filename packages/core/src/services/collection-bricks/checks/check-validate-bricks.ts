@@ -158,8 +158,8 @@ const validateBrickData = async (data: {
   return { errors, hasErrors };
 };
 
-const errorKey = (key: string, group_position?: number) => {
-  return group_position ? `${key}[${group_position}]` : key;
+const errorKey = (key: string, group?: number[]) => {
+  return group ? `${key}[${group?.toString()}]` : key;
 };
 const buildErrorObject = (brickErrors: Array<BrickErrors>) => {
   const errorObject: {

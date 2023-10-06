@@ -5342,7 +5342,7 @@ var FieldSchema = z8.object({
     z8.object({}).optional()
   ]),
   fields_id: z8.number().optional(),
-  group: z8.number().optional(),
+  group: z8.array(z8.number()).optional(),
   repeater: z8.string().optional()
 });
 var BrickSchema = z8.object({
@@ -6330,7 +6330,7 @@ var CollectionBrick = class {
           key: "type"
         },
         {
-          key: "group_position"
+          key: "group"
         },
         {
           key: "text_value"
@@ -6359,7 +6359,7 @@ var CollectionBrick = class {
         field.repeater_key,
         field.key,
         field.type,
-        field.group_position,
+        field.group,
         field.text_value,
         field.int_value,
         field.bool_value,
@@ -6370,7 +6370,7 @@ var CollectionBrick = class {
     });
     await client.query(
       `INSERT INTO 
-          lucid_fields (collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+          lucid_fields (collection_brick_id, repeater_key, key, type, group, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
         VALUES 
           ${aliases}`,
       dataValues
@@ -6386,7 +6386,7 @@ var CollectionBrick = class {
         { key: "repeater_key", type: "text" },
         { key: "key", type: "text" },
         { key: "type", type: "text" },
-        { key: "group_position", type: "int" },
+        { key: "group", type: "int[]" },
         { key: "text_value", type: "text" },
         { key: "int_value", type: "int" },
         { key: "bool_value", type: "bool" },
@@ -6403,7 +6403,7 @@ var CollectionBrick = class {
         field.repeater_key,
         field.key,
         field.type,
-        field.group_position,
+        field.group,
         field.text_value,
         field.int_value,
         field.bool_value,
@@ -6413,7 +6413,7 @@ var CollectionBrick = class {
       ];
     });
     await client.query({
-      text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+      text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_fields
@@ -6499,7 +6499,7 @@ var formatUpsertFields = (brick) => {
       repeater_key: field.repeater,
       key: field.key,
       type: field.type,
-      group_position: field.group,
+      group: field.group || [],
       text_value: null,
       int_value: null,
       bool_value: null,
@@ -6777,8 +6777,8 @@ var validateBrickData = async (data) => {
   }
   return { errors, hasErrors };
 };
-var errorKey = (key, group_position) => {
-  return group_position ? `${key}[${group_position}]` : key;
+var errorKey = (key, group) => {
+  return group ? `${key}[${group?.toString()}]` : key;
 };
 var buildErrorObject = (brickErrors) => {
   const errorObject = {};
@@ -7109,8 +7109,9 @@ var formatFields = ({
         };
         if (brickField.repeater_key)
           fieldsData.repeater = brickField.repeater_key;
-        if (brickField.group_position !== null)
-          fieldsData.group = brickField.group_position;
+        const groupVal = brickField.group?.filter((group) => group !== null) || [];
+        if (groupVal.length > 0)
+          fieldsData.group = groupVal;
         if (meta)
           fieldsData.meta = meta;
         if (value)

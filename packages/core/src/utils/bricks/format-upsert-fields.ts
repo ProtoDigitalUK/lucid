@@ -79,7 +79,7 @@ const formatUpsertFields = (
         repeater_key: field.repeater,
         key: field.key,
         type: field.type,
-        group_position: field.group,
+        group: field.group || [],
 
         text_value: null,
         int_value: null,

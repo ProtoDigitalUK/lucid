@@ -1,50 +1,7 @@
 // Store
-import builderStore from "@/store/builderStore";
+import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
 // Types
-import type { BrickConfigT, BrickFieldValueT } from "@lucid/types/src/bricks";
-import type { BrickStoreFieldT } from "@/store/builderStore";
-
-// --------------------------------------------
-// Build out brick fields based
-const brickConfigToStoreFields = (config: BrickConfigT): BrickStoreFieldT[] => {
-  // recursively build out the brick fields from the config object for the builder store
-  // repeaters values are empty arrays
-
-  const fieldsRes: BrickStoreFieldT[] = [];
-
-  const buildFieldData = (fields: BrickConfigT["fields"]) => {
-    if (!fields) return;
-    for (let i = 0; i < fields.length; i++) {
-      const field = fields[i];
-
-      // Skip tabs
-      if (field.type === "tab") {
-        buildFieldData(field.fields);
-        continue;
-      }
-
-      // Add repeater
-      if (field.type === "repeater") {
-        fieldsRes.push({
-          key: field.key,
-          type: field.type,
-          items: [],
-        });
-        continue;
-      }
-
-      // Add field
-      fieldsRes.push({
-        key: field.key,
-        type: field.type,
-        value: field.default,
-      });
-    }
-  };
-  buildFieldData(config.fields);
-
-  return fieldsRes;
-};
+import type { BrickFieldValueT, CustomFieldT } from "@lucid/types/src/bricks";
 
 // --------------------------------------------
 // Format store to update
@@ -53,44 +10,121 @@ const formatStoreToSave = () => {
 };
 
 // --------------------------------------------
+// Find field index
+const findFieldIndex = (params: {
+  fields: BrickStoreFieldT[];
+  key: string;
+  group?: number[];
+  repeater?: string;
+}) => {
+  const fieldIndex = params.fields.findIndex(
+    (f) =>
+      f.key === params.key &&
+      JSON.stringify(f.group) === JSON.stringify(params.group) &&
+      f.repeater === params.repeater
+  );
+  return fieldIndex;
+};
+
+// --------------------------------------------
 // Update field in store
 const updateFieldValue = (params: {
   type: "builderBricks" | "fixedBricks";
-  index: number;
+  brickIndex: number;
+
   key: string;
+  group?: number[];
+  repeater?: string;
+
   value: BrickFieldValueT;
 }) => {
-  const updatedBricks = builderStore.get.builderBricks;
-  console.log(updatedBricks);
-  const brick = updatedBricks[params.index];
+  const bricks = [...builderStore.get[params.type]];
+  const brick = { ...bricks[params.brickIndex] };
 
-  const field = brick.fields.find((f) => f.key === params.key);
-  if (field) {
-    field.value = params.value;
+  const fieldIndex = findFieldIndex({
+    fields: brick.fields,
+    key: params.key,
+    group: params.group,
+    repeater: params.repeater,
+  });
+
+  if (fieldIndex !== -1) {
+    const fieldsCopy = [...brick.fields]; // Create a shallow copy of the fields
+    const fieldCopy = { ...fieldsCopy[fieldIndex] }; // Copy the specific field you want to update
+
+    fieldCopy.value = params.value; // Update the field copy
+    fieldsCopy[fieldIndex] = fieldCopy; // Update the field in the fields array copy
+
+    brick.fields = fieldsCopy; // Update the brick with the modified fields array
+    bricks[params.brickIndex] = brick; // Update the bricks array with the modified brick
+
+    builderStore.set(params.type, bricks);
   }
-
-  builderStore.set(params.type, updatedBricks);
 };
 
 // --------------------------------------------
 // Get field value from store
-const getFieldValue = (params: {
+const getField = (params: {
   type: "builderBricks" | "fixedBricks";
-  index: number;
+  brickIndex: number;
+  field: CustomFieldT;
+
   key: string;
+  group?: number[];
+  repeater?: string;
 }) => {
-  const brick = builderStore.get[params.type][params.index];
-  const field = brick?.fields.find((f) => f.key === params.key);
-  return field?.value;
+  const brick = builderStore.get[params.type][params.brickIndex];
+  const fieldIndex = findFieldIndex({
+    fields: brick.fields,
+    key: params.key,
+    group: params.group,
+    repeater: params.repeater,
+  });
+  const field = brick.fields[fieldIndex];
+  if (!field) {
+    return addField(params);
+  }
+  return field;
+};
+
+// --------------------------------------------
+// Add new field to store
+const addField = (params: {
+  type: "builderBricks" | "fixedBricks";
+  brickIndex: number;
+  field: CustomFieldT;
+  group?: number[];
+  repeater?: string;
+}) => {
+  const bricks = [...builderStore.get[params.type]];
+  const brick = { ...bricks[params.brickIndex] };
+  const fields = [...brick.fields];
+
+  const field = {
+    key: params.field.key,
+    type: params.field.type,
+    value: params.field.default,
+    group: params.group,
+    repeater: params.repeater,
+  };
+
+  fields.push(field);
+  brick.fields = fields;
+
+  bricks[params.brickIndex] = brick;
+  builderStore.set(params.type, bricks);
+
+  return field;
 };
 
 // ---------------------------------------------
 // Exports
 const brickHelpers = {
-  brickConfigToStoreFields,
   formatStoreToSave,
   updateFieldValue,
-  getFieldValue,
+  getField,
+  addField,
+  findFieldIndex,
 };
 
 export default brickHelpers;

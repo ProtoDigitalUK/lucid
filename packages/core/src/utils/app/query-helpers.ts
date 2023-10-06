@@ -309,7 +309,7 @@ export class SelectQueryBuilder {
 interface AliasGeneratorConfig {
   columns: Array<{
     key: string;
-    type?: "int" | "text" | "bool" | "jsonb" | "timestamp";
+    type?: "int" | "text" | "bool" | "jsonb" | "timestamp" | "int[]";
   }>;
   rows: number;
 }

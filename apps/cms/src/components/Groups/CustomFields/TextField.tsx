@@ -1,4 +1,6 @@
-import { Component, createSignal, onCleanup } from "solid-js";
+import { Component, createSignal, createEffect } from "solid-js";
+// Types
+import { CustomFieldT } from "@lucid/types/src/bricks";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 
@@ -6,30 +8,24 @@ interface TextFieldProps {
   data: {
     type: "builderBricks" | "fixedBricks";
     brickIndex: number;
-    field: {
-      key: string;
-    };
-  };
-  callbacks: {
-    onChange: (_value: string) => void;
+    key: CustomFieldT["key"];
+    repeater?: string;
+    group?: number[];
+    field: CustomFieldT;
   };
 }
 
 export const TextField: Component<TextFieldProps> = (props) => {
   // -------------------------------
   // State
-  const [getValue, setValue] = createSignal<string>(
-    (brickHelpers.getFieldValue({
-      type: props.data.type,
-      index: props.data.brickIndex,
-      key: props.data.field.key,
-    }) as string | undefined) || ""
-  );
+  const [getText, setText] = createSignal("");
 
   // -------------------------------
   // Effects
-  onCleanup(() => {
-    props.callbacks.onChange(getValue());
+  createEffect(() => {
+    const field = brickHelpers.getField(props.data);
+    const value = (field?.value as string | undefined) || "";
+    setText(value);
   });
 
   // -------------------------------
@@ -38,8 +34,16 @@ export const TextField: Component<TextFieldProps> = (props) => {
     <input
       class="w-full border-border border"
       type="text"
-      value={getValue()}
-      onChange={(e) => setValue(e.target.value)}
+      value={getText()}
+      placeholder={`${props.data.field.title} - ${JSON.stringify(
+        props.data.group
+      )}`}
+      onChange={(e) => {
+        brickHelpers.updateFieldValue({
+          ...props.data,
+          value: e.target.value,
+        });
+      }}
     />
   );
 };

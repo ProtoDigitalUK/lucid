@@ -41,7 +41,7 @@ export interface BrickResT {
     key: string;
     type: FieldTypes;
     repeater?: string | null;
-    group?: number | null;
+    group?: number[];
     value?: BrickFieldValueT;
     meta?: BrickFieldMetaT;
   }>;

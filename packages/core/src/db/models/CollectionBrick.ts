@@ -28,7 +28,7 @@ export type CollectionBrickFieldsT = {
   key: string;
   type: FieldTypes;
 
-  group_position: number | null;
+  group: number[] | null;
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;
@@ -269,7 +269,7 @@ export default class CollectionBrick {
             key: "type",
           },
           {
-            key: "group_position",
+            key: "group",
           },
           {
             key: "text_value",
@@ -298,7 +298,7 @@ export default class CollectionBrick {
           field.repeater_key,
           field.key,
           field.type,
-          field.group_position,
+          field.group,
           field.text_value,
           field.int_value,
           field.bool_value,
@@ -310,7 +310,7 @@ export default class CollectionBrick {
 
       await client.query(
         `INSERT INTO 
-          lucid_fields (collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+          lucid_fields (collection_brick_id, repeater_key, key, type, group, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
         VALUES 
           ${aliases}`,
         dataValues
@@ -328,7 +328,7 @@ export default class CollectionBrick {
           { key: "repeater_key", type: "text" },
           { key: "key", type: "text" },
           { key: "type", type: "text" },
-          { key: "group_position", type: "int" },
+          { key: "group", type: "int[]" },
           { key: "text_value", type: "text" },
           { key: "int_value", type: "int" },
           { key: "bool_value", type: "bool" },
@@ -346,7 +346,7 @@ export default class CollectionBrick {
           field.repeater_key,
           field.key,
           field.type,
-          field.group_position,
+          field.group,
           field.text_value,
           field.int_value,
           field.bool_value,
@@ -357,7 +357,7 @@ export default class CollectionBrick {
       });
 
       await client.query({
-        text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_position, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+        text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_fields
@@ -386,7 +386,7 @@ export type BrickFieldUpdateObject = {
   repeater_key?: string | undefined;
   key: string;
   type: FieldTypes;
-  group_position?: number | undefined;
+  group: number[];
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;

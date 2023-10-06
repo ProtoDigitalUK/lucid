@@ -48,6 +48,19 @@ const TESTING_CONFIG: BrickConfigT = {
               key: "repeater-title",
               default: "",
             },
+            {
+              type: "repeater",
+              title: "Repeater Key Nested",
+              key: "repeater-key-nested",
+              fields: [
+                {
+                  type: "text",
+                  title: "Repeater Title Nested",
+                  key: "repeater-title-nested",
+                  default: "",
+                },
+              ],
+            },
           ],
         },
         {
@@ -140,7 +153,6 @@ const TestRoute: Component = () => {
         key: "testing",
         fields: [],
       },
-      config: TESTING_CONFIG,
     });
   });
 
