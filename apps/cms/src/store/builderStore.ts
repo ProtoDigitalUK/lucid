@@ -11,6 +11,7 @@ export interface BrickStoreFieldT {
   value?: BrickFieldValueT;
   repeater?: string;
   group?: number[];
+  group_order?: number;
 }
 
 export interface BrickDataT {

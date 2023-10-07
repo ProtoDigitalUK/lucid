@@ -38,6 +38,7 @@
   "email": "Email",
   "roles": "Roles",
   "update_brick": "Update {{name}}",
+  "add_entry": "Add entry",
   "reset_password": "Reset Password",
   "back_to_login": "Back to Login",
   "forgot_password": "Forgot Password?",

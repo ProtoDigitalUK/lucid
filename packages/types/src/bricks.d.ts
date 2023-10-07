@@ -13,6 +13,7 @@ export interface BrickConfigT {
 }
 
 export type CustomFieldT = CustomField;
+export type FieldTypesT = FieldTypes;
 
 // Format brick
 

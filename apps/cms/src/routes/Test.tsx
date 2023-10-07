@@ -169,7 +169,7 @@ const TestRoute: Component = () => {
         <h1>Test</h1>
         <p>You have {builderBricks().length} builder brick:</p>
       </div>
-      <div>
+      <div class="bg-white">
         <h2 class="mb-2.5">First Brick: {firstBrick()?.key}</h2>
 
         <PageBuilder.BrickBody

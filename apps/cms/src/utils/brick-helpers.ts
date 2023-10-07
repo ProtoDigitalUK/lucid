@@ -1,3 +1,4 @@
+import { produce } from "solid-js/store";
 // Store
 import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
 // Types
@@ -31,37 +32,30 @@ const findFieldIndex = (params: {
 const updateFieldValue = (params: {
   type: "builderBricks" | "fixedBricks";
   brickIndex: number;
-
   key: string;
   group?: number[];
   repeater?: string;
-
   value: BrickFieldValueT;
 }) => {
-  const bricks = [...builderStore.get[params.type]];
-  const brick = { ...bricks[params.brickIndex] };
+  builderStore.set(
+    params.type,
+    produce((draft) => {
+      const brick = draft[params.brickIndex];
+      if (!brick) return;
 
-  const fieldIndex = findFieldIndex({
-    fields: brick.fields,
-    key: params.key,
-    group: params.group,
-    repeater: params.repeater,
-  });
+      const fieldIndex = findFieldIndex({
+        fields: brick.fields,
+        key: params.key,
+        group: params.group,
+        repeater: params.repeater,
+      });
 
-  if (fieldIndex !== -1) {
-    const fieldsCopy = [...brick.fields]; // Create a shallow copy of the fields
-    const fieldCopy = { ...fieldsCopy[fieldIndex] }; // Copy the specific field you want to update
-
-    fieldCopy.value = params.value; // Update the field copy
-    fieldsCopy[fieldIndex] = fieldCopy; // Update the field in the fields array copy
-
-    brick.fields = fieldsCopy; // Update the brick with the modified fields array
-    bricks[params.brickIndex] = brick; // Update the bricks array with the modified brick
-
-    builderStore.set(params.type, bricks);
-  }
+      if (fieldIndex !== -1) {
+        brick.fields[fieldIndex].value = params.value;
+      }
+    })
+  );
 };
-
 // --------------------------------------------
 // Get field value from store
 const getField = (params: {
@@ -94,29 +88,28 @@ const addField = (params: {
   brickIndex: number;
   field: CustomFieldT;
   group?: number[];
+  group_order?: number;
   repeater?: string;
 }) => {
-  const bricks = [...builderStore.get[params.type]];
-  const brick = { ...bricks[params.brickIndex] };
-  const fields = [...brick.fields];
+  builderStore.set(
+    params.type,
+    produce((draft) => {
+      const brick = draft[params.brickIndex];
+      if (!brick) return;
 
-  const field = {
-    key: params.field.key,
-    type: params.field.type,
-    value: params.field.default,
-    group: params.group,
-    repeater: params.repeater,
-  };
+      const newField = {
+        key: params.field.key,
+        type: params.field.type,
+        value: params.field.default,
+        group: params.group,
+        group_order: params.group_order,
+        repeater: params.repeater,
+      };
 
-  fields.push(field);
-  brick.fields = fields;
-
-  bricks[params.brickIndex] = brick;
-  builderStore.set(params.type, bricks);
-
-  return field;
+      brick.fields.push(newField);
+    })
+  );
 };
-
 // ---------------------------------------------
 // Exports
 const brickHelpers = {
