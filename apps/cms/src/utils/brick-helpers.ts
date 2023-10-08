@@ -88,7 +88,6 @@ const addField = (params: {
   brickIndex: number;
   field: CustomFieldT;
   group?: number[];
-  group_order?: number;
   repeater?: string;
 }) => {
   builderStore.set(
@@ -102,7 +101,6 @@ const addField = (params: {
         type: params.field.type,
         value: params.field.default,
         group: params.group,
-        group_order: params.group_order,
         repeater: params.repeater,
       };
 

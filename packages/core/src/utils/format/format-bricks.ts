@@ -161,9 +161,7 @@ const formatFields = ({
         };
         if (brickField.repeater_key)
           fieldsData.repeater = brickField.repeater_key;
-        const groupVal =
-          brickField.group?.filter((group) => group !== null) || [];
-        if (groupVal.length > 0) fieldsData.group = groupVal;
+        if (brickField.group_id) fieldsData.group_id = brickField.group_id;
         if (meta) fieldsData.meta = meta;
         if (value) fieldsData.value = value;
 
@@ -173,6 +171,28 @@ const formatFields = ({
   });
 
   return fieldObjs;
+};
+
+const formatGroups = ({
+  brickFields,
+}: {
+  brickFields: CollectionBrickFieldsT[];
+}): BrickResT["groups"] => {
+  const groups: Map<number, BrickResT["groups"][0]> = new Map();
+
+  brickFields.forEach((brickField) => {
+    if (brickField.group_id) {
+      const group = groups.get(brickField.group_id);
+      if (!group) {
+        groups.set(brickField.group_id, {
+          group_id: brickField.group_id,
+          group_order: brickField.group_order,
+        });
+      }
+    }
+  });
+
+  return [...groups.values()];
 };
 
 // -------------------------------------------
@@ -191,6 +211,7 @@ const buildBrickStructure = (brickFields: CollectionBrickFieldsT[]) => {
         order: brickField.brick_order,
         type: brickField.brick_type,
         fields: [],
+        groups: [],
       });
     }
   });
@@ -224,16 +245,20 @@ const formatBricks = (data: {
     })
     .map((brick) => {
       const instance = builderInstances.find((b) => b.key === brick.key);
+      const brickFields =
+        data.brick_fields.filter(
+          (field) => field.collection_brick_id === brick.id
+        ) || [];
 
       return {
         ...brick,
         fields: formatFields({
-          brickFields:
-            data.brick_fields.filter(
-              (field) => field.collection_brick_id === brick.id
-            ) || [],
+          brickFields: brickFields,
           builderInstance: instance,
           collection: data.collection,
+        }),
+        groups: formatGroups({
+          brickFields: brickFields,
         }),
       };
     });

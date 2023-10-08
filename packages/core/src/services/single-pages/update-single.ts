@@ -3,7 +3,7 @@ import { PoolClient } from "pg";
 import service from "@utils/app/service.js";
 // Models
 import SinglePage from "@db/models/SinglePage.js";
-import { BrickObject } from "@db/models/CollectionBrick.js";
+import { BrickObject, GroupObject } from "@db/models/CollectionBrick.js";
 // Services
 import environmentsService from "@services/environments/index.js";
 import collectionsService from "@services/collections/index.js";

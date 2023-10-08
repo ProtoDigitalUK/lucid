@@ -4,7 +4,7 @@ import { FieldTypes } from "@builders/brick-builder/index.js";
 // Utils
 import { aliasGenerator } from "@utils/app/query-helpers.js";
 // Schema
-import { BrickSchema, FieldSchema } from "@schemas/bricks.js";
+import { BrickSchema, FieldSchema, GroupSchema } from "@schemas/bricks.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 // Builders
@@ -15,6 +15,7 @@ import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 export type CollectionBrickFieldsT = {
   // Page brick info
   id: number;
+  ref: string;
   brick_type: CollectionBrickConfigT["type"];
   brick_key: string;
   page_id: number | null;
@@ -28,7 +29,8 @@ export type CollectionBrickFieldsT = {
   key: string;
   type: FieldTypes;
 
-  group: number[] | null;
+  group_id: number | null;
+  group_order: number | null;
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;
@@ -58,6 +60,13 @@ export type CollectionBrickFieldsT = {
   };
 };
 
+export type CollectionBrickGroupT = {
+  group_id: number;
+  group_order: number;
+  brick_id: number;
+  ref: string;
+};
+
 export type CollectionBrickT = {
   id: number;
   brick_type: CollectionBrickConfigT["type"];
@@ -75,43 +84,48 @@ export default class CollectionBrick {
 
     const brickFields = await client.query<CollectionBrickFieldsT>(
       `SELECT 
-          lucid_collection_bricks.*,
-          lucid_fields.*,
-          json_build_object(
-            'title', lucid_pages.title,
-            'slug', lucid_pages.slug,
-            'full_slug', lucid_pages.full_slug,
-            'homepage', lucid_pages.homepage,
-            'collection_key', lucid_pages.collection_key
-          ) as linked_page,
-          json_build_object(
-            'key', lucid_media.key,
-            'mime_type', lucid_media.mime_type,
-            'file_extension', lucid_media.file_extension,
-            'file_size', lucid_media.file_size,
-            'width', lucid_media.width,
-            'height', lucid_media.height,
-            'name', lucid_media.name,
-            'alt', lucid_media.alt
-          ) as media
-        FROM 
-          lucid_collection_bricks
-        LEFT JOIN 
-          lucid_fields
-        ON 
-          lucid_collection_bricks.id = lucid_fields.collection_brick_id
-        LEFT JOIN 
-          lucid_pages
-        ON 
-          lucid_fields.page_link_id = lucid_pages.id
-        LEFT JOIN 
-          lucid_media
-        ON 
-          lucid_fields.media_id = lucid_media.id
-        WHERE 
-          lucid_collection_bricks.${referenceKey} = $1
-        ORDER BY 
-          lucid_collection_bricks.brick_order`,
+        lucid_collection_bricks.*,
+        lucid_fields.*,
+        lucid_groups.*,
+        json_build_object(
+          'title', lucid_pages.title,
+          'slug', lucid_pages.slug,
+          'full_slug', lucid_pages.full_slug,
+          'homepage', lucid_pages.homepage,
+          'collection_key', lucid_pages.collection_key
+        ) as linked_page,
+        json_build_object(
+          'key', lucid_media.key,
+          'mime_type', lucid_media.mime_type,
+          'file_extension', lucid_media.file_extension,
+          'file_size', lucid_media.file_size,
+          'width', lucid_media.width,
+          'height', lucid_media.height,
+          'name', lucid_media.name,
+          'alt', lucid_media.alt
+        ) as media
+      FROM 
+        lucid_collection_bricks
+      LEFT JOIN 
+        lucid_fields
+      ON 
+        lucid_collection_bricks.id = lucid_fields.collection_brick_id
+      LEFT JOIN 
+        lucid_groups
+      ON 
+        lucid_fields.group_id = lucid_groups.group_id
+      LEFT JOIN 
+        lucid_pages
+      ON 
+        lucid_fields.page_link_id = lucid_pages.id
+      LEFT JOIN 
+        lucid_media
+      ON 
+        lucid_fields.media_id = lucid_media.id
+      WHERE 
+        lucid_collection_bricks.${referenceKey} = $1
+      ORDER BY 
+        lucid_collection_bricks.brick_order, lucid_groups.group_order;`,
       [data.reference_id]
     );
 
@@ -127,14 +141,19 @@ export default class CollectionBrick {
     const collectionBrickIds = await client.query<{
       id: number;
       fields: { id: number }[];
+      groups: { group_id: number }[];
     }>({
       text: `SELECT 
         lucid_collection_bricks.id,
         COALESCE(json_agg(
           json_build_object('id', lucid_fields.fields_id) 
-        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields
+        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields,
+        COALESCE(json_agg(
+          json_build_object('id', lucid_groups.group_id) 
+        ) FILTER (WHERE lucid_groups.group_id IS NOT NULL), '[]'::json) as groups
       FROM lucid_collection_bricks 
       LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id
+      LEFT JOIN lucid_groups ON lucid_collection_bricks.id = lucid_groups.collection_brick_id
       WHERE ${referenceKey} = $1
       GROUP BY lucid_collection_bricks.id`,
       values: [data.reference_id],
@@ -146,6 +165,8 @@ export default class CollectionBrick {
     client,
     data
   ) => {
+    if (data.ids.length === 0) return;
+
     await client.query({
       text: `DELETE FROM lucid_collection_bricks WHERE id = ANY($1)`,
       values: [data.ids],
@@ -183,8 +204,8 @@ export default class CollectionBrick {
 
     const brickRes = await client.query<{
       id: CollectionBrickT["id"];
-      brick_order: CollectionBrickFieldsT["brick_order"];
-      brick_key: CollectionBrickFieldsT["key"];
+      brick_order: CollectionBrickT["brick_order"];
+      brick_key: CollectionBrickT["brick_key"];
     }>(
       `INSERT INTO 
         lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
@@ -242,9 +263,99 @@ export default class CollectionBrick {
   };
 
   // -------------------------------------------
+  // Groups
+  static deleteMultipleGroups: CollectionBrickDeleteMultipleGroups = async (
+    client,
+    data
+  ) => {
+    if (data.ids.length === 0) return;
+
+    await client.query({
+      text: `DELETE FROM lucid_groups WHERE id = ANY($1)`,
+      values: [data.ids],
+    });
+  };
+  static createMultipleGroups: CollectionBrickCreateMultipleGroups = async (
+    client,
+    data
+  ) => {
+    if (data.groups.length === 0) return [];
+
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "collection_brick_id",
+        },
+        {
+          key: "group_order",
+        },
+        {
+          key: "ref",
+        },
+      ],
+      rows: data.groups.length,
+    });
+    const dataValues = data.groups.flatMap((group) => {
+      return [group.collection_brick_id, group.group_order, group.group_id];
+    });
+
+    const groups = await client.query<{
+      group_id: CollectionBrickGroupT["group_id"];
+      ref: CollectionBrickGroupT["ref"];
+    }>(
+      `INSERT INTO 
+        lucid_groups (collection_brick_id, group_order, ref) 
+      VALUES 
+        ${aliases}
+      RETURNING group_id, ref`,
+      dataValues
+    );
+
+    return groups.rows;
+  };
+  static updateMultipleGroups: CollectionBrickUpdateMultipleGroups = async (
+    client,
+    data
+  ) => {
+    if (data.groups.length === 0) return;
+
+    // Construct the VALUES table to be used for the update
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "group_id",
+          type: "int",
+        },
+        {
+          key: "group_order",
+          type: "int",
+        },
+      ],
+      rows: data.groups.length,
+    });
+
+    const dataValues = data.groups.flatMap((group) => {
+      return [group.group_id, group.group_order];
+    });
+
+    await client.query({
+      text: `WITH data_values (group_id, group_order) AS (
+            VALUES ${aliases}
+          )
+          UPDATE lucid_groups
+          SET group_order = data_values.group_order
+          FROM data_values
+          WHERE lucid_groups.group_id = data_values.group_id;`,
+      values: dataValues,
+    });
+  };
+
+  // -------------------------------------------
   // Fields
   static deleteMultipleBrickFields: CollectionBrickDeleteMultipleFields =
     async (client, data) => {
+      if (data.ids.length === 0) return;
+
       await client.query({
         text: `DELETE FROM lucid_fields WHERE fields_id = ANY($1)`,
         values: [data.ids],
@@ -269,7 +380,7 @@ export default class CollectionBrick {
             key: "type",
           },
           {
-            key: "group",
+            key: "group_id",
           },
           {
             key: "text_value",
@@ -298,7 +409,7 @@ export default class CollectionBrick {
           field.repeater_key,
           field.key,
           field.type,
-          field.group,
+          field.group_id,
           field.text_value,
           field.int_value,
           field.bool_value,
@@ -310,7 +421,7 @@ export default class CollectionBrick {
 
       await client.query(
         `INSERT INTO 
-          lucid_fields (collection_brick_id, repeater_key, key, type, group, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+          lucid_fields (collection_brick_id, repeater_key, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
         VALUES 
           ${aliases}`,
         dataValues
@@ -328,7 +439,7 @@ export default class CollectionBrick {
           { key: "repeater_key", type: "text" },
           { key: "key", type: "text" },
           { key: "type", type: "text" },
-          { key: "group", type: "int[]" },
+          { key: "group_id", type: "int" },
           { key: "text_value", type: "text" },
           { key: "int_value", type: "int" },
           { key: "bool_value", type: "bool" },
@@ -346,7 +457,7 @@ export default class CollectionBrick {
           field.repeater_key,
           field.key,
           field.type,
-          field.group,
+          field.group_id,
           field.text_value,
           field.int_value,
           field.bool_value,
@@ -357,7 +468,7 @@ export default class CollectionBrick {
       });
 
       await client.query({
-        text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+        text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_fields
@@ -379,6 +490,7 @@ export default class CollectionBrick {
 // Types
 export type BrickFieldObject = z.infer<typeof FieldSchema>;
 export type BrickObject = z.infer<typeof BrickSchema>;
+export type GroupObject = z.infer<typeof GroupSchema>;
 
 export type BrickFieldUpdateObject = {
   fields_id?: number | undefined;
@@ -386,13 +498,20 @@ export type BrickFieldUpdateObject = {
   repeater_key?: string | undefined;
   key: string;
   type: FieldTypes;
-  group: number[];
+  group_id?: number | string;
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;
   json_value: any | null;
   page_link_id: number | null;
   media_id: number | null;
+};
+
+export type BrickGroupUpdateObject = {
+  group_id?: number | string;
+  collection_brick_id?: number;
+  group_order: number;
+  ref?: string | number;
 };
 
 type CollectionBrickGetAll = (
@@ -413,6 +532,7 @@ type CollectionBrickGetAllBricks = (
   {
     id: CollectionBrickT["id"];
     fields: { id: CollectionBrickFieldsT["id"] }[];
+    groups: { group_id: CollectionBrickGroupT["group_id"] }[];
   }[]
 >;
 
@@ -434,7 +554,7 @@ type CollectionBrickCreateMultiple = (
   {
     id: CollectionBrickT["id"];
     brick_order: CollectionBrickT["brick_order"];
-    brick_key: CollectionBrickFieldsT["key"];
+    brick_key: CollectionBrickT["brick_key"];
   }[]
 >;
 
@@ -469,5 +589,31 @@ type CollectionBrickDeleteMultipleFields = (
   client: PoolClient,
   data: {
     ids: CollectionBrickFieldsT["id"][];
+  }
+) => Promise<void>;
+
+type CollectionBrickDeleteMultipleGroups = (
+  client: PoolClient,
+  data: {
+    ids: CollectionBrickGroupT["group_id"][];
+  }
+) => Promise<void>;
+
+type CollectionBrickCreateMultipleGroups = (
+  client: PoolClient,
+  data: {
+    groups: BrickGroupUpdateObject[];
+  }
+) => Promise<
+  {
+    group_id: CollectionBrickGroupT["group_id"];
+    ref: CollectionBrickGroupT["ref"];
+  }[]
+>;
+
+type CollectionBrickUpdateMultipleGroups = (
+  client: PoolClient,
+  data: {
+    groups: BrickGroupUpdateObject[];
   }
 ) => Promise<void>;

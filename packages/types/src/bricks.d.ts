@@ -37,12 +37,16 @@ export interface BrickResT {
   key: CollectionBrickT["brick_key"];
   order: CollectionBrickT["brick_order"];
   type: CollectionBrickT["brick_type"];
+  groups: Array<{
+    group_id: number;
+    group_order: number | null;
+  }>;
   fields: Array<{
     fields_id: number;
     key: string;
     type: FieldTypes;
     repeater?: string | null;
-    group?: number[];
+    group_id?: number | null;
     value?: BrickFieldValueT;
     meta?: BrickFieldMetaT;
   }>;

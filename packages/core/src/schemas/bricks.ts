@@ -26,8 +26,13 @@ export const FieldSchema = z.object({
   ]),
 
   fields_id: z.number().optional(),
-  group: z.array(z.number()).optional(),
+  group_id: z.union([z.number(), z.string()]).optional(),
   repeater: z.string().optional(),
+});
+
+export const GroupSchema = z.object({
+  group_id: z.union([z.number(), z.string()]), // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
+  group_order: z.number(),
 });
 
 export const BrickSchema = z.object({
@@ -35,6 +40,8 @@ export const BrickSchema = z.object({
   key: z.string(),
   order: z.number(),
   type: z.union([z.literal("builder"), z.literal("fixed")]),
+
+  groups: z.array(GroupSchema).optional(),
   fields: z.array(FieldSchema).optional(),
 });
 

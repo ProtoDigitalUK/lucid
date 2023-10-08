@@ -5,6 +5,7 @@ import { CollectionResT } from "@lucid/types/src/collections.js";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
 import formatUpsertFields from "@utils/bricks/format-upsert-fields.js";
+import formatUpsertGroups from "@utils/bricks/format-upsert-groups.js";
 import service from "@utils/app/service.js";
 // Checks
 import checkValidateBricks from "@services/collection-bricks/checks/check-validate-bricks.js";
@@ -27,14 +28,22 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     reference_id: data.id,
   });
 
-  const bricksToUpdate = data.bricks.filter((brick) => brick.id !== undefined);
-  const bricksToCreate = data.bricks.filter((brick) => brick.id === undefined);
+  const bricksToUpdate = data.bricks.filter(
+    (brick) => brick.id !== undefined && brick.id !== null
+  );
+  const bricksToCreate = data.bricks.filter(
+    (brick) => brick.id === undefined || brick.id === null
+  );
 
   const deleteFieldIds = getFieldsToDelete(existingBricks, bricksToUpdate);
+  const deleteGroupIds = getGroupsToDelete(existingBricks, bricksToUpdate);
 
-  const [_, newBricks] = await Promise.all([
+  const [_, __, newBricks] = await Promise.all([
     CollectionBrick.deleteMultipleBrickFields(client, {
       ids: deleteFieldIds,
+    }),
+    CollectionBrick.deleteMultipleGroups(client, {
+      ids: deleteGroupIds,
     }),
     CollectionBrick.createMultipleBricks(client, {
       type: data.type,
@@ -43,7 +52,18 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     }),
   ]);
 
-  assignIdsToNewBricks(data.bricks, newBricks);
+  assignBrickIds(data.bricks, newBricks);
+
+  const groups = data.bricks.map(formatUpsertGroups).flat();
+
+  // create new groups
+  const newGroups = await CollectionBrick.createMultipleGroups(client, {
+    groups: groups.filter(
+      (group) =>
+        typeof group.group_id === "string" && group.group_id.startsWith("ref-")
+    ),
+  });
+  assignFieldIds(data.bricks, newGroups);
 
   const fields = data.bricks.map(formatUpsertFields).flat();
 
@@ -65,6 +85,9 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
       ids: existingBricks
         .filter((brick) => !bricksToUpdate.some((b) => b.id === brick.id))
         .map((brick) => brick.id),
+    }),
+    CollectionBrick.updateMultipleGroups(client, {
+      groups: groups.filter((group) => typeof group.group_id === "number"),
     }),
   ]);
 
@@ -101,7 +124,38 @@ function getFieldsToDelete(
   return deleteFieldIds;
 }
 
-function assignIdsToNewBricks(
+function getGroupsToDelete(
+  existingBricks: Array<{
+    id: number;
+    groups: {
+      group_id: number;
+    }[];
+  }>,
+  bricksToUpdate: Array<BrickObject>
+) {
+  const deleteGroupIds: Array<number> = [];
+  const updateIdsSet = new Set(bricksToUpdate.map((b) => b.id));
+
+  existingBricks.forEach((brick) => {
+    if (updateIdsSet.has(brick.id)) {
+      const currentBrickGroups = brick.groups || [];
+      currentBrickGroups.forEach((group) => {
+        if (
+          !bricksToUpdate.some(
+            (b) =>
+              b.groups && b.groups.some((g) => g.group_id === group.group_id)
+          )
+        ) {
+          deleteGroupIds.push(group.group_id);
+        }
+      });
+    }
+  });
+
+  return deleteGroupIds;
+}
+
+function assignBrickIds(
   bricks: Array<BrickObject>,
   newBricks: Array<{
     id: number;
@@ -116,6 +170,27 @@ function assignIdsToNewBricks(
     if (matchingNewBrick) {
       brick.id = matchingNewBrick.id;
     }
+  });
+}
+
+function assignFieldIds(
+  bricks: Array<BrickObject>,
+  groups: Array<{
+    group_id: number;
+    ref: string;
+  }>
+) {
+  const newGroupMap: { [key: string]: number } = {};
+  groups.forEach((group) => {
+    newGroupMap[group.ref] = group.group_id;
+  });
+  bricks.forEach((brick) => {
+    brick.fields?.forEach((field) => {
+      if (field.group_id === undefined) return;
+      if (newGroupMap[field.group_id]) {
+        field.group_id = newGroupMap[field.group_id];
+      }
+    });
   });
 }
 
