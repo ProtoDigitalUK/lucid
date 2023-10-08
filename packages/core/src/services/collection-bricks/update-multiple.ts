@@ -5,11 +5,12 @@ import { CollectionResT } from "@lucid/types/src/collections.js";
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils
 import formatUpsertFields from "@utils/bricks/format-upsert-fields.js";
-import formatUpsertGroups from "@utils/bricks/format-upsert-groups.js";
 import service from "@utils/app/service.js";
 // Checks
 import checkValidateBricks from "@services/collection-bricks/checks/check-validate-bricks.js";
 import checkDuplicateOrders from "@services/collection-bricks/checks/check-duplicate-orders.js";
+// Services
+import collectionBricks from "@services/collection-bricks/index.js";
 
 export interface ServiceData {
   id: number;
@@ -54,17 +55,18 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
 
   assignBrickIds(data.bricks, newBricks);
 
-  const groups = data.bricks.map(formatUpsertGroups).flat();
-
-  // create new groups
-  const newGroups = await CollectionBrick.createMultipleGroups(client, {
-    groups: groups.filter(
-      (group) =>
-        typeof group.group_id === "string" && group.group_id.startsWith("ref-")
-    ),
+  const newGroups = await service(
+    collectionBricks.createMultipleGroups,
+    false,
+    client
+  )({
+    bricks: data.bricks,
   });
-  assignFieldIds(data.bricks, newGroups);
 
+  assignFieldIds(data.bricks, newGroups); // add back new groups to assignFieldIds so id ref- can be updated with the group id
+  assignGroupsParentIds(data.bricks, newGroups); // adds parent_group_id to og groups based on new group ids
+
+  const groups = data.bricks.map((brick) => brick.groups || []).flat();
   const fields = data.bricks.map(formatUpsertFields).flat();
 
   await Promise.all([
@@ -133,22 +135,19 @@ function getGroupsToDelete(
   }>,
   bricksToUpdate: Array<BrickObject>
 ) {
-  const deleteGroupIds: Array<number> = [];
-  const updateIdsSet = new Set(bricksToUpdate.map((b) => b.id));
+  const groups = bricksToUpdate.map((brick) => brick.groups || []).flat();
+  const existingGroups = existingBricks
+    .map((brick) => brick.groups || [])
+    .flat();
 
-  existingBricks.forEach((brick) => {
-    if (updateIdsSet.has(brick.id)) {
-      const currentBrickGroups = brick.groups || [];
-      currentBrickGroups.forEach((group) => {
-        if (
-          !bricksToUpdate.some(
-            (b) =>
-              b.groups && b.groups.some((g) => g.group_id === group.group_id)
-          )
-        ) {
-          deleteGroupIds.push(group.group_id);
-        }
-      });
+  const deleteGroupIds: Array<number> = [];
+  existingGroups.forEach((group) => {
+    if (
+      !groups.some(
+        (g) => g.group_id !== undefined && g.group_id === group.group_id
+      )
+    ) {
+      deleteGroupIds.push(group.group_id);
     }
   });
 
@@ -187,8 +186,32 @@ function assignFieldIds(
   bricks.forEach((brick) => {
     brick.fields?.forEach((field) => {
       if (field.group_id === undefined) return;
+
       if (newGroupMap[field.group_id]) {
         field.group_id = newGroupMap[field.group_id];
+      }
+    });
+  });
+}
+
+function assignGroupsParentIds(
+  bricks: Array<BrickObject>,
+  groups: Array<{
+    group_id: number;
+    ref: string;
+  }>
+) {
+  const newGroupMap: { [key: string]: number } = {};
+  groups.forEach((group) => {
+    newGroupMap[group.ref] = group.group_id;
+  });
+
+  bricks.forEach((brick) => {
+    brick.groups?.forEach((group) => {
+      if (!group.parent_group_id) return;
+
+      if (newGroupMap[group.parent_group_id]) {
+        group.parent_group_id = newGroupMap[group.parent_group_id];
       }
     });
   });

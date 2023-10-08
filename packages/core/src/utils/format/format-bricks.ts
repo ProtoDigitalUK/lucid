@@ -159,8 +159,6 @@ const formatFields = ({
           key: brickField.key,
           type: brickField.type,
         };
-        if (brickField.repeater_key)
-          fieldsData.repeater = brickField.repeater_key;
         if (brickField.group_id) fieldsData.group_id = brickField.group_id;
         if (meta) fieldsData.meta = meta;
         if (value) fieldsData.value = value;
@@ -187,6 +185,8 @@ const formatGroups = ({
         groups.set(brickField.group_id, {
           group_id: brickField.group_id,
           group_order: brickField.group_order,
+          repeater_key: brickField.repeater_key,
+          parent_group_id: brickField.parent_group_id,
         });
       }
     }

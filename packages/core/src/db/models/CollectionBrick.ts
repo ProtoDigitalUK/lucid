@@ -22,15 +22,18 @@ export type CollectionBrickFieldsT = {
   singlepage_id: number | null;
   brick_order: number;
 
+  // Group info
+  group_id: number | null;
+  repeater_key: string | null;
+  group_order: number | null;
+  parent_group_id: number | null;
+
   // Fields info
   fields_id: number;
   collection_brick_id: number;
-  repeater_key: string | null;
   key: string;
   type: FieldTypes;
 
-  group_id: number | null;
-  group_order: number | null;
   text_value: string | null;
   int_value: number | null;
   bool_value: boolean | null;
@@ -271,7 +274,7 @@ export default class CollectionBrick {
     if (data.ids.length === 0) return;
 
     await client.query({
-      text: `DELETE FROM lucid_groups WHERE id = ANY($1)`,
+      text: `DELETE FROM lucid_groups WHERE group_id = ANY($1)`,
       values: [data.ids],
     });
   };
@@ -292,11 +295,23 @@ export default class CollectionBrick {
         {
           key: "ref",
         },
+        {
+          key: "parent_group_id",
+        },
+        {
+          key: "repeater_key",
+        },
       ],
       rows: data.groups.length,
     });
     const dataValues = data.groups.flatMap((group) => {
-      return [group.collection_brick_id, group.group_order, group.group_id];
+      return [
+        group.collection_brick_id,
+        group.group_order,
+        group.group_id,
+        group.parent_group_id,
+        group.repeater_key,
+      ];
     });
 
     const groups = await client.query<{
@@ -304,7 +319,7 @@ export default class CollectionBrick {
       ref: CollectionBrickGroupT["ref"];
     }>(
       `INSERT INTO 
-        lucid_groups (collection_brick_id, group_order, ref) 
+        lucid_groups (collection_brick_id, group_order, ref, parent_group_id, repeater_key) 
       VALUES 
         ${aliases}
       RETURNING group_id, ref`,
@@ -330,20 +345,26 @@ export default class CollectionBrick {
           key: "group_order",
           type: "int",
         },
+        {
+          key: "parent_group_id",
+          type: "int",
+        },
       ],
       rows: data.groups.length,
     });
 
     const dataValues = data.groups.flatMap((group) => {
-      return [group.group_id, group.group_order];
+      return [group.group_id, group.group_order, group.parent_group_id];
     });
 
     await client.query({
-      text: `WITH data_values (group_id, group_order) AS (
+      text: `WITH data_values (group_id, group_order, parent_group_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_groups
-          SET group_order = data_values.group_order
+          SET 
+            group_order = data_values.group_order
+            parent_group_id = data_values.parent_group_id
           FROM data_values
           WHERE lucid_groups.group_id = data_values.group_id;`,
       values: dataValues,
@@ -369,9 +390,6 @@ export default class CollectionBrick {
         columns: [
           {
             key: "collection_brick_id",
-          },
-          {
-            key: "repeater_key",
           },
           {
             key: "key",
@@ -406,7 +424,6 @@ export default class CollectionBrick {
       const dataValues = data.fields.flatMap((field) => {
         return [
           field.collection_brick_id,
-          field.repeater_key,
           field.key,
           field.type,
           field.group_id,
@@ -421,7 +438,7 @@ export default class CollectionBrick {
 
       await client.query(
         `INSERT INTO 
-          lucid_fields (collection_brick_id, repeater_key, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+          lucid_fields (collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
         VALUES 
           ${aliases}`,
         dataValues
@@ -436,7 +453,6 @@ export default class CollectionBrick {
         columns: [
           { key: "fields_id", type: "int" },
           { key: "collection_brick_id", type: "int" },
-          { key: "repeater_key", type: "text" },
           { key: "key", type: "text" },
           { key: "type", type: "text" },
           { key: "group_id", type: "int" },
@@ -454,7 +470,6 @@ export default class CollectionBrick {
         return [
           field.fields_id,
           field.collection_brick_id,
-          field.repeater_key,
           field.key,
           field.type,
           field.group_id,
@@ -468,7 +483,7 @@ export default class CollectionBrick {
       });
 
       await client.query({
-        text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+        text: `WITH data_values (fields_id, collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_fields
@@ -495,7 +510,6 @@ export type GroupObject = z.infer<typeof GroupSchema>;
 export type BrickFieldUpdateObject = {
   fields_id?: number | undefined;
   collection_brick_id: number;
-  repeater_key?: string | undefined;
   key: string;
   type: FieldTypes;
   group_id?: number | string;
@@ -511,6 +525,8 @@ export type BrickGroupUpdateObject = {
   group_id?: number | string;
   collection_brick_id?: number;
   group_order: number;
+  parent_group_id?: number | string | null;
+  repeater_key?: string;
   ref?: string | number;
 };
 

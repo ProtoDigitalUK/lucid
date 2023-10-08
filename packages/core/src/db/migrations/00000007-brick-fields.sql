@@ -10,8 +10,10 @@ CREATE TABLE IF NOT EXISTS lucid_collection_bricks (
 
 CREATE TABLE IF NOT EXISTS lucid_groups (
   group_id SERIAL PRIMARY KEY,
+  parent_group_id INT REFERENCES lucid_groups(group_id) ON DELETE CASCADE,
   collection_brick_id INT REFERENCES lucid_collection_bricks(id) ON DELETE CASCADE,
-  group_order INT  NOT NULL,
+  repeater_key TEXT NOT NULL,
+  group_order INT NOT NULL,
   ref TEXT
 );
 
@@ -19,7 +21,6 @@ CREATE TABLE IF NOT EXISTS lucid_fields (
   fields_id SERIAL PRIMARY KEY,
   collection_brick_id INT REFERENCES lucid_collection_bricks(id) ON DELETE CASCADE,
   group_id INT REFERENCES lucid_groups(id) ON DELETE CASCADE,
-  repeater_key TEXT,
 
   key TEXT NOT NULL,
   type TEXT NOT NULL,

@@ -40,12 +40,13 @@ export interface BrickResT {
   groups: Array<{
     group_id: number;
     group_order: number | null;
+    parent_group_id: number | null;
+    repeater_key: string | null;
   }>;
   fields: Array<{
     fields_id: number;
     key: string;
     type: FieldTypes;
-    repeater?: string | null;
     group_id?: number | null;
     value?: BrickFieldValueT;
     meta?: BrickFieldMetaT;

@@ -5342,13 +5342,14 @@ var FieldSchema = z8.object({
     z8.object({}).optional()
   ]),
   fields_id: z8.number().optional(),
-  group_id: z8.union([z8.number(), z8.string()]).optional(),
-  repeater: z8.string().optional()
+  group_id: z8.union([z8.number(), z8.string()]).optional()
 });
 var GroupSchema = z8.object({
   group_id: z8.union([z8.number(), z8.string()]),
   // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
-  group_order: z8.number()
+  group_order: z8.number(),
+  parent_group_id: z8.union([z8.number(), z8.string(), z8.null()]).optional(),
+  repeater_key: z8.string().optional()
 });
 var BrickSchema = z8.object({
   id: z8.number().optional(),
@@ -6327,7 +6328,7 @@ var CollectionBrick = class {
     if (data.ids.length === 0)
       return;
     await client.query({
-      text: `DELETE FROM lucid_groups WHERE id = ANY($1)`,
+      text: `DELETE FROM lucid_groups WHERE group_id = ANY($1)`,
       values: [data.ids]
     });
   };
@@ -6344,16 +6345,28 @@ var CollectionBrick = class {
         },
         {
           key: "ref"
+        },
+        {
+          key: "parent_group_id"
+        },
+        {
+          key: "repeater_key"
         }
       ],
       rows: data.groups.length
     });
     const dataValues = data.groups.flatMap((group) => {
-      return [group.collection_brick_id, group.group_order, group.group_id];
+      return [
+        group.collection_brick_id,
+        group.group_order,
+        group.group_id,
+        group.parent_group_id,
+        group.repeater_key
+      ];
     });
     const groups = await client.query(
       `INSERT INTO 
-        lucid_groups (collection_brick_id, group_order, ref) 
+        lucid_groups (collection_brick_id, group_order, ref, parent_group_id, repeater_key) 
       VALUES 
         ${aliases}
       RETURNING group_id, ref`,
@@ -6373,19 +6386,25 @@ var CollectionBrick = class {
         {
           key: "group_order",
           type: "int"
+        },
+        {
+          key: "parent_group_id",
+          type: "int"
         }
       ],
       rows: data.groups.length
     });
     const dataValues = data.groups.flatMap((group) => {
-      return [group.group_id, group.group_order];
+      return [group.group_id, group.group_order, group.parent_group_id];
     });
     await client.query({
-      text: `WITH data_values (group_id, group_order) AS (
+      text: `WITH data_values (group_id, group_order, parent_group_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_groups
-          SET group_order = data_values.group_order
+          SET 
+            group_order = data_values.group_order
+            parent_group_id = data_values.parent_group_id
           FROM data_values
           WHERE lucid_groups.group_id = data_values.group_id;`,
       values: dataValues
@@ -6408,9 +6427,6 @@ var CollectionBrick = class {
       columns: [
         {
           key: "collection_brick_id"
-        },
-        {
-          key: "repeater_key"
         },
         {
           key: "key"
@@ -6445,7 +6461,6 @@ var CollectionBrick = class {
     const dataValues = data.fields.flatMap((field) => {
       return [
         field.collection_brick_id,
-        field.repeater_key,
         field.key,
         field.type,
         field.group_id,
@@ -6459,7 +6474,7 @@ var CollectionBrick = class {
     });
     await client.query(
       `INSERT INTO 
-          lucid_fields (collection_brick_id, repeater_key, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
+          lucid_fields (collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) 
         VALUES 
           ${aliases}`,
       dataValues
@@ -6472,7 +6487,6 @@ var CollectionBrick = class {
       columns: [
         { key: "fields_id", type: "int" },
         { key: "collection_brick_id", type: "int" },
-        { key: "repeater_key", type: "text" },
         { key: "key", type: "text" },
         { key: "type", type: "text" },
         { key: "group_id", type: "int" },
@@ -6489,7 +6503,6 @@ var CollectionBrick = class {
       return [
         field.fields_id,
         field.collection_brick_id,
-        field.repeater_key,
         field.key,
         field.type,
         field.group_id,
@@ -6502,7 +6515,7 @@ var CollectionBrick = class {
       ];
     });
     await client.query({
-      text: `WITH data_values (fields_id, collection_brick_id, repeater_key, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
+      text: `WITH data_values (fields_id, collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
             VALUES ${aliases}
           )
           UPDATE lucid_fields
@@ -6585,7 +6598,6 @@ var formatUpsertFields = (brick) => {
     return {
       fields_id: field.fields_id,
       collection_brick_id: brick.id,
-      repeater_key: field.repeater,
       key: field.key,
       type: field.type,
       group_id: field.group_id,
@@ -6600,19 +6612,6 @@ var formatUpsertFields = (brick) => {
   }) || [];
 };
 var format_upsert_fields_default = formatUpsertFields;
-
-// src/utils/bricks/format-upsert-groups.ts
-var formatUpsertGroups = (brick) => {
-  return brick.groups?.map((group) => {
-    return {
-      group_id: group.group_id,
-      group_order: group.group_order,
-      collection_brick_id: brick.id,
-      ref: group.group_id
-    };
-  }) || [];
-};
-var format_upsert_groups_default = formatUpsertGroups;
 
 // src/db/models/Media.ts
 var Media = class {
@@ -7050,13 +7049,16 @@ var updateMultiple2 = async (client, data) => {
     })
   ]);
   assignBrickIds(data.bricks, newBricks);
-  const groups = data.bricks.map(format_upsert_groups_default).flat();
-  const newGroups = await CollectionBrick.createMultipleGroups(client, {
-    groups: groups.filter(
-      (group) => typeof group.group_id === "string" && group.group_id.startsWith("ref-")
-    )
+  const newGroups = await service_default(
+    collection_bricks_default.createMultipleGroups,
+    false,
+    client
+  )({
+    bricks: data.bricks
   });
   assignFieldIds(data.bricks, newGroups);
+  assignGroupsParentIds(data.bricks, newGroups);
+  const groups = data.bricks.map((brick) => brick.groups || []).flat();
   const fields = data.bricks.map(format_upsert_fields_default).flat();
   await Promise.all([
     CollectionBrick.updateMultipleBrickOrders(
@@ -7096,18 +7098,14 @@ function getFieldsToDelete(existingBricks, bricksToUpdate) {
   return deleteFieldIds;
 }
 function getGroupsToDelete(existingBricks, bricksToUpdate) {
+  const groups = bricksToUpdate.map((brick) => brick.groups || []).flat();
+  const existingGroups = existingBricks.map((brick) => brick.groups || []).flat();
   const deleteGroupIds = [];
-  const updateIdsSet = new Set(bricksToUpdate.map((b) => b.id));
-  existingBricks.forEach((brick) => {
-    if (updateIdsSet.has(brick.id)) {
-      const currentBrickGroups = brick.groups || [];
-      currentBrickGroups.forEach((group) => {
-        if (!bricksToUpdate.some(
-          (b) => b.groups && b.groups.some((g) => g.group_id === group.group_id)
-        )) {
-          deleteGroupIds.push(group.group_id);
-        }
-      });
+  existingGroups.forEach((group) => {
+    if (!groups.some(
+      (g) => g.group_id !== void 0 && g.group_id === group.group_id
+    )) {
+      deleteGroupIds.push(group.group_id);
     }
   });
   return deleteGroupIds;
@@ -7133,6 +7131,21 @@ function assignFieldIds(bricks, groups) {
         return;
       if (newGroupMap[field.group_id]) {
         field.group_id = newGroupMap[field.group_id];
+      }
+    });
+  });
+}
+function assignGroupsParentIds(bricks, groups) {
+  const newGroupMap = {};
+  groups.forEach((group) => {
+    newGroupMap[group.ref] = group.group_id;
+  });
+  bricks.forEach((brick) => {
+    brick.groups?.forEach((group) => {
+      if (!group.parent_group_id)
+        return;
+      if (newGroupMap[group.parent_group_id]) {
+        group.parent_group_id = newGroupMap[group.parent_group_id];
       }
     });
   });
@@ -7259,8 +7272,6 @@ var formatFields = ({
           key: brickField.key,
           type: brickField.type
         };
-        if (brickField.repeater_key)
-          fieldsData.repeater = brickField.repeater_key;
         if (brickField.group_id)
           fieldsData.group_id = brickField.group_id;
         if (meta)
@@ -7283,7 +7294,9 @@ var formatGroups = ({
       if (!group) {
         groups.set(brickField.group_id, {
           group_id: brickField.group_id,
-          group_order: brickField.group_order
+          group_order: brickField.group_order,
+          repeater_key: brickField.repeater_key,
+          parent_group_id: brickField.parent_group_id
         });
       }
     }
@@ -7367,10 +7380,63 @@ var getAll5 = async (client, data) => {
 };
 var get_all_default5 = getAll5;
 
+// src/services/collection-bricks/create-multiple-groups.ts
+var updateGroupIds = (groupBatch, refToIdMap) => {
+  for (const group of groupBatch) {
+    if (refToIdMap[group.parent_group_id]) {
+      group.parent_group_id = refToIdMap[group.parent_group_id];
+    }
+  }
+};
+var prepareGroupBatch = (groups, parentId = null) => {
+  if (parentId === null || parentId === void 0) {
+    return groups.filter(
+      (group) => group.parent_group_id === null || group.parent_group_id === void 0
+    );
+  }
+  return groups.filter((group) => group.parent_group_id === parentId);
+};
+var createMultipleGroups = async (client, data) => {
+  const newGroups = [];
+  let refToIdMap = {};
+  const allGroups = data.bricks.map((brick) => {
+    const groups = brick.groups?.map((group) => {
+      return {
+        ...group,
+        collection_brick_id: brick.id
+      };
+    }) || [];
+    return groups;
+  }).flat();
+  const needCreating = allGroups.filter(
+    (group) => typeof group.group_id === "string" && group.group_id.startsWith("ref-")
+  );
+  const recursiveGroupInsert = async (groups, parentId = null) => {
+    const groupBatch = prepareGroupBatch(groups, parentId);
+    if (groupBatch.length === 0)
+      return;
+    updateGroupIds(groupBatch, refToIdMap);
+    const insertedGroups = await CollectionBrick.createMultipleGroups(client, {
+      groups: groupBatch
+    });
+    for (const insertedGroup of insertedGroups) {
+      refToIdMap[insertedGroup.ref] = insertedGroup.group_id;
+    }
+    newGroups.push(...insertedGroups);
+    for (const insertedGroup of insertedGroups) {
+      await recursiveGroupInsert(groups, insertedGroup.ref);
+    }
+  };
+  await recursiveGroupInsert(needCreating);
+  return newGroups;
+};
+var create_multiple_groups_default = createMultipleGroups;
+
 // src/services/collection-bricks/index.ts
 var collection_bricks_default = {
   updateMultiple: update_multiple_default2,
-  getAll: get_all_default5
+  getAll: get_all_default5,
+  createMultipleGroups: create_multiple_groups_default
 };
 
 // src/services/pages/get-single.ts

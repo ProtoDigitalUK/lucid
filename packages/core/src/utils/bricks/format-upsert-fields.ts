@@ -76,7 +76,6 @@ const formatUpsertFields = (
       return {
         fields_id: field.fields_id,
         collection_brick_id: brick.id as number,
-        repeater_key: field.repeater,
         key: field.key,
         type: field.type,
         group_id: field.group_id,
