@@ -6,7 +6,7 @@ import { CustomFieldT } from "@lucid/types/src/bricks";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store
-import builderStore from "@/store/builderStore";
+import builderStore, { BrickStoreGroupT } from "@/store/builderStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 import Button from "@/components/Partials/Button";
@@ -16,67 +16,60 @@ interface RepeaterGroupProps {
     type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     field: CustomFieldT;
-    depth: number;
-    group: number[];
+
+    repeater: {
+      parent_group_id: BrickStoreGroupT["parent_group_id"];
+      repeater_depth: number;
+    };
   };
 }
 
 export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   // -------------------------------
   // Memos
-  const fieldValues = createMemo(() => {
-    const brick = builderStore.get[props.data.type][props.data.brickIndex];
-    const fields = brick.fields.filter((field) => {
-      if (field.repeater !== props.data.field.key) return false;
-
-      const fieldGroup = field.group;
-      const targetDepth = props.data?.depth + 1;
-
-      if (!fieldGroup || fieldGroup.length !== targetDepth) return false;
-
-      for (let i = 0; i < props.data.depth; i++) {
-        if (fieldGroup[i] !== props.data.group[i]) return false;
-      }
-
-      return true;
-    });
-
-    return fields;
-  });
-
   const repeaterGroups = createMemo(() => {
-    const uniqueGroups = new Set<number>();
+    const groups =
+      builderStore.get[props.data.type][props.data.brickIndex].groups;
 
-    fieldValues().forEach((field) => {
-      if (!field.group) return;
-      const groupIndex = field.group[props.data.depth]; // Assuming this exists
-      uniqueGroups.add(groupIndex);
-    });
-
-    return uniqueGroups.size;
+    return groups
+      .filter((group) => {
+        return (
+          group.repeater_key === props.data.field.key &&
+          group.parent_group_id === props.data.repeater.parent_group_id
+        );
+      })
+      .sort((a, b) => a.group_order - b.group_order);
   });
 
-  const incrementedGroup = createMemo(() => {
-    const group = props.data.group || [];
-    group[props.data.depth] = repeaterGroups();
-    return group;
+  const nextOrder = createMemo(() => {
+    const repGroups = repeaterGroups();
+    if (!repGroups.length) return 0;
+    const largestOrder = repGroups.reduce((prev, current) => {
+      return prev.group_order > current.group_order ? prev : current;
+    });
+    return largestOrder.group_order + 1;
   });
 
   // -------------------------------
   // Functions
   const addGroup = () => {
     if (!props.data.field.fields) return;
-    for (const field of props.data.field.fields) {
-      if (field.type === "repeater") continue;
+    brickHelpers.addGroup({
+      type: props.data.type,
+      brickIndex: props.data.brickIndex,
+      fields: props.data.field.fields,
 
-      brickHelpers.addField({
-        type: props.data.type,
-        brickIndex: props.data.brickIndex,
-        field: field,
-        group: incrementedGroup(),
-        repeater: props.data.field.key,
-      });
-    }
+      repeater_key: props.data.field.key,
+      parent_group_id: props.data.repeater.parent_group_id || null,
+      order: nextOrder(),
+    });
+  };
+  const removeGroup = (group_id: BrickStoreGroupT["group_id"]) => {
+    brickHelpers.removeGroup({
+      type: props.data.type,
+      brickIndex: props.data.brickIndex,
+      group_id: group_id,
+    });
   };
 
   // -------------------------------
@@ -87,18 +80,19 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
         {props.data.field.title}
       </h3>
       {/* Group */}
-      <For each={Array.from({ length: repeaterGroups() })}>
-        {(_, i) => (
+      <For each={repeaterGroups()}>
+        {(group) => (
           <div class="w-full flex">
             {/* Group Items */}
             <div
               class={classNames(
                 "bg-background border-border border p-15 mb-2.5 last:mb-0 rounded-md w-full ",
                 {
-                  "bg-white": props.data.depth % 2 !== 0,
+                  "bg-white": props.data.repeater.repeater_depth % 2 !== 0,
                 }
               )}
             >
+              <h3>Order - {group.group_order}</h3>
               <For each={props.data.field.fields}>
                 {(field) => (
                   <CustomFields.DynamicField
@@ -106,10 +100,13 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                       type: props.data.type,
                       brickIndex: props.data.brickIndex,
                       field: field,
-                      repeater: props.data.field.key,
+                      group_id: group.group_id,
 
-                      group: [...props.data.group, i()],
-                      depth: props.data.depth + 1,
+                      repeater: {
+                        parent_group_id: group.group_id,
+                        repeater_depth:
+                          (props.data.repeater.repeater_depth || 0) + 1,
+                      },
                     }}
                   />
                 )}
@@ -117,7 +114,13 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
             </div>
             {/* Group Action Bar */}
             <div class="ml-2.5">
-              <button type="button" class="w-5 h-5 bg-error">
+              <button
+                type="button"
+                class="w-5 h-5 bg-error"
+                onClick={() => {
+                  removeGroup(group.group_id);
+                }}
+              >
                 D
               </button>
             </div>

@@ -9,14 +9,21 @@ export interface BrickStoreFieldT {
   key: string;
   type: FieldTypes;
   value?: BrickFieldValueT;
-  repeater?: string;
-  group?: number[];
+  group_id?: string | number;
+}
+
+export interface BrickStoreGroupT {
+  group_id: string | number;
+  parent_group_id: null | string | number;
+  repeater_key: string;
+  group_order: number;
 }
 
 export interface BrickDataT {
   id?: number;
   key: string;
   fields: Array<BrickStoreFieldT>;
+  groups: Array<BrickStoreGroupT>;
 }
 
 export interface FixedBrickDataT extends BrickDataT {
@@ -58,6 +65,7 @@ const [get, set] = createStore<BuilderStoreT>({
       {
         key: brick.key,
         fields: brick.fields,
+        groups: brick.groups,
       },
     ]);
   },

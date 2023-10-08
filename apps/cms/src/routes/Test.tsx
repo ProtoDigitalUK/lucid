@@ -152,6 +152,7 @@ const TestRoute: Component = () => {
       brick: {
         key: "testing",
         fields: [],
+        groups: [],
       },
     });
   });

@@ -1,6 +1,8 @@
 import { Component, For, Match, Switch, Show } from "solid-js";
 // Types
 import { CustomFieldT } from "@lucid/types/src/bricks";
+// Store
+import { BrickStoreGroupT, BrickStoreFieldT } from "@/store/builderStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
@@ -10,11 +12,13 @@ interface DynamicFieldProps {
     type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     field: CustomFieldT;
-    repeater?: string;
-    group?: number[];
     activeTab?: string;
+    group_id?: BrickStoreFieldT["group_id"];
 
-    depth?: number;
+    repeater?: {
+      parent_group_id: BrickStoreGroupT["parent_group_id"];
+      repeater_depth: number;
+    };
   };
 }
 
@@ -49,8 +53,10 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                 type: props.data.type,
                 brickIndex: props.data.brickIndex,
                 field: props.data.field,
-                depth: props.data.depth || 0,
-                group: props.data.group || [],
+                repeater: {
+                  parent_group_id: props.data.repeater?.parent_group_id || null,
+                  repeater_depth: props.data.repeater?.repeater_depth || 0,
+                },
               }}
             />
           </Match>
@@ -60,9 +66,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                 type: props.data.type,
                 brickIndex: props.data.brickIndex,
                 key: props.data.field.key,
-                repeater: props.data.repeater,
-                group: props.data.group,
                 field: props.data.field,
+                group_id: props.data.group_id,
               }}
             />
           </Match>
