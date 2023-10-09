@@ -1,6 +1,7 @@
 import T from "@/translations/index";
 import classNames from "classnames";
 import { Component, For, createMemo } from "solid-js";
+import { FaSolidGripLines } from "solid-icons/fa";
 // Types
 import { CustomFieldT } from "@lucid/types/src/bricks";
 // Utils
@@ -86,31 +87,35 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
             {/* Group Items */}
             <div
               class={classNames(
-                "bg-background border-border border p-15 mb-2.5 last:mb-0 rounded-md w-full ",
+                "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full ",
                 {
                   "bg-white": props.data.repeater.repeater_depth % 2 !== 0,
                 }
               )}
             >
-              <h3>Order - {group.group_order}</h3>
-              <For each={props.data.field.fields}>
-                {(field) => (
-                  <CustomFields.DynamicField
-                    data={{
-                      type: props.data.type,
-                      brickIndex: props.data.brickIndex,
-                      field: field,
-                      group_id: group.group_id,
+              <button class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab">
+                <FaSolidGripLines class="fill-title w-3" />
+              </button>
+              <div class="p-15 w-full">
+                <For each={props.data.field.fields}>
+                  {(field) => (
+                    <CustomFields.DynamicField
+                      data={{
+                        type: props.data.type,
+                        brickIndex: props.data.brickIndex,
+                        field: field,
+                        group_id: group.group_id,
 
-                      repeater: {
-                        parent_group_id: group.group_id,
-                        repeater_depth:
-                          (props.data.repeater.repeater_depth || 0) + 1,
-                      },
-                    }}
-                  />
-                )}
-              </For>
+                        repeater: {
+                          parent_group_id: group.group_id,
+                          repeater_depth:
+                            (props.data.repeater.repeater_depth || 0) + 1,
+                        },
+                      }}
+                    />
+                  )}
+                </For>
+              </div>
             </div>
             {/* Group Action Bar */}
             <div class="ml-2.5">
