@@ -3,27 +3,31 @@ import { Component, JSXElement, createSignal, Accessor } from "solid-js";
 
 export interface DropZoneCBT {
   zoneId: string;
-  getDraggingIndex: Accessor<number | undefined>;
-  onDragStart: (_e: DragEvent, _index: number) => void;
+  getDraggingIndex: Accessor<number | string | undefined>;
+  getDraggingOverIndex: Accessor<number | string | undefined>;
+  onDragStart: (_e: DragEvent, _index: number | string) => void;
   onDragEnd: (_e: DragEvent) => void;
-  onDragEnter: (_e: DragEvent, _index: number) => void;
+  onDragEnter: (_e: DragEvent, _index: number | string) => void;
   onDragOver: (_e: DragEvent) => void;
 }
 
 interface DragDropZoneProps {
   zoneId: string;
-  sortOrder: (_index: number, _targetIndex: number) => void;
+  sortOrder: (_index: number | string, _targetIndex: number | string) => void;
+  options?: {
+    scale?: "in" | "out";
+  };
   children: (_props: { dropZone: DropZoneCBT }) => JSXElement;
 }
 
 const DragDropZone: Component<DragDropZoneProps> = (props) => {
   // ------------------------------
   // State
-  const [getDraggingIndex, setDraggingIndex] = createSignal<number | undefined>(
-    undefined
-  );
+  const [getDraggingIndex, setDraggingIndex] = createSignal<
+    number | string | undefined
+  >(undefined);
   const [getDraggingOverIndex, setDraggingOverIndex] = createSignal<
-    number | undefined
+    number | string | undefined
   >(undefined);
   const [getIsDragging, setIsDragging] = createSignal<boolean>(false);
 
@@ -58,8 +62,9 @@ const DragDropZone: Component<DragDropZoneProps> = (props) => {
 
   // ------------------------------
   // Events
-  const onDragStart = (e: DragEvent, index: number) => {
+  const onDragStart = (e: DragEvent, index: number | string) => {
     e.dataTransfer?.setDragImage(new Image(), 0, 0);
+    e.stopPropagation();
     setDraggingIndex(index);
     setDraggingOverIndex(index);
     setIsDragging(true);
@@ -75,7 +80,7 @@ const DragDropZone: Component<DragDropZoneProps> = (props) => {
     updateSortOrder(false, target);
   };
 
-  const onDragEnter = (e: DragEvent, index: number) => {
+  const onDragEnter = (e: DragEvent, index: number | string) => {
     e.preventDefault();
     setDraggingOverIndex(index);
   };
@@ -94,12 +99,14 @@ const DragDropZone: Component<DragDropZoneProps> = (props) => {
   return (
     <div
       class={classNames("scale-100 w-full transition-transform duration-200", {
-        "scale-[105%]": getIsDragging(),
+        "scale-[105%]": getIsDragging() && props.options?.scale === "in",
+        "scale-[99%]": getIsDragging() && props.options?.scale === "out",
       })}
     >
       {props.children({
         dropZone: {
           zoneId: props.zoneId,
+          getDraggingOverIndex,
           getDraggingIndex,
           onDragStart,
           onDragEnd,

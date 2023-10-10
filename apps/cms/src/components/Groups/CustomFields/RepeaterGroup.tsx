@@ -11,6 +11,7 @@ import builderStore, { BrickStoreGroupT } from "@/store/builderStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 import Button from "@/components/Partials/Button";
+import DragDropZone from "@/components/Partials/DragDropZone";
 
 interface RepeaterGroupProps {
   data: {
@@ -73,6 +74,10 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
     });
   };
 
+  const groupKey = (group: BrickStoreGroupT) => {
+    return JSON.stringify(group);
+  };
+
   // -------------------------------
   // Render
   return (
@@ -81,57 +86,99 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
         {props.data.field.title}
       </h3>
       {/* Group */}
-      <For each={repeaterGroups()}>
-        {(group) => (
-          <div class="w-full flex">
-            {/* Group Items */}
-            <div
-              class={classNames(
-                "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full ",
-                {
-                  "bg-white": props.data.repeater.repeater_depth % 2 !== 0,
-                }
-              )}
-            >
-              <button class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab">
-                <FaSolidGripLines class="fill-title w-3" />
-              </button>
-              <div class="p-15 w-full">
-                <For each={props.data.field.fields}>
-                  {(field) => (
-                    <CustomFields.DynamicField
-                      data={{
-                        type: props.data.type,
-                        brickIndex: props.data.brickIndex,
-                        field: field,
-                        group_id: group.group_id,
+      <DragDropZone
+        zoneId={`repeater-${props.data.field.key}`}
+        sortOrder={() => {
+          //   if (index === targetIndex) console.log("same index");
+          //   else console.log("different index");
+        }}
+        options={{
+          scale: "out",
+        }}
+      >
+        {({ dropZone }) => (
+          <>
+            <ul>
+              <li>Dragging Index {dropZone.getDraggingIndex()}</li>
+              <li>Target Index {dropZone.getDraggingOverIndex()}</li>
+            </ul>
+            <For each={repeaterGroups()}>
+              {(group) => (
+                <div
+                  class={classNames("w-full flex", {
+                    "opacity-60":
+                      dropZone.getDraggingIndex() === groupKey(group),
+                  })}
+                  data-zoneId={dropZone.zoneId}
+                  onDragStart={(e) => dropZone.onDragStart(e, groupKey(group))}
+                  onDragEnd={(e) => dropZone.onDragEnd(e)}
+                  onDragEnter={(e) => dropZone.onDragEnter(e, groupKey(group))}
+                  onDragOver={(e) => dropZone.onDragOver(e)}
+                >
+                  {/* Group Items */}
+                  <div
+                    class={classNames(
+                      "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full ",
+                      {
+                        "bg-white":
+                          props.data.repeater.repeater_depth % 2 !== 0,
+                      }
+                    )}
+                  >
+                    <button
+                      class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
+                      onDragStart={(e) =>
+                        dropZone.onDragStart(e, groupKey(group))
+                      }
+                      onDragEnd={(e) => dropZone.onDragEnd(e)}
+                      onDragEnter={(e) =>
+                        dropZone.onDragEnter(e, groupKey(group))
+                      }
+                      onDragOver={(e) => dropZone.onDragOver(e)}
+                      draggable={true}
+                    >
+                      <FaSolidGripLines class="fill-title w-3" />
+                    </button>
+                    <div class="p-15 w-full">
+                      <h3 class="text-sm">{groupKey(group)}</h3>
+                      <For each={props.data.field.fields}>
+                        {(field) => (
+                          <CustomFields.DynamicField
+                            data={{
+                              type: props.data.type,
+                              brickIndex: props.data.brickIndex,
+                              field: field,
+                              group_id: group.group_id,
 
-                        repeater: {
-                          parent_group_id: group.group_id,
-                          repeater_depth:
-                            (props.data.repeater.repeater_depth || 0) + 1,
-                        },
+                              repeater: {
+                                parent_group_id: group.group_id,
+                                repeater_depth:
+                                  (props.data.repeater.repeater_depth || 0) + 1,
+                              },
+                            }}
+                          />
+                        )}
+                      </For>
+                    </div>
+                  </div>
+                  {/* Group Action Bar */}
+                  <div class="ml-2.5">
+                    <button
+                      type="button"
+                      class="w-5 h-5 bg-error"
+                      onClick={() => {
+                        removeGroup(group.group_id);
                       }}
-                    />
-                  )}
-                </For>
-              </div>
-            </div>
-            {/* Group Action Bar */}
-            <div class="ml-2.5">
-              <button
-                type="button"
-                class="w-5 h-5 bg-error"
-                onClick={() => {
-                  removeGroup(group.group_id);
-                }}
-              >
-                D
-              </button>
-            </div>
-          </div>
+                    >
+                      D
+                    </button>
+                  </div>
+                </div>
+              )}
+            </For>
+          </>
         )}
-      </For>
+      </DragDropZone>
       <div>
         <Button type="button" theme="primary" size="x-small" onClick={addGroup}>
           {T("add_entry")}

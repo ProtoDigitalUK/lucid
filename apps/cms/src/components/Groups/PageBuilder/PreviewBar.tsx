@@ -60,8 +60,8 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
           sortOrder={(index, targetIndex) => {
             builderStore.get.sortOrder({
               type: "builderBricks",
-              from: index,
-              to: targetIndex,
+              from: index as number,
+              to: targetIndex as number,
             });
           }}
         >
