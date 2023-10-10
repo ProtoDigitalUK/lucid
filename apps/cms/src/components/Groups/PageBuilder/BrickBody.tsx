@@ -68,6 +68,7 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
         </For>
       </Show>
       {/* Body */}
+
       <For each={props.data.config.fields}>
         {(field) => (
           <CustomFields.DynamicField

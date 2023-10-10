@@ -41,6 +41,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                       type: props.data.type,
                       brickIndex: props.data.brickIndex,
                       field: field,
+                      repeater: props.data.repeater,
                     }}
                   />
                 )}
