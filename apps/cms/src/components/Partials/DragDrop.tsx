@@ -44,11 +44,12 @@ const DragDrop: Component<DragDropProps> = (props) => {
 
     const dragging = getDragging();
     const dragTarget = getDraggingTarget();
+
     if (dragging === undefined || dragTarget === undefined) return;
+    if (dragging.index === dragTarget.index) return;
 
     props.sortOrder(dragging.index, dragTarget.index);
     if (isDragging) {
-      console.log("dragging", dragging.index);
       setDragging(dragTarget);
     }
   };
@@ -87,11 +88,11 @@ const DragDrop: Component<DragDropProps> = (props) => {
   const onDragEnd = (e: DragEvent) => {
     e.preventDefault();
     const target = e.target as HTMLElement;
+    updateSortOrder(false, target);
 
     setDragging(undefined);
     setDraggingTarget(undefined);
     setIsDragging(false);
-    updateSortOrder(false, target);
   };
 
   const onDragEnter = (e: DragEvent, item: DragItemProps) => {
@@ -104,8 +105,8 @@ const DragDrop: Component<DragDropProps> = (props) => {
   const onDragOver = (e: DragEvent) => {
     e.preventDefault();
 
-    const target = e.target as HTMLElement;
-    updateSortOrder(true, target);
+    // const target = e.target as HTMLElement;
+    // updateSortOrder(true, target);
   };
 
   // ----------------------------------

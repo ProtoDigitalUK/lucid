@@ -4,8 +4,6 @@ import { Component, For, createMemo } from "solid-js";
 import { FaSolidGripLines } from "solid-icons/fa";
 // Types
 import { CustomFieldT } from "@lucid/types/src/bricks";
-// Utils
-import brickHelpers from "@/utils/brick-helpers";
 // Store
 import builderStore, { BrickStoreGroupT } from "@/store/builderStore";
 // Components
@@ -20,8 +18,8 @@ interface RepeaterGroupProps {
     field: CustomFieldT;
 
     repeater: {
-      parent_group_id: BrickStoreGroupT["parent_group_id"];
-      repeater_depth: number;
+      parentGroupId: BrickStoreGroupT["parent_group_id"];
+      repeaterDepth: number;
     };
   };
 }
@@ -37,7 +35,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       .filter((group) => {
         return (
           group.repeater_key === props.data.field.key &&
-          group.parent_group_id === props.data.repeater.parent_group_id
+          group.parent_group_id === props.data.repeater.parentGroupId
         );
       })
       .sort((a, b) => a.group_order - b.group_order);
@@ -53,33 +51,29 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   });
 
   const repeaterKey = createMemo(() => {
-    return `${props.data.field.key}-${props.data.repeater.repeater_depth}-${props.data.repeater.parent_group_id}`;
+    return `${props.data.field.key}-${props.data.repeater.repeaterDepth}-${props.data.repeater.parentGroupId}`;
   });
 
   // -------------------------------
   // Functions
   const addGroup = () => {
     if (!props.data.field.fields) return;
-    brickHelpers.addGroup({
+    builderStore.get.addGroup({
       type: props.data.type,
       brickIndex: props.data.brickIndex,
       fields: props.data.field.fields,
 
-      repeater_key: props.data.field.key,
-      parent_group_id: props.data.repeater.parent_group_id || null,
+      repeaterKey: props.data.field.key,
+      parentGroupId: props.data.repeater.parentGroupId || null,
       order: nextOrder(),
     });
   };
   const removeGroup = (group_id: BrickStoreGroupT["group_id"]) => {
-    brickHelpers.removeGroup({
+    builderStore.get.removeGroup({
       type: props.data.type,
       brickIndex: props.data.brickIndex,
-      group_id: group_id,
+      groupId: group_id,
     });
-  };
-
-  const groupIndex = (group: BrickStoreGroupT) => {
-    return JSON.stringify(group);
   };
 
   // -------------------------------
@@ -91,9 +85,14 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       </h3>
       {/* Group */}
       <DragDrop
-        sortOrder={() => {
-          //   if (index === targetIndex) console.log("same index");
-          //   else console.log("different index");
+        sortOrder={(index, targetindex) => {
+          builderStore.get.swapGroupOrder({
+            type: props.data.type,
+            brickIndex: props.data.brickIndex,
+
+            groupId: index,
+            targetGroupId: targetindex,
+          });
         }}
       >
         {({ dragDrop }) => (
@@ -102,19 +101,19 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
               <div
                 class={classNames("w-full flex", {
                   "opacity-60":
-                    dragDrop.getDragging()?.index === groupIndex(group),
+                    dragDrop.getDragging()?.index === group.group_id,
                 })}
                 data-dragkey={repeaterKey()}
                 onDragStart={(e) =>
                   dragDrop.onDragStart(e, {
-                    index: groupIndex(group),
+                    index: group.group_id,
                     key: repeaterKey(),
                   })
                 }
                 onDragEnd={(e) => dragDrop.onDragEnd(e)}
                 onDragEnter={(e) =>
                   dragDrop.onDragEnter(e, {
-                    index: groupIndex(group),
+                    index: group.group_id,
                     key: repeaterKey(),
                   })
                 }
@@ -123,9 +122,11 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                 {/* Group Items */}
                 <div
                   class={classNames(
-                    "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full ",
+                    "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
                     {
-                      "bg-white": props.data.repeater.repeater_depth % 2 !== 0,
+                      "bg-white": props.data.repeater.repeaterDepth % 2 !== 0,
+                      "border-secondary":
+                        dragDrop.getDraggingTarget()?.index === group.group_id,
                     }
                   )}
                 >
@@ -133,14 +134,14 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                     class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
                     onDragStart={(e) =>
                       dragDrop.onDragStart(e, {
-                        index: groupIndex(group),
+                        index: group.group_id,
                         key: repeaterKey(),
                       })
                     }
                     onDragEnd={(e) => dragDrop.onDragEnd(e)}
                     onDragEnter={(e) =>
                       dragDrop.onDragEnter(e, {
-                        index: groupIndex(group),
+                        index: group.group_id,
                         key: repeaterKey(),
                       })
                     }
@@ -157,12 +158,12 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                             type: props.data.type,
                             brickIndex: props.data.brickIndex,
                             field: field,
-                            group_id: group.group_id,
+                            groupId: group.group_id,
 
                             repeater: {
-                              parent_group_id: group.group_id,
-                              repeater_depth:
-                                (props.data.repeater.repeater_depth || 0) + 1,
+                              parentGroupId: group.group_id,
+                              repeaterDepth:
+                                (props.data.repeater.repeaterDepth || 0) + 1,
                             },
                           }}
                         />

@@ -1,7 +1,8 @@
 import { Component, createSignal, createEffect } from "solid-js";
 // Types
 import { CustomFieldT } from "@lucid/types/src/bricks";
-import { BrickStoreFieldT } from "@/store/builderStore";
+// Store
+import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 
@@ -11,7 +12,7 @@ interface TextFieldProps {
     brickIndex: number;
     key: CustomFieldT["key"];
     field: CustomFieldT;
-    group_id?: BrickStoreFieldT["group_id"];
+    groupId?: BrickStoreFieldT["group_id"];
   };
 }
 
@@ -35,9 +36,9 @@ export const TextField: Component<TextFieldProps> = (props) => {
       class="w-full border-border border"
       type="text"
       value={getText()}
-      placeholder={`${props.data.field.title} - ${props.data.group_id}`}
+      placeholder={`${props.data.field.title} - ${props.data.groupId}`}
       onChange={(e) => {
-        brickHelpers.updateFieldValue({
+        builderStore.get.updateFieldValue({
           ...props.data,
           value: e.target.value,
         });
