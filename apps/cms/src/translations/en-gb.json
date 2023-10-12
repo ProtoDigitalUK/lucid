@@ -17,6 +17,7 @@
   "collections": "Collections",
   "assign_collections_description": "Assign the collection you wish the environment to have access to.",
   "forms": "Forms",
+  "remove_entry": "Remove entry",
   "assign_forms_description": "Select the forms the environment should have access to.",
   "update": "Update",
   "add_brick": "Add Brick",

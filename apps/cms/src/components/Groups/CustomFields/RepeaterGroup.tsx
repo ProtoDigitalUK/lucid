@@ -1,7 +1,7 @@
 import T from "@/translations/index";
 import classNames from "classnames";
 import { Component, For, createMemo } from "solid-js";
-import { FaSolidGripLines } from "solid-icons/fa";
+import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
 import { CustomFieldT } from "@lucid/types/src/bricks";
 // Store
@@ -99,7 +99,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
           <For each={repeaterGroups()}>
             {(group) => (
               <div
-                class={classNames("w-full flex", {
+                class={classNames(`w-full flex`, {
                   "opacity-60":
                     dragDrop.getDragging()?.index === group.group_id,
                 })}
@@ -172,15 +172,16 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                   </div>
                 </div>
                 {/* Group Action Bar */}
-                <div class="ml-2.5">
+                <div class={`ml-2.5 transition-opacity duration-200`}>
                   <button
                     type="button"
-                    class="w-5 h-5 bg-error"
+                    class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
                     onClick={() => {
                       removeGroup(group.group_id);
                     }}
+                    aria-label={T("remove_entry")}
                   >
-                    D
+                    <FaSolidTrashCan class="w-4" />
                   </button>
                 </div>
               </div>
