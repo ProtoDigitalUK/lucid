@@ -13,7 +13,6 @@ import DragDrop from "@/components/Partials/DragDrop";
 
 interface RepeaterGroupProps {
   data: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     field: CustomFieldT;
 
@@ -28,8 +27,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   // -------------------------------
   // Memos
   const repeaterGroups = createMemo(() => {
-    const groups =
-      builderStore.get[props.data.type][props.data.brickIndex].groups;
+    const groups = builderStore.get.bricks[props.data.brickIndex].groups;
 
     return groups
       .filter((group) => {
@@ -59,7 +57,6 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   const addGroup = () => {
     if (!props.data.field.fields) return;
     builderStore.get.addGroup({
-      type: props.data.type,
       brickIndex: props.data.brickIndex,
       fields: props.data.field.fields,
 
@@ -70,7 +67,6 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   };
   const removeGroup = (group_id: BrickStoreGroupT["group_id"]) => {
     builderStore.get.removeGroup({
-      type: props.data.type,
       brickIndex: props.data.brickIndex,
       groupId: group_id,
     });
@@ -87,7 +83,6 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       <DragDrop
         sortOrder={(index, targetindex) => {
           builderStore.get.swapGroupOrder({
-            type: props.data.type,
             brickIndex: props.data.brickIndex,
 
             groupId: index,
@@ -155,7 +150,6 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                       {(field) => (
                         <CustomFields.DynamicField
                           data={{
-                            type: props.data.type,
                             brickIndex: props.data.brickIndex,
                             field: field,
                             groupId: group.group_id,

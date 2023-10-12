@@ -9,7 +9,6 @@ import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
 
 interface DynamicFieldProps {
   data: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     field: CustomFieldT;
     activeTab?: string;
@@ -38,7 +37,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                 {(field) => (
                   <DynamicField
                     data={{
-                      type: props.data.type,
                       brickIndex: props.data.brickIndex,
                       field: field,
                       repeater: props.data.repeater,
@@ -51,7 +49,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
           <Match when={props.data.field.type === "repeater"}>
             <CustomFields.RepeaterGroup
               data={{
-                type: props.data.type,
                 brickIndex: props.data.brickIndex,
                 field: props.data.field,
                 repeater: {
@@ -64,7 +61,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
           <Match when={props.data.field.type === "text"}>
             <CustomFields.TextField
               data={{
-                type: props.data.type,
                 brickIndex: props.data.brickIndex,
                 key: props.data.field.key,
                 field: props.data.field,

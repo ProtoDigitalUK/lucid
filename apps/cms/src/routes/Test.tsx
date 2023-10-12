@@ -148,9 +148,10 @@ const TestRoute: Component = () => {
     builderStore.get.reset();
 
     builderStore.get.addBrick({
-      type: "builderBricks",
       brick: {
         key: "testing",
+        type: "builder",
+        order: 0,
         fields: [],
         groups: [],
       },
@@ -159,7 +160,7 @@ const TestRoute: Component = () => {
 
   // ------------------------------------
   // Memos
-  const builderBricks = createMemo(() => builderStore.get.builderBricks);
+  const builderBricks = createMemo(() => builderStore.get.bricks);
   const firstBrick = createMemo(() => builderBricks()[0]);
 
   // ------------------------------------
@@ -175,7 +176,6 @@ const TestRoute: Component = () => {
 
         <PageBuilder.BrickBody
           data={{
-            index: 0,
             brick: firstBrick(),
             config: TESTING_CONFIG,
           }}

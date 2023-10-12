@@ -18,25 +18,32 @@ interface PreviewBarProps {
 export const PreviewBar: Component<PreviewBarProps> = (props) => {
   // ----------------------------------
   // Memos
-  const fixedTopBricks = createMemo(() => {
-    return builderStore.get.fixedBricks.filter(
-      (brick) => brick.position === "top"
-    );
-  });
-  const fixedBottomBricks = createMemo(() => {
-    return builderStore.get.fixedBricks.filter(
-      (brick) => brick.position === "bottom"
-    );
-  });
+  const builderBricks = createMemo(() =>
+    builderStore.get.bricks
+      .filter((brick) => brick.type === "builder")
+      .sort((a, b) => a.order - b.order)
+  );
+  const fixedBricks = createMemo(() =>
+    builderStore.get.bricks
+      .filter((brick) => brick.type === "fixed")
+      .sort((a, b) => a.order - b.order)
+  );
+
+  const topFixedBricks = createMemo(() =>
+    fixedBricks().filter((brick) => brick.position === "top")
+  );
+  const bottomFixedBricks = createMemo(() =>
+    fixedBricks().filter((brick) => brick.position === "bottom")
+  );
 
   // ----------------------------------
   // Render
   return (
     <>
       {/* Fixed - Top */}
-      <Show when={fixedTopBricks().length > 0}>
+      <Show when={topFixedBricks().length > 0}>
         <ul class="mb-2.5">
-          <For each={fixedTopBricks()}>
+          <For each={topFixedBricks()}>
             {(brick, i) => (
               <PreviewBarItem
                 type="fixed"
@@ -52,14 +59,13 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
       </Show>
       {/* Builder */}
       <div>
-        <Show when={fixedTopBricks().length > 0}>
+        <Show when={topFixedBricks().length > 0}>
           <span class="w-10 h-px bg-white block mx-auto mb-2.5" />
         </Show>
         <DragDropZone
           zoneId="builder-preview"
           sortOrder={(index, targetIndex) => {
             builderStore.get.sortOrder({
-              type: "builderBricks",
               from: index as number,
               to: targetIndex as number,
             });
@@ -67,7 +73,7 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
         >
           {({ dropZone }) => (
             <ol class="w-full">
-              <For each={builderStore.get.builderBricks}>
+              <For each={builderBricks()}>
                 {(brick, i) => (
                   <PreviewBarItem
                     type="builder"
@@ -83,14 +89,14 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
             </ol>
           )}
         </DragDropZone>
-        <Show when={fixedBottomBricks().length > 0}>
+        <Show when={bottomFixedBricks().length > 0}>
           <span class="w-10 h-px bg-white block mx-auto mt-2.5" />
         </Show>
       </div>
       {/* Fixed - Bottom */}
-      <Show when={fixedBottomBricks().length > 0}>
+      <Show when={bottomFixedBricks().length > 0}>
         <ul class="mt-2.5">
-          <For each={fixedBottomBricks()}>
+          <For each={bottomFixedBricks()}>
             {(brick, i) => (
               <PreviewBarItem
                 type="fixed"

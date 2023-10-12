@@ -16,7 +16,6 @@ import CustomFields from "@/components/Groups/CustomFields";
 
 interface BrickBodyProps {
   data: {
-    index: number;
     brick: BrickDataT;
     config: BrickConfigT;
   };
@@ -27,6 +26,8 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
   // State
   const [getActiveTab, setActiveTab] = createSignal<string>();
 
+  console.log("BrickBody", props.data.config);
+
   // -------------------------------
   // Memos
   const allTabs = createMemo(() => {
@@ -34,9 +35,10 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
       props.data.config.fields?.filter((field) => field.type === "tab") || []
     );
   });
-  const brickData = createMemo(() => {
-    const brick = builderStore.get.builderBricks[props.data.index];
-    return brick;
+  const brickIndex = createMemo(() => {
+    return builderStore.get.bricks.findIndex(
+      (brick) => brick.id === props.data.brick.id
+    );
   });
 
   // -------------------------------
@@ -51,7 +53,6 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
   // Render
   return (
     <>
-      <div>{brickData()?.key}</div>
       {/* Tabs */}
       <Show when={allTabs().length > 0}>
         <For each={allTabs()}>
@@ -73,8 +74,7 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
         {(field) => (
           <CustomFields.DynamicField
             data={{
-              type: "builderBricks",
-              brickIndex: props.data.index,
+              brickIndex: brickIndex(),
               field: field,
               activeTab: getActiveTab(),
             }}

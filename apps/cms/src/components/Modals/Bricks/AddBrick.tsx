@@ -122,9 +122,10 @@ const AddBrick: Component<AddBrickProps> = (props) => {
                       builderStore.get.addBrick({
                         brick: {
                           key: brickConfig.key,
+                          type: "builder",
                           fields: [],
+                          groups: [],
                         },
-                        type: "builderBricks",
                       });
                       props.state.setOpen(false);
                     }}

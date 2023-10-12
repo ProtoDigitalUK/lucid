@@ -1,5 +1,7 @@
 import { createStore, produce } from "solid-js/store";
 import shortUUID from "short-uuid";
+// Utils
+import brickHelpers from "@/utils/brick-helpers";
 // Types
 import type { FieldTypes } from "@lucid/types/src/pages";
 import type { BrickFieldValueT, CustomFieldT } from "@lucid/types/src/bricks";
@@ -20,54 +22,48 @@ export interface BrickStoreGroupT {
 }
 
 export interface BrickDataT {
-  id?: number;
+  id: number | string;
   key: string;
   fields: Array<BrickStoreFieldT>;
   groups: Array<BrickStoreGroupT>;
-}
-
-export interface FixedBrickDataT extends BrickDataT {
-  position: "top" | "bottom";
+  order: number;
+  type: "builder" | "fixed";
+  position?: "top" | "bottom";
 }
 
 type BuilderStoreT = {
-  builderBricks: Array<BrickDataT>;
-  fixedBricks: Array<FixedBrickDataT>;
+  bricks: Array<BrickDataT>;
   // functions
   reset: () => void;
   addBrick: (_props: {
-    brick: BrickDataT;
-    type: "builderBricks" | "fixedBricks";
+    brick: {
+      key: BrickDataT["key"];
+      fields: BrickDataT["fields"];
+      groups: BrickDataT["groups"];
+      order?: BrickDataT["order"];
+      type: BrickDataT["type"];
+      position?: BrickDataT["position"];
+    };
   }) => void;
-  removeBrick: (_props: {
-    index: number;
-    type: "builderBricks" | "fixedBricks";
-  }) => void;
-  sortOrder: (_props: {
-    type: "builderBricks" | "fixedBricks";
-    from: number;
-    to: number;
-  }) => void;
+  removeBrick: (_props: { index: number }) => void;
+  sortOrder: (_props: { from: number; to: number }) => void;
   findFieldIndex: (_props: {
     fields: BrickStoreFieldT[];
     key: string;
     groupId?: BrickStoreFieldT["group_id"];
   }) => number;
   addField: (_props: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     field: CustomFieldT;
     groupId?: BrickStoreFieldT["group_id"];
   }) => void;
   updateFieldValue: (_props: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     key: string;
     value: BrickFieldValueT;
     groupId?: BrickStoreFieldT["group_id"];
   }) => void;
   addGroup: (_props: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     fields: CustomFieldT[];
     repeaterKey: string;
@@ -75,12 +71,10 @@ type BuilderStoreT = {
     order: number;
   }) => void;
   removeGroup: (_props: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     groupId: BrickStoreGroupT["group_id"];
   }) => void;
   swapGroupOrder: (_props: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
 
     groupId: BrickStoreGroupT["group_id"];
@@ -89,36 +83,49 @@ type BuilderStoreT = {
 };
 
 const [get, set] = createStore<BuilderStoreT>({
-  builderBricks: [],
-  fixedBricks: [],
+  bricks: [],
 
   reset() {
-    set("builderBricks", []);
-    set("fixedBricks", []);
+    set("bricks", []);
   },
 
   // --------------------------------------------
   // Bricks
-  addBrick({ brick, type }) {
-    set(type, [
-      ...get[type],
-      {
-        key: brick.key,
-        fields: brick.fields,
-        groups: brick.groups,
-      },
-    ]);
+  addBrick({ brick }) {
+    set(
+      "bricks",
+      produce((draft) => {
+        draft.push({
+          id: `temp-${shortUUID.generate()}`, // strip from update
+          key: brick.key,
+          fields: brick.fields,
+          groups: brick.groups,
+          order: brick.order || brickHelpers.getNextBrickOrder(brick.type),
+          type: brick.type,
+          position: brick.position,
+        });
+      })
+    );
   },
-  removeBrick({ index, type }) {
-    const bricks = [...get[type]];
-    bricks.splice(index, 1);
-    set(type, bricks);
+  removeBrick({ index }) {
+    set(
+      "bricks",
+      produce((draft) => {
+        draft.splice(index, 1);
+      })
+    );
   },
-  sortOrder({ type, from, to }) {
-    const bricks = [...get[type]];
-    bricks.splice(to, 0, bricks.splice(from, 1)[0]);
-    set(type, bricks);
+  sortOrder({ from, to }) {
+    set(
+      "bricks",
+      produce((draft) => {
+        const fromOrder = draft[from].order;
+        draft[from].order = draft[to].order;
+        draft[to].order = fromOrder;
+      })
+    );
   },
+
   // --------------------------------------------
   // Fields
   findFieldIndex(params) {
@@ -129,7 +136,7 @@ const [get, set] = createStore<BuilderStoreT>({
   },
   addField(params) {
     builderStore.set(
-      params.type,
+      "bricks",
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
@@ -147,7 +154,7 @@ const [get, set] = createStore<BuilderStoreT>({
   },
   updateFieldValue(params) {
     builderStore.set(
-      params.type,
+      "bricks",
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
@@ -168,7 +175,7 @@ const [get, set] = createStore<BuilderStoreT>({
   // Groups
   addGroup(params) {
     builderStore.set(
-      params.type,
+      "bricks",
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
@@ -195,7 +202,7 @@ const [get, set] = createStore<BuilderStoreT>({
   },
   removeGroup(params) {
     builderStore.set(
-      params.type,
+      "bricks",
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
@@ -225,7 +232,7 @@ const [get, set] = createStore<BuilderStoreT>({
   },
   swapGroupOrder(params) {
     builderStore.set(
-      params.type,
+      "bricks",
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;

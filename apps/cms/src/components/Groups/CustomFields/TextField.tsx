@@ -8,7 +8,6 @@ import brickHelpers from "@/utils/brick-helpers";
 
 interface TextFieldProps {
   data: {
-    type: "builderBricks" | "fixedBricks";
     brickIndex: number;
     key: CustomFieldT["key"];
     field: CustomFieldT;
