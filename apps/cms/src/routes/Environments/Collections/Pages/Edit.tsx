@@ -173,7 +173,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         {/* Build */}
         <div class="h-full w-full p-15 pl-0">
           <div class="w-full h-full bg-primary rounded-md brick-pattern relative">
-            <div class="absolute inset-0 overflow-y-scroll z-10 right-[135px] p-15">
+            <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
               <PageBuilder.Builder
                 data={{
                   brickConfig: brickConfig.data?.data || [],
@@ -183,7 +183,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                 }}
               />
             </div>
-            <div class="absolute top-15 right-15 bottom-15 w-[120px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
+            <div class="absolute top-15 right-15 bottom-15 w-[180px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
               <PageBuilder.PreviewBar
                 data={{
                   brickConfig: brickConfig.data?.data || [],

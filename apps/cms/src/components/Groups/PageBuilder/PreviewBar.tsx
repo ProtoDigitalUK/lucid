@@ -161,6 +161,9 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
           brick: brickConfig(),
         }}
       />
+      <div class="bg-primary px-2.5 py-1">
+        <h3 class="text-sm text-white">{brickConfig()?.title}</h3>
+      </div>
     </li>
   );
 };
