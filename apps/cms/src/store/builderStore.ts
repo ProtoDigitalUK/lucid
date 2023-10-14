@@ -95,12 +95,15 @@ const [get, set] = createStore<BuilderStoreT>({
     set(
       "bricks",
       produce((draft) => {
+        const targetOrder =
+          brick.order || brickHelpers.getNextBrickOrder(brick.type);
+
         draft.push({
           id: `temp-${shortUUID.generate()}`, // strip from update
           key: brick.key,
           fields: brick.fields,
           groups: brick.groups,
-          order: brick.order || brickHelpers.getNextBrickOrder(brick.type),
+          order: targetOrder,
           type: brick.type,
           position: brick.position,
         });

@@ -28,6 +28,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
   const [getHighlightedBrick, setHighlightedBrick] = createSignal<
     string | undefined
   >(undefined);
+
   const [getSearchQuery, setSearchQuery] = createSignal<string>("");
 
   // ------------------------------

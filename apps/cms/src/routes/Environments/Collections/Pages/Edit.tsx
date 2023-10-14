@@ -179,7 +179,10 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   brickConfig: brickConfig.data?.data || [],
                 }}
                 state={{
-                  setOpenSelectBrick: setSelectBrickOpen,
+                  setOpenSelectBrick: () => {
+                    setSelectBrickOpen(true);
+                    // setTargetOrder(order);
+                  },
                 }}
               />
             </div>

@@ -13,7 +13,7 @@ interface BrickProps {
     brickConfig: BrickConfigT[];
   };
   callbacks: {
-    setOpenSelectBrick: (_open: boolean) => void;
+    setOpenSelectBrick: (_order?: number) => void;
   };
 }
 
@@ -47,7 +47,9 @@ export const Brick: Component<BrickProps> = (props) => {
             class={
               "w-6 h-6 mx-auto bg-container rounded-full hover:bg-backgroundAccent flex items-center justify-center hover:rotate-90 transition-all duration-300"
             }
-            onClick={() => props.callbacks.setOpenSelectBrick(true)}
+            onClick={() =>
+              props.callbacks.setOpenSelectBrick(props.data.brick.order)
+            }
           >
             <FaSolidPlus class="w-3 h-3 fill-title" />
           </button>

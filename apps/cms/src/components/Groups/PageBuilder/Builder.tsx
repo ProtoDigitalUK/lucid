@@ -10,7 +10,7 @@ import PageBuilder from "@/components/Groups/PageBuilder";
 
 interface BuilderProps {
   state: {
-    setOpenSelectBrick: (_open: boolean) => void;
+    setOpenSelectBrick: (_order?: number) => void;
   };
   data: {
     brickConfig: BrickConfigT[];
@@ -80,7 +80,7 @@ export const Builder: Component<BuilderProps> = (props) => {
                   type="button"
                   theme="container-outline"
                   size="small"
-                  onClick={() => props.state.setOpenSelectBrick(true)}
+                  onClick={() => props.state.setOpenSelectBrick()}
                 >
                   {T("add_brick")}
                 </Button>
