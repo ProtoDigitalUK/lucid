@@ -1,3 +1,4 @@
+import T from "@/translations/index";
 import { Component, createSignal, createMemo, createEffect } from "solid-js";
 import { useParams } from "@solidjs/router";
 import shortUUID from "short-uuid";
@@ -11,6 +12,7 @@ import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultip
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
+import Button from "@/components/Partials/Button";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
@@ -172,7 +174,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         </div>
         {/* Build */}
         <div class="h-full w-full p-15 pl-0">
-          <div class="w-full h-full bg-primary rounded-md brick-pattern relative">
+          <div class="w-full h-[calc(100%-59px)] bg-primary rounded-md brick-pattern relative">
             <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
               <PageBuilder.Builder
                 data={{
@@ -193,6 +195,19 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                 }}
               />
             </div>
+          </div>
+          <div class="w-full mt-15">
+            <Button
+              type="button"
+              theme="primary"
+              size="small"
+              onClick={() => {
+                setSelectBrickOpen(true);
+              }}
+              classes="w-full"
+            >
+              {T("add_brick")}
+            </Button>
           </div>
         </div>
       </div>

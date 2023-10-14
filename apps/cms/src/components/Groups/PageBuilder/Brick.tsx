@@ -1,5 +1,4 @@
 import { Component, Show, createMemo } from "solid-js";
-import { FaSolidPlus } from "solid-icons/fa";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
 // Store
@@ -11,9 +10,6 @@ interface BrickProps {
   data: {
     brick: BrickDataT;
     brickConfig: BrickConfigT[];
-  };
-  callbacks: {
-    setOpenSelectBrick: (_order?: number) => void;
   };
 }
 
@@ -42,18 +38,6 @@ export const Brick: Component<BrickProps> = (props) => {
             }}
           />
         </div>
-        <Show when={props.data.brick.type === "builder"}>
-          <button
-            class={
-              "w-6 h-6 mx-auto bg-container rounded-full hover:bg-backgroundAccent flex items-center justify-center hover:rotate-90 transition-all duration-300"
-            }
-            onClick={() =>
-              props.callbacks.setOpenSelectBrick(props.data.brick.order)
-            }
-          >
-            <FaSolidPlus class="w-3 h-3 fill-title" />
-          </button>
-        </Show>
       </li>
     </Show>
   );

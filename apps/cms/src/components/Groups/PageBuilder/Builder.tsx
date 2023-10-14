@@ -64,9 +64,6 @@ export const Builder: Component<BuilderProps> = (props) => {
                   brick,
                   brickConfig: props.data.brickConfig,
                 }}
-                callbacks={{
-                  setOpenSelectBrick: props.state.setOpenSelectBrick,
-                }}
               />
             )}
           </For>
@@ -95,9 +92,6 @@ export const Builder: Component<BuilderProps> = (props) => {
                         brick,
                         brickConfig: props.data.brickConfig,
                       }}
-                      callbacks={{
-                        setOpenSelectBrick: props.state.setOpenSelectBrick,
-                      }}
                     />
                   )}
                 </For>
@@ -113,9 +107,6 @@ export const Builder: Component<BuilderProps> = (props) => {
                 data={{
                   brick,
                   brickConfig: props.data.brickConfig,
-                }}
-                callbacks={{
-                  setOpenSelectBrick: props.state.setOpenSelectBrick,
                 }}
               />
             )}
