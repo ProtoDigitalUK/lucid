@@ -2,6 +2,7 @@ import T from "@/translations/index";
 import { Component, createSignal, createMemo, createEffect } from "solid-js";
 import { useParams } from "@solidjs/router";
 import shortUUID from "short-uuid";
+import { FaSolidTrash } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
 // Stores
@@ -145,7 +146,33 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // Render
   return (
     <>
-      <div class="relative h-screen w-full flex">
+      <header class="h-[60px] w-full bg-container border-b border-border px-15 md:px-30 flex items-center justify-between">
+        <h1 class="text-unfocused font-normal text-xl">
+          #{page.data?.data.id}
+        </h1>
+        <div class="flex items-center gap-2.5">
+          <Button
+            type="button"
+            theme="primary"
+            size="small"
+            onClick={() => alert("save page")}
+          >
+            {T("save", {
+              singular: collection.data?.data.singular || "",
+            })}
+          </Button>
+          <Button
+            theme="danger"
+            size="icon"
+            type="button"
+            onClick={() => alert("delete")}
+          >
+            <span class="sr-only">{T("delete")}</span>
+            <FaSolidTrash />
+          </Button>
+        </div>
+      </header>
+      <div class="relative h-[calc(100vh-60px)] w-full flex">
         {/* Inputs */}
         <div class="w-[500px] max-h-screen overflow-y-auto p-15 md:p-30">
           <PageBuilder.Sidebar
