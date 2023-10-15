@@ -1,6 +1,6 @@
 import T from "@/translations/index";
 import { Component, createSignal, createMemo, createEffect } from "solid-js";
-import { useParams } from "@solidjs/router";
+import { useParams, useNavigate } from "@solidjs/router";
 import shortUUID from "short-uuid";
 import { FaSolidTrash } from "solid-icons/fa";
 // Services
@@ -10,15 +10,18 @@ import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
+import { CollectionResT } from "@lucid/types/src/collections";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import Button from "@/components/Partials/Button";
+import DeletePage from "@/components/Modals/Pages/DeletePage";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
   // Hooks
   const params = useParams();
+  const navigate = useNavigate();
 
   // ------------------------------
   // State
@@ -36,7 +39,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     number | undefined
   >(undefined);
 
+  // Modals
   const [getSelectBrickOpen, setSelectBrickOpen] = createSignal(false);
+  const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
   // ----------------------------------
   // Memos
@@ -165,7 +170,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
             theme="danger"
             size="icon"
             type="button"
-            onClick={() => alert("delete")}
+            onClick={() => setDeleteOpen(true)}
           >
             <span class="sr-only">{T("delete")}</span>
             <FaSolidTrash />
@@ -247,6 +252,21 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         data={{
           collection: collection.data?.data,
           brickConfig: brickConfig.data?.data || [],
+        }}
+      />
+      <DeletePage
+        id={page.data?.data.id}
+        state={{
+          open: getDeleteOpen(),
+          setOpen: setDeleteOpen,
+        }}
+        collection={collection.data?.data as CollectionResT}
+        callbacks={{
+          onSuccess: () => {
+            navigate(
+              `/env/${environment()}/collection/${collection.data?.data.key}`
+            );
+          },
         }}
       />
     </>
