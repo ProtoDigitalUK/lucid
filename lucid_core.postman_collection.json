@@ -272,6 +272,192 @@
 			]
 		},
 		{
+			"name": "Languages",
+			"item": [
+				{
+					"name": "Get Options (todo)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/options",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"options"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages?sort=code&per_page=-1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "code"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/eng",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"eng"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"fra\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single (todo)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"1"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single (todo)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"1"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Options",
 			"item": []
 		},
