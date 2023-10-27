@@ -17,6 +17,7 @@ import forms from "@routes/v1/forms.routes.js";
 import options from "@routes/v1/options.routes.js";
 import account from "@routes/v1/account.routes.js";
 import settings from "@routes/v1/settings.routes.js";
+import languages from "@routes/v1/languages.routes.js";
 // CDN
 import cdn from "@routes/v1/cdn.routes.js";
 
@@ -42,6 +43,7 @@ const initRoutes = (app: any) => {
   app.use("/api/v1/options", options);
   app.use("/api/v1/account", account);
   app.use("/api/v1/settings", settings);
+  app.use("/api/v1/languages", languages);
 };
 
 export default initRoutes;

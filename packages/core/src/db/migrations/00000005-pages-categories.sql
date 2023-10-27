@@ -21,7 +21,7 @@ CREATE INDEX idx_lucid_pages_collection_key ON lucid_pages(collection_key);
 CREATE TABLE IF NOT EXISTS lucid_page_content (
   id SERIAL PRIMARY KEY,
   page_id INTEGER NOT NULL REFERENCES lucid_pages(id) ON DELETE CASCADE,
-  language_id INTEGER NOT NULL REFERENCES lucid_languages(id) ON DELETE CASCADE,
+  language_code TEXT NOT NULL REFERENCES lucid_languages(code) ON DELETE CASCADE,
 
   title TEXT NOT NULL,
   slug TEXT,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS lucid_page_content (
 );
 
 CREATE INDEX idx_lucid_page_content_page_id ON lucid_page_content(page_id);
-CREATE INDEX idx_lucid_page_content_language_id ON lucid_page_content(language_id);
+CREATE INDEX idx_lucid_page_content_language_code ON lucid_page_content(language_code);
 
 -- create full_slug
 CREATE OR REPLACE FUNCTION update_full_slug() RETURNS trigger AS $$

@@ -79,6 +79,7 @@
   "roles_permissions": "Role Permissions",
   "media_permissions": "Media Permissions",
   "settings_permissions": "Settings Permissions",
+  "languages_permissions": "Languages Permissions",
   "environment_permissions": "Environment Permissions",
   "emails_permissions": "Email Permissions",
   "content_permissions": "Content Permissions",
