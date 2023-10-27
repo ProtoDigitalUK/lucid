@@ -1,6 +1,8 @@
+import T from "@/translations/index";
 import { Component, createSignal, createMemo, createEffect } from "solid-js";
-import { useParams } from "@solidjs/router";
+import { useParams, useNavigate } from "@solidjs/router";
 import shortUUID from "short-uuid";
+import { FaSolidTrash } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
 // Stores
@@ -8,14 +10,18 @@ import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
+import { CollectionResT } from "@lucid/types/src/collections";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
+import Button from "@/components/Partials/Button";
+import DeletePage from "@/components/Modals/Pages/DeletePage";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
   // Hooks
   const params = useParams();
+  const navigate = useNavigate();
 
   // ------------------------------
   // State
@@ -33,7 +39,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     number | undefined
   >(undefined);
 
+  // Modals
   const [getSelectBrickOpen, setSelectBrickOpen] = createSignal(false);
+  const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
   // ----------------------------------
   // Memos
@@ -143,7 +151,33 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // Render
   return (
     <>
-      <div class="relative h-screen w-full flex">
+      <header class="h-[60px] w-full bg-container border-b border-border px-15 md:px-30 flex items-center justify-between">
+        <h1 class="text-unfocused font-normal text-xl">
+          #{page.data?.data.id}
+        </h1>
+        <div class="flex items-center gap-2.5">
+          <Button
+            type="button"
+            theme="primary"
+            size="small"
+            onClick={() => alert("save page")}
+          >
+            {T("save", {
+              singular: collection.data?.data.singular || "",
+            })}
+          </Button>
+          <Button
+            theme="danger"
+            size="icon"
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+          >
+            <span class="sr-only">{T("delete")}</span>
+            <FaSolidTrash />
+          </Button>
+        </div>
+      </header>
+      <div class="relative h-[calc(100vh-60px)] w-full flex">
         {/* Inputs */}
         <div class="w-[500px] max-h-screen overflow-y-auto p-15 md:p-30">
           <PageBuilder.Sidebar
@@ -172,24 +206,40 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         </div>
         {/* Build */}
         <div class="h-full w-full p-15 pl-0">
-          <div class="w-full h-full bg-primary rounded-md brick-pattern relative">
-            <div class="absolute inset-0 overflow-y-scroll z-10 right-[135px] p-15">
+          <div class="w-full h-[calc(100%-59px)] bg-primary rounded-md brick-pattern relative">
+            <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
               <PageBuilder.Builder
                 data={{
                   brickConfig: brickConfig.data?.data || [],
                 }}
                 state={{
-                  setOpenSelectBrick: setSelectBrickOpen,
+                  setOpenSelectBrick: () => {
+                    setSelectBrickOpen(true);
+                    // setTargetOrder(order);
+                  },
                 }}
               />
             </div>
-            <div class="absolute top-15 right-15 bottom-15 w-[120px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
+            <div class="absolute top-15 right-15 bottom-15 w-[180px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
               <PageBuilder.PreviewBar
                 data={{
                   brickConfig: brickConfig.data?.data || [],
                 }}
               />
             </div>
+          </div>
+          <div class="w-full mt-15">
+            <Button
+              type="button"
+              theme="primary"
+              size="small"
+              onClick={() => {
+                setSelectBrickOpen(true);
+              }}
+              classes="w-full"
+            >
+              {T("add_brick")}
+            </Button>
           </div>
         </div>
       </div>
@@ -202,6 +252,21 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         data={{
           collection: collection.data?.data,
           brickConfig: brickConfig.data?.data || [],
+        }}
+      />
+      <DeletePage
+        id={page.data?.data.id}
+        state={{
+          open: getDeleteOpen(),
+          setOpen: setDeleteOpen,
+        }}
+        collection={collection.data?.data as CollectionResT}
+        callbacks={{
+          onSuccess: () => {
+            navigate(
+              `/env/${environment()}/collection/${collection.data?.data.key}`
+            );
+          },
         }}
       />
     </>

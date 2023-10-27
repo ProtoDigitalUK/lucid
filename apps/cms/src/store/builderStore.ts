@@ -46,7 +46,7 @@ type BuilderStoreT = {
     };
   }) => void;
   removeBrick: (_props: { index: number }) => void;
-  sortOrder: (_props: { from: number; to: number }) => void;
+  sortOrder: (_props: { from: number | string; to: number | string }) => void;
   findFieldIndex: (_props: {
     fields: BrickStoreFieldT[];
     key: string;
@@ -95,12 +95,15 @@ const [get, set] = createStore<BuilderStoreT>({
     set(
       "bricks",
       produce((draft) => {
+        const targetOrder =
+          brick.order || brickHelpers.getNextBrickOrder(brick.type);
+
         draft.push({
           id: `temp-${shortUUID.generate()}`, // strip from update
           key: brick.key,
           fields: brick.fields,
           groups: brick.groups,
-          order: brick.order || brickHelpers.getNextBrickOrder(brick.type),
+          order: targetOrder,
           type: brick.type,
           position: brick.position,
         });
@@ -119,9 +122,14 @@ const [get, set] = createStore<BuilderStoreT>({
     set(
       "bricks",
       produce((draft) => {
-        const fromOrder = draft[from].order;
-        draft[from].order = draft[to].order;
-        draft[to].order = fromOrder;
+        const fromBrick = draft.find((brick) => brick.id === from);
+        const toBrick = draft.find((brick) => brick.id === to);
+
+        if (!fromBrick || !toBrick) return;
+
+        const fromOrder = fromBrick.order;
+        fromBrick.order = toBrick.order;
+        toBrick.order = fromOrder;
       })
     );
   },

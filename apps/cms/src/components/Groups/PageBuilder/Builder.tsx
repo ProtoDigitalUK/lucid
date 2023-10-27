@@ -10,7 +10,7 @@ import PageBuilder from "@/components/Groups/PageBuilder";
 
 interface BuilderProps {
   state: {
-    setOpenSelectBrick: (_open: boolean) => void;
+    setOpenSelectBrick: (_order?: number) => void;
   };
   data: {
     brickConfig: BrickConfigT[];
@@ -64,9 +64,6 @@ export const Builder: Component<BuilderProps> = (props) => {
                   brick,
                   brickConfig: props.data.brickConfig,
                 }}
-                callbacks={{
-                  setOpenSelectBrick: props.state.setOpenSelectBrick,
-                }}
               />
             )}
           </For>
@@ -80,7 +77,7 @@ export const Builder: Component<BuilderProps> = (props) => {
                   type="button"
                   theme="container-outline"
                   size="small"
-                  onClick={() => props.state.setOpenSelectBrick(true)}
+                  onClick={() => props.state.setOpenSelectBrick()}
                 >
                   {T("add_brick")}
                 </Button>
@@ -94,9 +91,6 @@ export const Builder: Component<BuilderProps> = (props) => {
                       data={{
                         brick,
                         brickConfig: props.data.brickConfig,
-                      }}
-                      callbacks={{
-                        setOpenSelectBrick: props.state.setOpenSelectBrick,
                       }}
                     />
                   )}
@@ -113,9 +107,6 @@ export const Builder: Component<BuilderProps> = (props) => {
                 data={{
                   brick,
                   brickConfig: props.data.brickConfig,
-                }}
-                callbacks={{
-                  setOpenSelectBrick: props.state.setOpenSelectBrick,
                 }}
               />
             )}

@@ -26,8 +26,6 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
   // State
   const [getActiveTab, setActiveTab] = createSignal<string>();
 
-  console.log("BrickBody", props.data.config);
-
   // -------------------------------
   // Memos
   const allTabs = createMemo(() => {
@@ -55,21 +53,26 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
     <>
       {/* Tabs */}
       <Show when={allTabs().length > 0}>
-        <For each={allTabs()}>
-          {(tab) => (
-            <button
-              class={classNames({
-                "bg-primary": getActiveTab() === tab.key,
-              })}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              {tab.title}
-            </button>
-          )}
-        </For>
+        <div class="border-b border-border mb-15 flex flex-wrap">
+          <For each={allTabs()}>
+            {(tab) => (
+              <button
+                class={classNames(
+                  "border-b border-border -mb-px text-sm font-medium py-1 px-2 first:pl-0",
+                  {
+                    "border-secondary": getActiveTab() === tab.key,
+                  }
+                )}
+                onClick={() => setActiveTab(tab.key)}
+              >
+                {tab.title}
+              </button>
+            )}
+          </For>
+        </div>
       </Show>
-      {/* Body */}
 
+      {/* Body */}
       <For each={props.data.config.fields}>
         {(field) => (
           <CustomFields.DynamicField

@@ -1,12 +1,11 @@
 import { Component, For, createMemo, Show } from "solid-js";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
-import type { DropZoneCBT } from "@/components/Partials/DragDropZone";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components
 import BrickPreview from "@/components/Partials/BrickPreview";
-import DragDropZone from "@/components/Partials/DragDropZone";
+import DragDrop, { type DragDropCBT } from "@/components/Partials/DragDrop";
 import classNames from "classnames";
 
 interface PreviewBarProps {
@@ -44,13 +43,13 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
       <Show when={topFixedBricks().length > 0}>
         <ul class="mb-2.5">
           <For each={topFixedBricks()}>
-            {(brick, i) => (
+            {(brick) => (
               <PreviewBarItem
                 type="fixed"
                 data={{
                   key: brick.key,
                   brickConfig: props.data.brickConfig,
-                  index: i(),
+                  brickId: brick.id,
                 }}
               />
             )}
@@ -62,33 +61,32 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
         <Show when={topFixedBricks().length > 0}>
           <span class="w-10 h-px bg-white block mx-auto mb-2.5" />
         </Show>
-        <DragDropZone
-          zoneId="builder-preview"
-          sortOrder={(index, targetIndex) => {
+        <DragDrop
+          sortOrder={(id, targetid) => {
             builderStore.get.sortOrder({
-              from: index as number,
-              to: targetIndex as number,
+              from: id,
+              to: targetid,
             });
           }}
         >
-          {({ dropZone }) => (
+          {({ dragDrop }) => (
             <ol class="w-full">
               <For each={builderBricks()}>
-                {(brick, i) => (
+                {(brick) => (
                   <PreviewBarItem
                     type="builder"
                     data={{
                       key: brick.key,
                       brickConfig: props.data.brickConfig,
-                      index: i(),
+                      brickId: brick.id,
                     }}
-                    callbacks={{ dropZone }}
+                    callbacks={{ dragDrop }}
                   />
                 )}
               </For>
             </ol>
           )}
-        </DragDropZone>
+        </DragDrop>
         <Show when={bottomFixedBricks().length > 0}>
           <span class="w-10 h-px bg-white block mx-auto mt-2.5" />
         </Show>
@@ -97,13 +95,13 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
       <Show when={bottomFixedBricks().length > 0}>
         <ul class="mt-2.5">
           <For each={bottomFixedBricks()}>
-            {(brick, i) => (
+            {(brick) => (
               <PreviewBarItem
                 type="fixed"
                 data={{
                   key: brick.key,
                   brickConfig: props.data.brickConfig,
-                  index: i(),
+                  brickId: brick.id,
                 }}
               />
             )}
@@ -119,10 +117,10 @@ interface PreviewBarItemProps {
   data: {
     key: string;
     brickConfig: BrickConfigT[];
-    index: number;
+    brickId: number | string;
   };
   callbacks?: {
-    dropZone?: DropZoneCBT;
+    dragDrop?: DragDropCBT;
   };
 }
 
@@ -132,28 +130,42 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
   const brickConfig = createMemo(() => {
     return props.data.brickConfig.find((brick) => brick.key === props.data.key);
   });
+  const repeaterKey = createMemo(() => {
+    return `pagebuilder-preview`;
+  });
 
   // ----------------------------------
   // Render
   return (
     <li
-      data-zoneId={props.callbacks?.dropZone?.zoneId}
+      data-brickId={props.data.brickId}
       class={classNames(
-        "mb-2 last:mb-0 transition-opacity duration-200 rounded-md overflow-hidden",
+        "mb-2 last:mb-0 transition-all duration-200 rounded-md overflow-hidden border border-transparent",
         {
           "opacity-60":
-            props.callbacks?.dropZone?.getDraggingIndex() === props.data.index,
+            props.callbacks?.dragDrop?.getDragging()?.index ===
+            props.data.brickId,
+          "!border-secondary":
+            props.callbacks?.dragDrop?.getDraggingTarget()?.index ===
+            props.data.brickId,
           "cursor-grab": props.type === "builder",
         }
       )}
+      data-dragkey={repeaterKey()}
       onDragStart={(e) =>
-        props.callbacks?.dropZone?.onDragStart(e, props.data.index)
+        props.callbacks?.dragDrop?.onDragStart(e, {
+          index: props.data.brickId,
+          key: repeaterKey(),
+        })
       }
-      onDragEnd={(e) => props.callbacks?.dropZone?.onDragEnd(e)}
+      onDragEnd={(e) => props.callbacks?.dragDrop?.onDragEnd(e)}
       onDragEnter={(e) =>
-        props.callbacks?.dropZone?.onDragEnter(e, props.data.index)
+        props.callbacks?.dragDrop?.onDragEnter(e, {
+          index: props.data.brickId,
+          key: repeaterKey(),
+        })
       }
-      onDragOver={(e) => props.callbacks?.dropZone?.onDragOver(e)}
+      onDragOver={(e) => props.callbacks?.dragDrop?.onDragOver(e)}
       draggable={props.type === "builder"}
     >
       <BrickPreview
@@ -161,6 +173,9 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
           brick: brickConfig(),
         }}
       />
+      <div class="bg-primary px-2.5 py-1 text-center">
+        <h3 class="text-sm text-white">{brickConfig()?.title}</h3>
+      </div>
     </li>
   );
 };

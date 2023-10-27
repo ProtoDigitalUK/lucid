@@ -20,6 +20,7 @@
   "remove_entry": "Remove entry",
   "assign_forms_description": "Select the forms the environment should have access to.",
   "update": "Update",
+  "save": "Save {{singular}}",
   "add_brick": "Add Brick",
   "create": "Create",
   "error_title": "Something went wrong",

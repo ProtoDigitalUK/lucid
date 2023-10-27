@@ -10,11 +10,14 @@ import type { CollectionResT } from "@lucid/types/src/collections";
 import api from "@/services/api";
 
 interface DeletePageProps {
-  id: Accessor<number | undefined>;
+  id: Accessor<number | undefined> | number | undefined;
   collection: CollectionResT;
   state: {
     open: boolean;
     setOpen: (_open: boolean) => void;
+  };
+  callbacks?: {
+    onSuccess?: () => void;
   };
 }
 
@@ -24,6 +27,7 @@ const DeletePage: Component<DeletePageProps> = (props) => {
   const deletePage = api.environment.collections.pages.useDeleteSingle({
     onSuccess: () => {
       props.state.setOpen(false);
+      if (props.callbacks?.onSuccess) props.callbacks.onSuccess();
     },
     collectionName: props.collection.singular,
   });
@@ -51,7 +55,7 @@ const DeletePage: Component<DeletePageProps> = (props) => {
         error: deletePage.errors()?.message,
       }}
       onConfirm={() => {
-        const id = props.id();
+        const id = typeof props.id === "function" ? props.id() : props.id;
         if (!id) return console.error("No id provided");
         deletePage.action.mutate({
           id: id,

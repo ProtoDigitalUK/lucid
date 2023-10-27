@@ -48,7 +48,7 @@ const Button: Component<ButtonProps> = (props) => {
 
         // Sizes
         "px-2.5 py-2 text-sm": props.size === "x-small",
-        "px-5 py-2.5 text-base": props.size === "small",
+        "px-5 py-2.5 h-10 text-base": props.size === "small",
         "px-5 py-3.5 text-base": props.size === "medium",
         "px-10 py-4 text-base": props.size === "large",
         "w-10 h-10 p-0": props.size === "icon",
