@@ -1,6 +1,6 @@
 import T from "@translations/index.js";
 import { PoolClient } from "pg";
-import { iso6393 } from "iso-639-3";
+import ISO6391 from "iso-639-1";
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
 // Models
@@ -30,15 +30,17 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  const code = iso6393.find((lang) => lang.iso6393 === data.code);
-  if (!code) {
+  const code = data.code.split("-");
+  const iso6391 = code[0];
+
+  if (!ISO6391.validate(iso6391)) {
     throw new LucidError({
       type: "basic",
       name: T("error_generic_name", {
         type: T("language"),
       }),
       message: T("error_invalid", {
-        type: T("language_iso_639_3"),
+        type: T("language_iso_639_1"),
       }),
       status: 400,
     });

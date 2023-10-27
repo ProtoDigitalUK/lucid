@@ -3,7 +3,7 @@ import z from "zod";
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  code: z.string().min(3).max(3), // ISO 639-3
+  code: z.string().min(2), // ISO 639-1 - bcp47
   is_default: z.boolean().optional(),
   is_enabled: z.boolean().optional(),
 });
@@ -15,7 +15,7 @@ const createSingleParams = z.object({});
 const getSingleBody = z.object({});
 const getSingleQuery = z.object({});
 const getSingleParams = z.object({
-  code: z.string().min(3).max(3), // ISO 639-3
+  code: z.string().min(2), // ISO 639-1 - bcp47
 });
 
 // ------------------------------------

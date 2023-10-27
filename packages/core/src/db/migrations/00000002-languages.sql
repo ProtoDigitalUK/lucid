@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS lucid_languages (
   id SERIAL PRIMARY KEY,
-  code TEXT NOT NULL UNIQUE, -- ISO 639-3:2007
+  code TEXT NOT NULL UNIQUE, -- ISO 639-1 - bcp47
   is_default BOOLEAN NOT NULL DEFAULT FALSE,
   is_enabled BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS lucid_languages (
 );
 
 INSERT INTO lucid_languages (code, is_default)
-VALUES ('eng', TRUE)
+VALUES ('en', TRUE)
 ON CONFLICT (code) 
 DO UPDATE SET is_default = TRUE;
 
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS lucid_translation_keys (
 CREATE TABLE IF NOT EXISTS lucid_translations (
   id SERIAL PRIMARY KEY,
   translation_key_id INTEGER REFERENCES lucid_translation_keys(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  language_code TEXT REFERENCES lucid_languages(code) ON DELETE CASCADE ON UPDATE CASCADE,
+  language_id INTEGER REFERENCES lucid_languages(id) ON DELETE CASCADE ON UPDATE CASCADE,
   value TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

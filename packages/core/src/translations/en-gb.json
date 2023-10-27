@@ -16,5 +16,5 @@
   "error_create": "Error creating {{type}}",
 
   "language": "Language",
-  "language_iso_639_3": "ISO 639-3"
+  "language_iso_639_1": "ISO 639-1"
 }
