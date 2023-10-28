@@ -25,6 +25,7 @@ const resetHomepages = async (client: PoolClient, data: ServiceData) => {
     const slugExists = await PageContent.checkSlugExistence(client, {
       slug: newSlug,
       id: homepage.id,
+      language_id: homepage.language_id,
       environment_key: data.environment_key,
     });
 

@@ -1,10 +1,10 @@
-import createSingle from "./create-single.js";
+import createSingle from "./create-single.js"; // verified
 import deleteSingle from "./delete-single.js";
 import getMultiple from "./get-multiple.js";
 import getSingle from "./get-single.js";
 import updateSingle from "./update-single.js";
 import checkPageExists from "./check-page-exists.js"; // needs use verified
-import buildUniqueSlug from "./build-unique-slug.js";
+import buildUniqueSlug from "./build-unique-slug.js"; // verified
 import parentChecks from "./parent-checks.js"; // verified
 import resetHomepages from "./reset-homepages.js"; // verified
 import checkPageCollection from "./check-page-collection.js"; // verified

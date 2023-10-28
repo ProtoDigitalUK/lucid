@@ -61,6 +61,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     environment_key: data.environment_key,
     collection_key: data.collection_key,
     parent_id: parentId,
+    language_id: data.language_id,
   });
 
   // Await all parallel checks and also get the slug

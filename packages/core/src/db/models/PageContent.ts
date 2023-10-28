@@ -1,9 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import {
-  queryDataFormat,
-  SelectQueryBuilder,
-} from "@utils/app/query-helpers.js";
+import { aliasGenerator } from "@utils/app/query-helpers.js";
 
 // -------------------------------------------
 // Page
@@ -28,6 +25,7 @@ export default class PageContent {
       data.slug,
       data.collection_key,
       data.environment_key,
+      data.language_id,
     ];
     if (data.parent_id) values.push(data.parent_id);
 
@@ -46,9 +44,11 @@ export default class PageContent {
           lucid_pages.collection_key = $3
         AND
           lucid_pages.environment_key = $4
+        AND
+          lucid_page_content.language_id = $5
         ${
           data.parent_id
-            ? `AND lucid_pages.parent_id = $5`
+            ? `AND lucid_pages.parent_id = $6`
             : `AND lucid_pages.parent_id IS NULL`
         }`,
       values: values,
@@ -72,14 +72,61 @@ export default class PageContent {
 
     return pageContent.rows[0];
   };
+  static createMultiple: PageContentCreateMultiple = async (client, data) => {
+    if (data.length === 0) return [];
+
+    const aliases = aliasGenerator({
+      columns: [
+        {
+          key: "language_id",
+        },
+        {
+          key: "page_id",
+        },
+        {
+          key: "title",
+        },
+        {
+          key: "slug",
+        },
+        {
+          key: "excerpt",
+        },
+      ],
+      rows: data.length,
+    });
+    const dataValues = data.flatMap((item) => {
+      return [
+        item.language_id,
+        item.page_id,
+        item.title,
+        item.slug,
+        item.excerpt || null,
+      ];
+    });
+
+    const contentRes = await client.query<{
+      id: PageContentT["id"];
+    }>(
+      `INSERT INTO 
+          lucid_page_content (language_id, page_id, title, slug, excerpt) 
+        VALUES 
+          ${aliases}
+        RETURNING id`,
+      dataValues
+    );
+
+    return contentRes.rows;
+  };
   static getOldHomepages: PageContentGetOldHomepages = async (client, data) => {
     const result = await client.query<{
       id: number;
       title: string;
       page_id: number;
+      language_id: number;
     }>({
       text: `
-        SELECT lucid_page_content.id, lucid_page_content.title, lucid_pages.id AS page_id
+        SELECT lucid_page_content.id, lucid_page_content.title, lucid_pages.id AS page_id, lucid_page_content.language_id
         FROM lucid_page_content
         JOIN lucid_pages
         ON lucid_page_content.page_id = lucid_pages.id
@@ -104,9 +151,10 @@ export default class PageContent {
         JOIN lucid_pages
         ON lucid_page_content.page_id = lucid_pages.id
         WHERE lucid_page_content.slug = $1
-        AND lucid_page_content.id != $2
-        AND lucid_pages.environment_key = $3`,
-      values: [data.slug, data.id, data.environment_key],
+        AND lucid_page_content.language_id = $2
+        AND lucid_page_content.id != $3
+        AND lucid_pages.environment_key = $4`,
+      values: [data.slug, data.language_id, data.id, data.environment_key],
     });
     return Number(slugExists.rows[0].count) > 0;
   };
@@ -134,6 +182,7 @@ type PageContentGetSlugCount = (
     environment_key: string;
     collection_key: string;
     parent_id?: number;
+    language_id: number;
   }
 ) => Promise<number>;
 
@@ -150,6 +199,21 @@ type PageContentCreateSingle = (
   id: PageContentT["id"];
 }>;
 
+type PageContentCreateMultiple = (
+  client: PoolClient,
+  data: {
+    language_id: number;
+    page_id: number;
+    title: string;
+    slug: string;
+    excerpt?: string;
+  }[]
+) => Promise<
+  {
+    id: PageContentT["id"];
+  }[]
+>;
+
 type PageContentGetOldHomepages = (
   client: PoolClient,
   data: {
@@ -161,6 +225,7 @@ type PageContentGetOldHomepages = (
     id: number;
     title: string;
     page_id: number;
+    language_id: number;
   }>
 >;
 
@@ -169,6 +234,7 @@ type PageContentCheckSlugExistence = (
   data: {
     slug: string;
     id: number;
+    language_id: number;
     environment_key: string;
   }
 ) => Promise<boolean>;
