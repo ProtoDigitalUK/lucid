@@ -4,6 +4,8 @@ import r from "@utils/app/route.js";
 import createSingle from "@controllers/languages/create-single.js";
 import getSingle from "@controllers/languages/get-single.js";
 import getMultiple from "@controllers/languages/get-multiple.js";
+import updateSingle from "@controllers/languages/update-single.js";
+import deleteSingle from "@controllers/languages/delete-single.js";
 
 // ------------------------------------
 // Router
@@ -42,6 +44,34 @@ r(router, {
   },
   schema: getSingle.schema,
   controller: getSingle.controller,
+});
+
+r(router, {
+  method: "patch",
+  path: "/:code",
+  permissions: {
+    global: ["update_language"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: updateSingle.schema,
+  controller: updateSingle.controller,
+});
+
+r(router, {
+  method: "delete",
+  path: "/:code",
+  permissions: {
+    global: ["delete_language"],
+  },
+  middleware: {
+    authenticate: true,
+    authoriseCSRF: true,
+  },
+  schema: deleteSingle.schema,
+  controller: deleteSingle.controller,
 });
 
 export default router;

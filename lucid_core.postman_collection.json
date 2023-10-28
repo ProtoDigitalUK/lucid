@@ -275,26 +275,6 @@
 			"name": "Languages",
 			"item": [
 				{
-					"name": "Get Options (todo)",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/languages/options",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"languages",
-								"options"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get Multiple",
 					"request": {
 						"method": "GET",
@@ -361,7 +341,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"fra\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"raw": "{\r\n    \"code\": \"en-gb\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -384,7 +364,7 @@
 					"response": []
 				},
 				{
-					"name": "Update Single (todo)",
+					"name": "Update Single",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -396,7 +376,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"raw": "{\r\n    \"code\": \"en-us\",\r\n    \"is_default\": true,\r\n    \"is_enabled\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -404,7 +384,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/languages/1",
+							"raw": "{{BASE_URL}}/api/v1/languages/en-gb",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -412,7 +392,7 @@
 								"api",
 								"v1",
 								"languages",
-								"1"
+								"en-gb"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -420,7 +400,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete Single (todo)",
+					"name": "Delete Single",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -440,7 +420,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/languages/1",
+							"raw": "{{BASE_URL}}/api/v1/languages/en-us",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -448,7 +428,7 @@
 								"api",
 								"v1",
 								"languages",
-								"1"
+								"en-us"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."

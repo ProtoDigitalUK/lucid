@@ -14,6 +14,9 @@
   "error_not_found": "We couldn't find the {{type}} you were looking for.",
   "error_invalid": "Invalid {{type}}",
   "error_create": "Error creating {{type}}",
+  "error_update": "Error updating {{type}}",
+  "error_delete": "Error deleting {{type}}",
+  "error_min_one": "You must have at least one {{type}}",
 
   "language": "Language",
   "language_iso_639_1": "ISO 639-1"

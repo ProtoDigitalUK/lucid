@@ -36,6 +36,26 @@ const getMultipleParams = z.object({});
 const getMultipleBody = z.object({});
 
 // ------------------------------------
+// UPDATE SINGLE
+const updateSingleBody = z.object({
+  code: z.string().min(2).optional(), // ISO 639-1 - bcp47
+  is_default: z.boolean().optional(),
+  is_enabled: z.boolean().optional(),
+});
+const updateSingleQuery = z.object({});
+const updateSingleParams = z.object({
+  code: z.string().min(2), // ISO 639-1 - bcp47
+});
+
+// ------------------------------------
+// DELETE SINGLE
+const deleteSingleBody = z.object({});
+const deleteSingleQuery = z.object({});
+const deleteSingleParams = z.object({
+  code: z.string().min(2), // ISO 639-1 - bcp47
+});
+
+// ------------------------------------
 // EXPORT
 export default {
   createSingle: {
@@ -52,5 +72,15 @@ export default {
     query: getMultipleQuery,
     params: getMultipleParams,
     body: getMultipleBody,
+  },
+  updateSingle: {
+    body: updateSingleBody,
+    query: updateSingleQuery,
+    params: updateSingleParams,
+  },
+  deleteSingle: {
+    body: deleteSingleBody,
+    query: deleteSingleQuery,
+    params: deleteSingleParams,
   },
 };

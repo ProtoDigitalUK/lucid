@@ -61,6 +61,39 @@ export default class Language {
 
     return roleRes.rows[0];
   };
+  static updateSingle: LanguageUpdateSingle = async (client, data) => {
+    const { columns, aliases, values } = queryDataFormat({
+      columns: ["code", "is_default", "is_enabled", "updated_at"],
+      values: [
+        data.data.code,
+        data.data.is_default,
+        data.data.is_enabled,
+        data.data.updated_at,
+      ],
+    });
+
+    const roleRes = await client.query<{
+      id: LanguageT["id"];
+    }>({
+      text: `UPDATE lucid_languages SET ${
+        columns.formatted.update
+      } WHERE code = $${aliases.value.length + 1} RETURNING id`,
+      values: [...values.value, data.code],
+    });
+
+    return roleRes.rows[0];
+  };
+  static deleteSingle: LanguageDeleteSingle = async (client, data) => {
+    const lang = await client.query<{
+      id: LanguageT["id"];
+      is_default: LanguageT["is_default"];
+    }>({
+      text: `DELETE FROM lucid_languages WHERE code = $1 RETURNING id, is_default`,
+      values: [data.code],
+    });
+
+    return lang.rows[0];
+  };
 }
 
 // -------------------------------------------
@@ -86,3 +119,28 @@ type LanguageGetSingleByCode = (
     code: LanguageT["code"];
   }
 ) => Promise<LanguageT>;
+
+type LanguageUpdateSingle = (
+  client: PoolClient,
+  data: {
+    code: LanguageT["code"];
+    data: {
+      code?: LanguageT["code"];
+      is_default?: LanguageT["is_default"];
+      is_enabled?: LanguageT["is_enabled"];
+      updated_at?: LanguageT["updated_at"];
+    };
+  }
+) => Promise<{
+  id: LanguageT["id"];
+}>;
+
+type LanguageDeleteSingle = (
+  client: PoolClient,
+  data: {
+    code: LanguageT["code"];
+  }
+) => Promise<{
+  id: LanguageT["id"];
+  is_default: LanguageT["is_default"];
+}>;

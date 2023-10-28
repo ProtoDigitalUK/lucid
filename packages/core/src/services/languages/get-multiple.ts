@@ -1,4 +1,3 @@
-import T from "@translations/index.js";
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
