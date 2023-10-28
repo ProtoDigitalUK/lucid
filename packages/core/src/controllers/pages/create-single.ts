@@ -28,6 +28,7 @@ const createSingleController: Controller<
       parent_id: req.body.parent_id,
       category_ids: req.body.category_ids,
       userId: req.auth.id,
+      language_id: req.language.id,
     });
 
     res.status(200).json(

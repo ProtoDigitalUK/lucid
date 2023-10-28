@@ -4,12 +4,14 @@ import { LucidError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
+import PageContent from "@db/models/PageContent.js";
 // Services
 import pageServices from "@services/pages/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
 
 export interface ServiceData {
   environment_key: string;
+  language_id: number;
   title: string;
   slug: string;
   collection_key: string;
@@ -72,11 +74,8 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   // Create page
   const page = await Page.createSingle(client, {
     environment_key: data.environment_key,
-    title: data.title,
-    slug: slug,
     collection_key: data.collection_key,
     homepage: data.homepage,
-    excerpt: data.excerpt,
     published: data.published,
     parent_id: parentId,
     category_ids: data.category_ids,
@@ -88,6 +87,23 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       type: "basic",
       name: "Page Not Created",
       message: "There was an error creating the page",
+      status: 500,
+    });
+  }
+
+  const pageContent = await PageContent.createSingle(client, {
+    language_id: data.language_id,
+    page_id: page.id,
+    title: data.title,
+    slug: slug,
+    excerpt: data.excerpt,
+  });
+
+  if (!pageContent) {
+    throw new LucidError({
+      type: "basic",
+      name: "Page Content Not Created",
+      message: "There was an error creating the page content",
       status: 500,
     });
   }

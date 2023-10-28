@@ -39,17 +39,21 @@ CREATE INDEX idx_lucid_page_content_language_id ON lucid_page_content(language_i
 CREATE OR REPLACE FUNCTION update_full_slug() RETURNS trigger AS $$
 DECLARE
     parent_full_slug TEXT;
+    parent_page_id INTEGER;  -- Renamed variable to avoid ambiguity
 BEGIN
-    -- Get parent's full_slug
-    SELECT full_slug INTO parent_full_slug FROM lucid_page_content WHERE id = NEW.parent_id;
-    
+    -- Get parent_id from lucid_pages table
+    SELECT parent_id INTO parent_page_id FROM lucid_pages WHERE id = NEW.page_id;  -- Adjusted reference to the renamed variable
+
+    -- Get parent's full_slug from lucid_page_content table based on parent_page_id and language_id
+    SELECT full_slug INTO parent_full_slug FROM lucid_page_content WHERE page_id = parent_page_id AND language_id = NEW.language_id;  -- Adjusted reference to the renamed variable
+
     -- Compute new full_slug for the updated/inserted row
     IF parent_full_slug IS NULL THEN
         NEW.full_slug := NEW.slug;
     ELSE
         NEW.full_slug := parent_full_slug || '/' || NEW.slug;
     END IF;
-    
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

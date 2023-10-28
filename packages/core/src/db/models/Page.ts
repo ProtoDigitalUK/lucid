@@ -8,152 +8,6 @@ import {
 import { BrickResT } from "@lucid/types/src/bricks.js";
 
 // -------------------------------------------
-// Types
-type PageGetMultiple = (
-  client: PoolClient,
-  query_instance: SelectQueryBuilder
-) => Promise<{
-  data: PageT[];
-  count: number;
-}>;
-
-type PageGetSingle = (
-  client: PoolClient,
-  query_instance: SelectQueryBuilder
-) => Promise<PageT>;
-
-type PageGetSingleBasic = (
-  client: PoolClient,
-  data: {
-    id: number;
-    environment_key: string;
-  }
-) => Promise<PageT>;
-
-type PageGetSlugCount = (
-  client: PoolClient,
-  data: {
-    slug: string;
-    environment_key: string;
-    collection_key: string;
-    parent_id?: number;
-  }
-) => Promise<number>;
-
-type PageCreateSingle = (
-  client: PoolClient,
-  data: {
-    userId: number;
-    environment_key: string;
-    title: string;
-    slug: string;
-    collection_key: string;
-    homepage?: boolean;
-    excerpt?: string;
-    published?: boolean;
-    parent_id?: number;
-    category_ids?: Array<number>;
-  }
-) => Promise<{
-  id: PageT["id"];
-}>;
-
-type PageUpdateSingle = (
-  client: PoolClient,
-  data: {
-    id: number;
-    environment_key: string;
-
-    title?: string;
-    slug?: string;
-    homepage?: boolean;
-    parent_id?: number | null;
-    category_ids?: Array<number>;
-    published?: boolean;
-    author_id?: number | null;
-    excerpt?: string;
-  }
-) => Promise<{
-  id: PageT["id"];
-}>;
-
-type PageDeleteSingle = (
-  client: PoolClient,
-  data: { id: number }
-) => Promise<{
-  id: PageT["id"];
-}>;
-
-type PageDeleteMultiple = (
-  client: PoolClient,
-  data: { ids: Array<number> }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
-
-type PageGetMultipleByIds = (
-  client: PoolClient,
-  data: {
-    ids: Array<number>;
-    environment_key: string;
-  }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
-
-type PageGetNonCurrentHomepages = (
-  client: PoolClient,
-  data: {
-    current_id: number;
-    environment_key: string;
-  }
-) => Promise<PageT[]>;
-
-type PageCheckSlugExistence = (
-  client: PoolClient,
-  data: {
-    slug: string;
-    id: number;
-    environment_key: string;
-  }
-) => Promise<boolean>;
-
-type PageUpdatePageToNonHomepage = (
-  client: PoolClient,
-  data: {
-    id: number;
-    slug: string;
-  }
-) => Promise<PageT>;
-
-type PageCheckParentAncestry = (
-  client: PoolClient,
-  data: {
-    page_id: number;
-    parent_id: number;
-  }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
-
-type PageGetValidParents = (
-  client: PoolClient,
-  data: {
-    page_id: number;
-    query_instance: SelectQueryBuilder;
-  }
-) => Promise<{
-  data: PageT[];
-  count: number;
-}>;
-
-// -------------------------------------------
 // Page
 export type PageT = {
   id: number;
@@ -252,16 +106,14 @@ export default class Page {
     const page = await client.query<{
       id: PageT["id"];
     }>({
-      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by, author_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9) RETURNING id`,
+      text: `INSERT INTO lucid_pages (environment_key, homepage, collection_key, published, parent_id, created_by, author_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
       values: [
         data.environment_key,
-        data.title,
-        data.slug,
         data.homepage || false,
         data.collection_key,
-        data.excerpt || null,
         data.published || false,
-        data.parent_id,
+        data.parent_id || null,
+        data.userId,
         data.userId,
       ],
     });
@@ -355,58 +207,14 @@ export default class Page {
 
     return page.rows[0];
   };
-  static getSlugCount: PageGetSlugCount = async (client, data) => {
-    const values: Array<any> = [
-      data.slug,
-      data.collection_key,
-      data.environment_key,
-    ];
-    if (data.parent_id) values.push(data.parent_id);
 
-    const slugCount = await client.query<{ count: string }>({
-      // where slug is like, slug-example, slug-example-1, slug-example-2
-      text: `SELECT COUNT(*) 
-        FROM 
-          lucid_pages 
-        WHERE slug ~ '^${data.slug}-\\d+$' 
-        OR 
-          slug = $1
-        AND
-          collection_key = $2
-        AND
-          environment_key = $3
-        ${data.parent_id ? `AND parent_id = $4` : `AND parent_id IS NULL`}`,
-      values: values,
-    });
-
-    return Number(slugCount.rows[0].count);
-  };
-  static getNonCurrentHomepages: PageGetNonCurrentHomepages = async (
-    client,
-    data
-  ) => {
-    const result = await client.query({
-      text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-      values: [data.current_id, data.environment_key],
-    });
-    return result.rows;
-  };
-  static checkSlugExistence: PageCheckSlugExistence = async (client, data) => {
-    const slugExists = await client.query<{
-      count: string;
-    }>({
-      text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
-      values: [data.slug, data.id, data.environment_key],
-    });
-    return Number(slugExists.rows[0].count) > 0;
-  };
-  static updatePageToNonHomepage: PageUpdatePageToNonHomepage = async (
+  static updateSingleHomepageFalse: PageUpdateSingleHomepageFalse = async (
     client,
     data
   ) => {
     const updateRes = await client.query({
-      text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
-      values: [data.id, data.slug],
+      text: `UPDATE lucid_pages SET homepage = false, parent_id = null WHERE id = $1`,
+      values: [data.id],
     });
 
     return updateRes.rows[0];
@@ -490,3 +298,118 @@ export default class Page {
     };
   };
 }
+
+// -------------------------------------------
+// Types
+type PageGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
+  data: PageT[];
+  count: number;
+}>;
+
+type PageGetSingle = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<PageT>;
+
+type PageGetSingleBasic = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+  }
+) => Promise<PageT>;
+
+type PageCreateSingle = (
+  client: PoolClient,
+  data: {
+    userId: number;
+    environment_key: string;
+    collection_key: string;
+    homepage?: boolean;
+    published?: boolean;
+    parent_id?: number;
+    category_ids?: Array<number>;
+  }
+) => Promise<{
+  id: PageT["id"];
+}>;
+
+type PageUpdateSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+
+    title?: string;
+    slug?: string;
+    homepage?: boolean;
+    parent_id?: number | null;
+    category_ids?: Array<number>;
+    published?: boolean;
+    author_id?: number | null;
+    excerpt?: string;
+  }
+) => Promise<{
+  id: PageT["id"];
+}>;
+
+type PageDeleteSingle = (
+  client: PoolClient,
+  data: { id: number }
+) => Promise<{
+  id: PageT["id"];
+}>;
+
+type PageDeleteMultiple = (
+  client: PoolClient,
+  data: { ids: Array<number> }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
+type PageGetMultipleByIds = (
+  client: PoolClient,
+  data: {
+    ids: Array<number>;
+    environment_key: string;
+  }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
+type PageUpdateSingleHomepageFalse = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<void>;
+
+type PageCheckParentAncestry = (
+  client: PoolClient,
+  data: {
+    page_id: number;
+    parent_id: number;
+  }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
+type PageGetValidParents = (
+  client: PoolClient,
+  data: {
+    page_id: number;
+    query_instance: SelectQueryBuilder;
+  }
+) => Promise<{
+  data: PageT[];
+  count: number;
+}>;

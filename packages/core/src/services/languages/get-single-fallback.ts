@@ -4,8 +4,6 @@ import { PoolClient } from "pg";
 import { LucidError } from "@utils/app/error-handler.js";
 // Models
 import Language from "@db/models/Language.js";
-// Format
-import formatLanguage from "@utils/format/format-language.js";
 
 export interface ServiceData {
   code?: string;
@@ -27,7 +25,10 @@ const getSingleFallback = async (client: PoolClient, data: ServiceData) => {
         status: 404,
       });
     }
-    return formatLanguage(language);
+    return {
+      id: language.id,
+      code: language.code,
+    };
   }
 
   const language = await Language.getSingleByCode(client, {
@@ -47,7 +48,10 @@ const getSingleFallback = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return formatLanguage(language);
+  return {
+    id: language.id,
+    code: language.code,
+  };
 };
 
 export default getSingleFallback;

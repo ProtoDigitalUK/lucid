@@ -10,7 +10,10 @@ declare global {
         email: string;
         username: string;
       };
-      language: LanguageResT;
+      language: {
+        id: LanguageResT["id"];
+        code: LanguageResT["code"];
+      };
     }
   }
 
