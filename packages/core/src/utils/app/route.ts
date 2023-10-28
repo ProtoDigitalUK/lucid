@@ -8,6 +8,7 @@ import paginated from "@middleware/paginated.js";
 import validateEnvironment from "@middleware/validate-environment.js";
 import permissions from "@middleware/permissions.js";
 import fileUpload from "@middleware/file-upload.js";
+import contentLanguage from "@middleware/content-language.js";
 // Types
 import {
   PermissionT,
@@ -33,6 +34,7 @@ type Route = <
       authoriseCSRF?: boolean;
       paginated?: boolean;
       validateEnvironment?: boolean;
+      contentLanguage?: boolean;
     };
     schema?: {
       params?: ParamsT;
@@ -91,6 +93,11 @@ const route: Route = (router, props) => {
   // set middleware for permissions
   if (props.permissions) {
     middleware.push(permissions(props.permissions));
+  }
+
+  // set middleware for content language
+  if (props.middleware?.contentLanguage) {
+    middleware.push(contentLanguage);
   }
 
   switch (method) {

@@ -1,4 +1,5 @@
-import { Request, Response, Express } from "express";
+import type { Request, Response, Express } from "express";
+import type { LanguageResT } from "@lucid/types/src/language.js";
 import z from "zod";
 
 declare global {
@@ -9,6 +10,7 @@ declare global {
         email: string;
         username: string;
       };
+      language: LanguageResT;
     }
   }
 

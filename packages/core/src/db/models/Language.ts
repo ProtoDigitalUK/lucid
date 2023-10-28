@@ -61,6 +61,13 @@ export default class Language {
 
     return roleRes.rows[0];
   };
+  static getDefault: LanguageGetDefault = async (client) => {
+    const roleRes = await client.query<LanguageT>({
+      text: `SELECT * FROM lucid_languages WHERE is_default = true`,
+    });
+
+    return roleRes.rows[0];
+  };
   static updateSingle: LanguageUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: ["code", "is_default", "is_enabled", "updated_at"],
@@ -144,3 +151,5 @@ type LanguageDeleteSingle = (
   id: LanguageT["id"];
   is_default: LanguageT["is_default"];
 }>;
+
+type LanguageGetDefault = (client: PoolClient) => Promise<LanguageT>;
