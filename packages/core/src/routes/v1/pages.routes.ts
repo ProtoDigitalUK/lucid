@@ -36,7 +36,6 @@ r(router, {
     authenticate: true,
     authoriseCSRF: true,
     validateEnvironment: true,
-    contentLanguage: true,
   },
   schema: createSingle.schema,
   controller: createSingle.controller,

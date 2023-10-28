@@ -30,14 +30,21 @@ const getMultipleParams = z.object({});
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  title: z.string().min(2),
-  slug: z.string().min(2).toLowerCase(),
   collection_key: z.string(),
   homepage: z.boolean().optional(),
-  excerpt: z.string().optional(),
   published: z.boolean().optional(),
   parent_id: z.number().optional(),
   category_ids: z.array(z.number()).optional(),
+  translations: z
+    .array(
+      z.object({
+        language_code: z.string().min(2),
+        title: z.string().min(2),
+        slug: z.string().min(2).toLowerCase(),
+        excerpt: z.string().optional(),
+      })
+    )
+    .min(1),
 });
 const createSingleQuery = z.object({});
 const createSingleParams = z.object({});

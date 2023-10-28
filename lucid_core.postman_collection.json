@@ -1073,7 +1073,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"title\": \"Dog Walking\",\n    \"slug\": \"cat-walking\",\n    // \"homepage\": true,\n    \"parent_id\": 12,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"raw": "{\n    \"translations\": [\n        {\n            \"language_code\": \"en\",\n            \"title\": \"Homepage\",\n            \"slug\": \"homepage\",\n            \"excerpt\": \"Excerpt\"\n        },\n        {\n            \"language_code\": \"en-gb\",\n            \"title\": \"Homepage\",\n            \"slug\": \"homepage\",\n            \"excerpt\": \"UK Excerpt\"\n        }\n    ],\n    \"homepage\": true,\n    // \"parent_id\": 12,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1112,7 +1112,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"author_id\": 2\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
+													"raw": "{\n    \"title\": \"Test Page\",\n    \"slug\": \"test-page\",\n    \"excerpt\": \"\"\n\n    // \"author_id\": 2,\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
 													"options": {
 														"raw": {
 															"language": "json"

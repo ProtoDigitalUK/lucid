@@ -101,6 +101,20 @@ export default class Language {
 
     return lang.rows[0];
   };
+  static getMultipleByCodes: LanguageGetMultipleByCodes = async (
+    client,
+    data
+  ) => {
+    const languages = await client.query<{
+      id: LanguageT["id"];
+      code: LanguageT["code"];
+    }>({
+      text: `SELECT id, code FROM lucid_languages WHERE code = ANY($1::text[])`,
+      values: [data.codes],
+    });
+
+    return languages.rows;
+  };
 }
 
 // -------------------------------------------
@@ -153,3 +167,15 @@ type LanguageDeleteSingle = (
 }>;
 
 type LanguageGetDefault = (client: PoolClient) => Promise<LanguageT>;
+
+type LanguageGetMultipleByCodes = (
+  client: PoolClient,
+  data: {
+    codes: LanguageT["code"][];
+  }
+) => Promise<
+  {
+    id: LanguageT["id"];
+    code: LanguageT["code"];
+  }[]
+>;

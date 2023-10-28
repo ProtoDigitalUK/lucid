@@ -4,23 +4,25 @@ import { LucidError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
-import PageContent from "@db/models/PageContent.js";
 // Services
 import pageServices from "@services/pages/index.js";
+import pageContentServices from "@services/page-content/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
 
 export interface ServiceData {
   environment_key: string;
-  language_id: number;
-  title: string;
-  slug: string;
   collection_key: string;
   homepage?: boolean;
-  excerpt?: string;
   published?: boolean;
   parent_id?: number;
   category_ids?: number[];
   userId: number;
+  translations: {
+    language_code: string;
+    title: string;
+    slug: string;
+    excerpt?: string;
+  }[];
 }
 
 const createSingle = async (client: PoolClient, data: ServiceData) => {
@@ -51,25 +53,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       })
     : Promise.resolve();
 
-  const buildUniqueSlugPromise = service(
-    pageServices.buildUniqueSlug,
-    false,
-    client
-  )({
-    slug: data.slug,
-    homepage: data.homepage || false,
-    environment_key: data.environment_key,
-    collection_key: data.collection_key,
-    parent_id: parentId,
-    language_id: data.language_id,
-  });
-
-  // Await all parallel checks and also get the slug
-  const [_, __, slug] = await Promise.all([
-    checkPageCollectionPromise,
-    parentCheckPromise,
-    buildUniqueSlugPromise,
-  ]);
+  await Promise.all([checkPageCollectionPromise, parentCheckPromise]);
 
   // -------------------------------------------
   // Create page
@@ -92,24 +76,21 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  const pageContent = await PageContent.createSingle(client, {
-    language_id: data.language_id,
+  // -------------------------------------------
+  // Create page content
+  const pageContentPromise = service(
+    pageContentServices.createMultiple,
+    false,
+    client
+  )({
     page_id: page.id,
-    title: data.title,
-    slug: slug,
-    excerpt: data.excerpt,
+    homepage: data.homepage || false,
+    environment_key: data.environment_key,
+    collection_key: data.collection_key,
+    parent_id: parentId,
+    translations: data.translations,
   });
 
-  if (!pageContent) {
-    throw new LucidError({
-      type: "basic",
-      name: "Page Content Not Created",
-      message: "There was an error creating the page content",
-      status: 500,
-    });
-  }
-
-  // Parallel Operations
   const pageCategoryServicePromise = data.category_ids
     ? service(
         pageCategoryService.createMultiple,
@@ -133,7 +114,11 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       })
     : Promise.resolve();
 
-  await Promise.all([pageCategoryServicePromise, resetHomepagesPromise]);
+  await Promise.all([
+    pageContentPromise,
+    pageCategoryServicePromise,
+    resetHomepagesPromise,
+  ]);
 
   return undefined;
 };
