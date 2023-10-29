@@ -16,8 +16,8 @@ export interface ServiceData {
   parent_id?: number;
   translations: {
     language_code: string;
-    title: string;
-    slug: string;
+    title?: string;
+    slug?: string;
     excerpt?: string;
   }[];
 }
@@ -25,8 +25,8 @@ export interface ServiceData {
 interface TranslationsT {
   language_code: string;
   language_id: number;
-  title: string;
-  slug: string;
+  title?: string;
+  slug?: string;
   excerpt?: string;
 }
 
@@ -55,6 +55,7 @@ const buildUniqueSlugs = async (
   client: PoolClient
 ) => {
   const slugPromises = translations.map((translation) => {
+    if (!translation.slug) return Promise.resolve(undefined);
     return service(
       pageServices.buildUniqueSlug,
       false,
@@ -77,7 +78,7 @@ const createPageContents = async (
   client: PoolClient
 ) => {
   await service(
-    PageContent.createMultiple,
+    PageContent.createOrUpdateMultiple,
     false,
     client
   )(
@@ -91,8 +92,10 @@ const createPageContents = async (
   );
 };
 
-const createMultiple = async (client: PoolClient, data: ServiceData) => {
+const upsertMultiple = async (client: PoolClient, data: ServiceData) => {
   try {
+    if (data.translations.length === 0) return undefined;
+
     const languages = await Language.getMultipleByCodes(client, {
       codes: data.translations.map((translation) => translation.language_code),
     });
@@ -101,13 +104,13 @@ const createMultiple = async (client: PoolClient, data: ServiceData) => {
       data.translations,
       languages
     );
+
     const uniqueSlugs = await buildUniqueSlugs(
       preparedTranslations,
       data,
       client
     );
 
-    // Merge uniqueSlugs with preparedTranslations
     const translationsWithUniqueSlugs = preparedTranslations.map(
       (translation, index) => ({
         ...translation,
@@ -119,9 +122,8 @@ const createMultiple = async (client: PoolClient, data: ServiceData) => {
 
     return undefined;
   } catch (error) {
-    console.log("her", error);
     throw error;
   }
 };
 
-export default createMultiple;
+export default upsertMultiple;

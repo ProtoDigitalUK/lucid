@@ -2,8 +2,8 @@ import createSingle from "./create-single.js"; // verified
 import deleteSingle from "./delete-single.js";
 import getMultiple from "./get-multiple.js";
 import getSingle from "./get-single.js";
-import updateSingle from "./update-single.js";
-import checkPageExists from "./check-page-exists.js";
+import updateSingle from "./update-single.js"; // verified
+import checkPageExists from "./check-page-exists.js"; // verified
 import buildUniqueSlug from "./build-unique-slug.js"; // verified
 import parentChecks from "./parent-checks.js"; // verified
 import resetHomepages from "./reset-homepages.js"; // verified

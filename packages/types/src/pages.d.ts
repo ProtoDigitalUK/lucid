@@ -9,7 +9,6 @@ export interface PagesResT {
 
   title: string;
   slug: string;
-  full_slug: string;
   homepage: boolean;
   excerpt: string | null;
 

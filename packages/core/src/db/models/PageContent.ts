@@ -11,7 +11,6 @@ export type PageContentT = {
 
   title: string;
   slug: string;
-  full_slug: string;
   excerpt: string | null;
 
   created_at: string;
@@ -21,7 +20,6 @@ export type PageContentT = {
 export default class PageContent {
   static getSlugCount: PageContentGetSlugCount = async (client, data) => {
     const values: Array<any> = [
-      data.slug,
       data.slug,
       data.collection_key,
       data.environment_key,
@@ -39,16 +37,16 @@ export default class PageContent {
         ON
           lucid_page_content.page_id = lucid_pages.id
         WHERE 
-          (slug ~ '^$2-\\d+$' OR slug = $1)
+          (slug ~ ('^' || $1 || '-\\d+$') OR slug = $1)
         AND
-          lucid_pages.collection_key = $3
+          lucid_pages.collection_key = $2
         AND
-          lucid_pages.environment_key = $4
+          lucid_pages.environment_key = $3
         AND
-          lucid_page_content.language_id = $5
+          lucid_page_content.language_id = $4
         ${
           data.parent_id
-            ? `AND lucid_pages.parent_id = $6`
+            ? `AND lucid_pages.parent_id = $5`
             : `AND lucid_pages.parent_id IS NULL`
         }`,
       values: values,
@@ -72,7 +70,10 @@ export default class PageContent {
 
     return pageContent.rows[0];
   };
-  static createMultiple: PageContentCreateMultiple = async (client, data) => {
+  static createOrUpdateMultiple: PageContentCreateOrUpdateMultiple = async (
+    client,
+    data
+  ) => {
     if (data.length === 0) return [];
 
     const aliases = aliasGenerator({
@@ -109,9 +110,14 @@ export default class PageContent {
       id: PageContentT["id"];
     }>(
       `INSERT INTO 
-          lucid_page_content (language_id, page_id, title, slug, excerpt) 
+          lucid_page_content (language_id, page_id, title, slug, excerpt)
         VALUES 
           ${aliases}
+        ON CONFLICT (page_id, language_id)
+        DO UPDATE SET
+          title = EXCLUDED.title,
+          slug = EXCLUDED.slug,
+          excerpt = EXCLUDED.excerpt
         RETURNING id`,
       dataValues
     );
@@ -199,13 +205,13 @@ type PageContentCreateSingle = (
   id: PageContentT["id"];
 }>;
 
-type PageContentCreateMultiple = (
+type PageContentCreateOrUpdateMultiple = (
   client: PoolClient,
   data: {
     language_id: number;
     page_id: number;
-    title: string;
-    slug: string;
+    title?: string;
+    slug?: string;
     excerpt?: string;
   }[]
 ) => Promise<

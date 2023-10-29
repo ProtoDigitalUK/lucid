@@ -17,7 +17,6 @@ export type PageT = {
 
   title: string;
   slug: string;
-  full_slug: string;
   homepage: boolean;
   excerpt: string | null;
   categories?: Array<number> | null;
@@ -123,9 +122,6 @@ export default class Page {
   static updateSingle: PageUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
-        "title",
-        "slug",
-        "excerpt",
         "published",
         "published_at",
         "author_id",
@@ -133,9 +129,6 @@ export default class Page {
         "homepage",
       ],
       values: [
-        data.title,
-        data.slug,
-        data.excerpt,
         data.published,
         data.published ? new Date() : null,
         data.author_id,

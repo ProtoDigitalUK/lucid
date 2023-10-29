@@ -61,7 +61,6 @@ export interface PageLinkValueT {
 
 export interface PageLinkMetaT {
   slug?: string;
-  full_slug?: string;
 }
 
 export interface LinkValueT {

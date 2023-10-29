@@ -1,5 +1,5 @@
-import createMultiple from "./create-multiple.js";
+import upsertMultiple from "./upsert-multiple.js";
 
 export default {
-  createMultiple,
+  upsertMultiple,
 };

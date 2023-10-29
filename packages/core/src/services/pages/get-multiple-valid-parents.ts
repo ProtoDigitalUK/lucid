@@ -34,7 +34,6 @@ const getMultipleValidParents = async (
       "parent_id",
       "title",
       "slug",
-      "full_slug",
       "homepage",
       "excerpt",
       "published",

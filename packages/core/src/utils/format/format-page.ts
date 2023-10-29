@@ -12,7 +12,6 @@ const formatPage = (data: PageT, collections: CollectionResT[]): PagesResT => {
 
     title: data.title,
     slug: data.slug,
-    full_slug: data.full_slug,
     homepage: data.homepage,
     excerpt: data.excerpt,
 
@@ -43,38 +42,6 @@ const formatPage = (data: PageT, collections: CollectionResT[]): PagesResT => {
   // Categories
   if (res.categories) {
     res.categories = res.categories[0] === null ? [] : res.categories;
-  }
-  // Full Slug
-  res.full_slug = formatFullSlug(data, collections);
-
-  return res;
-};
-
-export const formatFullSlug = (
-  data: {
-    full_slug?: string;
-    homepage?: boolean;
-    collection_key?: string;
-  },
-  collections: CollectionResT[]
-): string => {
-  let res = data.full_slug || "";
-
-  // Full Slug
-  if (res && !data.homepage) {
-    // append collection path
-    const collection = collections.find(
-      (collection) => collection.key === data.collection_key
-    );
-    if (collection && collection.path) {
-      res = `${collection.path}/${res}`;
-    }
-    // add leading slash
-    if (!res.startsWith("/")) {
-      res = "/" + res;
-    }
-    // remove double slashes
-    res = res.replace(/\/+/g, "/");
   }
 
   return res;

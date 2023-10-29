@@ -32,7 +32,6 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       "parent_id",
       "title",
       "slug",
-      "full_slug",
       "homepage",
       "excerpt",
       "published",

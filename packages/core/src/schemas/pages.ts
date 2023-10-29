@@ -62,14 +62,21 @@ const getSingleParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
-  title: z.string().optional(),
-  slug: z.string().optional(),
   homepage: z.boolean().optional(),
   parent_id: z.number().nullable().optional(),
   author_id: z.number().nullable().optional(),
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
-  excerpt: z.string().optional(),
+  translations: z
+    .array(
+      z.object({
+        language_code: z.string().min(2),
+        title: z.string().min(2).optional(),
+        slug: z.string().min(2).toLowerCase().optional(),
+        excerpt: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

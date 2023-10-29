@@ -79,7 +79,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   // -------------------------------------------
   // Create page content
   const pageContentPromise = service(
-    pageContentServices.createMultiple,
+    pageContentServices.upsertMultiple,
     false,
     client
   )({

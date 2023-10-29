@@ -45,7 +45,6 @@ export type CollectionBrickFieldsT = {
   linked_page: {
     title: string | null;
     slug: string | null;
-    full_slug: string | null;
     homepage: boolean | null;
     collection_key: string | null;
   };
@@ -93,7 +92,6 @@ export default class CollectionBrick {
         json_build_object(
           'title', lucid_pages.title,
           'slug', lucid_pages.slug,
-          'full_slug', lucid_pages.full_slug,
           'homepage', lucid_pages.homepage,
           'collection_key', lucid_pages.collection_key
         ) as linked_page,

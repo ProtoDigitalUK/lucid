@@ -21,14 +21,12 @@ const updateSingleController: Controller<
       id: parseInt(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
 
-      title: req.body.title,
-      slug: req.body.slug,
       homepage: req.body.homepage,
       parent_id: req.body.parent_id,
       author_id: req.body.author_id,
       category_ids: req.body.category_ids,
       published: req.body.published,
-      excerpt: req.body.excerpt,
+      translations: req.body.translations,
     });
 
     res.status(200).json(
