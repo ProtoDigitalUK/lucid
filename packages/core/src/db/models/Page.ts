@@ -22,6 +22,11 @@ export type PageT = {
     excerpt: string | null;
     language_id: number;
   }>;
+  title?: string;
+  slug?: string;
+  excerpt?: string | null;
+  language_id?: number;
+
   categories?: Array<number> | null;
 
   bricks?: Array<BrickResT> | null;
@@ -44,42 +49,55 @@ export default class Page {
   static getMultiple: PageGetMultiple = async (client, query_instance) => {
     const pages = client.query<PageT>({
       text: `SELECT
-          ${query_instance.query.select},
-          lucid_users.email AS author_email,
-          lucid_users.username AS author_username,
-          lucid_users.first_name AS author_first_name,
-          lucid_users.last_name AS author_last_name,
-          COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
-        FROM
-          lucid_pages
-        LEFT JOIN
-          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
-        LEFT JOIN
-          lucid_users ON lucid_pages.author_id = lucid_users.id
-        ${query_instance.query.where}
-        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name
-        ${query_instance.query.order}
-        ${query_instance.query.pagination}`,
+        ${query_instance.query.select},
+        lucid_users.email AS author_email,
+        lucid_users.username AS author_username,
+        lucid_users.first_name AS author_first_name,
+        lucid_users.last_name AS author_last_name,
+        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
+      FROM
+        lucid_pages
+      INNER JOIN
+        lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+      LEFT JOIN
+        lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+      LEFT JOIN
+        lucid_users ON lucid_pages.author_id = lucid_users.id
+      ${query_instance.query.where}
+      GROUP BY
+        lucid_pages.id,
+        lucid_users.email,
+        lucid_users.username,
+        lucid_users.first_name,
+        lucid_users.last_name,
+        lucid_page_content.title,
+        lucid_page_content.slug,
+        lucid_page_content.excerpt,
+        lucid_page_content.language_id
+      ${query_instance.query.order}
+      ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
     const count = client.query<{ count: string }>({
-      text: `SELECT 
+      text: `SELECT
           COUNT(DISTINCT lucid_pages.id)
         FROM
           lucid_pages
-        LEFT JOIN 
+        LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        INNER JOIN
+          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
         ${query_instance.query.where}
         `,
       values: query_instance.countValues,
     });
 
-    const data = await Promise.all([pages, count]);
+    const res = await Promise.all([pages, count]);
 
     return {
-      data: data[0].rows,
-      count: Number(data[1].rows[0].count),
+      data: res[0].rows,
+      count: Number(res[1].rows[0].count),
     };
   };
   static getSingle: PageGetSingle = async (client, data) => {
@@ -235,7 +253,6 @@ export default class Page {
 
     return page.rows[0];
   };
-
   static updateSingleHomepageFalse: PageUpdateSingleHomepageFalse = async (
     client,
     data
@@ -276,21 +293,23 @@ export default class Page {
   static getValidParents: PageGetValidParents = async (client, data) => {
     const pages = client.query<PageT>({
       text: `WITH RECURSIVE descendants AS (
-            SELECT id, parent_id 
-            FROM lucid_pages 
-            WHERE parent_id = $1
-
-            UNION ALL
-
-            SELECT lp.id, lp.parent_id 
-            FROM lucid_pages lp
-            JOIN descendants d ON lp.parent_id = d.id
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          WHERE lp.parent_id = $1
+    
+          UNION ALL
+    
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          JOIN descendants d ON lp.parent_id = d.id
         )
         
         SELECT
           ${data.query_instance.query.select}
         FROM 
           lucid_pages 
+        INNER JOIN
+          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
         ${data.query_instance.query.where}
         ${data.query_instance.query.order}
         ${data.query_instance.query.pagination}`,
@@ -299,21 +318,23 @@ export default class Page {
 
     const count = client.query<{ count: string }>({
       text: `WITH RECURSIVE descendants AS (
-            SELECT id, parent_id 
-            FROM lucid_pages 
-            WHERE parent_id = $1
-
-            UNION ALL
-
-            SELECT lp.id, lp.parent_id 
-            FROM lucid_pages lp
-            JOIN descendants d ON lp.parent_id = d.id
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          WHERE lp.parent_id = $1
+    
+          UNION ALL
+    
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          JOIN descendants d ON lp.parent_id = d.id
         )
  
         SELECT 
           COUNT(*) 
         FROM 
           lucid_pages
+        INNER JOIN
+          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
         ${data.query_instance.query.where}`,
       values: data.query_instance.countValues,
     });

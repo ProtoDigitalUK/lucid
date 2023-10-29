@@ -2,7 +2,7 @@ import { PageT } from "@db/models/Page.js";
 // Types
 import type { PagesResT } from "@lucid/types/src/pages.js";
 
-const formatPage = (data: PageT): PagesResT => {
+const formatPage = (data: PageT, single_content?: boolean): PagesResT => {
   let res: PagesResT = {
     id: data.id,
     environment_key: data.environment_key,
@@ -10,8 +10,16 @@ const formatPage = (data: PageT): PagesResT => {
     collection_key: data.collection_key,
 
     homepage: data.homepage,
-
-    page_content: data.page_content,
+    page_content: single_content
+      ? [
+          {
+            title: data.title,
+            slug: data.slug,
+            language_id: data.language_id,
+            excerpt: data.excerpt || null,
+          },
+        ]
+      : data.page_content,
 
     created_by: data.created_by,
     created_at: data.created_at,

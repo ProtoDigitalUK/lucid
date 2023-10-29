@@ -13,6 +13,9 @@ export interface ServiceData {
   page_id: number;
   environment_key: string;
   query: z.infer<typeof pagesSchema.getMultiple.query>;
+  language: {
+    id: number;
+  };
 }
 
 const getMultipleValidParents = async (
@@ -24,20 +27,21 @@ const getMultipleValidParents = async (
   // Build Query Data and Query
   const SelectQuery = new SelectQueryBuilder({
     columns: [
-      "id",
-      "environment_key",
-      "collection_key",
-      "parent_id",
-      "title",
-      "slug",
-      "homepage",
-      "excerpt",
-      "published",
-      "published_at",
-      "author_id",
-      "created_by",
-      "created_at",
-      "updated_at",
+      "lucid_pages.id",
+      "lucid_pages.environment_key",
+      "lucid_pages.collection_key",
+      "lucid_pages.parent_id",
+      "lucid_pages.homepage",
+      "lucid_pages.published",
+      "lucid_pages.published_at",
+      "lucid_pages.author_id",
+      "lucid_pages.created_by",
+      "lucid_pages.created_at",
+      "lucid_pages.updated_at",
+      "lucid_page_content.title",
+      "lucid_page_content.slug",
+      "lucid_page_content.excerpt",
+      "lucid_page_content.language_id",
     ],
     exclude: undefined,
     filter: {
@@ -51,26 +55,33 @@ const getMultipleValidParents = async (
           operator: "=",
           type: "text",
           columnType: "standard",
+          table: "lucid_pages",
         },
         title: {
           operator: "%",
           type: "text",
           columnType: "standard",
+          table: "lucid_page_content",
         },
         environment_key: {
           operator: "=",
           type: "text",
           columnType: "standard",
+          table: "lucid_pages",
         },
         homepage: {
           operator: "=",
           type: "boolean",
           columnType: "standard",
+          table: "lucid_pages",
         },
       },
     },
-    values: [data.page_id],
-    where: ["id NOT IN (SELECT id FROM descendants)", "id != $1"],
+    values: [data.page_id, data.language.id],
+    where: [
+      "lucid_pages.id NOT IN (SELECT d.id FROM descendants d)",
+      "lucid_pages.id != $1",
+    ],
     sort: sort,
     page: page,
     per_page: per_page,
@@ -82,7 +93,7 @@ const getMultipleValidParents = async (
   });
 
   return {
-    data: pages.data.map((page) => formatPage(page)),
+    data: pages.data.map((page) => formatPage(page, true)),
     count: pages.count,
   };
 };
