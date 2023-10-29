@@ -21,6 +21,7 @@ const getMultipleValidParentsController: Controller<
       page_id: Number(req.params.id),
       environment_key: req.headers["lucid-environment"] as string,
       query: req.query,
+      language: req.language,
     });
 
     res.status(200).json(

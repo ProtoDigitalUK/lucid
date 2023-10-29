@@ -7,11 +7,13 @@ export interface PagesResT {
   parent_id: number | null;
   collection_key: string;
 
-  title: string;
-  slug: string;
-  full_slug: string;
+  page_content: {
+    title?: string;
+    slug?: string;
+    excerpt?: string | null;
+    language_id?: number;
+  }[];
   homepage: boolean;
-  excerpt: string | null;
 
   created_by: number | null;
   created_at: string;

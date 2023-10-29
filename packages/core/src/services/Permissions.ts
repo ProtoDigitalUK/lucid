@@ -21,6 +21,10 @@ export default class Permissions {
         key: "settings_permissions",
         permissions: ["update_settings"],
       },
+      languages: {
+        key: "languages_permissions",
+        permissions: ["create_language", "update_language", "delete_language"],
+      },
       environment: {
         key: "environment_permissions",
         permissions: [

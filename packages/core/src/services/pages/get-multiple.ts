@@ -6,16 +6,15 @@ import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 import Page from "@db/models/Page.js";
 // Schema
 import pagesSchema from "@schemas/pages.js";
-// Utils
-import service from "@utils/app/service.js";
-// Services
-import collectionsService from "@services/collections/index.js";
 // Format
 import formatPage from "@utils/format/format-page.js";
 
 export interface ServiceData {
   query: z.infer<typeof pagesSchema.getMultiple.query>;
   environment_key: string;
+  language: {
+    id: number;
+  };
 }
 
 const getMultiple = async (client: PoolClient, data: ServiceData) => {
@@ -28,17 +27,17 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       "environment_key",
       "collection_key",
       "parent_id",
-      "title",
-      "slug",
-      "full_slug",
       "homepage",
-      "excerpt",
       "published",
       "published_at",
       "author_id",
       "created_by",
       "lucid_pages.created_at",
       "lucid_pages.updated_at",
+      "lucid_page_content.title",
+      "lucid_page_content.slug",
+      "lucid_page_content.excerpt",
+      "lucid_page_content.language_id",
     ],
     exclude: undefined,
     filter: {
@@ -56,11 +55,13 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
           operator: "%",
           type: "text",
           columnType: "standard",
+          table: "lucid_page_content",
         },
         slug: {
           operator: "%",
           type: "text",
           columnType: "standard",
+          table: "lucid_page_content",
         },
         category_id: {
           operator: "=",
@@ -78,22 +79,14 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     sort: sort,
     page: page,
     per_page: per_page,
+    values: [data.language.id],
   });
 
-  const response = await Promise.all([
-    Page.getMultiple(client, SelectQuery),
-    service(
-      collectionsService.getAll,
-      false,
-      client
-    )({
-      query: {},
-    }),
-  ]);
+  const pages = await Page.getMultiple(client, SelectQuery);
 
   return {
-    data: response[0].data.map((page) => formatPage(page, response[1])),
-    count: response[0].count,
+    data: pages.data.map((page) => formatPage(page, true)),
+    count: pages.count,
   };
 };
 

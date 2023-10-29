@@ -29,15 +29,6 @@ export interface MenuResT {
 // -------------------------------------------
 // Functions
 
-const buildURL = (full_slug: string | null, url: string) => {
-  if (full_slug) {
-    if (full_slug === "/") return "/";
-    return `/${full_slug}`;
-  }
-  return url;
-};
-
-// Recursive function to build menu items
 const buildItems = (
   items: MenuItemT[],
   parent_id: number | null
@@ -47,7 +38,7 @@ const buildItems = (
   return matchedItems.map((item) => ({
     page_id: item.page_id,
     name: item.name,
-    url: buildURL(item.full_slug, item.url),
+    url: item.url,
     target: item.target,
     meta: item.meta,
     children: buildItems(items, item.id),

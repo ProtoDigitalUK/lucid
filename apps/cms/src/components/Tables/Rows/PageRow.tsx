@@ -70,7 +70,7 @@ const PageRow: Component<PageRowProps> = (props) => {
     >
       <PageTitleCol
         title={props.page.title}
-        fullSlug={props.page.full_slug}
+        slug={props.page.slug}
         homepage={props.page.homepage}
         options={{ include: props?.include[0] }}
       />

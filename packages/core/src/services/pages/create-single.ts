@@ -6,19 +6,23 @@ import service from "@utils/app/service.js";
 import Page from "@db/models/Page.js";
 // Services
 import pageServices from "@services/pages/index.js";
+import pageContentServices from "@services/page-content/index.js";
 import pageCategoryService from "@services/page-categories/index.js";
 
 export interface ServiceData {
   environment_key: string;
-  title: string;
-  slug: string;
   collection_key: string;
   homepage?: boolean;
-  excerpt?: string;
   published?: boolean;
   parent_id?: number;
   category_ids?: number[];
   userId: number;
+  translations: {
+    language_id: number;
+    title: string;
+    slug: string;
+    excerpt?: string;
+  }[];
 }
 
 const createSingle = async (client: PoolClient, data: ServiceData) => {
@@ -49,34 +53,14 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       })
     : Promise.resolve();
 
-  const buildUniqueSlugPromise = service(
-    pageServices.buildUniqueSlug,
-    false,
-    client
-  )({
-    slug: data.slug,
-    homepage: data.homepage || false,
-    environment_key: data.environment_key,
-    collection_key: data.collection_key,
-    parent_id: parentId,
-  });
-
-  // Await all parallel checks and also get the slug
-  const [_, __, slug] = await Promise.all([
-    checkPageCollectionPromise,
-    parentCheckPromise,
-    buildUniqueSlugPromise,
-  ]);
+  await Promise.all([checkPageCollectionPromise, parentCheckPromise]);
 
   // -------------------------------------------
   // Create page
   const page = await Page.createSingle(client, {
     environment_key: data.environment_key,
-    title: data.title,
-    slug: slug,
     collection_key: data.collection_key,
     homepage: data.homepage,
-    excerpt: data.excerpt,
     published: data.published,
     parent_id: parentId,
     category_ids: data.category_ids,
@@ -92,7 +76,21 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  // Parallel Operations
+  // -------------------------------------------
+  // Create page content
+  const pageContentPromise = service(
+    pageContentServices.upsertMultiple,
+    false,
+    client
+  )({
+    page_id: page.id,
+    homepage: data.homepage || false,
+    environment_key: data.environment_key,
+    collection_key: data.collection_key,
+    parent_id: parentId,
+    translations: data.translations,
+  });
+
   const pageCategoryServicePromise = data.category_ids
     ? service(
         pageCategoryService.createMultiple,
@@ -116,7 +114,11 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       })
     : Promise.resolve();
 
-  await Promise.all([pageCategoryServicePromise, resetHomepagesPromise]);
+  await Promise.all([
+    pageContentPromise,
+    pageCategoryServicePromise,
+    resetHomepagesPromise,
+  ]);
 
   return undefined;
 };

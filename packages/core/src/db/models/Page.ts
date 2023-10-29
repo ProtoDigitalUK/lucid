@@ -8,152 +8,6 @@ import {
 import { BrickResT } from "@lucid/types/src/bricks.js";
 
 // -------------------------------------------
-// Types
-type PageGetMultiple = (
-  client: PoolClient,
-  query_instance: SelectQueryBuilder
-) => Promise<{
-  data: PageT[];
-  count: number;
-}>;
-
-type PageGetSingle = (
-  client: PoolClient,
-  query_instance: SelectQueryBuilder
-) => Promise<PageT>;
-
-type PageGetSingleBasic = (
-  client: PoolClient,
-  data: {
-    id: number;
-    environment_key: string;
-  }
-) => Promise<PageT>;
-
-type PageGetSlugCount = (
-  client: PoolClient,
-  data: {
-    slug: string;
-    environment_key: string;
-    collection_key: string;
-    parent_id?: number;
-  }
-) => Promise<number>;
-
-type PageCreateSingle = (
-  client: PoolClient,
-  data: {
-    userId: number;
-    environment_key: string;
-    title: string;
-    slug: string;
-    collection_key: string;
-    homepage?: boolean;
-    excerpt?: string;
-    published?: boolean;
-    parent_id?: number;
-    category_ids?: Array<number>;
-  }
-) => Promise<{
-  id: PageT["id"];
-}>;
-
-type PageUpdateSingle = (
-  client: PoolClient,
-  data: {
-    id: number;
-    environment_key: string;
-
-    title?: string;
-    slug?: string;
-    homepage?: boolean;
-    parent_id?: number | null;
-    category_ids?: Array<number>;
-    published?: boolean;
-    author_id?: number | null;
-    excerpt?: string;
-  }
-) => Promise<{
-  id: PageT["id"];
-}>;
-
-type PageDeleteSingle = (
-  client: PoolClient,
-  data: { id: number }
-) => Promise<{
-  id: PageT["id"];
-}>;
-
-type PageDeleteMultiple = (
-  client: PoolClient,
-  data: { ids: Array<number> }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
-
-type PageGetMultipleByIds = (
-  client: PoolClient,
-  data: {
-    ids: Array<number>;
-    environment_key: string;
-  }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
-
-type PageGetNonCurrentHomepages = (
-  client: PoolClient,
-  data: {
-    current_id: number;
-    environment_key: string;
-  }
-) => Promise<PageT[]>;
-
-type PageCheckSlugExistence = (
-  client: PoolClient,
-  data: {
-    slug: string;
-    id: number;
-    environment_key: string;
-  }
-) => Promise<boolean>;
-
-type PageUpdatePageToNonHomepage = (
-  client: PoolClient,
-  data: {
-    id: number;
-    slug: string;
-  }
-) => Promise<PageT>;
-
-type PageCheckParentAncestry = (
-  client: PoolClient,
-  data: {
-    page_id: number;
-    parent_id: number;
-  }
-) => Promise<
-  {
-    id: PageT["id"];
-  }[]
->;
-
-type PageGetValidParents = (
-  client: PoolClient,
-  data: {
-    page_id: number;
-    query_instance: SelectQueryBuilder;
-  }
-) => Promise<{
-  data: PageT[];
-  count: number;
-}>;
-
-// -------------------------------------------
 // Page
 export type PageT = {
   id: number;
@@ -161,11 +15,18 @@ export type PageT = {
   parent_id: number | null;
   collection_key: string;
 
-  title: string;
-  slug: string;
-  full_slug: string;
   homepage: boolean;
-  excerpt: string | null;
+  page_content: Array<{
+    title: string;
+    slug: string;
+    excerpt: string | null;
+    language_id: number;
+  }>;
+  title?: string;
+  slug?: string;
+  excerpt?: string | null;
+  language_id?: number;
+
   categories?: Array<number> | null;
 
   bricks?: Array<BrickResT> | null;
@@ -188,62 +49,107 @@ export default class Page {
   static getMultiple: PageGetMultiple = async (client, query_instance) => {
     const pages = client.query<PageT>({
       text: `SELECT
-          ${query_instance.query.select},
-          lucid_users.email AS author_email,
-          lucid_users.username AS author_username,
-          lucid_users.first_name AS author_first_name,
-          lucid_users.last_name AS author_last_name,
-          COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
-        FROM
-          lucid_pages
-        LEFT JOIN
-          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
-        LEFT JOIN
-          lucid_users ON lucid_pages.author_id = lucid_users.id
-        ${query_instance.query.where}
-        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name
-        ${query_instance.query.order}
-        ${query_instance.query.pagination}`,
-      values: query_instance.values,
-    });
-
-    const count = client.query<{ count: string }>({
-      text: `SELECT 
-          COUNT(DISTINCT lucid_pages.id)
-        FROM
-          lucid_pages
-        LEFT JOIN 
-          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
-        ${query_instance.query.where}
-        `,
-      values: query_instance.countValues,
-    });
-
-    const data = await Promise.all([pages, count]);
-
-    return {
-      data: data[0].rows,
-      count: Number(data[1].rows[0].count),
-    };
-  };
-  static getSingle: PageGetSingle = async (client, query_instance) => {
-    const page = await client.query<PageT>({
-      text: `SELECT
         ${query_instance.query.select},
         lucid_users.email AS author_email,
         lucid_users.username AS author_username,
         lucid_users.first_name AS author_first_name,
         lucid_users.last_name AS author_last_name,
         COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
+      FROM
+        lucid_pages
+      INNER JOIN
+        lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+      LEFT JOIN
+        lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+      LEFT JOIN
+        lucid_users ON lucid_pages.author_id = lucid_users.id
+      ${query_instance.query.where}
+      GROUP BY
+        lucid_pages.id,
+        lucid_users.email,
+        lucid_users.username,
+        lucid_users.first_name,
+        lucid_users.last_name,
+        lucid_page_content.title,
+        lucid_page_content.slug,
+        lucid_page_content.excerpt,
+        lucid_page_content.language_id
+      ${query_instance.query.order}
+      ${query_instance.query.pagination}`,
+      values: query_instance.values,
+    });
+
+    const count = client.query<{ count: string }>({
+      text: `SELECT
+          COUNT(DISTINCT lucid_pages.id)
+        FROM
+          lucid_pages
+        LEFT JOIN
+          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        INNER JOIN
+          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+        ${query_instance.query.where}
+        `,
+      values: query_instance.countValues,
+    });
+
+    const res = await Promise.all([pages, count]);
+
+    return {
+      data: res[0].rows,
+      count: Number(res[1].rows[0].count),
+    };
+  };
+  static getSingle: PageGetSingle = async (client, data) => {
+    const page = await client.query<PageT>({
+      text: `
+        SELECT
+          lucid_pages.id,
+          lucid_pages.environment_key,
+          lucid_pages.collection_key,
+          lucid_pages.parent_id,
+          lucid_pages.homepage,
+          lucid_pages.published,
+          lucid_pages.published_at,
+          lucid_pages.author_id,
+          lucid_pages.created_by,
+          lucid_pages.created_at,
+          lucid_pages.updated_at,
+          lucid_users.email AS author_email,
+          lucid_users.username AS author_username,
+          lucid_users.first_name AS author_first_name,
+          lucid_users.last_name AS author_last_name,
+          COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories,
+          (
+            SELECT json_agg(
+              json_build_object(
+                'title', title,
+                'slug', slug,
+                'excerpt', excerpt,
+                'language_id', language_id
+              )
+            )
+            FROM lucid_page_content
+            WHERE page_id = $1
+          ) AS page_content
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
         LEFT JOIN
           lucid_users ON lucid_pages.author_id = lucid_users.id
-        ${query_instance.query.where}
-        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name`,
-      values: query_instance.values,
+        WHERE
+          lucid_pages.id = $1
+        AND
+          lucid_pages.environment_key = $2
+        GROUP BY
+          lucid_pages.id,
+          lucid_users.email,
+          lucid_users.username,
+          lucid_users.first_name,
+          lucid_users.last_name
+      `,
+      values: [data.id, data.environment_key],
     });
 
     return page.rows[0];
@@ -252,16 +158,14 @@ export default class Page {
     const page = await client.query<{
       id: PageT["id"];
     }>({
-      text: `INSERT INTO lucid_pages (environment_key, title, slug, homepage, collection_key, excerpt, published, parent_id, created_by, author_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9) RETURNING id`,
+      text: `INSERT INTO lucid_pages (environment_key, homepage, collection_key, published, parent_id, created_by, author_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
       values: [
         data.environment_key,
-        data.title,
-        data.slug,
         data.homepage || false,
         data.collection_key,
-        data.excerpt || null,
         data.published || false,
-        data.parent_id,
+        data.parent_id || null,
+        data.userId,
         data.userId,
       ],
     });
@@ -271,9 +175,6 @@ export default class Page {
   static updateSingle: PageUpdateSingle = async (client, data) => {
     const { columns, aliases, values } = queryDataFormat({
       columns: [
-        "title",
-        "slug",
-        "excerpt",
         "published",
         "published_at",
         "author_id",
@@ -281,9 +182,6 @@ export default class Page {
         "homepage",
       ],
       values: [
-        data.title,
-        data.slug,
-        data.excerpt,
         data.published,
         data.published ? new Date() : null,
         data.author_id,
@@ -355,58 +253,13 @@ export default class Page {
 
     return page.rows[0];
   };
-  static getSlugCount: PageGetSlugCount = async (client, data) => {
-    const values: Array<any> = [
-      data.slug,
-      data.collection_key,
-      data.environment_key,
-    ];
-    if (data.parent_id) values.push(data.parent_id);
-
-    const slugCount = await client.query<{ count: string }>({
-      // where slug is like, slug-example, slug-example-1, slug-example-2
-      text: `SELECT COUNT(*) 
-        FROM 
-          lucid_pages 
-        WHERE slug ~ '^${data.slug}-\\d+$' 
-        OR 
-          slug = $1
-        AND
-          collection_key = $2
-        AND
-          environment_key = $3
-        ${data.parent_id ? `AND parent_id = $4` : `AND parent_id IS NULL`}`,
-      values: values,
-    });
-
-    return Number(slugCount.rows[0].count);
-  };
-  static getNonCurrentHomepages: PageGetNonCurrentHomepages = async (
-    client,
-    data
-  ) => {
-    const result = await client.query({
-      text: `SELECT id, title FROM lucid_pages WHERE homepage = true AND id != $1 AND environment_key = $2`,
-      values: [data.current_id, data.environment_key],
-    });
-    return result.rows;
-  };
-  static checkSlugExistence: PageCheckSlugExistence = async (client, data) => {
-    const slugExists = await client.query<{
-      count: string;
-    }>({
-      text: `SELECT COUNT(*) FROM lucid_pages WHERE slug = $1 AND id != $2 AND environment_key = $3`,
-      values: [data.slug, data.id, data.environment_key],
-    });
-    return Number(slugExists.rows[0].count) > 0;
-  };
-  static updatePageToNonHomepage: PageUpdatePageToNonHomepage = async (
+  static updateSingleHomepageFalse: PageUpdateSingleHomepageFalse = async (
     client,
     data
   ) => {
     const updateRes = await client.query({
-      text: `UPDATE lucid_pages SET homepage = false, parent_id = null, slug = $2 WHERE id = $1`,
-      values: [data.id, data.slug],
+      text: `UPDATE lucid_pages SET homepage = false, parent_id = null WHERE id = $1`,
+      values: [data.id],
     });
 
     return updateRes.rows[0];
@@ -440,21 +293,23 @@ export default class Page {
   static getValidParents: PageGetValidParents = async (client, data) => {
     const pages = client.query<PageT>({
       text: `WITH RECURSIVE descendants AS (
-            SELECT id, parent_id 
-            FROM lucid_pages 
-            WHERE parent_id = $1
-
-            UNION ALL
-
-            SELECT lp.id, lp.parent_id 
-            FROM lucid_pages lp
-            JOIN descendants d ON lp.parent_id = d.id
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          WHERE lp.parent_id = $1
+    
+          UNION ALL
+    
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          JOIN descendants d ON lp.parent_id = d.id
         )
         
         SELECT
           ${data.query_instance.query.select}
         FROM 
           lucid_pages 
+        INNER JOIN
+          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
         ${data.query_instance.query.where}
         ${data.query_instance.query.order}
         ${data.query_instance.query.pagination}`,
@@ -463,21 +318,23 @@ export default class Page {
 
     const count = client.query<{ count: string }>({
       text: `WITH RECURSIVE descendants AS (
-            SELECT id, parent_id 
-            FROM lucid_pages 
-            WHERE parent_id = $1
-
-            UNION ALL
-
-            SELECT lp.id, lp.parent_id 
-            FROM lucid_pages lp
-            JOIN descendants d ON lp.parent_id = d.id
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          WHERE lp.parent_id = $1
+    
+          UNION ALL
+    
+          SELECT lp.id, lp.parent_id
+          FROM lucid_pages lp
+          JOIN descendants d ON lp.parent_id = d.id
         )
  
         SELECT 
           COUNT(*) 
         FROM 
           lucid_pages
+        INNER JOIN
+          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
         ${data.query_instance.query.where}`,
       values: data.query_instance.countValues,
     });
@@ -490,3 +347,121 @@ export default class Page {
     };
   };
 }
+
+// -------------------------------------------
+// Types
+type PageGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
+  data: PageT[];
+  count: number;
+}>;
+
+type PageGetSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+  }
+) => Promise<PageT>;
+
+type PageGetSingleBasic = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+  }
+) => Promise<PageT>;
+
+type PageCreateSingle = (
+  client: PoolClient,
+  data: {
+    userId: number;
+    environment_key: string;
+    collection_key: string;
+    homepage?: boolean;
+    published?: boolean;
+    parent_id?: number;
+    category_ids?: Array<number>;
+  }
+) => Promise<{
+  id: PageT["id"];
+}>;
+
+type PageUpdateSingle = (
+  client: PoolClient,
+  data: {
+    id: number;
+    environment_key: string;
+
+    title?: string;
+    slug?: string;
+    homepage?: boolean;
+    parent_id?: number | null;
+    category_ids?: Array<number>;
+    published?: boolean;
+    author_id?: number | null;
+    excerpt?: string;
+  }
+) => Promise<{
+  id: PageT["id"];
+}>;
+
+type PageDeleteSingle = (
+  client: PoolClient,
+  data: { id: number }
+) => Promise<{
+  id: PageT["id"];
+}>;
+
+type PageDeleteMultiple = (
+  client: PoolClient,
+  data: { ids: Array<number> }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
+type PageGetMultipleByIds = (
+  client: PoolClient,
+  data: {
+    ids: Array<number>;
+    environment_key: string;
+  }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
+type PageUpdateSingleHomepageFalse = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<void>;
+
+type PageCheckParentAncestry = (
+  client: PoolClient,
+  data: {
+    page_id: number;
+    parent_id: number;
+  }
+) => Promise<
+  {
+    id: PageT["id"];
+  }[]
+>;
+
+type PageGetValidParents = (
+  client: PoolClient,
+  data: {
+    page_id: number;
+    query_instance: SelectQueryBuilder;
+  }
+) => Promise<{
+  data: PageT[];
+  count: number;
+}>;

@@ -21,6 +21,7 @@ const getSingleController: Controller<
       query: req.query,
       environment_key: req.headers["lucid-environment"] as string,
       id: parseInt(req.params.id),
+      language: req.language,
     });
 
     res.status(200).json(

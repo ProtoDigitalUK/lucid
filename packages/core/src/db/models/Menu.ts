@@ -119,7 +119,6 @@ export type MenuItemT = {
   target: "_self" | "_blank" | "_parent" | "_top";
   position: number;
   meta: any;
-  full_slug: string | null;
 };
 
 export default class Menu {
@@ -247,8 +246,7 @@ export default class Menu {
   static getMenuItems: MenuGetMenuItems = async (client, data) => {
     const menuItems = await client.query<MenuItemT>({
       text: `SELECT
-          mi.*,
-          p.full_slug
+          mi.*
         FROM
           lucid_menu_items mi
         LEFT JOIN

@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 import slug from "slug";
 // Models
-import Page from "@db/models/Page.js";
+import PageContent from "@db/models/PageContent.js";
 
 export interface ServiceData {
   slug: string;
@@ -9,6 +9,7 @@ export interface ServiceData {
   environment_key: string;
   collection_key: string;
   parent_id?: number;
+  language_id: number;
 }
 
 const buildUniqueSlug = async (client: PoolClient, data: ServiceData) => {
@@ -20,11 +21,12 @@ const buildUniqueSlug = async (client: PoolClient, data: ServiceData) => {
   // Sanitize slug with slugify
   data.slug = slug(data.slug, { lower: true });
 
-  const slugCount = await Page.getSlugCount(client, {
+  const slugCount = await PageContent.getSlugCount(client, {
     slug: data.slug,
     environment_key: data.environment_key,
     collection_key: data.collection_key,
     parent_id: data.parent_id,
+    language_id: data.language_id,
   });
 
   if (slugCount >= 1) {

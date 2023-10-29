@@ -15,12 +15,14 @@ export interface ServiceData {
   type: CollectionResT["type"];
   environment_key: string;
   collection: CollectionResT;
+  language_id: number;
 }
 
 const getAll = async (client: PoolClient, data: ServiceData) => {
   const brickFields = await CollectionBrick.getAll(client, {
     reference_id: data.reference_id,
     type: data.type,
+    language_id: data.language_id,
   });
 
   if (!brickFields) return [];

@@ -49,6 +49,7 @@ const app = async (options: InitOptions) => {
         "Authorization",
         "_csrf",
         "lucid-environment",
+        "lucid-content-lang",
       ],
       credentials: true,
     })

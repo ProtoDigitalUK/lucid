@@ -10,8 +10,6 @@ import {
 import createURL from "@utils/media/create-url.js";
 // Services
 import brickConfigService from "@services/brick-config/index.js";
-// Format
-import { formatFullSlug } from "@utils/format/format-page.js";
 // Types
 import { CollectionResT } from "@lucid/types/src/collections.js";
 import { EnvironmentResT } from "@lucid/types/src/environments.js";
@@ -95,15 +93,6 @@ const specificFieldValues = (
         label: field?.json_value.label || field?.linked_page.title || undefined,
       };
       meta = {
-        full_slug:
-          formatFullSlug(
-            {
-              full_slug: field?.linked_page.full_slug || undefined,
-              homepage: field?.linked_page.homepage || undefined,
-              collection_key: field?.linked_page.collection_key || undefined,
-            },
-            [collection]
-          ) || undefined,
         slug: field?.linked_page.slug || undefined,
       };
       break;

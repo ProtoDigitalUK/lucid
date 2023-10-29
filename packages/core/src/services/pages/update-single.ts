@@ -7,19 +7,24 @@ import Page from "@db/models/Page.js";
 // Services
 import pageCategoryService from "@services/page-categories/index.js";
 import pageServices from "@services/pages/index.js";
+import pageContentServices from "@services/page-content/index.js";
 
 export interface ServiceData {
   id: number;
   environment_key: string;
 
-  title?: string;
-  slug?: string;
   homepage?: boolean;
   parent_id?: number | null;
   author_id?: number | null;
   category_ids?: number[];
   published?: boolean;
-  excerpt?: string;
+
+  translations?: {
+    language_id: number;
+    title?: string;
+    slug?: string;
+    excerpt?: string;
+  }[];
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
@@ -73,36 +78,46 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     await Promise.all([parentChecks, ancestryChecks]);
   }
 
-  let newSlug = undefined;
-  if (data.slug) {
-    // Check if slug is unique
-    newSlug = await service(
-      pageServices.buildUniqueSlug,
-      false,
-      client
-    )({
-      slug: data.slug,
-      homepage: data.homepage || currentPage.homepage,
-      environment_key: data.environment_key,
-      collection_key: currentPage.collection_key,
-      parent_id: parentId || undefined,
-    });
-  }
+  const upsertContentPromise = service(
+    pageContentServices.upsertMultiple,
+    false,
+    client
+  )({
+    page_id: data.id,
+    environment_key: data.environment_key,
+    collection_key: currentPage.collection_key,
+    homepage: data.homepage || currentPage.homepage || false,
+    parent_id: parentId || undefined,
+    translations: data.translations || [],
+  });
 
-  // Update page
-  const page = await Page.updateSingle(client, {
+  const pagePromise = Page.updateSingle(client, {
     id: data.id,
     environment_key: data.environment_key,
-
-    title: data.title,
-    slug: newSlug,
     homepage: data.homepage,
     parent_id: parentId,
     category_ids: data.category_ids,
     published: data.published,
     author_id: data.author_id,
-    excerpt: data.excerpt,
   });
+
+  const updateCategoriesPromise = data.category_ids
+    ? service(
+        pageCategoryService.updateMultiple,
+        false,
+        client
+      )({
+        page_id: currentPage.id,
+        category_ids: data.category_ids,
+        collection_key: currentPage.collection_key,
+      })
+    : Promise.resolve();
+
+  const [page] = await Promise.all([
+    pagePromise,
+    upsertContentPromise,
+    updateCategoriesPromise,
+  ]);
 
   if (!page) {
     throw new LucidError({
@@ -110,19 +125,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       name: "Page Not Updated",
       message: "There was an error updating the page",
       status: 500,
-    });
-  }
-
-  // Update categories and bricks
-  if (data.category_ids) {
-    await service(
-      pageCategoryService.updateMultiple,
-      false,
-      client
-    )({
-      page_id: page.id,
-      category_ids: data.category_ids,
-      collection_key: currentPage.collection_key,
     });
   }
 

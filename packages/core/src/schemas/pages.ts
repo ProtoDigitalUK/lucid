@@ -30,14 +30,21 @@ const getMultipleParams = z.object({});
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  title: z.string().min(2),
-  slug: z.string().min(2).toLowerCase(),
   collection_key: z.string(),
   homepage: z.boolean().optional(),
-  excerpt: z.string().optional(),
   published: z.boolean().optional(),
   parent_id: z.number().optional(),
   category_ids: z.array(z.number()).optional(),
+  page_content: z
+    .array(
+      z.object({
+        language_id: z.number(),
+        title: z.string().min(2),
+        slug: z.string().min(2).toLowerCase(),
+        excerpt: z.string().optional(),
+      })
+    )
+    .min(1),
 });
 const createSingleQuery = z.object({});
 const createSingleParams = z.object({});
@@ -55,14 +62,21 @@ const getSingleParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
-  title: z.string().optional(),
-  slug: z.string().optional(),
   homepage: z.boolean().optional(),
   parent_id: z.number().nullable().optional(),
   author_id: z.number().nullable().optional(),
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
-  excerpt: z.string().optional(),
+  page_content: z
+    .array(
+      z.object({
+        language_id: z.number(),
+        title: z.string().min(2).optional(),
+        slug: z.string().min(2).toLowerCase().optional(),
+        excerpt: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

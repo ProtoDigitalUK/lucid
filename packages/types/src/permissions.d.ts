@@ -15,7 +15,10 @@ export type PermissionT =
   | "update_settings"
   | "read_email"
   | "delete_email"
-  | "send_email";
+  | "send_email"
+  | "create_language"
+  | "update_language"
+  | "delete_language";
 
 export type EnvironmentPermissionT =
   | "create_content"

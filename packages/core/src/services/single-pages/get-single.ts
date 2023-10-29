@@ -13,6 +13,9 @@ export interface ServiceData {
   collection_key: string;
   user_id: number;
   include_bricks?: boolean;
+  language: {
+    id: number;
+  };
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
@@ -82,6 +85,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       type: "singlepage",
       environment_key: data.environment_key,
       collection: collection,
+      language_id: data.language.id,
     });
     singlepage.bricks = bricks;
   }

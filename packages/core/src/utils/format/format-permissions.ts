@@ -14,6 +14,7 @@ const formatPermissions = (
       permissions.settings,
       permissions.environment,
       permissions.emails,
+      permissions.languages,
     ],
     environment: [
       permissions.content,

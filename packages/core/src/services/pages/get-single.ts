@@ -1,7 +1,6 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 import { LucidError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
@@ -18,55 +17,18 @@ export interface ServiceData {
   query: z.infer<typeof pagesSchema.getSingle.query>;
   environment_key: string;
   id: number;
+  language: {
+    id: number;
+  };
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
   const { include } = data.query;
 
-  // Build Query Data and Query
-  const SelectQuery = new SelectQueryBuilder({
-    columns: [
-      "lucid_pages.id",
-      "environment_key",
-      "collection_key",
-      "parent_id",
-      "title",
-      "slug",
-      "full_slug",
-      "homepage",
-      "excerpt",
-      "published",
-      "published_at",
-      "author_id",
-      "created_by",
-      "lucid_pages.created_at",
-      "lucid_pages.updated_at",
-    ],
-    exclude: undefined,
-    filter: {
-      data: {
-        "lucid_pages.id": data.id.toString(),
-        environment_key: data.environment_key,
-      },
-      meta: {
-        "lucid_pages.id": {
-          operator: "=",
-          type: "int",
-          columnType: "standard",
-        },
-        environment_key: {
-          operator: "=",
-          type: "text",
-          columnType: "standard",
-        },
-      },
-    },
-    sort: undefined,
-    page: undefined,
-    per_page: undefined,
+  const page = await Page.getSingle(client, {
+    id: data.id,
+    environment_key: data.environment_key,
   });
-
-  const page = await Page.getSingle(client, SelectQuery);
 
   if (!page) {
     throw new LucidError({
@@ -97,11 +59,12 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       type: "pages",
       environment_key: data.environment_key,
       collection: collection,
+      language_id: data.language.id,
     });
     page.bricks = pageBricks;
   }
 
-  return formatPage(page, [collection]);
+  return formatPage(page);
 };
 
 export default getSingle;

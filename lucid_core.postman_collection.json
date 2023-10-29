@@ -272,6 +272,172 @@
 			]
 		},
 		{
+			"name": "Languages",
+			"item": [
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages?sort=code&per_page=-1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "code"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/eng",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"eng"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"en-gb\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"en-us\",\r\n    \"is_default\": true,\r\n    \"is_enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/en-gb",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"en-gb"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/en-us",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"en-us"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Options",
 			"item": []
 		},
@@ -743,18 +909,19 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "_csrf",
-														"value": "{{CSRF}}",
-														"type": "text"
-													},
-													{
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
+													},
+													{
+														"key": "lucid-content-lang",
+														"value": "{{LUCID_CONTENT_LANG}}",
+														"type": "text",
+														"disabled": true
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages?sort=created_at",
+													"raw": "{{BASE_URL}}/api/v1/pages",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -766,7 +933,8 @@
 													"query": [
 														{
 															"key": "sort",
-															"value": "created_at"
+															"value": "created_at",
+															"disabled": true
 														},
 														{
 															"key": "filter[collection_key]",
@@ -775,7 +943,7 @@
 														},
 														{
 															"key": "filter[title]",
-															"value": "Ser",
+															"value": "home",
 															"disabled": true
 														},
 														{
@@ -812,10 +980,15 @@
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
+													},
+													{
+														"key": "lucid-content-lang",
+														"value": "{{LUCID_CONTENT_LANG}}",
+														"type": "text"
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/7/valid-parents",
+													"raw": "{{BASE_URL}}/api/v1/pages/3/valid-parents",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -823,13 +996,13 @@
 														"api",
 														"v1",
 														"pages",
-														"7",
+														"3",
 														"valid-parents"
 													],
 													"query": [
 														{
 															"key": "filter[title]",
-															"value": "Ser",
+															"value": "about",
 															"disabled": true
 														},
 														{
@@ -869,7 +1042,7 @@
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/2?include=bricks",
+													"raw": "{{BASE_URL}}/api/v1/pages/2",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -882,7 +1055,8 @@
 													"query": [
 														{
 															"key": "include",
-															"value": "bricks"
+															"value": "bricks",
+															"disabled": true
 														}
 													]
 												}
@@ -907,7 +1081,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"title\": \"Dog Walking\",\n    \"slug\": \"cat-walking\",\n    // \"homepage\": true,\n    \"parent_id\": 12,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"raw": "{\n    \"page_content\": [\n        {\n            \"language_id\": 1,\n            \"title\": \"Cats\",\n            \"slug\": \"cats\",\n            \"excerpt\": \"Cats en\"\n        },\n        {\n            \"language_id\": 2,\n            \"title\": \"Cats\",\n            \"slug\": \"cats\",\n            \"excerpt\": \"Cats gb\"\n        }\n    ],\n    // \"homepage\": true,\n    // \"parent_id\": 9,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -946,7 +1120,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"author_id\": 2\n    // \"title\": \"Test Page\",\n    // \"slug\": \"test-page\",\n    // \"homepage\": true,\n    // \"parent_id\": 2,\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
+													"raw": "{\n    \"page_content\": [\n        // {\n        //     \"language_id\": 1,\n        //     \"title\": \"About\",\n        //     \"slug\": \"about\",\n        //     \"excerpt\": \"\"\n        // }\n        {\n            \"language_id\": 2,\n            \"title\": \"About EN\",\n            \"slug\": \"about-en\"\n            // \"excerpt\": \"UK Homepage\"\n        }\n    ]\n\n    // \"author_id\": 2,\n    // \"homepage\": true,\n    // \"parent_id\": 11\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
 													"options": {
 														"raw": {
 															"language": "json"

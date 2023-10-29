@@ -18,6 +18,9 @@ export interface ServiceData {
   bricks: Array<BrickObject>;
   collection_key: string;
   environment_key: string;
+  language: {
+    id: number;
+  };
 }
 
 const updateMultiple = async (client: PoolClient, data: ServiceData) => {
@@ -27,7 +30,10 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
   const existingBricks = await CollectionBrick.getAllBricks(client, {
     type: data.type,
     reference_id: data.id,
+    language_id: data.language.id,
   });
+
+  console.log("existingBricks", existingBricks);
 
   const bricksToUpdate = data.bricks.filter(
     (brick) => brick.id !== undefined && brick.id !== null
@@ -36,8 +42,14 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     (brick) => brick.id === undefined || brick.id === null
   );
 
-  const deleteFieldIds = getFieldsToDelete(existingBricks, bricksToUpdate);
-  const deleteGroupIds = getGroupsToDelete(existingBricks, bricksToUpdate);
+  const deleteFieldIds = getFieldsToDeleteForLanguage(
+    existingBricks,
+    bricksToUpdate
+  );
+  const deleteGroupIds = getGroupsToDeleteForLanguage(
+    existingBricks,
+    bricksToUpdate
+  );
 
   const [_, __, newBricks] = await Promise.all([
     CollectionBrick.deleteMultipleBrickFields(client, {
@@ -61,6 +73,7 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     bricks: data.bricks,
+    language_id: data.language.id,
   });
 
   assignFieldIds(data.bricks, newGroups); // add back new groups to assignFieldIds so id ref- can be updated with the group id
@@ -82,6 +95,7 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     }),
     CollectionBrick.createMultipleBrickFields(client, {
       fields: fields.filter((field) => field.fields_id === undefined),
+      language_id: data.language.id,
     }),
     CollectionBrick.deleteMultipleBricks(client, {
       ids: existingBricks
@@ -96,7 +110,7 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
   return undefined;
 };
 
-function getFieldsToDelete(
+function getFieldsToDeleteForLanguage(
   existingBricks: Array<{
     id: number;
     fields: {
@@ -126,7 +140,7 @@ function getFieldsToDelete(
   return deleteFieldIds;
 }
 
-function getGroupsToDelete(
+function getGroupsToDeleteForLanguage(
   existingBricks: Array<{
     id: number;
     groups: {
