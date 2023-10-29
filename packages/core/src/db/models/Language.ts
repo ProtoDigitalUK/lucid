@@ -101,16 +101,12 @@ export default class Language {
 
     return lang.rows[0];
   };
-  static getMultipleByCodes: LanguageGetMultipleByCodes = async (
-    client,
-    data
-  ) => {
+  static getMultipleByIds: LanguageGetMultipleByIds = async (client, data) => {
     const languages = await client.query<{
       id: LanguageT["id"];
-      code: LanguageT["code"];
     }>({
-      text: `SELECT id, code FROM lucid_languages WHERE code = ANY($1::text[])`,
-      values: [data.codes],
+      text: `SELECT id FROM lucid_languages WHERE id = ANY($1::int[])`,
+      values: [data.ids],
     });
 
     return languages.rows;
@@ -168,14 +164,13 @@ type LanguageDeleteSingle = (
 
 type LanguageGetDefault = (client: PoolClient) => Promise<LanguageT>;
 
-type LanguageGetMultipleByCodes = (
+type LanguageGetMultipleByIds = (
   client: PoolClient,
   data: {
-    codes: LanguageT["code"][];
+    ids: LanguageT["id"][];
   }
 ) => Promise<
   {
     id: LanguageT["id"];
-    code: LanguageT["code"];
   }[]
 >;

@@ -15,10 +15,13 @@ export type PageT = {
   parent_id: number | null;
   collection_key: string;
 
-  title: string;
-  slug: string;
   homepage: boolean;
-  excerpt: string | null;
+  page_content: Array<{
+    title: string;
+    slug: string;
+    excerpt: string | null;
+    language_id: number;
+  }>;
   categories?: Array<number> | null;
 
   bricks?: Array<BrickResT> | null;
@@ -79,24 +82,56 @@ export default class Page {
       count: Number(data[1].rows[0].count),
     };
   };
-  static getSingle: PageGetSingle = async (client, query_instance) => {
+  static getSingle: PageGetSingle = async (client, data) => {
     const page = await client.query<PageT>({
-      text: `SELECT
-        ${query_instance.query.select},
-        lucid_users.email AS author_email,
-        lucid_users.username AS author_username,
-        lucid_users.first_name AS author_first_name,
-        lucid_users.last_name AS author_last_name,
-        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
+      text: `
+        SELECT
+          lucid_pages.id,
+          lucid_pages.environment_key,
+          lucid_pages.collection_key,
+          lucid_pages.parent_id,
+          lucid_pages.homepage,
+          lucid_pages.published,
+          lucid_pages.published_at,
+          lucid_pages.author_id,
+          lucid_pages.created_by,
+          lucid_pages.created_at,
+          lucid_pages.updated_at,
+          lucid_users.email AS author_email,
+          lucid_users.username AS author_username,
+          lucid_users.first_name AS author_first_name,
+          lucid_users.last_name AS author_last_name,
+          COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories,
+          (
+            SELECT json_agg(
+              json_build_object(
+                'title', title,
+                'slug', slug,
+                'excerpt', excerpt,
+                'language_id', language_id
+              )
+            )
+            FROM lucid_page_content
+            WHERE page_id = $1
+          ) AS page_content
         FROM
           lucid_pages
         LEFT JOIN
           lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
         LEFT JOIN
           lucid_users ON lucid_pages.author_id = lucid_users.id
-        ${query_instance.query.where}
-        GROUP BY lucid_pages.id, lucid_users.email, lucid_users.username, lucid_users.first_name, lucid_users.last_name`,
-      values: query_instance.values,
+        WHERE
+          lucid_pages.id = $1
+        AND
+          lucid_pages.environment_key = $2
+        GROUP BY
+          lucid_pages.id,
+          lucid_users.email,
+          lucid_users.username,
+          lucid_users.first_name,
+          lucid_users.last_name
+      `,
+      values: [data.id, data.environment_key],
     });
 
     return page.rows[0];
@@ -304,7 +339,10 @@ type PageGetMultiple = (
 
 type PageGetSingle = (
   client: PoolClient,
-  query_instance: SelectQueryBuilder
+  data: {
+    id: number;
+    environment_key: string;
+  }
 ) => Promise<PageT>;
 
 type PageGetSingleBasic = (

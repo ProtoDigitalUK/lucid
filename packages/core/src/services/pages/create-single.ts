@@ -18,7 +18,7 @@ export interface ServiceData {
   category_ids?: number[];
   userId: number;
   translations: {
-    language_code: string;
+    language_id: number;
     title: string;
     slug: string;
     excerpt?: string;

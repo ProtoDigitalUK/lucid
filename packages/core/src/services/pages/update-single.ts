@@ -20,7 +20,7 @@ export interface ServiceData {
   published?: boolean;
 
   translations?: {
-    language_code: string;
+    language_id: number;
     title?: string;
     slug?: string;
     excerpt?: string;

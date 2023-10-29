@@ -6,10 +6,6 @@ import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 import Page from "@db/models/Page.js";
 // Schema
 import pagesSchema from "@schemas/pages.js";
-// Utils
-import service from "@utils/app/service.js";
-// Services
-import collectionsService from "@services/collections/index.js";
 // Format
 import formatPage from "@utils/format/format-page.js";
 
@@ -80,23 +76,14 @@ const getMultipleValidParents = async (
     per_page: per_page,
   });
 
-  const response = await Promise.all([
-    Page.getValidParents(client, {
-      page_id: data.page_id,
-      query_instance: SelectQuery,
-    }),
-    service(
-      collectionsService.getAll,
-      false,
-      client
-    )({
-      query: {},
-    }),
-  ]);
+  const pages = await Page.getValidParents(client, {
+    page_id: data.page_id,
+    query_instance: SelectQuery,
+  });
 
   return {
-    data: response[0].data.map((page) => formatPage(page, response[1])),
-    count: response[0].count,
+    data: pages.data.map((page) => formatPage(page)),
+    count: pages.count,
   };
 };
 

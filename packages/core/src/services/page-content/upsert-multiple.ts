@@ -15,7 +15,7 @@ export interface ServiceData {
   collection_key: string;
   parent_id?: number;
   translations: {
-    language_code: string;
+    language_id: number;
     title?: string;
     slug?: string;
     excerpt?: string;
@@ -23,7 +23,6 @@ export interface ServiceData {
 }
 
 interface TranslationsT {
-  language_code: string;
   language_id: number;
   title?: string;
   slug?: string;
@@ -34,19 +33,16 @@ const prepareTranslations = (
   translations: ServiceData["translations"],
   languages: {
     id: number;
-    code: string;
   }[]
 ) => {
-  const languageCodeToId = Object.fromEntries(
-    languages.map((language) => [language.code, language.id])
-  );
-
   return translations
-    .map((translation) => ({
-      ...translation,
-      language_id: languageCodeToId[translation.language_code],
-    }))
-    .filter((translation) => translation.language_id);
+    .filter((translation) =>
+      languages.some((language) => language.id === translation.language_id)
+    )
+    .filter(
+      (translation) =>
+        translation.title || translation.slug || translation.excerpt
+    );
 };
 
 const buildUniqueSlugs = async (
@@ -96,8 +92,8 @@ const upsertMultiple = async (client: PoolClient, data: ServiceData) => {
   try {
     if (data.translations.length === 0) return undefined;
 
-    const languages = await Language.getMultipleByCodes(client, {
-      codes: data.translations.map((translation) => translation.language_code),
+    const languages = await Language.getMultipleByIds(client, {
+      ids: data.translations.map((translation) => translation.language_id),
     });
 
     const preparedTranslations = prepareTranslations(

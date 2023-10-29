@@ -1,5 +1,5 @@
 import createSingle from "./create-single.js"; // verified
-import deleteSingle from "./delete-single.js";
+import deleteSingle from "./delete-single.js"; // verified
 import getMultiple from "./get-multiple.js";
 import getSingle from "./get-single.js";
 import updateSingle from "./update-single.js"; // verified
