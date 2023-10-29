@@ -61,6 +61,7 @@ r(router, {
   middleware: {
     authenticate: true,
     validateEnvironment: true,
+    contentLanguage: true,
   },
   schema: getSingle.schema,
   controller: getSingle.controller,
@@ -91,6 +92,7 @@ r(router, {
     authenticate: true,
     authoriseCSRF: true,
     validateEnvironment: true,
+    contentLanguage: true,
   },
   schema: updateSingleBricksController.schema,
   controller: updateSingleBricksController.controller,
