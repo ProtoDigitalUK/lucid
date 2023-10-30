@@ -35,7 +35,7 @@ const createSingleBody = z.object({
   published: z.boolean().optional(),
   parent_id: z.number().optional(),
   category_ids: z.array(z.number()).optional(),
-  page_content: z
+  translations: z
     .array(
       z.object({
         language_id: z.number(),
@@ -67,7 +67,7 @@ const updateSingleBody = z.object({
   author_id: z.number().nullable().optional(),
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
-  page_content: z
+  translations: z
     .array(
       z.object({
         language_id: z.number(),

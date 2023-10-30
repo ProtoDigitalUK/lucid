@@ -20,8 +20,7 @@ const updateSingleController: Controller<
     )({
       id: parseInt(req.params.id),
       data: {
-        name: req.body.name,
-        alt: req.body.alt,
+        translations: req.body.translations,
         files: req.files,
       },
     });

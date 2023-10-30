@@ -13,8 +13,11 @@ import s3Service from "@services/s3/index.js";
 import formatMedia from "@utils/format/format-media.js";
 
 export interface ServiceData {
-  name?: string;
-  alt?: string;
+  translations: {
+    language_id: number;
+    name?: string;
+    alt?: string;
+  }[];
   files?: fileUpload.FileArray | null | undefined;
 }
 

@@ -7,7 +7,7 @@ export interface PagesResT {
   parent_id: number | null;
   collection_key: string;
 
-  page_content: {
+  translations: {
     title?: string;
     slug?: string;
     excerpt?: string | null;

@@ -18,8 +18,7 @@ const createSingleController: Controller<
       mediaService.createSingle,
       false
     )({
-      name: req.body.name,
-      alt: req.body.alt,
+      translations: req.body.translations,
       files: req.files,
     });
 

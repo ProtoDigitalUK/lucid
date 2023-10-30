@@ -26,7 +26,7 @@ const updateSingleController: Controller<
       author_id: req.body.author_id,
       category_ids: req.body.category_ids,
       published: req.body.published,
-      translations: req.body.page_content,
+      translations: req.body.translations,
     });
 
     res.status(200).json(

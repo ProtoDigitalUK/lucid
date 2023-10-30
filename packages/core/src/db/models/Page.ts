@@ -16,7 +16,7 @@ export type PageT = {
   collection_key: string;
 
   homepage: boolean;
-  page_content: Array<{
+  translations: Array<{
     title: string;
     slug: string;
     excerpt: string | null;
@@ -131,7 +131,7 @@ export default class Page {
             )
             FROM lucid_page_content
             WHERE page_id = $1
-          ) AS page_content
+          ) AS translations
         FROM
           lucid_pages
         LEFT JOIN

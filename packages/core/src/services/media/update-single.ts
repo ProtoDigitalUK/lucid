@@ -16,8 +16,11 @@ import processedImagesService from "@services/processed-images/index.js";
 export interface ServiceData {
   id: number;
   data: {
-    name?: string;
-    alt?: string;
+    translations: {
+      language_id: number;
+      name?: string;
+      alt?: string;
+    }[];
     files: fileUpload.FileArray | null | undefined;
   };
 }

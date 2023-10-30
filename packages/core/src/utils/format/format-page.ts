@@ -10,7 +10,7 @@ const formatPage = (data: PageT, single_content?: boolean): PagesResT => {
     collection_key: data.collection_key,
 
     homepage: data.homepage,
-    page_content: single_content
+    translations: single_content
       ? [
           {
             title: data.title,
@@ -19,7 +19,7 @@ const formatPage = (data: PageT, single_content?: boolean): PagesResT => {
             excerpt: data.excerpt || null,
           },
         ]
-      : data.page_content,
+      : data.translations,
 
     created_by: data.created_by,
     created_at: data.created_at,
