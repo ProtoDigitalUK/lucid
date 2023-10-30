@@ -16,9 +16,20 @@ const createSingleController: Controller<
   try {
     const media = await service(
       mediaService.createSingle,
-      false
+      true
     )({
-      translations: req.body.translations,
+      translations: [
+        {
+          language_id: 1,
+          name: "EN Name",
+          alt: "EN Alt",
+        },
+        {
+          language_id: 2,
+          name: "ENGB Name",
+          alt: "ENGB Alt",
+        },
+      ], // req.body.translations,
       files: req.files,
     });
 

@@ -14,10 +14,10 @@ type MediaCreateSingle = (
   client: PoolClient,
   data: {
     key: string;
-    name: string;
     type: MediaResT["type"];
     etag?: string;
-    alt?: string;
+    name_translation_key_id?: number;
+    alt_translation_key_id?: number;
     meta: MediaMetaDataT;
   }
 ) => Promise<MediaT>;
@@ -81,8 +81,9 @@ export type MediaT = {
   e_tag: string;
 
   type: MediaResT["type"];
-  name: string;
-  alt: string | null;
+
+  name_translation_key_id?: number | null;
+  alt_translation_key_id?: number | null;
 
   mime_type: string;
   file_extension: string;
@@ -103,8 +104,8 @@ export default class Media {
         "key",
         "e_tag",
         "type",
-        "name",
-        "alt",
+        "name_translation_key_id",
+        "alt_translation_key_id",
         "mime_type",
         "file_extension",
         "file_size",
@@ -115,8 +116,8 @@ export default class Media {
         data.key,
         data.etag,
         data.type,
-        data.name,
-        data.alt,
+        data.name_translation_key_id,
+        data.alt_translation_key_id,
         data.meta.mimeType,
         data.meta.fileExtension,
         data.meta.size,

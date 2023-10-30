@@ -9,6 +9,7 @@ import Media from "@db/models/Media.js";
 // Services
 import mediaService from "@services/media/index.js";
 import s3Service from "@services/s3/index.js";
+import translationsService from "@services/translations/index.js";
 // Format
 import formatMedia from "@utils/format/format-media.js";
 
@@ -41,6 +42,8 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
 
   const files = helpers.formatReqFiles(data.files);
   const firstFile = files[0];
+  const firstName =
+    data.translations.length > 0 ? data.translations[0].name : undefined;
 
   // -------------------------------------------
   // Checks
@@ -54,16 +57,49 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
 
   // -------------------------------------------
   // Generate key and save file
-  const key = helpers.uniqueKey(data.name || firstFile.name);
+  const key = helpers.uniqueKey(firstName || firstFile.name);
   const meta = await helpers.getMetaData(firstFile);
   const type = helpers.getMediaType(meta.mimeType);
 
-  const response = await s3Service.saveObject({
+  const s3Promise = s3Service.saveObject({
     type: "file",
     key: key,
     file: firstFile,
     meta,
   });
+  const translationPromise = service(
+    translationsService.createMultiple,
+    false,
+    client
+  )({
+    translations: {
+      name: data.translations
+        .filter((translation) => {
+          return translation.name !== undefined;
+        })
+        .map((translation) => {
+          return {
+            language_id: translation.language_id,
+            value: translation.name as string,
+          };
+        }),
+      alt: data.translations
+        .filter((translation) => {
+          return translation.alt !== undefined;
+        })
+        .map((translation) => {
+          return {
+            language_id: translation.language_id,
+            value: translation.alt as string,
+          };
+        }),
+    },
+  });
+
+  const [response, translations] = await Promise.all([
+    s3Promise,
+    translationPromise,
+  ]);
 
   // Error if file not saved
   if (response.$metadata.httpStatusCode !== 200) {
@@ -81,10 +117,11 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
+  // create media
   const media = await Media.createSingle(client, {
     key: key,
-    name: data.name || firstFile.name,
-    alt: data.alt,
+    name_translation_key_id: translations.get("name"),
+    alt_translation_key_id: translations.get("alt"),
     etag: response.ETag?.replace(/"/g, ""),
     type: type,
     meta: meta,

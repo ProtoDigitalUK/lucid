@@ -17,7 +17,7 @@ export interface ServiceData {
   id: number;
   data: {
     translations: {
-      language_id: number;
+      language_id: string;
       name?: string;
       alt?: string;
     }[];

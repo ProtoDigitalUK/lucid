@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS lucid_media (
   width INTEGER,
   height INTEGER,
 
-  name INTEGER REFERENCES lucid_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
-  alt INTEGER REFERENCES lucid_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  name_translation_key_id INTEGER REFERENCES lucid_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  alt_translation_key_id INTEGER REFERENCES lucid_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

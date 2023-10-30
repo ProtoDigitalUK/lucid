@@ -3,13 +3,13 @@ import z from "zod";
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  translations: z.array(
-    z.object({
-      language_id: z.number(),
-      name: z.string().optional(),
-      alt: z.string().optional(),
-    })
-  ),
+  // translations: z.array(
+  //   z.object({
+  //     language_id: z.number(),
+  //     name: z.string().optional(),
+  //     alt: z.string().optional(),
+  //   })
+  // ),
 });
 const createSingleQuery = z.object({});
 const createSingleParams = z.object({});

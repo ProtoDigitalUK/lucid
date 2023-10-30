@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS lucid_translations (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE INDEX idx_translation_key_language
+ON lucid_translations(translation_key_id, language_id);
+
 -- Create a trigger function to enforce a single default language
 CREATE OR REPLACE FUNCTION enforce_single_default_language() 
 RETURNS TRIGGER AS $$
