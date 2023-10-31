@@ -1,15 +1,17 @@
 import z from "zod";
 
+export const mediaTranslations = z.array(
+  z.object({
+    language_id: z.number(),
+    name: z.string().optional(),
+    alt: z.string().optional(),
+  })
+);
+
 // ------------------------------------
 // CREATE SINGLE
 const createSingleBody = z.object({
-  // translations: z.array(
-  //   z.object({
-  //     language_id: z.number(),
-  //     name: z.string().optional(),
-  //     alt: z.string().optional(),
-  //   })
-  // ),
+  translations: z.string(),
 });
 const createSingleQuery = z.object({});
 const createSingleParams = z.object({});
@@ -82,13 +84,7 @@ const deleteSingleParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
-  translations: z.array(
-    z.object({
-      language_id: z.number(),
-      name: z.string().optional(),
-      alt: z.string().optional(),
-    })
-  ),
+  translations: z.string(),
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({

@@ -18,18 +18,7 @@ const createSingleController: Controller<
       mediaService.createSingle,
       true
     )({
-      translations: [
-        {
-          language_id: 1,
-          name: "EN Name",
-          alt: "EN Alt",
-        },
-        {
-          language_id: 2,
-          name: "ENGB Name",
-          alt: "ENGB Alt",
-        },
-      ], // req.body.translations,
+      translations: req.body.translations,
       files: req.files,
     });
 
