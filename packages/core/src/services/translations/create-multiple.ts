@@ -14,16 +14,10 @@ export interface ServiceData {
 }
 
 const createMultiple = async (client: PoolClient, data: ServiceData) => {
-  let totalIdsNeeded = 0;
-  for (const [_, translation] of Object.entries(data.translations)) {
-    if (translation.length > 0) {
-      totalIdsNeeded++;
-    }
-  }
-
+  // create id regardless of whether we have translations or not, id is still needed on the parent table
   const translationKeys = await TranslationKey.createMultiple(
     client,
-    totalIdsNeeded
+    Object.keys(data.translations).length
   );
 
   const translationKeyIdMap = new Map<string, number>();

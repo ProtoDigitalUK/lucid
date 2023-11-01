@@ -10,8 +10,6 @@ import Media from "@db/models/Media.js";
 import mediaService from "@services/media/index.js";
 import s3Service from "@services/s3/index.js";
 import translationsService from "@services/translations/index.js";
-// Schema
-import { mediaTranslations } from "@schemas/media.js";
 // Format
 import formatMedia from "@utils/format/format-media.js";
 
@@ -21,16 +19,9 @@ export interface ServiceData {
 }
 
 const createSingle = async (client: PoolClient, data: ServiceData) => {
-  const translationValidate = await mediaTranslations.safeParseAsync(
-    JSON.parse(data.translations)
-  );
-
-  if (!translationValidate.success) {
-    throw new LucidError({
-      type: "validation",
-      zod: translationValidate.error,
-    });
-  }
+  const translationsData = translationsService.validateTranslations({
+    translations: data.translations,
+  });
 
   // -------------------------------------------
   // Data
@@ -52,7 +43,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   const files = helpers.formatReqFiles(data.files);
   const firstFile = files[0];
   const firstName =
-    data.translations.length > 0 ? translationValidate.data[0].name : undefined;
+    data.translations.length > 0 ? translationsData[0].name : undefined;
 
   // -------------------------------------------
   // Checks
@@ -82,7 +73,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     translations: {
-      name: translationValidate.data
+      name: translationsData
         .filter((translation) => {
           return translation.name !== undefined;
         })
@@ -92,7 +83,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
             value: translation.name as string,
           };
         }),
-      alt: translationValidate.data
+      alt: translationsData
         .filter((translation) => {
           return translation.alt !== undefined;
         })
