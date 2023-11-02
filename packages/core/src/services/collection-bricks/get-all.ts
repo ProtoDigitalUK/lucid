@@ -19,21 +19,22 @@ export interface ServiceData {
 }
 
 const getAll = async (client: PoolClient, data: ServiceData) => {
-  const brickFields = await CollectionBrick.getAll(client, {
-    reference_id: data.reference_id,
-    type: data.type,
-    language_id: data.language_id,
-  });
+  const [brickFields, environment] = await Promise.all([
+    CollectionBrick.getAll(client, {
+      reference_id: data.reference_id,
+      type: data.type,
+      language_id: data.language_id,
+    }),
+    service(
+      environmentsService.getSingle,
+      false,
+      client
+    )({
+      key: data.environment_key,
+    }),
+  ]);
 
   if (!brickFields) return [];
-
-  const environment = await service(
-    environmentsService.getSingle,
-    false,
-    client
-  )({
-    key: data.environment_key,
-  });
 
   return formatBricks({
     brick_fields: brickFields,

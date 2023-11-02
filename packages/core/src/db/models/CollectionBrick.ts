@@ -100,8 +100,8 @@ export default class CollectionBrick {
           'file_size', lucid_media.file_size,
           'width', lucid_media.width,
           'height', lucid_media.height,
-          'name', lucid_media.name,
-          'alt', lucid_media.alt
+          'name', COALESCE(name_translation.value, ''),
+          'alt', COALESCE(alt_translation.value, '')
         ) as media
       FROM 
         lucid_collection_bricks
@@ -125,6 +125,14 @@ export default class CollectionBrick {
         lucid_media
       ON 
         lucid_fields.media_id = lucid_media.id
+      LEFT JOIN 
+        lucid_translations AS name_translation
+      ON 
+        lucid_media.name_translation_key_id = name_translation.translation_key_id AND name_translation.language_id = $2
+      LEFT JOIN 
+        lucid_translations AS alt_translation
+      ON 
+        lucid_media.alt_translation_key_id = alt_translation.translation_key_id AND alt_translation.language_id = $2
       WHERE 
         lucid_collection_bricks.${referenceKey} = $1
       ORDER BY 
