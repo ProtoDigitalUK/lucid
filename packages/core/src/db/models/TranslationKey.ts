@@ -21,6 +21,16 @@ export default class TranslationKey {
 
     return translationKeys.rows;
   };
+  static deleteMultiple: TranslationKeyDeleteMultiple = async (
+    client,
+    data
+  ) => {
+    await client.query({
+      text: `DELETE FROM lucid_translation_keys
+      WHERE id = ANY($1)`,
+      values: [data.ids],
+    });
+  };
 }
 
 // -------------------------------------------
@@ -29,3 +39,10 @@ type TranslationKeyCreateMultiple = (
   client: PoolClient,
   total: number
 ) => Promise<TranslationKeyT[]>;
+
+type TranslationKeyDeleteMultiple = (
+  client: PoolClient,
+  data: {
+    ids: number[];
+  }
+) => Promise<void>;

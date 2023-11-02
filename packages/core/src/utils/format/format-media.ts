@@ -9,8 +9,8 @@ const formatMedia = (media: MediaT): MediaResT => {
     id: media.id,
     key: media.key,
     url: createURL(media.key) as string,
-    name: media.name,
-    alt: media.alt,
+    name_translation_key_id: media.name_translation_key_id,
+    alt_translation_key_id: media.alt_translation_key_id,
     type: media.type,
     meta: {
       mime_type: media.mime_type,

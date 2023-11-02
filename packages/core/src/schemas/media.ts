@@ -2,11 +2,14 @@ import z from "zod";
 
 export const mediaTranslations = z.array(
   z.object({
+    id: z.number().optional(), // translation id
     language_id: z.number(),
-    name: z.string().optional(),
-    alt: z.string().optional(),
+    value: z.string(),
+    key: z.enum(["name", "alt"]),
   })
 );
+
+export type MediaTranslationsT = z.infer<typeof mediaTranslations>;
 
 // ------------------------------------
 // CREATE SINGLE

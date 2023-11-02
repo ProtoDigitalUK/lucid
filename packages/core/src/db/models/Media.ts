@@ -9,71 +9,6 @@ import {
 import { MediaResT } from "@lucid/types/src/media.js";
 
 // -------------------------------------------
-// Types
-type MediaCreateSingle = (
-  client: PoolClient,
-  data: {
-    key: string;
-    type: MediaResT["type"];
-    etag?: string;
-    name_translation_key_id?: number;
-    alt_translation_key_id?: number;
-    meta: MediaMetaDataT;
-  }
-) => Promise<MediaT>;
-
-type MediaGetMultiple = (
-  client: PoolClient,
-  query_instance: SelectQueryBuilder
-) => Promise<{
-  data: MediaT[];
-  count: number;
-}>;
-
-type MediaGetSingle = (
-  client: PoolClient,
-  data: {
-    key: string;
-  }
-) => Promise<MediaT>;
-
-type MediaGetSingleById = (
-  client: PoolClient,
-  data: {
-    id: number;
-  }
-) => Promise<MediaT>;
-
-type MediaGetMultipleByIds = (
-  client: PoolClient,
-  data: {
-    ids: number[];
-  }
-) => Promise<MediaT[]>;
-
-type MediaDeleteSingle = (
-  client: PoolClient,
-  data: { key: string }
-) => Promise<{
-  key: MediaT["key"];
-  file_size: MediaT["file_size"];
-}>;
-
-type MediaUpdateSingle = (
-  client: PoolClient,
-  data: {
-    key: string;
-    name?: string;
-    type?: MediaResT["type"];
-    alt?: string;
-    meta?: MediaMetaDataT;
-    newKey?: string;
-  }
-) => Promise<{
-  key: MediaT["key"];
-}>;
-
-// -------------------------------------------
 // Media
 export type MediaT = {
   id: number;
@@ -82,8 +17,8 @@ export type MediaT = {
 
   type: MediaResT["type"];
 
-  name_translation_key_id?: number | null;
-  alt_translation_key_id?: number | null;
+  name_translation_key_id: number | null;
+  alt_translation_key_id: number | null;
 
   mime_type: string;
   file_extension: string;
@@ -127,7 +62,7 @@ export default class Media {
     });
 
     const media = await client.query<MediaT>({
-      text: `INSERT INTO lucid_media (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO lucid_media (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
       values: values.value,
     });
 
@@ -196,8 +131,6 @@ export default class Media {
     // Update Media Row
     const { columns, aliases, values } = queryDataFormat({
       columns: [
-        "name",
-        "alt",
         "type",
         "mime_type",
         "file_extension",
@@ -207,8 +140,6 @@ export default class Media {
         "key",
       ],
       values: [
-        data.name,
-        data.alt,
         data.type,
         data.meta?.mimeType,
         data.meta?.fileExtension,
@@ -255,3 +186,68 @@ export default class Media {
     return media.rows;
   };
 }
+
+// -------------------------------------------
+// Types
+type MediaCreateSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+    type: MediaResT["type"];
+    etag?: string;
+    name_translation_key_id?: number;
+    alt_translation_key_id?: number;
+    meta: MediaMetaDataT;
+  }
+) => Promise<{
+  id: MediaT["id"];
+}>;
+
+type MediaGetMultiple = (
+  client: PoolClient,
+  query_instance: SelectQueryBuilder
+) => Promise<{
+  data: MediaT[];
+  count: number;
+}>;
+
+type MediaGetSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+  }
+) => Promise<MediaT>;
+
+type MediaGetSingleById = (
+  client: PoolClient,
+  data: {
+    id: number;
+  }
+) => Promise<MediaT>;
+
+type MediaGetMultipleByIds = (
+  client: PoolClient,
+  data: {
+    ids: number[];
+  }
+) => Promise<MediaT[]>;
+
+type MediaDeleteSingle = (
+  client: PoolClient,
+  data: { key: string }
+) => Promise<{
+  key: MediaT["key"];
+  file_size: MediaT["file_size"];
+}>;
+
+type MediaUpdateSingle = (
+  client: PoolClient,
+  data: {
+    key: string;
+    type?: MediaResT["type"];
+    meta?: MediaMetaDataT;
+    newKey?: string;
+  }
+) => Promise<{
+  key: MediaT["key"];
+}>;

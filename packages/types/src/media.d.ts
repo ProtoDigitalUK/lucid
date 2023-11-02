@@ -2,8 +2,8 @@ export interface MediaResT {
   id: number;
   key: string;
   url: string;
-  name: string;
-  alt: string | null;
+  name_translation_key_id: number | null;
+  alt_translation_key_id: number | null;
   type: "image" | "video" | "audio" | "document" | "archive" | "unknown";
   meta: {
     mime_type: string;

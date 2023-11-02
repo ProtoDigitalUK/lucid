@@ -42,8 +42,10 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
 
   const files = helpers.formatReqFiles(data.files);
   const firstFile = files[0];
-  const firstName =
-    data.translations.length > 0 ? translationsData[0].name : undefined;
+  const firstName = translationsService.firstValueOfKey({
+    translations: translationsData,
+    key: "name",
+  });
 
   // -------------------------------------------
   // Checks
@@ -73,26 +75,10 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     translations: {
-      name: translationsData
-        .filter((translation) => {
-          return translation.name !== undefined;
-        })
-        .map((translation) => {
-          return {
-            language_id: translation.language_id,
-            value: translation.name as string,
-          };
-        }),
-      alt: translationsData
-        .filter((translation) => {
-          return translation.alt !== undefined;
-        })
-        .map((translation) => {
-          return {
-            language_id: translation.language_id,
-            value: translation.alt as string,
-          };
-        }),
+      name: translationsData.filter(
+        (translation) => translation.key === "name"
+      ),
+      alt: translationsData.filter((translation) => translation.key === "alt"),
     },
   });
 
@@ -117,15 +103,23 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  // create media
-  const media = await Media.createSingle(client, {
-    key: key,
-    name_translation_key_id: translations.get("name"),
-    alt_translation_key_id: translations.get("alt"),
-    etag: response.ETag?.replace(/"/g, ""),
-    type: type,
-    meta: meta,
-  });
+  const [media] = await Promise.all([
+    Media.createSingle(client, {
+      key: key,
+      name_translation_key_id: translations.get("name"),
+      alt_translation_key_id: translations.get("alt"),
+      etag: response.ETag?.replace(/"/g, ""),
+      type: type,
+      meta: meta,
+    }),
+    service(
+      mediaService.setStorageUsed,
+      false,
+      client
+    )({
+      add: meta.size,
+    }),
+  ]);
 
   if (!media) {
     await s3Service.deleteObject({
@@ -145,18 +139,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  // update storage used
-  await service(
-    mediaService.setStorageUsed,
-    false,
-    client
-  )({
-    add: meta.size,
-  });
-
-  // -------------------------------------------
-  // Return
-  return formatMedia(media);
+  return;
 };
 
 export default createSingle;

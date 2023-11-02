@@ -1,7 +1,7 @@
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
 // Schema
-import { mediaTranslations } from "@schemas/media.js";
+import { mediaTranslations, MediaTranslationsT } from "@schemas/media.js";
 
 export interface ServiceData {
   translations: string;
@@ -19,7 +19,7 @@ const validateTranslations = (data: ServiceData) => {
     });
   }
 
-  return translationValidate.data;
+  return translationValidate.data as MediaTranslationsT;
 };
 
 export default validateTranslations;

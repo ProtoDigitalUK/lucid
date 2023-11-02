@@ -341,7 +341,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"en-gb\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"raw": "{\r\n    \"code\": \"es\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1031,18 +1031,19 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "_csrf",
-														"value": "{{CSRF}}",
-														"type": "text"
-													},
-													{
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
+													},
+													{
+														"key": "lucid-content-lang",
+														"value": "{{LUCID_CONTENT_LANG}}",
+														"type": "text",
+														"disabled": true
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/2",
+													"raw": "{{BASE_URL}}/api/v1/pages/1?include=bricks",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -1050,13 +1051,12 @@
 														"api",
 														"v1",
 														"pages",
-														"2"
+														"1"
 													],
 													"query": [
 														{
 															"key": "include",
-															"value": "bricks",
-															"disabled": true
+															"value": "bricks"
 														}
 													]
 												}
@@ -1081,7 +1081,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"page_content\": [\n        {\n            \"language_id\": 1,\n            \"title\": \"Cats\",\n            \"slug\": \"cats\",\n            \"excerpt\": \"Cats en\"\n        },\n        {\n            \"language_id\": 2,\n            \"title\": \"Cats\",\n            \"slug\": \"cats\",\n            \"excerpt\": \"Cats gb\"\n        }\n    ],\n    // \"homepage\": true,\n    // \"parent_id\": 9,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+													"raw": "{\n    \"translations\": [\n        {\n            \"language_id\": 1,\n            \"title\": \"Cats\",\n            \"slug\": \"cats\",\n            \"excerpt\": \"Cats en\"\n        },\n        {\n            \"language_id\": 2,\n            \"title\": \"Cats\",\n            \"slug\": \"cats\",\n            \"excerpt\": \"Cats gb\"\n        }\n    ],\n    // \"homepage\": true,\n    // \"parent_id\": 9,\n    \"collection_key\": \"page\"\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1120,7 +1120,7 @@
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"page_content\": [\n        // {\n        //     \"language_id\": 1,\n        //     \"title\": \"About\",\n        //     \"slug\": \"about\",\n        //     \"excerpt\": \"\"\n        // }\n        {\n            \"language_id\": 2,\n            \"title\": \"About EN\",\n            \"slug\": \"about-en\"\n            // \"excerpt\": \"UK Homepage\"\n        }\n    ]\n\n    // \"author_id\": 2,\n    // \"homepage\": true,\n    // \"parent_id\": 11\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
+													"raw": "{\n    \"translations\": [\n        // {\n        //     \"language_id\": 1,\n        //     \"title\": \"About\",\n        //     \"slug\": \"about\",\n        //     \"excerpt\": \"\"\n        // }\n        {\n            \"language_id\": 2,\n            \"title\": \"About EN\",\n            \"slug\": \"about-en\"\n            // \"excerpt\": \"UK Homepage\"\n        }\n    ]\n\n    // \"author_id\": 2,\n    // \"homepage\": true,\n    // \"parent_id\": 11\n    // \"category_ids\": [\n    //   1\n    // ],\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1156,11 +1156,17 @@
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
+													},
+													{
+														"key": "lucid-content-lang",
+														"value": "{{LUCID_CONTENT_LANG}}",
+														"type": "text",
+														"disabled": true
 													}
 												],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"banner\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"groups\": [\n                {\n                    \"group_id\": \"ref-group1\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 0\n                },\n                {\n                    \"group_id\": \"ref-group2\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 1\n                },\n                {\n                    \"group_id\": \"ref-group3\",\n                    \"parent_group_id\": \"ref-group2\",\n                    \"repeater_key\": \"social_links_2\",\n                    \"group_order\": 0\n                }\n            ],\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"test 2\"\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<h2>Hello 2</h2>\"\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"page-link\",\n                    \"type\": \"pagelink\",\n                    \"value\": {\n                        \"id\": 3,\n                        \"target\": \"_blank\",\n                        \"label\": \"Link label\"\n                    }\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group1\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group2\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\"\n                }\n            ]\n        },\n        {\n            // \"id\": 2,\n            \"key\": \"intro\",\n            \"order\": 1,\n            \"type\": \"builder\",\n            \"fields\": []\n        }\n\n    ]\n}",
+													"raw": "{\n    \"bricks\": [\n        {\n            \"id\": 13,\n            \"key\": \"banner\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"groups\": [\n                {\n                    \"group_id\": \"ref-group1\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 0\n                },\n                {\n                    \"group_id\": \"ref-group2\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 1\n                },\n                {\n                    \"group_id\": \"ref-group3\",\n                    \"parent_group_id\": \"ref-group2\",\n                    \"repeater_key\": \"social_links_2\",\n                    \"group_order\": 0\n                }\n            ],\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"test 2\"\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<h2>Hello 2</h2>\"\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"page-link\",\n                    \"type\": \"pagelink\",\n                    \"value\": {\n                        \"id\": 3,\n                        \"target\": \"_blank\",\n                        \"label\": \"Link label\"\n                    }\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group1\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\"\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group2\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\"\n                }\n            ]\n        },\n        {\n            \"id\": 14,\n            \"key\": \"intro\",\n            \"order\": 1,\n            \"type\": \"builder\",\n            \"fields\": []\n        }\n\n    ]\n}",
 													"options": {
 														"raw": {
 															"language": "json"
@@ -1168,7 +1174,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/page/2/bricks",
+													"raw": "{{BASE_URL}}/api/v1/pages/page/1/bricks",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -1177,7 +1183,7 @@
 														"v1",
 														"pages",
 														"page",
-														"2",
+														"1",
 														"bricks"
 													]
 												}
@@ -1274,13 +1280,13 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "_csrf",
-														"value": "{{CSRF}}",
+														"key": "lucid-environment",
+														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "lucid-content-lang",
+														"value": "{{LUCID_CONTENT_LANG}}",
 														"type": "text"
 													}
 												],
@@ -2155,21 +2161,14 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "name",
-									"value": "I have no file",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "alt",
-									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text",
-									"disabled": true
-								},
-								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/Group 122.jpg"
+									"src": "/C:/Users/wyall/Pictures/Screenshots/Screenshot 2023-07-23 194433.png"
+								},
+								{
+									"key": "translations",
+									"value": "[{\"language_id\":1,\"value\":\"EN Name\",\"key\":\"name\"}]",
+									"type": "text"
 								}
 							]
 						},
@@ -2202,14 +2201,8 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "name",
-									"value": "Wolevito",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "alt",
-									"value": "A ham baked in rum, floating on the ocean surface",
+									"key": "translations",
+									"value": "[{\"id\": 6,\"language_id\":1,\"value\":\"EN Name tehe\",\"key\":\"name\"}]",
 									"type": "text",
 									"disabled": true
 								},
@@ -2222,7 +2215,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/1",
+							"raw": "{{BASE_URL}}/api/v1/media/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2230,7 +2223,7 @@
 								"api",
 								"v1",
 								"media",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -2322,7 +2315,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/2",
+							"raw": "{{BASE_URL}}/api/v1/media/3",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2330,7 +2323,7 @@
 								"api",
 								"v1",
 								"media",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -2357,7 +2350,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/8",
+							"raw": "{{BASE_URL}}/api/v1/media/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2365,7 +2358,7 @@
 								"api",
 								"v1",
 								"media",
-								"8"
+								"2"
 							]
 						}
 					},

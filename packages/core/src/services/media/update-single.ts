@@ -12,20 +12,21 @@ import { MediaResT } from "@lucid/types/src/media.js";
 import mediaService from "@services/media/index.js";
 import s3Service from "@services/s3/index.js";
 import processedImagesService from "@services/processed-images/index.js";
+import translationsService from "@services/translations/index.js";
 
 export interface ServiceData {
   id: number;
   data: {
-    translations: {
-      language_id: string;
-      name?: string;
-      alt?: string;
-    }[];
+    translations: string;
     files: fileUpload.FileArray | null | undefined;
   };
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
+  const translationsData = translationsService.validateTranslations({
+    translations: data.data.translations,
+  });
+
   // -------------------------------------------
   // Get Media
   const media = await service(
@@ -45,6 +46,10 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   if (data.data.files && data.data.files["file"]) {
     const files = helpers.formatReqFiles(data.data.files);
     const firstFile = files[0];
+    const firstName = translationsService.firstValueOfKey({
+      translations: translationsData,
+      key: "name",
+    });
 
     // -------------------------------------------
     // Checks
@@ -59,7 +64,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     // -------------------------------------------
     // Upload to S3
     meta = await helpers.getMetaData(firstFile);
-    newKey = helpers.uniqueKey(data.data.name || firstFile.name);
+    newKey = helpers.uniqueKey(firstName || firstFile.name);
     newType = helpers.getMediaType(meta.mimeType);
 
     const updateKeyRes = await s3Service.updateObjectKey({
@@ -82,12 +87,33 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       });
     }
 
-    const response = await s3Service.saveObject({
+    const saveFilePromise = s3Service.saveObject({
       type: "file",
       key: newKey,
       file: firstFile,
       meta,
     });
+    const updateStoragePromise = service(
+      mediaService.setStorageUsed,
+      false,
+      client
+    )({
+      add: meta.size,
+      minus: media.meta.file_size,
+    });
+    const clearProcessedPromise = service(
+      processedImagesService.clearSingle,
+      false,
+      client
+    )({
+      id: media.id,
+    });
+
+    const [response] = await Promise.all([
+      saveFilePromise,
+      updateStoragePromise,
+      clearProcessedPromise,
+    ]);
 
     if (response.$metadata.httpStatusCode !== 200) {
       throw new LucidError({
@@ -103,39 +129,32 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
         }),
       });
     }
-
-    // -------------------------------------------
-    // Update storage used
-    await service(
-      mediaService.setStorageUsed,
-      false,
-      client
-    )({
-      add: meta.size,
-      minus: media.meta.file_size,
-    });
-
-    // -------------------------------------------
-    // Remove all processed images
-    await service(
-      processedImagesService.clearSingle,
-      false,
-      client
-    )({
-      id: media.id,
-    });
   }
 
   // -------------------------------------------
   // Update Media Row
-  const mediaUpdate = await Media.updateSingle(client, {
+  const mediaUpdatePromise = Media.updateSingle(client, {
     key: media.key,
-    name: data.data.name,
-    alt: data.data.alt,
     meta: meta,
     type: newType,
     newKey: newKey,
   });
+  const updateMultipleTranslationsPromise = service(
+    translationsService.updateMultiple,
+    false,
+    client
+  )({
+    translations: translationsData,
+    keyMap: {
+      name: media.name_translation_key_id,
+      alt: media.alt_translation_key_id,
+    },
+  });
+
+  const [mediaUpdate] = await Promise.all([
+    mediaUpdatePromise,
+    updateMultipleTranslationsPromise,
+  ]);
 
   if (!mediaUpdate) {
     throw new LucidError({
