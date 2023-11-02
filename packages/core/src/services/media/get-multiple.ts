@@ -21,10 +21,10 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     columns: [
       "id",
       "key",
+      "name_translation_key_id",
+      "alt_translation_key_id",
       "e_tag",
       "type",
-      "name",
-      "alt",
       "mime_type",
       "file_extension",
       "file_size",
@@ -38,11 +38,6 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       meta: {
         type: {
           operator: "=",
-          type: "text",
-          columnType: "standard",
-        },
-        name: {
-          operator: "%",
           type: "text",
           columnType: "standard",
         },

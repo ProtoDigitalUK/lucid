@@ -11,6 +11,8 @@ const formatMedia = (media: MediaT): MediaResT => {
     url: createURL(media.key) as string,
     name_translation_key_id: media.name_translation_key_id,
     alt_translation_key_id: media.alt_translation_key_id,
+    name_translations: media.name_translations || [],
+    alt_translations: media.alt_translations || [],
     type: media.type,
     meta: {
       mime_type: media.mime_type,

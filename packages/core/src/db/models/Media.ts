@@ -20,6 +20,15 @@ export type MediaT = {
   name_translation_key_id: number | null;
   alt_translation_key_id: number | null;
 
+  name_translations: {
+    language_id: number;
+    value: string;
+  }[];
+  alt_translations: {
+    language_id: number;
+    value: string;
+  }[];
+
   mime_type: string;
   file_extension: string;
   file_size: number;
@@ -70,11 +79,36 @@ export default class Media {
   };
   static getMultiple: MediaGetMultiple = async (client, query_instance) => {
     const mediasRes = client.query<MediaT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_media ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT 
+          media.*, 
+          json_agg(
+            json_build_object(
+              'language_id', name_translations.language_id, 
+              'name_value', name_translations.value
+            )
+          ) FILTER (WHERE name_translations.id IS NOT NULL) AS name_translations,
+          json_agg(
+            json_build_object(
+              'language_id', alt_translations.language_id, 
+              'alt_value', alt_translations.value
+            )
+          ) FILTER (WHERE alt_translations.id IS NOT NULL) AS alt_translations
+        FROM 
+          lucid_media AS media
+        LEFT JOIN lucid_translations AS name_translations 
+          ON media.name_translation_key_id = name_translations.translation_key_id
+        LEFT JOIN lucid_translations AS alt_translations 
+          ON media.alt_translation_key_id = alt_translations.translation_key_id
+        ${query_instance.query.where}
+        GROUP BY media.id
+        ${query_instance.query.order}
+        ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_media.id) FROM lucid_media ${query_instance.query.where}`,
+      text: `SELECT COUNT(DISTINCT lucid_media.id) 
+        FROM lucid_media 
+        ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
@@ -85,27 +119,32 @@ export default class Media {
       count: Number(data[1].rows[0].count),
     };
   };
-  static getSingle: MediaGetSingle = async (client, data) => {
-    const media = await client.query<MediaT>({
-      text: `SELECT
-          *
-        FROM
-          lucid_media
-        WHERE
-          key = $1`,
-      values: [data.key],
-    });
-
-    return media.rows[0];
-  };
   static getSingleById: MediaGetSingleById = async (client, data) => {
     const media = await client.query<MediaT>({
       text: `SELECT
-          *
-        FROM
-          lucid_media
-        WHERE
-          id = $1`,
+        media.*,
+        json_agg(
+          json_build_object(
+            'language_id', name_translations.language_id,
+            'value', name_translations.value
+          )
+        ) FILTER (WHERE name_translations.id IS NOT NULL) AS name_translations,
+        json_agg(
+          json_build_object(
+            'language_id', alt_translations.language_id,
+            'value', alt_translations.value
+          )
+        ) FILTER (WHERE alt_translations.id IS NOT NULL) AS alt_translations
+      FROM
+        lucid_media AS media
+      LEFT JOIN lucid_translations AS name_translations
+        ON media.name_translation_key_id = name_translations.translation_key_id
+      LEFT JOIN lucid_translations AS alt_translations
+        ON media.alt_translation_key_id = alt_translations.translation_key_id
+      WHERE
+        media.id = $1
+      GROUP BY
+        media.id`,
       values: [data.id],
     });
 
@@ -210,13 +249,6 @@ type MediaGetMultiple = (
   data: MediaT[];
   count: number;
 }>;
-
-type MediaGetSingle = (
-  client: PoolClient,
-  data: {
-    key: string;
-  }
-) => Promise<MediaT>;
 
 type MediaGetSingleById = (
   client: PoolClient,
