@@ -1,9 +1,10 @@
 import T from "@/translations";
 import { Component, onMount, Switch, Match, Show, JSXElement } from "solid-js";
-import { FaSolidTrash } from "solid-icons/fa";
+import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
+import classNames from "classnames";
 // Components
 import Button from "@/components/Partials/Button";
-import classNames from "classnames";
+import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 
 export interface PageHeadingProps {
   title: string;
@@ -68,7 +69,11 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         "border-b": !props.options?.noBorder,
       })}
     >
-      <div class={"p-15 md:p-30 flex justify-between items-start"}>
+      <div
+        class={
+          "p-15 md:p-30 flex md:justify-between md:flex-row flex-col-reverse items-start"
+        }
+      >
         {/* Textarea */}
         <div class="max-w-4xl w-full">
           <Switch>
@@ -89,7 +94,8 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         </div>
         {/* Actions */}
         <Show when={props.actions}>
-          <div class="flex items-center justify-end ml-5">
+          <div class="flex items-center justify-end md:ml-5 mb-5 md:mb-0 w-full">
+            <ContentLanguageSelect />
             <Show
               when={
                 props.actions?.create !== undefined &&
@@ -99,12 +105,15 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
               <Button
                 type="submit"
                 theme="primary"
-                size="medium"
+                size="icon"
                 onClick={() => {
                   props.actions?.create?.setOpen(true);
                 }}
               >
-                {props.actions?.create?.label ?? T("create")}
+                <FaSolidPlus />
+                <span class="sr-only">
+                  {props.actions?.create?.label ?? T("create")}
+                </span>
               </Button>
             </Show>
             <Show

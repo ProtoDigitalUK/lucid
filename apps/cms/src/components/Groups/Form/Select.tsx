@@ -44,6 +44,7 @@ export interface SelectProps {
   disabled?: boolean;
   errors?: ErrorResult;
   noMargin?: boolean;
+  noClear?: boolean;
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -80,6 +81,8 @@ export const Select: Component<SelectProps> = (props) => {
   // ----------------------------------------
   // Memos
   const selectOptions = createMemo(() => {
+    if (props.noClear) return props.options;
+
     const options = props.options;
     options.unshift({
       value: undefined,
@@ -126,7 +129,7 @@ export const Select: Component<SelectProps> = (props) => {
             class={classNames(
               "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium w-full flex justify-between",
               {
-                "pt-2": props.copy?.label === undefined,
+                "pt-2 h-10 flex items-center": props.copy?.label === undefined,
               }
             )}
             onFocus={() => setInputFocus(true)}

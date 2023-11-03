@@ -12,7 +12,7 @@ import type { QueryBuilderProps } from "@/utils/query-builder";
 type QueryParamsValueT = Accessor<unknown> | unknown;
 
 interface QueryParams {
-  queryString?: Accessor<string>;
+  queryString?: Accessor<string> | string;
   filters?: Record<string, QueryParamsValueT>;
   location?: Record<string, QueryParamsValueT>;
   headers?: Record<string, QueryParamsValueT>;
