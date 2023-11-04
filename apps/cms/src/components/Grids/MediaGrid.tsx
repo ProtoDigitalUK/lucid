@@ -4,6 +4,8 @@ import api from "@/services/api";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 import useSearchParams from "@/hooks/useSearchParams";
+// Store
+import { contentLanguage } from "@/store/contentLanguageStore";
 // Components
 import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
@@ -51,7 +53,13 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
         loadingCard={<MediaCardLoading />}
       >
         <For each={media.data?.data}>
-          {(item) => <MediaCard media={item} rowTarget={rowTarget} />}
+          {(item) => (
+            <MediaCard
+              media={item}
+              rowTarget={rowTarget}
+              contentLanguage={contentLanguage()}
+            />
+          )}
         </For>
       </Grid.Root>
 

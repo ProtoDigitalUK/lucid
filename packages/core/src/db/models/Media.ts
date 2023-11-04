@@ -84,13 +84,13 @@ export default class Media {
           json_agg(
             json_build_object(
               'language_id', name_translations.language_id, 
-              'name_value', name_translations.value
+              'value', name_translations.value
             )
           ) FILTER (WHERE name_translations.id IS NOT NULL) AS name_translations,
           json_agg(
             json_build_object(
               'language_id', alt_translations.language_id, 
-              'alt_value', alt_translations.value
+              'value', alt_translations.value
             )
           ) FILTER (WHERE alt_translations.id IS NOT NULL) AS alt_translations
         FROM 

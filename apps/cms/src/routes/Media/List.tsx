@@ -16,10 +16,6 @@ const MediaListRoute: Component = () => {
   const searchParams = useSearchParams(
     {
       filters: {
-        name: {
-          value: "",
-          type: "text",
-        },
         file_extension: {
           value: "",
           type: "text",
@@ -30,7 +26,6 @@ const MediaListRoute: Component = () => {
         },
       },
       sorts: {
-        name: undefined,
         file_size: undefined,
         width: undefined,
         height: undefined,
@@ -58,11 +53,6 @@ const MediaListRoute: Component = () => {
         <Query.Row
           searchParams={searchParams}
           filters={[
-            {
-              label: T("name"),
-              key: "name",
-              type: "text",
-            },
             {
               label: T("type"),
               key: "type",
@@ -102,10 +92,6 @@ const MediaListRoute: Component = () => {
           ]}
           sorts={[
             {
-              label: T("name"),
-              key: "name",
-            },
-            {
               label: T("file_size"),
               key: "file_size",
             },
@@ -135,6 +121,7 @@ const MediaListRoute: Component = () => {
           setOpen: setOpenCreateMediaPanel,
           permission: userStore.get.hasPermission(["create_media"]).all,
         },
+        contentLanguage: true,
       }}
     >
       <MediaGrid searchParams={searchParams} />

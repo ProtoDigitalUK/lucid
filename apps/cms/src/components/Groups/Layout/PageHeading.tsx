@@ -25,6 +25,7 @@ export interface PageHeadingProps {
       permission?: boolean;
       label?: string;
     };
+    contentLanguage?: boolean;
   };
   options?: {
     noBorder?: boolean;
@@ -95,7 +96,16 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
         {/* Actions */}
         <Show when={props.actions}>
           <div class="flex items-center justify-end md:ml-5 mb-5 md:mb-0 w-full">
-            <ContentLanguageSelect />
+            <Show
+              when={
+                props.actions?.contentLanguage !== undefined &&
+                props.actions.contentLanguage !== false
+              }
+            >
+              <div class="w-full md:max-w-[200px] mr-2.5">
+                <ContentLanguageSelect />
+              </div>
+            </Show>
             <Show
               when={
                 props.actions?.create !== undefined &&

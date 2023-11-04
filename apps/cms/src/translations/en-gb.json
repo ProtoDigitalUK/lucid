@@ -33,6 +33,7 @@
   "per_page": "Per page {{count}}",
   "filter": "Filter",
   "active": "Active",
+  "no_translation": "No translation",
   "inactive": "Inactive",
   "username": "Username",
   "password": "Password",
