@@ -21,8 +21,20 @@ interface CreateMediaPanelProps {
 const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
   // ------------------------------
   // State
-  const [getAlt, setAlt] = createSignal<string | undefined>(undefined);
-  const [getName, setName] = createSignal<string | undefined>(undefined);
+  const [getAlt, setAlt] = createSignal<
+    Array<{
+      language_id: number;
+      value: string;
+      key: "alt";
+    }>
+  >([]);
+  const [getName, setName] = createSignal<
+    Array<{
+      language_id: number;
+      value: string;
+      key: "name";
+    }>
+  >([]);
 
   // ---------------------------------
   // Mutations
@@ -60,8 +72,7 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
       onSubmit={() => {
         createMedia.action.mutate({
           body: {
-            name: getName(),
-            alt: getAlt(),
+            translations: [],
             file: MediaFile.getFile() || undefined,
           },
         });
@@ -69,8 +80,8 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
       reset={() => {
         createMedia.reset();
         MediaFile.reset();
-        setName(undefined);
-        setAlt(undefined);
+        setName([]);
+        setAlt([]);
       }}
       mutateState={{
         isLoading: createMedia.action.isLoading,
@@ -84,6 +95,7 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
     >
       <MediaFile.Render />
       <SectionHeading title={T("details")} />
+
       <Form.Input
         id="name"
         value={getName() || ""}

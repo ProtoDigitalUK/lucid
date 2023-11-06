@@ -14,12 +14,14 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
   const SelectQuery = new SelectQueryBuilder({
     columns: ["id", "code", "is_default"],
     exclude: undefined,
-    sort: [
-      {
-        key: "id",
-        value: "asc",
-      },
-    ],
+    sort: {
+      data: [
+        {
+          key: "id",
+          value: "asc",
+        },
+      ],
+    },
     page: undefined,
     per_page: "-1",
   });

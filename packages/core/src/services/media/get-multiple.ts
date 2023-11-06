@@ -11,6 +11,9 @@ import formatMedia from "@utils/format/format-media.js";
 
 export interface ServiceData {
   query: z.infer<typeof mediaSchema.getMultiple.query>;
+  language: {
+    id: number;
+  };
 }
 
 const getMultiple = async (client: PoolClient, data: ServiceData) => {
@@ -41,6 +44,13 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
           type: "text",
           columnType: "standard",
         },
+        name: {
+          operator: "%",
+          type: "text",
+          columnType: "standard",
+          table: "name_translations",
+          key: "value",
+        },
         key: {
           operator: "%",
           type: "text",
@@ -58,15 +68,26 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
         },
       },
     },
-    sort: sort,
+    sort: {
+      data: sort,
+      meta: {
+        name: {
+          key: "value",
+          table: "name_translations",
+        },
+      },
+    },
     page: page,
     per_page: per_page,
+    values: [data.language.id],
   });
 
   const mediasRes = await Media.getMultiple(client, SelectQuery);
 
   return {
-    data: mediasRes.data.map((media) => formatMedia(media)),
+    data: mediasRes.data.map((media) =>
+      formatMedia(media, true, data.language.id)
+    ),
     count: mediasRes.count,
   };
 };

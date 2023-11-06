@@ -33,6 +33,9 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
   const media = api.media.useGetMultiple({
     queryParams: {
       queryString: props.searchParams.getQueryString,
+      headers: {
+        "lucid-content-lang": contentLanguage,
+      },
     },
     enabled: () => props.searchParams.getSettled(),
   });

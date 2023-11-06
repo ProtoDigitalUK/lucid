@@ -61,6 +61,14 @@ export default class Language {
 
     return roleRes.rows[0];
   };
+  static getSingleByID: LanguageGetSingleByID = async (client, data) => {
+    const roleRes = await client.query<LanguageT>({
+      text: `SELECT * FROM lucid_languages WHERE id = $1`,
+      values: [data.id],
+    });
+
+    return roleRes.rows[0];
+  };
   static getDefault: LanguageGetDefault = async (client) => {
     const roleRes = await client.query<LanguageT>({
       text: `SELECT * FROM lucid_languages WHERE is_default = true`,
@@ -134,6 +142,13 @@ type LanguageGetSingleByCode = (
   client: PoolClient,
   data: {
     code: LanguageT["code"];
+  }
+) => Promise<LanguageT>;
+
+type LanguageGetSingleByID = (
+  client: PoolClient,
+  data: {
+    id: LanguageT["id"];
   }
 ) => Promise<LanguageT>;
 

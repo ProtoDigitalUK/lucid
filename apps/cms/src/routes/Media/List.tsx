@@ -16,6 +16,10 @@ const MediaListRoute: Component = () => {
   const searchParams = useSearchParams(
     {
       filters: {
+        name: {
+          value: "",
+          type: "text",
+        },
         file_extension: {
           value: "",
           type: "text",
@@ -27,6 +31,7 @@ const MediaListRoute: Component = () => {
       },
       sorts: {
         file_size: undefined,
+        name: undefined,
         width: undefined,
         height: undefined,
         created_at: undefined,
@@ -53,6 +58,11 @@ const MediaListRoute: Component = () => {
         <Query.Row
           searchParams={searchParams}
           filters={[
+            {
+              label: T("name"),
+              key: "name",
+              type: "text",
+            },
             {
               label: T("type"),
               key: "type",
@@ -91,6 +101,10 @@ const MediaListRoute: Component = () => {
             },
           ]}
           sorts={[
+            {
+              label: T("name"),
+              key: "name",
+            },
             {
               label: T("file_size"),
               key: "file_size",

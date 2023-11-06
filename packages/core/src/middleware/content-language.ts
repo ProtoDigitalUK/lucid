@@ -19,7 +19,7 @@ const contentLanguage = async (
       languagesService.getSingleFallback,
       false
     )({
-      code: contentLang as string | undefined,
+      id: contentLang !== null ? Number(contentLang) : undefined,
     });
 
     if (!language) {

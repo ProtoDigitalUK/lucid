@@ -6,11 +6,11 @@ export interface MediaResT {
   alt_translation_key_id: number | null;
   name_translations: {
     language_id: number;
-    value: string;
+    value: string | null;
   }[];
   alt_translations: {
     language_id: number;
-    value: string;
+    value: string | null;
   }[];
   type: "image" | "video" | "audio" | "document" | "archive" | "unknown";
   meta: {

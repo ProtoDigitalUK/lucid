@@ -82,7 +82,9 @@ const getMultipleValidParents = async (
       "lucid_pages.id NOT IN (SELECT d.id FROM descendants d)",
       "lucid_pages.id != $1",
     ],
-    sort: sort,
+    sort: {
+      data: sort,
+    },
     page: page,
     per_page: per_page,
   });

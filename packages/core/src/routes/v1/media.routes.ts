@@ -48,6 +48,7 @@ r(router, {
   middleware: {
     authenticate: true,
     paginated: true,
+    contentLanguage: true,
   },
   schema: getMultiple.schema,
   controller: getMultiple.controller,

@@ -27,7 +27,9 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       "updated_at",
     ],
     exclude: undefined,
-    sort: sort,
+    sort: {
+      data: sort,
+    },
     page: page,
     per_page: per_page,
   });

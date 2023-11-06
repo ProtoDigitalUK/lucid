@@ -19,6 +19,7 @@ const getMultipleController: Controller<
       false
     )({
       query: req.query,
+      language: req.language,
     });
 
     res.status(200).json(

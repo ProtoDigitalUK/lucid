@@ -130,9 +130,17 @@ interface SelectQueryBuilderConfig {
     };
   };
   sort?: {
-    key: string;
-    value: "asc" | "desc";
-  }[];
+    data?: {
+      key: string;
+      value: "asc" | "desc";
+    }[];
+    meta?: {
+      [key: string]: {
+        key?: string;
+        table?: string;
+      };
+    };
+  };
   page?: string;
   per_page?: string;
 
@@ -183,15 +191,15 @@ export class SelectQueryBuilder {
     const filterClauses: Array<string> = this.config.where || [];
 
     if (!this.config.filter?.data) {
-      this.query.where = "";
-      this.values = [];
+      // this.query.where = "";
+      // this.values = [];
       return;
     }
 
     const filters = Object.entries(this.config.filter.data);
     if (!filters) {
-      this.query.where = "";
-      this.values = [];
+      // this.query.where = "";
+      // this.values = [];
       return;
     }
 
@@ -249,16 +257,19 @@ export class SelectQueryBuilder {
       filterClauses.length > 0 ? "WHERE " + filterClauses.join(" AND ") : "";
   }
   #buildOrder() {
-    if (!this.config.sort) return;
-    let query = "";
+    if (!this.config.sort?.data) return;
+    let queryItems: string[] = [];
 
-    this.config.sort.forEach((sort, index) => {
-      query += `${sort.key} ${sort.value.toUpperCase()}${
-        index < (this.config.sort?.length || 0) - 1 ? ", " : ""
-      }`;
+    this.config.sort.data.forEach((sort, index) => {
+      const meta = this.config.sort?.meta;
+      let key = meta?.[sort.key]?.key || sort.key;
+      const table = meta?.[sort.key]?.table || undefined;
+      if (table) key = `${table}.${key}`;
+
+      queryItems.push(`${key} ${sort.value.toUpperCase()}`);
     });
 
-    this.query.order = `ORDER BY ${query}`;
+    this.query.order = `ORDER BY ${queryItems.join(", ")}`;
   }
   #buildPagination() {
     if (!this.config.page || !this.config.per_page) return;

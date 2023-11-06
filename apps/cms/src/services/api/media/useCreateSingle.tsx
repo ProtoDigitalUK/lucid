@@ -9,8 +9,11 @@ import { MediaResT } from "@lucid/types/src/media";
 
 interface Params {
   body: {
-    name?: string;
-    alt?: string;
+    translations?: Array<{
+      language_id: number;
+      value: string;
+      key: "name" | "alt";
+    }>;
     file?: File;
   };
 }
@@ -21,7 +24,9 @@ export const createSingleReq = (params: Params) => {
     csrf: true,
     config: {
       method: "POST",
-      body: objectToFormData(params.body),
+      body: objectToFormData(params.body, {
+        translations: true,
+      }),
     },
   });
 };

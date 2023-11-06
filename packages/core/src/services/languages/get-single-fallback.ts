@@ -6,11 +6,11 @@ import { LucidError } from "@utils/app/error-handler.js";
 import Language from "@db/models/Language.js";
 
 export interface ServiceData {
-  code?: string;
+  id?: number;
 }
 
 const getSingleFallback = async (client: PoolClient, data: ServiceData) => {
-  if (!data.code) {
+  if (!data.id) {
     // get default content lang
     const language = await Language.getDefault(client);
     if (!language) {
@@ -31,8 +31,8 @@ const getSingleFallback = async (client: PoolClient, data: ServiceData) => {
     };
   }
 
-  const language = await Language.getSingleByCode(client, {
-    code: data.code,
+  const language = await Language.getSingleByID(client, {
+    id: data.id,
   });
 
   if (!language) {

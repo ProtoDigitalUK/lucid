@@ -2236,7 +2236,14 @@
 					},
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "lucid-content-lang",
+								"value": "{{LUCID_CONTENT_LANG}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -2258,11 +2265,6 @@
 							],
 							"query": [
 								{
-									"key": "filter[name]",
-									"value": "Rum",
-									"disabled": true
-								},
-								{
 									"key": "filter[key]",
 									"value": "",
 									"disabled": true
@@ -2279,7 +2281,7 @@
 								},
 								{
 									"key": "sort",
-									"value": "-created_at",
+									"value": "-name",
 									"disabled": true
 								},
 								{
@@ -2290,6 +2292,11 @@
 								{
 									"key": "filter[type]",
 									"value": "image,video",
+									"disabled": true
+								},
+								{
+									"key": "filter[name]",
+									"value": "EN Name",
 									"disabled": true
 								}
 							]

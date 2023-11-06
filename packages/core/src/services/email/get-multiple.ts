@@ -65,7 +65,9 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
         },
       },
     },
-    sort: sort,
+    sort: {
+      data: sort,
+    },
     page: page,
     per_page: per_page,
   });
