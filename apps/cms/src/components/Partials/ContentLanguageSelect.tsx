@@ -1,16 +1,11 @@
-import { Component, Match, Switch, Accessor } from "solid-js";
-// Services
-import api from "@/services/api";
+import { Component, Match, Switch, createMemo } from "solid-js";
 // Store
-import {
-  contentLanguage,
-  setContentLanguage,
-} from "@/store/contentLanguageStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
 import Form from "@/components/Groups/Form";
 
 interface ContentLanguageSelectProps {
-  value?: Accessor<number | undefined>;
+  value?: number | undefined;
   setValue?: (_value: number | undefined) => void;
 }
 
@@ -18,13 +13,11 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
   props
 ) => {
   // ----------------------------------
-  // Mutations & Queries
-  const languages = api.languages.useGetMultiple({
-    queryParams: {
-      queryString: "?sort=code",
-      perPage: -1,
-    },
-  });
+  // Memos
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
+  const languages = createMemo(() => contentLanguageStore.get.languages);
 
   // ----------------------------------------
   // Render
@@ -35,12 +28,12 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
           id={`content-language`}
           value={contentLanguage()}
           onChange={(value) => {
-            if (!value) setContentLanguage(undefined);
-            else setContentLanguage(Number(value));
+            if (!value) contentLanguageStore.get.setContentLanguage(undefined);
+            else contentLanguageStore.get.setContentLanguage(Number(value));
           }}
           name={`content-language`}
           options={
-            languages.data?.data.map((language) => ({
+            languages().map((language) => ({
               value: language.id,
               label: language.name
                 ? `${language.name} (${language.code})`
@@ -54,14 +47,14 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
       <Match when={props.value !== undefined}>
         <Form.Select
           id={`content-language`}
-          value={props.value ? props.value() : undefined}
+          value={props.value}
           onChange={(value) => {
             if (!value) props.setValue?.(undefined);
             else props.setValue?.(Number(value));
           }}
           name={`content-language`}
           options={
-            languages.data?.data.map((language) => ({
+            languages().map((language) => ({
               value: language.id,
               label: language.name
                 ? `${language.name} (${language.code})`

@@ -153,63 +153,69 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
         submit: T("update"),
       }}
     >
-      <MediaFile.Render />
-      <SectionHeading title={T("details")} />
-      <Form.Input
-        id="name"
-        value={getName() || ""}
-        onChange={setName}
-        name={"name"}
-        type="text"
-        copy={{
-          label: T("name"),
-        }}
-        errors={updateMedia.errors()?.errors?.body?.name}
-      />
-      <Show when={showAltInput()}>
-        <Form.Input
-          id="alt"
-          value={getAlt() || ""}
-          onChange={setAlt}
-          name={"alt"}
-          type="text"
-          copy={{
-            label: T("alt"),
-          }}
-          errors={updateMedia.errors()?.errors?.body?.alt}
-        />
-      </Show>
-      <SectionHeading title={T("meta")} />
-      <DetailsList
-        type="text"
-        items={[
-          {
-            label: T("file_size"),
-            value: helpers.bytesToSize(media.data?.data.meta.file_size || 0),
-          },
-          {
-            label: T("dimensions"),
-            value: `${media.data?.data.meta.width} x ${media.data?.data.meta.height}`,
-            show: media.data?.data.type === "image",
-          },
-          {
-            label: T("extension"),
-            value: media.data?.data.meta.file_extension,
-          },
-          {
-            label: T("mime_type"),
-            value: media.data?.data.meta.mime_type,
-          },
-          {
-            label: T("created_at"),
-            value: dateHelpers.formatDate(media.data?.data.created_at),
-          },
-          {
-            label: T("updated_at"),
-            value: dateHelpers.formatDate(media.data?.data.updated_at),
-          },
-        ]}
-      />
+      {() => (
+        <>
+          <MediaFile.Render />
+          <SectionHeading title={T("details")} />
+          <Form.Input
+            id="name"
+            value={getName() || ""}
+            onChange={setName}
+            name={"name"}
+            type="text"
+            copy={{
+              label: T("name"),
+            }}
+            errors={updateMedia.errors()?.errors?.body?.name}
+          />
+          <Show when={showAltInput()}>
+            <Form.Input
+              id="alt"
+              value={getAlt() || ""}
+              onChange={setAlt}
+              name={"alt"}
+              type="text"
+              copy={{
+                label: T("alt"),
+              }}
+              errors={updateMedia.errors()?.errors?.body?.alt}
+            />
+          </Show>
+          <SectionHeading title={T("meta")} />
+          <DetailsList
+            type="text"
+            items={[
+              {
+                label: T("file_size"),
+                value: helpers.bytesToSize(
+                  media.data?.data.meta.file_size || 0
+                ),
+              },
+              {
+                label: T("dimensions"),
+                value: `${media.data?.data.meta.width} x ${media.data?.data.meta.height}`,
+                show: media.data?.data.type === "image",
+              },
+              {
+                label: T("extension"),
+                value: media.data?.data.meta.file_extension,
+              },
+              {
+                label: T("mime_type"),
+                value: media.data?.data.meta.mime_type,
+              },
+              {
+                label: T("created_at"),
+                value: dateHelpers.formatDate(media.data?.data.created_at),
+              },
+              {
+                label: T("updated_at"),
+                value: dateHelpers.formatDate(media.data?.data.updated_at),
+              },
+            ]}
+          />
+        </>
+      )}
     </Panel.Root>
   );
 };

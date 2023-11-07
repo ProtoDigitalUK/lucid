@@ -92,34 +92,39 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
         description: T("create_media_panel_description"),
         submit: T("create"),
       }}
+      contentLanguage={true}
     >
-      <MediaFile.Render />
-      <SectionHeading title={T("details")} />
+      {() => (
+        <>
+          <MediaFile.Render />
+          <SectionHeading title={T("details")} />
 
-      <Form.Input
-        id="name"
-        value={getName() || ""}
-        onChange={setName}
-        name={"name"}
-        type="text"
-        copy={{
-          label: T("name"),
-        }}
-        errors={createMedia.errors()?.errors?.body?.name}
-      />
-      <Show when={showAltInput()}>
-        <Form.Input
-          id="alt"
-          value={getAlt() || ""}
-          onChange={setAlt}
-          name={"alt"}
-          type="text"
-          copy={{
-            label: T("alt"),
-          }}
-          errors={createMedia.errors()?.errors?.body?.alt}
-        />
-      </Show>
+          <Form.Input
+            id="name"
+            value={getName() || ""}
+            onChange={setName}
+            name={"name"}
+            type="text"
+            copy={{
+              label: T("name"),
+            }}
+            errors={createMedia.errors()?.errors?.body?.name}
+          />
+          <Show when={showAltInput()}>
+            <Form.Input
+              id="alt"
+              value={getAlt() || ""}
+              onChange={setAlt}
+              name={"alt"}
+              type="text"
+              copy={{
+                label: T("alt"),
+              }}
+              errors={createMedia.errors()?.errors?.body?.alt}
+            />
+          </Show>
+        </>
+      )}
     </Panel.Root>
   );
 };

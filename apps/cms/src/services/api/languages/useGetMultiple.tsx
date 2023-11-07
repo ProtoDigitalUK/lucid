@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Store
-import { syncContentLanguage } from "@/store/contentLanguageStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import { APIResponse } from "@/types/api";
 import { LanguageResT } from "@lucid/types/src/language";
@@ -39,7 +39,8 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
   // Effects
   createEffect(() => {
     if (query.isSuccess) {
-      syncContentLanguage(query.data?.data);
+      contentLanguageStore.get.syncContentLanguage(query.data?.data);
+      contentLanguageStore.set("languages", query.data?.data || []);
     }
   });
 

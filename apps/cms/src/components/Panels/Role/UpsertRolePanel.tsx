@@ -239,45 +239,49 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
         submit: panelSubmit(),
       }}
     >
-      {/* Details */}
-      <SectionHeading title={T("details")} />
-      <InputGrid columns={2}>
-        <Form.Input
-          id="name"
-          name="name"
-          type="text"
-          value={getName()}
-          onChange={setName}
-          copy={{
-            label: T("name"),
-          }}
-          required={true}
-          errors={errors()?.errors?.body?.name}
-          noMargin={true}
-        />
-      </InputGrid>
-      {/* Global perms */}
-      <PermissionGroup
-        title={T("global_permissions")}
-        options={permissions.data?.data.global || []}
-        selectedPermissions={selectedPermissions()}
-        setSelectedPermissions={setSelectedPermissions}
-        toggleMultiplePermissions={toggleMultiplePermissions}
-        environment={null}
-      />
-      {/* Env Perms */}
-      <For each={environments.data?.data}>
-        {(environment) => (
+      {() => (
+        <>
+          {/* Details */}
+          <SectionHeading title={T("details")} />
+          <InputGrid columns={2}>
+            <Form.Input
+              id="name"
+              name="name"
+              type="text"
+              value={getName()}
+              onChange={setName}
+              copy={{
+                label: T("name"),
+              }}
+              required={true}
+              errors={errors()?.errors?.body?.name}
+              noMargin={true}
+            />
+          </InputGrid>
+          {/* Global perms */}
           <PermissionGroup
-            title={environment.title}
-            options={permissions.data?.data.environment || []}
+            title={T("global_permissions")}
+            options={permissions.data?.data.global || []}
             selectedPermissions={selectedPermissions()}
             setSelectedPermissions={setSelectedPermissions}
             toggleMultiplePermissions={toggleMultiplePermissions}
-            environment={environment.key}
+            environment={null}
           />
-        )}
-      </For>
+          {/* Env Perms */}
+          <For each={environments.data?.data}>
+            {(environment) => (
+              <PermissionGroup
+                title={environment.title}
+                options={permissions.data?.data.environment || []}
+                selectedPermissions={selectedPermissions()}
+                setSelectedPermissions={setSelectedPermissions}
+                toggleMultiplePermissions={toggleMultiplePermissions}
+                environment={environment.key}
+              />
+            )}
+          </For>
+        </>
+      )}
     </Panel.Root>
   );
 };

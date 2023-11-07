@@ -15,12 +15,15 @@ import { FaSolidArrowLeft } from "solid-icons/fa";
 import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Types
 import { APIErrorResponse } from "@/types/api";
+// Store
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
 import { Dialog } from "@kobalte/core";
 import Loading from "@/components/Partials/Loading";
 import Error from "@/components/Partials/Error";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
+import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 
 interface PanelProps {
   open: boolean;
@@ -28,6 +31,7 @@ interface PanelProps {
   onSubmit?: () => void;
   reset: () => void;
   hideFooter?: boolean;
+  contentLanguage?: boolean;
 
   fetchState?: {
     isLoading?: boolean;
@@ -45,13 +49,19 @@ interface PanelProps {
     fetchError?: string;
     submit?: string;
   };
-  children: JSXElement;
+  children: (_props?: {
+    contentLanguage: number;
+    setContentLanguage: (_value: number) => void;
+  }) => JSXElement;
 }
 
 export const Panel: Component<PanelProps> = (props) => {
   // ------------------------------
   // State
   const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
+  const [contentLanguage, setContentLanguage] = createSignal<
+    number | undefined
+  >(contentLanguageStore.get.contentLanguage);
 
   // ------------------------------
   // Refs
@@ -81,6 +91,7 @@ export const Panel: Component<PanelProps> = (props) => {
   createEffect(() => {
     if (props.open) {
       props.reset();
+      setContentLanguage(contentLanguageStore.get.contentLanguage);
       setBodyHeightValue();
     }
   });
@@ -115,7 +126,7 @@ export const Panel: Component<PanelProps> = (props) => {
           >
             <div
               ref={headerRef}
-              class="bg-background p-15 md:p-30 border-b border-border"
+              class="bg-background border-b border-border p-15 md:p-30"
             >
               <div class="w-full mb-2.5">
                 <Dialog.CloseButton class="flex items-center text-sm text-title">
@@ -139,6 +150,14 @@ export const Panel: Component<PanelProps> = (props) => {
                   </Show>
                 </Match>
               </Switch>
+              <Show when={props.contentLanguage}>
+                <div class="mt-5">
+                  <ContentLanguageSelect
+                    value={contentLanguage()}
+                    setValue={setContentLanguage}
+                  />
+                </div>
+              </Show>
             </div>
             <form
               class="w-full"
@@ -153,7 +172,12 @@ export const Panel: Component<PanelProps> = (props) => {
                   "min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
                 }}
               >
-                <Switch fallback={props.children}>
+                <Switch
+                  fallback={props.children({
+                    contentLanguage: 1,
+                    setContentLanguage: () => {},
+                  })}
+                >
                   <Match when={isLoading()}>
                     <Loading type="fill" />
                   </Match>

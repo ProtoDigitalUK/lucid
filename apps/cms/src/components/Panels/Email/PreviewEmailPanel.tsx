@@ -45,53 +45,60 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
         title: T("preview_email_panel_title"),
       }}
     >
-      <SectionHeading title={T("details")} />
-      <DetailsList
-        type="text"
-        items={[
-          {
-            label: T("subject"),
-            value: email.data?.data.mail_details.subject || undefined,
-          },
-          {
-            label: T("template"),
-            value: email.data?.data.mail_details.template || undefined,
-          },
-          {
-            label: T("to"),
-            value: email.data?.data.mail_details.to || undefined,
-          },
-          {
-            label: T("from"),
-            value: email.data?.data.mail_details.from.address || undefined,
-          },
-          {
-            label: T("status"),
-            value: email.data?.data.delivery_status || undefined,
-          },
-          {
-            label: T("sent_count"),
-            value: email.data?.data.sent_count || 0,
-          },
-          {
-            label: T("type"),
-            value: email.data?.data.type || undefined,
-          },
-        ]}
-      />
+      {() => (
+        <>
+          <SectionHeading title={T("details")} />
+          <DetailsList
+            type="text"
+            items={[
+              {
+                label: T("subject"),
+                value: email.data?.data.mail_details.subject || undefined,
+              },
+              {
+                label: T("template"),
+                value: email.data?.data.mail_details.template || undefined,
+              },
+              {
+                label: T("to"),
+                value: email.data?.data.mail_details.to || undefined,
+              },
+              {
+                label: T("from"),
+                value: email.data?.data.mail_details.from.address || undefined,
+              },
+              {
+                label: T("status"),
+                value: email.data?.data.delivery_status || undefined,
+              },
+              {
+                label: T("sent_count"),
+                value: email.data?.data.sent_count || 0,
+              },
+              {
+                label: T("type"),
+                value: email.data?.data.type || undefined,
+              },
+            ]}
+          />
 
-      <SectionHeading title={T("data")} />
-      <JSONPreview title={T("view_data")} json={email.data?.data.data || {}} />
+          <SectionHeading title={T("data")} />
+          <JSONPreview
+            title={T("view_data")}
+            json={email.data?.data.data || {}}
+          />
 
-      <SectionHeading title={T("preview")} />
+          <SectionHeading title={T("preview")} />
 
-      <div class="border border-border rounded-md overflow-hidden">
-        <iframe
-          class="w-full h-96"
-          srcdoc={email.data?.data.html || ""}
-          title="Preview"
-        />
-      </div>
+          <div class="border border-border rounded-md overflow-hidden">
+            <iframe
+              class="w-full h-96"
+              srcdoc={email.data?.data.html || ""}
+              title="Preview"
+            />
+          </div>
+        </>
+      )}
     </Panel.Root>
   );
 };

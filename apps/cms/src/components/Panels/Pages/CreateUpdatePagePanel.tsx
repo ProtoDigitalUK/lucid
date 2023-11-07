@@ -292,119 +292,123 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       }}
       content={panelContent()}
     >
-      <SectionHeading title={T("details")} />
-      <Form.Input
-        id="name"
-        value={getTitle() || ""}
-        onChange={setTitle}
-        name={"title"}
-        type="text"
-        copy={{
-          label: T("title"),
-        }}
-        onBlur={setSlugFromTitle}
-        errors={mutateErrors()?.errors?.body?.title}
-        required={true}
-      />
-      <Show when={!hideSlugInput()}>
-        <Form.Input
-          id="slug"
-          value={getSlug() || ""}
-          onChange={setSlug}
-          name={"slug"}
-          type="text"
-          copy={{
-            label: T("slug"),
-            describedBy: T("page_slug_description"),
-          }}
-          errors={createPage.errors()?.errors?.body?.slug}
-          required={true}
-        />
-      </Show>
-      <Form.Textarea
-        id="excerpt"
-        value={getExcerpt() || ""}
-        onChange={setExcerpt}
-        name={"excerpt"}
-        copy={{
-          label: T("excerpt"),
-        }}
-        errors={mutateErrors()?.errors?.body?.excerpt}
-      />
-      <Show when={props.collection.disableHomepage !== true}>
-        <Form.Checkbox
-          id="homepage"
-          value={getIsHomepage()}
-          onChange={setIsHomepage}
-          name={"homepage"}
-          copy={{
-            label: T("is_homepage"),
-            describedBy: T("is_homepage_description"),
-          }}
-          errors={mutateErrors()?.errors?.body?.homepage}
-        />
-      </Show>
-      <Show when={!hideSetParentPage()}>
-        <Switch>
-          <Match when={panelMode() === "create"}>
-            <PageSearchSelect
-              id="parent_id"
-              name="parent_id"
-              collectionKey={props.collection.key}
-              value={getParentId()}
-              setValue={setParentId}
+      {() => (
+        <>
+          <SectionHeading title={T("details")} />
+          <Form.Input
+            id="name"
+            value={getTitle() || ""}
+            onChange={setTitle}
+            name={"title"}
+            type="text"
+            copy={{
+              label: T("title"),
+            }}
+            onBlur={setSlugFromTitle}
+            errors={mutateErrors()?.errors?.body?.title}
+            required={true}
+          />
+          <Show when={!hideSlugInput()}>
+            <Form.Input
+              id="slug"
+              value={getSlug() || ""}
+              onChange={setSlug}
+              name={"slug"}
+              type="text"
               copy={{
-                label: T("parent_page"),
+                label: T("slug"),
+                describedBy: T("page_slug_description"),
               }}
-              errors={mutateErrors()?.errors?.body?.parent_id}
+              errors={createPage.errors()?.errors?.body?.slug}
+              required={true}
             />
-          </Match>
-          <Match when={panelMode() === "update"}>
-            <ValidParentPageSearchSelect
-              pageId={props.id?.() as number}
-              id="parent_id"
-              name="parent_id"
-              collectionKey={props.collection.key}
-              value={getParentId()}
-              setValue={setParentId}
+          </Show>
+          <Form.Textarea
+            id="excerpt"
+            value={getExcerpt() || ""}
+            onChange={setExcerpt}
+            name={"excerpt"}
+            copy={{
+              label: T("excerpt"),
+            }}
+            errors={mutateErrors()?.errors?.body?.excerpt}
+          />
+          <Show when={props.collection.disableHomepage !== true}>
+            <Form.Checkbox
+              id="homepage"
+              value={getIsHomepage()}
+              onChange={setIsHomepage}
+              name={"homepage"}
               copy={{
-                label: T("parent_page"),
+                label: T("is_homepage"),
+                describedBy: T("is_homepage_description"),
               }}
-              errors={mutateErrors()?.errors?.body?.parent_id}
+              errors={mutateErrors()?.errors?.body?.homepage}
             />
-          </Match>
-        </Switch>
-      </Show>
-      <Form.SelectMultiple
-        id="category_ids"
-        values={getSelectedCategories()}
-        onChange={setSelectedCategories}
-        name={"category_ids"}
-        copy={{
-          label: T("categories"),
-        }}
-        options={
-          categories.data?.data.map((cat) => {
-            return {
-              value: cat.id,
-              label: cat.title,
-            };
-          }) || []
-        }
-        errors={mutateErrors()?.errors?.body?.category_ids}
-      />
-      <Show when={panelMode() === "update"}>
-        <UserSearchSelect
-          id="author_id"
-          name="author_id"
-          value={getSelectedAuthor()}
-          setValue={setSelectedAuthor}
-          copy={{
-            label: T("author"),
-          }}
-          errors={mutateErrors()?.errors?.body?.author_id}
-        />
-      </Show>
+          </Show>
+          <Show when={!hideSetParentPage()}>
+            <Switch>
+              <Match when={panelMode() === "create"}>
+                <PageSearchSelect
+                  id="parent_id"
+                  name="parent_id"
+                  collectionKey={props.collection.key}
+                  value={getParentId()}
+                  setValue={setParentId}
+                  copy={{
+                    label: T("parent_page"),
+                  }}
+                  errors={mutateErrors()?.errors?.body?.parent_id}
+                />
+              </Match>
+              <Match when={panelMode() === "update"}>
+                <ValidParentPageSearchSelect
+                  pageId={props.id?.() as number}
+                  id="parent_id"
+                  name="parent_id"
+                  collectionKey={props.collection.key}
+                  value={getParentId()}
+                  setValue={setParentId}
+                  copy={{
+                    label: T("parent_page"),
+                  }}
+                  errors={mutateErrors()?.errors?.body?.parent_id}
+                />
+              </Match>
+            </Switch>
+          </Show>
+          <Form.SelectMultiple
+            id="category_ids"
+            values={getSelectedCategories()}
+            onChange={setSelectedCategories}
+            name={"category_ids"}
+            copy={{
+              label: T("categories"),
+            }}
+            options={
+              categories.data?.data.map((cat) => {
+                return {
+                  value: cat.id,
+                  label: cat.title,
+                };
+              }) || []
+            }
+            errors={mutateErrors()?.errors?.body?.category_ids}
+          />
+          <Show when={panelMode() === "update"}>
+            <UserSearchSelect
+              id="author_id"
+              name="author_id"
+              value={getSelectedAuthor()}
+              setValue={setSelectedAuthor}
+              copy={{
+                label: T("author"),
+              }}
+              errors={mutateErrors()?.errors?.body?.author_id}
+            />
+          </Show>
+        </>
+      )}
     </Panel.Root>
   );
 };

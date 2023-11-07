@@ -1,19 +1,14 @@
-import { createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
 // Types
 import { LanguageResT } from "@lucid/types/src/language";
 
-// -------------------------------
-// Functions
-const setContentLanguage = (value: number | undefined) => {
-  setContentLanguageValue(value);
-
-  if (!value) {
-    localStorage.removeItem("lucid_content_language");
-    return;
-  } else {
-    localStorage.setItem("lucid_content_language", value.toString());
-  }
+type ContentLangStoreT = {
+  contentLanguage: number | undefined;
+  languages: LanguageResT[];
+  syncContentLanguage: (_languages: LanguageResT[]) => void;
+  setContentLanguage: (_contentLanguage?: number) => void;
 };
+
 const getInitialContentLanguage = () => {
   const contentLang = localStorage.getItem("lucid_content_language");
   if (contentLang) {
@@ -21,30 +16,42 @@ const getInitialContentLanguage = () => {
   }
   return undefined;
 };
-const syncContentLanguage = (languages: LanguageResT[]) => {
-  if (languages.length === 0) {
-    setContentLanguage(undefined);
-    return;
-  }
 
-  const contentLangLs = localStorage.getItem("lucid_content_language");
-  if (contentLangLs) {
-    // check if environment exists
-    const languageExists = languages.find(
-      (lang) => lang.id === Number(contentLangLs)
-    );
-    if (languageExists !== undefined) {
-      setContentLanguage(Number(contentLangLs));
+const [get, set] = createStore<ContentLangStoreT>({
+  contentLanguage: getInitialContentLanguage(),
+  languages: [],
+
+  syncContentLanguage(languages: LanguageResT[]) {
+    if (languages.length === 0) {
+      set("contentLanguage", undefined);
       return;
     }
-  }
-  setContentLanguage(languages[0]?.id || undefined);
+
+    const contentLangLs = localStorage.getItem("lucid_content_language");
+    if (contentLangLs) {
+      // check if environment exists
+      const languageExists = languages.find(
+        (lang) => lang.id === Number(contentLangLs)
+      );
+      if (languageExists !== undefined) {
+        set("contentLanguage", Number(contentLangLs));
+        return;
+      }
+    }
+    set("contentLanguage", languages[0]?.id || undefined);
+  },
+  setContentLanguage(contentLanguage?: number) {
+    if (contentLanguage === undefined)
+      localStorage.removeItem("lucid_content_language");
+    else
+      localStorage.setItem("lucid_content_language", String(contentLanguage));
+    set("contentLanguage", contentLanguage);
+  },
+});
+
+const contentLanguageStore = {
+  get,
+  set,
 };
 
-// -------------------------------
-// State
-const [contentLanguage, setContentLanguageValue] = createSignal<
-  number | undefined
->(getInitialContentLanguage());
-
-export { contentLanguage, setContentLanguage, syncContentLanguage };
+export default contentLanguageStore;

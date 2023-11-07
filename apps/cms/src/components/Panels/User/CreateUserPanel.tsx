@@ -111,116 +111,120 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
         submit: T("create"),
       }}
     >
-      <Form.Input
-        id="username"
-        value={getUsername()}
-        onChange={setUsername}
-        name={"username"}
-        type="text"
-        copy={{
-          label: T("username"),
-        }}
-        required={true}
-        errors={createUser.errors()?.errors?.body?.username}
-      />
-      <InputGrid columns={2}>
-        <Form.Input
-          id="first_name"
-          value={getFirstName()}
-          onChange={setFirstName}
-          name={"first_name"}
-          type="text"
-          copy={{
-            label: T("first_name"),
-          }}
-          noMargin={true}
-          errors={createUser.errors()?.errors?.body?.first_name}
-        />
-        <Form.Input
-          id="last_name"
-          value={getLastName()}
-          onChange={setLastName}
-          name={"last_name"}
-          type="text"
-          copy={{
-            label: T("last_name"),
-          }}
-          noMargin={true}
-          errors={createUser.errors()?.errors?.body?.last_name}
-        />
-      </InputGrid>
-      <InputGrid columns={1}>
-        <Form.Input
-          id="email"
-          value={getEmail()}
-          onChange={setEmail}
-          name={"email"}
-          type="text"
-          copy={{
-            label: T("email"),
-          }}
-          noMargin={true}
-          required={true}
-          errors={createUser.errors()?.errors?.body?.email}
-        />
-        <Form.Input
-          id="password"
-          value={getPassword()}
-          onChange={setPassword}
-          name={"password"}
-          type="password"
-          copy={{
-            label: T("password"),
-          }}
-          noMargin={true}
-          required={true}
-          errors={createUser.errors()?.errors?.body?.password}
-        />
-        <Form.Input
-          id="password_confirmation"
-          value={getPasswordConfirmation()}
-          onChange={setPasswordConfirmation}
-          name={"password_confirmation"}
-          type="password"
-          copy={{
-            label: T("password_confirmation"),
-            describedBy: T("password_description"),
-          }}
-          noMargin={true}
-          required={true}
-          errors={createUser.errors()?.errors?.body?.password_confirmation}
-        />
-      </InputGrid>
-      <Form.SelectMultiple
-        id="role_ids"
-        values={getSelectedRoles()}
-        onChange={setSelectedRoles}
-        name={"role_ids"}
-        copy={{
-          label: T("roles"),
-        }}
-        options={
-          roles.data?.data.map((role) => {
-            return {
-              value: role.id,
-              label: role.name,
-            };
-          }) || []
-        }
-        errors={createUser.errors()?.errors?.body?.role_ids}
-      />
-      <Show when={userStore.get.user?.super_admin}>
-        <Form.Checkbox
-          id="super_admin"
-          value={getIsSuperAdmin()}
-          onChange={setIsSuperAdmin}
-          name={"super_admin"}
-          copy={{
-            label: T("is_super_admin"),
-          }}
-          errors={createUser.errors()?.errors?.body?.super_admin}
-        />
-      </Show>
+      {() => (
+        <>
+          <Form.Input
+            id="username"
+            value={getUsername()}
+            onChange={setUsername}
+            name={"username"}
+            type="text"
+            copy={{
+              label: T("username"),
+            }}
+            required={true}
+            errors={createUser.errors()?.errors?.body?.username}
+          />
+          <InputGrid columns={2}>
+            <Form.Input
+              id="first_name"
+              value={getFirstName()}
+              onChange={setFirstName}
+              name={"first_name"}
+              type="text"
+              copy={{
+                label: T("first_name"),
+              }}
+              noMargin={true}
+              errors={createUser.errors()?.errors?.body?.first_name}
+            />
+            <Form.Input
+              id="last_name"
+              value={getLastName()}
+              onChange={setLastName}
+              name={"last_name"}
+              type="text"
+              copy={{
+                label: T("last_name"),
+              }}
+              noMargin={true}
+              errors={createUser.errors()?.errors?.body?.last_name}
+            />
+          </InputGrid>
+          <InputGrid columns={1}>
+            <Form.Input
+              id="email"
+              value={getEmail()}
+              onChange={setEmail}
+              name={"email"}
+              type="text"
+              copy={{
+                label: T("email"),
+              }}
+              noMargin={true}
+              required={true}
+              errors={createUser.errors()?.errors?.body?.email}
+            />
+            <Form.Input
+              id="password"
+              value={getPassword()}
+              onChange={setPassword}
+              name={"password"}
+              type="password"
+              copy={{
+                label: T("password"),
+              }}
+              noMargin={true}
+              required={true}
+              errors={createUser.errors()?.errors?.body?.password}
+            />
+            <Form.Input
+              id="password_confirmation"
+              value={getPasswordConfirmation()}
+              onChange={setPasswordConfirmation}
+              name={"password_confirmation"}
+              type="password"
+              copy={{
+                label: T("password_confirmation"),
+                describedBy: T("password_description"),
+              }}
+              noMargin={true}
+              required={true}
+              errors={createUser.errors()?.errors?.body?.password_confirmation}
+            />
+          </InputGrid>
+          <Form.SelectMultiple
+            id="role_ids"
+            values={getSelectedRoles()}
+            onChange={setSelectedRoles}
+            name={"role_ids"}
+            copy={{
+              label: T("roles"),
+            }}
+            options={
+              roles.data?.data.map((role) => {
+                return {
+                  value: role.id,
+                  label: role.name,
+                };
+              }) || []
+            }
+            errors={createUser.errors()?.errors?.body?.role_ids}
+          />
+          <Show when={userStore.get.user?.super_admin}>
+            <Form.Checkbox
+              id="super_admin"
+              value={getIsSuperAdmin()}
+              onChange={setIsSuperAdmin}
+              name={"super_admin"}
+              copy={{
+                label: T("is_super_admin"),
+              }}
+              errors={createUser.errors()?.errors?.body?.super_admin}
+            />
+          </Show>
+        </>
+      )}
     </Panel.Root>
   );
 };

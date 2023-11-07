@@ -130,36 +130,40 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
         submit: T("update"),
       }}
     >
-      <Form.SelectMultiple
-        id="roles"
-        values={getSelectedRoles()}
-        onChange={setSelectedRoles}
-        name={"roles"}
-        copy={{
-          label: T("roles"),
-        }}
-        options={
-          roles.data?.data.map((role) => {
-            return {
-              value: role.id,
-              label: role.name,
-            };
-          }) || []
-        }
-        errors={updateUser.errors()?.errors?.body?.role_ids}
-      />
-      <Show when={userStore.get.user?.super_admin}>
-        <Form.Checkbox
-          id="super_admin"
-          value={getIsSuperAdmin()}
-          onChange={setIsSuperAdmin}
-          name={"super_admin"}
-          copy={{
-            label: T("is_super_admin"),
-          }}
-          errors={updateUser.errors()?.errors?.body?.super_admin}
-        />
-      </Show>
+      {() => (
+        <>
+          <Form.SelectMultiple
+            id="roles"
+            values={getSelectedRoles()}
+            onChange={setSelectedRoles}
+            name={"roles"}
+            copy={{
+              label: T("roles"),
+            }}
+            options={
+              roles.data?.data.map((role) => {
+                return {
+                  value: role.id,
+                  label: role.name,
+                };
+              }) || []
+            }
+            errors={updateUser.errors()?.errors?.body?.role_ids}
+          />
+          <Show when={userStore.get.user?.super_admin}>
+            <Form.Checkbox
+              id="super_admin"
+              value={getIsSuperAdmin()}
+              onChange={setIsSuperAdmin}
+              name={"super_admin"}
+              copy={{
+                label: T("is_super_admin"),
+              }}
+              errors={updateUser.errors()?.errors?.body?.super_admin}
+            />
+          </Show>
+        </>
+      )}
     </Panel.Root>
   );
 };

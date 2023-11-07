@@ -7,10 +7,16 @@ import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 
 const MainLayout: Component = () => {
-  // ------------------------------------------------------
-  // State & Hooks
+  // ----------------------------------
+  // Mutations & Queries
   const authenticatedUser = api.auth.useGetAuthenticatedUser({
     queryParams: {},
+  });
+  api.languages.useGetMultiple({
+    queryParams: {
+      queryString: "?sort=code",
+      perPage: -1,
+    },
   });
 
   // ------------------------------------------------------
