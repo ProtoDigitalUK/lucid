@@ -1,5 +1,5 @@
 import("dotenv/config.js");
-import init from "./init.js";
+import lucid from "./lucid.js";
 // Models
 import { ConfigT, buildConfig } from "@services/Config.js";
 // Utils
@@ -19,7 +19,7 @@ const sendEmail = emailServices.sendExternal;
 const submitForm = submitFormExternal;
 
 export {
-  init,
+  lucid,
   buildConfig,
   sendEmail,
   BrickBuilder,
@@ -28,6 +28,4 @@ export {
   submitForm,
 };
 
-export default {
-  init,
-};
+export default lucid;

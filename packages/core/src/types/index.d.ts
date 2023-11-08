@@ -1,3 +1,4 @@
+import { Fastify } from "fastify";
 import type { Request, Response, Express } from "express";
 import type { LanguageResT } from "@lucid/types/src/language.js";
 import z from "zod";
@@ -20,8 +21,7 @@ declare global {
   // --------------------------------------------------
   // Init
   interface InitOptions {
-    express: Express;
-    public?: string;
+    fastify: Fastify.FastifyInstance;
   }
 
   // --------------------------------------------------

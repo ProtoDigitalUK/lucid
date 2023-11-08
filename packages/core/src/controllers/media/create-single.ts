@@ -14,7 +14,7 @@ const createSingleController: Controller<
   typeof mediaSchema.createSingle.query
 > = async (req, res, next) => {
   try {
-    const media = await service(
+    await service(
       mediaService.createSingle,
       true
     )({
@@ -24,7 +24,7 @@ const createSingleController: Controller<
 
     res.status(200).json(
       buildResponse(req, {
-        data: media,
+        data: undefined,
       })
     );
   } catch (error) {

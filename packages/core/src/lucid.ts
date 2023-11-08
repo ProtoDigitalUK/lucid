@@ -1,14 +1,16 @@
 import("dotenv/config.js");
-import express from "express";
-import morgan from "morgan";
-import cors from "cors";
 import path from "path";
-import cookieParser from "cookie-parser";
 import { log } from "console-log-colors";
+
+import fp from "fastify-plugin";
+import { FastifyInstance } from "fastify";
+import fastifyStatic from "@fastify/static";
+import cors from "@fastify/cors";
+import fs from "fs-extra";
 // Core
 import { initialisePool } from "@db/db.js";
 import migrateDB from "@db/migration.js";
-import initRoutes from "@routes/index.js";
+import routes from "@routes/index.js";
 // Utils
 import service from "@utils/app/service.js";
 import getDirName from "@utils/app/get-dirname.js";
@@ -23,9 +25,10 @@ import Initialise from "@services/Initialise.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const app = async (options: InitOptions) => {
-  const app = options.express;
-
+const lucid = async (
+  fastify: FastifyInstance,
+  options: Record<string, any>
+) => {
   // ------------------------------------
   // Config
   await Config.cachedConfig();
@@ -39,23 +42,18 @@ const app = async (options: InitOptions) => {
   // ------------------------------------
   // Server wide middleware
   log.white("----------------------------------------------------");
-  app.use(express.json());
-  app.use(
-    cors({
-      origin: Config.origin,
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "_csrf",
-        "lucid-environment",
-        "lucid-content-lang",
-      ],
-      credentials: true,
-    })
-  );
-  app.use(morgan("dev"));
-  app.use(cookieParser(Config.secret));
+  fastify.register(cors, {
+    origin: Config.origin,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "_csrf",
+      "lucid-environment",
+      "lucid-content-lang",
+    ],
+    credentials: true,
+  });
   log.yellow("Middleware configured");
 
   // ------------------------------------
@@ -72,22 +70,31 @@ const app = async (options: InitOptions) => {
   // ------------------------------------
   // Routes
   log.white("----------------------------------------------------");
-  if (options.public) app.use("/public", express.static(options.public));
-  initRoutes(app);
-  // Serve CMS
-  app.use("/", express.static(path.join(currentDir, "../cms")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(currentDir, "../cms", "index.html"));
+  fastify.register(routes);
+  fastify.register(fastifyStatic, {
+    root: [path.resolve("public"), path.join(currentDir, "../cms")],
+    wildcard: false,
   });
+  fastify.setNotFoundHandler((request, reply) => {
+    const indexPath = path.resolve(currentDir, "../cms/index.html");
+    if (fs.existsSync(indexPath)) {
+      const stream = fs.createReadStream(indexPath);
+      reply.type("text/html").send(stream);
+    } else {
+      reply.code(404).send("Page not found");
+    }
+  });
+
   log.yellow("Routes initialised");
 
   // ------------------------------------
   // Error handling
-  app.use(errorLogger);
-  app.use(errorResponder);
-  app.use(invalidPathHandler);
-
-  return app;
+  // fastify.use(errorLogger);
+  // fastify.use(errorResponder);
+  // fastify.use(invalidPathHandler);
 };
 
-export default app;
+export default fp(lucid, {
+  name: "lucid",
+  fastify: "4.x",
+});
