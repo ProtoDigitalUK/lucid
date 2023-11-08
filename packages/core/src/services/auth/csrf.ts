@@ -1,35 +1,34 @@
-import { Request, Response } from "express";
+import { FastifyRequest, FastifyReply } from "fastify";
 import crypto from "crypto";
 // Services
 import Config from "@services/Config.js";
 
-export const generateCSRFToken = (res: Response) => {
-  // create a random string for CSRF token
+export const generateCSRFToken = (reply: FastifyReply) => {
   const token = crypto.randomBytes(32).toString("hex");
 
-  // store the CSRF token a httpOnly cookie,
-  res.cookie("_csrf", token, {
+  reply.setCookie("_csrf", token, {
     maxAge: 86400000 * 7,
     httpOnly: true,
     secure: Config.mode === "production",
     sameSite: "strict",
+    path: "/",
   });
 
   return token;
 };
 
-export const verifyCSRFToken = (req: Request) => {
-  const { _csrf } = req.cookies;
-  const { _csrf: CSRFHeader } = req.headers;
+export const verifyCSRFToken = (request: FastifyRequest) => {
+  const cookieCSRF = request.cookies["_csrf"];
+  const headerCSRF = request.headers["_csrf"] as string;
 
-  if (!_csrf || !CSRFHeader) return false;
-  if (_csrf !== CSRFHeader) return false;
+  if (!cookieCSRF || !headerCSRF) return false;
+  if (cookieCSRF !== headerCSRF) return false;
 
   return true;
 };
 
-export const clearCSRFToken = (res: Response) => {
-  res.clearCookie("_csrf");
+export const clearCSRFToken = (reply: FastifyReply) => {
+  reply.clearCookie("_csrf", { path: "/" });
 };
 
 export default {

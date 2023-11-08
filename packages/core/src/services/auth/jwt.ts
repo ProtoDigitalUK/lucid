@@ -1,14 +1,14 @@
-import { Response, Request } from "express";
+import { FastifyRequest, FastifyReply } from "fastify";
 import jwt from "jsonwebtoken";
 // Services
 import Config from "@services/Config.js";
 // Types
 import { UserResT } from "@lucid/types/src/users.js";
 
-export const generateJWT = (res: Response, user: UserResT) => {
+export const generateJWT = (reply: FastifyReply, user: UserResT) => {
   const { id, email, username } = user;
 
-  const payload: Request["auth"] = {
+  const payload: FastifyRequest["auth"] = {
     id,
     email,
     username,
@@ -18,24 +18,27 @@ export const generateJWT = (res: Response, user: UserResT) => {
     expiresIn: "7d",
   });
 
-  res.cookie("_jwt", token, {
+  reply.setCookie("_jwt", token, {
     maxAge: 86400000 * 7,
     httpOnly: true,
     secure: Config.mode === "production",
     sameSite: "strict",
+    path: "/",
   });
-  res.cookie("auth", true, {
+  reply.setCookie("auth", "true", {
     maxAge: 86400000 * 7,
+    path: "/",
   });
 };
 
-export const verifyJWT = (req: Request) => {
+export const verifyJWT = (request: FastifyRequest) => {
   try {
-    const { _jwt } = req.cookies;
+    // Assuming you have registered the fastify-cookie plugin
+    const _jwt = request.cookies["_jwt"];
 
     if (!_jwt) {
       return {
-        sucess: false,
+        success: false,
         data: null,
       };
     }
@@ -43,20 +46,20 @@ export const verifyJWT = (req: Request) => {
     const decoded = jwt.verify(_jwt, Config.secret);
 
     return {
-      sucess: true,
-      data: decoded as Request["auth"],
+      success: true,
+      data: decoded as FastifyRequest["auth"],
     };
   } catch (err) {
     return {
-      sucess: false,
+      success: false,
       data: null,
     };
   }
 };
 
-export const clearJWT = (res: Response) => {
-  res.clearCookie("_jwt");
-  res.clearCookie("auth");
+export const clearJWT = (reply: FastifyReply) => {
+  reply.clearCookie("_jwt", { path: "/" }); // Path should match the one used when setting the cookie
+  reply.clearCookie("auth", { path: "/" });
 };
 
 export default {

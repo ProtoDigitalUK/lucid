@@ -1,29 +1,19 @@
-import { Request, Response, NextFunction } from "express";
+import { FastifyRequest } from "fastify";
 // Utils
 import { LucidError } from "@utils/app/error-handler.js";
 // Services
 import authService from "@services/auth/index.js";
 
-const authenticate = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const authenticateJWT = authService.jwt.verifyJWT(req);
-    if (!authenticateJWT.sucess || !authenticateJWT.data) {
-      throw new LucidError({
-        type: "authorisation",
-        message: "You are not authorised to perform this action",
-      });
-    }
-
-    req.auth = authenticateJWT.data;
-
-    return next();
-  } catch (error) {
-    return next(error);
+const authenticate = async (request: FastifyRequest) => {
+  const authenticateJWT = authService.jwt.verifyJWT(request);
+  if (!authenticateJWT.success || !authenticateJWT.data) {
+    throw new LucidError({
+      type: "authorisation",
+      message: "You are not authorised to perform this action",
+    });
   }
+
+  request.auth = authenticateJWT.data;
 };
 
 export default authenticate;

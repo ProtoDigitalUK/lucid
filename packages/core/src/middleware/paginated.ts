@@ -1,19 +1,18 @@
-import { Request, Response, NextFunction } from "express";
+import { FastifyRequest } from "fastify";
 import constants from "@root/constants.js";
+import { QueryType } from "@middleware/validate.js";
 
-const paginated = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!req.query.page) {
-      req.query.page = constants.pagination.page;
-    }
+const paginated = async (
+  request: FastifyRequest<{
+    Querystring: QueryType;
+  }>
+) => {
+  if (!request.query.page) {
+    request.query.page = constants.pagination.page;
+  }
 
-    if (!req.query.per_page) {
-      req.query.per_page = constants.pagination.perPage;
-    }
-
-    return next();
-  } catch (error) {
-    return next(error);
+  if (!request.query.per_page) {
+    request.query.per_page = constants.pagination.perPage;
   }
 };
 

@@ -1,11 +1,12 @@
 import("dotenv/config.js");
 import path from "path";
-import { log } from "console-log-colors";
+import { log, red } from "console-log-colors";
 
 import fp from "fastify-plugin";
 import { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
+import fastifyCookie from "@fastify/cookie";
 import fs from "fs-extra";
 // Core
 import { initialisePool } from "@db/db.js";
@@ -14,11 +15,7 @@ import routes from "@routes/index.js";
 // Utils
 import service from "@utils/app/service.js";
 import getDirName from "@utils/app/get-dirname.js";
-import {
-  errorLogger,
-  errorResponder,
-  invalidPathHandler,
-} from "@utils/app/error-handler.js";
+import { decodeError } from "@utils/app/error-handler.js";
 // Service
 import Config from "@services/Config.js";
 import Initialise from "@services/Initialise.js";
@@ -53,6 +50,9 @@ const lucid = async (
       "lucid-content-lang",
     ],
     credentials: true,
+  });
+  fastify.register(fastifyCookie, {
+    secret: Config.secret,
   });
   log.yellow("Middleware configured");
 
@@ -89,9 +89,28 @@ const lucid = async (
 
   // ------------------------------------
   // Error handling
-  // fastify.use(errorLogger);
-  // fastify.use(errorResponder);
-  // fastify.use(invalidPathHandler);
+  fastify.setErrorHandler((error, request, reply) => {
+    const { name, message, status, errors, code } = decodeError(error);
+
+    request.log.error(red(`${status} - ${message}`));
+
+    if (reply.sent) {
+      request.log.error("Headers were already sent!");
+      return;
+    }
+
+    const response = Object.fromEntries(
+      Object.entries({
+        code,
+        status,
+        name,
+        message,
+        errors,
+      }).filter(([_, value]) => value !== null)
+    );
+
+    reply.status(status).send(response);
+  });
 };
 
 export default fp(lucid, {
