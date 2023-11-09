@@ -6,9 +6,8 @@
     - When the error is being thorwn internall and outside of a request. Eg: in a migration or launch step
 */
 
-import { Request, Response, NextFunction } from "express";
 import z from "zod";
-import { red, bgRed } from "console-log-colors";
+import { bgRed } from "console-log-colors";
 
 const DEFAULT_ERROR = {
   name: "Error",
@@ -139,56 +138,4 @@ const modelErrors = (error: ErrorResult): ErrorResult => {
   };
 };
 
-// ------------------------------------
-// Error Handlers
-const errorLogger = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  // console.log(error);
-  const { message, status } = decodeError(error);
-  console.error(red(`${status} - ${message}`));
-  next(error);
-};
-
-const errorResponder = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { name, message, status, errors, code } = decodeError(error);
-
-  const response = Object.fromEntries(
-    Object.entries({
-      code,
-      status,
-      name,
-      message,
-      errors,
-    }).filter(([_, value]) => value !== null)
-  );
-
-  res.status(status).send(response);
-};
-
-const invalidPathHandler = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  res.status(404);
-  res.send("invalid path");
-};
-
-export {
-  LucidError,
-  RuntimeError,
-  modelErrors,
-  errorLogger,
-  errorResponder,
-  invalidPathHandler,
-};
+export { LucidError, RuntimeError, modelErrors };

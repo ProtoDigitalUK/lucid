@@ -12,23 +12,19 @@ const getSingleController: Controller<
   typeof environmentSchema.getSingle.params,
   typeof environmentSchema.getSingle.body,
   typeof environmentSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const environment = await service(
-      environmentsService.getSingle,
-      false
-    )({
-      key: req.params.key,
-    });
+> = async (request, reply) => {
+  const environment = await service(
+    environmentsService.getSingle,
+    false
+  )({
+    key: request.params.key,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: environment,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: environment,
+    })
+  );
 };
 
 // --------------------------------------------------

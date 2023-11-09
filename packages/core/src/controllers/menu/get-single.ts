@@ -12,24 +12,20 @@ const getSingleController: Controller<
   typeof menusSchema.getSingle.params,
   typeof menusSchema.getSingle.body,
   typeof menusSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const menu = await service(
-      menusService.getSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const menu = await service(
+    menusService.getSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: menu,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: menu,
+    })
+  );
 };
 
 // --------------------------------------------------

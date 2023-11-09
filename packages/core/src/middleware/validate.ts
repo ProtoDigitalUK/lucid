@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { FastifyRequest } from "fastify";
 import z, { AnyZodObject } from "zod";
 import constants from "@root/constants.js";
 // Utils
@@ -15,9 +15,11 @@ const querySchema = z.object({
   per_page: z.string().optional(),
 });
 
+export type QueryType = z.infer<typeof querySchema>;
+
 // ------------------------------------
 // Build Functions
-const buildFilter = (query: z.infer<typeof querySchema>) => {
+const buildFilter = (query: QueryType) => {
   let filter:
     | {
         [key: string]: string | Array<string>;
@@ -36,21 +38,21 @@ const buildFilter = (query: z.infer<typeof querySchema>) => {
 
   return filter;
 };
-const buildInclude = (query: z.infer<typeof querySchema>) => {
+const buildInclude = (query: QueryType) => {
   let include: Array<string> | undefined = undefined;
 
   include = query.include?.split(",");
 
   return include;
 };
-const buildExclude = (query: z.infer<typeof querySchema>) => {
+const buildExclude = (query: QueryType) => {
   let exclude: Array<string> | undefined = undefined;
 
   exclude = query.exclude?.split(",");
 
   return exclude;
 };
-const buildSort = (query: z.infer<typeof querySchema>) => {
+const buildSort = (query: QueryType) => {
   let sort:
     | Array<{
         key: string;
@@ -74,7 +76,7 @@ const buildSort = (query: z.infer<typeof querySchema>) => {
 
   return sort;
 };
-const buildPage = (query: z.infer<typeof querySchema>) => {
+const buildPage = (query: QueryType) => {
   let page: string | undefined = undefined;
 
   // check if it can be converted to number
@@ -89,7 +91,7 @@ const buildPage = (query: z.infer<typeof querySchema>) => {
 
   return page;
 };
-const buildPerPage = (query: z.infer<typeof querySchema>) => {
+const buildPerPage = (query: QueryType) => {
   let per_page: string | undefined = undefined;
 
   // check if it can be converted to number
@@ -107,9 +109,9 @@ const buildPerPage = (query: z.infer<typeof querySchema>) => {
 
 // ------------------------------------
 // Functions
-const addRemainingQuery = (req: Request) => {
+const addRemainingQuery = (query: QueryType) => {
   const remainingQuery = Object.fromEntries(
-    Object.entries(req.query).filter(
+    Object.entries(query).filter(
       ([key]) =>
         !["include", "exclude", "filter", "sort", "page", "per_page"].includes(
           key
@@ -123,50 +125,47 @@ const addRemainingQuery = (req: Request) => {
 // Validate Middleware
 const validate =
   (schema: AnyZodObject) =>
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const parseData: {
-        body?: any;
-        query?: {
-          include?: ReturnType<typeof buildInclude>;
-          exclude?: ReturnType<typeof buildExclude>;
-          filter?: ReturnType<typeof buildFilter>;
-          sort?: ReturnType<typeof buildSort>;
-          page?: ReturnType<typeof buildPage>;
-          per_page?: ReturnType<typeof buildPerPage>;
-        };
-        params?: any;
-      } = {};
-
-      parseData["body"] = req.body;
-      parseData["params"] = req.params;
-      parseData["query"] = {
-        include: buildInclude(req.query),
-        exclude: buildExclude(req.query),
-        filter: buildFilter(req.query),
-        sort: buildSort(req.query),
-        page: buildPage(req.query),
-        per_page: buildPerPage(req.query),
-        ...addRemainingQuery(req),
+  async (request: FastifyRequest<{ Querystring: QueryType }>) => {
+    const parseData: {
+      body?: any;
+      query?: {
+        include?: ReturnType<typeof buildInclude>;
+        exclude?: ReturnType<typeof buildExclude>;
+        filter?: ReturnType<typeof buildFilter>;
+        sort?: ReturnType<typeof buildSort>;
+        page?: ReturnType<typeof buildPage>;
+        per_page?: ReturnType<typeof buildPerPage>;
       };
+      params?: any;
+    } = {};
 
-      if (Object.keys(parseData).length === 0) return next();
+    parseData.body = request.body || {};
+    parseData.params = request.params || {};
+    parseData.query = {
+      include: buildInclude(request.query),
+      exclude: buildExclude(request.query),
+      filter: buildFilter(request.query),
+      sort: buildSort(request.query),
+      page: buildPage(request.query),
+      per_page: buildPerPage(request.query),
+      ...addRemainingQuery(request.query),
+    };
 
-      const validate = await schema.safeParseAsync(parseData);
-      if (!validate.success) {
-        throw new LucidError({
-          type: "validation",
-          zod: validate.error,
-        });
-      } else {
-        req.body = validate.data.body;
-        req.query = validate.data.query;
-        req.params = validate.data.params;
-      }
+    if (Object.keys(parseData).length === 0) {
+      return; // Continue with the request processing
+    }
 
-      return next();
-    } catch (error) {
-      return next(error);
+    const validateResult = await schema.safeParseAsync(parseData);
+
+    if (!validateResult.success) {
+      throw new LucidError({
+        type: "validation",
+        zod: validateResult.error,
+      });
+    } else {
+      request.body = validateResult.data.body;
+      request.query = validateResult.data.query;
+      request.params = validateResult.data.params;
     }
   };
 

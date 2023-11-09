@@ -12,29 +12,25 @@ const getMultipleController: Controller<
   typeof mediaSchema.getMultiple.params,
   typeof mediaSchema.getMultiple.body,
   typeof mediaSchema.getMultiple.query
-> = async (req, res, next) => {
-  try {
-    const mediasRes = await service(
-      mediaService.getMultiple,
-      false
-    )({
-      query: req.query,
-      language: req.language,
-    });
+> = async (request, reply) => {
+  const mediasRes = await service(
+    mediaService.getMultiple,
+    false
+  )({
+    query: request.query,
+    language: request.language,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: mediasRes.data,
-        pagination: {
-          count: mediasRes.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: mediasRes.data,
+      pagination: {
+        count: mediasRes.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

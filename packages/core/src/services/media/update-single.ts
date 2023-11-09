@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import fileUpload from "express-fileupload";
+import { MultipartFile } from "@fastify/multipart";
 // Utils
 import helpers, { type MediaMetaDataT } from "@utils/media/helpers.js";
 import { LucidError, modelErrors } from "@utils/app/error-handler.js";
@@ -18,7 +18,7 @@ export interface ServiceData {
   id: number;
   data: {
     translations: string;
-    files: fileUpload.FileArray | null | undefined;
+    fileData: MultipartFile | undefined;
   };
 }
 
@@ -43,9 +43,8 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   let newKey: string | undefined = undefined;
   let newType: MediaResT["type"] | undefined = undefined;
 
-  if (data.data.files && data.data.files["file"]) {
-    const files = helpers.formatReqFiles(data.data.files);
-    const firstFile = files[0];
+  if (data.data.fileData && data.data.fileData.file) {
+    const file = data.data.fileData.file;
     const firstName = translationsService.firstValueOfKey({
       translations: translationsData,
       key: "name",
@@ -53,18 +52,22 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
 
     // -------------------------------------------
     // Checks
-    await service(
+    const size = await service(
       mediaService.canStoreFiles,
       false,
       client
     )({
-      files,
+      file: file,
+      filename: data.data.fileData.filename,
     });
 
     // -------------------------------------------
     // Upload to S3
-    meta = await helpers.getMetaData(firstFile);
-    newKey = helpers.uniqueKey(firstName || firstFile.name);
+    meta = await helpers.getMetaData(file, {
+      size,
+      mimetype: data.data.fileData.mimetype,
+    });
+    newKey = helpers.uniqueKey(firstName || data.data.fileData.filename);
     newType = helpers.getMediaType(meta.mimeType);
 
     const updateKeyRes = await s3Service.updateObjectKey({
@@ -90,7 +93,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     const saveFilePromise = s3Service.saveObject({
       type: "file",
       key: newKey,
-      file: firstFile,
+      file: file,
       meta,
     });
     const updateStoragePromise = service(

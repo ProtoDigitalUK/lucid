@@ -12,18 +12,14 @@ const getSettingsController: Controller<
   typeof settingsSchema.getSettings.params,
   typeof settingsSchema.getSettings.body,
   typeof settingsSchema.getSettings.query
-> = async (req, res, next) => {
-  try {
-    const settings = await service(settingsService.getSettings, false)();
+> = async (request, reply) => {
+  const settings = await service(settingsService.getSettings, false)();
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: settings,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: settings,
+    })
+  );
 };
 
 // --------------------------------------------------

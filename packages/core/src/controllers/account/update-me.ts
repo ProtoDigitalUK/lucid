@@ -12,28 +12,24 @@ const updateMeController: Controller<
   typeof accountSchema.updateMe.params,
   typeof accountSchema.updateMe.body,
   typeof accountSchema.updateMe.query
-> = async (req, res, next) => {
-  try {
-    const userRoles = await service(usersService.updateSingle, false)(
-      {
-        user_id: req.auth.id,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        username: req.body.username,
-        email: req.body.email,
-        role_ids: req.body.role_ids,
-      },
-      req.auth.id
-    );
+> = async (request, reply) => {
+  const userRoles = await service(usersService.updateSingle, false)(
+    {
+      user_id: request.auth.id,
+      first_name: request.body.first_name,
+      last_name: request.body.last_name,
+      username: request.body.username,
+      email: request.body.email,
+      role_ids: request.body.role_ids,
+    },
+    request.auth.id
+  );
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: userRoles,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: userRoles,
+    })
+  );
 };
 
 // --------------------------------------------------

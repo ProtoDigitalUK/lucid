@@ -12,29 +12,25 @@ const createSingleController: Controller<
   typeof usersSchema.createSingle.params,
   typeof usersSchema.createSingle.body,
   typeof usersSchema.createSingle.query
-> = async (req, res, next) => {
-  try {
-    const user = await service(usersService.registerSingle, false)(
-      {
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        super_admin: req.body.super_admin,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        role_ids: req.body.role_ids,
-      },
-      req.auth.id
-    );
+> = async (request, reply) => {
+  const user = await service(usersService.registerSingle, false)(
+    {
+      email: request.body.email,
+      username: request.body.username,
+      password: request.body.password,
+      super_admin: request.body.super_admin,
+      first_name: request.body.first_name,
+      last_name: request.body.last_name,
+      role_ids: request.body.role_ids,
+    },
+    request.auth.id
+  );
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: user,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: user,
+    })
+  );
 };
 
 // --------------------------------------------------

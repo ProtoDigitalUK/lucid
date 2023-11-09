@@ -8,6 +8,8 @@ export interface ServiceData {
 }
 
 const validateTranslations = (data: ServiceData) => {
+  console.log("here", JSON.parse(data.translations));
+
   const translationValidate = mediaTranslations.safeParse(
     JSON.parse(data.translations)
   );

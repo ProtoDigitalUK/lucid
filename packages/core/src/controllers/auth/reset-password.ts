@@ -12,24 +12,20 @@ const resetPasswordController: Controller<
   typeof authSchema.resetPassword.params,
   typeof authSchema.resetPassword.body,
   typeof authSchema.resetPassword.query
-> = async (req, res, next) => {
-  try {
-    const resetPassword = await service(
-      authService.resetPassword,
-      false
-    )({
-      token: req.params.token,
-      password: req.body.password,
-    });
+> = async (request, reply) => {
+  const resetPassword = await service(
+    authService.resetPassword,
+    false
+  )({
+    token: request.params.token,
+    password: request.body.password,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: resetPassword,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: resetPassword,
+    })
+  );
 };
 
 // --------------------------------------------------

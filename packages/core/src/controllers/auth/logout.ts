@@ -11,21 +11,17 @@ const logout: Controller<
   typeof authSchema.logout.params,
   typeof authSchema.logout.body,
   typeof authSchema.logout.query
-> = async (req, res, next) => {
-  try {
-    authService.jwt.clearJWT(res);
-    authService.csrf.clearCSRFToken(res);
+> = async (request, reply) => {
+  authService.jwt.clearJWT(reply);
+  authService.csrf.clearCSRFToken(reply);
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: {
-          message: "Logged out successfully",
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: {
+        message: "Logged out successfully",
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

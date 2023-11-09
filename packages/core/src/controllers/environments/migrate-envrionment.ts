@@ -11,25 +11,21 @@ const migrateEnvironmentController: Controller<
   typeof environmentSchema.migrateEnvironment.params,
   typeof environmentSchema.migrateEnvironment.body,
   typeof environmentSchema.migrateEnvironment.query
-> = async (req, res, next) => {
-  try {
-    /*
+> = async (request, reply) => {
+  /*
       This route will migrate data from one envrionemnt to another.
       This means deleting the target envrionments data,
       then looking up all data that is scoped to the current envrionemnt and copying it over to the target envrionemnt.
     */
-    await environmentsService.migrateEnvironment({});
+  await environmentsService.migrateEnvironment({});
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: {
-          message: "Environment migrated successfully",
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: {
+        message: "Environment migrated successfully",
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

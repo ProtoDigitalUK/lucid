@@ -12,28 +12,24 @@ const getMultipleController: Controller<
   typeof rolesSchema.getMultiple.params,
   typeof rolesSchema.getMultiple.body,
   typeof rolesSchema.getMultiple.query
-> = async (req, res, next) => {
-  try {
-    const rolesRes = await service(
-      rolesService.getMultiple,
-      false
-    )({
-      query: req.query,
-    });
+> = async (request, reply) => {
+  const rolesRes = await service(
+    rolesService.getMultiple,
+    false
+  )({
+    query: request.query,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: rolesRes.data,
-        pagination: {
-          count: rolesRes.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: rolesRes.data,
+      pagination: {
+        count: rolesRes.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

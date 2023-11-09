@@ -12,24 +12,20 @@ const createSingleController: Controller<
   typeof mediaSchema.createSingle.params,
   typeof mediaSchema.createSingle.body,
   typeof mediaSchema.createSingle.query
-> = async (req, res, next) => {
-  try {
-    const media = await service(
-      mediaService.createSingle,
-      true
-    )({
-      translations: req.body.translations,
-      files: req.files,
-    });
+> = async (request, reply) => {
+  await service(
+    mediaService.createSingle,
+    true
+  )({
+    translations: request.body.translations,
+    fileData: await request.file(),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: media,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: undefined,
+    })
+  );
 };
 
 // --------------------------------------------------

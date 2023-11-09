@@ -1,35 +1,37 @@
-import type { Request, Response, Express } from "express";
+import { Fastify, FastifyRequest, FastifyReply } from "fastify";
 import type { LanguageResT } from "@lucid/types/src/language.js";
 import z from "zod";
 
-declare global {
-  namespace Express {
-    interface Request {
-      auth: {
-        id: number;
-        email: string;
-        username: string;
-      };
-      language: {
-        id: LanguageResT["id"];
-        code: LanguageResT["code"];
-      };
-    }
+declare module "fastify" {
+  interface FastifyRequest {
+    auth: {
+      id: number;
+      email: string;
+      username: string;
+    };
+    language: {
+      id: LanguageResT["id"];
+      code: LanguageResT["code"];
+    };
   }
+}
 
+declare global {
   // --------------------------------------------------
   // Init
   interface InitOptions {
-    express: Express;
-    public?: string;
+    fastify: Fastify.FastifyInstance;
   }
 
   // --------------------------------------------------
   // Controller
   type Controller<ParamsT, BodyT, QueryT> = (
-    req: Request<z.infer<ParamsT>, any, z.infer<BodyT>, z.infer<QueryT>>,
-    res: Response<ResponseBody>,
-    next: NextFunction
+    request: FastifyRequest<{
+      Params: z.infer<ParamsT>;
+      Body: z.infer<BodyT>;
+      Querystring: z.infer<QueryT>;
+    }>,
+    reply: FastifyReply
   ) => void;
 
   interface ResponseBody {

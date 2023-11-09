@@ -12,23 +12,19 @@ const getAllController: Controller<
   typeof formsSchema.getAll.params,
   typeof formsSchema.getAll.body,
   typeof formsSchema.getAll.query
-> = async (req, res, next) => {
-  try {
-    const formsRes = await service(
-      formsService.getAll,
-      false
-    )({
-      query: req.query,
-    });
+> = async (request, reply) => {
+  const formsRes = await service(
+    formsService.getAll,
+    false
+  )({
+    query: request.query,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: formsRes,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: formsRes,
+    })
+  );
 };
 
 // --------------------------------------------------

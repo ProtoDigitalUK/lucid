@@ -12,27 +12,23 @@ const createSingleController: Controller<
   typeof menusSchema.createSingle.params,
   typeof menusSchema.createSingle.body,
   typeof menusSchema.createSingle.query
-> = async (req, res, next) => {
-  try {
-    const menu = await service(
-      menusService.createSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      key: req.body.key,
-      name: req.body.name,
-      description: req.body.description,
-      items: req.body.items,
-    });
+> = async (request, reply) => {
+  const menu = await service(
+    menusService.createSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    key: request.body.key,
+    name: request.body.name,
+    description: request.body.description,
+    items: request.body.items,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: menu,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: menu,
+    })
+  );
 };
 
 // --------------------------------------------------

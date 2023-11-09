@@ -12,29 +12,25 @@ const updateSingleController: Controller<
   typeof categorySchema.updateSingle.params,
   typeof categorySchema.updateSingle.body,
   typeof categorySchema.updateSingle.query
-> = async (req, res, next) => {
-  try {
-    const category = await service(
-      categoriesService.updateSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      id: parseInt(req.params.id),
-      data: {
-        title: req.body.title,
-        slug: req.body.slug,
-        description: req.body.description,
-      },
-    });
+> = async (request, reply) => {
+  const category = await service(
+    categoriesService.updateSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    id: parseInt(request.params.id),
+    data: {
+      title: request.body.title,
+      slug: request.body.slug,
+      description: request.body.description,
+    },
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: category,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: category,
+    })
+  );
 };
 
 // --------------------------------------------------

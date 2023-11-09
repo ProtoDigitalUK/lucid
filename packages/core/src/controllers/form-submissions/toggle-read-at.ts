@@ -12,25 +12,21 @@ const toggleReadAtController: Controller<
   typeof formSubmissionsSchema.toggleReadAt.params,
   typeof formSubmissionsSchema.toggleReadAt.body,
   typeof formSubmissionsSchema.toggleReadAt.query
-> = async (req, res, next) => {
-  try {
-    const formSubmission = await service(
-      formSubService.toggleReadAt,
-      false
-    )({
-      id: parseInt(req.params.id),
-      form_key: req.params.form_key,
-      environment_key: req.headers["lucid-environment"] as string,
-    });
+> = async (request, reply) => {
+  const formSubmission = await service(
+    formSubService.toggleReadAt,
+    false
+  )({
+    id: parseInt(request.params.id),
+    form_key: request.params.form_key,
+    environment_key: request.headers["lucid-environment"] as string,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: formSubmission,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: formSubmission,
+    })
+  );
 };
 
 // --------------------------------------------------

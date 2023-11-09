@@ -12,27 +12,23 @@ const getSingleController: Controller<
   typeof singlePageSchema.getSingle.params,
   typeof singlePageSchema.getSingle.body,
   typeof singlePageSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const singlepage = await service(
-      singlePagesService.getSingle,
-      false
-    )({
-      user_id: req.auth.id,
-      environment_key: req.headers["lucid-environment"] as string,
-      collection_key: req.params.collection_key,
-      include_bricks: true,
-      language: req.language,
-    });
+> = async (request, reply) => {
+  const singlepage = await service(
+    singlePagesService.getSingle,
+    false
+  )({
+    user_id: request.auth.id,
+    environment_key: request.headers["lucid-environment"] as string,
+    collection_key: request.params.collection_key,
+    include_bricks: true,
+    language: request.language,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: singlepage,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: singlepage,
+    })
+  );
 };
 
 // --------------------------------------------------

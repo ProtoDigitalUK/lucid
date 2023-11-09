@@ -1,5 +1,6 @@
 import slug from "slug";
-import fileUpload from "express-fileupload";
+import { MultipartFile } from "@fastify/multipart";
+import { BusboyFileStream } from "@fastify/busboy";
 import mime from "mime-types";
 import sharp from "sharp";
 import z from "zod";
@@ -35,18 +36,38 @@ const uniqueKey = (name: string) => {
   return `${slugVal}-${Date.now()}`;
 };
 
+// Get file size
+const getFileSize = (file: BusboyFileStream) => {
+  return new Promise<number>((resolve, reject) => {
+    let size = 0;
+    file.on("data", (chunk) => {
+      size += chunk.length;
+    });
+    file.on("end", () => {
+      resolve(size);
+    });
+    file.on("error", reject);
+  });
+};
+
 // Get meta data from a file
 const getMetaData = async (
-  file: fileUpload.UploadedFile
+  fileStream: BusboyFileStream,
+  data: {
+    size: number;
+    mimetype: string;
+  }
 ): Promise<MediaMetaDataT> => {
-  const fileExtension = mime.extension(file.mimetype);
-  const mimeType = file.mimetype;
-  const size = file.size;
+  const fileExtension = mime.extension(data.mimetype);
+  const mimeType = data.mimetype;
+  const size = data.size;
   let width = null;
   let height = null;
 
   try {
-    const metaData = await sharp(file.data).metadata();
+    const transform = sharp();
+    fileStream.pipe(transform);
+    const metaData = await transform.metadata();
     width = metaData.width;
     height = metaData.height;
   } catch (error) {}
@@ -61,9 +82,7 @@ const getMetaData = async (
 };
 
 // formats files from request into an array
-const formatReqFiles = (files: fileUpload.FileArray) => {
-  // Check if files exist
-
+const formatReqFiles = (files: MultipartFile) => {
   const file = files["file"];
   if (Array.isArray(file)) {
     return file;
@@ -119,6 +138,7 @@ const helpers = {
   createProcessKey,
   streamToBuffer,
   getMediaType,
+  getFileSize,
 };
 
 export default helpers;

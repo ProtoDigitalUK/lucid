@@ -9,36 +9,42 @@ const streamSingleController: Controller<
   typeof mediaSchema.streamSingle.params,
   typeof mediaSchema.streamSingle.body,
   typeof mediaSchema.streamSingle.query
-> = async (req, res, next) => {
+> = async (request, reply) => {
   try {
     const response = await mediaService.streamMedia({
-      key: req.params.key,
-      query: req.query,
+      key: request.params.key,
+      query: request.query,
     });
 
-    // --------------------------------------------------
-    // Send response
-    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    reply.header("Cache-Control", "public, max-age=31536000, immutable");
 
     if (response !== undefined) {
-      res.setHeader(
+      reply.header(
         "Content-Disposition",
-        `inline; filename="${req.params.key}"`
+        `inline; filename="${request.params.key}"`
       );
-      if (response?.contentLength)
-        res.setHeader("Content-Length", response.contentLength);
-      if (response?.contentType)
-        res.setHeader("Content-Type", response.contentType);
 
-      if (response?.body !== undefined) response.body.pipe(res);
+      if (response.contentLength) {
+        reply.header("Content-Length", response.contentLength);
+      }
+      if (response.contentType) {
+        reply.header("Content-Type", response.contentType);
+      }
+
+      if (response.body !== undefined) {
+        return reply.send(response.body);
+      }
     }
+
+    return reply.status(404).send();
   } catch (error) {
-    await mediaService.streamErrorImage({
-      fallback: req.query?.fallback,
+    const { body, contentType } = await mediaService.streamErrorImage({
+      fallback: request.query?.fallback,
       error: error as Error,
-      res: res,
-      next: next,
     });
+
+    reply.header("Content-Type", contentType);
+    return reply.send(body);
   }
 };
 

@@ -1,42 +1,16 @@
-import express, { Router } from "express";
-import timeout from "connect-timeout";
-import helmet from "helmet";
-import compression from "compression";
-import responseTime from "response-time";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-import path from "path";
+import Fastify from "fastify";
 import { log } from "console-log-colors";
 
 import lucid, { sendEmail, submitForm } from "@lucid/core";
 import { ContactForm } from "./forms/index.js";
 
-const app = express();
-
-app.use(compression());
-app.use(responseTime());
-app.use(timeout("10s"));
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-    contentSecurityPolicy: false,
-  })
-);
-
-const publicPath = path.join(
-  dirname(fileURLToPath(import.meta.url)),
-  "../public"
-);
-
-lucid.init({
-  express: app,
-  public: publicPath,
+const fastify = Fastify({
+  logger: true,
 });
 
-const router = Router();
+fastify.register(lucid);
 
-router.post("/send-email", async (req, res, next) => {
+fastify.post("/send-email", async (request, reply) => {
   try {
     const data = {
       name: "John Doe",
@@ -48,7 +22,7 @@ router.post("/send-email", async (req, res, next) => {
     const { valid, errors } = await ContactForm.validate(data);
 
     if (!valid) {
-      return res.json({ errors });
+      return reply.status(400).send({ errors });
     }
 
     // save form data & send email
@@ -66,16 +40,15 @@ router.post("/send-email", async (req, res, next) => {
       },
     });
 
-    res.json(emailRes);
+    reply.send({ emailRes });
   } catch (error) {
-    next(error as Error);
+    reply.status(500).send({ error });
   }
 });
-app.use(router);
 
-app.listen(process.env.PORT || 8393, () => {
-  log.white("----------------------------------------------------");
-  log.yellow(`CMS started at: http://localhost:8393`);
-  log.yellow(`API started at: http://localhost:8393/api`);
-  log.white("----------------------------------------------------");
-});
+await fastify.listen({ port: Number(process.env.PORT) || 8393 });
+
+log.white("----------------------------------------------------");
+log.yellow(`CMS started at: http://localhost:8393`);
+log.yellow(`API started at: http://localhost:8393/api`);
+log.white("----------------------------------------------------");

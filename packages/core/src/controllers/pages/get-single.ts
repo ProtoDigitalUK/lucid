@@ -12,26 +12,22 @@ const getSingleController: Controller<
   typeof pagesSchema.getSingle.params,
   typeof pagesSchema.getSingle.body,
   typeof pagesSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const page = await service(
-      pagesService.getSingle,
-      false
-    )({
-      query: req.query,
-      environment_key: req.headers["lucid-environment"] as string,
-      id: parseInt(req.params.id),
-      language: req.language,
-    });
+> = async (request, reply) => {
+  const page = await service(
+    pagesService.getSingle,
+    false
+  )({
+    query: request.query,
+    environment_key: request.headers["lucid-environment"] as string,
+    id: parseInt(request.params.id),
+    language: request.language,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: page,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: page,
+    })
+  );
 };
 
 // --------------------------------------------------

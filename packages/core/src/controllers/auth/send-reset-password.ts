@@ -12,23 +12,19 @@ const sendResetPasswordController: Controller<
   typeof authSchema.sendResetPassword.params,
   typeof authSchema.sendResetPassword.body,
   typeof authSchema.sendResetPassword.query
-> = async (req, res, next) => {
-  try {
-    const resetPassword = await service(
-      authService.sendResetPassword,
-      false
-    )({
-      email: req.body.email,
-    });
+> = async (request, reply) => {
+  const resetPassword = await service(
+    authService.sendResetPassword,
+    false
+  )({
+    email: request.body.email,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: resetPassword,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: resetPassword,
+    })
+  );
 };
 
 // --------------------------------------------------

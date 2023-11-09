@@ -12,28 +12,24 @@ const updateSingleBricksController: Controller<
   typeof pagesSchema.updateSingleBricks.params,
   typeof pagesSchema.updateSingleBricks.body,
   typeof pagesSchema.updateSingleBricks.query
-> = async (req, res, next) => {
-  try {
-    const page = await service(
-      collectionBricksService.updateMultiple,
-      true
-    )({
-      id: parseInt(req.params.id),
-      environment_key: req.headers["lucid-environment"] as string,
-      collection_key: req.params.collection_key,
-      bricks: req.body.bricks,
-      language: req.language,
-      type: "pages",
-    });
+> = async (request, reply) => {
+  const page = await service(
+    collectionBricksService.updateMultiple,
+    true
+  )({
+    id: parseInt(request.params.id),
+    environment_key: request.headers["lucid-environment"] as string,
+    collection_key: request.params.collection_key,
+    bricks: request.body.bricks,
+    language: request.language,
+    type: "pages",
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: page,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: page,
+    })
+  );
 };
 
 // --------------------------------------------------
