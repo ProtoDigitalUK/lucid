@@ -12,28 +12,24 @@ const getMultipleController: Controller<
   typeof usersSchema.getMultiple.params,
   typeof usersSchema.getMultiple.body,
   typeof usersSchema.getMultiple.query
-> = async (req, res, next) => {
-  try {
-    const user = await service(
-      usersService.getMultiple,
-      false
-    )({
-      query: req.query,
-    });
+> = async (request, reply) => {
+  const user = await service(
+    usersService.getMultiple,
+    false
+  )({
+    query: request.query,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: user.data,
-        pagination: {
-          count: user.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: user.data,
+      pagination: {
+        count: user.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

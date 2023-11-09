@@ -12,23 +12,19 @@ const getSingleController: Controller<
   typeof languagesSchema.getSingle.params,
   typeof languagesSchema.getSingle.body,
   typeof languagesSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const language = await service(
-      languagesService.getSingle,
-      false
-    )({
-      code: req.params.code,
-    });
+> = async (request, reply) => {
+  const language = await service(
+    languagesService.getSingle,
+    false
+  )({
+    code: request.params.code,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: language,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: language,
+    })
+  );
 };
 
 // --------------------------------------------------

@@ -12,31 +12,27 @@ const getMultipleValidParentsController: Controller<
   typeof pagesSchema.getMultipleValidParents.params,
   typeof pagesSchema.getMultipleValidParents.body,
   typeof pagesSchema.getMultipleValidParents.query
-> = async (req, res, next) => {
-  try {
-    const pagesRes = await service(
-      pagesService.getMultipleValidParents,
-      false
-    )({
-      page_id: Number(req.params.id),
-      environment_key: req.headers["lucid-environment"] as string,
-      query: req.query,
-      language: req.language,
-    });
+> = async (request, reply) => {
+  const pagesRes = await service(
+    pagesService.getMultipleValidParents,
+    false
+  )({
+    page_id: Number(request.params.id),
+    environment_key: request.headers["lucid-environment"] as string,
+    query: request.query,
+    language: request.language,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: pagesRes.data,
-        pagination: {
-          count: pagesRes.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: pagesRes.data,
+      pagination: {
+        count: pagesRes.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

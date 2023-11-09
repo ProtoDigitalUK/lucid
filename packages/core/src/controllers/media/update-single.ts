@@ -12,27 +12,23 @@ const updateSingleController: Controller<
   typeof mediaSchema.updateSingle.params,
   typeof mediaSchema.updateSingle.body,
   typeof mediaSchema.updateSingle.query
-> = async (req, res, next) => {
-  try {
-    const media = await service(
-      mediaService.updateSingle,
-      false
-    )({
-      id: parseInt(req.params.id),
-      data: {
-        translations: req.body.translations,
-        files: req.files,
-      },
-    });
+> = async (request, reply) => {
+  const media = await service(
+    mediaService.updateSingle,
+    false
+  )({
+    id: parseInt(request.params.id),
+    data: {
+      translations: request.body.translations,
+      files: request.files,
+    },
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: media,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: media,
+    })
+  );
 };
 
 // --------------------------------------------------

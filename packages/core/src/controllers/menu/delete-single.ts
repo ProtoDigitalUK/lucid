@@ -12,24 +12,20 @@ const deleteSingleController: Controller<
   typeof menusSchema.deleteSingle.params,
   typeof menusSchema.deleteSingle.body,
   typeof menusSchema.deleteSingle.query
-> = async (req, res, next) => {
-  try {
-    const menu = await service(
-      menusService.deleteSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const menu = await service(
+    menusService.deleteSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: menu,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: menu,
+    })
+  );
 };
 
 // --------------------------------------------------

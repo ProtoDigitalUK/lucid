@@ -12,18 +12,14 @@ const getAllController: Controller<
   typeof permissionsSchema.getAll.params,
   typeof permissionsSchema.getAll.body,
   typeof permissionsSchema.getAll.query
-> = async (req, res, next) => {
-  try {
-    const permissionsRes = formatPermissions(Permissions.raw);
+> = async (request, reply) => {
+  const permissionsRes = formatPermissions(Permissions.raw);
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: permissionsRes,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: permissionsRes,
+    })
+  );
 };
 
 // --------------------------------------------------

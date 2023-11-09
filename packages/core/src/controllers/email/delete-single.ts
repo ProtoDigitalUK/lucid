@@ -12,23 +12,19 @@ const deleteSingleController: Controller<
   typeof emailsSchema.deleteSingle.params,
   typeof emailsSchema.deleteSingle.body,
   typeof emailsSchema.deleteSingle.query
-> = async (req, res, next) => {
-  try {
-    const email = await service(
-      emailServices.deleteSingle,
-      false
-    )({
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const email = await service(
+    emailServices.deleteSingle,
+    false
+  )({
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: email,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: email,
+    })
+  );
 };
 
 // --------------------------------------------------

@@ -12,23 +12,19 @@ const deleteSingleController: Controller<
   typeof usersSchema.deleteSingle.params,
   typeof usersSchema.deleteSingle.body,
   typeof usersSchema.deleteSingle.query
-> = async (req, res, next) => {
-  try {
-    const user = await service(
-      usersService.deleteSingle,
-      false
-    )({
-      user_id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const user = await service(
+    usersService.deleteSingle,
+    false
+  )({
+    user_id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: user,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: user,
+    })
+  );
 };
 
 // --------------------------------------------------

@@ -12,30 +12,26 @@ const getMultipleController: Controller<
   typeof formSubmissionsSchema.getMultiple.params,
   typeof formSubmissionsSchema.getMultiple.body,
   typeof formSubmissionsSchema.getMultiple.query
-> = async (req, res, next) => {
-  try {
-    const submissions = await service(
-      formSubService.getMultiple,
-      false
-    )({
-      query: req.query,
-      form_key: req.params.form_key,
-      environment_key: req.headers["lucid-environment"] as string,
-    });
+> = async (request, reply) => {
+  const submissions = await service(
+    formSubService.getMultiple,
+    false
+  )({
+    query: request.query,
+    form_key: request.params.form_key,
+    environment_key: request.headers["lucid-environment"] as string,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: submissions.data,
-        pagination: {
-          count: submissions.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: submissions.data,
+      pagination: {
+        count: submissions.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

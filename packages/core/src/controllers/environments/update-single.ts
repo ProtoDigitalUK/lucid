@@ -12,30 +12,26 @@ const updateSingleController: Controller<
   typeof environmentSchema.updateSingle.params,
   typeof environmentSchema.updateSingle.body,
   typeof environmentSchema.updateSingle.query
-> = async (req, res, next) => {
-  try {
-    const environment = await service(
-      environmentsService.upsertSingle,
-      false
-    )({
-      data: {
-        key: req.params.key,
-        title: req.body.title,
-        assigned_bricks: req.body.assigned_bricks,
-        assigned_collections: req.body.assigned_collections,
-        assigned_forms: req.body.assigned_forms,
-      },
-      create: false,
-    });
+> = async (request, reply) => {
+  const environment = await service(
+    environmentsService.upsertSingle,
+    false
+  )({
+    data: {
+      key: request.params.key,
+      title: request.body.title,
+      assigned_bricks: request.body.assigned_bricks,
+      assigned_collections: request.body.assigned_collections,
+      assigned_forms: request.body.assigned_forms,
+    },
+    create: false,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: environment,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: environment,
+    })
+  );
 };
 
 // --------------------------------------------------

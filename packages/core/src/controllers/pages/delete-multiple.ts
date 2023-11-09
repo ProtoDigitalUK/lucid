@@ -12,23 +12,19 @@ const deleteMultipleController: Controller<
   typeof pagesSchema.deleteMultiple.params,
   typeof pagesSchema.deleteMultiple.body,
   typeof pagesSchema.deleteMultiple.query
-> = async (req, res, next) => {
-  try {
-    const page = await service(
-      pagesService.deleteMultiple,
-      false
-    )({
-      ids: req.body.ids,
-    });
+> = async (request, reply) => {
+  const page = await service(
+    pagesService.deleteMultiple,
+    false
+  )({
+    ids: request.body.ids,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: page,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: page,
+    })
+  );
 };
 
 // --------------------------------------------------

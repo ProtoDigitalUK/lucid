@@ -12,28 +12,24 @@ const getMultipleController: Controller<
   typeof emailsSchema.getMultiple.params,
   typeof emailsSchema.getMultiple.body,
   typeof emailsSchema.getMultiple.query
-> = async (req, res, next) => {
-  try {
-    const emailsRes = await service(
-      emailServices.getMultiple,
-      false
-    )({
-      query: req.query,
-    });
+> = async (request, reply) => {
+  const emailsRes = await service(
+    emailServices.getMultiple,
+    false
+  )({
+    query: request.query,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: emailsRes.data,
-        pagination: {
-          count: emailsRes.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: emailsRes.data,
+      pagination: {
+        count: emailsRes.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

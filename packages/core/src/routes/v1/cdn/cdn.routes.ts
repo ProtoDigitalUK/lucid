@@ -1,14 +1,13 @@
 import { FastifyInstance } from "fastify";
-import fp from "fastify-plugin";
 // Utils
-import fastifyRoute from "@utils/app/fastify-route.js";
+import r from "@utils/app/route.js";
 // Controllers
 import streamSingle from "@controllers/media/stream-single.js";
 
 const cdnRoutes = async (fastify: FastifyInstance) => {
   // ------------------------------------
   // Stream single media
-  fastifyRoute(fastify, {
+  r(fastify, {
     method: "get",
     url: "/:key",
     schema: streamSingle.schema,
@@ -16,4 +15,4 @@ const cdnRoutes = async (fastify: FastifyInstance) => {
   });
 };
 
-export default fp(cdnRoutes);
+export default cdnRoutes;

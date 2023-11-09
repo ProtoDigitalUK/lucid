@@ -1,9 +1,6 @@
-import { Router } from "express";
-import r from "@utils/app/route.js";
-// Controller
+import { FastifyInstance } from "fastify";
+// import r from "@utils/app/route.js";
 
-// ------------------------------------
-// Router
-const router = Router();
+const optionRoutes = async (fastify: FastifyInstance) => {};
 
-export default router;
+export default optionRoutes;

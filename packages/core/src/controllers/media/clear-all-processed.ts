@@ -12,18 +12,14 @@ const clearAllProcessedController: Controller<
   typeof mediaSchema.clearAllProcessed.params,
   typeof mediaSchema.clearAllProcessed.body,
   typeof mediaSchema.clearAllProcessed.query
-> = async (req, res, next) => {
-  try {
-    await service(processedImagesService.clearAll, false)();
+> = async (request, reply) => {
+  await service(processedImagesService.clearAll, false)();
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: undefined,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: undefined,
+    })
+  );
 };
 
 // --------------------------------------------------

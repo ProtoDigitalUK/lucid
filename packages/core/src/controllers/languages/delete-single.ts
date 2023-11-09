@@ -12,23 +12,19 @@ const deleteSingleController: Controller<
   typeof languagesSchema.deleteSingle.params,
   typeof languagesSchema.deleteSingle.body,
   typeof languagesSchema.deleteSingle.query
-> = async (req, res, next) => {
-  try {
-    const language = await service(
-      languagesService.deleteSingle,
-      false
-    )({
-      code: req.params.code,
-    });
+> = async (request, reply) => {
+  const language = await service(
+    languagesService.deleteSingle,
+    false
+  )({
+    code: request.params.code,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: language,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: language,
+    })
+  );
 };
 
 // --------------------------------------------------

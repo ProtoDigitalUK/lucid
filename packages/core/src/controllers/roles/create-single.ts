@@ -12,24 +12,20 @@ const createSingleController: Controller<
   typeof rolesSchema.createSingle.params,
   typeof rolesSchema.createSingle.body,
   typeof rolesSchema.createSingle.query
-> = async (req, res, next) => {
-  try {
-    const role = await service(
-      rolesService.createSingle,
-      false
-    )({
-      name: req.body.name,
-      permission_groups: req.body.permission_groups,
-    });
+> = async (request, reply) => {
+  const role = await service(
+    rolesService.createSingle,
+    false
+  )({
+    name: request.body.name,
+    permission_groups: request.body.permission_groups,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: role,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: role,
+    })
+  );
 };
 
 // --------------------------------------------------

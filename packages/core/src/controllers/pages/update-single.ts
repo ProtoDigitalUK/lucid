@@ -12,31 +12,27 @@ const updateSingleController: Controller<
   typeof pagesSchema.updateSingle.params,
   typeof pagesSchema.updateSingle.body,
   typeof pagesSchema.updateSingle.query
-> = async (req, res, next) => {
-  try {
-    const page = await service(
-      pagesService.updateSingle,
-      true
-    )({
-      id: parseInt(req.params.id),
-      environment_key: req.headers["lucid-environment"] as string,
+> = async (request, reply) => {
+  const page = await service(
+    pagesService.updateSingle,
+    true
+  )({
+    id: parseInt(request.params.id),
+    environment_key: request.headers["lucid-environment"] as string,
 
-      homepage: req.body.homepage,
-      parent_id: req.body.parent_id,
-      author_id: req.body.author_id,
-      category_ids: req.body.category_ids,
-      published: req.body.published,
-      translations: req.body.translations,
-    });
+    homepage: request.body.homepage,
+    parent_id: request.body.parent_id,
+    author_id: request.body.author_id,
+    category_ids: request.body.category_ids,
+    published: request.body.published,
+    translations: request.body.translations,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: page,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: page,
+    })
+  );
 };
 
 // --------------------------------------------------

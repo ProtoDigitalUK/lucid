@@ -12,23 +12,19 @@ const deleteSingleController: Controller<
   typeof rolesSchema.deleteSingle.params,
   typeof rolesSchema.deleteSingle.body,
   typeof rolesSchema.deleteSingle.query
-> = async (req, res, next) => {
-  try {
-    const role = await service(
-      rolesService.deleteSingle,
-      false
-    )({
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const role = await service(
+    rolesService.deleteSingle,
+    false
+  )({
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: role,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: role,
+    })
+  );
 };
 
 // --------------------------------------------------

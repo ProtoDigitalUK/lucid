@@ -1,13 +1,13 @@
-import { Router } from "express";
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import z from "zod";
 // Middleware
-import validate from "@middleware/validate.js";
 import authenticate from "@middleware/authenticate.js";
 import authoriseCSRF from "@middleware/authorise-csrf.js";
+import fastifyMultipart from "@fastify/multipart";
+import validate, { QueryType } from "@middleware/validate.js";
 import paginated from "@middleware/paginated.js";
 import validateEnvironment from "@middleware/validate-environment.js";
 import permissions from "@middleware/permissions.js";
-import fileUpload from "@middleware/file-upload.js";
 import contentLanguage from "@middleware/content-language.js";
 // Types
 import {
@@ -15,15 +15,15 @@ import {
   EnvironmentPermissionT,
 } from "@lucid/types/src/permissions.js";
 
-type Route = <
+type RouteT = <
   ParamsT extends z.ZodTypeAny,
   BodyT extends z.ZodTypeAny,
   QueryT extends z.ZodTypeAny
 >(
-  router: Router,
-  props: {
+  fastify: FastifyInstance,
+  opts: {
     method: "get" | "post" | "put" | "delete" | "patch";
-    path: string;
+    url: string;
     permissions?: {
       global?: PermissionT[];
       environments?: EnvironmentPermissionT[];
@@ -43,84 +43,45 @@ type Route = <
     };
     controller: Controller<ParamsT, BodyT, QueryT>;
   }
-) => Router;
+) => void;
 
-const route: Route = (router, props) => {
-  const { method, path, controller } = props;
+const route: RouteT = (fastify, opts) => {
+  const { method, url, controller, middleware, schema } = opts;
 
-  // ------------------------------------
-  // Assign middleware
-  const middleware = [];
+  const preHandler: Array<
+    (
+      request: FastifyRequest<{
+        Querystring: QueryType;
+      }>,
+      reply: FastifyReply
+    ) => Promise<void>
+  > = [];
 
-  // set middleware for authentication
-  if (props.middleware?.authenticate) {
-    middleware.push(authenticate);
-  }
-
-  // set middleware for authorisation (CSRF)
-  if (props.middleware?.authoriseCSRF) {
-    middleware.push(authoriseCSRF);
-  }
-
-  // set middleware for file upload
-  if (props.middleware?.fileUpload) {
-    middleware.push(fileUpload);
-  }
-
-  // set middleware for validation
-  if (props.schema?.params || props.schema?.body || props.schema?.query) {
-    middleware.push(
+  if (middleware?.authenticate) preHandler.push(authenticate);
+  if (middleware?.authoriseCSRF) preHandler.push(authoriseCSRF);
+  if (middleware?.fileUpload) fastify.register(fastifyMultipart);
+  if (schema?.params || schema?.body || schema?.query) {
+    preHandler.push(
       validate(
         z.object({
-          params: props.schema?.params ?? z.object({}),
-          query: props.schema?.query ?? z.object({}),
-          body: props.schema?.body ?? z.object({}),
+          params: schema?.params ?? z.object({}),
+          query: schema?.query ?? z.object({}),
+          body: schema?.body ?? z.object({}),
         })
       )
     );
   }
+  if (middleware?.paginated) preHandler.push(paginated);
+  if (middleware?.validateEnvironment) preHandler.push(validateEnvironment);
+  if (opts.permissions) preHandler.push(permissions(opts.permissions));
+  if (middleware?.contentLanguage) preHandler.push(contentLanguage);
 
-  // set middleware for pagination
-  if (props.middleware?.paginated) {
-    middleware.push(paginated);
-  }
-
-  // set middleware for environment validation
-  if (props.middleware?.validateEnvironment) {
-    middleware.push(validateEnvironment);
-  }
-
-  // set middleware for permissions
-  if (props.permissions) {
-    middleware.push(permissions(props.permissions));
-  }
-
-  // set middleware for content language
-  if (props.middleware?.contentLanguage) {
-    middleware.push(contentLanguage);
-  }
-
-  switch (method) {
-    case "get":
-      router.get(path, middleware, controller);
-      break;
-    case "post":
-      router.post(path, middleware, controller);
-      break;
-    case "put":
-      router.put(path, middleware, controller);
-      break;
-    case "delete":
-      router.delete(path, middleware, controller);
-      break;
-    case "patch":
-      router.patch(path, middleware, controller);
-      break;
-    default:
-      break;
-  }
-
-  return router;
+  fastify.route({
+    method: method,
+    url: url,
+    preHandler: preHandler,
+    handler: controller,
+  });
 };
 
 export default route;

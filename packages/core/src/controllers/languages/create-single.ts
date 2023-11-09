@@ -12,25 +12,21 @@ const createSingleController: Controller<
   typeof languagesSchema.createSingle.params,
   typeof languagesSchema.createSingle.body,
   typeof languagesSchema.createSingle.query
-> = async (req, res, next) => {
-  try {
-    const language = await service(
-      languagesService.createSingle,
-      false
-    )({
-      code: req.body.code,
-      is_default: req.body.is_default,
-      is_enabled: req.body.is_enabled,
-    });
+> = async (request, reply) => {
+  const language = await service(
+    languagesService.createSingle,
+    false
+  )({
+    code: request.body.code,
+    is_default: request.body.is_default,
+    is_enabled: request.body.is_enabled,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: language,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: language,
+    })
+  );
 };
 
 // --------------------------------------------------

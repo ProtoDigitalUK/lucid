@@ -1,21 +1,19 @@
-import { Router } from "express";
+import { FastifyInstance } from "fastify";
 import r from "@utils/app/route.js";
 // Controller
 import updateMe from "@controllers/account/update-me.js";
 
-// ------------------------------------
-// Router
-const router = Router();
+const accountRoutes = async (fastify: FastifyInstance) => {
+  r(fastify, {
+    method: "patch",
+    url: "/",
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+    },
+    schema: updateMe.schema,
+    controller: updateMe.controller,
+  });
+};
 
-r(router, {
-  method: "patch",
-  path: "/",
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-  },
-  schema: updateMe.schema,
-  controller: updateMe.controller,
-});
-
-export default router;
+export default accountRoutes;

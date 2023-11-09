@@ -12,23 +12,19 @@ const getSingleController: Controller<
   typeof rolesSchema.getSingle.params,
   typeof rolesSchema.getSingle.body,
   typeof rolesSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const role = await service(
-      rolesService.getSingle,
-      false
-    )({
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const role = await service(
+    rolesService.getSingle,
+    false
+  )({
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: role,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: role,
+    })
+  );
 };
 
 // --------------------------------------------------

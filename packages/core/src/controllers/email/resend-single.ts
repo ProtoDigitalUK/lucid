@@ -12,23 +12,19 @@ const resendSingleController: Controller<
   typeof emailsSchema.resendSingle.params,
   typeof emailsSchema.resendSingle.body,
   typeof emailsSchema.resendSingle.query
-> = async (req, res, next) => {
-  try {
-    const email = await service(
-      emailServices.resendSingle,
-      false
-    )({
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const email = await service(
+    emailServices.resendSingle,
+    false
+  )({
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: email,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: email,
+    })
+  );
 };
 
 // --------------------------------------------------

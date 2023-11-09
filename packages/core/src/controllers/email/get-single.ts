@@ -12,24 +12,20 @@ const getSingleController: Controller<
   typeof emailsSchema.getSingle.params,
   typeof emailsSchema.getSingle.body,
   typeof emailsSchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const email = await service(
-      emailServices.getSingle,
-      false
-    )({
-      id: parseInt(req.params.id),
-      renderTemplate: true,
-    });
+> = async (request, reply) => {
+  const email = await service(
+    emailServices.getSingle,
+    false
+  )({
+    id: parseInt(request.params.id),
+    renderTemplate: true,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: email,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: email,
+    })
+  );
 };
 
 // --------------------------------------------------

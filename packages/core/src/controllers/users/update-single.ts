@@ -12,25 +12,21 @@ const updateSingleController: Controller<
   typeof usersSchema.updateSingle.params,
   typeof usersSchema.updateSingle.body,
   typeof usersSchema.updateSingle.query
-> = async (req, res, next) => {
-  try {
-    const userRoles = await service(usersService.updateSingle, false)(
-      {
-        user_id: parseInt(req.params.id),
-        role_ids: req.body.role_ids,
-        super_admin: req.body.super_admin,
-      },
-      req.auth.id
-    );
+> = async (request, reply) => {
+  const userRoles = await service(usersService.updateSingle, false)(
+    {
+      user_id: parseInt(request.params.id),
+      role_ids: request.body.role_ids,
+      super_admin: request.body.super_admin,
+    },
+    request.auth.id
+  );
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: userRoles,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: userRoles,
+    })
+  );
 };
 
 // --------------------------------------------------

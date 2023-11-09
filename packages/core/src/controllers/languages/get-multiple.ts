@@ -12,28 +12,24 @@ const getMultipleController: Controller<
   typeof languagesSchema.getMultiple.params,
   typeof languagesSchema.getMultiple.body,
   typeof languagesSchema.getMultiple.query
-> = async (req, res, next) => {
-  try {
-    const languagesRes = await service(
-      languagesService.getMultiple,
-      false
-    )({
-      query: req.query,
-    });
+> = async (request, reply) => {
+  const languagesRes = await service(
+    languagesService.getMultiple,
+    false
+  )({
+    query: request.query,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: languagesRes.data,
-        pagination: {
-          count: languagesRes.count,
-          page: req.query.page as string,
-          per_page: req.query.per_page as string,
-        },
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: languagesRes.data,
+      pagination: {
+        count: languagesRes.count,
+        page: request.query.page as string,
+        per_page: request.query.per_page as string,
+      },
+    })
+  );
 };
 
 // --------------------------------------------------

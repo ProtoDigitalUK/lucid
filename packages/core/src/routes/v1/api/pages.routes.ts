@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { FastifyInstance } from "fastify";
 import r from "@utils/app/route.js";
 // Controller
 import createSingle from "@controllers/pages/create-single.js";
@@ -10,122 +10,120 @@ import deleteMultiple from "@controllers/pages/delete-multiple.js";
 import getMultipleValidParents from "@controllers/pages/get-multiple-valid-parents.js";
 import updateSingleBricksController from "@controllers/pages/update-single-bricks.js";
 
-// ------------------------------------
-// Router
-const router = Router();
+const pageRoutes = async (fastify: FastifyInstance) => {
+  r(fastify, {
+    method: "get",
+    url: "/:id/valid-parents",
+    middleware: {
+      authenticate: true,
+      validateEnvironment: true,
+      paginated: true,
+      contentLanguage: true,
+    },
+    schema: getMultipleValidParents.schema,
+    controller: getMultipleValidParents.controller,
+  });
 
-r(router, {
-  method: "get",
-  path: "/:id/valid-parents",
-  middleware: {
-    authenticate: true,
-    validateEnvironment: true,
-    paginated: true,
-    contentLanguage: true,
-  },
-  schema: getMultipleValidParents.schema,
-  controller: getMultipleValidParents.controller,
-});
+  r(fastify, {
+    method: "post",
+    url: "/",
+    permissions: {
+      environments: ["create_content"],
+    },
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+      validateEnvironment: true,
+    },
+    schema: createSingle.schema,
+    controller: createSingle.controller,
+  });
 
-r(router, {
-  method: "post",
-  path: "/",
-  permissions: {
-    environments: ["create_content"],
-  },
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-    validateEnvironment: true,
-  },
-  schema: createSingle.schema,
-  controller: createSingle.controller,
-});
+  r(fastify, {
+    method: "get",
+    url: "/",
+    middleware: {
+      authenticate: true,
+      paginated: true,
+      validateEnvironment: true,
+      contentLanguage: true,
+    },
+    schema: getMultiple.schema,
+    controller: getMultiple.controller,
+  });
 
-r(router, {
-  method: "get",
-  path: "/",
-  middleware: {
-    authenticate: true,
-    paginated: true,
-    validateEnvironment: true,
-    contentLanguage: true,
-  },
-  schema: getMultiple.schema,
-  controller: getMultiple.controller,
-});
+  r(fastify, {
+    method: "get",
+    url: "/:id",
+    middleware: {
+      authenticate: true,
+      validateEnvironment: true,
+      contentLanguage: true,
+    },
+    schema: getSingle.schema,
+    controller: getSingle.controller,
+  });
 
-r(router, {
-  method: "get",
-  path: "/:id",
-  middleware: {
-    authenticate: true,
-    validateEnvironment: true,
-    contentLanguage: true,
-  },
-  schema: getSingle.schema,
-  controller: getSingle.controller,
-});
+  r(fastify, {
+    method: "patch",
+    url: "/:id",
+    permissions: {
+      environments: ["update_content"],
+    },
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+      validateEnvironment: true,
+    },
+    schema: updateSingle.schema,
+    controller: updateSingle.controller,
+  });
 
-r(router, {
-  method: "patch",
-  path: "/:id",
-  permissions: {
-    environments: ["update_content"],
-  },
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-    validateEnvironment: true,
-  },
-  schema: updateSingle.schema,
-  controller: updateSingle.controller,
-});
+  r(fastify, {
+    method: "patch",
+    url: "/:collection_key/:id/bricks",
+    permissions: {
+      environments: ["update_content"],
+    },
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+      validateEnvironment: true,
+      contentLanguage: true,
+    },
+    schema: updateSingleBricksController.schema,
+    controller: updateSingleBricksController.controller,
+  });
 
-r(router, {
-  method: "patch",
-  path: "/:collection_key/:id/bricks",
-  permissions: {
-    environments: ["update_content"],
-  },
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-    validateEnvironment: true,
-    contentLanguage: true,
-  },
-  schema: updateSingleBricksController.schema,
-  controller: updateSingleBricksController.controller,
-});
+  r(fastify, {
+    method: "delete",
+    url: "/:id",
+    permissions: {
+      environments: ["delete_content"],
+    },
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+      validateEnvironment: true,
+    },
+    schema: deleteSingle.schema,
+    controller: deleteSingle.controller,
+  });
 
-r(router, {
-  method: "delete",
-  path: "/:id",
-  permissions: {
-    environments: ["delete_content"],
-  },
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-    validateEnvironment: true,
-  },
-  schema: deleteSingle.schema,
-  controller: deleteSingle.controller,
-});
+  r(fastify, {
+    method: "delete",
+    url: "/",
+    permissions: {
+      environments: ["delete_content"],
+    },
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+      validateEnvironment: true,
+    },
+    schema: deleteMultiple.schema,
+    controller: deleteMultiple.controller,
+  });
+};
 
-r(router, {
-  method: "delete",
-  path: "/",
-  permissions: {
-    environments: ["delete_content"],
-  },
-  middleware: {
-    authenticate: true,
-    authoriseCSRF: true,
-    validateEnvironment: true,
-  },
-  schema: deleteMultiple.schema,
-  controller: deleteMultiple.controller,
-});
-
-export default router;
+export default pageRoutes;

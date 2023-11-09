@@ -12,30 +12,26 @@ const createSingleController: Controller<
   typeof pagesSchema.createSingle.params,
   typeof pagesSchema.createSingle.body,
   typeof pagesSchema.createSingle.query
-> = async (req, res, next) => {
-  try {
-    const page = await service(
-      pagesService.createSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      collection_key: req.body.collection_key,
-      homepage: req.body.homepage,
-      published: req.body.published,
-      parent_id: req.body.parent_id,
-      category_ids: req.body.category_ids,
-      userId: req.auth.id,
-      translations: req.body.translations,
-    });
+> = async (request, reply) => {
+  const page = await service(
+    pagesService.createSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    collection_key: request.body.collection_key,
+    homepage: request.body.homepage,
+    published: request.body.published,
+    parent_id: request.body.parent_id,
+    category_ids: request.body.category_ids,
+    userId: request.auth.id,
+    translations: request.body.translations,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: page,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: page,
+    })
+  );
 };
 
 // --------------------------------------------------
