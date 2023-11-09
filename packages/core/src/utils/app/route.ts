@@ -3,7 +3,6 @@ import z from "zod";
 // Middleware
 import authenticate from "@middleware/authenticate.js";
 import authoriseCSRF from "@middleware/authorise-csrf.js";
-import fastifyMultipart from "@fastify/multipart";
 import validate, { QueryType } from "@middleware/validate.js";
 import paginated from "@middleware/paginated.js";
 import validateEnvironment from "@middleware/validate-environment.js";
@@ -29,7 +28,6 @@ type RouteT = <
       environments?: EnvironmentPermissionT[];
     };
     middleware?: {
-      fileUpload?: boolean;
       authenticate?: boolean;
       authoriseCSRF?: boolean;
       paginated?: boolean;
@@ -59,7 +57,6 @@ const route: RouteT = (fastify, opts) => {
 
   if (middleware?.authenticate) preHandler.push(authenticate);
   if (middleware?.authoriseCSRF) preHandler.push(authoriseCSRF);
-  if (middleware?.fileUpload) fastify.register(fastifyMultipart);
   if (schema?.params || schema?.body || schema?.query) {
     preHandler.push(
       validate(

@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import fileUpload from "express-fileupload";
+import { MultipartFile } from "@fastify/multipart";
 // Utils
 import helpers from "@utils/media/helpers.js";
 import service from "@utils/app/service.js";
@@ -10,12 +10,10 @@ import Media from "@db/models/Media.js";
 import mediaService from "@services/media/index.js";
 import s3Service from "@services/s3/index.js";
 import translationsService from "@services/translations/index.js";
-// Format
-import formatMedia from "@utils/format/format-media.js";
 
 export interface ServiceData {
   translations: string;
-  files?: fileUpload.FileArray | null | undefined;
+  fileData: MultipartFile | undefined;
 }
 
 const createSingle = async (client: PoolClient, data: ServiceData) => {
@@ -25,7 +23,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
 
   // -------------------------------------------
   // Data
-  if (!data.files || !data.files["file"]) {
+  if (!data.fileData) {
     throw new LucidError({
       type: "basic",
       name: "No files provided",
@@ -40,8 +38,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  const files = helpers.formatReqFiles(data.files);
-  const firstFile = files[0];
+  const file = data.fileData.file;
   const firstName = translationsService.firstValueOfKey({
     translations: translationsData,
     key: "name",
@@ -49,24 +46,28 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
 
   // -------------------------------------------
   // Checks
-  await service(
+  const size = await service(
     mediaService.canStoreFiles,
     false,
     client
   )({
-    files,
+    file: file,
+    filename: data.fileData.filename,
   });
 
   // -------------------------------------------
   // Generate key and save file
-  const key = helpers.uniqueKey(firstName || firstFile.name);
-  const meta = await helpers.getMetaData(firstFile);
+  const key = helpers.uniqueKey(firstName || data.fileData.filename);
+  const meta = await helpers.getMetaData(file, {
+    size,
+    mimetype: data.fileData.mimetype,
+  });
   const type = helpers.getMediaType(meta.mimeType);
 
   const s3Promise = s3Service.saveObject({
     type: "file",
     key: key,
-    file: firstFile,
+    file: file,
     meta,
   });
   const translationPromise = service(

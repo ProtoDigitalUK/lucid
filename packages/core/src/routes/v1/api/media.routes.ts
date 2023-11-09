@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import r from "@utils/app/route.js";
+
 // Controller
 import createSingle from "@controllers/media/create-single.js";
 import getMultiple from "@controllers/media/get-multiple.js";
@@ -31,7 +32,6 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
       global: ["create_media"],
     },
     middleware: {
-      fileUpload: true,
       authenticate: true,
       authoriseCSRF: true,
     },
@@ -82,7 +82,6 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
       global: ["update_media"],
     },
     middleware: {
-      fileUpload: true,
       authenticate: true,
       authoriseCSRF: true,
     },

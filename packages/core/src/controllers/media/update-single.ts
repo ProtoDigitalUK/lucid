@@ -20,7 +20,7 @@ const updateSingleController: Controller<
     id: parseInt(request.params.id),
     data: {
       translations: request.body.translations,
-      files: request.files,
+      fileData: await request.file(),
     },
   });
 

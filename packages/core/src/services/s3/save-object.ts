@@ -1,5 +1,5 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import fileUpload from "express-fileupload";
+import { BusboyFileStream } from "@fastify/busboy";
 // Utils
 import getS3Client from "@utils/app/s3-client.js";
 import { type MediaMetaDataT } from "@utils/media/helpers.js";
@@ -10,7 +10,7 @@ export interface ServiceData {
   type: "file" | "buffer";
 
   key: string;
-  file?: fileUpload.UploadedFile;
+  file?: BusboyFileStream;
   buffer?: Buffer;
   meta: MediaMetaDataT;
 }
@@ -21,7 +21,7 @@ const saveObject = async (data: ServiceData) => {
   const command = new PutObjectCommand({
     Bucket: Config.media.store.bucket,
     Key: data.key,
-    Body: data.type === "file" ? data.file?.data : data.buffer,
+    Body: data.type === "file" ? data.file : data.buffer,
     ContentType: data.meta.mimeType,
     Metadata: {
       width: data.meta.width?.toString() || "",

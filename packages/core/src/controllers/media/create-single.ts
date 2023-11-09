@@ -18,7 +18,7 @@ const createSingleController: Controller<
     true
   )({
     translations: request.body.translations,
-    files: request.files,
+    fileData: await request.file(),
   });
 
   reply.status(200).send(

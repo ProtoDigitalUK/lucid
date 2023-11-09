@@ -8,6 +8,8 @@ import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fs from "fs-extra";
+import fastifyMultipart from "@fastify/multipart";
+
 // Core
 import { initialisePool } from "@db/db.js";
 import migrateDB from "@db/migration.js";
@@ -28,7 +30,7 @@ const lucid = async (
 ) => {
   // ------------------------------------
   // Config
-  await Config.cachedConfig();
+  const config = await Config.cachedConfig();
 
   // ------------------------------------
   // INitialise app
@@ -53,6 +55,11 @@ const lucid = async (
   });
   fastify.register(fastifyCookie, {
     secret: Config.secret,
+  });
+  fastify.register(fastifyMultipart, {
+    limits: {
+      fileSize: config.media.maxFileSize,
+    },
   });
   log.yellow("Middleware configured");
 

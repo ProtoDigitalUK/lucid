@@ -1,5 +1,4 @@
 import { FastifyInstance } from "fastify";
-
 // API
 import auth from "@routes/v1/api/auth.routes.js";
 import health from "@routes/v1/api/health.routes.js";
@@ -22,65 +21,63 @@ import settings from "@routes/v1/api/settings.routes.js";
 import languages from "@routes/v1/api/languages.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
-  // Version 1
-  // API
-  // fastify.register(auth, {
-  //   prefix: "/auth",
-  // });
-  // fastify.register(health, {
-  //   prefix: "/health",
-  // });
-  // fastify.register(categories, {
-  //   prefix: "/categories",
-  // });
-  // fastify.register(pages, {
-  //   prefix: "/pages",
-  // });
-  // fastify.register(singlePages, {
-  //   prefix: "/single-page",
-  // });
-  // fastify.register(collections, {
-  //   prefix: "/collections",
-  // });
-  // fastify.register(environments, {
-  //   prefix: "/environments",
-  // });
-  // fastify.register(roles, {
-  //   prefix: "/roles",
-  // });
-  // fastify.register(users, {
-  //   prefix: "/users",
-  // });
-  // fastify.register(permissions, {
-  //   prefix: "/permissions",
-  // });
-  // fastify.register(bricks, {
-  //   prefix: "/bricks",
-  // });
-  // fastify.register(menus, {
-  //   prefix: "/menus",
-  // });
-  // fastify.register(media, {
-  //   prefix: "/media",
-  // });
-  // fastify.register(emails, {
-  //   prefix: "/emails",
-  // });
-  // fastify.register(forms, {
-  //   prefix: "/forms",
-  // });
-  // fastify.register(options, {
-  //   prefix: "/options",
-  // });
-  // fastify.register(account, {
-  //   prefix: "/account",
-  // });
-  // fastify.register(settings, {
-  //   prefix: "/settings",
-  // });
-  // fastify.register(languages, {
-  //   prefix: "/languages",
-  // });
+  fastify.register(auth, {
+    prefix: "/auth",
+  });
+  fastify.register(health, {
+    prefix: "/health",
+  });
+  fastify.register(categories, {
+    prefix: "/categories",
+  });
+  fastify.register(pages, {
+    prefix: "/pages",
+  });
+  fastify.register(singlePages, {
+    prefix: "/single-page",
+  });
+  fastify.register(collections, {
+    prefix: "/collections",
+  });
+  fastify.register(environments, {
+    prefix: "/environments",
+  });
+  fastify.register(roles, {
+    prefix: "/roles",
+  });
+  fastify.register(users, {
+    prefix: "/users",
+  });
+  fastify.register(permissions, {
+    prefix: "/permissions",
+  });
+  fastify.register(bricks, {
+    prefix: "/bricks",
+  });
+  fastify.register(menus, {
+    prefix: "/menus",
+  });
+  fastify.register(media, {
+    prefix: "/media",
+  });
+  fastify.register(emails, {
+    prefix: "/emails",
+  });
+  fastify.register(forms, {
+    prefix: "/forms",
+  });
+  fastify.register(options, {
+    prefix: "/options",
+  });
+  fastify.register(account, {
+    prefix: "/account",
+  });
+  fastify.register(settings, {
+    prefix: "/settings",
+  });
+  fastify.register(languages, {
+    prefix: "/languages",
+  });
 };
 
 export default routes;
