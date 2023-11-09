@@ -12,24 +12,20 @@ const getSingleController: Controller<
   typeof categorySchema.getSingle.params,
   typeof categorySchema.getSingle.body,
   typeof categorySchema.getSingle.query
-> = async (req, res, next) => {
-  try {
-    const category = await service(
-      categoriesService.getSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const category = await service(
+    categoriesService.getSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: category,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: category,
+    })
+  );
 };
 
 // --------------------------------------------------

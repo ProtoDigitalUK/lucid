@@ -12,23 +12,19 @@ const verifyResetPasswordController: Controller<
   typeof authSchema.verifyResetPassword.params,
   typeof authSchema.verifyResetPassword.body,
   typeof authSchema.verifyResetPassword.query
-> = async (req, res, next) => {
-  try {
-    const verifyResetPassword = await service(
-      authService.verifyResetPassword,
-      false
-    )({
-      token: req.params.token,
-    });
+> = async (request, reply) => {
+  const verifyResetPassword = await service(
+    authService.verifyResetPassword,
+    false
+  )({
+    token: request.params.token,
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: verifyResetPassword,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: verifyResetPassword,
+    })
+  );
 };
 
 // --------------------------------------------------

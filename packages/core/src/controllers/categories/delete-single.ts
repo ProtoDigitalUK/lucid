@@ -12,24 +12,20 @@ const deleteSingleController: Controller<
   typeof categorySchema.deleteSingle.params,
   typeof categorySchema.deleteSingle.body,
   typeof categorySchema.deleteSingle.query
-> = async (req, res, next) => {
-  try {
-    const category = await service(
-      categoriesService.deleteSingle,
-      false
-    )({
-      environment_key: req.headers["lucid-environment"] as string,
-      id: parseInt(req.params.id),
-    });
+> = async (request, reply) => {
+  const category = await service(
+    categoriesService.deleteSingle,
+    false
+  )({
+    environment_key: request.headers["lucid-environment"] as string,
+    id: parseInt(request.params.id),
+  });
 
-    res.status(200).json(
-      buildResponse(req, {
-        data: category,
-      })
-    );
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(
+    buildResponse(request, {
+      data: category,
+    })
+  );
 };
 
 // --------------------------------------------------

@@ -12,21 +12,17 @@ const loginController: Controller<
   typeof authSchema.login.params,
   typeof authSchema.login.body,
   typeof authSchema.login.query
-> = async (req, res, next) => {
-  try {
-    const user = await service(
-      authService.login,
-      false
-    )({
-      username: req.body.username,
-      password: req.body.password,
-    });
-    authService.jwt.generateJWT(res, user);
+> = async (request, reply) => {
+  const user = await service(
+    authService.login,
+    false
+  )({
+    username: request.body.username,
+    password: request.body.password,
+  });
+  authService.jwt.generateJWT(reply, user);
 
-    res.status(200).json(buildResponse(req, { data: user }));
-  } catch (error) {
-    next(error as Error);
-  }
+  reply.status(200).send(buildResponse(request, { data: user }));
 };
 
 // --------------------------------------------------
