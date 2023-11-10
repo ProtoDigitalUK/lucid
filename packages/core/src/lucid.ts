@@ -50,6 +50,7 @@ const lucid = async (
       "_csrf",
       "lucid-environment",
       "lucid-content-lang",
+      "Content-Length",
     ],
     credentials: true,
   });

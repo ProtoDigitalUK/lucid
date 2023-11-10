@@ -8,17 +8,16 @@ import mediaService from "@services/media/index.js";
 
 // --------------------------------------------------
 // Controller
-const updateSingleController: Controller<
-  typeof mediaSchema.updateSingle.params,
-  typeof mediaSchema.updateSingle.body,
-  typeof mediaSchema.updateSingle.query
+const uploadSingleFileController: Controller<
+  typeof mediaSchema.uploadSingleFile.params,
+  typeof mediaSchema.uploadSingleFile.body,
+  typeof mediaSchema.uploadSingleFile.query
 > = async (request, reply) => {
   const media = await service(
-    mediaService.updateSingle,
-    false
+    mediaService.uploadSingleFile,
+    true
   )({
-    id: Number(request.params.id),
-    translations: request.body.translations,
+    fileData: await request.file(),
   });
 
   reply.status(200).send(
@@ -31,6 +30,6 @@ const updateSingleController: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: mediaSchema.updateSingle,
-  controller: updateSingleController,
+  schema: mediaSchema.uploadSingleFile,
+  controller: uploadSingleFileController,
 };

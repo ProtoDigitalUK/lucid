@@ -57,7 +57,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.363.0",
-    "@fastify/busboy": "^2.0.0",
     "@fastify/cookie": "^9.1.0",
     "@fastify/cors": "^8.4.1",
     "@fastify/multipart": "^8.0.0",

@@ -1,10 +1,12 @@
 import slug from "slug";
+import fs from "fs-extra";
 import { MultipartFile } from "@fastify/multipart";
-import { BusboyFileStream } from "@fastify/busboy";
 import mime from "mime-types";
 import sharp from "sharp";
 import z from "zod";
 import { Readable } from "stream";
+import { pipeline } from "stream/promises";
+import { join } from "path";
 // Schema
 import mediaSchema from "@schemas/media.js";
 // Types
@@ -36,40 +38,27 @@ const uniqueKey = (name: string) => {
   return `${slugVal}-${Date.now()}`;
 };
 
-// Get file size
-const getFileSize = (file: BusboyFileStream) => {
-  return new Promise<number>((resolve, reject) => {
-    let size = 0;
-    file.on("data", (chunk) => {
-      size += chunk.length;
-    });
-    file.on("end", () => {
-      resolve(size);
-    });
-    file.on("error", reject);
-  });
-};
-
 // Get meta data from a file
-const getMetaData = async (
-  fileStream: BusboyFileStream,
-  data: {
-    size: number;
-    mimetype: string;
-  }
-): Promise<MediaMetaDataT> => {
+const getMetaData = async (data: {
+  filePath: string;
+
+  mimetype: string;
+}): Promise<MediaMetaDataT> => {
+  const file = streamTempFile(data.filePath);
+
   const fileExtension = mime.extension(data.mimetype);
   const mimeType = data.mimetype;
-  const size = data.size;
+  let size = 0;
   let width = null;
   let height = null;
 
   try {
     const transform = sharp();
-    fileStream.pipe(transform);
+    file.pipe(transform);
     const metaData = await transform.metadata();
     width = metaData.width;
     height = metaData.height;
+    size = metaData.size || 0;
   } catch (error) {}
 
   return {
@@ -130,6 +119,30 @@ const getMediaType = (mimeType: string): MediaResT["type"] => {
   return "unknown";
 };
 
+// save stream to temp file
+const saveStreamToTempFile = async (stream: Readable, name: string) => {
+  const tempDir = "./tmp";
+  await fs.ensureDir(tempDir);
+
+  const tempFilePath = join(tempDir, name);
+
+  await pipeline(stream, fs.createWriteStream(tempFilePath));
+
+  return tempFilePath;
+};
+
+const streamTempFile = (filePath: string): Readable => {
+  return fs.createReadStream(filePath);
+};
+
+const deleteTempFile = async (filePath: string): Promise<void> => {
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    console.error(`Error deleting temporary file: ${filePath}`, error);
+  }
+};
+
 // -------------------------------------------
 const helpers = {
   uniqueKey,
@@ -138,7 +151,9 @@ const helpers = {
   createProcessKey,
   streamToBuffer,
   getMediaType,
-  getFileSize,
+  saveStreamToTempFile,
+  streamTempFile,
+  deleteTempFile,
 };
 
 export default helpers;

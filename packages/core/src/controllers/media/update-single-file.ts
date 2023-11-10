@@ -8,22 +8,22 @@ import mediaService from "@services/media/index.js";
 
 // --------------------------------------------------
 // Controller
-const createSingleController: Controller<
-  typeof mediaSchema.createSingle.params,
-  typeof mediaSchema.createSingle.body,
-  typeof mediaSchema.createSingle.query
+const updateSingleFileController: Controller<
+  typeof mediaSchema.updateSingleFile.params,
+  typeof mediaSchema.updateSingleFile.body,
+  typeof mediaSchema.updateSingleFile.query
 > = async (request, reply) => {
-  await service(
-    mediaService.createSingle,
+  const media = await service(
+    mediaService.updateSingleFile,
     true
   )({
-    translations: request.body.translations,
+    id: Number(request.params.id),
     fileData: await request.file(),
   });
 
   reply.status(200).send(
     buildResponse(request, {
-      data: undefined,
+      data: media,
     })
   );
 };
@@ -31,6 +31,6 @@ const createSingleController: Controller<
 // --------------------------------------------------
 // Export
 export default {
-  schema: mediaSchema.createSingle,
-  controller: createSingleController,
+  schema: mediaSchema.updateSingleFile,
+  controller: updateSingleFileController,
 };

@@ -12,17 +12,10 @@ import s3Service from "@services/s3/index.js";
 import translationsService from "@services/translations/index.js";
 
 export interface ServiceData {
-  translations: string;
   fileData: MultipartFile | undefined;
 }
 
-const createSingle = async (client: PoolClient, data: ServiceData) => {
-  const translationsData = translationsService.validateTranslations({
-    translations: data.translations,
-  });
-
-  // -------------------------------------------
-  // Data
+const uploadSingleFile = async (client: PoolClient, data: ServiceData) => {
   if (!data.fileData) {
     throw new LucidError({
       type: "basic",
@@ -38,36 +31,31 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  const file = data.fileData.file;
-  const firstName = translationsService.firstValueOfKey({
-    translations: translationsData,
-    key: "name",
-  });
+  const filePath = await helpers.saveStreamToTempFile(
+    data.fileData.file,
+    data.fileData.filename
+  );
 
-  // -------------------------------------------
-  // Checks
-  const size = await service(
-    mediaService.canStoreFiles,
-    false,
-    client
-  )({
-    file: file,
-    filename: data.fileData.filename,
-  });
-
-  // -------------------------------------------
-  // Generate key and save file
-  const key = helpers.uniqueKey(firstName || data.fileData.filename);
-  const meta = await helpers.getMetaData(file, {
-    size,
+  const key = helpers.uniqueKey(data.fileData.filename);
+  const meta = await helpers.getMetaData({
+    filePath,
     mimetype: data.fileData.mimetype,
   });
   const type = helpers.getMediaType(meta.mimeType);
 
+  await service(
+    mediaService.canStoreFiles,
+    false,
+    client
+  )({
+    size: meta.size,
+    filename: data.fileData.filename,
+  });
+
   const s3Promise = s3Service.saveObject({
-    type: "file",
+    type: "readable",
     key: key,
-    file: file,
+    readable: helpers.streamTempFile(filePath),
     meta,
   });
   const translationPromise = service(
@@ -76,10 +64,8 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     translations: {
-      name: translationsData.filter(
-        (translation) => translation.key === "name"
-      ),
-      alt: translationsData.filter((translation) => translation.key === "alt"),
+      name: [],
+      alt: [],
     },
   });
 
@@ -88,7 +74,6 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     translationPromise,
   ]);
 
-  // Error if file not saved
   if (response.$metadata.httpStatusCode !== 200) {
     throw new LucidError({
       type: "basic",
@@ -109,9 +94,9 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       key: key,
       name_translation_key_id: translations.get("name"),
       alt_translation_key_id: translations.get("alt"),
-      etag: response.ETag?.replace(/"/g, ""),
       type: type,
       meta: meta,
+      etag: response.ETag?.replace(/"/g, ""),
     }),
     service(
       mediaService.setStorageUsed,
@@ -120,6 +105,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     )({
       add: meta.size,
     }),
+    helpers.deleteTempFile(filePath),
   ]);
 
   if (!media) {
@@ -140,7 +126,9 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
 
-  return;
+  return {
+    id: media.id,
+  };
 };
 
-export default createSingle;
+export default uploadSingleFile;

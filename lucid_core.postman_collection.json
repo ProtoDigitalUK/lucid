@@ -2147,7 +2147,7 @@
 			"name": "Media",
 			"item": [
 				{
-					"name": "Create Single",
+					"name": "Upload Single File",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -2163,24 +2163,57 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/wyall/Pictures/Screenshots/Screenshot 2023-07-23 194433.png"
-								},
-								{
-									"key": "translations",
-									"value": "[{\"language_id\":1,\"value\":\"EN Name\",\"key\":\"name\"}]",
-									"type": "text"
+									"src": "/C:/Users/wyall/Pictures/Screenshots/Screenshot 2023-10-07 115327.png"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media",
+							"raw": "{{BASE_URL}}/api/v1/media/file",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"media"
+								"media",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single File",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/wyall/Pictures/Screenshots/Screenshot 2023-10-12 192936.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/file/9",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"file",
+								"9"
 							]
 						}
 					},
@@ -2198,21 +2231,13 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "translations",
-									"value": "[{\"id\": 6,\"language_id\":1,\"value\":\"EN Name tehe\",\"key\":\"name\"}]",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/C:/Users/wyall/Desktop/Group 122.jpg",
-									"disabled": true
+							"mode": "raw",
+							"raw": "{\r\n    \"translations\": [\r\n        {\r\n            \"id\": 6,\r\n            \"language_id\":1,\r\n            \"value\":\"EN Name tehe\",\r\n            \"key\":\"name\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/media/3",
@@ -2357,7 +2382,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/2",
+							"raw": "{{BASE_URL}}/api/v1/media/8",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2365,7 +2390,7 @@
 								"api",
 								"v1",
 								"media",
-								"2"
+								"8"
 							]
 						}
 					},
@@ -2954,45 +2979,18 @@
 			"item": [
 				{
 					"name": "Stream Media",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Rum Ham",
-									"type": "text"
-								},
-								{
-									"key": "alt",
-									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "file",
-									"type": "file",
-									"src": [
-										"/C:/Users/wyall/Desktop/rumham.jpg",
-										"/C:/Users/wyall/Desktop/rumham2.jpg"
-									]
-								}
-							]
-						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-1693731021922",
+							"raw": "{{BASE_URL}}/cdn/v1/screenshot-2023-10-12-192936png-1699639913999",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"rum-ham-1693731021922"
+								"screenshot-2023-10-12-192936png-1699639913999"
 							]
 						}
 					},
@@ -3008,37 +3006,17 @@
 						"header": [],
 						"body": {
 							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Rum Ham",
-									"type": "text"
-								},
-								{
-									"key": "alt",
-									"value": "A ham baked in rum, floating on the ocean surface",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "file",
-									"type": "file",
-									"src": [
-										"/C:/Users/wyall/Desktop/rumham.jpg",
-										"/C:/Users/wyall/Desktop/rumham2.jpg"
-									]
-								}
-							]
+							"formdata": []
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/rum-ham-16935822437227?fallback=1",
+							"raw": "{{BASE_URL}}/cdn/v1/en-name-169895d6298714?fallback=1",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"rum-ham-16935822437227"
+								"en-name-169895d6298714"
 							],
 							"query": [
 								{
@@ -3120,6 +3098,25 @@
 					"path": [
 						"public",
 						"rumham.jpg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testing",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/test",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"test"
 					]
 				}
 			},

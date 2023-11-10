@@ -2,7 +2,8 @@ import { FastifyInstance } from "fastify";
 import r from "@utils/app/route.js";
 
 // Controller
-import createSingle from "@controllers/media/create-single.js";
+import uploadSingleFile from "@controllers/media/upload-single-file.js";
+import updateSingleFile from "@controllers/media/update-single-file.js";
 import getMultiple from "@controllers/media/get-multiple.js";
 import getSingle from "@controllers/media/get-single.js";
 import deleteSingle from "@controllers/media/delete-single.js";
@@ -27,7 +28,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 
   r(fastify, {
     method: "post",
-    url: "/",
+    url: "/file",
     permissions: {
       global: ["create_media"],
     },
@@ -35,8 +36,22 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
       authenticate: true,
       authoriseCSRF: true,
     },
-    schema: createSingle.schema,
-    controller: createSingle.controller,
+    schema: uploadSingleFile.schema,
+    controller: uploadSingleFile.controller,
+  });
+
+  r(fastify, {
+    method: "patch",
+    url: "/file/:id",
+    permissions: {
+      global: ["update_media"],
+    },
+    middleware: {
+      authenticate: true,
+      authoriseCSRF: true,
+    },
+    schema: updateSingleFile.schema,
+    controller: updateSingleFile.controller,
   });
 
   r(fastify, {

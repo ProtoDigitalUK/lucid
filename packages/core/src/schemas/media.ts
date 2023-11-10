@@ -12,12 +12,18 @@ export const mediaTranslations = z.array(
 export type MediaTranslationsT = z.infer<typeof mediaTranslations>;
 
 // ------------------------------------
-// CREATE SINGLE
-const createSingleBody = z.object({
-  translations: z.string(),
+// UPLOAD SINGLE FILE
+const uploadSingleFileBody = z.object({});
+const uploadSingleFileQuery = z.object({});
+const uploadSingleFileParams = z.object({});
+
+// ------------------------------------
+// UPDATE SINGLE FILE
+const updateSingleFileBody = z.object({});
+const updateSingleFileQuery = z.object({});
+const updateSingleFileParams = z.object({
+  id: z.string(),
 });
-const createSingleQuery = z.object({});
-const createSingleParams = z.object({});
 
 // ------------------------------------
 // STREAM SINGLE
@@ -87,7 +93,7 @@ const deleteSingleParams = z.object({
 // ------------------------------------
 // UPDATE SINGLE
 const updateSingleBody = z.object({
-  translations: z.string(),
+  translations: mediaTranslations,
 });
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({
@@ -111,10 +117,15 @@ const clearAllProcessedParams = z.object({});
 // ------------------------------------
 // EXPORT
 export default {
-  createSingle: {
-    body: createSingleBody,
-    query: createSingleQuery,
-    params: createSingleParams,
+  uploadSingleFile: {
+    body: uploadSingleFileBody,
+    query: uploadSingleFileQuery,
+    params: uploadSingleFileParams,
+  },
+  updateSingleFile: {
+    body: updateSingleFileBody,
+    query: updateSingleFileQuery,
+    params: updateSingleFileParams,
   },
   streamSingle: {
     body: streamSingleBody,

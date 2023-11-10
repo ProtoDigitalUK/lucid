@@ -1,24 +1,21 @@
 import { PoolClient } from "pg";
-import { BusboyFileStream } from "@fastify/busboy";
 // Utils
 import service from "@utils/app/service.js";
-import helpers from "@utils/media/helpers.js";
 import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 // Services
 import Config from "@services/Config.js";
 import mediaService from "@services/media/index.js";
 
 export interface ServiceData {
-  file: BusboyFileStream;
+  size: number;
   filename: string;
 }
 
 const canStoreFiles = async (client: PoolClient, data: ServiceData) => {
   const { storageLimit, maxFileSize } = Config.media;
+  const size = data.size;
 
-  const fileSize = await helpers.getFileSize(data.file);
-
-  if (fileSize > maxFileSize) {
+  if (size > maxFileSize) {
     const message = `File ${data.filename} is too large. Max file size is ${maxFileSize} bytes.`;
     throw new LucidError({
       type: "basic",
@@ -43,7 +40,7 @@ const canStoreFiles = async (client: PoolClient, data: ServiceData) => {
 
   // check files dont exceed storage limit
   // const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
-  if (fileSize + (storageUsed || 0) > storageLimit) {
+  if (size + (storageUsed || 0) > storageLimit) {
     const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;
     throw new LucidError({
       type: "basic",
@@ -58,8 +55,6 @@ const canStoreFiles = async (client: PoolClient, data: ServiceData) => {
       }),
     });
   }
-
-  return fileSize;
 };
 
 export default canStoreFiles;
