@@ -4,9 +4,9 @@ import { Toaster } from "solid-toast";
 // Components
 import Router from "@/Router";
 
-const queryClient = new QueryClient();
-
 const App: Component = () => {
+  const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster

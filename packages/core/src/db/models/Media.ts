@@ -87,22 +87,12 @@ export default class Media {
             alt_translations.value AS alt_translation_value
         FROM 
             lucid_media AS media
-        LEFT JOIN (
-          SELECT 
-              translation_key_id, 
-              value
-          FROM lucid_translations
-          WHERE language_id = $1
-          LIMIT 1
-        ) AS name_translations ON media.name_translation_key_id = name_translations.translation_key_id
-        LEFT JOIN (
-            SELECT 
-                translation_key_id, 
-                value
-            FROM lucid_translations
-            WHERE language_id = $1
-            LIMIT 1
-        ) AS alt_translations ON media.alt_translation_key_id = alt_translations.translation_key_id
+        LEFT JOIN lucid_translations AS name_translations 
+          ON media.name_translation_key_id = name_translations.translation_key_id
+          AND name_translations.language_id = $1
+        LEFT JOIN lucid_translations AS alt_translations 
+          ON media.alt_translation_key_id = alt_translations.translation_key_id
+          AND alt_translations.language_id = $1
         ${query_instance.query.where}
         GROUP BY media.id, name_translations.value, alt_translations.value
         ${query_instance.query.order}
@@ -147,12 +137,14 @@ export default class Media {
         media.*,
         json_agg(
           json_build_object(
+            'id', name_translations.id,
             'language_id', name_translations.language_id,
             'value', name_translations.value
           )
         ) FILTER (WHERE name_translations.id IS NOT NULL) AS name_translations,
         json_agg(
           json_build_object(
+            'id', alt_translations.id,
             'language_id', alt_translations.language_id,
             'value', alt_translations.value
           )

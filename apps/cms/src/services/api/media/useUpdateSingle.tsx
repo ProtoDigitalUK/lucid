@@ -1,7 +1,6 @@
 import T from "@/translations";
 // Utils
 import request from "@/utils/request";
-import objectToFormData from "@/utils/object-to-formdata";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
@@ -10,9 +9,12 @@ import { MediaResT } from "@lucid/types/src/media";
 interface Params {
   id: number;
   body: {
-    name?: string;
-    alt?: string;
-    file?: File;
+    translations: Array<{
+      id?: number;
+      language_id: number;
+      value: string;
+      key: "alt" | "name";
+    }>;
   };
 }
 
@@ -22,7 +24,7 @@ export const updateSingleReq = (params: Params) => {
     csrf: true,
     config: {
       method: "PATCH",
-      body: objectToFormData(params.body),
+      body: params.body,
     },
   });
 };

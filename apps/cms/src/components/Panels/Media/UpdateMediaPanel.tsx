@@ -6,11 +6,14 @@ import {
   createSignal,
   createEffect,
   Show,
+  For,
 } from "solid-js";
 // Services
 import api from "@/services/api";
 // Hooks
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
+// Store
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Utils
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
@@ -19,6 +22,7 @@ import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import DetailsList from "@/components/Partials/DetailsList";
+import TranslationGroup from "@/components/Partials/TranslationGroup";
 
 interface UpdateMediaPanelProps {
   id: Accessor<number | undefined>;
@@ -26,6 +30,13 @@ interface UpdateMediaPanelProps {
     open: boolean;
     setOpen: (_state: boolean) => void;
   };
+}
+
+interface MediaTranslations {
+  id?: number;
+  language_id: number;
+  value: string;
+  key: "alt" | "name";
 }
 
 const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
@@ -42,40 +53,176 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
 
   // ------------------------------
   // State
-  const [getAlt, setAlt] = createSignal<string | undefined>(undefined);
-  const [getName, setName] = createSignal<string | undefined>(undefined);
+  const [getUpdateDataLock, setUpdateDataLock] = createSignal(false);
+  const [getUpdateFileLock, setUpdateFileLock] = createSignal(false);
+
+  const [getAlt, setAlt] = createSignal<Array<MediaTranslations>>([]);
+  const [getName, setName] = createSignal<Array<MediaTranslations>>([]);
+
+  const [getOriginalAlt, setOriginalAlt] = createSignal<
+    Array<MediaTranslations>
+  >([]);
+  const [getOriginalName, setOriginalName] = createSignal<
+    Array<MediaTranslations>
+  >([]);
+
+  const translations = createMemo(() => [...getAlt(), ...getName()]);
+  const originalTranslations = createMemo(() => [
+    ...getOriginalAlt(),
+    ...getOriginalName(),
+  ]);
 
   // ---------------------------------
   // Mutations
-  const updateMedia = api.media.useUpdateSingle({
-    onSuccess: () => {
-      props.state.setOpen(false);
-    },
-  });
+  const updateSingle = api.media.useUpdateSingle();
+  const updateSingleFile = api.media.useUpdateFileSingle();
 
   const MediaFile = useSingleFileUpload({
     id: "file",
     disableRemoveCurrent: true,
     name: "file",
     required: true,
-    errors: updateMedia.errors,
+    errors: updateSingleFile.errors,
     noMargin: false,
   });
+
+  // ---------------------------------
+  // Functions
+  const buildTranslationArray = (
+    key: "alt" | "name",
+    data: Array<{
+      id?: number | undefined;
+      language_id: number;
+      value: string | null;
+    }>
+  ) => {
+    const languages = contentLanguageStore.get.languages;
+
+    for (let i = 0; languages.length > i; i++) {
+      const language = languages[i];
+      const itemExists = data.find((item) => {
+        return item.language_id === language.id;
+      });
+      if (!itemExists) {
+        data.push({
+          language_id: language.id,
+          value: "",
+        });
+      }
+    }
+
+    return data.map((item) => {
+      const obj: MediaTranslations = {
+        id: item.id,
+        language_id: item.language_id,
+        value: item.value || "",
+        key: key,
+      };
+      return obj;
+    });
+  };
+  const setTranslations = (
+    key: "name" | "alt",
+    value: string,
+    language_id: number
+  ) => {
+    const prevValues = key === "name" ? getName() : getAlt();
+    const itemExists = prevValues.find((item) => {
+      return item.language_id === language_id;
+    });
+
+    if (itemExists) {
+      const newValues = prevValues.map((item) => {
+        if (item.language_id === language_id) {
+          return {
+            ...item,
+            value: value,
+          };
+        }
+        return item;
+      });
+      if (key === "name") setName(newValues);
+      if (key === "alt") setAlt(newValues);
+    } else {
+      const newItem = {
+        language_id: language_id,
+        value: value,
+        key: key,
+      };
+      const newValues = [...prevValues, newItem];
+      if (key === "name") setName(newValues);
+      if (key === "alt") setAlt(newValues);
+    }
+  };
+  const panelSubmit = async () => {
+    const resultes = await Promise.allSettled([
+      updateSingle.action.mutateAsync({
+        id: props.id() as number,
+        body: {
+          translations: updateData().data.translations || [],
+        },
+      }),
+      MediaFile.getFile() !== null
+        ? updateSingleFile.action.mutateAsync({
+            id: props.id() as number,
+            body: {
+              file: MediaFile.getFile() as File,
+            },
+          })
+        : Promise.resolve(),
+    ]);
+
+    if (resultes[0].status === "rejected" || resultes[1].status === "rejected")
+      return;
+
+    props.state.setOpen(false);
+  };
+  const inputError = (key: "name" | "alt", language_id: number) => {
+    const data = translations();
+    const index = data.findIndex((item) => {
+      return item.key === key && item.language_id === language_id;
+    });
+    if (index === -1) return undefined;
+
+    const errors = updateSingle.errors()?.errors?.body?.translations.children;
+    if (errors) {
+      return errors[index]?.value;
+    }
+    return undefined;
+  };
 
   // ---------------------------------
   // Effects
   createEffect(() => {
     if (media.isSuccess) {
-      setName(media.data?.data.name || "");
-      setAlt(media.data?.data.alt || "");
-      MediaFile.reset();
-      MediaFile.setCurrentFile({
-        name: media.data?.data.name || undefined,
-        url: media.data?.data.url
-          ? `${media.data.data.url}?width=400`
-          : undefined,
-        type: media.data?.data.type || undefined,
-      });
+      if (!getUpdateDataLock()) {
+        const nameTranslations = buildTranslationArray(
+          "name",
+          media.data?.data.name_translations || []
+        );
+        const altTranslations = buildTranslationArray(
+          "alt",
+          media.data?.data.alt_translations || []
+        );
+        setName(nameTranslations);
+        setOriginalName(nameTranslations);
+        setAlt(altTranslations);
+        setOriginalAlt(altTranslations);
+
+        setUpdateDataLock(true);
+      }
+
+      if (!getUpdateFileLock()) {
+        MediaFile.reset();
+        MediaFile.setCurrentFile({
+          name: media.data.data.key,
+          url: media.data?.data.url
+            ? `${media.data.data.url}?width=400`
+            : undefined,
+          type: media.data?.data.type || undefined,
+        });
+        setUpdateFileLock(true);
+      }
     }
   });
 
@@ -84,18 +231,15 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
   const updateData = createMemo(() => {
     const { changed, data } = helpers.updateData(
       {
-        name: media.data?.data.name || "",
-        alt: media.data?.data.alt || "",
+        translations: originalTranslations(),
       },
       {
-        name: getName(),
-        alt: getAlt(),
+        translations: translations(),
       }
     );
 
     let resData: {
-      name?: string;
-      alt?: string;
+      translations?: Array<MediaTranslations>;
       file?: File;
     } = data;
     let resChanged = changed;
@@ -114,13 +258,19 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
       data: resData,
     };
   });
-
   const showAltInput = createMemo(() => {
     if (MediaFile.getFile() !== null) {
       const type = helpers.getMediaType(MediaFile.getFile()?.type);
       return type === "image";
     }
     return media.data?.data.type === "image";
+  });
+  const languages = createMemo(() => contentLanguageStore.get.languages);
+  const mutateIsLoading = createMemo(() => {
+    return updateSingle.action.isLoading || updateSingleFile.action.isLoading;
+  });
+  const mutateErrors = createMemo(() => {
+    return updateSingle.errors() || updateSingleFile.errors();
   });
 
   // ---------------------------------
@@ -129,23 +279,22 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
     <Panel.Root
       open={props.state.open}
       setOpen={props.state.setOpen}
-      onSubmit={() => {
-        updateMedia.action.mutate({
-          id: props.id() as number,
-          body: updateData().data,
-        });
-      }}
+      onSubmit={panelSubmit}
       reset={() => {
-        updateMedia.reset();
+        updateSingle.reset();
+        updateSingleFile.reset();
+
+        setUpdateDataLock(false);
+        setUpdateFileLock(false);
       }}
       fetchState={{
         isLoading: media.isLoading,
         isError: media.isError,
       }}
       mutateState={{
-        isLoading: updateMedia.action.isLoading,
+        isLoading: mutateIsLoading(),
         isDisabled: !updateData().changed,
-        errors: updateMedia.errors(),
+        errors: mutateErrors(),
       }}
       content={{
         title: T("update_media_panel_title"),
@@ -156,31 +305,49 @@ const UpdateMediaPanel: Component<UpdateMediaPanelProps> = (props) => {
       {() => (
         <>
           <MediaFile.Render />
-          <SectionHeading title={T("details")} />
-          <Form.Input
-            id="name"
-            value={getName() || ""}
-            onChange={setName}
-            name={"name"}
-            type="text"
-            copy={{
-              label: T("name"),
-            }}
-            errors={updateMedia.errors()?.errors?.body?.name}
-          />
-          <Show when={showAltInput()}>
-            <Form.Input
-              id="alt"
-              value={getAlt() || ""}
-              onChange={setAlt}
-              name={"alt"}
-              type="text"
-              copy={{
-                label: T("alt"),
-              }}
-              errors={updateMedia.errors()?.errors?.body?.alt}
-            />
-          </Show>
+          <SectionHeading title={T("translations")} />
+          <For each={languages()}>
+            {(language) => (
+              <TranslationGroup name={language.name} code={language.code}>
+                <Form.Input
+                  id={`name-${language.id}`}
+                  value={
+                    getName().find((item) => item.language_id === language.id)
+                      ?.value || ""
+                  }
+                  onChange={(val) => {
+                    setTranslations("name", val, language.id);
+                  }}
+                  name={`name-${language.id}`}
+                  type="text"
+                  copy={{
+                    label: T("name"),
+                  }}
+                  errors={inputError("name", language.id)}
+                  theme="slim"
+                />
+                <Show when={showAltInput()}>
+                  <Form.Input
+                    id={`alt-${language.id}`}
+                    value={
+                      getAlt().find((item) => item.language_id === language.id)
+                        ?.value || ""
+                    }
+                    onChange={(val) => {
+                      setTranslations("alt", val, language.id);
+                    }}
+                    name={`alt-${language.id}`}
+                    type="text"
+                    copy={{
+                      label: T("alt"),
+                    }}
+                    errors={inputError("alt", language.id)}
+                    theme="slim"
+                  />
+                </Show>
+              </TranslationGroup>
+            )}
+          </For>
           <SectionHeading title={T("meta")} />
           <DetailsList
             type="text"

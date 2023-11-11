@@ -25,6 +25,8 @@ interface InputProps {
   disabled?: boolean;
   errors?: ErrorResult;
   noMargin?: boolean;
+
+  theme?: "slim";
 }
 
 export const Input: Component<InputProps> = (props) => {
@@ -44,15 +46,18 @@ export const Input: Component<InputProps> = (props) => {
     <div
       class={classnames("w-full", {
         "mb-0": props.noMargin,
-        "mb-5": !props.noMargin,
+        "mb-5": !props.noMargin && props.theme !== "slim",
+        "mb-2.5 last:mb-0": !props.noMargin && props.theme === "slim",
       })}
     >
       <div
         class={classnames(
-          "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",
+          "flex flex-col transition-colors duration-200 ease-in-out relative",
           {
-            "border-secondary bg-backgroundAccentH": inputFocus(),
+            "border-secondary bg-backgroundAccentH":
+              inputFocus() && props.theme !== "slim",
             "border-error": props.errors?.message !== undefined,
+            "bg-backgroundAccent rounded-md border": props.theme !== "slim",
           }
         )}
       >
@@ -61,13 +66,17 @@ export const Input: Component<InputProps> = (props) => {
           label={props.copy?.label}
           focused={inputFocus()}
           required={props.required}
+          theme={props.theme}
         />
         <input
           class={classnames(
-            "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium",
+            "focus:outline-none px-2.5 text-sm text-title font-medium",
             {
               "pr-[38px]": props.type === "password",
               "pt-2": props.copy?.label === undefined,
+              "bg-container border border-border h-10 rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
+                props.theme === "slim",
+              "bg-transparent pb-2 pt-1 rounded-b-md": props.theme !== "slim",
             }
           )}
           onKeyDown={(e) => {
