@@ -37,7 +37,7 @@ const useUpdateFileSingle = (props?: UseUpdateFileSingleProps) => {
   // Mutation
   return serviceHelpers.useMutationWrapper<Params, APIResponse<Response>>({
     mutationFn: uploadSingleFileReq,
-    invalidates: ["media.getMultiple"],
+    invalidates: ["media.getMultiple", "media.getSingle"],
     onSuccess: props?.onSuccess,
     onError: props?.onError,
   });

@@ -8,7 +8,7 @@ import userStore from "@/store/userStore";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import MediaGrid from "@/components/Grids/MediaGrid";
-import UpsertMediaPanel from "@/components/Panels/Media/UpsertMediaPanel";
+import CreateUpdateMediaPanel from "@/components/Panels/Media/CreateUpdateMediaPanel";
 
 const MediaListRoute: Component = () => {
   // ----------------------------------
@@ -139,7 +139,7 @@ const MediaListRoute: Component = () => {
       }}
     >
       <MediaGrid searchParams={searchParams} />
-      <UpsertMediaPanel
+      <CreateUpdateMediaPanel
         state={{
           open: getOpenCreateMediaPanel(),
           setOpen: setOpenCreateMediaPanel,

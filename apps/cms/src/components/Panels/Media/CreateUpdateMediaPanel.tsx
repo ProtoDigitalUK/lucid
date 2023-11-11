@@ -23,7 +23,7 @@ import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import DetailsList from "@/components/Partials/DetailsList";
 
-interface CreateMediaPanelProps {
+interface CreateUpdateMediaPanelProps {
   id?: Accessor<number | undefined>;
   state: {
     open: boolean;
@@ -38,7 +38,13 @@ interface MediaTranslations {
   key: "alt" | "name";
 }
 
-const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
+const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
+  props
+) => {
+  const panelMode = createMemo(() => {
+    return props.id === undefined ? "create" : "update";
+  });
+
   // ---------------------------------
   // Queries
   const media = api.media.useGetSingle({
@@ -84,7 +90,7 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
     name: "file",
     required: true,
     errors:
-      props.id === undefined
+      panelMode() === "create"
         ? uploadSingleFile.errors
         : updateSingleFile.errors,
     noMargin: false,
@@ -97,7 +103,7 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
       const type = helpers.getMediaType(MediaFile.getFile()?.type);
       return type === "image";
     }
-    return props.id === undefined ? false : media.data?.data.type === "image";
+    return panelMode() === "create" ? false : media.data?.data.type === "image";
   });
   const languages = createMemo(() => contentLanguageStore.get.languages);
   const mutateIsLoading = createMemo(() => {
@@ -152,14 +158,14 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
     };
   });
   const mutateIsDisabled = createMemo(() => {
-    if (props.id === undefined) {
+    if (panelMode() === "create") {
       return MediaFile.getFile() === null;
     } else {
       return !updateData().changed;
     }
   });
   const panelContent = createMemo(() => {
-    if (props.id === undefined) {
+    if (panelMode() === "create") {
       return {
         title: T("create_media_panel_title"),
         description: T("create_media_panel_description"),
@@ -170,6 +176,16 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
         title: T("update_media_panel_title"),
         description: T("update_media_panel_description"),
         submit: T("update"),
+      };
+    }
+  });
+  const panelFetchState = createMemo(() => {
+    if (panelMode() === "create") {
+      return undefined;
+    } else {
+      return {
+        isLoading: media.isLoading,
+        isError: media.isError,
       };
     }
   });
@@ -318,7 +334,8 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
   // ---------------------------------
   // Effects
   createEffect(() => {
-    if (translations().length > 0 && props.id === undefined) return;
+    if (panelMode() === "update") return;
+    if (translations().length > 0) return;
     const nameTranslations: MediaTranslations[] = [];
     const altTranslations: MediaTranslations[] = [];
 
@@ -339,7 +356,7 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
   });
 
   createEffect(() => {
-    if (media.isSuccess && props.id !== undefined) {
+    if (media.isSuccess && panelMode() === "update") {
       if (!getUpdateDataLock()) {
         const nameTranslations = buildTranslationArray(
           "name",
@@ -378,12 +395,13 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
       open={props.state.open}
       setOpen={props.state.setOpen}
       onSubmit={() => {
-        if (props.id === undefined) {
+        if (panelMode() === "create") {
           panelSubmitCreate();
         } else {
           panelSubmitUpdate();
         }
       }}
+      fetchState={panelFetchState()}
       reset={() => {
         uploadSingleFile.reset();
         updateSingle.reset();
@@ -492,4 +510,4 @@ const CreateMediaPanel: Component<CreateMediaPanelProps> = (props) => {
   );
 };
 
-export default CreateMediaPanel;
+export default CreateUpdateMediaPanel;
