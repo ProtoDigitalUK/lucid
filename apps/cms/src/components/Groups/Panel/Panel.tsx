@@ -9,6 +9,7 @@ import {
   Match,
   createEffect,
   createMemo,
+  Accessor,
 } from "solid-js";
 import { FaSolidArrowLeft } from "solid-icons/fa";
 // Assets
@@ -32,6 +33,7 @@ interface PanelProps {
   reset: () => void;
   hideFooter?: boolean;
   contentLanguage?: boolean;
+  hasContentLanguageError?: boolean;
 
   fetchState?: {
     isLoading?: boolean;
@@ -50,7 +52,7 @@ interface PanelProps {
     submit?: string;
   };
   children: (_props?: {
-    contentLanguage: number;
+    contentLanguage: Accessor<number | undefined>;
     setContentLanguage: (_value: number) => void;
   }) => JSXElement;
 }
@@ -155,6 +157,7 @@ export const Panel: Component<PanelProps> = (props) => {
                   <ContentLanguageSelect
                     value={contentLanguage()}
                     setValue={setContentLanguage}
+                    hasError={props.hasContentLanguageError}
                   />
                 </div>
               </Show>
@@ -174,8 +177,8 @@ export const Panel: Component<PanelProps> = (props) => {
               >
                 <Switch
                   fallback={props.children({
-                    contentLanguage: 1,
-                    setContentLanguage: () => {},
+                    contentLanguage: contentLanguage,
+                    setContentLanguage: setContentLanguage,
                   })}
                 >
                   <Match when={isLoading()}>
@@ -211,7 +214,11 @@ export const Panel: Component<PanelProps> = (props) => {
                     >
                       <ErrorMessage
                         theme="basic"
-                        message={props.mutateState?.errors?.message}
+                        message={
+                          props.hasContentLanguageError
+                            ? "One or more translation fields have errors. Please fix them."
+                            : props.mutateState?.errors?.message
+                        }
                       />
                     </Match>
                   </Switch>

@@ -7,6 +7,7 @@ import Form from "@/components/Groups/Form";
 interface ContentLanguageSelectProps {
   value?: number | undefined;
   setValue?: (_value: number | undefined) => void;
+  hasError?: boolean;
 }
 
 const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
@@ -63,6 +64,7 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
           }
           noMargin={true}
           noClear={true}
+          hasError={props.hasError}
         />
       </Match>
     </Switch>

@@ -45,6 +45,7 @@ export interface SelectProps {
   errors?: ErrorResult;
   noMargin?: boolean;
   noClear?: boolean;
+  hasError?: boolean;
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -113,7 +114,8 @@ export const Select: Component<SelectProps> = (props) => {
             "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",
             {
               "border-secondary bg-backgroundAccentH": inputFocus(),
-              "border-error": props.errors?.message !== undefined,
+              "border-error":
+                props.errors?.message !== undefined || props.hasError,
             }
           )}
         >

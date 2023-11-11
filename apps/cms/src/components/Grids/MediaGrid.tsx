@@ -9,7 +9,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
 import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
-import UpdateMediaPanel from "@/components/Panels/Media/UpdateMediaPanel";
+import UpsertMediaPanel from "@/components/Panels/Media/UpsertMediaPanel";
 import DeleteMedia from "@/components/Modals/Media/DeleteMedia";
 import ClearProcessedMedia from "@/components/Modals/Media/ClearProcessedImages";
 
@@ -72,7 +72,7 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
         </For>
       </Grid.Root>
 
-      <UpdateMediaPanel
+      <UpsertMediaPanel
         id={rowTarget.getTargetId}
         state={{
           open: rowTarget.getTriggers().update,

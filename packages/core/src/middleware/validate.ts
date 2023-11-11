@@ -160,6 +160,7 @@ const validate =
     if (!validateResult.success) {
       throw new LucidError({
         type: "validation",
+        message: "Please check your fields for any errors.",
         zod: validateResult.error,
       });
     } else {
