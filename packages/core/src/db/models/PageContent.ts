@@ -24,6 +24,7 @@ export default class PageContent {
       data.collection_key,
       data.environment_key,
       data.language_id,
+      data.page_id,
     ];
     if (data.parent_id) values.push(data.parent_id);
 
@@ -44,9 +45,11 @@ export default class PageContent {
           lucid_pages.environment_key = $3
         AND
           lucid_page_content.language_id = $4
+        AND
+          lucid_page_content.page_id != $5
         ${
           data.parent_id
-            ? `AND lucid_pages.parent_id = $5`
+            ? `AND lucid_pages.parent_id = $6`
             : `AND lucid_pages.parent_id IS NULL`
         }`,
       values: values,
@@ -189,6 +192,7 @@ type PageContentGetSlugCount = (
     collection_key: string;
     parent_id?: number;
     language_id: number;
+    page_id: number;
   }
 ) => Promise<number>;
 

@@ -41,6 +41,8 @@
   "password": "Password",
   "confirm_password": "Confirm Password",
   "email": "Email",
+  "either_title_or_slug_dont_have_translations": "Either the title or slug have missing translations",
+  "this_is_the_homepage": "This is the homepage",
   "roles": "Roles",
   "update_brick": "Update {{name}}",
   "add_entry": "Add entry",

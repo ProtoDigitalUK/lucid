@@ -11,7 +11,8 @@ import { useParams } from "@solidjs/router";
 import { CollectionResT } from "@lucid/types/src/collections";
 // Services
 import api from "@/services/api";
-// Stores
+// Store
+import contentLanguageStore from "@/store/contentLanguageStore";
 import { environment } from "@/store/environmentStore";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
@@ -41,6 +42,9 @@ const PagesTable: Component<PagesTableProps> = (props) => {
   // ----------------------------------
   // Memos
   const collectionKey = createMemo(() => params.collectionKey);
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
 
   // ----------------------------------
   // Queries
@@ -52,6 +56,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
       },
       headers: {
         "lucid-environment": environment,
+        "lucid-content-lang": contentLanguage,
       },
     },
     enabled: () => props.searchParams.getSettled(),
@@ -145,6 +150,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
                 callbacks={{
                   setSelected: setSelected,
                 }}
+                contentLanguage={contentLanguage()}
               />
             )}
           </Index>

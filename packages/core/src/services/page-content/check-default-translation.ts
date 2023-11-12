@@ -1,12 +1,13 @@
 import { PoolClient } from "pg";
-import T from "@translations/index.js";
 import {
   LucidError,
   modelErrors,
   ErrorResult,
 } from "@utils/app/error-handler.js";
-// Models
-import Language from "@db/models/Language.js";
+// Utils
+import service from "@utils/app/service.js";
+// Services
+import languagesService from "@services/languages/index.js";
 
 export interface ServiceData {
   translations: {
@@ -22,19 +23,11 @@ const checkDefaultTranslation = async (
   client: PoolClient,
   data: ServiceData
 ) => {
-  const defaultLanguage = await Language.getDefault(client);
-  if (!defaultLanguage) {
-    throw new LucidError({
-      type: "basic",
-      name: T("error_generic_name", {
-        type: T("language"),
-      }),
-      message: T("error_not_found", {
-        type: T("language"),
-      }),
-      status: 404,
-    });
-  }
+  const defaultLanguage = await service(
+    languagesService.getDefault,
+    false,
+    client
+  )();
 
   const defaultTranslation = data.translations.find(
     (translation) => translation.language_id === defaultLanguage.id

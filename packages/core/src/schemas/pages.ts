@@ -2,7 +2,7 @@ import z from "zod";
 // Schema
 import { BrickSchema } from "@schemas/bricks.js";
 
-const slugRegex = /^[a-zA-Z0-9-_]+$/;
+const slugRegex = /^[a-zA-Z0-9-_/]+$/;
 const slugSchema = z
   .string()
   .optional()

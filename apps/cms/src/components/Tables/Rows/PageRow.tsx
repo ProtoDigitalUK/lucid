@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component } from "solid-js";
+import { Component, createMemo } from "solid-js";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 // Types
@@ -21,9 +21,39 @@ interface PageRowProps extends TableRowProps {
   environmentKey: string;
   include: boolean[];
   rowTarget: ReturnType<typeof useRowTarget<"delete" | "update">>;
+  contentLanguage?: number;
 }
 
 const PageRow: Component<PageRowProps> = (props) => {
+  // ----------------------------------
+  // Memos
+  const currentTranslation = createMemo(() => {
+    return props.page.translations.find(
+      (translation) => translation.language_id === props.contentLanguage
+    );
+  });
+
+  const title = createMemo(() => {
+    return {
+      value:
+        currentTranslation()?.title ||
+        props.page.default_title ||
+        T("no_translation"),
+      is_default:
+        !currentTranslation()?.title && props.page.default_title ? true : false,
+    };
+  });
+  const slug = createMemo(() => {
+    return {
+      value:
+        currentTranslation()?.slug ||
+        props.page.default_slug ||
+        T("no_translation"),
+      is_default:
+        !currentTranslation()?.slug && props.page.default_slug ? true : false,
+    };
+  });
+
   // ----------------------------------
   // Render
   return (
@@ -69,8 +99,8 @@ const PageRow: Component<PageRowProps> = (props) => {
       ]}
     >
       <PageTitleCol
-        title={props.page.title}
-        slug={props.page.slug}
+        title={title()}
+        slug={slug()}
         homepage={props.page.homepage}
         options={{ include: props?.include[0] }}
       />

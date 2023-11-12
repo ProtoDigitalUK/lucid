@@ -10,6 +10,7 @@ export interface ServiceData {
   collection_key: string;
   parent_id?: number;
   language_id: number;
+  page_id: number;
 }
 
 const buildUniqueSlug = async (client: PoolClient, data: ServiceData) => {
@@ -31,6 +32,7 @@ const buildUniqueSlug = async (client: PoolClient, data: ServiceData) => {
     collection_key: data.collection_key,
     parent_id: data.parent_id,
     language_id: data.language_id,
+    page_id: data.page_id,
   });
 
   if (slugCount >= 1) {

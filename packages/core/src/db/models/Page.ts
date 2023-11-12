@@ -27,6 +27,10 @@ export type PageT = {
   excerpt?: string | null;
   language_id?: number;
 
+  default_title?: string | null;
+  default_slug?: string | null;
+  default_excerpt?: string | null;
+
   categories?: Array<number> | null;
 
   bricks?: Array<BrickResT> | null;
@@ -54,11 +58,16 @@ export default class Page {
         lucid_users.username AS author_username,
         lucid_users.first_name AS author_first_name,
         lucid_users.last_name AS author_last_name,
-        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories
+        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories,
+        default_content.title AS default_title,
+        default_content.slug AS default_slug,
+        default_content.excerpt AS default_excerpt
       FROM
         lucid_pages
-      INNER JOIN
+      LEFT JOIN
         lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+      LEFT JOIN
+        lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $2
       LEFT JOIN
         lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
       LEFT JOIN
@@ -73,7 +82,10 @@ export default class Page {
         lucid_page_content.title,
         lucid_page_content.slug,
         lucid_page_content.excerpt,
-        lucid_page_content.language_id
+        lucid_page_content.language_id,
+        default_content.title,
+        default_content.slug,
+        default_content.excerpt
       ${query_instance.query.order}
       ${query_instance.query.pagination}`,
       values: query_instance.values,
@@ -84,10 +96,10 @@ export default class Page {
           COUNT(DISTINCT lucid_pages.id)
         FROM
           lucid_pages
-        LEFT JOIN
-          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
         INNER JOIN
           lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+        LEFT JOIN
+          lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $2
         ${query_instance.query.where}
         `,
       values: query_instance.countValues,

@@ -202,6 +202,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   // ---------------------------------
   // Functions
   const setSlugFromTitle = (language_id: number) => {
+    if (getIsHomepage()) return;
     const item = getTranslations().find((t) => {
       return t.language_id === language_id;
     });
@@ -262,7 +263,26 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       }
     }
 
-    setTranslations([...translationsValues]);
+    setTranslations(
+      translationsValues.map((translation) => {
+        if (translation.slug && translation.slug !== "/") {
+          translation.slug = translation.slug.replace(/^\//, "");
+        }
+        return translation;
+      })
+    );
+  };
+  const parseTranslationBody = (translations?: PagesResT["translations"]) => {
+    if (!translations) return undefined;
+    const homepage = getIsHomepage();
+    return translations.map((translation) => {
+      return {
+        title: translation.title,
+        slug: homepage ? null : translation.slug,
+        excerpt: translation.excerpt,
+        language_id: translation.language_id,
+      };
+    });
   };
 
   // ---------------------------------
@@ -308,9 +328,16 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       setOpen={props.state.setOpen}
       onSubmit={() => {
         if (panelMode() === "update") {
+          const body = updateData().data;
           updatePage.action.mutate({
             id: props.id?.() as number,
-            body: updateData().data,
+            body: {
+              homepage: body.homepage,
+              parent_id: body.parent_id,
+              category_ids: body.category_ids,
+              author_id: body.author_id,
+              translations: parseTranslationBody(body.translations),
+            },
             headers: {
               "lucid-environment": environment() || "",
             },
@@ -318,7 +345,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         } else {
           createPage.action.mutate({
             body: {
-              translations: getTranslations(),
+              translations: parseTranslationBody(getTranslations()) || [],
               collection_key: props.collection.key,
               homepage: getIsHomepage(),
               parent_id: getParentId(),

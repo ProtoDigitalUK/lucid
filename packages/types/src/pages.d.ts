@@ -15,6 +15,10 @@ export interface PagesResT {
   }[];
   homepage: boolean;
 
+  default_title: string | null;
+  default_slug: string | null;
+  default_excerpt: string | null;
+
   created_by: number | null;
   created_at: string;
   updated_at: string;

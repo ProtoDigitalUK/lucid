@@ -2,16 +2,34 @@ import { PageT } from "@db/models/Page.js";
 // Types
 import type { PagesResT } from "@lucid/types/src/pages.js";
 
+export const formatPageSlug = (slug: string | null) => {
+  if (!slug) return null;
+  if (!slug.startsWith("/")) slug = `/${slug}`;
+
+  return slug;
+};
+
 const setMultiContent = (data: PageT) => {
   if (!data.language_id) return [];
   return [
     {
       title: data.title || null,
-      slug: data.slug || null,
+      slug: formatPageSlug(data.slug || null),
       language_id: data.language_id,
       excerpt: data.excerpt || null,
     },
   ];
+};
+
+const formatTranslations = (translations: PageT["translations"]) => {
+  return translations.map((translation) => {
+    return {
+      title: translation.title || null,
+      slug: formatPageSlug(translation.slug || null),
+      language_id: translation.language_id,
+      excerpt: translation.excerpt || null,
+    };
+  });
 };
 
 const formatPage = (data: PageT, multi_content?: boolean): PagesResT => {
@@ -22,7 +40,13 @@ const formatPage = (data: PageT, multi_content?: boolean): PagesResT => {
     collection_key: data.collection_key,
 
     homepage: data.homepage,
-    translations: multi_content ? setMultiContent(data) : data.translations,
+    translations: multi_content
+      ? setMultiContent(data)
+      : formatTranslations(data.translations || []),
+
+    default_title: data.default_title || null,
+    default_slug: formatPageSlug(data.default_slug || null),
+    default_excerpt: data.default_excerpt || null,
 
     created_by: data.created_by,
     created_at: data.created_at,

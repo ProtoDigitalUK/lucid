@@ -1,11 +1,14 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
+import service from "@utils/app/service.js";
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Models
 import Page from "@db/models/Page.js";
 // Schema
 import pagesSchema from "@schemas/pages.js";
+// Services
+import languagesService from "@services/languages/index.js";
 // Format
 import formatPage from "@utils/format/format-page.js";
 
@@ -19,6 +22,12 @@ export interface ServiceData {
 
 const getMultiple = async (client: PoolClient, data: ServiceData) => {
   const { filter, sort, page, per_page } = data.query;
+
+  const defaultLanguage = await service(
+    languagesService.getDefault,
+    false,
+    client
+  )();
 
   // Build Query Data and Query
   const SelectQuery = new SelectQueryBuilder({
@@ -81,7 +90,7 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     },
     page: page,
     per_page: per_page,
-    values: [data.language.id],
+    values: [data.language.id, defaultLanguage.id],
   });
 
   const pages = await Page.getMultiple(client, SelectQuery);

@@ -20,15 +20,17 @@ export interface BrickUpdateFieldT {
 interface Params {
   id: number;
   body: {
-    title?: string;
-    slug?: string;
     homepage?: boolean;
-    excerpt?: string;
     published?: boolean;
     parent_id?: number | null;
     category_ids?: number[];
     author_id?: number | null;
-
+    translations?: {
+      title: string | null;
+      slug: string | null;
+      excerpt: string | null;
+      language_id: number;
+    }[];
     builder_bricks?: Array<{
       id?: number;
       key: string;

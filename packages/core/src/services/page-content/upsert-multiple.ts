@@ -61,6 +61,7 @@ const buildUniqueSlugs = async (
       collection_key: data.collection_key,
       parent_id: data.parent_id,
       language_id: translation.language_id,
+      page_id: data.page_id,
     });
   });
   return await Promise.all(slugPromises);

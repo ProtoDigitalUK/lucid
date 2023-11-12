@@ -19,6 +19,22 @@ export type QueryType = z.infer<typeof querySchema>;
 
 // ------------------------------------
 // Build Functions
+const groupFilters = (queryReq: Record<string, string>) => {
+  const filters: {
+    [key: string]: string;
+  } = {};
+
+  const filterKeys = Object.keys(queryReq).filter((key) =>
+    key.startsWith("filter[")
+  );
+
+  filterKeys.forEach((key) => {
+    const filterKey = key.slice(7, -1);
+    const filterValue = queryReq[key];
+    filters[filterKey] = filterValue;
+  });
+  return filters;
+};
 const buildFilter = (query: QueryType) => {
   let filter:
     | {
@@ -125,7 +141,14 @@ const addRemainingQuery = (query: QueryType) => {
 // Validate Middleware
 const validate =
   (schema: AnyZodObject) =>
-  async (request: FastifyRequest<{ Querystring: QueryType }>) => {
+  async (
+    request: FastifyRequest<{
+      Querystring: Record<string, string>;
+    }>
+  ) => {
+    const filters = groupFilters(request.query);
+    const query = { ...request.query, filter: filters } as QueryType;
+
     const parseData: {
       body?: any;
       query?: {
@@ -142,13 +165,13 @@ const validate =
     parseData.body = request.body || {};
     parseData.params = request.params || {};
     parseData.query = {
-      include: buildInclude(request.query),
-      exclude: buildExclude(request.query),
-      filter: buildFilter(request.query),
-      sort: buildSort(request.query),
-      page: buildPage(request.query),
-      per_page: buildPerPage(request.query),
-      ...addRemainingQuery(request.query),
+      include: buildInclude(query),
+      exclude: buildExclude(query),
+      filter: buildFilter(query),
+      sort: buildSort(query),
+      page: buildPage(query),
+      per_page: buildPerPage(query),
+      ...addRemainingQuery(query),
     };
 
     if (Object.keys(parseData).length === 0) {
