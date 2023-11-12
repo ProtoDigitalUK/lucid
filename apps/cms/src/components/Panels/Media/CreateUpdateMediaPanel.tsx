@@ -392,8 +392,11 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
         isDisabled: mutateIsDisabled(),
       }}
       content={panelContent()}
-      contentLanguage={true}
-      hasContentLanguageError={hasTranslationErrors()}
+      langauge={{
+        contentLanguage: true,
+        hasContentLanguageError: hasTranslationErrors(),
+        useDefaultContentLanguage: panelMode() === "create",
+      }}
     >
       {(lang) => (
         <>

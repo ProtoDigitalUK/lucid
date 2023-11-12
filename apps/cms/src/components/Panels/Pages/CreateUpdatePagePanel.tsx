@@ -377,8 +377,11 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         isError: fetchIsError(),
       }}
       content={panelContent()}
-      contentLanguage={true}
-      hasContentLanguageError={hasTranslationErrors()}
+      langauge={{
+        contentLanguage: true,
+        hasContentLanguageError: hasTranslationErrors(),
+        useDefaultContentLanguage: panelMode() === "create",
+      }}
     >
       {(lang) => (
         <>

@@ -102,7 +102,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
                 props.actions.contentLanguage !== false
               }
             >
-              <div class="w-full md:max-w-[200px] mr-2.5">
+              <div class="w-full md:max-w-[240px] mr-2.5">
                 <ContentLanguageSelect />
               </div>
             </Show>

@@ -36,9 +36,11 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
           options={
             languages().map((language) => ({
               value: language.id,
-              label: language.name
-                ? `${language.name} (${language.code})`
-                : language.code,
+              label: `${
+                language.name
+                  ? `${language.name} (${language.code})`
+                  : language.code
+              } ${language.is_default ? "(Default)" : ""}`,
             })) || []
           }
           noMargin={true}
@@ -57,9 +59,11 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
           options={
             languages().map((language) => ({
               value: language.id,
-              label: language.name
-                ? `${language.name} (${language.code})`
-                : language.code,
+              label: `${
+                language.name
+                  ? `${language.name} (${language.code})`
+                  : language.code
+              } ${language.is_default ? "(Default)" : ""}`,
             })) || []
           }
           noMargin={true}

@@ -32,8 +32,11 @@ interface PanelProps {
   onSubmit?: () => void;
   reset: () => void;
   hideFooter?: boolean;
-  contentLanguage?: boolean;
-  hasContentLanguageError?: boolean;
+  langauge?: {
+    contentLanguage?: boolean;
+    hasContentLanguageError?: boolean;
+    useDefaultContentLanguage?: boolean;
+  };
 
   fetchState?: {
     isLoading?: boolean;
@@ -58,12 +61,22 @@ interface PanelProps {
 }
 
 export const Panel: Component<PanelProps> = (props) => {
+  const getDefaultContentLanguage = () => {
+    if (!props.langauge?.useDefaultContentLanguage)
+      return contentLanguageStore.get.contentLanguage;
+    const defaultLanguage = contentLanguageStore.get.languages.find(
+      (language) => language.is_default
+    );
+    if (defaultLanguage) return defaultLanguage.id;
+    return contentLanguageStore.get.contentLanguage;
+  };
+
   // ------------------------------
   // State
   const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
   const [contentLanguage, setContentLanguage] = createSignal<
     number | undefined
-  >(contentLanguageStore.get.contentLanguage);
+  >(getDefaultContentLanguage());
 
   // ------------------------------
   // Refs
@@ -93,7 +106,7 @@ export const Panel: Component<PanelProps> = (props) => {
   createEffect(() => {
     if (props.open) {
       props.reset();
-      setContentLanguage(contentLanguageStore.get.contentLanguage);
+      setContentLanguage(getDefaultContentLanguage());
       setBodyHeightValue();
     }
   });
@@ -152,12 +165,12 @@ export const Panel: Component<PanelProps> = (props) => {
                   </Show>
                 </Match>
               </Switch>
-              <Show when={props.contentLanguage}>
+              <Show when={props.langauge?.contentLanguage}>
                 <div class="mt-5">
                   <ContentLanguageSelect
                     value={contentLanguage()}
                     setValue={setContentLanguage}
-                    hasError={props.hasContentLanguageError}
+                    hasError={props.langauge?.hasContentLanguageError}
                   />
                 </div>
               </Show>
