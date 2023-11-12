@@ -1,10 +1,11 @@
 import { Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
-import { FaSolidEye, FaSolidEyeSlash } from "solid-icons/fa";
+import { FaSolidEye, FaSolidEyeSlash, FaSolidInfo } from "solid-icons/fa";
 // Types
 import { ErrorResult } from "@/types/api";
 // Components
 import Form from "@/components/Groups/Form";
+import { HoverCard } from "@kobalte/core";
 
 interface InputProps {
   id: string;
@@ -16,6 +17,7 @@ interface InputProps {
     label?: string;
     placeholder?: string;
     describedBy?: string;
+    info?: string;
   };
   onBlur?: () => void;
   autoFoucs?: boolean;
@@ -118,6 +120,19 @@ export const Input: Component<InputProps> = (props) => {
               <FaSolidEye size={18} class="fill-unfocused" />
             </Show>
           </button>
+        </Show>
+        {/* Info */}
+        <Show when={props.copy?.info}>
+          <HoverCard.Root>
+            <HoverCard.Trigger class="w-5 h-5 cursor-help hover:bg-secondary absolute right-2.5 top-1/2 -translate-y-1/2 bg-primary rounded-full fill-primaryText flex items-center justify-center duration-200 transition-colors">
+              <FaSolidInfo size={10} />
+            </HoverCard.Trigger>
+            <HoverCard.Portal>
+              <HoverCard.Content class="z-50 bg-primary w-80 mt-2.5 rounded-md p-15">
+                <p class="text-sm text-primaryText">{props.copy?.info}</p>
+              </HoverCard.Content>
+            </HoverCard.Portal>
+          </HoverCard.Root>
         </Show>
       </div>
       <Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />

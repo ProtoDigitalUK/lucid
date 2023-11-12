@@ -5,7 +5,7 @@ import lucid, { sendEmail, submitForm } from "@lucid/core";
 import { ContactForm } from "./forms/index.js";
 
 const fastify = Fastify({
-  logger: false,
+  logger: true,
 });
 
 fastify.register(lucid);

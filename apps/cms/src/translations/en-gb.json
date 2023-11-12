@@ -231,7 +231,7 @@
   "create_page_panel_title": "Create {{name}}",
   "create_page_panel_description": "Create a new page for the {{collection}} collection.",
   "update_page_panel_title": "Update {{name}}",
-  "update_page_panel_description": "Update the {{name}} page.",
+  "update_page_panel_description": "Update the {{collection}} collection page.",
 
   "password_reset_toast_title": "Password reset email sent",
   "password_reset_toast_message": "Please check your email for a password reset link",

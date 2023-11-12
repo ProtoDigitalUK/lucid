@@ -7,11 +7,14 @@ import { APIResponse } from "@/types/api";
 
 interface Params {
   body: {
-    title: string;
-    slug: string;
+    translations: {
+      language_id: number;
+      title: string | null;
+      slug: string | null;
+      excerpt: string | null;
+    }[];
     collection_key: string;
     homepage?: boolean;
-    excerpt?: string;
     published?: boolean;
     parent_id?: number;
     category_ids?: number[];

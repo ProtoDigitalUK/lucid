@@ -2,6 +2,23 @@ import z from "zod";
 // Schema
 import { BrickSchema } from "@schemas/bricks.js";
 
+const slugRegex = /^[a-zA-Z0-9-_]+$/;
+const slugSchema = z
+  .string()
+  .optional()
+  .nullable()
+  .refine(
+    (slug) =>
+      slug === null ||
+      slug === undefined ||
+      (typeof slug === "string" && slug.length === 0) ||
+      (typeof slug === "string" && slug.length >= 2 && slugRegex.test(slug)),
+    {
+      message:
+        "Slug must be at least 2 characters long and contain only letters, numbers, hyphens, and underscores",
+    }
+  );
+
 // ------------------------------------
 // GET MULTIPLE
 const getMultipleBody = z.object({});
@@ -39,9 +56,9 @@ const createSingleBody = z.object({
     .array(
       z.object({
         language_id: z.number(),
-        title: z.string().min(2),
-        slug: z.string().min(2).toLowerCase(),
-        excerpt: z.string().optional(),
+        title: z.string().optional().nullable(),
+        slug: slugSchema,
+        excerpt: z.string().optional().nullable(),
       })
     )
     .min(1),
@@ -71,9 +88,9 @@ const updateSingleBody = z.object({
     .array(
       z.object({
         language_id: z.number(),
-        title: z.string().min(2).optional(),
-        slug: z.string().min(2).toLowerCase().optional(),
-        excerpt: z.string().optional(),
+        title: z.string().optional().nullable(),
+        slug: slugSchema,
+        excerpt: z.string().optional().nullable(),
       })
     )
     .optional(),

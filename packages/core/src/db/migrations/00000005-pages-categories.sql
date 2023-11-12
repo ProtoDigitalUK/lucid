@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS lucid_page_content (
   page_id INTEGER NOT NULL REFERENCES lucid_pages(id) ON DELETE CASCADE,
   language_id INTEGER NOT NULL REFERENCES lucid_languages(id) ON DELETE CASCADE,
 
-  title TEXT NOT NULL,
+  title TEXT,
   slug TEXT,
   excerpt TEXT,
 

@@ -8,10 +8,10 @@ export interface PagesResT {
   collection_key: string;
 
   translations: {
-    title?: string;
-    slug?: string;
-    excerpt?: string | null;
-    language_id?: number;
+    title: string | null;
+    slug: string | null;
+    excerpt: string | null;
+    language_id: number;
   }[];
   homepage: boolean;
 

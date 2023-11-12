@@ -1,5 +1,5 @@
 import { Accessor } from "solid-js";
-import equal from "fast-deep-equal";
+import equal from "fast-deep-equal/es6";
 // Types
 import type { MediaResT } from "@lucid/types/src/media";
 import type { CollectionResT } from "@lucid/types/src/collections";

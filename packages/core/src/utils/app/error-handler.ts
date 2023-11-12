@@ -30,12 +30,13 @@ interface LucidErrorData {
 export interface ErrorResult {
   code?: string;
   message?: string;
-  children?: Array<undefined | ErrorResult>;
+  children?: Array<undefined | ErrorResult | null>;
   [key: string]:
-    | Array<undefined | ErrorResult>
+    | Array<undefined | ErrorResult | null>
     | string
     | undefined
-    | ErrorResult;
+    | ErrorResult
+    | null;
 }
 
 // ------------------------------------

@@ -100,8 +100,8 @@ export default class PageContent {
       return [
         item.language_id,
         item.page_id,
-        item.title,
-        item.slug,
+        item.title || null,
+        item.slug || null,
         item.excerpt || null,
       ];
     });
@@ -210,9 +210,9 @@ type PageContentCreateOrUpdateMultiple = (
   data: {
     language_id: number;
     page_id: number;
-    title?: string;
-    slug?: string;
-    excerpt?: string;
+    title?: string | null;
+    slug?: string | null;
+    excerpt?: string | null;
   }[]
 ) => Promise<
   {

@@ -2,7 +2,19 @@ import { PageT } from "@db/models/Page.js";
 // Types
 import type { PagesResT } from "@lucid/types/src/pages.js";
 
-const formatPage = (data: PageT, single_content?: boolean): PagesResT => {
+const setMultiContent = (data: PageT) => {
+  if (!data.language_id) return [];
+  return [
+    {
+      title: data.title || null,
+      slug: data.slug || null,
+      language_id: data.language_id,
+      excerpt: data.excerpt || null,
+    },
+  ];
+};
+
+const formatPage = (data: PageT, multi_content?: boolean): PagesResT => {
   let res: PagesResT = {
     id: data.id,
     environment_key: data.environment_key,
@@ -10,16 +22,7 @@ const formatPage = (data: PageT, single_content?: boolean): PagesResT => {
     collection_key: data.collection_key,
 
     homepage: data.homepage,
-    translations: single_content
-      ? [
-          {
-            title: data.title,
-            slug: data.slug,
-            language_id: data.language_id,
-            excerpt: data.excerpt || null,
-          },
-        ]
-      : data.translations,
+    translations: multi_content ? setMultiContent(data) : data.translations,
 
     created_by: data.created_by,
     created_at: data.created_at,

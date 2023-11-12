@@ -103,6 +103,7 @@ const EnvCollectionsPagesListRoute: Component = () => {
             name: collection.data?.data.singular || "",
           }),
         },
+        contentLanguage: true,
       }}
       headingChildren={
         <Query.Row

@@ -21,9 +21,9 @@ export interface ServiceData {
 
   translations?: {
     language_id: number;
-    title?: string;
-    slug?: string;
-    excerpt?: string;
+    title?: string | null;
+    slug?: string | null;
+    excerpt?: string | null;
   }[];
 }
 
@@ -37,6 +37,18 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   )({
     id: data.id,
     environment_key: data.environment_key,
+  });
+  const homepage =
+    (data.homepage === undefined ? currentPage.homepage : data.homepage) ||
+    false;
+
+  await service(
+    pageContentServices.checkDefaultTranslation,
+    false,
+    client
+  )({
+    translations: data.translations || [],
+    homepage: homepage,
   });
 
   // Check if the page is a parent of itself
@@ -86,7 +98,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     page_id: data.id,
     environment_key: data.environment_key,
     collection_key: currentPage.collection_key,
-    homepage: data.homepage || currentPage.homepage || false,
+    homepage: homepage,
     parent_id: parentId || undefined,
     translations: data.translations || [],
   });

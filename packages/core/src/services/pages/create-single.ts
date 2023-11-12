@@ -19,9 +19,9 @@ export interface ServiceData {
   userId: number;
   translations: {
     language_id: number;
-    title: string;
-    slug: string;
-    excerpt?: string;
+    title?: string | null;
+    slug?: string | null;
+    excerpt?: string | null;
   }[];
 }
 
@@ -53,7 +53,19 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
       })
     : Promise.resolve();
 
-  await Promise.all([checkPageCollectionPromise, parentCheckPromise]);
+  const checkDefaultTranslationPromise = service(
+    pageContentServices.checkDefaultTranslation,
+    false,
+    client
+  )({
+    translations: data.translations,
+  });
+
+  await Promise.all([
+    checkPageCollectionPromise,
+    parentCheckPromise,
+    checkDefaultTranslationPromise,
+  ]);
 
   // -------------------------------------------
   // Create page

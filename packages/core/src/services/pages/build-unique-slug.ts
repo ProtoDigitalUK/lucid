@@ -4,7 +4,7 @@ import slug from "slug";
 import PageContent from "@db/models/PageContent.js";
 
 export interface ServiceData {
-  slug: string;
+  slug: string | null | undefined;
   homepage: boolean;
   environment_key: string;
   collection_key: string;
@@ -16,6 +16,10 @@ const buildUniqueSlug = async (client: PoolClient, data: ServiceData) => {
   // For homepage, return "/"
   if (data.homepage) {
     return "/";
+  }
+
+  if (!data.slug) {
+    return null;
   }
 
   // Sanitize slug with slugify

@@ -8,6 +8,7 @@ import {
   Accessor,
   Switch,
   Match,
+  For,
 } from "solid-js";
 import slugify from "slugify";
 // Services
@@ -16,9 +17,11 @@ import api from "@/services/api";
 import helpers from "@/utils/helpers";
 // Stores
 import { environment } from "@/store/environmentStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { CollectionResT } from "@lucid/types/src/collections";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
+import type { PagesResT } from "@lucid/types/src/pages";
 // Components
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
@@ -41,9 +44,9 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 ) => {
   // ------------------------------
   // State
-  const [getTitle, setTitle] = createSignal<string>("");
-  const [getSlug, setSlug] = createSignal<string>("");
-  const [getExcerpt, setExcerpt] = createSignal<string>("");
+  const [getTranslations, setTranslations] = createSignal<
+    PagesResT["translations"]
+  >([]);
   const [getParentId, setParentId] = createSignal<number | undefined>(
     undefined
   );
@@ -61,7 +64,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     if (props.id === undefined) return "create";
     return "update";
   });
-
+  const languages = createMemo(() => contentLanguageStore.get.languages);
   const hideSetParentPage = createMemo(() => {
     return props.collection.disableHomepage === true || getIsHomepage();
   });
@@ -121,24 +124,20 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   const updateData = createMemo(() => {
     return helpers.updateData(
       {
-        title: page.data?.data.title,
-        slug: page.data?.data.slug,
         homepage: page.data?.data.homepage,
         parent_id: page.data?.data.parent_id || null,
         category_ids: page.data?.data.categories || [],
-        excerpt: page.data?.data.excerpt || "",
         author_id: page.data?.data.author?.id || null,
+        translations: page.data?.data.translations || [],
       },
       {
-        title: getTitle(),
-        slug: getSlug(),
         homepage: getIsHomepage(),
         parent_id: getParentId() || null,
         category_ids: getSelectedCategories().map(
           (cat) => cat.value
         ) as number[],
-        excerpt: getExcerpt(),
         author_id: getSelectedAuthor() || null,
+        translations: getTranslations(),
       }
     );
   });
@@ -192,15 +191,87 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     };
   });
 
+  const hasTranslationErrors = createMemo(() => {
+    const errors = mutateErrors()?.errors?.body?.translations.children;
+    if (errors) {
+      return errors.length > 0;
+    }
+    return false;
+  });
+
+  // ---------------------------------
+  // Functions
+  const setSlugFromTitle = (language_id: number) => {
+    const item = getTranslations().find((t) => {
+      return t.language_id === language_id;
+    });
+
+    if (!item?.title) return;
+    if (item.slug) return;
+    const slugValue = slugify(item.title, { lower: true });
+    setTranslationsValues("slug", language_id, slugValue);
+  };
+  const setTranslationsValues = (
+    key: "title" | "slug" | "excerpt",
+    language_id: number,
+    value: string | null
+  ) => {
+    const translations = getTranslations();
+    const translation = translations.find((t) => {
+      return t.language_id === language_id;
+    });
+    if (!translation) {
+      const item: PagesResT["translations"][0] = {
+        title: null,
+        slug: null,
+        excerpt: null,
+        language_id,
+      };
+      item[key] = value;
+      translations.push(item);
+      setTranslations([...translations]);
+      return;
+    }
+    translation[key] = value;
+    setTranslations([...translations]);
+  };
+  const inputError = (index: number) => {
+    const errors = mutateErrors()?.errors?.body?.translations.children;
+    if (errors) return errors[index];
+    return undefined;
+  };
+  const setDefualtTranslations = (translations: PagesResT["translations"]) => {
+    const translationsValues = JSON.parse(
+      JSON.stringify(translations)
+    ) as PagesResT["translations"];
+
+    const languagesValues = languages();
+    for (let i = 0; i < languagesValues.length; i++) {
+      const language = languagesValues[i];
+      const translation = translationsValues.find((t) => {
+        return t.language_id === language.id;
+      });
+      if (!translation) {
+        const item: PagesResT["translations"][0] = {
+          title: null,
+          slug: null,
+          excerpt: null,
+          language_id: language.id,
+        };
+        translationsValues.push(item);
+      }
+    }
+
+    setTranslations([...translationsValues]);
+  };
+
   // ---------------------------------
   // Effects
   createEffect(() => {
     if (page.isSuccess && categories.isSuccess) {
-      setTitle(page.data?.data.title || "");
-      setSlug(page.data?.data.slug || "");
       setParentId(page.data?.data.parent_id || undefined);
       setIsHomepage(page.data?.data.homepage || false);
-      setExcerpt(page.data?.data.excerpt || "");
+      setDefualtTranslations(page.data?.data.translations || []);
       setSelectedCategories(
         categories.data?.data
           .filter((cat) => {
@@ -218,24 +289,16 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   });
 
   createEffect(() => {
+    if (panelMode() !== "create") return;
+    if (getTranslations().length > 0) return;
+    setDefualtTranslations([]);
+  });
+
+  createEffect(() => {
     if (getIsHomepage()) {
       setParentId(undefined);
     }
   });
-
-  createEffect(() => {
-    if (panelMode() === "update" && getIsHomepage()) {
-      setSlug(page.data?.data.slug || "");
-    }
-  });
-
-  // ---------------------------------
-  // Functions
-  const setSlugFromTitle = () => {
-    if (!getTitle()) return;
-    if (getSlug()) return;
-    setSlug(slugify(getTitle(), { lower: true }));
-  };
 
   // ---------------------------------
   // Render
@@ -255,12 +318,10 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         } else {
           createPage.action.mutate({
             body: {
-              title: getTitle(),
-              slug: getSlug(),
+              translations: getTranslations(),
               collection_key: props.collection.key,
               homepage: getIsHomepage(),
               parent_id: getParentId(),
-              excerpt: getExcerpt(),
               category_ids: getSelectedCategories().map(
                 (cat) => cat.value
               ) as number[],
@@ -274,9 +335,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       reset={() => {
         updatePage.reset();
         createPage.reset();
-        setTitle("");
-        setSlug("");
-        setExcerpt("");
+        setTranslations([]);
         setParentId(undefined);
         setIsHomepage(false);
         setSelectedCategories([]);
@@ -291,53 +350,92 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         isError: fetchIsError(),
       }}
       content={panelContent()}
+      contentLanguage={true}
+      hasContentLanguageError={hasTranslationErrors()}
     >
-      {() => (
+      {(lang) => (
         <>
-          <SectionHeading title={T("details")} />
-          <Form.Input
-            id="name"
-            value={getTitle() || ""}
-            onChange={setTitle}
-            name={"title"}
-            type="text"
-            copy={{
-              label: T("title"),
-            }}
-            onBlur={setSlugFromTitle}
-            errors={mutateErrors()?.errors?.body?.title}
-            required={true}
-          />
-          <Show when={!hideSlugInput()}>
-            <Form.Input
-              id="slug"
-              value={getSlug() || ""}
-              onChange={setSlug}
-              name={"slug"}
-              type="text"
-              copy={{
-                label: T("slug"),
-                describedBy: T("page_slug_description"),
-              }}
-              errors={createPage.errors()?.errors?.body?.slug}
-              required={true}
-            />
-          </Show>
-          <Form.Textarea
-            id="excerpt"
-            value={getExcerpt() || ""}
-            onChange={setExcerpt}
-            name={"excerpt"}
-            copy={{
-              label: T("excerpt"),
-            }}
-            errors={mutateErrors()?.errors?.body?.excerpt}
-          />
+          <For each={languages()}>
+            {(language, index) => (
+              <Show when={language.id === lang?.contentLanguage()}>
+                <SectionHeading
+                  title={T("details_lang", {
+                    code: `${language.code}`,
+                  })}
+                />
+                <Form.Input
+                  id="name"
+                  value={
+                    getTranslations().find((t) => {
+                      return t.language_id === language.id;
+                    })?.title || ""
+                  }
+                  onChange={(value) =>
+                    setTranslationsValues("title", language.id, value)
+                  }
+                  name={"title"}
+                  type="text"
+                  copy={{
+                    label: T("title"),
+                  }}
+                  onBlur={() => setSlugFromTitle(language.id)}
+                  errors={inputError(index())?.title}
+                  required={language.is_default}
+                />
+                <Show when={!hideSlugInput()}>
+                  <Form.Input
+                    id="slug"
+                    value={
+                      getTranslations().find((t) => {
+                        return t.language_id === language.id;
+                      })?.slug || ""
+                    }
+                    onChange={(value) =>
+                      setTranslationsValues("slug", language.id, value)
+                    }
+                    name={"slug"}
+                    type="text"
+                    copy={{
+                      label: T("slug"),
+                      info: T("page_slug_description"),
+                    }}
+                    errors={inputError(index())?.slug}
+                    required={language.is_default}
+                  />
+                </Show>
+                <Form.Textarea
+                  id="excerpt"
+                  value={
+                    getTranslations().find((t) => {
+                      return t.language_id === language.id;
+                    })?.excerpt || ""
+                  }
+                  onChange={(value) =>
+                    setTranslationsValues("excerpt", language.id, value)
+                  }
+                  name={"excerpt"}
+                  copy={{
+                    label: T("excerpt"),
+                  }}
+                  errors={inputError(index())?.excerpt}
+                />
+              </Show>
+            )}
+          </For>
+          <SectionHeading title={T("meta")} />
           <Show when={props.collection.disableHomepage !== true}>
             <Form.Checkbox
               id="homepage"
               value={getIsHomepage()}
-              onChange={setIsHomepage}
+              onChange={(value) => {
+                setIsHomepage(value);
+                if (panelMode() === "create") return;
+                const translations = getTranslations();
+                for (let i = 0; i < translations.length; i++) {
+                  translations[i].slug = null;
+                }
+                setTranslations([...translations]);
+              }}
               name={"homepage"}
               copy={{
                 label: T("is_homepage"),

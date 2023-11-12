@@ -1,6 +1,5 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import PageContent from "@db/models/PageContent.js";
@@ -16,17 +15,17 @@ export interface ServiceData {
   parent_id?: number;
   translations: {
     language_id: number;
-    title?: string;
-    slug?: string;
-    excerpt?: string;
+    title?: string | null;
+    slug?: string | null;
+    excerpt?: string | null;
   }[];
 }
 
 interface TranslationsT {
   language_id: number;
-  title?: string;
-  slug?: string;
-  excerpt?: string;
+  title?: string | null;
+  slug?: string | null;
+  excerpt?: string | null;
 }
 
 const prepareTranslations = (
@@ -51,7 +50,6 @@ const buildUniqueSlugs = async (
   client: PoolClient
 ) => {
   const slugPromises = translations.map((translation) => {
-    if (!translation.slug) return Promise.resolve(undefined);
     return service(
       pageServices.buildUniqueSlug,
       false,

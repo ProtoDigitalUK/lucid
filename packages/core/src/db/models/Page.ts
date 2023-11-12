@@ -17,13 +17,13 @@ export type PageT = {
 
   homepage: boolean;
   translations: Array<{
-    title: string;
-    slug: string;
+    title: string | null;
+    slug: string | null;
     excerpt: string | null;
     language_id: number;
   }>;
-  title?: string;
-  slug?: string;
+  title?: string | null;
+  slug?: string | null;
   excerpt?: string | null;
   language_id?: number;
 

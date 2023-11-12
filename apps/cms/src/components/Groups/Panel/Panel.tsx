@@ -214,11 +214,7 @@ export const Panel: Component<PanelProps> = (props) => {
                     >
                       <ErrorMessage
                         theme="basic"
-                        message={
-                          props.hasContentLanguageError
-                            ? "One or more translation fields have errors. Please fix them."
-                            : props.mutateState?.errors?.message
-                        }
+                        message={props.mutateState?.errors?.message}
                       />
                     </Match>
                   </Switch>
