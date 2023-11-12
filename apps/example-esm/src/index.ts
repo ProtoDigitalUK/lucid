@@ -46,7 +46,10 @@ fastify.post("/send-email", async (request, reply) => {
   }
 });
 
-await fastify.listen({ port: Number(process.env.PORT) || 8393 });
+await fastify.listen({
+  port: Number(process.env.PORT) || 8393,
+  host: "0.0.0.0",
+});
 
 log.white("----------------------------------------------------");
 log.yellow(`CMS started at: http://localhost:8393`);
