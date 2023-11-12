@@ -143,10 +143,10 @@ const validate =
   (schema: AnyZodObject) =>
   async (
     request: FastifyRequest<{
-      Querystring: Record<string, string>;
+      Querystring: QueryType;
     }>
   ) => {
-    const filters = groupFilters(request.query);
+    const filters = groupFilters(request.query as Record<string, string>);
     const query = { ...request.query, filter: filters } as QueryType;
 
     const parseData: {
