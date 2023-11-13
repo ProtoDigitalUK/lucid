@@ -4,37 +4,51 @@ import createURL from "@utils/media/create-url.js";
 // Types
 import { MediaResT } from "@lucid/types/src/media.js";
 
-const translationObject = (value: string | null, language_id: number) => {
-  if (!value) return [];
+const constructTranslations = (media: MediaT) => {
+  const translationsMap = new Map();
 
-  return [
-    {
-      language_id,
-      value,
-    },
-  ];
+  media.name_translations.forEach((translation) => {
+    translationsMap.set(translation.language_id, {
+      language_id: translation.language_id,
+      name: translation.value || null,
+      alt: null,
+    });
+  });
+
+  media.alt_translations.forEach((translation) => {
+    if (translationsMap.has(translation.language_id)) {
+      const existingTranslation = translationsMap.get(translation.language_id);
+      existingTranslation.alt = translation.value || null;
+    } else {
+      translationsMap.set(translation.language_id, {
+        language_id: translation.language_id,
+        name: null,
+        alt: translation.value || null,
+      });
+    }
+  });
+
+  return Array.from(translationsMap.values());
 };
 
 const formatMedia = (
   media: MediaT,
-  single_content?: boolean,
+  multi_content?: boolean,
   language_id?: number
 ): MediaResT => {
   return {
     id: media.id,
     key: media.key,
     url: createURL(media.key) as string,
-    name_translation_key_id: media.name_translation_key_id,
-    alt_translation_key_id: media.alt_translation_key_id,
-    name_translations: single_content
-      ? translationObject(
-          media.name_translation_value || null,
-          language_id || 0
-        )
-      : media.name_translations || [],
-    alt_translations: single_content
-      ? translationObject(media.alt_translation_value || null, language_id || 0)
-      : media.alt_translations || [],
+    translations: multi_content
+      ? [
+          {
+            language_id: language_id || 0,
+            name: media.name_translation_value || null,
+            alt: media.alt_translation_value || null,
+          },
+        ]
+      : constructTranslations(media),
     type: media.type,
     meta: {
       mime_type: media.mime_type,

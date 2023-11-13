@@ -2232,7 +2232,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"translations\": [\r\n        {\r\n            \"id\": 6,\r\n            \"language_id\":1,\r\n            \"value\":\"EN Name tehe\",\r\n            \"key\":\"name\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"translations\": [\r\n        {\r\n            \"language_id\": 1,\r\n            \"name\":\"EN Name\",\r\n            \"alt\":\"EN Alt\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2347,7 +2347,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/3",
+							"raw": "{{BASE_URL}}/api/v1/media/17",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2355,7 +2355,7 @@
 								"api",
 								"v1",
 								"media",
-								"3"
+								"17"
 							]
 						}
 					},

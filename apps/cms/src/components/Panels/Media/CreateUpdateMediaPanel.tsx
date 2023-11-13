@@ -32,10 +32,9 @@ interface CreateUpdateMediaPanelProps {
 }
 
 interface MediaTranslations {
-  id?: number | undefined;
   language_id: number;
-  value: string;
-  key: "alt" | "name";
+  alt: string | null;
+  name: string | null;
 }
 
 const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
@@ -61,9 +60,6 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
   const [getUpdateDataLock, setUpdateDataLock] = createSignal(false);
   const [getUpdateFileLock, setUpdateFileLock] = createSignal(false);
   const [getTranslations, setTranslations] = createSignal<
-    Array<MediaTranslations>
-  >([]);
-  const [getOriginalTranslations, setOriginalTranslations] = createSignal<
     Array<MediaTranslations>
   >([]);
   const [getMediaId, setMediaId] = createSignal<number | null>(null);
@@ -120,7 +116,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
   const updateData = createMemo(() => {
     const { changed, data } = helpers.updateData(
       {
-        translations: getOriginalTranslations(),
+        translations: media.data?.data.translations || [],
       },
       {
         translations: getTranslations(),
@@ -182,35 +178,28 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 
   // ---------------------------------
   // Functions
-  const setTranslationsValue = (
+  const setTranslationsValues = (
     key: "name" | "alt",
     value: string,
     language_id: number
   ) => {
-    const prevValues = getTranslations();
-    const itemExists = prevValues.find((item) => {
-      return item.language_id === language_id && item.key === key;
+    const translations = getTranslations();
+    const translation = translations.find((t) => {
+      return t.language_id === language_id;
     });
-
-    if (itemExists) {
-      const newValues = prevValues.map((item) => {
-        if (item.language_id === language_id && item.key === key) {
-          return {
-            ...item,
-            value: value,
-          };
-        }
-        return item;
-      });
-      setTranslations(newValues);
-    } else {
-      const newItem = {
-        language_id: language_id,
-        value: value,
-        key: key,
+    if (!translation) {
+      const item: MediaTranslations = {
+        language_id,
+        alt: null,
+        name: null,
       };
-      setTranslations([...prevValues, newItem]);
+      item[key] = value;
+      translations.push(item);
+      setTranslations([...translations]);
+      return;
     }
+    translation[key] = value;
+    setTranslations([...translations]);
   };
   const panelSubmitCreate = async () => {
     const file = MediaFile.getFile();
@@ -271,52 +260,33 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
       props.state.setOpen(false);
     }
   };
-  const buildTranslationArray = (
-    key: "alt" | "name",
-    data: Array<{
-      id?: number | undefined;
-      language_id: number;
-      value: string | null;
-      key?: "alt" | "name";
-    }>
-  ) => {
-    const languages = contentLanguageStore.get.languages;
+  const setDefualtTranslations = (translations: MediaTranslations[]) => {
+    const translationsValues = JSON.parse(
+      JSON.stringify(translations)
+    ) as MediaTranslations[];
 
-    for (let i = 0; languages.length > i; i++) {
-      const language = languages[i];
-      const itemExists = data.find((item) => {
-        return item.language_id === language.id;
+    const languagesValues = languages();
+    for (let i = 0; i < languagesValues.length; i++) {
+      const language = languagesValues[i];
+      const translation = translationsValues.find((t) => {
+        return t.language_id === language.id;
       });
-      if (!itemExists) {
-        data.push({
+      if (!translation) {
+        const item: MediaTranslations = {
           language_id: language.id,
-          value: "",
-          key: key,
-        });
+          alt: null,
+          name: null,
+        };
+        translationsValues.push(item);
       }
     }
 
-    return data.map((item) => {
-      const obj: MediaTranslations = {
-        id: item.id,
-        language_id: item.language_id,
-        value: item.value || "",
-        key: key,
-      };
-      return obj;
-    });
+    setTranslations(translationsValues);
   };
-  const inputError = (key: "name" | "alt", language_id: number) => {
-    const data = getTranslations();
-    const index = data.findIndex((item) => {
-      return item.key === key && item.language_id === language_id;
-    });
-    if (index === -1) return undefined;
 
-    const errors = updateSingle.errors()?.errors?.body?.translations.children;
-    if (errors) {
-      return errors[index]?.value;
-    }
+  const inputError = (index: number) => {
+    const errors = mutateErrors()?.errors?.body?.translations.children;
+    if (errors) return errors[index];
     return undefined;
   };
 
@@ -325,27 +295,13 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
   createEffect(() => {
     if (panelMode() === "update") return;
     if (getTranslations().length > 0) return;
-    const values = [
-      ...buildTranslationArray("name", []),
-      ...buildTranslationArray("alt", []),
-    ];
-    setTranslations(values);
+    setDefualtTranslations([]);
   });
 
   createEffect(() => {
     if (media.isSuccess && panelMode() === "update") {
       if (!getUpdateDataLock()) {
-        const nameTranslations = buildTranslationArray(
-          "name",
-          media.data?.data.name_translations || []
-        );
-        const altTranslations = buildTranslationArray(
-          "alt",
-          media.data?.data.alt_translations || []
-        );
-        setTranslations([...nameTranslations, ...altTranslations]);
-        setOriginalTranslations([...nameTranslations, ...altTranslations]);
-
+        setDefualtTranslations(media.data?.data.translations || []);
         setUpdateDataLock(true);
       }
       if (!getUpdateFileLock()) {
@@ -382,7 +338,6 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
         MediaFile.reset();
         setMediaId(null);
         setTranslations([]);
-        setOriginalTranslations([]);
         setUpdateDataLock(false);
         setUpdateFileLock(false);
       }}
@@ -402,7 +357,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
         <>
           <MediaFile.Render />
           <For each={languages()}>
-            {(language) => (
+            {(language, index) => (
               <Show when={language.id === lang?.contentLanguage()}>
                 <SectionHeading
                   title={T("details_lang", {
@@ -413,38 +368,36 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
                   id={`name-${language.id}`}
                   value={
                     getTranslations().find(
-                      (item) =>
-                        item.language_id === language.id && item.key === "name"
-                    )?.value || ""
+                      (item) => item.language_id === language.id
+                    )?.name || ""
                   }
                   onChange={(val) => {
-                    setTranslationsValue("name", val, language.id);
+                    setTranslationsValues("name", val, language.id);
                   }}
                   name={`name-${language.id}`}
                   type="text"
                   copy={{
                     label: T("name"),
                   }}
-                  errors={inputError("name", language.id)}
+                  errors={inputError(index())?.name}
                 />
                 <Show when={showAltInput()}>
                   <Form.Input
                     id={`alt-${language.id}`}
                     value={
                       getTranslations().find(
-                        (item) =>
-                          item.language_id === language.id && item.key === "alt"
-                      )?.value || ""
+                        (item) => item.language_id === language.id
+                      )?.alt || ""
                     }
                     onChange={(val) => {
-                      setTranslationsValue("alt", val, language.id);
+                      setTranslationsValues("alt", val, language.id);
                     }}
                     name={`alt-${language.id}`}
                     type="text"
                     copy={{
                       label: T("alt"),
                     }}
-                    errors={inputError("alt", language.id)}
+                    errors={inputError(index())?.alt}
                   />
                 </Show>
               </Show>

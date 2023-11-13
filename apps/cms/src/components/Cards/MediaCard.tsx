@@ -52,18 +52,10 @@ const MediaCard: Component<MediaCardProps> = (props) => {
     return userStore.get.hasPermission(["update_media"]).all;
   });
 
-  const mediaName = createMemo(() => {
-    return (
-      props.media.name_translations.find(
-        (translation) => translation.language_id === props.contentLanguage
-      )?.value || T("no_translation")
-    );
-  });
-
-  const mediaAlt = createMemo(() => {
-    return props.media.alt_translations.find(
+  const translation = createMemo(() => {
+    return props.media.translations.find(
       (translation) => translation.language_id === props.contentLanguage
-    )?.value;
+    );
   });
 
   // ----------------------------------
@@ -129,7 +121,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
                 "rounded-t-md group-hover:scale-110 transition duration-100 backface-hidden"
               }
               src={`${props.media.url}?width=400`}
-              alt={mediaAlt() || mediaName()}
+              alt={translation()?.alt || translation()?.name || ""}
               loading="lazy"
             />
           </Match>
@@ -168,7 +160,9 @@ const MediaCard: Component<MediaCardProps> = (props) => {
       </AspectRatio>
       {/* Content */}
       <div class="p-15 border-t border-border">
-        <h3 class="mb-0.5 line-clamp-1">{mediaName()}</h3>
+        <h3 class="mb-0.5 line-clamp-1">
+          {translation()?.name || T("no_translation")}
+        </h3>
         <ClickToCopy
           type="simple"
           text={props.media.key}

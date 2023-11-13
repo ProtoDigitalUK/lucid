@@ -4,17 +4,16 @@ import Translation from "@db/models/Translation.js";
 
 export interface ServiceData {
   translations: {
-    value: string;
+    value: string | undefined | null;
     language_id: number;
-    key: "name" | "alt";
-    id?: number | undefined;
+    key: string;
   }[];
   keyMap: {
     [key: string]: number | undefined | null;
   };
 }
 
-const updateMultiple = async (client: PoolClient, data: ServiceData) => {
+const upsertMultiple = async (client: PoolClient, data: ServiceData) => {
   // remove keys that dont have a value
   const translations = data.translations
     .filter((translation) => {
@@ -33,26 +32,9 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
       };
     });
 
-  const toUpdate = translations.filter(
-    (translation) => translation.id !== undefined
-  );
-  const toCreate = translations.filter(
-    (translation) => translation.id === undefined
-  );
-
-  await Promise.all([
-    Translation.createMultiple(client, {
-      translations: toCreate,
-    }),
-    Translation.updateMultiple(client, {
-      translations: toUpdate as {
-        id: number;
-        translation_key_id: number;
-        language_id: number;
-        value: string;
-      }[],
-    }),
-  ]);
+  await Translation.createOrUpdateMultiple(client, {
+    translations: translations,
+  });
 };
 
-export default updateMultiple;
+export default upsertMultiple;

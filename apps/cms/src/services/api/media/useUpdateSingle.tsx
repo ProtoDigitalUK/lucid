@@ -10,10 +10,9 @@ interface Params {
   id: number;
   body: {
     translations: Array<{
-      id?: number;
       language_id: number;
-      value: string;
-      key: "alt" | "name";
+      alt: string | null;
+      name:  string | null;
     }>;
   };
 }

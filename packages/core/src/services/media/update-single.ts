@@ -1,10 +1,12 @@
 import { PoolClient } from "pg";
 // Utils
 import service from "@utils/app/service.js";
+import { LucidError } from "@utils/app/error-handler.js";
 // Schema
 import { MediaTranslationsT } from "@schemas/media.js";
+// Models
+import Media from "@db/models/Media.js";
 // Services
-import mediaService from "@services/media/index.js";
 import translationsService from "@services/translations/index.js";
 
 export interface ServiceData {
@@ -13,20 +15,40 @@ export interface ServiceData {
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
-  const media = await service(
-    mediaService.getSingle,
-    false,
-    client
-  )({
+  const media = await Media.getSingleById(client, {
     id: data.id,
   });
 
+  if (!media) {
+    throw new LucidError({
+      type: "basic",
+      name: "Media not found",
+      message: "We couldn't find the media you were looking for.",
+      status: 404,
+    });
+  }
+
   await service(
-    translationsService.updateMultiple,
+    translationsService.upsertMultiple,
     false,
     client
   )({
-    translations: data.translations,
+    translations: [
+      ...data.translations.map((translation) => {
+        return {
+          value: translation.name,
+          language_id: translation.language_id,
+          key: "name",
+        };
+      }),
+      ...data.translations.map((translation) => {
+        return {
+          value: translation.alt,
+          language_id: translation.language_id,
+          key: "alt",
+        };
+      }),
+    ],
     keyMap: {
       name: media.name_translation_key_id,
       alt: media.alt_translation_key_id,

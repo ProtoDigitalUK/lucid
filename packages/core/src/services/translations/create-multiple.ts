@@ -43,7 +43,7 @@ const createMultiple = async (client: PoolClient, data: ServiceData) => {
     counter++;
   }
 
-  await Translation.createMultiple(client, {
+  await Translation.createOrUpdateMultiple(client, {
     translations: translations,
   });
 

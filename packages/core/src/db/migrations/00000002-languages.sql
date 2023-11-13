@@ -21,9 +21,12 @@ CREATE TABLE IF NOT EXISTS lucid_translations (
   id SERIAL PRIMARY KEY,
   translation_key_id INTEGER REFERENCES lucid_translation_keys(id) ON DELETE CASCADE ON UPDATE CASCADE,
   language_id INTEGER REFERENCES lucid_languages(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  value TEXT NOT NULL,
+  value TEXT,
+
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+  updated_at TIMESTAMP DEFAULT NOW(),
+
+  UNIQUE (translation_key_id, language_id)
 );
 
 CREATE INDEX idx_translation_key_language
