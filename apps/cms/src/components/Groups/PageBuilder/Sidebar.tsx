@@ -19,12 +19,6 @@ interface SidebarProps {
     categories: CollectionCategoriesResT[];
   };
   state: {
-    getTitle: Accessor<string>;
-    setTitle: (_value: string) => void;
-    getSlug: Accessor<string>;
-    setSlug: (_value: string) => void;
-    getExcerpt: Accessor<string>;
-    setExcerpt: (_value: string) => void;
     getParentId: Accessor<number | undefined>;
     setParentId: (_value: ValueT) => void;
     getIsHomepage: Accessor<boolean>;
@@ -55,43 +49,6 @@ export const Sidebar: Component<SidebarProps> = (props) => {
     <>
       <h1>{T("edit_page_route_title")}</h1>
       <div class="mt-30">
-        <Form.Input
-          id="title"
-          value={props.state.getTitle()}
-          onChange={props.state.setTitle}
-          name={"title"}
-          type="text"
-          copy={{
-            label: T("title"),
-          }}
-          errors={{}}
-          required={true}
-        />
-        <Show when={!props.state.getIsHomepage()}>
-          <Form.Input
-            id="slug"
-            value={props.state.getSlug()}
-            onChange={props.state.setSlug}
-            name={"slug"}
-            type="text"
-            copy={{
-              label: T("slug"),
-              describedBy: T("page_slug_description"),
-            }}
-            errors={{}}
-            required={true}
-          />
-        </Show>
-        <Form.Textarea
-          id="excerpt"
-          value={props.state.getExcerpt()}
-          onChange={props.state.setExcerpt}
-          name={"excerpt"}
-          copy={{
-            label: T("excerpt"),
-          }}
-          errors={{}}
-        />
         <Show when={props.data.collection?.disableHomepage !== true}>
           <Form.Checkbox
             id="homepage"

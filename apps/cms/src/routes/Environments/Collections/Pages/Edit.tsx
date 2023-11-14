@@ -1,5 +1,11 @@
 import T from "@/translations/index";
-import { Component, createSignal, createMemo, createEffect } from "solid-js";
+import {
+  Component,
+  createSignal,
+  createMemo,
+  createEffect,
+  Show,
+} from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import shortUUID from "short-uuid";
 import { FaSolidTrash } from "solid-icons/fa";
@@ -16,6 +22,7 @@ import PageBuilder from "@/components/Groups/PageBuilder";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import Button from "@/components/Partials/Button";
 import DeletePage from "@/components/Modals/Pages/DeletePage";
+import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
@@ -25,9 +32,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 
   // ------------------------------
   // State
-  const [getTitle, setTitle] = createSignal<string>("");
-  const [getSlug, setSlug] = createSignal<string>("");
-  const [getExcerpt, setExcerpt] = createSignal<string>("");
   const [getParentId, setParentId] = createSignal<number | undefined>(
     undefined
   );
@@ -99,17 +103,23 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     },
   });
 
+  const isLoading = createMemo(() => {
+    return (
+      categories.isLoading ||
+      collection.isLoading ||
+      page.isLoading ||
+      brickConfig.isLoading
+    );
+  });
+
   // ---------------------------------
   // Effects
   createEffect(() => {
     if (page.isSuccess && categories.isSuccess && collection.isSuccess) {
       builderStore.get.reset();
 
-      setTitle(page.data?.data.title || "");
-      setSlug(page.data?.data.slug || "");
       setParentId(page.data?.data.parent_id || undefined);
       setIsHomepage(page.data?.data.homepage || false);
-      setExcerpt(page.data?.data.excerpt || "");
       setSelectedCategories(
         categories.data?.data
           .filter((cat) => {
@@ -155,7 +165,11 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         <h1 class="text-unfocused font-normal text-xl">
           #{page.data?.data.id}
         </h1>
+
         <div class="flex items-center gap-2.5">
+          <div class="min-w-[250px]">
+            <ContentLanguageSelect />
+          </div>
           <Button
             type="button"
             theme="primary"
@@ -187,12 +201,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
               categories: categories.data?.data || [],
             }}
             state={{
-              getTitle,
-              setTitle,
-              getSlug,
-              setSlug,
-              getExcerpt,
-              setExcerpt,
               getParentId,
               setParentId,
               getIsHomepage,
@@ -243,32 +251,34 @@ const EnvCollectionsPagesEditRoute: Component = () => {
           </div>
         </div>
       </div>
-      {/* Modals */}
-      <AddBrick
-        state={{
-          open: getSelectBrickOpen(),
-          setOpen: setSelectBrickOpen,
-        }}
-        data={{
-          collection: collection.data?.data,
-          brickConfig: brickConfig.data?.data || [],
-        }}
-      />
-      <DeletePage
-        id={page.data?.data.id}
-        state={{
-          open: getDeleteOpen(),
-          setOpen: setDeleteOpen,
-        }}
-        collection={collection.data?.data as CollectionResT}
-        callbacks={{
-          onSuccess: () => {
-            navigate(
-              `/env/${environment()}/collection/${collection.data?.data.key}`
-            );
-          },
-        }}
-      />
+      <Show when={!isLoading()}>
+        {/* Modals */}
+        <AddBrick
+          state={{
+            open: getSelectBrickOpen(),
+            setOpen: setSelectBrickOpen,
+          }}
+          data={{
+            collection: collection.data?.data,
+            brickConfig: brickConfig.data?.data || [],
+          }}
+        />
+        <DeletePage
+          id={page.data?.data.id}
+          state={{
+            open: getDeleteOpen(),
+            setOpen: setDeleteOpen,
+          }}
+          collection={collection.data?.data as CollectionResT}
+          callbacks={{
+            onSuccess: () => {
+              navigate(
+                `/env/${environment()}/collection/${collection.data?.data.key}`
+              );
+            },
+          }}
+        />
+      </Show>
     </>
   );
 };
