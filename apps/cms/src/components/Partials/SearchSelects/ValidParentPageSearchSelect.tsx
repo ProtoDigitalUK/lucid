@@ -1,3 +1,4 @@
+import T from "@/translations";
 import { Component, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
@@ -60,7 +61,9 @@ const ValidParentPageSearchSelect: Component<
       options={
         validParents.data?.data.map((page) => ({
           value: page.id,
-          label: page.title,
+          label: page.translations.length
+            ? page.translations[0].title ?? T("no_translation")
+            : T("no_translation"),
         })) || []
       }
       errors={props.errors}
