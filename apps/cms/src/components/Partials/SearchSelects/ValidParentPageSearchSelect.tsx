@@ -1,9 +1,11 @@
-import T from "@/translations";
-import { Component, createSignal } from "solid-js";
+import { Component, createSignal, createMemo } from "solid-js";
 // Services
 import api from "@/services/api";
+// Utils
+import helpers from "@/utils/helpers";
 // Stores
 import { environment } from "@/store/environmentStore";
+import contentLanguage from "@/store/contentLanguageStore";
 // Types
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
 import type { ErrorResult } from "@/types/api";
@@ -25,6 +27,7 @@ const ValidParentPageSearchSelect: Component<
   ValidParentPageSearchSelectProps
 > = (props) => {
   const [getSearchQuery, setSearchQuery] = createSignal<string>("");
+  const language = createMemo(() => contentLanguage.get.contentLanguage);
 
   // ----------------------------------
   // Queries
@@ -39,6 +42,7 @@ const ValidParentPageSearchSelect: Component<
       },
       headers: {
         "lucid-environment": environment,
+        "lucid-content-lang": language,
       },
       perPage: 10,
     },
@@ -61,9 +65,11 @@ const ValidParentPageSearchSelect: Component<
       options={
         validParents.data?.data.map((page) => ({
           value: page.id,
-          label: page.translations.length
-            ? page.translations[0].title ?? T("no_translation")
-            : T("no_translation"),
+          label: helpers.getPageContentTranslations({
+            translations: page.translations,
+            default_title: page.default_title,
+            default_slug: page.default_slug,
+          }).title.value,
         })) || []
       }
       errors={props.errors}

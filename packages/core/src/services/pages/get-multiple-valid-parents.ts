@@ -2,10 +2,13 @@ import { PoolClient } from "pg";
 import z from "zod";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
+import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
 // Schema
 import pagesSchema from "@schemas/pages.js";
+// Serivces
+import languagesService from "@services/languages/index.js";
 // Format
 import formatPage from "@utils/format/format-page.js";
 
@@ -24,7 +27,12 @@ const getMultipleValidParents = async (
 ) => {
   const { filter, sort, page, per_page } = data.query;
 
-  // Build Query Data and Query
+  const defaultLanguage = await service(
+    languagesService.getDefault,
+    false,
+    client
+  )();
+
   const SelectQuery = new SelectQueryBuilder({
     columns: [
       "lucid_pages.id",
@@ -77,7 +85,7 @@ const getMultipleValidParents = async (
         },
       },
     },
-    values: [data.page_id, data.language.id],
+    values: [data.page_id, data.language.id, defaultLanguage.id],
     where: [
       "lucid_pages.id NOT IN (SELECT d.id FROM descendants d)",
       "lucid_pages.id != $1",

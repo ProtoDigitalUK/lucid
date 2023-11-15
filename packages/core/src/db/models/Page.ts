@@ -96,7 +96,7 @@ export default class Page {
           COUNT(DISTINCT lucid_pages.id)
         FROM
           lucid_pages
-        INNER JOIN
+        LEFT JOIN
           lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
         LEFT JOIN
           lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $2
@@ -317,11 +317,17 @@ export default class Page {
         )
         
         SELECT
-          ${data.query_instance.query.select}
+          ${data.query_instance.query.select},
+          default_content.title AS default_title,
+          default_content.slug AS default_slug,
+          default_content.excerpt AS default_excerpt
         FROM 
           lucid_pages 
-        INNER JOIN
+        LEFT JOIN
           lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
+        LEFT JOIN
+          lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $3
+
         ${data.query_instance.query.where}
         ${data.query_instance.query.order}
         ${data.query_instance.query.pagination}`,
@@ -345,8 +351,10 @@ export default class Page {
           COUNT(*) 
         FROM 
           lucid_pages
-        INNER JOIN
+        LEFT JOIN
           lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
+        LEFT JOIN
+          lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $3
         ${data.query_instance.query.where}`,
       values: data.query_instance.countValues,
     });

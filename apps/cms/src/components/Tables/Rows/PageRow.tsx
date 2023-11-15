@@ -2,6 +2,8 @@ import T from "@/translations";
 import { Component, createMemo } from "solid-js";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
+// Utils
+import helpers from "@/utils/helpers";
 // Types
 import { TableRowProps } from "@/types/components";
 import type { CollectionResT } from "@lucid/types/src/collections";
@@ -33,25 +35,12 @@ const PageRow: Component<PageRowProps> = (props) => {
     );
   });
 
-  const title = createMemo(() => {
-    return {
-      value:
-        currentTranslation()?.title ||
-        props.page.default_title ||
-        T("no_translation"),
-      is_default:
-        !currentTranslation()?.title && props.page.default_title ? true : false,
-    };
-  });
-  const slug = createMemo(() => {
-    return {
-      value:
-        currentTranslation()?.slug ||
-        props.page.default_slug ||
-        T("no_translation"),
-      is_default:
-        !currentTranslation()?.slug && props.page.default_slug ? true : false,
-    };
+  const translationContent = createMemo(() => {
+    return helpers.getPageContentTranslations({
+      translations: currentTranslation(),
+      default_title: props.page.default_title,
+      default_slug: props.page.default_slug,
+    });
   });
 
   // ----------------------------------
@@ -99,8 +88,8 @@ const PageRow: Component<PageRowProps> = (props) => {
       ]}
     >
       <PageTitleCol
-        title={title()}
-        slug={slug()}
+        title={translationContent().title}
+        slug={translationContent().slug}
         homepage={props.page.homepage}
         options={{ include: props?.include[0] }}
       />

@@ -18,6 +18,7 @@ interface QueryParams {
   };
   headers: {
     "lucid-environment": Accessor<string | undefined> | string;
+    "lucid-content-lang": Accessor<number | undefined> | number;
   };
   perPage?: Accessor<number> | number;
 }

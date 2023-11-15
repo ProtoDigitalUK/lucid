@@ -1,7 +1,8 @@
-import T from "@/translations";
 import { Component, createMemo, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
+// Utils
+import helpers from "@/utils/helpers";
 // Stores
 import { environment } from "@/store/environmentStore";
 import contentLanguage from "@/store/contentLanguageStore";
@@ -60,9 +61,11 @@ const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
           .filter((page) => page.homepage !== true)
           .map((page) => ({
             value: page.id,
-            label: page.translations.length
-              ? page.translations[0].title ?? T("no_translation")
-              : T("no_translation"),
+            label: helpers.getPageContentTranslations({
+              translations: page.translations,
+              default_title: page.default_title,
+              default_slug: page.default_slug,
+            }).title.value,
           })) || []
       }
       errors={props.errors}

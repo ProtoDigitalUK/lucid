@@ -29,7 +29,6 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
     client
   )();
 
-  // Build Query Data and Query
   const SelectQuery = new SelectQueryBuilder({
     columns: [
       "lucid_pages.id",

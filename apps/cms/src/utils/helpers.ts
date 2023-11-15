@@ -1,9 +1,11 @@
+import T from "@/translations";
 import { Accessor } from "solid-js";
 import equal from "fast-deep-equal/es6";
 // Types
 import type { MediaResT } from "@lucid/types/src/media";
 import type { CollectionResT } from "@lucid/types/src/collections";
 import type { UserResT } from "@lucid/types/src/users";
+import type { PagesResT } from "@lucid/types/src/pages";
 
 // ---------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -183,6 +185,44 @@ const formatUserInitials = (user: {
 };
 
 // ---------------------------------------------
+// Get translation
+const getPageContentTranslations = (data: {
+  translations:
+    | PagesResT["translations"]
+    | PagesResT["translations"][0]
+    | undefined;
+  default_title: PagesResT["default_title"];
+  default_slug: PagesResT["default_slug"];
+}) => {
+  const firstItem = Array.isArray(data.translations)
+    ? data.translations[0]
+    : data.translations;
+  if (!firstItem) {
+    return {
+      title: {
+        value: data.default_title || T("no_translation"),
+        is_default: data.default_title ? true : false,
+      },
+      slug: {
+        value: data.default_slug || T("no_translation"),
+        is_default: data.default_slug ? true : false,
+      },
+    };
+  }
+
+  return {
+    title: {
+      value: firstItem.title || data.default_title || T("no_translation"),
+      is_default: !firstItem.title && !data.default_title ? true : false,
+    },
+    slug: {
+      value: firstItem.slug || data.default_slug || T("no_translation"),
+      is_default: !firstItem.slug && !data.default_slug ? true : false,
+    },
+  };
+};
+
+// ---------------------------------------------
 // Exports
 const helpers = {
   deepMerge,
@@ -194,6 +234,7 @@ const helpers = {
   getFirstEnvLink,
   formatUserName,
   formatUserInitials,
+  getPageContentTranslations,
 };
 
 export default helpers;
