@@ -1,11 +1,11 @@
-import T from "@/translations";
 import { Component, For, Switch, Match, createMemo } from "solid-js";
+// Assets
+import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components
-import Button from "@/components/Partials/Button";
 import PageBuilder from "@/components/Groups/PageBuilder";
 
 interface BuilderProps {
@@ -54,7 +54,7 @@ export const Builder: Component<BuilderProps> = (props) => {
   // Render
   return (
     <>
-      <div class="w-full">
+      <div class="w-full min-h-full flex flex-col">
         {/* Fixed Top Zone */}
         <ul>
           <For each={topFixedBricks()}>
@@ -69,18 +69,11 @@ export const Builder: Component<BuilderProps> = (props) => {
           </For>
         </ul>
         {/* Builder Zone */}
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center flex-grow">
           <Switch>
             <Match when={builderBricks().length === 0}>
               <div class="my-10 w-full flex items-center justify-center">
-                <Button
-                  type="button"
-                  theme="container-outline"
-                  size="small"
-                  onClick={() => props.state.setOpenSelectBrick()}
-                >
-                  {T("add_brick")}
-                </Button>
+                <img src={missingContent} class="h-[150px]" />
               </div>
             </Match>
             <Match when={builderBricks().length > 0}>
@@ -100,7 +93,7 @@ export const Builder: Component<BuilderProps> = (props) => {
           </Switch>
         </div>
         {/* Fixed Bottom/Sidebar Zone */}
-        <ul>
+        <ul class="flex justify-end">
           <For each={bottomFixedBricks()}>
             {(brick) => (
               <PageBuilder.Brick

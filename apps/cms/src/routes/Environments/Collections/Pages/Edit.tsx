@@ -165,7 +165,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         <h1 class="text-unfocused font-normal text-xl">
           #{page.data?.data.id}
         </h1>
-
         <div class="flex items-center gap-2.5">
           <div class="min-w-[250px]">
             <ContentLanguageSelect />
@@ -223,12 +222,11 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                 state={{
                   setOpenSelectBrick: () => {
                     setSelectBrickOpen(true);
-                    // setTargetOrder(order);
                   },
                 }}
               />
             </div>
-            <div class="absolute top-15 right-15 bottom-15 w-[180px] p-2 bg-white bg-opacity-20 rounded-md z-20 overflow-y-scroll">
+            <div class="absolute top-15 right-15 bottom-15 w-[180px] z-20 overflow-y-scroll">
               <PageBuilder.PreviewBar
                 data={{
                   brickConfig: brickConfig.data?.data || [],

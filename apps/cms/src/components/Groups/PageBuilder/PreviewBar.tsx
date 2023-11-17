@@ -58,8 +58,8 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
       </Show>
       {/* Builder */}
       <div>
-        <Show when={topFixedBricks().length > 0}>
-          <span class="w-10 h-px bg-white block mx-auto mb-2.5" />
+        <Show when={topFixedBricks().length > 0 && builderBricks().length > 0}>
+          <span class="w-10 h-px bg-white block mx-auto my-2.5" />
         </Show>
         <DragDrop
           sortOrder={(id, targetid) => {
@@ -87,13 +87,15 @@ export const PreviewBar: Component<PreviewBarProps> = (props) => {
             </ol>
           )}
         </DragDrop>
-        <Show when={bottomFixedBricks().length > 0}>
-          <span class="w-10 h-px bg-white block mx-auto mt-2.5" />
+        <Show
+          when={bottomFixedBricks().length > 0 && builderBricks().length > 0}
+        >
+          <span class="w-10 h-px bg-white block mx-auto my-2.5" />
         </Show>
       </div>
       {/* Fixed - Bottom */}
       <Show when={bottomFixedBricks().length > 0}>
-        <ul class="mt-2.5">
+        <ul>
           <For each={bottomFixedBricks()}>
             {(brick) => (
               <PreviewBarItem
@@ -173,7 +175,7 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
           brick: brickConfig(),
         }}
       />
-      <div class="bg-primary px-2.5 py-1 text-center">
+      <div class="bg-primaryA2 px-2.5 py-1 text-center">
         <h3 class="text-sm text-white">{brickConfig()?.title}</h3>
       </div>
     </li>
