@@ -1,11 +1,10 @@
 import { Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
-import { FaSolidEye, FaSolidEyeSlash, FaSolidInfo } from "solid-icons/fa";
+import { FaSolidEye, FaSolidEyeSlash } from "solid-icons/fa";
 // Types
 import { ErrorResult } from "@/types/api";
 // Components
 import Form from "@/components/Groups/Form";
-import { HoverCard } from "@kobalte/core";
 
 interface InputProps {
   id: string;
@@ -17,7 +16,7 @@ interface InputProps {
     label?: string;
     placeholder?: string;
     describedBy?: string;
-    info?: string;
+    tooltip?: string;
   };
   onBlur?: () => void;
   autoFoucs?: boolean;
@@ -28,7 +27,7 @@ interface InputProps {
   errors?: ErrorResult;
   noMargin?: boolean;
 
-  theme?: "slim";
+  theme?: "basic";
 }
 
 export const Input: Component<InputProps> = (props) => {
@@ -48,8 +47,8 @@ export const Input: Component<InputProps> = (props) => {
     <div
       class={classnames("w-full", {
         "mb-0": props.noMargin,
-        "mb-5": !props.noMargin && props.theme !== "slim",
-        "mb-2.5 last:mb-0": !props.noMargin && props.theme === "slim",
+        "mb-15 last:mb-0": !props.noMargin && props.theme !== "basic",
+        "mb-2.5 last:mb-0": !props.noMargin && props.theme === "basic",
       })}
     >
       <div
@@ -57,9 +56,9 @@ export const Input: Component<InputProps> = (props) => {
           "flex flex-col transition-colors duration-200 ease-in-out relative",
           {
             "border-secondary bg-backgroundAccentH":
-              inputFocus() && props.theme !== "slim",
+              inputFocus() && props.theme !== "basic",
             "border-error": props.errors?.message !== undefined,
-            "bg-backgroundAccent rounded-md border": props.theme !== "slim",
+            "bg-backgroundAccent rounded-md border": props.theme !== "basic",
           }
         )}
       >
@@ -77,8 +76,8 @@ export const Input: Component<InputProps> = (props) => {
               "pr-[38px]": props.type === "password",
               "pt-2": props.copy?.label === undefined,
               "bg-container border border-border h-10 rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
-                props.theme === "slim",
-              "bg-transparent pb-2 pt-1 rounded-b-md": props.theme !== "slim",
+                props.theme === "basic",
+              "bg-transparent pb-2 pt-1 rounded-b-md": props.theme !== "basic",
             }
           )}
           onKeyDown={(e) => {
@@ -121,19 +120,7 @@ export const Input: Component<InputProps> = (props) => {
             </Show>
           </button>
         </Show>
-        {/* Info */}
-        <Show when={props.copy?.info}>
-          <HoverCard.Root>
-            <HoverCard.Trigger class="w-5 h-5 cursor-help hover:bg-secondary absolute right-2.5 top-1/2 -translate-y-1/2 bg-primary rounded-full fill-primaryText flex items-center justify-center duration-200 transition-colors">
-              <FaSolidInfo size={10} />
-            </HoverCard.Trigger>
-            <HoverCard.Portal>
-              <HoverCard.Content class="z-50 bg-primary w-80 mt-2.5 rounded-md p-15">
-                <p class="text-sm text-primaryText">{props.copy?.info}</p>
-              </HoverCard.Content>
-            </HoverCard.Portal>
-          </HoverCard.Root>
-        </Show>
+        <Form.Tooltip copy={props.copy?.tooltip} theme={props.theme} />
       </div>
       <Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
       <Form.ErrorMessage id={props.id} errors={props.errors} />

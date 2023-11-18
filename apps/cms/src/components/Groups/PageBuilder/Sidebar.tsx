@@ -1,110 +1,79 @@
-import T from "@/translations";
-import { Component, Accessor, Show, createMemo } from "solid-js";
+import { Component, Accessor, createMemo, Setter } from "solid-js";
+// Stores
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
+import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { ValueT } from "@/components/Groups/Form/Select";
+import type { PagesResT } from "@lucid/types/src/pages";
 import type {
-  CollectionResT,
   CollectionCategoriesResT,
+  CollectionResT,
 } from "@lucid/types/src/collections";
 // Components
-import Form from "@/components/Groups/Form";
-import ValidParentPageSearchSelect from "@/components/Partials/SearchSelects/ValidParentPageSearchSelect";
-import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSelect";
+import PageFieldGroup from "@/components/FieldGroups/Page";
 
 interface SidebarProps {
-  data: {
-    pageId: number;
-    collection?: CollectionResT;
-    categories: CollectionCategoriesResT[];
-  };
   state: {
+    pageId?: number;
+    collection: CollectionResT;
+    categories: CollectionCategoriesResT[];
+    mutateErrors: Accessor<APIErrorResponse | undefined>;
+    // Page Details
+    getTranslations: Accessor<PagesResT["translations"]>;
     getParentId: Accessor<number | undefined>;
-    setParentId: (_value: ValueT) => void;
     getIsHomepage: Accessor<boolean>;
-    setIsHomepage: (_value: boolean) => void;
     getSelectedCategories: Accessor<SelectMultipleValueT[]>;
-    setSelectedCategories: (_value: SelectMultipleValueT[]) => void;
     getSelectedAuthor: Accessor<number | undefined>;
-    setSelectedAuthor: (_value: ValueT) => void;
+  };
+  setState: {
+    // Page Details
+    setTranslations: Setter<PagesResT["translations"]>;
+    setParentId: Setter<number | undefined>;
+    setIsHomepage: Setter<boolean>;
+    setSelectedCategories: Setter<SelectMultipleValueT[]>;
+    setSelectedAuthor: Setter<number | undefined>;
   };
 }
 
 export const Sidebar: Component<SidebarProps> = (props) => {
-  // ----------------------------------
-  // States
-
-  // ----------------------------------
+  // ------------------------------
   // Memos
-  const hideSetParentPage = createMemo(() => {
-    return (
-      props.data.collection?.disableHomepage === true ||
-      props.state.getIsHomepage()
-    );
-  });
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
+  const pageId = createMemo(() => props.state.pageId);
 
   // ----------------------------------
   // Render
   return (
     <>
-      <h1>{T("edit_page_route_title")}</h1>
-      <div class="mt-30">
-        <Show when={props.data.collection?.disableHomepage !== true}>
-          <Form.Checkbox
-            id="homepage"
-            value={props.state.getIsHomepage()}
-            onChange={props.state.setIsHomepage}
-            name={"homepage"}
-            copy={{
-              label: T("is_homepage"),
-              describedBy: T("is_homepage_description"),
-            }}
-            errors={{}}
-          />
-        </Show>
-        <Show when={!hideSetParentPage()}>
-          <ValidParentPageSearchSelect
-            pageId={props.data.pageId}
-            id="parent_id"
-            name="parent_id"
-            collectionKey={props.data.collection?.key || ""}
-            value={props.state.getParentId()}
-            setValue={props.state.setParentId}
-            copy={{
-              label: T("parent_page"),
-            }}
-            errors={{}}
-          />
-        </Show>
-        <Form.SelectMultiple
-          id="category_ids"
-          values={props.state.getSelectedCategories()}
-          onChange={props.state.setSelectedCategories}
-          name={"category_ids"}
-          copy={{
-            label: T("categories"),
+      <div class="w-full p-15 bg-container border border-border rounded-md mb-15">
+        <PageFieldGroup
+          mode={"update"}
+          showTitles={false}
+          theme="basic"
+          state={{
+            pageId: pageId,
+            contentLanguage: contentLanguage,
+            mutateErrors: props.state.mutateErrors,
+            collection: props.state.collection,
+            categories: props.state.categories,
+            getTranslations: props.state.getTranslations,
+            getIsHomepage: props.state.getIsHomepage,
+            getParentId: props.state.getParentId,
+            getSelectedCategories: props.state.getSelectedCategories,
+            getSelectedAuthor: props.state.getSelectedAuthor,
           }}
-          options={
-            props.data.categories.map((cat) => {
-              return {
-                value: cat.id,
-                label: cat.title,
-              };
-            }) || []
-          }
-          errors={{}}
-        />
-        <UserSearchSelect
-          id="author_id"
-          name="author_id"
-          value={props.state.getSelectedAuthor()}
-          setValue={props.state.setSelectedAuthor}
-          copy={{
-            label: T("author"),
+          setState={{
+            setTranslations: props.setState.setTranslations,
+            setIsHomepage: props.setState.setIsHomepage,
+            setParentId: props.setState.setParentId,
+            setSelectedCategories: props.setState.setSelectedCategories,
+            setSelectedAuthor: props.setState.setSelectedAuthor,
           }}
-          errors={{}}
         />
       </div>
+      <div>sidebar bricks</div>
     </>
   );
 };

@@ -9,6 +9,7 @@ import { SingleFileUpload } from "./SingleFileUpload";
 import { ErrorMessage } from "./ErrorMessage";
 import { DescribedBy } from "./DescribedBy";
 import { Label } from "./Label";
+import { Tooltip } from "./Tooltip";
 
 const Form = {
   Root,
@@ -22,6 +23,7 @@ const Form = {
   ErrorMessage,
   DescribedBy,
   Label,
+  Tooltip,
 };
 
 export default Form;

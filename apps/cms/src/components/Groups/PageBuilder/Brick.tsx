@@ -26,8 +26,8 @@ export const Brick: Component<BrickProps> = (props) => {
   // Render
   return (
     <Show when={config() !== undefined}>
-      <li class="w-full mb-15">
-        <div class="bg-container w-full rounded-md mb-15 p-15">
+      <li class="w-full mb-15 last:mb-0">
+        <div class="bg-container w-full rounded-md p-15">
           <div class="border-b border-border mb-15 pb-15">
             <h3>{config()?.title}</h3>
           </div>

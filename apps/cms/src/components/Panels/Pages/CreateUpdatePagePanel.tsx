@@ -3,14 +3,9 @@ import {
   Component,
   createMemo,
   createSignal,
-  Show,
   createEffect,
   Accessor,
-  Switch,
-  Match,
-  For,
 } from "solid-js";
-import slugify from "slugify";
 // Services
 import api from "@/services/api";
 // Utils
@@ -24,11 +19,7 @@ import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultip
 import type { PagesResT } from "@lucid/types/src/pages";
 // Components
 import Panel from "@/components/Groups/Panel";
-import Form from "@/components/Groups/Form";
-import SectionHeading from "@/components/Blocks/SectionHeading";
-import PageSearchSelect from "@/components/Partials/SearchSelects/PageSearchSelect";
-import ValidParentPageSearchSelect from "@/components/Partials/SearchSelects/ValidParentPageSearchSelect";
-import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSelect";
+import PageFieldGroup from "@/components/FieldGroups/Page";
 
 interface CreateUpdatePagePanelProps {
   id?: Accessor<number | undefined>;
@@ -65,9 +56,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     return "update";
   });
   const languages = createMemo(() => contentLanguageStore.get.languages);
-  const hideSetParentPage = createMemo(() => {
-    return props.collection.disableHomepage === true || getIsHomepage();
-  });
 
   // ---------------------------------
   // Queries
@@ -116,11 +104,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
   // ---------------------------------
   // Memos
-  const hideSlugInput = createMemo(() => {
-    if (panelMode() === "create") return false;
-    return getIsHomepage();
-  });
-
   const updateData = createMemo(() => {
     return helpers.updateData(
       {
@@ -201,46 +184,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
   // ---------------------------------
   // Functions
-  const setSlugFromTitle = (language_id: number) => {
-    if (getIsHomepage()) return;
-    const item = getTranslations().find((t) => {
-      return t.language_id === language_id;
-    });
-
-    if (!item?.title) return;
-    if (item.slug) return;
-    const slugValue = slugify(item.title, { lower: true });
-    setTranslationsValues("slug", language_id, slugValue);
-  };
-  const setTranslationsValues = (
-    key: "title" | "slug" | "excerpt",
-    language_id: number,
-    value: string | null
-  ) => {
-    const translations = getTranslations();
-    const translation = translations.find((t) => {
-      return t.language_id === language_id;
-    });
-    if (!translation) {
-      const item: PagesResT["translations"][0] = {
-        title: null,
-        slug: null,
-        excerpt: null,
-        language_id,
-      };
-      item[key] = value;
-      translations.push(item);
-      setTranslations([...translations]);
-      return;
-    }
-    translation[key] = value;
-    setTranslations([...translations]);
-  };
-  const inputError = (index: number) => {
-    const errors = mutateErrors()?.errors?.body?.translations.children;
-    if (errors) return errors[index];
-    return undefined;
-  };
   const setDefualtTranslations = (translations: PagesResT["translations"]) => {
     const translationsValues = JSON.parse(
       JSON.stringify(translations)
@@ -384,158 +327,29 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       }}
     >
       {(lang) => (
-        <>
-          <For each={languages()}>
-            {(language, index) => (
-              <Show when={language.id === lang?.contentLanguage()}>
-                <SectionHeading
-                  title={T("details_lang", {
-                    code: `${language.code}`,
-                  })}
-                />
-                <Form.Input
-                  id="name"
-                  value={
-                    getTranslations().find((t) => {
-                      return t.language_id === language.id;
-                    })?.title || ""
-                  }
-                  onChange={(value) =>
-                    setTranslationsValues("title", language.id, value)
-                  }
-                  name={"title"}
-                  type="text"
-                  copy={{
-                    label: T("title"),
-                  }}
-                  onBlur={() => setSlugFromTitle(language.id)}
-                  errors={inputError(index())?.title}
-                  required={language.is_default}
-                />
-                <Show when={!hideSlugInput()}>
-                  <Form.Input
-                    id="slug"
-                    value={
-                      getTranslations().find((t) => {
-                        return t.language_id === language.id;
-                      })?.slug || ""
-                    }
-                    onChange={(value) =>
-                      setTranslationsValues("slug", language.id, value)
-                    }
-                    name={"slug"}
-                    type="text"
-                    copy={{
-                      label: T("slug"),
-                      info: T("page_slug_description"),
-                    }}
-                    errors={inputError(index())?.slug}
-                    required={language.is_default}
-                  />
-                </Show>
-                <Form.Textarea
-                  id="excerpt"
-                  value={
-                    getTranslations().find((t) => {
-                      return t.language_id === language.id;
-                    })?.excerpt || ""
-                  }
-                  onChange={(value) =>
-                    setTranslationsValues("excerpt", language.id, value)
-                  }
-                  name={"excerpt"}
-                  copy={{
-                    label: T("excerpt"),
-                  }}
-                  errors={inputError(index())?.excerpt}
-                />
-              </Show>
-            )}
-          </For>
-          <SectionHeading title={T("meta")} />
-          <Show when={props.collection.disableHomepage !== true}>
-            <Form.Checkbox
-              id="homepage"
-              value={getIsHomepage()}
-              onChange={(value) => {
-                setIsHomepage(value);
-                if (panelMode() === "create") return;
-                const translations = getTranslations();
-                for (let i = 0; i < translations.length; i++) {
-                  translations[i].slug = null;
-                }
-                setTranslations([...translations]);
-              }}
-              name={"homepage"}
-              copy={{
-                label: T("is_homepage"),
-                describedBy: T("is_homepage_description"),
-              }}
-              errors={mutateErrors()?.errors?.body?.homepage}
-            />
-          </Show>
-          <Show when={!hideSetParentPage()}>
-            <Switch>
-              <Match when={panelMode() === "create"}>
-                <PageSearchSelect
-                  id="parent_id"
-                  name="parent_id"
-                  collectionKey={props.collection.key}
-                  value={getParentId()}
-                  setValue={setParentId}
-                  copy={{
-                    label: T("parent_page"),
-                  }}
-                  errors={mutateErrors()?.errors?.body?.parent_id}
-                />
-              </Match>
-              <Match when={panelMode() === "update"}>
-                <ValidParentPageSearchSelect
-                  pageId={props.id?.() as number}
-                  id="parent_id"
-                  name="parent_id"
-                  collectionKey={props.collection.key}
-                  value={getParentId()}
-                  setValue={setParentId}
-                  copy={{
-                    label: T("parent_page"),
-                  }}
-                  errors={mutateErrors()?.errors?.body?.parent_id}
-                />
-              </Match>
-            </Switch>
-          </Show>
-          <Form.SelectMultiple
-            id="category_ids"
-            values={getSelectedCategories()}
-            onChange={setSelectedCategories}
-            name={"category_ids"}
-            copy={{
-              label: T("categories"),
-            }}
-            options={
-              categories.data?.data.map((cat) => {
-                return {
-                  value: cat.id,
-                  label: cat.title,
-                };
-              }) || []
-            }
-            errors={mutateErrors()?.errors?.body?.category_ids}
-          />
-          <Show when={panelMode() === "update"}>
-            <UserSearchSelect
-              id="author_id"
-              name="author_id"
-              value={getSelectedAuthor()}
-              setValue={setSelectedAuthor}
-              copy={{
-                label: T("author"),
-              }}
-              errors={mutateErrors()?.errors?.body?.author_id}
-            />
-          </Show>
-        </>
+        <PageFieldGroup
+          mode={panelMode()}
+          showTitles={true}
+          state={{
+            pageId: props.id,
+            contentLanguage: lang?.contentLanguage,
+            mutateErrors,
+            collection: props.collection,
+            categories: categories.data?.data || [],
+            getTranslations,
+            getIsHomepage,
+            getParentId,
+            getSelectedCategories,
+            getSelectedAuthor,
+          }}
+          setState={{
+            setTranslations,
+            setIsHomepage,
+            setParentId,
+            setSelectedCategories,
+            setSelectedAuthor,
+          }}
+        />
       )}
     </Panel.Root>
   );

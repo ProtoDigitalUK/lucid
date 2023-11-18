@@ -15,6 +15,7 @@ interface CategorySearchSelectProps {
   name: string;
   id: string;
   copy?: SelectProps["copy"];
+  theme?: "basic";
 }
 
 const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
@@ -54,6 +55,7 @@ const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
           label: cat.title,
         })) || []
       }
+      theme={props.theme}
     />
   );
 };

@@ -21,6 +21,7 @@ interface ValidParentPageSearchSelectProps {
   id: string;
   copy?: SelectProps["copy"];
   errors?: ErrorResult;
+  theme?: "basic";
 }
 
 const ValidParentPageSearchSelect: Component<
@@ -73,6 +74,7 @@ const ValidParentPageSearchSelect: Component<
         })) || []
       }
       errors={props.errors}
+      theme={props.theme}
     />
   );
 };

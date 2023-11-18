@@ -20,6 +20,7 @@ interface PageSearchSelectProps {
   id: string;
   copy?: SelectProps["copy"];
   errors?: ErrorResult;
+  theme?: "basic";
 }
 
 const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
@@ -69,6 +70,7 @@ const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
           })) || []
       }
       errors={props.errors}
+      theme={props.theme}
     />
   );
 };

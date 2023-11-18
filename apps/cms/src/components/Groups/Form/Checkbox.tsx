@@ -15,10 +15,12 @@ interface CheckboxInputProps {
   copy: {
     label?: string;
     describedBy?: string;
+    tooltip?: string;
   };
   required?: boolean;
   errors?: ErrorResult;
   noMargin?: boolean;
+  theme?: "basic";
 }
 
 export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
@@ -28,9 +30,10 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
   // Render
   return (
     <div
-      class={classnames("w-full", {
+      class={classnames("w-full relative", {
         "mb-0": props.noMargin,
-        "mb-5": !props.noMargin,
+        "mb-15 last:mb-0": !props.noMargin,
+        "mb-2.5 last:mb-0": !props.noMargin && props.theme === "basic",
       })}
     >
       <Checkbox.Root
@@ -77,6 +80,7 @@ export const CheckboxInput: Component<CheckboxInputProps> = (props) => {
       </Checkbox.Root>
 
       <Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
+      <Form.Tooltip copy={props.copy?.tooltip} theme={undefined} />
       <Form.ErrorMessage id={props.id} errors={props.errors} />
     </div>
   );

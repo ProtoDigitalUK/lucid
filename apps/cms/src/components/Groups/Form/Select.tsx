@@ -46,6 +46,7 @@ export interface SelectProps {
   noMargin?: boolean;
   noClear?: boolean;
   hasError?: boolean;
+  theme?: "basic";
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -98,7 +99,8 @@ export const Select: Component<SelectProps> = (props) => {
     <div
       class={classNames("w-full", {
         "mb-0": props.noMargin,
-        "mb-5": !props.noMargin,
+        "mb-15 last:mb-0": !props.noMargin,
+        "mb-2.5 last:mb-0": !props.noMargin && props.theme === "basic",
       })}
     >
       {/* Select */}
@@ -111,11 +113,13 @@ export const Select: Component<SelectProps> = (props) => {
       >
         <div
           class={classNames(
-            "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",
+            "flex flex-col transition-colors duration-200 ease-in-out relative",
             {
-              "border-secondary bg-backgroundAccentH": inputFocus(),
+              "border-secondary bg-backgroundAccentH":
+                inputFocus() && props.theme !== "basic",
               "border-error":
                 props.errors?.message !== undefined || props.hasError,
+              "bg-backgroundAccent rounded-md border": props.theme !== "basic",
             }
           )}
         >
@@ -125,13 +129,18 @@ export const Select: Component<SelectProps> = (props) => {
             label={props.copy?.label}
             focused={inputFocus()}
             required={props.required}
+            theme={props.theme}
           />
           {/* Trigger */}
           <DropdownMenu.Trigger
             class={classNames(
-              "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium w-full flex justify-between",
+              "focus:outline-none px-2.5 text-sm text-title font-medium w-full flex justify-between",
               {
                 "pt-2 h-10 flex items-center": props.copy?.label === undefined,
+                "bg-container border border-border flex items-center h-10 rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
+                  props.theme === "basic",
+                "bg-transparent pb-2 pt-1 rounded-b-md":
+                  props.theme !== "basic",
               }
             )}
             onFocus={() => setInputFocus(true)}
@@ -141,7 +150,6 @@ export const Select: Component<SelectProps> = (props) => {
             <FaSolidSort size={16} class="fill-title ml-1" />
           </DropdownMenu.Trigger>
         </div>
-
         <DropdownContent
           options={{
             anchorWidth: true,

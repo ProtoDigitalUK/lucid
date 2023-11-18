@@ -5,10 +5,12 @@ import {
   createMemo,
   createEffect,
   Show,
+  Switch,
+  Match,
 } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import shortUUID from "short-uuid";
-import { FaSolidTrash } from "solid-icons/fa";
+import { FaSolidRobot, FaSolidTrash } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
 // Stores
@@ -16,7 +18,8 @@ import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import { CollectionResT } from "@lucid/types/src/collections";
+import type { CollectionResT } from "@lucid/types/src/collections";
+import type { PagesResT } from "@lucid/types/src/pages";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
@@ -32,6 +35,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 
   // ------------------------------
   // State
+  const [getTranslations, setTranslations] = createSignal<
+    PagesResT["translations"]
+  >([]);
   const [getParentId, setParentId] = createSignal<number | undefined>(
     undefined
   );
@@ -48,7 +54,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
   // ----------------------------------
-  // Memos
+  // Params
   const pageId = createMemo(() => Number(params.id));
   const collectionKey = createMemo(() => params.collectionKey);
 
@@ -103,6 +109,8 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     },
   });
 
+  // ----------------------------------
+  // Memos
   const isLoading = createMemo(() => {
     return (
       categories.isLoading ||
@@ -110,6 +118,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       page.isLoading ||
       brickConfig.isLoading
     );
+  });
+  const mutationErrors = createMemo(() => {
+    return undefined;
   });
 
   // ---------------------------------
@@ -161,9 +172,10 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // Render
   return (
     <>
-      <header class="h-[60px] w-full bg-container border-b border-border px-15 md:px-30 flex items-center justify-between">
-        <h1 class="text-unfocused font-normal text-xl">
-          #{page.data?.data.id}
+      <header class="h-[60px] w-full bg-container border-b border-border px-15 flex items-center justify-between">
+        <h1 class="text-xl">
+          {T("edit_page_route_title")}
+          <span class="text-unfocused ml-2.5">#{page.data?.data.id}</span>
         </h1>
         <div class="flex items-center gap-2.5">
           <div class="min-w-[250px]">
@@ -191,29 +203,56 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         </div>
       </header>
       <div class="relative h-[calc(100vh-60px)] w-full flex">
-        {/* Inputs */}
-        <div class="w-[500px] max-h-screen overflow-y-auto p-15 md:p-30">
-          <PageBuilder.Sidebar
-            data={{
-              pageId: pageId(),
-              collection: collection.data?.data,
-              categories: categories.data?.data || [],
-            }}
-            state={{
-              getParentId,
-              setParentId,
-              getIsHomepage,
-              setIsHomepage,
-              getSelectedCategories,
-              setSelectedCategories,
-              getSelectedAuthor,
-              setSelectedAuthor,
-            }}
-          />
+        {/* Sidebar Bricks & page fields */}
+        <div class="w-[500px] max-h-screen overflow-y-auto p-15">
+          <Switch>
+            <Match when={!isLoading()}>
+              <PageBuilder.Sidebar
+                state={{
+                  pageId: pageId(),
+                  collection: collection.data?.data as CollectionResT,
+                  categories: categories.data?.data || [],
+                  mutateErrors: mutationErrors,
+                  // Page Details
+                  getTranslations,
+                  getParentId,
+                  getIsHomepage,
+                  getSelectedCategories,
+                  getSelectedAuthor,
+                }}
+                setState={{
+                  // Page Details
+                  setTranslations,
+                  setParentId,
+                  setIsHomepage,
+                  setSelectedCategories,
+                  setSelectedAuthor,
+                }}
+              />
+            </Match>
+          </Switch>
         </div>
         {/* Build */}
         <div class="h-full w-full p-15 pl-0">
-          <div class="w-full h-[calc(100%-59px)] bg-primary rounded-md brick-pattern relative">
+          <div class="h-[40px] w-full mb-15 flex items-center">
+            <Button
+              type="button"
+              theme="primary"
+              size="small"
+              onClick={() => {
+                setSelectBrickOpen(true);
+              }}
+            >
+              {T("add_brick")}
+            </Button>
+            <button
+              class="h-10 w-10 rounded-full ml-2.5 bg-secondary flex items-center justify-center fill-white text-xl hover:bg-secondaryH duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+              disabled
+            >
+              <FaSolidRobot />
+            </button>
+          </div>
+          <div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
             <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
               <PageBuilder.Builder
                 data={{
@@ -233,19 +272,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                 }}
               />
             </div>
-          </div>
-          <div class="w-full mt-15">
-            <Button
-              type="button"
-              theme="primary"
-              size="small"
-              onClick={() => {
-                setSelectBrickOpen(true);
-              }}
-              classes="w-full"
-            >
-              {T("add_brick")}
-            </Button>
           </div>
         </div>
       </div>

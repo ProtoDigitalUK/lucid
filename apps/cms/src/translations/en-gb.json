@@ -171,6 +171,8 @@
   "template": "Template",
   "subject": "Subject",
   "to": "To",
+  "constructing_your_page": "Constructing your page",
+  "get_started_by_adding_bricks": "Get started by adding bricks to your page. Manage the content and layout of these to determine the structure of your page.",
   "emails": "Emails",
   "first_attempt": "First Attempt",
   "last_attempt": "Last Attempt",

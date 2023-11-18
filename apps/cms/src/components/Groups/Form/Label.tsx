@@ -7,7 +7,7 @@ interface LabelProps {
   focused?: boolean;
   required?: boolean;
   noPadding?: boolean;
-  theme?: "slim";
+  theme?: "basic";
 }
 
 export const Label: Component<LabelProps> = (props) => {
@@ -19,7 +19,7 @@ export const Label: Component<LabelProps> = (props) => {
           "block text-sm transition-colors duration-200 ease-in-out",
           {
             "text-secondaryH": props.focused,
-            "pt-2 px-2.5": props.noPadding !== true && props.theme !== "slim",
+            "pt-2 px-2.5": props.noPadding !== true && props.theme !== "basic",
             "mb-2": props.noPadding === true,
           }
         )}

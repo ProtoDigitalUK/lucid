@@ -1,4 +1,5 @@
-import { Component, For, Switch, Match, createMemo } from "solid-js";
+import T from "@/translations/index";
+import { Component, For, Switch, Match, createMemo, Show } from "solid-js";
 // Assets
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
@@ -56,24 +57,37 @@ export const Builder: Component<BuilderProps> = (props) => {
     <>
       <div class="w-full min-h-full flex flex-col">
         {/* Fixed Top Zone */}
-        <ul>
-          <For each={topFixedBricks()}>
-            {(brick) => (
-              <PageBuilder.Brick
-                data={{
-                  brick,
-                  brickConfig: props.data.brickConfig,
-                }}
-              />
-            )}
-          </For>
-        </ul>
+        <Show when={topFixedBricks().length > 0}>
+          <ul class="mb-15">
+            <For each={topFixedBricks()}>
+              {(brick) => (
+                <PageBuilder.Brick
+                  data={{
+                    brick,
+                    brickConfig: props.data.brickConfig,
+                  }}
+                />
+              )}
+            </For>
+          </ul>
+        </Show>
         {/* Builder Zone */}
         <div class="flex flex-col items-center flex-grow">
           <Switch>
             <Match when={builderBricks().length === 0}>
-              <div class="my-10 w-full flex items-center justify-center">
-                <img src={missingContent} class="h-[150px]" />
+              <div class="w-full flex items-center justify-center h-full border border-primaryA rounded-md flex-grow p-10">
+                <div class="max-w-lg mx-auto w-full text-center">
+                  <img
+                    src={missingContent}
+                    class="w-full max-w-[240px] mx-auto mb-10"
+                  />
+                  <h3 class="text-white mb-15">
+                    {T("constructing_your_page")}
+                  </h3>
+                  <p class="text-white text-sm">
+                    {T("get_started_by_adding_bricks")}
+                  </p>
+                </div>
               </div>
             </Match>
             <Match when={builderBricks().length > 0}>
@@ -93,18 +107,20 @@ export const Builder: Component<BuilderProps> = (props) => {
           </Switch>
         </div>
         {/* Fixed Bottom/Sidebar Zone */}
-        <ul class="flex justify-end">
-          <For each={bottomFixedBricks()}>
-            {(brick) => (
-              <PageBuilder.Brick
-                data={{
-                  brick,
-                  brickConfig: props.data.brickConfig,
-                }}
-              />
-            )}
-          </For>
-        </ul>
+        <Show when={bottomFixedBricks().length > 0}>
+          <ul class="flex justify-end mt-15">
+            <For each={bottomFixedBricks()}>
+              {(brick) => (
+                <PageBuilder.Brick
+                  data={{
+                    brick,
+                    brickConfig: props.data.brickConfig,
+                  }}
+                />
+              )}
+            </For>
+          </ul>
+        </Show>
       </div>
     </>
   );

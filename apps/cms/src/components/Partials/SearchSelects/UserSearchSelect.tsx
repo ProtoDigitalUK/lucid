@@ -16,6 +16,7 @@ interface UserSearchSelectProps {
   id: string;
   copy?: SelectProps["copy"];
   errors?: ErrorResult;
+  theme?: "basic";
 }
 
 const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
@@ -54,6 +55,7 @@ const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
         })) || []
       }
       errors={props.errors}
+      theme={props.theme}
     />
   );
 };

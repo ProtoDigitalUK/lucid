@@ -61,22 +61,12 @@ interface PanelProps {
 }
 
 export const Panel: Component<PanelProps> = (props) => {
-  const getDefaultContentLanguage = () => {
-    if (!props.langauge?.useDefaultContentLanguage)
-      return contentLanguageStore.get.contentLanguage;
-    const defaultLanguage = contentLanguageStore.get.languages.find(
-      (language) => language.is_default
-    );
-    if (defaultLanguage) return defaultLanguage.id;
-    return contentLanguageStore.get.contentLanguage;
-  };
-
   // ------------------------------
   // State
   const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
   const [contentLanguage, setContentLanguage] = createSignal<
     number | undefined
-  >(getDefaultContentLanguage());
+  >(undefined);
 
   // ------------------------------
   // Refs
@@ -94,6 +84,15 @@ export const Panel: Component<PanelProps> = (props) => {
       }
     });
   };
+  const getDefaultContentLanguage = () => {
+    if (!props.langauge?.useDefaultContentLanguage)
+      return contentLanguageStore.get.contentLanguage;
+    const defaultLanguage = contentLanguageStore.get.languages.find(
+      (language) => language.is_default
+    );
+    if (defaultLanguage) return defaultLanguage.id;
+    return contentLanguageStore.get.contentLanguage;
+  };
 
   // ------------------------------
   // Mount
@@ -109,6 +108,12 @@ export const Panel: Component<PanelProps> = (props) => {
       setContentLanguage(getDefaultContentLanguage());
       setBodyHeightValue();
     }
+  });
+
+  createEffect(() => {
+    const defaultLang = getDefaultContentLanguage();
+    if (contentLanguage() === undefined && defaultLang !== undefined)
+      setContentLanguage(defaultLang);
   });
 
   // ------------------------------

@@ -22,6 +22,7 @@ interface TextareaProps {
   disabled?: boolean;
   errors?: ErrorResult;
   noMargin?: boolean;
+  theme?: "basic";
 }
 
 export const Textarea: Component<TextareaProps> = (props) => {
@@ -38,10 +39,12 @@ export const Textarea: Component<TextareaProps> = (props) => {
     >
       <div
         class={classnames(
-          "flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out relative",
+          "flex flex-col transition-colors duration-200 ease-in-out relative",
           {
-            "border-secondary bg-backgroundAccentH": inputFocus(),
+            "border-secondary bg-backgroundAccentH":
+              inputFocus() && props.theme !== "basic",
             "border-error": props.errors?.message !== undefined,
+            "bg-backgroundAccent rounded-md border": props.theme !== "basic",
           }
         )}
       >
@@ -50,12 +53,17 @@ export const Textarea: Component<TextareaProps> = (props) => {
           label={props.copy?.label}
           focused={inputFocus()}
           required={props.required}
+          theme={props.theme}
         />
         <textarea
           class={classnames(
-            "bg-transparent focus:outline-none px-2.5 pb-2 pt-1 rounded-b-md text-sm text-title font-medium resize-none w-full h-40",
+            "focus:outline-none text-sm text-title font-medium resize-none w-full h-40",
             {
               "pt-2": props.copy?.label === undefined,
+              "bg-container border border-border rounded-md mt-1 p-2.5 focus:border-secondary duration-200 transition-colors":
+                props.theme === "basic",
+              "bg-transparent pb-2 px-2.5 pt-1 rounded-b-md":
+                props.theme !== "basic",
             }
           )}
           onKeyDown={(e) => {

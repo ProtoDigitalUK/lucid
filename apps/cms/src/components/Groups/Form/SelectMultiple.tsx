@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { Component, Show, createSignal, For, Switch, Match } from "solid-js";
-import classNames from "classnames";
+import classnames from "classnames";
 // Types
 import { ErrorResult } from "@/types/api";
 // Components
@@ -30,6 +30,7 @@ interface SelectMultipleProps {
   disabled?: boolean;
   errors?: ErrorResult;
   noMargin?: boolean;
+  theme?: "basic";
 }
 
 export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
@@ -54,9 +55,10 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
   // Render
   return (
     <div
-      class={classNames("w-full", {
+      class={classnames("w-full", {
         "mb-0": props.noMargin,
-        "mb-5": !props.noMargin,
+        "mb-15 last:mb-0": !props.noMargin,
+        "mb-2.5 last:mb-0": !props.noMargin && props.theme === "basic",
       })}
     >
       {/* Select */}
@@ -68,11 +70,13 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
         gutter={5}
       >
         <div
-          class={classNames(
-            "relative flex flex-col border rounded-md bg-backgroundAccent transition-colors duration-200 ease-in-out w-full group",
+          class={classnames(
+            "flex flex-col transition-colors duration-200 ease-in-out relative",
             {
+              "border-secondary bg-backgroundAccentH":
+                inputFocus() && props.theme !== "basic",
               "border-error": props.errors?.message !== undefined,
-              "border-secondary bg-backgroundAccentH": inputFocus(),
+              "bg-backgroundAccent rounded-md border": props.theme !== "basic",
             }
           )}
         >
@@ -81,14 +85,18 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
             id={props.id}
             label={props.copy?.label}
             required={props.required}
+            theme={props.theme}
           />
           {/* Select */}
           <div
-            class={classNames(
-              "w-full pointer-events-none z-10 bg-transparent focus:outline-none px-2.5 pb-2 rounded-b-md text-sm text-title  font-medium justify-between flex ",
+            class={classnames(
+              "w-full pointer-events-none z-10 focus:outline-none px-2.5 text-sm text-title font-medium justify-between flex ",
               {
                 "pt-2 min-h-[40px]": props.copy?.label === undefined,
                 "min-h-[32px] mt-1": props.copy?.label !== undefined,
+                "bg-container border border-border flex items-center min-h-[40px] rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
+                  props.theme === "basic",
+                "bg-transparent pb-2 rounded-b-md": props.theme !== "basic",
               }
             )}
           >
