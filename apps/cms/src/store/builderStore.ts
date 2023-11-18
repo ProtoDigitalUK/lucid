@@ -28,7 +28,7 @@ export interface BrickDataT {
   groups: Array<BrickStoreGroupT>;
   order: number;
   type: "builder" | "fixed";
-  position?: "top" | "bottom";
+  position?: "top" | "bottom" | "sidebar";
 }
 
 type BuilderStoreT = {

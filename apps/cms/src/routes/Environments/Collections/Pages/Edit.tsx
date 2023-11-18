@@ -11,11 +11,13 @@ import {
 import { useParams, useNavigate } from "@solidjs/router";
 import shortUUID from "short-uuid";
 import { FaSolidRobot, FaSolidTrash } from "solid-icons/fa";
+import { setDefualtTranslations } from "@/components/FieldGroups/Page";
 // Services
 import api from "@/services/api";
 // Stores
 import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { CollectionResT } from "@lucid/types/src/collections";
@@ -111,6 +113,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 
   // ----------------------------------
   // Memos
+  const languages = createMemo(() => contentLanguageStore.get.languages);
   const isLoading = createMemo(() => {
     return (
       categories.isLoading ||
@@ -128,7 +131,12 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   createEffect(() => {
     if (page.isSuccess && categories.isSuccess && collection.isSuccess) {
       builderStore.get.reset();
-
+      setTranslations(
+        setDefualtTranslations({
+          translations: page.data?.data.translations || [],
+          languages: languages(),
+        })
+      );
       setParentId(page.data?.data.parent_id || undefined);
       setIsHomepage(page.data?.data.homepage || false);
       setSelectedCategories(
@@ -159,9 +167,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
               groups: [],
               type: "fixed",
               order: i,
-              position: (brick.position === "top" ? "top" : "bottom") as
-                | "top"
-                | "bottom",
+              position: brick.position,
             };
           })
       );
@@ -213,7 +219,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   collection: collection.data?.data as CollectionResT,
                   categories: categories.data?.data || [],
                   mutateErrors: mutationErrors,
-                  // Page Details
                   getTranslations,
                   getParentId,
                   getIsHomepage,
@@ -221,12 +226,14 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   getSelectedAuthor,
                 }}
                 setState={{
-                  // Page Details
                   setTranslations,
                   setParentId,
                   setIsHomepage,
                   setSelectedCategories,
                   setSelectedAuthor,
+                }}
+                data={{
+                  brickConfig: brickConfig.data?.data || [],
                 }}
               />
             </Match>

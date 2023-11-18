@@ -19,7 +19,10 @@ import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultip
 import type { PagesResT } from "@lucid/types/src/pages";
 // Components
 import Panel from "@/components/Groups/Panel";
-import PageFieldGroup from "@/components/FieldGroups/Page";
+import PageFieldGroup, {
+  setDefualtTranslations,
+  parseTranslationBody,
+} from "@/components/FieldGroups/Page";
 
 interface CreateUpdatePagePanelProps {
   id?: Accessor<number | undefined>;
@@ -184,49 +187,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
   // ---------------------------------
   // Functions
-  const setDefualtTranslations = (translations: PagesResT["translations"]) => {
-    const translationsValues = JSON.parse(
-      JSON.stringify(translations)
-    ) as PagesResT["translations"];
-
-    const languagesValues = languages();
-    for (let i = 0; i < languagesValues.length; i++) {
-      const language = languagesValues[i];
-      const translation = translationsValues.find((t) => {
-        return t.language_id === language.id;
-      });
-      if (!translation) {
-        const item: PagesResT["translations"][0] = {
-          title: null,
-          slug: null,
-          excerpt: null,
-          language_id: language.id,
-        };
-        translationsValues.push(item);
-      }
-    }
-
-    setTranslations(
-      translationsValues.map((translation) => {
-        if (translation.slug && translation.slug !== "/") {
-          translation.slug = translation.slug.replace(/^\//, "");
-        }
-        return translation;
-      })
-    );
-  };
-  const parseTranslationBody = (translations?: PagesResT["translations"]) => {
-    if (!translations) return undefined;
-    const homepage = getIsHomepage();
-    return translations.map((translation) => {
-      return {
-        title: translation.title,
-        slug: homepage ? null : translation.slug,
-        excerpt: translation.excerpt,
-        language_id: translation.language_id,
-      };
-    });
-  };
 
   // ---------------------------------
   // Effects
@@ -234,7 +194,12 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
     if (page.isSuccess && categories.isSuccess) {
       setParentId(page.data?.data.parent_id || undefined);
       setIsHomepage(page.data?.data.homepage || false);
-      setDefualtTranslations(page.data?.data.translations || []);
+      setTranslations(
+        setDefualtTranslations({
+          translations: page.data?.data.translations || [],
+          languages: languages(),
+        })
+      );
       setSelectedCategories(
         categories.data?.data
           .filter((cat) => {
@@ -254,7 +219,12 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   createEffect(() => {
     if (panelMode() !== "create") return;
     if (getTranslations().length > 0) return;
-    setDefualtTranslations([]);
+    setTranslations(
+      setDefualtTranslations({
+        translations: [],
+        languages: languages(),
+      })
+    );
   });
 
   createEffect(() => {
@@ -279,7 +249,10 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
               parent_id: body.parent_id,
               category_ids: body.category_ids,
               author_id: body.author_id,
-              translations: parseTranslationBody(body.translations),
+              translations: parseTranslationBody({
+                translations: body.translations,
+                isHomepage: getIsHomepage(),
+              }),
             },
             headers: {
               "lucid-environment": environment() || "",
@@ -288,7 +261,11 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         } else {
           createPage.action.mutate({
             body: {
-              translations: parseTranslationBody(getTranslations()) || [],
+              translations:
+                parseTranslationBody({
+                  translations: getTranslations(),
+                  isHomepage: getIsHomepage(),
+                }) || [],
               collection_key: props.collection.key,
               homepage: getIsHomepage(),
               parent_id: getParentId(),

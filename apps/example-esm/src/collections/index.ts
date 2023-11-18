@@ -23,6 +23,11 @@ export const PageCollection = new CollectionBuilder("page", {
       type: "fixed",
       position: "bottom",
     },
+    {
+      key: "page_meta",
+      type: "fixed",
+      position: "sidebar",
+    },
   ],
 });
 

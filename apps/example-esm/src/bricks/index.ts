@@ -146,3 +146,13 @@ export const DefaultMetaBrick = new BrickBuilder("default_meta")
     key: "meta_description",
     title: "Meta Description",
   });
+
+export const PageMetaBrick = new BrickBuilder("page_meta")
+  .addText({
+    key: "meta_title",
+    title: "Meta Title",
+  })
+  .addText({
+    key: "meta_description",
+    title: "Meta Description",
+  });

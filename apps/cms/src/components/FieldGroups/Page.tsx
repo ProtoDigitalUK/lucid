@@ -13,6 +13,7 @@ import slugify from "slugify";
 // Stores
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
+import type { LanguageResT } from "@lucid/types/src/language";
 import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { PagesResT } from "@lucid/types/src/pages";
@@ -288,6 +289,54 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
       </Show>
     </>
   );
+};
+
+export const setDefualtTranslations = (data: {
+  translations: PagesResT["translations"];
+  languages: LanguageResT[];
+}) => {
+  const translationsValues = JSON.parse(
+    JSON.stringify(data.translations)
+  ) as PagesResT["translations"];
+
+  const languagesValues = data.languages;
+  for (let i = 0; i < languagesValues.length; i++) {
+    const language = languagesValues[i];
+    const translation = translationsValues.find((t) => {
+      return t.language_id === language.id;
+    });
+    if (!translation) {
+      const item: PagesResT["translations"][0] = {
+        title: null,
+        slug: null,
+        excerpt: null,
+        language_id: language.id,
+      };
+      translationsValues.push(item);
+    }
+  }
+
+  return translationsValues.map((translation) => {
+    if (translation.slug && translation.slug !== "/") {
+      translation.slug = translation.slug.replace(/^\//, "");
+    }
+    return translation;
+  });
+};
+
+export const parseTranslationBody = (data: {
+  translations?: PagesResT["translations"];
+  isHomepage: boolean;
+}) => {
+  if (!data.translations) return undefined;
+  return data.translations.map((translation) => {
+    return {
+      title: translation.title,
+      slug: data.isHomepage ? null : translation.slug,
+      excerpt: translation.excerpt,
+      language_id: translation.language_id,
+    };
+  });
 };
 
 export default PageFieldGroup;
