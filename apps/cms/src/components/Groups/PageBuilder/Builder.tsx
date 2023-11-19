@@ -1,9 +1,18 @@
 import T from "@/translations/index";
-import { Component, For, Switch, Match, createMemo, Show } from "solid-js";
+import {
+  Component,
+  For,
+  Switch,
+  Match,
+  createMemo,
+  Show,
+  Accessor,
+} from "solid-js";
 // Assets
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { APIErrorResponse } from "@/types/api";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components
@@ -11,10 +20,8 @@ import PageBuilder from "@/components/Groups/PageBuilder";
 
 interface BuilderProps {
   state: {
-    setOpenSelectBrick: (_order?: number) => void;
-  };
-  data: {
     brickConfig: BrickConfigT[];
+    mutateErrors: Accessor<APIErrorResponse | undefined>;
   };
 }
 
@@ -62,9 +69,10 @@ export const Builder: Component<BuilderProps> = (props) => {
             <For each={topFixedBricks()}>
               {(brick) => (
                 <PageBuilder.Brick
-                  data={{
+                  state={{
                     brick,
-                    brickConfig: props.data.brickConfig,
+                    brickConfig: props.state.brickConfig,
+                    mutateErrors: props.state.mutateErrors,
                   }}
                 />
               )}
@@ -95,9 +103,10 @@ export const Builder: Component<BuilderProps> = (props) => {
                 <For each={builderBricks()}>
                   {(brick) => (
                     <PageBuilder.Brick
-                      data={{
+                      state={{
                         brick,
-                        brickConfig: props.data.brickConfig,
+                        brickConfig: props.state.brickConfig,
+                        mutateErrors: props.state.mutateErrors,
                       }}
                     />
                   )}
@@ -112,9 +121,10 @@ export const Builder: Component<BuilderProps> = (props) => {
             <For each={bottomFixedBricks()}>
               {(brick) => (
                 <PageBuilder.Brick
-                  data={{
+                  state={{
                     brick,
-                    brickConfig: props.data.brickConfig,
+                    brickConfig: props.state.brickConfig,
+                    mutateErrors: props.state.mutateErrors,
                   }}
                 />
               )}

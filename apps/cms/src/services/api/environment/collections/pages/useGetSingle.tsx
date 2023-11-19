@@ -11,7 +11,7 @@ interface QueryParams {
   location: {
     id?: Accessor<number | undefined> | number;
   };
-  includes: {
+  include: {
     bricks: Accessor<boolean | undefined> | boolean;
   };
   headers: {
@@ -20,9 +20,9 @@ interface QueryParams {
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() =>
-    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
-  );
+  const queryParams = createMemo(() => {
+    return serviceHelpers.getQueryParams<QueryParams>(params.queryParams);
+  });
   const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
   // -----------------------------
@@ -36,6 +36,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     queryFn: () =>
       request<APIResponse<PagesResT>>({
         url: `/api/v1/pages/${queryParams().location?.id}`,
+        query: queryParams(),
         config: {
           method: "GET",
           headers: queryParams().headers,
@@ -44,6 +45,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
+    refetchOnWindowFocus: params.refetchOnWindowFocus,
   }));
 };
 

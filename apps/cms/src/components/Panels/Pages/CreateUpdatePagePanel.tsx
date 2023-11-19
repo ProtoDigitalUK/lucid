@@ -79,7 +79,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
       location: {
         id: props?.id,
       },
-      includes: {
+      include: {
         bricks: false,
       },
       headers: {
@@ -139,8 +139,8 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
   });
 
   const mutateIsLoading = createMemo(() => {
-    if (panelMode() === "create") return createPage.action.isLoading;
-    return updatePage.action.isLoading;
+    if (panelMode() === "create") return createPage.action.isPending;
+    return updatePage.action.isPending;
   });
 
   const mutateErrors = createMemo(() => {

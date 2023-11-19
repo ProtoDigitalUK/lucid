@@ -3,31 +3,23 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
+import type { BrickDataT } from "@/store/builderStore";
 
 interface Params {
   id: number;
+  collectionKey: string;
   body: {
-    homepage?: boolean;
-    published?: boolean;
-    parent_id?: number | null;
-    category_ids?: number[];
-    author_id?: number | null;
-    translations?: {
-      title: string | null;
-      slug: string | null;
-      excerpt: string | null;
-      language_id: number;
-    }[];
+    bricks: Array<BrickDataT>;
   };
   headers: {
     "lucid-environment": string;
   };
 }
 
-export const updateSingleReq = (params: Params) => {
+export const updateBricksReq = (params: Params) => {
   return request<APIResponse<null>>({
-    url: `/api/v1/pages/${params.id}`,
+    url: `/api/v1/pages/${params.collectionKey}/${params.id}/bricks`,
     csrf: true,
     config: {
       method: "PATCH",
@@ -39,35 +31,31 @@ export const updateSingleReq = (params: Params) => {
   });
 };
 
-interface UseUpdateSingleProps {
+interface UseUpdateBricksProps {
   onSuccess?: () => void;
   onError?: () => void;
-  collectionName: string;
 }
 
-const useUpdateSingle = (props: UseUpdateSingleProps) => {
+const useUpdateBricks = (props: UseUpdateBricksProps) => {
   // -----------------------------
   // Mutation
   return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
-    mutationFn: updateSingleReq,
+    mutationFn: updateBricksReq,
     successToast: {
       title: T("update_toast_title", {
-        name: props.collectionName || "Content",
+        name: "Bricks",
       }),
       message: T("update_toast_message", {
         name: {
-          value: props.collectionName || "Content",
+          value: "Bricks",
           toLowerCase: true,
         },
       }),
     },
-    invalidates: [
-      "environment.collections.pages.getMultiple",
-      "environment.collections.pages.getSingle",
-    ],
+    invalidates: ["environment.collections.pages.getSingle"],
     onSuccess: props?.onSuccess,
     onError: props?.onError,
   });
 };
 
-export default useUpdateSingle;
+export default useUpdateBricks;

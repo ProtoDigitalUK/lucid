@@ -9,11 +9,14 @@ import {
   Match,
 } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
-import shortUUID from "short-uuid";
+import { parseTranslationBody } from "@/components/FieldGroups/Page";
+// import shortUUID from "short-uuid";
 import { FaSolidRobot, FaSolidTrash } from "solid-icons/fa";
 import { setDefualtTranslations } from "@/components/FieldGroups/Page";
 // Services
 import api from "@/services/api";
+// Utils
+import helpers from "@/utils/helpers";
 // Stores
 import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
@@ -90,14 +93,15 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       location: {
         id: pageId(),
       },
-      includes: {
-        bricks: false,
+      include: {
+        bricks: true,
       },
       headers: {
         "lucid-environment": environment,
       },
     },
     enabled: () => !!pageId(),
+    refetchOnWindowFocus: false,
   });
   const brickConfig = api.brickConfig.useGetAll({
     queryParams: {
@@ -112,8 +116,55 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   });
 
   // ----------------------------------
+  // Mutations
+  const updatePage = api.environment.collections.pages.useUpdateSingle({
+    collectionName: collection.data?.data.singular || "",
+  });
+  const updateBricks = api.environment.collections.pages.useUpdateBricks({});
+
+  // ----------------------------------
   // Memos
   const languages = createMemo(() => contentLanguageStore.get.languages);
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
+
+  const brickTranslationErrors = createMemo(() => {
+    const errors = updateBricks.errors()?.errors?.body?.fields;
+    if (errors === undefined) return false;
+    return (
+      errors.filter((field) => field.language_id !== contentLanguage()).length >
+      0
+    );
+  });
+  const pageTranslationErrors = createMemo(() => {
+    const errors = updatePage.errors()?.errors?.body?.translations.children;
+    if (errors) {
+      return errors.length > 0;
+    }
+    return false;
+  });
+  const updateData = createMemo(() => {
+    return helpers.updateData(
+      {
+        homepage: page.data?.data.homepage,
+        parent_id: page.data?.data.parent_id || null,
+        category_ids: page.data?.data.categories || [],
+        author_id: page.data?.data.author?.id || null,
+        translations: page.data?.data.translations || [],
+      },
+      {
+        homepage: getIsHomepage(),
+        parent_id: getParentId() || null,
+        category_ids: getSelectedCategories().map(
+          (cat) => cat.value
+        ) as number[],
+        author_id: getSelectedAuthor() || null,
+        translations: getTranslations(),
+      }
+    );
+  });
+
   const isLoading = createMemo(() => {
     return (
       categories.isLoading ||
@@ -122,9 +173,50 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       brickConfig.isLoading
     );
   });
-  const mutationErrors = createMemo(() => {
-    return undefined;
+  const isSuccess = createMemo(() => {
+    return (
+      categories.isSuccess &&
+      collection.isSuccess &&
+      page.isSuccess &&
+      brickConfig.isSuccess
+    );
   });
+  const isSaving = createMemo(() => {
+    return updatePage.action.isPending || updateBricks.action.isPending;
+  });
+
+  // ---------------------------------
+  // Functions
+  const savePage = async () => {
+    updateBricks.action.mutate({
+      id: pageId(),
+      collectionKey: collection.data?.data.key || "",
+      body: {
+        bricks: builderStore.get.bricks,
+      },
+      headers: {
+        "lucid-environment": environment() || "",
+      },
+    });
+
+    const body = updateData().data;
+    updatePage.action.mutate({
+      id: pageId(),
+      body: {
+        homepage: body.homepage,
+        parent_id: body.parent_id,
+        category_ids: body.category_ids,
+        author_id: body.author_id,
+        translations: parseTranslationBody({
+          translations: body.translations,
+          isHomepage: getIsHomepage(),
+        }),
+      },
+      headers: {
+        "lucid-environment": environment() || "",
+      },
+    });
+  };
 
   // ---------------------------------
   // Effects
@@ -153,24 +245,27 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       );
       setSelectedAuthor(page.data?.data.author?.id || undefined);
 
+      builderStore.set("bricks", page.data.data.bricks || []);
+      // merge fixed bricks if they dont exist in the page bricks array
+
       // TODO: add better solution for this
       // Set fixed
-      builderStore.set(
-        "bricks",
-        collection.data.data.bricks
-          .filter((brick) => brick.type === "fixed")
-          .map((brick, i) => {
-            return {
-              id: `temp-${shortUUID.generate()}}`,
-              key: brick.key,
-              fields: [],
-              groups: [],
-              type: "fixed",
-              order: i,
-              position: brick.position,
-            };
-          })
-      );
+      // builderStore.set(
+      //   "bricks",
+      //   collection.data.data.bricks
+      //     .filter((brick) => brick.type === "fixed")
+      //     .map((brick, i) => {
+      //       return {
+      //         id: `temp-${shortUUID.generate()}}`,
+      //         key: brick.key,
+      //         fields: [],
+      //         groups: [],
+      //         type: "fixed",
+      //         order: i,
+      //         position: brick.position,
+      //       };
+      //     })
+      // );
     }
   });
 
@@ -185,14 +280,11 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         </h1>
         <div class="flex items-center gap-2.5">
           <div class="min-w-[250px]">
-            <ContentLanguageSelect />
+            <ContentLanguageSelect
+              hasError={brickTranslationErrors() || pageTranslationErrors()}
+            />
           </div>
-          <Button
-            type="button"
-            theme="primary"
-            size="small"
-            onClick={() => alert("save page")}
-          >
+          <Button type="button" theme="primary" size="small" onClick={savePage}>
             {T("save", {
               singular: collection.data?.data.singular || "",
             })}
@@ -208,17 +300,24 @@ const EnvCollectionsPagesEditRoute: Component = () => {
           </Button>
         </div>
       </header>
-      <div class="relative h-[calc(100vh-60px)] w-full flex">
-        {/* Sidebar Bricks & page fields */}
-        <div class="w-[500px] max-h-screen overflow-y-auto p-15">
-          <Switch>
-            <Match when={!isLoading()}>
+      <Switch>
+        <Match when={isLoading()}>
+          <div class="fixed top-[60px] left-[70px] bottom-0 right-0 bg-black text-white flex items-center justify-center">
+            temp loading
+          </div>
+        </Match>
+        <Match when={isSuccess()}>
+          <div class="relative h-[calc(100vh-60px)] w-full flex">
+            {/* Sidebar Bricks & page fields */}
+            <div class="w-[500px] max-h-screen overflow-y-auto p-15">
               <PageBuilder.Sidebar
                 state={{
+                  brickConfig: brickConfig.data?.data || [],
                   pageId: pageId(),
                   collection: collection.data?.data as CollectionResT,
                   categories: categories.data?.data || [],
-                  mutateErrors: mutationErrors,
+                  mutateErrors: updatePage.errors,
+                  brickMutateErrors: updateBricks.errors,
                   getTranslations,
                   getParentId,
                   getIsHomepage,
@@ -232,84 +331,80 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   setSelectedCategories,
                   setSelectedAuthor,
                 }}
-                data={{
-                  brickConfig: brickConfig.data?.data || [],
-                }}
               />
-            </Match>
-          </Switch>
-        </div>
-        {/* Build */}
-        <div class="h-full w-full p-15 pl-0">
-          <div class="h-[40px] w-full mb-15 flex items-center">
-            <Button
-              type="button"
-              theme="primary"
-              size="small"
-              onClick={() => {
-                setSelectBrickOpen(true);
-              }}
-            >
-              {T("add_brick")}
-            </Button>
-            <button
-              class="h-10 w-10 rounded-full ml-2.5 bg-secondary flex items-center justify-center fill-white text-xl hover:bg-secondaryH duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
-              disabled
-            >
-              <FaSolidRobot />
-            </button>
-          </div>
-          <div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
-            <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
-              <PageBuilder.Builder
-                data={{
-                  brickConfig: brickConfig.data?.data || [],
-                }}
-                state={{
-                  setOpenSelectBrick: () => {
+            </div>
+            {/* Build */}
+            <div class="h-full w-full p-15 pl-0">
+              <div class="h-[40px] w-full mb-15 flex items-center">
+                <Button
+                  type="button"
+                  theme="primary"
+                  size="small"
+                  onClick={() => {
                     setSelectBrickOpen(true);
-                  },
-                }}
-              />
-            </div>
-            <div class="absolute top-15 right-15 bottom-15 w-[180px] z-20 overflow-y-scroll">
-              <PageBuilder.PreviewBar
-                data={{
-                  brickConfig: brickConfig.data?.data || [],
-                }}
-              />
+                  }}
+                >
+                  {T("add_brick")}
+                </Button>
+                <button
+                  class="h-10 w-10 rounded-full ml-2.5 bg-secondary flex items-center justify-center fill-white text-xl hover:bg-secondaryH duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                  disabled
+                >
+                  <FaSolidRobot />
+                </button>
+              </div>
+              <div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
+                <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
+                  <PageBuilder.Builder
+                    state={{
+                      brickConfig: brickConfig.data?.data || [],
+                      mutateErrors: updateBricks.errors,
+                    }}
+                  />
+                </div>
+                <div class="absolute top-15 right-15 bottom-15 w-[180px] z-20 overflow-y-scroll">
+                  <PageBuilder.PreviewBar
+                    data={{
+                      brickConfig: brickConfig.data?.data || [],
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Show when={!isLoading()}>
-        {/* Modals */}
-        <AddBrick
-          state={{
-            open: getSelectBrickOpen(),
-            setOpen: setSelectBrickOpen,
-          }}
-          data={{
-            collection: collection.data?.data,
-            brickConfig: brickConfig.data?.data || [],
-          }}
-        />
-        <DeletePage
-          id={page.data?.data.id}
-          state={{
-            open: getDeleteOpen(),
-            setOpen: setDeleteOpen,
-          }}
-          collection={collection.data?.data as CollectionResT}
-          callbacks={{
-            onSuccess: () => {
-              navigate(
-                `/env/${environment()}/collection/${collection.data?.data.key}`
-              );
-            },
-          }}
-        />
-      </Show>
+          {/* Modals */}
+          <AddBrick
+            state={{
+              open: getSelectBrickOpen(),
+              setOpen: setSelectBrickOpen,
+            }}
+            data={{
+              collection: collection.data?.data,
+              brickConfig: brickConfig.data?.data || [],
+            }}
+          />
+          <DeletePage
+            id={page.data?.data.id}
+            state={{
+              open: getDeleteOpen(),
+              setOpen: setDeleteOpen,
+            }}
+            collection={collection.data?.data as CollectionResT}
+            callbacks={{
+              onSuccess: () => {
+                navigate(
+                  `/env/${environment()}/collection/${collection.data?.data
+                    .key}`
+                );
+              },
+            }}
+          />
+
+          <Show when={isSaving()}>
+            <div class="fixed inset-0 bg-black bg-opacity-50 z-50" />
+          </Show>
+        </Match>
+      </Switch>
     </>
   );
 };

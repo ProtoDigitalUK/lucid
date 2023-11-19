@@ -17,10 +17,12 @@ import PageFieldGroup from "@/components/FieldGroups/Page";
 
 interface SidebarProps {
   state: {
+    brickConfig: BrickConfigT[];
     pageId?: number;
     collection: CollectionResT;
     categories: CollectionCategoriesResT[];
     mutateErrors: Accessor<APIErrorResponse | undefined>;
+    brickMutateErrors: Accessor<APIErrorResponse | undefined>;
     getTranslations: Accessor<PagesResT["translations"]>;
     getParentId: Accessor<number | undefined>;
     getIsHomepage: Accessor<boolean>;
@@ -33,9 +35,6 @@ interface SidebarProps {
     setIsHomepage: Setter<boolean>;
     setSelectedCategories: Setter<SelectMultipleValueT[]>;
     setSelectedAuthor: Setter<number | undefined>;
-  };
-  data: {
-    brickConfig: BrickConfigT[];
   };
 }
 
@@ -90,9 +89,10 @@ export const Sidebar: Component<SidebarProps> = (props) => {
         <For each={sidebarBricks()}>
           {(brick) => (
             <PageBuilder.Brick
-              data={{
+              state={{
                 brick,
-                brickConfig: props.data.brickConfig,
+                brickConfig: props.state.brickConfig,
+                mutateErrors: props.state.brickMutateErrors,
               }}
             />
           )}

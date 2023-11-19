@@ -17,6 +17,14 @@ export interface APIErrorResponse {
   errors: ErrorResult;
 }
 
+export interface FieldError {
+  brick_id: string | number | undefined;
+  group_id: string | number | undefined;
+  key: string;
+  language_id: number;
+  message: string;
+}
+
 export interface ErrorResult {
   // @ts-ignore
   code?: string;
@@ -24,5 +32,7 @@ export interface ErrorResult {
   message?: string;
   // @ts-ignore
   children?: Array<undefined | ErrorResult>;
+  // @ts-ignore
+  fields?: Array<FieldError>;
   [key: string]: ErrorResult;
 }

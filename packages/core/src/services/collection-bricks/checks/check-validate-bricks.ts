@@ -1,8 +1,12 @@
 import T from "@translations/index.js";
 import { PoolClient } from "pg";
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 // Utils
 import service from "@utils/app/service.js";
+import {
+  LucidError,
+  modelErrors,
+  type FieldErrors,
+} from "@utils/app/error-handler.js";
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick.js";
 import { EnvironmentT } from "@db/models/Environment.js";
@@ -19,26 +23,12 @@ import environmentsService from "@services/environments/index.js";
 import brickConfigService from "@services/brick-config/index.js";
 import collectionsService from "@services/collections/index.js";
 // Types
-import { PageLinkValueT, LinkValueT } from "@lucid/types/src/bricks.js";
-import { CollectionResT } from "@lucid/types/src/collections.js";
-import { MediaResT } from "@lucid/types/src/media.js";
-import { PageT } from "@db/models/Page.js";
+import type { PageLinkValueT, LinkValueT } from "@lucid/types/src/bricks.js";
+import type { CollectionResT } from "@lucid/types/src/collections.js";
+import type { MediaResT } from "@lucid/types/src/media.js";
+import type { PageT } from "@db/models/Page.js";
 // Format
 import formatMedia from "@utils/format/format-media.js";
-
-// ------------------------------------
-// Interfaces
-
-interface BrickErrors {
-  key: string;
-  errors: Array<{
-    key: string;
-    message?: string;
-  }>;
-}
-
-// ------------------------------------
-// Utils
 
 // validate bricks group
 const validateBrickData = async (data: {
@@ -51,15 +41,11 @@ const validateBrickData = async (data: {
     id: PageT["id"];
   }[];
 }) => {
-  const errors: BrickErrors[] = [];
+  const errors: FieldErrors[] = [];
   let hasErrors = false;
 
   for (let i = 0; i < data.bricks.length; i++) {
     const brick = data.bricks[i];
-    const brickErrors: BrickErrors = {
-      key: brick.key,
-      errors: [],
-    };
 
     // Check if the brick instance exists
     const instance = data.builderInstances.find((b) => b.key === brick.key);
@@ -144,46 +130,19 @@ const validateBrickData = async (data: {
       });
 
       if (err.valid === false) {
-        brickErrors.errors.push({
-          key: errorKey(field.key, field.group_id),
-          message: err.message,
+        errors.push({
+          key: field.key,
+          brick_id: brick.id,
+          language_id: field.language_id,
+          group_id: field.group_id,
+          message: err.message || "Invalid value.",
         });
         hasErrors = true;
       }
     }
-
-    errors.push(brickErrors);
   }
 
   return { errors, hasErrors };
-};
-
-const errorKey = (key: string, group?: number | string) => {
-  return group ? `${key}[${group?.toString()}]` : key;
-};
-const buildErrorObject = (brickErrors: Array<BrickErrors>) => {
-  const errorObject: {
-    [key: string]: {
-      [key: string]: {
-        code: string;
-        message: string;
-      };
-    };
-  } = {};
-
-  brickErrors.forEach((brick, index) => {
-    const brickKeyWithIndex = `${brick.key}[${index}]`;
-    errorObject[brickKeyWithIndex] = {};
-    brick.errors.forEach((error) => {
-      const brickObj = errorObject[brickKeyWithIndex];
-      brickObj[error.key] = {
-        code: "invalid",
-        message: error.message || "Invalid value.",
-      };
-    });
-  });
-
-  return errorObject;
 };
 
 const flattenAllFields = (bricks: BrickObject[]): BrickFieldObject[] => {
@@ -303,7 +262,7 @@ const validateBricks = async (
       message: "There was an error validating your bricks.",
       status: 400,
       errors: modelErrors({
-        bricks: buildErrorObject(errors),
+        fields: errors,
       }),
     });
   }

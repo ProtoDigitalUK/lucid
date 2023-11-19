@@ -161,7 +161,7 @@ export default class CollectionBrick {
         ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields,
         COALESCE(json_agg(
           json_build_object('id', lucid_groups.group_id) 
-        ) FILTER (WHERE lucid_groups.group_id IS NOT NULL AND lucid_groups.language_id = $2), '[]'::json) as groups
+        ) FILTER (WHERE lucid_groups.group_id IS NOT NULL), '[]'::json) as groups
       FROM lucid_collection_bricks 
       LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id
       LEFT JOIN lucid_groups ON lucid_collection_bricks.id = lucid_groups.collection_brick_id
@@ -371,14 +371,14 @@ export default class CollectionBrick {
 
     await client.query({
       text: `WITH data_values (group_id, group_order, parent_group_id) AS (
-            VALUES ${aliases}
-          )
-          UPDATE lucid_groups
-          SET 
-            group_order = data_values.group_order
-            parent_group_id = data_values.parent_group_id
-          FROM data_values
-          WHERE lucid_groups.group_id = data_values.group_id;`,
+          VALUES ${aliases}
+        )
+        UPDATE lucid_groups
+        SET 
+          group_order = data_values.group_order,
+          parent_group_id = data_values.parent_group_id
+        FROM data_values
+        WHERE lucid_groups.group_id = data_values.group_id;`,
       values: dataValues,
     });
   };

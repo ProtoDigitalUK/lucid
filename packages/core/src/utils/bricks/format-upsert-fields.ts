@@ -74,6 +74,7 @@ const formatUpsertFields = (
   return (
     brick.fields?.map((field) => {
       return {
+        language_id: field.language_id,
         fields_id: field.fields_id,
         collection_brick_id: brick.id as number,
         key: field.key,

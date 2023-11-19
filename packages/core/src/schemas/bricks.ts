@@ -38,7 +38,7 @@ export const GroupSchema = z.object({
 });
 
 export const BrickSchema = z.object({
-  id: z.number().optional(),
+  id: z.union([z.number(), z.string()]).optional(),
   key: z.string(),
   order: z.number(),
   type: z.union([z.literal("builder"), z.literal("fixed")]),

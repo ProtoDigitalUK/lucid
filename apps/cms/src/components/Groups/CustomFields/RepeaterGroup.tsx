@@ -3,7 +3,8 @@ import classNames from "classnames";
 import { Component, For, createMemo } from "solid-js";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
-import { CustomFieldT } from "@lucid/types/src/bricks";
+import type { CustomFieldT } from "@lucid/types/src/bricks";
+import type { FieldError } from "@/types/api";
 // Store
 import builderStore, { BrickStoreGroupT } from "@/store/builderStore";
 // Components
@@ -12,11 +13,11 @@ import Button from "@/components/Partials/Button";
 import DragDrop from "@/components/Partials/DragDrop";
 
 interface RepeaterGroupProps {
-  data: {
+  state: {
     brickIndex: number;
     field: CustomFieldT;
     contentLanguage: number | undefined;
-
+    fieldErrors: FieldError[];
     repeater: {
       parentGroupId: BrickStoreGroupT["parent_group_id"];
       repeaterDepth: number;
@@ -28,14 +29,14 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   // -------------------------------
   // Memos
   const repeaterGroups = createMemo(() => {
-    const groups = builderStore.get.bricks[props.data.brickIndex].groups;
+    const groups = builderStore.get.bricks[props.state.brickIndex].groups;
 
     return groups
       .filter((group) => {
         return (
-          group.repeater_key === props.data.field.key &&
-          group.parent_group_id === props.data.repeater.parentGroupId &&
-          group.language_id === props.data.contentLanguage
+          group.repeater_key === props.state.field.key &&
+          group.parent_group_id === props.state.repeater.parentGroupId &&
+          group.language_id === props.state.contentLanguage
         );
       })
       .sort((a, b) => a.group_order - b.group_order);
@@ -51,26 +52,26 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   });
 
   const repeaterKey = createMemo(() => {
-    return `${props.data.field.key}-${props.data.repeater.repeaterDepth}-${props.data.repeater.parentGroupId}`;
+    return `${props.state.field.key}-${props.state.repeater.repeaterDepth}-${props.state.repeater.parentGroupId}`;
   });
 
   // -------------------------------
   // Functions
   const addGroup = () => {
-    if (!props.data.field.fields) return;
+    if (!props.state.field.fields) return;
     builderStore.get.addGroup({
-      brickIndex: props.data.brickIndex,
-      fields: props.data.field.fields,
+      brickIndex: props.state.brickIndex,
+      fields: props.state.field.fields,
 
-      repeaterKey: props.data.field.key,
-      parentGroupId: props.data.repeater.parentGroupId || null,
+      repeaterKey: props.state.field.key,
+      parentGroupId: props.state.repeater.parentGroupId || null,
       order: nextOrder(),
-      contentLanguage: props.data.contentLanguage,
+      contentLanguage: props.state.contentLanguage,
     });
   };
   const removeGroup = (group_id: BrickStoreGroupT["group_id"]) => {
     builderStore.get.removeGroup({
-      brickIndex: props.data.brickIndex,
+      brickIndex: props.state.brickIndex,
       groupId: group_id,
     });
   };
@@ -80,13 +81,13 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
   return (
     <div class="mb-2.5 last:mb-0 w-full">
       <h3 class="text-sm text-body font-body font-normal mb-2.5">
-        {props.data.field.title}
+        {props.state.field.title}
       </h3>
       {/* Group */}
       <DragDrop
         sortOrder={(index, targetindex) => {
           builderStore.get.swapGroupOrder({
-            brickIndex: props.data.brickIndex,
+            brickIndex: props.state.brickIndex,
 
             groupId: index,
             targetGroupId: targetindex,
@@ -122,7 +123,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                   class={classNames(
                     "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
                     {
-                      "bg-white": props.data.repeater.repeaterDepth % 2 !== 0,
+                      "bg-white": props.state.repeater.repeaterDepth % 2 !== 0,
                       "border-secondary":
                         dragDrop.getDraggingTarget()?.index === group.group_id,
                     }
@@ -149,18 +150,19 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                     <FaSolidGripLines class="fill-title w-3" />
                   </div>
                   <div class="p-15 w-full">
-                    <For each={props.data.field.fields}>
+                    <For each={props.state.field.fields}>
                       {(field) => (
                         <CustomFields.DynamicField
-                          data={{
-                            brickIndex: props.data.brickIndex,
+                          state={{
+                            brickIndex: props.state.brickIndex,
                             field: field,
                             groupId: group.group_id,
-                            contentLanguage: props.data.contentLanguage,
+                            contentLanguage: props.state.contentLanguage,
+                            fieldErrors: props.state.fieldErrors,
                             repeater: {
                               parentGroupId: group.group_id,
                               repeaterDepth:
-                                (props.data.repeater.repeaterDepth || 0) + 1,
+                                (props.state.repeater.repeaterDepth || 0) + 1,
                             },
                           }}
                         />

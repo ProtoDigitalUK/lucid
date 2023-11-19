@@ -6,6 +6,8 @@ import {
   createSignal,
   onMount,
   Match,
+  Accessor,
+  createEffect,
 } from "solid-js";
 import classNames from "classnames";
 import {
@@ -17,15 +19,16 @@ import {
 import defaultBrickIconWhite from "@/assets/svgs/default-brick-icon-white.svg";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
-// Store
+import type { APIErrorResponse } from "@/types/api";
 import { type BrickDataT } from "@/store/builderStore";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 
 interface BrickProps {
-  data: {
+  state: {
     brick: BrickDataT;
     brickConfig: BrickConfigT[];
+    mutateErrors: Accessor<APIErrorResponse | undefined>;
   };
 }
 
@@ -40,12 +43,11 @@ export const Brick: Component<BrickProps> = (props) => {
 
   // ------------------------------------
   // Functions
-  const toggleAccordion = () => {
-    const state = getAccordionOpen();
-    setAccordionOpen(!state);
+  const toggleAccordion = (state: boolean) => {
+    setAccordionOpen(state);
 
     if (dropdownContentRef) {
-      if (!state) {
+      if (state) {
         dropdownContentRef.style.maxHeight = `${dropdownContentRef.scrollHeight}px`;
       } else {
         dropdownContentRef.style.maxHeight = "0px";
@@ -77,12 +79,30 @@ export const Brick: Component<BrickProps> = (props) => {
   // ------------------------------
   // Memos
   const config = createMemo(() => {
-    return props.data.brickConfig.find(
-      (brick) => brick.key === props.data.brick.key
+    return props.state.brickConfig.find(
+      (brick) => brick.key === props.state.brick.key
     );
   });
   const isFixed = createMemo(() => {
-    return props.data.brick.type === "fixed";
+    return props.state.brick.type === "fixed";
+  });
+  const fieldErrors = createMemo(() => {
+    const errors = props.state.mutateErrors()?.errors?.body;
+    if (errors === undefined) return [];
+    const brickErrors =
+      errors.fields?.filter(
+        (field) => field.brick_id === props.state.brick.id
+      ) || [];
+
+    return brickErrors;
+  });
+
+  // ------------------------------
+  // Effects
+  createEffect(() => {
+    if (fieldErrors().length > 0) {
+      setAccordionOpen(true);
+    }
   });
 
   // ----------------------------------
@@ -98,7 +118,7 @@ export const Brick: Component<BrickProps> = (props) => {
               "border-transparent": !getAccordionOpen(),
             }
           )}
-          onClick={toggleAccordion}
+          onClick={() => toggleAccordion(!getAccordionOpen())}
         >
           <div class="flex items-center">
             <span class="w-7 h-7 rounded-md bg-secondary flex items-center justify-center mr-2.5 fill-white">
@@ -146,9 +166,10 @@ export const Brick: Component<BrickProps> = (props) => {
         >
           <div class="p-15">
             <PageBuilder.BrickBody
-              data={{
-                brick: props.data.brick,
+              state={{
+                brick: props.state.brick,
                 config: config() as BrickConfigT,
+                fieldErrors: fieldErrors(),
               }}
             />
           </div>

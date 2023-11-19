@@ -29,6 +29,12 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     reference_id: data.id,
   });
 
+  data.bricks.forEach((brick) => {
+    if (typeof brick.id === "string") {
+      brick.id = undefined;
+    }
+  });
+
   const bricksToUpdate = data.bricks.filter(
     (brick) => brick.id !== undefined && brick.id !== null
   );

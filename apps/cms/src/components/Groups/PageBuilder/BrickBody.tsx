@@ -8,7 +8,8 @@ import {
 } from "solid-js";
 import classNames from "classnames";
 // Types
-import { BrickConfigT } from "@lucid/types/src/bricks";
+import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { FieldError } from "@/types/api";
 // Store
 import builderStore, { type BrickDataT } from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
@@ -16,9 +17,10 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 import CustomFields from "@/components/Groups/CustomFields";
 
 interface BrickBodyProps {
-  data: {
+  state: {
     brick: BrickDataT;
     config: BrickConfigT;
+    fieldErrors: FieldError[];
   };
 }
 
@@ -31,12 +33,12 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
   // Memos
   const allTabs = createMemo(() => {
     return (
-      props.data.config.fields?.filter((field) => field.type === "tab") || []
+      props.state.config.fields?.filter((field) => field.type === "tab") || []
     );
   });
   const brickIndex = createMemo(() => {
     return builderStore.get.bricks.findIndex(
-      (brick) => brick.id === props.data.brick.id
+      (brick) => brick.id === props.state.brick.id
     );
   });
   const contentLanguage = createMemo(
@@ -77,14 +79,15 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
       </Show>
 
       {/* Body */}
-      <For each={props.data.config.fields}>
+      <For each={props.state.config.fields}>
         {(field) => (
           <CustomFields.DynamicField
-            data={{
+            state={{
               brickIndex: brickIndex(),
               field: field,
               activeTab: getActiveTab(),
               contentLanguage: contentLanguage(),
+              fieldErrors: props.state.fieldErrors,
             }}
           />
         )}

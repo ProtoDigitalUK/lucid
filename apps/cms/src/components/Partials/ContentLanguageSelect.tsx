@@ -45,6 +45,7 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
           }
           noMargin={true}
           noClear={true}
+          hasError={props.hasError}
         />
       </Match>
       <Match when={props.value !== undefined}>

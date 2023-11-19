@@ -35,11 +35,11 @@ const specificFieldValues = (
       break;
     }
     case "text": {
-      value = field?.text_value || builderField?.default;
+      value = field?.text_value ?? builderField?.default;
       break;
     }
     case "wysiwyg": {
-      value = field?.text_value || builderField?.default;
+      value = field?.text_value ?? builderField?.default;
       break;
     }
     case "media": {
@@ -59,31 +59,31 @@ const specificFieldValues = (
       break;
     }
     case "number": {
-      value = field?.int_value || builderField?.default;
+      value = field?.int_value ?? builderField?.default;
       break;
     }
     case "checkbox": {
-      value = field?.bool_value || builderField?.default;
+      value = field?.bool_value ?? builderField?.default;
       break;
     }
     case "select": {
-      value = field?.text_value || builderField?.default;
+      value = field?.text_value ?? builderField?.default;
       break;
     }
     case "textarea": {
-      value = field?.text_value || builderField?.default;
+      value = field?.text_value ?? builderField?.default;
       break;
     }
     case "json": {
-      value = field?.json_value || builderField?.default;
+      value = field?.json_value ?? builderField?.default;
       break;
     }
     case "colour": {
-      value = field?.text_value || builderField?.default;
+      value = field?.text_value ?? builderField?.default;
       break;
     }
     case "datetime": {
-      value = field?.text_value || builderField?.default;
+      value = field?.text_value ?? builderField?.default;
       break;
     }
     case "pagelink": {
@@ -151,7 +151,7 @@ const formatFields = ({
         };
         if (brickField.group_id) fieldsData.group_id = brickField.group_id;
         if (meta) fieldsData.meta = meta;
-        if (value) fieldsData.value = value;
+        fieldsData.value = value;
 
         fieldObjs.push(fieldsData);
       }

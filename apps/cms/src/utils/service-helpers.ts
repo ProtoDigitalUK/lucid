@@ -16,7 +16,7 @@ interface QueryParams {
   filters?: Record<string, QueryParamsValueT>;
   location?: Record<string, QueryParamsValueT>;
   headers?: Record<string, QueryParamsValueT>;
-  include?: Record<string, boolean>;
+  include?: Record<string, QueryParamsValueT>;
   perPage?: Accessor<number> | number;
 }
 

@@ -175,7 +175,7 @@ const TestRoute: Component = () => {
         <h2 class="mb-2.5">First Brick: {firstBrick()?.key}</h2>
 
         <PageBuilder.BrickBody
-          data={{
+          state={{
             brick: firstBrick(),
             config: TESTING_CONFIG,
           }}

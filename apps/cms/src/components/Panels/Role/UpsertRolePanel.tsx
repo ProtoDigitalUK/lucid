@@ -192,7 +192,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 
   // Mutation memos
   const isCreating = createMemo(() => {
-    return createRole.action.isLoading || updateRole.action.isLoading;
+    return createRole.action.isPending || updateRole.action.isPending;
   });
   const errors = createMemo(() => {
     if (!props.id) return createRole.errors();
