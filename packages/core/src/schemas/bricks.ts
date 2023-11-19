@@ -24,7 +24,7 @@ export const FieldSchema = z.object({
     }),
     z.object({}).optional(),
   ]),
-
+  language_id: z.number(),
   fields_id: z.number().optional(),
   group_id: z.union([z.number(), z.string()]).optional(),
 });
@@ -34,6 +34,7 @@ export const GroupSchema = z.object({
   group_order: z.number(),
   parent_group_id: z.union([z.number(), z.string(), z.null()]).optional(),
   repeater_key: z.string().optional(),
+  language_id: z.number(),
 });
 
 export const BrickSchema = z.object({

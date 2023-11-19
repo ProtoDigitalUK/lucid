@@ -89,7 +89,6 @@ const pageRoutes = async (fastify: FastifyInstance) => {
       authenticate: true,
       authoriseCSRF: true,
       validateEnvironment: true,
-      contentLanguage: true,
     },
     schema: updateSingleBricksController.schema,
     controller: updateSingleBricksController.controller,

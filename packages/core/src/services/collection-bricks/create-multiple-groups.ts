@@ -7,7 +7,6 @@ import CollectionBrick, {
 
 export interface ServiceData {
   bricks: Array<BrickObject>;
-  language_id: number;
 }
 
 const updateGroupIds = (
@@ -69,7 +68,6 @@ const createMultipleGroups = async (client: PoolClient, data: ServiceData) => {
 
     const insertedGroups = await CollectionBrick.createMultipleGroups(client, {
       groups: groupBatch,
-      language_id: data.language_id,
     });
 
     for (const insertedGroup of insertedGroups) {

@@ -147,6 +147,7 @@ const formatFields = ({
           fields_id: brickField.fields_id,
           key: brickField.key,
           type: brickField.type,
+          language_id: brickField.language_id,
         };
         if (brickField.group_id) fieldsData.group_id = brickField.group_id;
         if (meta) fieldsData.meta = meta;
@@ -176,6 +177,7 @@ const formatGroups = ({
           group_order: brickField.group_order,
           repeater_key: brickField.repeater_key,
           parent_group_id: brickField.parent_group_id,
+          language_id: brickField.language_id,
         });
       }
     }

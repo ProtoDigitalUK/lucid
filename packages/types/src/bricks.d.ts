@@ -42,6 +42,7 @@ export interface BrickResT {
     group_order: number | null;
     parent_group_id: number | null;
     repeater_key: string | null;
+    language_id: number;
   }>;
   fields: Array<{
     fields_id: number;
@@ -50,6 +51,7 @@ export interface BrickResT {
     group_id?: number | null;
     value?: BrickFieldValueT;
     meta?: BrickFieldMetaT;
+    language_id: number;
   }>;
 }
 

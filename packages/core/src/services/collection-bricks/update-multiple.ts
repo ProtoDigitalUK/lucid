@@ -18,9 +18,6 @@ export interface ServiceData {
   bricks: Array<BrickObject>;
   collection_key: string;
   environment_key: string;
-  language: {
-    id: number;
-  };
 }
 
 const updateMultiple = async (client: PoolClient, data: ServiceData) => {
@@ -30,10 +27,7 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
   const existingBricks = await CollectionBrick.getAllBricks(client, {
     type: data.type,
     reference_id: data.id,
-    language_id: data.language.id,
   });
-
-  console.log("existingBricks", existingBricks);
 
   const bricksToUpdate = data.bricks.filter(
     (brick) => brick.id !== undefined && brick.id !== null
@@ -73,7 +67,6 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     client
   )({
     bricks: data.bricks,
-    language_id: data.language.id,
   });
 
   assignFieldIds(data.bricks, newGroups); // add back new groups to assignFieldIds so id ref- can be updated with the group id
@@ -95,7 +88,6 @@ const updateMultiple = async (client: PoolClient, data: ServiceData) => {
     }),
     CollectionBrick.createMultipleBrickFields(client, {
       fields: fields.filter((field) => field.fields_id === undefined),
-      language_id: data.language.id,
     }),
     CollectionBrick.deleteMultipleBricks(client, {
       ids: existingBricks

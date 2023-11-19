@@ -21,7 +21,6 @@ const updateSingleBricksController: Controller<
     environment_key: request.headers["lucid-environment"] as string,
     collection_key: request.params.collection_key,
     bricks: request.body.bricks,
-    language: request.language,
     type: "pages",
   });
 

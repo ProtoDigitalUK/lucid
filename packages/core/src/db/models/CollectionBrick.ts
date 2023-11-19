@@ -33,6 +33,7 @@ export type CollectionBrickFieldsT = {
   collection_brick_id: number;
   key: string;
   type: FieldTypes;
+  language_id: number;
 
   text_value: string | null;
   int_value: number | null;
@@ -108,11 +109,11 @@ export default class CollectionBrick {
       LEFT JOIN 
         lucid_fields
       ON 
-        lucid_collection_bricks.id = lucid_fields.collection_brick_id AND lucid_fields.language_id = $2
+        lucid_collection_bricks.id = lucid_fields.collection_brick_id
       LEFT JOIN 
         lucid_groups
       ON 
-        lucid_fields.group_id = lucid_groups.group_id AND lucid_groups.language_id = $2
+        lucid_fields.group_id = lucid_groups.group_id
       LEFT JOIN 
         lucid_pages
       ON 
@@ -137,7 +138,7 @@ export default class CollectionBrick {
         lucid_collection_bricks.${referenceKey} = $1
       ORDER BY 
         lucid_collection_bricks.brick_order, lucid_groups.group_order;`,
-      [data.reference_id, data.language_id]
+      [data.reference_id, data.default_language_id]
     );
 
     return brickFields.rows;
@@ -157,16 +158,16 @@ export default class CollectionBrick {
         lucid_collection_bricks.id,
         COALESCE(json_agg(
           json_build_object('id', lucid_fields.fields_id) 
-        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL AND lucid_fields.language_id = $2), '[]'::json) as fields,
+        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields,
         COALESCE(json_agg(
           json_build_object('id', lucid_groups.group_id) 
         ) FILTER (WHERE lucid_groups.group_id IS NOT NULL AND lucid_groups.language_id = $2), '[]'::json) as groups
       FROM lucid_collection_bricks 
-      LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id AND lucid_fields.language_id = $2
-      LEFT JOIN lucid_groups ON lucid_collection_bricks.id = lucid_groups.collection_brick_id AND lucid_groups.language_id = $2
+      LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id
+      LEFT JOIN lucid_groups ON lucid_collection_bricks.id = lucid_groups.collection_brick_id
       WHERE ${referenceKey} = $1
       GROUP BY lucid_collection_bricks.id`,
-      values: [data.reference_id, data.language_id],
+      values: [data.reference_id],
     });
 
     return collectionBrickIds.rows;
@@ -321,7 +322,7 @@ export default class CollectionBrick {
         group.group_id,
         group.parent_group_id,
         group.repeater_key,
-        data.language_id,
+        group.language_id,
       ];
     });
 
@@ -447,7 +448,7 @@ export default class CollectionBrick {
           field.json_value,
           field.page_link_id,
           field.media_id,
-          data.language_id,
+          field.language_id,
         ];
       });
 
@@ -534,6 +535,7 @@ export type BrickFieldUpdateObject = {
   json_value: any | null;
   page_link_id: number | null;
   media_id: number | null;
+  language_id: number;
 };
 
 export type BrickGroupUpdateObject = {
@@ -543,6 +545,7 @@ export type BrickGroupUpdateObject = {
   parent_group_id?: number | string | null;
   repeater_key?: string;
   ref?: string | number;
+  language_id: number;
 };
 
 type CollectionBrickGetAll = (
@@ -550,7 +553,7 @@ type CollectionBrickGetAll = (
   data: {
     reference_id: number;
     type: CollectionResT["type"];
-    language_id: number;
+    default_language_id: number;
   }
 ) => Promise<CollectionBrickFieldsT[]>;
 
@@ -559,7 +562,6 @@ type CollectionBrickGetAllBricks = (
   data: {
     type: CollectionResT["type"];
     reference_id: number;
-    language_id: number;
   }
 ) => Promise<
   {
@@ -615,7 +617,6 @@ type CollectionBrickCreateMultipleFields = (
   client: PoolClient,
   data: {
     fields: BrickFieldUpdateObject[];
-    language_id: number;
   }
 ) => Promise<void>;
 
@@ -637,7 +638,6 @@ type CollectionBrickCreateMultipleGroups = (
   client: PoolClient,
   data: {
     groups: BrickGroupUpdateObject[];
-    language_id: number;
   }
 ) => Promise<
   {
