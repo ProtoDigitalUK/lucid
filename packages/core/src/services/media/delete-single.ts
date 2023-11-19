@@ -1,5 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
+import { LucidError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Media from "@db/models/Media.js";
@@ -15,13 +16,18 @@ export interface ServiceData {
 }
 
 const deleteSingle = async (client: PoolClient, data: ServiceData) => {
-  const media = await service(
-    mediaService.getSingle,
-    false,
-    client
-  )({
+  const media = await Media.getSingleById(client, {
     id: data.id,
   });
+
+  if (!media) {
+    throw new LucidError({
+      type: "basic",
+      name: "Media not found",
+      message: "We couldn't find the media you were looking for.",
+      status: 404,
+    });
+  }
 
   // Remove all processed images
   await Promise.all([
@@ -44,7 +50,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
       client
     )({
       add: 0,
-      minus: media.meta.file_size,
+      minus: media.file_size,
     }),
     service(
       translationsService.deleteMultiple,

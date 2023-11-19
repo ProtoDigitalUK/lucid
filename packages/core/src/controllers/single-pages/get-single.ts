@@ -21,7 +21,6 @@ const getSingleController: Controller<
     environment_key: request.headers["lucid-environment"] as string,
     collection_key: request.params.collection_key,
     include_bricks: true,
-    language: request.language,
   });
 
   reply.status(200).send(

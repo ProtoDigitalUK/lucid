@@ -5,6 +5,7 @@ import brickHelpers from "@/utils/brick-helpers";
 // Types
 import type { FieldTypes } from "@lucid/types/src/pages";
 import type { BrickFieldValueT, CustomFieldT } from "@lucid/types/src/bricks";
+import type { CollectionResT } from "@lucid/types/src/collections";
 
 export interface BrickStoreFieldT {
   fields_id?: number;
@@ -49,6 +50,7 @@ type BuilderStoreT = {
   }) => void;
   removeBrick: (_props: { index: number }) => void;
   sortOrder: (_props: { from: number | string; to: number | string }) => void;
+  addMissingFixedBricks: (_collectionBricks: CollectionResT["bricks"]) => void;
   findFieldIndex: (_props: {
     fields: BrickStoreFieldT[];
     key: string;
@@ -136,6 +138,36 @@ const [get, set] = createStore<BuilderStoreT>({
         const fromOrder = fromBrick.order;
         fromBrick.order = toBrick.order;
         toBrick.order = fromOrder;
+      })
+    );
+  },
+  addMissingFixedBricks(collectionBricks) {
+    set(
+      "bricks",
+      produce((draft) => {
+        collectionBricks
+          .filter((brick) => brick.type === "fixed")
+          .forEach((brick) => {
+            const brickIndex = draft.findIndex(
+              (b) => b.key === brick.key && b.type === "fixed"
+            );
+            if (brickIndex !== -1) {
+              draft[brickIndex].position = brick.position;
+              return;
+            }
+
+            const newBrick: BrickDataT = {
+              id: `temp-${shortUUID.generate()}}`,
+              key: brick.key,
+              fields: [],
+              groups: [],
+              type: "fixed",
+              order: -1,
+              position: brick.position,
+            };
+
+            draft.push(newBrick);
+          });
       })
     );
   },

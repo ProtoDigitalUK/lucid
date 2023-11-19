@@ -17,9 +17,6 @@ export interface ServiceData {
   query: z.infer<typeof pagesSchema.getSingle.query>;
   environment_key: string;
   id: number;
-  language: {
-    id: number;
-  };
 }
 
 const getSingle = async (client: PoolClient, data: ServiceData) => {
@@ -59,7 +56,6 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
       type: "pages",
       environment_key: data.environment_key,
       collection: collection,
-      language_id: data.language.id,
     });
     page.bricks = pageBricks;
   }

@@ -20,7 +20,6 @@ const getSingleController: Controller<
     query: request.query,
     environment_key: request.headers["lucid-environment"] as string,
     id: parseInt(request.params.id),
-    language: request.language,
   });
 
   reply.status(200).send(

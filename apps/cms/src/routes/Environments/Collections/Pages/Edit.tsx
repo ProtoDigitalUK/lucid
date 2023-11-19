@@ -246,26 +246,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       setSelectedAuthor(page.data?.data.author?.id || undefined);
 
       builderStore.set("bricks", page.data.data.bricks || []);
-      // merge fixed bricks if they dont exist in the page bricks array
-
-      // TODO: add better solution for this
-      // Set fixed
-      // builderStore.set(
-      //   "bricks",
-      //   collection.data.data.bricks
-      //     .filter((brick) => brick.type === "fixed")
-      //     .map((brick, i) => {
-      //       return {
-      //         id: `temp-${shortUUID.generate()}}`,
-      //         key: brick.key,
-      //         fields: [],
-      //         groups: [],
-      //         type: "fixed",
-      //         order: i,
-      //         position: brick.position,
-      //       };
-      //     })
-      // );
+      builderStore.get.addMissingFixedBricks(collection.data.data.bricks || []);
     }
   });
 

@@ -50,7 +50,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     user_id: data.user_id,
     environment_key: data.environment_key,
     collection_key: data.collection_key,
-    language: data.language,
   });
 
   await service(
@@ -63,7 +62,6 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     collection_key: data.collection_key,
     bricks: data.bricks,
     type: "singlepage",
-    language: data.language,
   });
 
   // -------------------------------------------

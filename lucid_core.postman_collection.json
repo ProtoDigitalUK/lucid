@@ -1034,12 +1034,6 @@
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
 														"type": "text"
-													},
-													{
-														"key": "lucid-content-lang",
-														"value": "{{LUCID_CONTENT_LANG}}",
-														"type": "text",
-														"disabled": true
 													}
 												],
 												"url": {
@@ -1276,11 +1270,6 @@
 													{
 														"key": "lucid-environment",
 														"value": "{{LUCID_ENVIRONMENT}}",
-														"type": "text"
-													},
-													{
-														"key": "lucid-content-lang",
-														"value": "{{LUCID_CONTENT_LANG}}",
 														"type": "text"
 													}
 												],
@@ -3092,25 +3081,6 @@
 					"path": [
 						"public",
 						"rumham.jpg"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Testing",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{BASE_URL}}/api/v1/test",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"test"
 					]
 				}
 			},

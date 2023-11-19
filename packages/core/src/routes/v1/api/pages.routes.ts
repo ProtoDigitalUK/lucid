@@ -58,7 +58,6 @@ const pageRoutes = async (fastify: FastifyInstance) => {
     middleware: {
       authenticate: true,
       validateEnvironment: true,
-      contentLanguage: true,
     },
     schema: getSingle.schema,
     controller: getSingle.controller,
