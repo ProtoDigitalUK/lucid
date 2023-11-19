@@ -79,7 +79,7 @@ const useMutationWrapper = <Params, Response>({
   const [errors, setErrors] = createSignal<APIErrorResponse>();
   const queryClient = useQueryClient();
 
-  const mutation = createMutation({
+  const mutation = createMutation(() => ({
     mutationFn,
     onSettled: (data, error) => {
       if (data) {
@@ -92,7 +92,11 @@ const useMutationWrapper = <Params, Response>({
         }
         setErrors(undefined);
         if (onSuccess) onSuccess(data);
-        invalidates.forEach((query) => queryClient.invalidateQueries([query]));
+        invalidates.forEach((query) =>
+          queryClient.invalidateQueries({
+            queryKey: [query],
+          })
+        );
       } else if (error) {
         if (errorToast) {
           spawnToast({
@@ -105,7 +109,7 @@ const useMutationWrapper = <Params, Response>({
         onError?.();
       }
     },
-  });
+  }));
 
   onCleanup(() => {
     setErrors(undefined);

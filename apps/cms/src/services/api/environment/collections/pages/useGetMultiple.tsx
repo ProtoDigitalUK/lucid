@@ -30,27 +30,25 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => [
+  return createQuery(() => ({
+    queryKey: [
       "environment.collections.pages.getMultiple",
       queryKey(),
       params.key?.(),
     ],
-    {
-      queryFn: () =>
-        request<APIResponse<PagesResT[]>>({
-          url: `/api/v1/pages`,
-          query: queryParams(),
-          config: {
-            method: "GET",
-            headers: queryParams().headers,
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+    queryFn: () =>
+      request<APIResponse<PagesResT[]>>({
+        url: `/api/v1/pages`,
+        query: queryParams(),
+        config: {
+          method: "GET",
+          headers: queryParams().headers,
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useGetMultiple;

@@ -21,21 +21,19 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 
   const logout = api.auth.useLogout();
 
-  const query = createQuery(
-    () => ["users.getSingle", queryKey(), params.key?.()],
-    {
-      queryFn: () =>
-        request<APIResponse<UserResT>>({
-          url: `/api/v1/auth/me`,
-          config: {
-            method: "GET",
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  const query = createQuery(() => ({
+    queryKey: ["users.getSingle", queryKey(), params.key?.()],
+    queryFn: () =>
+      request<APIResponse<UserResT>>({
+        url: `/api/v1/auth/me`,
+        config: {
+          method: "GET",
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 
   createEffect(() => {
     if (query.isSuccess) {

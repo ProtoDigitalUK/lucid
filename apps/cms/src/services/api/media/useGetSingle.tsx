@@ -21,7 +21,8 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["media.getSingle", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["media.getSingle", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<MediaResT>>({
         url: `/api/v1/media/${queryParams().location?.id}`,
@@ -32,7 +33,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetSingle;

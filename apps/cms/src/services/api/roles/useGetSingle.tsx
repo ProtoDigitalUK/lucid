@@ -21,7 +21,8 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["roles.getSingle", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["roles.getSingle", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<RoleResT>>({
         url: `/api/v1/roles/${queryParams().location?.role_id}`,
@@ -32,7 +33,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetSingle;

@@ -25,7 +25,8 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["roles.getMultiple", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["roles.getMultiple", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<RoleResT[]>>({
         url: `/api/v1/roles`,
@@ -37,7 +38,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetMultiple;

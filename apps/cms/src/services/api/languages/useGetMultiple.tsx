@@ -20,21 +20,19 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
   );
   const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
 
-  const query = createQuery(
-    () => ["languages.getAll", queryKey(), params.key?.()],
-    {
-      queryFn: () =>
-        request<APIResponse<LanguageResT[]>>({
-          url: `/api/v1/languages`,
-          config: {
-            method: "GET",
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  const query = createQuery(() => ({
+    queryKey: ["languages.getAll", queryKey(), params.key?.()],
+    queryFn: () =>
+      request<APIResponse<LanguageResT[]>>({
+        url: `/api/v1/languages`,
+        config: {
+          method: "GET",
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 
   // Effects
   createEffect(() => {

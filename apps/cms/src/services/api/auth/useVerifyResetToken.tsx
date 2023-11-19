@@ -20,26 +20,24 @@ const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => ["auth.verifyResetToken", queryKey(), params.key?.()],
-    {
-      queryFn: () =>
-        request<
-          APIResponse<{
-            message: string;
-          }>
-        >({
-          url: `/api/v1/auth/reset-password/${queryParams().location?.token}`,
-          config: {
-            method: "GET",
-          },
-        }),
-      retry: 0,
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  return createQuery(() => ({
+    queryKey: ["auth.verifyResetToken", queryKey(), params.key?.()],
+    queryFn: () =>
+      request<
+        APIResponse<{
+          message: string;
+        }>
+      >({
+        url: `/api/v1/auth/reset-password/${queryParams().location?.token}`,
+        config: {
+          method: "GET",
+        },
+      }),
+    retry: 0,
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useVerifyResetToken;

@@ -22,22 +22,20 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => ["environment.forms.getAll", queryKey(), params.key?.()],
-    {
-      queryFn: () =>
-        request<APIResponse<FormResT[]>>({
-          url: `/api/v1/forms`,
-          query: queryParams(),
-          config: {
-            method: "GET",
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  return createQuery(() => ({
+    queryKey: ["environment.forms.getAll", queryKey(), params.key?.()],
+    queryFn: () =>
+      request<APIResponse<FormResT[]>>({
+        url: `/api/v1/forms`,
+        query: queryParams(),
+        config: {
+          method: "GET",
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useGetAll;

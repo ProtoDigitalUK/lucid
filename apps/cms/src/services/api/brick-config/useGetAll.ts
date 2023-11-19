@@ -23,7 +23,8 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["brickConfig.getAll", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["brickConfig.getAll", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<BrickConfigT[]>>({
         url: `/api/v1/bricks/config`,
@@ -35,7 +36,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetAll;

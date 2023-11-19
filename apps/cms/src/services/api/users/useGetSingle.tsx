@@ -21,7 +21,8 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["users.getSingle", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["users.getSingle", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<UserResT>>({
         url: `/api/v1/users/${queryParams().location?.user_id}`,
@@ -32,7 +33,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetSingle;

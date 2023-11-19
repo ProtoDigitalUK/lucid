@@ -17,7 +17,8 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["permissions.getAll", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["permissions.getAll", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<PermissionsResT>>({
         url: `/api/v1/permissions`,
@@ -29,7 +30,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetAll;

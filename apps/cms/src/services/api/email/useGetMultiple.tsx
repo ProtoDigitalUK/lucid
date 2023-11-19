@@ -27,7 +27,8 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["email.getMultiple", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["email.getMultiple", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<EmailResT[]>>({
         url: `/api/v1/emails`,
@@ -39,7 +40,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetMultiple;

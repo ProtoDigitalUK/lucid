@@ -21,22 +21,19 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => ["environment.getSingle", queryKey(), params.key?.()],
-    {
-      queryFn: () =>
-        request<APIResponse<EnvironmentResT>>({
-          url: `/api/v1/environments/${queryParams().location
-            ?.environment_key}`,
-          config: {
-            method: "GET",
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  return createQuery(() => ({
+    queryKey: ["environment.getSingle", queryKey(), params.key?.()],
+    queryFn: () =>
+      request<APIResponse<EnvironmentResT>>({
+        url: `/api/v1/environments/${queryParams().location?.environment_key}`,
+        config: {
+          method: "GET",
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useGetSingle;

@@ -30,7 +30,8 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["media.getMultiple", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["media.getMultiple", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<MediaResT[]>>({
         url: `/api/v1/media`,
@@ -43,7 +44,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetMultiple;

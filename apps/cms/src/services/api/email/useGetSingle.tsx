@@ -21,7 +21,8 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(() => ["email.getSingle", queryKey(), params.key?.()], {
+  return createQuery(() => ({
+    queryKey: ["email.getSingle", queryKey(), params.key?.()],
     queryFn: () =>
       request<APIResponse<EmailResT>>({
         url: `/api/v1/emails/${queryParams().location?.email_id}`,
@@ -32,7 +33,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
     get enabled() {
       return params.enabled ? params.enabled() : true;
     },
-  });
+  }));
 };
 
 export default useGetSingle;

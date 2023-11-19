@@ -17,21 +17,19 @@ const useGetSettings = (params?: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => ["settings.getSettings", queryKey(), params?.key?.()],
-    {
-      queryFn: () =>
-        request<APIResponse<SettingsResT>>({
-          url: `/api/v1/settings`,
-          config: {
-            method: "GET",
-          },
-        }),
-      get enabled() {
-        return params?.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  return createQuery(() => ({
+    queryKey: ["settings.getSettings", queryKey(), params?.key?.()],
+    queryFn: () =>
+      request<APIResponse<SettingsResT>>({
+        url: `/api/v1/settings`,
+        config: {
+          method: "GET",
+        },
+      }),
+    get enabled() {
+      return params?.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useGetSettings;

@@ -27,27 +27,25 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => [
+  return createQuery(() => ({
+    queryKey: [
       "environment.collections.categories.getMultiple",
       queryKey(),
       params.key?.(),
     ],
-    {
-      queryFn: () =>
-        request<APIResponse<CollectionCategoriesResT[]>>({
-          url: `/api/v1/categories`,
-          query: queryParams(),
-          config: {
-            method: "GET",
-            headers: queryParams().headers,
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+    queryFn: () =>
+      request<APIResponse<CollectionCategoriesResT[]>>({
+        url: `/api/v1/categories`,
+        query: queryParams(),
+        config: {
+          method: "GET",
+          headers: queryParams().headers,
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useGetMultiple;

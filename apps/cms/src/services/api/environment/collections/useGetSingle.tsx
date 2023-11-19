@@ -24,22 +24,20 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 
   // -----------------------------
   // Query
-  return createQuery(
-    () => ["environment.collections.getSingle", queryKey(), params.key?.()],
-    {
-      queryFn: () =>
-        request<APIResponse<CollectionResT>>({
-          url: `/api/v1/collections/${queryParams().location?.collection_key}`,
-          config: {
-            method: "GET",
-            headers: queryParams().headers,
-          },
-        }),
-      get enabled() {
-        return params.enabled ? params.enabled() : true;
-      },
-    }
-  );
+  return createQuery(() => ({
+    queryKey: ["environment.collections.getSingle", queryKey(), params.key?.()],
+    queryFn: () =>
+      request<APIResponse<CollectionResT>>({
+        url: `/api/v1/collections/${queryParams().location?.collection_key}`,
+        config: {
+          method: "GET",
+          headers: queryParams().headers,
+        },
+      }),
+    get enabled() {
+      return params.enabled ? params.enabled() : true;
+    },
+  }));
 };
 
 export default useGetSingle;
