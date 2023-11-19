@@ -10,12 +10,14 @@ const getField = (params: {
   field: CustomFieldT;
   groupId?: BrickStoreFieldT["group_id"];
   key: string;
+  contentLanguage: number | undefined;
 }) => {
   const brick = builderStore.get.bricks[params.brickIndex];
   const fieldIndex = builderStore.get.findFieldIndex({
     fields: brick.fields,
     key: params.key,
     groupId: params.groupId,
+    contentLanguage: params.contentLanguage,
   });
   const field = brick.fields[fieldIndex];
   if (!field) {

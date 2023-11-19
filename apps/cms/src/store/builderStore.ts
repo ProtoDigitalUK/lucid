@@ -12,6 +12,7 @@ export interface BrickStoreFieldT {
   type: FieldTypes;
   value?: BrickFieldValueT;
   group_id?: string | number;
+  language_id: number;
 }
 
 export interface BrickStoreGroupT {
@@ -19,6 +20,7 @@ export interface BrickStoreGroupT {
   parent_group_id: null | string | number;
   repeater_key: string;
   group_order: number;
+  language_id: number;
 }
 
 export interface BrickDataT {
@@ -51,17 +53,20 @@ type BuilderStoreT = {
     fields: BrickStoreFieldT[];
     key: string;
     groupId?: BrickStoreFieldT["group_id"];
+    contentLanguage: number | undefined;
   }) => number;
   addField: (_props: {
     brickIndex: number;
     field: CustomFieldT;
     groupId?: BrickStoreFieldT["group_id"];
+    contentLanguage: number | undefined;
   }) => void;
   updateFieldValue: (_props: {
     brickIndex: number;
     key: string;
     value: BrickFieldValueT;
     groupId?: BrickStoreFieldT["group_id"];
+    contentLanguage: number | undefined;
   }) => void;
   addGroup: (_props: {
     brickIndex: number;
@@ -69,6 +74,7 @@ type BuilderStoreT = {
     repeaterKey: string;
     parentGroupId: BrickStoreGroupT["parent_group_id"];
     order: number;
+    contentLanguage: number | undefined;
   }) => void;
   removeGroup: (_props: {
     brickIndex: number;
@@ -138,7 +144,10 @@ const [get, set] = createStore<BuilderStoreT>({
   // Fields
   findFieldIndex(params) {
     const fieldIndex = params.fields.findIndex(
-      (f) => f.key === params.key && f.group_id === params.groupId
+      (f) =>
+        f.key === params.key &&
+        f.group_id === params.groupId &&
+        f.language_id === params.contentLanguage
     );
     return fieldIndex;
   },
@@ -148,12 +157,14 @@ const [get, set] = createStore<BuilderStoreT>({
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
+        if (params.contentLanguage === undefined) return;
 
         const newField: BrickStoreFieldT = {
           key: params.field.key,
           type: params.field.type,
           value: params.field.default,
           group_id: params.groupId,
+          language_id: params.contentLanguage,
         };
 
         brick.fields.push(newField);
@@ -166,11 +177,13 @@ const [get, set] = createStore<BuilderStoreT>({
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
+        if (params.contentLanguage === undefined) return;
 
         const fieldIndex = get.findFieldIndex({
           fields: brick.fields,
           key: params.key,
           groupId: params.groupId,
+          contentLanguage: params.contentLanguage,
         });
 
         if (fieldIndex !== -1) {
@@ -187,11 +200,14 @@ const [get, set] = createStore<BuilderStoreT>({
       produce((draft) => {
         const brick = draft[params.brickIndex];
         if (!brick) return;
+        if (params.contentLanguage === undefined) return;
+
         const newGroup: BrickStoreGroupT = {
           group_id: `ref-${shortUUID.generate()}`,
           repeater_key: params.repeaterKey,
           parent_group_id: params.parentGroupId,
           group_order: params.order,
+          language_id: params.contentLanguage,
         };
 
         params.fields.forEach((field) => {
@@ -200,6 +216,7 @@ const [get, set] = createStore<BuilderStoreT>({
             type: field.type,
             value: field.default,
             group_id: newGroup.group_id,
+            language_id: params.contentLanguage as number,
           };
           brick.fields.push(newField);
         });

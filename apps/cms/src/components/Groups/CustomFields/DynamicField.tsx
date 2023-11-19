@@ -13,6 +13,7 @@ interface DynamicFieldProps {
     field: CustomFieldT;
     activeTab?: string;
     groupId?: BrickStoreFieldT["group_id"];
+    contentLanguage: number | undefined;
 
     repeater?: {
       parentGroupId: BrickStoreGroupT["parent_group_id"];
@@ -40,6 +41,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                       brickIndex: props.data.brickIndex,
                       field: field,
                       repeater: props.data.repeater,
+                      contentLanguage: props.data.contentLanguage,
                     }}
                   />
                 )}
@@ -51,6 +53,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
               data={{
                 brickIndex: props.data.brickIndex,
                 field: props.data.field,
+                contentLanguage: props.data.contentLanguage,
                 repeater: {
                   parentGroupId: props.data.repeater?.parentGroupId || null,
                   repeaterDepth: props.data.repeater?.repeaterDepth || 0,
@@ -65,6 +68,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                 key: props.data.field.key,
                 field: props.data.field,
                 groupId: props.data.groupId,
+                contentLanguage: props.data.contentLanguage,
               }}
             />
           </Match>

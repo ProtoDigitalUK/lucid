@@ -11,6 +11,7 @@ import classNames from "classnames";
 import { BrickConfigT } from "@lucid/types/src/bricks";
 // Store
 import builderStore, { type BrickDataT } from "@/store/builderStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 
@@ -38,6 +39,9 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
       (brick) => brick.id === props.data.brick.id
     );
   });
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
 
   // -------------------------------
   // Effects
@@ -80,6 +84,7 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
               brickIndex: brickIndex(),
               field: field,
               activeTab: getActiveTab(),
+              contentLanguage: contentLanguage(),
             }}
           />
         )}

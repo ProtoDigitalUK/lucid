@@ -12,6 +12,7 @@ interface TextFieldProps {
     key: CustomFieldT["key"];
     field: CustomFieldT;
     groupId?: BrickStoreFieldT["group_id"];
+    contentLanguage: number | undefined;
   };
 }
 

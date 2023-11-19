@@ -58,7 +58,6 @@ export const Brick: Component<BrickProps> = (props) => {
   onMount(() => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        console.log(mutation);
         if (mutation.type === "childList") {
           if (!getAccordionOpen()) return;
           dropdownContentRef!.style.maxHeight = `${

@@ -15,6 +15,7 @@ interface RepeaterGroupProps {
   data: {
     brickIndex: number;
     field: CustomFieldT;
+    contentLanguage: number | undefined;
 
     repeater: {
       parentGroupId: BrickStoreGroupT["parent_group_id"];
@@ -33,7 +34,8 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       .filter((group) => {
         return (
           group.repeater_key === props.data.field.key &&
-          group.parent_group_id === props.data.repeater.parentGroupId
+          group.parent_group_id === props.data.repeater.parentGroupId &&
+          group.language_id === props.data.contentLanguage
         );
       })
       .sort((a, b) => a.group_order - b.group_order);
@@ -63,6 +65,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       repeaterKey: props.data.field.key,
       parentGroupId: props.data.repeater.parentGroupId || null,
       order: nextOrder(),
+      contentLanguage: props.data.contentLanguage,
     });
   };
   const removeGroup = (group_id: BrickStoreGroupT["group_id"]) => {
@@ -153,7 +156,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                             brickIndex: props.data.brickIndex,
                             field: field,
                             groupId: group.group_id,
-
+                            contentLanguage: props.data.contentLanguage,
                             repeater: {
                               parentGroupId: group.group_id,
                               repeaterDepth:
