@@ -1137,7 +1137,7 @@
 											"response": []
 										},
 										{
-											"name": "Update Bricks Single",
+											"name": "Update Single (bricks)",
 											"request": {
 												"method": "PATCH",
 												"header": [
@@ -1162,7 +1162,7 @@
 													}
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/v1/pages/page/1/bricks",
+													"raw": "{{BASE_URL}}/api/v1/pages/1",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -1170,9 +1170,7 @@
 														"api",
 														"v1",
 														"pages",
-														"page",
-														"1",
-														"bricks"
+														"1"
 													]
 												}
 											},

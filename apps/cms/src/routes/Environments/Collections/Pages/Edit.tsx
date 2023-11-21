@@ -10,7 +10,6 @@ import {
 } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import { parseTranslationBody } from "@/components/FieldGroups/Page";
-// import shortUUID from "short-uuid";
 import { FaSolidRobot, FaSolidTrash } from "solid-icons/fa";
 import { setDefualtTranslations } from "@/components/FieldGroups/Page";
 // Services
@@ -120,7 +119,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   const updatePage = api.environment.collections.pages.useUpdateSingle({
     collectionName: collection.data?.data.singular || "",
   });
-  const updateBricks = api.environment.collections.pages.useUpdateBricks({});
 
   // ----------------------------------
   // Memos
@@ -130,7 +128,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   );
 
   const brickTranslationErrors = createMemo(() => {
-    const errors = updateBricks.errors()?.errors?.body?.fields;
+    const errors = updatePage.errors()?.errors?.body?.fields;
     if (errors === undefined) return false;
     return (
       errors.filter((field) => field.language_id !== contentLanguage()).length >
@@ -182,23 +180,12 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     );
   });
   const isSaving = createMemo(() => {
-    return updatePage.action.isPending || updateBricks.action.isPending;
+    return updatePage.action.isPending;
   });
 
   // ---------------------------------
   // Functions
   const savePage = async () => {
-    updateBricks.action.mutate({
-      id: pageId(),
-      collectionKey: collection.data?.data.key || "",
-      body: {
-        bricks: builderStore.get.bricks,
-      },
-      headers: {
-        "lucid-environment": environment() || "",
-      },
-    });
-
     const body = updateData().data;
     updatePage.action.mutate({
       id: pageId(),
@@ -211,6 +198,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
           translations: body.translations,
           isHomepage: getIsHomepage(),
         }),
+        bricks: builderStore.get.bricks,
       },
       headers: {
         "lucid-environment": environment() || "",
@@ -298,7 +286,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   collection: collection.data?.data as CollectionResT,
                   categories: categories.data?.data || [],
                   mutateErrors: updatePage.errors,
-                  brickMutateErrors: updateBricks.errors,
+                  brickMutateErrors: updatePage.errors,
                   getTranslations,
                   getParentId,
                   getIsHomepage,
@@ -339,7 +327,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   <PageBuilder.Builder
                     state={{
                       brickConfig: brickConfig.data?.data || [],
-                      mutateErrors: updateBricks.errors,
+                      mutateErrors: updatePage.errors,
                     }}
                   />
                 </div>

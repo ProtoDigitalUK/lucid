@@ -4,10 +4,13 @@ import { LucidError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
+// Types
+import type { BrickObject } from "@db/models/CollectionBrick.js";
 // Services
 import pageCategoryService from "@services/page-categories/index.js";
 import pageServices from "@services/pages/index.js";
 import pageContentServices from "@services/page-content/index.js";
+import collectionBricksService from "@services/collection-bricks/index.js";
 
 export interface ServiceData {
   id: number;
@@ -25,6 +28,7 @@ export interface ServiceData {
     slug?: string | null;
     excerpt?: string | null;
   }[];
+  bricks?: Array<BrickObject>;
 }
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
@@ -125,10 +129,25 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       })
     : Promise.resolve();
 
+  let updatePageBricks = Promise.resolve();
+  if (data.bricks) {
+    updatePageBricks = service(
+      collectionBricksService.updateMultiple,
+      true
+    )({
+      id: currentPage.id,
+      environment_key: data.environment_key,
+      collection_key: currentPage.collection_key,
+      bricks: data.bricks,
+      type: "pages",
+    });
+  }
+
   const [page] = await Promise.all([
     pagePromise,
     upsertContentPromise,
     updateCategoriesPromise,
+    updatePageBricks,
   ]);
 
   if (!page) {

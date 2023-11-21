@@ -84,6 +84,7 @@ const updateSingleBody = z.object({
   author_id: z.number().nullable().optional(),
   category_ids: z.array(z.number()).optional(),
   published: z.boolean().optional(),
+  bricks: z.array(BrickSchema).optional(),
   translations: z
     .array(
       z.object({
@@ -98,17 +99,6 @@ const updateSingleBody = z.object({
 const updateSingleQuery = z.object({});
 const updateSingleParams = z.object({
   id: z.string(),
-});
-
-// ------------------------------------
-// UPDATE SINGLE BRICKS
-const updateSingleBricksBody = z.object({
-  bricks: z.array(BrickSchema),
-});
-const updateSingleBricksQuery = z.object({});
-const updateSingleBricksParams = z.object({
-  id: z.string(),
-  collection_key: z.string(),
 });
 
 // ------------------------------------
@@ -166,11 +156,6 @@ export default {
     body: updateSingleBody,
     query: updateSingleQuery,
     params: updateSingleParams,
-  },
-  updateSingleBricks: {
-    body: updateSingleBricksBody,
-    query: updateSingleBricksQuery,
-    params: updateSingleBricksParams,
   },
   deleteSingle: {
     body: deleteSingleBody,

@@ -3,7 +3,8 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
+import type { BrickDataT } from "@/store/builderStore";
 
 interface Params {
   id: number;
@@ -19,6 +20,7 @@ interface Params {
       excerpt: string | null;
       language_id: number;
     }[];
+    bricks?: Array<BrickDataT>;
   };
   headers: {
     "lucid-environment": string;

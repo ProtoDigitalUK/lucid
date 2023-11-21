@@ -5,7 +5,6 @@ import useDeleteMultiple from "./useDeleteMultiple";
 import useUpdateSingle from "./useUpdateSingle";
 import useGetSingle from "./useGetSingle";
 import useGetValidParents from "./useGetValidParents";
-import useUpdateBricks from "./useUpdateBricks";
 
 const exportObject = {
   useGetMultiple,
@@ -15,7 +14,6 @@ const exportObject = {
   useUpdateSingle,
   useGetSingle,
   useGetValidParents,
-  useUpdateBricks,
 };
 
 export default exportObject;

@@ -26,6 +26,7 @@ const updateSingleController: Controller<
     category_ids: request.body.category_ids,
     published: request.body.published,
     translations: request.body.translations,
+    bricks: request.body.bricks,
   });
 
   reply.status(200).send(

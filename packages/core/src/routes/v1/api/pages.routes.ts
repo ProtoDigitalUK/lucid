@@ -8,7 +8,6 @@ import updateSingle from "@controllers/pages/update-single.js";
 import deleteSingle from "@controllers/pages/delete-single.js";
 import deleteMultiple from "@controllers/pages/delete-multiple.js";
 import getMultipleValidParents from "@controllers/pages/get-multiple-valid-parents.js";
-import updateSingleBricksController from "@controllers/pages/update-single-bricks.js";
 
 const pageRoutes = async (fastify: FastifyInstance) => {
   r(fastify, {
@@ -76,21 +75,6 @@ const pageRoutes = async (fastify: FastifyInstance) => {
     },
     schema: updateSingle.schema,
     controller: updateSingle.controller,
-  });
-
-  r(fastify, {
-    method: "patch",
-    url: "/:collection_key/:id/bricks",
-    permissions: {
-      environments: ["update_content"],
-    },
-    middleware: {
-      authenticate: true,
-      authoriseCSRF: true,
-      validateEnvironment: true,
-    },
-    schema: updateSingleBricksController.schema,
-    controller: updateSingleBricksController.controller,
   });
 
   r(fastify, {
