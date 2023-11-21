@@ -127,21 +127,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     () => contentLanguageStore.get.contentLanguage
   );
 
-  const brickTranslationErrors = createMemo(() => {
-    const errors = updatePage.errors()?.errors?.body?.fields;
-    if (errors === undefined) return false;
-    return (
-      errors.filter((field) => field.language_id !== contentLanguage()).length >
-      0
-    );
-  });
-  const pageTranslationErrors = createMemo(() => {
-    const errors = updatePage.errors()?.errors?.body?.translations.children;
-    if (errors) {
-      return errors.length > 0;
-    }
-    return false;
-  });
   const updateData = createMemo(() => {
     return helpers.updateData(
       {
@@ -181,6 +166,25 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   });
   const isSaving = createMemo(() => {
     return updatePage.action.isPending;
+  });
+  const mutateErrors = createMemo(() => {
+    return updatePage.errors();
+  });
+
+  const brickTranslationErrors = createMemo(() => {
+    const errors = mutateErrors()?.errors?.body?.fields;
+    if (errors === undefined) return false;
+    return (
+      errors.filter((field) => field.language_id !== contentLanguage()).length >
+      0
+    );
+  });
+  const pageTranslationErrors = createMemo(() => {
+    const errors = mutateErrors()?.errors?.body?.translations?.children;
+    if (errors) {
+      return errors.length > 0;
+    }
+    return false;
   });
 
   // ---------------------------------
@@ -285,8 +289,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   pageId: pageId(),
                   collection: collection.data?.data as CollectionResT,
                   categories: categories.data?.data || [],
-                  mutateErrors: updatePage.errors,
-                  brickMutateErrors: updatePage.errors,
+                  mutateErrors: mutateErrors,
                   getTranslations,
                   getParentId,
                   getIsHomepage,
@@ -327,7 +330,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   <PageBuilder.Builder
                     state={{
                       brickConfig: brickConfig.data?.data || [],
-                      mutateErrors: updatePage.errors,
+                      mutateErrors: mutateErrors,
                     }}
                   />
                 </div>

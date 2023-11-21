@@ -22,7 +22,6 @@ interface SidebarProps {
     collection: CollectionResT;
     categories: CollectionCategoriesResT[];
     mutateErrors: Accessor<APIErrorResponse | undefined>;
-    brickMutateErrors: Accessor<APIErrorResponse | undefined>;
     getTranslations: Accessor<PagesResT["translations"]>;
     getParentId: Accessor<number | undefined>;
     getIsHomepage: Accessor<boolean>;
@@ -55,6 +54,8 @@ export const Sidebar: Component<SidebarProps> = (props) => {
     fixedBricks().filter((brick) => brick.position === "sidebar")
   );
 
+  const mutationErrors = createMemo(() => undefined);
+
   // ----------------------------------
   // Render
   return (
@@ -68,7 +69,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
             state={{
               pageId: pageId,
               contentLanguage: contentLanguage,
-              mutateErrors: props.state.mutateErrors,
+              mutateErrors: mutationErrors, // props.state.mutateErrors,
               collection: props.state.collection,
               categories: props.state.categories,
               getTranslations: props.state.getTranslations,
@@ -92,7 +93,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
               state={{
                 brick,
                 brickConfig: props.state.brickConfig,
-                mutateErrors: props.state.brickMutateErrors,
+                mutateErrors: mutationErrors, // props.state.mutateErrors,
                 alwaysOpen: true,
               }}
             />

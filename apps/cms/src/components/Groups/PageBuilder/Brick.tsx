@@ -17,6 +17,8 @@ import {
 } from "solid-icons/fa";
 // Assets
 import defaultBrickIconWhite from "@/assets/svgs/default-brick-icon-white.svg";
+// Store
+import builderStore from "@/store/builderStore";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
 import type { APIErrorResponse } from "@/types/api";
@@ -57,6 +59,11 @@ export const Brick: Component<BrickProps> = (props) => {
       }
     }
   };
+  const removeBrick = () => {
+    builderStore.get.removeBrick({
+      id: props.state.brick.id,
+    });
+  };
 
   // ------------------------------------
   // Mount
@@ -93,6 +100,7 @@ export const Brick: Component<BrickProps> = (props) => {
   const fieldErrors = createMemo(() => {
     const errors = props.state.mutateErrors()?.errors?.body;
     if (errors === undefined) return [];
+
     const brickErrors =
       errors.fields?.filter(
         (field) => field.brick_id === props.state.brick.id
@@ -145,6 +153,7 @@ export const Brick: Component<BrickProps> = (props) => {
                 class="h-7 w-7 flex items-center justify-center bg-backgroundAccent hover:bg-errorH hover:border-errorH fill-black hover:fill-errorText border border-border rounded-full duration-200 transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
+                  removeBrick();
                 }}
               >
                 <FaSolidTrashCan size={14} />

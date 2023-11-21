@@ -48,7 +48,7 @@ type BuilderStoreT = {
       position?: BrickDataT["position"];
     };
   }) => void;
-  removeBrick: (_props: { index: number }) => void;
+  removeBrick: (_props: { id: number | string }) => void;
   sortOrder: (_props: { from: number | string; to: number | string }) => void;
   addMissingFixedBricks: (_collectionBricks: CollectionResT["bricks"]) => void;
   findFieldIndex: (_props: {
@@ -118,11 +118,14 @@ const [get, set] = createStore<BuilderStoreT>({
       })
     );
   },
-  removeBrick({ index }) {
+  removeBrick({ id }) {
     set(
       "bricks",
       produce((draft) => {
-        draft.splice(index, 1);
+        const brickIndex = draft.findIndex((brick) => brick.id === id);
+        if (brickIndex === -1) return;
+
+        draft.splice(brickIndex, 1);
       })
     );
   },
