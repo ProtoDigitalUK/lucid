@@ -29,6 +29,7 @@ interface BrickProps {
     brick: BrickDataT;
     brickConfig: BrickConfigT[];
     mutateErrors: Accessor<APIErrorResponse | undefined>;
+    alwaysOpen?: boolean;
   };
 }
 
@@ -44,6 +45,8 @@ export const Brick: Component<BrickProps> = (props) => {
   // ------------------------------------
   // Functions
   const toggleAccordion = (state: boolean) => {
+    if (props.state.alwaysOpen) return;
+
     setAccordionOpen(state);
 
     if (dropdownContentRef) {
@@ -58,6 +61,8 @@ export const Brick: Component<BrickProps> = (props) => {
   // ------------------------------------
   // Mount
   onMount(() => {
+    if (props.state.alwaysOpen) return;
+
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === "childList") {
@@ -69,7 +74,6 @@ export const Brick: Component<BrickProps> = (props) => {
         }
       });
     });
-
     observer.observe(dropdownContentRef!, {
       childList: true,
       subtree: true,
@@ -114,8 +118,9 @@ export const Brick: Component<BrickProps> = (props) => {
           class={classNames(
             "border-b p-15 flex w-full items-center justify-between duration-200 transition-all cursor-pointer",
             {
-              "border-border": getAccordionOpen(),
-              "border-transparent": !getAccordionOpen(),
+              "border-border": getAccordionOpen() || props.state.alwaysOpen,
+              "border-transparent":
+                !getAccordionOpen() && !props.state.alwaysOpen,
             }
           )}
           onClick={() => toggleAccordion(!getAccordionOpen())}
@@ -145,24 +150,31 @@ export const Brick: Component<BrickProps> = (props) => {
                 <FaSolidTrashCan size={14} />
               </button>
             </Show>
-            <button
-              class={classNames(
-                "h-7 w-7 flex items-center justify-center hover:bg-primaryH hover:fill-primaryText hover:border-primaryH rounded-full border transition-all duration-200",
-                {
-                  "rotate-180 bg-primaryH fill-primaryText border-primaryH":
-                    getAccordionOpen(),
-                  "bg-backgroundAccent fill-black border-border":
-                    !getAccordionOpen(),
-                }
-              )}
-            >
-              <FaSolidChevronDown size={14} />
-            </button>
+            <Show when={props.state.alwaysOpen !== true}>
+              <button
+                class={classNames(
+                  "h-7 w-7 flex items-center justify-center hover:bg-primaryH hover:fill-primaryText hover:border-primaryH rounded-full border transition-all duration-200",
+                  {
+                    "rotate-180 bg-primaryH fill-primaryText border-primaryH":
+                      getAccordionOpen(),
+                    "bg-backgroundAccent fill-black border-border":
+                      !getAccordionOpen(),
+                  }
+                )}
+              >
+                <FaSolidChevronDown size={14} />
+              </button>
+            </Show>
           </div>
         </div>
         <div
           ref={dropdownContentRef}
-          class={"w-full overflow-hidden transition-all duration-200 max-h-0"}
+          class={classNames(
+            "w-full overflow-hidden transition-all duration-200 max-h-0",
+            {
+              "max-h-full": props.state.alwaysOpen,
+            }
+          )}
         >
           <div class="p-15">
             <PageBuilder.BrickBody

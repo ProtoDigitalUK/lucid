@@ -93,6 +93,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
                 brick,
                 brickConfig: props.state.brickConfig,
                 mutateErrors: props.state.brickMutateErrors,
+                alwaysOpen: true,
               }}
             />
           )}
