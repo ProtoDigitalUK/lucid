@@ -60,6 +60,7 @@ export interface CustomField {
     zod?: z.ZodType<any>;
     required?: boolean;
     extensions?: string[];
+    maxGroups?: number;
     width?: {
       min?: number;
       max?: number;
@@ -140,7 +141,7 @@ export interface MediaConfig extends CustomFieldConfig {
 }
 export interface RepeaterConfig extends CustomFieldConfig {
   validation?: {
-    required?: boolean;
+    maxGroups?: number;
   };
 }
 export interface NumberConfig extends CustomFieldConfig {

@@ -104,6 +104,9 @@ export const BannerBrick = new BrickBuilder("banner", {
   })
   .addRepeater({
     key: "social_links",
+    validation: {
+      maxGroups: 3,
+    },
   })
   .addText({
     key: "social_title",

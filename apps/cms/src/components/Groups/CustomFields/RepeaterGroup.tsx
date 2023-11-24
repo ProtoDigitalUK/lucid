@@ -1,6 +1,6 @@
 import T from "@/translations/index";
 import classNames from "classnames";
-import { Component, For, createMemo } from "solid-js";
+import { Component, For, createMemo, Show } from "solid-js";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
@@ -53,6 +53,11 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
 
   const repeaterKey = createMemo(() => {
     return `${props.state.field.key}-${props.state.repeater.repeaterDepth}-${props.state.repeater.parentGroupId}`;
+  });
+
+  const canAddGroup = createMemo(() => {
+    if (!props.state.field.validation?.maxGroups) return true;
+    return repeaterGroups().length < props.state.field.validation?.maxGroups;
   });
 
   // -------------------------------
@@ -188,10 +193,30 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
           </For>
         )}
       </DragDrop>
-      <div>
-        <Button type="button" theme="primary" size="x-small" onClick={addGroup}>
+      <div class="w-full flex justify-between items-center">
+        <Button
+          type="button"
+          theme="primary"
+          size="x-small"
+          onClick={addGroup}
+          disabled={!canAddGroup()}
+        >
           {T("add_entry")}
         </Button>
+        <Show when={props.state.field.validation?.maxGroups !== undefined}>
+          <span
+            class={classNames(
+              "text-body text-sm font-body font-normal mr-[25px]",
+              {
+                "text-error": !canAddGroup(),
+              }
+            )}
+          >
+            {repeaterGroups().length}
+            {"/"}
+            {props.state.field.validation?.maxGroups}
+          </span>
+        </Show>
       </div>
     </div>
   );
