@@ -286,6 +286,7 @@ const [get, set] = createStore<BuilderStoreT>({
           if (field.group_id) {
             return !removeGroupIds.includes(field.group_id);
           }
+          return true;
         });
       })
     );
