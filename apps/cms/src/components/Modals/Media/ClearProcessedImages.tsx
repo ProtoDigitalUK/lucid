@@ -29,7 +29,7 @@ const ClearProcessedImages: Component<ClearProcessedImagesProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: clearProcessed.action.isLoading,
+        isLoading: clearProcessed.action.isPending,
         isError: clearProcessed.action.isError,
       }}
       content={{

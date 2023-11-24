@@ -29,7 +29,7 @@ const DeleteUser: Component<DeleteUserProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deleteUser.action.isLoading,
+        isLoading: deleteUser.action.isPending,
         isError: deleteUser.action.isError,
       }}
       content={{

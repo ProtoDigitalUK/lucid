@@ -29,7 +29,7 @@ const DeleteEnvironment: Component<DeleteEnvironmentProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deleteEnvironment.action.isLoading,
+        isLoading: deleteEnvironment.action.isPending,
         isError: deleteEnvironment.action.isError,
       }}
       content={{

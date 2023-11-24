@@ -163,7 +163,7 @@ const UpsertEnvForm: Component<UpsertEnvFormProps> = (props) => {
   // Mutation memos
   const isCreating = createMemo(() => {
     return (
-      createEnvironment.action.isLoading || updateEnvironment.action.isLoading
+      createEnvironment.action.isPending || updateEnvironment.action.isPending
     );
   });
   const errors = createMemo(() => {

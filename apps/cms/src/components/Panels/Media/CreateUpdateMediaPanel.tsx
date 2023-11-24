@@ -94,9 +94,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
   const languages = createMemo(() => contentLanguageStore.get.languages);
   const mutateIsLoading = createMemo(() => {
     return (
-      uploadSingleFile.action.isLoading ||
-      updateSingle.action.isLoading ||
-      updateSingleFile.action.isLoading
+      uploadSingleFile.action.isPending ||
+      updateSingle.action.isPending ||
+      updateSingleFile.action.isPending
     );
   });
   const mutateErrors = createMemo(() => {

@@ -218,6 +218,8 @@
   "resend_email_modal_description": "Are you sure you want to resend this email?",
   "delete_page_modal_title": "Delete {{name}}",
   "delete_page_modal_description": "Are you sure you want to delete this {{name}}?",
+  "navigation_guard_modal_title": "Any unsaved changes will be lost",
+  "navigation_guard_modal_description": "Are you sure you want to leave this page? Any unsaved changes will be lost.",
 
   "update_role_panel_title": "Edit {{name}} Role",
   "update_role_panel_description": "Update the permissions for the {{name}} role.",

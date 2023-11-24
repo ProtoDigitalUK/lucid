@@ -30,7 +30,7 @@ const ClearAllProcessedImages: Component<ClearAllProcessedImagesProps> = (
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: clearAllProcessedImages.action.isLoading,
+        isLoading: clearAllProcessedImages.action.isPending,
         isError: clearAllProcessedImages.action.isError,
       }}
       content={{

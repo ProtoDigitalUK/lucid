@@ -29,7 +29,7 @@ const DeleteRole: Component<DeleteRoleProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deleteRole.action.isLoading,
+        isLoading: deleteRole.action.isPending,
         isError: deleteRole.action.isError,
       }}
       content={{

@@ -102,7 +102,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
         isError: isError(),
       }}
       mutateState={{
-        isLoading: createUser.action.isLoading,
+        isLoading: createUser.action.isPending,
         errors: createUser.errors(),
       }}
       content={{

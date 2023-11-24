@@ -39,7 +39,7 @@ const DeletePage: Component<DeletePageProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deletePage.action.isLoading,
+        isLoading: deletePage.action.isPending,
         isError: deletePage.action.isError,
       }}
       content={{

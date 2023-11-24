@@ -29,7 +29,7 @@ const DeleteEmail: Component<DeleteEmailProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deleteEmail.action.isLoading,
+        isLoading: deleteEmail.action.isPending,
         isError: deleteEmail.action.isError,
       }}
       content={{

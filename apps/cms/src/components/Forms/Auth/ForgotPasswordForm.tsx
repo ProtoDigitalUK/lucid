@@ -29,7 +29,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
     <Form.Root
       type="standard"
       state={{
-        isLoading: forgotPassword.action.isLoading,
+        isLoading: forgotPassword.action.isPending,
         errors: forgotPassword.errors(),
       }}
       content={{

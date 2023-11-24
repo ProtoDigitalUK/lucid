@@ -120,7 +120,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
         isError: isError(),
       }}
       mutateState={{
-        isLoading: updateUser.action.isLoading,
+        isLoading: updateUser.action.isPending,
         isDisabled: !updateData().changed,
         errors: updateUser.errors(),
       }}

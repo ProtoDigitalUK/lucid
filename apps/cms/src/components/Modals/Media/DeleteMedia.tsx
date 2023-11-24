@@ -29,7 +29,7 @@ const DeleteMedia: Component<DeleteMediaProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: deleteMedia.action.isLoading,
+        isLoading: deleteMedia.action.isPending,
         isError: deleteMedia.action.isError,
       }}
       content={{

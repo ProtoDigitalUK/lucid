@@ -30,12 +30,16 @@ import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import Button from "@/components/Partials/Button";
 import DeletePage from "@/components/Modals/Pages/DeletePage";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import NavigationGuard, {
+  navGuardHook,
+} from "@/components/Modals/NavigationGuard";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
   // Hooks
   const params = useParams();
   const navigate = useNavigate();
+  const navGuard = navGuardHook();
 
   // ------------------------------
   // State
@@ -371,7 +375,13 @@ const EnvCollectionsPagesEditRoute: Component = () => {
               },
             }}
           />
-
+          <NavigationGuard
+            state={{
+              open: navGuard.getModalOpen(),
+              setOpen: navGuard.setModalOpen,
+              targetElement: navGuard.getTargetElement(),
+            }}
+          />
           <Show when={isSaving()}>
             <div class="fixed inset-0 bg-black bg-opacity-50 z-50" />
           </Show>

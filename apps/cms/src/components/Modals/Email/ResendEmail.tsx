@@ -30,7 +30,7 @@ const ResendEmail: Component<ResendEmailProps> = (props) => {
       state={{
         open: props.state.open,
         setOpen: props.state.setOpen,
-        isLoading: resendEmail.action.isLoading,
+        isLoading: resendEmail.action.isPending,
         isError: resendEmail.action.isError,
       }}
       content={{
