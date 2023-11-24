@@ -42,15 +42,6 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       .sort((a, b) => a.group_order - b.group_order);
   });
 
-  const nextOrder = createMemo(() => {
-    const repGroups = repeaterGroups();
-    if (!repGroups.length) return 0;
-    const largestOrder = repGroups.reduce((prev, current) => {
-      return prev.group_order > current.group_order ? prev : current;
-    });
-    return largestOrder.group_order + 1;
-  });
-
   const repeaterKey = createMemo(() => {
     return `${props.state.field.key}-${props.state.repeater.repeaterDepth}-${props.state.repeater.parentGroupId}`;
   });
@@ -62,6 +53,14 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
 
   // -------------------------------
   // Functions
+  const nextOrder = () => {
+    const repGroups = repeaterGroups();
+    if (!repGroups.length) return 0;
+    const largestOrder = repGroups.reduce((prev, current) => {
+      return prev.group_order > current.group_order ? prev : current;
+    });
+    return largestOrder.group_order + 1;
+  };
   const addGroup = () => {
     if (!props.state.field.fields) return;
     builderStore.get.addGroup({

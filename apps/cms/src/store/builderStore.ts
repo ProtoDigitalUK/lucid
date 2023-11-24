@@ -77,7 +77,7 @@ type BuilderStoreT = {
     parentGroupId: BrickStoreGroupT["parent_group_id"];
     order: number;
     contentLanguage: number | undefined;
-  }) => void;
+  }) => BrickStoreGroupT | undefined;
   removeGroup: (_props: {
     brickIndex: number;
     groupId: BrickStoreGroupT["group_id"];
@@ -230,6 +230,8 @@ const [get, set] = createStore<BuilderStoreT>({
   // --------------------------------------------
   // Groups
   addGroup(params) {
+    let newGroup: BrickStoreGroupT | undefined = undefined;
+
     builderStore.set(
       "bricks",
       produce((draft) => {
@@ -237,8 +239,9 @@ const [get, set] = createStore<BuilderStoreT>({
         if (!brick) return;
         if (params.contentLanguage === undefined) return;
 
-        const newGroup: BrickStoreGroupT = {
-          group_id: `ref-${shortUUID.generate()}`,
+        const ID = `ref-${shortUUID.generate()}`;
+        newGroup = {
+          group_id: ID,
           repeater_key: params.repeaterKey,
           parent_group_id: params.parentGroupId,
           group_order: params.order,
@@ -250,7 +253,7 @@ const [get, set] = createStore<BuilderStoreT>({
             key: field.key,
             type: field.type,
             value: field.default,
-            group_id: newGroup.group_id,
+            group_id: ID,
             language_id: params.contentLanguage as number,
           };
           brick.fields.push(newField);
@@ -259,6 +262,8 @@ const [get, set] = createStore<BuilderStoreT>({
         brick.groups.push(newGroup);
       })
     );
+
+    return newGroup;
   },
   removeGroup(params) {
     builderStore.set(
