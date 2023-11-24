@@ -57,15 +57,19 @@ export const navGuardHook = () => {
   };
 
   onMount(() => {
-    const links = document.querySelectorAll("a");
-    links.forEach((link) => {
-      link.addEventListener("click", clickEvent);
-    });
+    setTimeout(() => {
+      const links = document.querySelectorAll("a");
+      links.forEach((link) => {
+        if (link.target === "_blank") return;
+        link.addEventListener("click", clickEvent);
+      });
+    }, 500);
   });
 
   onCleanup(() => {
     const links = document.querySelectorAll("a");
     links.forEach((link) => {
+      if (link.target === "_blank") return;
       link.removeEventListener("click", clickEvent);
     });
   });
