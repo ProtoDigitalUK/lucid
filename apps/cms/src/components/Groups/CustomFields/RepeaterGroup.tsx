@@ -1,6 +1,6 @@
 import T from "@/translations/index";
 import classNames from "classnames";
-import { Component, For, createMemo, Show } from "solid-js";
+import { Component, For, createMemo, Show, Switch, Match } from "solid-js";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
@@ -89,53 +89,27 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
         {props.state.field.title}
       </h3>
       {/* Group */}
-      <DragDrop
-        sortOrder={(index, targetindex) => {
-          builderStore.get.swapGroupOrder({
-            brickIndex: props.state.brickIndex,
+      <Switch>
+        <Match when={repeaterGroups().length > 0}>
+          <DragDrop
+            sortOrder={(index, targetindex) => {
+              builderStore.get.swapGroupOrder({
+                brickIndex: props.state.brickIndex,
 
-            groupId: index,
-            targetGroupId: targetindex,
-          });
-        }}
-      >
-        {({ dragDrop }) => (
-          <For each={repeaterGroups()}>
-            {(group) => (
-              <div
-                class={classNames(`w-full flex`, {
-                  "opacity-60":
-                    dragDrop.getDragging()?.index === group.group_id,
-                })}
-                data-dragkey={repeaterKey()}
-                onDragStart={(e) =>
-                  dragDrop.onDragStart(e, {
-                    index: group.group_id,
-                    key: repeaterKey(),
-                  })
-                }
-                onDragEnd={(e) => dragDrop.onDragEnd(e)}
-                onDragEnter={(e) =>
-                  dragDrop.onDragEnter(e, {
-                    index: group.group_id,
-                    key: repeaterKey(),
-                  })
-                }
-                onDragOver={(e) => dragDrop.onDragOver(e)}
-              >
-                {/* Group Items */}
-                <div
-                  class={classNames(
-                    "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
-                    {
-                      "bg-white": props.state.repeater.repeaterDepth % 2 !== 0,
-                      "border-secondary":
-                        dragDrop.getDraggingTarget()?.index === group.group_id,
-                    }
-                  )}
-                >
+                groupId: index,
+                targetGroupId: targetindex,
+              });
+            }}
+          >
+            {({ dragDrop }) => (
+              <For each={repeaterGroups()}>
+                {(group) => (
                   <div
-                    class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
+                    class={classNames(`w-full flex`, {
+                      "opacity-60":
+                        dragDrop.getDragging()?.index === group.group_id,
+                    })}
+                    data-dragkey={repeaterKey()}
                     onDragStart={(e) =>
                       dragDrop.onDragStart(e, {
                         index: group.group_id,
@@ -150,49 +124,87 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                       })
                     }
                     onDragOver={(e) => dragDrop.onDragOver(e)}
-                    draggable={true}
                   >
-                    <FaSolidGripLines class="fill-title w-3" />
-                  </div>
-                  <div class="p-15 w-full">
-                    <For each={props.state.field.fields}>
-                      {(field) => (
-                        <CustomFields.DynamicField
-                          state={{
-                            brickIndex: props.state.brickIndex,
-                            field: field,
-                            groupId: group.group_id,
-                            contentLanguage: props.state.contentLanguage,
-                            fieldErrors: props.state.fieldErrors,
-                            repeater: {
-                              parentGroupId: group.group_id,
-                              repeaterDepth:
-                                (props.state.repeater.repeaterDepth || 0) + 1,
-                            },
-                          }}
-                        />
+                    {/* Group Items */}
+                    <div
+                      class={classNames(
+                        "bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
+                        {
+                          "bg-white":
+                            props.state.repeater.repeaterDepth % 2 !== 0,
+                          "border-secondary":
+                            dragDrop.getDraggingTarget()?.index ===
+                            group.group_id,
+                        }
                       )}
-                    </For>
+                    >
+                      <div
+                        class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
+                        onDragStart={(e) =>
+                          dragDrop.onDragStart(e, {
+                            index: group.group_id,
+                            key: repeaterKey(),
+                          })
+                        }
+                        onDragEnd={(e) => dragDrop.onDragEnd(e)}
+                        onDragEnter={(e) =>
+                          dragDrop.onDragEnter(e, {
+                            index: group.group_id,
+                            key: repeaterKey(),
+                          })
+                        }
+                        onDragOver={(e) => dragDrop.onDragOver(e)}
+                        draggable={true}
+                      >
+                        <FaSolidGripLines class="fill-title w-3" />
+                      </div>
+                      <div class="p-15 w-full">
+                        <For each={props.state.field.fields}>
+                          {(field) => (
+                            <CustomFields.DynamicField
+                              state={{
+                                brickIndex: props.state.brickIndex,
+                                field: field,
+                                groupId: group.group_id,
+                                contentLanguage: props.state.contentLanguage,
+                                fieldErrors: props.state.fieldErrors,
+                                repeater: {
+                                  parentGroupId: group.group_id,
+                                  repeaterDepth:
+                                    (props.state.repeater.repeaterDepth || 0) +
+                                    1,
+                                },
+                              }}
+                            />
+                          )}
+                        </For>
+                      </div>
+                    </div>
+                    {/* Group Action Bar */}
+                    <div class={`ml-2.5 transition-opacity duration-200`}>
+                      <button
+                        type="button"
+                        class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
+                        onClick={() => {
+                          removeGroup(group.group_id);
+                        }}
+                        aria-label={T("remove_entry")}
+                      >
+                        <FaSolidTrashCan class="w-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-                {/* Group Action Bar */}
-                <div class={`ml-2.5 transition-opacity duration-200`}>
-                  <button
-                    type="button"
-                    class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
-                    onClick={() => {
-                      removeGroup(group.group_id);
-                    }}
-                    aria-label={T("remove_entry")}
-                  >
-                    <FaSolidTrashCan class="w-4" />
-                  </button>
-                </div>
-              </div>
+                )}
+              </For>
             )}
-          </For>
-        )}
-      </DragDrop>
+          </DragDrop>
+        </Match>
+        <Match when={repeaterGroups().length === 0}>
+          <div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md bg-container flex items-center flex-col justify-center text-center">
+            <span class="text-sm text-unfocused">{T("no_entries")}</span>
+          </div>
+        </Match>
+      </Switch>
       <div class="w-full flex justify-between items-center">
         <Button
           type="button"

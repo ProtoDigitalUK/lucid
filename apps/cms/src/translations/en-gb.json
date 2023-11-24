@@ -30,6 +30,7 @@
   "no_results": "No results found",
   "no_results_message": "Try adjusting your filters to find what you're looking for.",
   "confirm": "Confirm",
+  "no_entries": "No entries",
   "cancel": "Cancel",
   "sort": "Sort",
   "per_page": "Per page {{count}}",
