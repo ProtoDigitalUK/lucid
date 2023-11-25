@@ -1,11 +1,11 @@
 import { Component, Show } from "solid-js";
 import { FaSolidTriangleExclamation } from "solid-icons/fa";
 // Types
-import { ErrorResult } from "@/types/api";
+import type { FieldError, ErrorResult } from "@/types/api";
 
 interface ErrorMessageProps {
   id?: string;
-  errors?: ErrorResult;
+  errors?: ErrorResult | FieldError;
 }
 
 export const ErrorMessage: Component<ErrorMessageProps> = (props) => {

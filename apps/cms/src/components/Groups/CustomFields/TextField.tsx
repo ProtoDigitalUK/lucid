@@ -1,10 +1,4 @@
-import {
-  Component,
-  createSignal,
-  createEffect,
-  createMemo,
-  Show,
-} from "solid-js";
+import { Component, createSignal, createEffect, createMemo } from "solid-js";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
 // Store
@@ -12,6 +6,8 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
+// Components
+import Form from "@/components/Groups/Form";
 
 interface TextFieldProps {
   state: {
@@ -60,25 +56,28 @@ export const TextField: Component<TextFieldProps> = (props) => {
   // -------------------------------
   // Render
   return (
-    <>
-      <input
-        class="w-full border-border border"
-        type="text"
-        value={getText()}
-        placeholder={`${props.state.field.title} - ${props.state.groupId}`}
-        onChange={(e) => {
-          builderStore.get.updateFieldValue({
-            brickIndex: props.state.brickIndex,
-            key: props.state.key,
-            groupId: props.state.groupId,
-            contentLanguage: contentLanguage(),
-            value: e.target.value,
-          });
-        }}
-      />
-      <Show when={fieldError()}>
-        <div class="text-red-500 text-sm">{fieldError()?.message}</div>
-      </Show>
-    </>
+    <Form.Input
+      id={`field-${props.state.key}-${props.state.brickIndex}-${props.state.groupId}`}
+      value={getText()}
+      onChange={(value) =>
+        builderStore.get.updateFieldValue({
+          brickIndex: props.state.brickIndex,
+          key: props.state.key,
+          groupId: props.state.groupId,
+          contentLanguage: contentLanguage(),
+          value: value,
+        })
+      }
+      name={props.state.field.key}
+      type="text"
+      copy={{
+        label: props.state.field.title,
+        placeholder: props.state.field.placeholder,
+        describedBy: props.state.field.description,
+      }}
+      errors={fieldError()}
+      required={props.state.field.validation?.required || false}
+      theme={"basic"}
+    />
   );
 };
