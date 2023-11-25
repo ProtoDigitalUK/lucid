@@ -1,8 +1,12 @@
-import { Component, For, Match, Switch, Show } from "solid-js";
+import { Component, For, Match, Switch, Show, createMemo } from "solid-js";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
 // Store
-import { BrickStoreGroupT, BrickStoreFieldT } from "@/store/builderStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
+import builderStore, {
+  type BrickStoreGroupT,
+  type BrickStoreFieldT,
+} from "@/store/builderStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
@@ -22,6 +26,22 @@ interface DynamicFieldProps {
 }
 
 export const DynamicField: Component<DynamicFieldProps> = (props) => {
+  // -------------------------------
+  // Memos
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
+
+  const fieldError = createMemo(() => {
+    return builderStore.get.fieldsErrors.find((field) => {
+      return (
+        field.key === props.state.field.key &&
+        field.language_id === contentLanguage() &&
+        field.group_id === props.state.groupId
+      );
+    });
+  });
+
   // -------------------------------
   // Render
   return (
@@ -59,12 +79,15 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             />
           </Match>
           <Match when={props.state.field.type === "text"}>
-            <CustomFields.TextField
+            <CustomFields.InputField
+              type="text"
               state={{
                 brickIndex: props.state.brickIndex,
                 key: props.state.field.key,
                 field: props.state.field,
                 groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
               }}
             />
           </Match>
@@ -75,12 +98,15 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             <div>media</div>
           </Match>
           <Match when={props.state.field.type === "number"}>
-            <CustomFields.NumberField
+            <CustomFields.InputField
+              type="number"
               state={{
                 brickIndex: props.state.brickIndex,
                 key: props.state.field.key,
                 field: props.state.field,
                 groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
               }}
             />
           </Match>
@@ -97,6 +123,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                 key: props.state.field.key,
                 field: props.state.field,
                 groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
               }}
             />
           </Match>

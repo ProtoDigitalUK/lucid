@@ -1,15 +1,13 @@
 import { DynamicField } from "./DynamicField";
 import { RepeaterField } from "./RepeaterField";
-import { TextField } from "./TextField";
 import { TextareaField } from "./TextareaField";
-import { NumberField } from "./NumberField";
+import { InputField } from "./InputField";
 
 const CustomFields = {
   DynamicField,
   RepeaterField,
-  TextField,
+  InputField,
   TextareaField,
-  NumberField,
 };
 
 export default CustomFields;
