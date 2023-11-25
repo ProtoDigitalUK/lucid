@@ -52,6 +52,10 @@ export interface CustomField {
   default?: defaultFieldValues;
 
   presets?: string[];
+  copy?: {
+    true?: string;
+    false?: string;
+  };
   options?: Array<{
     label: string;
     value: string;
@@ -155,6 +159,10 @@ export interface NumberConfig extends CustomFieldConfig {
 }
 export interface CheckboxConfig extends CustomFieldConfig {
   default?: boolean;
+  copy?: {
+    true?: string;
+    false?: string;
+  };
 }
 export interface SelectConfig extends CustomFieldConfig {
   default?: string;

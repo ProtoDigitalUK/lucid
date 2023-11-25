@@ -40,6 +40,10 @@ export const TestingBrick = new BrickBuilder("testing", {
   })
   .addCheckbox({
     key: "checkbox-key",
+    copy: {
+      true: "Show",
+      false: "Hide",
+    },
   })
   .addSelect({
     key: "select-key",

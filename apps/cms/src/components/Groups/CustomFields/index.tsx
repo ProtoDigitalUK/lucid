@@ -3,6 +3,7 @@ import { RepeaterField } from "./RepeaterField";
 import { TextareaField } from "./TextareaField";
 import { InputField } from "./InputField";
 import { ColourField } from "./ColourField";
+import { CheckboxField } from "./CheckboxField";
 
 const CustomFields = {
   DynamicField,
@@ -10,6 +11,7 @@ const CustomFields = {
   InputField,
   TextareaField,
   ColourField,
+  CheckboxField,
 };
 
 export default CustomFields;

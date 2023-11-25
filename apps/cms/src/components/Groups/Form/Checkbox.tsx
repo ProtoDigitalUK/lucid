@@ -3,7 +3,7 @@ import classnames from "classnames";
 import { FaSolidCheck } from "solid-icons/fa";
 import { Checkbox } from "@kobalte/core";
 // Types
-import { ErrorResult } from "@/types/api";
+import type { ErrorResult, FieldError } from "@/types/api";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -18,7 +18,7 @@ interface CheckboxInputProps {
     tooltip?: string;
   };
   required?: boolean;
-  errors?: ErrorResult;
+  errors?: ErrorResult | FieldError;
   noMargin?: boolean;
   theme?: "basic";
 }

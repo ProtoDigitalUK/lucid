@@ -56,6 +56,9 @@ export const Colour: Component<ColourProps> = (props) => {
         required={props.required}
         disabled={props.disabled}
         onFocus={() => setInputFocus(true)}
+        onBlur={() => {
+          setInputFocus(false);
+        }}
       />
       <Show when={props.presets !== undefined}>
         <ul class="mt-2.5">
