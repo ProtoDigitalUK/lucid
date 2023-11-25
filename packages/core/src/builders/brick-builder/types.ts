@@ -145,7 +145,7 @@ export interface RepeaterConfig extends CustomFieldConfig {
   };
 }
 export interface NumberConfig extends CustomFieldConfig {
-  default?: number;
+  default?: number | null;
   placeholder?: string;
   validation?: {
     required?: boolean;

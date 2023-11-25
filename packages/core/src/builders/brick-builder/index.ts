@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { nullable } from "zod";
 import sanitizeHtml from "sanitize-html";
 // Types
 import {
@@ -38,7 +38,14 @@ const baseCustomFieldSchema = z.object({
   placeholder: z.string().optional(),
   // boolean or string
   default: z
-    .union([z.boolean(), z.string(), z.number(), z.undefined(), z.object({})])
+    .union([
+      z.boolean(),
+      z.string(),
+      z.number(),
+      z.undefined(),
+      z.object({}),
+      z.null(),
+    ])
     .optional(),
   options: z
     .array(
@@ -290,18 +297,51 @@ export default class BrickBuilder {
   // Field Type Validation
   private fieldTypeToDataType: Record<
     string,
-    "string" | "number" | "boolean" | "object"
+    {
+      type: "string" | "number" | "boolean" | "object";
+      nullable: boolean;
+    }
   > = {
-    text: "string",
-    textarea: "string",
-    colour: "string",
-    datetime: "string",
-    link: "object",
-    wysiwyg: "string",
-    select: "string",
-    number: "number",
-    pagelink: "object",
-    checkbox: "boolean",
+    text: {
+      type: "string",
+      nullable: true,
+    },
+    textarea: {
+      type: "string",
+      nullable: true,
+    },
+    colour: {
+      type: "string",
+      nullable: true,
+    },
+    datetime: {
+      type: "string",
+      nullable: true,
+    },
+    link: {
+      type: "object",
+      nullable: false,
+    },
+    wysiwyg: {
+      type: "string",
+      nullable: true,
+    },
+    select: {
+      type: "string",
+      nullable: true,
+    },
+    number: {
+      type: "number",
+      nullable: true,
+    },
+    pagelink: {
+      type: "object",
+      nullable: false,
+    },
+    checkbox: {
+      type: "boolean",
+      nullable: false,
+    },
   };
   fieldValidation({
     type,
@@ -337,8 +377,10 @@ export default class BrickBuilder {
       // Use the map to do the data type validation
       const dataType = this.fieldTypeToDataType[field.type];
       if (dataType) {
-        if (typeof value !== dataType) {
-          throw new ValidationError(`The field value must be a ${dataType}.`);
+        if (dataType.nullable && value !== null) {
+          if (typeof value !== dataType.type) {
+            throw new ValidationError(`The field value must be a ${dataType}.`);
+          }
         }
       }
 
@@ -543,7 +585,7 @@ export default class BrickBuilder {
         return undefined;
       }
       case "number": {
-        return (config as NumberConfig).default || 0;
+        return (config as NumberConfig).default || null;
       }
       case "checkbox": {
         return (config as CheckboxConfig).default || false;

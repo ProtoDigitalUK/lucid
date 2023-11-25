@@ -13,6 +13,7 @@ export const TestingBrick = new BrickBuilder("testing", {
   .addText({
     key: "text-key",
     description: "Testing title",
+    placeholder: "Testing title",
   })
   .addWysiwyg({
     key: "wysiwyg-key",
@@ -59,6 +60,8 @@ export const TestingBrick = new BrickBuilder("testing", {
   })
   .addTextarea({
     key: "textarea-key",
+    placeholder: "Testing textarea",
+    description: "Testing textarea",
   })
   .addTab({
     title: "Advanced",
@@ -145,7 +148,7 @@ export const DefaultMetaBrick = new BrickBuilder("default_meta")
     key: "meta_title",
     title: "Meta Title",
   })
-  .addText({
+  .addTextarea({
     key: "meta_description",
     title: "Meta Description",
   });
@@ -155,7 +158,7 @@ export const PageMetaBrick = new BrickBuilder("page_meta")
     key: "meta_title",
     title: "Meta Title",
   })
-  .addText({
+  .addTextarea({
     key: "meta_description",
     title: "Meta Description",
   });

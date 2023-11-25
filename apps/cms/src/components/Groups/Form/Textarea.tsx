@@ -1,7 +1,7 @@
 import { Component, createSignal } from "solid-js";
 import classnames from "classnames";
 // Types
-import { ErrorResult } from "@/types/api";
+import type { ErrorResult, FieldError } from "@/types/api";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -20,7 +20,7 @@ interface TextareaProps {
   onKeyUp?: (_e: KeyboardEvent) => void;
   required?: boolean;
   disabled?: boolean;
-  errors?: ErrorResult;
+  errors?: ErrorResult | FieldError;
   noMargin?: boolean;
   theme?: "basic";
 }
@@ -34,7 +34,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
     <div
       class={classnames("w-full", {
         "mb-0": props.noMargin,
-        "mb-5": !props.noMargin,
+        "mb-5 last:mb-0": !props.noMargin,
       })}
     >
       <div

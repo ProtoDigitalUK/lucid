@@ -75,7 +75,14 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             <div>media</div>
           </Match>
           <Match when={props.state.field.type === "number"}>
-            <div>number</div>
+            <CustomFields.NumberField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "checkbox"}>
             <div>checkbox</div>
@@ -84,7 +91,14 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             <div>select</div>
           </Match>
           <Match when={props.state.field.type === "textarea"}>
-            <div>textarea</div>
+            <CustomFields.TextareaField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "json"}>
             <div>json</div>
