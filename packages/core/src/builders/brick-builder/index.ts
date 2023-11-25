@@ -93,7 +93,7 @@ export default class BrickBuilder {
   title: string;
   fields: Map<string, CustomField> = new Map();
   repeaterStack: string[] = [];
-  maxRepeaterDepth: number = 5;
+  maxRepeaterDepth: number = 3;
   config: BrickConfigOptionsT = {};
   constructor(key: string, config?: BrickConfigOptionsT) {
     this.key = key;
