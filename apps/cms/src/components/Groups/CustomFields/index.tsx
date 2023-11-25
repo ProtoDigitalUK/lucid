@@ -1,10 +1,10 @@
 import { DynamicField } from "./DynamicField";
-import { RepeaterGroup } from "./RepeaterGroup";
+import { RepeaterField } from "./RepeaterField";
 import { TextField } from "./TextField";
 
 const CustomFields = {
   DynamicField,
-  RepeaterGroup,
+  RepeaterField,
   TextField,
 };
 

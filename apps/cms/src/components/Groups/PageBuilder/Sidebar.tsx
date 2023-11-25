@@ -49,12 +49,9 @@ export const Sidebar: Component<SidebarProps> = (props) => {
       .filter((brick) => brick.type === "fixed")
       .sort((a, b) => a.order - b.order)
   );
-
   const sidebarBricks = createMemo(() =>
     fixedBricks().filter((brick) => brick.position === "sidebar")
   );
-
-  const mutationErrors = createMemo(() => undefined);
 
   // ----------------------------------
   // Render
@@ -69,7 +66,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
             state={{
               pageId: pageId,
               contentLanguage: contentLanguage,
-              mutateErrors: mutationErrors, // props.state.mutateErrors,
+              mutateErrors: props.state.mutateErrors,
               collection: props.state.collection,
               categories: props.state.categories,
               getTranslations: props.state.getTranslations,
@@ -93,7 +90,6 @@ export const Sidebar: Component<SidebarProps> = (props) => {
               state={{
                 brick,
                 brickConfig: props.state.brickConfig,
-                mutateErrors: mutationErrors, // props.state.mutateErrors,
                 alwaysOpen: true,
               }}
             />

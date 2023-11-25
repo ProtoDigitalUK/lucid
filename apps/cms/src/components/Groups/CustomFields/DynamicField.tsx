@@ -1,7 +1,6 @@
-import { Component, For, Match, Switch, Show, createMemo } from "solid-js";
+import { Component, For, Match, Switch, Show } from "solid-js";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
-import type { FieldError } from "@/types/api";
 // Store
 import { BrickStoreGroupT, BrickStoreFieldT } from "@/store/builderStore";
 // Components
@@ -14,8 +13,6 @@ interface DynamicFieldProps {
     field: CustomFieldT;
     activeTab?: string;
     groupId?: BrickStoreFieldT["group_id"];
-    contentLanguage: number | undefined;
-    fieldErrors: FieldError[];
 
     repeater?: {
       parentGroupId: BrickStoreGroupT["parent_group_id"];
@@ -25,14 +22,6 @@ interface DynamicFieldProps {
 }
 
 export const DynamicField: Component<DynamicFieldProps> = (props) => {
-  // -------------------------------
-  // Memos
-  const fieldErrors = createMemo(() => {
-    return props.state.fieldErrors.filter(
-      (field) => field.group_id === props.state.groupId
-    );
-  });
-
   // -------------------------------
   // Render
   return (
@@ -51,8 +40,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                       brickIndex: props.state.brickIndex,
                       field: field,
                       repeater: props.state.repeater,
-                      contentLanguage: props.state.contentLanguage,
-                      fieldErrors: fieldErrors(),
                     }}
                   />
                 )}
@@ -60,12 +47,10 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             </Show>
           </Match>
           <Match when={props.state.field.type === "repeater"}>
-            <CustomFields.RepeaterGroup
+            <CustomFields.RepeaterField
               state={{
                 brickIndex: props.state.brickIndex,
                 field: props.state.field,
-                contentLanguage: props.state.contentLanguage,
-                fieldErrors: fieldErrors(),
                 repeater: {
                   parentGroupId: props.state.repeater?.parentGroupId || null,
                   repeaterDepth: props.state.repeater?.repeaterDepth || 0,
@@ -80,8 +65,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
                 key: props.state.field.key,
                 field: props.state.field,
                 groupId: props.state.groupId,
-                contentLanguage: props.state.contentLanguage,
-                fieldErrors: fieldErrors(),
               }}
             />
           </Match>

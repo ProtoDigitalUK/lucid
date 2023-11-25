@@ -4,20 +4,18 @@ import { Component, For, createMemo, Show, Switch, Match } from "solid-js";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
-import type { FieldError } from "@/types/api";
 // Store
+import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, { BrickStoreGroupT } from "@/store/builderStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 import Button from "@/components/Partials/Button";
 import DragDrop from "@/components/Partials/DragDrop";
 
-interface RepeaterGroupProps {
+interface RepeaterFieldProps {
   state: {
     brickIndex: number;
     field: CustomFieldT;
-    contentLanguage: number | undefined;
-    fieldErrors: FieldError[];
     repeater: {
       parentGroupId: BrickStoreGroupT["parent_group_id"];
       repeaterDepth: number;
@@ -25,9 +23,13 @@ interface RepeaterGroupProps {
   };
 }
 
-export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
+export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
   // -------------------------------
   // Memos
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
+
   const repeaterGroups = createMemo(() => {
     const groups = builderStore.get.bricks[props.state.brickIndex].groups;
 
@@ -36,7 +38,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
         return (
           group.repeater_key === props.state.field.key &&
           group.parent_group_id === props.state.repeater.parentGroupId &&
-          group.language_id === props.state.contentLanguage
+          group.language_id === contentLanguage()
         );
       })
       .sort((a, b) => a.group_order - b.group_order);
@@ -70,7 +72,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
       repeaterKey: props.state.field.key,
       parentGroupId: props.state.repeater.parentGroupId || null,
       order: nextOrder(),
-      contentLanguage: props.state.contentLanguage,
+      contentLanguage: contentLanguage(),
     });
   };
   const removeGroup = (group_id: BrickStoreGroupT["group_id"]) => {
@@ -165,8 +167,7 @@ export const RepeaterGroup: Component<RepeaterGroupProps> = (props) => {
                                 brickIndex: props.state.brickIndex,
                                 field: field,
                                 groupId: group.group_id,
-                                contentLanguage: props.state.contentLanguage,
-                                fieldErrors: props.state.fieldErrors,
+
                                 repeater: {
                                   parentGroupId: group.group_id,
                                   repeaterDepth:

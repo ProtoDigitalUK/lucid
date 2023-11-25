@@ -26,7 +26,7 @@ interface MutationWrapperProps<Params, Response> {
   errorToast?: { title: string; message: string };
   invalidates?: string[];
   onSuccess?: (_data: Response) => void;
-  onError?: () => void;
+  onError?: (_errors: APIErrorResponse | undefined) => void;
 }
 
 // -------------------------------------------------
@@ -105,8 +105,9 @@ const useMutationWrapper = <Params, Response>({
             status: "error",
           });
         }
-        validateSetError(error, setErrors);
-        onError?.();
+        const errors = validateSetError(error);
+        setErrors(errors);
+        onError?.(errors);
       }
     },
   }));

@@ -1,5 +1,4 @@
 import T from "@/translations";
-import { Setter } from "solid-js";
 import spawnToast from "@/utils/spawn-toast";
 // Types
 import { APIErrorResponse } from "@/types/api";
@@ -14,21 +13,17 @@ export class LucidError extends Error {
   }
 }
 
-export const validateSetError = (
-  error: unknown,
-  setErrors: Setter<APIErrorResponse | undefined>
-) => {
+export const validateSetError = (error: unknown) => {
   if (error instanceof LucidError) {
-    setErrors(error.errorRes);
+    return error.errorRes;
   } else {
-    setErrors({
+    return {
       status: 500,
       name: T("error"),
       message: T("unknown_error_message"),
       errors: {},
-    });
+    };
   }
-  return;
 };
 
 export const handleSiteErrors = (error: APIErrorResponse) => {

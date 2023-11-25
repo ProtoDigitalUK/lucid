@@ -6,6 +6,7 @@ import brickHelpers from "@/utils/brick-helpers";
 import type { FieldTypes } from "@lucid/types/src/pages";
 import type { BrickFieldValueT, CustomFieldT } from "@lucid/types/src/bricks";
 import type { CollectionResT } from "@lucid/types/src/collections";
+import type { FieldError } from "@/types/api";
 
 export interface BrickStoreFieldT {
   fields_id?: number;
@@ -36,6 +37,7 @@ export interface BrickDataT {
 
 type BuilderStoreT = {
   bricks: Array<BrickDataT>;
+  fieldsErrors: Array<FieldError>;
   // functions
   reset: () => void;
   addBrick: (_props: {
@@ -92,9 +94,11 @@ type BuilderStoreT = {
 
 const [get, set] = createStore<BuilderStoreT>({
   bricks: [],
+  fieldsErrors: [],
 
   reset() {
     set("bricks", []);
+    set("fieldsErrors", []);
   },
 
   // --------------------------------------------

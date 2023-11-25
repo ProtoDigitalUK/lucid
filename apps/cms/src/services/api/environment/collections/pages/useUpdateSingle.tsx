@@ -3,7 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { APIResponse, APIErrorResponse } from "@/types/api";
 import type { BrickDataT } from "@/store/builderStore";
 
 interface Params {
@@ -43,7 +43,7 @@ export const updateSingleReq = (params: Params) => {
 
 interface UseUpdateSingleProps {
   onSuccess?: () => void;
-  onError?: () => void;
+  onError?: (_errors: APIErrorResponse | undefined) => void;
   collectionName: string;
 }
 

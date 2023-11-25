@@ -9,10 +9,8 @@ import {
 import classNames from "classnames";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
-import type { FieldError } from "@/types/api";
 // Store
 import builderStore, { type BrickDataT } from "@/store/builderStore";
-import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 
@@ -20,7 +18,6 @@ interface BrickBodyProps {
   state: {
     brick: BrickDataT;
     config: BrickConfigT;
-    fieldErrors: FieldError[];
   };
 }
 
@@ -41,9 +38,6 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
       (brick) => brick.id === props.state.brick.id
     );
   });
-  const contentLanguage = createMemo(
-    () => contentLanguageStore.get.contentLanguage
-  );
 
   // -------------------------------
   // Effects
@@ -86,8 +80,6 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
               brickIndex: brickIndex(),
               field: field,
               activeTab: getActiveTab(),
-              contentLanguage: contentLanguage(),
-              fieldErrors: props.state.fieldErrors,
             }}
           />
         )}

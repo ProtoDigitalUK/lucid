@@ -178,6 +178,7 @@ const TestRoute: Component = () => {
           state={{
             brick: firstBrick(),
             config: TESTING_CONFIG,
+            fieldErrors: [],
           }}
         />
       </div>

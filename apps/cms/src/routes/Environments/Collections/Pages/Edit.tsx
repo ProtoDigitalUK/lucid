@@ -7,6 +7,7 @@ import {
   Show,
   Switch,
   Match,
+  onCleanup,
 } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import { parseTranslationBody } from "@/components/FieldGroups/Page";
@@ -121,6 +122,12 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // ----------------------------------
   // Mutations
   const updatePage = api.environment.collections.pages.useUpdateSingle({
+    onSuccess: () => {
+      builderStore.set("fieldsErrors", []);
+    },
+    onError: (errors) => {
+      builderStore.set("fieldsErrors", errors?.errors?.body?.fields || []);
+    },
     collectionName: collection.data?.data.singular || "",
   });
 
@@ -246,6 +253,10 @@ const EnvCollectionsPagesEditRoute: Component = () => {
     }
   });
 
+  onCleanup(() => {
+    builderStore.get.reset();
+  });
+
   // ----------------------------------
   // Render
   return (
@@ -334,7 +345,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                   <PageBuilder.Builder
                     state={{
                       brickConfig: brickConfig.data?.data || [],
-                      mutateErrors: mutateErrors,
                     }}
                   />
                 </div>

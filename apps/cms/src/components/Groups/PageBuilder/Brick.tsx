@@ -6,7 +6,6 @@ import {
   createSignal,
   onMount,
   Match,
-  Accessor,
   createEffect,
 } from "solid-js";
 import classNames from "classnames";
@@ -21,8 +20,7 @@ import defaultBrickIconWhite from "@/assets/svgs/default-brick-icon-white.svg";
 import builderStore from "@/store/builderStore";
 // Types
 import type { BrickConfigT } from "@lucid/types/src/bricks";
-import type { APIErrorResponse } from "@/types/api";
-import { type BrickDataT } from "@/store/builderStore";
+import type { BrickDataT } from "@/store/builderStore";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 
@@ -30,7 +28,6 @@ interface BrickProps {
   state: {
     brick: BrickDataT;
     brickConfig: BrickConfigT[];
-    mutateErrors: Accessor<APIErrorResponse | undefined>;
     alwaysOpen?: boolean;
   };
 }
@@ -97,22 +94,14 @@ export const Brick: Component<BrickProps> = (props) => {
   const isFixed = createMemo(() => {
     return props.state.brick.type === "fixed";
   });
-  const fieldErrors = createMemo(() => {
-    const errors = props.state.mutateErrors()?.errors?.body;
-    if (errors === undefined) return [];
-
-    const brickErrors =
-      errors.fields?.filter(
-        (field) => field.brick_id === props.state.brick.id
-      ) || [];
-
-    return brickErrors;
-  });
 
   // ------------------------------
   // Effects
   createEffect(() => {
-    if (fieldErrors().length > 0) {
+    const brickErrors = builderStore.get.fieldsErrors.filter((field) => {
+      return field.brick_id === props.state.brick.id;
+    });
+    if (brickErrors.length > 0) {
       setAccordionOpen(true);
     }
   });
@@ -190,7 +179,6 @@ export const Brick: Component<BrickProps> = (props) => {
               state={{
                 brick: props.state.brick,
                 config: config() as BrickConfigT,
-                fieldErrors: fieldErrors(),
               }}
             />
           </div>

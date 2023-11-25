@@ -74,7 +74,7 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
   // Functions
   const inputError = (index: number) => {
     const errors =
-      props.state.mutateErrors()?.errors?.body?.translations.children;
+      props.state.mutateErrors()?.errors?.body?.translations?.children;
     if (errors) return errors[index];
     return undefined;
   };
