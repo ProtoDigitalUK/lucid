@@ -72,6 +72,7 @@ export const TestingBrick = new BrickBuilder("testing", {
   })
   .addColour({
     key: "colour-key",
+    presets: ["#000000", "#ffffff"],
   })
   .addDateTime({
     key: "datetime-key",

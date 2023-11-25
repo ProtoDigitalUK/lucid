@@ -10,7 +10,7 @@ import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
 interface InputFieldProps {
-  type: "number" | "text";
+  type: "number" | "text" | "datetime-local";
   state: {
     brickIndex: number;
     key: CustomFieldT["key"];

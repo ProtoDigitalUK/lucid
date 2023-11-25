@@ -132,10 +132,29 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             <div>json</div>
           </Match>
           <Match when={props.state.field.type === "colour"}>
-            <div>colour</div>
+            <CustomFields.ColourField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "datetime"}>
-            <div>datetime</div>
+            <CustomFields.InputField
+              type="datetime-local"
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "pagelink"}>
             <div>pagelink</div>

@@ -5,6 +5,7 @@ import { Textarea } from "./Textarea";
 import { Select } from "./Select";
 import { SelectMultiple } from "./SelectMultiple";
 import { SingleFileUpload } from "./SingleFileUpload";
+import { Colour } from "./Colour";
 
 import { ErrorMessage } from "./ErrorMessage";
 import { DescribedBy } from "./DescribedBy";
@@ -19,6 +20,7 @@ const Form = {
   Select,
   SelectMultiple,
   SingleFileUpload,
+  Colour,
 
   ErrorMessage,
   DescribedBy,

@@ -51,6 +51,7 @@ export interface CustomField {
   fields?: Array<CustomField>;
   default?: defaultFieldValues;
 
+  presets?: string[];
   options?: Array<{
     label: string;
     value: string;
@@ -180,7 +181,7 @@ export interface JSONConfig extends CustomFieldConfig {
 }
 export interface ColourConfig extends CustomFieldConfig {
   default?: string;
-  placeholder?: string;
+  presets?: string[];
   validation?: {
     required?: boolean;
   };
