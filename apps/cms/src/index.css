@@ -126,6 +126,14 @@
     );
   }
 
+  /* Wysiwyg */
+  .ql-toolbar {
+    @apply !border-border !rounded-t-md;
+  }
+  .ql-container {
+    @apply !border-border !rounded-b-md;
+  }
+
   /* Brick Pattern */
   @keyframes BrickScrollRight {
     0% {

@@ -11,9 +11,9 @@ const FieldTypeIcon: Component<FieldTypeIconProps> = (props) => {
   // -------------------------------
   // Render
   return (
-    <span
+    <div
       class={classNames(
-        "w-7 h-7 min-w-[28px] mr-2.5 flex items-center justify-center bg-opacity-30 border-opacity-40 rounded-md text-black text-opacity-50 text-sm",
+        "absolute top-0 left-0 w-7 h-7 min-w-[28px] mr-2.5 flex items-center justify-center bg-opacity-30 border-opacity-40 rounded-md text-black text-opacity-50 text-sm",
         {
           "bg-[#4DD64D] border-[#4DD64D]":
             props.type === "text" ||
@@ -48,7 +48,7 @@ const FieldTypeIcon: Component<FieldTypeIconProps> = (props) => {
         <Match when={props.type === "media"}>M</Match>
         <Match when={props.type === "colour"}>C</Match>
       </Switch>
-    </span>
+    </div>
   );
 };
 

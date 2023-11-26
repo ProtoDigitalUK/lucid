@@ -8,6 +8,7 @@ import { SingleFileUpload } from "./SingleFileUpload";
 import { Colour } from "./Colour";
 import { Switch } from "./Switch";
 import { JSONTextarea } from "./JSONTextarea";
+import { WYSIWYG } from "./WYSIWYG";
 
 import { ErrorMessage } from "./ErrorMessage";
 import { DescribedBy } from "./DescribedBy";
@@ -25,6 +26,7 @@ const Form = {
   Colour,
   Switch,
   JSONTextarea,
+  WYSIWYG,
 
   ErrorMessage,
   DescribedBy,

@@ -1,4 +1,5 @@
 import { Component, For, Match, Switch, Show, createMemo } from "solid-js";
+import classNames from "classnames";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
 // Store
@@ -45,11 +46,15 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
   // -------------------------------
   // Render
   return (
-    <div class="flex w-full mb-2.5 last:mb-0">
+    <div class="w-full mb-2.5 last:mb-0 relative">
       <Show when={props.state.field.type !== "tab"}>
         <FieldTypeIcon type={props.state.field.type} />
       </Show>
-      <div class="w-full">
+      <div
+        class={classNames("w-full h-full", {
+          "pl-[38px]": props.state.field.type !== "tab",
+        })}
+      >
         <Switch>
           <Match when={props.state.field.type === "tab"}>
             <Show when={props.state.activeTab === props.state.field.key}>
@@ -92,7 +97,16 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             />
           </Match>
           <Match when={props.state.field.type === "wysiwyg"}>
-            <div>wysiwyg</div>
+            <CustomFields.WYSIWYGField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "media"}>
             <div>media</div>

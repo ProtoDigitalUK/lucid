@@ -6,6 +6,7 @@ import { ColourField } from "./ColourField";
 import { CheckboxField } from "./CheckboxField";
 import { JSONField } from "./JSONField";
 import { SelectField } from "./SelectField";
+import { WYSIWYGField } from "./WYSIWYGField";
 
 const CustomFields = {
   DynamicField,
@@ -16,6 +17,7 @@ const CustomFields = {
   CheckboxField,
   JSONField,
   SelectField,
+  WYSIWYGField,
 };
 
 export default CustomFields;
