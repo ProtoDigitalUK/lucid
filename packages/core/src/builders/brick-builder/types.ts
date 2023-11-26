@@ -51,6 +51,11 @@ export interface CustomField {
   fields?: Array<CustomField>;
   default?: defaultFieldValues;
 
+  presets?: string[];
+  copy?: {
+    true?: string;
+    false?: string;
+  };
   options?: Array<{
     label: string;
     value: string;
@@ -145,7 +150,7 @@ export interface RepeaterConfig extends CustomFieldConfig {
   };
 }
 export interface NumberConfig extends CustomFieldConfig {
-  default?: number;
+  default?: number | null;
   placeholder?: string;
   validation?: {
     required?: boolean;
@@ -154,11 +159,19 @@ export interface NumberConfig extends CustomFieldConfig {
 }
 export interface CheckboxConfig extends CustomFieldConfig {
   default?: boolean;
+  copy?: {
+    true?: string;
+    false?: string;
+  };
 }
 export interface SelectConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
+
   options: Array<{ label: string; value: string }>;
+  validation?: {
+    required?: boolean;
+  };
 }
 export interface TextareaConfig extends CustomFieldConfig {
   default?: string;
@@ -180,7 +193,7 @@ export interface JSONConfig extends CustomFieldConfig {
 }
 export interface ColourConfig extends CustomFieldConfig {
   default?: string;
-  placeholder?: string;
+  presets?: string[];
   validation?: {
     required?: boolean;
   };

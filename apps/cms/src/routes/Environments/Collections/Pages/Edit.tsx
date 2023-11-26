@@ -297,7 +297,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         <Match when={isSuccess()}>
           <div class="relative h-[calc(100vh-60px)] w-full flex">
             {/* Sidebar Bricks & page fields */}
-            <div class="w-[500px] max-h-screen overflow-y-auto p-15">
+            <div class="w-[500px] max-h-screen overflow-y-auto p-15 hide-scrollbar">
               <PageBuilder.Sidebar
                 state={{
                   brickConfig: brickConfig.data?.data || [],
@@ -341,14 +341,14 @@ const EnvCollectionsPagesEditRoute: Component = () => {
                 </button>
               </div>
               <div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
-                <div class="absolute inset-0 overflow-y-scroll z-10 right-[195px] p-15">
+                <div class="absolute inset-0 overflow-y-scroll z-10 right-[175px] p-15 hide-scrollbar">
                   <PageBuilder.Builder
                     state={{
                       brickConfig: brickConfig.data?.data || [],
                     }}
                   />
                 </div>
-                <div class="absolute top-15 right-15 bottom-15 w-[180px] z-20 overflow-y-scroll">
+                <div class="absolute top-15 right-15 bottom-15 w-[160px] z-20 overflow-y-scroll hide-scrollbar">
                   <PageBuilder.PreviewBar
                     data={{
                       brickConfig: brickConfig.data?.data || [],

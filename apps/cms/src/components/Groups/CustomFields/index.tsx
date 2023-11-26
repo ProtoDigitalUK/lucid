@@ -1,11 +1,23 @@
 import { DynamicField } from "./DynamicField";
 import { RepeaterField } from "./RepeaterField";
-import { TextField } from "./TextField";
+import { TextareaField } from "./TextareaField";
+import { InputField } from "./InputField";
+import { ColourField } from "./ColourField";
+import { CheckboxField } from "./CheckboxField";
+import { JSONField } from "./JSONField";
+import { SelectField } from "./SelectField";
+import { WYSIWYGField } from "./WYSIWYGField";
 
 const CustomFields = {
   DynamicField,
   RepeaterField,
-  TextField,
+  InputField,
+  TextareaField,
+  ColourField,
+  CheckboxField,
+  JSONField,
+  SelectField,
+  WYSIWYGField,
 };
 
 export default CustomFields;

@@ -1,8 +1,13 @@
-import { Component, For, Match, Switch, Show } from "solid-js";
+import { Component, For, Match, Switch, Show, createMemo } from "solid-js";
+import classNames from "classnames";
 // Types
 import type { CustomFieldT } from "@lucid/types/src/bricks";
 // Store
-import { BrickStoreGroupT, BrickStoreFieldT } from "@/store/builderStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
+import builderStore, {
+  type BrickStoreGroupT,
+  type BrickStoreFieldT,
+} from "@/store/builderStore";
 // Components
 import CustomFields from "@/components/Groups/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
@@ -23,13 +28,33 @@ interface DynamicFieldProps {
 
 export const DynamicField: Component<DynamicFieldProps> = (props) => {
   // -------------------------------
+  // Memos
+  const contentLanguage = createMemo(
+    () => contentLanguageStore.get.contentLanguage
+  );
+
+  const fieldError = createMemo(() => {
+    return builderStore.get.fieldsErrors.find((field) => {
+      return (
+        field.key === props.state.field.key &&
+        field.language_id === contentLanguage() &&
+        field.group_id === props.state.groupId
+      );
+    });
+  });
+
+  // -------------------------------
   // Render
   return (
-    <div class="flex w-full mb-2.5 last:mb-0">
+    <div class="w-full mb-2.5 last:mb-0 relative">
       <Show when={props.state.field.type !== "tab"}>
         <FieldTypeIcon type={props.state.field.type} />
       </Show>
-      <div class="w-full">
+      <div
+        class={classNames("w-full h-full", {
+          "pl-[38px]": props.state.field.type !== "tab",
+        })}
+      >
         <Switch>
           <Match when={props.state.field.type === "tab"}>
             <Show when={props.state.activeTab === props.state.field.key}>
@@ -59,41 +84,118 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             />
           </Match>
           <Match when={props.state.field.type === "text"}>
-            <CustomFields.TextField
+            <CustomFields.InputField
+              type="text"
               state={{
                 brickIndex: props.state.brickIndex,
                 key: props.state.field.key,
                 field: props.state.field,
                 groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
               }}
             />
           </Match>
           <Match when={props.state.field.type === "wysiwyg"}>
-            <div>wysiwyg</div>
+            <CustomFields.WYSIWYGField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "media"}>
             <div>media</div>
           </Match>
           <Match when={props.state.field.type === "number"}>
-            <div>number</div>
+            <CustomFields.InputField
+              type="number"
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "checkbox"}>
-            <div>checkbox</div>
+            <CustomFields.CheckboxField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "select"}>
-            <div>select</div>
+            <CustomFields.SelectField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "textarea"}>
-            <div>textarea</div>
+            <CustomFields.TextareaField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "json"}>
-            <div>json</div>
+            <CustomFields.JSONField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "colour"}>
-            <div>colour</div>
+            <CustomFields.ColourField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "datetime"}>
-            <div>datetime</div>
+            <CustomFields.InputField
+              type="datetime-local"
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "pagelink"}>
             <div>pagelink</div>

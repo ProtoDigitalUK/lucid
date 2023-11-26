@@ -13,6 +13,7 @@ export const TestingBrick = new BrickBuilder("testing", {
   .addText({
     key: "text-key",
     description: "Testing title",
+    placeholder: "Testing title",
   })
   .addWysiwyg({
     key: "wysiwyg-key",
@@ -39,6 +40,10 @@ export const TestingBrick = new BrickBuilder("testing", {
   })
   .addCheckbox({
     key: "checkbox-key",
+    copy: {
+      true: "Show",
+      false: "Hide",
+    },
   })
   .addSelect({
     key: "select-key",
@@ -56,9 +61,14 @@ export const TestingBrick = new BrickBuilder("testing", {
         value: "option-3",
       },
     ],
+    validation: {
+      required: true,
+    },
   })
   .addTextarea({
     key: "textarea-key",
+    placeholder: "Testing textarea",
+    description: "Testing textarea",
   })
   .addTab({
     title: "Advanced",
@@ -69,6 +79,7 @@ export const TestingBrick = new BrickBuilder("testing", {
   })
   .addColour({
     key: "colour-key",
+    presets: ["#000000", "#ffffff"],
   })
   .addDateTime({
     key: "datetime-key",
@@ -145,7 +156,7 @@ export const DefaultMetaBrick = new BrickBuilder("default_meta")
     key: "meta_title",
     title: "Meta Title",
   })
-  .addText({
+  .addTextarea({
     key: "meta_description",
     title: "Meta Description",
   });
@@ -155,7 +166,7 @@ export const PageMetaBrick = new BrickBuilder("page_meta")
     key: "meta_title",
     title: "Meta Title",
   })
-  .addText({
+  .addTextarea({
     key: "meta_description",
     title: "Meta Description",
   });

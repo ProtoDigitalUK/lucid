@@ -79,6 +79,8 @@
   "file_extension": "File Extension",
   "file_size": "File Size",
   "width": "Width",
+  "true": "True",
+  "false": "False",
   "height": "Height",
   "mime_type": "Mime Type",
   "users_permissions": "User Permissions",

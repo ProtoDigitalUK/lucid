@@ -12,7 +12,7 @@ import {
 import classNames from "classnames";
 import { debounce } from "@solid-primitives/scheduled";
 // Types
-import { ErrorResult } from "@/types/api";
+import type { ErrorResult, FieldError } from "@/types/api";
 // Components
 import { FaSolidCheck, FaSolidSort, FaSolidXmark } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
@@ -42,7 +42,7 @@ export interface SelectProps {
   autoFoucs?: boolean;
   required?: boolean;
   disabled?: boolean;
-  errors?: ErrorResult;
+  errors?: ErrorResult | FieldError;
   noMargin?: boolean;
   noClear?: boolean;
   hasError?: boolean;
@@ -85,7 +85,7 @@ export const Select: Component<SelectProps> = (props) => {
   const selectOptions = createMemo(() => {
     if (props.noClear) return props.options;
 
-    const options = props.options;
+    const options = JSON.parse(JSON.stringify(props.options));
     options.unshift({
       value: undefined,
       label: T("clear"),
@@ -146,7 +146,11 @@ export const Select: Component<SelectProps> = (props) => {
             onFocus={() => setInputFocus(true)}
             onBlur={() => setInputFocus(false)}
           >
-            {selectedLabel()}
+            {selectedLabel() ? (
+              <span class="truncate">{selectedLabel()}</span>
+            ) : (
+              <span class="text-placeholder">{T("nothing_selected")}</span>
+            )}
             <FaSolidSort size={16} class="fill-title ml-1" />
           </DropdownMenu.Trigger>
         </div>

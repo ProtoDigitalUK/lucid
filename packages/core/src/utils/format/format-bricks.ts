@@ -146,7 +146,7 @@ const formatFields = ({
         let fieldsData: BrickResT["fields"][0] = {
           fields_id: brickField.fields_id,
           key: brickField.key,
-          type: brickField.type,
+          type: field.type,
           language_id: brickField.language_id,
         };
         if (brickField.group_id) fieldsData.group_id = brickField.group_id;

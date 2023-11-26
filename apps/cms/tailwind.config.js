@@ -72,5 +72,6 @@ module.exports = {
       },
     },
   },
+  safelist: ["ql-toolbar", "ql-container"],
   plugins: [require("@tailwindcss/typography")],
 };
