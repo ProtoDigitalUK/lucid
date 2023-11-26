@@ -61,6 +61,9 @@ export const TestingBrick = new BrickBuilder("testing", {
         value: "option-3",
       },
     ],
+    validation: {
+      required: true,
+    },
   })
   .addTextarea({
     key: "textarea-key",

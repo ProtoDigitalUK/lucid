@@ -365,7 +365,12 @@ export default class BrickBuilder {
       // Check if field is required
       if (field.validation?.required) {
         if (value === undefined || value === null || value === "") {
-          throw new ValidationError(`Please enter a value.`);
+          let message = `Please enter a value.`;
+          if (field.type === "checkbox")
+            message = `Please ensure the switch is checked.`;
+          if (field.type === "select")
+            message = `Please ensure an option is selected.`;
+          throw new ValidationError(message);
         }
       }
 
@@ -437,11 +442,11 @@ export default class BrickBuilder {
   }
   // ------------------------------------
   #validateSelectType(field: CustomField, value: string) {
-    // Check if value is in the options
+    if (field.validation?.required !== true && !value) return;
     if (field.options) {
       const optionValues = field.options.map((option) => option.value);
       if (!optionValues.includes(value)) {
-        throw new ValidationError("Please ensure the value is a valid option.");
+        throw new ValidationError("Please ensure an option is selected.");
       }
     }
   }

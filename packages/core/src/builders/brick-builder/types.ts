@@ -167,7 +167,11 @@ export interface CheckboxConfig extends CustomFieldConfig {
 export interface SelectConfig extends CustomFieldConfig {
   default?: string;
   placeholder?: string;
+
   options: Array<{ label: string; value: string }>;
+  validation?: {
+    required?: boolean;
+  };
 }
 export interface TextareaConfig extends CustomFieldConfig {
   default?: string;
