@@ -57,7 +57,7 @@ export const Switch: Component<SwitchProps> = (props) => {
       />
       <button
         type="button"
-        class="bg-backgroundAccent rounded-md flex border border-border mt-1 relative h-10 focus:border-secondary"
+        class="bg-backgroundAccent rounded-md flex border border-border mt-1 relative h-10 focus:border-secondary group"
         onClick={() => {
           checkboxRef?.click();
         }}
@@ -92,13 +92,13 @@ export const Switch: Component<SwitchProps> = (props) => {
         </span>
         <span
           class={classnames(
-            "w-1/2 bg-secondary absolute top-0 bottom-0 transition-all duration-200 rounded-md z-0",
+            "w-1/2 bg-secondary absolute top-0 bottom-0 transition-all duration-200 rounded-md z-0 group-hover:bg-secondaryH",
             {
               "left-1/2": props.value,
               "left-0": !props.value,
             }
           )}
-        ></span>
+        />
       </button>
       <Form.DescribedBy id={props.id} describedBy={props.copy?.describedBy} />
       <Form.Tooltip copy={props.copy?.tooltip} theme={undefined} />

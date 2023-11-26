@@ -399,6 +399,7 @@ export default class BrickBuilder {
           break;
         }
         case "datetime": {
+          if (!value) break;
           const date = new Date(value);
           if (isNaN(date.getTime())) {
             throw new ValidationError("Please ensure the date is valid.");

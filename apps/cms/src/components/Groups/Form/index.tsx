@@ -7,6 +7,7 @@ import { SelectMultiple } from "./SelectMultiple";
 import { SingleFileUpload } from "./SingleFileUpload";
 import { Colour } from "./Colour";
 import { Switch } from "./Switch";
+import { JSONTextarea } from "./JSONTextarea";
 
 import { ErrorMessage } from "./ErrorMessage";
 import { DescribedBy } from "./DescribedBy";
@@ -23,6 +24,7 @@ const Form = {
   SingleFileUpload,
   Colour,
   Switch,
+  JSONTextarea,
 
   ErrorMessage,
   DescribedBy,

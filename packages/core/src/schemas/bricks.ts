@@ -23,7 +23,7 @@ export const FieldSchema = z.object({
       label: z.string().nullable().optional(),
     }),
     z.null(),
-    z.object({}).optional(),
+    z.any(),
   ]),
   language_id: z.number(),
   fields_id: z.number().optional(),

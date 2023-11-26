@@ -138,7 +138,16 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             />
           </Match>
           <Match when={props.state.field.type === "json"}>
-            <div>json</div>
+            <CustomFields.JSONField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "colour"}>
             <CustomFields.ColourField

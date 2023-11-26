@@ -57,7 +57,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
         />
         <textarea
           class={classnames(
-            "focus:outline-none text-sm text-title font-medium resize-none w-full h-40",
+            "focus:outline-none text-sm text-title font-medium resize-none w-full h-40 block",
             {
               "pt-2": props.copy?.label === undefined,
               "bg-container border border-border rounded-md mt-1 p-2.5 focus:border-secondary duration-200 transition-colors":

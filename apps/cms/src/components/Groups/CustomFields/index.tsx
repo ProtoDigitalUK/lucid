@@ -4,6 +4,7 @@ import { TextareaField } from "./TextareaField";
 import { InputField } from "./InputField";
 import { ColourField } from "./ColourField";
 import { CheckboxField } from "./CheckboxField";
+import { JSONField } from "./JSONField";
 
 const CustomFields = {
   DynamicField,
@@ -12,6 +13,7 @@ const CustomFields = {
   TextareaField,
   ColourField,
   CheckboxField,
+  JSONField,
 };
 
 export default CustomFields;
