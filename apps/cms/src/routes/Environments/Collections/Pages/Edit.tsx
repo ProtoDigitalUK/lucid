@@ -212,6 +212,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         translations: parseTranslationBody({
           translations: body.translations,
           isHomepage: getIsHomepage(),
+          mode: "update",
         }),
         bricks: builderStore.get.bricks,
       },

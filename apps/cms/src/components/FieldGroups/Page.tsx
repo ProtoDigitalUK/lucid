@@ -327,12 +327,18 @@ export const setDefualtTranslations = (data: {
 export const parseTranslationBody = (data: {
   translations?: PagesResT["translations"];
   isHomepage: boolean;
+  mode: "create" | "update";
 }) => {
   if (!data.translations) return undefined;
   return data.translations.map((translation) => {
     return {
       title: translation.title,
-      slug: data.isHomepage ? null : translation.slug,
+      slug:
+        data.mode === "create"
+          ? translation.slug
+          : data.isHomepage
+          ? null
+          : translation.slug,
       excerpt: translation.excerpt,
       language_id: translation.language_id,
     };

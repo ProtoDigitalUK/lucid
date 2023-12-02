@@ -10,8 +10,8 @@ module.exports = {
         // Accents
 
         // black
-        primary: "#16161A",
-        primaryH: "#2E2E34",
+        primary: "#101010",
+        primaryH: "#1E1E1E",
         primaryText: "#FFFFFF",
         primaryA: "#414141",
         primaryA2: "#343439",

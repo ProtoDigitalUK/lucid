@@ -252,6 +252,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
               translations: parseTranslationBody({
                 translations: body.translations,
                 isHomepage: getIsHomepage(),
+                mode: "update",
               }),
             },
             headers: {
@@ -265,6 +266,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
                 parseTranslationBody({
                   translations: getTranslations(),
                   isHomepage: getIsHomepage(),
+                  mode: "create",
                 }) || [],
               collection_key: props.collection.key,
               homepage: getIsHomepage(),
