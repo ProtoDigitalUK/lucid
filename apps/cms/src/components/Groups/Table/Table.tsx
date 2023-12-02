@@ -331,7 +331,11 @@ export const TableRoot: Component<TableRootProps> = (props) => {
       </Switch>
       {/* Pagination */}
       <Show when={props.meta}>
-        <Query.Pagination meta={props.meta} searchParams={props.searchParams} />
+        <Query.Pagination
+          meta={props.meta}
+          searchParams={props.searchParams}
+          mode="page"
+        />
       </Show>
     </>
   );

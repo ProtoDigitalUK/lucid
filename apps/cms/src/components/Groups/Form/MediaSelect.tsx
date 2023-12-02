@@ -3,6 +3,9 @@ import { Component } from "solid-js";
 import classNames from "classnames";
 // Types
 import type { ErrorResult, FieldError } from "@/types/api";
+import { MediaResT } from "@headless/types/src/media";
+// Store
+import mediaSelectStore from "@/store/mediaSelectStore";
 // Components
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
@@ -37,7 +40,19 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
         theme={"basic"}
       />
       <div class="mt-2.5 w-full">
-        <Button type="submit" theme="primary" size="x-small">
+        <Button
+          type="submit"
+          theme="primary"
+          size="x-small"
+          onClick={() => {
+            mediaSelectStore.set({
+              onSelectCallback: (media: MediaResT) => {
+                console.log("select callback", media);
+              },
+              open: true,
+            });
+          }}
+        >
           {T("select_media")}
         </Button>
       </div>

@@ -104,7 +104,7 @@ export const Sort: Component<SortProps> = (props) => {
         options={{
           as: "ul",
           rounded: true,
-          class: "w-[180px]",
+          class: "w-[180px] z-[60]",
         }}
       >
         <For each={props.sorts}>

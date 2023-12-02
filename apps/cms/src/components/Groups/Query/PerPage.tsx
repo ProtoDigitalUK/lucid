@@ -42,7 +42,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
         options={{
           as: "ul",
           rounded: true,
-          class: "w-[180px]",
+          class: "w-[180px] z-[60]",
         }}
       >
         <For each={options()}>

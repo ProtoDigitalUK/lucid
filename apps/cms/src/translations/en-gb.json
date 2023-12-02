@@ -203,6 +203,7 @@
   "quick_edit": "Quick Edit",
   "excerpt": "Excerpt",
   "author": "Author",
+  "select_media_description": "Click the media you wish to use. To upload a new file drag and drop it into the modal.",
 
   "delete_environment_modal_title": "Delete Environment",
   "delete_environment_modal_description": "Are you sure you want to delete this environment?",

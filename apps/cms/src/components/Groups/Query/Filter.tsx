@@ -257,7 +257,7 @@ export const Filter: Component<FilterProps> = (props) => {
         options={{
           as: "ul",
           rounded: true,
-          class: "w-[300px]",
+          class: "w-[300px] z-[60]",
         }}
       >
         <For each={props.filters}>

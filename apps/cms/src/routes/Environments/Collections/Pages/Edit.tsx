@@ -34,6 +34,7 @@ import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 import NavigationGuard, {
   navGuardHook,
 } from "@/components/Modals/NavigationGuard";
+import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
@@ -393,6 +394,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
               targetElement: navGuard.getTargetElement(),
             }}
           />
+          <SelectMediaModal />
           <Show when={isSaving()}>
             <div class="fixed inset-0 bg-black bg-opacity-50 z-50" />
           </Show>

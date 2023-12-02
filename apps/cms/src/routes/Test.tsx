@@ -5,6 +5,7 @@ import { BrickConfigT } from "@headless/types/src/bricks";
 import builderStore from "@/store/builderStore";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
+import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
 
 const TESTING_CONFIG: BrickConfigT = {
   key: "testing",
@@ -178,9 +179,10 @@ const TestRoute: Component = () => {
           state={{
             brick: firstBrick(),
             config: TESTING_CONFIG,
-            fieldErrors: [],
           }}
         />
+
+        <SelectMediaModal />
       </div>
     </>
   );

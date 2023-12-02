@@ -13,9 +13,8 @@ import Query from "@/components/Groups/Query";
 import Error from "@/components/Partials/Error";
 import Button from "@/components/Partials/Button";
 import SkeletonCard from "@/components/Cards/SkeletonCard";
-import Layout from "@/components/Groups/Layout";
 
-interface GridRootProps {
+interface ModalGridProps {
   items: number;
   state: {
     isLoading: boolean;
@@ -29,7 +28,7 @@ interface GridRootProps {
   children: JSXElement;
 }
 
-export const GridRoot: Component<GridRootProps> = (props) => {
+export const ModalGrid: Component<ModalGridProps> = (props) => {
   // ----------------------------------
   // Render
   return (
@@ -37,7 +36,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
       <Switch>
         <Match when={props.permission === false}>
           <Error
-            type="page-layout"
+            type="fill"
             content={{
               image: noPermission,
               title: T("no_permission"),
@@ -47,7 +46,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
         </Match>
         <Match when={props.state.isError}>
           <Error
-            type="page-layout"
+            type="fill"
             content={{
               image: notifySvg,
               title: T("error_title"),
@@ -57,7 +56,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
         </Match>
         <Match when={props.items === 0 && props.state.isLoading === false}>
           <Error
-            type="page-layout"
+            type="fill"
             content={{
               image: emptySvg,
               title: T("no_results"),
@@ -83,37 +82,35 @@ export const GridRoot: Component<GridRootProps> = (props) => {
           </Error>
         </Match>
         <Match when={props.state.isSuccess || props.state.isLoading}>
-          <Layout.PageContent>
-            <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-15">
-              <Switch>
-                <Match when={props.state.isLoading}>
-                  <Switch>
-                    <Match when={props.loadingCard}>
-                      {props.loadingCard}
-                      {props.loadingCard}
-                      {props.loadingCard}
-                      {props.loadingCard}
-                      {props.loadingCard}
-                      {props.loadingCard}
-                      {props.loadingCard}
-                      {props.loadingCard}
-                    </Match>
-                    <Match when={!props.loadingCard}>
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                      <SkeletonCard size="medium" />
-                    </Match>
-                  </Switch>
-                </Match>
-                <Match when={props.state.isSuccess}>{props.children}</Match>
-              </Switch>
-            </ul>
-          </Layout.PageContent>
+          <ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-15">
+            <Switch>
+              <Match when={props.state.isLoading}>
+                <Switch>
+                  <Match when={props.loadingCard}>
+                    {props.loadingCard}
+                    {props.loadingCard}
+                    {props.loadingCard}
+                    {props.loadingCard}
+                    {props.loadingCard}
+                    {props.loadingCard}
+                    {props.loadingCard}
+                    {props.loadingCard}
+                  </Match>
+                  <Match when={!props.loadingCard}>
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                    <SkeletonCard size="medium" />
+                  </Match>
+                </Switch>
+              </Match>
+              <Match when={props.state.isSuccess}>{props.children}</Match>
+            </Switch>
+          </ul>
         </Match>
       </Switch>
       {/* Pagination */}
@@ -123,7 +120,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
           searchParams={
             props.searchParams as ReturnType<typeof useSearchParams>
           }
-          mode="page"
+          mode="modal"
         />
       </Show>
     </>

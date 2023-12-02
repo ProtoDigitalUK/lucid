@@ -162,7 +162,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
           options={{
             anchorWidth: true,
             rounded: true,
-            class: "max-h-36 overflow-y-auto z-50 !p-1.5",
+            class: "max-h-36 overflow-y-auto z-[70] !p-1.5",
           }}
         >
           <Switch>
