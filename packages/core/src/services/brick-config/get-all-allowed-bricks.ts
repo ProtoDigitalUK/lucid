@@ -5,8 +5,8 @@ import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 // Services
 import brickConfigService from "@services/brick-config/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
-import { BrickConfigT } from "@lucid/types/src/bricks.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
+import { BrickConfigT } from "@headless/types/src/bricks.js";
 
 export interface ServiceData {
   collection: CollectionResT;

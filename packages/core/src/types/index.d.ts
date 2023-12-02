@@ -1,5 +1,5 @@
 import { Fastify, FastifyRequest, FastifyReply } from "fastify";
-import type { LanguageResT } from "@lucid/types/src/language.js";
+import type { LanguageResT } from "@headless/types/src/language.js";
 import z from "zod";
 
 declare module "fastify" {

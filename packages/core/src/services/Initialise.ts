@@ -24,9 +24,9 @@ const Initialise = async (client: PoolClient) => {
       false,
       client
     )({
-      first_name: "Lucid",
+      first_name: "Headless",
       last_name: "Admin",
-      email: "admin@lucid.com",
+      email: "admin@headless.com",
       username: "admin",
       password: "password",
       super_admin: true,

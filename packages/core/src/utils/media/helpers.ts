@@ -10,7 +10,7 @@ import { join } from "path";
 // Schema
 import mediaSchema from "@schemas/media.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media.js";
+import { MediaResT } from "@headless/types/src/media.js";
 
 // -------------------------------------------
 // Types

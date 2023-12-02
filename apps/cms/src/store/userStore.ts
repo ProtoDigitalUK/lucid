@@ -1,10 +1,10 @@
 import { createStore } from "solid-js/store";
 // Types
-import { UserResT } from "@lucid/types/src/users";
+import { UserResT } from "@headless/types/src/users";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions";
+} from "@headless/types/src/permissions";
 
 type UserStoreT = {
   user: UserResT | null;

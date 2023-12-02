@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 // Types
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { EnvironmentResT } from "@headless/types/src/environments";
 
 // -------------------------------
 // Functions
@@ -9,15 +9,15 @@ const setEnvironment = (value: EnvironmentResT["key"] | undefined) => {
 
   if (!value) {
     // remove from local storage
-    localStorage.removeItem("lucid_environment");
+    localStorage.removeItem("headless_environment");
     return;
   } else {
     // set in local storage
-    localStorage.setItem("lucid_environment", value);
+    localStorage.setItem("headless_environment", value);
   }
 };
 const getInitialEnvironment = () => {
-  const environment = localStorage.getItem("lucid_environment");
+  const environment = localStorage.getItem("headless_environment");
   if (environment) {
     return environment as EnvironmentResT["key"];
   }
@@ -30,7 +30,7 @@ const syncEnvironment = (environments: EnvironmentResT[]) => {
   }
 
   // check if environment is already set, verify it exists
-  const environmentLS = localStorage.getItem("lucid_environment");
+  const environmentLS = localStorage.getItem("headless_environment");
   if (environmentLS) {
     // check if environment exists
     const environmentExists = environments.find(

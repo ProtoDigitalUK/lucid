@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Page from "@db/models/Page.js";
 
@@ -14,7 +14,7 @@ const deleteMultiple = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (page.length !== data.ids.length) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Pages Not Deleted",
       message: "There was an error deleting some or all of the pages",

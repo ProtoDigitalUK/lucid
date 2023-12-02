@@ -10,7 +10,7 @@ import {
 // Stores
 import userStore from "@/store/userStore";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@headless/types/src/media";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 // Utils

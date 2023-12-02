@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { BrickConfigT } from "@lucid/types/src/bricks";
+import { BrickConfigT } from "@headless/types/src/bricks";
 
 interface QueryParams {
   include: Record<"fields", boolean>;

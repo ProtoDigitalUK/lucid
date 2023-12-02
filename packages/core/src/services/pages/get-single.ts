@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 import z from "zod";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
@@ -28,7 +28,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!page) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page not found",
       message: `Page with id "${data.id}" not found`,

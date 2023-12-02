@@ -18,7 +18,7 @@ const getSingleController: Controller<
     false
   )({
     collection_key: request.params.collection_key,
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
   });
 
   reply.status(200).send(

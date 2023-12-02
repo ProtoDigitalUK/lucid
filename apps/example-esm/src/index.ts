@@ -1,14 +1,14 @@
 import Fastify from "fastify";
 import { log } from "console-log-colors";
 
-import lucid, { sendEmail, submitForm } from "@lucid/core";
+import headless, { sendEmail, submitForm } from "@headless/core";
 import { ContactForm } from "./forms/index.js";
 
 const fastify = Fastify({
   logger: true,
 });
 
-fastify.register(lucid);
+fastify.register(headless);
 
 fastify.post("/send-email", async (request, reply) => {
   try {

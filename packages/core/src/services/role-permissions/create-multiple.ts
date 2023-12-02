@@ -5,7 +5,7 @@ import RolePermission from "@db/models/RolePermission.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 export interface ServiceData {
   role_id: number;

@@ -81,7 +81,7 @@ export default class Role {
     });
 
     const roleRes = await client.query<RoleT>({
-      text: `INSERT INTO lucid_roles (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_roles (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
@@ -89,7 +89,7 @@ export default class Role {
   };
   static deleteSingle: RoleDeleteSingle = async (client, data) => {
     const roleRes = await client.query<RoleT>({
-      text: `DELETE FROM lucid_roles WHERE id = $1 RETURNING *`,
+      text: `DELETE FROM headless_roles WHERE id = $1 RETURNING *`,
       values: [data.id],
     });
 
@@ -97,12 +97,12 @@ export default class Role {
   };
   static getMultiple: RoleGetMultiple = async (client, query_instance) => {
     const roles = client.query<RoleT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_roles as roles ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_roles.id) FROM lucid_roles ${query_instance.query.where}`,
+      text: `SELECT COUNT(DISTINCT headless_roles.id) FROM headless_roles ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
@@ -120,9 +120,9 @@ export default class Role {
     });
 
     const roleRes = await client.query<RoleT>({
-      text: `UPDATE lucid_roles SET ${columns.formatted.update} WHERE id = $${
-        aliases.value.length + 1
-      } RETURNING *`,
+      text: `UPDATE headless_roles SET ${
+        columns.formatted.update
+      } WHERE id = $${aliases.value.length + 1} RETURNING *`,
       values: [...values.value, data.id],
     });
 
@@ -138,9 +138,9 @@ export default class Role {
             'environment_key', rp.environment_key
           )) AS permissions
         FROM
-          lucid_roles as roles
+          headless_roles as roles
         LEFT JOIN 
-          lucid_role_permissions as rp ON roles.id = rp.role_id
+          headless_role_permissions as rp ON roles.id = rp.role_id
         WHERE 
           roles.id = $1
         GROUP BY
@@ -152,7 +152,7 @@ export default class Role {
   };
   static getSingleByName: RoleGetSingleByName = async (client, data) => {
     const roleRes = await client.query<RoleT>({
-      text: `SELECT * FROM lucid_roles WHERE name = $1`,
+      text: `SELECT * FROM headless_roles WHERE name = $1`,
       values: [data.name],
     });
 

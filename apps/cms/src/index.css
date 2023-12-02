@@ -54,8 +54,8 @@
 }
 
 :root {
-  --lucid-page-layout-footer-height: 0px;
-  --lucid-page-layout-header-height: 0px;
+  --headless-page-layout-footer-height: 0px;
+  --headless-page-layout-header-height: 0px;
 }
 
 @layer base {
@@ -117,12 +117,12 @@
 
   /* Page Layout */
   .page-layout {
-    min-height: calc(100vh - var(--lucid-page-layout-header-height));
+    min-height: calc(100vh - var(--headless-page-layout-header-height));
   }
   .page-layout-full-body {
     min-height: calc(
-      100vh - var(--lucid-page-layout-header-height) -
-        var(--lucid-page-layout-footer-height)
+      100vh - var(--headless-page-layout-header-height) -
+        var(--headless-page-layout-footer-height)
     );
   }
 

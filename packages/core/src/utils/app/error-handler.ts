@@ -1,5 +1,5 @@
 /*
-  When to use LucidError:
+  When to use HeadlessError:
     - When the error is being thrown from a route or middleware
 
   When to use RuntimeError:
@@ -17,7 +17,7 @@ const DEFAULT_ERROR = {
   errors: null,
 };
 
-interface LucidErrorData {
+interface HeadlessErrorData {
   type: "validation" | "basic" | "forbidden" | "authorisation";
 
   name?: string;
@@ -52,11 +52,11 @@ export interface ErrorResult {
 
 // ------------------------------------
 // Error Classes
-class LucidError extends Error {
-  code: LucidErrorData["code"] | null = null;
+class HeadlessError extends Error {
+  code: HeadlessErrorData["code"] | null = null;
   status: number;
   errors: ErrorResult | null = null;
-  constructor(data: LucidErrorData) {
+  constructor(data: HeadlessErrorData) {
     super(data.message || DEFAULT_ERROR.message);
 
     switch (data.type) {
@@ -126,7 +126,7 @@ class RuntimeError extends Error {
 // ------------------------------------
 // Util Functions
 export const decodeError = (error: Error) => {
-  if (error instanceof LucidError) {
+  if (error instanceof HeadlessError) {
     return {
       name: error.name,
       message: error.message,
@@ -150,4 +150,4 @@ const modelErrors = (error: ErrorResult): ErrorResult => {
   };
 };
 
-export { LucidError, RuntimeError, modelErrors };
+export { HeadlessError, RuntimeError, modelErrors };

@@ -1,4 +1,4 @@
-import { BrickBuilder } from "@lucid/core";
+import { BrickBuilder } from "@headless/core";
 
 export const TestingBrick = new BrickBuilder("testing", {
   preview: {
@@ -93,7 +93,7 @@ export const TestingBrick = new BrickBuilder("testing", {
 
 export const BannerBrick = new BrickBuilder("banner", {
   preview: {
-    image: "https://lucid-dev.up.railway.app/public/banner-brick.png",
+    image: "https://headless-dev.up.railway.app/public/banner-brick.png",
   },
 })
   .addTab({
@@ -137,7 +137,7 @@ export const BannerBrick = new BrickBuilder("banner", {
 
 export const IntroBrick = new BrickBuilder("intro", {
   preview: {
-    image: "https://lucid-dev.up.railway.app/public/introduction-brick.png",
+    image: "https://headless-dev.up.railway.app/public/introduction-brick.png",
   },
 })
   .addTab({

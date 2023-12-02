@@ -18,7 +18,7 @@ const getMultipleValidParentsController: Controller<
     false
   )({
     page_id: Number(request.params.id),
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     query: request.query,
     language: request.language,
   });

@@ -1,7 +1,7 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import getS3Client from "@utils/app/s3-client.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Types
 import { Readable } from "stream";
 // Services
@@ -35,7 +35,7 @@ const getS3Object = async (data: ServiceData): Promise<Response> => {
     };
   } catch (err) {
     const error = err as Error;
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: error.name || "Error",
       message: error.message || "An error occurred",

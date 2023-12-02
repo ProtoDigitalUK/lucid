@@ -4,7 +4,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@headless/types/src/media";
 
 interface Params {
   id: number;
@@ -12,7 +12,7 @@ interface Params {
     translations: Array<{
       language_id: number;
       alt: string | null;
-      name:  string | null;
+      name: string | null;
     }>;
   };
 }

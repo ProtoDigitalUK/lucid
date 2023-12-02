@@ -1,6 +1,6 @@
 import { FastifyRequest } from "fastify";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Serivces
 import usersServices from "@services/users/index.js";
@@ -8,10 +8,10 @@ import usersServices from "@services/users/index.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 const throwPermissionError = () => {
-  throw new LucidError({
+  throw new HeadlessError({
     type: "basic",
     name: "Permission Error",
     message: "You do not have permission to access this resource",
@@ -27,7 +27,7 @@ const permissions =
     environments?: EnvironmentPermissionT[];
   }) =>
   async (request: FastifyRequest) => {
-    const environment = request.headers["lucid-environment"];
+    const environment = request.headers["headless-environment"];
 
     // Lookup the users role and permissions
     const user = await service(

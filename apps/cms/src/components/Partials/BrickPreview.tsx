@@ -2,7 +2,7 @@ import { Component } from "solid-js";
 // Assets
 import brickPlaceholder from "@/assets/images/brick-placeholder.jpg";
 // Types
-import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 // Components
 import { Image } from "@kobalte/core";
 import AspectRatio from "@/components/Partials/AspectRatio";

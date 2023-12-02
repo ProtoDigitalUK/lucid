@@ -9,7 +9,7 @@
     "./temp",
     "./.turbo",
     "clear-db.js",
-    "lucid.config.ts"
+    "headless.config.ts"
   ],
   "compilerOptions": {
     "module": "NodeNext",

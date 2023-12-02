@@ -1,4 +1,4 @@
-import { PermissionGroup } from "@lucid/types/src/permissions.js";
+import { PermissionGroup } from "@headless/types/src/permissions.js";
 // Format
 import formatPermissions from "@utils/format/format-permissions.js";
 

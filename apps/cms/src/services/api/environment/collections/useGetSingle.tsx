@@ -5,14 +5,14 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@headless/types/src/collections";
 
 interface QueryParams {
   location: {
     collection_key?: Accessor<string | undefined> | string;
   };
   headers: {
-    "lucid-environment": Accessor<string | undefined> | string;
+    "headless-environment": Accessor<string | undefined> | string;
   };
 }
 

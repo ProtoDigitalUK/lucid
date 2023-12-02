@@ -1,7 +1,7 @@
 // Modale
 import { EmailT } from "@db/models/Email.js";
 // Types
-import { EmailResT } from "@lucid/types/src/email.js";
+import { EmailResT } from "@headless/types/src/email.js";
 
 const formatEmails = (email: EmailT, html?: string): EmailResT => {
   return {

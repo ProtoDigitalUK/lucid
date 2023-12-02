@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import FormSubmission from "@db/models/FormSubmission.js";
@@ -36,7 +36,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!formSubmission) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Form Submission Error",
       message: "Failed to create form submission entry.",

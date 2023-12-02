@@ -31,7 +31,7 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
 
   const SelectQuery = new SelectQueryBuilder({
     columns: [
-      "lucid_pages.id",
+      "headless_pages.id",
       "environment_key",
       "collection_key",
       "parent_id",
@@ -40,12 +40,12 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
       "published_at",
       "author_id",
       "created_by",
-      "lucid_pages.created_at",
-      "lucid_pages.updated_at",
-      "lucid_page_content.title",
-      "lucid_page_content.slug",
-      "lucid_page_content.excerpt",
-      "lucid_page_content.language_id",
+      "headless_pages.created_at",
+      "headless_pages.updated_at",
+      "headless_page_content.title",
+      "headless_page_content.slug",
+      "headless_page_content.excerpt",
+      "headless_page_content.language_id",
     ],
     exclude: undefined,
     filter: {
@@ -63,19 +63,19 @@ const getMultiple = async (client: PoolClient, data: ServiceData) => {
           operator: "%",
           type: "text",
           columnType: "standard",
-          table: "lucid_page_content",
+          table: "headless_page_content",
         },
         slug: {
           operator: "%",
           type: "text",
           columnType: "standard",
-          table: "lucid_page_content",
+          table: "headless_page_content",
         },
         category_id: {
           operator: "=",
           type: "int",
           columnType: "standard",
-          table: "lucid_page_categories",
+          table: "headless_page_categories",
         },
         environment_key: {
           operator: "=",

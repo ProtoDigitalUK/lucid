@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 import crypto from "crypto";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import UserToken, { UserTokenT } from "@db/models/UserToken.js";
 
@@ -22,7 +22,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!userToken) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Error creating user token",
       message: "There was an error creating the user token.",

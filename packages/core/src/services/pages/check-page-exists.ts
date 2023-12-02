@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Page from "@db/models/Page.js";
 
@@ -16,7 +16,7 @@ const checkPageExists = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!page) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page not found",
       message: `Page with id "${data.id}" not found in environment "${data.environment_key}"!`,

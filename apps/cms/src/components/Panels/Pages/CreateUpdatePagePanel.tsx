@@ -14,9 +14,9 @@ import helpers from "@/utils/helpers";
 import { environment } from "@/store/environmentStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { CollectionResT } from "@lucid/types/src/collections";
+import type { CollectionResT } from "@headless/types/src/collections";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { PagesResT } from "@headless/types/src/pages";
 // Components
 import Panel from "@/components/Groups/Panel";
 import PageFieldGroup, {
@@ -68,7 +68,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         collection_key: props.collection.key,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
       perPage: -1,
     },
@@ -83,7 +83,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
         bricks: false,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
     },
     enabled: () => panelMode() === "update" && !!props.id?.(),
@@ -255,7 +255,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
               }),
             },
             headers: {
-              "lucid-environment": environment() || "",
+              "headless-environment": environment() || "",
             },
           });
         } else {
@@ -274,7 +274,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
               ) as number[],
             },
             headers: {
-              "lucid-environment": environment() as string,
+              "headless-environment": environment() as string,
             },
           });
         }

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Serices
 import authServices from "@services/auth/index.js";
@@ -21,7 +21,7 @@ const login = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!user || !user.password) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "User Not Found",
       message: "The username or password you entered is incorrect.",
@@ -35,7 +35,7 @@ const login = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!passwordValid) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "User Not Found",
       message: "The username or password you entered is incorrect.",

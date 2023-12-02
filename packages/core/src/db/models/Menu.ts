@@ -131,7 +131,7 @@ export default class Menu {
     // -------------------------------------------
     // Create Menu
     const menu = await client.query<MenuT>({
-      text: `INSERT INTO lucid_menus (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_menus (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
@@ -139,7 +139,7 @@ export default class Menu {
   };
   static deleteSingle: MenuDeleteSingle = async (client, data) => {
     const menu = await client.query({
-      text: `DELETE FROM lucid_menus WHERE id = $1 AND environment_key = $2 RETURNING *`,
+      text: `DELETE FROM headless_menus WHERE id = $1 AND environment_key = $2 RETURNING *`,
       values: [data.id, data.environment_key],
     });
 
@@ -180,7 +180,7 @@ export default class Menu {
       text: `SELECT
           ${SelectQuery.query.select}
         FROM
-          lucid_menus
+          headless_menus
         ${SelectQuery.query.where}`,
       values: SelectQuery.values,
     });
@@ -189,11 +189,11 @@ export default class Menu {
   };
   static getMultiple: MenuGetMultiple = async (client, query_instance) => {
     const menus = client.query<MenuT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_menus ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_menus ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_menus.id) FROM lucid_menus ${query_instance.query.where} `,
+      text: `SELECT COUNT(DISTINCT headless_menus.id) FROM headless_menus ${query_instance.query.where} `,
       values: query_instance.countValues,
     });
 
@@ -220,7 +220,7 @@ export default class Menu {
     // Update menu data if there is any
     const menu = await client.query<MenuT>({
       text: `UPDATE 
-            lucid_menus 
+            headless_menus 
           SET 
             ${columns.formatted.update} 
           WHERE 
@@ -235,7 +235,7 @@ export default class Menu {
   };
   static checkKeyIsUnique: MenuCheckKeyIsUnique = async (client, data) => {
     const findMenu = await client.query<MenuT>({
-      text: `SELECT * FROM lucid_menus WHERE key = $1 AND environment_key = $2`,
+      text: `SELECT * FROM headless_menus WHERE key = $1 AND environment_key = $2`,
       values: [data.key, data.environment_key],
     });
 
@@ -248,9 +248,9 @@ export default class Menu {
       text: `SELECT
           mi.*
         FROM
-          lucid_menu_items mi
+          headless_menu_items mi
         LEFT JOIN
-          lucid_pages p ON mi.page_id = p.id
+          headless_pages p ON mi.page_id = p.id
         WHERE
           mi.menu_id = ANY($1::int[])`,
       values: [data.menu_ids],
@@ -260,7 +260,7 @@ export default class Menu {
   };
   static getSingleItem: MenuGetSingleItem = async (client, data) => {
     const menuItem = await client.query<MenuItemT>({
-      text: `SELECT * FROM lucid_menu_items WHERE id = $1 AND menu_id = $2`,
+      text: `SELECT * FROM headless_menu_items WHERE id = $1 AND menu_id = $2`,
       values: [data.id, data.menu_id],
     });
 
@@ -268,7 +268,7 @@ export default class Menu {
   };
   static deleteItemsByIds: MenuDeleteItemsByIds = async (client, data) => {
     const deleted = await client.query<MenuItemT>({
-      text: `DELETE FROM lucid_menu_items WHERE id = ANY($1::int[]) RETURNING *`,
+      text: `DELETE FROM headless_menu_items WHERE id = ANY($1::int[]) RETURNING *`,
       values: [data.ids],
     });
 
@@ -276,7 +276,7 @@ export default class Menu {
   };
   static updateMenuItem: MenuUpdateMenuItem = async (client, data) => {
     const res = await client.query<MenuItemT>({
-      text: `UPDATE lucid_menu_items SET ${
+      text: `UPDATE headless_menu_items SET ${
         data.query_data.columns.formatted.update
       } WHERE id = $${data.query_data.aliases.value.length + 1} RETURNING *`,
       values: [...data.query_data.values.value, data.item_id],
@@ -286,7 +286,7 @@ export default class Menu {
   };
   static createMenuItem: MenuCreateMenuItem = async (client, data) => {
     const res = await client.query<MenuItemT>({
-      text: `INSERT INTO lucid_menu_items (${data.query_data.columns.formatted.insert}) VALUES (${data.query_data.aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_menu_items (${data.query_data.columns.formatted.insert}) VALUES (${data.query_data.aliases.formatted.insert}) RETURNING *`,
       values: data.query_data.values.value,
     });
 

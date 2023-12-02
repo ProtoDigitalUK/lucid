@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Menu from "@db/models/Menu.js";
 
@@ -14,7 +14,7 @@ const deleteItemsByIds = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (deletedItems.length !== data.ids.length) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Menu Item Delete Error",
       message: "Menu items could not be deleted",

@@ -10,8 +10,8 @@ import Config from "@services/Config.js";
 import brickConfigService from "@services/brick-config/index.js";
 import environmentsService from "@services/environments/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
-import { EnvironmentResT } from "@lucid/types/src/environments.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
+import { EnvironmentResT } from "@headless/types/src/environments.js";
 
 export interface ServiceData {
   query: z.infer<typeof collectionSchema.getAll.query>;

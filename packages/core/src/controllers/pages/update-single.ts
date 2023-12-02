@@ -18,7 +18,7 @@ const updateSingleController: Controller<
     true
   )({
     id: parseInt(request.params.id),
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
 
     homepage: request.body.homepage,
     parent_id: request.body.parent_id,

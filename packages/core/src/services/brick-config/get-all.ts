@@ -9,7 +9,7 @@ import brickConfigService from "@services/brick-config/index.js";
 import collectionsService from "@services/collections/index.js";
 import environmentsService from "@services/environments/index.js";
 // Types
-import { BrickConfigT } from "@lucid/types/src/bricks.js";
+import { BrickConfigT } from "@headless/types/src/bricks.js";
 
 export interface ServiceData {
   query: z.infer<typeof bricksSchema.config.getAll.query>;

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import { EnvironmentT } from "@db/models/Environment.js";
@@ -12,7 +12,7 @@ import formatCollection from "@utils/format/format-collections.js";
 import Config from "@services/Config.js";
 import brickConfigService from "@services/brick-config/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
 import environmentsService from "@services/environments/index.js";
 
 export interface ServiceData {
@@ -26,7 +26,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   // Get all instances from config
   const instances = Config.collections || [];
   if (!instances) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Collection not found",
       message: `Collection with key "${data.collection_key}" under environment "${data.environment_key}" not found`,
@@ -69,7 +69,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     });
   }
   if (!collection) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Collection not found",
       message: `Collection with key "${data.collection_key}" and of type "${data.type}" under environment "${data.environment_key}" not found`,

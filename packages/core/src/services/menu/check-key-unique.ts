@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Menu from "@db/models/Menu.js";
 
@@ -16,7 +16,7 @@ const checkKeyUnique = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (menu) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Menu Key Already Exists",
       message: `Menu key "${data.key}" already exists in environment "${data.environment_key}"`,

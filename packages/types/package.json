@@ -1,20 +1,19 @@
 {
-  "name": "@lucid/types",
+  "name": "@headless/types",
   "version": "0.0.0",
   "private": false,
-  "description": "Contains shared type definitions for Lucid",
+  "description": "Contains shared type definitions for Headless",
   "main": "src/index.ts",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WillYallop/Lucid.git"
+    "url": "git+https://github.com/WillYallop/Headless.git"
   },
   "keywords": [],
   "author": "William Yallop",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "bugs": {
-    "url": "hhttps://github.com/WillYallop/Lucid/issues"
+    "url": "hhttps://github.com/WillYallop/Headless/issues"
   },
-  "homepage": "https://github.com/WillYallop/Lucid#readme"
+  "homepage": "https://github.com/WillYallop/Headless#readme"
 }

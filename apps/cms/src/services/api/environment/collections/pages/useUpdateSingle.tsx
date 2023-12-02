@@ -23,7 +23,7 @@ interface Params {
     bricks?: Array<BrickDataT>;
   };
   headers: {
-    "lucid-environment": string;
+    "headless-environment": string;
   };
 }
 
@@ -35,7 +35,7 @@ export const updateSingleReq = (params: Params) => {
       method: "PATCH",
       body: params.body,
       headers: {
-        "lucid-environment": params.headers["lucid-environment"],
+        "headless-environment": params.headers["headless-environment"],
       },
     },
   });

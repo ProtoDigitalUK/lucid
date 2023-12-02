@@ -1,7 +1,7 @@
 // Store
 import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
 // Types
-import type { CustomFieldT } from "@lucid/types/src/bricks";
+import type { CustomFieldT } from "@headless/types/src/bricks";
 
 // --------------------------------------------
 // Get field value from store

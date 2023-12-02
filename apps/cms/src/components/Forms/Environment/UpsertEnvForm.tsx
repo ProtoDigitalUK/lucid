@@ -15,10 +15,10 @@ import api from "@/services/api";
 // Utils
 import helpers from "@/utils/helpers";
 // Types
-import { BrickConfigT } from "@lucid/types/src/bricks";
-import { CollectionResT } from "@lucid/types/src/collections";
-import { FormResT } from "@lucid/types/src/forms";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { BrickConfigT } from "@headless/types/src/bricks";
+import { CollectionResT } from "@headless/types/src/collections";
+import { FormResT } from "@headless/types/src/forms";
+import { EnvironmentResT } from "@headless/types/src/environments";
 // Components
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";

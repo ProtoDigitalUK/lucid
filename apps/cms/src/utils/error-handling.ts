@@ -3,7 +3,7 @@ import spawnToast from "@/utils/spawn-toast";
 // Types
 import { APIErrorResponse } from "@/types/api";
 
-export class LucidError extends Error {
+export class HeadlessError extends Error {
   errorRes: APIErrorResponse;
   constructor(message: string, errorRes: APIErrorResponse) {
     super(message);
@@ -14,7 +14,7 @@ export class LucidError extends Error {
 }
 
 export const validateSetError = (error: unknown) => {
-  if (error instanceof LucidError) {
+  if (error instanceof HeadlessError) {
     return error.errorRes;
   } else {
     return {

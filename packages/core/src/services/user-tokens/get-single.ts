@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import UserToken, { UserTokenT } from "@db/models/UserToken.js";
 
@@ -16,7 +16,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!userToken) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Invalid token",
       message:

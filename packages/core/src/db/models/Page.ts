@@ -5,7 +5,7 @@ import {
   SelectQueryBuilder,
 } from "@utils/app/query-helpers.js";
 // Types
-import { BrickResT } from "@lucid/types/src/bricks.js";
+import { BrickResT } from "@headless/types/src/bricks.js";
 
 // -------------------------------------------
 // Page
@@ -54,35 +54,35 @@ export default class Page {
     const pages = client.query<PageT>({
       text: `SELECT
         ${query_instance.query.select},
-        lucid_users.email AS author_email,
-        lucid_users.username AS author_username,
-        lucid_users.first_name AS author_first_name,
-        lucid_users.last_name AS author_last_name,
-        COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories,
+        headless_users.email AS author_email,
+        headless_users.username AS author_username,
+        headless_users.first_name AS author_first_name,
+        headless_users.last_name AS author_last_name,
+        COALESCE(json_agg(headless_page_categories.category_id), '[]') AS categories,
         default_content.title AS default_title,
         default_content.slug AS default_slug,
         default_content.excerpt AS default_excerpt
       FROM
-        lucid_pages
+        headless_pages
       LEFT JOIN
-        lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+        headless_page_content ON headless_page_content.page_id = headless_pages.id AND headless_page_content.language_id = $1
       LEFT JOIN
-        lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $2
+        headless_page_content AS default_content ON default_content.page_id = headless_pages.id AND default_content.language_id = $2
       LEFT JOIN
-        lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+        headless_page_categories ON headless_page_categories.page_id = headless_pages.id
       LEFT JOIN
-        lucid_users ON lucid_pages.author_id = lucid_users.id
+        headless_users ON headless_pages.author_id = headless_users.id
       ${query_instance.query.where}
       GROUP BY
-        lucid_pages.id,
-        lucid_users.email,
-        lucid_users.username,
-        lucid_users.first_name,
-        lucid_users.last_name,
-        lucid_page_content.title,
-        lucid_page_content.slug,
-        lucid_page_content.excerpt,
-        lucid_page_content.language_id,
+        headless_pages.id,
+        headless_users.email,
+        headless_users.username,
+        headless_users.first_name,
+        headless_users.last_name,
+        headless_page_content.title,
+        headless_page_content.slug,
+        headless_page_content.excerpt,
+        headless_page_content.language_id,
         default_content.title,
         default_content.slug,
         default_content.excerpt
@@ -93,13 +93,13 @@ export default class Page {
 
     const count = client.query<{ count: string }>({
       text: `SELECT
-          COUNT(DISTINCT lucid_pages.id)
+          COUNT(DISTINCT headless_pages.id)
         FROM
-          lucid_pages
+          headless_pages
         LEFT JOIN
-          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $1
+          headless_page_content ON headless_page_content.page_id = headless_pages.id AND headless_page_content.language_id = $1
         LEFT JOIN
-          lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $2
+          headless_page_content AS default_content ON default_content.page_id = headless_pages.id AND default_content.language_id = $2
         ${query_instance.query.where}
         `,
       values: query_instance.countValues,
@@ -116,22 +116,22 @@ export default class Page {
     const page = await client.query<PageT>({
       text: `
         SELECT
-          lucid_pages.id,
-          lucid_pages.environment_key,
-          lucid_pages.collection_key,
-          lucid_pages.parent_id,
-          lucid_pages.homepage,
-          lucid_pages.published,
-          lucid_pages.published_at,
-          lucid_pages.author_id,
-          lucid_pages.created_by,
-          lucid_pages.created_at,
-          lucid_pages.updated_at,
-          lucid_users.email AS author_email,
-          lucid_users.username AS author_username,
-          lucid_users.first_name AS author_first_name,
-          lucid_users.last_name AS author_last_name,
-          COALESCE(json_agg(lucid_page_categories.category_id), '[]') AS categories,
+          headless_pages.id,
+          headless_pages.environment_key,
+          headless_pages.collection_key,
+          headless_pages.parent_id,
+          headless_pages.homepage,
+          headless_pages.published,
+          headless_pages.published_at,
+          headless_pages.author_id,
+          headless_pages.created_by,
+          headless_pages.created_at,
+          headless_pages.updated_at,
+          headless_users.email AS author_email,
+          headless_users.username AS author_username,
+          headless_users.first_name AS author_first_name,
+          headless_users.last_name AS author_last_name,
+          COALESCE(json_agg(headless_page_categories.category_id), '[]') AS categories,
           (
             SELECT json_agg(
               json_build_object(
@@ -141,25 +141,25 @@ export default class Page {
                 'language_id', language_id
               )
             )
-            FROM lucid_page_content
+            FROM headless_page_content
             WHERE page_id = $1
           ) AS translations
         FROM
-          lucid_pages
+          headless_pages
         LEFT JOIN
-          lucid_page_categories ON lucid_page_categories.page_id = lucid_pages.id
+          headless_page_categories ON headless_page_categories.page_id = headless_pages.id
         LEFT JOIN
-          lucid_users ON lucid_pages.author_id = lucid_users.id
+          headless_users ON headless_pages.author_id = headless_users.id
         WHERE
-          lucid_pages.id = $1
+          headless_pages.id = $1
         AND
-          lucid_pages.environment_key = $2
+          headless_pages.environment_key = $2
         GROUP BY
-          lucid_pages.id,
-          lucid_users.email,
-          lucid_users.username,
-          lucid_users.first_name,
-          lucid_users.last_name
+          headless_pages.id,
+          headless_users.email,
+          headless_users.username,
+          headless_users.first_name,
+          headless_users.last_name
       `,
       values: [data.id, data.environment_key],
     });
@@ -170,7 +170,7 @@ export default class Page {
     const page = await client.query<{
       id: PageT["id"];
     }>({
-      text: `INSERT INTO lucid_pages (environment_key, homepage, collection_key, published, parent_id, created_by, author_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+      text: `INSERT INTO headless_pages (environment_key, homepage, collection_key, published, parent_id, created_by, author_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
       values: [
         data.environment_key,
         data.homepage || false,
@@ -212,9 +212,9 @@ export default class Page {
     const page = await client.query<{
       id: PageT["id"];
     }>({
-      text: `UPDATE lucid_pages SET ${columns.formatted.update} WHERE id = $${
-        aliases.value.length + 1
-      } RETURNING id`,
+      text: `UPDATE headless_pages SET ${
+        columns.formatted.update
+      } WHERE id = $${aliases.value.length + 1} RETURNING id`,
       values: [...values.value, data.id],
     });
 
@@ -224,7 +224,7 @@ export default class Page {
     const page = await client.query<{
       id: PageT["id"];
     }>({
-      text: `DELETE FROM lucid_pages WHERE id = $1 RETURNING id`,
+      text: `DELETE FROM headless_pages WHERE id = $1 RETURNING id`,
       values: [data.id],
     });
 
@@ -234,7 +234,7 @@ export default class Page {
     const pages = await client.query<{
       id: PageT["id"];
     }>({
-      text: `DELETE FROM lucid_pages WHERE id = ANY($1) RETURNING id`,
+      text: `DELETE FROM headless_pages WHERE id = ANY($1) RETURNING id`,
       values: [data.ids],
     });
 
@@ -244,7 +244,7 @@ export default class Page {
     const pages = await client.query<{
       id: PageT["id"];
     }>({
-      text: `SELECT id FROM lucid_pages WHERE id = ANY($1) AND environment_key = $2`,
+      text: `SELECT id FROM headless_pages WHERE id = ANY($1) AND environment_key = $2`,
       values: [data.ids, data.environment_key],
     });
 
@@ -255,7 +255,7 @@ export default class Page {
       text: `SELECT
           *
         FROM
-          lucid_pages
+          headless_pages
         WHERE
           id = $1
         AND
@@ -270,7 +270,7 @@ export default class Page {
     data
   ) => {
     const updateRes = await client.query({
-      text: `UPDATE lucid_pages SET homepage = false, parent_id = null WHERE id = $1`,
+      text: `UPDATE headless_pages SET homepage = false, parent_id = null WHERE id = $1`,
       values: [data.id],
     });
 
@@ -285,13 +285,13 @@ export default class Page {
     }>({
       text: `WITH RECURSIVE ancestry AS (
           SELECT id, parent_id
-          FROM lucid_pages
+          FROM headless_pages
           WHERE id = $1
     
           UNION ALL
     
           SELECT p.id, p.parent_id
-          FROM lucid_pages p
+          FROM headless_pages p
           JOIN ancestry a ON p.id = a.parent_id
         )
         SELECT id
@@ -306,13 +306,13 @@ export default class Page {
     const pages = client.query<PageT>({
       text: `WITH RECURSIVE descendants AS (
           SELECT lp.id, lp.parent_id
-          FROM lucid_pages lp
+          FROM headless_pages lp
           WHERE lp.parent_id = $1
     
           UNION ALL
     
           SELECT lp.id, lp.parent_id
-          FROM lucid_pages lp
+          FROM headless_pages lp
           JOIN descendants d ON lp.parent_id = d.id
         )
         
@@ -322,11 +322,11 @@ export default class Page {
           default_content.slug AS default_slug,
           default_content.excerpt AS default_excerpt
         FROM 
-          lucid_pages 
+          headless_pages 
         LEFT JOIN
-          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
+          headless_page_content ON headless_page_content.page_id = headless_pages.id AND headless_page_content.language_id = $2
         LEFT JOIN
-          lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $3
+          headless_page_content AS default_content ON default_content.page_id = headless_pages.id AND default_content.language_id = $3
 
         ${data.query_instance.query.where}
         ${data.query_instance.query.order}
@@ -337,24 +337,24 @@ export default class Page {
     const count = client.query<{ count: string }>({
       text: `WITH RECURSIVE descendants AS (
           SELECT lp.id, lp.parent_id
-          FROM lucid_pages lp
+          FROM headless_pages lp
           WHERE lp.parent_id = $1
     
           UNION ALL
     
           SELECT lp.id, lp.parent_id
-          FROM lucid_pages lp
+          FROM headless_pages lp
           JOIN descendants d ON lp.parent_id = d.id
         )
  
         SELECT 
           COUNT(*) 
         FROM 
-          lucid_pages
+          headless_pages
         LEFT JOIN
-          lucid_page_content ON lucid_page_content.page_id = lucid_pages.id AND lucid_page_content.language_id = $2
+          headless_page_content ON headless_page_content.page_id = headless_pages.id AND headless_page_content.language_id = $2
         LEFT JOIN
-          lucid_page_content AS default_content ON default_content.page_id = lucid_pages.id AND default_content.language_id = $3
+          headless_page_content AS default_content ON default_content.page_id = headless_pages.id AND default_content.language_id = $3
         ${data.query_instance.query.where}`,
       values: data.query_instance.countValues,
     });

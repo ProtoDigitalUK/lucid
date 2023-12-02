@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Environment from "@db/models/Environment.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Format
 import formatEnvironment from "@utils/format/format-environment.js";
 
@@ -16,7 +16,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!environment) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Environment not found",
       message: `Environment with key "${data.key}" not found`,

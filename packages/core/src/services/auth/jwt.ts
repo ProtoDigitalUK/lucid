@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 // Services
 import Config from "@services/Config.js";
 // Types
-import { UserResT } from "@lucid/types/src/users.js";
+import { UserResT } from "@headless/types/src/users.js";
 
 export const generateJWT = (reply: FastifyReply, user: UserResT) => {
   const { id, email, username } = user;

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Menu from "@db/models/Menu.js";
 
@@ -16,7 +16,7 @@ const getSingleItem = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!menuItem) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Menu Item Not Found",
       message: `Menu item with id "${data.id}" not found in menu with id "${data.menu_id}"`,

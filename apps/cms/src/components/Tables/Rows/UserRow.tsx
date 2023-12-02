@@ -2,7 +2,7 @@ import T from "@/translations";
 import { Component } from "solid-js";
 // Types
 import { TableRowProps } from "@/types/components";
-import { UserResT } from "@lucid/types/src/users";
+import { UserResT } from "@headless/types/src/users";
 // Store
 import userStore from "@/store/userStore";
 // Hooks

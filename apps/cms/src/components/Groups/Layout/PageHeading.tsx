@@ -40,7 +40,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
   function setHeaderHeight() {
     if (headerEle) {
       document.documentElement.style.setProperty(
-        "--lucid-page-layout-header-height",
+        "--headless-page-layout-header-height",
         `${headerEle.offsetHeight}px`
       );
     }

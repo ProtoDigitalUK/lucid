@@ -1,4 +1,4 @@
-# @lucid/core
+# @headless/core
 
 > Notes and documentation for building and maintaining the core package.
 

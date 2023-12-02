@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import usersServices from "@services/users/index.js";
@@ -25,7 +25,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!user) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "User Not Found",
       message: "There was an error finding the user.",

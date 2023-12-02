@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import PageCategory from "@db/models/PageCategory.js";
@@ -29,7 +29,7 @@ const createMultiple = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (pageCategory.length !== data.category_ids.length) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page Category Not Created",
       message: "There was an error creating the page category.",

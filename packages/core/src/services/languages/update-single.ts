@@ -2,7 +2,7 @@ import T from "@translations/index.js";
 import { PoolClient } from "pg";
 import ISO6391 from "iso-639-1";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Language from "@db/models/Language.js";
 
@@ -17,7 +17,7 @@ export interface ServiceData {
 
 const updateSingle = async (client: PoolClient, data: ServiceData) => {
   if (!data.data.code && !data.data.is_default && !data.data.is_enabled) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_generic_name", {
         type: T("language"),
@@ -35,7 +35,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     });
 
     if (language) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: T("error_generic_name", {
           type: T("language"),
@@ -51,7 +51,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
     const iso6391 = code[0];
 
     if (!ISO6391.validate(iso6391)) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: T("error_generic_name", {
           type: T("language"),
@@ -75,7 +75,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!languageRes) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_generic_name", {
         type: T("language"),

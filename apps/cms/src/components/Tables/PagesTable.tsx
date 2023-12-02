@@ -8,7 +8,7 @@ import {
 } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@headless/types/src/collections";
 // Services
 import api from "@/services/api";
 // Store
@@ -55,8 +55,8 @@ const PagesTable: Component<PagesTableProps> = (props) => {
         collection_key: collectionKey,
       },
       headers: {
-        "lucid-environment": environment,
-        "lucid-content-lang": contentLanguage,
+        "headless-environment": environment,
+        "headless-content-lang": contentLanguage,
       },
     },
     enabled: () => props.searchParams.getSettled(),
@@ -127,7 +127,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
                 ids: ids,
               },
               headers: {
-                "lucid-environment": environment() || "",
+                "headless-environment": environment() || "",
               },
             });
           },

@@ -7,7 +7,7 @@
   "error_saving_bricks": "Error saving bricks",
   "error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}",
   "error_saving_page_brick_not_in_collection": "The brick '{{key}}' of type '{{type}}' is not allowed in this collection. Check your assigned bricks in the collection and environment.",
-  "error_saving_page_brick_couldnt_find_brick_config": "We couln't find the brick config for the brick key of: '{{key}}'. Ensure you are using the correct key for the brick defined in your lucid.config file.",
+  "error_saving_page_brick_couldnt_find_brick_config": "We couln't find the brick config for the brick key of: '{{key}}'. Ensure you are using the correct key for the brick defined in your headless.config file.",
 
   "error_exists": "{{type}} already exists",
   "error_generic_name": "{{type}} Error",

@@ -17,7 +17,7 @@ const updateSingleController: Controller<
     menusService.updateSingle,
     true
   )({
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     id: parseInt(request.params.id),
 
     key: request.body.key,

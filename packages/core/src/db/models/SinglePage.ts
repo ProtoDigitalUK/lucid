@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Utils
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Types
-import { BrickResT } from "@lucid/types/src/bricks.js";
+import { BrickResT } from "@headless/types/src/bricks.js";
 
 // -------------------------------------------
 // Types
@@ -48,7 +48,7 @@ export default class SinglePage {
       text: `SELECT
           ${query_instance.query.select}
         FROM
-          lucid_singlepages
+          headless_singlepages
         ${query_instance.query.where}`,
       values: query_instance.values,
     });
@@ -57,7 +57,7 @@ export default class SinglePage {
   };
   static createSingle: SinglePageCreateSingle = async (client, data) => {
     const res = await client.query<SinglePageT>({
-      text: `INSERT INTO lucid_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING id`,
+      text: `INSERT INTO headless_singlepages ( environment_key, collection_key, updated_by ) VALUES ($1, $2, $3) RETURNING id`,
       values: [data.environment_key, data.collection_key, data.user_id],
     });
 
@@ -65,7 +65,7 @@ export default class SinglePage {
   };
   static updateSingle: SinglePageUpdateSingle = async (client, data) => {
     const updateSinglePage = await client.query<SinglePageT>({
-      text: `UPDATE lucid_singlepages SET updated_by = $1 WHERE id = $2 RETURNING id`,
+      text: `UPDATE headless_singlepages SET updated_by = $1 WHERE id = $2 RETURNING id`,
       values: [data.user_id, data.id],
     });
 

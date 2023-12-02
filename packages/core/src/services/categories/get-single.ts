@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Category from "@db/models/Category.js";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Format
 import formatCategory from "@utils/format/format-category.js";
 
@@ -18,7 +18,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!category) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Category Not Found",
       message: "Category not found.",

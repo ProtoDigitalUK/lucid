@@ -6,8 +6,8 @@ import useRowTarget from "@/hooks/useRowTarget";
 import helpers from "@/utils/helpers";
 // Types
 import { TableRowProps } from "@/types/components";
-import type { CollectionResT } from "@lucid/types/src/collections";
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { CollectionResT } from "@headless/types/src/collections";
+import type { PagesResT } from "@headless/types/src/pages";
 // Stores
 import userStore from "@/store/userStore";
 // Components

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import environmentsService from "@services/environments/index.js";
@@ -25,7 +25,7 @@ const hasEnvironmentPermission = async (
   const hasPerm = environment.assigned_forms?.includes(data.form_key);
 
   if (!hasPerm) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Form Error",
       message: "This form is not assigned to this environment.",

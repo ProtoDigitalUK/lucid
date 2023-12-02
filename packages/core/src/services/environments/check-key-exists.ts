@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Environment from "@db/models/Environment.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 
 export interface ServiceData {
   key: string;
@@ -14,7 +14,7 @@ const checkKeyExists = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (environment) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Environment already exists",
       message: `Environment with key "${data.key}" already exists`,

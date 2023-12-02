@@ -5,7 +5,7 @@ import {
   BrickFieldUpdateObject,
 } from "@db/models/CollectionBrick.js";
 // Types
-import { PageLinkValueT, LinkValueT } from "@lucid/types/src/bricks.js";
+import { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 
 const valueKey = (type: BrickFieldObject["type"]) => {
   switch (type) {

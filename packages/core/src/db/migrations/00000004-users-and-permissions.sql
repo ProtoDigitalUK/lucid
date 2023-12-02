@@ -1,5 +1,5 @@
 -- USERS TABLE
-CREATE TABLE IF NOT EXISTS lucid_users (
+CREATE TABLE IF NOT EXISTS headless_users (
   id SERIAL PRIMARY KEY,
 
   super_admin BOOLEAN DEFAULT FALSE, 
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS lucid_users (
 );
 
 -- ROLES TABLE
-CREATE TABLE IF NOT EXISTS lucid_roles (
+CREATE TABLE IF NOT EXISTS headless_roles (
   id SERIAL PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
 
@@ -26,30 +26,30 @@ CREATE TABLE IF NOT EXISTS lucid_roles (
 );
 
 -- ROLE PERMISSIONS TABLE
-CREATE TABLE IF NOT EXISTS lucid_role_permissions (
+CREATE TABLE IF NOT EXISTS headless_role_permissions (
   id SERIAL PRIMARY KEY,
-  role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
+  role_id INT NOT NULL REFERENCES headless_roles(id) ON DELETE CASCADE,
   permission TEXT NOT NULL,
-  environment_key TEXT REFERENCES lucid_environments(key) ON DELETE CASCADE,
+  environment_key TEXT REFERENCES headless_environments(key) ON DELETE CASCADE,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- USER ROLES TABLE
-CREATE TABLE IF NOT EXISTS lucid_user_roles (
+CREATE TABLE IF NOT EXISTS headless_user_roles (
   id SERIAL PRIMARY KEY,
-  user_id INT NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
-  role_id INT NOT NULL REFERENCES lucid_roles(id) ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES headless_users(id) ON DELETE CASCADE,
+  role_id INT NOT NULL REFERENCES headless_roles(id) ON DELETE CASCADE,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- USER TOKENS TABLE
-CREATE TABLE IF NOT EXISTS lucid_user_tokens (
+CREATE TABLE IF NOT EXISTS headless_user_tokens (
     id serial PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES lucid_users(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES headless_users(id) ON DELETE CASCADE,
     token_type varchar(255),
     token varchar(255) NOT NULL UNIQUE,
 

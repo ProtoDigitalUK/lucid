@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@lucid/core";
+import { CollectionBuilder } from "@headless/core";
 
 export const PageCollection = new CollectionBuilder("page", {
   type: "pages",

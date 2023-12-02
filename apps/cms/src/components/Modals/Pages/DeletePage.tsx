@@ -5,7 +5,7 @@ import Modal from "@/components/Groups/Modal";
 // Stores
 import { environment } from "@/store/environmentStore";
 // Types
-import type { CollectionResT } from "@lucid/types/src/collections";
+import type { CollectionResT } from "@headless/types/src/collections";
 // Services
 import api from "@/services/api";
 
@@ -60,7 +60,7 @@ const DeletePage: Component<DeletePageProps> = (props) => {
         deletePage.action.mutate({
           id: id,
           headers: {
-            "lucid-environment": environment() || "",
+            "headless-environment": environment() || "",
           },
         });
       }}

@@ -2,10 +2,10 @@ import T from "@/translations";
 import { Accessor } from "solid-js";
 import equal from "fast-deep-equal/es6";
 // Types
-import type { MediaResT } from "@lucid/types/src/media";
-import type { CollectionResT } from "@lucid/types/src/collections";
-import type { UserResT } from "@lucid/types/src/users";
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { MediaResT } from "@headless/types/src/media";
+import type { CollectionResT } from "@headless/types/src/collections";
+import type { UserResT } from "@headless/types/src/users";
+import type { PagesResT } from "@headless/types/src/pages";
 
 // ---------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

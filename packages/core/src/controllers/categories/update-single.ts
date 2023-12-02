@@ -17,7 +17,7 @@ const updateSingleController: Controller<
     categoriesService.updateSingle,
     false
   )({
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     id: parseInt(request.params.id),
     data: {
       title: request.body.title,

@@ -7,7 +7,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import { syncEnvironment } from "@/store/environmentStore";
 // Types
 import { APIResponse } from "@/types/api";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { EnvironmentResT } from "@headless/types/src/environments";
 
 interface QueryParams {}
 

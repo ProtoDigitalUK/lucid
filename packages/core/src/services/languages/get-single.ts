@@ -1,7 +1,7 @@
 import T from "@translations/index.js";
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Language from "@db/models/Language.js";
 // Format
@@ -17,7 +17,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!language) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_generic_name", {
         type: T("language"),

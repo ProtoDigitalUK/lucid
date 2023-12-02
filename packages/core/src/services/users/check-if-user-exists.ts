@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Serices
 import usersServices from "@services/users/index.js";
@@ -22,7 +22,7 @@ const checkIfUserExists = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (user) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "User Already Exists",
       message: "A user with that email or username already exists.",

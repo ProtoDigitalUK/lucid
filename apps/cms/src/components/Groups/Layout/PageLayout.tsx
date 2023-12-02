@@ -62,7 +62,7 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
       </Show>
       <div
         class={classNames(
-          "pb-[var(--lucid-page-layout-footer-height)] page-layout"
+          "pb-[var(--headless-page-layout-footer-height)] page-layout"
         )}
       >
         <Switch>

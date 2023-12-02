@@ -1,5 +1,5 @@
 import { FastifyRequest } from "fastify";
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import environmentsService from "@services/environments/index.js";
@@ -8,18 +8,18 @@ import environmentsService from "@services/environments/index.js";
 // Validate Environment Middleware
 const validateEnvironment = async (request: FastifyRequest) => {
   // get the environment from the header
-  const environment = request.headers["lucid-environment"];
+  const environment = request.headers["headless-environment"];
 
   if (!environment) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Validation Error",
-      message: "You must set the Lucid Environment header.",
+      message: "You must set the Headless Environment header.",
       status: 400,
       errors: modelErrors({
-        "lucid-environment": {
+        "headless-environment": {
           code: "required",
-          message: "You must set the Lucid Environment header.",
+          message: "You must set the Headless Environment header.",
         },
       }),
     });
@@ -30,15 +30,15 @@ const validateEnvironment = async (request: FastifyRequest) => {
   const findEnv = environmentConfig.find((env) => env.key === environment);
 
   if (!findEnv) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Validation Error",
-      message: "You must set a valid Lucid Environment header.",
+      message: "You must set a valid Headless Environment header.",
       status: 400,
       errors: modelErrors({
-        "lucid-environment": {
+        "headless-environment": {
           code: "required",
-          message: "You must set a valid Lucid Environment header.",
+          message: "You must set a valid Headless Environment header.",
         },
       }),
     });

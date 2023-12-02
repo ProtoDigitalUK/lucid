@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 // Utils
 import service from "@utils/app/service.js";
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Services
 import Config from "@services/Config.js";
 import mediaService from "@services/media/index.js";
@@ -17,7 +17,7 @@ const canStoreFiles = async (client: PoolClient, data: ServiceData) => {
 
   if (size > maxFileSize) {
     const message = `File ${data.filename} is too large. Max file size is ${maxFileSize} bytes.`;
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Error saving file",
       message: message,
@@ -42,7 +42,7 @@ const canStoreFiles = async (client: PoolClient, data: ServiceData) => {
   // const totalSize = data.files.reduce((acc, file) => acc + file.size, 0);
   if (size + (storageUsed || 0) > storageLimit) {
     const message = `Files exceed storage limit. Max storage limit is ${storageLimit} bytes.`;
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Error saving file",
       message: message,

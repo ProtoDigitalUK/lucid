@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@headless/types/src/media";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {
@@ -18,7 +18,7 @@ interface QueryParams {
   };
   perPage?: number;
   headers: {
-    "lucid-content-lang": Accessor<number | undefined> | number;
+    "headless-content-lang": Accessor<number | undefined> | number;
   };
 }
 

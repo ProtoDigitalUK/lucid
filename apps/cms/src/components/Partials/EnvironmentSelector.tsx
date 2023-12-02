@@ -8,7 +8,7 @@ import userStore from "@/store/userStore";
 // Utils
 import helpers from "@/utils/helpers";
 // Types
-import type { EnvironmentResT } from "@lucid/types/src/environments";
+import type { EnvironmentResT } from "@headless/types/src/environments";
 // Components
 import { FaSolidPlus, FaSolidGear } from "solid-icons/fa";
 import { DropdownMenu, Separator } from "@kobalte/core";

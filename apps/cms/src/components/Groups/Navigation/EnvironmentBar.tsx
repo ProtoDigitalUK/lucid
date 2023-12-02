@@ -13,8 +13,8 @@ import { useLocation, useParams } from "@solidjs/router";
 // Store
 import { environment } from "@/store/environmentStore";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { CollectionResT } from "@headless/types/src/collections";
+import { EnvironmentResT } from "@headless/types/src/environments";
 // Components
 import EnvironmentSelector from "@/components/Partials/EnvironmentSelector";
 import Navigation from "@/components/Groups/Navigation";

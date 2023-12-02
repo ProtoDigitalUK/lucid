@@ -32,7 +32,7 @@ export type OptionT = {
 export default class Option {
   static getByName: OptionGetByName = async (client, data) => {
     const options = await client.query<OptionT>({
-      text: `SELECT * FROM lucid_options WHERE option_name = $1`,
+      text: `SELECT * FROM headless_options WHERE option_name = $1`,
       values: [data.name],
     });
 
@@ -40,7 +40,7 @@ export default class Option {
   };
   static patchByName: OptionPatchByName = async (client, data) => {
     const options = await client.query<OptionT>({
-      text: `UPDATE lucid_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
+      text: `UPDATE headless_options SET option_value = $1, type = $2, updated_at = NOW() WHERE option_name = $3 RETURNING *`,
       values: [data.value, data.type, data.name],
     });
 

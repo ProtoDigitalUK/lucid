@@ -5,7 +5,7 @@ import { queryDataFormat } from "@utils/app/query-helpers.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 // -------------------------------------------
 // Types
@@ -60,7 +60,7 @@ export default class RolePermission {
     });
 
     const permissionRes = await client.query<RolePermissionT>({
-      text: `INSERT INTO lucid_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_role_permissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
@@ -68,7 +68,7 @@ export default class RolePermission {
   };
   static deleteSingle: RolePermissionDeleteSingle = async (client, data) => {
     const rolePermission = await client.query<RolePermissionT>({
-      text: `DELETE FROM lucid_role_permissions WHERE id = $1 RETURNING *`,
+      text: `DELETE FROM headless_role_permissions WHERE id = $1 RETURNING *`,
       values: [data.id],
     });
 
@@ -76,7 +76,7 @@ export default class RolePermission {
   };
   static deleteAll: RolePermissionDeleteAll = async (client, data) => {
     const res = await client.query<RolePermissionT>({
-      text: `DELETE FROM lucid_role_permissions WHERE role_id = $1 RETURNING *`,
+      text: `DELETE FROM headless_role_permissions WHERE role_id = $1 RETURNING *`,
       values: [data.role_id],
     });
 
@@ -84,7 +84,7 @@ export default class RolePermission {
   };
   static getAll: RolePermissionGetAll = async (client, data) => {
     const res = await client.query<RolePermissionT>({
-      text: `SELECT * FROM lucid_role_permissions WHERE role_id = $1`,
+      text: `SELECT * FROM headless_role_permissions WHERE role_id = $1`,
       values: [data.role_id],
     });
 

@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 import argon2 from "argon2";
 // Utils
 import {
-  LucidError,
+  HeadlessError,
   modelErrors,
   ErrorResult,
 } from "@utils/app/error-handler.js";
@@ -65,7 +65,7 @@ const registerSingle = async (
         message: "A user with that username already exists.",
       };
     }
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "User Already Exists",
       message: "A user with that email or username already exists.",
@@ -113,7 +113,7 @@ const registerSingle = async (
   });
 
   if (!user) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "User Not Created",
       message: "There was an error creating the user.",

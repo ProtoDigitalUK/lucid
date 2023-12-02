@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { UserResT } from "@lucid/types/src/users";
+import { UserResT } from "@headless/types/src/users";
 
 interface Params {
   username: string;

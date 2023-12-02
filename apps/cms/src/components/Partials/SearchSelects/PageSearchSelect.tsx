@@ -36,8 +36,8 @@ const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
         title: getSearchQuery,
       },
       headers: {
-        "lucid-environment": environment,
-        "lucid-content-lang": language,
+        "headless-environment": environment,
+        "headless-content-lang": language,
       },
       perPage: 10,
     },

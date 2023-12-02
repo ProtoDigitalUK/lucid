@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Menu from "@db/models/Menu.js";
@@ -21,7 +21,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!menu) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Menu Get Error",
       message: `Menu with id ${data.id} not found in environment ${data.environment_key}.`,

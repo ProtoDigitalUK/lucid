@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { EnvironmentResT } from "@lucid/types/src/environments";
+import { EnvironmentResT } from "@headless/types/src/environments";
 
 interface QueryParams {
   location: {

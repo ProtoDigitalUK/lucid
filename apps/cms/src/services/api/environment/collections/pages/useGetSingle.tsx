@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { APIResponse } from "@/types/api";
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { PagesResT } from "@headless/types/src/pages";
 
 interface QueryParams {
   location: {
@@ -15,7 +15,7 @@ interface QueryParams {
     bricks: Accessor<boolean | undefined> | boolean;
   };
   headers: {
-    "lucid-environment": Accessor<string | undefined> | string;
+    "headless-environment": Accessor<string | undefined> | string;
   };
 }
 

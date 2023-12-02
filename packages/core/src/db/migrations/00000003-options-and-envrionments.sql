@@ -1,5 +1,5 @@
 -- SITE OPTIONS TABLE
-CREATE TABLE IF NOT EXISTS lucid_options (
+CREATE TABLE IF NOT EXISTS headless_options (
   option_name TEXT UNIQUE NOT NULL PRIMARY KEY,
   option_value TEXT NOT NULL,
   type TEXT NOT NULL,
@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS lucid_options (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO lucid_options (option_name, option_value, type) VALUES ('media_storage_used', '0', 'number');
+INSERT INTO headless_options (option_name, option_value, type) VALUES ('media_storage_used', '0', 'number');
 
 -- ENVIRONMENTS TABLE
-CREATE TABLE IF NOT EXISTS lucid_environments (
+CREATE TABLE IF NOT EXISTS headless_environments (
   key TEXT PRIMARY KEY,
 
   title TEXT,

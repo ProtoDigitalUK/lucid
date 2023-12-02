@@ -3,7 +3,7 @@ import { MultipartFile } from "@fastify/multipart";
 // Utils
 import helpers from "@utils/media/helpers.js";
 import service from "@utils/app/service.js";
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Models
 import Media from "@db/models/Media.js";
 // Services
@@ -17,7 +17,7 @@ export interface ServiceData {
 
 const uploadSingleFile = async (client: PoolClient, data: ServiceData) => {
   if (!data.fileData) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "No files provided",
       message: "No files provided",
@@ -75,7 +75,7 @@ const uploadSingleFile = async (client: PoolClient, data: ServiceData) => {
   ]);
 
   if (response.$metadata.httpStatusCode !== 200) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Error saving file",
       message: "Error saving file",
@@ -112,7 +112,7 @@ const uploadSingleFile = async (client: PoolClient, data: ServiceData) => {
     await s3Service.deleteObject({
       key,
     });
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Error saving file",
       message: "Error saving file",

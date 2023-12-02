@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
 // Models
 import CollectionBrick, { BrickObject } from "@db/models/CollectionBrick.js";
 // Utils

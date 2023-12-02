@@ -6,7 +6,7 @@ import pkg from "pg";
 const { Client } = pkg;
 
 const client = new Client({
-  connectionString: process.env.LUCID_POSTGRES_URL,
+  connectionString: process.env.HEADLESS_POSTGRES_URL,
   ssl: {
     rejectUnauthorized: false,
   },

@@ -45,7 +45,7 @@ export type PageCategoryT = {
 export default class PageCategory {
   static createMultiple: PageCategoryCreate = async (client, data) => {
     const categories = await client.query<PageCategoryT>({
-      text: `INSERT INTO lucid_page_categories (page_id, category_id) SELECT $1, id FROM lucid_categories WHERE id = ANY($2) RETURNING *`,
+      text: `INSERT INTO headless_page_categories (page_id, category_id) SELECT $1, id FROM headless_categories WHERE id = ANY($2) RETURNING *`,
       values: [data.page_id, data.category_ids],
     });
 
@@ -53,7 +53,7 @@ export default class PageCategory {
   };
   static getMultiple: PageCategoryGetMultiple = async (client, data) => {
     const res = await client.query<PageCategoryT>({
-      text: `SELECT * FROM lucid_categories WHERE id = ANY($1) AND collection_key = $2`,
+      text: `SELECT * FROM headless_categories WHERE id = ANY($1) AND collection_key = $2`,
       values: [data.category_ids, data.collection_key],
     });
 
@@ -64,7 +64,7 @@ export default class PageCategory {
     data
   ) => {
     const res = await client.query<PageCategoryT>({
-      text: `SELECT * FROM lucid_page_categories WHERE page_id = $1`,
+      text: `SELECT * FROM headless_page_categories WHERE page_id = $1`,
       values: [data.page_id],
     });
 
@@ -72,7 +72,7 @@ export default class PageCategory {
   };
   static deleteMultiple: PageCategoryDelete = async (client, data) => {
     const deleteCategories = await client.query<PageCategoryT>({
-      text: `DELETE FROM lucid_page_categories WHERE page_id = $1 AND category_id = ANY($2) RETURNING *`,
+      text: `DELETE FROM headless_page_categories WHERE page_id = $1 AND category_id = ANY($2) RETURNING *`,
       values: [data.page_id, data.category_ids],
     });
 

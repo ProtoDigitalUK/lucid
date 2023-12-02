@@ -40,7 +40,7 @@ export default class Translation {
     });
 
     const res = await client.query({
-      text: `INSERT INTO lucid_translations (translation_key_id, language_id, value)
+      text: `INSERT INTO headless_translations (translation_key_id, language_id, value)
               VALUES ${aliases}
               ON CONFLICT (translation_key_id, language_id)
               DO UPDATE SET

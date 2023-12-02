@@ -5,7 +5,7 @@ import service from "@utils/app/service.js";
 import Category from "@db/models/Category.js";
 import categoriesService from "@services/categories/index.js";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 
 export interface ServiceData {
   environment_key: string;
@@ -36,7 +36,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
       ignore_id: data.id,
     });
     if (!isSlugUnique) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: "Category Not Updated",
         message: "Please provide a unique slug within this post type.",
@@ -60,7 +60,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!category) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Category Not Updated",
       message: "There was an error updating the category.",

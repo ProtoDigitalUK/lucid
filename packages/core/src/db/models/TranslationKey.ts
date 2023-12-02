@@ -12,8 +12,8 @@ export default class TranslationKey {
     total
   ) => {
     const translationKeys = await client.query<TranslationKeyT>({
-      text: `INSERT INTO lucid_translation_keys (id)
-      SELECT nextval('lucid_translation_keys_id_seq')
+      text: `INSERT INTO headless_translation_keys (id)
+      SELECT nextval('headless_translation_keys_id_seq')
       FROM generate_series(1, $1)
       RETURNING id`,
       values: [total],
@@ -26,7 +26,7 @@ export default class TranslationKey {
     data
   ) => {
     await client.query({
-      text: `DELETE FROM lucid_translation_keys
+      text: `DELETE FROM headless_translation_keys
       WHERE id = ANY($1)`,
       values: [data.ids],
     });

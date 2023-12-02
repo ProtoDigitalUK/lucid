@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
@@ -80,7 +80,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!page) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page Not Created",
       message: "There was an error creating the page",

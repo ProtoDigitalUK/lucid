@@ -17,7 +17,7 @@ const createSingleController: Controller<
     menusService.createSingle,
     false
   )({
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     key: request.body.key,
     name: request.body.name,
     description: request.body.description,

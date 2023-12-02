@@ -12,7 +12,7 @@ export const PageFooter: Component<PageLayoutFooterProps> = (props) => {
   function setFooterHeight() {
     if (footerEle) {
       document.documentElement.style.setProperty(
-        "--lucid-page-layout-footer-height",
+        "--headless-page-layout-footer-height",
         `${footerEle.offsetHeight || 0}px`
       );
     }

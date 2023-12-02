@@ -141,10 +141,10 @@ export default class Email {
     const email = await client.query<{
       id: EmailT["id"];
     }>({
-      text: `INSERT INTO lucid_emails (${columns.formatted.insert})
+      text: `INSERT INTO headless_emails (${columns.formatted.insert})
         VALUES (${aliases.formatted.insert}) 
         ON CONFLICT (email_hash)
-        DO UPDATE SET sent_count = lucid_emails.sent_count + 1
+        DO UPDATE SET sent_count = headless_emails.sent_count + 1
         RETURNING id`,
       values: values.value,
     });
@@ -155,12 +155,12 @@ export default class Email {
   };
   static getMultiple: EmailGetMultiple = async (client, query_instance) => {
     const emails = client.query<EmailT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_emails ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_emails ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
     const count = client.query<{ count: string }>({
-      text: `SELECT  COUNT(DISTINCT lucid_emails.id) FROM lucid_emails ${query_instance.query.where}`,
+      text: `SELECT  COUNT(DISTINCT headless_emails.id) FROM headless_emails ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
@@ -176,7 +176,7 @@ export default class Email {
       text: `SELECT
           *
         FROM
-          lucid_emails
+          headless_emails
         WHERE
           id = $1`,
       values: [data.id],
@@ -187,7 +187,7 @@ export default class Email {
   static deleteSingle: EmailDeleteSingle = async (client, data) => {
     const email = await client.query<EmailT>({
       text: `DELETE FROM
-          lucid_emails
+          headless_emails
         WHERE
           id = $1
         RETURNING *`,
@@ -216,7 +216,7 @@ export default class Email {
       id: EmailT["id"];
     }>({
       text: `UPDATE 
-        lucid_emails 
+        headless_emails 
         SET 
           ${columns.formatted.update} 
         WHERE 

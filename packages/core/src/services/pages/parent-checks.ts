@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import pageServices from "@services/pages/index.js";
@@ -32,7 +32,7 @@ const parentChecks = async (client: PoolClient, data: ServiceData) => {
 
   // Check if the parent is a homepage
   if (parent.homepage) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Homepage Parent",
       message: "The homepage cannot be set as a parent!",
@@ -42,7 +42,7 @@ const parentChecks = async (client: PoolClient, data: ServiceData) => {
 
   // Check if the parent is in the same collection as the child
   if (parent.collection_key !== data.collection_key) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Parent Collection Mismatch",
       message:

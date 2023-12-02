@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { CollectionCategoriesResT } from "@lucid/types/src/collections";
+import { CollectionCategoriesResT } from "@headless/types/src/collections";
 
 interface QueryParams {
   queryString?: Accessor<string>;
@@ -14,7 +14,7 @@ interface QueryParams {
     collection_key?: Accessor<string | undefined> | string;
   };
   headers: {
-    "lucid-environment": Accessor<string | undefined> | string;
+    "headless-environment": Accessor<string | undefined> | string;
   };
   perPage?: Accessor<number> | number;
 }

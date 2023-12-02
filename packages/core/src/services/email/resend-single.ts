@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Email from "@db/models/Email.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Services
 import emailServices from "@services/email/index.js";
 
@@ -16,7 +16,7 @@ const resendSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!email) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Email",
       message: "Email not found",

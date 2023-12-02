@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Category from "@db/models/Category.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 
 export interface ServiceData {
   id: number;
@@ -16,7 +16,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!category) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Category Not Deleted",
       message: "There was an error deleting the category.",

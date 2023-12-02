@@ -1,6 +1,6 @@
 import { Component, For, createMemo, Show } from "solid-js";
 // Types
-import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components

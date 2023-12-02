@@ -10,7 +10,7 @@ import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 // Types
-import { SettingsResT } from "@lucid/types/src/settings";
+import { SettingsResT } from "@headless/types/src/settings";
 
 interface GeneralSettingsRouteProps {
   settings?: SettingsResT;

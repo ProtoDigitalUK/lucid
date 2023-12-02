@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { Component, For, createMemo } from "solid-js";
 // Types
-import { PermissionGroup as PermissionGroupT } from "@lucid/types/src/permissions";
+import { PermissionGroup as PermissionGroupT } from "@headless/types/src/permissions";
 // Components
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";

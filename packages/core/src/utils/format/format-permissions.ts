@@ -1,7 +1,7 @@
 import {
   PermissionGroup,
   PermissionsResT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 const formatPermissions = (
   permissions: Record<string, PermissionGroup>

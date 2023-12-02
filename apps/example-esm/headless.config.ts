@@ -1,4 +1,4 @@
-import { buildConfig } from "@lucid/core";
+import { buildConfig } from "@headless/core";
 import {
   BannerBrick,
   IntroBrick,
@@ -16,15 +16,15 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 export default buildConfig({
-  host: process.env.LUCID_HOST as string,
-  origin: process.env.LUCID_ORIGIN as string,
+  host: process.env.HEADLESS_HOST as string,
+  origin: process.env.HEADLESS_ORIGIN as string,
   mode: "development",
-  postgresURL: process.env.LUCID_POSTGRES_URL as string,
-  secret: process.env.LUCID_SECRET_KEY as string,
+  postgresURL: process.env.HEADLESS_POSTGRES_URL as string,
+  secret: process.env.HEADLESS_SECRET_KEY as string,
   email: {
     from: {
-      name: "Lucid CMS",
-      email: "hello@lucidcms.com",
+      name: "Headless CMS",
+      email: "hello@headlesscms.com",
     },
     templateDir: path.join(
       dirname(fileURLToPath(import.meta.url)),
@@ -34,8 +34,8 @@ export default buildConfig({
       host: "127.0.0.1",
       port: 6969,
       secure: false,
-      user: process.env.LUCID_SMPT_USER as string,
-      pass: process.env.LUCID_SMPT_PASS as string,
+      user: process.env.HEADLESS_SMPT_USER as string,
+      pass: process.env.HEADLESS_SMPT_PASS as string,
     },
   },
   media: {
@@ -44,11 +44,11 @@ export default buildConfig({
     fallbackImage: undefined,
     store: {
       service: "cloudflare",
-      cloudflareAccountId: process.env.LUCID_CLOUDFLARE_ACCOUNT_ID,
-      region: process.env.LUCID_S3_REGION as string,
-      bucket: process.env.LUCID_S3_BUCKET as string,
-      accessKeyId: process.env.LUCID_S3_ACCESS_KEY as string,
-      secretAccessKey: process.env.LUCID_S3_SECRET_KEY as string,
+      cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
+      region: process.env.HEADLESS_S3_REGION as string,
+      bucket: process.env.HEADLESS_S3_BUCKET as string,
+      accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
+      secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
     },
   },
   forms: [ContactForm],

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Menu from "@db/models/Menu.js";
@@ -38,7 +38,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!menu) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Menu Creation Error",
       message: "Menu could not be created",

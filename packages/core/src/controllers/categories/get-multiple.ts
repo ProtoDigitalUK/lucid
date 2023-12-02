@@ -17,7 +17,7 @@ const getMultipleController: Controller<
     categoriesService.getMultiple,
     false
   )({
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     query: request.query,
   });
 

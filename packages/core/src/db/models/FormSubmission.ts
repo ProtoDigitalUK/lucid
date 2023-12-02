@@ -103,7 +103,7 @@ export default class FormSubmission {
     });
 
     const res = await client.query<FormSubmissionsT>({
-      text: `INSERT INTO lucid_form_submissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_form_submissions (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
@@ -112,7 +112,7 @@ export default class FormSubmission {
   static getSingle: FormSubmissionGetSingle = async (client, data) => {
     // Get form submission
     const formSubmission = await client.query<FormSubmissionsT>({
-      text: `SELECT * FROM lucid_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3;`,
+      text: `SELECT * FROM headless_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3;`,
       values: [data.id, data.form_key, data.environment_key],
     });
 
@@ -123,11 +123,11 @@ export default class FormSubmission {
     query_instance
   ) => {
     const submissions = client.query<FormSubmissionsT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_form_submissions ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_form_submissions ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_form_submissions.id) FROM lucid_form_submissions ${query_instance.query.where} `,
+      text: `SELECT COUNT(DISTINCT headless_form_submissions.id) FROM headless_form_submissions ${query_instance.query.where} `,
       values: query_instance.countValues,
     });
 
@@ -141,7 +141,7 @@ export default class FormSubmission {
   static toggleReadAt: FormSubmissionToggleReadAt = async (client, data) => {
     // Update form submission
     const updatedFormSubmission = await client.query<FormSubmissionsT>({
-      text: `UPDATE lucid_form_submissions SET read_at = $1 WHERE id = $2 AND form_key = $3 AND environment_key = $4 RETURNING *;`,
+      text: `UPDATE headless_form_submissions SET read_at = $1 WHERE id = $2 AND form_key = $3 AND environment_key = $4 RETURNING *;`,
       values: [data.read_at, data.id, data.form_key, data.environment_key],
     });
 
@@ -150,7 +150,7 @@ export default class FormSubmission {
   static deleteSingle: FormSubmissionDeleteSingle = async (client, data) => {
     // Delete form submission
     const formSubmission = await client.query<FormSubmissionsT>({
-      text: `DELETE FROM lucid_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3 RETURNING *;`,
+      text: `DELETE FROM headless_form_submissions WHERE id = $1 AND form_key = $2 AND environment_key = $3 RETURNING *;`,
       values: [data.id, data.form_key, data.environment_key],
     });
 
@@ -180,7 +180,7 @@ export default class FormSubmission {
     });
 
     const formData = await client.query<FormDataT>({
-      text: `INSERT INTO lucid_form_data (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_form_data (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
@@ -191,7 +191,7 @@ export default class FormSubmission {
     data
   ) => {
     const res = await client.query<FormDataT>({
-      text: `SELECT * FROM lucid_form_data WHERE form_submission_id = ANY($1)`,
+      text: `SELECT * FROM headless_form_data WHERE form_submission_id = ANY($1)`,
       values: [data.submission_ids],
     });
 

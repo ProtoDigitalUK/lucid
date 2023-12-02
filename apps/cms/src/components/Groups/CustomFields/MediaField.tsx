@@ -1,6 +1,6 @@
 import { Component } from "solid-js";
 // Types
-import type { CustomFieldT } from "@lucid/types/src/bricks";
+import type { CustomFieldT } from "@headless/types/src/bricks";
 import type { FieldError } from "@/types/api";
 // Store
 import { BrickStoreFieldT } from "@/store/builderStore";

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Models
 import Option, { OptionT } from "@db/models/Option.js";
 // Format
@@ -18,7 +18,7 @@ const getByName = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!option) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Option Not Found",
       message: "There was an error finding the option.",

@@ -2,7 +2,7 @@ import { FastifyRequest } from "fastify";
 import z, { AnyZodObject } from "zod";
 import constants from "@root/constants.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 
 // ------------------------------------
 // Schemas
@@ -181,7 +181,7 @@ const validate =
     const validateResult = await schema.safeParseAsync(parseData);
 
     if (!validateResult.success) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "validation",
         message: "Please check your fields for any errors.",
         zod: validateResult.error,

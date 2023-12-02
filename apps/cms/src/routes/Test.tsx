@@ -1,6 +1,6 @@
 import { Component, createMemo, onMount } from "solid-js";
 // Types
-import { BrickConfigT } from "@lucid/types/src/bricks";
+import { BrickConfigT } from "@headless/types/src/bricks";
 // Store
 import builderStore from "@/store/builderStore";
 // Components

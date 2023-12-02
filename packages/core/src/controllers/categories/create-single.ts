@@ -17,7 +17,7 @@ const createSingleControllers: Controller<
     categoriesService.createSingle,
     false
   )({
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     collection_key: request.body.collection_key,
     title: request.body.title,
     slug: request.body.slug,

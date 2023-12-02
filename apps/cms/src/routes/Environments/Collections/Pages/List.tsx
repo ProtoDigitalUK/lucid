@@ -7,7 +7,7 @@ import api from "@/services/api";
 import userStore from "@/store/userStore";
 import { environment } from "@/store/environmentStore";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections";
+import { CollectionResT } from "@headless/types/src/collections";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
@@ -58,7 +58,7 @@ const EnvCollectionsPagesListRoute: Component = () => {
         collection_key: collectionKey,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
     },
     enabled: () => !!collectionKey(),
@@ -70,7 +70,7 @@ const EnvCollectionsPagesListRoute: Component = () => {
         collection_key: collectionKey,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
       perPage: -1,
     },

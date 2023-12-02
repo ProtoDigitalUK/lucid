@@ -6,7 +6,7 @@ import {
   SelectQueryBuilder,
 } from "@utils/app/query-helpers.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media.js";
+import { MediaResT } from "@headless/types/src/media.js";
 
 // -------------------------------------------
 // Media
@@ -73,7 +73,7 @@ export default class Media {
     });
 
     const media = await client.query<MediaT>({
-      text: `INSERT INTO lucid_media (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
+      text: `INSERT INTO headless_media (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
       values: values.value,
     });
 
@@ -86,11 +86,11 @@ export default class Media {
             name_translations.value AS name_translation_value,
             alt_translations.value AS alt_translation_value
         FROM 
-            lucid_media AS media
-        LEFT JOIN lucid_translations AS name_translations 
+            headless_media AS media
+        LEFT JOIN headless_translations AS name_translations 
           ON media.name_translation_key_id = name_translations.translation_key_id
           AND name_translations.language_id = $1
-        LEFT JOIN lucid_translations AS alt_translations 
+        LEFT JOIN headless_translations AS alt_translations 
           ON media.alt_translation_key_id = alt_translations.translation_key_id
           AND alt_translations.language_id = $1
         ${query_instance.query.where}
@@ -103,12 +103,12 @@ export default class Media {
     const count = client.query<{ count: string }>({
       text: `SELECT COUNT(DISTINCT media.id)
         FROM 
-          lucid_media AS media
+          headless_media AS media
         LEFT JOIN (
           SELECT 
               translation_key_id, 
               value
-          FROM lucid_translations
+          FROM headless_translations
           WHERE language_id = $1
           LIMIT 1
         ) AS name_translations ON media.name_translation_key_id = name_translations.translation_key_id
@@ -116,7 +116,7 @@ export default class Media {
             SELECT 
                 translation_key_id, 
                 value
-            FROM lucid_translations
+            FROM headless_translations
             WHERE language_id = $1
             LIMIT 1
         ) AS alt_translations ON media.alt_translation_key_id = alt_translations.translation_key_id
@@ -150,10 +150,10 @@ export default class Media {
           )
         ) FILTER (WHERE alt_translations.id IS NOT NULL) AS alt_translations
       FROM
-        lucid_media AS media
-      LEFT JOIN lucid_translations AS name_translations
+        headless_media AS media
+      LEFT JOIN headless_translations AS name_translations
         ON media.name_translation_key_id = name_translations.translation_key_id
-      LEFT JOIN lucid_translations AS alt_translations
+      LEFT JOIN headless_translations AS alt_translations
         ON media.alt_translation_key_id = alt_translations.translation_key_id
       WHERE
         media.id = $1
@@ -170,7 +170,7 @@ export default class Media {
       file_size: MediaT["file_size"];
     }>({
       text: `DELETE FROM
-          lucid_media
+          headless_media
         WHERE
           key = $1
         RETURNING key, file_size`,
@@ -212,7 +212,7 @@ export default class Media {
       key: MediaT["key"];
     }>({
       text: `UPDATE 
-            lucid_media 
+            headless_media 
           SET 
             ${columns.formatted.update} 
           WHERE 
@@ -230,7 +230,7 @@ export default class Media {
       text: `SELECT
           *
         FROM
-          lucid_media
+          headless_media
         WHERE
           id = ANY($1)`,
       values: [data.ids],

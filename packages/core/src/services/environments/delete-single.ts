@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Environment from "@db/models/Environment.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import environmentsService from "@services/environments/index.js";
@@ -28,7 +28,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!environment) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Environment not deleted",
       message: `Environment with key "${data.key}" could not be deleted`,

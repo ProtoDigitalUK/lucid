@@ -4,7 +4,7 @@ import z from "zod";
 import roleSchema from "@schemas/roles.js";
 // Utils
 import {
-  LucidError,
+  HeadlessError,
   ErrorResult,
   modelErrors,
 } from "@utils/app/error-handler.js";
@@ -16,7 +16,7 @@ import Permissions from "@services/Permissions.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 type SchemaPermissions = z.infer<
   typeof roleSchema.createSingle.body
@@ -111,7 +111,7 @@ const validatePermissions = async (
     Object.keys(permissionErrors).length > 0 ||
     Object.keys(environmentErrors).length > 0
   ) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Role Error",
       message: "There was an error creating the role.",

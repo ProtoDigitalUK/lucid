@@ -7,7 +7,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import { APIResponse } from "@/types/api";
-import { LanguageResT } from "@lucid/types/src/language";
+import { LanguageResT } from "@headless/types/src/language";
 
 interface QueryParams {
   queryString?: Accessor<string> | string;

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Media from "@db/models/Media.js";
 // Format
@@ -16,7 +16,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!media) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Media not found",
       message: "We couldn't find the media you were looking for.",

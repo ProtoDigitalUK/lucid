@@ -1,6 +1,6 @@
 import { FastifyRequest } from "fastify";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Serivces
 import languagesService from "@services/languages/index.js";
@@ -8,7 +8,7 @@ import languagesService from "@services/languages/index.js";
 // ------------------------------------
 // Content language
 const contentLanguage = async (request: FastifyRequest) => {
-  const contentLang = request.headers["lucid-content-lang"];
+  const contentLang = request.headers["headless-content-lang"];
 
   const language = await service(
     languagesService.getSingleFallback,
@@ -18,7 +18,7 @@ const contentLanguage = async (request: FastifyRequest) => {
   });
 
   if (!language) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Language Error",
       message: "Language not found",

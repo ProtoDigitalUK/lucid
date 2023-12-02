@@ -1,6 +1,6 @@
 // Utils
 import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
-import { LucidError, handleSiteErrors } from "@/utils/error-handling";
+import { HeadlessError, handleSiteErrors } from "@/utils/error-handling";
 // Types
 import { APIErrorResponse } from "@/types/api";
 // Services
@@ -66,7 +66,7 @@ const request = async <Response, Data = unknown>(
   if (!fetchRes.ok) {
     const errorObj = data as APIErrorResponse;
     handleSiteErrors(errorObj);
-    throw new LucidError(errorObj.message, errorObj);
+    throw new HeadlessError(errorObj.message, errorObj);
   }
 
   return data as Response;

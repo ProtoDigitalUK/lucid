@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import PageCategory from "@db/models/PageCategory.js";
 
@@ -16,7 +16,7 @@ const deleteMultiple = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (pageCategory.length !== data.category_ids.length) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page Category Not Deleted",
       message: "There was an error deleting the page category.",

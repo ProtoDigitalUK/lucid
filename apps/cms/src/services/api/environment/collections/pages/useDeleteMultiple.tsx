@@ -10,7 +10,7 @@ interface Params {
     ids: number[];
   };
   headers: {
-    "lucid-environment": string;
+    "headless-environment": string;
   };
 }
 
@@ -22,7 +22,7 @@ export const deleteMultipleReq = (params: Params) => {
       method: "DELETE",
       body: params.body,
       headers: {
-        "lucid-environment": params.headers["lucid-environment"],
+        "headless-environment": params.headers["headless-environment"],
       },
     },
   });

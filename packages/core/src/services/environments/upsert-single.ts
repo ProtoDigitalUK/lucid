@@ -3,7 +3,7 @@ import slug from "slug";
 // Models
 import Environment from "@db/models/Environment.js";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import environmentsService from "@services/environments/index.js";
@@ -28,7 +28,7 @@ const checkAssignedBricks = async (assigned_bricks: string[]) => {
 
   const invalidBricks = assigned_bricks.filter((b) => !brickKeys.includes(b));
   if (invalidBricks.length > 0) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Invalid brick keys",
       message: `Make sure all assigned_bricks are valid.`,
@@ -54,7 +54,7 @@ const checkAssignedCollections = async (assigned_collections: string[]) => {
     (c) => !collectionKeys.includes(c)
   );
   if (invalidCollections.length > 0) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Invalid collection keys",
       message: `Make sure all assigned_collections are valid.`,
@@ -78,7 +78,7 @@ const checkAssignedForms = async (assigned_forms: string[]) => {
 
   const invalidForms = assigned_forms.filter((f) => !formKeys.includes(f));
   if (invalidForms.length > 0) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Invalid form keys",
       message: `Make sure all assigned_forms are valid.`,
@@ -145,7 +145,7 @@ const upsertSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!environment) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Environment not created",
       message: `Environment with key "${key}" could not be created`,

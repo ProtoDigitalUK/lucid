@@ -3,7 +3,7 @@ import { Component, For, Switch, Match, createMemo, Show } from "solid-js";
 // Assets
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
-import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components

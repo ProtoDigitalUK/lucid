@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS lucid_emails (
+CREATE TABLE IF NOT EXISTS headless_emails (
   id SERIAL PRIMARY KEY,
   email_hash CHAR(64) NOT NULL UNIQUE,
 

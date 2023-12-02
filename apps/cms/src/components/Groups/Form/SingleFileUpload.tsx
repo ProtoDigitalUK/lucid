@@ -20,7 +20,7 @@ import {
 import helpers from "@/utils/helpers";
 // Types
 import { ErrorResult } from "@/types/api";
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@headless/types/src/media";
 // Components
 import Form from "@/components/Groups/Form";
 

@@ -29,7 +29,7 @@ const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
         collection_key: props.collectionKey,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
       perPage: 10,
     },

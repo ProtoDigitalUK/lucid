@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import { decodeError } from "@utils/app/error-handler.js";
 import getDirName from "@utils/app/get-dirname.js";
 // Services
@@ -35,7 +35,7 @@ const streamErrorImage = async (data: ServiceData) => {
   }
 
   if (Config.media.fallbackImage === false || data.fallback === "0") {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Error",
       message: "We're sorry, but this image is not available.",

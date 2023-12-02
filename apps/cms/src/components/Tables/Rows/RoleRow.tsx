@@ -4,7 +4,7 @@ import { Component } from "solid-js";
 import useRowTarget from "@/hooks/useRowTarget";
 // Types
 import { TableRowProps } from "@/types/components";
-import { RoleResT } from "@lucid/types/src/roles";
+import { RoleResT } from "@headless/types/src/roles";
 // Store
 import userStore from "@/store/userStore";
 // Components

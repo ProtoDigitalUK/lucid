@@ -19,7 +19,7 @@ const toggleReadAtController: Controller<
   )({
     id: parseInt(request.params.id),
     form_key: request.params.form_key,
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
   });
 
   reply.status(200).send(

@@ -18,7 +18,7 @@ const getSingleController: Controller<
     false
   )({
     user_id: request.auth.id,
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     collection_key: request.params.collection_key,
     include_bricks: true,
   });

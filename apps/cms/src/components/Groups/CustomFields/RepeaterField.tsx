@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Component, For, createMemo, Show, Switch, Match } from "solid-js";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
-import type { CustomFieldT } from "@lucid/types/src/bricks";
+import type { CustomFieldT } from "@headless/types/src/bricks";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, { BrickStoreGroupT } from "@/store/builderStore";

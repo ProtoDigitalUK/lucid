@@ -1,8 +1,8 @@
 {
-  "name": "@lucid-cms/core",
+  "name": "@headless-cms/core",
   "version": "0.0.0",
   "private": false,
-  "description": "The core of the Lucid CMS. Its responsible for spinning up the API and serving the CMS.",
+  "description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
   "type": "module",
   "types": "./dist/index.d.ts",
   "main": "dist/index.cjs",
@@ -28,7 +28,7 @@
   ],
   "author": "William Yallop",
   "devDependencies": {
-    "@lucid/types": "*",
+    "@headless/types": "*",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/date-fns": "^2.6.0",

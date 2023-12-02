@@ -44,7 +44,7 @@ export default class UserToken {
   static createSingle: UserTokenCreateSingle = async (client, data) => {
     const userToken = await client.query<UserTokenT>({
       text: `
-            INSERT INTO lucid_user_tokens (
+            INSERT INTO headless_user_tokens (
                 user_id,
                 token_type,
                 token,
@@ -64,7 +64,7 @@ export default class UserToken {
   static getByToken: UserTokenGetByToken = async (client, data) => {
     const userToken = await client.query<UserTokenT>({
       text: `
-            SELECT * FROM lucid_user_tokens
+            SELECT * FROM headless_user_tokens
             WHERE token = $1
             AND token_type = $2
             AND expiry_date > NOW()
@@ -77,7 +77,7 @@ export default class UserToken {
   static deleteSingle: UserTokenDeleteSingle = async (client, data) => {
     const userToken = await client.query<UserTokenT>({
       text: `
-            DELETE FROM lucid_user_tokens
+            DELETE FROM headless_user_tokens
             WHERE id = $1
         `,
       values: [data.id],
@@ -88,7 +88,7 @@ export default class UserToken {
   static removeExpiredTokens: UserTokenRemoveExpiredTokens = async (client) => {
     const userToken = await client.query<UserTokenT>({
       text: `
-            DELETE FROM lucid_user_tokens
+            DELETE FROM headless_user_tokens
             WHERE expiry_date < NOW()
         `,
     });

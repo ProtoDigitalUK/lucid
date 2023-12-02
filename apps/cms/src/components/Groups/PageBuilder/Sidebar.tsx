@@ -5,12 +5,12 @@ import builderStore from "@/store/builderStore";
 // Types
 import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@lucid/types/src/pages";
-import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { PagesResT } from "@headless/types/src/pages";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 import type {
   CollectionCategoriesResT,
   CollectionResT,
-} from "@lucid/types/src/collections";
+} from "@headless/types/src/collections";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import PageFieldGroup from "@/components/FieldGroups/Page";

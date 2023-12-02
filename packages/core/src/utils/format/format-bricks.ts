@@ -11,13 +11,13 @@ import createURL from "@utils/media/create-url.js";
 // Services
 import brickConfigService from "@services/brick-config/index.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
-import { EnvironmentResT } from "@lucid/types/src/environments.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
+import { EnvironmentResT } from "@headless/types/src/environments.js";
 import {
   BrickResT,
   BrickFieldValueT,
   BrickFieldMetaT,
-} from "@lucid/types/src/bricks.js";
+} from "@headless/types/src/bricks.js";
 
 // -------------------------------------------
 // Custom Field Specific Fields

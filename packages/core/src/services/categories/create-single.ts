@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 // Models
 import Category from "@db/models/Category.js";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import collectionsService from "@services/collections/index.js";
@@ -35,7 +35,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!isSlugUnique) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Category Not Created",
       message: "Please provide a unique slug within this post type.",
@@ -53,7 +53,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   const category = await Category.createSingle(client, data);
 
   if (!category) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Category Not Created",
       message: "There was an error creating the category.",

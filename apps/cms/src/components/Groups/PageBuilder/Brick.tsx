@@ -19,7 +19,7 @@ import defaultBrickIconWhite from "@/assets/svgs/default-brick-icon-white.svg";
 // Store
 import builderStore from "@/store/builderStore";
 // Types
-import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 import type { BrickDataT } from "@/store/builderStore";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";

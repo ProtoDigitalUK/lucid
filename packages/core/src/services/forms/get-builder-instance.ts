@@ -1,7 +1,7 @@
 // Services
 import Config from "@services/Config.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 
 export interface ServiceData {
   form_key: string;
@@ -13,7 +13,7 @@ const getBuilderInstance = (data: ServiceData) => {
   const form = FormBuilderInstances.find((form) => form.key === data.form_key);
 
   if (!form) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Form Error",
       message: "Form not found.",

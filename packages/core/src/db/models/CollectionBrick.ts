@@ -6,7 +6,7 @@ import { aliasGenerator } from "@utils/app/query-helpers.js";
 // Schema
 import { BrickSchema, FieldSchema, GroupSchema } from "@schemas/bricks.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
 // Builders
 import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 
@@ -87,57 +87,57 @@ export default class CollectionBrick {
 
     const brickFields = await client.query<CollectionBrickFieldsT>(
       `SELECT 
-        lucid_collection_bricks.*,
-        lucid_fields.*,
-        lucid_groups.*,
+        headless_collection_bricks.*,
+        headless_fields.*,
+        headless_groups.*,
         json_build_object(
-          'title', lucid_page_content.title,
-          'slug', lucid_page_content.slug
+          'title', headless_page_content.title,
+          'slug', headless_page_content.slug
         ) as linked_page,
         json_build_object(
-          'key', lucid_media.key,
-          'mime_type', lucid_media.mime_type,
-          'file_extension', lucid_media.file_extension,
-          'file_size', lucid_media.file_size,
-          'width', lucid_media.width,
-          'height', lucid_media.height,
+          'key', headless_media.key,
+          'mime_type', headless_media.mime_type,
+          'file_extension', headless_media.file_extension,
+          'file_size', headless_media.file_size,
+          'width', headless_media.width,
+          'height', headless_media.height,
           'name', COALESCE(name_translation.value, ''),
           'alt', COALESCE(alt_translation.value, '')
         ) as media
       FROM 
-        lucid_collection_bricks
+        headless_collection_bricks
       LEFT JOIN 
-        lucid_fields
+        headless_fields
       ON 
-        lucid_collection_bricks.id = lucid_fields.collection_brick_id
+        headless_collection_bricks.id = headless_fields.collection_brick_id
       LEFT JOIN 
-        lucid_groups
+        headless_groups
       ON 
-        lucid_fields.group_id = lucid_groups.group_id
+        headless_fields.group_id = headless_groups.group_id
       LEFT JOIN 
-        lucid_pages
+        headless_pages
       ON 
-        lucid_fields.page_link_id = lucid_pages.id
+        headless_fields.page_link_id = headless_pages.id
       LEFT JOIN 
-        lucid_page_content
+        headless_page_content
       ON 
-        lucid_pages.id = lucid_page_content.page_id AND lucid_page_content.language_id = $2
+        headless_pages.id = headless_page_content.page_id AND headless_page_content.language_id = $2
       LEFT JOIN 
-        lucid_media
+        headless_media
       ON 
-        lucid_fields.media_id = lucid_media.id
+        headless_fields.media_id = headless_media.id
       LEFT JOIN 
-        lucid_translations AS name_translation
+        headless_translations AS name_translation
       ON 
-        lucid_media.name_translation_key_id = name_translation.translation_key_id AND name_translation.language_id = $2
+        headless_media.name_translation_key_id = name_translation.translation_key_id AND name_translation.language_id = $2
       LEFT JOIN 
-        lucid_translations AS alt_translation
+        headless_translations AS alt_translation
       ON 
-        lucid_media.alt_translation_key_id = alt_translation.translation_key_id AND alt_translation.language_id = $2
+        headless_media.alt_translation_key_id = alt_translation.translation_key_id AND alt_translation.language_id = $2
       WHERE 
-        lucid_collection_bricks.${referenceKey} = $1
+        headless_collection_bricks.${referenceKey} = $1
       ORDER BY 
-        lucid_collection_bricks.brick_order, lucid_groups.group_order;`,
+        headless_collection_bricks.brick_order, headless_groups.group_order;`,
       [data.reference_id, data.default_language_id]
     );
 
@@ -155,18 +155,18 @@ export default class CollectionBrick {
       groups: { group_id: number }[];
     }>({
       text: `SELECT 
-        lucid_collection_bricks.id,
+        headless_collection_bricks.id,
         COALESCE(json_agg(
-          json_build_object('id', lucid_fields.fields_id) 
-        ) FILTER (WHERE lucid_fields.fields_id IS NOT NULL), '[]'::json) as fields,
+          json_build_object('id', headless_fields.fields_id) 
+        ) FILTER (WHERE headless_fields.fields_id IS NOT NULL), '[]'::json) as fields,
         COALESCE(json_agg(
-          json_build_object('id', lucid_groups.group_id) 
-        ) FILTER (WHERE lucid_groups.group_id IS NOT NULL), '[]'::json) as groups
-      FROM lucid_collection_bricks 
-      LEFT JOIN lucid_fields ON lucid_collection_bricks.id = lucid_fields.collection_brick_id
-      LEFT JOIN lucid_groups ON lucid_collection_bricks.id = lucid_groups.collection_brick_id
+          json_build_object('id', headless_groups.group_id) 
+        ) FILTER (WHERE headless_groups.group_id IS NOT NULL), '[]'::json) as groups
+      FROM headless_collection_bricks 
+      LEFT JOIN headless_fields ON headless_collection_bricks.id = headless_fields.collection_brick_id
+      LEFT JOIN headless_groups ON headless_collection_bricks.id = headless_groups.collection_brick_id
       WHERE ${referenceKey} = $1
-      GROUP BY lucid_collection_bricks.id`,
+      GROUP BY headless_collection_bricks.id`,
       values: [data.reference_id],
     });
 
@@ -179,7 +179,7 @@ export default class CollectionBrick {
     if (data.ids.length === 0) return;
 
     await client.query({
-      text: `DELETE FROM lucid_collection_bricks WHERE id = ANY($1)`,
+      text: `DELETE FROM headless_collection_bricks WHERE id = ANY($1)`,
       values: [data.ids],
     });
   };
@@ -219,7 +219,7 @@ export default class CollectionBrick {
       brick_key: CollectionBrickT["brick_key"];
     }>(
       `INSERT INTO 
-        lucid_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
+        headless_collection_bricks (brick_key, brick_type, ${referenceKey}, brick_order) 
       VALUES 
         ${aliases}
       RETURNING id, brick_order, brick_key`,
@@ -262,11 +262,11 @@ export default class CollectionBrick {
             VALUES 
             ${aliases}
         ) 
-      UPDATE lucid_collection_bricks
+      UPDATE headless_collection_bricks
       SET brick_order = data_values.brick_order
       FROM data_values
-      WHERE lucid_collection_bricks.id = data_values.id
-      RETURNING lucid_collection_bricks.id, lucid_collection_bricks.brick_order`,
+      WHERE headless_collection_bricks.id = data_values.id
+      RETURNING headless_collection_bricks.id, headless_collection_bricks.brick_order`,
       dataValues
     );
 
@@ -282,7 +282,7 @@ export default class CollectionBrick {
     if (data.ids.length === 0) return;
 
     await client.query({
-      text: `DELETE FROM lucid_groups WHERE group_id = ANY($1)`,
+      text: `DELETE FROM headless_groups WHERE group_id = ANY($1)`,
       values: [data.ids],
     });
   };
@@ -331,7 +331,7 @@ export default class CollectionBrick {
       ref: CollectionBrickGroupT["ref"];
     }>(
       `INSERT INTO 
-        lucid_groups (collection_brick_id, group_order, ref, parent_group_id, repeater_key, language_id) 
+        headless_groups (collection_brick_id, group_order, ref, parent_group_id, repeater_key, language_id) 
       VALUES 
         ${aliases}
       RETURNING group_id, ref`,
@@ -373,12 +373,12 @@ export default class CollectionBrick {
       text: `WITH data_values (group_id, group_order, parent_group_id) AS (
           VALUES ${aliases}
         )
-        UPDATE lucid_groups
+        UPDATE headless_groups
         SET 
           group_order = data_values.group_order,
           parent_group_id = data_values.parent_group_id
         FROM data_values
-        WHERE lucid_groups.group_id = data_values.group_id;`,
+        WHERE headless_groups.group_id = data_values.group_id;`,
       values: dataValues,
     });
   };
@@ -390,7 +390,7 @@ export default class CollectionBrick {
       if (data.ids.length === 0) return;
 
       await client.query({
-        text: `DELETE FROM lucid_fields WHERE fields_id = ANY($1)`,
+        text: `DELETE FROM headless_fields WHERE fields_id = ANY($1)`,
         values: [data.ids],
       });
     };
@@ -454,7 +454,7 @@ export default class CollectionBrick {
 
       await client.query(
         `INSERT INTO 
-          lucid_fields (collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id, language_id) 
+          headless_fields (collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id, language_id) 
         VALUES 
           ${aliases}`,
         dataValues
@@ -502,7 +502,7 @@ export default class CollectionBrick {
         text: `WITH data_values (fields_id, collection_brick_id, key, type, group_id, text_value, int_value, bool_value, json_value, page_link_id, media_id) AS (
             VALUES ${aliases}
           )
-          UPDATE lucid_fields
+          UPDATE headless_fields
           SET
             text_value = data_values.text_value,
             int_value = data_values.int_value,
@@ -511,7 +511,7 @@ export default class CollectionBrick {
             page_link_id = data_values.page_link_id,
             media_id = data_values.media_id
           FROM data_values
-          WHERE lucid_fields.fields_id = data_values.fields_id;`,
+          WHERE headless_fields.fields_id = data_values.fields_id;`,
         values: dataValues,
       });
     };

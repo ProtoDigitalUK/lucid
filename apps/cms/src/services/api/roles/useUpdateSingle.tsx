@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { RoleResT } from "@lucid/types/src/roles";
+import { RoleResT } from "@headless/types/src/roles";
 
 interface Params {
   id: number;

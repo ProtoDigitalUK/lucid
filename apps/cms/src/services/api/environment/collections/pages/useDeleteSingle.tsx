@@ -8,7 +8,7 @@ import { APIResponse } from "@/types/api";
 interface Params {
   id: number;
   headers: {
-    "lucid-environment": string;
+    "headless-environment": string;
   };
 }
 
@@ -19,7 +19,7 @@ export const deleteSingleReq = (params: Params) => {
     config: {
       method: "DELETE",
       headers: {
-        "lucid-environment": params.headers["lucid-environment"],
+        "headless-environment": params.headers["headless-environment"],
       },
     },
   });

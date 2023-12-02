@@ -8,7 +8,7 @@ import serviceHelpers from "@/utils/service-helpers";
 // Services
 import api from "@/services/api";
 // Types
-import { UserResT } from "@lucid/types/src/users";
+import { UserResT } from "@headless/types/src/users";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {}

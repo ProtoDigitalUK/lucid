@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Models
 import PageCategory from "@db/models/PageCategory.js";
 
@@ -24,7 +24,7 @@ const verifyCategoriesInCollection = async (
   });
 
   if (pageCategories.length !== data.category_ids.length) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Category Not Found",
       message: "Category not found.",

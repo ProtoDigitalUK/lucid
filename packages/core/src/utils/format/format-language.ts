@@ -2,7 +2,7 @@ import ISO6391 from "iso-639-1";
 // Models
 import { LanguageT } from "@db/models/Language.js";
 // Types
-import { LanguageResT } from "@lucid/types/src/language.js";
+import { LanguageResT } from "@headless/types/src/language.js";
 
 const formatLanguage = (language: LanguageT): LanguageResT => {
   const iso6391Code = language.code.split("-")[0];

@@ -66,15 +66,15 @@ export default class UserRole {
       name: string;
     }>({
       text: `SELECT 
-          lucid_user_roles.id AS id,
-          lucid_user_roles.role_id AS role_id,
-          lucid_roles.name AS name
+          headless_user_roles.id AS id,
+          headless_user_roles.role_id AS role_id,
+          headless_roles.name AS name
       FROM 
-          lucid_user_roles
+          headless_user_roles
       INNER JOIN 
-          lucid_roles ON lucid_user_roles.role_id = lucid_roles.id
+          headless_roles ON headless_user_roles.role_id = headless_roles.id
       WHERE 
-          lucid_user_roles.user_id = $1;`,
+          headless_user_roles.user_id = $1;`,
       values: [data.user_id],
     });
 
@@ -83,7 +83,7 @@ export default class UserRole {
   static updateRoles: UserRoleUpdate = async (client, data) => {
     const roles = await client.query<UserRoleT>({
       text: `
-        INSERT INTO lucid_user_roles(user_id, role_id)
+        INSERT INTO headless_user_roles(user_id, role_id)
         SELECT $1, unnest($2::integer[]);`,
       values: [data.user_id, data.role_ids],
     });
@@ -94,7 +94,7 @@ export default class UserRole {
     const roles = await client.query<UserRoleT>({
       text: `
         DELETE FROM 
-          lucid_user_roles
+          headless_user_roles
         WHERE 
           id = ANY($1::integer[])
         AND 
@@ -114,11 +114,11 @@ export default class UserRole {
           r.id AS role_id,
           r.name AS role_name
         FROM 
-          lucid_role_permissions rp
+          headless_role_permissions rp
         INNER JOIN 
-          lucid_user_roles ur ON ur.role_id = rp.role_id
+          headless_user_roles ur ON ur.role_id = rp.role_id
         INNER JOIN 
-          lucid_roles r ON r.id = rp.role_id
+          headless_roles r ON r.id = rp.role_id
         WHERE 
           ur.user_id = $1;`,
       values: [data.user_id],

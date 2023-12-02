@@ -3,7 +3,7 @@ import { PoolClient } from "pg";
 // Utils
 import service from "@utils/app/service.js";
 import {
-  LucidError,
+  HeadlessError,
   modelErrors,
   type FieldErrors,
 } from "@utils/app/error-handler.js";
@@ -23,9 +23,9 @@ import environmentsService from "@services/environments/index.js";
 import brickConfigService from "@services/brick-config/index.js";
 import collectionsService from "@services/collections/index.js";
 // Types
-import type { PageLinkValueT, LinkValueT } from "@lucid/types/src/bricks.js";
-import type { CollectionResT } from "@lucid/types/src/collections.js";
-import type { MediaResT } from "@lucid/types/src/media.js";
+import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
+import type { CollectionResT } from "@headless/types/src/collections.js";
+import type { MediaResT } from "@headless/types/src/media.js";
 import type { PageT } from "@db/models/Page.js";
 // Format
 import formatMedia from "@utils/format/format-media.js";
@@ -50,7 +50,7 @@ const validateBrickData = async (data: {
     // Check if the brick instance exists
     const instance = data.builderInstances.find((b) => b.key === brick.key);
     if (!instance) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: T("error_saving_bricks"),
         message: T("error_saving_page_brick_couldnt_find_brick_config", {
@@ -68,7 +68,7 @@ const validateBrickData = async (data: {
       collection: data.collection,
     });
     if (!allowed.allowed) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: T("error_saving_bricks"),
         message: T("error_saving_page_brick_not_in_collection", {
@@ -256,7 +256,7 @@ const validateBricks = async (
 
   // If there are errors, throw them
   if (hasErrors) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Validation Error",
       message: "There was an error validating your bricks.",

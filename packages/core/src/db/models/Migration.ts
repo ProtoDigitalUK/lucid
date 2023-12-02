@@ -24,7 +24,7 @@ export default class Migration {
   static all: MigrationAll = async (client) => {
     try {
       const migrations = await client.query<MigrationT>(
-        `SELECT * FROM lucid_migrations`
+        `SELECT * FROM headless_migrations`
       );
       return migrations.rows;
     } catch (err) {
@@ -38,7 +38,7 @@ export default class Migration {
       text: rawSql,
     });
     await client.query({
-      text: `INSERT INTO lucid_migrations (file) VALUES ($1)`,
+      text: `INSERT INTO headless_migrations (file) VALUES ($1)`,
       values: [file],
     });
   };

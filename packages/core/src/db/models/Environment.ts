@@ -46,7 +46,7 @@ export default class Environment {
     const environments = await client.query<EnvironmentT>({
       text: `SELECT *
         FROM 
-          lucid_environments
+          headless_environments
         ORDER BY
           key ASC`,
       values: [],
@@ -56,7 +56,7 @@ export default class Environment {
   };
   static getSingle: EnvironmentGetSingle = async (client, data) => {
     const environment = await client.query<EnvironmentT>({
-      text: `SELECT * FROM lucid_environments WHERE key = $1`,
+      text: `SELECT * FROM headless_environments WHERE key = $1`,
       values: [data.key],
     });
 
@@ -83,7 +83,7 @@ export default class Environment {
 
     // Create or update environment
     const environments = await client.query<EnvironmentT>({
-      text: `INSERT INTO lucid_environments (${columns.formatted.insert}) 
+      text: `INSERT INTO headless_environments (${columns.formatted.insert}) 
         VALUES (${aliases.formatted.insert}) 
         ON CONFLICT (key) 
         DO UPDATE SET ${columns.formatted.doUpdate}
@@ -95,7 +95,7 @@ export default class Environment {
   };
   static deleteSingle: EnvironmentDeleteSingle = async (client, data) => {
     const environments = await client.query<EnvironmentT>({
-      text: `DELETE FROM lucid_environments WHERE key = $1 RETURNING *`,
+      text: `DELETE FROM headless_environments WHERE key = $1 RETURNING *`,
       values: [data.key],
     });
 

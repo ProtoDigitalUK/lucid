@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Models
 import Page from "@db/models/Page.js";
 
@@ -13,7 +13,7 @@ const checkParentAncestry = async (client: PoolClient, data: ServiceData) => {
   const results = await Page.checkParentAncestry(client, data);
 
   if (results.length > 0) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page Not Updated",
       message: "An error occurred while updating the page.",

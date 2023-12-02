@@ -29,7 +29,7 @@ export default class Language {
     const roleRes = await client.query<{
       id: LanguageT["id"];
     }>({
-      text: `INSERT INTO lucid_languages (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
+      text: `INSERT INTO headless_languages (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
       values: values.value,
     });
 
@@ -37,12 +37,12 @@ export default class Language {
   };
   static getMultiple: LanguageGetMultiple = async (client, query_instance) => {
     const languages = client.query<LanguageT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_languages ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_languages ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_languages.id) FROM lucid_languages ${query_instance.query.where}`,
+      text: `SELECT COUNT(DISTINCT headless_languages.id) FROM headless_languages ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
@@ -55,7 +55,7 @@ export default class Language {
   };
   static getSingleByCode: LanguageGetSingleByCode = async (client, data) => {
     const roleRes = await client.query<LanguageT>({
-      text: `SELECT * FROM lucid_languages WHERE code = $1`,
+      text: `SELECT * FROM headless_languages WHERE code = $1`,
       values: [data.code],
     });
 
@@ -63,7 +63,7 @@ export default class Language {
   };
   static getSingleByID: LanguageGetSingleByID = async (client, data) => {
     const roleRes = await client.query<LanguageT>({
-      text: `SELECT * FROM lucid_languages WHERE id = $1`,
+      text: `SELECT * FROM headless_languages WHERE id = $1`,
       values: [data.id],
     });
 
@@ -71,7 +71,7 @@ export default class Language {
   };
   static getDefault: LanguageGetDefault = async (client) => {
     const roleRes = await client.query<LanguageT>({
-      text: `SELECT * FROM lucid_languages WHERE is_default = true`,
+      text: `SELECT * FROM headless_languages WHERE is_default = true`,
     });
 
     return roleRes.rows[0];
@@ -90,7 +90,7 @@ export default class Language {
     const roleRes = await client.query<{
       id: LanguageT["id"];
     }>({
-      text: `UPDATE lucid_languages SET ${
+      text: `UPDATE headless_languages SET ${
         columns.formatted.update
       } WHERE code = $${aliases.value.length + 1} RETURNING id`,
       values: [...values.value, data.code],
@@ -103,7 +103,7 @@ export default class Language {
       id: LanguageT["id"];
       is_default: LanguageT["is_default"];
     }>({
-      text: `DELETE FROM lucid_languages WHERE code = $1 RETURNING id, is_default`,
+      text: `DELETE FROM headless_languages WHERE code = $1 RETURNING id, is_default`,
       values: [data.code],
     });
 
@@ -113,7 +113,7 @@ export default class Language {
     const languages = await client.query<{
       id: LanguageT["id"];
     }>({
-      text: `SELECT id FROM lucid_languages WHERE id = ANY($1::int[])`,
+      text: `SELECT id FROM headless_languages WHERE id = ANY($1::int[])`,
       values: [data.ids],
     });
 

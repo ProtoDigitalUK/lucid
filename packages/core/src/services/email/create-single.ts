@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 import { format, getHours } from "date-fns";
 import crypto from "crypto";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import Email from "@db/models/Email.js";
 
@@ -46,7 +46,7 @@ const createSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!email) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Email",
       message: "Error saving email",

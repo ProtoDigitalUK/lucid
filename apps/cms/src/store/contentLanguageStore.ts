@@ -1,6 +1,6 @@
 import { createStore } from "solid-js/store";
 // Types
-import { LanguageResT } from "@lucid/types/src/language";
+import { LanguageResT } from "@headless/types/src/language";
 
 type ContentLangStoreT = {
   contentLanguage: number | undefined;
@@ -10,7 +10,7 @@ type ContentLangStoreT = {
 };
 
 const getInitialContentLanguage = () => {
-  const contentLang = localStorage.getItem("lucid_content_language");
+  const contentLang = localStorage.getItem("headless_content_language");
   if (contentLang) {
     return Number(contentLang);
   }
@@ -27,7 +27,7 @@ const [get, set] = createStore<ContentLangStoreT>({
       return;
     }
 
-    const contentLangLs = localStorage.getItem("lucid_content_language");
+    const contentLangLs = localStorage.getItem("headless_content_language");
     if (contentLangLs) {
       // check if environment exists
       const languageExists = languages.find(
@@ -42,9 +42,12 @@ const [get, set] = createStore<ContentLangStoreT>({
   },
   setContentLanguage(contentLanguage?: number) {
     if (contentLanguage === undefined)
-      localStorage.removeItem("lucid_content_language");
+      localStorage.removeItem("headless_content_language");
     else
-      localStorage.setItem("lucid_content_language", String(contentLanguage));
+      localStorage.setItem(
+        "headless_content_language",
+        String(contentLanguage)
+      );
     set("contentLanguage", contentLanguage);
   },
 });

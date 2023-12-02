@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { PermissionsResT } from "@lucid/types/src/permissions";
+import { PermissionsResT } from "@headless/types/src/permissions";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {}

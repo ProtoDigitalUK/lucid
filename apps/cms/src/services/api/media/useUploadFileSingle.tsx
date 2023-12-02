@@ -4,7 +4,7 @@ import objectToFormData from "@/utils/object-to-formdata";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { MediaResT } from "@lucid/types/src/media";
+import { MediaResT } from "@headless/types/src/media";
 
 interface Params {
   body: {

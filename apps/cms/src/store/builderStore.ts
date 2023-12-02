@@ -3,9 +3,12 @@ import shortUUID from "short-uuid";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Types
-import type { FieldTypes } from "@lucid/types/src/pages";
-import type { BrickFieldValueT, CustomFieldT } from "@lucid/types/src/bricks";
-import type { CollectionResT } from "@lucid/types/src/collections";
+import type { FieldTypes } from "@headless/types/src/pages";
+import type {
+  BrickFieldValueT,
+  CustomFieldT,
+} from "@headless/types/src/bricks";
+import type { CollectionResT } from "@headless/types/src/collections";
 import type { FieldError } from "@/types/api";
 
 export interface BrickStoreFieldT {

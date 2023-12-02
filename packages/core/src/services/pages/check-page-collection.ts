@@ -1,7 +1,7 @@
 import T from "@translations/index.js";
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Services
 import collectionsService from "@services/collections/index.js";
@@ -25,7 +25,7 @@ const checkPageCollection = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (collection.disableHomepage === true && data.homepage === true) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_creating_page"),
       message: T("error_creating_page_homepage_disabled"),
@@ -34,7 +34,7 @@ const checkPageCollection = async (client: PoolClient, data: ServiceData) => {
   }
 
   if (collection.disableParent === true && data.parent_id !== undefined) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_creating_page"),
       message: T("error_creating_page_parents_disabled"),

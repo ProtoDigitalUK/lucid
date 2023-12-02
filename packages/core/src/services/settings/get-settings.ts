@@ -7,7 +7,7 @@ import Config from "@services/Config.js";
 // Models
 import ProcessedImage from "@db/models/ProcessedImage.js";
 // Types
-import { SettingsResT } from "@lucid/types/src/settings.js";
+import { SettingsResT } from "@headless/types/src/settings.js";
 
 export interface ServiceData {
   id: number;

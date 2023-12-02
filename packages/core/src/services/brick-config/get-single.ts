@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Services
 import brickConfigService from "@services/brick-config/index.js";
 
@@ -13,7 +13,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   const instance = builderInstances.find((b) => b.key === data.brick_key);
 
   if (!instance) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Brick not found",
       message: "We could not find the brick you are looking for.",
@@ -26,7 +26,7 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!brick) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Brick not found",
       message: "We could not find the brick you are looking for.",

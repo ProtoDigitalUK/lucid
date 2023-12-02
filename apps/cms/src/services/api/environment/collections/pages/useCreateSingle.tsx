@@ -20,7 +20,7 @@ interface Params {
     category_ids?: number[];
   };
   headers: {
-    "lucid-environment": string;
+    "headless-environment": string;
   };
 }
 
@@ -32,7 +32,7 @@ export const createSingleReq = (params: Params) => {
       method: "POST",
       body: params.body,
       headers: {
-        "lucid-environment": params.headers["lucid-environment"],
+        "headless-environment": params.headers["headless-environment"],
       },
     },
   });

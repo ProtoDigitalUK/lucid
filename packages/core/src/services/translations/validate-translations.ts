@@ -1,5 +1,5 @@
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Schema
 import { mediaTranslations, MediaTranslationsT } from "@schemas/media.js";
 
@@ -15,7 +15,7 @@ const validateTranslations = (data: ServiceData) => {
   );
 
   if (!translationValidate.success) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "validation",
       zod: translationValidate.error,
     });

@@ -12,7 +12,7 @@ import contentLanguage from "@middleware/content-language.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 type RouteT = <
   ParamsT extends z.ZodTypeAny,

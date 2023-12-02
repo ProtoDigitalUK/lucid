@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import FormSubmission from "@db/models/FormSubmission.js";
@@ -46,7 +46,7 @@ const toggleReadAt = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!updateFormSubmission) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Form Error",
       message: "This form submission does not exist.",

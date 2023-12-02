@@ -1,6 +1,6 @@
 import { Component, Switch, Match } from "solid-js";
 // Types
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { PagesResT } from "@headless/types/src/pages";
 // Components
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";

@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import UserRole from "@db/models/UserRole.js";
@@ -37,7 +37,7 @@ const updateRoles = async (client: PoolClient, data: ServiceData) => {
       },
     });
     if (rolesRes.count !== newRoles.length) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: "Role Error",
         message: "One or more of the roles do not exist.",

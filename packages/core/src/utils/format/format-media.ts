@@ -2,7 +2,7 @@ import { MediaT } from "@db/models/Media.js";
 // Utils
 import createURL from "@utils/media/create-url.js";
 // Types
-import { MediaResT } from "@lucid/types/src/media.js";
+import { MediaResT } from "@headless/types/src/media.js";
 
 const constructTranslations = (media: MediaT) => {
   const translationsMap = new Map();

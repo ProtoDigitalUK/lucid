@@ -4,7 +4,7 @@ import { Component } from "solid-js";
 import useRowTarget from "@/hooks/useRowTarget";
 // Types
 import { TableRowProps } from "@/types/components";
-import { EmailResT } from "@lucid/types/src/email";
+import { EmailResT } from "@headless/types/src/email";
 // Stores
 import userStore from "@/store/userStore";
 // Components

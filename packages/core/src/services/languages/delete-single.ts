@@ -1,7 +1,7 @@
 import T from "@translations/index.js";
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 // Models
 import Language from "@db/models/Language.js";
@@ -28,7 +28,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
   let languages = await Language.getMultiple(client, SelectQuery);
 
   if (languages.data.length === 1) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_generic_name", {
         type: T("language"),
@@ -45,7 +45,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (!language) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_generic_name", {
         type: T("language"),
@@ -69,7 +69,7 @@ const deleteSingle = async (client: PoolClient, data: ServiceData) => {
     });
 
     if (!languageRes) {
-      throw new LucidError({
+      throw new HeadlessError({
         type: "basic",
         name: T("error_generic_name", {
           type: T("language"),

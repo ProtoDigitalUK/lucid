@@ -17,7 +17,7 @@ const deleteSingleController: Controller<
     menusService.deleteSingle,
     false
   )({
-    environment_key: request.headers["lucid-environment"] as string,
+    environment_key: request.headers["headless-environment"] as string,
     id: parseInt(request.params.id),
   });
 

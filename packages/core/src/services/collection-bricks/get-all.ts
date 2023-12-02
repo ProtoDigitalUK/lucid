@@ -9,7 +9,7 @@ import environmentsService from "@services/environments/index.js";
 // Format
 import formatBricks from "@utils/format/format-bricks.js";
 // Types
-import { CollectionResT } from "@lucid/types/src/collections.js";
+import { CollectionResT } from "@headless/types/src/collections.js";
 
 export interface ServiceData {
   reference_id: number;

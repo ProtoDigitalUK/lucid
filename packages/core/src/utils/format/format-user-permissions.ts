@@ -4,11 +4,11 @@ import type { UserRolePermissionRes } from "@db/models/UserRole.js";
 import {
   UserPermissionsResT,
   UserEnvrionmentResT,
-} from "@lucid/types/src/users.js";
+} from "@headless/types/src/users.js";
 import {
   PermissionT,
   EnvironmentPermissionT,
-} from "@lucid/types/src/permissions.js";
+} from "@headless/types/src/permissions.js";
 
 const formatUserPermissions = (
   roles: {

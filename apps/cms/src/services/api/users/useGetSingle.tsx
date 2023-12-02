@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { UserResT } from "@lucid/types/src/users";
+import { UserResT } from "@headless/types/src/users";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {

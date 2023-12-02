@@ -87,18 +87,18 @@ export default class Config {
   };
   public static findPath = (cwd: string): string => {
     // if specified, use the specified path
-    if (process.env.LUCID_CONFIG_PATH) {
-      if (path.isAbsolute(process.env.LUCID_CONFIG_PATH)) {
-        return process.env.LUCID_CONFIG_PATH;
+    if (process.env.HEADLESS_CONFIG_PATH) {
+      if (path.isAbsolute(process.env.HEADLESS_CONFIG_PATH)) {
+        return process.env.HEADLESS_CONFIG_PATH;
       }
 
-      return path.resolve(process.cwd(), process.env.LUCID_CONFIG_PATH);
+      return path.resolve(process.cwd(), process.env.HEADLESS_CONFIG_PATH);
     }
 
     // recursively search for the config file by navigating up the directory tree
     let configPath: string | undefined = undefined;
     const root = path.parse(cwd).root;
-    const configFileName = "lucid.config";
+    const configFileName = "headless.config";
     const configExtensions = [".ts", ".js"];
 
     const search = (cwd: string): void => {
@@ -124,7 +124,7 @@ export default class Config {
 
     if (!configPath) {
       throw new RuntimeError(
-        "Cannot find the lucid.config.ts or lucid.config.js file at the root of your project."
+        "Cannot find the headless.config.ts or headless.config.js file at the root of your project."
       );
     }
 
@@ -234,7 +234,7 @@ export default class Config {
     const uniqueBrickKeys = [...new Set(brickKeys)];
     if (brickKeys.length !== uniqueBrickKeys.length) {
       throw new RuntimeError(
-        "Each brick key must be unique, found duplicates in lucid.config.ts/js."
+        "Each brick key must be unique, found duplicates in headless.config.ts/js."
       );
     }
   }
@@ -246,7 +246,7 @@ export default class Config {
     const uniqueCollectionKeys = [...new Set(collectionKeys)];
     if (collectionKeys.length !== uniqueCollectionKeys.length) {
       throw new RuntimeError(
-        "Each collection key must be unique, found duplicates in lucid.config.ts/js."
+        "Each collection key must be unique, found duplicates in headless.config.ts/js."
       );
     }
   }
@@ -256,7 +256,7 @@ export default class Config {
     const uniqueFormKeys = [...new Set(formKeys)];
     if (formKeys.length !== uniqueFormKeys.length) {
       throw new RuntimeError(
-        "Each form key must be unique, found duplicates in lucid.config.ts/js."
+        "Each form key must be unique, found duplicates in headless.config.ts/js."
       );
     }
   }

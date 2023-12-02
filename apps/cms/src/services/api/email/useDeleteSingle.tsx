@@ -4,7 +4,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { EmailResT } from "@lucid/types/src/email";
+import { EmailResT } from "@headless/types/src/email";
 
 interface Params {
   id: number;

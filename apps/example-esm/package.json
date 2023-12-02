@@ -9,7 +9,7 @@
     "dev": "nodemon"
   },
   "dependencies": {
-    "@lucid/core": "*",
+    "@headless/core": "*",
     "fastify": "^4.24.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"

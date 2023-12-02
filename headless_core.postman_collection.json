@@ -455,8 +455,8 @@
 								"type": "text"
 							},
 							{
-								"key": "lucid-environment",
-								"value": "{{LUCID_ENVIRONMENT}}",
+								"key": "headless-environment",
+								"value": "{{HEADLESS_ENVIRONMENT}}",
 								"type": "text"
 							}
 						],
@@ -516,8 +516,8 @@
 								"type": "text"
 							},
 							{
-								"key": "lucid-environment",
-								"value": "{{LUCID_ENVIRONMENT}}",
+								"key": "headless-environment",
+								"value": "{{HEADLESS_ENVIRONMENT}}",
 								"type": "text"
 							}
 						],
@@ -659,8 +659,8 @@
 								"type": "text"
 							},
 							{
-								"key": "lucid-environment",
-								"value": "{{LUCID_ENVIRONMENT}}",
+								"key": "headless-environment",
+								"value": "{{HEADLESS_ENVIRONMENT}}",
 								"type": "text"
 							}
 						],
@@ -700,8 +700,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -756,8 +756,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -787,8 +787,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -826,8 +826,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -866,8 +866,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -909,13 +909,13 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													},
 													{
-														"key": "lucid-content-lang",
-														"value": "{{LUCID_CONTENT_LANG}}",
+														"key": "headless-content-lang",
+														"value": "{{HEADLESS_CONTENT_LANG}}",
 														"type": "text",
 														"disabled": true
 													}
@@ -977,13 +977,13 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													},
 													{
-														"key": "lucid-content-lang",
-														"value": "{{LUCID_CONTENT_LANG}}",
+														"key": "headless-content-lang",
+														"value": "{{HEADLESS_CONTENT_LANG}}",
 														"type": "text"
 													}
 												],
@@ -1031,8 +1031,8 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1068,8 +1068,8 @@
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1107,8 +1107,8 @@
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1147,8 +1147,8 @@
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1187,8 +1187,8 @@
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1227,8 +1227,8 @@
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1266,8 +1266,8 @@
 												"method": "GET",
 												"header": [
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1297,8 +1297,8 @@
 														"type": "text"
 													},
 													{
-														"key": "lucid-environment",
-														"value": "{{LUCID_ENVIRONMENT}}",
+														"key": "headless-environment",
+														"value": "{{HEADLESS_ENVIRONMENT}}",
 														"type": "text"
 													}
 												],
@@ -1358,7 +1358,7 @@
 										},
 										{
 											"key": "filter[environment_key]",
-											"value": "{{LUCID_ENVIRONMENT}}",
+											"value": "{{HEADLESS_ENVIRONMENT}}",
 											"disabled": true
 										},
 										{
@@ -1383,8 +1383,8 @@
 										"type": "text"
 									},
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -1420,8 +1420,8 @@
 										"type": "text"
 									},
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -1459,8 +1459,8 @@
 										"type": "text"
 									},
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -1499,8 +1499,8 @@
 										"type": "text"
 									},
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -1542,8 +1542,8 @@
 										"type": "text"
 									},
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -1580,8 +1580,8 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -1642,8 +1642,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -1689,8 +1689,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -1722,8 +1722,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -1755,8 +1755,8 @@
 												"type": "text"
 											},
 											{
-												"key": "lucid-environment",
-												"value": "{{LUCID_ENVIRONMENT}}",
+												"key": "headless-environment",
+												"value": "{{HEADLESS_ENVIRONMENT}}",
 												"type": "text"
 											}
 										],
@@ -1803,7 +1803,7 @@
 										},
 										{
 											"key": "filter[environment_key]",
-											"value": "{{LUCID_ENVIRONMENT}}",
+											"value": "{{HEADLESS_ENVIRONMENT}}",
 											"disabled": true
 										}
 									]
@@ -1817,8 +1817,8 @@
 								"method": "GET",
 								"header": [
 									{
-										"key": "lucid-environment",
-										"value": "{{LUCID_ENVIRONMENT}}",
+										"key": "headless-environment",
+										"value": "{{HEADLESS_ENVIRONMENT}}",
 										"type": "text"
 									}
 								],
@@ -2053,7 +2053,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/bricks/config?include=fields&filter[environment_key]={{LUCID_ENVIRONMENT}}&filter[collection_key]=page",
+							"raw": "{{BASE_URL}}/api/v1/bricks/config?include=fields&filter[environment_key]={{HEADLESS_ENVIRONMENT}}&filter[collection_key]=page",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -2070,7 +2070,7 @@
 								},
 								{
 									"key": "filter[environment_key]",
-									"value": "{{LUCID_ENVIRONMENT}}"
+									"value": "{{HEADLESS_ENVIRONMENT}}"
 								},
 								{
 									"key": "filter[collection_key]",
@@ -2244,8 +2244,8 @@
 						"method": "GET",
 						"header": [
 							{
-								"key": "lucid-content-lang",
-								"value": "{{LUCID_CONTENT_LANG}}",
+								"key": "headless-content-lang",
+								"value": "{{HEADLESS_CONTENT_LANG}}",
 								"type": "text",
 								"disabled": true
 							}
@@ -2707,7 +2707,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"stand2ard@lucid.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [10]\r\n}",
+							"raw": "{\r\n    \"email\": \"stand2ard@headless.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [10]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

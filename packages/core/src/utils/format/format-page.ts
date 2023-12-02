@@ -1,6 +1,6 @@
 import { PageT } from "@db/models/Page.js";
 // Types
-import type { PagesResT } from "@lucid/types/src/pages.js";
+import type { PagesResT } from "@headless/types/src/pages.js";
 
 export const formatPageSlug = (slug: string | null) => {
   if (!slug) return null;

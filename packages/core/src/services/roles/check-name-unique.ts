@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 // Models
 import Role from "@db/models/Role.js";
 
@@ -14,7 +14,7 @@ const checkNameIsUnique = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (role) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Role Error",
       message: "The role name must be unique.",

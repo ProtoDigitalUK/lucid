@@ -23,8 +23,8 @@ import builderStore from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { CollectionResT } from "@lucid/types/src/collections";
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { CollectionResT } from "@headless/types/src/collections";
+import type { PagesResT } from "@headless/types/src/pages";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
@@ -75,7 +75,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         collection_key: collectionKey,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
       perPage: -1,
     },
@@ -87,7 +87,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         collection_key: collectionKey,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
     },
     enabled: () => !!collectionKey(),
@@ -101,7 +101,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         bricks: true,
       },
       headers: {
-        "lucid-environment": environment,
+        "headless-environment": environment,
       },
     },
     enabled: () => !!pageId(),
@@ -216,7 +216,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         bricks: builderStore.get.bricks,
       },
       headers: {
-        "lucid-environment": environment() || "",
+        "headless-environment": environment() || "",
       },
     });
   };

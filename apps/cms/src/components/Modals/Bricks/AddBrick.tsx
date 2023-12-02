@@ -2,8 +2,8 @@ import { Component, For, createSignal, createMemo, Show } from "solid-js";
 import { FaSolidMagnifyingGlass, FaSolidXmark } from "solid-icons/fa";
 import classNames from "classnames";
 // Types
-import type { BrickConfigT } from "@lucid/types/src/bricks";
-import type { CollectionResT } from "@lucid/types/src/collections";
+import type { BrickConfigT } from "@headless/types/src/bricks";
+import type { CollectionResT } from "@headless/types/src/collections";
 import brickIcon from "@/assets/svgs/default-brick-icon.svg";
 // Store
 import builderStore from "@/store/builderStore";

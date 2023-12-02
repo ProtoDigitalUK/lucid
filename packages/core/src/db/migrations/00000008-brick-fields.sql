@@ -1,31 +1,31 @@
-CREATE TABLE IF NOT EXISTS lucid_collection_bricks (
+CREATE TABLE IF NOT EXISTS headless_collection_bricks (
   id SERIAL PRIMARY KEY,
   brick_type TEXT NOT NULL,
   brick_key TEXT NOT NULL,
-  page_id INT REFERENCES lucid_pages(id) ON DELETE CASCADE,
-  singlepage_id INT REFERENCES lucid_singlepages(id) ON DELETE CASCADE,
+  page_id INT REFERENCES headless_pages(id) ON DELETE CASCADE,
+  singlepage_id INT REFERENCES headless_singlepages(id) ON DELETE CASCADE,
   
   brick_order INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS lucid_groups (
+CREATE TABLE IF NOT EXISTS headless_groups (
   group_id SERIAL PRIMARY KEY,
-  parent_group_id INT REFERENCES lucid_groups(group_id) ON DELETE CASCADE,
-  collection_brick_id INT REFERENCES lucid_collection_bricks(id) ON DELETE CASCADE,
-  language_id INTEGER REFERENCES lucid_languages(id) ON DELETE CASCADE NOT NULL,
+  parent_group_id INT REFERENCES headless_groups(group_id) ON DELETE CASCADE,
+  collection_brick_id INT REFERENCES headless_collection_bricks(id) ON DELETE CASCADE,
+  language_id INTEGER REFERENCES headless_languages(id) ON DELETE CASCADE NOT NULL,
   repeater_key TEXT NOT NULL,
   group_order INT NOT NULL,
   ref TEXT
 );
-CREATE INDEX idx_lucid_groups_language_id ON lucid_groups(language_id);
-CREATE INDEX idx_lucid_groups_collection_brick_id ON lucid_groups(collection_brick_id);
-CREATE INDEX idx_lucid_groups_parent_group_id ON lucid_groups(parent_group_id);
+CREATE INDEX idx_headless_groups_language_id ON headless_groups(language_id);
+CREATE INDEX idx_headless_groups_collection_brick_id ON headless_groups(collection_brick_id);
+CREATE INDEX idx_headless_groups_parent_group_id ON headless_groups(parent_group_id);
 
-CREATE TABLE IF NOT EXISTS lucid_fields (
+CREATE TABLE IF NOT EXISTS headless_fields (
   fields_id SERIAL PRIMARY KEY,
-  collection_brick_id INT REFERENCES lucid_collection_bricks(id) ON DELETE CASCADE,
-  group_id INT REFERENCES lucid_groups(group_id) ON DELETE CASCADE,
-  language_id INTEGER REFERENCES lucid_languages(id) ON DELETE CASCADE NOT NULL,
+  collection_brick_id INT REFERENCES headless_collection_bricks(id) ON DELETE CASCADE,
+  group_id INT REFERENCES headless_groups(group_id) ON DELETE CASCADE,
+  language_id INTEGER REFERENCES headless_languages(id) ON DELETE CASCADE NOT NULL,
 
   key TEXT NOT NULL,
   type TEXT NOT NULL,
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS lucid_fields (
   int_value INT,
   bool_value BOOLEAN,
   json_value JSONB,
-  page_link_id INT REFERENCES lucid_pages(id) ON DELETE SET NULL,
-  media_id INT REFERENCES lucid_media(id) ON DELETE SET NULL
+  page_link_id INT REFERENCES headless_pages(id) ON DELETE SET NULL,
+  media_id INT REFERENCES headless_media(id) ON DELETE SET NULL
 );
 
-CREATE INDEX idx_lucid_fields_language_id ON lucid_fields(language_id);
-CREATE INDEX idx_lucid_fields_collection_brick_id ON lucid_fields(collection_brick_id);
-CREATE INDEX idx_lucid_fields_group_id ON lucid_fields(group_id);
+CREATE INDEX idx_headless_fields_language_id ON headless_fields(language_id);
+CREATE INDEX idx_headless_fields_collection_brick_id ON headless_fields(collection_brick_id);
+CREATE INDEX idx_headless_fields_group_id ON headless_fields(group_id);

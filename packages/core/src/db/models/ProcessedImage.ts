@@ -52,7 +52,7 @@ export default class ProcessedImage {
     });
 
     const processedImage = await client.query<ProcessedImageT>({
-      text: `INSERT INTO lucid_processed_images (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING key`,
+      text: `INSERT INTO headless_processed_images (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING key`,
       values: values.value,
     });
 
@@ -64,7 +64,7 @@ export default class ProcessedImage {
     data
   ) => {
     const processedImages = await client.query<ProcessedImageT>({
-      text: `SELECT * FROM lucid_processed_images WHERE media_key = $1`,
+      text: `SELECT * FROM headless_processed_images WHERE media_key = $1`,
       values: [data.media_key],
     });
 
@@ -75,7 +75,7 @@ export default class ProcessedImage {
     data
   ) => {
     const processedImages = await client.query<ProcessedImageT>({
-      text: `DELETE FROM lucid_processed_images WHERE media_key = $1`,
+      text: `DELETE FROM headless_processed_images WHERE media_key = $1`,
       values: [data.media_key],
     });
 
@@ -84,14 +84,14 @@ export default class ProcessedImage {
 
   static getAll = async (client: PoolClient) => {
     const processedImages = await client.query<ProcessedImageT>({
-      text: `SELECT * FROM lucid_processed_images`,
+      text: `SELECT * FROM headless_processed_images`,
     });
 
     return processedImages.rows;
   };
   static deleteAll = async (client: PoolClient) => {
     const processedImages = await client.query<ProcessedImageT>({
-      text: `DELETE FROM lucid_processed_images`,
+      text: `DELETE FROM headless_processed_images`,
     });
 
     return processedImages.rows;
@@ -104,7 +104,7 @@ export default class ProcessedImage {
     const processedImages = await client.query<{
       count: string;
     }>({
-      text: `SELECT COUNT(*) FROM lucid_processed_images WHERE media_key = $1`,
+      text: `SELECT COUNT(*) FROM headless_processed_images WHERE media_key = $1`,
       values: [data.media_key],
     });
 
@@ -114,7 +114,7 @@ export default class ProcessedImage {
     const processedImages = await client.query<{
       count: string;
     }>({
-      text: `SELECT COUNT(*) FROM lucid_processed_images`,
+      text: `SELECT COUNT(*) FROM headless_processed_images`,
     });
 
     return Number(processedImages.rows[0].count);

@@ -1,4 +1,4 @@
-import { FormBuilder } from "@lucid/core";
+import { FormBuilder } from "@headless/core";
 import z from "zod";
 
 export const ContactForm = new FormBuilder("contact-form", {

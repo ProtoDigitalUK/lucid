@@ -1,7 +1,7 @@
 import { Component, For, Match, Switch, Show, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { CustomFieldT } from "@lucid/types/src/bricks";
+import type { CustomFieldT } from "@headless/types/src/bricks";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, {

@@ -13,14 +13,14 @@ import slugify from "slugify";
 // Stores
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { LanguageResT } from "@lucid/types/src/language";
+import type { LanguageResT } from "@headless/types/src/language";
 import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@lucid/types/src/pages";
+import type { PagesResT } from "@headless/types/src/pages";
 import type {
   CollectionCategoriesResT,
   CollectionResT,
-} from "@lucid/types/src/collections";
+} from "@headless/types/src/collections";
 // Components
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";

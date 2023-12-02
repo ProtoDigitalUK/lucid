@@ -89,7 +89,7 @@ export default class User {
     });
 
     const user = await client.query<UserT>({
-      text: `INSERT INTO lucid_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
+      text: `INSERT INTO headless_users (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING *`,
       values: values.value,
     });
 
@@ -97,12 +97,12 @@ export default class User {
   };
   static getMultiple: UserGetMultiple = async (client, query_instance) => {
     const users = client.query<UserT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_users ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(DISTINCT lucid_users.id) FROM lucid_users ${query_instance.query.where}`,
+      text: `SELECT COUNT(DISTINCT headless_users.id) FROM headless_users ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
@@ -143,9 +143,9 @@ export default class User {
     const page = await client.query<{
       id: UserT["id"];
     }>({
-      text: `UPDATE lucid_users SET ${columns.formatted.update} WHERE id = $${
-        aliases.value.length + 1
-      } RETURNING id`,
+      text: `UPDATE headless_users SET ${
+        columns.formatted.update
+      } WHERE id = $${aliases.value.length + 1} RETURNING id`,
       values: [...values.value, data.user_id],
     });
 
@@ -153,7 +153,7 @@ export default class User {
   };
   static deleteSingle: UserDeleteSingle = async (client, data) => {
     const user = await client.query<UserT>({
-      text: `DELETE FROM lucid_users WHERE id = $1 RETURNING *`,
+      text: `DELETE FROM headless_users WHERE id = $1 RETURNING *`,
       values: [data.id],
     });
 
@@ -161,7 +161,7 @@ export default class User {
   };
   static getSingle: UserGetSingle = async (client, query_instance) => {
     const user = await client.query<UserT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_users ${query_instance.query.where}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_users ${query_instance.query.where}`,
       values: query_instance.values,
     });
 

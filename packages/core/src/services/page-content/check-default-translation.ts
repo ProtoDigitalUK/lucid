@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import {
-  LucidError,
+  HeadlessError,
   modelErrors,
   ErrorResult,
 } from "@utils/app/error-handler.js";
@@ -37,7 +37,7 @@ const checkDefaultTranslation = async (
     !defaultTranslation.title ||
     (!defaultTranslation.slug && data.homepage !== true)
   ) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Validation Error",
       message: "The default translation must have a title and slug.",

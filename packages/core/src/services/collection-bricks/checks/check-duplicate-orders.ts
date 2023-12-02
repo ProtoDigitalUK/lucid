@@ -1,6 +1,6 @@
 import T from "@translations/index.js";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import { BrickObject } from "@db/models/CollectionBrick.js";
 
@@ -20,7 +20,7 @@ const checkDuplicateOrders = (bricks: Array<BrickObject>) => {
   // );
 
   if (builderOrderDuplicates.length > 0) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: T("error_saving_bricks"),
       message: T("error_saving_page_duplicate_order", {
@@ -30,7 +30,7 @@ const checkDuplicateOrders = (bricks: Array<BrickObject>) => {
     });
   }
   // if (fixedOrderDuplicates.length > 0) {
-  //   throw new LucidError({
+  //   throw new HeadlessError({
   //     type: "basic",
   //     name: T("error_saving_bricks"),
   //     message: T("error_saving_page_duplicate_order", {

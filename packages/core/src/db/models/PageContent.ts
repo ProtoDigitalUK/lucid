@@ -32,25 +32,25 @@ export default class PageContent {
       text: `
         SELECT COUNT(*) 
         FROM 
-          lucid_page_content
+          headless_page_content
         JOIN
-          lucid_pages
+          headless_pages
         ON
-          lucid_page_content.page_id = lucid_pages.id
+          headless_page_content.page_id = headless_pages.id
         WHERE 
           (slug ~ ('^' || $1 || '-\\d+$') OR slug = $1)
         AND
-          lucid_pages.collection_key = $2
+          headless_pages.collection_key = $2
         AND
-          lucid_pages.environment_key = $3
+          headless_pages.environment_key = $3
         AND
-          lucid_page_content.language_id = $4
+          headless_page_content.language_id = $4
         AND
-          lucid_page_content.page_id != $5
+          headless_page_content.page_id != $5
         ${
           data.parent_id
-            ? `AND lucid_pages.parent_id = $6`
-            : `AND lucid_pages.parent_id IS NULL`
+            ? `AND headless_pages.parent_id = $6`
+            : `AND headless_pages.parent_id IS NULL`
         }`,
       values: values,
     });
@@ -61,7 +61,7 @@ export default class PageContent {
     const pageContent = await client.query<{
       id: PageContentT["id"];
     }>({
-      text: `INSERT INTO lucid_page_content (language_id, page_id, title, slug, excerpt) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+      text: `INSERT INTO headless_page_content (language_id, page_id, title, slug, excerpt) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
       values: [
         data.language_id,
         data.page_id,
@@ -113,7 +113,7 @@ export default class PageContent {
       id: PageContentT["id"];
     }>(
       `INSERT INTO 
-          lucid_page_content (language_id, page_id, title, slug, excerpt)
+          headless_page_content (language_id, page_id, title, slug, excerpt)
         VALUES 
           ${aliases}
         ON CONFLICT (page_id, language_id)
@@ -135,13 +135,13 @@ export default class PageContent {
       language_id: number;
     }>({
       text: `
-        SELECT lucid_page_content.id, lucid_page_content.title, lucid_pages.id AS page_id, lucid_page_content.language_id
-        FROM lucid_page_content
-        JOIN lucid_pages
-        ON lucid_page_content.page_id = lucid_pages.id
-        WHERE lucid_pages.homepage = true
-        AND lucid_pages.id != $1
-        AND lucid_pages.environment_key = $2`,
+        SELECT headless_page_content.id, headless_page_content.title, headless_pages.id AS page_id, headless_page_content.language_id
+        FROM headless_page_content
+        JOIN headless_pages
+        ON headless_page_content.page_id = headless_pages.id
+        WHERE headless_pages.homepage = true
+        AND headless_pages.id != $1
+        AND headless_pages.environment_key = $2`,
       values: [data.current_id, data.environment_key],
     });
 
@@ -156,13 +156,13 @@ export default class PageContent {
     }>({
       text: `
         SELECT COUNT(*) 
-        FROM lucid_page_content
-        JOIN lucid_pages
-        ON lucid_page_content.page_id = lucid_pages.id
-        WHERE lucid_page_content.slug = $1
-        AND lucid_page_content.language_id = $2
-        AND lucid_page_content.id != $3
-        AND lucid_pages.environment_key = $4`,
+        FROM headless_page_content
+        JOIN headless_pages
+        ON headless_page_content.page_id = headless_pages.id
+        WHERE headless_page_content.slug = $1
+        AND headless_page_content.language_id = $2
+        AND headless_page_content.id != $3
+        AND headless_pages.environment_key = $4`,
       values: [data.slug, data.language_id, data.id, data.environment_key],
     });
     return Number(slugExists.rows[0].count) > 0;
@@ -174,7 +174,7 @@ export default class PageContent {
     const pageContent = await client.query<{
       id: PageContentT["id"];
     }>({
-      text: `UPDATE lucid_page_content SET slug = $1 WHERE id = $2 RETURNING id`,
+      text: `UPDATE headless_page_content SET slug = $1 WHERE id = $2 RETURNING id`,
       values: [data.slug, data.id],
     });
 

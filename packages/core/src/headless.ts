@@ -24,7 +24,7 @@ import Initialise from "@services/Initialise.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const lucid = async (
+const headless = async (
   fastify: FastifyInstance,
   options: Record<string, any>
 ) => {
@@ -48,8 +48,8 @@ const lucid = async (
       "Content-Type",
       "Authorization",
       "_csrf",
-      "lucid-environment",
-      "lucid-content-lang",
+      "headless-environment",
+      "headless-content-lang",
       "Content-Length",
     ],
     credentials: true,
@@ -121,7 +121,7 @@ const lucid = async (
   });
 };
 
-export default fp(lucid, {
-  name: "lucid",
+export default fp(headless, {
+  name: "headless",
   fastify: "4.x",
 });

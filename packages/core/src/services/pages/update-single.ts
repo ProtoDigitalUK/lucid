@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError, modelErrors } from "@utils/app/error-handler.js";
+import { HeadlessError, modelErrors } from "@utils/app/error-handler.js";
 import service from "@utils/app/service.js";
 // Models
 import Page from "@db/models/Page.js";
@@ -57,7 +57,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
 
   // Check if the page is a parent of itself
   if (currentPage.id === data.parent_id) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page Not Updated",
       message: "A page cannot be its own parent",
@@ -151,7 +151,7 @@ const updateSingle = async (client: PoolClient, data: ServiceData) => {
   ]);
 
   if (!page) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Page Not Updated",
       message: "There was an error updating the page",

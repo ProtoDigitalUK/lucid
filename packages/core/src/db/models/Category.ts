@@ -85,12 +85,12 @@ export type CategoryT = {
 export default class Category {
   static getMultiple: CategoryGetMultiple = async (client, query_instance) => {
     const categories = client.query<CategoryT>({
-      text: `SELECT ${query_instance.query.select} FROM lucid_categories ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
+      text: `SELECT ${query_instance.query.select} FROM headless_categories ${query_instance.query.where} ${query_instance.query.order} ${query_instance.query.pagination}`,
       values: query_instance.values,
     });
 
     const count = client.query<{ count: string }>({
-      text: `SELECT COUNT(*) FROM lucid_categories ${query_instance.query.where}`,
+      text: `SELECT COUNT(*) FROM headless_categories ${query_instance.query.where}`,
       values: query_instance.countValues,
     });
 
@@ -103,7 +103,7 @@ export default class Category {
   };
   static getSingle: CategoryGetSingle = async (client, data) => {
     const category = await client.query<CategoryT>({
-      text: "SELECT * FROM lucid_categories WHERE id = $1 AND environment_key = $2",
+      text: "SELECT * FROM headless_categories WHERE id = $1 AND environment_key = $2",
       values: [data.id, data.environment_key],
     });
 
@@ -130,7 +130,7 @@ export default class Category {
     const res = await client.query<{
       id: CategoryT["id"];
     }>({
-      text: `INSERT INTO lucid_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
+      text: `INSERT INTO headless_categories (${columns.formatted.insert}) VALUES (${aliases.formatted.insert}) RETURNING id`,
       values: values.value,
     });
 
@@ -141,7 +141,7 @@ export default class Category {
       id: CategoryT["id"];
     }>({
       name: "update-category",
-      text: `UPDATE lucid_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING id`,
+      text: `UPDATE headless_categories SET title = COALESCE($1, title), slug = COALESCE($2, slug), description = COALESCE($3, description) WHERE id = $4 AND environment_key = $5 RETURNING id`,
       values: [
         data.title,
         data.slug,
@@ -158,7 +158,7 @@ export default class Category {
       id: CategoryT["id"];
     }>({
       name: "delete-category",
-      text: `DELETE FROM lucid_categories WHERE id = $1 AND environment_key = $2 RETURNING id`,
+      text: `DELETE FROM headless_categories WHERE id = $1 AND environment_key = $2 RETURNING id`,
       values: [data.id, data.environment_key],
     });
 
@@ -178,7 +178,7 @@ export default class Category {
     }
 
     const res = await client.query<CategoryT>({
-      text: `SELECT * FROM lucid_categories WHERE collection_key = $1 AND slug = $2 AND environment_key = $3 ${
+      text: `SELECT * FROM headless_categories WHERE collection_key = $1 AND slug = $2 AND environment_key = $3 ${
         data.ignore_id ? "AND id != $4" : ""
       }`,
       values: values,

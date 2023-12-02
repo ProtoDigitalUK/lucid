@@ -8,7 +8,7 @@ import {
 } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { BrickConfigT } from "@lucid/types/src/bricks";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 // Store
 import builderStore, { type BrickDataT } from "@/store/builderStore";
 // Components

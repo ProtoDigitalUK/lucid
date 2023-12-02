@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 // Utils
-import { LucidError } from "@utils/app/error-handler.js";
+import { HeadlessError } from "@utils/app/error-handler.js";
 // Models
 import ProcessedImage from "@db/models/ProcessedImage.js";
 // Services
@@ -18,7 +18,7 @@ const getSingleCount = async (client: PoolClient, data: ServiceData) => {
   });
 
   if (count >= limit) {
-    throw new LucidError({
+    throw new HeadlessError({
       type: "basic",
       name: "Processed image limit reached",
       message: `The processed image limit of ${limit} has been reached for this image.`,

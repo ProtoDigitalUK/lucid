@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"],
-      "@lucid-core/*": ["../../packages/core/src/*"]
+      "@headless-core/*": ["../../packages/core/src/*"]
     }
   }
 }
