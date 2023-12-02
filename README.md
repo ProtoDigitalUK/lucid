@@ -1,21 +1,21 @@
-![Headless, a Headless CMS](https://github.com/WillYallop/Headless/blob/master/banner.jpg?raw=true)
+![Proto Headless CMS](https://github.com/ProtoDigitalUK/proto_headless/blob/master/banner.png?raw=true)
 
 ## Installation
 
 ```bash
-npm install @headless/core
+npm install @protodigital/headless
 ```
 
 ## Builders
 
-- [Brick Builder](https://github.com/WillYallop/Headless/tree/master/packages/brick-builder)
-- [Collection Builder](https://github.com/WillYallop/Headless/tree/master/packages/collection-builder)
-- [Form Builder](https://github.com/WillYallop/Headless/tree/master/packages/form-builder)
+- [Brick Builder]()
+- [Collection Builder]()
+- [Form Builder]()
 
 ## headless.config.ts/js
 
 ```ts
-import { buildConfig } from "@headless/core";
+import { buildConfig } from "@protodigital/headless";
 
 import { ContactForm } from "./src/forms";
 import { Banner, Intro, DefaultMeta } from "./src/bricks";
@@ -25,13 +25,17 @@ export default buildConfig({
   host: "http://localhost:8393",
   origin: "*",
   mode: "development",
-  secret: process.env.HEADLESS_SECRET_KEY as string,
   postgresURL: process.env.HEADLESS_POSTGRES_URL as string,
+  secret: process.env.HEADLESS_SECRET_KEY as string,
   email: {
     from: {
       name: "Headless CMS",
       email: "hello@headlesscms.com",
     },
+    templateDir: path.join(
+      dirname(fileURLToPath(import.meta.url)),
+      "./templates"
+    ),
     smtp: {
       host: "127.0.0.1",
       port: 6969,
@@ -47,7 +51,7 @@ export default buildConfig({
     processedImageLimit: 10, // the total number of processed images to store per image
     store: {
       service: "cloudflare",
-      cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID as string,
+      cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
       region: process.env.HEADLESS_S3_REGION as string,
       bucket: process.env.HEADLESS_S3_BUCKET as string,
       accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
@@ -60,4 +64,4 @@ export default buildConfig({
 });
 ```
 
-> Check the example app: [example](https://github.com/WillYallop/Headless/tree/master/apps/example/headless.config.ts)
+> Check the example app: [example](https://github.com/ProtoDigitalUK/proto_headless/tree/master/apps/example-esm/headless.config.ts)
