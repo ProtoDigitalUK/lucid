@@ -228,7 +228,7 @@ export default class Media {
   static getMultipleByIds: MediaGetMultipleByIds = async (client, data) => {
     const media = await client.query<MediaT>({
       text: `SELECT
-          *
+          id, file_extension, width, height, type
         FROM
           headless_media
         WHERE

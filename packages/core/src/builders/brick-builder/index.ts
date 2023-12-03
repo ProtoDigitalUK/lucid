@@ -400,7 +400,11 @@ export default class BrickBuilder {
           break;
         }
         case "media": {
-          this.#validateMediaType(field, referenceData as MediaReferenceData);
+          this.#validateMediaType(
+            field,
+            referenceData as MediaReferenceData,
+            value
+          );
           break;
         }
         case "datetime": {
@@ -461,7 +465,13 @@ export default class BrickBuilder {
       this.#validateZodSchema(field.validation.zod, sanitizedValue);
     }
   }
-  #validateMediaType(field: CustomField, referenceData: MediaReferenceData) {
+  #validateMediaType(
+    field: CustomField,
+    referenceData: MediaReferenceData,
+    value: number | null = null
+  ) {
+    if (field.validation?.required !== true && !value) return;
+
     if (referenceData === undefined) {
       throw new ValidationError("We couldn't find the media you selected.");
     }
@@ -474,6 +484,20 @@ export default class BrickBuilder {
           `Media must be one of the following extensions: ${field.validation.extensions.join(
             ", "
           )}`
+        );
+      }
+    }
+
+    // Check type
+    if (field.validation?.type) {
+      const type = referenceData.type;
+      if (!type) {
+        throw new ValidationError("This media does not have a type.");
+      }
+
+      if (field.validation.type !== type) {
+        throw new ValidationError(
+          `Media must be of type "${field.validation.type}".`
         );
       }
     }

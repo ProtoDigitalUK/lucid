@@ -1,3 +1,11 @@
+export type MediaTypeT =
+  | "image"
+  | "video"
+  | "audio"
+  | "document"
+  | "archive"
+  | "unknown";
+
 export interface MediaResT {
   id: number;
   key: string;
@@ -21,7 +29,7 @@ export interface MediaResT {
   //   language_id: number;
   //   value: string | null;
   // }[];
-  type: "image" | "video" | "audio" | "document" | "archive" | "unknown";
+  type: MediaTypeT;
   meta: {
     mime_type: string;
     file_extension: string;

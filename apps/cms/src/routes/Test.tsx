@@ -37,6 +37,10 @@ const TESTING_CONFIG: BrickConfigT = {
           type: "media",
           title: "Media Key",
           key: "media-key",
+          validation: {
+            extensions: ["png"],
+            type: "image",
+          },
         },
         {
           type: "repeater",

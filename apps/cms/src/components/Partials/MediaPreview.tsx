@@ -12,7 +12,10 @@ import { MediaResT } from "@headless/types/src/media";
 import Image from "@/components/Partials/Image";
 
 interface MediaPreviewProps {
-  media: MediaResT;
+  media: {
+    type: MediaResT["type"];
+    url: string;
+  };
   alt: string | null;
 }
 

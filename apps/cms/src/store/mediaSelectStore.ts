@@ -7,6 +7,10 @@ type SelectCallbackT = (_media: MediaResT) => void;
 type MediaSelectStoreT = {
   open: boolean;
   onSelectCallback: SelectCallbackT;
+
+  extensions?: string;
+  type?: string;
+  selected?: MediaResT["id"];
 };
 
 const [get, set] = createStore<MediaSelectStoreT>({

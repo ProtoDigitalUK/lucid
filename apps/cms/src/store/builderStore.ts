@@ -7,6 +7,7 @@ import type { FieldTypes } from "@headless/types/src/pages";
 import type {
   BrickFieldValueT,
   CustomFieldT,
+  BrickFieldMetaT,
 } from "@headless/types/src/bricks";
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { FieldError } from "@/types/api";
@@ -16,6 +17,7 @@ export interface BrickStoreFieldT {
   key: string;
   type: FieldTypes;
   value?: BrickFieldValueT;
+  meta?: BrickFieldMetaT;
   group_id?: string | number;
   language_id: number;
 }
@@ -74,6 +76,7 @@ type BuilderStoreT = {
     value: BrickFieldValueT;
     groupId?: BrickStoreFieldT["group_id"];
     contentLanguage: number | undefined;
+    meta?: BrickFieldMetaT;
   }) => void;
   addGroup: (_props: {
     brickIndex: number;
@@ -230,6 +233,7 @@ const [get, set] = createStore<BuilderStoreT>({
 
         if (fieldIndex !== -1) {
           brick.fields[fieldIndex].value = params.value;
+          brick.fields[fieldIndex].meta = params.meta || undefined;
         }
       })
     );

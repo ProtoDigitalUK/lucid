@@ -10,7 +10,7 @@ import {
 // Models
 import { BrickObject, BrickFieldObject } from "@db/models/CollectionBrick.js";
 import { EnvironmentT } from "@db/models/Environment.js";
-import Media from "@db/models/Media.js";
+import Media, { MediaT } from "@db/models/Media.js";
 import Page from "@db/models/Page.js";
 // Internal packages
 import BrickBuilder, {
@@ -36,7 +36,7 @@ const validateBrickData = async (data: {
   builderInstances: BrickBuilder[];
   environment: EnvironmentT;
   collection: CollectionResT;
-  media: MediaResT[];
+  media: MediaT[];
   pages: {
     id: PageT["id"];
   }[];
@@ -112,9 +112,10 @@ const validateBrickData = async (data: {
           const media = data.media.find((m) => m.id === field.value);
           if (media) {
             referenceData = {
-              extension: media.meta.file_extension,
-              width: media.meta.width,
-              height: media.meta.height,
+              extension: media.file_extension,
+              width: media.width,
+              height: media.height,
+              type: media.type,
             } as MediaReferenceData;
           }
           break;
@@ -176,7 +177,7 @@ const getAllMedia = async (client: PoolClient, fields: BrickFieldObject[]) => {
       return [];
     }
 
-    return mediasRes.map((media) => formatMedia(media));
+    return mediasRes;
   } catch (err) {
     return [];
   }

@@ -6,7 +6,8 @@ import { aliasGenerator } from "@utils/app/query-helpers.js";
 // Schema
 import { BrickSchema, FieldSchema, GroupSchema } from "@schemas/bricks.js";
 // Types
-import { CollectionResT } from "@headless/types/src/collections.js";
+import type { CollectionResT } from "@headless/types/src/collections.js";
+import type { MediaTypeT } from "@headless/types/src/media.js";
 // Builders
 import { CollectionBrickConfigT } from "@builders/collection-builder/index.js";
 
@@ -58,6 +59,7 @@ export type CollectionBrickFieldsT = {
     height: number | null;
     name: string | null;
     alt: string | null;
+    type: MediaTypeT | null;
   };
 };
 
@@ -102,7 +104,8 @@ export default class CollectionBrick {
           'width', headless_media.width,
           'height', headless_media.height,
           'name', COALESCE(name_translation.value, ''),
-          'alt', COALESCE(alt_translation.value, '')
+          'alt', COALESCE(alt_translation.value, ''),
+          'type', headless_media.type
         ) as media
       FROM 
         headless_collection_bricks

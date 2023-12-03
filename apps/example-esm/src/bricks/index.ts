@@ -20,6 +20,10 @@ export const TestingBrick = new BrickBuilder("testing", {
   })
   .addMedia({
     key: "media-key",
+    validation: {
+      extensions: ["png"],
+      type: "image",
+    },
   })
   .addRepeater({
     key: "repeater-key",

@@ -55,11 +55,11 @@ const SelectMediaContent: Component = () => {
           type: "text",
         },
         file_extension: {
-          value: "",
+          value: mediaSelectStore.get.extensions || "",
           type: "text",
         },
         type: {
-          value: "",
+          value: mediaSelectStore.get.type || "",
           type: "array",
         },
       },
@@ -109,7 +109,11 @@ const SelectMediaContent: Component = () => {
   return (
     <div class="p-15">
       <div class="mb-15">
-        <h2>{T("select_media")}</h2>
+        <h2>
+          {T("select_media", {
+            type: "Media",
+          })}
+        </h2>
         <p>{T("select_media_description")}</p>
       </div>
       <div class="w-full flex justify-between mb-15 pb-15 border-b border-border">
@@ -211,6 +215,7 @@ const SelectMediaContent: Component = () => {
               <MediaBasicCard
                 media={item}
                 contentLanguage={contentLanguage()}
+                selected={item.id === mediaSelectStore.get.selected}
                 onClick={() => {
                   mediaSelectStore.get.onSelectCallback(item);
                   mediaSelectStore.set("open", false);

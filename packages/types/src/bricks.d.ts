@@ -1,9 +1,10 @@
-import {
+import type {
   CustomField,
   BrickConfigOptionsT,
   FieldTypes,
 } from "../../core/src/builders/brick-builder/index.js";
-import { CollectionBrickT } from "../../db/src/models/CollectionBrick.js";
+import type { CollectionBrickT } from "../../db/src/models/CollectionBrick.js";
+import type { MediaTypeT } from "./media.js";
 
 export interface BrickConfigT {
   key: string;
@@ -83,4 +84,5 @@ export interface MediaMetaT {
   height?: number;
   name?: string;
   alt?: string;
+  type?: MediaTypeT;
 }

@@ -55,6 +55,7 @@ const specificFieldValues = (
         height: field?.media.height || undefined,
         name: field?.media.name || undefined,
         alt: field?.media.alt || undefined,
+        type: field?.media.type || undefined,
       };
       break;
     }

@@ -1,3 +1,4 @@
+import { type } from "os";
 import z from "zod";
 
 // ------------------------------------
@@ -65,6 +66,7 @@ export interface CustomField {
     zod?: z.ZodType<any>;
     required?: boolean;
     extensions?: string[];
+    type?: "image" | "video" | "document" | "archive";
     maxGroups?: number;
     width?: {
       min?: number;
@@ -100,6 +102,7 @@ export interface MediaReferenceData {
   extension: string;
   width: number | null;
   height: number | null;
+  type: string;
 }
 
 // ------------------------------------
@@ -134,6 +137,7 @@ export interface MediaConfig extends CustomFieldConfig {
   validation?: {
     required?: boolean;
     extensions?: string[];
+    type?: "image" | "video" | "document" | "archive";
     width?: {
       min?: number;
       max?: number;
