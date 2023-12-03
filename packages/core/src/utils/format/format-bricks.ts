@@ -90,10 +90,12 @@ const specificFieldValues = (
     case "pagelink": {
       value = {
         id: field?.page_link_id || undefined,
-        target: field?.json_value.target || "_self",
-        label: field?.json_value.label || field?.linked_page.title || undefined,
+        target: field?.json_value?.target || "_self",
+        label:
+          field?.json_value?.label || field?.linked_page.title || undefined,
       };
       meta = {
+        // TODO: update so its formatted correctly, also add full slug to meta once it exists again
         slug: field?.linked_page.slug || undefined,
       };
       break;
@@ -101,8 +103,8 @@ const specificFieldValues = (
     case "link": {
       value = {
         url: field?.text_value || builderField?.default || "",
-        target: field?.json_value.target || "_self",
-        label: field?.json_value.label || undefined,
+        target: field?.json_value?.target || "_self",
+        label: field?.json_value?.label || undefined,
       };
       break;
     }

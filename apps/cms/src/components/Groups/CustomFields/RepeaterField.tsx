@@ -208,7 +208,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
       <div class="w-full flex justify-between items-center">
         <Button
           type="button"
-          theme="primary"
+          theme="container-outline"
           size="x-small"
           onClick={addGroup}
           disabled={!canAddGroup()}

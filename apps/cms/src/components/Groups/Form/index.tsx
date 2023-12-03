@@ -10,6 +10,8 @@ import { Switch } from "./Switch";
 import { JSONTextarea } from "./JSONTextarea";
 import { WYSIWYG } from "./WYSIWYG";
 import { MediaSelect } from "./MediaSelect";
+import { LinkSelect } from "./LinkSelect";
+import { Search } from "./Search";
 
 import { ErrorMessage } from "./ErrorMessage";
 import { DescribedBy } from "./DescribedBy";
@@ -29,6 +31,8 @@ const Form = {
   JSONTextarea,
   WYSIWYG,
   MediaSelect,
+  LinkSelect,
+  Search,
 
   ErrorMessage,
   DescribedBy,

@@ -8,6 +8,8 @@ import { JSONField } from "./JSONField";
 import { SelectField } from "./SelectField";
 import { WYSIWYGField } from "./WYSIWYGField";
 import { MediaField } from "./MediaField";
+import { LinkField } from "./LinkField";
+import { PageLinkField } from "./PageLinkField";
 
 const CustomFields = {
   DynamicField,
@@ -20,6 +22,8 @@ const CustomFields = {
   SelectField,
   WYSIWYGField,
   MediaField,
+  LinkField,
+  PageLinkField,
 };
 
 export default CustomFields;

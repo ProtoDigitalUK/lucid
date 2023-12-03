@@ -34,7 +34,7 @@ const Button: Component<ButtonProps> = (props) => {
           props.theme === "primary",
         "bg-transparent border border-primaryA hover:bg-primaryH fill-primaryText text-primaryText hover:text-primaryText":
           props.theme === "primary-outline",
-        "bg-container border border-primary hover:bg-primaryH fill-primaryText text-title hover:text-primaryText":
+        "bg-container border border-primary hover:bg-primaryH fill-primaryText text-title hover:text-primaryText ring-secondary":
           props.theme === "container-outline",
         "bg-error hover:bg-errorH text-errorText ring-secondary fill-errorText":
           props.theme === "danger",

@@ -25,10 +25,7 @@ import collectionsService from "@services/collections/index.js";
 // Types
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
-import type { MediaResT } from "@headless/types/src/media.js";
 import type { PageT } from "@db/models/Page.js";
-// Format
-import formatMedia from "@utils/format/format-media.js";
 
 // validate bricks group
 const validateBrickData = async (data: {
@@ -90,7 +87,7 @@ const validateBrickData = async (data: {
 
       switch (field.type) {
         case "link": {
-          const value = field.value as LinkValueT;
+          const value = field.value as LinkValueT | undefined;
           referenceData = {
             target: value?.target,
             label: value?.label,
@@ -98,8 +95,8 @@ const validateBrickData = async (data: {
           break;
         }
         case "pagelink": {
-          const value = field.value as PageLinkValueT;
-          const page = data.pages.find((p) => p.id === value.id);
+          const value = field.value as PageLinkValueT | undefined;
+          const page = data.pages.find((p) => p.id === value?.id);
           if (page) {
             referenceData = {
               target: value?.target,
@@ -204,6 +201,7 @@ const getAllPages = async (
       ids: ids,
       environment_key: environment_key,
     });
+
     if (!pages) {
       return [];
     }

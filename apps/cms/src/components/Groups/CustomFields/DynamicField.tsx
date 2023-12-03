@@ -207,10 +207,28 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
             />
           </Match>
           <Match when={props.state.field.type === "pagelink"}>
-            <div>pagelink</div>
+            <CustomFields.PageLinkField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
           <Match when={props.state.field.type === "link"}>
-            <div>link</div>
+            <CustomFields.LinkField
+              state={{
+                brickIndex: props.state.brickIndex,
+                key: props.state.field.key,
+                field: props.state.field,
+                groupId: props.state.groupId,
+                fieldError: fieldError(),
+                contentLanguage: contentLanguage(),
+              }}
+            />
           </Match>
         </Switch>
       </div>

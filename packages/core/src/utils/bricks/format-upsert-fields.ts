@@ -41,7 +41,13 @@ const valueKey = (type: BrickFieldObject["type"]) => {
 const fieldTypeValues = (field: BrickFieldObject) => {
   switch (field.type) {
     case "link": {
-      const value = field.value as LinkValueT;
+      const value = field.value as LinkValueT | undefined;
+      if (!value) {
+        return {
+          text_value: null,
+          json_value: null,
+        };
+      }
       return {
         text_value: value.url,
         json_value: {
@@ -51,7 +57,13 @@ const fieldTypeValues = (field: BrickFieldObject) => {
       };
     }
     case "pagelink": {
-      const value = field.value as PageLinkValueT;
+      const value = field.value as PageLinkValueT | undefined;
+      if (!value) {
+        return {
+          page_link_id: null,
+          json_value: null,
+        };
+      }
       return {
         page_link_id: value.id,
         json_value: {

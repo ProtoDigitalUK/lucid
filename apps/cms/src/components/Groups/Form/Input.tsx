@@ -78,6 +78,7 @@ export const Input: Component<InputProps> = (props) => {
               "bg-container border border-border h-10 rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
                 props.theme === "basic",
               "bg-transparent pb-2 pt-1 rounded-b-md": props.theme !== "basic",
+              "opacity-80 cursor-not-allowed": props.disabled,
             }
           )}
           onKeyDown={(e) => {

@@ -420,11 +420,6 @@ export default class BrickBuilder {
           break;
         }
         case "pagelink": {
-          if (!referenceData) {
-            throw new ValidationError(
-              "We couldn't find the page you selected."
-            );
-          }
           this.#validateLinkTarget(referenceData as LinkReferenceData);
           break;
         }
@@ -541,6 +536,8 @@ export default class BrickBuilder {
     }
   }
   #validateLinkTarget(referenceData: LinkReferenceData) {
+    if (!referenceData) return;
+
     const allowedValues = ["_self", "_blank"];
     if (!referenceData.target) return;
     if (!allowedValues.includes(referenceData.target)) {

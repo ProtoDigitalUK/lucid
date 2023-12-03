@@ -22,6 +22,7 @@ export interface ServiceData {
 
 const updateMultiple = async (client: PoolClient, data: ServiceData) => {
   checkDuplicateOrders(data.bricks);
+
   await service(checkValidateBricks, false, client)(data);
 
   const existingBricks = await CollectionBrick.getAllBricks(client, {

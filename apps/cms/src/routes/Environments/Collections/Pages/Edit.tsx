@@ -35,6 +35,7 @@ import NavigationGuard, {
   navGuardHook,
 } from "@/components/Modals/NavigationGuard";
 import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
+import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 
 const EnvCollectionsPagesEditRoute: Component = () => {
   // ------------------------------
@@ -202,6 +203,8 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // ---------------------------------
   // Functions
   const savePage = async () => {
+    console.log(builderStore.get.bricks);
+
     const body = updateData().data;
     updatePage.action.mutate({
       id: pageId(),
@@ -395,6 +398,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
             }}
           />
           <SelectMediaModal />
+          <LinkSelect />
           <Show when={isSaving()}>
             <div class="fixed inset-0 bg-black bg-opacity-50 z-50" />
           </Show>

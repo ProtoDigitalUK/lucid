@@ -85,7 +85,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
           <Match when={typeof props.value !== "number"}>
             <Button
               type="button"
-              theme="primary"
+              theme="container-outline"
               size="x-small"
               onClick={openMediaSelectModal}
             >
@@ -111,7 +111,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
             <div class="flex flex-wrap gap-2.5">
               <Button
                 type="button"
-                theme="primary"
+                theme="container-outline"
                 size="x-small"
                 onClick={openMediaSelectModal}
               >
