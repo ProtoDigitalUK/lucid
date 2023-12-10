@@ -57,6 +57,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
             value: value,
           })
         }
+        meta={null}
         copy={{
           label: props.state.field.title,
           describedBy: props.state.field.description,

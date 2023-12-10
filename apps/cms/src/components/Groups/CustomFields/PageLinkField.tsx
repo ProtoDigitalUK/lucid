@@ -1,7 +1,11 @@
 import { Component, createSignal, createEffect } from "solid-js";
 // Types
 import type { FieldError } from "@/types/api";
-import type { CustomFieldT, PageLinkValueT } from "@headless/types/src/bricks";
+import type {
+  CustomFieldT,
+  PageLinkValueT,
+  PageLinkMetaT,
+} from "@headless/types/src/bricks";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store
@@ -27,6 +31,7 @@ export const PageLinkField: Component<PageLinkFieldProps> = (props) => {
   const [getValue, setValue] = createSignal<
     PageLinkValueT | undefined | null
   >();
+  const [getMeta, setMeta] = createSignal<PageLinkMetaT | null>(null);
 
   // -------------------------------
   // Effects
@@ -38,8 +43,11 @@ export const PageLinkField: Component<PageLinkFieldProps> = (props) => {
       key: props.state.key,
       contentLanguage: props.state.contentLanguage,
     });
+
     const value = field?.value as PageLinkValueT | undefined | null;
+    const meta = field?.meta as PageLinkMetaT | undefined | null;
     setValue(value);
+    setMeta(meta || null);
   });
 
   // -------------------------------
@@ -50,15 +58,17 @@ export const PageLinkField: Component<PageLinkFieldProps> = (props) => {
         id={`field-${props.state.key}-${props.state.brickIndex}-${props.state.groupId}`}
         type={"pagelink"}
         value={getValue()}
-        onChange={(value) => {
+        onChange={(value, meta) => {
           builderStore.get.updateFieldValue({
             brickIndex: props.state.brickIndex,
             key: props.state.key,
             groupId: props.state.groupId,
             contentLanguage: props.state.contentLanguage,
             value: value,
+            meta: meta,
           });
         }}
+        meta={getMeta()}
         copy={{
           label: props.state.field.title,
           describedBy: props.state.field.description,

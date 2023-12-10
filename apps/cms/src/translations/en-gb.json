@@ -45,6 +45,7 @@
   "password": "Password",
   "confirm_password": "Confirm Password",
   "email": "Email",
+  "url": "URL",
   "select_link": "Select link",
   "set_page_link": "Set Page Link",
   "set_link": "Set Link",
