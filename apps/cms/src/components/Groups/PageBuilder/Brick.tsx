@@ -112,6 +112,7 @@ export const Brick: Component<BrickProps> = (props) => {
     <Show when={config() !== undefined}>
       <li class="w-full mb-15 last:mb-0 bg-container rounded-md border border-border">
         <div
+          id={`accordion-${props.state.brick.id}`}
           class={classNames(
             "border-b p-15 flex w-full items-center justify-between duration-200 transition-all cursor-pointer",
             {
