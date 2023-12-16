@@ -203,8 +203,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // ---------------------------------
   // Functions
   const savePage = async () => {
-    console.log(builderStore.get.bricks);
-
     const body = updateData().data;
     updatePage.action.mutate({
       id: pageId(),
@@ -295,8 +293,12 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       </header>
       <Switch>
         <Match when={isLoading()}>
-          <div class="fixed top-[60px] left-[70px] bottom-0 right-0 bg-black text-white flex items-center justify-center">
-            temp loading
+          <div class="fixed top-[75px] left-[85px] bottom-15 right-15 flex">
+            <span class="w-[500px] skeleton block h-full mr-15" />
+            <span class="flex flex-col w-full h-full">
+              <span class="h-10 w-full skeleton block mb-15" />
+              <span class="h-full w-full skeleton block" />
+            </span>
           </div>
         </Match>
         <Match when={isSuccess()}>

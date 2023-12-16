@@ -57,7 +57,6 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
       return props.value?.label;
     }
     const value = props.value as LinkValueT;
-    console.log(value);
     return value?.label || value?.url;
   };
 
