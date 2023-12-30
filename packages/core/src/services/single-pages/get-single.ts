@@ -4,6 +4,8 @@ import { SelectQueryBuilder } from "@utils/app/query-helpers.js";
 import service from "@utils/app/service.js";
 // Models
 import SinglePage from "@db/models/SinglePage.js";
+// Types
+import { SinglePagesResT } from "@headless/types/src/pages.js";
 // Services
 import collectionsService from "@services/collections/index.js";
 import collectionBricksService from "@services/collection-bricks/index.js";
@@ -86,7 +88,10 @@ const getSingle = async (client: PoolClient, data: ServiceData) => {
     singlepage.bricks = bricks;
   }
 
-  return singlepage;
+  return {
+    id: singlepage.id,
+    bricks: singlepage.bricks || [],
+  } as SinglePagesResT;
 };
 
 export default getSingle;

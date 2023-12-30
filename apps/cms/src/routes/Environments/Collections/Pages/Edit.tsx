@@ -227,7 +227,7 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   // ---------------------------------
   // Effects
   createEffect(() => {
-    if (page.isSuccess && categories.isSuccess && collection.isSuccess) {
+    if (isSuccess()) {
       builderStore.get.reset();
       setTranslations(
         setDefualtTranslations({
@@ -251,8 +251,10 @@ const EnvCollectionsPagesEditRoute: Component = () => {
       );
       setSelectedAuthor(page.data?.data.author?.id || undefined);
 
-      builderStore.set("bricks", page.data.data.bricks || []);
-      builderStore.get.addMissingFixedBricks(collection.data.data.bricks || []);
+      builderStore.set("bricks", page.data?.data.bricks || []);
+      builderStore.get.addMissingFixedBricks(
+        collection.data?.data.bricks || []
+      );
     }
   });
 
@@ -304,29 +306,28 @@ const EnvCollectionsPagesEditRoute: Component = () => {
         <Match when={isSuccess()}>
           <div class="relative h-[calc(100vh-60px)] w-full flex">
             {/* Sidebar Bricks & page fields */}
-            <div class="w-[500px] max-h-screen overflow-y-auto p-15 hide-scrollbar">
-              <PageBuilder.Sidebar
-                state={{
-                  brickConfig: brickConfig.data?.data || [],
-                  pageId: pageId(),
-                  collection: collection.data?.data as CollectionResT,
-                  categories: categories.data?.data || [],
-                  mutateErrors: mutateErrors,
-                  getTranslations,
-                  getParentId,
-                  getIsHomepage,
-                  getSelectedCategories,
-                  getSelectedAuthor,
-                }}
-                setState={{
-                  setTranslations,
-                  setParentId,
-                  setIsHomepage,
-                  setSelectedCategories,
-                  setSelectedAuthor,
-                }}
-              />
-            </div>
+            <PageBuilder.Sidebar
+              mode="multiple"
+              state={{
+                brickConfig: brickConfig.data?.data || [],
+                pageId: pageId(),
+                collection: collection.data?.data as CollectionResT,
+                categories: categories.data?.data || [],
+                mutateErrors: mutateErrors,
+                getTranslations,
+                getParentId,
+                getIsHomepage,
+                getSelectedCategories,
+                getSelectedAuthor,
+              }}
+              setState={{
+                setTranslations,
+                setParentId,
+                setIsHomepage,
+                setSelectedCategories,
+                setSelectedAuthor,
+              }}
+            />
             {/* Build */}
             <div class="h-full w-full p-15 pl-0">
               <div class="h-[40px] w-full mb-15 flex items-center">

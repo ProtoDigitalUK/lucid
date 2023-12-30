@@ -38,4 +38,9 @@ export interface PagesResT {
   bricks?: Array<BrickResT> | null;
 }
 
+export interface SinglePagesResT {
+  id: number;
+  bricks: Array<BrickResT>;
+}
+
 export type FieldTypes = FieldTypes;
