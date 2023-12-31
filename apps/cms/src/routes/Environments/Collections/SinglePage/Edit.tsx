@@ -1,7 +1,6 @@
 import T from "@/translations/index";
 import {
   Component,
-  createSignal,
   createMemo,
   createEffect,
   Show,
@@ -10,7 +9,6 @@ import {
   onCleanup,
 } from "solid-js";
 import { useParams } from "@solidjs/router";
-import { FaSolidRobot } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
 // Stores
@@ -21,7 +19,6 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 import type { CollectionResT } from "@headless/types/src/collections";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
-import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import Button from "@/components/Partials/Button";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 import NavigationGuard, {
@@ -35,10 +32,6 @@ const EnvCollectionsSinglePageEditRoute: Component = () => {
   // Hooks
   const params = useParams();
   const navGuard = navGuardHook();
-
-  // ------------------------------
-  // State
-  const [getSelectBrickOpen, setSelectBrickOpen] = createSignal(false);
 
   // ----------------------------------
   // Params
@@ -169,8 +162,9 @@ const EnvCollectionsSinglePageEditRoute: Component = () => {
     <>
       <header class="h-[60px] w-full bg-container border-b border-border px-15 flex items-center justify-between">
         <h1 class="text-xl">
-          {T("edit_page_route_title")}
-          <span class="text-unfocused ml-2.5">#{singlePage.data?.data.id}</span>
+          {T("edit_page_route_title_singular", {
+            title: collection.data?.data.title || "",
+          })}
         </h1>
         <div class="flex items-center gap-2.5">
           <div class="min-w-[250px]">
@@ -187,7 +181,7 @@ const EnvCollectionsSinglePageEditRoute: Component = () => {
       </header>
       <Switch>
         <Match when={isLoading()}>
-          <div class="fixed top-[75px] left-[85px] bottom-15 right-15 flex">
+          <div class="fixed top-[75px] left-[325px] bottom-15 right-15 flex">
             <span class="w-[500px] skeleton block h-full mr-15" />
             <span class="flex flex-col w-full h-full">
               <span class="h-10 w-full skeleton block mb-15" />
@@ -208,29 +202,18 @@ const EnvCollectionsSinglePageEditRoute: Component = () => {
             />
             {/* Build */}
             <div class="h-full w-full p-15 pl-0">
-              <div class="h-[40px] w-full mb-15 flex items-center">
-                <Button
-                  type="button"
-                  theme="primary"
-                  size="small"
-                  onClick={() => {
-                    setSelectBrickOpen(true);
-                  }}
-                >
-                  {T("add_brick")}
-                </Button>
-                <button
-                  class="h-10 w-10 rounded-full ml-2.5 bg-secondary flex items-center justify-center fill-white text-xl hover:bg-secondaryH duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
-                  disabled
-                >
-                  <FaSolidRobot />
-                </button>
-              </div>
+              <PageBuilder.TopBar
+                state={{
+                  brickConfig: brickConfig.data?.data || [],
+                  collection: collection.data?.data,
+                }}
+              />
               <div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
                 <div class="absolute inset-0 overflow-y-scroll z-10 right-[175px] p-15 hide-scrollbar">
                   <PageBuilder.Builder
                     state={{
                       brickConfig: brickConfig.data?.data || [],
+                      collection: collection.data?.data,
                     }}
                   />
                 </div>
@@ -245,16 +228,6 @@ const EnvCollectionsSinglePageEditRoute: Component = () => {
             </div>
           </div>
           {/* Modals */}
-          <AddBrick
-            state={{
-              open: getSelectBrickOpen(),
-              setOpen: setSelectBrickOpen,
-            }}
-            data={{
-              collection: collection.data?.data,
-              brickConfig: brickConfig.data?.data || [],
-            }}
-          />
           <NavigationGuard
             state={{
               open: navGuard.getModalOpen(),

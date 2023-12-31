@@ -142,7 +142,7 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
     <li
       data-brickId={props.data.brickId}
       class={classNames(
-        "mb-2 last:mb-0 transition-all duration-200 rounded-md overflow-hidden border border-transparent",
+        "mb-2 last:mb-0 transition-all duration-200 rounded-md overflow-hidden border border-transparent cursor-pointer",
         {
           "opacity-60":
             props.callbacks?.dragDrop?.getDragging()?.index ===

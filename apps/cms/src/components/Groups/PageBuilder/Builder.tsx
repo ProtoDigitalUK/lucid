@@ -4,6 +4,7 @@ import { Component, For, Switch, Match, createMemo, Show } from "solid-js";
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";
+import type { CollectionResT } from "@headless/types/src/collections";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components
@@ -12,6 +13,7 @@ import PageBuilder from "@/components/Groups/PageBuilder";
 interface BuilderProps {
   state: {
     brickConfig: BrickConfigT[];
+    collection?: CollectionResT;
   };
 }
 
@@ -38,6 +40,11 @@ export const Builder: Component<BuilderProps> = (props) => {
   const bottomFixedBricks = createMemo(() =>
     fixedBricks().filter((brick) => brick.position === "bottom")
   );
+  const hasBuilderBricks = createMemo(() => {
+    return props.state.collection?.bricks?.some(
+      (brick) => brick.type === "builder"
+    );
+  });
 
   // ------------------------------
   // Functions
@@ -71,7 +78,7 @@ export const Builder: Component<BuilderProps> = (props) => {
         {/* Builder Zone */}
         <div class="flex flex-col items-center flex-grow">
           <Switch>
-            <Match when={builderBricks().length === 0}>
+            <Match when={builderBricks().length === 0 && hasBuilderBricks()}>
               <div class="w-full flex items-center justify-center h-full border border-primaryA rounded-md flex-grow p-10">
                 <div class="max-w-lg mx-auto w-full text-center">
                   <img
@@ -87,7 +94,7 @@ export const Builder: Component<BuilderProps> = (props) => {
                 </div>
               </div>
             </Match>
-            <Match when={builderBricks().length > 0}>
+            <Match when={builderBricks().length > 0 && hasBuilderBricks()}>
               <ol class="w-full">
                 <For each={builderBricks()}>
                   {(brick) => (

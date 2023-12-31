@@ -11,7 +11,7 @@ import {
 } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import { parseTranslationBody } from "@/components/FieldGroups/Page";
-import { FaSolidRobot, FaSolidTrash } from "solid-icons/fa";
+import { FaSolidTrash } from "solid-icons/fa";
 import { setDefualtTranslations } from "@/components/FieldGroups/Page";
 // Services
 import api from "@/services/api";
@@ -27,7 +27,6 @@ import type { CollectionResT } from "@headless/types/src/collections";
 import type { PagesResT } from "@headless/types/src/pages";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
-import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import Button from "@/components/Partials/Button";
 import DeletePage from "@/components/Modals/Pages/DeletePage";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
@@ -61,7 +60,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
   >(undefined);
 
   // Modals
-  const [getSelectBrickOpen, setSelectBrickOpen] = createSignal(false);
   const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
   // ----------------------------------
@@ -330,29 +328,18 @@ const EnvCollectionsPagesEditRoute: Component = () => {
             />
             {/* Build */}
             <div class="h-full w-full p-15 pl-0">
-              <div class="h-[40px] w-full mb-15 flex items-center">
-                <Button
-                  type="button"
-                  theme="primary"
-                  size="small"
-                  onClick={() => {
-                    setSelectBrickOpen(true);
-                  }}
-                >
-                  {T("add_brick")}
-                </Button>
-                <button
-                  class="h-10 w-10 rounded-full ml-2.5 bg-secondary flex items-center justify-center fill-white text-xl hover:bg-secondaryH duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
-                  disabled
-                >
-                  <FaSolidRobot />
-                </button>
-              </div>
+              <PageBuilder.TopBar
+                state={{
+                  brickConfig: brickConfig.data?.data || [],
+                  collection: collection.data?.data,
+                }}
+              />
               <div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
                 <div class="absolute inset-0 overflow-y-scroll z-10 right-[175px] p-15 hide-scrollbar">
                   <PageBuilder.Builder
                     state={{
                       brickConfig: brickConfig.data?.data || [],
+                      collection: collection.data?.data,
                     }}
                   />
                 </div>
@@ -367,16 +354,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
             </div>
           </div>
           {/* Modals */}
-          <AddBrick
-            state={{
-              open: getSelectBrickOpen(),
-              setOpen: setSelectBrickOpen,
-            }}
-            data={{
-              collection: collection.data?.data,
-              brickConfig: brickConfig.data?.data || [],
-            }}
-          />
           <DeletePage
             id={page.data?.data.id}
             state={{
