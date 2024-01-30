@@ -135,31 +135,15 @@ export default class Config {
   static getConfig = async (): Promise<ConfigT> => {
     return await Config.cachedConfig();
   };
-  static getConfigESM = async (path: string) => {
-    const configUrl = pathToFileURL(path).href;
-    const configModule = await import(configUrl);
-    const config = configModule.default as ConfigT;
-    return config;
-  };
-  static getConfigCJS = async (path: string) => {
-    const configModule = await require(path);
-    const config = configModule.default as ConfigT;
-    return config;
-  };
   static cachedConfig = async (): Promise<ConfigT> => {
     if (Config.configCache) {
       return Config.configCache;
     }
 
     const configPath = Config.findPath(process.cwd());
-    let config: ConfigT; // = await Config.getConfigESM(configPath);
-
-    // TODO: Return to this, if validation failure happens on config files default function export, it trys to use cjs loader. Not indeded.
-    try {
-      config = await Config.getConfigESM(configPath);
-    } catch (error) {
-      config = await Config.getConfigCJS(configPath);
-    }
+    const configUrl = pathToFileURL(configPath).href;
+    const configModule = await import(configUrl);
+    const config = configModule.default as ConfigT;
 
     Config._configCache = config;
     return config;

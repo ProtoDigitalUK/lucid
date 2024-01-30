@@ -16,7 +16,7 @@ const directoriesToCopy = [
 export default defineConfig({
   entry: ["src/index.ts", "src/workers/process-image/processImageWorker.ts"],
   dts: true,
-  format: ["esm", "cjs"],
+  format: 'esm',
   shims: true,
   sourcemap: true,
   clean: true,
