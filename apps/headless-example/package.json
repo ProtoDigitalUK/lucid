@@ -1,0 +1,22 @@
+{
+	"name": "headless-example",
+	"version": "1.0.0",
+	"description": "",
+	"main": "src/index.ts",
+	"type": "module",
+	"scripts": {
+		"start": "node --trace-warnings --loader ts-node/esm src/index.ts",
+		"dev": "nodemon"
+	},
+	"dependencies": {
+		"@protodigital/headless": "*",
+		"fastify": "^4.24.3",
+		"ts-node": "^10.9.1",
+		"typescript": "^5.0.4"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"nodemon": "^3.0.1"
+	}
+}

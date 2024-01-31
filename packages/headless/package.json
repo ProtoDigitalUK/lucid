@@ -1,0 +1,38 @@
+{
+	"name": "@protodigital/headless",
+	"version": "0.0.1",
+	"private": false,
+	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
+	"type": "module",
+	"types": "./dist/index.d.ts",
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "tsc",
+		"dev": "nodemon",
+		"generate": "drizzle-kit generate:pg"
+	},
+	"files": ["dist/**", "cms/**", "templates/**", "drizzle/**"],
+	"author": "William Yallop",
+	"devDependencies": {
+		"drizzle-kit": "^0.20.13",
+		"nodemon": "^3.0.3",
+		"typescript": "^5.3.3"
+	},
+	"volta": {
+		"node": "20.1.0"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.29.3",
+		"fs-extra": "^11.2.0",
+		"postgres": "^3.4.3",
+		"zod": "^3.22.4"
+	}
+}
