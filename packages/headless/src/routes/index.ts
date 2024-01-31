@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+import { users } from "../db/schema.js";
 // Groups
 // import apiV1 from "@routes/v1/api/index.js";
 // import cdnV1 from "@routes/v1/cdn/index.js";

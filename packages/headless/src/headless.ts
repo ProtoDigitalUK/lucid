@@ -1,4 +1,6 @@
 import("dotenv/config.js");
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import path from "path";
 import { log } from "console-log-colors";
@@ -11,7 +13,7 @@ import fastifyCookie from "@fastify/cookie";
 import fs from "fs-extra";
 import fastifyMultipart from "@fastify/multipart";
 
-import db from "./db/db.js";
+import * as schema from "./db/schema.js";
 import routes from "./routes/index.js";
 import getDirName from "./utils/app/get-dirname.js";
 import getConfig from "./services/config.js";
@@ -22,7 +24,14 @@ const headless = async (
 	fastify: FastifyInstance,
 	options: Record<string, string>,
 ) => {
-	// await getConfig();
+	const config = await getConfig();
+
+	const client = postgres(config.databaseURL);
+	const db = drizzle(client, { schema });
+
+	// ------------------------------------
+	// Decorate
+	fastify.decorate("db", db);
 
 	// ------------------------------------
 	// Server wide middleware

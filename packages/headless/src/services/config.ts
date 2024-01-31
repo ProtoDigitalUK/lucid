@@ -60,12 +60,7 @@ export const getConfig = async () => {
 
 	const configPath = findConfigPath(process.cwd());
 	const configUrl = pathToFileURL(configPath).href;
-
-	console.log(configUrl);
-
 	const configModule = await import(configUrl);
-
-	console.log("configModule", configModule);
 
 	config = configModule.default as HeadlessConfigT;
 
