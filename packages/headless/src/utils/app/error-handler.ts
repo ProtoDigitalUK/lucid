@@ -2,7 +2,7 @@
   When to use APIError:
     - When the error is being thrown from a route or middleware
 
-  When to use RuntimeError:
+  When to use InternalError:
     - When the error is being thorwn internall and outside of a request. Eg: in a migration or launch step
 */
 
@@ -87,10 +87,10 @@ class APIError extends Error {
 	}
 }
 
-class RuntimeError extends Error {
+class InternalError extends Error {
 	constructor(message: string) {
 		super(message);
-		console.error(bgRed(`[RUNTIME ERROR] ${message}`));
+		console.error(bgRed(`[INTERNAL ERROR] ${message}`));
 	}
 }
 
@@ -158,4 +158,4 @@ export interface ErrorResultT {
 
 // ------------------------------------
 // Export
-export { APIError, RuntimeError, modelErrors };
+export { APIError, InternalError, modelErrors };

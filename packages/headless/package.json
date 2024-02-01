@@ -17,14 +17,10 @@
 	"scripts": {
 		"build": "tsc",
 		"dev": "nodemon",
-		"generate": "drizzle-kit generate:pg"
+		"drizzle:generate": "drizzle-kit generate:pg",
+		"drizzle:studio": "drizzle-kit studio"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**",
-		"drizzle/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**", "drizzle/**"],
 	"author": "William Yallop",
 	"devDependencies": {
 		"drizzle-kit": "^0.20.13",

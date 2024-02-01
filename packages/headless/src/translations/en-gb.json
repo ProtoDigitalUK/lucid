@@ -4,5 +4,6 @@
 	"default_error_message": "An error occurred! Please try again later.",
 	"validation_error": "Validation error!",
 	"authorisation_error": "Authorisation error!",
-	"forbidden_error": "Forbidden error!"
+	"forbidden_error": "Forbidden error!",
+	"an_error_occurred_saving_default_user": "An error occurred while saving the default user!"
 }

@@ -1,5 +1,6 @@
 import("dotenv/config.js");
 import path from "path";
+import T from "./translations/index.js";
 import { log, red } from "console-log-colors";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
@@ -18,7 +19,7 @@ import routes from "./routes/index.js";
 import getDirName from "./utils/app/get-dirname.js";
 import getConfig from "./services/config.js";
 import { decodeError } from "./utils/app/error-handler.js";
-import T from "./translations/index.js";
+import seedHeadless from "./services/seed-headless.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -26,108 +27,119 @@ const headless = async (
 	fastify: FastifyInstance,
 	options: Record<string, string>,
 ) => {
-	const config = await getConfig();
-	const client = postgres(config.databaseURL);
-	const db = drizzle(client, { schema });
+	try {
+		const config = await getConfig();
+		const client = postgres(config.databaseURL);
+		const db = drizzle(client, { schema });
 
-	fastify.decorate("db", db);
-	fastify.decorate("config", config);
+		fastify.decorate("db", db);
+		fastify.decorate("config", config);
 
-	// ------------------------------------
-	// Swagger
-	await fastify.register(fastifySwagger, {
-		swagger: {
-			info: {
-				title: "Headless API",
-				description: "Headless API",
-				version: "0.0.1",
+		// ------------------------------------
+		// Swagger
+		await fastify.register(fastifySwagger, {
+			swagger: {
+				info: {
+					title: "Headless API",
+					description: "Headless API",
+					version: "0.0.1",
+				},
+				host: "localhost:3000",
+				schemes: ["http"],
+				consumes: ["application/json"],
+				produces: ["application/json"],
 			},
-			host: "localhost:3000",
-			schemes: ["http"],
-			consumes: ["application/json"],
-			produces: ["application/json"],
-		},
-	});
-	await fastify.register(fastifySwaggerUi, {
-		routePrefix: "/documentation",
-	});
+		});
+		await fastify.register(fastifySwaggerUi, {
+			routePrefix: "/documentation",
+		});
 
-	// ------------------------------------
-	// Server wide middleware
-	log.white("----------------------------------------------------");
-	fastify.register(cors, {
-		origin: "http://localhost:3000", // update
-		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-		allowedHeaders: [
-			"Content-Type",
-			"Authorization",
-			"_csrf",
-			"headless-environment",
-			"headless-content-lang",
-			"Content-Length",
-		],
-		credentials: true,
-	});
-	fastify.register(fastifyCookie, {
-		secret: config.keys.cookieSecret,
-	});
-	fastify.register(fastifyMultipart, {
-		limits: {
-			fileSize: 10 * 1024 * 1024, // 10MB TODO: move to config
-		},
-	});
-	log.yellow("Middleware configured");
+		// ------------------------------------
+		// Server wide middleware
+		log.white("----------------------------------------------------");
+		fastify.register(cors, {
+			origin: "http://localhost:3000", // update
+			methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+			allowedHeaders: [
+				"Content-Type",
+				"Authorization",
+				"_csrf",
+				"headless-environment",
+				"headless-content-lang",
+				"Content-Length",
+			],
+			credentials: true,
+		});
+		fastify.register(fastifyCookie, {
+			secret: config.keys.cookieSecret,
+		});
+		fastify.register(fastifyMultipart, {
+			limits: {
+				fileSize: 10 * 1024 * 1024, // 10MB TODO: move to config
+			},
+		});
+		log.yellow("Middleware configured");
 
-	// ------------------------------------
-	// Migrate DB
-	log.white("----------------------------------------------------");
-	await migrate(db, {
-		migrationsFolder: path.resolve(currentDir, "../drizzle"),
-	});
+		// ------------------------------------
+		// Migrate DB
+		log.white("----------------------------------------------------");
+		await migrate(db, {
+			migrationsFolder: path.resolve(currentDir, "../drizzle"),
+		});
 
-	// ------------------------------------
-	// Routes
-	log.white("----------------------------------------------------");
-	fastify.register(routes);
-	fastify.register(fastifyStatic, {
-		root: [path.resolve("public"), path.join(currentDir, "../cms")],
-		wildcard: false,
-	});
-	fastify.setNotFoundHandler((request, reply) => {
-		const indexPath = path.resolve(currentDir, "../cms/index.html");
-		if (fs.existsSync(indexPath)) {
-			const stream = fs.createReadStream(indexPath);
-			reply.type("text/html").send(stream);
-		} else {
-			reply.code(404).send("Page not found");
-		}
-	});
-	log.yellow("Routes initialised");
+		// ------------------------------------
+		// Initialise
+		log.white("----------------------------------------------------");
+		await seedHeadless(fastify, undefined);
+		log.yellow("Initialised");
 
-	// ------------------------------------
-	// Error handling
-	fastify.setErrorHandler((error, request, reply) => {
-		const { name, message, status, errors, code } = decodeError(error);
+		// ------------------------------------
+		// Routes
+		log.white("----------------------------------------------------");
+		fastify.register(routes);
+		fastify.register(fastifyStatic, {
+			root: [path.resolve("public"), path.join(currentDir, "../cms")],
+			wildcard: false,
+		});
+		fastify.setNotFoundHandler((request, reply) => {
+			const indexPath = path.resolve(currentDir, "../cms/index.html");
+			if (fs.existsSync(indexPath)) {
+				const stream = fs.createReadStream(indexPath);
+				reply.type("text/html").send(stream);
+			} else {
+				reply.code(404).send("Page not found");
+			}
+		});
+		log.yellow("Routes initialised");
 
-		request.log.error(red(`${status} - ${message}`));
+		// ------------------------------------
+		// Error handling
+		fastify.setErrorHandler((error, request, reply) => {
+			const { name, message, status, errors, code } = decodeError(error);
 
-		if (reply.sent) {
-			request.log.error(T("headers_already_sent"));
-			return;
-		}
+			request.log.error(red(`${status} - ${message}`));
 
-		const response = Object.fromEntries(
-			Object.entries({
-				code,
-				status,
-				name,
-				message,
-				errors,
-			}).filter(([_, value]) => value !== null),
-		);
+			if (reply.sent) {
+				request.log.error(T("headers_already_sent"));
+				return;
+			}
 
-		reply.status(status).send(response);
-	});
+			const response = Object.fromEntries(
+				Object.entries({
+					code,
+					status,
+					name,
+					message,
+					errors,
+				}).filter(([_, value]) => value !== null),
+			);
+
+			reply.status(status).send(response);
+		});
+	} catch (error) {
+		const err = error as Error;
+		fastify.log.error(err.message);
+	}
 };
 
 export default fp(headless, {

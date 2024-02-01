@@ -5,12 +5,14 @@ import { type HeadlessConfigT } from "../schemas/config.js";
 
 declare module "fastify" {
 	interface FastifyInstance {
-		db: PostgresJsDatabase<typeof schema>;
+		db: DB;
 		config: HeadlessConfigT;
 	}
 }
 
 declare global {
+	type DB = PostgresJsDatabase<typeof schema>;
+
 	type ControllerT<ParamsT, BodyT, QueryT> = (
 		request: FastifyRequest<{
 			Params: z.infer<ParamsT>;
@@ -19,6 +21,11 @@ declare global {
 		}>,
 		reply: FastifyReply,
 	) => void;
+
+	type ServiceT<DataT> = (
+		fastify: FastifyInstance,
+		data: DataT,
+	) => Promise<unknown>;
 
 	interface ResponseBodyT {
 		data: Array<unknown> | { [key: string]: unknown } | undefined | null;
