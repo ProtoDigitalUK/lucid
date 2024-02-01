@@ -1,6 +1,6 @@
 import("dotenv/config.js");
 import path from "path";
-import { log } from "console-log-colors";
+import { log, red } from "console-log-colors";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
@@ -17,6 +17,8 @@ import * as schema from "./db/schema.js";
 import routes from "./routes/index.js";
 import getDirName from "./utils/app/get-dirname.js";
 import getConfig from "./services/config.js";
+import { decodeError } from "./utils/app/error-handler.js";
+import T from "./translations/index.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -105,7 +107,26 @@ const headless = async (
 	// ------------------------------------
 	// Error handling
 	fastify.setErrorHandler((error, request, reply) => {
-		reply.status(500).send(error.message);
+		const { name, message, status, errors, code } = decodeError(error);
+
+		request.log.error(red(`${status} - ${message}`));
+
+		if (reply.sent) {
+			request.log.error(T("headers_already_sent"));
+			return;
+		}
+
+		const response = Object.fromEntries(
+			Object.entries({
+				code,
+				status,
+				name,
+				message,
+				errors,
+			}).filter(([_, value]) => value !== null),
+		);
+
+		reply.status(status).send(response);
 	});
 };
 

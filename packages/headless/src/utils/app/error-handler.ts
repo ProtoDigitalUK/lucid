@@ -1,5 +1,5 @@
 /*
-  When to use HeadlessError:
+  When to use APIError:
     - When the error is being thrown from a route or middleware
 
   When to use RuntimeError:
@@ -8,60 +8,28 @@
 
 import z from "zod";
 import { bgRed } from "console-log-colors";
+import T from "../../translations/index.js";
 
 const DEFAULT_ERROR = {
-	name: "Error",
-	message: "Something went wrong",
+	name: T("default_error_name"),
+	message: T("default_error_message"),
 	status: 500,
 	code: null,
 	errors: null,
 };
 
-interface HeadlessErrorData {
-	type: "validation" | "basic" | "forbidden" | "authorisation";
-
-	name?: string;
-	message?: string;
-	status?: number;
-	code?: "csrf";
-	zod?: z.ZodError;
-	errors?: ErrorResult;
-}
-
-export interface FieldErrors {
-	brick_id: string | number | undefined;
-	group_id: string | number | undefined;
-	key: string;
-	language_id: number;
-	message: string;
-}
-
-export interface ErrorResult {
-	code?: string;
-	message?: string;
-	children?: Array<undefined | ErrorResult | null>;
-
-	[key: string]:
-		| Array<undefined | ErrorResult | null>
-		| string
-		| undefined
-		| ErrorResult
-		| null
-		| FieldErrors[];
-}
-
 // ------------------------------------
 // Error Classes
-class HeadlessError extends Error {
-	code: HeadlessErrorData["code"] | null = null;
+class APIError extends Error {
+	code: APIErrorDataT["code"] | null = null;
 	status: number;
-	errors: ErrorResult | null = null;
-	constructor(data: HeadlessErrorData) {
+	errors: ErrorResultT | null = null;
+	constructor(data: APIErrorDataT) {
 		super(data.message || DEFAULT_ERROR.message);
 
 		switch (data.type) {
 			case "validation": {
-				this.name = "Validation Error";
+				this.name = T("validation_error");
 				this.status = 400;
 				this.#formatZodErrors(data.zod?.issues || []);
 				break;
@@ -73,12 +41,12 @@ class HeadlessError extends Error {
 				break;
 			}
 			case "authorisation": {
-				this.name = "Authorisation Error";
+				this.name = T("authorisation_error");
 				this.status = 401;
 				break;
 			}
 			case "forbidden": {
-				this.name = "Forbidden";
+				this.name = T("forbidden_error");
 				this.status = 403;
 				this.code = data.code || DEFAULT_ERROR.code;
 				this.errors = data.errors || DEFAULT_ERROR.errors;
@@ -93,7 +61,7 @@ class HeadlessError extends Error {
 		}
 	}
 	#formatZodErrors(error: z.ZodIssue[]) {
-		const result: ErrorResult = {};
+		const result: ErrorResultT = {};
 
 		for (const item of error) {
 			let current = result;
@@ -129,7 +97,7 @@ class RuntimeError extends Error {
 // ------------------------------------
 // Util Functions
 export const decodeError = (error: Error) => {
-	if (error instanceof HeadlessError) {
+	if (error instanceof APIError) {
 		return {
 			name: error.name,
 			message: error.message,
@@ -147,10 +115,47 @@ export const decodeError = (error: Error) => {
 	};
 };
 
-const modelErrors = (error: ErrorResult): ErrorResult => {
+const modelErrors = (error: ErrorResultT): ErrorResultT => {
 	return {
 		body: error,
 	};
 };
 
-export { HeadlessError, RuntimeError, modelErrors };
+// ------------------------------------
+// Types
+interface APIErrorDataT {
+	type: "validation" | "basic" | "forbidden" | "authorisation";
+
+	name?: string;
+	message?: string;
+	status?: number;
+	code?: "csrf";
+	zod?: z.ZodError;
+	errors?: ErrorResultT;
+}
+
+export interface FieldErrorsT {
+	brick_id: string | number | undefined;
+	group_id: string | number | undefined;
+	key: string;
+	language_id: number;
+	message: string;
+}
+
+export interface ErrorResultT {
+	code?: string;
+	message?: string;
+	children?: Array<undefined | ErrorResultT | null>;
+
+	[key: string]:
+		| Array<undefined | ErrorResultT | null>
+		| string
+		| undefined
+		| ErrorResultT
+		| null
+		| FieldErrorsT[];
+}
+
+// ------------------------------------
+// Export
+export { APIError, RuntimeError, modelErrors };

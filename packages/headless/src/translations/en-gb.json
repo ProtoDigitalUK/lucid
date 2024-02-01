@@ -1,0 +1,8 @@
+{
+	"headers_already_sent": "Headers were already sent!",
+	"default_error_name": "An error occurred!",
+	"default_error_message": "An error occurred! Please try again later.",
+	"validation_error": "Validation error!",
+	"authorisation_error": "Authorisation error!",
+	"forbidden_error": "Forbidden error!"
+}
