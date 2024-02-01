@@ -1,10 +1,9 @@
 import("dotenv/config.js");
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
 import path from "path";
 import { log } from "console-log-colors";
-
+import { drizzle } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import postgres from "postgres";
 import fp from "fastify-plugin";
 import { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
@@ -12,7 +11,8 @@ import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fs from "fs-extra";
 import fastifyMultipart from "@fastify/multipart";
-
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 import * as schema from "./db/schema.js";
 import routes from "./routes/index.js";
 import getDirName from "./utils/app/get-dirname.js";
@@ -25,13 +25,30 @@ const headless = async (
 	options: Record<string, string>,
 ) => {
 	const config = await getConfig();
-
 	const client = postgres(config.databaseURL);
 	const db = drizzle(client, { schema });
 
-	// ------------------------------------
-	// Decorate
 	fastify.decorate("db", db);
+	fastify.decorate("config", config);
+
+	// ------------------------------------
+	// Swagger
+	await fastify.register(fastifySwagger, {
+		swagger: {
+			info: {
+				title: "Headless API",
+				description: "Headless API",
+				version: "0.0.1",
+			},
+			host: "localhost:3000",
+			schemes: ["http"],
+			consumes: ["application/json"],
+			produces: ["application/json"],
+		},
+	});
+	await fastify.register(fastifySwaggerUi, {
+		routePrefix: "/documentation",
+	});
 
 	// ------------------------------------
 	// Server wide middleware
@@ -49,14 +66,14 @@ const headless = async (
 		],
 		credentials: true,
 	});
-	// fastify.register(fastifyCookie, {
-	//   secret: Config.secret,
-	// });
-	// fastify.register(fastifyMultipart, {
-	//   limits: {
-	//     fileSize: config.media.maxFileSize,
-	//   },
-	// });
+	fastify.register(fastifyCookie, {
+		secret: config.keys.cookieSecret,
+	});
+	fastify.register(fastifyMultipart, {
+		limits: {
+			fileSize: 10 * 1024 * 1024, // 10MB TODO: move to config
+		},
+	});
 	log.yellow("Middleware configured");
 
 	// ------------------------------------
@@ -65,12 +82,6 @@ const headless = async (
 	await migrate(db, {
 		migrationsFolder: path.resolve(currentDir, "../drizzle"),
 	});
-
-	// ------------------------------------
-	// Initialise app
-	log.white("----------------------------------------------------");
-	// await service(Initialise, true)();
-	log.yellow("Start up tasks complete");
 
 	// ------------------------------------
 	// Routes
@@ -89,7 +100,6 @@ const headless = async (
 			reply.code(404).send("Page not found");
 		}
 	});
-
 	log.yellow("Routes initialised");
 
 	// ------------------------------------

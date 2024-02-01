@@ -5,7 +5,7 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"start": "node --trace-warnings --loader ts-node/esm src/index.ts",
+		"start": "node --loader ts-node/esm src/index.ts",
 		"dev": "nodemon"
 	},
 	"dependencies": {

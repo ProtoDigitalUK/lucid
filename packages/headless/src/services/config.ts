@@ -6,8 +6,6 @@ import {
 	headlessConfigSchema,
 } from "../schemas/config.js";
 
-let config: HeadlessConfigT;
-
 const findConfigPath = (cwd: string): string => {
 	let configPath: string | undefined = undefined;
 	const root = path.parse(cwd).root;
@@ -54,17 +52,11 @@ export const headlessConfig = (config: HeadlessConfigT) => {
 };
 
 export const getConfig = async () => {
-	if (config) {
-		return config;
-	}
-
 	const configPath = findConfigPath(process.cwd());
 	const configUrl = pathToFileURL(configPath).href;
 	const configModule = await import(configUrl);
 
-	config = configModule.default as HeadlessConfigT;
-
-	return config;
+	return configModule.default as HeadlessConfigT;
 };
 
 export default getConfig;

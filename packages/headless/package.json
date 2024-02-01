@@ -19,7 +19,12 @@
 		"dev": "nodemon",
 		"generate": "drizzle-kit generate:pg"
 	},
-	"files": ["dist/**", "cms/**", "templates/**", "drizzle/**"],
+	"files": [
+		"dist/**",
+		"cms/**",
+		"templates/**",
+		"drizzle/**"
+	],
 	"author": "William Yallop",
 	"devDependencies": {
 		"drizzle-kit": "^0.20.13",
@@ -30,6 +35,8 @@
 		"node": "20.1.0"
 	},
 	"dependencies": {
+		"@fastify/swagger": "^8.14.0",
+		"@fastify/swagger-ui": "^2.1.0",
 		"drizzle-orm": "^0.29.3",
 		"fs-extra": "^11.2.0",
 		"postgres": "^3.4.3",
