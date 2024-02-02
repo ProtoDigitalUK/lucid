@@ -5,5 +5,12 @@
 	"validation_error": "Validation error!",
 	"authorisation_error": "Authorisation error!",
 	"forbidden_error": "Forbidden error!",
-	"an_error_occurred_saving_default_user": "An error occurred while saving the default user!"
+	"an_error_occurred_saving_default_user": "An error occurred while saving the default user!",
+	"swagger_response_200": "Successfull response",
+	"swagger_response_201": "Resource created response",
+	"swagger_response_204": "No content response",
+	"swagger_response_400": "Bad request response",
+	"swagger_response_401": "Unauthorised response",
+	"swagger_response_403": "Forbidden response",
+	"swagger_response_500": "Internal server error response"
 }

@@ -7,4 +7,5 @@ export default {
 		password: "password",
 		super_admin: true,
 	},
+	csrfExpiration: 86400000 * 7,
 };

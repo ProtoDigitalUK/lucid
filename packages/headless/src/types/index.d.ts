@@ -18,6 +18,7 @@ declare global {
 			Params: z.infer<ParamsT>;
 			Body: z.infer<BodyT>;
 			Querystring: z.infer<QueryT>;
+			server: FastifyInstance;
 		}>,
 		reply: FastifyReply,
 	) => void;
