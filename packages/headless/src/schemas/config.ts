@@ -6,6 +6,8 @@ export const headlessConfigSchema = zod.object({
 	mode: zod.literal("production").or(zod.literal("development")),
 	keys: zod.object({
 		cookieSecret: zod.string(),
+		accessTokenSecret: zod.string(),
+		refreshTokenSecret: zod.string(),
 	}),
 	collections: zod.array(zod.string()),
 	bricks: zod.array(zod.string()),

@@ -7,5 +7,7 @@ export default {
 		password: "password",
 		super_admin: true,
 	},
-	csrfExpiration: 86400000 * 7,
+	csrfExpiration: 86400000 * 7, // 7 days
+	refreshTokenExpiration: 86400000 * 7, // 7 days
+	accessTokenExpiration: 900000, // 15 minutes
 };

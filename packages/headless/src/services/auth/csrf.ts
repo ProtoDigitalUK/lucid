@@ -1,13 +1,15 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import { type FastifyRequest, type FastifyReply } from "fastify";
 import crypto from "crypto";
 import constants from "../../constants.js";
 import getConfig from "../config.js";
+
+const key = "_csrf";
 
 export const generateCSRFToken = async (reply: FastifyReply) => {
 	const token = crypto.randomBytes(32).toString("hex");
 	const config = await getConfig();
 
-	reply.setCookie("_csrf", token, {
+	reply.setCookie(key, token, {
 		maxAge: constants.csrfExpiration,
 		httpOnly: true,
 		secure: config.mode === "production",
@@ -29,7 +31,7 @@ export const verifyCSRFToken = (request: FastifyRequest) => {
 };
 
 export const clearCSRFToken = (reply: FastifyReply) => {
-	reply.clearCookie("_csrf", { path: "/" });
+	reply.clearCookie(key, { path: "/" });
 };
 
 export default {

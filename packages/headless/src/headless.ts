@@ -64,6 +64,8 @@ const headless = async (
 				"Content-Type",
 				"Authorization",
 				"_csrf",
+				"_access",
+				"_refresh",
 				"headless-environment",
 				"headless-content-lang",
 				"Content-Length",
@@ -90,7 +92,7 @@ const headless = async (
 		// ------------------------------------
 		// Initialise
 		log.white("----------------------------------------------------");
-		await seedHeadless(fastify, undefined);
+		await seedHeadless(fastify);
 		log.yellow("Initialised");
 
 		// ------------------------------------

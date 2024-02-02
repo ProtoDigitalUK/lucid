@@ -7,10 +7,10 @@ const metaObject = {
 		links: {
 			type: "array",
 		},
-		current_page: { type: "null" },
-		last_page: { type: "null" },
-		per_page: { type: "null" },
-		total: { type: "null" },
+		current_page: { nullable: true },
+		last_page: { nullable: true },
+		per_page: { nullable: true },
+		total: { nullable: true },
 	},
 };
 
@@ -25,36 +25,42 @@ const paginatedMetaObject = {
 				properties: {
 					active: { type: "boolean" },
 					label: { type: "string" },
-					url: { type: ["string", "null"] },
+					url: { type: "string", nullable: true },
 					page: { type: "number" },
 				},
 			},
 		},
-		current_page: { type: ["number", "null"] },
-		last_page: { type: ["number", "null"] },
-		per_page: { type: ["number", "null"] },
-		total: { type: ["number", "null"] },
+		current_page: { type: "string", nullable: true },
+		last_page: { type: "string", nullable: true },
+		per_page: { type: "string", nullable: true },
+		total: { type: "string", nullable: true },
 	},
 };
 
 const linksObject = {
 	type: "object",
 	properties: {
-		first: { type: ["string", "null"] },
-		last: { type: ["string", "null"] },
-		next: { type: ["string", "null"] },
-		prev: { type: ["string", "null"] },
+		first: { type: "string", nullable: true },
+		last: { type: "string", nullable: true },
+		next: { type: "string", nullable: true },
+		prev: { type: "string", nullable: true },
 	},
 };
 
 interface SwaggerResponseParamsT {
 	type: 200 | 201 | 204 | 400 | 401 | 403 | 404 | 500;
-	data: unknown;
+	data?: unknown;
 	paginated?: boolean;
+	noPropertise?: boolean;
 }
 
 export const swaggerResponse = (params: SwaggerResponseParamsT) => {
 	let description = T("swagger_response_200");
+	const headers: {
+		_access?: unknown;
+		_refresh?: unknown;
+		_csrf?: unknown;
+	} = {};
 
 	switch (params.type) {
 		case 200:
@@ -74,6 +80,9 @@ export const swaggerResponse = (params: SwaggerResponseParamsT) => {
 			break;
 		case 403:
 			description = T("swagger_response_403");
+			break;
+		case 404:
+			description = T("swagger_response_404");
 			break;
 		case 500:
 			description = T("swagger_response_500");
@@ -95,7 +104,39 @@ export const swaggerResponse = (params: SwaggerResponseParamsT) => {
 
 	return {
 		description: description,
+		type: params.noPropertise === true ? "null" : "object",
+		properties: params.noPropertise === true ? undefined : propertise,
+		headers: headers,
+	};
+};
+
+interface SwaggerHeadersT {
+	// undefine means dont include in the schema, boolean means required or not
+	csrf?: boolean;
+}
+
+export const swaggerHeaders = (headers: SwaggerHeadersT) => {
+	const propertise: {
+		_csrf?: {
+			type: string;
+			description: string;
+		};
+	} = {};
+	const required: string[] = [];
+
+	if (headers.csrf !== undefined) {
+		propertise._csrf = {
+			type: "string",
+			description: T("swagger_csrf_header_description"),
+		};
+		if (headers.csrf) {
+			required.push("_csrf");
+		}
+	}
+
+	return {
 		type: "object",
 		properties: propertise,
+		required: required,
 	};
 };

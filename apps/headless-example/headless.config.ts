@@ -6,6 +6,8 @@ export default headlessConfig({
 	databaseURL: process.env.DATABASE_URL as string,
 	keys: {
 		cookieSecret: process.env.COOKIE_SECRET as string,
+		refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
+		accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
 	},
 	collections: [],
 	bricks: [],

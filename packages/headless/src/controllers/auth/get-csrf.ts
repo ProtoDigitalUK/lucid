@@ -6,9 +6,9 @@ import buildResponse from "../../utils/app/build-response.js";
 // --------------------------------------------------
 // Controller
 const getCSRFController: ControllerT<
-	typeof authSchema.getAuthenticatedUser.params,
-	typeof authSchema.getAuthenticatedUser.body,
-	typeof authSchema.getAuthenticatedUser.query
+	typeof authSchema.getCSRF.params,
+	typeof authSchema.getCSRF.body,
+	typeof authSchema.getCSRF.query
 > = async (request, reply) => {
 	const token = await auth.csrf.generateCSRFToken(reply);
 
@@ -27,7 +27,8 @@ export default {
 	controller: getCSRFController,
 	zodSchema: authSchema.getCSRF,
 	swaggerSchema: {
-		description: "Returns a CSRF token",
+		description:
+			"This route returns a CSRF token in the response body and also sets a _csrf httpOnly cookie. The client can use this token on required routes by setting a _csrf header. On required routes this header will be checked against the _csrf cookie.",
 		tags: ["auth"],
 		summary: "Returns a CSRF token",
 		response: {

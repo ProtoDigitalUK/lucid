@@ -8,6 +8,19 @@ declare module "fastify" {
 		db: DB;
 		config: HeadlessConfigT;
 	}
+
+	interface FastifyRequest {
+		auth: {
+			id: number;
+			email: string;
+			username: string;
+		};
+		language: {
+			id: LanguageResT["id"];
+			code: LanguageResT["code"];
+		};
+		server: FastifyInstance;
+	}
 }
 
 declare global {
@@ -18,15 +31,9 @@ declare global {
 			Params: z.infer<ParamsT>;
 			Body: z.infer<BodyT>;
 			Querystring: z.infer<QueryT>;
-			server: FastifyInstance;
 		}>,
 		reply: FastifyReply,
 	) => void;
-
-	type ServiceT<DataT> = (
-		fastify: FastifyInstance,
-		data: DataT,
-	) => Promise<unknown>;
 
 	interface ResponseBodyT {
 		data: Array<unknown> | { [key: string]: unknown } | undefined | null;

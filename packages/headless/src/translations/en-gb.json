@@ -1,16 +1,23 @@
 {
-	"headers_already_sent": "Headers were already sent!",
+	"headers_already_sent": "Headers were already sent.",
 	"default_error_name": "An error occurred!",
 	"default_error_message": "An error occurred! Please try again later.",
 	"validation_error": "Validation error!",
-	"authorisation_error": "Authorisation error!",
+	"authorisation_error": "Authorisation error.",
 	"forbidden_error": "Forbidden error!",
-	"an_error_occurred_saving_default_user": "An error occurred while saving the default user!",
+	"an_error_occurred_saving_default_user": "An error occurred while saving the default user.",
 	"swagger_response_200": "Successfull response",
 	"swagger_response_201": "Resource created response",
 	"swagger_response_204": "No content response",
 	"swagger_response_400": "Bad request response",
 	"swagger_response_401": "Unauthorised response",
 	"swagger_response_403": "Forbidden response",
-	"swagger_response_500": "Internal server error response"
+	"swagger_response_404": "Not found response",
+	"swagger_response_500": "Internal server error response",
+	"swagger_csrf_header_description": "A token that is used to protect against CSRF attacks. CSRF middleware expects this value to be passed in the header so it can be compared to the _csrf cookie.",
+	"swagger_access_header_description": "Stores the access token that is used to authenticate requests.",
+	"swagger_refresh_header_description": "Stores the refresh token that can be used to obtain a new access token when the current one expires.",
+
+	"login_error_name": "There was an error logging in.",
+	"login_error_message": "The username/email or password you entered is incorrect."
 }

@@ -14,18 +14,18 @@ type RouteT = <
 		//   global?: PermissionT[];
 		//   environments?: EnvironmentPermissionT[];
 		// };
-		// middleware?: {
-		//   authenticate?: boolean;
-		//   authoriseCSRF?: boolean;
-		//   paginated?: boolean;
-		//   validateEnvironment?: boolean;
-		//   contentLanguage?: boolean;
-		// };
-		// zodSchema?: {
-		//   params?: ParamsT;
-		//   body?: BodyT;
-		//   query?: QueryT;
-		// };
+		middleware?: {
+			authenticate?: boolean;
+			authoriseCSRF?: boolean;
+			paginated?: boolean;
+			validateEnvironment?: boolean;
+			contentLanguage?: boolean;
+		};
+		zodSchema?: {
+			params?: ParamsT;
+			body?: BodyT;
+			query?: QueryT;
+		};
 		swaggerSchema?: {
 			description?: string;
 			tags?: string[];
@@ -36,6 +36,16 @@ type RouteT = <
 					type?: string;
 					properties?: unknown;
 				};
+			};
+			body?: {
+				type?: string;
+				properties?: unknown;
+				required?: string[];
+			};
+			headers?: {
+				type: string;
+				properties: unknown;
+				required: string[];
 			};
 		};
 		controller: ControllerT<ParamsT, BodyT, QueryT>;
