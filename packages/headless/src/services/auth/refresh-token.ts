@@ -1,20 +1,25 @@
+import T from "../../translations/index.js";
 import { type FastifyRequest, type FastifyReply } from "fastify";
+import { eq, and, gte } from "drizzle-orm";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
+import { userTokens } from "../../db/schema.js";
+import { APIError } from "../../utils/app/error-handler.js";
+import auth from "./index.js";
 
 const key = "_refresh";
 
 export const generateRefreshToken = async (
 	reply: FastifyReply,
-	user: {
-		id: number;
-	},
+	request: FastifyRequest,
+	user_id: number,
 ) => {
 	const config = await getConfig();
+	await clearRefreshToken(request, reply);
 
 	const payload = {
-		id: user.id,
+		id: user_id,
 	};
 
 	const token = jwt.sign(payload, config.keys.refreshTokenSecret, {
@@ -29,42 +34,98 @@ export const generateRefreshToken = async (
 		path: "/",
 	});
 
-	// TODO: store token in db in user_tokens table
+	await request.server.db
+		.insert(userTokens)
+		.values({
+			user_id: user_id,
+			token: token,
+			type: "refresh",
+			expires_at: new Date(
+				Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
+			).toISOString(),
+		})
+		.execute();
 };
 
-export const verifyRefreshToken = async (request: FastifyRequest) => {
+export const verifyRefreshToken = async (
+	request: FastifyRequest,
+	reply: FastifyReply,
+) => {
 	try {
 		const _refresh = request.cookies[key];
 		const config = await getConfig();
 
 		if (!_refresh) {
-			return {
-				success: false,
-				userId: null,
-			};
+			throw new Error("No refresh token found");
 		}
 
 		const decode = jwt.verify(_refresh, config.keys.refreshTokenSecret) as {
 			id: number;
 		};
 
-		// TODO: verify the token exists against the user in the db and has not expired
+		const token = await request.server.db
+			.select({
+				id: userTokens.id,
+				user_id: userTokens.user_id,
+				token: userTokens.token,
+			})
+			.from(userTokens)
+			.where(
+				and(
+					eq(userTokens.user_id, decode.id),
+					eq(userTokens.token, _refresh),
+					eq(userTokens.type, "refresh"),
+					gte(userTokens.expires_at, new Date().toISOString()),
+				),
+			)
+			.execute();
+
+		if (token.length === 0) {
+			throw new Error("No refresh token found");
+		}
 
 		return {
-			success: true,
 			userId: decode.id,
 		};
 	} catch (err) {
-		return {
-			success: false,
-			userId: null,
-		};
+		await Promise.all([
+			clearRefreshToken(request, reply),
+			auth.accessToken.clearAccessToken(reply),
+		]);
+		throw new APIError({
+			type: "authorisation",
+			name: T("refresh_token_error_name"),
+			message: T("refresh_token_error_message"),
+			status: 401,
+		});
 	}
 };
 
-export const clearRefreshToken = (reply: FastifyReply) => {
+export const clearRefreshToken = async (
+	request: FastifyRequest,
+	reply: FastifyReply,
+) => {
+	const _refresh = request.cookies[key];
+	if (!_refresh) return;
+
+	const config = await getConfig();
+
+	const decode = jwt.verify(_refresh, config.keys.refreshTokenSecret) as {
+		id: number;
+	};
+
 	reply.clearCookie(key, { path: "/" });
-	// TODO: remove token from db
+
+	await request.server.db
+		.delete(userTokens)
+		.where(
+			and(
+				eq(userTokens.user_id, decode.id),
+				eq(userTokens.token, _refresh),
+				eq(userTokens.type, "refresh"),
+			),
+		)
+		.execute();
 };
 
 export default {

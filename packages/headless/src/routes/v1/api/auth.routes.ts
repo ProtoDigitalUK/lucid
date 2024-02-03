@@ -13,14 +13,14 @@ const authRoutes = async (fastify: FastifyInstance) => {
 	});
 
 	r(fastify, {
-		method: "get",
-		url: "/me",
+		method: "post",
+		url: "/token",
 		middleware: {
-			authenticate: true,
+			authoriseCSRF: true,
 		},
-		zodSchema: auth.getAuthenticatedUser.zodSchema,
-		swaggerSchema: auth.getAuthenticatedUser.swaggerSchema,
-		controller: auth.getAuthenticatedUser.controller,
+		zodSchema: auth.token.zodSchema,
+		swaggerSchema: auth.token.swaggerSchema,
+		controller: auth.token.controller,
 	});
 
 	r(fastify, {
@@ -32,6 +32,17 @@ const authRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: auth.login.zodSchema,
 		swaggerSchema: auth.login.swaggerSchema,
 		controller: auth.login.controller,
+	});
+
+	r(fastify, {
+		method: "get",
+		url: "/me",
+		middleware: {
+			authenticate: true,
+		},
+		zodSchema: auth.getAuthenticatedUser.zodSchema,
+		swaggerSchema: auth.getAuthenticatedUser.swaggerSchema,
+		controller: auth.getAuthenticatedUser.controller,
 	});
 };
 

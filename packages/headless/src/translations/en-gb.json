@@ -22,5 +22,9 @@
 	"login_error_message": "The username/email or password you entered is incorrect.",
 	"validation_body_error_message": "Please check the request body and try again.",
 	"validation_query_error_message": "Please check the query parameters and try again.",
-	"validation_params_error_message": "Please check the request parameters and try again."
+	"validation_params_error_message": "Please check the request parameters and try again.",
+	"access_token_error_name": "There was an error obtaining an access token.",
+	"access_token_error_message": "There was an error obtaining an access token. Please try logging in again.",
+	"refresh_token_error_name": "There was an error obtaining a new access token.",
+	"refresh_token_error_message": "There was an error obtaining a new access token. Please try logging in again."
 }

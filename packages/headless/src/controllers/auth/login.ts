@@ -13,14 +13,8 @@ const loginController: ControllerT<
 	const user = await auth.login(request.server, request.body);
 
 	await Promise.all([
-		auth.refreshToken.generateRefreshToken(reply, {
-			id: user.id,
-		}),
-		auth.accessToken.generateAccessToken(reply, {
-			id: user.id,
-			username: user.username,
-			email: user.email,
-		}),
+		auth.refreshToken.generateRefreshToken(reply, request, user.id),
+		auth.accessToken.generateAccessToken(reply, request, user.id),
 	]);
 
 	reply.status(200).send();

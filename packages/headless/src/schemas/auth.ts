@@ -19,4 +19,9 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	token: {
+		body: undefined,
+		query: undefined,
+		params: undefined,
+	},
 };

@@ -1,19 +1,41 @@
+import T from "../../translations/index.js";
 import { type FastifyRequest, type FastifyReply } from "fastify";
+import { eq } from "drizzle-orm";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
+import { users } from "../../db/schema.js";
+import { APIError } from "../../utils/app/error-handler.js";
 
 const key = "_access";
 
 export const generateAccessToken = async (
 	reply: FastifyReply,
-	user: {
-		id: number;
-		username: string;
-		email: string;
-	},
+	request: FastifyRequest,
+	user_id: number,
 ) => {
 	const config = await getConfig();
+
+	const userRes = await request.server.db
+		.select({
+			id: users.id,
+			username: users.username,
+			email: users.email,
+		})
+		.from(users)
+		.where(eq(users.id, user_id))
+		.execute();
+
+	if (userRes.length === 0) {
+		throw new APIError({
+			type: "authorisation",
+			name: T("access_token_error_name"),
+			message: T("access_token_error_message"),
+			status: 401,
+		});
+	}
+
+	const user = userRes[0];
 
 	const payload = {
 		id: user.id,
