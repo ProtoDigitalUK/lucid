@@ -73,6 +73,7 @@ export const verifyAccessToken = async (request: FastifyRequest) => {
 			id: number;
 			username: string;
 			email: string;
+			// TODO: store users permissions in the token
 		};
 
 		return {

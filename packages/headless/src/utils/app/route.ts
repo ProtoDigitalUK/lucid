@@ -7,6 +7,8 @@ import z from "zod";
 import validateBody from "../../middleware/validate-body.js";
 import validateParams from "../../middleware/validate-params.js";
 import validateQuery from "../../middleware/validate-query.js";
+import authenticate from "../../middleware/authenticate.js";
+import validateCSRF from "../../middleware/validate-csrf.js";
 
 type RouteT = <
 	ParamsT extends z.ZodTypeAny | undefined,
@@ -23,10 +25,10 @@ type RouteT = <
 		// };
 		middleware?: {
 			authenticate?: boolean;
-			authoriseCSRF?: boolean;
-			paginated?: boolean;
-			validateEnvironment?: boolean;
-			contentLanguage?: boolean;
+			validateCSRF?: boolean;
+			// paginated?: boolean;
+			// validateEnvironment?: boolean;
+			// contentLanguage?: boolean;
 		};
 		zodSchema?: {
 			params?: ParamsT;
@@ -65,10 +67,14 @@ type PreHookT = Array<
 >;
 
 const route: RouteT = (fastify, opts) => {
-	const { method, url, controller, swaggerSchema, zodSchema } = opts;
+	const { method, url, controller, swaggerSchema, zodSchema, middleware } =
+		opts;
 
 	const preValidation: PreHookT = [];
 	const preHandler: PreHookT = [];
+
+	if (middleware?.authenticate) preHandler.push(authenticate);
+	if (middleware?.validateCSRF) preHandler.push(validateCSRF);
 
 	if (zodSchema?.body !== undefined)
 		preValidation.push(validateBody(zodSchema.body));

@@ -26,5 +26,7 @@
 	"access_token_error_name": "There was an error obtaining an access token.",
 	"access_token_error_message": "There was an error obtaining an access token. Please try logging in again.",
 	"refresh_token_error_name": "There was an error obtaining a new access token.",
-	"refresh_token_error_message": "There was an error obtaining a new access token. Please try logging in again."
+	"refresh_token_error_message": "There was an error obtaining a new access token. Please try logging in again.",
+	"not_authorised_to_perform_action": "You are not authorised to perform this action.",
+	"failed_to_validate_csrf_token": "Failed to validate CSRF token."
 }
