@@ -1,7 +1,8 @@
-import { type FastifyInstance } from "fastify";
+import { type FastifyInstance, type FastifyRequest, type FastifyReply } from "fastify";
 import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import * as schema from "../db/schema.js";
+import type * as schema from "../db/schema.js";
 import { type HeadlessConfigT } from "../schemas/config.js";
+import z from "zod";
 
 declare module "fastify" {
 	interface FastifyInstance {
