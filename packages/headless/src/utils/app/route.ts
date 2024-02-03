@@ -30,13 +30,14 @@ type RouteT = <
 			description?: string;
 			tags?: string[];
 			summary?: string;
-			response?: {
-				200?: {
+			response?: Record<
+				string | number,
+				{
 					description?: string;
 					type?: string;
 					properties?: unknown;
-				};
-			};
+				}
+			>;
 			body?: {
 				type?: string;
 				properties?: unknown;

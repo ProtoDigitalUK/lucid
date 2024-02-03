@@ -6,6 +6,7 @@
 	"authorisation_error": "Authorisation error.",
 	"forbidden_error": "Forbidden error!",
 	"an_error_occurred_saving_default_user": "An error occurred while saving the default user.",
+	"an_error_occurred_clearing_expired_tokens": "An error occurred while clearing expired tokens.",
 	"swagger_response_200": "Successfull response",
 	"swagger_response_201": "Resource created response",
 	"swagger_response_204": "No content response",

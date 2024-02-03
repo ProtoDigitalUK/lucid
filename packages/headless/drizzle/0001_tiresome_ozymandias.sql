@@ -1,0 +1,1 @@
+ALTER TYPE "type" ADD VALUE 'refresh';

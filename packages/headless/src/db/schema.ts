@@ -130,7 +130,7 @@ export const userRoles = pgTable("headless_user_roles", {
 	updated_at: text("updated_at").default("NOW()"),
 });
 
-export const tokenTypeEnum = pgEnum("type", ["password_reset"]);
+export const tokenTypeEnum = pgEnum("type", ["password_reset", "refresh"]);
 
 export const userTokens = pgTable("headless_user_tokens", {
 	id: serial("id").primaryKey(),

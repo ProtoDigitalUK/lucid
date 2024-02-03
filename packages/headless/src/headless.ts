@@ -20,6 +20,7 @@ import getDirName from "./utils/app/get-dirname.js";
 import getConfig from "./services/config.js";
 import { decodeError } from "./utils/app/error-handler.js";
 import seedHeadless from "./services/seed-headless.js";
+import registerCronJobs from "./services/cron-jobs.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -93,6 +94,7 @@ const headless = async (
 		// Initialise
 		log.white("----------------------------------------------------");
 		await seedHeadless(fastify);
+		registerCronJobs(fastify);
 		log.yellow("Initialised");
 
 		// ------------------------------------
