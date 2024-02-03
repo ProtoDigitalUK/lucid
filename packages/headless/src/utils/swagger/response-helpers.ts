@@ -1,4 +1,5 @@
 import T from "../../translations/index.js";
+import constants from "../../constants.js";
 
 const metaObject = {
 	type: "object",
@@ -7,10 +8,10 @@ const metaObject = {
 		links: {
 			type: "array",
 		},
-		current_page: { type: "string", nullable: true },
-		last_page: { type: "string", nullable: true },
-		per_page: { type: "string", nullable: true },
-		total: { type: "string", nullable: true },
+		current_page: { type: "number", nullable: true, example: null },
+		last_page: { type: "number", nullable: true, example: null },
+		per_page: { type: "number", nullable: true, example: null },
+		total: { type: "number", nullable: true, example: null },
 	},
 };
 
@@ -30,10 +31,22 @@ const paginatedMetaObject = {
 				},
 			},
 		},
-		current_page: { type: "string", nullable: true },
-		last_page: { type: "string", nullable: true },
-		per_page: { type: "string", nullable: true },
-		total: { type: "string", nullable: true },
+		current_page: {
+			type: "number",
+			nullable: true,
+			example: constants.query.page,
+		},
+		last_page: {
+			type: "number",
+			nullable: true,
+			example: 200 / constants.query.per_page,
+		},
+		per_page: {
+			type: "number",
+			nullable: true,
+			example: constants.query.per_page,
+		},
+		total: { type: "number", nullable: true, example: 200 },
 	},
 };
 

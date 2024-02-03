@@ -29,9 +29,12 @@ export default {
 			200: swaggerResponse({
 				type: 200,
 				data: {
-					id: { type: "number" },
-					username: { type: "string" },
-					email: { type: "string" },
+					type: "object",
+					properties: {
+						id: { type: "number", example: 20 },
+						username: { type: "string" },
+						email: { type: "string" },
+					},
 				},
 			}),
 		},
