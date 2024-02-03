@@ -9,5 +9,5 @@ export default {
 	},
 	csrfExpiration: 86400000 * 7, // 7 days
 	refreshTokenExpiration: 86400000 * 7, // 7 days
-	accessTokenExpiration: 900000, // 15 minutes
+	accessTokenExpiration: 300000, // 5 minutes
 };

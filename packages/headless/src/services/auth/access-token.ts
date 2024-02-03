@@ -19,6 +19,7 @@ export const generateAccessToken = async (
 		id: user.id,
 		username: user.username,
 		email: user.email,
+		// TODO: store users permissions in the token
 	};
 
 	const token = jwt.sign(payload, config.keys.accessTokenSecret, {

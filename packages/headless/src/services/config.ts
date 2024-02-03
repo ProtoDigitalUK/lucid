@@ -46,6 +46,8 @@ const findConfigPath = (cwd: string): string => {
 
 export const headlessConfig = (config: HeadlessConfigT) => {
 	try {
+		// TODO: Improve validation and error handling
+
 		headlessConfigSchema.parse(config);
 		return config;
 	} catch (error) {
@@ -63,6 +65,8 @@ export const getConfig = async () => {
 	const configModule = await import(configUrl);
 
 	config = configModule.default as HeadlessConfigT;
+
+	// TODO: Merge config object with default config values
 
 	return config;
 };

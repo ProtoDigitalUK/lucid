@@ -28,6 +28,8 @@ export const generateRefreshToken = async (
 		sameSite: "strict",
 		path: "/",
 	});
+
+	// TODO: store token in db in user_tokens table
 };
 
 export const verifyRefreshToken = async (request: FastifyRequest) => {
@@ -46,6 +48,8 @@ export const verifyRefreshToken = async (request: FastifyRequest) => {
 			id: number;
 		};
 
+		// TODO: verify the token exists against the user in the db and has not expired
+
 		return {
 			success: true,
 			userId: decode.id,
@@ -60,6 +64,7 @@ export const verifyRefreshToken = async (request: FastifyRequest) => {
 
 export const clearRefreshToken = (reply: FastifyReply) => {
 	reply.clearCookie(key, { path: "/" });
+	// TODO: remove token from db
 };
 
 export default {
