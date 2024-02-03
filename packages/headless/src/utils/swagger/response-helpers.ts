@@ -7,10 +7,10 @@ const metaObject = {
 		links: {
 			type: "array",
 		},
-		current_page: { nullable: true },
-		last_page: { nullable: true },
-		per_page: { nullable: true },
-		total: { nullable: true },
+		current_page: { type: "string", nullable: true },
+		last_page: { type: "string", nullable: true },
+		per_page: { type: "string", nullable: true },
+		total: { type: "string", nullable: true },
 	},
 };
 

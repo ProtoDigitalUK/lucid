@@ -18,7 +18,9 @@
 	"swagger_csrf_header_description": "A token that is used to protect against CSRF attacks. CSRF middleware expects this value to be passed in the header so it can be compared to the _csrf cookie.",
 	"swagger_access_header_description": "Stores the access token that is used to authenticate requests.",
 	"swagger_refresh_header_description": "Stores the refresh token that can be used to obtain a new access token when the current one expires.",
-
 	"login_error_name": "There was an error logging in.",
-	"login_error_message": "The username/email or password you entered is incorrect."
+	"login_error_message": "The username/email or password you entered is incorrect.",
+	"validation_body_error_message": "Please check the request body and try again.",
+	"validation_query_error_message": "Please check the query parameters and try again.",
+	"validation_params_error_message": "Please check the request parameters and try again."
 }

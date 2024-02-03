@@ -7,6 +7,10 @@ export default {
 		password: "password",
 		super_admin: true,
 	},
+	query: {
+		page: 1,
+		per_page: 10,
+	},
 	csrfExpiration: 86400000 * 7, // 7 days
 	refreshTokenExpiration: 86400000 * 7, // 7 days
 	accessTokenExpiration: 300000, // 5 minutes
