@@ -3,8 +3,6 @@ import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import auth from "../../services/auth/index.js";
 import buildResponse from "../../utils/app/build-response.js";
 
-// --------------------------------------------------
-// Controller
 const getCSRFController: ControllerT<
 	typeof authSchema.getCSRF.params,
 	typeof authSchema.getCSRF.body,
@@ -21,8 +19,6 @@ const getCSRFController: ControllerT<
 	);
 };
 
-// --------------------------------------------------
-// Export
 export default {
 	controller: getCSRFController,
 	zodSchema: authSchema.getCSRF,

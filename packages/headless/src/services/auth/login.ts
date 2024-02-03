@@ -6,7 +6,7 @@ import { users } from "../../db/schema.js";
 import auth from "./index.js";
 
 export interface ServiceData {
-	usernameOrEmail: string;
+	username_or_email: string;
 	password: string;
 }
 
@@ -21,8 +21,8 @@ const login = async (fastify: FastifyInstance, data: ServiceData) => {
 		.from(users)
 		.where(
 			or(
-				eq(users.username, data.usernameOrEmail),
-				eq(users.email, data.usernameOrEmail),
+				eq(users.username, data.username_or_email),
+				eq(users.email, data.username_or_email),
 			),
 		)
 		.limit(1);

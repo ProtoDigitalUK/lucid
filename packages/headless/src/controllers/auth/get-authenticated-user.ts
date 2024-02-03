@@ -1,8 +1,6 @@
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 
-// --------------------------------------------------
-// Controller
 const getAuthenticatedUserController: ControllerT<
 	typeof authSchema.getAuthenticatedUser.params,
 	typeof authSchema.getAuthenticatedUser.body,
@@ -11,8 +9,6 @@ const getAuthenticatedUserController: ControllerT<
 	reply.status(200).send({});
 };
 
-// --------------------------------------------------
-// Export
 export default {
 	controller: getAuthenticatedUserController,
 	zodSchema: authSchema.getAuthenticatedUser,

@@ -13,7 +13,7 @@ export default {
 	},
 	login: {
 		body: z.object({
-			usernameOrEmail: z.string(),
+			username_or_email: z.string(),
 			password: z.string(),
 		}),
 		query: z.object({}),

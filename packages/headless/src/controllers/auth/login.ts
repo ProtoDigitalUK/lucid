@@ -5,17 +5,12 @@ import {
 } from "../../utils/swagger/response-helpers.js";
 import auth from "../../services/auth/index.js";
 
-// --------------------------------------------------
-// Controller
 const loginController: ControllerT<
 	typeof authSchema.login.params,
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	const user = await auth.login(request.server, {
-		usernameOrEmail: request.body.usernameOrEmail,
-		password: request.body.password,
-	});
+	const user = await auth.login(request.server, request.body);
 
 	await Promise.all([
 		auth.refreshToken.generateRefreshToken(reply, {
@@ -31,8 +26,6 @@ const loginController: ControllerT<
 	reply.status(200).send();
 };
 
-// --------------------------------------------------
-// Export
 export default {
 	controller: loginController,
 	zodSchema: authSchema.login,
@@ -44,10 +37,10 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				usernameOrEmail: { type: "string" },
+				username_or_email: { type: "string" },
 				password: { type: "string" },
 			},
-			required: ["usernameOrEmail", "password"],
+			required: ["username_or_email", "password"],
 		},
 		response: {
 			200: swaggerResponse({
