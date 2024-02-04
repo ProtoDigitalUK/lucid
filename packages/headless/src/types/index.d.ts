@@ -42,7 +42,7 @@ declare global {
 	) => void;
 
 	interface ResponseBodyT {
-		data: Array<unknown> | { [key: string]: unknown } | undefined | null;
+		data: unknown;
 		links?: {
 			first: string | null;
 			last: string | null;

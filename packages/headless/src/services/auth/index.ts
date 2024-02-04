@@ -3,6 +3,7 @@ import validatePassword from "./validate-password.js";
 import login from "./login.js";
 import accessToken from "./access-token.js";
 import refreshToken from "./refresh-token.js";
+import getAuthenticatedUser from "./get-authenticated-user.js";
 
 export default {
 	csrf,
@@ -10,4 +11,5 @@ export default {
 	login,
 	accessToken,
 	refreshToken,
+	getAuthenticatedUser,
 };

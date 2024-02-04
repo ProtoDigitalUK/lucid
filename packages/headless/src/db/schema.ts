@@ -7,6 +7,7 @@ import {
 	integer,
 	unique,
 } from "drizzle-orm/pg-core";
+import { type InferSelectModel } from "drizzle-orm";
 
 // --------------------------------------------------------- //
 // Environments
@@ -94,6 +95,8 @@ export const users = pgTable("headless_users", {
 	updated_at: text("updated_at").default("NOW()"),
 });
 
+export type UsersT = InferSelectModel<typeof users>;
+
 export const roles = pgTable("headless_roles", {
 	id: serial("id").primaryKey(),
 	name: text("name").unique().notNull(),
@@ -117,6 +120,8 @@ export const rolePermissions = pgTable("headless_role_permissions", {
 	updated_at: text("updated_at").default("NOW()"),
 });
 
+export type RolePermissionsT = InferSelectModel<typeof rolePermissions>;
+
 export const userRoles = pgTable("headless_user_roles", {
 	id: serial("id").primaryKey(),
 	user_id: serial("user_id")
@@ -129,6 +134,8 @@ export const userRoles = pgTable("headless_user_roles", {
 	created_at: text("created_at").default("NOW()"),
 	updated_at: text("updated_at").default("NOW()"),
 });
+
+export type UserRolesT = InferSelectModel<typeof userRoles>;
 
 export const tokenTypeEnum = pgEnum("type", ["password_reset", "refresh"]);
 

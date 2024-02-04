@@ -28,5 +28,8 @@
 	"refresh_token_error_name": "There was an error obtaining a new access token.",
 	"refresh_token_error_message": "There was an error obtaining a new access token. Please try logging in again.",
 	"not_authorised_to_perform_action": "You are not authorised to perform this action.",
-	"failed_to_validate_csrf_token": "Failed to validate CSRF token."
+	"failed_to_validate_csrf_token": "Failed to validate CSRF token.",
+	"user": "User",
+	"error_not_found_name": "{{name}} Not Found",
+	"error_not_found_message": "{{name}} resource could not be found."
 }

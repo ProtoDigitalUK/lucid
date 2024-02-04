@@ -5,7 +5,7 @@ import getConfig from "../../services/config.js";
 // --------------------------------------------------
 // Types
 interface BuildResponseParams {
-	data: Array<unknown> | { [key: string]: unknown } | undefined;
+	data: unknown;
 	pagination?: {
 		count: number;
 		page: string;

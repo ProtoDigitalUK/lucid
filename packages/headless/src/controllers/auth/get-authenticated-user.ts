@@ -1,19 +1,21 @@
 import authSchema from "../../schemas/auth.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import buildResponse from "../../utils/app/build-response.js";
+import auth from "../../services/auth/index.js";
+import { swaggerUsersRes } from "../../format/format-user.js";
 
 const getAuthenticatedUserController: ControllerT<
 	typeof authSchema.getAuthenticatedUser.params,
 	typeof authSchema.getAuthenticatedUser.body,
 	typeof authSchema.getAuthenticatedUser.query
 > = async (request, reply) => {
+	const user = await auth.getAuthenticatedUser(request.server, {
+		user_id: request.auth.id,
+	});
+
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: {
-				id: request.auth.id,
-				username: request.auth.username,
-				email: request.auth.email,
-			},
+			data: user,
 		}),
 	);
 };
@@ -28,14 +30,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: {
-					type: "object",
-					properties: {
-						id: { type: "number", example: 20 },
-						username: { type: "string" },
-						email: { type: "string" },
-					},
-				},
+				data: swaggerUsersRes,
 			}),
 		},
 	},

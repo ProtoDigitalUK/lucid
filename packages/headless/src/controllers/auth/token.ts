@@ -28,7 +28,7 @@ const tokenController: ControllerT<
 		),
 	]);
 
-	reply.status(200).send();
+	reply.status(204).send();
 };
 
 export default {
@@ -40,8 +40,8 @@ export default {
 		tags: ["auth"],
 		summary: "Issues a new access and refresh token.",
 		response: {
-			200: swaggerResponse({
-				type: 200,
+			204: swaggerResponse({
+				type: 204,
 				noPropertise: true,
 			}),
 		},
