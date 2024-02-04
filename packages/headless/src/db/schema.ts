@@ -7,7 +7,7 @@ import {
 	integer,
 	unique,
 } from "drizzle-orm/pg-core";
-import { type InferSelectModel } from "drizzle-orm";
+import { type InferSelectModel, sql } from "drizzle-orm";
 
 // --------------------------------------------------------- //
 // Environments
@@ -41,8 +41,8 @@ export const headlessLanguages = pgTable("headless_languages", {
 	is_default: boolean("is_default").notNull().default(false),
 	is_enabled: boolean("is_enabled").notNull().default(true),
 
-	created_at: text("created_at").default("NOW()"),
-	updated_at: text("updated_at").default("NOW()"),
+	created_at: text("created_at").default(sql`NOW()`),
+	updated_at: text("updated_at").default(sql`NOW()`),
 });
 
 export const headlessTranslationKeys = pgTable("headless_translation_keys", {
@@ -67,8 +67,8 @@ export const headlessTranslations = pgTable(
 			.notNull(),
 		value: text("value"),
 
-		created_at: text("created_at").default("NOW()"),
-		updated_at: text("updated_at").default("NOW()"),
+		created_at: text("created_at").default(sql`NOW()`),
+		updated_at: text("updated_at").default(sql`NOW()`),
 	},
 	(t) => ({
 		unq: unique().on(t.translation_key_id, t.language_id),
@@ -91,8 +91,8 @@ export const users = pgTable("headless_users", {
 	delete: boolean("delete").default(false),
 	deleted_at: text("deleted_at"),
 
-	created_at: text("created_at").default("NOW()"),
-	updated_at: text("updated_at").default("NOW()"),
+	created_at: text("created_at").default(sql`NOW()`),
+	updated_at: text("updated_at").default(sql`NOW()`),
 });
 
 export type UsersT = InferSelectModel<typeof users>;
@@ -102,8 +102,8 @@ export const roles = pgTable("headless_roles", {
 	name: text("name").unique().notNull(),
 	description: text("description"),
 
-	created_at: text("created_at").default("NOW()"),
-	updated_at: text("updated_at").default("NOW()"),
+	created_at: text("created_at").default(sql`NOW()`),
+	updated_at: text("updated_at").default(sql`NOW()`),
 });
 
 export const rolePermissions = pgTable("headless_role_permissions", {
@@ -116,8 +116,8 @@ export const rolePermissions = pgTable("headless_role_permissions", {
 		.references(() => environments.key, { onDelete: "cascade" })
 		.notNull(),
 
-	created_at: text("created_at").default("NOW()"),
-	updated_at: text("updated_at").default("NOW()"),
+	created_at: text("created_at").default(sql`NOW()`),
+	updated_at: text("updated_at").default(sql`NOW()`),
 });
 
 export type RolePermissionsT = InferSelectModel<typeof rolePermissions>;
@@ -131,8 +131,8 @@ export const userRoles = pgTable("headless_user_roles", {
 		.references(() => roles.id, { onDelete: "cascade" })
 		.notNull(),
 
-	created_at: text("created_at").default("NOW()"),
-	updated_at: text("updated_at").default("NOW()"),
+	created_at: text("created_at").default(sql`NOW()`),
+	updated_at: text("updated_at").default(sql`NOW()`),
 });
 
 export type UserRolesT = InferSelectModel<typeof userRoles>;
@@ -147,6 +147,6 @@ export const userTokens = pgTable("headless_user_tokens", {
 	token: text("token").notNull(),
 	type: tokenTypeEnum("type").notNull(),
 
-	created_at: text("created_at").default("NOW()"),
+	created_at: text("created_at").default(sql`NOW()`),
 	expires_at: text("expires_at").notNull(),
 });

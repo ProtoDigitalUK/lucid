@@ -15,6 +15,13 @@
       "when": 1706918128982,
       "tag": "0001_tiresome_ozymandias",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1707053260494,
+      "tag": "0002_jazzy_bastion",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,5 @@
 import { FastifyInstance } from "fastify";
 import r from "../../../utils/app/route.js";
-// Controllers
 import auth from "../../../controllers/auth/index.js";
 
 const authRoutes = async (fastify: FastifyInstance) => {

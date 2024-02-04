@@ -15,7 +15,7 @@
 	"swagger_response_403": "Forbidden response",
 	"swagger_response_404": "Not found response",
 	"swagger_response_500": "Internal server error response",
-	"swagger_csrf_header_description": "A token that is used to protect against CSRF attacks. CSRF middleware expects this value to be passed in the header so it can be compared to the _csrf cookie.",
+	"swagger_csrf_header_description": "A token that is used to protect against CSRF attacks. CSRF middleware expects this value to be passed in the header so it can be compared to the httpOnly _csrf cookie.",
 	"swagger_access_header_description": "Stores the access token that is used to authenticate requests.",
 	"swagger_refresh_header_description": "Stores the refresh token that can be used to obtain a new access token when the current one expires.",
 	"login_error_name": "There was an error logging in.",
@@ -31,5 +31,16 @@
 	"failed_to_validate_csrf_token": "Failed to validate CSRF token.",
 	"user": "User",
 	"error_not_found_name": "{{name}} Not Found",
-	"error_not_found_message": "{{name}} resource could not be found."
+	"error_not_found_message": "{{name}} resource could not be found.",
+	"invalid_brick_keys": "Invalid brick keys.",
+	"make_sure_all_assigned_bricks_are_valid": "Please make sure all assigned bricks are valid.",
+	"brick_with_key_not_found": "Brick with key '{{key}}' not found.",
+	"invalid_collection_keys": "Invalid collection keys.",
+	"make_sure_all_assigned_collections_are_valid": "Please make sure all assigned collections are valid.",
+	"collection_with_key_not_found": "Collection with key '{{key}}' not found.",
+	"error_already_exists_name": "{{name}} Already Exists",
+	"environment_with_key_already_exists": "Environment with key '{{key}}' already exists.",
+	"environment": "Environment",
+	"error_not_created_name": "{{name}} Not Created",
+	"error_not_created_message": "{{name}} could not be created. Please try again later."
 }

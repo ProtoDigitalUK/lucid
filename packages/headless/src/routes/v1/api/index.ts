@@ -1,10 +1,14 @@
 import { FastifyInstance } from "fastify";
 // API
-import auth from "./auth.routes.js";
+import authRoutes from "./auth.routes.js";
+import environmentRoutes from "./environments.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
-	fastify.register(auth, {
+	fastify.register(authRoutes, {
 		prefix: "/auth",
+	});
+	fastify.register(environmentRoutes, {
+		prefix: "/environments",
 	});
 };
 

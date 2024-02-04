@@ -21,10 +21,16 @@
 		"drizzle:studio": "drizzle-kit studio",
 		"format": "npx @biomejs/biome format --write ./src"
 	},
-	"files": ["dist/**", "cms/**", "templates/**", "drizzle/**"],
+	"files": [
+		"dist/**",
+		"cms/**",
+		"templates/**",
+		"drizzle/**"
+	],
 	"author": "William Yallop",
 	"devDependencies": {
 		"@types/node-cron": "^3.0.11",
+		"@types/slug": "^5.0.7",
 		"drizzle-kit": "^0.20.13",
 		"nodemon": "^3.0.3",
 		"typescript": "^5.3.3"
@@ -41,6 +47,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"node-cron": "^3.0.3",
 		"postgres": "^3.4.3",
+		"slug": "^8.2.3",
 		"zod": "^3.22.4"
 	}
 }
