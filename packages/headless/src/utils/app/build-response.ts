@@ -114,7 +114,8 @@ const buildResponse: BuildResponseT = async (request, params) => {
 		total: Number(params.pagination?.count) || null,
 		last_page: params.pagination
 			? Math.ceil(
-					params.pagination?.count / Number(params.pagination.per_page),
+					params.pagination?.count /
+						Number(params.pagination.per_page),
 			  ) ||
 			  Number(params.pagination?.page) ||
 			  null

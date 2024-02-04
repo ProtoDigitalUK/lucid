@@ -18,14 +18,10 @@
 		"build": "tsc",
 		"dev": "nodemon",
 		"drizzle:generate": "drizzle-kit generate:pg",
-		"drizzle:studio": "drizzle-kit studio"
+		"drizzle:studio": "drizzle-kit studio",
+		"format": "npx @biomejs/biome format --write ./src"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**",
-		"drizzle/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**", "drizzle/**"],
 	"author": "William Yallop",
 	"devDependencies": {
 		"@types/node-cron": "^3.0.11",

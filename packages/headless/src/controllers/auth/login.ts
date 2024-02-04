@@ -17,7 +17,7 @@ const loginController: ControllerT<
 		auth.accessToken.generateAccessToken(reply, request, user.id),
 	]);
 
-	reply.status(200).send();
+	reply.status(204).send();
 };
 
 export default {
@@ -37,8 +37,8 @@ export default {
 			required: ["username_or_email", "password"],
 		},
 		response: {
-			200: swaggerResponse({
-				type: 200,
+			204: swaggerResponse({
+				type: 204,
 				noPropertise: true,
 			}),
 		},

@@ -16,7 +16,9 @@ const addDefaultUser = async (db: DB) => {
 		const userCount = totalUserCount[0].count;
 
 		if (userCount === 0) {
-			const hashedPassword = await argon2.hash(constants.defaultUser.password);
+			const hashedPassword = await argon2.hash(
+				constants.defaultUser.password,
+			);
 			await db
 				.insert(users)
 				.values({

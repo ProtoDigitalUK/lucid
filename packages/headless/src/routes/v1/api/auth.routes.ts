@@ -17,6 +17,8 @@ const authRoutes = async (fastify: FastifyInstance) => {
 		url: "/token",
 		middleware: {
 			validateCSRF: true,
+			// Does have the authenticate middleware because all it does it checks if the access token is valid
+			// and if it is it will return the user data, this handles authorisatio itsself via the refresh token.
 		},
 		zodSchema: auth.token.zodSchema,
 		swaggerSchema: auth.token.swaggerSchema,
@@ -32,6 +34,18 @@ const authRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: auth.login.zodSchema,
 		swaggerSchema: auth.login.swaggerSchema,
 		controller: auth.login.controller,
+	});
+
+	r(fastify, {
+		method: "post",
+		url: "/logout",
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		zodSchema: auth.logout.zodSchema,
+		swaggerSchema: auth.logout.swaggerSchema,
+		controller: auth.logout.controller,
 	});
 
 	r(fastify, {

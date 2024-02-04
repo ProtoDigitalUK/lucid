@@ -45,7 +45,9 @@ const headless = async (
 					description: "Headless API",
 					version: "0.0.1",
 				},
-				host: config.host.replace("http://", "").replace("https://", ""),
+				host: config.host
+					.replace("http://", "")
+					.replace("https://", ""),
 				schemes: ["http"],
 				consumes: ["application/json"],
 				produces: ["application/json"],

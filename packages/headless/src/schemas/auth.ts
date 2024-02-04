@@ -24,4 +24,9 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	logout: {
+		body: undefined,
+		query: undefined,
+		params: undefined,
+	},
 };
