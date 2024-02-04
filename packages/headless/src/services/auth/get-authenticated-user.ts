@@ -1,20 +1,19 @@
 import T from "../../translations/index.js";
-import { type FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
 import { APIError } from "../../utils/app/error-handler.js";
 import { users } from "../../db/schema.js";
 import formatUser from "../../format/format-user.js";
-import usersServices from "../users/index.js";
+// import usersServices from "../users/index.js";
 
 export interface ServiceData {
 	user_id: number;
 }
 
 const getAuthenticatedUser = async (
-	fastify: FastifyInstance,
+	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const findUserRes = await fastify.db
+	const findUserRes = await serviceConfig.db
 		.select()
 		.from(users)
 		.where(eq(users.id, data.user_id))

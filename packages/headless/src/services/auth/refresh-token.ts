@@ -34,17 +34,14 @@ export const generateRefreshToken = async (
 		path: "/",
 	});
 
-	await request.server.db
-		.insert(userTokens)
-		.values({
-			user_id: user_id,
-			token: token,
-			type: "refresh",
-			expires_at: new Date(
-				Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
-			).toISOString(),
-		})
-		.execute();
+	await request.server.db.insert(userTokens).values({
+		user_id: user_id,
+		token: token,
+		type: "refresh",
+		expires_at: new Date(
+			Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
+		).toISOString(),
+	});
 };
 
 export const verifyRefreshToken = async (
@@ -77,8 +74,7 @@ export const verifyRefreshToken = async (
 					eq(userTokens.type, "refresh"),
 					gte(userTokens.expires_at, new Date().toISOString()),
 				),
-			)
-			.execute();
+			);
 
 		if (token.length === 0) {
 			throw new Error("No refresh token found");
@@ -124,8 +120,7 @@ export const clearRefreshToken = async (
 				eq(userTokens.token, _refresh),
 				eq(userTokens.type, "refresh"),
 			),
-		)
-		.execute();
+		);
 };
 
 export default {

@@ -41,6 +41,11 @@ declare global {
 		reply: FastifyReply,
 	) => void;
 
+	interface ServiceConfigT {
+		db: DB;
+		inTransaction?: boolean; // If the function is within a transaction
+	}
+
 	interface ResponseBodyT {
 		data: unknown;
 		links?: {

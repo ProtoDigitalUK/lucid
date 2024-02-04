@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import { type FastifyInstance } from "fastify";
 import { or, eq } from "drizzle-orm";
 import { APIError } from "../../utils/app/error-handler.js";
 import { users } from "../../db/schema.js";
@@ -10,8 +9,8 @@ export interface ServiceData {
 	password: string;
 }
 
-const login = async (fastify: FastifyInstance, data: ServiceData) => {
-	const findUserRes = await fastify.db
+const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+	const findUserRes = await serviceConfig.db
 		.select({
 			id: users.id,
 			password: users.password,

@@ -17,6 +17,21 @@ const environmentRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: environments.createSingle.zodSchema,
 		controller: environments.createSingle.controller,
 	});
+
+	r(fastify, {
+		method: "patch",
+		url: "/:key",
+		// permissions: {
+		// global: ["update_environment"],
+		//   },
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: environments.updateSingle.swaggerSchema,
+		zodSchema: environments.updateSingle.zodSchema,
+		controller: environments.updateSingle.controller,
+	});
 };
 
 export default environmentRoutes;

@@ -18,7 +18,6 @@ export default {
 			title: z.string().optional(),
 			assigned_bricks: z.array(z.string()).optional(),
 			assigned_collections: z.array(z.string()).optional(),
-			assigned_forms: z.array(z.string()).optional(),
 		}),
 		query: undefined,
 		params: z.object({

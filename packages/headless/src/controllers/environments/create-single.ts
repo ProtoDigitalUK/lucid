@@ -4,13 +4,24 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
 import environments from "../../services/environments/index.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 const createSingleController: ControllerT<
 	typeof environmentsSchema.createSingle.params,
 	typeof environmentsSchema.createSingle.body,
 	typeof environmentsSchema.createSingle.query
 > = async (request, reply) => {
-	await environments.createSingle(request.server, request.body);
+	await serviceWrapper(environments.createSingle, true)(
+		{
+			db: request.server.db,
+		},
+		{
+			key: request.body.key,
+			title: request.body.title,
+			assignedBricks: request.body.assigned_bricks,
+			assignedCollections: request.body.assigned_collections,
+		},
+	);
 	reply.status(204).send();
 };
 

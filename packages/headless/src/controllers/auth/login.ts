@@ -4,13 +4,22 @@ import {
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
 import auth from "../../services/auth/index.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 const loginController: ControllerT<
 	typeof authSchema.login.params,
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	const user = await auth.login(request.server, request.body);
+	const user = await serviceWrapper(auth.login, false)(
+		{
+			db: request.server.db,
+		},
+		{
+			username_or_email: request.body.username_or_email,
+			password: request.body.password,
+		},
+	);
 
 	await Promise.all([
 		auth.refreshToken.generateRefreshToken(reply, request, user.id),

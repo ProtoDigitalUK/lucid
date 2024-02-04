@@ -19,17 +19,14 @@ const addDefaultUser = async (db: DB) => {
 			const hashedPassword = await argon2.hash(
 				constants.defaultUser.password,
 			);
-			await db
-				.insert(users)
-				.values({
-					super_admin: constants.defaultUser.super_admin,
-					email: constants.defaultUser.email,
-					username: constants.defaultUser.username,
-					first_name: constants.defaultUser.first_name,
-					last_name: constants.defaultUser.last_name,
-					password: hashedPassword,
-				})
-				.execute();
+			await db.insert(users).values({
+				super_admin: constants.defaultUser.super_admin,
+				email: constants.defaultUser.email,
+				username: constants.defaultUser.username,
+				first_name: constants.defaultUser.first_name,
+				last_name: constants.defaultUser.last_name,
+				password: hashedPassword,
+			});
 		}
 	} catch (error) {
 		throw new InternalError(T("an_error_occurred_saving_default_user"));

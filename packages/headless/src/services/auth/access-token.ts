@@ -23,8 +23,7 @@ export const generateAccessToken = async (
 			email: users.email,
 		})
 		.from(users)
-		.where(eq(users.id, user_id))
-		.execute();
+		.where(eq(users.id, user_id));
 
 	if (userRes.length === 0) {
 		throw new APIError({

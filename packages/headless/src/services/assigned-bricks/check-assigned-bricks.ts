@@ -1,6 +1,6 @@
-import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
-import { type HeadlessConfigT } from "../../../schemas/config.js";
+import T from "../../translations/index.js";
+import { APIError, modelErrors } from "../../utils/app/error-handler.js";
+import { type HeadlessConfigT } from "../../schemas/config.js";
 
 const checkAssignedBricks = (
 	config: HeadlessConfigT,

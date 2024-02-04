@@ -1,37 +1,34 @@
-import { type FastifyInstance } from "fastify";
 import slug from "slug";
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/app/error-handler.js";
-import {
-	environments,
-	assignedBricks,
-	assignedCollections,
-} from "../../db/schema.js";
-import { eq } from "drizzle-orm";
-import checkAssignedBricks from "./checks/check-assigned-bricks.js";
-import checkAssignedCollections from "./checks/check-assigned-collectins.js";
+import { environments } from "../../db/schema.js";
+import { eq, sql } from "drizzle-orm";
+import assignedBricksServices from "../assigned-bricks/index.js";
+import assignedCollectionsServices from "../assigned-collections/index.js";
 import getConfig from "../config.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
 	title: string;
-	assigned_bricks?: string[];
-	assigned_collections?: string[];
+	assignedBricks?: string[];
+	assignedCollections?: string[];
 }
 
-const createSingle = async (fastify: FastifyInstance, data: ServiceData) => {
+const createSingle = async (
+	serviceConfig: ServiceConfigT,
+	data: ServiceData,
+) => {
 	const config = await getConfig();
 	const key = slug(data.key, { lower: true });
 
-	const environmentExists = await fastify.db
+	const environmentExists = await serviceConfig.db
 		.select({
 			key: environments.key,
 		})
 		.from(environments)
 		.where(eq(environments.key, key))
 		.limit(1);
-
-	console.log(environmentExists);
 
 	if (environmentExists.length > 0) {
 		throw new APIError({
@@ -54,11 +51,15 @@ const createSingle = async (fastify: FastifyInstance, data: ServiceData) => {
 		});
 	}
 
-	if (data.assigned_bricks) checkAssignedBricks(config, data.assigned_bricks);
-	if (data.assigned_collections)
-		checkAssignedCollections(config, data.assigned_collections);
+	if (data.assignedBricks)
+		assignedBricksServices.checkAssignedBricks(config, data.assignedBricks);
+	if (data.assignedCollections)
+		assignedCollectionsServices.checkAssignedCollections(
+			config,
+			data.assignedCollections,
+		);
 
-	const environment = await fastify.db
+	const environment = await serviceConfig.db
 		.insert(environments)
 		.values({
 			key: key,
@@ -66,8 +67,7 @@ const createSingle = async (fastify: FastifyInstance, data: ServiceData) => {
 		})
 		.returning({
 			key: environments.key,
-		})
-		.execute();
+		});
 
 	if (environment.length === 0) {
 		throw new APIError({
@@ -83,26 +83,20 @@ const createSingle = async (fastify: FastifyInstance, data: ServiceData) => {
 	}
 
 	await Promise.all([
-		data.assigned_bricks &&
-			fastify.db
-				.insert(assignedBricks)
-				.values(
-					data.assigned_bricks.map((brick) => ({
-						key: brick,
-						environment_key: key,
-					})),
-				)
-				.execute(),
-		data.assigned_collections &&
-			fastify.db
-				.insert(assignedCollections)
-				.values(
-					data.assigned_collections.map((collection) => ({
-						key: collection,
-						environment_key: key,
-					})),
-				)
-				.execute(),
+		serviceWrapper(assignedBricksServices.createMultiple, false)(
+			serviceConfig,
+			{
+				environmentKey: key,
+				assignedBricks: data.assignedBricks,
+			},
+		),
+		serviceWrapper(assignedCollectionsServices.createMultiple, false)(
+			serviceConfig,
+			{
+				environmentKey: key,
+				assignedCollections: data.assignedCollections,
+			},
+		),
 	]);
 
 	return true;

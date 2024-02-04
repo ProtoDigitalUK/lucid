@@ -20,17 +20,21 @@ import { Banner, Intro, DefaultMeta } from "./src/bricks";
 import { Pages, Settings } from "./src/collections";
 
 export default headlessConfig({
-    mode: "development",
-    host: "http://localhost:8393",
-    databaseURL: process.env.DATABASE_URL as string,
-    keys: {
-        cookieSecret: process.env.COOKIE_SECRET as string,
-        refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
-        accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
-    },
-    collections: [Pages, Settings],
-    bricks: [Banner, Intro, DefaultMeta],
+  mode: "development",
+  host: "http://localhost:8393",
+  databaseURL: process.env.DATABASE_URL as string,
+  keys: {
+    cookieSecret: process.env.COOKIE_SECRET as string,
+    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
+  },
+  collections: [Pages, Settings],
+  bricks: [Banner, Intro, DefaultMeta],
 });
 ```
 
 > Check the example app: [example](https://github.com/ProtoDigitalUK/proto_headless/tree/master/apps/headless-example/headless.config.ts)
+
+## Notes
+
+- If using Supabase for your database, ensure you're using the session mode for your database url.
