@@ -7,7 +7,7 @@ import {
 	integer,
 	unique,
 } from "drizzle-orm/pg-core";
-import { type InferSelectModel, sql } from "drizzle-orm";
+import { type InferSelectModel, sql, relations } from "drizzle-orm";
 
 // --------------------------------------------------------- //
 // Environments
@@ -17,20 +17,51 @@ export const environments = pgTable("headless_environments", {
 
 	title: text("title").notNull(),
 });
+export type EnvironmentsT = InferSelectModel<typeof environments>;
+
+export const environmentRelations = relations(environments, ({ many }) => ({
+	assigned_bricks: many(assignedBricks),
+	assigned_collections: many(assignedCollections),
+}));
+export interface EnvrionmentsWithRelationsT extends EnvironmentsT {
+	assigned_bricks: Array<AssignedBricksT>;
+	assigned_collections: Array<AssignedCollectionsT>;
+}
 
 export const assignedBricks = pgTable("headless_assigned_bricks", {
-	key: text("key").primaryKey(),
+	id: serial("id").primaryKey(),
+	key: text("key").notNull(),
 	environment_key: text("environment_key")
 		.references(() => environments.key, { onDelete: "cascade" })
 		.notNull(),
 });
+export type AssignedBricksT = InferSelectModel<typeof assignedBricks>;
+
+export const assignedBricksRelations = relations(assignedBricks, ({ one }) => ({
+	environment: one(environments, {
+		fields: [assignedBricks.environment_key],
+		references: [environments.key],
+	}),
+}));
 
 export const assignedCollections = pgTable("headless_assigned_collections", {
-	key: text("key").primaryKey(),
+	id: serial("id").primaryKey(),
+	key: text("key").notNull(),
 	environment_key: text("environment_key")
 		.references(() => environments.key, { onDelete: "cascade" })
 		.notNull(),
 });
+export type AssignedCollectionsT = InferSelectModel<typeof assignedCollections>;
+
+export const assignedCollectionsRelations = relations(
+	assignedCollections,
+	({ one }) => ({
+		environment: one(environments, {
+			fields: [assignedCollections.environment_key],
+			references: [environments.key],
+		}),
+	}),
+);
 
 // --------------------------------------------------------- //
 // Languages

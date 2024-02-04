@@ -32,6 +32,17 @@ const environmentRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: environments.updateSingle.zodSchema,
 		controller: environments.updateSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: environments.getAll.swaggerSchema,
+		zodSchema: environments.getAll.zodSchema,
+		controller: environments.getAll.controller,
+	});
 };
 
 export default environmentRoutes;

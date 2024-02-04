@@ -1,5 +1,5 @@
 {
-  "id": "dd6d886d-222c-4826-9b83-c5c302ff2b2c",
+  "id": "7ae89a27-1276-43e3-a826-9513c2932526",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -8,10 +8,16 @@
       "name": "headless_assigned_bricks",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "key": {
           "name": "key",
           "type": "text",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "environment_key": {
@@ -44,10 +50,16 @@
       "name": "headless_assigned_collections",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "key": {
           "name": "key",
           "type": "text",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "environment_key": {
@@ -133,14 +145,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         }
       },
       "indexes": {},
@@ -205,14 +217,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         }
       },
       "indexes": {},
@@ -289,14 +301,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         }
       },
       "indexes": {},
@@ -358,14 +370,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         }
       },
       "indexes": {},
@@ -408,14 +420,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         }
       },
       "indexes": {},
@@ -483,7 +495,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "expires_at": {
           "name": "expires_at",
@@ -576,14 +588,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "default": "'NOW()'"
+          "default": "NOW()"
         }
       },
       "indexes": {},
@@ -611,7 +623,8 @@
     "type": {
       "name": "type",
       "values": {
-        "password_reset": "password_reset"
+        "password_reset": "password_reset",
+        "refresh": "refresh"
       }
     }
   },

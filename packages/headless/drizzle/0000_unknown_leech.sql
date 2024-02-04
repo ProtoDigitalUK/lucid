@@ -1,16 +1,18 @@
 DO $$ BEGIN
- CREATE TYPE "type" AS ENUM('password_reset');
+ CREATE TYPE "type" AS ENUM('password_reset', 'refresh');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "headless_assigned_bricks" (
-	"key" text PRIMARY KEY NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
+	"key" text NOT NULL,
 	"environment_key" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "headless_assigned_collections" (
-	"key" text PRIMARY KEY NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
+	"key" text NOT NULL,
 	"environment_key" text NOT NULL
 );
 --> statement-breakpoint
@@ -24,8 +26,8 @@ CREATE TABLE IF NOT EXISTS "headless_languages" (
 	"code" text NOT NULL,
 	"is_default" boolean DEFAULT false NOT NULL,
 	"is_enabled" boolean DEFAULT true NOT NULL,
-	"created_at" text DEFAULT 'NOW()',
-	"updated_at" text DEFAULT 'NOW()',
+	"created_at" text DEFAULT NOW(),
+	"updated_at" text DEFAULT NOW(),
 	CONSTRAINT "headless_languages_code_unique" UNIQUE("code")
 );
 --> statement-breakpoint
@@ -38,8 +40,8 @@ CREATE TABLE IF NOT EXISTS "headless_translations" (
 	"translation_key_id" integer NOT NULL,
 	"language_id" integer NOT NULL,
 	"value" text,
-	"created_at" text DEFAULT 'NOW()',
-	"updated_at" text DEFAULT 'NOW()',
+	"created_at" text DEFAULT NOW(),
+	"updated_at" text DEFAULT NOW(),
 	CONSTRAINT "headless_translations_translation_key_id_language_id_unique" UNIQUE("translation_key_id","language_id")
 );
 --> statement-breakpoint
@@ -48,16 +50,16 @@ CREATE TABLE IF NOT EXISTS "headless_role_permissions" (
 	"role_id" serial NOT NULL,
 	"permission" text NOT NULL,
 	"environment_key" text NOT NULL,
-	"created_at" text DEFAULT 'NOW()',
-	"updated_at" text DEFAULT 'NOW()'
+	"created_at" text DEFAULT NOW(),
+	"updated_at" text DEFAULT NOW()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "headless_roles" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
-	"created_at" text DEFAULT 'NOW()',
-	"updated_at" text DEFAULT 'NOW()',
+	"created_at" text DEFAULT NOW(),
+	"updated_at" text DEFAULT NOW(),
 	CONSTRAINT "headless_roles_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
@@ -65,8 +67,8 @@ CREATE TABLE IF NOT EXISTS "headless_user_roles" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" serial NOT NULL,
 	"role_id" serial NOT NULL,
-	"created_at" text DEFAULT 'NOW()',
-	"updated_at" text DEFAULT 'NOW()'
+	"created_at" text DEFAULT NOW(),
+	"updated_at" text DEFAULT NOW()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "headless_user_tokens" (
@@ -74,7 +76,7 @@ CREATE TABLE IF NOT EXISTS "headless_user_tokens" (
 	"user_id" serial NOT NULL,
 	"token" text NOT NULL,
 	"type" "type" NOT NULL,
-	"created_at" text DEFAULT 'NOW()',
+	"created_at" text DEFAULT NOW(),
 	"expires_at" text NOT NULL
 );
 --> statement-breakpoint
@@ -88,8 +90,8 @@ CREATE TABLE IF NOT EXISTS "headless_users" (
 	"password" text NOT NULL,
 	"delete" boolean DEFAULT false,
 	"deleted_at" text,
-	"created_at" text DEFAULT 'NOW()',
-	"updated_at" text DEFAULT 'NOW()',
+	"created_at" text DEFAULT NOW(),
+	"updated_at" text DEFAULT NOW(),
 	CONSTRAINT "headless_users_email_unique" UNIQUE("email"),
 	CONSTRAINT "headless_users_username_unique" UNIQUE("username")
 );
