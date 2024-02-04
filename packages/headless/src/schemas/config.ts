@@ -1,16 +1,21 @@
-import zod from "zod";
+import z from "zod";
+import { type CollectionBuilderT } from "../builders/collection-builder/index.js";
+import { type BrickBuilderT } from "../builders/brick-builder/index.js";
 
-export const headlessConfigSchema = zod.object({
-	databaseURL: zod.string(),
-	host: zod.string(),
-	mode: zod.literal("production").or(zod.literal("development")),
-	keys: zod.object({
-		cookieSecret: zod.string(),
-		accessTokenSecret: zod.string(),
-		refreshTokenSecret: zod.string(),
+export const headlessConfigSchema = z.object({
+	databaseURL: z.string(),
+	host: z.string(),
+	mode: z.literal("production").or(z.literal("development")),
+	keys: z.object({
+		cookieSecret: z.string(),
+		accessTokenSecret: z.string(),
+		refreshTokenSecret: z.string(),
 	}),
-	collections: zod.array(zod.string()),
-	bricks: zod.array(zod.string()),
+	// collections: z.array(z.any()),
+	// bricks: z.array(z.any()),
 });
 
-export type HeadlessConfigT = zod.infer<typeof headlessConfigSchema>;
+export interface HeadlessConfigT extends z.infer<typeof headlessConfigSchema> {
+	collections?: CollectionBuilderT[];
+	bricks?: BrickBuilderT[];
+}
