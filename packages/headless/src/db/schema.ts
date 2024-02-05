@@ -136,6 +136,15 @@ export const roles = pgTable("headless_roles", {
 	created_at: text("created_at").default(sql`NOW()`),
 	updated_at: text("updated_at").default(sql`NOW()`),
 });
+export type RolesT = InferSelectModel<typeof roles>;
+
+export const rolesRelations = relations(roles, ({ many }) => ({
+	permissions: many(rolePermissions),
+}));
+
+export interface RolesWithRelationsT extends RolesT {
+	permissions: Array<RolePermissionsT>;
+}
 
 export const rolePermissions = pgTable("headless_role_permissions", {
 	id: serial("id").primaryKey(),

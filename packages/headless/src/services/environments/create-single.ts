@@ -2,7 +2,7 @@ import slug from "slug";
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/app/error-handler.js";
 import { environments } from "../../db/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import assignedBricksServices from "../assigned-bricks/index.js";
 import assignedCollectionsServices from "../assigned-collections/index.js";
 import getConfig from "../config.js";
