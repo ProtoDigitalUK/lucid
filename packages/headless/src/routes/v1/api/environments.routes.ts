@@ -43,6 +43,32 @@ const environmentRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: environments.getAll.zodSchema,
 		controller: environments.getAll.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "/:key",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: environments.getSingle.swaggerSchema,
+		zodSchema: environments.getSingle.zodSchema,
+		controller: environments.getSingle.controller,
+	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/:key",
+		// permissions: {
+		//   global: ["delete_environment"],
+		// },
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: environments.deleteSingle.swaggerSchema,
+		zodSchema: environments.deleteSingle.zodSchema,
+		controller: environments.deleteSingle.controller,
+	});
 };
 
 export default environmentRoutes;

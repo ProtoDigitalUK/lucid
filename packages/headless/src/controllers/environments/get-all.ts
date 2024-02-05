@@ -1,8 +1,5 @@
 import environmentsSchema from "../../schemas/environments.js";
-import {
-	swaggerResponse,
-	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
+import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import environments from "../../services/environments/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";

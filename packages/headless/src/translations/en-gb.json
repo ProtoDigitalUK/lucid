@@ -42,5 +42,7 @@
 	"environment_with_key_already_exists": "Environment with key '{{key}}' already exists.",
 	"environment": "Environment",
 	"error_not_created_name": "{{name}} Not Created",
-	"error_not_created_message": "{{name}} could not be created. Please try again later."
+	"error_not_created_message": "{{name}} could not be created. Please try again later.",
+	"error_not_min_entries_name": "{{name}} Not Enough Entries",
+	"error_not_min_entries_message": "{{name}} must have at least 1 entry at all times."
 }

@@ -35,6 +35,7 @@ const addDefaultUser = async (db: DB) => {
 
 const seedHeadless = async (fastify: FastifyInstance) => {
 	await addDefaultUser(fastify.db);
+	// Add seed to save a default environment if none exists
 };
 
 export default seedHeadless;
