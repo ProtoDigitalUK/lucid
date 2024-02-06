@@ -1,20 +1,14 @@
-import slug from "slug";
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/app/error-handler.js";
-import { environments } from "../../db/schema.js";
-import { eq, sql } from "drizzle-orm";
-import assignedBricksServices from "../assigned-bricks/index.js";
-import assignedCollectionsServices from "../assigned-collections/index.js";
-import getConfig from "../config.js";
-import roles from "./index.js";
+import { roles, rolePermissions } from "../../db/schema.js";
+import { eq } from "drizzle-orm";
+import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import {
-	type PermissionT,
-	type EnvironmentPermissionT,
-} from "@headless/types/src/permissions.js";
+import formatRole from "../../format/format-roles.js";
 
 export interface ServiceData {
 	name: string;
+	description?: string;
 	permissionGroups: {
 		permissions: string[];
 		environment_key?: string | undefined;
@@ -25,49 +19,97 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const validatePerms = await serviceWrapper(
-		roles.validatePermissions,
-		false,
-	)(serviceConfig, {
-		permissionGroups: data.permissionGroups,
+	const [validatePerms, checkNameIsUnique] = await Promise.all([
+		serviceWrapper(rolesServices.validatePermissions, false)(
+			serviceConfig,
+			{
+				permissionGroups: data.permissionGroups,
+			},
+		),
+		serviceConfig.db
+			.select()
+			.from(roles)
+			.where(eq(roles.name, data.name))
+			.execute(),
+	]);
+
+	if (checkNameIsUnique.length > 0) {
+		throw new APIError({
+			type: "basic",
+			name: T("dynamic_error_name", {
+				name: "Role Error",
+			}),
+			message: T("not_unique_error_message"),
+			status: 400,
+			errors: modelErrors({
+				name: {
+					code: "invalid",
+					message: T("not_unique_error_message"),
+				},
+			}),
+		});
+	}
+
+	const newRole = await serviceConfig.db
+		.insert(roles)
+		.values({
+			name: data.name,
+			description: data.description,
+		})
+		.returning({
+			id: roles.id,
+		})
+		.execute();
+
+	if (newRole.length === 0) {
+		throw new APIError({
+			type: "basic",
+			name: T("dynamic_error_name", {
+				name: "Role Error",
+			}),
+			message: T("creation_error_message", {
+				name: "role",
+			}),
+			status: 500,
+		});
+	}
+
+	const newRoleId = newRole[0].id;
+
+	if (validatePerms.length > 0) {
+		await serviceConfig.db
+			.insert(rolePermissions)
+			.values(
+				validatePerms.map((permission) => ({
+					role_id: newRoleId,
+					permission: permission.permission,
+					environment_key: permission.environmentKey,
+				})),
+			)
+			.execute();
+	}
+
+	const role = await serviceConfig.db.query.roles.findFirst({
+		with: {
+			permissions: true,
+		},
+		where: eq(roles.id, newRoleId),
 	});
-	console.log(validatePerms);
-	// const parsePermissions = await service(
-	// 	roleServices.validatePermissions,
-	// 	false,
-	// 	client
-	//   )(data.permission_groups);
-	//   // check if role name is unique
-	//   await service(
-	// 	roleServices.checkNameIsUnique,
-	// 	false,
-	// 	client
-	//   )({
-	// 	name: data.name,
-	//   });
-	//   const role = await Role.createSingle(client, {
-	// 	name: data.name,
-	// 	permission_groups: data.permission_groups,
-	//   });
-	//   if (!role) {
-	// 	throw new HeadlessError({
-	// 	  type: "basic",
-	// 	  name: "Role Error",
-	// 	  message: "There was an error creating the role.",
-	// 	  status: 500,
-	// 	});
-	//   }
-	//   if (data.permission_groups.length > 0) {
-	// 	await service(
-	// 	  rolePermServices.createMultiple,
-	// 	  false,
-	// 	  client
-	// 	)({
-	// 	  role_id: role.id,
-	// 	  permissions: parsePermissions,
-	// 	});
-	//   }
-	//   return formatRole(role);
+
+	if (!role) {
+		throw new APIError({
+			type: "basic",
+			name: T("dynamic_error_name", {
+				name: "Role Error",
+			}),
+			message: T("creation_error_message", {
+				name: "role",
+			}),
+			status: 500,
+		});
+	}
+
+	return formatRole(role);
 };
 
 export default createSingle;

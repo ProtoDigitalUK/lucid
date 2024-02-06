@@ -48,5 +48,6 @@
 	"the_permission_is_invalid_against_mesage": "The permission '{{permission}}' is invalid against {{group}} permissions.",
 	"dynamic_error_name": "{{name}} Error",
 	"creation_error_message": "An error occurred while creating {{name}}.",
+	"not_unique_error_message": "Please ensure that the value is unique and try again.",
 	"role": "Role"
 }

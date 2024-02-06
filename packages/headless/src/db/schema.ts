@@ -152,15 +152,26 @@ export const rolePermissions = pgTable("headless_role_permissions", {
 		.references(() => roles.id, { onDelete: "cascade" })
 		.notNull(),
 	permission: text("permission").notNull(),
-	environment_key: text("environment_key")
-		.references(() => environments.key, { onDelete: "cascade" })
-		.notNull(),
+	environment_key: text("environment_key").references(
+		() => environments.key,
+		{ onDelete: "cascade" },
+	),
 
 	created_at: text("created_at").default(sql`NOW()`),
 	updated_at: text("updated_at").default(sql`NOW()`),
 });
 
 export type RolePermissionsT = InferSelectModel<typeof rolePermissions>;
+
+export const rolePermissionsRelations = relations(
+	rolePermissions,
+	({ one }) => ({
+		role: one(roles, {
+			fields: [rolePermissions.role_id],
+			references: [roles.id],
+		}),
+	}),
+);
 
 export const userRoles = pgTable("headless_user_roles", {
 	id: serial("id").primaryKey(),

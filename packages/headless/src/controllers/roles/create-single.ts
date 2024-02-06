@@ -1,24 +1,31 @@
 import rolesSchema from "../../schemas/roles.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import roles from "../../services/roles/index.js";
+import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import buildResponse from "../../utils/app/build-response.js";
+import { swaggerRoleRes } from "../../format/format-roles.js";
 
 const createSingleController: ControllerT<
 	typeof rolesSchema.createSingle.params,
 	typeof rolesSchema.createSingle.body,
 	typeof rolesSchema.createSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(roles.createSingle, true)(
+	const role = await serviceWrapper(rolesServices.createSingle, true)(
 		{
 			db: request.server.db,
 		},
 		{
 			name: request.body.name,
+			description: request.body.description,
 			permissionGroups: request.body.permission_groups,
 		},
 	);
 
-	reply.status(204).send();
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: role,
+		}),
+	);
 };
 
 export default {
@@ -30,9 +37,9 @@ export default {
 		tags: ["roles"],
 		summary: "Create a single role",
 		response: {
-			204: swaggerResponse({
-				type: 204,
-				noPropertise: true,
+			200: swaggerResponse({
+				type: 200,
+				data: swaggerRoleRes,
 			}),
 		},
 		body: {
@@ -40,7 +47,11 @@ export default {
 			properties: {
 				name: {
 					type: "string",
-					default: "admin",
+					default: "Admin",
+				},
+				description: {
+					type: "string",
+					default: "Admin role description",
 				},
 				permission_groups: {
 					type: "array",

@@ -1,0 +1,1 @@
+ALTER TABLE "headless_role_permissions" ALTER COLUMN "environment_key" DROP NOT NULL;

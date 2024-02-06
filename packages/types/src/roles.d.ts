@@ -1,6 +1,7 @@
 export interface RoleResT {
 	id: number;
 	name: string;
+	description: string | null;
 
 	permissions?: {
 		id: RolePermissionT["id"];
