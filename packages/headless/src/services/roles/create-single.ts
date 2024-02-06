@@ -6,7 +6,12 @@ import { eq, sql } from "drizzle-orm";
 import assignedBricksServices from "../assigned-bricks/index.js";
 import assignedCollectionsServices from "../assigned-collections/index.js";
 import getConfig from "../config.js";
+import roles from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import {
+	type PermissionT,
+	type EnvironmentPermissionT,
+} from "@headless/types/src/permissions.js";
 
 export interface ServiceData {
 	name: string;
@@ -20,6 +25,13 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const validatePerms = await serviceWrapper(
+		roles.validatePermissions,
+		false,
+	)(serviceConfig, {
+		permissionGroups: data.permissionGroups,
+	});
+	console.log(validatePerms);
 	// const parsePermissions = await service(
 	// 	roleServices.validatePermissions,
 	// 	false,

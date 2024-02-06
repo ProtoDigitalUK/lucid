@@ -3,6 +3,7 @@ import { FastifyInstance } from "fastify";
 import authRoutes from "./auth.routes.js";
 import environmentRoutes from "./environments.routes.js";
 import permissionRoutes from "./permissions.routes.js";
+import roleRoutes from "./roles.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -13,6 +14,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(permissionRoutes, {
 		prefix: "/permissions",
+	});
+	fastify.register(roleRoutes, {
+		prefix: "/roles",
 	});
 };
 

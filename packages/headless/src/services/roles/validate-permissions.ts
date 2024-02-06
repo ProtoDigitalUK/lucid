@@ -29,92 +29,82 @@ const validatePermissions = async (
 		},
 	});
 
-	// Data
-	const validPermissions: Array<{
+	const permErrors: Array<{
+		key: string;
+		type: "permissions" | "environments";
+		error: ErrorResultT;
+	}> = [];
+	const validPerms: Array<{
 		permission: PermissionT | EnvironmentPermissionT;
-		environment_key?: string;
+		environmentKey?: string;
 	}> = [];
 
-	const permissionErrors: ErrorResultT = {};
-	const environmentErrors: ErrorResultT = {};
-
-	// Loop through the permissions array
 	for (const obj of data.permissionGroups) {
 		const envKey = obj.environment_key;
+		const currentPermissionSet = envKey
+			? permissionSet.environment
+			: permissionSet.global;
+
 		for (let i = 0; i < obj.permissions.length; i++) {
 			const permission = obj.permissions[i] as
 				| PermissionT
 				| EnvironmentPermissionT;
 
-			// Check against global permissions
-			if (!envKey) {
-				if (permissionSet.global.includes(permission as PermissionT)) {
-					validPermissions.push({
-						permission,
+			if (!currentPermissionSet.includes(permission)) {
+				const findError = permErrors.find(
+					(e) => e.key === permission && e.type === "permissions",
+				);
+				if (!findError) {
+					permErrors.push({
+						key: permission,
+						type: envKey ? "environments" : "permissions",
+						error: {
+							key: permission,
+							code: "Invalid Permission",
+							message: `The permission "${permission}" is invalid against ${
+								envKey ? "environment" : "global"
+							} permissions.`,
+						},
 					});
-				} else {
-					if (!permissionErrors[permission]) {
-						permissionErrors[permission] = {
-							key: permission,
-							code: "Invalid Permission",
-							message: `The permission "${permission}" is invalid against global permissions.`,
-						};
-					}
 				}
+				continue;
 			}
-			// Check against environment permissions
-			else {
-				if (
-					permissionSet.environment.includes(
-						permission as EnvironmentPermissionT,
-					)
-				) {
-					// Check if the environment key is valid
-					const env = environmentsRes.find((e) => e.key === envKey);
-					if (!env) {
-						if (!environmentErrors[envKey]) {
-							environmentErrors[envKey] = {
-								key: envKey,
-								code: "Invalid Environment",
-								message: `The environment key "${envKey}" is invalid.`,
-							};
-						}
-					} else {
-						validPermissions.push({
-							permission,
-							environment_key: envKey,
-						});
-					}
-				} else {
-					if (!permissionErrors[permission]) {
-						permissionErrors[permission] = {
-							key: permission,
-							code: "Invalid Permission",
-							message: `The permission "${permission}" is invalid against environment permissions.`,
-						};
-					}
-				}
-			}
+
+			validPerms.push({
+				permission,
+				environmentKey: envKey,
+			});
 		}
 	}
 
-	if (
-		Object.keys(permissionErrors).length > 0 ||
-		Object.keys(environmentErrors).length > 0
-	) {
+	if (permErrors.length > 0) {
 		throw new APIError({
 			type: "basic",
 			name: "Role Error",
 			message: "There was an error creating the role.",
 			status: 500,
 			errors: modelErrors({
-				permissions: permissionErrors,
-				environments: environmentErrors,
+				permissions: permErrors
+					.filter((e) => e.type === "permissions")
+					.reduce<ErrorResultT>((acc, e) => {
+						acc[e.key] = e.error;
+						return acc;
+					}, {}),
+				environments: permErrors
+					.filter((e) => e.type === "environments")
+					.reduce<ErrorResultT>((acc, e) => {
+						acc[e.key] = e.error;
+						return acc;
+					}, {}),
 			}),
 		});
 	}
 
-	return validPermissions;
+	return validPerms.filter((obj) => {
+		const envKey = obj.environmentKey;
+		if (!envKey) return true;
+		return environmentsRes.some((e) => e.key === envKey);
+	});
 };
 
 export default validatePermissions;
