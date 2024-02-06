@@ -13,7 +13,10 @@ const createSingleController: ControllerT<
 	typeof environmentsSchema.createSingle.body,
 	typeof environmentsSchema.createSingle.query
 > = async (request, reply) => {
-	const key = await serviceWrapper(environments.createSingle, true)(
+	const environmentKey = await serviceWrapper(
+		environments.createSingle,
+		true,
+	)(
 		{
 			db: request.server.db,
 		},
@@ -30,7 +33,7 @@ const createSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			key: key,
+			key: environmentKey,
 		},
 	);
 

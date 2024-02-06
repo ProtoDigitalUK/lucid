@@ -4,7 +4,6 @@ import { roles, rolePermissions } from "../../db/schema.js";
 import { eq } from "drizzle-orm";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import formatRole from "../../format/format-roles.js";
 
 export interface ServiceData {
 	name: string;
@@ -89,27 +88,7 @@ const createSingle = async (
 			.execute();
 	}
 
-	const role = await serviceConfig.db.query.roles.findFirst({
-		with: {
-			permissions: true,
-		},
-		where: eq(roles.id, newRoleId),
-	});
-
-	if (!role) {
-		throw new APIError({
-			type: "basic",
-			name: T("dynamic_error_name", {
-				name: "Role Error",
-			}),
-			message: T("creation_error_message", {
-				name: "role",
-			}),
-			status: 500,
-		});
-	}
-
-	return formatRole(role);
+	return newRoleId;
 };
 
 export default createSingle;

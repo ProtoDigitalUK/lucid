@@ -10,7 +10,7 @@ const createSingleController: ControllerT<
 	typeof rolesSchema.createSingle.body,
 	typeof rolesSchema.createSingle.query
 > = async (request, reply) => {
-	const role = await serviceWrapper(rolesServices.createSingle, true)(
+	const roleId = await serviceWrapper(rolesServices.createSingle, true)(
 		{
 			db: request.server.db,
 		},
@@ -18,6 +18,15 @@ const createSingleController: ControllerT<
 			name: request.body.name,
 			description: request.body.description,
 			permissionGroups: request.body.permission_groups,
+		},
+	);
+
+	const role = await serviceWrapper(rolesServices.getSingle, false)(
+		{
+			db: request.server.db,
+		},
+		{
+			id: roleId,
 		},
 	);
 

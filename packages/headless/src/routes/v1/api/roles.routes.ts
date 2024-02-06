@@ -14,6 +14,17 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: roles.createSingle.zodSchema,
 		controller: roles.createSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: roles.getSingle.swaggerSchema,
+		zodSchema: roles.getSingle.zodSchema,
+		controller: roles.getSingle.controller,
+	});
 };
 
 export default roleRoutes;
