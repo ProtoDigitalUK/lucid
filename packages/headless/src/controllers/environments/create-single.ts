@@ -5,13 +5,15 @@ import {
 } from "../../utils/swagger/response-helpers.js";
 import environments from "../../services/environments/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import buildResponse from "../../utils/app/build-response.js";
+import { swaggerEnvironmentRes } from "../../format/format-environment.js";
 
 const createSingleController: ControllerT<
 	typeof environmentsSchema.createSingle.params,
 	typeof environmentsSchema.createSingle.body,
 	typeof environmentsSchema.createSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(environments.createSingle, true)(
+	const key = await serviceWrapper(environments.createSingle, true)(
 		{
 			db: request.server.db,
 		},
@@ -22,7 +24,21 @@ const createSingleController: ControllerT<
 			assignedCollections: request.body.assigned_collections,
 		},
 	);
-	reply.status(204).send();
+
+	const environment = await serviceWrapper(environments.getSingle, true)(
+		{
+			db: request.server.db,
+		},
+		{
+			key: key,
+		},
+	);
+
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: environment,
+		}),
+	);
 };
 
 export default {
@@ -52,9 +68,9 @@ export default {
 			required: ["key", "title"],
 		},
 		response: {
-			204: swaggerResponse({
-				type: 204,
-				noPropertise: true,
+			200: swaggerResponse({
+				type: 200,
+				data: swaggerEnvironmentRes,
 			}),
 		},
 		headers: swaggerHeaders({

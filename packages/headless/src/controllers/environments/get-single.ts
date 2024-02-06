@@ -3,6 +3,7 @@ import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import environments from "../../services/environments/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
+import { swaggerEnvironmentRes } from "../../format/format-environment.js";
 
 const getSingleController: ControllerT<
 	typeof environmentsSchema.getSingle.params,
@@ -36,21 +37,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: {
-					type: "object",
-					properties: {
-						key: { type: "string", example: "production" },
-						title: { type: "string", example: "Production" },
-						assigned_bricks: {
-							type: "array",
-							example: ["hero-banner", "intro"],
-						},
-						assigned_collections: {
-							type: "array",
-							example: ["pages", "articles"],
-						},
-					},
-				},
+				data: swaggerEnvironmentRes,
 			}),
 		},
 	},

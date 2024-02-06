@@ -82,24 +82,26 @@ const createSingle = async (
 		});
 	}
 
+	const newKey = environment[0].key;
+
 	await Promise.all([
 		serviceWrapper(assignedBricksServices.createMultiple, false)(
 			serviceConfig,
 			{
-				environmentKey: key,
+				environmentKey: newKey,
 				assignedBricks: data.assignedBricks,
 			},
 		),
 		serviceWrapper(assignedCollectionsServices.createMultiple, false)(
 			serviceConfig,
 			{
-				environmentKey: key,
+				environmentKey: newKey,
 				assignedCollections: data.assignedCollections,
 			},
 		),
 	]);
 
-	return true;
+	return newKey;
 };
 
 export default createSingle;

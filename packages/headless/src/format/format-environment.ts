@@ -14,4 +14,20 @@ const formatEnvironment = (
 	};
 };
 
+export const swaggerEnvironmentRes = {
+	type: "object",
+	properties: {
+		key: { type: "string", example: "production" },
+		title: { type: "string", example: "Production" },
+		assigned_bricks: {
+			type: "array",
+			example: ["hero-banner", "intro"],
+		},
+		assigned_collections: {
+			type: "array",
+			example: ["pages", "articles"],
+		},
+	},
+};
+
 export default formatEnvironment;
