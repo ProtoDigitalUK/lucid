@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import {
 	APIError,
 	type ErrorResultT,
@@ -60,10 +61,14 @@ const validatePermissions = async (
 						type: envKey ? "environments" : "permissions",
 						error: {
 							key: permission,
-							code: "Invalid Permission",
-							message: `The permission "${permission}" is invalid against ${
-								envKey ? "environment" : "global"
-							} permissions.`,
+							code: "invalid",
+							message: T(
+								"the_permission_is_invalid_against_mesage",
+								{
+									permission: permission,
+									group: envKey ? "environment" : "global",
+								},
+							),
 						},
 					});
 				}
@@ -80,8 +85,12 @@ const validatePermissions = async (
 	if (permErrors.length > 0) {
 		throw new APIError({
 			type: "basic",
-			name: "Role Error",
-			message: "There was an error creating the role.",
+			name: T("dynamic_error_name", {
+				name: T("role"),
+			}),
+			message: T("creation_error_message", {
+				name: T("role").toLowerCase(),
+			}),
 			status: 500,
 			errors: modelErrors({
 				permissions: permErrors

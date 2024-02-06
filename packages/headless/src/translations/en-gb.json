@@ -44,5 +44,9 @@
 	"error_not_created_name": "{{name}} Not Created",
 	"error_not_created_message": "{{name}} could not be created. Please try again later.",
 	"error_not_min_entries_name": "{{name}} Not Enough Entries",
-	"error_not_min_entries_message": "{{name}} must have at least 1 entry at all times."
+	"error_not_min_entries_message": "{{name}} must have at least 1 entry at all times.",
+	"the_permission_is_invalid_against_mesage": "The permission '{{permission}}' is invalid against {{group}} permissions.",
+	"dynamic_error_name": "{{name}} Error",
+	"creation_error_message": "An error occurred while creating {{name}}.",
+	"role": "Role"
 }
