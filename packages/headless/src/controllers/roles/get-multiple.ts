@@ -14,7 +14,9 @@ const getMultipleController: ControllerT<
 		{
 			db: request.server.db,
 		},
-		{},
+		{
+			query: request.query,
+		},
 	);
 
 	reply.status(200).send(

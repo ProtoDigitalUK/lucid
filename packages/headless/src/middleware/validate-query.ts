@@ -4,7 +4,7 @@ import z, { type ZodTypeAny } from "zod";
 import constants from "../constants.js";
 import { APIError } from "../utils/app/error-handler.js";
 
-interface RequestQueryParsedT {
+export interface RequestQueryParsedT {
 	filter: Record<string, string | Array<string>> | undefined;
 	sort:
 		| Array<{
