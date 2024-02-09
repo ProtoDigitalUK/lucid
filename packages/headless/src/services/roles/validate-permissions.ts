@@ -24,11 +24,10 @@ const validatePermissions = async (
 	if (data.permissionGroups.length === 0) return [];
 
 	const permissionSet = getPermissions();
-	const environmentsRes = await serviceConfig.db.query.environments.findMany({
-		columns: {
-			key: true,
-		},
-	});
+	const environmentsRes = await serviceConfig.db
+		.selectFrom("headless_environments")
+		.select("key")
+		.execute();
 
 	const permErrors: Array<{
 		key: string;

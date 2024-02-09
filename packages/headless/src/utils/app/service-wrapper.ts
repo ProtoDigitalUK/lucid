@@ -1,5 +1,3 @@
-import { sql } from "drizzle-orm";
-
 /**
  * This module exports a higher-order function `serviceWrapper` which is used to
  * wrap all database related service functions in the application and is responsible
@@ -28,7 +26,7 @@ const serviceWrapper =
 		}
 
 		// If its a transaction
-		return await serviceConfig.db.transaction(async (tx) => {
+		return await serviceConfig.db.transaction().execute(async (tx) => {
 			const result = await fn({ db: tx, inTransaction: true }, ...args);
 			return result;
 		});

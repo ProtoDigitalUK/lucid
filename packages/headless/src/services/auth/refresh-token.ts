@@ -1,10 +1,8 @@
 import T from "../../translations/index.js";
 import { type FastifyRequest, type FastifyReply } from "fastify";
-import { eq, and, gte } from "drizzle-orm";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
-import { userTokens } from "../../db/schema.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import auth from "./index.js";
 
@@ -34,14 +32,17 @@ export const generateRefreshToken = async (
 		path: "/",
 	});
 
-	await request.server.db.insert(userTokens).values({
-		user_id: user_id,
-		token: token,
-		type: "refresh",
-		expires_at: new Date(
-			Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
-		).toISOString(),
-	});
+	await request.server.db
+		.insertInto("headless_user_tokens")
+		.values({
+			user_id: user_id,
+			token: token,
+			token_type: "refresh",
+			expiry_date: new Date(
+				Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
+			).toISOString(),
+		})
+		.execute();
 };
 
 export const verifyRefreshToken = async (
@@ -61,22 +62,15 @@ export const verifyRefreshToken = async (
 		};
 
 		const token = await request.server.db
-			.select({
-				id: userTokens.id,
-				user_id: userTokens.user_id,
-				token: userTokens.token,
-			})
-			.from(userTokens)
-			.where(
-				and(
-					eq(userTokens.user_id, decode.id),
-					eq(userTokens.token, _refresh),
-					eq(userTokens.type, "refresh"),
-					gte(userTokens.expires_at, new Date().toISOString()),
-				),
-			);
+			.selectFrom("headless_user_tokens")
+			.select("id")
+			.where("user_id", "=", decode.id)
+			.where("token", "=", _refresh)
+			.where("token_type", "=", "refresh")
+			.where("expiry_date", ">=", new Date())
+			.executeTakeFirst();
 
-		if (token.length === 0) {
+		if (token === undefined) {
 			throw new Error("No refresh token found");
 		}
 
@@ -113,14 +107,11 @@ export const clearRefreshToken = async (
 	reply.clearCookie(key, { path: "/" });
 
 	await request.server.db
-		.delete(userTokens)
-		.where(
-			and(
-				eq(userTokens.user_id, decode.id),
-				eq(userTokens.token, _refresh),
-				eq(userTokens.type, "refresh"),
-			),
-		);
+		.deleteFrom("headless_user_tokens")
+		.where("user_id", "=", decode.id)
+		.where("token", "=", _refresh)
+		.where("token_type", "=", "refresh")
+		.execute();
 };
 
 export default {

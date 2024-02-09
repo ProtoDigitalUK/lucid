@@ -1,6 +1,4 @@
 import { type FastifyInstance } from "fastify";
-import { eq, inArray } from "drizzle-orm";
-import { userRoles, rolePermissions } from "../../db/schema.js";
 import formatUserPermissions from "../../format/format-user-permissions.js";
 
 export interface ServiceData {
@@ -12,27 +10,28 @@ const getPermissions = async (
 	data: ServiceData,
 ) => {
 	const rolesRes = await serviceConfig.db
-		.select()
-		.from(userRoles)
-		.where(eq(userRoles.user_id, data.user_id));
+		.selectFrom("headless_user_roles")
+		.selectAll()
+		.where("user_id", "=", data.user_id)
+		.execute();
 
 	if (rolesRes.length === 0) {
 		return null;
 	}
 
 	// for each role, get its permissions
-	const rolePermissionsRes = await serviceConfig.db
-		.select()
-		.from(rolePermissions)
+	const rolePermissions = await serviceConfig.db
+		.selectFrom("headless_role_permissions")
+		.selectAll()
 		.where(
-			inArray(
-				rolePermissions.role_id,
-				rolesRes.map((role) => role.role_id),
-			),
-		);
+			"role_id",
+			"in",
+			rolesRes.map((role) => role.role_id),
+		)
+		.execute();
 
 	console.log("roles", rolesRes);
-	console.log("permissions", rolePermissionsRes);
+	console.log("permissions", rolePermissions);
 
 	// return formatUserPermissions(roles, permissions);
 };

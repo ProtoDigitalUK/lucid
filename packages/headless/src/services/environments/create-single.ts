@@ -1,8 +1,6 @@
 import slug from "slug";
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/app/error-handler.js";
-import { environments } from "../../db/schema.js";
-import { eq } from "drizzle-orm";
 import assignedBricksServices from "../assigned-bricks/index.js";
 import assignedCollectionsServices from "../assigned-collections/index.js";
 import getConfig from "../config.js";
@@ -23,14 +21,12 @@ const createSingle = async (
 	const key = slug(data.key, { lower: true });
 
 	const environmentExists = await serviceConfig.db
-		.select({
-			key: environments.key,
-		})
-		.from(environments)
-		.where(eq(environments.key, key))
-		.limit(1);
+		.selectFrom("headless_environments")
+		.select("key")
+		.where("key", "=", key)
+		.executeTakeFirst();
 
-	if (environmentExists.length > 0) {
+	if (environmentExists !== undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_already_exists_name", {
@@ -60,16 +56,15 @@ const createSingle = async (
 		);
 
 	const environment = await serviceConfig.db
-		.insert(environments)
+		.insertInto("headless_environments")
 		.values({
 			key: key,
 			title: data.title,
 		})
-		.returning({
-			key: environments.key,
-		});
+		.returning("key")
+		.executeTakeFirst();
 
-	if (environment.length === 0) {
+	if (environment === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
@@ -82,26 +77,24 @@ const createSingle = async (
 		});
 	}
 
-	const newKey = environment[0].key;
-
 	await Promise.all([
 		serviceWrapper(assignedBricksServices.createMultiple, false)(
 			serviceConfig,
 			{
-				environmentKey: newKey,
+				environmentKey: environment.key,
 				assignedBricks: data.assignedBricks,
 			},
 		),
 		serviceWrapper(assignedCollectionsServices.createMultiple, false)(
 			serviceConfig,
 			{
-				environmentKey: newKey,
+				environmentKey: environment.key,
 				assignedCollections: data.assignedCollections,
 			},
 		),
 	]);
 
-	return newKey;
+	return environment.key;
 };
 
 export default createSingle;

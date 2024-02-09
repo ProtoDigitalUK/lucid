@@ -1,7 +1,5 @@
 import T from "../../translations/index.js";
-import { or, eq } from "drizzle-orm";
 import { APIError } from "../../utils/app/error-handler.js";
-import { users } from "../../db/schema.js";
 import auth from "./index.js";
 
 export interface ServiceData {
@@ -10,21 +8,16 @@ export interface ServiceData {
 }
 
 const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const findUserRes = await serviceConfig.db
-		.select({
-			id: users.id,
-			password: users.password,
-		})
-		.from(users)
-		.where(
-			or(
-				eq(users.username, data.username_or_email),
-				eq(users.email, data.username_or_email),
-			),
+	const user = await serviceConfig.db
+		.selectFrom("headless_users")
+		.select(["id", "password"])
+		.where((eb) =>
+			eb.or([
+				eb("username", "=", data.username_or_email),
+				eb("email", "=", data.username_or_email),
+			]),
 		)
-		.limit(1);
-
-	const user = findUserRes[0];
+		.executeTakeFirst();
 
 	if (!user || !user.password) {
 		throw new APIError({

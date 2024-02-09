@@ -1,6 +1,3 @@
-import { assignedBricks } from "../../db/schema.js";
-import { eq } from "drizzle-orm";
-
 export interface ServiceData {
 	environmentKey: string;
 	assignedBricks?: string[];
@@ -13,15 +10,19 @@ const updateMultiple = async (
 	if (!data.assignedBricks) return;
 
 	await serviceConfig.db
-		.delete(assignedBricks)
-		.where(eq(assignedBricks.environment_key, data.environmentKey));
+		.deleteFrom("headless_assigned_bricks")
+		.where("environment_key", "=", data.environmentKey)
+		.execute();
 
-	await serviceConfig.db.insert(assignedBricks).values(
-		data.assignedBricks.map((brick) => ({
-			key: brick,
-			environment_key: data.environmentKey,
-		})),
-	);
+	await serviceConfig.db
+		.insertInto("headless_assigned_bricks")
+		.values(
+			data.assignedBricks.map((brick) => ({
+				key: brick,
+				environment_key: data.environmentKey,
+			})),
+		)
+		.execute();
 };
 
 export default updateMultiple;

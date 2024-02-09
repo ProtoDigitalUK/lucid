@@ -1,9 +1,19 @@
 import { EnvironmentResT } from "@headless/types/src/environments.js";
-import { type EnvrionmentsWithRelationsT } from "../db/schema.js";
 
-const formatEnvironment = (
-	environment: EnvrionmentsWithRelationsT,
-): EnvironmentResT => {
+const formatEnvironment = (environment: {
+	key: string;
+	title: string | null;
+	assigned_bricks: {
+		id: number;
+		key: string;
+		environment_key: string | null;
+	}[];
+	assigned_collections: {
+		id: number;
+		key: string;
+		environment_key: string | null;
+	}[];
+}): EnvironmentResT => {
 	return {
 		key: environment.key,
 		title: environment.title,

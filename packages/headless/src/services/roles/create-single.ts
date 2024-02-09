@@ -1,7 +1,5 @@
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/app/error-handler.js";
-import { roles, rolePermissions } from "../../db/schema.js";
-import { eq } from "drizzle-orm";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 
@@ -26,13 +24,13 @@ const createSingle = async (
 			},
 		),
 		serviceConfig.db
-			.select()
-			.from(roles)
-			.where(eq(roles.name, data.name))
-			.execute(),
+			.selectFrom("headless_roles")
+			.select("id")
+			.where("name", "=", data.name)
+			.executeTakeFirst(),
 	]);
 
-	if (checkNameIsUnique.length > 0) {
+	if (checkNameIsUnique !== undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
@@ -49,18 +47,16 @@ const createSingle = async (
 		});
 	}
 
-	const newRole = await serviceConfig.db
-		.insert(roles)
+	const newRoles = await serviceConfig.db
+		.insertInto("headless_roles")
 		.values({
 			name: data.name,
-			description: data.description,
+			// description: data.description, TODO: come back once db is migrated again
 		})
-		.returning({
-			id: roles.id,
-		})
-		.execute();
+		.returning("id")
+		.executeTakeFirst();
 
-	if (newRole.length === 0) {
+	if (newRoles === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
@@ -73,14 +69,12 @@ const createSingle = async (
 		});
 	}
 
-	const newRoleId = newRole[0].id;
-
 	if (validatePerms.length > 0) {
 		await serviceConfig.db
-			.insert(rolePermissions)
+			.insertInto("headless_role_permissions")
 			.values(
 				validatePerms.map((permission) => ({
-					role_id: newRoleId,
+					role_id: newRoles.id,
 					permission: permission.permission,
 					environment_key: permission.environmentKey,
 				})),
@@ -88,7 +82,7 @@ const createSingle = async (
 			.execute();
 	}
 
-	return newRoleId;
+	return newRoles.id;
 };
 
 export default createSingle;

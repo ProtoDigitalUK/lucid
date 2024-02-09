@@ -3,10 +3,10 @@ import {
 	type FastifyRequest,
 	type FastifyReply,
 } from "fastify";
-import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "../db/schema.js";
 import { type HeadlessConfigT } from "../schemas/config.js";
 import z from "zod";
+import { type Kysely } from "kysely";
+import { type DB as DBSchema } from "../db/kysely.js";
 
 declare module "fastify" {
 	interface FastifyInstance {
@@ -30,7 +30,7 @@ declare module "fastify" {
 }
 
 declare global {
-	type DB = PostgresJsDatabase<typeof schema>;
+	type DB = Kysely<DBSchema>;
 
 	type ControllerT<ParamsT, BodyT, QueryT> = (
 		request: FastifyRequest<{

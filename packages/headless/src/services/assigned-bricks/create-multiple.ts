@@ -1,5 +1,3 @@
-import { assignedBricks } from "../../db/schema.js";
-
 export interface ServiceData {
 	environmentKey: string;
 	assignedBricks?: string[];
@@ -11,12 +9,15 @@ const createMultiple = async (
 ) => {
 	if (!data.assignedBricks) return;
 
-	await serviceConfig.db.insert(assignedBricks).values(
-		data.assignedBricks.map((brick) => ({
-			key: brick,
-			environment_key: data.environmentKey,
-		})),
-	);
+	await serviceConfig.db
+		.insertInto("headless_assigned_bricks")
+		.values(
+			data.assignedBricks.map((brick) => ({
+				key: brick,
+				environment_key: data.environmentKey,
+			})),
+		)
+		.execute();
 };
 
 export default createMultiple;

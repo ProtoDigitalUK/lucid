@@ -1,7 +1,5 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import { environments } from "../../db/schema.js";
-import { eq } from "drizzle-orm";
 import assignedBricksServices from "../assigned-bricks/index.js";
 import assignedCollectionsServices from "../assigned-collections/index.js";
 import getConfig from "../config.js";
@@ -22,18 +20,13 @@ const updateSingle = async (
 ) => {
 	const config = await getConfig();
 
-	const environmentExists = await serviceConfig.db
-		.select({
-			key: environments.key,
-			title: environments.title,
-		})
-		.from(environments)
-		.where(eq(environments.key, data.key))
-		.limit(1);
+	const envrionmentExists = await serviceConfig.db
+		.selectFrom("headless_environments")
+		.select(["key", "title"])
+		.where("key", "=", data.key)
+		.executeTakeFirst();
 
-	const environmentData = environmentExists[0];
-
-	if (environmentExists.length === 0) {
+	if (envrionmentExists === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {
@@ -58,13 +51,14 @@ const updateSingle = async (
 		);
 
 	const updateEnvironment = async () => {
-		if (data.data.title && data.data.title !== environmentData.title) {
+		if (data.data.title && data.data.title !== envrionmentExists.title) {
 			await serviceConfig.db
-				.update(environments)
+				.updateTable("headless_environments")
 				.set({
 					title: data.data.title,
 				})
-				.where(eq(environments.key, data.key));
+				.where("key", "=", data.key)
+				.execute();
 		}
 	};
 

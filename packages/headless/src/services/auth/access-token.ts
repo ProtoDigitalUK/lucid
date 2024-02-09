@@ -1,10 +1,8 @@
 import T from "../../translations/index.js";
 import { type FastifyRequest, type FastifyReply } from "fastify";
-import { eq } from "drizzle-orm";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
-import { users } from "../../db/schema.js";
 import { APIError } from "../../utils/app/error-handler.js";
 
 const key = "_access";
@@ -17,15 +15,12 @@ export const generateAccessToken = async (
 	const config = await getConfig();
 
 	const userRes = await request.server.db
-		.select({
-			id: users.id,
-			username: users.username,
-			email: users.email,
-		})
-		.from(users)
-		.where(eq(users.id, user_id));
+		.selectFrom("headless_users")
+		.select(["id", "username", "email"])
+		.where("id", "=", user_id)
+		.executeTakeFirst();
 
-	if (userRes.length === 0) {
+	if (!userRes) {
 		throw new APIError({
 			type: "authorisation",
 			name: T("access_token_error_name"),
@@ -34,12 +29,10 @@ export const generateAccessToken = async (
 		});
 	}
 
-	const user = userRes[0];
-
 	const payload = {
-		id: user.id,
-		username: user.username,
-		email: user.email,
+		id: userRes.id,
+		username: userRes.username,
+		email: userRes.email,
 		// TODO: store users permissions in the token
 	};
 

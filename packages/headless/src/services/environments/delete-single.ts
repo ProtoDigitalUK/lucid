@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
-import { eq } from "drizzle-orm";
-import { environments } from "../../db/schema.js";
 import { APIError } from "../../utils/app/error-handler.js";
+import { sql } from "kysely";
 
 export interface ServiceData {
 	key: string;
@@ -11,14 +10,15 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const environmentsMultiple =
-		await serviceConfig.db.query.environments.findMany({
-			columns: {
-				key: true,
-			},
-		});
+	const environments = (await serviceConfig.db
+		.selectFrom("headless_environments")
+		.select(sql`count(*)`.as("count"))
+		.where("key", "=", data.key)
+		.executeTakeFirst()) as { count: string };
 
-	if (environmentsMultiple.length === 1) {
+	const count = parseInt(environments?.count) || 0;
+
+	if (count <= 1) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_min_entries_name", {
@@ -33,8 +33,9 @@ const deleteSingle = async (
 	}
 
 	await serviceConfig.db
-		.delete(environments)
-		.where(eq(environments.key, data.key));
+		.deleteFrom("headless_environments")
+		.where("key", "=", data.key)
+		.execute();
 
 	return true;
 };

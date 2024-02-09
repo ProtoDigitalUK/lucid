@@ -2,9 +2,6 @@ import("dotenv/config.js");
 import path from "path";
 import T from "./translations/index.js";
 import { log, red } from "console-log-colors";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import postgres from "postgres";
 import fp from "fastify-plugin";
 import { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
@@ -14,13 +11,16 @@ import fs from "fs-extra";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import * as schema from "./db/schema.js";
 import routes from "./routes/index.js";
 import getDirName from "./utils/app/get-dirname.js";
 import getConfig from "./services/config.js";
 import { decodeError } from "./utils/app/error-handler.js";
 import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
+import migrate from "./db/migrate.js";
+import pkg from "pg";
+import { Kysely, PostgresDialect } from "kysely";
+import { type DB as DBSchema } from "./db/kysely.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -29,9 +29,21 @@ const headless = async (
 	options: Record<string, string>,
 ) => {
 	try {
+		const { Pool } = pkg;
 		const config = await getConfig();
-		const client = postgres(config.databaseURL);
-		const db = drizzle(client, { schema });
+		const dialect = new PostgresDialect({
+			pool: new Pool({
+				connectionString: config.databaseURL,
+				max: 20,
+				ssl: {
+					rejectUnauthorized: false,
+				},
+			}),
+		});
+
+		const db = new Kysely<DBSchema>({
+			dialect,
+		});
 
 		fastify.decorate("db", db);
 		fastify.decorate("config", config);
@@ -88,9 +100,7 @@ const headless = async (
 		// ------------------------------------
 		// Migrate DB
 		log.white("----------------------------------------------------");
-		await migrate(db, {
-			migrationsFolder: path.resolve(currentDir, "../drizzle"),
-		});
+		await migrate(db);
 
 		// ------------------------------------
 		// Initialise

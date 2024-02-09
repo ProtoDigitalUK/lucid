@@ -1,11 +1,21 @@
 import { RoleResT } from "@headless/types/src/roles.js";
-import { type RolesWithRelationsT } from "../db/schema.js";
 
-const formatRole = (role: RolesWithRelationsT): RoleResT => {
+const formatRole = (role: {
+	created_at: Date | null;
+	id: number;
+	name: string;
+	updated_at: Date | null;
+	permissions: {
+		id: number;
+		environment_key: string | null;
+		permission: string;
+		role_id: number;
+	}[];
+}): RoleResT => {
 	return {
 		id: role.id,
 		name: role.name,
-		description: role.description,
+		description: null, // role.description,
 		permissions: role.permissions.map((permission) => {
 			return {
 				id: permission.id,
@@ -13,8 +23,8 @@ const formatRole = (role: RolesWithRelationsT): RoleResT => {
 				environment_key: permission.environment_key,
 			};
 		}),
-		created_at: role.created_at,
-		updated_at: role.updated_at,
+		created_at: role.created_at?.toISOString() || null,
+		updated_at: role.updated_at?.toISOString() || null,
 	};
 };
 

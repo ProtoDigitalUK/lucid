@@ -1,5 +1,3 @@
-import { assignedCollections } from "../../db/schema.js";
-
 export interface ServiceData {
 	environmentKey: string;
 	assignedCollections?: string[];
@@ -11,12 +9,15 @@ const createMultiple = async (
 ) => {
 	if (!data.assignedCollections) return;
 
-	await serviceConfig.db.insert(assignedCollections).values(
-		data.assignedCollections.map((collection) => ({
-			key: collection,
-			environment_key: data.environmentKey,
-		})),
-	);
+	await serviceConfig.db
+		.insertInto("headless_assigned_collections")
+		.values(
+			data.assignedCollections.map((collection) => ({
+				key: collection,
+				environment_key: data.environmentKey,
+			})),
+		)
+		.execute();
 };
 
 export default createMultiple;

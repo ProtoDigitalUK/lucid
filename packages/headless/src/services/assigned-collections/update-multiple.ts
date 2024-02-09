@@ -1,6 +1,3 @@
-import { assignedCollections } from "../../db/schema.js";
-import { eq } from "drizzle-orm";
-
 export interface ServiceData {
 	environmentKey: string;
 	assignedCollections?: string[];
@@ -13,15 +10,19 @@ const updateMultiple = async (
 	if (!data.assignedCollections) return;
 
 	await serviceConfig.db
-		.delete(assignedCollections)
-		.where(eq(assignedCollections.environment_key, data.environmentKey));
+		.deleteFrom("headless_assigned_collections")
+		.where("environment_key", "=", data.environmentKey)
+		.execute();
 
-	await serviceConfig.db.insert(assignedCollections).values(
-		data.assignedCollections.map((collection) => ({
-			key: collection,
-			environment_key: data.environmentKey,
-		})),
-	);
+	await serviceConfig.db
+		.insertInto("headless_assigned_collections")
+		.values(
+			data.assignedCollections.map((collection) => ({
+				key: collection,
+				environment_key: data.environmentKey,
+			})),
+		)
+		.execute();
 };
 
 export default updateMultiple;

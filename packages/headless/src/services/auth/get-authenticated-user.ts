@@ -1,7 +1,5 @@
 import T from "../../translations/index.js";
-import { eq } from "drizzle-orm";
 import { APIError } from "../../utils/app/error-handler.js";
-import { users } from "../../db/schema.js";
 import formatUser from "../../format/format-user.js";
 // import usersServices from "../users/index.js";
 
@@ -13,13 +11,20 @@ const getAuthenticatedUser = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const findUserRes = await serviceConfig.db
-		.select()
-		.from(users)
-		.where(eq(users.id, data.user_id))
-		.limit(1);
-
-	const user = findUserRes[0];
+	const user = await serviceConfig.db
+		.selectFrom("headless_users")
+		.select([
+			"id",
+			"super_admin",
+			"email",
+			"username",
+			"first_name",
+			"last_name",
+			"created_at",
+			"updated_at",
+		])
+		.where("id", "=", data.user_id)
+		.executeTakeFirst();
 
 	if (!user) {
 		throw new APIError({
