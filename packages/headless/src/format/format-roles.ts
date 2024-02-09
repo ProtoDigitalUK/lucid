@@ -4,6 +4,7 @@ const formatRole = (role: {
 	created_at: Date | null;
 	id: number;
 	name: string;
+	description: string | null;
 	updated_at: Date | null;
 	permissions: {
 		id: number;
@@ -15,7 +16,7 @@ const formatRole = (role: {
 	return {
 		id: role.id,
 		name: role.name,
-		description: null, // role.description,
+		description: role.description,
 		permissions: role.permissions.map((permission) => {
 			return {
 				id: permission.id,

@@ -15,7 +15,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"name",
 			"created_at",
 			"updated_at",
-			// "description", TODO: update once migrate and types updated
+			"description",
 			jsonArrayFrom(
 				eb
 					.selectFrom("headless_role_permissions")

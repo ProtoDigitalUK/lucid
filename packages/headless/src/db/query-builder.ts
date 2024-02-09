@@ -5,13 +5,13 @@ import {
 	type ComparisonOperatorExpression,
 } from "kysely";
 
-interface QueryBuilderConfigT<Table extends keyof DB> {
+interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;
 	meta: {
 		filters: {
 			queryKey: string; // e.g. "filter[status]" - the object key for the specific filter
 			tableKey: ReferenceExpression<DB, Table>; // e.g. "status" - the table column name for the specific filter
-			operator: ComparisonOperatorExpression;
+			operator: ComparisonOperatorExpression | "%";
 		}[];
 		sorts: {
 			queryKey: string;
@@ -20,9 +20,9 @@ interface QueryBuilderConfigT<Table extends keyof DB> {
 	};
 }
 
-const queryBuilder = <Table extends keyof DB>(
-	db: SelectQueryBuilder<DB, Table, unknown>,
-	config: QueryBuilderConfigT<Table>,
+const queryBuilder = <DB, Table extends keyof DB, O>(
+	db: SelectQueryBuilder<DB, Table, O>,
+	config: QueryBuilderConfigT<DB, Table>,
 ) => {
 	let query = db;
 	const { requestQuery, meta } = config;
@@ -38,8 +38,17 @@ const queryBuilder = <Table extends keyof DB>(
 
 		const { tableKey, operator } = filterMeta;
 
-		if (Array.isArray(value)) query = query.where(tableKey, "in", value);
-		else query = query.where(tableKey, operator, value);
+		const isArray = Array.isArray(value);
+
+		if (isArray) {
+			query = query.where(tableKey, "in", value);
+		} else {
+			query = query.where(
+				tableKey,
+				operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
+				value,
+			);
+		}
 	}
 
 	// -----------------------------------------
