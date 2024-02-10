@@ -3,6 +3,7 @@ import validatePermissions from "./validate-permissions.js";
 import getSingle from "./get-single.js";
 import getMultiple from "./get-multiple.js";
 import deleteSingle from "./delete-single.js";
+import updateSingle from "./update-single.js";
 
 export default {
 	createSingle,
@@ -10,4 +11,5 @@ export default {
 	getSingle,
 	getMultiple,
 	deleteSingle,
+	updateSingle,
 };

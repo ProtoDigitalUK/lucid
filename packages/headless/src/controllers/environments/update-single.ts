@@ -40,14 +40,14 @@ export default {
 			description:
 				"Title is a human readable name for the environment. For example: 'Staging' or 'Production'. <br> Assigned bricks and collections should be an array of keys. These keys should match those that you have defined in the collection and brick builder.",
 			properties: {
-				title: { type: "string", default: "Production" },
+				title: { type: "string" },
 				assigned_bricks: {
 					type: "array",
-					items: { type: "string", default: "hero" },
+					items: { type: "string" },
 				},
 				assigned_collections: {
 					type: "array",
-					items: { type: "string", default: "articles" },
+					items: { type: "string" },
 				},
 			},
 		},

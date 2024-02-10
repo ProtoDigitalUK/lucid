@@ -51,7 +51,7 @@ const createSingle = async (
 		.insertInto("headless_roles")
 		.values({
 			name: data.name,
-			// description: data.description, TODO: come back once db is migrated again
+			description: data.description,
 		})
 		.returning("id")
 		.executeTakeFirst();

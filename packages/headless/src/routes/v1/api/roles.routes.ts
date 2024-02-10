@@ -55,20 +55,20 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		controller: roles.deleteSingle.controller,
 	});
 
-	//   r(fastify, {
-	//     method: "patch",
-	//     url: "/:id",
-	//     permissions: {
-	//       global: ["update_role"],
-	//     },
-	//     middleware: {
-	//       authenticate: true,
-	//       validateCSRF: true,
-	//     },
-	//     swaggerSchema: roles.updateSingle.swaggerSchema,
-	//     zodSchema: roles.updateSingle.zodSchema,
-	//     controller: roles.updateSingle.controller,
-	//   });
+	r(fastify, {
+		method: "patch",
+		url: "/:id",
+		// permissions: {
+		//   global: ["update_role"],
+		// },
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: roles.updateSingle.swaggerSchema,
+		zodSchema: roles.updateSingle.zodSchema,
+		controller: roles.updateSingle.controller,
+	});
 };
 
 export default roleRoutes;

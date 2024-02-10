@@ -19,6 +19,7 @@ export default {
 	updateSingle: {
 		body: z.object({
 			name: z.string().min(2).optional(),
+			description: z.string().optional(),
 			permission_groups: z
 				.array(
 					z.object({

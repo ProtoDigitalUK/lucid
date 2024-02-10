@@ -14,7 +14,7 @@ const deleteSingle = async (
 		.where("id", "=", data.id)
 		.executeTakeFirst();
 
-	if (Number(deleteRoles.numDeletedRows) === 0) {
+	if (deleteRoles.numDeletedRows > 0) {
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {

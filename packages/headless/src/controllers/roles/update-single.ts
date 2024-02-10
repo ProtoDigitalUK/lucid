@@ -2,53 +2,39 @@ import rolesSchema from "../../schemas/roles.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
-import { swaggerRoleRes } from "../../format/format-roles.js";
 
-const createSingleController: ControllerT<
-	typeof rolesSchema.createSingle.params,
-	typeof rolesSchema.createSingle.body,
-	typeof rolesSchema.createSingle.query
+const updateSingleController: ControllerT<
+	typeof rolesSchema.updateSingle.params,
+	typeof rolesSchema.updateSingle.body,
+	typeof rolesSchema.updateSingle.query
 > = async (request, reply) => {
-	const roleId = await serviceWrapper(rolesServices.createSingle, true)(
+	await serviceWrapper(rolesServices.updateSingle, true)(
 		{
 			db: request.server.db,
 		},
 		{
+			id: parseInt(request.params.id),
 			name: request.body.name,
 			description: request.body.description,
 			permissionGroups: request.body.permission_groups,
 		},
 	);
 
-	const role = await serviceWrapper(rolesServices.getSingle, false)(
-		{
-			db: request.server.db,
-		},
-		{
-			id: roleId,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: role,
-		}),
-	);
+	reply.status(204).send();
 };
 
 export default {
-	controller: createSingleController,
-	zodSchema: rolesSchema.createSingle,
+	controller: updateSingleController,
+	zodSchema: rolesSchema.updateSingle,
 	swaggerSchema: {
 		description:
-			"Create a single role with the given name and permission groups.",
+			"Update a single role with the given name and permission groups.",
 		tags: ["roles"],
-		summary: "Create a single role",
+		summary: "Update a single role",
 		response: {
-			200: swaggerResponse({
-				type: 200,
-				data: swaggerRoleRes,
+			204: swaggerResponse({
+				type: 204,
+				noPropertise: true,
 			}),
 		},
 		body: {
