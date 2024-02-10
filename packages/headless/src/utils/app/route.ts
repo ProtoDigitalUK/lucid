@@ -26,7 +26,6 @@ type RouteT = <
 		middleware?: {
 			authenticate?: boolean;
 			validateCSRF?: boolean;
-			paginated?: boolean;
 			// validateEnvironment?: boolean;
 			// contentLanguage?: boolean;
 		};

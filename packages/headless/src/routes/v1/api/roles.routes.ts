@@ -31,7 +31,6 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		url: "",
 		middleware: {
 			authenticate: true,
-			paginated: true,
 		},
 		swaggerSchema: roles.getMultiple.swaggerSchema,
 		zodSchema: roles.getMultiple.zodSchema,
