@@ -5,7 +5,7 @@ import {
 	type ComparisonOperatorExpression,
 } from "kysely";
 
-interface QueryBuilderConfigT<DB, Table extends keyof DB> {
+export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;
 	meta: {
 		filters: {
@@ -20,11 +20,21 @@ interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	};
 }
 
-const queryBuilder = <DB, Table extends keyof DB, O>(
-	db: SelectQueryBuilder<DB, Table, O>,
+const queryBuilder = <DB, Table extends keyof DB, O, T>(
+	db: {
+		main: SelectQueryBuilder<DB, Table, O>;
+		count?: SelectQueryBuilder<
+			DB,
+			Table,
+			{
+				count: unknown;
+			}
+		>;
+	},
 	config: QueryBuilderConfigT<DB, Table>,
 ) => {
-	let query = db;
+	let mainQuery = db.main;
+	let countQuery = db.count;
 	const { requestQuery, meta } = config;
 
 	// -----------------------------------------
@@ -41,13 +51,23 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 		const isArray = Array.isArray(value);
 
 		if (isArray) {
-			query = query.where(tableKey, "in", value);
+			mainQuery = mainQuery.where(tableKey, "in", value);
+			if (countQuery) {
+				countQuery = countQuery.where(tableKey, "in", value);
+			}
 		} else {
-			query = query.where(
+			mainQuery = mainQuery.where(
 				tableKey,
 				operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
 				value,
 			);
+			if (countQuery) {
+				countQuery = countQuery.where(
+					tableKey,
+					operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
+					value,
+				);
+			}
 		}
 	}
 
@@ -62,17 +82,20 @@ const queryBuilder = <DB, Table extends keyof DB, O>(
 
 			const { tableKey } = sortMeta;
 
-			query = query.orderBy(tableKey, sort.value);
+			mainQuery = mainQuery.orderBy(tableKey, sort.value);
 		}
 	}
 
 	// -----------------------------------------
 	// Pagination
-	query = query
+	mainQuery = mainQuery
 		.limit(requestQuery.per_page)
 		.offset((requestQuery.page - 1) * requestQuery.per_page);
 
-	return query;
+	return {
+		main: mainQuery,
+		count: countQuery,
+	};
 };
 
 export default queryBuilder;

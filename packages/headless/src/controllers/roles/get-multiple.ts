@@ -21,7 +21,12 @@ const getMultipleController: ControllerT<
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: role,
+			data: role.data,
+			pagination: {
+				count: role.count,
+				page: request.query.page,
+				per_page: request.query.per_page,
+			},
 		}),
 	);
 };
@@ -40,6 +45,7 @@ export default {
 					type: "array",
 					items: swaggerRoleRes,
 				},
+				paginated: true,
 			}),
 		},
 	},

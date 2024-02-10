@@ -8,8 +8,8 @@ interface BuildResponseParams {
 	data: unknown;
 	pagination?: {
 		count: number;
-		page: string;
-		per_page: string;
+		page: number;
+		per_page: number;
 	};
 }
 
@@ -46,7 +46,7 @@ const buildMetaLinks = (
 		if (i !== 0) url.searchParams.set("page", String(i + 1));
 		else url.searchParams.delete("page");
 		links.push({
-			active: page === String(i + 1),
+			active: page === i + 1,
 			label: String(i + 1),
 			url: url.toString(),
 			page: i + 1,
@@ -80,12 +80,11 @@ const buildLinks = (
 	links.first = url.toString();
 
 	// Set Last
-	if (page !== String(totalPages))
-		url.searchParams.set("page", String(totalPages));
+	if (page !== totalPages) url.searchParams.set("page", String(totalPages));
 	links.last = url.toString();
 
 	// Set Next
-	if (page !== String(totalPages)) {
+	if (page !== totalPages) {
 		url.searchParams.set("page", String(Number(page) + 1));
 		links.next = url.toString();
 	} else {
@@ -93,7 +92,7 @@ const buildLinks = (
 	}
 
 	// Set Prev
-	if (page !== "1") {
+	if (page !== 1) {
 		url.searchParams.set("page", String(Number(page) - 1));
 		links.prev = url.toString();
 	} else {
@@ -109,8 +108,8 @@ const buildResponse: BuildResponseT = async (request, params) => {
 	const meta = {
 		path: await getPath(request),
 		links: buildMetaLinks(request, params),
-		current_page: Number(params.pagination?.page) || null,
-		per_page: Number(params.pagination?.per_page) || null,
+		current_page: params.pagination?.page ?? null,
+		per_page: params.pagination?.per_page ?? null,
 		total: Number(params.pagination?.count) || null,
 		last_page: params.pagination
 			? Math.ceil(
