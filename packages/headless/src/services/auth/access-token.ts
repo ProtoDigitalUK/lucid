@@ -3,7 +3,16 @@ import { type FastifyRequest, type FastifyReply } from "fastify";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
+import auth from "./index.js";
+import type { UserPermissionsResT } from "@headless/types/src/users.js";
 import { APIError } from "../../utils/app/error-handler.js";
+
+export interface PayloadT {
+	id: number;
+	username: string;
+	email: string;
+	permissions: UserPermissionsResT["permissions"] | undefined;
+}
 
 const key = "_access";
 
@@ -12,15 +21,37 @@ export const generateAccessToken = async (
 	request: FastifyRequest,
 	user_id: number,
 ) => {
-	const config = await getConfig();
+	try {
+		const config = await getConfig();
 
-	const userRes = await request.server.db
-		.selectFrom("headless_users")
-		.select(["id", "username", "email"])
-		.where("id", "=", user_id)
-		.executeTakeFirst();
+		const user = await auth.getAuthenticatedUser(
+			{
+				db: request.server.db,
+			},
+			{
+				user_id,
+			},
+		);
 
-	if (!userRes) {
+		const payload = {
+			id: user.id,
+			username: user.username,
+			email: user.email,
+			permissions: user.permissions,
+		} satisfies PayloadT;
+
+		const token = jwt.sign(payload, config.keys.accessTokenSecret, {
+			expiresIn: constants.accessTokenExpiration,
+		});
+
+		reply.setCookie(key, token, {
+			maxAge: constants.accessTokenExpiration,
+			httpOnly: true,
+			secure: config.mode === "production",
+			sameSite: "strict",
+			path: "/",
+		});
+	} catch (err) {
 		throw new APIError({
 			type: "authorisation",
 			name: T("access_token_error_name"),
@@ -28,25 +59,6 @@ export const generateAccessToken = async (
 			status: 401,
 		});
 	}
-
-	const payload = {
-		id: userRes.id,
-		username: userRes.username,
-		email: userRes.email,
-		// TODO: store users permissions in the token
-	};
-
-	const token = jwt.sign(payload, config.keys.accessTokenSecret, {
-		expiresIn: constants.accessTokenExpiration,
-	});
-
-	reply.setCookie(key, token, {
-		maxAge: constants.accessTokenExpiration,
-		httpOnly: true,
-		secure: config.mode === "production",
-		sameSite: "strict",
-		path: "/",
-	});
 };
 
 export const verifyAccessToken = async (request: FastifyRequest) => {
@@ -61,12 +73,10 @@ export const verifyAccessToken = async (request: FastifyRequest) => {
 			};
 		}
 
-		const decode = jwt.verify(_access, config.keys.accessTokenSecret) as {
-			id: number;
-			username: string;
-			email: string;
-			// TODO: store users permissions in the token
-		};
+		const decode = jwt.verify(
+			_access,
+			config.keys.accessTokenSecret,
+		) as PayloadT;
 
 		return {
 			success: true,
