@@ -4,11 +4,16 @@ import {
 	type FastifyReply,
 } from "fastify";
 import z from "zod";
+import type {
+	PermissionT,
+	EnvironmentPermissionT,
+} from "@headless/types/src/permissions.js";
 import validateBody from "../../middleware/validate-body.js";
 import validateParams from "../../middleware/validate-params.js";
 import validateQuery from "../../middleware/validate-query.js";
 import authenticate from "../../middleware/authenticate.js";
 import validateCSRF from "../../middleware/validate-csrf.js";
+import permissions from "../../middleware/permissions.js";
 
 type RouteT = <
 	ParamsT extends z.ZodTypeAny | undefined,
@@ -19,10 +24,10 @@ type RouteT = <
 	opts: {
 		method: "get" | "post" | "put" | "delete" | "patch";
 		url: string;
-		// permissions?: {
-		//   global?: PermissionT[];
-		//   environments?: EnvironmentPermissionT[];
-		// };
+		permissions?: {
+			global?: PermissionT[];
+			environments?: EnvironmentPermissionT[];
+		};
 		middleware?: {
 			authenticate?: boolean;
 			validateCSRF?: boolean;
@@ -81,6 +86,7 @@ const route: RouteT = (fastify, opts) => {
 		preValidation.push(validateParams(zodSchema.params));
 	if (zodSchema?.query !== undefined)
 		preValidation.push(validateQuery(zodSchema.query));
+	if (opts.permissions) preHandler.push(permissions(opts.permissions));
 
 	fastify.route({
 		method: method,

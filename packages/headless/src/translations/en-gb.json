@@ -53,7 +53,9 @@
 	"not_unique_error_message": "Please ensure that the value is unique and try again.",
 	"this_email_is_already_in_use": "This email is already in use.",
 	"this_username_is_already_in_use": "This username is already in use.",
+	"you_do_not_have_permission_to_perform_this_action": "You do not have permission to perform this action.",
 	"role": "Role",
 	"account": "Account",
-	"your_account": "your account"
+	"your_account": "your account",
+	"permission": "Permission"
 }

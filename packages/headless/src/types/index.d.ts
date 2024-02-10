@@ -7,6 +7,7 @@ import { type HeadlessConfigT } from "../schemas/config.js";
 import z from "zod";
 import { type Kysely } from "kysely";
 import { type DB as DBSchema } from "../db/kysely.js";
+import type { UserPermissionsResT } from "@headless/types/src/users.js";
 
 declare module "fastify" {
 	interface FastifyInstance {
@@ -17,9 +18,10 @@ declare module "fastify" {
 	interface FastifyRequest {
 		auth: {
 			id: number;
-			email: string;
 			username: string;
-			// TODO: add permissions
+			email: string;
+			super_admin: boolean;
+			permissions: UserPermissionsResT["permissions"] | undefined;
 		};
 		language: {
 			id: LanguageResT["id"];

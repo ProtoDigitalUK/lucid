@@ -10,9 +10,9 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		// permissions: {
-		//     global: ["create_role"],
-		//   },
+		permissions: {
+			global: ["create_role"],
+		},
 		swaggerSchema: roles.createSingle.swaggerSchema,
 		zodSchema: roles.createSingle.zodSchema,
 		controller: roles.createSingle.controller,
@@ -47,9 +47,9 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		// permissions: {
-		//     global: ["delete_role"],
-		//   },
+		permissions: {
+			global: ["delete_role"],
+		},
 		swaggerSchema: roles.deleteSingle.swaggerSchema,
 		zodSchema: roles.deleteSingle.zodSchema,
 		controller: roles.deleteSingle.controller,
@@ -58,9 +58,9 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "patch",
 		url: "/:id",
-		// permissions: {
-		//   global: ["update_role"],
-		// },
+		permissions: {
+			global: ["update_role"],
+		},
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,

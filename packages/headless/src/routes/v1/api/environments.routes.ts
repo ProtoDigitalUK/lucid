@@ -6,9 +6,9 @@ const environmentRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "post",
 		url: "",
-		// permissions: {
-		//   global: ["create_environment"],
-		// },
+		permissions: {
+			global: ["create_environment"],
+		},
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -21,9 +21,9 @@ const environmentRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "patch",
 		url: "/:key",
-		// permissions: {
-		// global: ["update_environment"],
-		//   },
+		permissions: {
+			global: ["update_environment"],
+		},
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -58,9 +58,9 @@ const environmentRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "delete",
 		url: "/:key",
-		// permissions: {
-		//   global: ["delete_environment"],
-		// },
+		permissions: {
+			global: ["delete_environment"],
+		},
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,

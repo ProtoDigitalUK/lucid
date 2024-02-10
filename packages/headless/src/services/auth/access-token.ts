@@ -4,15 +4,8 @@ import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import auth from "./index.js";
-import type { UserPermissionsResT } from "@headless/types/src/users.js";
-import { APIError } from "../../utils/app/error-handler.js";
 
-export interface PayloadT {
-	id: number;
-	username: string;
-	email: string;
-	permissions: UserPermissionsResT["permissions"] | undefined;
-}
+import { APIError } from "../../utils/app/error-handler.js";
 
 const key = "_access";
 
@@ -38,7 +31,8 @@ export const generateAccessToken = async (
 			username: user.username,
 			email: user.email,
 			permissions: user.permissions,
-		} satisfies PayloadT;
+			super_admin: user.super_admin || false,
+		} satisfies FastifyRequest["auth"];
 
 		const token = jwt.sign(payload, config.keys.accessTokenSecret, {
 			expiresIn: constants.accessTokenExpiration,
@@ -76,7 +70,7 @@ export const verifyAccessToken = async (request: FastifyRequest) => {
 		const decode = jwt.verify(
 			_access,
 			config.keys.accessTokenSecret,
-		) as PayloadT;
+		) as FastifyRequest["auth"];
 
 		return {
 			success: true,
