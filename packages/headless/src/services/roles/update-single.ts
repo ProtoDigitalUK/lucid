@@ -39,7 +39,7 @@ const updateSingle = async (
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
-				name: "Role Error",
+				name: T("role"),
 			}),
 			message: T("not_unique_error_message"),
 			status: 400,
@@ -52,7 +52,7 @@ const updateSingle = async (
 		});
 	}
 
-	await serviceConfig.db
+	const updateRoleRes = await serviceConfig.db
 		.updateTable("headless_roles")
 		.set({
 			name: data.name,
@@ -61,6 +61,19 @@ const updateSingle = async (
 		})
 		.where("id", "=", data.id)
 		.executeTakeFirst();
+
+	if (updateRoleRes.numUpdatedRows === 0n) {
+		throw new APIError({
+			type: "basic",
+			name: T("dynamic_error_name", {
+				name: T("role"),
+			}),
+			message: T("update_error_message", {
+				name: T("role").toLowerCase(),
+			}),
+			status: 400,
+		});
+	}
 
 	if (validatePerms !== undefined) {
 		await serviceConfig.db
