@@ -31,6 +31,7 @@ const updateSingle = async (
 					.selectFrom("headless_roles")
 					.select("id")
 					.where("name", "=", data.name)
+					.where("id", "!=", data.id)
 					.executeTakeFirst()
 			: undefined,
 	]);

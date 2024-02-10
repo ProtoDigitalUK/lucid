@@ -2,24 +2,32 @@ import {
 	type UserPermissionsResT,
 	type UserResT,
 } from "@headless/types/src/users.js";
-import {
+import formatUserPermissions, {
 	swaggerPermissionsRes,
 	swaggerRolesRes,
 } from "./format-user-permissions.js";
 
-const formatUser = (
-	user: {
+const formatUser = (user: {
+	created_at: Date | null;
+	email: string;
+	first_name: string | null;
+	super_admin: boolean | null;
+	id: number;
+	last_name: string | null;
+	updated_at: Date | null;
+	username: string;
+	roles?: {
 		id: number;
-		created_at: Date | null;
-		email: string;
-		first_name: string | null;
-		last_name: string | null;
-		super_admin: boolean | null;
-		updated_at: Date | null;
-		username: string;
-	},
-	permissions?: UserPermissionsResT,
-): UserResT => {
+		description: string | null;
+		name: string;
+		permissions: {
+			permission: string;
+			environment_key: string | null;
+		}[];
+	}[];
+}): UserResT => {
+	const { roles, permissions } = formatUserPermissions(user.roles);
+
 	return {
 		id: user.id,
 		super_admin: user.super_admin || false,
@@ -27,8 +35,8 @@ const formatUser = (
 		username: user.username,
 		first_name: user.first_name,
 		last_name: user.last_name,
-		roles: permissions?.roles,
-		permissions: permissions?.permissions,
+		roles: roles,
+		permissions: permissions,
 		created_at: user.created_at?.toISOString() || null,
 		updated_at: user.updated_at?.toISOString() || null,
 	};
