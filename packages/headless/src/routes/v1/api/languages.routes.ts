@@ -39,6 +39,21 @@ const langaugeRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: langauges.getMultiple.zodSchema,
 		controller: langauges.getMultiple.controller,
 	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/:code",
+		permissions: {
+			global: ["delete_language"],
+		},
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: langauges.deleteSingle.swaggerSchema,
+		zodSchema: langauges.deleteSingle.zodSchema,
+		controller: langauges.deleteSingle.controller,
+	});
 };
 
 export default langaugeRoutes;
