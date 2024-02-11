@@ -58,5 +58,7 @@
 	"account": "Account",
 	"your_account": "your account",
 	"permission": "Permission",
-	"language": "Language"
+	"language": "Language",
+	"error_invalid": "Invalid {{type}}",
+	"language_iso_639_1": "ISO 639-1"
 }

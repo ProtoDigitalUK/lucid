@@ -28,7 +28,7 @@ const createSingleController: ControllerT<
 		},
 	);
 
-	const environment = await serviceWrapper(environments.getSingle, true)(
+	const environment = await serviceWrapper(environments.getSingle, false)(
 		{
 			db: request.server.db,
 		},
@@ -57,15 +57,15 @@ export default {
 			description:
 				"Key should be unique and only contain lowercase letters and dashes. For example: 'staging' or 'production'. <br> Title is a human readable name for the environment. For example: 'Staging' or 'Production'. <br> Assigned bricks and collections should be an array of keys. These keys should match those that you have defined in the collection and brick builder.",
 			properties: {
-				key: { type: "string", default: "production" },
-				title: { type: "string", default: "Production" },
+				key: { type: "string" },
+				title: { type: "string" },
 				assigned_bricks: {
 					type: "array",
-					items: { type: "string", default: "hero" },
+					items: { type: "string" },
 				},
 				assigned_collections: {
 					type: "array",
-					items: { type: "string", default: "articles" },
+					items: { type: "string" },
 				},
 			},
 			required: ["key", "title"],
