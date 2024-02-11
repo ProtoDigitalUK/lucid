@@ -25,10 +25,10 @@ const createSingle = async (
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
-				type: T("language"),
+				name: T("language"),
 			}),
 			message: T("creation_error_message", {
-				type: T("language").toLowerCase(),
+				name: T("language").toLowerCase(),
 			}),
 			status: 400,
 			errors: modelErrors({
@@ -47,7 +47,7 @@ const createSingle = async (
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
-				type: T("language"),
+				name: T("language"),
 			}),
 			message: T("error_invalid", {
 				type: T("language_iso_639_1"),
@@ -70,10 +70,10 @@ const createSingle = async (
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
-				type: T("language"),
+				name: T("language"),
 			}),
 			message: T("creation_error_message", {
-				type: T("language").toLowerCase(),
+				name: T("language").toLowerCase(),
 			}),
 			status: 400,
 		});
