@@ -4,6 +4,7 @@ import rolesSchema from "../../schemas/roles.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";
+import { parseCount } from "../../utils/app/helpers.js";
 
 export interface ServiceData {
 	query: z.infer<typeof rolesSchema.getMultiple.query>;
@@ -84,12 +85,14 @@ const getMultiple = async (
 
 	const roles = await main.execute();
 	const rolesCount = (await count?.executeTakeFirst()) as
-		| { count: number }
+		| { count: string }
 		| undefined;
+
+	console.log(typeof rolesCount?.count);
 
 	return {
 		data: roles.map(formatRole),
-		count: rolesCount?.count || 0,
+		count: parseCount(rolesCount?.count),
 	};
 };
 

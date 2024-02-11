@@ -5,7 +5,7 @@
 	"validation_error": "Validation error!",
 	"authorisation_error": "Authorisation error.",
 	"forbidden_error": "Forbidden error!",
-	"an_error_occurred_saving_default_user": "An error occurred while saving the default user.",
+	"dynamic_an_error_occurred_saving_default": "An error occurred while saving the default {{name}}.",
 	"an_error_occurred_clearing_expired_tokens": "An error occurred while clearing expired tokens.",
 	"swagger_response_200": "Successfull response",
 	"swagger_response_201": "Resource created response",
@@ -57,5 +57,6 @@
 	"role": "Role",
 	"account": "Account",
 	"your_account": "your account",
-	"permission": "Permission"
+	"permission": "Permission",
+	"language": "Language"
 }

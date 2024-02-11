@@ -1,11 +1,22 @@
 export default {
-	defaultUser: {
-		first_name: "Headless",
-		last_name: "Admin",
-		email: "admin@headless.com",
-		username: "admin",
-		password: "password",
-		super_admin: true,
+	seedDefaults: {
+		language: {
+			code: "en",
+			is_default: true,
+			is_enabled: true,
+		},
+		environment: {
+			key: "production",
+			title: "Production",
+		},
+		user: {
+			first_name: "Headless",
+			last_name: "Admin",
+			email: "admin@headless.com",
+			username: "admin",
+			password: "password",
+			super_admin: true,
+		},
 	},
 	query: {
 		page: 1,
