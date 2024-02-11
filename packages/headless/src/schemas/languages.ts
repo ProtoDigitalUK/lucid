@@ -1,9 +1,10 @@
 import z from "zod";
+import defaultQuery from "./default-query.js";
 
 export default {
 	createSingle: {
 		body: z.object({
-			code: z.string().min(2), // ISO 639-1 - bcp47
+			code: z.string().min(2),
 			is_default: z.boolean(),
 			is_enabled: z.boolean(),
 		}),
@@ -13,12 +14,13 @@ export default {
 	getSingle: {
 		query: undefined,
 		params: z.object({
-			code: z.string().min(2), // ISO 639-1 - bcp47
+			code: z.string().min(2),
 		}),
 		body: undefined,
 	},
 	getMultiple: {
 		query: z.object({
+			filter: defaultQuery.filter,
 			sort: z
 				.array(
 					z.object({
@@ -27,28 +29,30 @@ export default {
 					}),
 				)
 				.optional(),
-			page: z.string().optional(),
-			per_page: z.string().optional(),
+			include: z.array(z.enum(["permissions"])).optional(),
+			exclude: defaultQuery.exclude,
+			page: defaultQuery.page,
+			per_page: defaultQuery.per_page,
 		}),
 		params: undefined,
 		body: undefined,
 	},
 	updateSingle: {
 		body: z.object({
-			code: z.string().min(2).optional(), // ISO 639-1 - bcp47
+			code: z.string().min(2).optional(),
 			is_default: z.boolean().optional(),
 			is_enabled: z.boolean().optional(),
 		}),
 		query: undefined,
 		params: z.object({
-			code: z.string().min(2), // ISO 639-1 - bcp47
+			code: z.string().min(2),
 		}),
 	},
 	deleteSingle: {
 		body: undefined,
 		query: undefined,
 		params: z.object({
-			code: z.string().min(2), // ISO 639-1 - bcp47
+			code: z.string().min(2),
 		}),
 	},
 };

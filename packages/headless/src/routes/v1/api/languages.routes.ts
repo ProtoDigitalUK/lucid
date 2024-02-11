@@ -28,6 +28,17 @@ const langaugeRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: langauges.getSingle.zodSchema,
 		controller: langauges.getSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: langauges.getMultiple.swaggerSchema,
+		zodSchema: langauges.getMultiple.zodSchema,
+		controller: langauges.getMultiple.controller,
+	});
 };
 
 export default langaugeRoutes;

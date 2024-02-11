@@ -9,7 +9,7 @@ interface BuildResponseParams {
 	pagination?: {
 		count: number;
 		page: number;
-		per_page: number;
+		perPage: number;
 	};
 }
 
@@ -35,8 +35,8 @@ const buildMetaLinks = (
 	const links: ResponseBodyT["meta"]["links"] = [];
 	if (!params.pagination) return links;
 
-	const { page, per_page, count } = params.pagination;
-	const totalPages = Math.ceil(count / Number(per_page));
+	const { page, perPage, count } = params.pagination;
+	const totalPages = Math.ceil(count / Number(perPage));
 
 	const url = new URL(
 		`${request.protocol}://${request.hostname}${request.originalUrl}`,
@@ -61,8 +61,8 @@ const buildLinks = (
 ): ResponseBodyT["links"] => {
 	if (!params.pagination) return undefined;
 
-	const { page, per_page, count } = params.pagination;
-	const totalPages = Math.ceil(count / Number(per_page));
+	const { page, perPage, count } = params.pagination;
+	const totalPages = perPage === -1 ? 1 : Math.ceil(count / Number(perPage));
 
 	const url = new URL(
 		`${request.protocol}://${request.hostname}${request.originalUrl}`,
@@ -105,20 +105,24 @@ const buildLinks = (
 // --------------------------------------------------
 // Main
 const buildResponse: BuildResponseT = async (request, params) => {
+	let lastPage = null;
+	if (params.pagination) {
+		if (params.pagination.perPage === -1) {
+			lastPage = 1;
+		} else {
+			lastPage = Math.ceil(
+				params.pagination.count / Number(params.pagination.perPage),
+			);
+		}
+	}
+
 	const meta = {
 		path: await getPath(request),
 		links: buildMetaLinks(request, params),
 		current_page: params.pagination?.page ?? null,
-		per_page: params.pagination?.per_page ?? null,
+		per_page: params.pagination?.perPage ?? null,
 		total: Number(params.pagination?.count) || null,
-		last_page: params.pagination
-			? Math.ceil(
-					params.pagination?.count /
-						Number(params.pagination.per_page),
-			  ) ||
-			  Number(params.pagination?.page) ||
-			  null
-			: null,
+		last_page: lastPage,
 	};
 	const links = buildLinks(request, params);
 

@@ -1,16 +1,19 @@
-import rolesSchema from "../../schemas/roles.js";
+import languageSchema from "../../schemas/languages.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import rolesServices from "../../services/roles/index.js";
+import languagesServices from "../../services/languages/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerRoleRes } from "../../format/format-roles.js";
+import { swaggerLanguageRes } from "../../format/format-language.js";
 
 const getMultipleController: ControllerT<
-	typeof rolesSchema.getMultiple.params,
-	typeof rolesSchema.getMultiple.body,
-	typeof rolesSchema.getMultiple.query
+	typeof languageSchema.getMultiple.params,
+	typeof languageSchema.getMultiple.body,
+	typeof languageSchema.getMultiple.query
 > = async (request, reply) => {
-	const role = await serviceWrapper(rolesServices.getMultiple, false)(
+	const languages = await serviceWrapper(
+		languagesServices.getMultiple,
+		false,
+	)(
 		{
 			db: request.server.db,
 		},
@@ -21,9 +24,9 @@ const getMultipleController: ControllerT<
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: role.data,
+			data: languages.data,
 			pagination: {
-				count: role.count,
+				count: languages.count,
 				page: request.query.page,
 				perPage: request.query.per_page,
 			},
@@ -33,17 +36,18 @@ const getMultipleController: ControllerT<
 
 export default {
 	controller: getMultipleController,
-	zodSchema: rolesSchema.getMultiple,
+	zodSchema: languageSchema.getMultiple,
 	swaggerSchema: {
-		description: "Returns multiple roles based on the query parameters.",
-		tags: ["roles"],
-		summary: "Get multiple roles",
+		description:
+			"Returns multiple languages based on the query parameters.",
+		tags: ["languages"],
+		summary: "Get multiple language",
 		response: {
 			200: swaggerResponse({
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerRoleRes,
+					items: swaggerLanguageRes,
 				},
 				paginated: true,
 			}),

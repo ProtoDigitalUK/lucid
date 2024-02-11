@@ -88,8 +88,6 @@ const getMultiple = async (
 		| { count: string }
 		| undefined;
 
-	console.log(typeof rolesCount?.count);
-
 	return {
 		data: roles.map(formatRole),
 		count: parseCount(rolesCount?.count),

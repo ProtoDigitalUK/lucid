@@ -88,9 +88,12 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 
 	// -----------------------------------------
 	// Pagination
-	mainQuery = mainQuery
-		.limit(requestQuery.per_page)
-		.offset((requestQuery.page - 1) * requestQuery.per_page);
+
+	if (requestQuery.per_page !== -1) {
+		mainQuery = mainQuery
+			.limit(requestQuery.per_page)
+			.offset((requestQuery.page - 1) * requestQuery.per_page);
+	}
 
 	return {
 		main: mainQuery,
