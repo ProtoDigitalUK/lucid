@@ -1,3 +1,5 @@
+import nodemailer from "nodemailer";
+import aws from "@aws-sdk/client-ses";
 import { headlessConfig } from "@protodigital/headless";
 import {
 	BannerBrick,
@@ -20,6 +22,21 @@ export default headlessConfig({
 		cookieSecret: process.env.COOKIE_SECRET as string,
 		refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
+	},
+	email: {
+		from: {
+			name: "Headless CMS",
+			email: "hello@protoheadless.com",
+		},
+		transporter: nodemailer.createTransport({
+			SES: {
+				ses: new aws.SES({
+					apiVersion: "2010-12-01",
+					region: "eu-west-2",
+				}),
+				aws: aws,
+			},
+		}),
 	},
 	collections: [PageCollection, BlogCollection, SettingsCollection],
 	bricks: [
