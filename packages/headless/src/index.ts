@@ -5,6 +5,6 @@ import BrickBuilder from "./builders/brick-builder/index.js";
 import CollectionBuilder from "./builders/collection-builder/index.js";
 
 export { headless, headlessConfig, BrickBuilder, CollectionBuilder };
-export type { SendEmailT } from "./services/email/send-email.js";
+export type { EmailStrategyT } from "./schemas/config.js";
 
 export default headless;

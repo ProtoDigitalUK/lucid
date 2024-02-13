@@ -22,11 +22,18 @@ export default headlessConfig({
 		refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
 	},
-	emailStrategy: async (data, tempalte) => {
-		return {
-			success: true,
-			message: "Email sent",
-		};
+	email: {
+		from: {
+			email: "admin@protoheadless.com",
+			name: "Protoheadless",
+		},
+		strategy: async (email, meta) => {
+			console.log(email, meta);
+			return {
+				success: true,
+				message: "Email sent",
+			};
+		},
 	},
 	collections: [PageCollection, BlogCollection, SettingsCollection],
 	bricks: [

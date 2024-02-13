@@ -271,6 +271,27 @@ export interface HeadlessAssignedCollections {
   key: string;
 }
 
+export interface HeadlessEmails {
+  bcc: string | null;
+  cc: string | null;
+  created_at: Generated<Timestamp | null>;
+  data: Json | null;
+  delivery_status: string;
+  email_hash: string;
+  error_count: Generated<number>;
+  from_address: string | null;
+  from_name: string | null;
+  id: Generated<number>;
+  last_attempt_at: Generated<Timestamp | null>;
+  last_error_message: string | null;
+  last_success_at: Timestamp | null;
+  sent_count: Generated<number>;
+  subject: string | null;
+  template: string;
+  to_address: string | null;
+  type: string;
+}
+
 export interface HeadlessEnvironments {
   key: string;
   title: string | null;
@@ -502,6 +523,7 @@ export interface DB {
   "extensions.pg_stat_statements_info": ExtensionsPgStatStatementsInfo;
   headless_assigned_bricks: HeadlessAssignedBricks;
   headless_assigned_collections: HeadlessAssignedCollections;
+  headless_emails: HeadlessEmails;
   headless_environments: HeadlessEnvironments;
   headless_languages: HeadlessLanguages;
   headless_migrations: HeadlessMigrations;
