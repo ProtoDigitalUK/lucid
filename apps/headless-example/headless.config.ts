@@ -22,7 +22,7 @@ export default headlessConfig({
 		refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
 	},
-	sendEmail: async (data, tempalte) => {
+	emailStrategy: async (data, tempalte) => {
 		return {
 			success: true,
 			message: "Email sent",

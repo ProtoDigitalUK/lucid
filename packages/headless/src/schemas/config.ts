@@ -17,7 +17,6 @@ export const headlessConfigSchema = z.object({
 			emailTemplates: z.string().optional(),
 		})
 		.optional(),
-	sendEmail: z.any(),
 	// collections: z.array(z.any()),
 	// bricks: z.array(z.any()),
 });
@@ -25,5 +24,5 @@ export const headlessConfigSchema = z.object({
 export interface HeadlessConfigT extends z.infer<typeof headlessConfigSchema> {
 	collections?: CollectionBuilderT[];
 	bricks?: BrickBuilderT[];
-	sendEmail: SendEmailT;
+	emailStrategy: SendEmailT;
 }
