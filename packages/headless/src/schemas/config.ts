@@ -12,6 +12,11 @@ export const headlessConfigSchema = z.object({
 		accessTokenSecret: z.string(),
 		refreshTokenSecret: z.string(),
 	}),
+	paths: z
+		.object({
+			emailTemplates: z.string().optional(),
+		})
+		.optional(),
 	sendEmail: z.any(),
 	// collections: z.array(z.any()),
 	// bricks: z.array(z.any()),
