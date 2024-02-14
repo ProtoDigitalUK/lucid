@@ -6,6 +6,7 @@ import permissionRoutes from "./permissions.routes.js";
 import roleRoutes from "./roles.routes.js";
 import accountRoutes from "./account.routes.js";
 import langaugeRoutes from "./languages.routes.js";
+import emailRoutes from "./emails.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -25,6 +26,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(langaugeRoutes, {
 		prefix: "/languages",
+	});
+	fastify.register(emailRoutes, {
+		prefix: "/emails",
 	});
 };
 
