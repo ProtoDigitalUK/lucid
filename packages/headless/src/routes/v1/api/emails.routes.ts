@@ -30,6 +30,20 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: emails.getMultiple.zodSchema,
 		controller: emails.getMultiple.controller,
 	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+		},
+		permissions: {
+			global: ["delete_email"],
+		},
+		swaggerSchema: emails.deleteSingle.swaggerSchema,
+		zodSchema: emails.deleteSingle.zodSchema,
+		controller: emails.deleteSingle.controller,
+	});
 };
 
 export default roleRoutes;
