@@ -9,6 +9,9 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		middleware: {
 			authenticate: true,
 		},
+		permissions: {
+			global: ["read_email"],
+		},
 		swaggerSchema: emails.getMultiple.swaggerSchema,
 		zodSchema: emails.getMultiple.zodSchema,
 		controller: emails.getMultiple.controller,
