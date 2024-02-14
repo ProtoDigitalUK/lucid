@@ -20,7 +20,7 @@ import registerCronJobs from "./services/cron-jobs.js";
 import migrate from "./db/migrate.js";
 import pkg from "pg";
 import { Kysely, PostgresDialect } from "kysely";
-import { type DB as DBSchema } from "./db/kysely.js";
+import { type DB as DBSchema } from "kysely-codegen";
 
 const currentDir = getDirName(import.meta.url);
 

@@ -6,8 +6,8 @@ import {
 import { type HeadlessConfigT } from "../schemas/config.js";
 import z from "zod";
 import { type Kysely } from "kysely";
-import { type DB as DBSchema } from "../db/kysely.js";
 import type { UserPermissionsResT } from "@headless/types/src/users.js";
+import { type DB as DBSchema } from "kysely-codegen";
 
 declare module "fastify" {
 	interface FastifyInstance {
