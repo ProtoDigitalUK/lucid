@@ -60,5 +60,6 @@
 	"permission": "Permission",
 	"language": "Language",
 	"error_invalid": "Invalid {{type}}",
-	"language_iso_639_1": "ISO 639-1"
+	"language_iso_639_1": "ISO 639-1",
+	"email": "Email"
 }

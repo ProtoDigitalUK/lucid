@@ -5,6 +5,20 @@ import emails from "../../../controllers/email/index.js";
 const roleRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "get",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+		},
+		permissions: {
+			global: ["read_email"],
+		},
+		swaggerSchema: emails.getSingle.swaggerSchema,
+		zodSchema: emails.getSingle.zodSchema,
+		controller: emails.getSingle.controller,
+	});
+
+	r(fastify, {
+		method: "get",
 		url: "",
 		middleware: {
 			authenticate: true,

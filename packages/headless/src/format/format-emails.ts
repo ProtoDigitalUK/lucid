@@ -19,7 +19,7 @@ const formatEmails = (
 		last_attempt_at: Date | null;
 		last_success_at: Date | null;
 		created_at: Date | null;
-		data?: string | null;
+		data?: unknown | null;
 	},
 	html?: string,
 ): EmailResT => {
@@ -36,12 +36,12 @@ const formatEmails = (
 			bcc: email.bcc,
 			template: email.template,
 		},
-		data: email.data ? JSON.parse(email.data) : null,
+		data: email.data ?? null,
 		delivery_status: email.delivery_status as "sent" | "failed" | "pending",
 		type: email.type as "external" | "internal",
 		email_hash: email.email_hash,
 		sent_count: email.sent_count || 0,
-		html: html,
+		html: html ?? null,
 		created_at: email.created_at?.toISOString() ?? null,
 		last_success_at: email.last_success_at?.toISOString() ?? null,
 		last_attempt_at: email.last_attempt_at?.toISOString() ?? null,
