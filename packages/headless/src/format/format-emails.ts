@@ -4,17 +4,17 @@ const formatEmails = (
 	email: {
 		id: number;
 		email_hash: string;
-		from_address: string | null;
-		from_name: string | null;
-		to_address: string | null;
-		subject: string | null;
+		from_address: string;
+		from_name: string;
+		to_address: string;
+		subject: string;
 		cc: string | null;
 		bcc: string | null;
-		delivery_status: string | null;
-		template: string | null;
-		type: string | null;
-		sent_count: number | null;
-		error_count: number | null;
+		delivery_status: string;
+		template: string;
+		type: string;
+		sent_count: number;
+		error_count: number;
 		last_error_message: string | null;
 		last_attempt_at: Date | null;
 		last_success_at: Date | null;

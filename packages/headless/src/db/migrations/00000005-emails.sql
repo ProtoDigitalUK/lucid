@@ -2,10 +2,10 @@ CREATE TABLE IF NOT EXISTS headless_emails (
     id SERIAL PRIMARY KEY,
     email_hash CHAR(64) NOT NULL UNIQUE,
 
-    from_address TEXT,
-    from_name TEXT,
-    to_address TEXT,
-    subject TEXT,
+    from_address TEXT NOT NULL,
+    from_name TEXT NOT NULL,
+    to_address TEXT NOT NULL,
+    subject TEXT NOT NULL,
     cc TEXT,
     bcc TEXT,
 

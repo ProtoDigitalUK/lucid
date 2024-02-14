@@ -279,16 +279,16 @@ export interface HeadlessEmails {
   delivery_status: string;
   email_hash: string;
   error_count: Generated<number>;
-  from_address: string | null;
-  from_name: string | null;
+  from_address: string;
+  from_name: string;
   id: Generated<number>;
   last_attempt_at: Generated<Timestamp | null>;
   last_error_message: string | null;
   last_success_at: Timestamp | null;
   sent_count: Generated<number>;
-  subject: string | null;
+  subject: string;
   template: string;
-  to_address: string | null;
+  to_address: string;
   type: string;
 }
 

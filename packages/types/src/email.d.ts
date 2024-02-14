@@ -1,22 +1,22 @@
 export interface EmailResT {
-	id: number | null;
+	id: number;
 	mail_details: {
 		from: {
-			address: string | null;
-			name: string | null;
+			address: string;
+			name: string;
 		};
-		to: string | null;
-		subject: string | null;
+		to: string;
+		subject: string;
 		cc: null | string;
 		bcc: null | string;
-		template: string | null;
+		template: string;
 	};
 	data: unknown | null;
 	delivery_status: "sent" | "failed" | "pending";
 	type: "external" | "internal";
-	email_hash: string | null;
-	sent_count: number | null;
-	error_count: number | null;
+	email_hash: string;
+	sent_count: number;
+	error_count: number;
 	html: string | null;
 	error_message: string | null;
 
