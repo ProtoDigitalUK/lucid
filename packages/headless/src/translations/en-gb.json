@@ -61,5 +61,6 @@
 	"language": "Language",
 	"error_invalid": "Invalid {{type}}",
 	"language_iso_639_1": "ISO 639-1",
-	"email": "Email"
+	"email": "Email",
+	"db_connection_error": "An error occurred while connecting to the database."
 }

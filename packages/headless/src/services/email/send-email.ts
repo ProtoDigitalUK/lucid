@@ -3,18 +3,19 @@ import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/app/helpers.js";
 
 export interface ServiceData {
+	type: "internal" | "external";
 	to: string;
 	subject: string;
 	template: string;
+	cc?: string;
+	bcc?: string;
+	replyTo?: string;
 	data: {
 		[key: string]: unknown;
 	};
 }
 
-const sendInternal = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
+const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const config = await getConfig();
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);
@@ -24,6 +25,9 @@ const sendInternal = async (
 			to: data.to,
 			subject: data.subject,
 			from: config.email.from,
+			cc: data.cc,
+			bcc: data.bcc,
+			replyTo: data.replyTo,
 			html: html,
 		},
 		{
@@ -68,8 +72,10 @@ const sendInternal = async (
 				to_address: data.to,
 				subject: data.subject,
 				template: data.template,
+				cc: data.cc,
+				bcc: data.bcc,
 				data: JSON.stringify(data.data),
-				type: "internal",
+				type: data.type,
 				sent_count: result.success ? 1 : 0,
 				error_count: result.success ? 0 : 1,
 				delivery_status: emailRecord.deliveryStatus,
@@ -82,4 +88,4 @@ const sendInternal = async (
 	return;
 };
 
-export default sendInternal;
+export default sendEmail;
