@@ -18,9 +18,7 @@ import { decodeError } from "./utils/app/error-handler.js";
 import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
 import migrate from "./db/migrate.js";
-import pkg from "pg";
-import { Kysely, PostgresDialect } from "kysely";
-import { type DB as DBSchema } from "kysely-codegen";
+import { initialiseDB, headlessDB } from "./db/db.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -29,23 +27,10 @@ const headless = async (
 	options: Record<string, string>,
 ) => {
 	try {
-		const { Pool } = pkg;
 		const config = await getConfig();
-		const dialect = new PostgresDialect({
-			pool: new Pool({
-				connectionString: config.databaseURL,
-				max: 20,
-				ssl: {
-					rejectUnauthorized: false,
-				},
-			}),
-		});
+		await initialiseDB();
 
-		const db = new Kysely<DBSchema>({
-			dialect,
-		});
-
-		fastify.decorate("db", db);
+		fastify.decorate("db", headlessDB());
 		fastify.decorate("config", config);
 
 		// ------------------------------------
@@ -100,7 +85,7 @@ const headless = async (
 		// ------------------------------------
 		// Migrate DB
 		log.white("----------------------------------------------------");
-		await migrate(db);
+		await migrate(fastify.db);
 
 		// ------------------------------------
 		// Initialise
