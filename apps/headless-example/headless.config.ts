@@ -31,7 +31,7 @@ export default headlessConfig({
 			console.log(email, meta);
 			return {
 				success: true,
-				message: "Email sent",
+				message: "Email sent successfully",
 			};
 		},
 	},

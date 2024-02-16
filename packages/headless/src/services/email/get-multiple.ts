@@ -58,7 +58,7 @@ const getMultiple = async (
 					{
 						queryKey: "to_address",
 						tableKey: "to_address",
-						operator: "%",
+						operator: "=",
 					},
 					{
 						queryKey: "subject",
