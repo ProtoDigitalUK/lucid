@@ -1,6 +1,9 @@
+import T from "../../translations/index.js";
 import getConfig from "../config.js";
 import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/app/helpers.js";
+import formatEmails from "../../format/format-emails.js";
+import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	type: "internal" | "external";
@@ -50,7 +53,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		.executeTakeFirst();
 
 	if (emailExists) {
-		await serviceConfig.db
+		const emailUpdated = await serviceConfig.db
 			.updateTable("headless_emails")
 			.set({
 				delivery_status: emailRecord.deliveryStatus,
@@ -61,31 +64,61 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				last_attempt_at: new Date(),
 			})
 			.where("id", "=", emailExists.id)
-			.execute();
-	} else {
-		await serviceConfig.db
-			.insertInto("headless_emails")
-			.values({
-				email_hash: emailHash,
-				from_address: config.email.from.email,
-				from_name: config.email.from.name,
-				to_address: data.to,
-				subject: data.subject,
-				template: data.template,
-				cc: data.cc,
-				bcc: data.bcc,
-				data: JSON.stringify(data.data),
-				type: data.type,
-				sent_count: result.success ? 1 : 0,
-				error_count: result.success ? 0 : 1,
-				delivery_status: emailRecord.deliveryStatus,
-				last_error_message: emailRecord.lastErrorMessage,
-				last_success_at: emailRecord.lastSuccessAt,
-			})
-			.execute();
+			.returningAll()
+			.executeTakeFirst();
+
+		if (emailUpdated === undefined) {
+			throw new APIError({
+				type: "basic",
+				name: T("dynamic_error_name", {
+					name: T("email"),
+				}),
+				message: T("update_error_message", {
+					name: T("email").toLowerCase(),
+				}),
+				status: 500,
+			});
+		}
+
+		return formatEmails(emailUpdated, html);
 	}
 
-	return;
+	const newEmail = await serviceConfig.db
+		.insertInto("headless_emails")
+		.values({
+			email_hash: emailHash,
+			from_address: config.email.from.email,
+			from_name: config.email.from.name,
+			to_address: data.to,
+			subject: data.subject,
+			template: data.template,
+			cc: data.cc,
+			bcc: data.bcc,
+			data: JSON.stringify(data.data),
+			type: data.type,
+			sent_count: result.success ? 1 : 0,
+			error_count: result.success ? 0 : 1,
+			delivery_status: emailRecord.deliveryStatus,
+			last_error_message: emailRecord.lastErrorMessage,
+			last_success_at: emailRecord.lastSuccessAt,
+		})
+		.returningAll()
+		.executeTakeFirst();
+
+	if (newEmail === undefined) {
+		throw new APIError({
+			type: "basic",
+			name: T("dynamic_error_name", {
+				name: T("email"),
+			}),
+			message: T("creation_error_message", {
+				name: T("email").toLowerCase(),
+			}),
+			status: 500,
+		});
+	}
+
+	return formatEmails(newEmail, html);
 };
 
 export default sendEmail;

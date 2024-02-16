@@ -28,7 +28,7 @@ export default headlessConfig({
 			name: "Protoheadless",
 		},
 		strategy: async (email, meta) => {
-			console.log(email, meta);
+			// console.log(email, meta);
 			return {
 				success: true,
 				message: "Email sent successfully",
