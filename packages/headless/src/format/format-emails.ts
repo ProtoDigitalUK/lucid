@@ -23,8 +23,13 @@ const formatEmails = (
 	},
 	html?: string,
 ): EmailResT => {
+	console.log(email.data);
+
 	return {
 		id: email.id,
+		email_hash: email.email_hash,
+		type: email.type as "external" | "internal",
+		delivery_status: email.delivery_status as "sent" | "failed" | "pending",
 		mail_details: {
 			from: {
 				address: email.from_address,
@@ -37,16 +42,13 @@ const formatEmails = (
 			template: email.template,
 		},
 		data: email.data ?? null,
-		delivery_status: email.delivery_status as "sent" | "failed" | "pending",
-		type: email.type as "external" | "internal",
-		email_hash: email.email_hash,
 		sent_count: email.sent_count || 0,
-		html: html ?? null,
-		created_at: email.created_at?.toISOString() ?? null,
-		last_success_at: email.last_success_at?.toISOString() ?? null,
-		last_attempt_at: email.last_attempt_at?.toISOString() ?? null,
 		error_count: email.error_count || 0,
 		error_message: email.last_error_message,
+		html: html ?? null,
+		last_success_at: email.last_success_at?.toISOString() ?? null,
+		last_attempt_at: email.last_attempt_at?.toISOString() ?? null,
+		created_at: email.created_at?.toISOString() ?? null,
 	};
 };
 
@@ -55,6 +57,17 @@ export const swaggerEmailsRes = {
 	properties: {
 		id: {
 			type: "number",
+		},
+		email_hash: {
+			type: "string",
+		},
+		type: {
+			type: "string",
+			enum: ["external", "internal"],
+		},
+		delivery_status: {
+			type: "string",
+			enum: ["sent", "failed", "pending"],
 		},
 		mail_details: {
 			type: "object",
@@ -78,9 +91,11 @@ export const swaggerEmailsRes = {
 				},
 				cc: {
 					type: "string",
+					nullable: true,
 				},
 				bcc: {
 					type: "string",
+					nullable: true,
 				},
 				template: {
 					type: "string",
@@ -89,39 +104,34 @@ export const swaggerEmailsRes = {
 		},
 		data: {
 			type: "object",
-			properties: {},
-		},
-		delivery_status: {
-			type: "string",
-			enum: ["sent", "failed", "pending"],
-		},
-		type: {
-			type: "string",
-			enum: ["external", "internal"],
-		},
-		email_hash: {
-			type: "string",
+			nullable: true,
+			additionalProperties: true,
 		},
 		sent_count: {
 			type: "number",
-		},
-		html: {
-			type: "string",
-		},
-		created_at: {
-			type: "string",
-		},
-		last_success_at: {
-			type: "string",
-		},
-		last_attempt_at: {
-			type: "string",
 		},
 		error_count: {
 			type: "number",
 		},
 		error_message: {
 			type: "string",
+			nullable: true,
+		},
+		html: {
+			type: "string",
+			nullable: true,
+		},
+		last_success_at: {
+			type: "string",
+			nullable: true,
+		},
+		last_attempt_at: {
+			type: "string",
+			nullable: true,
+		},
+		created_at: {
+			type: "string",
+			nullable: true,
 		},
 	},
 };
