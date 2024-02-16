@@ -14,11 +14,9 @@ fastify.post("/send-email", async (request, reply) => {
 	const res = await sendEmail({
 		to: "hello@williamyallop.com",
 		subject: "Hello",
-		template: "contact-form",
+		template: "password-reset",
 		data: {
-			name: "William",
-			email: "hello@williamyallop.com",
-			message: "Hello!",
+			first_name: "William",
 		},
 	});
 
