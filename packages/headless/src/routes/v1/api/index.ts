@@ -12,20 +12,20 @@ const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
 		prefix: "/auth",
 	});
-	fastify.register(environmentRoutes, {
-		prefix: "/environments",
+	fastify.register(accountRoutes, {
+		prefix: "/account",
 	});
 	fastify.register(permissionRoutes, {
 		prefix: "/permissions",
 	});
-	fastify.register(roleRoutes, {
-		prefix: "/roles",
-	});
-	fastify.register(accountRoutes, {
-		prefix: "/account",
-	});
 	fastify.register(langaugeRoutes, {
 		prefix: "/languages",
+	});
+	fastify.register(environmentRoutes, {
+		prefix: "/environments",
+	});
+	fastify.register(roleRoutes, {
+		prefix: "/roles",
 	});
 	fastify.register(emailRoutes, {
 		prefix: "/emails",
