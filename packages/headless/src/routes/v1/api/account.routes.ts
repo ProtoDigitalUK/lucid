@@ -44,6 +44,17 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: account.verifyResetPassword.zodSchema,
 		controller: account.verifyResetPassword.controller,
 	});
+
+	r(fastify, {
+		method: "patch",
+		url: "/reset-password/:token",
+		middleware: {
+			validateCSRF: true,
+		},
+		swaggerSchema: account.resetPassword.swaggerSchema,
+		zodSchema: account.resetPassword.zodSchema,
+		controller: account.resetPassword.controller,
+	});
 };
 
 export default roleRoutes;

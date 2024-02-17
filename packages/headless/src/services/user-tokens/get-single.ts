@@ -9,7 +9,7 @@ export interface ServiceData {
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const userToken = await serviceConfig.db
 		.selectFrom("headless_user_tokens")
-		.select(["id"])
+		.select(["id", "user_id"])
 		.where("token", "=", data.token)
 		.where("token_type", "=", data.tokenType)
 		.where("expiry_date", ">", new Date())

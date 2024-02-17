@@ -1,4 +1,5 @@
 import z from "zod";
+import T from "../translations/index.js";
 
 export default {
 	getMe: {
@@ -26,6 +27,21 @@ export default {
 	},
 	verifyResetPassword: {
 		body: undefined,
+		query: undefined,
+		params: z.object({
+			token: z.string(),
+		}),
+	},
+	resetPassword: {
+		body: z
+			.object({
+				password: z.string().min(8),
+				password_confirmation: z.string().min(8),
+			})
+			.refine((data) => data.password === data.password_confirmation, {
+				message: T("please_ensure_passwords_match"),
+				path: ["password_confirmation"],
+			}),
 		query: undefined,
 		params: z.object({
 			token: z.string(),
