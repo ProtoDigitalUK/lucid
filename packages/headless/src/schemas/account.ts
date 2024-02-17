@@ -17,4 +17,11 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	sendResetPassword: {
+		body: z.object({
+			email: z.string().email(),
+		}),
+		query: undefined,
+		params: undefined,
+	},
 };

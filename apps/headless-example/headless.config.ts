@@ -28,11 +28,40 @@ export default headlessConfig({
 			name: "Protoheadless",
 		},
 		strategy: async (email, meta) => {
-			// console.log(email, meta);
-			return {
-				success: true,
-				message: "Email sent successfully",
-			};
+			try {
+				console.log({
+					from: `${email.from.name} <${email.from.email}>`,
+					to: email.to,
+					subject: email.subject,
+					cc: email.cc,
+					bcc: email.bcc,
+					replyTo: email.replyTo,
+					text: email.text,
+					html: email.html,
+				});
+
+				await transporter.sendMail({
+					from: `${email.from.name} <${email.from.email}>`,
+					to: email.to,
+					subject: email.subject,
+					cc: email.cc,
+					bcc: email.bcc,
+					replyTo: email.replyTo,
+					text: email.text,
+					html: email.html,
+				});
+
+				return {
+					success: true,
+					message: "Email sent successfully",
+				};
+			} catch (error) {
+				const err = error as Error;
+				return {
+					success: false,
+					message: err.message,
+				};
+			}
 		},
 	},
 	collections: [PageCollection, BlogCollection, SettingsCollection],

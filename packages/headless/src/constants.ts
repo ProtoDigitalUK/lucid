@@ -22,8 +22,12 @@ export default {
 		page: 1,
 		per_page: 10,
 	},
+	locations: {
+		resetPassword: "/reset-password",
+	},
 	// 7 days in seconds
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds
 	accessTokenExpiration: 300, // 5 minutes in seconds
+	passwordResetTokenExpirationMinutes: 15,
 };

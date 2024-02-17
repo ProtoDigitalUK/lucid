@@ -9,7 +9,6 @@
 		"dev": "nodemon"
 	},
 	"dependencies": {
-		"@aws-sdk/client-ses": "^3.511.0",
 		"@protodigital/headless": "*",
 		"fastify": "^4.24.3",
 		"nodemailer": "^6.9.9",
