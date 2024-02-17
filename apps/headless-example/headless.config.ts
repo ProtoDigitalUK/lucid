@@ -29,17 +29,6 @@ export default headlessConfig({
 		},
 		strategy: async (email, meta) => {
 			try {
-				console.log({
-					from: `${email.from.name} <${email.from.email}>`,
-					to: email.to,
-					subject: email.subject,
-					cc: email.cc,
-					bcc: email.bcc,
-					replyTo: email.replyTo,
-					text: email.text,
-					html: email.html,
-				});
-
 				await transporter.sendMail({
 					from: `${email.from.name} <${email.from.email}>`,
 					to: email.to,

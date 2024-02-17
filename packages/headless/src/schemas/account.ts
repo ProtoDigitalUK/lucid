@@ -24,4 +24,11 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	verifyResetPassword: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			token: z.string(),
+		}),
+	},
 };

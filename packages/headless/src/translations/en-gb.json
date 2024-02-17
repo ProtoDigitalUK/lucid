@@ -65,5 +65,6 @@
 	"db_connection_error": "An error occurred while connecting to the database.",
 	"if_account_exists_with_email_not_found": "If an account exists with the email provided, a password reset link will be sent to the email address.",
 	"error_creating_user_token": "An error occurred while creating the token.",
-	"reset_password_email_subject": "Reset your password"
+	"reset_password_email_subject": "Reset your password",
+	"token": "Token"
 }
