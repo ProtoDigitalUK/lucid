@@ -46,17 +46,6 @@ const authRoutes = async (fastify: FastifyInstance) => {
 		swaggerSchema: auth.logout.swaggerSchema,
 		controller: auth.logout.controller,
 	});
-
-	r(fastify, {
-		method: "get",
-		url: "/me",
-		middleware: {
-			authenticate: true,
-		},
-		zodSchema: auth.getAuthenticatedUser.zodSchema,
-		swaggerSchema: auth.getAuthenticatedUser.swaggerSchema,
-		controller: auth.getAuthenticatedUser.controller,
-	});
 };
 
 export default authRoutes;

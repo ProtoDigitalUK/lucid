@@ -4,6 +4,17 @@ import account from "../../../controllers/account/index.js";
 
 const roleRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+		},
+		zodSchema: account.getMe.zodSchema,
+		swaggerSchema: account.getMe.swaggerSchema,
+		controller: account.getMe.controller,
+	});
+
+	r(fastify, {
 		method: "patch",
 		url: "",
 		middleware: {

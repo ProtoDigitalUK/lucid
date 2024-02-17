@@ -1,16 +1,16 @@
-import authSchema from "../../schemas/auth.js";
+import accountSchema from "../../schemas/account.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import buildResponse from "../../utils/app/build-response.js";
-import auth from "../../services/auth/index.js";
+import account from "../../services/account/index.js";
 import { swaggerUsersRes } from "../../format/format-user.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 
-const getAuthenticatedUserController: ControllerT<
-	typeof authSchema.getAuthenticatedUser.params,
-	typeof authSchema.getAuthenticatedUser.body,
-	typeof authSchema.getAuthenticatedUser.query
+const getMeController: ControllerT<
+	typeof accountSchema.getMe.params,
+	typeof accountSchema.getMe.body,
+	typeof accountSchema.getMe.query
 > = async (request, reply) => {
-	const user = await serviceWrapper(auth.getAuthenticatedUser, false)(
+	const user = await serviceWrapper(account.getAuthenticatedUser, false)(
 		{
 			db: request.server.db,
 		},
@@ -27,11 +27,11 @@ const getAuthenticatedUserController: ControllerT<
 };
 
 export default {
-	controller: getAuthenticatedUserController,
-	zodSchema: authSchema.getAuthenticatedUser,
+	controller: getMeController,
+	zodSchema: accountSchema.getMe,
 	swaggerSchema: {
 		description: "Returns user data based on the authenticated user",
-		tags: ["auth"],
+		tags: ["account"],
 		summary: "Returns user data based on the authenticated user",
 		response: {
 			200: swaggerResponse({

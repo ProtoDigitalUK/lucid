@@ -1,11 +1,6 @@
 import z from "zod";
 
 export default {
-	getAuthenticatedUser: {
-		body: undefined,
-		query: undefined,
-		params: undefined,
-	},
 	getCSRF: {
 		body: undefined,
 		query: undefined,

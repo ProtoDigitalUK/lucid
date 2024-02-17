@@ -1,6 +1,11 @@
 import z from "zod";
 
 export default {
+	getMe: {
+		body: undefined,
+		query: undefined,
+		params: undefined,
+	},
 	updateMe: {
 		body: z.object({
 			first_name: z.string().optional(),
