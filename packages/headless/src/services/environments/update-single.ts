@@ -40,12 +40,12 @@ const updateSingle = async (
 	}
 
 	if (data.data.assignedBricks)
-		assignedBricksServices.checkAssignedBricks(
+		assignedBricksServices.checks.checkAssignedBricks(
 			config,
 			data.data.assignedBricks,
 		);
 	if (data.data.assignedCollections)
-		assignedCollectionsServices.checkAssignedCollections(
+		assignedCollectionsServices.checks.checkAssignedCollections(
 			config,
 			data.data.assignedCollections,
 		);

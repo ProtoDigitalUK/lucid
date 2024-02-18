@@ -19,5 +19,8 @@
 	"license": "ISC",
 	"devDependencies": {
 		"nodemon": "^3.0.1"
+	},
+	"volta": {
+		"node": "21.6.2"
 	}
 }

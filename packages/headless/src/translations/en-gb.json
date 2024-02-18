@@ -69,5 +69,8 @@
 	"reset_password_email_subject": "Reset your password",
 	"password_reset_success_subject": "Password reset successful",
 	"token": "Token",
-	"please_ensure_passwords_match": "Please ensure that the passwords match and try again."
+	"please_ensure_passwords_match": "Please ensure that the passwords match and try again.",
+	"media": "Media",
+	"ensure_file_has_been_uploaded": "Please ensure that a file has been uploaded and try again.",
+	"make_sure_all_translations_languages_exist": "Please make sure all translation languages exist."
 }

@@ -1,6 +1,7 @@
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import media from "../../services/media/index.js";
 import buildResponse from "../../utils/app/build-response.js";
 
 const uploadSingleController: ControllerT<
@@ -8,7 +9,17 @@ const uploadSingleController: ControllerT<
 	typeof mediaSchema.uploadSingle.body,
 	typeof mediaSchema.uploadSingle.query
 > = async (request, reply) => {
-	console.log("body-data", request.body);
+	console.log("request", request);
+
+	const mediaId = await serviceWrapper(media.uploadSingle, true)(
+		{
+			db: request.server.db,
+		},
+		{
+			fileData: await request.file(),
+			translations: request.body.translations,
+		},
+	);
 
 	reply.status(204).send();
 	// reply.status(200).send(
@@ -39,12 +50,13 @@ export default {
 					type: "string",
 					format: "binary",
 				},
-				body: {
-					type: "string",
-					description:
-						'Stringified JSON data ie: {"translations":[{"language_id":1,"title":"Title","alt":"Alt"}]}',
-				},
+				// body: {
+				// 	type: "string",
+				// 	description:
+				// 		'Stringified JSON data ie: {"translations":[{"language_id":1,"title":"Title","alt":"Alt"}]}',
+				// },
 			},
 		},
+		// TODO: add body to url params
 	},
 };

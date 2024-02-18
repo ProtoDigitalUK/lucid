@@ -48,9 +48,12 @@ const createSingle = async (
 	}
 
 	if (data.assignedBricks)
-		assignedBricksServices.checkAssignedBricks(config, data.assignedBricks);
+		assignedBricksServices.checks.checkAssignedBricks(
+			config,
+			data.assignedBricks,
+		);
 	if (data.assignedCollections)
-		assignedCollectionsServices.checkAssignedCollections(
+		assignedCollectionsServices.checks.checkAssignedCollections(
 			config,
 			data.assignedCollections,
 		);
