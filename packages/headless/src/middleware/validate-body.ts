@@ -11,26 +11,20 @@ function isFile(part: unknown): part is MultipartFile {
 const validateBody =
 	(schema: ZodTypeAny, isMultipart?: boolean) =>
 	async (request: FastifyRequest) => {
-		let bodyData = request.body;
+		let bodyData = request.body || {};
 
 		if (isMultipart) {
-			const parts = request.parts();
-			for await (const part of parts) {
-				if (isFile(part)) part.file.resume();
-				else {
-					if (part.fieldname === "body") {
-						try {
-							bodyData = JSON.parse(part.value as string);
-						} catch (error) {
-							throw new APIError({
-								type: "validation",
-								message: T(
-									"multipart_body_validation_error_message",
-								),
-							});
-						}
-					}
-				}
+			try {
+				const queryObject = request.query as Record<
+					string,
+					string | undefined
+				>;
+				if (queryObject.body) bodyData = JSON.parse(queryObject.body);
+			} catch (error) {
+				throw new APIError({
+					type: "validation",
+					message: T("multipart_body_validation_error_message"),
+				});
 			}
 		}
 
