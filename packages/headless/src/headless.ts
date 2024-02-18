@@ -22,10 +22,7 @@ import { initialiseDB, headlessDB } from "./db/db.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const headless = async (
-	fastify: FastifyInstance,
-	options: Record<string, string>,
-) => {
+const headless = async (fastify: FastifyInstance) => {
 	try {
 		const config = await getConfig();
 		await initialiseDB();
@@ -46,7 +43,7 @@ const headless = async (
 					.replace("http://", "")
 					.replace("https://", ""),
 				schemes: ["http"],
-				consumes: ["application/json"],
+				consumes: ["application/json", "multipart/form-data"],
 				produces: ["application/json"],
 			},
 		});
@@ -86,6 +83,7 @@ const headless = async (
 		// Migrate DB
 		log.white("----------------------------------------------------");
 		await migrate(fastify.db);
+		log.yellow("Migrated");
 
 		// ------------------------------------
 		// Initialise

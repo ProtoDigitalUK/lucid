@@ -34,6 +34,7 @@ type RouteT = <
 			// validateEnvironment?: boolean;
 			// contentLanguage?: boolean;
 		};
+		isMultipart?: boolean;
 		zodSchema?: {
 			params?: ParamsT;
 			body?: BodyT;
@@ -81,7 +82,7 @@ const route: RouteT = (fastify, opts) => {
 	if (middleware?.validateCSRF) preHandler.push(validateCSRF);
 
 	if (zodSchema?.body !== undefined)
-		preValidation.push(validateBody(zodSchema.body));
+		preValidation.push(validateBody(zodSchema.body, opts.isMultipart));
 	if (zodSchema?.params !== undefined)
 		preValidation.push(validateParams(zodSchema.params));
 	if (zodSchema?.query !== undefined)

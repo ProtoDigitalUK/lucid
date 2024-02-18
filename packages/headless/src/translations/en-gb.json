@@ -21,6 +21,7 @@
 	"login_error_name": "There was an error logging in.",
 	"login_error_message": "The username/email or password you entered is incorrect.",
 	"validation_body_error_message": "Please check the request body and try again.",
+	"multipart_body_validation_error_message": "Please ensure the multipart/form-data body value is valid JSON.",
 	"validation_query_error_message": "Please check the query parameters and try again.",
 	"validation_params_error_message": "Please check the request parameters and try again.",
 	"access_token_error_name": "There was an error obtaining an access token.",
