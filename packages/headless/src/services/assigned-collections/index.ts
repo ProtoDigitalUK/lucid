@@ -1,9 +1,9 @@
-import checkAssignedCollections from "./check-assigned-collectins.js";
 import updateMultiple from "./update-multiple.js";
 import createMultiple from "./create-multiple.js";
+import checks from "./checks/index.js";
 
 export default {
-	checkAssignedCollections,
+	checks,
 	updateMultiple,
 	createMultiple,
 };
