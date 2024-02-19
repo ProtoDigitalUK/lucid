@@ -99,6 +99,7 @@ export const swaggerPermissionsRes = {
 		},
 	},
 };
+
 export const swaggerRolesRes = {
 	type: "array",
 	items: {

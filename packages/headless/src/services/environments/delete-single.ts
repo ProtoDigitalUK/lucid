@@ -1,6 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import { sql } from "kysely";
+import { parseCount } from "../../utils/app/helpers.js";
 
 export interface ServiceData {
 	key: string;
@@ -16,7 +17,7 @@ const deleteSingle = async (
 		.where("key", "=", data.key)
 		.executeTakeFirst()) as { count: string };
 
-	const count = parseInt(environments?.count) || 0;
+	const count = parseCount(environments.count);
 
 	if (count <= 1) {
 		throw new APIError({
