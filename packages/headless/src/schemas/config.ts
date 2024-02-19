@@ -23,6 +23,13 @@ export const headlessConfigSchema = z.object({
 		}),
 		strategy: z.any(),
 	}),
+	media: z
+		.object({
+			storageLimit: z.number().optional(),
+			maxFileSize: z.number().optional(),
+			processedImageLimit: z.number().optional(),
+		})
+		.optional(),
 	// collections: z.array(z.any()),
 	// bricks: z.array(z.any()),
 });

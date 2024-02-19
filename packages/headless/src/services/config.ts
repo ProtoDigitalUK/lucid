@@ -1,10 +1,12 @@
 import path from "path";
 import { pathToFileURL } from "url";
 import fs from "fs-extra";
+import merge from "lodash.merge";
 import {
 	type HeadlessConfigT,
 	headlessConfigSchema,
 } from "../schemas/config.js";
+import constants from "../constants.js";
 
 let config: HeadlessConfigT | undefined = undefined;
 
@@ -49,7 +51,16 @@ export const headlessConfig = (config: HeadlessConfigT) => {
 		// TODO: Improve validation and error handling
 
 		headlessConfigSchema.parse(config);
-		return config;
+		return merge(
+			{
+				media: {
+					storageLimit: constants.media.storageLimit,
+					maxFileSize: constants.media.maxFileSize,
+					processedImageLimit: constants.media.processedImageLimit,
+				},
+			},
+			config,
+		);
 	} catch (error) {
 		console.error(error);
 	}
