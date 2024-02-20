@@ -4,6 +4,7 @@ import { MultipartFile } from "@fastify/multipart";
 import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaHelpers from "../../utils/media/helpers.js";
+import mediaServices from "./index.js";
 
 export interface ServiceData {
 	fileData: MultipartFile | undefined;
@@ -79,6 +80,13 @@ const uploadSingle = async (
 	console.log(metaData);
 
 	// Ensure we available storage space
+	await serviceWrapper(mediaServices.checks.checkCanStoreMedia, false)(
+		serviceConfig,
+		{
+			filename: data.fileData.filename,
+			size: metaData.size,
+		},
+	);
 
 	// Save file to storage
 

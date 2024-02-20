@@ -17,7 +17,7 @@ const getSettings = async (
 	]);
 
 	return await formatSettings({
-		mediaStorageUsed: mediaStorageUsed.value as number,
+		mediaStorageUsed: mediaStorageUsed.value_int || 0,
 		processedImageCount: processedImageCount,
 	});
 };
