@@ -20,23 +20,23 @@ import { Banner, Intro, Meta } from "./src/bricks";
 import { Pages, Blogs, Settings } from "./src/collections";
 
 export default headlessConfig({
-	mode: "development",
-	host: "http://localhost:8393",
-	databaseURL: process.env.DATABASE_URL as string,
-	keys: {
-		cookieSecret: process.env.COOKIE_SECRET as string,
-		refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
-		accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
-	},
-	email: {
-		from: {
-			email: "admin@protoheadless.com",
-			name: "Proto Headless",
-		},
-		strategy: async (email, meta) => {},
-	},
-	collections: [Pages, Blogs, Settings],
-	bricks: [Banner, Intro, Meta]
+    mode: "development",
+    host: "http://localhost:8393",
+    databaseURL: process.env.DATABASE_URL as string,
+    keys: {
+        cookieSecret: process.env.COOKIE_SECRET as string,
+        refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
+        accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
+    },
+    email: {
+        from: {
+            email: "admin@protoheadless.com",
+            name: "Proto Headless",
+        },
+        strategy: async (email, meta) => {},
+    },
+    collections: [Pages, Blogs, Settings],
+    bricks: [Banner, Intro, Meta]
 });
 ```
 
