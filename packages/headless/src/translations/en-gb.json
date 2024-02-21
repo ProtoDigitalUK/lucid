@@ -75,5 +75,10 @@
 	"make_sure_all_translations_languages_exist": "Please make sure all translation languages exist.",
 	"option": "Option",
 	"file_too_large_max_size_is": "File {{name}} is too large. Max file size is {{size}} bytes.",
-	"file_exceeds_storage_limit_max_limit_is": "Files exceed storage limit. Max storage limit is {{size}} bytes."
+	"file_exceeds_storage_limit_max_limit_is": "Files exceed storage limit. Max storage limit is {{size}} bytes.",
+	"failed_to_save_object": "An error occured while saving the object to S3",
+	"object_successfully_saved": "Object successfully saved to S3",
+	"object_successfully_updated": "Object successfully updated in S3",
+	"objects_successfully_deleted": "Objects successfully deleted from S3",
+	"object_successfully_deleted": "Object successfully deleted from S3"
 }

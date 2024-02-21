@@ -3,6 +3,7 @@ import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
 import getConfig from "../../config.js";
 import serviceWrapper from "../../../utils/app/service-wrapper.js";
 import optionsServices from "../../options/index.js";
+import constants from "../../../constants.js";
 
 export interface ServiceData {
 	size: number;
@@ -15,8 +16,9 @@ const checkCanStoreMedia = async (
 ) => {
 	const config = await getConfig();
 
-	const maxFileSize = config.media?.maxFileSize || 0;
-	const storageLimit = config.media?.storageLimit || 0;
+	const maxFileSize = config.media.maxFileSize || constants.media.maxFileSize;
+	const storageLimit =
+		config.media.storageLimit || constants.media.storageLimit;
 
 	if (data.size > maxFileSize) {
 		throw new APIError({

@@ -1,6 +1,7 @@
 import z from "zod";
 import { type CollectionBuilderT } from "../builders/collection-builder/index.js";
 import { type BrickBuilderT } from "../builders/brick-builder/index.js";
+import constants from "../constants.js";
 
 export const headlessConfigSchema = z.object({
 	databaseURL: z.string(),
@@ -23,13 +24,26 @@ export const headlessConfigSchema = z.object({
 		}),
 		strategy: z.any(),
 	}),
-	media: z
-		.object({
-			storageLimit: z.number().optional(),
-			maxFileSize: z.number().optional(),
-			processedImageLimit: z.number().optional(),
-		})
-		.optional(),
+	media: z.object({
+		storageLimit: z
+			.number()
+			.default(constants.media.storageLimit)
+			.optional(),
+		maxFileSize: z.number().default(constants.media.maxFileSize).optional(),
+		processedImageLimit: z
+			.number()
+			.default(constants.media.processedImageLimit)
+			.optional(),
+		fallbackImage: z.union([z.string(), z.boolean()]).optional(),
+		store: z.object({
+			service: z.enum(["aws", "cloudflare"]),
+			cloudflareAccountId: z.string().optional(),
+			region: z.string(),
+			bucket: z.string(),
+			accessKeyId: z.string(),
+			secretAccessKey: z.string(),
+		}),
+	}),
 	// collections: z.array(z.any()),
 	// bricks: z.array(z.any()),
 });

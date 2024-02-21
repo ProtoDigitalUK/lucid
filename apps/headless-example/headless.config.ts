@@ -53,6 +53,16 @@ export default headlessConfig({
 			}
 		},
 	},
+	media: {
+		store: {
+			service: "cloudflare",
+			cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
+			region: process.env.HEADLESS_S3_REGION as string,
+			bucket: process.env.HEADLESS_S3_BUCKET as string,
+			accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
+			secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
+		},
+	},
 	collections: [PageCollection, BlogCollection, SettingsCollection],
 	bricks: [
 		BannerBrick,
