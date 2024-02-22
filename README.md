@@ -15,7 +15,6 @@ npm install @protodigital/headless
 
 ```ts
 import { headlessConfig } from "@protodigital/headless";
-
 import { Banner, Intro, Meta } from "./src/bricks";
 import { Pages, Blogs, Settings } from "./src/collections";
 
@@ -34,6 +33,16 @@ export default headlessConfig({
             name: "Proto Headless",
         },
         strategy: async (email, meta) => {},
+    },
+    media: {
+        store: {
+            service: "cloudflare",
+            cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
+            region: process.env.HEADLESS_S3_REGION as string,
+            bucket: process.env.HEADLESS_S3_BUCKET as string,
+            accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
+            secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
+        },
     },
     collections: [Pages, Blogs, Settings],
     bricks: [Banner, Intro, Meta]
