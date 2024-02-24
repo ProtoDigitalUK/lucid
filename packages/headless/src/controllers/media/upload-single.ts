@@ -9,8 +9,6 @@ const uploadSingleController: ControllerT<
 	typeof mediaSchema.uploadSingle.body,
 	typeof mediaSchema.uploadSingle.query
 > = async (request, reply) => {
-	console.log("request", request);
-
 	const mediaId = await serviceWrapper(media.uploadSingle, true)(
 		{
 			db: request.server.db,
@@ -18,6 +16,7 @@ const uploadSingleController: ControllerT<
 		{
 			fileData: await request.file(),
 			translations: request.body.translations,
+			visible: true,
 		},
 	);
 

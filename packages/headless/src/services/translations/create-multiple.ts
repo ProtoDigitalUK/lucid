@@ -5,7 +5,7 @@ import { sql } from "kysely";
 export interface ServiceData<K extends string> {
 	keys: K[];
 	translations: Array<{
-		value: string;
+		value: string | null;
 		language_id: number;
 		key: K;
 	}>;

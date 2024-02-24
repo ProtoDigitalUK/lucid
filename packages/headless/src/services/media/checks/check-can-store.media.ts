@@ -67,6 +67,8 @@ const checkCanStoreMedia = async (
 			}),
 		});
 	}
+
+	return proposedSize;
 };
 
 export default checkCanStoreMedia;

@@ -30,11 +30,12 @@ const saveObject = async (data: ServiceData) => {
 				extension: data.meta.fileExtension,
 			},
 		});
-		await S3.send(command);
+		const response = await S3.send(command);
 
 		return {
 			success: true,
 			message: T("object_successfully_saved"),
+			etag: response.ETag?.replace(/"/g, ""),
 		};
 	} catch (e) {
 		const error = e as Error;

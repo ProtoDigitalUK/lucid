@@ -15,6 +15,7 @@ export interface MediaMetaDataT {
 	height: number | null;
 	type: MediaResT["type"];
 	key: string;
+	etag?: string;
 }
 
 // Get meta data from file
@@ -74,15 +75,10 @@ const getMediaType = (mimeType: string): MediaResT["type"] => {
 
 // Generate unique key
 const uniqueKey = (name: string) => {
-	const slugVal = slug(name, {
+	const slugVal = slug(name.split(".")[0], {
 		lower: true,
 	});
-	const date = new Date();
-	const day = date.getDate();
-	const month = date.getMonth();
-	const year = date.getFullYear();
-	const hours = date.getHours();
-	return `${slugVal}-${day}-${month}-${year}-${hours}`;
+	return `${slugVal}-${new Date().getTime()}`;
 };
 
 // Save stream to a temporary file
@@ -102,12 +98,19 @@ const streamTempFile = (filePath: string): Readable => {
 	return fs.createReadStream(filePath);
 };
 
+// Remove temp file
+const deleteTempFile = async (filePath?: string) => {
+	if (!filePath) return;
+	await fs.remove(filePath);
+};
+
 const mediaHelpers = {
 	getMediaType,
 	uniqueKey,
 	streamTempFile,
 	saveStreamToTempFile,
 	getMetaData,
+	deleteTempFile,
 };
 
 export default mediaHelpers;

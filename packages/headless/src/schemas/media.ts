@@ -7,8 +7,8 @@ export default {
 				.array(
 					z.object({
 						language_id: z.number(),
-						title: z.string().optional(),
-						alt: z.string().optional(),
+						value: z.string().nullable(),
+						key: z.enum(["title", "alt"]),
 					}),
 				)
 				.optional(),
