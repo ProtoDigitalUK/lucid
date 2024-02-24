@@ -57,13 +57,18 @@ export default {
 					type: "string",
 					format: "binary",
 				},
-				// body: {
-				// 	type: "string",
-				// 	description:
-				// 		'Stringified JSON data ie: {"translations":[{"language_id":1,"title":"Title","alt":"Alt"}]}',
-				// },
 			},
 		},
-		// TODO: add body to url params
+		querystring: {
+			type: "object",
+			required: ["body"],
+			properties: {
+				body: {
+					type: "string",
+					description:
+						'Stringified JSON data containing translations for the media. The translations should be an array of objects with the following properties: language_id, value, and key. The key should be either "title" or "alt".<br><br>Example: <code>{"translations":[{"language_id":1,"value":"Title value","key":"title"},{"language_id":1,"value":"Alt value","key":"alt"}]}</code>',
+				},
+			},
+		},
 	},
 };

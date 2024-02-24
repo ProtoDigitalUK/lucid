@@ -1,12 +1,15 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import formatMedia from "../../format/format-media.js";
+import getConfig from "../config.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+	const config = await getConfig();
 	const media = await serviceConfig.db
 		.selectFrom("headless_media")
 		.select((eb) => [
@@ -29,7 +32,6 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					.select([
 						"headless_translations.value",
 						"headless_translations.language_id",
-						"headless_translations.id",
 					])
 					.where("headless_translations.value", "is not", null)
 					.whereRef(
@@ -44,7 +46,6 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					.select([
 						"headless_translations.value",
 						"headless_translations.language_id",
-						"headless_translations.id",
 					])
 					.where("headless_translations.value", "is not", null)
 					.whereRef(
@@ -70,7 +71,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return media;
+	return formatMedia(media, config.host);
 };
 
 export default getSingle;

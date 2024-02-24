@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS headless_translation_keys (
 
 CREATE TABLE IF NOT EXISTS headless_translations (
   id SERIAL PRIMARY KEY,
-  translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  language_id INTEGER REFERENCES headless_languages(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  translation_key_id INTEGER NOT NULL REFERENCES headless_translation_keys(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  language_id INTEGER NOT NULL REFERENCES headless_languages(id) ON DELETE CASCADE ON UPDATE CASCADE,
   value TEXT,
 
   UNIQUE (translation_key_id, language_id)
