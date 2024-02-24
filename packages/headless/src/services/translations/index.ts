@@ -1,1 +1,5 @@
-export default {};
+import createMultiple from "./create-multiple.js";
+
+export default {
+	createMultiple,
+};

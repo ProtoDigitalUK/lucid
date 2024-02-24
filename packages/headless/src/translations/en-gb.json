@@ -80,5 +80,6 @@
 	"object_successfully_saved": "Object successfully saved to S3",
 	"object_successfully_updated": "Object successfully updated in S3",
 	"objects_successfully_deleted": "Objects successfully deleted from S3",
-	"object_successfully_deleted": "Object successfully deleted from S3"
+	"object_successfully_deleted": "Object successfully deleted from S3",
+	"translation": "Translation"
 }
