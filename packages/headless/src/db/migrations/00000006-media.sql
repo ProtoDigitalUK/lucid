@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS headless_media (
   id SERIAL PRIMARY KEY,
   key TEXT NOT NULL UNIQUE,
   e_tag TEXT,
+  visible BOOLEAN NOT NULL DEFAULT TRUE,
 
   type TEXT NOT NULL,
   mime_type TEXT NOT NULL,
