@@ -1,6 +1,6 @@
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import optionsServices from "../../services/options/index.js";
-import mediaServices from "../../services/media/index.js";
+import processedImagesServices from "../../services/processed-images/index.js";
 import formatSettings from "../../format/format-settings.js";
 
 // export interface ServiceData {}
@@ -13,7 +13,7 @@ const getSettings = async (
 		serviceWrapper(optionsServices.getSingle, false)(serviceConfig, {
 			name: "media_storage_used",
 		}),
-		serviceWrapper(mediaServices.processedImageCount, false)(serviceConfig),
+		serviceWrapper(processedImagesServices.getCount, false)(serviceConfig),
 	]);
 
 	return await formatSettings({

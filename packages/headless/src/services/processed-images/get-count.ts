@@ -3,7 +3,7 @@ import { parseCount } from "../../utils/app/helpers.js";
 
 // export interface ServiceData {}
 
-const processedImageCount = async (
+const getCount = async (
 	serviceConfig: ServiceConfigT,
 	// data: ServiceData,
 ) => {
@@ -15,4 +15,4 @@ const processedImageCount = async (
 	return parseCount(processedImageCount.count);
 };
 
-export default processedImageCount;
+export default getCount;
