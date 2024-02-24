@@ -1,15 +1,16 @@
 import mediaSchema from "../../schemas/media.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import media from "../../services/media/index.js";
+import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/app/build-response.js";
+import { swaggerMediaRes } from "../../format/format-media.js";
 
 const uploadSingleController: ControllerT<
 	typeof mediaSchema.uploadSingle.params,
 	typeof mediaSchema.uploadSingle.body,
 	typeof mediaSchema.uploadSingle.query
 > = async (request, reply) => {
-	const mediaId = await serviceWrapper(media.uploadSingle, true)(
+	const mediaId = await serviceWrapper(mediaServices.uploadSingle, true)(
 		{
 			db: request.server.db,
 		},
@@ -19,13 +20,20 @@ const uploadSingleController: ControllerT<
 			visible: true,
 		},
 	);
+	const media = await serviceWrapper(mediaServices.getSingle, false)(
+		{
+			db: request.server.db,
+		},
+		{
+			id: mediaId,
+		},
+	);
 
-	reply.status(204).send();
-	// reply.status(200).send(
-	// 	await buildResponse(request, {
-	// 		data: undefined,
-	// 	}),
-	// );
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: media,
+		}),
+	);
 };
 
 export default {
@@ -36,9 +44,9 @@ export default {
 		tags: ["media"],
 		summary: "Upload a single file.",
 		response: {
-			204: swaggerResponse({
-				type: 204,
-				noPropertise: true,
+			200: swaggerResponse({
+				type: 200,
+				data: swaggerMediaRes,
 			}),
 		},
 		consumes: ["multipart/form-data"],

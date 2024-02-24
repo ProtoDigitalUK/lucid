@@ -18,6 +18,17 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: media.uploadSingle.zodSchema,
 		controller: media.uploadSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: media.getSingle.swaggerSchema,
+		zodSchema: media.getSingle.zodSchema,
+		controller: media.getSingle.controller,
+	});
 };
 
 export default mediaRoutes;

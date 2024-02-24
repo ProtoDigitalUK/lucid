@@ -1,6 +1,13 @@
 import z from "zod";
 
 export default {
+	getSingle: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 	uploadSingle: {
 		body: z.object({
 			translations: z
