@@ -1,5 +1,8 @@
 import mediaSchema from "../../schemas/media.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import {
+	swaggerResponse,
+	swaggerHeaders,
+} from "../../utils/swagger/response-helpers.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/app/build-response.js";
@@ -70,5 +73,8 @@ export default {
 				},
 			},
 		},
+		headers: swaggerHeaders({
+			csrf: true,
+		}),
 	},
 };

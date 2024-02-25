@@ -1,5 +1,8 @@
 import emailsSchema from "../../schemas/email.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import {
+	swaggerResponse,
+	swaggerHeaders,
+} from "../../utils/swagger/response-helpers.js";
 import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 
@@ -32,5 +35,8 @@ export default {
 				noPropertise: true,
 			}),
 		},
+		headers: swaggerHeaders({
+			csrf: true,
+		}),
 	},
 };

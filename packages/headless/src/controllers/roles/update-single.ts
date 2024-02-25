@@ -1,5 +1,8 @@
 import rolesSchema from "../../schemas/roles.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import {
+	swaggerResponse,
+	swaggerHeaders,
+} from "../../utils/swagger/response-helpers.js";
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 
@@ -66,5 +69,8 @@ export default {
 				},
 			},
 		},
+		headers: swaggerHeaders({
+			csrf: true,
+		}),
 	},
 };

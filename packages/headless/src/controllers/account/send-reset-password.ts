@@ -1,5 +1,8 @@
 import accountSchema from "../../schemas/account.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import {
+	swaggerResponse,
+	swaggerHeaders,
+} from "../../utils/swagger/response-helpers.js";
 import buildResponse from "../../utils/app/build-response.js";
 import account from "../../services/account/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
@@ -43,5 +46,8 @@ export default {
 				},
 			}),
 		},
+		headers: swaggerHeaders({
+			csrf: true,
+		}),
 	},
 };

@@ -126,11 +126,16 @@ export const swaggerResponse = (params: SwaggerResponseParamsT) => {
 interface SwaggerHeadersT {
 	// undefine means dont include in the schema, boolean means required or not
 	csrf?: boolean;
+	contentLanguage?: boolean;
 }
 
 export const swaggerHeaders = (headers: SwaggerHeadersT) => {
 	const propertise: {
 		_csrf?: {
+			type: string;
+			description: string;
+		};
+		"headless-content-lang"?: {
 			type: string;
 			description: string;
 		};
@@ -145,6 +150,13 @@ export const swaggerHeaders = (headers: SwaggerHeadersT) => {
 		if (headers.csrf) {
 			required.push("_csrf");
 		}
+	}
+
+	if (headers.contentLanguage !== undefined) {
+		propertise["headless-content-lang"] = {
+			type: "string",
+			description: T("swagger_content_language_header_description"),
+		};
 	}
 
 	return {
