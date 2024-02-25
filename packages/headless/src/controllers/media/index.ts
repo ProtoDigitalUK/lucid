@@ -3,6 +3,7 @@ import getSingle from "./get-single.js";
 import deleteSingle from "./delete-single.js";
 import getMultiple from "./get-multiple.js";
 import clearSingleProcessed from "./clear-single-processed.js";
+import clearAllProcessed from "./clear-all-processed.js";
 
 export default {
 	uploadSingle,
@@ -10,4 +11,5 @@ export default {
 	deleteSingle,
 	getMultiple,
 	clearSingleProcessed,
+	clearAllProcessed,
 };

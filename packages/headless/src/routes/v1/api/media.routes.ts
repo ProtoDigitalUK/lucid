@@ -71,6 +71,21 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: media.clearSingleProcessed.zodSchema,
 		controller: media.clearSingleProcessed.controller,
 	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/processed",
+		permissions: {
+			global: ["update_media"],
+		},
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: media.clearAllProcessed.swaggerSchema,
+		zodSchema: media.clearAllProcessed.zodSchema,
+		controller: media.clearAllProcessed.controller,
+	});
 };
 
 export default mediaRoutes;

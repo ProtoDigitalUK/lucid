@@ -78,4 +78,9 @@ export default {
 			key: z.string(),
 		}),
 	},
+	clearAllProcessed: {
+		body: undefined,
+		query: undefined,
+		params: undefined,
+	},
 };
