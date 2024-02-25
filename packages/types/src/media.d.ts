@@ -10,8 +10,6 @@ export interface MediaResT {
 	id: number;
 	key: string;
 	url: string;
-	// name_translation_key_id: number | null;
-	// alt_translation_key_id: number | null;
 
 	translations: {
 		language_id: number;
