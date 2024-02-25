@@ -43,6 +43,22 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 	});
 
 	r(fastify, {
+		method: "patch",
+		url: "/:id",
+		permissions: {
+			global: ["update_media"],
+		},
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		isMultipart: true,
+		swaggerSchema: media.updateSingle.swaggerSchema,
+		zodSchema: media.updateSingle.zodSchema,
+		controller: media.updateSingle.controller,
+	});
+
+	r(fastify, {
 		method: "delete",
 		url: "/:id",
 		permissions: {

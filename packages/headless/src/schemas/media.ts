@@ -71,6 +71,23 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	updateSingle: {
+		body: z.object({
+			translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
+						key: z.enum(["title", "alt"]),
+					}),
+				)
+				.optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 	clearSingleProcessed: {
 		body: undefined,
 		query: undefined,

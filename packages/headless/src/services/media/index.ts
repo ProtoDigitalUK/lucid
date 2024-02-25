@@ -5,6 +5,7 @@ import uploadSingle from "./upload-single.js";
 import getSingle from "./get-single.js";
 import deleteSingle from "./delete-single.js";
 import getMultiple from "./get-multiple.js";
+import updateSingle from "./update-single.js";
 
 export default {
 	checks,
@@ -14,4 +15,5 @@ export default {
 	getSingle,
 	deleteSingle,
 	getMultiple,
+	updateSingle,
 };
