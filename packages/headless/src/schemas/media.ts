@@ -71,4 +71,11 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	clearSingleProcessed: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			key: z.string(),
+		}),
+	},
 };
