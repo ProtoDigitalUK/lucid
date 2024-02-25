@@ -16,6 +16,7 @@ const getMultipleController: ControllerT<
 		},
 		{
 			query: request.query,
+			languageId: request.language.id,
 		},
 	);
 

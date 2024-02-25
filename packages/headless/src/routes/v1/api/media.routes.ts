@@ -19,9 +19,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 		url: "",
 		middleware: {
 			authenticate: true,
-		},
-		permissions: {
-			global: ["read_email"],
+			contentLanguage: true,
 		},
 		swaggerSchema: media.getMultiple.swaggerSchema,
 		zodSchema: media.getMultiple.zodSchema,

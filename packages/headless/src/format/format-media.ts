@@ -22,29 +22,49 @@ const formatMedia = (
 		alt_translation_key_id: number | null;
 		created_at: Date | null;
 		updated_at: Date | null;
-		title_translations: Array<{
+		title_translations?: Array<{
 			value: string | null;
 			language_id: number | null;
 		}>;
-		alt_translations: Array<{
+		alt_translations?: Array<{
 			value: string | null;
 			language_id: number | null;
 		}>;
+		title_translation_value?: string | null;
+		alt_translation_value?: string | null;
 	},
-	host: string,
+	config: {
+		host: string;
+		isMultiple: boolean;
+		languageId?: number;
+	},
 ): MediaResT => {
 	return {
 		id: media.id,
 		key: media.key,
-		url: createURL(host, media.key),
+		url: createURL(config.host, media.key),
 		translations: formatTranslations([
 			{
 				key: "title",
-				translations: media.title_translations,
+				translations: config.isMultiple
+					? [
+							{
+								value: media.title_translation_value ?? null,
+								language_id: config.languageId ?? null,
+							},
+					  ]
+					: media.title_translations ?? [],
 			},
 			{
 				key: "alt",
-				translations: media.alt_translations,
+				translations: config.isMultiple
+					? [
+							{
+								value: media.alt_translation_value ?? null,
+								language_id: config.languageId ?? null,
+							},
+					  ]
+					: media.alt_translations ?? [],
 			},
 		]),
 		type: media.type as MediaTypeT,

@@ -20,9 +20,6 @@ const updateSingle = async (
 		data.is_default === undefined &&
 		data.is_enabled === undefined
 	) {
-		console.log(
-			"data.code === undefined && data.is_default === undefined && data.is_enabled === undefined",
-		);
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
