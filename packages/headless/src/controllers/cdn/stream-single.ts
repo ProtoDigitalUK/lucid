@@ -1,12 +1,22 @@
 import cdnSchema from "../../schemas/cdn.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import cdnServices from "../../services/cdn/index.js";
 
 const streamSingleController: ControllerT<
 	typeof cdnSchema.streamSingle.params,
 	typeof cdnSchema.streamSingle.body,
 	typeof cdnSchema.streamSingle.query
 > = async (request, reply) => {
+	const response = await serviceWrapper(cdnServices.streamMedia, false)(
+		{
+			db: request.server.db,
+		},
+		{
+			key: request.params.key,
+			query: request.query,
+		},
+	);
 	reply.status(204).send();
 };
 
