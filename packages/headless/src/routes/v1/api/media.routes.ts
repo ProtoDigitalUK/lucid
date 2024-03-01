@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import r from "../../../utils/app/route.js";
 import media from "../../../controllers/media/index.js";
 
