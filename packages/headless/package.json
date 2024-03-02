@@ -1,7 +1,7 @@
 {
 	"name": "@protodigital/headless",
 	"version": "0.0.1",
-	"private": false,
+	"private": true,
 	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -21,11 +21,7 @@
 		"format": "npx @biomejs/biome format --write ./src",
 		"clear-db": "node ./clear-db.js"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**"],
 	"author": "William Yallop",
 	"devDependencies": {
 		"@headless/types": "*",
@@ -74,5 +70,6 @@
 		"sharp": "^0.33.2",
 		"slug": "^8.2.3",
 		"zod": "^3.22.4"
-	}
+	},
+	"license": "UNLICENSED"
 }
