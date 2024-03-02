@@ -35,8 +35,8 @@ export default {
 	resetPassword: {
 		body: z
 			.object({
-				password: z.string().min(8),
-				password_confirmation: z.string().min(8),
+				password: z.string().min(8).max(128),
+				password_confirmation: z.string().min(8).max(128),
 			})
 			.refine((data) => data.password === data.password_confirmation, {
 				message: T("please_ensure_passwords_match"),
