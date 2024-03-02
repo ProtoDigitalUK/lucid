@@ -56,7 +56,10 @@ export const headlessConfig = (config: HeadlessConfigT) => {
 				media: {
 					storageLimit: constants.media.storageLimit,
 					maxFileSize: constants.media.maxFileSize,
-					processedImageLimit: constants.media.processedImageLimit,
+					processedImages: {
+						store: constants.media.processedImages.store,
+						limit: constants.media.processedImages.limit,
+					},
 				},
 			},
 			config,

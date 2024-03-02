@@ -15,7 +15,8 @@ const formatSettings = async (data: {
 				? (config.media?.storageLimit || 0) - data.mediaStorageUsed
 				: null,
 			processed_images: {
-				per_image_limit: config.media?.processedImageLimit ?? null,
+				stored: config.media?.processedImages?.store ?? false,
+				per_image_limit: config.media?.processedImages?.limit ?? null,
 				total: data.processedImageCount,
 			},
 		},
@@ -34,6 +35,7 @@ export const swaggerSettingsRes = {
 				processed_images: {
 					type: "object",
 					properties: {
+						stored: { type: "boolean" },
 						per_image_limit: { type: "number" },
 						total: { type: "number" },
 					},

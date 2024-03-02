@@ -30,9 +30,17 @@ export const headlessConfigSchema = z.object({
 			.default(constants.media.storageLimit)
 			.optional(),
 		maxFileSize: z.number().default(constants.media.maxFileSize).optional(),
-		processedImageLimit: z
-			.number()
-			.default(constants.media.processedImageLimit)
+		processedImages: z
+			.object({
+				limit: z
+					.number()
+					.default(constants.media.processedImages.limit)
+					.optional(),
+				store: z
+					.boolean()
+					.default(constants.media.processedImages.store)
+					.optional(),
+			})
 			.optional(),
 		fallbackImage: z.union([z.string(), z.boolean()]).optional(),
 		store: z.object({

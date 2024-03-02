@@ -54,6 +54,10 @@ export default headlessConfig({
 		},
 	},
 	media: {
+		processedImages: {
+			store: false,
+			limit: 10,
+		},
 		store: {
 			service: "cloudflare",
 			cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,

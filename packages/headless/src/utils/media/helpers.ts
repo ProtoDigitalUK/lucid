@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import { Readable } from "stream";
+import type { Readable } from "stream";
 import { pipeline } from "stream/promises";
 import { join } from "path";
 import mime from "mime-types";
@@ -119,6 +119,35 @@ const chooseFormat = (
 	return undefined;
 };
 
+// Create process key
+const createProcessKey = (data: {
+	key: string;
+	options: {
+		format?: string;
+		quality?: string;
+		width?: string;
+		height?: string;
+	};
+}) => {
+	let key = `processed/${data.key}`;
+	if (data.options.format) key = key.concat(`.${data.options.format}`);
+	if (data.options.quality) key = key.concat(`.${data.options.quality}`);
+	if (data.options.width) key = key.concat(`.${data.options.width}`);
+	if (data.options.height) key = key.concat(`.${data.options.height}`);
+
+	return key;
+};
+
+// Steam to buffer
+const streamToBuffer = (readable: Readable): Promise<Buffer> => {
+	return new Promise((resolve, reject) => {
+		const chunks: Buffer[] = [];
+		readable.on("data", (chunk) => chunks.push(chunk));
+		readable.on("end", () => resolve(Buffer.concat(chunks)));
+		readable.on("error", reject);
+	});
+};
+
 const mediaHelpers = {
 	getMediaType,
 	uniqueKey,
@@ -127,6 +156,8 @@ const mediaHelpers = {
 	getMetaData,
 	deleteTempFile,
 	chooseFormat,
+	createProcessKey,
+	streamToBuffer,
 };
 
 export default mediaHelpers;
