@@ -87,6 +87,23 @@ const buildExclude = (query: unknown) => {
 
 	return exclude.split(",");
 };
+const addRemainingQuery = (query: unknown) => {
+	const queryObject = query as Record<string, string>;
+	const remainingQuery = Object.fromEntries(
+		Object.entries(queryObject).filter(
+			([key]) =>
+				![
+					"include",
+					"exclude",
+					"filter",
+					"sort",
+					"page",
+					"per_page",
+				].includes(key),
+		),
+	);
+	return remainingQuery;
+};
 
 const validateQuery =
 	(schema: ZodTypeAny) => async (request: FastifyRequest) => {
@@ -102,6 +119,7 @@ const validateQuery =
 				exclude: buildExclude(request.query),
 				page: buildPage(request.query),
 				per_page: buildPerPage(request.query),
+				...addRemainingQuery(request.query),
 			},
 		});
 

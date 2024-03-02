@@ -15,6 +15,7 @@ const streamSingleController: ControllerT<
 		{
 			key: request.params.key,
 			query: request.query,
+			accept: request.headers.accept,
 		},
 	);
 	reply.status(204).send();
