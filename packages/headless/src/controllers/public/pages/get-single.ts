@@ -28,6 +28,9 @@ export default {
 		querystring: swaggerQueryString({
 			filters: [
 				{
+					key: "full_slug",
+				},
+				{
 					key: "collection_slug",
 				},
 			],

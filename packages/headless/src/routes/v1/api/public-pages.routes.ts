@@ -5,7 +5,7 @@ import publicPages from "../../../controllers/public/pages/index.js";
 const publicPagesRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "get",
-		url: "/:full_slug",
+		url: "/:slug",
 		middleware: {
 			// TODO: integration authentication instead of authenticate
 			authenticate: true,

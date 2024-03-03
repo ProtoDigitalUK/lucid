@@ -7,11 +7,12 @@ export default {
 			filter: z
 				.object({
 					collection_slug: z.string().optional(),
+					full_slug: z.string().optional(),
 				})
 				.optional(),
 		}),
 		params: z.object({
-			full_slug: z.string(),
+			slug: z.string(),
 		}),
 	},
 };
