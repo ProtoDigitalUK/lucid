@@ -198,7 +198,7 @@ export const swaggerQueryString = (config: SwaggerQueryStringConfigT) => {
 			queryString.properties[`filter[${filter.key}]`] = {
 				type: "string",
 				enum: filter.enum,
-				description: T("swagger_query_string_filter_description"),
+				// description: T("swagger_query_string_filter_description"),
 			};
 		}
 	}
