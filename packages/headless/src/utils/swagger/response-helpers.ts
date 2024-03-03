@@ -172,6 +172,9 @@ interface SwaggerQueryStringConfigT {
 		key: string;
 		enum?: string[];
 	}[];
+	sorts?: string[];
+	page?: boolean;
+	perPage?: boolean;
 }
 export const swaggerQueryString = (config: SwaggerQueryStringConfigT) => {
 	const queryString: {
@@ -198,6 +201,28 @@ export const swaggerQueryString = (config: SwaggerQueryStringConfigT) => {
 				description: T("swagger_query_string_filter_description"),
 			};
 		}
+	}
+
+	if (config.sorts && config.sorts.length > 0) {
+		queryString.properties.sort = {
+			type: "string",
+			enum: config.sorts,
+			description: T("swagger_query_string_sort_description"),
+		};
+	}
+
+	if (config.page) {
+		queryString.properties.page = {
+			type: "number",
+			description: T("swagger_query_string_page_description"),
+		};
+	}
+
+	if (config.perPage) {
+		queryString.properties.per_page = {
+			type: "number",
+			description: T("swagger_query_string_per_page_description"),
+		};
 	}
 
 	return queryString;

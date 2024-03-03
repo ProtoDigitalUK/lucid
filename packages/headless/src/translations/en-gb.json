@@ -87,5 +87,8 @@
 	"collection_not_found_message": "Collection with key \"{{collectionKey}}\" under environment \"{{environmentKey}}\" not found",
 	"brick": "Brick",
 	"swagger_query_string_include_description": "Seperate values by a comma if you want to include multiple values",
-	"swagger_query_string_filter_description": "Seperate values by a comma if you want to filter by multiple values"
+	"swagger_query_string_filter_description": "Seperate values by a comma if you want to filter by multiple values",
+	"swagger_query_string_sort_description": "Prefix the value with a minus sign (-) to sort in descending order and seperate values by a comma if you want to sort by multiple values",
+	"swagger_query_string_page_description": "The page number of the paginated response",
+	"swagger_query_string_per_page_description": "The number of items per page in the paginated response"
 }

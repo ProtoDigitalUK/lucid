@@ -1,5 +1,8 @@
 import emailsSchema from "../../schemas/email.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import {
+	swaggerResponse,
+	swaggerQueryString,
+} from "../../utils/swagger/response-helpers.js";
 import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
@@ -48,5 +51,29 @@ export default {
 				paginated: true,
 			}),
 		},
+		querystring: swaggerQueryString({
+			filters: [
+				{
+					key: "to_address",
+				},
+				{
+					key: "subject",
+				},
+				{
+					key: "delivery_status",
+					enum: ["sent", "failed", "pending"],
+				},
+				{
+					key: "type",
+					enum: ["internal", "external"],
+				},
+				{
+					key: "template",
+				},
+			],
+			sorts: ["sent_count", "created_at", "updated_at"],
+			page: true,
+			perPage: true,
+		}),
 	},
 };

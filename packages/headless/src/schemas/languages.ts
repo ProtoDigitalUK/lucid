@@ -29,7 +29,7 @@ export default {
 					}),
 				)
 				.optional(),
-			include: z.array(z.enum(["permissions"])).optional(),
+			include: defaultQuery.include,
 			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
 			per_page: defaultQuery.per_page,

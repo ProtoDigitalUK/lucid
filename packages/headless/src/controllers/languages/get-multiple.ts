@@ -1,5 +1,8 @@
 import languageSchema from "../../schemas/languages.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import {
+	swaggerResponse,
+	swaggerQueryString,
+} from "../../utils/swagger/response-helpers.js";
 import languagesServices from "../../services/languages/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
@@ -52,5 +55,10 @@ export default {
 				paginated: true,
 			}),
 		},
+		querystring: swaggerQueryString({
+			sorts: ["code", "created_at", "updated_at"],
+			page: true,
+			perPage: true,
+		}),
 	},
 };

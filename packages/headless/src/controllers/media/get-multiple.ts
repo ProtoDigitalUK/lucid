@@ -2,6 +2,7 @@ import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
+	swaggerQueryString,
 } from "../../utils/swagger/response-helpers.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
@@ -54,6 +55,37 @@ export default {
 		},
 		headers: swaggerHeaders({
 			contentLanguage: true,
+		}),
+		querystring: swaggerQueryString({
+			filters: [
+				{
+					key: "key",
+				},
+				{
+					key: "mime_type",
+				},
+				{
+					key: "file_extension",
+				},
+				{
+					key: "type",
+				},
+				{
+					key: "title",
+				},
+			],
+			sorts: [
+				"created_at",
+				"updated_at",
+				"title",
+				"file_size",
+				"width",
+				"height",
+				"mime_type",
+				"file_extension",
+			],
+			page: true,
+			perPage: true,
 		}),
 	},
 };
