@@ -1,4 +1,4 @@
-import { EnvironmentResT } from "@headless/types/src/environments.js";
+import type { EnvironmentResT } from "@headless/types/src/environments.js";
 
 const formatEnvironment = (environment: {
 	key: string;

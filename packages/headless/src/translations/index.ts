@@ -1,4 +1,3 @@
-// Translation files
 import enGb from "./en-gb.json" assert { type: "json" };
 
 const selectedLang = enGb;

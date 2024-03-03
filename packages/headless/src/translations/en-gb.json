@@ -82,5 +82,10 @@
 	"objects_successfully_deleted": "Objects successfully deleted from S3",
 	"object_successfully_deleted": "Object successfully deleted from S3",
 	"translation": "Translation",
-	"swagger_content_language_header_description": "The language id of the content you wish to filter translations by. If left empty, the default language will be used."
+	"swagger_content_language_header_description": "The language id of the content you wish to filter translations by. If left empty, the default language will be used.",
+	"collection": "Collection",
+	"collection_not_found_message": "Collection with key \"{{collectionKey}}\" under environment \"{{environmentKey}}\" not found",
+	"brick": "Brick",
+	"swagger_query_string_include_description": "Seperate values by a comma if you want to include multiple values",
+	"swagger_query_string_filter_description": "Seperate values by a comma if you want to filter by multiple values"
 }
