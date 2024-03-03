@@ -9,6 +9,7 @@ import langaugeRoutes from "./languages.routes.js";
 import emailRoutes from "./emails.routes.js";
 import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
+import brickRoutes from "./bricks.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -37,6 +38,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(mediaRoutes, {
 		prefix: "/media",
+	});
+	fastify.register(brickRoutes, {
+		prefix: "/bricks",
 	});
 };
 
