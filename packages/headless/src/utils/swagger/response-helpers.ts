@@ -165,3 +165,40 @@ export const swaggerHeaders = (headers: SwaggerHeadersT) => {
 		required: required,
 	};
 };
+
+interface SwaggerQueryStringConfigT {
+	include?: string[];
+	filters?: {
+		key: string;
+		enum?: string[];
+	}[];
+}
+export const swaggerQueryString = (config: SwaggerQueryStringConfigT) => {
+	const queryString: {
+		type: string;
+		properties: Record<string, unknown>;
+	} = {
+		type: "object",
+		properties: {},
+	};
+
+	if (config.include && config.include.length > 0) {
+		queryString.properties.include = {
+			type: "string",
+			enum: config.include,
+			description: T("swagger_query_string_include_description"),
+		};
+	}
+
+	if (config.filters && config.filters.length > 0) {
+		for (const filter of config.filters) {
+			queryString.properties[`filter[${filter.key}]`] = {
+				type: "string",
+				enum: filter.enum,
+				description: T("swagger_query_string_filter_description"),
+			};
+		}
+	}
+
+	return queryString;
+};
