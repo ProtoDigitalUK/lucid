@@ -1,5 +1,4 @@
 import z from "zod";
-import { type CollectionBuilderT } from "../builders/collection-builder/index.js";
 import { type BrickBuilderT } from "../builders/brick-builder/index.js";
 import constants from "../constants.js";
 
@@ -83,7 +82,6 @@ export type EmailStrategyT = (
 }>;
 
 export interface HeadlessConfigT extends z.infer<typeof headlessConfigSchema> {
-	collections?: CollectionBuilderT[];
 	bricks?: BrickBuilderT[];
 	email: {
 		from: {

@@ -12,11 +12,9 @@ CREATE TYPE headless_collection_type AS ENUM ('multiple-builder', 'single-builde
 CREATE TABLE IF NOT EXISTS headless_collections (
     key TEXT PRIMARY KEY,
     type headless_collection_type NOT NULL,
-
-    title_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    singular_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    description_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    slug_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    title TEXT NOT NULL,
+    singular TEXT NOT NULL,
+    description TEXT,
 
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()

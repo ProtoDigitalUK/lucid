@@ -7,11 +7,6 @@ import {
 	TestingBrick,
 	PageMetaBrick,
 } from "./src/headless/bricks/index.js";
-import {
-	PageCollection,
-	SettingsCollection,
-	BlogCollection,
-} from "./src/headless/collections/index.js";
 
 export default headlessConfig({
 	mode: "development",
@@ -67,7 +62,6 @@ export default headlessConfig({
 			secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
 		},
 	},
-	collections: [PageCollection, BlogCollection, SettingsCollection],
 	bricks: [
 		BannerBrick,
 		IntroBrick,

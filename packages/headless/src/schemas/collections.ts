@@ -55,26 +55,17 @@ export default {
 						"Invalid key format. Only lowercase letters and dashes are allowed.",
 				}),
 			type: z.enum(["multiple-builder", "single-builder"]),
-			translations: z
-				.array(
-					z.object({
-						language_id: z.number(),
-						value: z.string().nullable(),
-						key: z.enum([
-							"title",
-							"singular",
-							"description",
-							"slug",
-						]),
-					}),
-				)
-				.optional(),
+			title: z.string(),
+			singular: z.string(),
+			description: z.string().optional(),
 			bricks: z
 				.array(
 					z.object({
 						key: z.string(),
 						type: z.enum(["builder", "fixed"]),
-						position: z.enum(["top", "bottom", "sidebar"]),
+						position: z
+							.enum(["top", "bottom", "sidebar"])
+							.optional(),
 					}),
 				)
 				.optional(),

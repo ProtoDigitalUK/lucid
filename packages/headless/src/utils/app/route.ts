@@ -22,9 +22,7 @@ type RouteT = <
 	opts: {
 		method: "get" | "post" | "put" | "delete" | "patch";
 		url: string;
-		permissions?: {
-			global?: PermissionT[];
-		};
+		permissions?: PermissionT[];
 		middleware?: {
 			authenticate?: boolean;
 			validateCSRF?: boolean;

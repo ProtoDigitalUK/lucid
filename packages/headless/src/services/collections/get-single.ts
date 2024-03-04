@@ -1,44 +1,48 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import type { CollectionConfigT } from "../../builders/collection-builder/index.js";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
 import getConfig from "../config.js";
 import formatCollection from "../../format/format-collection.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
 import brickConfigServices from "../brick-config/index.js";
 
 export interface ServiceData {
-	collectionKey: string;
-	type?: CollectionConfigT["type"];
+	key: string;
+	type?: "single-builder" | "multiple-builder";
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
-	const instances = config.collections || [];
+	const collectionQuery = serviceConfig.db
+		.selectFrom("headless_collections")
+		.select((eb) => [
+			"key",
+			"title",
+			"singular",
+			"description",
+			"type",
+			"created_at",
+			"updated_at",
+			jsonArrayFrom(
+				eb
+					.selectFrom("headless_collections_bricks")
+					.select([
+						"headless_collections_bricks.key",
+						"headless_collections_bricks.type",
+						"headless_collections_bricks.position",
+					])
+					.whereRef(
+						"headless_collections_bricks.collection_key",
+						"=",
+						"headless_collections.key",
+					),
+			).as("bricks"),
+		])
+		.where("key", "=", data.key);
 
-	if (!instances.length) {
-		throw new APIError({
-			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("collection"),
-			}),
-			message: T("collection_not_found_message", {
-				collectionKey: data.collectionKey,
-			}),
-			status: 404,
-		});
+	if (data.type) {
+		collectionQuery.where("type", "=", data.type);
 	}
 
-	const collections = instances.map(formatCollection);
-
-	const collection = collections.find((collection) => {
-		if (data.type !== undefined) {
-			return (
-				collection.key === data.collectionKey &&
-				collection.type === data.type
-			);
-		}
-		return collection.key === data.collectionKey;
-	});
+	const collection = await collectionQuery.executeTakeFirst();
 
 	if (collection === undefined) {
 		throw new APIError({
@@ -47,7 +51,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				name: T("collection"),
 			}),
 			message: T("collection_not_found_message", {
-				collectionKey: data.collectionKey,
+				collectionKey: data.key,
 			}),
 			status: 404,
 		});
@@ -58,7 +62,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 	collection.bricks = allowedBricks.collectionBricks;
 
-	return collection;
+	return formatCollection(collection);
 };
 
 export default getSingle;

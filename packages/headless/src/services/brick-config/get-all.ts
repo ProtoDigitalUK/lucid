@@ -20,7 +20,7 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			collectionsServices.getSingle,
 			false,
 		)(serviceConfig, {
-			collectionKey: collectionKey,
+			key: collectionKey,
 		});
 		const allowedBricks = await brickConfigService.getAllowedBricks({
 			collection: collection,

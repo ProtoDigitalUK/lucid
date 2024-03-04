@@ -10,6 +10,7 @@ import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
 import brickRoutes from "./bricks.routes.js";
 import publicPagesRoutes from "./public-pages.routes.js";
+import collectionRoutes from "./collections.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -23,6 +24,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(langaugeRoutes, {
 		prefix: "/languages",
+	});
+	fastify.register(collectionRoutes, {
+		prefix: "/collections",
 	});
 	fastify.register(settingsRoutes, {
 		prefix: "/settings",

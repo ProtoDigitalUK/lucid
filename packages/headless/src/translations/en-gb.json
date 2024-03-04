@@ -33,6 +33,7 @@
 	"user": "User",
 	"error_not_found_name": "{{name}} Not Found",
 	"error_not_found_message": "{{name}} resource could not be found.",
+	"duplicate_entry_error_message": "The entry already exists.",
 	"invalid_brick_keys": "Invalid brick keys.",
 	"make_sure_all_assigned_bricks_are_valid": "Please make sure all assigned bricks are valid.",
 	"brick_with_key_not_found": "Brick with key '{{key}}' not found.",

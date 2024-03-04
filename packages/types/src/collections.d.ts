@@ -1,8 +1,15 @@
-// Internal
-import type { CollectionConfigT } from "../../headless/src/builders/collection-builder/index.js";
-
-export interface CollectionResT extends CollectionConfigT {
+export interface CollectionResT {
 	key: string;
+	type: "single-builder" | "multiple-builder";
+	title: string;
+	singular: string;
+	description: string | null;
+	bricks: CollectionBrickConfigT[];
+}
+export interface CollectionBrickConfigT {
+	key: string;
+	type: "builder" | "fixed";
+	position: "top" | "bottom" | "sidebar";
 }
 
 export interface CollectionCategoriesResT {

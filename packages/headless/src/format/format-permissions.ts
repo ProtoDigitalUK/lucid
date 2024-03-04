@@ -11,7 +11,7 @@ const formatPermissions = (
 		permissions.emails,
 		permissions.languages,
 		permissions.content,
-		permissions.category,
+		permissions.collections,
 		permissions.menu,
 		permissions.form_submissions,
 	];

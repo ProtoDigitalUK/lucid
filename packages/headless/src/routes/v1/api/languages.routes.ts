@@ -6,9 +6,7 @@ const langaugeRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "post",
 		url: "",
-		permissions: {
-			global: ["create_language"],
-		},
+		permissions: ["create_language"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -43,9 +41,7 @@ const langaugeRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "delete",
 		url: "/:code",
-		permissions: {
-			global: ["delete_language"],
-		},
+		permissions: ["delete_language"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -58,9 +54,7 @@ const langaugeRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "patch",
 		url: "/:code",
-		permissions: {
-			global: ["update_language"],
-		},
+		permissions: ["update_language"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,

@@ -15,17 +15,14 @@ const throwPermissionError = () => {
 };
 
 const permissions =
-	(permissions: {
-		global?: PermissionT[];
-	}) =>
-	async (request: FastifyRequest) => {
+	(permissions: PermissionT[]) => async (request: FastifyRequest) => {
 		const payloadPermissions = request.auth.permissions;
 
 		if (request.auth.super_admin) return;
 		if (payloadPermissions === undefined) return throwPermissionError();
 
-		if (permissions.global) {
-			for (const permission of permissions.global) {
+		if (permissions) {
+			for (const permission of permissions) {
 				if (!payloadPermissions.includes(permission)) {
 					throwPermissionError();
 					break;

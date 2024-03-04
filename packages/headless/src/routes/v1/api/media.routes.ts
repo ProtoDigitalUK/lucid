@@ -29,9 +29,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "post",
 		url: "",
-		permissions: {
-			global: ["create_media"],
-		},
+		permissions: ["create_media"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -45,9 +43,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "patch",
 		url: "/:id",
-		permissions: {
-			global: ["update_media"],
-		},
+		permissions: ["update_media"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -61,9 +57,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "delete",
 		url: "/:id",
-		permissions: {
-			global: ["delete_media"],
-		},
+		permissions: ["delete_media"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -76,9 +70,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "delete",
 		url: "/:key/processed",
-		permissions: {
-			global: ["update_media"],
-		},
+		permissions: ["update_media"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,
@@ -91,9 +83,7 @@ const mediaRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "delete",
 		url: "/processed",
-		permissions: {
-			global: ["update_media"],
-		},
+		permissions: ["update_media"],
 		middleware: {
 			authenticate: true,
 			validateCSRF: true,

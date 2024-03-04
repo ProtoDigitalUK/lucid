@@ -22,7 +22,6 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 		key: "languages_permissions",
 		permissions: ["create_language", "update_language", "delete_language"],
 	},
-
 	emails: {
 		key: "emails_permissions",
 		permissions: ["read_email", "delete_email", "send_email"],
@@ -37,21 +36,17 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 			"unpublish_content",
 		],
 	},
-	category: {
-		key: "category_permissions",
-		permissions: ["create_category", "update_category", "delete_category"],
+	collections: {
+		key: "collections_permissions",
+		permissions: [
+			"create_collection",
+			"update_collection",
+			"delete_collection",
+		],
 	},
 	menu: {
 		key: "menu_permissions",
 		permissions: ["create_menu", "update_menu", "delete_menu"],
-	},
-	form_submissions: {
-		key: "form_submissions_permissions",
-		permissions: [
-			"read_form_submissions",
-			"delete_form_submissions",
-			"update_form_submissions",
-		],
 	},
 };
 

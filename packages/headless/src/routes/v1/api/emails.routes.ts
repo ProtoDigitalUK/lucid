@@ -9,9 +9,7 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		middleware: {
 			authenticate: true,
 		},
-		permissions: {
-			global: ["read_email"],
-		},
+		permissions: ["read_email"],
 		swaggerSchema: emails.getSingle.swaggerSchema,
 		zodSchema: emails.getSingle.zodSchema,
 		controller: emails.getSingle.controller,
@@ -23,9 +21,7 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		middleware: {
 			authenticate: true,
 		},
-		permissions: {
-			global: ["read_email"],
-		},
+		permissions: ["read_email"],
 		swaggerSchema: emails.getMultiple.swaggerSchema,
 		zodSchema: emails.getMultiple.zodSchema,
 		controller: emails.getMultiple.controller,
@@ -37,9 +33,7 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 		middleware: {
 			authenticate: true,
 		},
-		permissions: {
-			global: ["delete_email"],
-		},
+		permissions: ["delete_email"],
 		swaggerSchema: emails.deleteSingle.swaggerSchema,
 		zodSchema: emails.deleteSingle.zodSchema,
 		controller: emails.deleteSingle.controller,
@@ -52,9 +46,7 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 			authenticate: true,
 			validateCSRF: true,
 		},
-		permissions: {
-			global: ["send_email"],
-		},
+		permissions: ["send_email"],
 		swaggerSchema: emails.resendSingle.swaggerSchema,
 		zodSchema: emails.resendSingle.zodSchema,
 		controller: emails.resendSingle.controller,

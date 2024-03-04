@@ -8,10 +8,6 @@ export type PermissionT =
 	| "create_media"
 	| "update_media"
 	| "delete_media"
-	| "update_environment"
-	| "migrate_environment"
-	| "delete_environment"
-	| "create_environment"
 	| "update_settings"
 	| "read_email"
 	| "delete_email"
@@ -24,15 +20,12 @@ export type PermissionT =
 	| "delete_content"
 	| "publish_content"
 	| "unpublish_content"
-	| "create_category"
-	| "update_category"
-	| "delete_category"
 	| "create_menu"
 	| "update_menu"
 	| "delete_menu"
-	| "read_form_submissions"
-	| "delete_form_submissions"
-	| "update_form_submissions";
+	| "delete_collection"
+	| "create_collection"
+	| "update_collection";
 
 export type PermissionGroup = {
 	key: string;
