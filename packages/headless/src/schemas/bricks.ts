@@ -54,19 +54,8 @@ export default {
 			filter: z
 				.object({
 					collection_key: z.string().optional(),
-					environment_key: z.string().optional(),
 				})
-				.optional()
-				.refine(
-					(data) =>
-						(data?.collection_key && data?.environment_key) ||
-						(!data?.collection_key && !data?.environment_key),
-					{
-						message:
-							"Both collection_key and environment_key should be set or neither.",
-						path: [],
-					},
-				),
+				.optional(),
 		}),
 		params: undefined,
 	},

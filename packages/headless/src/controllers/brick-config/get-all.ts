@@ -50,9 +50,6 @@ export default {
 			include: ["fields"],
 			filters: [
 				{
-					key: "environment_key",
-				},
-				{
 					key: "collection_key",
 				},
 			],

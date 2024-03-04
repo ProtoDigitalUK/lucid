@@ -22,15 +22,7 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 		key: "languages_permissions",
 		permissions: ["create_language", "update_language", "delete_language"],
 	},
-	environment: {
-		key: "environment_permissions",
-		permissions: [
-			"update_environment",
-			"migrate_environment",
-			"delete_environment",
-			"create_environment",
-		],
-	},
+
 	emails: {
 		key: "emails_permissions",
 		permissions: ["read_email", "delete_email", "send_email"],
@@ -65,17 +57,7 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 
 const getPermissions = () => {
 	const formattedPermissions = formatPermissions(permissionGroups);
-
-	const globalPermissions = formattedPermissions.global.flatMap(
-		(group) => group.permissions,
-	);
-	const environmentPermissions = formattedPermissions.environment.flatMap(
-		(group) => group.permissions,
-	);
-	return {
-		global: globalPermissions,
-		environment: environmentPermissions,
-	};
+	return formattedPermissions.flatMap((group) => group.permissions);
 };
 
 export default getPermissions;

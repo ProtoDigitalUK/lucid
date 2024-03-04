@@ -225,5 +225,6 @@ export const swaggerQueryString = (config: SwaggerQueryStringConfigT) => {
 		};
 	}
 
-	return queryString;
+	// TODO: fix function, runs before validation middleware so query param format is wrong
+	return {};
 };

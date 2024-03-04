@@ -11,22 +11,19 @@ export interface ServiceData {
 }
 
 const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const environmentKey = data.query.filter?.environment_key;
 	const collectionKey = data.query.filter?.collection_key;
 
 	let bricks: BrickConfigT[] = [];
 
-	if (environmentKey && collectionKey) {
-		const collectionRes = await serviceWrapper(
+	if (collectionKey) {
+		const collection = await serviceWrapper(
 			collectionsServices.getSingle,
 			false,
 		)(serviceConfig, {
 			collectionKey: collectionKey,
-			environmentKey: environmentKey,
 		});
 		const allowedBricks = await brickConfigService.getAllowedBricks({
-			collection: collectionRes.collection,
-			environment: collectionRes.environment,
+			collection: collection,
 		});
 		bricks = allowedBricks.bricks;
 	} else {

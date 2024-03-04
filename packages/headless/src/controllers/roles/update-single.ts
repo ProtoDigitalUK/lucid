@@ -19,7 +19,7 @@ const updateSingleController: ControllerT<
 			id: parseInt(request.params.id),
 			name: request.body.name,
 			description: request.body.description,
-			permissionGroups: request.body.permission_groups,
+			permissions: request.body.permissions,
 		},
 	);
 
@@ -49,22 +49,10 @@ export default {
 				description: {
 					type: "string",
 				},
-				permission_groups: {
+				permissions: {
 					type: "array",
 					items: {
-						type: "object",
-						properties: {
-							permissions: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
-							environment_key: {
-								type: "string",
-							},
-						},
-						required: ["permissions"],
+						type: "string",
 					},
 				},
 			},

@@ -4,10 +4,7 @@ import {
 	type FastifyReply,
 } from "fastify";
 import z from "zod";
-import type {
-	PermissionT,
-	EnvironmentPermissionT,
-} from "@headless/types/src/permissions.js";
+import type { PermissionT } from "@headless/types/src/permissions.js";
 import validateBody from "../../middleware/validate-body.js";
 import validateParams from "../../middleware/validate-params.js";
 import validateQuery from "../../middleware/validate-query.js";
@@ -27,12 +24,10 @@ type RouteT = <
 		url: string;
 		permissions?: {
 			global?: PermissionT[];
-			environments?: EnvironmentPermissionT[];
 		};
 		middleware?: {
 			authenticate?: boolean;
 			validateCSRF?: boolean;
-			// validateEnvironment?: boolean;
 			contentLanguage?: boolean;
 		};
 		isMultipart?: boolean;

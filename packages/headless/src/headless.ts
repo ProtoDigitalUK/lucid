@@ -63,7 +63,6 @@ const headless = async (fastify: FastifyInstance) => {
 				"_csrf",
 				"_access",
 				"_refresh",
-				"headless-environment",
 				"headless-content-lang",
 				"Content-Length",
 			],

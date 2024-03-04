@@ -8,7 +8,6 @@ const formatRole = (role: {
 	updated_at: Date | null;
 	permissions?: {
 		id: number;
-		environment_key: string | null;
 		permission: string;
 		role_id: number;
 	}[];
@@ -21,7 +20,6 @@ const formatRole = (role: {
 			return {
 				id: permission.id,
 				permission: permission.permission,
-				environment_key: permission.environment_key,
 			};
 		}),
 		created_at: role.created_at?.toISOString() || null,
@@ -47,12 +45,10 @@ export const swaggerRoleRes = {
 				{
 					id: 1,
 					permission: "create_role",
-					environment_key: null,
 				},
 				{
 					id: 2,
 					permission: "update_role",
-					environment_key: "production",
 				},
 			],
 			items: {
@@ -63,9 +59,6 @@ export const swaggerRoleRes = {
 					},
 					permission: {
 						type: "string",
-					},
-					environment_key: {
-						type: ["string", "null"],
 					},
 				},
 			},

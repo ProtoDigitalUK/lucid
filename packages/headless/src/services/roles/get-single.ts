@@ -21,7 +21,6 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					.selectFrom("headless_role_permissions")
 					.select([
 						"headless_role_permissions.id",
-						"headless_role_permissions.environment_key",
 						"headless_role_permissions.permission",
 						"headless_role_permissions.role_id",
 					])

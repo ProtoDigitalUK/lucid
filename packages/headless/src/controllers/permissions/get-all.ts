@@ -22,56 +22,28 @@ export default {
 	controller: getAllController,
 	zodSchema: permissionsSchema.getAll,
 	swaggerSchema: {
-		description:
-			"Returns a list of all permissions available for users. Global permissions control access to CMS wide features, while environment permissions control access to specific environment features and can be different for each environment.",
+		description: "Returns a list of all permissions available for users.",
 		tags: ["permissions"],
 		summary: "Get all permissions",
 		response: {
 			200: swaggerResponse({
 				type: 200,
 				data: {
-					type: "object",
-					properties: {
-						global: {
-							type: "array",
-							items: {
-								type: "object",
-								properties: {
-									key: {
-										type: "string",
-										example: "users_permissions",
-									},
-									permissions: {
-										type: "array",
-										example: [
-											"create_user",
-											"update_user",
-											"delete_user",
-										],
-									},
-								},
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							key: {
+								type: "string",
+								example: "users_permissions",
 							},
-						},
-						environment: {
-							type: "array",
-							items: {
-								type: "object",
-								properties: {
-									key: {
-										type: "string",
-										example: "content_permissions",
-									},
-									permissions: {
-										type: "array",
-										example: [
-											"create_content",
-											"update_content",
-											"delete_content",
-											"publish_content",
-											"unpublish_content",
-										],
-									},
-								},
+							permissions: {
+								type: "array",
+								example: [
+									"create_user",
+									"update_user",
+									"delete_user",
+								],
 							},
 						},
 					},

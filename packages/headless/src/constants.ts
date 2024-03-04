@@ -5,10 +5,6 @@ export default {
 			is_default: true,
 			is_enabled: true,
 		},
-		environment: {
-			key: "production",
-			title: "Production",
-		},
 		user: {
 			first_name: "Headless",
 			last_name: "Admin",

@@ -19,7 +19,6 @@ const formatUser = (user: {
 		name: string;
 		permissions: {
 			permission: string;
-			environment_key: string | null;
 		}[];
 	}[];
 }): UserResT => {

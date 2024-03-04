@@ -64,36 +64,10 @@ const addDefaultLanguage = async (db: DB) => {
 	}
 };
 
-const addDefaultEnvironment = async (db: DB) => {
-	try {
-		const totalEnvrionmentcount = (await db
-			.selectFrom("headless_environments")
-			.select(sql`count(*)`.as("count"))
-			.executeTakeFirst()) as { count: string } | undefined;
-
-		if (parseCount(totalEnvrionmentcount?.count) === 0) {
-			await db
-				.insertInto("headless_environments")
-				.values({
-					key: constants.seedDefaults.environment.key,
-					title: constants.seedDefaults.environment.title,
-				})
-				.execute();
-		}
-	} catch (error) {
-		throw new InternalError(
-			T("dynamic_an_error_occurred_saving_default", {
-				name: T("environment"),
-			}),
-		);
-	}
-};
-
 const seedHeadless = async (fastify: FastifyInstance) => {
 	await Promise.allSettled([
 		addDefaultUser(fastify.db),
 		addDefaultLanguage(fastify.db),
-		addDefaultEnvironment(fastify.db),
 	]);
 };
 

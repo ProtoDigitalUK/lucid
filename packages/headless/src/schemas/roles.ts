@@ -6,12 +6,7 @@ export default {
 		body: z.object({
 			name: z.string().min(2),
 			description: z.string().optional(),
-			permission_groups: z.array(
-				z.object({
-					environment_key: z.string().optional(),
-					permissions: z.array(z.string()),
-				}),
-			),
+			permissions: z.array(z.string()),
 		}),
 		query: undefined,
 		params: undefined,
@@ -20,14 +15,7 @@ export default {
 		body: z.object({
 			name: z.string().min(2).optional(),
 			description: z.string().optional(),
-			permission_groups: z
-				.array(
-					z.object({
-						environment_key: z.string().optional(),
-						permissions: z.array(z.string()),
-					}),
-				)
-				.optional(),
+			permissions: z.array(z.string()).optional(),
 		}),
 		query: undefined,
 		params: z.object({

@@ -37,7 +37,7 @@ const getAuthenticatedUser = async (
 						jsonArrayFrom(
 							eb
 								.selectFrom("headless_role_permissions")
-								.select(["permission", "environment_key"])
+								.select(["permission"])
 								// @ts-ignore
 								.whereRef("role_id", "=", "headless_roles.id"), // ignore: query works as expected
 						).as("permissions"),

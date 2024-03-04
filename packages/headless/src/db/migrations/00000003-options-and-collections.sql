@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS headless_options (
 
 INSERT INTO headless_options (name, value_int) VALUES ('media_storage_used', 0);
 
-CREATE TYPE IF NOT EXISTS headless_collection_type AS ENUM ('multiple-builder', 'single-builder');
+CREATE TYPE headless_collection_type AS ENUM ('multiple-builder', 'single-builder');
 
 CREATE TABLE IF NOT EXISTS headless_collections (
     key TEXT PRIMARY KEY,
@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS headless_collections (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TYPE IF NOT EXISTS headless_collection_brick_type AS ENUM ('builder', 'fixed');
-CREATE TYPE IF NOT EXISTS headless_collection_brick_position AS ENUM ('bottom', 'top', 'sidebar');
+CREATE TYPE headless_collection_brick_type AS ENUM ('builder', 'fixed');
+CREATE TYPE headless_collection_brick_position AS ENUM ('bottom', 'top', 'sidebar');
 
 CREATE TABLE IF NOT EXISTS headless_collections_bricks (
     id SERIAL PRIMARY KEY,

@@ -1,28 +1,20 @@
-import {
-	PermissionGroup,
-	PermissionsResT,
-} from "@headless/types/src/permissions.js";
+import type { PermissionGroup } from "@headless/types/src/permissions.js";
 
 const formatPermissions = (
 	permissions: Record<string, PermissionGroup>,
-): PermissionsResT => {
-	return {
-		global: [
-			permissions.users,
-			permissions.roles,
-			permissions.media,
-			permissions.settings,
-			permissions.environment,
-			permissions.emails,
-			permissions.languages,
-		],
-		environment: [
-			permissions.content,
-			permissions.category,
-			permissions.menu,
-			permissions.form_submissions,
-		],
-	};
+): PermissionGroup[] => {
+	return [
+		permissions.users,
+		permissions.roles,
+		permissions.media,
+		permissions.settings,
+		permissions.emails,
+		permissions.languages,
+		permissions.content,
+		permissions.category,
+		permissions.menu,
+		permissions.form_submissions,
+	];
 };
 
 export default formatPermissions;

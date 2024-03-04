@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder_content (
     slug TEXT,
     excerpt TEXT,
 
-    UNIQUE (page_id, language_id)
+    UNIQUE (collection_multiple_builder_id, language_id)
 );
 
 CREATE INDEX idx_headless_collection_multiple_builder_content_collection_multiple_builder_id ON headless_collection_multiple_builder_content(collection_multiple_builder_id);

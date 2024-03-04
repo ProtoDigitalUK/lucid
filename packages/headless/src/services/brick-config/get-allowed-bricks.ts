@@ -2,12 +2,10 @@ import brickConfigServices from "./index.js";
 import getConfig from "../config.js";
 import type { CollectionBrickConfigT } from "../../builders/collection-builder/index.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
-import type { EnvironmentResT } from "@headless/types/src/environments.js";
 import type { BrickConfigT } from "@headless/types/src/bricks.js";
 
 export interface ServiceData {
 	collection: CollectionResT;
-	environment: EnvironmentResT;
 }
 
 const getAllowedBricks = async (data: ServiceData) => {
@@ -21,7 +19,6 @@ const getAllowedBricks = async (data: ServiceData) => {
 		const brickAllowed = await brickConfigServices.isBrickAllowed({
 			key: brick.key,
 			collection: data.collection,
-			environment: data.environment,
 		});
 
 		if (brickAllowed.allowed && brickAllowed.brick)

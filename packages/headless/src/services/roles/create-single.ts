@@ -6,10 +6,7 @@ import serviceWrapper from "../../utils/app/service-wrapper.js";
 export interface ServiceData {
 	name: string;
 	description?: string;
-	permissionGroups: {
-		permissions: string[];
-		environment_key?: string | undefined;
-	}[];
+	permissions: string[];
 }
 
 const createSingle = async (
@@ -20,7 +17,7 @@ const createSingle = async (
 		serviceWrapper(rolesServices.validatePermissions, false)(
 			serviceConfig,
 			{
-				permissionGroups: data.permissionGroups,
+				permissions: data.permissions,
 			},
 		),
 		serviceConfig.db
@@ -76,7 +73,6 @@ const createSingle = async (
 				validatePerms.map((permission) => ({
 					role_id: newRoles.id,
 					permission: permission.permission,
-					environment_key: permission.environmentKey,
 				})),
 			)
 			.execute();

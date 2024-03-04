@@ -7,10 +7,7 @@ export interface ServiceData {
 	id: number;
 	name?: string;
 	description?: string;
-	permissionGroups?: {
-		permissions: string[];
-		environment_key?: string | undefined;
-	}[];
+	permissions?: string[];
 }
 
 const updateSingle = async (
@@ -18,11 +15,11 @@ const updateSingle = async (
 	data: ServiceData,
 ) => {
 	const [validatePerms, checkNameIsUnique] = await Promise.all([
-		data.permissionGroups !== undefined
+		data.permissions !== undefined
 			? serviceWrapper(rolesServices.validatePermissions, false)(
 					serviceConfig,
 					{
-						permissionGroups: data.permissionGroups,
+						permissions: data.permissions,
 					},
 			  )
 			: undefined,
@@ -89,7 +86,6 @@ const updateSingle = async (
 					validatePerms.map((permission) => ({
 						role_id: data.id,
 						permission: permission.permission,
-						environment_key: permission.environmentKey,
 					})),
 				)
 				.execute();
