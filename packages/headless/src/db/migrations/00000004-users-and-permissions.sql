@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS headless_role_permissions (
   id SERIAL PRIMARY KEY,
   role_id INT NOT NULL REFERENCES headless_roles(id) ON DELETE CASCADE,
   permission TEXT NOT NULL,
-  environment_key TEXT REFERENCES headless_environments(key) ON DELETE CASCADE,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
