@@ -20,6 +20,14 @@ CREATE TABLE IF NOT EXISTS headless_collections (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS headless_collection_slugs (
+    id SERIAL PRIMARY KEY,
+    collection_key TEXT REFERENCES headless_collections(key) ON DELETE CASCADE,
+    language_id INTEGER REFERENCES headless_languages(id) ON DELETE CASCADE,
+    slug TEXT,
+    UNIQUE (collection_key, language_id)
+);
+
 CREATE TYPE headless_collection_brick_type AS ENUM ('builder', 'fixed');
 CREATE TYPE headless_collection_brick_position AS ENUM ('bottom', 'top', 'sidebar');
 

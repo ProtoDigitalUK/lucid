@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder_content (
 
     title TEXT,
     slug TEXT,
+    full_slug TEXT, -- computed from collection slug and content slug
     excerpt TEXT,
 
     UNIQUE (collection_multiple_builder_id, language_id)
