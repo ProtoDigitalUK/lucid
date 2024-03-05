@@ -11,14 +11,3 @@ export interface CollectionBrickConfigT {
 	type: "builder" | "fixed";
 	position: "top" | "bottom" | "sidebar";
 }
-
-export interface CollectionCategoriesResT {
-	id: number;
-	environment_key: string;
-	collection_key: string;
-	title: string;
-	slug: string;
-	description: string | null;
-	created_at: string;
-	updated_at: string;
-}
