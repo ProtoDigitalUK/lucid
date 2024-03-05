@@ -1,9 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import getConfig from "../config.js";
 import formatCollection from "../../format/format-collection.js";
-import brickConfigServices from "../brick-config/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -57,12 +55,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const allowedBricks = await brickConfigServices.getAllowedBricks({
-		collection,
-	});
-	collection.bricks = allowedBricks.collectionBricks;
-
-	return formatCollection(collection);
+	return await formatCollection(collection);
 };
 
 export default getSingle;

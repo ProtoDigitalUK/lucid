@@ -1,6 +1,7 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
+import getConfig from "../services/config.js";
 
-const formatCollection = (collection: {
+const formatCollection = async (collection: {
 	created_at: Date | null;
 	description: string | null;
 	key: string;
@@ -13,18 +14,23 @@ const formatCollection = (collection: {
 		position: "top" | "bottom" | "sidebar";
 		type: "builder" | "fixed";
 	}[];
-}): CollectionResT => {
+}): Promise<CollectionResT> => {
+	const config = await getConfig();
+	const bricks = collection.bricks
+		.filter((brick) => config.bricks?.find((b) => b.key === brick.key))
+		.map((brick) => ({
+			key: brick.key,
+			position: brick.position,
+			type: brick.type,
+		}));
+
 	return {
 		description: collection.description,
 		key: collection.key,
 		singular: collection.singular,
 		title: collection.title,
 		type: collection.type,
-		bricks: collection.bricks.map((brick) => ({
-			key: brick.key,
-			position: brick.position,
-			type: brick.type,
-		})),
+		bricks: bricks,
 	};
 };
 
