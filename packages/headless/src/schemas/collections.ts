@@ -15,20 +15,9 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
-			translations: z
-				.array(
-					z.object({
-						language_id: z.number(),
-						value: z.string().nullable(),
-						key: z.enum([
-							"title",
-							"singular",
-							"description",
-							"slug",
-						]),
-					}),
-				)
-				.optional(),
+			title: z.string().optional(),
+			singular: z.string().optional(),
+			description: z.string().optional().nullable(),
 			bricks: z
 				.array(
 					z.object({

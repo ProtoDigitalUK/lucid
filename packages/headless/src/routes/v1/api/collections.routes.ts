@@ -38,6 +38,18 @@ const collectionRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: collections.deleteSingle.zodSchema,
 		controller: collections.deleteSingle.controller,
 	});
+	r(fastify, {
+		method: "patch",
+		url: "/:key",
+		permissions: ["update_collection"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collections.updateSingle.swaggerSchema,
+		zodSchema: collections.updateSingle.zodSchema,
+		controller: collections.updateSingle.controller,
+	});
 };
 
 export default collectionRoutes;
