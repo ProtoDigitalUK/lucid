@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder_content (
 
 CREATE INDEX idx_headless_collection_multiple_builder_content_collection_multiple_builder_id ON headless_collection_multiple_builder_content(collection_multiple_builder_id);
 CREATE INDEX idx_headless_collection_multiple_builder_content_language_id ON headless_collection_multiple_builder_content(language_id);
-CREATE INDEX idx_headless_collection_multiple_builder_content_slug ON headless_collection_multiple_builder_content(slug);
 
 
 CREATE OR REPLACE FUNCTION update_full_slug() RETURNS trigger AS $$
