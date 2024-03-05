@@ -107,10 +107,10 @@ const getMultiple = async (
 		},
 	);
 
-	const emails = await main.execute();
-	const emailsCount = (await count?.executeTakeFirst()) as
-		| { count: string }
-		| undefined;
+	const [emails, emailsCount] = await Promise.all([
+		main.execute(),
+		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
+	]);
 
 	return {
 		data: emails.map((email) => formatEmails(email)),

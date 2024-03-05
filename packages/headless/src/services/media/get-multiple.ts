@@ -175,10 +175,10 @@ const getMultiple = async (
 		},
 	);
 
-	const medias = await main.execute();
-	const mediasCount = (await count?.executeTakeFirst()) as
-		| { count: string }
-		| undefined;
+	const [medias, mediasCount] = await Promise.all([
+		main.execute(),
+		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
+	]);
 
 	return {
 		data: medias.map((media) =>

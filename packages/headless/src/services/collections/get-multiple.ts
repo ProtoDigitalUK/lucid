@@ -90,10 +90,10 @@ const getMultiple = async (
 		},
 	);
 
-	const collections = await main.execute();
-	const collectionsCount = (await count?.executeTakeFirst()) as
-		| { count: string }
-		| undefined;
+	const [collections, collectionsCount] = await Promise.all([
+		main.execute(),
+		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
+	]);
 
 	const config = await getConfig();
 

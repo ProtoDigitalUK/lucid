@@ -55,10 +55,10 @@ const getMultiple = async (
 		},
 	);
 
-	const languages = await main.execute();
-	const languagesCount = (await count?.executeTakeFirst()) as
-		| { count: string }
-		| undefined;
+	const [languages, languagesCount] = await Promise.all([
+		main.execute(),
+		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
+	]);
 
 	return {
 		data: languages.map(formatLanguage),

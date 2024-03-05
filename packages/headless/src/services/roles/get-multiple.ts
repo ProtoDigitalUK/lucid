@@ -82,10 +82,10 @@ const getMultiple = async (
 		},
 	);
 
-	const roles = await main.execute();
-	const rolesCount = (await count?.executeTakeFirst()) as
-		| { count: string }
-		| undefined;
+	const [roles, rolesCount] = await Promise.all([
+		main.execute(),
+		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
+	]);
 
 	return {
 		data: roles.map(formatRole),
