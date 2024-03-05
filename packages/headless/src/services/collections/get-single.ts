@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import formatCollection from "../../format/format-collection.js";
+import getConfig from "../config.js";
 
 export interface ServiceData {
 	key: string;
@@ -55,7 +56,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return await formatCollection(collection);
+	const config = await getConfig();
+	return formatCollection(collection, config.bricks);
 };
 
 export default getSingle;

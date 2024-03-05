@@ -1,4 +1,5 @@
 import z from "zod";
+import defaultQuery from "./default-query.js";
 
 export default {
 	getAll: {
@@ -68,5 +69,30 @@ export default {
 		params: z.object({
 			key: z.string(),
 		}),
+	},
+	getMultiple: {
+		body: undefined,
+		query: z.object({
+			filter: z
+				.object({
+					type: z
+						.enum(["single-builder", "multiple-builder"])
+						.optional(),
+				})
+				.optional(),
+			sort: z
+				.array(
+					z.object({
+						key: z.enum(["created_at", "title", "updated_at"]),
+						value: z.enum(["asc", "desc"]),
+					}),
+				)
+				.optional(),
+			include: z.array(z.enum(["bricks"])).optional(),
+			exclude: defaultQuery.exclude,
+			page: defaultQuery.page,
+			per_page: defaultQuery.per_page,
+		}),
+		params: undefined,
 	},
 };

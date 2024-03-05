@@ -50,6 +50,16 @@ const collectionRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: collections.updateSingle.zodSchema,
 		controller: collections.updateSingle.controller,
 	});
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: collections.getMultiple.swaggerSchema,
+		zodSchema: collections.getMultiple.zodSchema,
+		controller: collections.getMultiple.controller,
+	});
 };
 
 export default collectionRoutes;

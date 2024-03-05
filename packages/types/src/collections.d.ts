@@ -4,7 +4,7 @@ export interface CollectionResT {
 	title: string;
 	singular: string;
 	description: string | null;
-	bricks: CollectionBrickConfigT[];
+	bricks?: CollectionBrickConfigT[];
 }
 export interface CollectionBrickConfigT {
 	key: string;

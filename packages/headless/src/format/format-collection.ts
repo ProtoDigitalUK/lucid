@@ -1,23 +1,25 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
-import getConfig from "../services/config.js";
+import { type BrickBuilderT } from "../builders/brick-builder/index.js";
 
-const formatCollection = async (collection: {
-	created_at: Date | null;
-	description: string | null;
-	key: string;
-	singular: string;
-	title: string;
-	type: "single-builder" | "multiple-builder";
-	updated_at: Date | null;
-	bricks: {
+const formatCollection = (
+	collection: {
+		created_at: Date | null;
+		description: string | null;
 		key: string;
-		position: "top" | "bottom" | "sidebar";
-		type: "builder" | "fixed";
-	}[];
-}): Promise<CollectionResT> => {
-	const config = await getConfig();
+		singular: string;
+		title: string;
+		type: "single-builder" | "multiple-builder";
+		updated_at: Date | null;
+		bricks?: {
+			key: string;
+			position: "top" | "bottom" | "sidebar";
+			type: "builder" | "fixed";
+		}[];
+	},
+	brickInstances: BrickBuilderT[] | undefined,
+): CollectionResT => {
 	const bricks = collection.bricks
-		.filter((brick) => config.bricks?.find((b) => b.key === brick.key))
+		?.filter((brick) => brickInstances?.find((b) => b.key === brick.key))
 		.map((brick) => ({
 			key: brick.key,
 			position: brick.position,
