@@ -5,6 +5,7 @@ import serviceWrapper from "../../utils/app/service-wrapper.js";
 import categoriesServices from "./index.js";
 import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
+import collectionsServices from "../collections/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
@@ -27,7 +28,33 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	// TODO: check collection exists
+	const collectionExists = await serviceWrapper(
+		collectionsServices.checks.checkCollectionExists,
+		false,
+	)(serviceConfig, {
+		key: data.collection_key,
+	});
+
+	if (!collectionExists) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_found_name", {
+				name: T("collection"),
+			}),
+			message: T("error_not_found_message", {
+				name: T("collection"),
+			}),
+			status: 404,
+			errors: modelErrors({
+				collection_key: {
+					code: "not_found",
+					message: T("error_not_found_message", {
+						name: T("collection"),
+					}),
+				},
+			}),
+		});
+	}
 
 	const slugValue = slug(data.slug, {
 		lower: true,
