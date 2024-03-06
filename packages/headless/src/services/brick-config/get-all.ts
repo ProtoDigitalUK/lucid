@@ -19,7 +19,7 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			key: collectionKey,
 		});
 		return await brickConfigService.getBrickInstances({
-			filterBricks: collection.bricks.map((b) => b.key),
+			filterBricks: collection.bricks?.map((b) => b.key),
 			includeFields: data.query.include?.includes("fields"),
 		});
 	}

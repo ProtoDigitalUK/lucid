@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS headless_collections (
     singular TEXT NOT NULL,
     description TEXT,
 
+    disable_parents BOOLEAN DEFAULT FALSE,
+    disable_omepage BOOLEAN DEFAULT FALSE,
+
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
