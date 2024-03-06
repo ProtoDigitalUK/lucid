@@ -44,6 +44,10 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 			"delete_collection",
 		],
 	},
+	category: {
+		key: "category_permissions",
+		permissions: ["create_category", "update_category", "delete_category"],
+	},
 	menu: {
 		key: "menu_permissions",
 		permissions: ["create_menu", "update_menu", "delete_menu"],

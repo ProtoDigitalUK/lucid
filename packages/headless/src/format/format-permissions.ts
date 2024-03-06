@@ -12,6 +12,7 @@ const formatPermissions = (
 		permissions.languages,
 		permissions.content,
 		permissions.collections,
+		permissions.category,
 		permissions.menu,
 		permissions.form_submissions,
 	];

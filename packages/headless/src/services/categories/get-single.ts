@@ -1,29 +1,21 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import formatMedia from "../../format/format-media.js";
-import getConfig from "../config.js";
+import formatCategory from "../../format/format-category.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
-	const media = await serviceConfig.db
-		.selectFrom("headless_media")
+	const category = await serviceConfig.db
+		.selectFrom("headless_collection_categories")
 		.select((eb) => [
 			"id",
-			"key",
-			"e_tag",
-			"type",
-			"mime_type",
-			"file_extension",
-			"file_size",
-			"width",
-			"height",
+			"collection_key",
 			"title_translation_key_id",
-			"alt_translation_key_id",
+			"description_translation_key_id",
+			"slug",
 			"created_at",
 			"updated_at",
 			jsonArrayFrom(
@@ -37,7 +29,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					.whereRef(
 						"headless_translations.translation_key_id",
 						"=",
-						"headless_media.title_translation_key_id",
+						"headless_collection_categories.title_translation_key_id",
 					),
 			).as("title_translations"),
 			jsonArrayFrom(
@@ -51,29 +43,27 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					.whereRef(
 						"headless_translations.translation_key_id",
 						"=",
-						"headless_media.alt_translation_key_id",
+						"headless_collection_categories.description_translation_key_id",
 					),
-			).as("alt_translations"),
+			).as("description_translations"),
 		])
-		.where("visible", "=", true)
 		.where("id", "=", data.id)
 		.executeTakeFirst();
 
-	if (media === undefined) {
+	if (category === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {
-				name: T("media"),
+				name: T("category"),
 			}),
 			message: T("error_not_found_message", {
-				name: T("media"),
+				name: T("category"),
 			}),
 			status: 404,
 		});
 	}
 
-	return formatMedia(media, {
-		host: config.host,
+	return formatCategory(category, {
 		isMultiple: false,
 	});
 };

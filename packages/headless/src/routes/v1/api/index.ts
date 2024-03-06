@@ -11,6 +11,7 @@ import settingsRoutes from "./settings.routes.js";
 import brickRoutes from "./bricks.routes.js";
 import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
+import categoriesRoutes from "./categories.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
 	fastify.register(authRoutes, {
@@ -27,6 +28,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(collectionRoutes, {
 		prefix: "/collections",
+	});
+	fastify.register(categoriesRoutes, {
+		prefix: "/collections/categories",
 	});
 	fastify.register(settingsRoutes, {
 		prefix: "/settings",

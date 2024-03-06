@@ -25,7 +25,10 @@ export type PermissionT =
 	| "delete_menu"
 	| "delete_collection"
 	| "create_collection"
-	| "update_collection";
+	| "update_collection"
+	| "create_category"
+	| "update_category"
+	| "delete_category";
 
 export type PermissionGroup = {
 	key: string;
