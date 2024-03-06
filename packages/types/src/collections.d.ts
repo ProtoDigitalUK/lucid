@@ -4,6 +4,8 @@ export interface CollectionResT {
 	title: string;
 	singular: string;
 	description: string | null;
+	disable_homepages: boolean | null;
+	disable_parents: boolean | null;
 	bricks?: CollectionBrickConfigT[];
 }
 export interface CollectionBrickConfigT {

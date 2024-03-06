@@ -10,6 +10,8 @@ const formatCollection = (
 		title: string;
 		type: "single-builder" | "multiple-builder";
 		updated_at: Date | null;
+		disable_homepages: boolean | null;
+		disable_parents: boolean | null;
 		bricks?: {
 			key: string;
 			position: "top" | "bottom" | "sidebar";
@@ -32,6 +34,8 @@ const formatCollection = (
 		singular: collection.singular,
 		title: collection.title,
 		type: collection.type,
+		disable_homepages: collection.disable_homepages,
+		disable_parents: collection.disable_parents,
 		bricks: bricks,
 	};
 };
@@ -44,6 +48,8 @@ export const swaggerCollectionRes = {
 		title: { type: "string", example: "Pages" },
 		singular: { type: "string", example: "Page" },
 		description: { type: "string", example: "A collection of pages" },
+		disable_homepages: { type: "boolean", example: false },
+		disable_parents: { type: "boolean", example: false },
 		bricks: {
 			type: "array",
 			items: {

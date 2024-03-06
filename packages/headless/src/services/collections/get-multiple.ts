@@ -25,6 +25,8 @@ const getMultiple = async (
 			"type",
 			"created_at",
 			"updated_at",
+			"disable_homepages",
+			"disable_parents",
 		]);
 
 	if (data.query.include?.includes("bricks")) {

@@ -19,6 +19,8 @@ export default {
 			title: z.string().optional(),
 			singular: z.string().optional(),
 			description: z.string().optional().nullable(),
+			disable_homepages: z.boolean().optional(),
+			disable_parents: z.boolean().optional(),
 			bricks: z
 				.array(
 					z.object({
@@ -48,6 +50,8 @@ export default {
 			title: z.string(),
 			singular: z.string(),
 			description: z.string().optional(),
+			disable_homepages: z.boolean().optional(),
+			disable_parents: z.boolean().optional(),
 			bricks: z
 				.array(
 					z.object({

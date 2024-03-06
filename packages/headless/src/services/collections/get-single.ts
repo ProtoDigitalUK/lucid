@@ -20,6 +20,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"type",
 			"created_at",
 			"updated_at",
+			"disable_homepages",
+			"disable_parents",
 			jsonArrayFrom(
 				eb
 					.selectFrom("headless_collections_bricks")

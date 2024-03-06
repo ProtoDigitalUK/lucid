@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS headless_collections (
     description TEXT,
 
     disable_parents BOOLEAN DEFAULT FALSE,
-    disable_omepage BOOLEAN DEFAULT FALSE,
+    disable_homepages BOOLEAN DEFAULT FALSE,
 
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
