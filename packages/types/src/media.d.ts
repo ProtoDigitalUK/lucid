@@ -10,23 +10,14 @@ export interface MediaResT {
 	id: number;
 	key: string;
 	url: string;
-
-	translations: {
-		language_id: number;
-		value: string;
-		key: "title" | "alt";
+	title_translations: {
+		language_id: number | null;
+		value: string | null;
 	}[];
-
-	// name_translations: {
-	//   id?: number;
-	//   language_id: number;
-	//   value: string | null;
-	// }[];
-	// alt_translations: {
-	//   id?: number;
-	//   language_id: number;
-	//   value: string | null;
-	// }[];
+	alt_translations: {
+		language_id: number | null;
+		value: string | null;
+	}[];
 	type: MediaTypeT;
 	meta: {
 		mime_type: string;

@@ -13,11 +13,11 @@ import {
 export interface ServiceData {
 	collection_key: string;
 	slug: string;
-	title: {
+	title_translations: {
 		language_id: number;
 		value: string | null;
 	}[];
-	description?: {
+	description_translations?: {
 		language_id: number;
 		value: string | null;
 	}[];
@@ -64,8 +64,8 @@ const createSingle = async (
 		serviceConfig,
 		{
 			languageIds: getUniqueLanguageIDs([
-				data.title,
-				data.description || [],
+				data.title_translations,
+				data.description_translations || [],
 			]),
 		},
 	);
@@ -77,11 +77,11 @@ const createSingle = async (
 		keys: ["title", "description"],
 		translations: mergeTranslationGroups([
 			{
-				translations: data.title,
+				translations: data.title_translations,
 				key: "title",
 			},
 			{
-				translations: data.description || [],
+				translations: data.description_translations || [],
 				key: "description",
 			},
 		]),

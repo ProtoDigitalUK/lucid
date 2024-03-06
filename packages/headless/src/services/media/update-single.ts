@@ -5,16 +5,22 @@ import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
-import s3Services from "../s3/index.js";
+import {
+	mergeTranslationGroups,
+	getUniqueLanguageIDs,
+} from "../../utils/translations/helpers.js";
 
 export interface ServiceData {
 	id: number;
 	fileData: MultipartFile | undefined;
-	translations?: Array<{
+	title_translations?: {
 		language_id: number;
 		value: string | null;
-		key: "title" | "alt";
-	}>;
+	}[];
+	alt_translations?: {
+		language_id: number;
+		value: string | null;
+	}[];
 }
 
 const updateSingle = async (
@@ -50,12 +56,20 @@ const updateSingle = async (
 		});
 	}
 
-	if (data.translations !== undefined && data.translations.length > 0) {
+	if (
+		(data.title_translations !== undefined &&
+			data.title_translations.length > 0) ||
+		(data.alt_translations !== undefined &&
+			data.alt_translations.length > 0)
+	) {
 		await serviceWrapper(
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: data.translations?.map((t) => t.language_id) || [],
+			languageIds: getUniqueLanguageIDs([
+				data.title_translations || [],
+				data.alt_translations || [],
+			]),
 		});
 		await serviceWrapper(translationsServices.upsertMultiple, false)(
 			serviceConfig,
@@ -64,7 +78,16 @@ const updateSingle = async (
 					title: media.title_translation_key_id,
 					alt: media.alt_translation_key_id,
 				},
-				translations: data.translations,
+				translations: mergeTranslationGroups([
+					{
+						translations: data.title_translations || [],
+						key: "title",
+					},
+					{
+						translations: data.alt_translations || [],
+						key: "alt",
+					},
+				]),
 			},
 		);
 	}
@@ -72,7 +95,6 @@ const updateSingle = async (
 	if (data.fileData === undefined) {
 		return;
 	}
-	console.log("data.fileData is undefined", data.fileData);
 
 	const updateObjectRes = await serviceWrapper(
 		mediaServices.storage.updateObject,

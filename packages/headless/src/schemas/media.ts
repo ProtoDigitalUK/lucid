@@ -58,12 +58,19 @@ export default {
 	},
 	uploadSingle: {
 		body: z.object({
-			translations: z
+			title_translations: z
 				.array(
 					z.object({
 						language_id: z.number(),
 						value: z.string().nullable(),
-						key: z.enum(["title", "alt"]),
+					}),
+				)
+				.optional(),
+			alt_translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
 					}),
 				)
 				.optional(),
@@ -73,12 +80,19 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
-			translations: z
+			title_translations: z
 				.array(
 					z.object({
 						language_id: z.number(),
 						value: z.string().nullable(),
-						key: z.enum(["title", "alt"]),
+					}),
+				)
+				.optional(),
+			alt_translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
 					}),
 				)
 				.optional(),

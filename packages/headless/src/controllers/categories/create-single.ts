@@ -20,8 +20,8 @@ const createSingleController: ControllerT<
 		{
 			collection_key: request.body.collection_key,
 			slug: request.body.slug,
-			title: request.body.title,
-			description: request.body.description,
+			title_translations: request.body.title_translations,
+			description_translations: request.body.description_translations,
 		},
 	);
 
@@ -58,7 +58,7 @@ export default {
 				slug: {
 					type: "string",
 				},
-				title: {
+				title_translations: {
 					type: "array",
 					items: {
 						type: "object",
@@ -72,7 +72,7 @@ export default {
 						},
 					},
 				},
-				description: {
+				description_translations: {
 					type: "array",
 					items: {
 						type: "object",
@@ -87,7 +87,7 @@ export default {
 					},
 				},
 			},
-			required: ["collection_key", "slug", "title"],
+			required: ["collection_key", "slug", "title_translations"],
 		},
 		response: {
 			200: swaggerResponse({

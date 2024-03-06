@@ -19,7 +19,8 @@ const uploadSingleController: ControllerT<
 		},
 		{
 			fileData: await request.file(),
-			translations: request.body.translations,
+			title_translations: request.body.title_translations,
+			alt_translations: request.body.alt_translations,
 			visible: true,
 		},
 	);
@@ -69,7 +70,7 @@ export default {
 				body: {
 					type: "string",
 					description:
-						'Stringified JSON data containing translations for the media. The translations should be an array of objects with the following properties: language_id, value, and key. The key should be either "title" or "alt".<br><br>Example: <code>{"translations":[{"language_id":1,"value":"Title value","key":"title"},{"language_id":1,"value":"Alt value","key":"alt"}]}</code>',
+						'Stringified JSON data containing tile_translations and alt_translations for the media.<br><br>Example: <code>{"title_translations":[{"language_id":1,"value":"title value"}],"alt_translations":[{"language_id":1,"value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
 				},
 			},
 		},

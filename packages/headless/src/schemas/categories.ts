@@ -5,13 +5,13 @@ export default {
 		body: z.object({
 			collection_key: z.string(),
 			slug: z.string(),
-			title: z.array(
+			title_translations: z.array(
 				z.object({
 					language_id: z.number(),
 					value: z.string().nullable(),
 				}),
 			),
-			description: z
+			description_translations: z
 				.array(
 					z.object({
 						language_id: z.number(),

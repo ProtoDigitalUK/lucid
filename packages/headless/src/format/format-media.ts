@@ -1,7 +1,4 @@
 import type { MediaResT, MediaTypeT } from "@headless/types/src/media.js";
-import formatTranslations, {
-	swaggerTranslationsRes,
-} from "./format-translations.js";
 
 const createURL = (host: string, key: string) => {
 	return `${host}/cdn/v1/${key}`;
@@ -43,30 +40,22 @@ const formatMedia = (
 		id: media.id,
 		key: media.key,
 		url: createURL(config.host, media.key),
-		translations: formatTranslations([
-			{
-				key: "title",
-				translations: config.isMultiple
-					? [
-							{
-								value: media.title_translation_value ?? null,
-								language_id: config.languageId ?? null,
-							},
-					  ]
-					: media.title_translations ?? [],
-			},
-			{
-				key: "alt",
-				translations: config.isMultiple
-					? [
-							{
-								value: media.alt_translation_value ?? null,
-								language_id: config.languageId ?? null,
-							},
-					  ]
-					: media.alt_translations ?? [],
-			},
-		]),
+		title_translations: config.isMultiple
+			? [
+					{
+						value: media.title_translation_value ?? null,
+						language_id: config.languageId ?? null,
+					},
+			  ]
+			: media.title_translations ?? [],
+		alt_translations: config.isMultiple
+			? [
+					{
+						value: media.alt_translation_value ?? null,
+						language_id: config.languageId ?? null,
+					},
+			  ]
+			: media.alt_translations ?? [],
 		type: media.type as MediaTypeT,
 		meta: {
 			mime_type: media.mime_type,
@@ -86,7 +75,28 @@ export const swaggerMediaRes = {
 		id: { type: "number", example: 1 },
 		key: { type: "string", example: "placeholder-1708786317482" },
 		url: { type: "string", example: "https://example.com/cdn/v1/key" },
-		translations: swaggerTranslationsRes,
+		title_translations: {
+			type: "array",
+			items: {
+				type: "object",
+				properties: {
+					language_id: { type: "number", example: 1 },
+					value: { type: "string" },
+				},
+			},
+		},
+		alt_translations: {
+			type: "array",
+			items: {
+				type: "object",
+				properties: {
+					language_id: { type: "number", example: 1 },
+					value: {
+						type: "string",
+					},
+				},
+			},
+		},
 		type: { type: "string", example: "image" },
 		meta: {
 			type: "object",

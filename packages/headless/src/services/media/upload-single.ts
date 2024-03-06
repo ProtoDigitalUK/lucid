@@ -6,14 +6,21 @@ import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import s3Services from "../s3/index.js";
+import {
+	mergeTranslationGroups,
+	getUniqueLanguageIDs,
+} from "../../utils/translations/helpers.js";
 
 export interface ServiceData {
 	fileData: MultipartFile | undefined;
-	translations?: Array<{
+	title_translations?: {
 		language_id: number;
 		value: string | null;
-		key: "title" | "alt";
-	}>;
+	}[];
+	alt_translations?: {
+		language_id: number;
+		value: string | null;
+	}[];
 	visible?: boolean;
 }
 
@@ -29,7 +36,10 @@ const uploadSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: data.translations?.map((t) => t.language_id) || [],
+			languageIds: getUniqueLanguageIDs([
+				data.title_translations || [],
+				data.alt_translations || [],
+			]),
 		});
 
 		const translationKeyIdPromise = serviceWrapper(
@@ -37,7 +47,16 @@ const uploadSingle = async (
 			false,
 		)(serviceConfig, {
 			keys: ["title", "alt"],
-			translations: data.translations || [],
+			translations: mergeTranslationGroups([
+				{
+					translations: data.title_translations || [],
+					key: "title",
+				},
+				{
+					translations: data.alt_translations || [],
+					key: "alt",
+				},
+			]),
 		});
 		const uploadObjectPromise = serviceWrapper(
 			mediaServices.storage.uploadObject,
