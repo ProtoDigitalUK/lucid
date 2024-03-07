@@ -38,6 +38,19 @@ const categoriesRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: categories.getMultiple.zodSchema,
 		controller: categories.getMultiple.controller,
 	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/:id",
+		permissions: ["delete_category"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: categories.deleteSingle.swaggerSchema,
+		zodSchema: categories.deleteSingle.zodSchema,
+		controller: categories.deleteSingle.controller,
+	});
 };
 
 export default categoriesRoutes;

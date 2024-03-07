@@ -13,7 +13,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteEmail = await serviceConfig.db
+	const deleteMedia = await serviceConfig.db
 		.deleteFrom("headless_media")
 		.where("id", "=", data.id)
 		.returning([
@@ -25,7 +25,7 @@ const deleteSingle = async (
 		])
 		.executeTakeFirst();
 
-	if (deleteEmail === undefined) {
+	if (deleteMedia === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("dynamic_error_name", {
@@ -42,22 +42,22 @@ const deleteSingle = async (
 		serviceWrapper(processedImagesServices.clearSingle, false)(
 			serviceConfig,
 			{
-				key: deleteEmail.key,
+				key: deleteMedia.key,
 			},
 		),
 		serviceWrapper(mediaServices.storage.deleteObject, false)(
 			serviceConfig,
 			{
-				key: deleteEmail.key,
-				size: deleteEmail.file_size,
+				key: deleteMedia.key,
+				size: deleteMedia.file_size,
 			},
 		),
 		serviceWrapper(translationsServices.deleteMultiple, false)(
 			serviceConfig,
 			{
 				ids: [
-					deleteEmail.title_translation_key_id,
-					deleteEmail.alt_translation_key_id,
+					deleteMedia.title_translation_key_id,
+					deleteMedia.alt_translation_key_id,
 				],
 			},
 		),
