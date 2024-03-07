@@ -26,6 +26,18 @@ const categoriesRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: categories.getSingle.zodSchema,
 		controller: categories.getSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+			contentLanguage: true,
+		},
+		swaggerSchema: categories.getMultiple.swaggerSchema,
+		zodSchema: categories.getMultiple.zodSchema,
+		controller: categories.getMultiple.controller,
+	});
 };
 
 export default categoriesRoutes;
