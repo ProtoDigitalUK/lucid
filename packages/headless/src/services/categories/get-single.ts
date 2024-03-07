@@ -63,9 +63,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatCategory(category, {
-		isMultiple: false,
-	});
+	return formatCategory(category);
 };
 
 export default getSingle;

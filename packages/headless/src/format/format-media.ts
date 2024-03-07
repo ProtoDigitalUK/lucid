@@ -32,30 +32,14 @@ const formatMedia = (
 	},
 	config: {
 		host: string;
-		isMultiple: boolean;
-		languageId?: number;
 	},
 ): MediaResT => {
 	return {
 		id: media.id,
 		key: media.key,
 		url: createURL(config.host, media.key),
-		title_translations: config.isMultiple
-			? [
-					{
-						value: media.title_translation_value ?? null,
-						language_id: config.languageId ?? null,
-					},
-			  ]
-			: media.title_translations ?? [],
-		alt_translations: config.isMultiple
-			? [
-					{
-						value: media.alt_translation_value ?? null,
-						language_id: config.languageId ?? null,
-					},
-			  ]
-			: media.alt_translations ?? [],
+		title_translations: media.title_translations ?? [],
+		alt_translations: media.alt_translations ?? [],
 		type: media.type as MediaTypeT,
 		meta: {
 			mime_type: media.mime_type,

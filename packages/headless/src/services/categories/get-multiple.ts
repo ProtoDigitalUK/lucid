@@ -4,6 +4,7 @@ import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/app/helpers.js";
 import formatCategory from "../../format/format-category.js";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
 	query: z.infer<typeof categoriesSchema.getMultiple.query>;
@@ -16,7 +17,7 @@ const getMultiple = async (
 ) => {
 	const categoryQuery = serviceConfig.db
 		.selectFrom("headless_collection_categories")
-		.select([
+		.select((eb) => [
 			"headless_collection_categories.id",
 			"headless_collection_categories.collection_key",
 			"headless_collection_categories.slug",
@@ -24,6 +25,34 @@ const getMultiple = async (
 			"headless_collection_categories.description_translation_key_id",
 			"headless_collection_categories.created_at",
 			"headless_collection_categories.updated_at",
+			jsonArrayFrom(
+				eb
+					.selectFrom("headless_translations")
+					.select([
+						"headless_translations.value",
+						"headless_translations.language_id",
+					])
+					.where("headless_translations.value", "is not", null)
+					.whereRef(
+						"headless_translations.translation_key_id",
+						"=",
+						"headless_collection_categories.title_translation_key_id",
+					),
+			).as("title_translations"),
+			jsonArrayFrom(
+				eb
+					.selectFrom("headless_translations")
+					.select([
+						"headless_translations.value",
+						"headless_translations.language_id",
+					])
+					.where("headless_translations.value", "is not", null)
+					.whereRef(
+						"headless_translations.translation_key_id",
+						"=",
+						"headless_collection_categories.description_translation_key_id",
+					),
+			).as("description_translations"),
 		])
 		.leftJoin("headless_translations as title_translations", (join) =>
 			join
@@ -152,12 +181,7 @@ const getMultiple = async (
 	]);
 
 	return {
-		data: categories.map((category) =>
-			formatCategory(category, {
-				isMultiple: true,
-				languageId: data.languageId,
-			}),
-		),
+		data: categories.map((category) => formatCategory(category)),
 		count: parseCount(categoriesCount?.count),
 	};
 };

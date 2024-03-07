@@ -3,6 +3,7 @@ import formatMedia from "../../format/format-media.js";
 import mediaSchema from "../../schemas/media.js";
 import { parseCount } from "../../utils/app/helpers.js";
 import { sql } from "kysely";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
 import getConfig from "../../services/config.js";
 
@@ -19,7 +20,7 @@ const getMultiple = async (
 
 	const mediasQuery = serviceConfig.db
 		.selectFrom("headless_media")
-		.select([
+		.select((eb) => [
 			"headless_media.id",
 			"headless_media.key",
 			"headless_media.e_tag",
@@ -33,6 +34,34 @@ const getMultiple = async (
 			"headless_media.alt_translation_key_id",
 			"headless_media.created_at",
 			"headless_media.updated_at",
+			jsonArrayFrom(
+				eb
+					.selectFrom("headless_translations")
+					.select([
+						"headless_translations.value",
+						"headless_translations.language_id",
+					])
+					.where("headless_translations.value", "is not", null)
+					.whereRef(
+						"headless_translations.translation_key_id",
+						"=",
+						"headless_media.title_translation_key_id",
+					),
+			).as("title_translations"),
+			jsonArrayFrom(
+				eb
+					.selectFrom("headless_translations")
+					.select([
+						"headless_translations.value",
+						"headless_translations.language_id",
+					])
+					.where("headless_translations.value", "is not", null)
+					.whereRef(
+						"headless_translations.translation_key_id",
+						"=",
+						"headless_media.alt_translation_key_id",
+					),
+			).as("alt_translations"),
 		])
 		.leftJoin("headless_translations as title_translations", (join) =>
 			join
@@ -184,8 +213,6 @@ const getMultiple = async (
 		data: medias.map((media) =>
 			formatMedia(media, {
 				host: config.host,
-				isMultiple: true,
-				languageId: data.languageId,
 			}),
 		),
 		count: parseCount(mediasCount?.count),

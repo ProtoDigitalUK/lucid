@@ -74,7 +74,6 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	return formatMedia(media, {
 		host: config.host,
-		isMultiple: false,
 	});
 };
 
