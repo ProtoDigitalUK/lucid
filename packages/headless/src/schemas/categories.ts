@@ -24,6 +24,31 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	updateSingle: {
+		body: z.object({
+			slug: z.string().optional(),
+			title_translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
+					}),
+				)
+				.optional(),
+			description_translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
+					}),
+				)
+				.optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 	getMultiple: {
 		query: z.object({
 			filter: z

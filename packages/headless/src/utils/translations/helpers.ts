@@ -37,3 +37,7 @@ export const getUniqueLanguageIDs = (items: Array<TranslationsObjT[]>) => {
 	const languageIds = items.flatMap((t) => t.map((t) => t.language_id));
 	return Array.from(new Set(languageIds));
 };
+
+export const shouldUpdateTranslations = (
+	item: Array<TranslationsObjT[] | undefined>,
+) => item.some((t) => t !== undefined && t.length > 0);

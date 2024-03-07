@@ -63,7 +63,11 @@ export const swaggerCategoryRes = {
 				type: "object",
 				properties: {
 					language_id: { type: "number", example: 1 },
-					value: { type: "string", example: "Technology" },
+					value: {
+						type: "string",
+						example: "Technology",
+						nullable: true,
+					},
 				},
 			},
 		},
@@ -76,6 +80,7 @@ export const swaggerCategoryRes = {
 					value: {
 						type: "string",
 						example: "Technology Description",
+						nullable: true,
 					},
 				},
 			},

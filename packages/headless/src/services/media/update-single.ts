@@ -6,6 +6,7 @@ import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import {
+	shouldUpdateTranslations,
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
 } from "../../utils/translations/helpers.js";
@@ -33,7 +34,7 @@ const updateSingle = async (
 
 	const media = await serviceConfig.db
 		.selectFrom("headless_media")
-		.select((eb) => [
+		.select([
 			"id",
 			"key",
 			"file_size",
@@ -57,10 +58,10 @@ const updateSingle = async (
 	}
 
 	if (
-		(data.title_translations !== undefined &&
-			data.title_translations.length > 0) ||
-		(data.alt_translations !== undefined &&
-			data.alt_translations.length > 0)
+		shouldUpdateTranslations([
+			data.title_translations,
+			data.alt_translations,
+		])
 	) {
 		await serviceWrapper(
 			languagesServices.checks.checkLanguagesExist,
@@ -124,11 +125,11 @@ const updateSingle = async (
 	if (mediaUpdateRes === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_created_name", {
+			name: T("dynamic_error_name", {
 				name: T("media"),
 			}),
-			message: T("error_not_created_message", {
-				name: T("media"),
+			message: T("update_error_message", {
+				name: T("media").toLowerCase(),
 			}),
 			status: 500,
 		});
