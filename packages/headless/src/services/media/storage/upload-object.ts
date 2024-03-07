@@ -8,7 +8,7 @@ import s3Services from "../../s3/index.js";
 import optionsServices from "../../options/index.js";
 
 export interface ServiceData {
-	fileData: MultipartFile | undefined;
+	file_data: MultipartFile | undefined;
 }
 
 const uploadObject = async (
@@ -18,7 +18,7 @@ const uploadObject = async (
 	let tempFilePath = undefined;
 
 	try {
-		if (data.fileData === undefined) {
+		if (data.file_data === undefined) {
 			throw new APIError({
 				type: "basic",
 				name: T("error_not_created_name", {
@@ -39,14 +39,14 @@ const uploadObject = async (
 
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
-			data.fileData.file,
-			data.fileData.filename,
+			data.file_data.file,
+			data.file_data.filename,
 		);
 		// Get meta data from file
 		const metaData = await mediaHelpers.getMetaData({
 			filePath: tempFilePath,
-			mimeType: data.fileData.mimetype,
-			fileName: data.fileData.filename,
+			mimeType: data.file_data.mimetype,
+			fileName: data.file_data.filename,
 		});
 
 		// Ensure we available storage space
@@ -54,7 +54,7 @@ const uploadObject = async (
 			mediaServices.checks.checkCanStoreMedia,
 			false,
 		)(serviceConfig, {
-			filename: data.fileData.filename,
+			filename: data.file_data.filename,
 			size: metaData.size,
 		});
 

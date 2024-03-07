@@ -64,7 +64,7 @@ const createSingle = async (
 		categoriesServices.checks.checkSlugExists,
 		false,
 	)(serviceConfig, {
-		collectionKey: data.collection_key,
+		collection_key: data.collection_key,
 		slug: slugValue,
 	});
 
@@ -90,7 +90,7 @@ const createSingle = async (
 	await serviceWrapper(languagesServices.checks.checkLanguagesExist, false)(
 		serviceConfig,
 		{
-			languageIds: getUniqueLanguageIDs([
+			language_ids: getUniqueLanguageIDs([
 				data.title_translations,
 				data.description_translations || [],
 			]),

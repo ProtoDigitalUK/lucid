@@ -7,8 +7,8 @@ export interface ServiceData {
 	title?: string;
 	singular?: string;
 	description?: string | null;
-	disableHomepages?: boolean;
-	disableParents?: boolean;
+	disable_homepages?: boolean;
+	disable_parents?: boolean;
 	bricks?: {
 		key: string;
 		type: "builder" | "fixed";
@@ -32,8 +32,8 @@ const updateSingle = async (
 			title: data.title,
 			singular: data.singular,
 			description: data.description,
-			disable_homepages: data.disableHomepages,
-			disable_parents: data.disableParents,
+			disable_homepages: data.disable_homepages,
+			disable_parents: data.disable_parents,
 			updated_at: new Date().toISOString(),
 		})
 		.where("key", "=", data.key)

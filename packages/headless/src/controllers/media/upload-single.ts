@@ -18,7 +18,7 @@ const uploadSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			fileData: await request.file(),
+			file_data: await request.file(),
 			title_translations: request.body.title_translations,
 			alt_translations: request.body.alt_translations,
 			visible: true,

@@ -1,7 +1,7 @@
 export interface ServiceData {
 	slug: string;
-	collectionKey: string;
-	excludeId?: number;
+	collection_key: string;
+	exclude_id?: number;
 }
 
 const checkSlugExists = async (
@@ -12,10 +12,10 @@ const checkSlugExists = async (
 		.selectFrom("headless_collection_categories")
 		.select("id")
 		.where("slug", "=", data.slug)
-		.where("collection_key", "=", data.collectionKey);
+		.where("collection_key", "=", data.collection_key);
 
-	if (data.excludeId !== undefined) {
-		slugExistsQuery = slugExistsQuery.where("id", "!=", data.excludeId);
+	if (data.exclude_id !== undefined) {
+		slugExistsQuery = slugExistsQuery.where("id", "!=", data.exclude_id);
 	}
 
 	const slugExists = await slugExistsQuery.executeTakeFirst();

@@ -15,7 +15,7 @@ const getSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			brickKey: request.params.brick_key,
+			brick_key: request.params.brick_key,
 		},
 	);
 

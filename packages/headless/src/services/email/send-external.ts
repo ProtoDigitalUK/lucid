@@ -8,7 +8,7 @@ export interface ServiceData {
 	template: string;
 	cc?: string;
 	bcc?: string;
-	replyTo?: string;
+	replyTo?: string; // user facing camelCase
 	data: {
 		[key: string]: unknown;
 	};
@@ -26,7 +26,7 @@ const sendExternal = async (data: ServiceData) =>
 			template: data.template,
 			cc: data.cc,
 			bcc: data.bcc,
-			replyTo: data.replyTo,
+			reply_to: data.replyTo,
 			data: data.data,
 		},
 	);

@@ -20,8 +20,8 @@ const updateSingleController: ControllerT<
 			title: request.body.title,
 			singular: request.body.singular,
 			description: request.body.description,
-			disableHomepages: request.body.disable_homepages,
-			disableParents: request.body.disable_parents,
+			disable_homepages: request.body.disable_homepages,
+			disable_parents: request.body.disable_parents,
 			bricks: request.body.bricks,
 		},
 	);

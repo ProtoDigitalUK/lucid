@@ -17,11 +17,11 @@ const updateMeController: ControllerT<
 		},
 		{
 			auth: request.auth,
-			firstName: request.body.first_name,
-			lastName: request.body.last_name,
+			first_name: request.body.first_name,
+			last_name: request.body.last_name,
 			username: request.body.username,
 			email: request.body.email,
-			roleIds: request.body.role_ids,
+			role_ids: request.body.role_ids,
 		},
 	);
 

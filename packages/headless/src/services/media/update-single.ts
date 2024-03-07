@@ -13,7 +13,7 @@ import {
 
 export interface ServiceData {
 	id: number;
-	fileData: MultipartFile | undefined;
+	file_data: MultipartFile | undefined;
 	title_translations?: {
 		language_id: number;
 		value: string | null;
@@ -67,7 +67,7 @@ const updateSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs([
+			language_ids: getUniqueLanguageIDs([
 				data.title_translations || [],
 				data.alt_translations || [],
 			]),
@@ -93,7 +93,7 @@ const updateSingle = async (
 		);
 	}
 
-	if (data.fileData === undefined) {
+	if (data.file_data === undefined) {
 		return;
 	}
 
@@ -101,8 +101,8 @@ const updateSingle = async (
 		mediaServices.storage.updateObject,
 		false,
 	)(serviceConfig, {
-		fileData: data.fileData,
-		previousSize: media.file_size,
+		file_data: data.file_data,
+		previous_size: media.file_size,
 		key: media.key,
 	});
 

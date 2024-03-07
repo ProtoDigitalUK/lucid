@@ -19,8 +19,8 @@ const createSingleController: ControllerT<
 		},
 		{
 			code: request.body.code,
-			isEnabled: request.body.is_enabled,
-			isDefault: request.body.is_default,
+			is_enabled: request.body.is_enabled,
+			is_default: request.body.is_default,
 		},
 	);
 

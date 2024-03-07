@@ -29,7 +29,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	const passwordValid = await auth.validatePassword({
-		hashedPassword: user.password,
+		hashed_password: user.password,
 		password: data.password,
 	});
 

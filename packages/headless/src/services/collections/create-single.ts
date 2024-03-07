@@ -8,8 +8,8 @@ export interface ServiceData {
 	title: string;
 	singular: string;
 	description?: string;
-	disableHomepages?: boolean;
-	disableParents?: boolean;
+	disable_homepages?: boolean;
+	disable_parents?: boolean;
 	bricks?: {
 		key: string;
 		type: "builder" | "fixed";
@@ -59,8 +59,8 @@ const createSingle = async (
 			title: data.title,
 			singular: data.singular,
 			description: data.description,
-			disable_homepages: data.disableHomepages ?? false,
-			disable_parents: data.disableParents ?? false,
+			disable_homepages: data.disable_homepages ?? false,
+			disable_parents: data.disable_parents ?? false,
 		})
 		.returning("key")
 		.executeTakeFirst();

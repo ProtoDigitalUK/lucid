@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
-	tokenType: "password_reset";
+	token_type: "password_reset";
 	token: string;
 }
 
@@ -11,7 +11,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		.selectFrom("headless_user_tokens")
 		.select(["id", "user_id"])
 		.where("token", "=", data.token)
-		.where("token_type", "=", data.tokenType)
+		.where("token_type", "=", data.token_type)
 		.where("expiry_date", ">", new Date())
 		.executeTakeFirst();
 

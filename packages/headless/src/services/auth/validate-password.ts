@@ -1,12 +1,12 @@
 import argon2 from "argon2";
 
 export interface ServiceData {
-	hashedPassword: string;
+	hashed_password: string;
 	password: string;
 }
 
 const validatePassword = async (data: ServiceData) => {
-	return await argon2.verify(data.hashedPassword, data.password);
+	return await argon2.verify(data.hashed_password, data.password);
 };
 
 export default validatePassword;

@@ -4,8 +4,8 @@ import ISO6391 from "iso-639-1";
 
 export interface ServiceData {
 	code: string;
-	isEnabled: boolean;
-	isDefault: boolean;
+	is_enabled: boolean;
+	is_default: boolean;
 }
 
 const createSingle = async (
@@ -60,8 +60,8 @@ const createSingle = async (
 		.insertInto("headless_languages")
 		.values({
 			code: data.code,
-			is_enabled: data.isDefault ? true : data.isEnabled,
-			is_default: data.isDefault,
+			is_enabled: data.is_default ? true : data.is_enabled,
+			is_default: data.is_default,
 		})
 		.returning(["id", "code"])
 		.executeTakeFirst();
@@ -79,7 +79,7 @@ const createSingle = async (
 		});
 	}
 
-	if (data.isDefault) {
+	if (data.is_default) {
 		await serviceConfig.db
 			.updateTable("headless_languages")
 			.set({

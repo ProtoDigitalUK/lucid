@@ -8,7 +8,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
 	query: z.infer<typeof categoriesSchema.getMultiple.query>;
-	languageId: number;
+	language_id: number;
 }
 
 const getMultiple = async (
@@ -61,7 +61,7 @@ const getMultiple = async (
 					"=",
 					"headless_collection_categories.title_translation_key_id",
 				)
-				.on("title_translations.language_id", "=", data.languageId),
+				.on("title_translations.language_id", "=", data.language_id),
 		)
 		.leftJoin("headless_translations as description_translations", (join) =>
 			join
@@ -73,7 +73,7 @@ const getMultiple = async (
 				.on(
 					"description_translations.language_id",
 					"=",
-					data.languageId,
+					data.language_id,
 				),
 		)
 		.select([
@@ -96,7 +96,7 @@ const getMultiple = async (
 					"=",
 					"headless_collection_categories.title_translation_key_id",
 				)
-				.on("title_translations.language_id", "=", data.languageId),
+				.on("title_translations.language_id", "=", data.language_id),
 		)
 		.leftJoin("headless_translations as description_translations", (join) =>
 			join
@@ -108,7 +108,7 @@ const getMultiple = async (
 				.on(
 					"description_translations.language_id",
 					"=",
-					data.languageId,
+					data.language_id,
 				),
 		)
 		.select([

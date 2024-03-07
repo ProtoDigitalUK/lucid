@@ -2,14 +2,14 @@ import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
 
 export interface ServiceData {
-	languageIds: number[];
+	language_ids: number[];
 }
 
 const checkLanguagesExist = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const languageIds = Array.from(new Set(data.languageIds));
+	const languageIds = Array.from(new Set(data.language_ids));
 
 	const languages = await serviceConfig.db
 		.selectFrom("headless_languages")

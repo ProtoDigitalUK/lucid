@@ -5,7 +5,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	id: number;
-	renderTemplate: boolean;
+	render_template: boolean;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -28,7 +28,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	if (!data.renderTemplate) {
+	if (!data.render_template) {
 		return formatEmails(email);
 	}
 

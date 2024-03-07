@@ -7,7 +7,7 @@ import constants from "../../../constants.js";
 
 export interface ServiceData {
 	size: number;
-	previousSize: number;
+	previous_size: number;
 	filename: string;
 }
 
@@ -50,7 +50,7 @@ const checkCanUpdateMedia = async (
 	);
 
 	const proposedSize =
-		(storageUsed.value_int || 0) + data.size - data.previousSize;
+		(storageUsed.value_int || 0) + data.size - data.previous_size;
 	if (proposedSize > storageLimit) {
 		throw new APIError({
 			type: "basic",

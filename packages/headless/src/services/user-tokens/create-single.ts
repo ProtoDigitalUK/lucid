@@ -3,9 +3,9 @@ import { APIError } from "../../utils/app/error-handler.js";
 import crypto from "crypto";
 
 export interface ServiceData {
-	userId: number;
-	tokenType: "password_reset";
-	expiryDate: string;
+	user_id: number;
+	token_type: "password_reset";
+	expiry_date: string;
 }
 
 const createSingle = async (
@@ -17,10 +17,10 @@ const createSingle = async (
 	const userToken = await serviceConfig.db
 		.insertInto("headless_user_tokens")
 		.values({
-			user_id: data.userId,
+			user_id: data.user_id,
 			token: token,
-			token_type: data.tokenType,
-			expiry_date: data.expiryDate,
+			token_type: data.token_type,
+			expiry_date: data.expiry_date,
 		})
 		.returning("token")
 		.executeTakeFirst();

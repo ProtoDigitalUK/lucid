@@ -9,7 +9,7 @@ import getConfig from "../../services/config.js";
 
 export interface ServiceData {
 	query: z.infer<typeof mediaSchema.getMultiple.query>;
-	languageId: number;
+	language_id: number;
 }
 
 const getMultiple = async (
@@ -70,7 +70,7 @@ const getMultiple = async (
 					"=",
 					"headless_media.title_translation_key_id",
 				)
-				.on("title_translations.language_id", "=", data.languageId),
+				.on("title_translations.language_id", "=", data.language_id),
 		)
 		.leftJoin("headless_translations as alt_translations", (join) =>
 			join
@@ -79,7 +79,7 @@ const getMultiple = async (
 					"=",
 					"headless_media.alt_translation_key_id",
 				)
-				.on("alt_translations.language_id", "=", data.languageId),
+				.on("alt_translations.language_id", "=", data.language_id),
 		)
 		.select([
 			"title_translations.value as title_translation_value",
@@ -102,7 +102,7 @@ const getMultiple = async (
 					"=",
 					"headless_media.title_translation_key_id",
 				)
-				.on("title_translations.language_id", "=", data.languageId),
+				.on("title_translations.language_id", "=", data.language_id),
 		)
 		.leftJoin("headless_translations as alt_translations", (join) =>
 			join
@@ -111,7 +111,7 @@ const getMultiple = async (
 					"=",
 					"headless_media.alt_translation_key_id",
 				)
-				.on("alt_translations.language_id", "=", data.languageId),
+				.on("alt_translations.language_id", "=", data.language_id),
 		)
 		.select([
 			"title_translations.value as title_translation_value",

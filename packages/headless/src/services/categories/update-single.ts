@@ -65,8 +65,8 @@ const updateSingle = async (
 			false,
 		)(serviceConfig, {
 			slug: newSlug,
-			collectionKey: categoryRes.collection_key,
-			excludeId: data.id,
+			collection_key: categoryRes.collection_key,
+			exclude_id: data.id,
 		});
 
 		if (slugExists) {
@@ -100,7 +100,7 @@ const updateSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs([
+			language_ids: getUniqueLanguageIDs([
 				data.title_translations || [],
 				data.description_translations || [],
 			]),

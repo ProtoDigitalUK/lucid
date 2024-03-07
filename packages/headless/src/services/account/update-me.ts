@@ -4,11 +4,11 @@ import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
-	firstName?: string;
-	lastName?: string;
+	first_name?: string;
+	last_name?: string;
 	username?: string;
 	email?: string;
-	roleIds?: number[];
+	role_ids?: number[];
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -72,8 +72,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const updateMe = await serviceConfig.db
 		.updateTable("headless_users")
 		.set({
-			first_name: data.firstName,
-			last_name: data.lastName,
+			first_name: data.first_name,
+			last_name: data.last_name,
 			username: data.username,
 			email: data.email,
 			updated_at: new Date().toISOString(),
@@ -99,7 +99,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	// EXIT OUT IF USER IS NOT SUPER ADMIN
 	if (getUser.super_admin === false) return;
 
-	if (data.roleIds === undefined) return;
+	if (data.role_ids === undefined) return;
 
 	await serviceConfig.db
 		.deleteFrom("headless_user_roles")
@@ -109,7 +109,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	await serviceConfig.db
 		.insertInto("headless_user_roles")
 		.values(
-			data.roleIds.map((roleId) => ({
+			data.role_ids.map((roleId) => ({
 				user_id: data.auth.id,
 				role_id: roleId,
 			})),

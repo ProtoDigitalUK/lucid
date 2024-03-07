@@ -3,8 +3,8 @@ import getConfig from "../config.js";
 import type { BrickConfigT } from "@headless/types/src/bricks.js";
 
 export interface ServiceData {
-	filterBricks?: string[];
-	includeFields?: boolean;
+	filter_bricks?: string[];
+	include_fields?: boolean;
 }
 
 const getBrickInstances = async (data: ServiceData) => {
@@ -16,17 +16,17 @@ const getBrickInstances = async (data: ServiceData) => {
 	for (const brick of builderInstances) {
 		const brickData = await brickConfigServices.getBrickData({
 			instance: brick,
-			query: data.includeFields
+			query: data.include_fields
 				? {
 						include: ["fields"],
 				  }
 				: undefined,
 		});
-		if (!data.filterBricks) {
+		if (!data.filter_bricks) {
 			brickInstances.push(brickData);
 			continue;
 		}
-		if (data.filterBricks.includes(brick.key)) {
+		if (data.filter_bricks.includes(brick.key)) {
 			brickInstances.push(brickData);
 		}
 	}

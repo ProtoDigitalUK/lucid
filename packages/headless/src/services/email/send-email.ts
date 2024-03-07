@@ -12,7 +12,7 @@ export interface ServiceData {
 	template: string;
 	cc?: string;
 	bcc?: string;
-	replyTo?: string;
+	reply_to?: string;
 	data: {
 		[key: string]: unknown;
 	};
@@ -30,7 +30,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			from: config.email.from,
 			cc: data.cc,
 			bcc: data.bcc,
-			replyTo: data.replyTo,
+			replyTo: data.reply_to,
 			html: html,
 		},
 		{

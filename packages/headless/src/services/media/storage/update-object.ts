@@ -9,8 +9,8 @@ import optionsServices from "../../options/index.js";
 import processedImagesServices from "../../processed-images/index.js";
 
 export interface ServiceData {
-	fileData: MultipartFile | undefined;
-	previousSize: number;
+	file_data: MultipartFile | undefined;
+	previous_size: number;
 	key: string;
 }
 
@@ -21,7 +21,7 @@ const updateObject = async (
 	let tempFilePath = undefined;
 
 	try {
-		if (data.fileData === undefined) {
+		if (data.file_data === undefined) {
 			throw new APIError({
 				type: "basic",
 				name: T("error_not_created_name", {
@@ -42,14 +42,14 @@ const updateObject = async (
 
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
-			data.fileData.file,
-			data.fileData.filename,
+			data.file_data.file,
+			data.file_data.filename,
 		);
 		// Get meta data from file
 		const metaData = await mediaHelpers.getMetaData({
 			filePath: tempFilePath,
-			mimeType: data.fileData.mimetype,
-			fileName: data.fileData.filename,
+			mimeType: data.file_data.mimetype,
+			fileName: data.file_data.filename,
 		});
 
 		// Ensure we available storage space
@@ -57,9 +57,9 @@ const updateObject = async (
 			mediaServices.checks.checkCanUpdateMedia,
 			false,
 		)(serviceConfig, {
-			filename: data.fileData.filename,
+			filename: data.file_data.filename,
 			size: metaData.size,
-			previousSize: data.previousSize,
+			previous_size: data.previous_size,
 		});
 
 		// Save file to storage

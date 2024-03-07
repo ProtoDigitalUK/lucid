@@ -18,7 +18,7 @@ const resetPassword = async (
 		serviceConfig,
 		{
 			token: data.token,
-			tokenType: "password_reset",
+			token_type: "password_reset",
 		},
 	);
 

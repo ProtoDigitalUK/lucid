@@ -17,7 +17,7 @@ const updateSingleController: ControllerT<
 		},
 		{
 			id: parseInt(request.params.id),
-			fileData: await request.file(),
+			file_data: await request.file(),
 			title_translations: request.body.title_translations,
 			alt_translations: request.body.alt_translations,
 		},

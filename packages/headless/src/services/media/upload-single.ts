@@ -12,7 +12,7 @@ import {
 } from "../../utils/translations/helpers.js";
 
 export interface ServiceData {
-	fileData: MultipartFile | undefined;
+	file_data: MultipartFile | undefined;
 	title_translations?: {
 		language_id: number;
 		value: string | null;
@@ -36,7 +36,7 @@ const uploadSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs([
+			language_ids: getUniqueLanguageIDs([
 				data.title_translations || [],
 				data.alt_translations || [],
 			]),
@@ -62,7 +62,7 @@ const uploadSingle = async (
 			mediaServices.storage.uploadObject,
 			false,
 		)(serviceConfig, {
-			fileData: data.fileData,
+			file_data: data.file_data,
 		});
 
 		const [translationKeyIds, uploadObjectRes] = await Promise.all([
