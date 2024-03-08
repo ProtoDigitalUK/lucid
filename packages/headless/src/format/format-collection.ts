@@ -7,6 +7,7 @@ const formatCollection = (
 		description: string | null;
 		key: string;
 		singular: string;
+		slug: string | null;
 		title: string;
 		type: "single-builder" | "multiple-builder";
 		updated_at: Date | null;
@@ -32,6 +33,7 @@ const formatCollection = (
 		description: collection.description,
 		key: collection.key,
 		singular: collection.singular,
+		slug: collection.slug,
 		title: collection.title,
 		type: collection.type,
 		disable_homepages: collection.disable_homepages,
@@ -45,6 +47,7 @@ export const swaggerCollectionRes = {
 	properties: {
 		key: { type: "string", example: "pages" },
 		type: { type: "string", example: "multiple-builder" },
+		slug: { type: "string", example: "pages", nullable: true },
 		title: { type: "string", example: "Pages" },
 		singular: { type: "string", example: "Page" },
 		description: { type: "string", example: "A collection of pages" },

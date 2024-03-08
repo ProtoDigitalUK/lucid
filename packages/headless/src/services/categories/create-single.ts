@@ -5,7 +5,6 @@ import serviceWrapper from "../../utils/app/service-wrapper.js";
 import categoriesServices from "./index.js";
 import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
-import collectionsServices from "../collections/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
@@ -28,14 +27,13 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const collectionExists = await serviceWrapper(
-		collectionsServices.checks.checkCollectionExists,
-		false,
-	)(serviceConfig, {
-		key: data.collection_key,
-	});
+	const collectionExists = await serviceConfig.db
+		.selectFrom("headless_collections")
+		.select("key")
+		.where("key", "=", data.collection_key)
+		.executeTakeFirst();
 
-	if (!collectionExists) {
+	if (collectionExists === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {

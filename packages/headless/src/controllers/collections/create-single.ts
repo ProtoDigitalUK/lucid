@@ -23,6 +23,7 @@ const createSingleController: ControllerT<
 		{
 			key: request.body.key,
 			type: request.body.type,
+			slug: request.body.slug,
 			title: request.body.title,
 			singular: request.body.singular,
 			description: request.body.description,
@@ -67,6 +68,9 @@ export default {
 				type: {
 					type: "string",
 					enum: ["multiple-builder", "single-builder"],
+				},
+				slug: {
+					type: "string",
 				},
 				title: {
 					type: "string",

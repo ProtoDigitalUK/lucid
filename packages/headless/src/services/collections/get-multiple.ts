@@ -23,6 +23,7 @@ const getMultiple = async (
 			"singular",
 			"description",
 			"type",
+			"slug",
 			"created_at",
 			"updated_at",
 			"disable_homepages",

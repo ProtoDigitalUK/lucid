@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS headless_collections (
     title TEXT NOT NULL,
     singular TEXT NOT NULL,
     description TEXT,
+    slug TEXT UNIQUE,
 
     disable_parents BOOLEAN DEFAULT FALSE,
     disable_homepages BOOLEAN DEFAULT FALSE,

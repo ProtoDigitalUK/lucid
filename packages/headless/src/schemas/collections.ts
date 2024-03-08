@@ -16,6 +16,7 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
+			slug: z.string().optional(),
 			title: z.string().optional(),
 			singular: z.string().optional(),
 			description: z.string().optional().nullable(),
@@ -47,6 +48,7 @@ export default {
 						"Invalid key format. Only lowercase letters and dashes are allowed.",
 				}),
 			type: z.enum(["multiple-builder", "single-builder"]),
+			slug: z.string().optional(),
 			title: z.string(),
 			singular: z.string(),
 			description: z.string().optional(),

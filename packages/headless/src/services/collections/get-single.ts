@@ -18,6 +18,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"singular",
 			"description",
 			"type",
+			"slug",
 			"created_at",
 			"updated_at",
 			"disable_homepages",

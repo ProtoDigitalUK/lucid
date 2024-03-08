@@ -1,21 +1,35 @@
 import T from "../../../translations/index.js";
+import slug from "slug";
 import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
 
 export interface ServiceData {
-	key: string;
+	slug?: string | null;
+	exclude_key?: string;
 }
 
-const checkCollectionExists = async (
+const checkSlugExists = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const collectionExists = await serviceConfig.db
+	if (data.slug === undefined) return undefined;
+	if (data.slug === null) return null;
+
+	const slugValue = slug(data.slug, {
+		lower: true,
+	});
+
+	let slugExistsQuery = serviceConfig.db
 		.selectFrom("headless_collections")
 		.select("key")
-		.where("key", "=", data.key)
-		.executeTakeFirst();
+		.where("slug", "=", slugValue);
 
-	if (collectionExists !== undefined) {
+	if (data.exclude_key !== undefined) {
+		slugExistsQuery = slugExistsQuery.where("key", "!=", data.exclude_key);
+	}
+
+	const slugExists = await slugExistsQuery.executeTakeFirst();
+
+	if (slugExists !== undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
@@ -26,13 +40,15 @@ const checkCollectionExists = async (
 			}),
 			status: 400,
 			errors: modelErrors({
-				key: {
+				slug: {
 					code: "invalid",
 					message: T("duplicate_entry_error_message"),
 				},
 			}),
 		});
 	}
+
+	return slugValue;
 };
 
-export default checkCollectionExists;
+export default checkSlugExists;

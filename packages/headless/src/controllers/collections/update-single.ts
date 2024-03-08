@@ -17,6 +17,7 @@ const updateSingleController: ControllerT<
 		},
 		{
 			key: request.params.key,
+			slug: request.body.slug,
 			title: request.body.title,
 			singular: request.body.singular,
 			description: request.body.description,
@@ -40,6 +41,9 @@ export default {
 			type: "object",
 			properties: {
 				title: {
+					type: "string",
+				},
+				slug: {
 					type: "string",
 				},
 				singular: {
