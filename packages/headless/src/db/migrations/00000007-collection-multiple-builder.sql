@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder (
     collection_key TEXT REFERENCES headless_collections(key) ON DELETE CASCADE,
     parent_id INTEGER REFERENCES headless_collection_multiple_builder(id) ON DELETE SET NULL,
 
+    title_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    excerpt_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
     slug TEXT,
     full_slug TEXT, 
     homepage BOOLEAN DEFAULT FALSE,
@@ -15,22 +17,6 @@ CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
-
-CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder_content (
-    id SERIAL PRIMARY KEY,
-    collection_multiple_builder_id INTEGER NOT NULL REFERENCES headless_collection_multiple_builder(id) ON DELETE CASCADE,
-    language_id INTEGER NOT NULL REFERENCES headless_languages(id) ON DELETE CASCADE,
-    collection_key TEXT REFERENCES headless_collections(key) ON DELETE CASCADE,
-
-    title TEXT,
-    excerpt TEXT,
-
-    UNIQUE (collection_multiple_builder_id, language_id)
-);
-
-CREATE INDEX idx_headless_collection_multiple_builder_content_collection_multiple_builder_id ON headless_collection_multiple_builder_content(collection_multiple_builder_id);
-CREATE INDEX idx_headless_collection_multiple_builder_content_language_id ON headless_collection_multiple_builder_content(language_id);
-
 
 CREATE OR REPLACE FUNCTION update_full_slug() RETURNS trigger AS $$
 DECLARE

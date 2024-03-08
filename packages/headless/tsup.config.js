@@ -28,11 +28,9 @@ export default defineConfig({
 			fs.copySync(source, dest);
 		}
 		fs.ensureFileSync(join(process.cwd(), "restart.txt"));
-		setTimeout(() => {
-			fs.writeFileSync(
-				join(process.cwd(), "restart.txt"),
-				new Date().toISOString(),
-			);
-		}, 400);
+		fs.writeFileSync(
+			join(process.cwd(), "restart.txt"),
+			new Date().toISOString(),
+		);
 	},
 });
