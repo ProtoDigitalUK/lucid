@@ -1,3 +1,5 @@
+import { permissionGroups } from "./services/permissions.js";
+
 export default {
 	seedDefaults: {
 		language: {
@@ -13,6 +15,36 @@ export default {
 			password: "password",
 			super_admin: true,
 		},
+		roles: [
+			{
+				name: "Admin",
+				description: "The admin role has permissions to do everything.",
+				permissions: [
+					...permissionGroups.users.permissions,
+					...permissionGroups.roles.permissions,
+					...permissionGroups.media.permissions,
+					...permissionGroups.settings.permissions,
+					...permissionGroups.languages.permissions,
+					...permissionGroups.emails.permissions,
+					...permissionGroups.content.permissions,
+					// ...permissionGroups.collections.permissions, // Should probs only be available to super admin
+					...permissionGroups.category.permissions,
+					...permissionGroups.menu.permissions,
+					...permissionGroups.form_submissions.permissions,
+				],
+			},
+			{
+				name: "Editor",
+				description:
+					"The editor role has permissions to manage content.",
+				permissions: [
+					...permissionGroups.media.permissions,
+					...permissionGroups.content.permissions,
+					...permissionGroups.category.permissions,
+					...permissionGroups.menu.permissions,
+				],
+			},
+		],
 	},
 	query: {
 		page: 1,

@@ -52,6 +52,14 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 		key: "menu_permissions",
 		permissions: ["create_menu", "update_menu", "delete_menu"],
 	},
+	form_submissions: {
+		key: "form_submissions_permissions",
+		permissions: [
+			"read_form_submissions",
+			"delete_form_submissions",
+			"update_form_submissions",
+		],
+	},
 };
 
 const getPermissions = () => {

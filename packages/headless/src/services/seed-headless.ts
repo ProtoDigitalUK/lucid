@@ -1,73 +1,109 @@
 import T from "../translations/index.js";
 import argon2 from "argon2";
-import { type FastifyInstance } from "fastify";
 import constants from "../constants.js";
 import { InternalError } from "../utils/app/error-handler.js";
 import { sql } from "kysely";
 import { parseCount } from "../utils/app/helpers.js";
+import serviceWrapper from "../utils/app/service-wrapper.js";
+import rolesServices from "./roles/index.js";
 
-const addDefaultUser = async (db: DB) => {
+const addDefaultUser = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const totalUserCount = (await db
+		const totalUserCount = (await serviceConfig.db
 			.selectFrom("headless_users")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst()) as { count: string } | undefined;
 
-		if (parseCount(totalUserCount?.count) === 0) {
-			const hashedPassword = await argon2.hash(
-				constants.seedDefaults.user.password,
-			);
-			await db
-				.insertInto("headless_users")
-				.values({
-					super_admin: constants.seedDefaults.user.super_admin,
-					email: constants.seedDefaults.user.email,
-					username: constants.seedDefaults.user.username,
-					first_name: constants.seedDefaults.user.first_name,
-					last_name: constants.seedDefaults.user.last_name,
-					password: hashedPassword,
-				})
-				.execute();
-		}
+		if (parseCount(totalUserCount?.count) > 0) return;
+
+		const hashedPassword = await argon2.hash(
+			constants.seedDefaults.user.password,
+		);
+		await serviceConfig.db
+			.insertInto("headless_users")
+			.values({
+				super_admin: constants.seedDefaults.user.super_admin,
+				email: constants.seedDefaults.user.email,
+				username: constants.seedDefaults.user.username,
+				first_name: constants.seedDefaults.user.first_name,
+				last_name: constants.seedDefaults.user.last_name,
+				password: hashedPassword,
+			})
+			.execute();
 	} catch (error) {
 		throw new InternalError(
 			T("dynamic_an_error_occurred_saving_default", {
-				name: T("user"),
+				name: T("user").toLowerCase(),
 			}),
 		);
 	}
 };
 
-const addDefaultLanguage = async (db: DB) => {
+const addDefaultLanguage = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const totalLanguagesCount = (await db
+		const totalLanguagesCount = (await serviceConfig.db
 			.selectFrom("headless_languages")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst()) as { count: string } | undefined;
 
-		if (parseCount(totalLanguagesCount?.count) === 0) {
-			await db
-				.insertInto("headless_languages")
-				.values({
-					code: constants.seedDefaults.language.code,
-					is_default: constants.seedDefaults.language.is_default,
-					is_enabled: constants.seedDefaults.language.is_enabled,
-				})
-				.execute();
-		}
+		if (parseCount(totalLanguagesCount?.count) > 0) return;
+
+		await serviceConfig.db
+			.insertInto("headless_languages")
+			.values({
+				code: constants.seedDefaults.language.code,
+				is_default: constants.seedDefaults.language.is_default,
+				is_enabled: constants.seedDefaults.language.is_enabled,
+			})
+			.execute();
 	} catch (error) {
 		throw new InternalError(
 			T("dynamic_an_error_occurred_saving_default", {
-				name: T("language"),
+				name: T("language").toLowerCase(),
 			}),
 		);
 	}
 };
 
-const seedHeadless = async (fastify: FastifyInstance) => {
+const addDefaultRoles = async (serviceConfig: ServiceConfigT) => {
+	try {
+		const totalRoleCount = (await serviceConfig.db
+			.selectFrom("headless_roles")
+			.select(sql`count(*)`.as("count"))
+			.executeTakeFirst()) as { count: string } | undefined;
+
+		if (parseCount(totalRoleCount?.count) > 0) return;
+
+		const rolePromises = [];
+		for (const role of constants.seedDefaults.roles) {
+			rolePromises.push(
+				serviceWrapper(rolesServices.createSingle, false)(
+					{
+						db: serviceConfig.db,
+					},
+					{
+						name: role.name,
+						description: role.description,
+						permissions: role.permissions,
+					},
+				),
+			);
+		}
+		await Promise.all(rolePromises);
+	} catch (error) {
+		throw new InternalError(
+			T("dynamic_an_error_occurred_saving_default", {
+				name: T("roles").toLowerCase(),
+			}),
+		);
+	}
+};
+
+const seedHeadless = async (serviceConfig: ServiceConfigT) => {
 	await Promise.allSettled([
-		addDefaultUser(fastify.db),
-		addDefaultLanguage(fastify.db),
+		addDefaultUser(serviceConfig),
+		addDefaultLanguage(serviceConfig),
+		addDefaultRoles(serviceConfig),
 	]);
 };
 

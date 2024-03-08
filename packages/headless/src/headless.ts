@@ -19,6 +19,7 @@ import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
 import migrate from "./db/migrate.js";
 import { initialiseDB, headlessDB } from "./db/db.js";
+import serviceWrapper from "./utils/app/service-wrapper.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -87,7 +88,12 @@ const headless = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Initialise
 		log.white("----------------------------------------------------");
-		await seedHeadless(fastify);
+		await serviceWrapper(
+			seedHeadless,
+			true,
+		)({
+			db: fastify.db,
+		});
 		registerCronJobs(fastify);
 		log.yellow("Initialised");
 

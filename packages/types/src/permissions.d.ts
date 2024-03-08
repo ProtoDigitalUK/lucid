@@ -28,7 +28,10 @@ export type PermissionT =
 	| "update_collection"
 	| "create_category"
 	| "update_category"
-	| "delete_category";
+	| "delete_category"
+	| "read_form_submissions"
+	| "delete_form_submissions"
+	| "update_form_submissions";
 
 export type PermissionGroup = {
 	key: string;
