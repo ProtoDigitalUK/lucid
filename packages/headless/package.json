@@ -21,7 +21,11 @@
 		"format": "npx @biomejs/biome format --write ./src",
 		"clear-db": "node ./clear-db.js"
 	},
-	"files": ["dist/**", "cms/**", "templates/**"],
+	"files": [
+		"dist/**",
+		"cms/**",
+		"templates/**"
+	],
 	"author": "William Yallop",
 	"devDependencies": {
 		"@headless/types": "*",
@@ -69,6 +73,7 @@
 		"sanitize-html": "^2.11.0",
 		"sharp": "^0.33.2",
 		"slug": "^8.2.3",
+		"unique-names-generator": "^4.7.1",
 		"zod": "^3.22.4"
 	},
 	"license": "UNLICENSED"

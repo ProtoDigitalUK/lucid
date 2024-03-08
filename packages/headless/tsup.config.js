@@ -27,10 +27,12 @@ export default defineConfig({
 			const dest = join(process.cwd(), "dist", item.dest);
 			fs.copySync(source, dest);
 		}
-		fs.ensureFileSync(join(process.cwd(), "restart.txt"));
-		fs.writeFileSync(
-			join(process.cwd(), "restart.txt"),
-			new Date().toISOString(),
-		);
+		setTimeout(() => {
+			fs.ensureFileSync(join(process.cwd(), "restart.txt"));
+			fs.writeFileSync(
+				join(process.cwd(), "restart.txt"),
+				new Date().toISOString(),
+			);
+		}, 300);
 	},
 });

@@ -74,6 +74,7 @@
 	"ensure_file_has_been_uploaded": "Please ensure that a file has been uploaded and try again.",
 	"make_sure_all_translations_languages_exist": "Please make sure all translation languages exist.",
 	"option": "Option",
+	"parent": "Parent",
 	"file_too_large_max_size_is": "File {{name}} is too large. Max file size is {{size}} bytes.",
 	"file_exceeds_storage_limit_max_limit_is": "Files exceed storage limit. Max storage limit is {{size}} bytes.",
 	"failed_to_save_object": "An error occured while saving the object to S3",
@@ -91,5 +92,11 @@
 	"swagger_query_string_sort_description": "Prefix the value with a minus sign (-) to sort in descending order and seperate values by a comma if you want to sort by multiple values",
 	"swagger_query_string_page_description": "The page number of the paginated response",
 	"swagger_query_string_per_page_description": "The number of items per page in the paginated response",
-	"category": "Category"
+	"category": "Category",
+	"multiple_builder": "Multiple Builder",
+	"document": "Document",
+	"homepage_disabled_error_message": "Homepages are disabled for this collection.",
+	"parent_disabled_error_message": "Parent pages are disabled for this collection.",
+	"homepage_parent_error_message": "The homepage cannot be set as a parent.",
+	"error_not_unique_message": "Please ensure that the value is unique and try again."
 }
