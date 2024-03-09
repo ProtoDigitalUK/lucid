@@ -33,11 +33,24 @@ const createSingleController: ControllerT<
 		},
 	);
 
-	// TODO: add a get single service and call it here to return the created document
+	const document = await serviceWrapper(
+		multipleBuilderServices.getSingle,
+		false,
+	)(
+		{
+			db: request.server.db,
+		},
+		{
+			id: documentId,
+			query: {
+				include: [],
+			},
+		},
+	);
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: documentId,
+			data: document,
 		}),
 	);
 };

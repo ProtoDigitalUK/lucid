@@ -1,29 +1,27 @@
 import type { BrickResT } from "./bricks.d.ts";
 import type { FieldTypes } from "../../headless/src/builders/brick-builder/types.js";
 
-// TODO: remove pages.d.ts - been replaced with multiple-builder.d.ts
-
-export interface PagesResT {
+export interface MultipleBuilderResT {
 	id: number;
-	environment_key: string;
 	parent_id: number | null;
-	collection_key: string;
+	collection_key: string | null;
 
-	translations: {
-		title: string | null;
-		slug: string | null;
-		excerpt: string | null;
-		language_id: number;
+	title_translations: {
+		language_id: number | null;
+		value: string | null;
 	}[];
+	excerpt_translations: {
+		language_id: number | null;
+		value: string | null;
+	}[];
+	slug: string | null;
+	full_slug: string | null;
+
 	homepage: boolean;
 
-	default_title: string | null;
-	default_slug: string | null;
-	default_excerpt: string | null;
-
 	created_by: number | null;
-	created_at: string;
-	updated_at: string;
+	created_at: string | null;
+	updated_at: string | null;
 
 	published: boolean;
 	published_at: string | null;
@@ -40,7 +38,7 @@ export interface PagesResT {
 	bricks?: Array<BrickResT> | null;
 }
 
-export interface SinglePagesResT {
+export interface SingleBuilderResT {
 	id: number;
 	bricks: Array<BrickResT>;
 }

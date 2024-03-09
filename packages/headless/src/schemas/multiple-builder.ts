@@ -1,5 +1,4 @@
 import z from "zod";
-import defaultQuery from "./default-query.js";
 
 const slugRegex = /^[a-zA-Z0-9-_/]+$/;
 const slugSchema = z
@@ -46,5 +45,14 @@ export default {
 		}),
 		query: undefined,
 		params: undefined,
+	},
+	getSingle: {
+		query: z.object({
+			include: z.array(z.enum(["bricks"])).optional(),
+		}),
+		params: z.object({
+			id: z.string(),
+		}),
+		body: undefined,
 	},
 };

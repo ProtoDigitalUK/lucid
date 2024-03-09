@@ -15,6 +15,17 @@ const multipleBuilderRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: multipleBuilder.createSingle.zodSchema,
 		controller: multipleBuilder.createSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: multipleBuilder.getSingle.swaggerSchema,
+		zodSchema: multipleBuilder.getSingle.zodSchema,
+		controller: multipleBuilder.getSingle.controller,
+	});
 };
 
 export default multipleBuilderRoutes;

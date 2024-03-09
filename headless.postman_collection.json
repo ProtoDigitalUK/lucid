@@ -373,7 +373,71 @@
 			"item": [
 				{
 					"name": "Multiple Builder",
-					"item": []
+					"item": [
+						{
+							"name": "Create Single",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    \"collection_key\": \"pages\",\n    // \"parent_id\": 9,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Homepage\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"I am the homepage\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-builder"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/21",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-builder",
+										"21"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "bricks",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Single Builder",
@@ -417,7 +481,7 @@
 										},
 										{
 											"key": "filter[title]",
-											"value": "Page",
+											"value": "Te",
 											"disabled": true
 										},
 										{
@@ -533,7 +597,7 @@
 							"response": []
 						},
 						{
-							"name": "Update Single (todo)",
+							"name": "Update Single",
 							"request": {
 								"method": "PATCH",
 								"header": [
@@ -541,16 +605,11 @@
 										"key": "_csrf",
 										"value": "{{CSRF}}",
 										"type": "text"
-									},
-									{
-										"key": "headless-environment",
-										"value": "{{HEADLESS_ENVIRONMENT}}",
-										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"title\": \"Staff\",\n    \"slug\": \"staff\",\n    \"description\": \"\"\n}",
+									"raw": "{\n    \"slug\": \"technology\",\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Tech\"\n        }\n    ],\n    \"description_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": null\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -558,13 +617,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/categories/3",
+									"raw": "{{BASE_URL}}/api/v1/collections/categories/3",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"api",
 										"v1",
+										"collections",
 										"categories",
 										"3"
 									]
@@ -573,6 +633,84 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections/pages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections?per_page=-1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections"
+							],
+							"query": [
+								{
+									"key": "filter[type]",
+									"value": "multiple-builder",
+									"disabled": true
+								},
+								{
+									"key": "include",
+									"value": "bricks",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "title,created_at,updated_at",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "-1"
+								}
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
 				},
 				{
 					"name": "Create Single",
@@ -587,7 +725,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"key\": \"pages\",\r\n    \"type\": \"multiple-builder\",\r\n    \"title\": \"Pages\",\r\n    \"singular\": \"Page\",\r\n    \"description\": \"The pages collection\",\r\n    \"disable_parents\": false,\r\n    \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"key\": \"pages\",\r\n    // \"slug\": \"/\",\r\n    \"type\": \"multiple-builder\",\r\n    \"title\": \"Pages\",\r\n    \"singular\": \"Page\",\r\n    \"description\": \"The pages collection\",\r\n    \"disable_parents\": false,\r\n    \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -644,38 +782,6 @@
 					"response": []
 				},
 				{
-					"name": "Get Single",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/collections/pages",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"collections",
-								"pages"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Delete Single",
 					"request": {
 						"method": "DELETE",
@@ -707,43 +813,6 @@
 								"pages"
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get All",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/collections",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"collections"
-							],
-							"query": [
-								{
-									"key": "filter[type]",
-									"value": "multiple-builder",
-									"disabled": true
-								},
-								{
-									"key": "include",
-									"value": "bricks",
-									"disabled": true
-								},
-								{
-									"key": "sort",
-									"value": "title,created_at,updated_at",
-									"disabled": true
-								}
-							]
-						},
-						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
 					},
 					"response": []
 				}
@@ -1465,8 +1534,7 @@
 							{
 								"key": "headless-content-lang",
 								"value": "{{HEADLESS_CONTENT_LANG}}",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							}
 						],
 						"body": {
