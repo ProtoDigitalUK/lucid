@@ -49,8 +49,61 @@ const upsertMultipleGroups = async (
 		.returning(["group_id", "ref"])
 		.execute();
 
+	// update groups with their new parent_group_id
+	const updateGroupParentIds: {
+		parent_group_id: number | null;
+		group_id: number;
+	}[] = [];
+
+	for (const brick of data.bricks) {
+		for (const group of brick.groups || []) {
+			let groupId = null;
+			let parentGroupId = null;
+
+			if (
+				typeof group.group_id === "string" &&
+				group.group_id.startsWith("ref-")
+			) {
+				const foundGroup = groupsRes.find(
+					(res) => res.ref === group.group_id,
+				);
+				if (!foundGroup) continue;
+				groupId = foundGroup.group_id;
+			}
+
+			if (
+				typeof group.parent_group_id === "string" &&
+				group.parent_group_id.startsWith("ref-")
+			) {
+				const parentGroup = groupsRes.find(
+					(res) => res.ref === group.parent_group_id,
+				);
+				if (!parentGroup) continue;
+				parentGroupId = parentGroup.group_id;
+			}
+
+			if (groupId !== null && parentGroupId !== null) {
+				updateGroupParentIds.push({
+					parent_group_id: group.parent_group_id as number | null,
+					group_id: group.group_id as number,
+				});
+			}
+		}
+	}
+
+	if (updateGroupParentIds.length > 0) {
+		await serviceConfig.db
+			.updateTable("headless_groups")
+			.from(values(updateGroupParentIds, "c"))
+			.set((eb) => ({
+				parent_group_id: eb.ref("c.parent_group_id"),
+			}))
+			.whereRef("c.group_id", "=", "c.group_id")
+			.execute();
+	}
+
 	// Create groups array from bricks and update groups by the group_id with their new parent_group_id
-	const groups = data.bricks.flatMap((brick) => {
+	return data.bricks.flatMap((brick) => {
 		if (!brick.groups) return [];
 
 		return brick.groups.map((group) => {
@@ -93,28 +146,6 @@ const upsertMultipleGroups = async (
 			};
 		});
 	});
-
-	// update groups with their new parent_group_id
-	await serviceConfig.db
-		.updateTable("headless_groups")
-		.from(
-			values(
-				groups.map((group) => {
-					return {
-						parent_group_id: group.parent_group_id,
-						group_id: group.group_id,
-					};
-				}),
-				"c",
-			),
-		)
-		.set((eb) => ({
-			parent_group_id: eb.ref("c.parent_group_id"),
-		}))
-		.whereRef("c.group_id", "=", "c.group_id")
-		.execute();
-
-	return groups;
 };
 
 export default upsertMultipleGroups;
