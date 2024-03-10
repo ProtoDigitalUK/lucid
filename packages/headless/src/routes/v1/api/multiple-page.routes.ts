@@ -26,6 +26,19 @@ const multiplePageRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: multiplePage.getSingle.zodSchema,
 		controller: multiplePage.getSingle.controller,
 	});
+
+	r(fastify, {
+		method: "patch",
+		url: "/:id",
+		permissions: ["update_content"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: multiplePage.updateSingle.swaggerSchema,
+		zodSchema: multiplePage.updateSingle.zodSchema,
+		controller: multiplePage.updateSingle.controller,
+	});
 };
 
 export default multiplePageRoutes;

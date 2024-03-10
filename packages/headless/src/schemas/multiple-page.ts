@@ -1,4 +1,5 @@
 import z from "zod";
+import { BrickSchema } from "./bricks.js";
 
 const slugRegex = /^[a-zA-Z0-9-_/]+$/;
 const slugSchema = z
@@ -54,5 +55,14 @@ export default {
 			id: z.string(),
 		}),
 		body: undefined,
+	},
+	updateSingle: {
+		body: z.object({
+			bricks: z.array(BrickSchema).optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
 	},
 };

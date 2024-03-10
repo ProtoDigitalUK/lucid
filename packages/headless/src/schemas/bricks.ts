@@ -27,6 +27,7 @@ export const FieldSchema = z.object({
 	fields_id: z.number().optional(),
 	group_id: z.union([z.number(), z.string()]).optional(),
 });
+export type BrickFieldObjectT = z.infer<typeof FieldSchema>;
 
 export const GroupSchema = z.object({
 	group_id: z.union([z.number(), z.string()]), // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
@@ -35,6 +36,7 @@ export const GroupSchema = z.object({
 	repeater_key: z.string().optional(),
 	language_id: z.number(),
 });
+export type GroupObjectT = z.infer<typeof GroupSchema>;
 
 export const BrickSchema = z.object({
 	id: z.union([z.number(), z.string()]).optional(),
@@ -45,6 +47,7 @@ export const BrickSchema = z.object({
 	groups: z.array(GroupSchema).optional(),
 	fields: z.array(FieldSchema).optional(),
 });
+export type BrickObjectT = z.infer<typeof BrickSchema>;
 
 export default {
 	getAll: {
