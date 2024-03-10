@@ -1,6 +1,6 @@
 import type { PagesResT } from "@headless/types/src/multiple-page.js";
 
-interface DocumentT {
+interface PageT {
 	id: number;
 	parent_id: number | null;
 	collection_key: string | null;
@@ -33,37 +33,37 @@ interface DocumentT {
 	author_username: string | null;
 }
 
-const formatmultiplePage = (document: DocumentT): PagesResT => {
+const formatmultiplePage = (page: PageT): PagesResT => {
 	const res: PagesResT = {
-		id: document.id,
-		parent_id: document.parent_id,
-		collection_key: document.collection_key,
-		title_translations: document.title_translations,
-		excerpt_translations: document.excerpt_translations,
-		slug: document.slug,
-		full_slug: document.full_slug,
-		homepage: document.homepage ?? false,
-		created_by: document.created_by,
-		created_at: document.created_at?.toISOString() || null,
-		updated_at: document.updated_at?.toISOString() || null,
-		published: document.published ?? false,
-		published_at: document.published_at?.toISOString() || null,
+		id: page.id,
+		parent_id: page.parent_id,
+		collection_key: page.collection_key,
+		title_translations: page.title_translations,
+		excerpt_translations: page.excerpt_translations,
+		slug: page.slug,
+		full_slug: page.full_slug,
+		homepage: page.homepage ?? false,
+		created_by: page.created_by,
+		created_at: page.created_at?.toISOString() || null,
+		updated_at: page.updated_at?.toISOString() || null,
+		published: page.published ?? false,
+		published_at: page.published_at?.toISOString() || null,
 		author: null,
 		// bricks: []
 	};
 
-	if (document.author_id) {
+	if (page.author_id) {
 		res.author = {
-			id: document.author_id,
-			email: document.author_email,
-			first_name: document.author_first_name,
-			last_name: document.author_last_name,
-			username: document.author_username,
+			id: page.author_id,
+			email: page.author_email,
+			first_name: page.author_first_name,
+			last_name: page.author_last_name,
+			username: page.author_username,
 		};
 	}
 
-	if (document.categories) {
-		res.categories = document.categories.map(
+	if (page.categories) {
+		res.categories = page.categories.map(
 			(category) => category.category_id,
 		);
 	}

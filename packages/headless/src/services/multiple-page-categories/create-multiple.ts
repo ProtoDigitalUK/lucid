@@ -1,5 +1,5 @@
 export interface ServiceData {
-	document_id: number;
+	page_id: number;
 	category_ids: Array<number>;
 }
 
@@ -15,7 +15,7 @@ const createMultiple = async (
 		.insertInto("headless_collection_multiple_page_categories")
 		.values(
 			data.category_ids.map((category_id) => ({
-				collection_multiple_page_id: data.document_id,
+				collection_multiple_page_id: data.page_id,
 				category_id: category_id,
 			})),
 		)

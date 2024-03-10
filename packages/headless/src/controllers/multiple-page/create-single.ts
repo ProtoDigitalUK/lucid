@@ -56,9 +56,9 @@ export default {
 	controller: createSingleController,
 	zodSchema: multiplePageSchema.createSingle,
 	swaggerSchema: {
-		description: "Creates a single multiple-page document.",
+		description: "Creates a single multiple-page entry.",
 		tags: ["collection-multiple-page"],
-		summary: "Create a single multiple-page document.",
+		summary: "Create a single multiple-page entry.",
 		body: {
 			type: "object",
 			properties: {

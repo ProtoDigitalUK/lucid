@@ -23,10 +23,10 @@ const checkCategoriesInCollection = async (
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
-				name: T("document"),
+				name: T("page"),
 			}),
 			message: T("error_not_created_message", {
-				name: T("document"),
+				name: T("page"),
 			}),
 			status: 400,
 			errors: modelErrors({

@@ -11,7 +11,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const document = await serviceConfig.db
+	const page = await serviceConfig.db
 		.selectFrom("headless_collection_multiple_page")
 		.select((eb) => [
 			"headless_collection_multiple_page.id",
@@ -87,20 +87,20 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		.where("headless_collection_multiple_page.id", "=", data.id)
 		.executeTakeFirst();
 
-	if (document === undefined) {
+	if (page === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {
-				name: T("document"),
+				name: T("page"),
 			}),
 			message: T("error_not_found_message", {
-				name: T("document"),
+				name: T("page"),
 			}),
 			status: 404,
 		});
 	}
 
-	return formatmultiplePage(document);
+	return formatmultiplePage(page);
 };
 
 export default getSingle;

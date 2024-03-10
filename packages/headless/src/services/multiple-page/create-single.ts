@@ -92,7 +92,7 @@ const createSingle = async (
 		]),
 	});
 
-	const document = await serviceConfig.db
+	const page = await serviceConfig.db
 		.insertInto("headless_collection_multiple_page")
 		.values({
 			collection_key: data.collection_key,
@@ -108,14 +108,14 @@ const createSingle = async (
 		.returning("id")
 		.executeTakeFirst();
 
-	if (document === undefined) {
+	if (page === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
-				name: T("document"),
+				name: T("page"),
 			}),
 			message: T("error_not_created_message", {
-				name: T("document"),
+				name: T("page"),
 			}),
 			status: 500,
 		});
@@ -127,19 +127,19 @@ const createSingle = async (
 				serviceConfig,
 				{
 					collection_key: data.collection_key,
-					exclude_id: document.id,
+					exclude_id: page.id,
 				},
 			),
 		serviceWrapper(multiplePageCategoriesServices.createMultiple, false)(
 			serviceConfig,
 			{
-				document_id: document.id,
+				page_id: page.id,
 				category_ids: data.category_ids || [],
 			},
 		),
 	]);
 
-	return document.id;
+	return page.id;
 };
 
 export default createSingle;

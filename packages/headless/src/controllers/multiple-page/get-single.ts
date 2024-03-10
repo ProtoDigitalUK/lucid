@@ -13,10 +13,7 @@ const getSingleController: ControllerT<
 	typeof multiplePageSchema.getSingle.body,
 	typeof multiplePageSchema.getSingle.query
 > = async (request, reply) => {
-	const document = await serviceWrapper(
-		multiplePageServices.getSingle,
-		false,
-	)(
+	const page = await serviceWrapper(multiplePageServices.getSingle, false)(
 		{
 			db: request.server.db,
 		},
@@ -28,7 +25,7 @@ const getSingleController: ControllerT<
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: document,
+			data: page,
 		}),
 	);
 };
@@ -37,9 +34,9 @@ export default {
 	controller: getSingleController,
 	zodSchema: multiplePageSchema.getSingle,
 	swaggerSchema: {
-		description: "Get a single multiple-page document.",
+		description: "Get a single multiple-page entry.",
 		tags: ["collection-multiple-page"],
-		summary: "Get a single multiple-page document.",
+		summary: "Get a single multiple-page entry.",
 		response: {
 			200: swaggerResponse({
 				type: 200,
