@@ -15,6 +15,13 @@ export default {
 			password: "password",
 			super_admin: true,
 		},
+		collection: {
+			key: "pages",
+			type: "multiple-page" as const,
+			title: "Pages",
+			singular: "Page",
+			description: "A collection of pages.",
+		},
 		roles: [
 			{
 				name: "Admin",
