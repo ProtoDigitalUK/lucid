@@ -372,7 +372,7 @@
 			"name": "Collections",
 			"item": [
 				{
-					"name": "Multiple Builder",
+					"name": "Multiple Page",
 					"item": [
 						{
 							"name": "Create Single",
@@ -395,7 +395,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -403,7 +403,7 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder"
+										"multiple-page"
 									]
 								}
 							},
@@ -415,7 +415,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/21",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/1",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -423,8 +423,8 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder",
-										"21"
+										"multiple-page",
+										"1"
 									],
 									"query": [
 										{
@@ -684,7 +684,7 @@
 							"query": [
 								{
 									"key": "filter[type]",
-									"value": "multiple-builder",
+									"value": "multiple-page",
 									"disabled": true
 								},
 								{
@@ -725,7 +725,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"key\": \"pages\",\r\n    // \"slug\": \"/\",\r\n    \"type\": \"multiple-builder\",\r\n    \"title\": \"Pages\",\r\n    \"singular\": \"Page\",\r\n    \"description\": \"The pages collection\",\r\n    \"disable_parents\": false,\r\n    \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"key\": \"pages\",\r\n    // \"slug\": \"/\",\r\n    \"type\": \"multiple-page\",\r\n    \"title\": \"Pages\",\r\n    \"singular\": \"Page\",\r\n    \"description\": \"The pages collection\",\r\n    \"disable_parents\": false,\r\n    \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
