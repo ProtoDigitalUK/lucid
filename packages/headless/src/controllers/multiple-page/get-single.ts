@@ -1,20 +1,20 @@
-import multipleBuilderSchema from "../../schemas/multiple-builder.js";
+import multiplePageSchema from "../../schemas/multiple-page.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../utils/swagger/response-helpers.js";
-import multipleBuilderServices from "../../services/multiple-builder/index.js";
+import multiplePageServices from "../../services/multiple-page/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerMultipleBuilderRes } from "../../format/format-multiple-builder.js";
+import { swaggermultiplePageRes } from "../../format/format-multiple-page.js";
 
 const getSingleController: ControllerT<
-	typeof multipleBuilderSchema.getSingle.params,
-	typeof multipleBuilderSchema.getSingle.body,
-	typeof multipleBuilderSchema.getSingle.query
+	typeof multiplePageSchema.getSingle.params,
+	typeof multiplePageSchema.getSingle.body,
+	typeof multiplePageSchema.getSingle.query
 > = async (request, reply) => {
 	const document = await serviceWrapper(
-		multipleBuilderServices.getSingle,
+		multiplePageServices.getSingle,
 		false,
 	)(
 		{
@@ -35,15 +35,15 @@ const getSingleController: ControllerT<
 
 export default {
 	controller: getSingleController,
-	zodSchema: multipleBuilderSchema.getSingle,
+	zodSchema: multiplePageSchema.getSingle,
 	swaggerSchema: {
-		description: "Get a single multiple-builder document.",
-		tags: ["collection-multiple-builder"],
-		summary: "Get a single multiple-builder document.",
+		description: "Get a single multiple-page document.",
+		tags: ["collection-multiple-page"],
+		summary: "Get a single multiple-page document.",
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerMultipleBuilderRes,
+				data: swaggermultiplePageRes,
 			}),
 		},
 		querystring: swaggerQueryString({

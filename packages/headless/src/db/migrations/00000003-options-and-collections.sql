@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS headless_options (
 
 INSERT INTO headless_options (name, value_int) VALUES ('media_storage_used', 0);
 
-CREATE TYPE headless_collection_type AS ENUM ('multiple-builder', 'single-builder');
+CREATE TYPE headless_collection_type AS ENUM ('multiple-page', 'single-page');
 
 CREATE TABLE IF NOT EXISTS headless_collections (
     key TEXT PRIMARY KEY,

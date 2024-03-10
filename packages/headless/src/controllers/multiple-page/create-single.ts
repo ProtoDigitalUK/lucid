@@ -1,20 +1,20 @@
-import multipleBuilderSchema from "../../schemas/multiple-builder.js";
+import multiplePageSchema from "../../schemas/multiple-page.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import multipleBuilderServices from "../../services/multiple-builder/index.js";
+import multiplePageServices from "../../services/multiple-page/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerMultipleBuilderRes } from "../../format/format-multiple-builder.js";
+import { swaggermultiplePageRes } from "../../format/format-multiple-page.js";
 
 const createSingleController: ControllerT<
-	typeof multipleBuilderSchema.createSingle.params,
-	typeof multipleBuilderSchema.createSingle.body,
-	typeof multipleBuilderSchema.createSingle.query
+	typeof multiplePageSchema.createSingle.params,
+	typeof multiplePageSchema.createSingle.body,
+	typeof multiplePageSchema.createSingle.query
 > = async (request, reply) => {
-	const documentId = await serviceWrapper(
-		multipleBuilderServices.createSingle,
+	const pageId = await serviceWrapper(
+		multiplePageServices.createSingle,
 		true,
 	)(
 		{
@@ -33,15 +33,12 @@ const createSingleController: ControllerT<
 		},
 	);
 
-	const document = await serviceWrapper(
-		multipleBuilderServices.getSingle,
-		false,
-	)(
+	const page = await serviceWrapper(multiplePageServices.getSingle, false)(
 		{
 			db: request.server.db,
 		},
 		{
-			id: documentId,
+			id: pageId,
 			query: {
 				include: [],
 			},
@@ -50,18 +47,18 @@ const createSingleController: ControllerT<
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: document,
+			data: page,
 		}),
 	);
 };
 
 export default {
 	controller: createSingleController,
-	zodSchema: multipleBuilderSchema.createSingle,
+	zodSchema: multiplePageSchema.createSingle,
 	swaggerSchema: {
-		description: "Creates a single multiple-builder document.",
-		tags: ["collection-multiple-builder"],
-		summary: "Create a single multiple-builder document.",
+		description: "Creates a single multiple-page document.",
+		tags: ["collection-multiple-page"],
+		summary: "Create a single multiple-page document.",
 		body: {
 			type: "object",
 			properties: {
@@ -120,7 +117,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerMultipleBuilderRes,
+				data: swaggermultiplePageRes,
 			}),
 		},
 		headers: swaggerHeaders({

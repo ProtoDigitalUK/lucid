@@ -46,7 +46,7 @@ export default {
 	zodSchema: categoriesSchema.createSingle,
 	swaggerSchema: {
 		description:
-			"Creates a new collection category. These can be assigned to pages that belong to the multiple-builder collection type.",
+			"Creates a new collection category. These can be assigned to pages that belong to the multiple-page collection type.",
 		tags: ["collection-categories"],
 		summary: "Create a collection category",
 		body: {

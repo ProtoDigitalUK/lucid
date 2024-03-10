@@ -67,7 +67,7 @@ export default {
 				},
 				type: {
 					type: "string",
-					enum: ["multiple-builder", "single-builder"],
+					enum: ["multiple-page", "single-page"],
 				},
 				slug: {
 					type: "string",

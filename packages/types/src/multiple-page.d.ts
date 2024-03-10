@@ -1,7 +1,7 @@
-import type { BrickResT } from "./bricks.d.ts";
+import type { BrickResT } from "./bricks.js";
 import type { FieldTypes } from "../../headless/src/builders/brick-builder/types.js";
 
-export interface MultipleBuilderResT {
+export interface PagesResT {
 	id: number;
 	parent_id: number | null;
 	collection_key: string | null;

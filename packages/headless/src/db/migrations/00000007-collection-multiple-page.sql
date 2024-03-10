@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder (
+CREATE TABLE IF NOT EXISTS headless_collection_multiple_page (
     id SERIAL PRIMARY KEY,
     collection_key TEXT REFERENCES headless_collections(key) ON DELETE CASCADE,
-    parent_id INTEGER REFERENCES headless_collection_multiple_builder(id) ON DELETE SET NULL,
+    parent_id INTEGER REFERENCES headless_collection_multiple_page(id) ON DELETE SET NULL,
 
     title_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
     excerpt_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION update_full_slug() RETURNS trigger AS $$
 DECLARE
     parent_full_slug TEXT;
 BEGIN
-    SELECT full_slug INTO parent_full_slug FROM headless_collection_multiple_builder WHERE id = NEW.parent_id;
+    SELECT full_slug INTO parent_full_slug FROM headless_collection_multiple_page WHERE id = NEW.parent_id;
     
     IF parent_full_slug IS NULL THEN
         NEW.full_slug := NEW.slug;
@@ -34,15 +34,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS update_full_slug_trigger ON headless_collection_multiple_builder;
-CREATE TRIGGER update_full_slug_trigger BEFORE INSERT OR UPDATE ON headless_collection_multiple_builder
+DROP TRIGGER IF EXISTS update_full_slug_trigger ON headless_collection_multiple_page;
+CREATE TRIGGER update_full_slug_trigger BEFORE INSERT OR UPDATE ON headless_collection_multiple_page
 FOR EACH ROW EXECUTE PROCEDURE update_full_slug();
 
 
 CREATE OR REPLACE FUNCTION update_child_full_slug() RETURNS trigger AS $$
 BEGIN
     IF OLD.slug != NEW.slug THEN
-        UPDATE headless_collection_multiple_builder SET full_slug = NEW.full_slug || substring(full_slug, length(OLD.full_slug) + 1)
+        UPDATE headless_collection_multiple_page SET full_slug = NEW.full_slug || substring(full_slug, length(OLD.full_slug) + 1)
         WHERE full_slug LIKE OLD.full_slug || '/%';
     END IF;
 
@@ -50,6 +50,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS update_child_full_slug_trigger ON headless_collection_multiple_builder;
-CREATE TRIGGER update_child_full_slug_trigger AFTER UPDATE ON headless_collection_multiple_builder
+DROP TRIGGER IF EXISTS update_child_full_slug_trigger ON headless_collection_multiple_page;
+CREATE TRIGGER update_child_full_slug_trigger AFTER UPDATE ON headless_collection_multiple_page
 FOR EACH ROW WHEN (OLD.slug IS DISTINCT FROM NEW.slug) EXECUTE PROCEDURE update_child_full_slug();

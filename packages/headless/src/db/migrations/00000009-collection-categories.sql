@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS headless_collection_categories (
   unique (collection_key, slug)
 );
 
-CREATE TABLE IF NOT EXISTS headless_collection_multiple_builder_categories (
-  collection_multiple_builder_id INTEGER NOT NULL REFERENCES headless_collection_multiple_builder(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS headless_collection_multiple_page_categories (
+  collection_multiple_page_id INTEGER NOT NULL REFERENCES headless_collection_multiple_page(id) ON DELETE CASCADE,
   category_id INTEGER NOT NULL REFERENCES headless_collection_categories(id) ON DELETE CASCADE,
-  PRIMARY KEY (collection_multiple_builder_id, category_id)
+  PRIMARY KEY (collection_multiple_page_id, category_id)
 );

@@ -1,12 +1,12 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/app/error-handler.js";
 import brickConfigServices from "../brick-config/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import collectionsServices from "./index.js";
 
 export interface ServiceData {
 	key: string;
-	type: "multiple-builder" | "single-builder";
+	type: "multiple-page" | "single-page";
 	slug?: string;
 	title: string;
 	singular: string;

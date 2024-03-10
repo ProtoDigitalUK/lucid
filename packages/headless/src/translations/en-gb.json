@@ -93,7 +93,6 @@
 	"swagger_query_string_page_description": "The page number of the paginated response",
 	"swagger_query_string_per_page_description": "The number of items per page in the paginated response",
 	"category": "Category",
-	"multiple_builder": "Multiple Builder",
 	"document": "Document",
 	"homepage_disabled_error_message": "Homepages are disabled for this collection.",
 	"parent_disabled_error_message": "Parent pages are disabled for this collection.",

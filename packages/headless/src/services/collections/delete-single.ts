@@ -3,7 +3,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	key: string;
-	type?: "single-builder" | "multiple-builder";
+	type?: "single-page" | "multiple-page";
 }
 
 const deleteSingle = async (

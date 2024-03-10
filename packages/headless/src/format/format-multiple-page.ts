@@ -1,4 +1,4 @@
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder.js";
+import type { PagesResT } from "@headless/types/src/multiple-page.js";
 
 interface DocumentT {
 	id: number;
@@ -33,8 +33,8 @@ interface DocumentT {
 	author_username: string | null;
 }
 
-const formatMultipleBuilder = (document: DocumentT): MultipleBuilderResT => {
-	const res: MultipleBuilderResT = {
+const formatmultiplePage = (document: DocumentT): PagesResT => {
+	const res: PagesResT = {
 		id: document.id,
 		parent_id: document.parent_id,
 		collection_key: document.collection_key,
@@ -71,7 +71,7 @@ const formatMultipleBuilder = (document: DocumentT): MultipleBuilderResT => {
 	return res;
 };
 
-export const swaggerMultipleBuilderRes = {
+export const swaggermultiplePageRes = {
 	type: "object",
 	properties: {
 		id: {
@@ -183,4 +183,4 @@ export const swaggerMultipleBuilderRes = {
 	},
 };
 
-export default formatMultipleBuilder;
+export default formatmultiplePage;

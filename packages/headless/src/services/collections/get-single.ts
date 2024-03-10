@@ -6,7 +6,7 @@ import getConfig from "../config.js";
 
 export interface ServiceData {
 	key: string;
-	type?: "single-builder" | "multiple-builder";
+	type?: "single-page" | "multiple-page";
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {

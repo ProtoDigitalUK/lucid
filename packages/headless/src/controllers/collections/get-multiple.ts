@@ -60,7 +60,7 @@ export default {
 			filters: [
 				{
 					key: "type",
-					enum: ["single-builder", "multiple-builder"],
+					enum: ["single-page", "multiple-page"],
 				},
 			],
 			sorts: ["title", "created_at", "updated_at"],

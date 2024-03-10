@@ -47,7 +47,7 @@ export default {
 					message:
 						"Invalid key format. Only lowercase letters and dashes are allowed.",
 				}),
-			type: z.enum(["multiple-builder", "single-builder"]),
+			type: z.enum(["multiple-page", "single-page"]),
 			slug: z.string().optional(),
 			title: z.string(),
 			singular: z.string(),
@@ -81,9 +81,7 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					type: z
-						.enum(["single-builder", "multiple-builder"])
-						.optional(),
+					type: z.enum(["single-page", "multiple-page"]).optional(),
 				})
 				.optional(),
 			sort: z

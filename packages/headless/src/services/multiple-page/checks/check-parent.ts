@@ -23,7 +23,7 @@ const checkParent = async (
 	if (data.homepage) return undefined;
 
 	const parentDocument = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_builder")
+		.selectFrom("headless_collection_multiple_page")
 		.select(["homepage"])
 		.where("id", "=", data.parent_id)
 		.where("collection_key", "=", data.collection_key)

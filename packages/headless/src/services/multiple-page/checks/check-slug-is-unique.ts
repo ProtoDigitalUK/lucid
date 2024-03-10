@@ -21,7 +21,7 @@ const checkSlugIsUnique = async (
 	const slugValue = slug(data.slug, { lower: true });
 
 	const slugExists = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_builder")
+		.selectFrom("headless_collection_multiple_page")
 		.where("collection_key", "=", data.collection_key)
 		.where("slug", "=", slugValue)
 		.executeTakeFirst();

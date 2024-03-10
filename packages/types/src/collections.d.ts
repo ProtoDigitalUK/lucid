@@ -1,6 +1,6 @@
 export interface CollectionResT {
 	key: string;
-	type: "single-builder" | "multiple-builder";
+	type: "single-page" | "multiple-page";
 	slug: string | null;
 	title: string;
 	singular: string;

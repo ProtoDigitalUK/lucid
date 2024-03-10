@@ -28,29 +28,29 @@ const resetHomepages = async (
 	// Update the docuemnts with new slug and set homepage to false
 
 	const homepages = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_builder")
-		.select(["headless_collection_multiple_builder.id"])
+		.selectFrom("headless_collection_multiple_page")
+		.select(["headless_collection_multiple_page.id"])
 		.leftJoin("headless_translations as title_translations", (join) =>
 			join
 				.onRef(
 					"title_translations.translation_key_id",
 					"=",
-					"headless_collection_multiple_builder.title_translation_key_id",
+					"headless_collection_multiple_page.title_translation_key_id",
 				)
 				.on("title_translations.language_id", "=", defaultLanguageId),
 		)
 		.select(["title_translations.value as title_translation_value"])
 		.groupBy([
-			"headless_collection_multiple_builder.id",
+			"headless_collection_multiple_page.id",
 			"title_translations.value",
 		])
 		.where(
-			"headless_collection_multiple_builder.collection_key",
+			"headless_collection_multiple_page.collection_key",
 			"=",
 			data.collection_key,
 		)
-		.where("headless_collection_multiple_builder.homepage", "=", true)
-		.where("headless_collection_multiple_builder.id", "!=", data.exclude_id)
+		.where("headless_collection_multiple_page.homepage", "=", true)
+		.where("headless_collection_multiple_page.id", "!=", data.exclude_id)
 		.execute();
 
 	if (homepages.length === 0) {
@@ -76,7 +76,7 @@ const resetHomepages = async (
 	await Promise.all(
 		newHomepageData.map((homepage) => {
 			return serviceConfig.db
-				.updateTable("headless_collection_multiple_builder")
+				.updateTable("headless_collection_multiple_page")
 				.set({
 					slug: homepage.slug,
 					homepage: false,

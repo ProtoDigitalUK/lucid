@@ -1,10 +1,10 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import multipleBuilderServices from "./index.js";
+import multiplePageServices from "./index.js";
 import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
-import multipleBuilderCategoriesServices from "../multiple-builder-categories/index.js";
+import multiplePageCategoriesServices from "../multiple-page-categories/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
@@ -33,7 +33,7 @@ const createSingle = async (
 	data: ServiceData,
 ) => {
 	const [parentId, slug] = await Promise.all([
-		serviceWrapper(multipleBuilderServices.checks.checkParent, false)(
+		serviceWrapper(multiplePageServices.checks.checkParent, false)(
 			serviceConfig,
 			{
 				collection_key: data.collection_key,
@@ -41,7 +41,7 @@ const createSingle = async (
 				homepage: data.homepage,
 			},
 		),
-		serviceWrapper(multipleBuilderServices.checks.checkSlugIsUnique, false)(
+		serviceWrapper(multiplePageServices.checks.checkSlugIsUnique, false)(
 			serviceConfig,
 			{
 				collection_key: data.collection_key,
@@ -49,7 +49,7 @@ const createSingle = async (
 				homepage: data.homepage,
 			},
 		),
-		serviceWrapper(multipleBuilderServices.checks.checkCollection, false)(
+		serviceWrapper(multiplePageServices.checks.checkCollection, false)(
 			serviceConfig,
 			{
 				collection_key: data.collection_key,
@@ -67,8 +67,7 @@ const createSingle = async (
 			},
 		),
 		serviceWrapper(
-			multipleBuilderCategoriesServices.checks
-				.checkCategoriesInCollection,
+			multiplePageCategoriesServices.checks.checkCategoriesInCollection,
 			false,
 		)(serviceConfig, {
 			category_ids: data.category_ids || [],
@@ -94,7 +93,7 @@ const createSingle = async (
 	});
 
 	const document = await serviceConfig.db
-		.insertInto("headless_collection_multiple_builder")
+		.insertInto("headless_collection_multiple_page")
 		.values({
 			collection_key: data.collection_key,
 			author_id: data.user_id,
@@ -124,14 +123,14 @@ const createSingle = async (
 
 	await Promise.all([
 		data.homepage &&
-			serviceWrapper(multipleBuilderServices.resetHomepages, false)(
+			serviceWrapper(multiplePageServices.resetHomepages, false)(
 				serviceConfig,
 				{
 					collection_key: data.collection_key,
 					exclude_id: document.id,
 				},
 			),
-		serviceWrapper(multipleBuilderCategoriesServices.createMultiple, false)(
+		serviceWrapper(multiplePageCategoriesServices.createMultiple, false)(
 			serviceConfig,
 			{
 				document_id: document.id,
