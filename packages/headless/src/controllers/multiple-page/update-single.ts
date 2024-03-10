@@ -47,7 +47,7 @@ export default {
 						type: "object",
 						properties: {
 							id: {
-								type: "number",
+								type: ["number", "string"],
 							},
 							key: {
 								type: "string",

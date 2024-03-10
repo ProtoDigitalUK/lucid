@@ -32,6 +32,7 @@
 	"failed_to_validate_csrf_token": "Failed to validate CSRF token.",
 	"user": "User",
 	"roles": "Roles",
+	"group": "Group",
 	"error_not_found_name": "{{name}} Not Found",
 	"error_not_found_message": "{{name}} resource could not be found.",
 	"duplicate_entry_error_message": "The entry already exists.",
