@@ -33,7 +33,7 @@ export const GroupSchema = z.object({
 	group_id: z.union([z.number(), z.string()]), // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
 	group_order: z.number(),
 	parent_group_id: z.union([z.number(), z.string(), z.null()]).optional(),
-	repeater_key: z.string(), // .optional(),
+	repeater_key: z.string(), // .optional(), // TODO: remove optional
 	language_id: z.number(),
 });
 export type GroupObjectT = z.infer<typeof GroupSchema>;
