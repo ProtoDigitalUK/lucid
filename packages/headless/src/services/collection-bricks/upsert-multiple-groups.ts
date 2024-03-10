@@ -117,7 +117,7 @@ const upsertMultipleGroups = async (
 				const foundGroup = groupsRes.find(
 					(res) => res.ref === group.group_id,
 				);
-				if (!foundGroup) throw new Error("Group not found");
+				if (!foundGroup) throw new Error("Group not found"); // TODO: update to APIError
 
 				group.group_id = foundGroup.group_id;
 				ref = foundGroup.ref;
