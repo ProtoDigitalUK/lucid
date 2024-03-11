@@ -2,6 +2,16 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import { values } from "../../utils/app/kysely-helpers.js";
+import { sql } from "kysely";
+
+export interface GroupsResT {
+	group_id: number;
+	parent_group_id: number | null;
+	group_order: number;
+	repeater_key: string;
+	language_id: number;
+	ref: string;
+}
 
 export interface ServiceData {
 	bricks: Array<BrickObjectT>;
@@ -84,26 +94,15 @@ const upsertMultipleGroups = async (
 
 			if (groupId !== null && parentGroupId !== null) {
 				updateGroupParentIds.push({
-					parent_group_id: group.parent_group_id as number | null,
-					group_id: group.group_id as number,
+					parent_group_id: parentGroupId,
+					group_id: groupId,
 				});
 			}
 		}
 	}
 
-	if (updateGroupParentIds.length > 0) {
-		await serviceConfig.db
-			.updateTable("headless_groups")
-			.from(values(updateGroupParentIds, "c"))
-			.set((eb) => ({
-				parent_group_id: eb.ref("c.parent_group_id"),
-			}))
-			.whereRef("c.group_id", "=", "c.group_id")
-			.execute();
-	}
-
 	// Create groups array from bricks and update groups by the group_id with their new parent_group_id
-	return data.bricks.flatMap((brick) => {
+	const groups = data.bricks.flatMap((brick) => {
 		if (!brick.groups) return [];
 
 		return brick.groups.map((group) => {
@@ -146,6 +145,41 @@ const upsertMultipleGroups = async (
 			};
 		});
 	});
+
+	return {
+		groups,
+		promises: [
+			// Delete groups not in groupsRes
+			serviceConfig.db
+				.deleteFrom("headless_groups")
+				.where(
+					"collection_brick_id",
+					"in",
+					data.bricks.map((brick) => brick.id as number),
+				)
+				.where(
+					"group_id",
+					"not in",
+					groups.map((group) => group.group_id),
+				)
+				.execute(),
+			// Update groups with their new parent_group_id
+			updateGroupParentIds.length > 0
+				? serviceConfig.db
+						.updateTable("headless_groups")
+						.from(values(updateGroupParentIds, "c"))
+						.set((eb) => ({
+							parent_group_id: sql`c.parent_group_id::int`,
+						}))
+						.whereRef(
+							"headless_groups.group_id",
+							"=",
+							sql`c.group_id::int`,
+						)
+						.execute()
+				: undefined,
+		],
+	};
 };
 
 export default upsertMultipleGroups;

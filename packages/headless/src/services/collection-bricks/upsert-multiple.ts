@@ -3,7 +3,6 @@ import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
 	id: number;
@@ -15,12 +14,6 @@ const upsertMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	// get existing ids
-	const existingIds = await serviceWrapper(
-		collectionBricksServices.getExistingIds,
-		false,
-	)(serviceConfig, data);
-
 	// upsert bricks and return all the ids, order and key
 	const bricksRes = await serviceConfig.db
 		.insertInto("headless_collection_bricks")
@@ -50,21 +43,34 @@ const upsertMultiple = async (
 	data.bricks = assignBrickIds(data.bricks, bricksRes);
 
 	// upsert groups
-	const groups = await serviceWrapper(
+	const groupsRes = await serviceWrapper(
 		collectionBricksServices.upsertMultipleGroups,
 		false,
 	)(serviceConfig, {
 		bricks: data.bricks,
 	});
 
-	// upsert fields
-	const fields = await serviceWrapper(
-		collectionBricksServices.upsertMultipleFields,
-		false,
-	)(serviceConfig, {
-		bricks: data.bricks,
-		groups,
-	});
+	Promise.all([
+		// upsert fields
+		serviceWrapper(collectionBricksServices.upsertMultipleFields, false)(
+			serviceConfig,
+			{
+				bricks: data.bricks,
+				groups: groupsRes.groups,
+			},
+		),
+		// delete multiple bricks
+		serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
+			serviceConfig,
+			{
+				id: data.id,
+				type: data.type,
+				bricks: bricksRes,
+			},
+		),
+		// group delete, parent update
+		...groupsRes.promises,
+	]);
 };
 
 const assignBrickIds = (

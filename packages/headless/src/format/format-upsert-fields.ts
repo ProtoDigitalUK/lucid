@@ -1,7 +1,7 @@
 import type { BrickFieldObjectT, BrickObjectT } from "../schemas/bricks.js";
 import type { FieldTypes } from "../builders/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
-import collectionBrickServices from "../services/collection-bricks/index.js";
+import type { GroupsResT } from "../services/collection-bricks/upsert-multiple-groups.js";
 
 const valueKey = (type: BrickFieldObjectT["type"]) => {
 	switch (type) {
@@ -93,9 +93,7 @@ interface BrickFieldUpdateObject {
 
 const formatUpsertFields = (
 	brick: BrickObjectT,
-	groups: Awaited<
-		ReturnType<typeof collectionBrickServices.upsertMultipleGroups>
-	>,
+	groups: Array<GroupsResT>,
 ): Array<BrickFieldUpdateObject> => {
 	return (
 		brick.fields?.map((field) => {
