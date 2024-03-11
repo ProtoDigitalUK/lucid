@@ -13,13 +13,33 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.bricks && data.bricks.length > 0) {
+	const page = await serviceConfig.db
+		.selectFrom("headless_collection_multiple_page")
+		.select(["id", "collection_key"])
+		.where("id", "=", data.id)
+		.executeTakeFirst();
+
+	if (page === undefined) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_found_name", {
+				name: T("page"),
+			}),
+			message: T("error_not_found_message", {
+				name: T("page"),
+			}),
+			status: 404,
+		});
+	}
+
+	if (page.collection_key && data.bricks && data.bricks.length > 0) {
 		await serviceWrapper(collectionBricksServices.upsertMultiple, false)(
 			serviceConfig,
 			{
 				id: data.id,
 				type: "multiple-page",
 				bricks: data.bricks,
+				collection_key: page.collection_key,
 			},
 		);
 	}

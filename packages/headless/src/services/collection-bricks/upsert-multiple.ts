@@ -8,12 +8,20 @@ export interface ServiceData {
 	id: number;
 	type: "multiple-page" | "single-page";
 	bricks: Array<BrickObjectT>;
+	collection_key: string;
 }
 
 const upsertMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	// validation
+	collectionBricksServices.checks.checkDuplicateOrder(data.bricks);
+	await collectionBricksServices.checks.checkValidateBricks(
+		serviceConfig,
+		data,
+	);
+
 	// upsert bricks and return all the ids, order and key
 	const bricksRes = await serviceConfig.db
 		.insertInto("headless_collection_bricks")
