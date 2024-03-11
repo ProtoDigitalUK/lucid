@@ -4,7 +4,6 @@ import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import formatUpsertFields from "../../format/format-upsert-fields.js";
 
 export interface ServiceData {
 	id: number;
@@ -16,47 +15,11 @@ const upsertMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	let existingIdsQuery = serviceConfig.db
-		.selectFrom("headless_collection_bricks")
-		.select((eb) => [
-			"headless_collection_bricks.id",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_groups")
-					.select("group_id")
-					.whereRef(
-						"headless_groups.collection_brick_id",
-						"=",
-						"headless_groups.group_id",
-					),
-			).as("groups"),
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_fields")
-					.select("fields_id")
-					.whereRef(
-						"headless_fields.collection_brick_id",
-						"=",
-						"headless_fields.fields_id",
-					),
-			).as("fields"),
-		]);
-
-	if (data.type === "multiple-page") {
-		existingIdsQuery = existingIdsQuery.where(
-			"multiple_page_id",
-			"=",
-			data.id,
-		);
-	} else {
-		existingIdsQuery = existingIdsQuery.where(
-			"single_page_id",
-			"=",
-			data.id,
-		);
-	}
-
-	const existingIds = await existingIdsQuery.execute();
+	// get existing ids
+	const existingIds = await serviceWrapper(
+		collectionBricksServices.getExistingIds,
+		false,
+	)(serviceConfig, data);
 
 	// upsert bricks and return all the ids, order and key
 	const bricksRes = await serviceConfig.db
@@ -86,6 +49,7 @@ const upsertMultiple = async (
 	// update data.bricks with the new ids where key and order match
 	data.bricks = assignBrickIds(data.bricks, bricksRes);
 
+	// upsert groups
 	const groups = await serviceWrapper(
 		collectionBricksServices.upsertMultipleGroups,
 		false,
@@ -93,9 +57,14 @@ const upsertMultiple = async (
 		bricks: data.bricks,
 	});
 
-	const fields = data.bricks.flatMap((brick) =>
-		formatUpsertFields(brick, groups),
-	);
+	// upsert fields
+	const fields = await serviceWrapper(
+		collectionBricksServices.upsertMultipleFields,
+		false,
+	)(serviceConfig, {
+		bricks: data.bricks,
+		groups,
+	});
 };
 
 const assignBrickIds = (
