@@ -4,6 +4,7 @@ import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import formatUpsertFields from "../../format/format-upsert-fields.js";
 
 export interface ServiceData {
 	id: number;
@@ -91,6 +92,10 @@ const upsertMultiple = async (
 	)(serviceConfig, {
 		bricks: data.bricks,
 	});
+
+	const fields = data.bricks.flatMap((brick) =>
+		formatUpsertFields(brick, groups),
+	);
 };
 
 const assignBrickIds = (
