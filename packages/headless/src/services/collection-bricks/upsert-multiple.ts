@@ -40,7 +40,22 @@ const upsertMultiple = async (
 		.execute();
 
 	// update data.bricks with the new ids where key and order match
-	data.bricks = assignBrickIds(data.bricks, bricksRes);
+	data.bricks = data.bricks.map((brick) => {
+		const foundBrick = bricksRes.find(
+			(res) =>
+				res.brick_key === brick.key && res.brick_order === brick.order,
+		);
+		if (!foundBrick) throw new Error("Brick not found");
+
+		return {
+			id: foundBrick.id,
+			key: brick.key,
+			order: brick.order,
+			type: brick.type,
+			groups: brick.groups,
+			fields: brick.fields,
+		};
+	});
 
 	// upsert groups
 	const groupsRes = await serviceWrapper(
@@ -50,7 +65,7 @@ const upsertMultiple = async (
 		bricks: data.bricks,
 	});
 
-	Promise.all([
+	await Promise.all([
 		// upsert fields
 		serviceWrapper(collectionBricksServices.upsertMultipleFields, false)(
 			serviceConfig,
@@ -71,32 +86,6 @@ const upsertMultiple = async (
 		// group delete, parent update
 		...groupsRes.promises,
 	]);
-};
-
-const assignBrickIds = (
-	bricks: Array<BrickObjectT>,
-	brickUpdateRes: Array<{
-		id: number;
-		brick_order: number;
-		brick_key: string;
-	}>,
-) => {
-	return bricks.map((brick) => {
-		const foundBrick = brickUpdateRes.find(
-			(res) =>
-				res.brick_key === brick.key && res.brick_order === brick.order,
-		);
-		if (!foundBrick) throw new Error("Brick not found");
-
-		return {
-			id: foundBrick.id,
-			key: brick.key,
-			order: brick.order,
-			type: brick.type,
-			groups: brick.groups,
-			fields: brick.fields,
-		};
-	});
 };
 
 export default upsertMultiple;
