@@ -40,7 +40,7 @@ const formatmultiplePage = (page: PageT): PagesResT => {
 		collection_key: page.collection_key,
 		title_translations: page.title_translations,
 		excerpt_translations: page.excerpt_translations,
-		slug: page.slug,
+		slug: formatPageSlug(page.slug),
 		full_slug: page.full_slug,
 		homepage: page.homepage ?? false,
 		created_by: page.created_by,
@@ -69,6 +69,12 @@ const formatmultiplePage = (page: PageT): PagesResT => {
 	}
 
 	return res;
+};
+
+export const formatPageSlug = (slug: string | null) => {
+	if (!slug) return null;
+	if (!slug.startsWith("/")) return `/${slug}`;
+	return slug;
 };
 
 export const swaggermultiplePageRes = {
