@@ -168,9 +168,9 @@ const upsertMultipleGroups = async (
 				? serviceConfig.db
 						.updateTable("headless_groups")
 						.from(values(updateGroupParentIds, "c"))
-						.set((eb) => ({
+						.set({
 							parent_group_id: sql`c.parent_group_id::int`,
-						}))
+						})
 						.whereRef(
 							"headless_groups.group_id",
 							"=",
