@@ -27,7 +27,9 @@ export default {
 					z.object({
 						key: z.string(),
 						type: z.enum(["builder", "fixed"]),
-						position: z.enum(["top", "bottom", "sidebar"]),
+						position: z
+							.enum(["top", "bottom", "sidebar"])
+							.optional(),
 					}),
 				)
 				.optional(),

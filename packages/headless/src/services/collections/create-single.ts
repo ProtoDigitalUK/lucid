@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../utils/app/error-handler.js";
 import brickConfigServices from "../brick-config/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import collectionsServices from "./index.js";
@@ -24,7 +24,7 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const [slug] = await Promise.all([
+	const [slug, collectionExists] = await Promise.all([
 		serviceWrapper(collectionsServices.checks.checkSlugExists, false)(
 			serviceConfig,
 			{
@@ -43,6 +43,25 @@ const createSingle = async (
 			  })
 			: undefined,
 	]);
+
+	if (collectionExists) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_created_name", {
+				name: T("collection"),
+			}),
+			message: T("error_not_created_message", {
+				name: T("collection"),
+			}),
+			status: 400,
+			errors: modelErrors({
+				key: {
+					code: "invalid",
+					message: T("duplicate_entry_error_message"),
+				},
+			}),
+		});
+	}
 
 	const collection = await serviceConfig.db
 		.insertInto("headless_collections")

@@ -23,7 +23,7 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const [slug] = await Promise.all([
+	const [slug, collectionExists] = await Promise.all([
 		serviceWrapper(collectionsServices.checks.checkSlugExists, false)(
 			serviceConfig,
 			{
@@ -42,6 +42,19 @@ const updateSingle = async (
 			  })
 			: undefined,
 	]);
+
+	if (!collectionExists) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_found_name", {
+				name: T("collection"),
+			}),
+			message: T("error_not_found_message", {
+				name: T("collection"),
+			}),
+			status: 404,
+		});
+	}
 
 	const updateCollectionRes = await serviceConfig.db
 		.updateTable("headless_collections")
