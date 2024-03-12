@@ -436,6 +436,42 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Update Single (bricks)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bricks\": [\n        {\n            \"id\": 13,\n            \"key\": \"banner\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"groups\": [\n                {\n                    \"group_id\": \"ref-group1\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 0,\n                    \"language_id\": 1\n                },\n                {\n                    \"group_id\": \"ref-group2\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 1,\n                    \"language_id\": 1\n                },\n                {\n                    \"group_id\": \"ref-group3\",\n                    \"parent_group_id\": \"ref-group2\",\n                    \"repeater_key\": \"social_links_2\",\n                    \"group_order\": 0,\n                    \"language_id\": 1\n                }\n            ],\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"test 2\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<h2>Hello 2</h2>\",\n                    \"language_id\": 1\n                },\n                // {\n                //     // \"fields_id\": 13,\n                //     \"key\": \"page-link\",\n                //     \"type\": \"pagelink\",\n                //     \"value\": {\n                //         \"id\": 3,\n                //         \"target\": \"_blank\",\n                //         \"label\": \"Link label\"\n                //     },\n                //     \"language_id\": 1\n                // },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group1\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group2\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\",\n                    \"language_id\": 1\n                }\n            ]\n        },\n        {\n            \"id\": 14,\n            \"key\": \"intro\",\n            \"order\": 1,\n            \"type\": \"builder\",\n            \"fields\": []\n        }\n\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/1",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"1"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -759,7 +795,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    // \"title\": \"Pages\",\r\n    // \"singular\": \"Page\",\r\n    \"description\": \"The pages collection description\",\r\n    \"disable_parents\": true,\r\n    \"disable_homepages\": false\r\n    // \"bricks\": [\r\n    //     {\r\n    //         \"key\": \"banner\",\r\n    //         \"type\": \"builder\"\r\n    //     },\r\n    //     {\r\n    //         \"key\": \"default_meta\",\r\n    //         \"type\": \"fixed\",\r\n    //         \"position\": \"sidebar\"\r\n    //     }\r\n    // ]\r\n}",
+							"raw": "{\r\n    // \"title\": \"Pages\",\r\n    // \"singular\": \"Page\",\r\n    // \"description\": \"The pages collection description\",\r\n    // \"disable_parents\": true,\r\n    // \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"intro\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
