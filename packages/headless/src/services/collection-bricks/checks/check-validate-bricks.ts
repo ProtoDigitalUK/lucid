@@ -205,7 +205,9 @@ const getAllMedia = async (
 	fields: BrickFieldObjectT[],
 ) => {
 	try {
-		return serviceConfig.db
+		const ids = allFieldIdsOfType<number>(fields, "media");
+		if (ids.length === 0) return [];
+		return await serviceConfig.db
 			.selectFrom("headless_media")
 			.select(["id", "file_extension", "width", "height", "type"])
 			.where("id", "in", allFieldIdsOfType<number>(fields, "media"))
@@ -219,10 +221,12 @@ const getAllPages = async (
 	fields: BrickFieldObjectT[],
 ) => {
 	try {
-		return serviceConfig.db
+		const ids = allFieldIdsOfType<number>(fields, "pagelink");
+		if (ids.length === 0) return [];
+		return await serviceConfig.db
 			.selectFrom("headless_collection_multiple_page")
 			.select("id")
-			.where("id", "in", allFieldIdsOfType<number>(fields, "pagelink"))
+			.where("id", "in", ids)
 			.execute();
 	} catch (err) {
 		return [];
