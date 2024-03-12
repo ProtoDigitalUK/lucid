@@ -21,6 +21,9 @@ const upsertMultipleGroups = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const brickGroups = data.bricks.flatMap((brick) => brick.groups || []);
+	if (brickGroups.length === 0) return { groups: [], promises: [] };
+
 	// Update groups, on id conflict, update group_order, parent_group_id
 	const groupsRes = await serviceConfig.db
 		.insertInto("headless_groups")

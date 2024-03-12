@@ -97,9 +97,16 @@ const formatUpsertFields = (
 ): Array<BrickFieldUpdateObject> => {
 	return (
 		brick.fields?.map((field) => {
+			let groupId = null;
 			const findGroup = groups.find(
 				(group) => group.ref === field.group_id,
 			);
+			if (findGroup === undefined) {
+				const findGroupBrick = groups.find(
+					(group) => group.group_id === field.group_id,
+				);
+				groupId = findGroupBrick?.group_id ?? null;
+			} else groupId = findGroup.group_id;
 
 			return {
 				language_id: field.language_id,
@@ -107,8 +114,7 @@ const formatUpsertFields = (
 				collection_brick_id: brick.id as number,
 				key: field.key,
 				type: field.type,
-				group_id: findGroup?.group_id ?? null,
-
+				group_id: groupId,
 				text_value: null,
 				int_value: null,
 				bool_value: null,

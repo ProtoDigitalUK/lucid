@@ -18,6 +18,10 @@ const upsertMultipleFields = async (
 		formatUpsertFields(brick, data.groups),
 	);
 
+	if (fields.length === 0) {
+		return;
+	}
+
 	// upsert fields
 	const fieldsRes = await serviceConfig.db
 		.insertInto("headless_fields")
@@ -49,6 +53,7 @@ const upsertMultipleFields = async (
 				json_value: eb.ref("excluded.json_value"),
 				page_link_id: eb.ref("excluded.page_link_id"),
 				media_id: eb.ref("excluded.media_id"),
+				group_id: eb.ref("excluded.group_id"),
 			})),
 		)
 		.returning(["fields_id"])

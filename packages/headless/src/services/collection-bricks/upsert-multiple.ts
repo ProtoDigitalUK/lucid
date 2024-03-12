@@ -53,7 +53,14 @@ const upsertMultiple = async (
 			(res) =>
 				res.brick_key === brick.key && res.brick_order === brick.order,
 		);
-		if (!foundBrick) throw new Error("Brick not found");
+		if (!foundBrick) {
+			throw new APIError({
+				type: "basic",
+				name: T("error_saving_bricks"),
+				message: T("there_was_an_error_updating_bricks"),
+				status: 400,
+			});
+		}
 
 		return {
 			id: foundBrick.id,
