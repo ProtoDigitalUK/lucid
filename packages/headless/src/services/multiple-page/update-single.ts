@@ -1,13 +1,11 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import multiplePageServices from "./index.js";
-import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
 import multiplePageCategoriesServices from "../multiple-page-categories/index.js";
-import { getUniqueLanguageIDs } from "../../utils/translations/helpers.js";
 
 export interface ServiceData {
 	id: number;
@@ -130,6 +128,8 @@ const updateSingle = async (
 				collection_key: page.collection_key,
 			},
 		),
+		// TODO: add multiple page updae
+		// TODO: add multiple page category update
 	]);
 };
 
