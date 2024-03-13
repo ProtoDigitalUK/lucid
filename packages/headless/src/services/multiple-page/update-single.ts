@@ -71,13 +71,19 @@ const updateSingle = async (
 				homepage: homepage,
 			},
 		),
-		// TODO: add check parent ancestory
 		serviceWrapper(multiplePageServices.checks.checkSlugIsUnique, false)(
 			serviceConfig,
 			{
 				collection_key: page.collection_key,
 				slug: data.slug,
 				homepage: homepage,
+			},
+		),
+		serviceWrapper(multiplePageServices.checks.checkParentAncestry, false)(
+			serviceConfig,
+			{
+				page_id: data.id,
+				parent_id: data.parent_id,
 			},
 		),
 		serviceWrapper(multiplePageServices.checks.checkCollection, false)(
@@ -128,7 +134,17 @@ const updateSingle = async (
 				collection_key: page.collection_key,
 			},
 		),
-		// TODO: add multiple page updae
+		serviceConfig.db
+			.updateTable("headless_collection_multiple_page")
+			.set({
+				slug: slug,
+				homepage: homepage,
+				published: data.published,
+				parent_id: parentId,
+				updated_at: new Date(),
+			})
+			.where("id", "=", data.id)
+			.execute(),
 		// TODO: add multiple page category update
 	]);
 };
