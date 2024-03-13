@@ -106,5 +106,6 @@
 	"there_was_an_error_updating_bricks": "There was an error updating the bricks.",
 	"error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}.",
 	"page_cannot_be_parent_of_itself": "The page cannot be a parent of itself.",
-	"parent_is_child_of_page": "The page you are trying to set as the parent is currently a child of this page."
+	"parent_is_child_of_page": "The page you are trying to set as the parent is currently a child of this page.",
+	"page_slug_required_if_setting_homepage_to_false": "The slug is required if you're setting the homepage to false."
 }

@@ -11,7 +11,7 @@ import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
 export interface ServiceData {
 	collection_key: string;
 	homepage?: boolean;
-	parent_id?: number;
+	parent_id?: number | null;
 }
 
 const checkCollection = async (
@@ -62,7 +62,11 @@ const checkCollection = async (
 		});
 	}
 
-	if (collection.disable_parents === true && data.parent_id !== undefined) {
+	if (
+		collection.disable_parents === true &&
+		data.parent_id !== undefined &&
+		data.parent_id !== null
+	) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {

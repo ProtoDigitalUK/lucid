@@ -41,7 +41,7 @@ const formatmultiplePage = (page: PageT): PagesResT => {
 		title_translations: page.title_translations,
 		excerpt_translations: page.excerpt_translations,
 		slug: formatPageSlug(page.slug),
-		full_slug: page.full_slug,
+		full_slug: formatPageSlug(page.full_slug),
 		homepage: page.homepage ?? false,
 		created_by: page.created_by,
 		created_at: page.created_at?.toISOString() || null,

@@ -11,7 +11,7 @@ import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	collection_key: string;
-	parent_id?: number;
+	parent_id?: number | null;
 	homepage?: boolean;
 	current_id?: number;
 }
@@ -20,8 +20,9 @@ const checkParent = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (!data.parent_id) return undefined;
-	if (data.homepage) return undefined;
+	if (data.parent_id === null) return null;
+	if (data.parent_id === undefined) return undefined;
+	if (data.homepage) return null;
 
 	if (data.current_id === data.parent_id) {
 		throw new APIError({

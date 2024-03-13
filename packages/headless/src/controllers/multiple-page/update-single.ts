@@ -17,6 +17,13 @@ const updateSingleController: ControllerT<
 		},
 		{
 			id: parseInt(request.params.id),
+			slug: request.body.slug,
+			homepage: request.body.homepage,
+			published: request.body.published,
+			parent_id: request.body.parent_id,
+			category_ids: request.body.category_ids,
+			title_translations: request.body.title_translations,
+			excerpt_translations: request.body.excerpt_translations,
 			bricks: request.body.bricks,
 		},
 	);
@@ -41,6 +48,55 @@ export default {
 		body: {
 			type: "object",
 			properties: {
+				slug: {
+					type: "string",
+				},
+				homepage: {
+					type: "boolean",
+				},
+				published: {
+					type: "boolean",
+				},
+				parent_id: {
+					type: "number",
+					nullable: true,
+				},
+				category_ids: {
+					type: "array",
+					items: {
+						type: "number",
+					},
+				},
+				title_translations: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							language_id: {
+								type: "number",
+							},
+							value: {
+								type: "string",
+								nullable: true,
+							},
+						},
+					},
+				},
+				excerpt_translations: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: {
+							language_id: {
+								type: "number",
+							},
+							value: {
+								type: "string",
+								nullable: true,
+							},
+						},
+					},
+				},
 				bricks: {
 					type: "array",
 					items: {

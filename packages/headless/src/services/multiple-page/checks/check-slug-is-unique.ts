@@ -17,8 +17,8 @@ const checkSlugIsUnique = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.slug === undefined) return undefined;
 	if (data.homepage) return "/";
+	if (data.slug === undefined) return undefined;
 	const slugValue = slug(data.slug, { lower: true });
 
 	const slugExists = await serviceConfig.db

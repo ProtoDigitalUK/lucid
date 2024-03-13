@@ -16,5 +16,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_categories (
 CREATE TABLE IF NOT EXISTS headless_collection_multiple_page_categories (
   collection_multiple_page_id INTEGER NOT NULL REFERENCES headless_collection_multiple_page(id) ON DELETE CASCADE,
   category_id INTEGER NOT NULL REFERENCES headless_collection_categories(id) ON DELETE CASCADE,
-  PRIMARY KEY (collection_multiple_page_id, category_id)
+  PRIMARY KEY (collection_multiple_page_id, category_id),
+
+  unique (collection_multiple_page_id, category_id)
 );

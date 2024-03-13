@@ -4,14 +4,14 @@ import { sql } from "kysely";
 
 export interface ServiceData {
 	page_id: number;
-	parent_id?: number;
+	parent_id?: number | null;
 }
 
 const checkParentAncestry = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.parent_id === undefined) return;
+	if (data.parent_id === undefined || data.parent_id === null) return;
 
 	const page = await sql
 		.raw<{

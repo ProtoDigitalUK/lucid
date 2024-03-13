@@ -58,6 +58,27 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
+			slug: slugSchema.optional(),
+			homepage: z.boolean().optional(),
+			published: z.boolean().optional(),
+			parent_id: z.number().optional().nullable(),
+			category_ids: z.array(z.number()).optional(),
+			title_translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
+					}),
+				)
+				.optional(),
+			excerpt_translations: z
+				.array(
+					z.object({
+						language_id: z.number(),
+						value: z.string().nullable(),
+					}),
+				)
+				.optional(),
 			bricks: z.array(BrickSchema).optional(),
 		}),
 		query: undefined,

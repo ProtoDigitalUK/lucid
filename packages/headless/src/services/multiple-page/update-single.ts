@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
@@ -12,7 +12,7 @@ export interface ServiceData {
 	slug?: string;
 	homepage?: boolean;
 	published?: boolean;
-	parent_id?: number;
+	parent_id?: number | null;
 	category_ids?: number[];
 	title_translations?: {
 		language_id: number;
@@ -61,6 +61,33 @@ const updateSingle = async (
 
 	// ---------------------------------------
 	// Checks
+	if (
+		page.homepage === true &&
+		homepage === false &&
+		data.slug === undefined
+	) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_created_name", {
+				name: T("page"),
+			}),
+			message: T("error_not_created_message", {
+				name: T("page"),
+			}),
+			status: 400,
+			errors: modelErrors({
+				slug: {
+					code: "required",
+					message: T(
+						"page_slug_required_if_setting_homepage_to_false",
+					),
+				},
+			}),
+		});
+	}
+
+	// TODO: fix bug where if you make a page a homepage, its children dont get their parent_id set to null
+
 	const [parentId, slug] = await Promise.all([
 		serviceWrapper(multiplePageServices.checks.checkParent, false)(
 			serviceConfig,
@@ -105,7 +132,19 @@ const updateSingle = async (
 
 	// ---------------------------------------
 	// Updates
-	await Promise.all([
+	const [pageRes] = await Promise.all([
+		serviceConfig.db
+			.updateTable("headless_collection_multiple_page")
+			.set({
+				slug: slug,
+				homepage: homepage,
+				published: data.published,
+				parent_id: parentId,
+				updated_at: new Date(),
+			})
+			.where("id", "=", data.id)
+			.returning("id")
+			.executeTakeFirst(),
 		serviceWrapper(translationsServices.upsertMultiple, false)(
 			serviceConfig,
 			{
@@ -134,19 +173,38 @@ const updateSingle = async (
 				collection_key: page.collection_key,
 			},
 		),
-		serviceConfig.db
-			.updateTable("headless_collection_multiple_page")
-			.set({
-				slug: slug,
-				homepage: homepage,
-				published: data.published,
-				parent_id: parentId,
-				updated_at: new Date(),
-			})
-			.where("id", "=", data.id)
-			.execute(),
-		// TODO: add multiple page category update
+		serviceWrapper(multiplePageCategoriesServices.upsertMultiple, false)(
+			serviceConfig,
+			{
+				page_id: data.id,
+				category_ids: data.category_ids || [],
+			},
+		),
+		homepage === true
+			? serviceWrapper(multiplePageServices.resetHomepages, false)(
+					serviceConfig,
+					{
+						collection_key: page.collection_key,
+						exclude_id: data.id,
+					},
+			  )
+			: undefined,
 	]);
+
+	if (pageRes === undefined) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_created_name", {
+				name: T("page"),
+			}),
+			message: T("error_not_created_message", {
+				name: T("page"),
+			}),
+			status: 500,
+		});
+	}
+
+	return pageRes.id;
 };
 
 export default updateSingle;
