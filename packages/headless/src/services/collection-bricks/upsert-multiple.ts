@@ -15,6 +15,8 @@ const upsertMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	if (data.bricks.length === 0) return;
+
 	// validation
 	collectionBricksServices.checks.checkDuplicateOrder(data.bricks);
 	await collectionBricksServices.checks.checkValidateBricks(

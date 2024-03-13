@@ -13,6 +13,7 @@ export interface ServiceData {
 	collection_key: string;
 	parent_id?: number;
 	homepage?: boolean;
+	current_id?: number;
 }
 
 const checkParent = async (
@@ -21,6 +22,25 @@ const checkParent = async (
 ) => {
 	if (!data.parent_id) return undefined;
 	if (data.homepage) return undefined;
+
+	if (data.current_id === data.parent_id) {
+		throw new APIError({
+			type: "basic",
+			name: T("dynamic_error_name", {
+				name: T("page"),
+			}),
+			message: T("update_error_message", {
+				name: T("page").toLowerCase(),
+			}),
+			status: 400,
+			errors: modelErrors({
+				parent_id: {
+					code: "invalid",
+					message: T("page_cannot_be_parent_of_itself"),
+				},
+			}),
+		});
+	}
 
 	const pagePage = await serviceConfig.db
 		.selectFrom("headless_collection_multiple_page")
