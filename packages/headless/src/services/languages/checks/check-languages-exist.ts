@@ -11,6 +11,8 @@ const checkLanguagesExist = async (
 ) => {
 	const languageIds = Array.from(new Set(data.language_ids));
 
+	if (languageIds.length === 0) return;
+
 	const languages = await serviceConfig.db
 		.selectFrom("headless_languages")
 		.select("id")

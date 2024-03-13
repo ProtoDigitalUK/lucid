@@ -1,15 +1,9 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import { type MultipartFile } from "@fastify/multipart";
-import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
-import {
-	shouldUpdateTranslations,
-	mergeTranslationGroups,
-	getUniqueLanguageIDs,
-} from "../../utils/translations/helpers.js";
 
 export interface ServiceData {
 	id: number;
@@ -57,41 +51,25 @@ const updateSingle = async (
 		});
 	}
 
-	if (
-		shouldUpdateTranslations([
-			data.title_translations,
-			data.alt_translations,
-		])
-	) {
-		await serviceWrapper(
-			languagesServices.checks.checkLanguagesExist,
-			false,
-		)(serviceConfig, {
-			language_ids: getUniqueLanguageIDs([
-				data.title_translations || [],
-				data.alt_translations || [],
-			]),
-		});
-		await serviceWrapper(translationsServices.upsertMultiple, false)(
-			serviceConfig,
-			{
-				keys: {
-					title: media.title_translation_key_id,
-					alt: media.alt_translation_key_id,
-				},
-				translations: mergeTranslationGroups([
-					{
-						translations: data.title_translations || [],
-						key: "title",
-					},
-					{
-						translations: data.alt_translations || [],
-						key: "alt",
-					},
-				]),
+	await serviceWrapper(translationsServices.upsertMultiple, false)(
+		serviceConfig,
+		{
+			keys: {
+				title: media.title_translation_key_id,
+				alt: media.alt_translation_key_id,
 			},
-		);
-	}
+			items: [
+				{
+					translations: data.title_translations || [],
+					key: "title",
+				},
+				{
+					translations: data.alt_translations || [],
+					key: "alt",
+				},
+			],
+		},
+	);
 
 	if (data.file_data === undefined) {
 		return;

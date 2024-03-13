@@ -3,13 +3,7 @@ import { APIError, modelErrors } from "../../utils/app/error-handler.js";
 import slug from "slug";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import categoriesServices from "./index.js";
-import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
-import {
-	shouldUpdateTranslations,
-	mergeTranslationGroups,
-	getUniqueLanguageIDs,
-} from "../../utils/translations/helpers.js";
 
 export interface ServiceData {
 	id: number;
@@ -89,43 +83,25 @@ const updateSingle = async (
 		}
 	}
 
-	// Update translations
-	if (
-		shouldUpdateTranslations([
-			data.title_translations,
-			data.description_translations,
-		])
-	) {
-		await serviceWrapper(
-			languagesServices.checks.checkLanguagesExist,
-			false,
-		)(serviceConfig, {
-			language_ids: getUniqueLanguageIDs([
-				data.title_translations || [],
-				data.description_translations || [],
-			]),
-		});
-
-		await serviceWrapper(translationsServices.upsertMultiple, false)(
-			serviceConfig,
-			{
-				keys: {
-					title: categoryRes.title_translation_key_id,
-					description: categoryRes.description_translation_key_id,
-				},
-				translations: mergeTranslationGroups([
-					{
-						translations: data.title_translations || [],
-						key: "title",
-					},
-					{
-						translations: data.description_translations || [],
-						key: "description",
-					},
-				]),
+	await serviceWrapper(translationsServices.upsertMultiple, false)(
+		serviceConfig,
+		{
+			keys: {
+				title: categoryRes.title_translation_key_id,
+				description: categoryRes.description_translation_key_id,
 			},
-		);
-	}
+			items: [
+				{
+					translations: data.title_translations || [],
+					key: "title",
+				},
+				{
+					translations: data.description_translations || [],
+					key: "description",
+				},
+			],
+		},
+	);
 
 	const categoryUpdateRes = await serviceConfig.db
 		.updateTable("headless_collection_categories")

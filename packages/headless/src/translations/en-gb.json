@@ -104,5 +104,6 @@
 	"error_saving_page_brick_couldnt_find_brick_config": "We couln't find the brick config for the brick key of: '{{key}}'. Ensure you are using the correct key for the brick defined in your headless.config file.",
 	"invalid_value": "Invalid value",
 	"there_was_an_error_updating_bricks": "There was an error updating the bricks.",
-	"error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}."
+	"error_saving_page_duplicate_order": "Duplicate builder orders found: {{order}}.",
+	"page_cannot_be_parent_of_itself": "The page cannot be a parent of itself."
 }

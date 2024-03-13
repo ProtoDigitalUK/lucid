@@ -1,4 +1,4 @@
-interface TranslationsObjT {
+export interface TranslationsObjT {
 	language_id: number;
 	value: string | null;
 }
@@ -10,16 +10,16 @@ export const removeDuplicates = (translations: TranslationsObjT[]) =>
 			self.findIndex((t) => t.language_id === translation.language_id),
 	);
 
-export const mergeTranslationGroups = (
+export const mergeTranslationGroups = <K>(
 	items: Array<{
 		translations: TranslationsObjT[];
-		key: string;
+		key: K;
 	}>,
 ) => {
 	const translations: {
 		language_id: number;
 		value: string | null;
-		key: string;
+		key: K;
 	}[] = [];
 	for (const item of items) {
 		const itemTranslations = removeDuplicates(item.translations);
