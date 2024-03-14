@@ -3,7 +3,7 @@ import z from "zod";
 import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import multiplePageSchema from "../../schemas/multiple-page.js";
-import formatmultiplePage from "../../format/format-multiple-page.js";
+import formatMultiplePage from "../../format/format-multiple-page.js";
 
 export interface ServiceData {
 	id: number;
@@ -100,7 +100,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatmultiplePage(page);
+	return formatMultiplePage(page);
 };
 
 export default getSingle;

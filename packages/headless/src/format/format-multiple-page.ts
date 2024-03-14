@@ -23,6 +23,8 @@ interface PageT {
 		language_id: number | null;
 		value: string | null;
 	}[];
+	title_translation_value?: string | null;
+	alt_translation_value?: string | null;
 	categories: Array<{
 		category_id: number;
 	}> | null;

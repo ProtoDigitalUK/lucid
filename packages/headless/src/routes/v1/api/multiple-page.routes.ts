@@ -65,6 +65,18 @@ const multiplePageRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: multiplePage.deleteMultiple.zodSchema,
 		controller: multiplePage.deleteMultiple.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+			contentLanguage: true,
+		},
+		swaggerSchema: multiplePage.getMultiple.swaggerSchema,
+		zodSchema: multiplePage.getMultiple.zodSchema,
+		controller: multiplePage.getMultiple.controller,
+	});
 };
 
 export default multiplePageRoutes;

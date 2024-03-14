@@ -1,5 +1,6 @@
 import z from "zod";
 import { BrickSchema } from "./bricks.js";
+import defaultQuery from "./default-query.js";
 
 const slugRegex = /^[a-zA-Z0-9-_/]+$/;
 const slugSchema = z
@@ -99,5 +100,38 @@ export default {
 		}),
 		query: undefined,
 		params: undefined,
+	},
+	getMultiple: {
+		query: z.object({
+			filter: z
+				.object({
+					collection_key: z
+						.union([z.string(), z.array(z.string())])
+						.optional(),
+					title: z.string().optional(),
+					slug: z.string().optional(),
+					full_slug: z.string().optional(),
+				})
+				.optional(),
+			sort: z
+				.array(
+					z.object({
+						key: z.enum([
+							"created_at",
+							"updated_at",
+							"title",
+							"published_at",
+						]),
+						value: z.enum(["asc", "desc"]),
+					}),
+				)
+				.optional(),
+			include: defaultQuery.include,
+			exclude: defaultQuery.exclude,
+			page: defaultQuery.page,
+			per_page: defaultQuery.per_page,
+		}),
+		params: undefined,
+		body: undefined,
 	},
 };
