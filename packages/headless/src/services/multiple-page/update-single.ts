@@ -86,8 +86,6 @@ const updateSingle = async (
 		});
 	}
 
-	// TODO: fix bug where if you make a page a homepage, its children dont get their parent_id set to null
-
 	const [parentId, slug] = await Promise.all([
 		serviceWrapper(multiplePageServices.checks.checkParent, false)(
 			serviceConfig,
@@ -186,6 +184,7 @@ const updateSingle = async (
 					{
 						collection_key: page.collection_key,
 						exclude_id: data.id,
+						page_id: data.id,
 					},
 			  )
 			: undefined,

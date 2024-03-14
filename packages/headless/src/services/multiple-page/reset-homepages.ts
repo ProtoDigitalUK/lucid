@@ -9,6 +9,7 @@ import {
 export interface ServiceData {
 	collection_key: string;
 	exclude_id: number;
+	page_id?: number;
 }
 
 const resetHomepages = async (
@@ -27,31 +28,50 @@ const resetHomepages = async (
 	// generate slug from title translation if it exists or make new one
 	// Update the docuemnts with new slug and set homepage to false
 
-	const homepages = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
-		.select(["headless_collection_multiple_page.id"])
-		.leftJoin("headless_translations as title_translations", (join) =>
-			join
-				.onRef(
-					"title_translations.translation_key_id",
-					"=",
-					"headless_collection_multiple_page.title_translation_key_id",
-				)
-				.on("title_translations.language_id", "=", defaultLanguageId),
-		)
-		.select(["title_translations.value as title_translation_value"])
-		.groupBy([
-			"headless_collection_multiple_page.id",
-			"title_translations.value",
-		])
-		.where(
-			"headless_collection_multiple_page.collection_key",
-			"=",
-			data.collection_key,
-		)
-		.where("headless_collection_multiple_page.homepage", "=", true)
-		.where("headless_collection_multiple_page.id", "!=", data.exclude_id)
-		.execute();
+	const [homepages] = await Promise.all([
+		serviceConfig.db
+			.selectFrom("headless_collection_multiple_page")
+			.select(["headless_collection_multiple_page.id"])
+			.leftJoin("headless_translations as title_translations", (join) =>
+				join
+					.onRef(
+						"title_translations.translation_key_id",
+						"=",
+						"headless_collection_multiple_page.title_translation_key_id",
+					)
+					.on(
+						"title_translations.language_id",
+						"=",
+						defaultLanguageId,
+					),
+			)
+			.select(["title_translations.value as title_translation_value"])
+			.groupBy([
+				"headless_collection_multiple_page.id",
+				"title_translations.value",
+			])
+			.where(
+				"headless_collection_multiple_page.collection_key",
+				"=",
+				data.collection_key,
+			)
+			.where("headless_collection_multiple_page.homepage", "=", true)
+			.where(
+				"headless_collection_multiple_page.id",
+				"!=",
+				data.exclude_id,
+			)
+			.execute(),
+		data.page_id !== undefined
+			? serviceConfig.db
+					.updateTable("headless_collection_multiple_page")
+					.where("parent_id", "=", data.page_id)
+					.set({
+						parent_id: null,
+					})
+					.execute()
+			: undefined,
+	]);
 
 	if (homepages.length === 0) {
 		return;
