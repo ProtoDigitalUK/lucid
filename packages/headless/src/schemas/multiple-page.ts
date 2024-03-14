@@ -86,4 +86,18 @@ export default {
 			id: z.string(),
 		}),
 	},
+	deleteSingle: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
+	deleteMultiple: {
+		body: z.object({
+			ids: z.array(z.number()),
+		}),
+		query: undefined,
+		params: undefined,
+	},
 };
