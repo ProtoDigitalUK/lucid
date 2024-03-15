@@ -387,7 +387,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"slug\": \"about-us\",\n    // \"homepage\": false,\n    \"collection_key\": \"pages\",\n    // \"parent_id\": 9,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"About us\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"I am the about us page\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+									"raw": "{\n    \"slug\": \"dogs\",\n    // \"homepage\": false,\n    \"collection_key\": \"pages\",\n    \"parent_id\": 2,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dogs\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dogs\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -456,7 +456,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page?filter[collection_key]=blogs",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -474,7 +474,8 @@
 										},
 										{
 											"key": "filter[collection_key]",
-											"value": "blogs"
+											"value": "blogs",
+											"disabled": true
 										},
 										{
 											"key": "filter[title]",
@@ -489,6 +490,57 @@
 										{
 											"key": "filter[full_slug]",
 											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "-1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Multiple Valid Parents",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "headless-content-lang",
+										"value": "{{HEADLESS_CONTENT_LANG}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/4/valid-parents",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"4",
+										"valid-parents"
+									],
+									"query": [
+										{
+											"key": "filter[collection_key]",
+											"value": "blogs",
+											"disabled": true
+										},
+										{
+											"key": "filter[title]",
+											"value": "About us",
 											"disabled": true
 										},
 										{
