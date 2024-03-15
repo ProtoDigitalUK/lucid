@@ -195,7 +195,12 @@ const allFieldIdsOfType = <T>(
 ) => {
 	return fields
 		.filter((field) => field.type === type)
-		.map((field) => field.value as T)
+		.map((field) => {
+			if (field.type === "pagelink") {
+				return field.value?.id;
+			}
+			return field.value as T;
+		})
 		.filter((value) => value !== undefined)
 		.filter((value, index, self) => self.indexOf(value) === index);
 };
