@@ -8,13 +8,62 @@ import formatMultiplePage from "../../format/format-multiple-page.js";
 
 export interface ServiceData {
 	query: z.infer<typeof multiplePageSchema.getMultiple.query>;
+	page_id: number;
 	language_id: number;
 }
 
-const getMultiple = async (
+const getMultipleValidParents = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const page = await serviceConfig.db
+		.selectFrom("headless_collection_multiple_page")
+		.select("homepage")
+		.where("id", "=", data.page_id)
+		.executeTakeFirst();
+
+	if (page === undefined || page.homepage === true) {
+		return {
+			data: [],
+			count: 0,
+		};
+	}
+
+	const validParents = await sql
+		.raw<{
+			id: number;
+		}>(`WITH RECURSIVE descendants AS (
+        SELECT id, parent_id
+        FROM headless_collection_multiple_page
+        WHERE id = ${data.page_id}
+
+        UNION ALL
+
+        SELECT p.id, p.parent_id
+        FROM headless_collection_multiple_page p
+        INNER JOIN descendants d ON p.parent_id = d.id
+    )
+    SELECT p.id
+    FROM headless_collection_multiple_page p
+    WHERE NOT p.id = ${data.page_id}
+    ${
+		data.query.filter?.collection_key !== undefined
+			? `AND p.collection_key = '${data.query.filter.collection_key}'`
+			: ""
+	}
+    AND NOT p.id IN (SELECT id FROM descendants)
+    AND NOT p.homepage;`)
+		.execute(serviceConfig.db);
+
+	if (validParents.rows.length === 0) {
+		return {
+			data: [],
+			count: 0,
+		};
+	}
+
+	const validParentIds = validParents.rows.map((row) => row.id);
+
 	const pagesQuery = serviceConfig.db
 		.selectFrom("headless_collection_multiple_page")
 		.select((eb) => [
@@ -79,15 +128,6 @@ const getMultiple = async (
 				)
 				.on("title_translations.language_id", "=", data.language_id),
 		)
-		.leftJoin("headless_translations as excerpt_translations", (join) =>
-			join
-				.onRef(
-					"excerpt_translations.translation_key_id",
-					"=",
-					"headless_collection_multiple_page.excerpt_translation_key_id",
-				)
-				.on("excerpt_translations.language_id", "=", data.language_id),
-		)
 		.innerJoin(
 			"headless_collections",
 			"headless_collections.key",
@@ -100,7 +140,6 @@ const getMultiple = async (
 		)
 		.select([
 			"title_translations.value as title_translation_value",
-			"excerpt_translations.value as excerpt_translation_value",
 			"headless_collections.slug as collection_slug",
 			"headless_users.id as author_id",
 			"headless_users.email as author_email",
@@ -108,10 +147,10 @@ const getMultiple = async (
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
+		.where("headless_collection_multiple_page.id", "in", validParentIds)
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",
-			"excerpt_translations.value",
 			"headless_collections.slug",
 			"headless_users.id",
 		]);
@@ -128,15 +167,6 @@ const getMultiple = async (
 				)
 				.on("title_translations.language_id", "=", data.language_id),
 		)
-		.leftJoin("headless_translations as excerpt_translations", (join) =>
-			join
-				.onRef(
-					"excerpt_translations.translation_key_id",
-					"=",
-					"headless_collection_multiple_page.excerpt_translation_key_id",
-				)
-				.on("excerpt_translations.language_id", "=", data.language_id),
-		)
 		.innerJoin(
 			"headless_collections",
 			"headless_collections.key",
@@ -149,7 +179,6 @@ const getMultiple = async (
 		)
 		.select([
 			"title_translations.value as title_translation_value",
-			"excerpt_translations.value as excerpt_translation_value",
 			"headless_collections.slug as collection_slug",
 			"headless_users.id as author_id",
 			"headless_users.email as author_email",
@@ -157,10 +186,10 @@ const getMultiple = async (
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
+		.where("headless_collection_multiple_page.id", "in", validParentIds)
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",
-			"excerpt_translations.value",
 			"headless_collections.slug",
 			"headless_users.id",
 		]);
@@ -191,16 +220,6 @@ const getMultiple = async (
 						tableKey: "collection_key",
 						operator: "=",
 					},
-					{
-						queryKey: "slug",
-						tableKey: "slug",
-						operator: "%",
-					},
-					{
-						queryKey: "full_slug",
-						tableKey: "full_slug",
-						operator: "%",
-					},
 				],
 				sorts: [
 					{
@@ -214,10 +233,6 @@ const getMultiple = async (
 					{
 						queryKey: "updated_at",
 						tableKey: "updated_at",
-					},
-					{
-						queryKey: "published_at",
-						tableKey: "published_at",
 					},
 				],
 			},
@@ -235,4 +250,4 @@ const getMultiple = async (
 	};
 };
 
-export default getMultiple;
+export default getMultipleValidParents;

@@ -4,6 +4,18 @@ import multiplePage from "../../../controllers/multiple-page/index.js";
 
 const multiplePageRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
+		method: "get",
+		url: "/:id/valid-parents",
+		middleware: {
+			authenticate: true,
+			contentLanguage: true,
+		},
+		swaggerSchema: multiplePage.getMultipleValidParents.swaggerSchema,
+		zodSchema: multiplePage.getMultipleValidParents.zodSchema,
+		controller: multiplePage.getMultipleValidParents.controller,
+	});
+
+	r(fastify, {
 		method: "post",
 		url: "",
 		permissions: ["create_content"],

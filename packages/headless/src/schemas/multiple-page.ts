@@ -134,4 +134,30 @@ export default {
 		params: undefined,
 		body: undefined,
 	},
+	getMultipleValidParents: {
+		query: z.object({
+			filter: z
+				.object({
+					collection_key: z.string().optional(),
+					title: z.string().optional(),
+				})
+				.optional(),
+			sort: z
+				.array(
+					z.object({
+						key: z.enum(["created_at", "updated_at", "title"]),
+						value: z.enum(["asc", "desc"]),
+					}),
+				)
+				.optional(),
+			include: defaultQuery.include,
+			exclude: defaultQuery.exclude,
+			page: defaultQuery.page,
+			per_page: defaultQuery.per_page,
+		}),
+		params: z.object({
+			id: z.string(),
+		}),
+		body: undefined,
+	},
 };
