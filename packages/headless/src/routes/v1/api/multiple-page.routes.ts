@@ -21,6 +21,7 @@ const multiplePageRoutes = async (fastify: FastifyInstance) => {
 		url: "/:id",
 		middleware: {
 			authenticate: true,
+			contentLanguage: true,
 		},
 		swaggerSchema: multiplePage.getSingle.swaggerSchema,
 		zodSchema: multiplePage.getSingle.zodSchema,

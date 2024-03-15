@@ -4,9 +4,12 @@ import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import multiplePageSchema from "../../schemas/multiple-page.js";
 import formatMultiplePage from "../../format/format-multiple-page.js";
+import collectionBricksServices from "../collection-bricks/index.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
+	language_id: number;
 	query: z.infer<typeof multiplePageSchema.getSingle.query>;
 }
 
@@ -98,6 +101,17 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			}),
 			status: 404,
 		});
+	}
+
+	if (data.query.include?.includes("bricks")) {
+		await serviceWrapper(collectionBricksServices.getMultiple, false)(
+			serviceConfig,
+			{
+				id: data.id,
+				type: "multiple-page",
+				language_id: data.language_id,
+			},
+		);
 	}
 
 	return formatMultiplePage(page);

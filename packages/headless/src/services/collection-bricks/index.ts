@@ -4,6 +4,7 @@ import getExistingIds from "./get-existing-ids.js";
 import upsertMultipleGroups from "./upsert-multiple-groups.js";
 import upsertMultipleFields from "./upsert-multiple-fields.js";
 import deleteMultipleBricks from "./delete-multiple-bricks.js";
+import getMultiple from "./get-multiple.js";
 
 export default {
 	checks,
@@ -12,4 +13,5 @@ export default {
 	upsertMultipleGroups,
 	upsertMultipleFields,
 	deleteMultipleBricks,
+	getMultiple,
 };

@@ -16,6 +16,7 @@ export interface PagesResT {
 	}[];
 	slug: string | null;
 	full_slug: string | null;
+	collection_slug: string | null;
 
 	homepage: boolean;
 

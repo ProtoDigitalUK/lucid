@@ -44,6 +44,7 @@ const formatmultiplePage = (page: PageT): PagesResT => {
 		excerpt_translations: page.excerpt_translations,
 		slug: formatPageSlug(page.slug),
 		full_slug: formatPageSlug(page.full_slug),
+		collection_slug: page.collection_slug, // TODO: should be appended to full_slug
 		homepage: page.homepage ?? false,
 		created_by: page.created_by,
 		created_at: page.created_at?.toISOString() || null,
@@ -98,6 +99,10 @@ export const swaggermultiplePageRes = {
 			nullable: true,
 		},
 		full_slug: {
+			type: "string",
+			nullable: true,
+		},
+		collection_slug: {
 			type: "string",
 			nullable: true,
 		},

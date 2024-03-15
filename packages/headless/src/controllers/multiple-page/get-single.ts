@@ -20,6 +20,7 @@ const getSingleController: ControllerT<
 		{
 			id: parseInt(request.params.id),
 			query: request.query,
+			language_id: request.language.id,
 		},
 	);
 
