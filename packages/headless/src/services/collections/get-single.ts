@@ -25,14 +25,14 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"disable_parents",
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_collections_bricks")
+					.selectFrom("headless_collections_assigned_bricks")
 					.select([
-						"headless_collections_bricks.key",
-						"headless_collections_bricks.type",
-						"headless_collections_bricks.position",
+						"headless_collections_assigned_bricks.key",
+						"headless_collections_assigned_bricks.type",
+						"headless_collections_assigned_bricks.position",
 					])
 					.whereRef(
-						"headless_collections_bricks.collection_key",
+						"headless_collections_assigned_bricks.collection_key",
 						"=",
 						"headless_collections.key",
 					),
