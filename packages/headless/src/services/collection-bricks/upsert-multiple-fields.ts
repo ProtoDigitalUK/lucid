@@ -1,5 +1,3 @@
-import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import formatUpsertFields from "../../format/format-upsert-fields.js";
 import type { GroupsResT } from "./upsert-multiple-groups.js";
