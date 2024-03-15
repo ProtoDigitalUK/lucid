@@ -1,6 +1,6 @@
 import type { MediaResT, MediaTypeT } from "@headless/types/src/media.js";
 
-const createURL = (host: string, key: string) => {
+export const createURL = (host: string, key: string) => {
 	return `${host}/cdn/v1/${key}`;
 };
 

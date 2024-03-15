@@ -3,7 +3,6 @@ import type {
 	BrickConfigOptionsT,
 	FieldTypes,
 } from "../../headless/src/builders/brick-builder/index.js";
-import type { CollectionBrickT } from "../../db/src/models/CollectionBrick.js";
 import type { MediaTypeT } from "./media.js";
 
 export interface BrickConfigT {
@@ -16,17 +15,13 @@ export interface BrickConfigT {
 export type CustomFieldT = CustomField;
 export type FieldTypesT = FieldTypes;
 
-// Format brick
-
 export type BrickFieldValueT =
 	| string
 	| number
 	| boolean
 	| null
 	| undefined
-	| {
-			[key: string]: unknown;
-	  }
+	| Record<string, unknown>
 	| LinkValueT
 	| MediaValueT
 	| PageLinkValueT;
@@ -34,15 +29,15 @@ export type BrickFieldValueT =
 export type BrickFieldMetaT = null | undefined | MediaMetaT | PageLinkMetaT;
 
 export interface BrickResT {
-	id: CollectionBrickT["id"];
-	key: CollectionBrickT["brick_key"];
-	order: CollectionBrickT["brick_order"];
-	type: CollectionBrickT["brick_type"];
+	id: number;
+	key: string;
+	order: number;
+	type: "builder" | "fixed";
 	groups: Array<{
 		group_id: number;
-		group_order: number | null;
+		group_order: number;
 		parent_group_id: number | null;
-		repeater_key: string | null;
+		repeater_key: string;
 		language_id: number;
 	}>;
 	fields: Array<{
@@ -64,6 +59,12 @@ export interface PageLinkValueT {
 
 export interface PageLinkMetaT {
 	slug?: string;
+	full_slug?: string;
+	collection_slug?: string;
+	title_translations?: Array<{
+		value: string | null;
+		language_id: number | null;
+	}>;
 }
 
 export interface LinkValueT {
@@ -82,7 +83,13 @@ export interface MediaMetaT {
 	file_size?: number;
 	width?: number;
 	height?: number;
-	name?: string;
-	alt?: string;
+	title_translations?: Array<{
+		value: string | null;
+		language_id: number | null;
+	}>;
+	alt_translations?: Array<{
+		value: string | null;
+		language_id: number | null;
+	}>;
 	type?: MediaTypeT;
 }

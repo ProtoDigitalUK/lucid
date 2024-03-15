@@ -7,7 +7,7 @@ import {
 import multiplePageServices from "../../services/multiple-page/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggermultiplePageRes } from "../../format/format-multiple-page.js";
+import { swaggerMultiplePageRes } from "../../format/format-multiple-page.js";
 
 const getMultipleController: ControllerT<
 	typeof multiplePageSchema.getMultiple.params,
@@ -48,7 +48,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggermultiplePageRes,
+					items: swaggerMultiplePageRes,
 				},
 				paginated: true,
 			}),

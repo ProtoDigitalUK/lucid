@@ -1,4 +1,6 @@
 import type { PagesResT } from "@headless/types/src/multiple-page.js";
+import { swaggerBrickRes } from "./format-bricks.js";
+import { BrickResT } from "@headless/types/src/bricks.js";
 
 interface PageT {
 	id: number;
@@ -35,24 +37,24 @@ interface PageT {
 	author_username: string | null;
 }
 
-const formatmultiplePage = (page: PageT): PagesResT => {
+const formatMultiplePage = (page: PageT, bricks?: BrickResT[]): PagesResT => {
 	const res: PagesResT = {
 		id: page.id,
 		parent_id: page.parent_id,
 		collection_key: page.collection_key,
 		title_translations: page.title_translations,
 		excerpt_translations: page.excerpt_translations,
-		slug: formatPageSlug(page.slug),
-		full_slug: formatPageSlug(page.full_slug),
-		collection_slug: page.collection_slug, // TODO: should be appended to full_slug
+		slug: page.slug,
+		full_slug: formatPageFullSlug(page.full_slug, page.collection_slug),
+		collection_slug: page.collection_slug,
 		homepage: page.homepage ?? false,
+		bricks: bricks || [],
 		created_by: page.created_by,
 		created_at: page.created_at?.toISOString() || null,
 		updated_at: page.updated_at?.toISOString() || null,
 		published: page.published ?? false,
 		published_at: page.published_at?.toISOString() || null,
 		author: null,
-		// bricks: []
 	};
 
 	if (page.author_id) {
@@ -74,13 +76,21 @@ const formatmultiplePage = (page: PageT): PagesResT => {
 	return res;
 };
 
-export const formatPageSlug = (slug: string | null) => {
-	if (!slug) return null;
+export const formatPageFullSlug = (
+	full_slug: string | null,
+	collection_slug: string | null,
+) => {
+	let slug = null;
+
+	if (!full_slug) return slug;
+	if (collection_slug !== null) slug = [collection_slug, full_slug].join("/");
+	else slug = full_slug;
+
 	if (!slug.startsWith("/")) return `/${slug}`;
 	return slug;
 };
 
-export const swaggermultiplePageRes = {
+export const swaggerMultiplePageRes = {
 	type: "object",
 	properties: {
 		id: {
@@ -173,6 +183,10 @@ export const swaggermultiplePageRes = {
 				type: "number",
 			},
 		},
+		bricks: {
+			type: "array",
+			items: swaggerBrickRes,
+		},
 		created_by: {
 			type: "number",
 			nullable: true,
@@ -196,4 +210,4 @@ export const swaggermultiplePageRes = {
 	},
 };
 
-export default formatmultiplePage;
+export default formatMultiplePage;

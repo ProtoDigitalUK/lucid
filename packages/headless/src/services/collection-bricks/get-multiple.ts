@@ -1,14 +1,17 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
-import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import getConfig from "../config.js";
+import collectionsServices from "../collections/index.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import formatBricks from "../../format/format-bricks.js";
 
 export interface ServiceData {
 	id: number;
 	type: "multiple-page" | "single-page";
 	language_id: number;
+	collection_key: string;
 }
 
 const getMultiple = async (
@@ -94,12 +97,12 @@ const getMultiple = async (
 						).as("page_title_translations"),
 						// Media fields
 						"headless_media.key as media_key",
-						"headless_media.mime_type",
-						"headless_media.file_extension",
-						"headless_media.file_size",
-						"headless_media.width",
-						"headless_media.height",
-						"headless_media.type",
+						"headless_media.mime_type as media_mime_type",
+						"headless_media.file_extension as media_file_extension",
+						"headless_media.file_size as media_file_size",
+						"headless_media.width as media_width",
+						"headless_media.height as media_height",
+						"headless_media.type as media_type",
 						jsonArrayFrom(
 							eb
 								.selectFrom("headless_translations")
@@ -160,13 +163,21 @@ const getMultiple = async (
 		);
 	}
 
-	const bricks = await brickFieldsQuery.execute();
+	const [bricks, collection, config] = await Promise.all([
+		brickFieldsQuery.execute(),
+		serviceWrapper(collectionsServices.getSingle, false)(serviceConfig, {
+			key: data.collection_key,
+			type: data.type,
+		}),
+		getConfig(),
+	]);
 
-	for (const brick of bricks) {
-		for (const field of brick.fields) {
-			console.log(field);
-		}
-	}
+	return formatBricks({
+		bricks: bricks,
+		collection: collection,
+		brick_instances: config.bricks || [],
+		host: config.host,
+	});
 };
 
 export default getMultiple;

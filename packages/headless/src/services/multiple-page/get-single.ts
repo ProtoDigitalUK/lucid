@@ -9,7 +9,7 @@ import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
-	language_id: number;
+	language_id?: number;
 	query: z.infer<typeof multiplePageSchema.getSingle.query>;
 }
 
@@ -90,7 +90,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		.where("headless_collection_multiple_page.id", "=", data.id)
 		.executeTakeFirst();
 
-	if (page === undefined) {
+	if (page === undefined || page.collection_key === null) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {
@@ -103,15 +103,17 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	if (data.query.include?.includes("bricks")) {
-		await serviceWrapper(collectionBricksServices.getMultiple, false)(
-			serviceConfig,
-			{
-				id: data.id,
-				type: "multiple-page",
-				language_id: data.language_id,
-			},
-		);
+	if (data.query.include?.includes("bricks") && data.language_id) {
+		const bricks = await serviceWrapper(
+			collectionBricksServices.getMultiple,
+			false,
+		)(serviceConfig, {
+			id: data.id,
+			type: "multiple-page",
+			language_id: data.language_id,
+			collection_key: page.collection_key,
+		});
+		return formatMultiplePage(page, bricks);
 	}
 
 	return formatMultiplePage(page);
