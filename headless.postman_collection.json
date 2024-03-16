@@ -369,6 +369,66 @@
 			]
 		},
 		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"stand2ard@headless.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [1]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Collections",
 			"item": [
 				{
@@ -1193,7 +1253,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    // \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"role_ids\": [1]\r\n}",
+							"raw": "{\r\n    // \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"role_ids\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

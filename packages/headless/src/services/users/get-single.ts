@@ -7,10 +7,7 @@ export interface ServiceData {
 	user_id: number;
 }
 
-const getAuthenticatedUser = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
+const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const user = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select((eb) => [
@@ -30,7 +27,7 @@ const getAuthenticatedUser = async (
 						"headless_roles.id",
 						"headless_user_roles.role_id",
 					)
-					.select([
+					.select((eb) => [
 						"headless_roles.id",
 						"headless_roles.name",
 						"headless_roles.description",
@@ -38,14 +35,14 @@ const getAuthenticatedUser = async (
 							eb
 								.selectFrom("headless_role_permissions")
 								.select(["permission"])
-								// @ts-ignore
-								.whereRef("role_id", "=", "headless_roles.id"), // ignore: query works as expected
+								.whereRef("role_id", "=", "headless_roles.id"),
 						).as("permissions"),
 					])
 					.whereRef("user_id", "=", "headless_users.id"),
 			).as("roles"),
 		])
 		.where("id", "=", data.user_id)
+		.where("is_deleted", "=", false)
 		.executeTakeFirst();
 
 	if (!user) {
@@ -64,4 +61,4 @@ const getAuthenticatedUser = async (
 	return formatUser(user);
 };
 
-export default getAuthenticatedUser;
+export default getSingle;

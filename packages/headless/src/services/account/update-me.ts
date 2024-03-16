@@ -1,6 +1,8 @@
 import T from "../../translations/index.js";
 import { type FastifyRequest } from "fastify";
 import { APIError } from "../../utils/app/error-handler.js";
+import usersService from "../users/index.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
@@ -45,6 +47,15 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					.where("username", "=", data.username)
 					.where("id", "!=", data.auth.id)
 					.executeTakeFirst()
+			: undefined,
+		data.role_ids !== undefined
+			? serviceWrapper(usersService.checks.checkRolesExist, false)(
+					serviceConfig,
+					{
+						role_ids: data.role_ids,
+						is_create: false,
+					},
+			  )
 			: undefined,
 	]);
 
@@ -96,15 +107,15 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	// TODO: send email to user to confirm email change
 
-	// EXIT OUT IF USER IS NOT SUPER ADMIN
 	if (getUser.super_admin === false) return;
-
 	if (data.role_ids === undefined) return;
 
 	await serviceConfig.db
 		.deleteFrom("headless_user_roles")
 		.where("user_id", "=", data.auth.id)
 		.execute();
+
+	if (data.role_ids.length === 0) return;
 
 	await serviceConfig.db
 		.insertInto("headless_user_roles")

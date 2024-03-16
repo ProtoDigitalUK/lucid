@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS headless_users (
   last_name TEXT,
   password TEXT NOT NULL,
 
-  is_deletet BOOLEAN DEFAULT FALSE,
+  is_deleted BOOLEAN DEFAULT FALSE,
   is_deleted_at TIMESTAMP,
 
   created_at TIMESTAMP DEFAULT NOW(),

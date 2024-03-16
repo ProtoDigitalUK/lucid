@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import r from "../../../utils/app/route.js";
 import emails from "../../../controllers/email/index.js";
 
-const roleRoutes = async (fastify: FastifyInstance) => {
+const emailsRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "get",
 		url: "/:id",
@@ -53,4 +53,4 @@ const roleRoutes = async (fastify: FastifyInstance) => {
 	});
 };
 
-export default roleRoutes;
+export default emailsRoutes;

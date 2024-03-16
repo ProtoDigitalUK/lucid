@@ -3,7 +3,7 @@ import { type FastifyRequest, type FastifyReply } from "fastify";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
-import account from "../account/index.js";
+import usersServices from "../users/index.js";
 
 import { APIError } from "../../utils/app/error-handler.js";
 
@@ -17,7 +17,7 @@ export const generateAccessToken = async (
 	try {
 		const config = await getConfig();
 
-		const user = await account.getAuthenticatedUser(
+		const user = await usersServices.getSingle(
 			{
 				db: request.server.db,
 			},

@@ -1,21 +1,21 @@
-import accountSchema from "../../schemas/account.js";
+import usersSchema from "../../schemas/users.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import buildResponse from "../../utils/app/build-response.js";
 import usersServices from "../../services/users/index.js";
-import { swaggerUsersRes } from "../../format/format-user.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import buildResponse from "../../utils/app/build-response.js";
+import { swaggerUsersRes } from "../../format/format-user.js";
 
-const getMeController: ControllerT<
-	typeof accountSchema.getMe.params,
-	typeof accountSchema.getMe.body,
-	typeof accountSchema.getMe.query
+const getSingleController: ControllerT<
+	typeof usersSchema.getSingle.params,
+	typeof usersSchema.getSingle.body,
+	typeof usersSchema.getSingle.query
 > = async (request, reply) => {
 	const user = await serviceWrapper(usersServices.getSingle, false)(
 		{
 			db: request.server.db,
 		},
 		{
-			user_id: request.auth.id,
+			user_id: parseInt(request.params.id),
 		},
 	);
 
@@ -27,12 +27,12 @@ const getMeController: ControllerT<
 };
 
 export default {
-	controller: getMeController,
-	zodSchema: accountSchema.getMe,
+	controller: getSingleController,
+	zodSchema: usersSchema.getSingle,
 	swaggerSchema: {
-		description: "Returns user data based on the authenticated user",
-		tags: ["account"],
-		summary: "Returns user data based on the authenticated user",
+		description: "Get a single user.",
+		tags: ["users"],
+		summary: "Get a single user.",
 		response: {
 			200: swaggerResponse({
 				type: 200,

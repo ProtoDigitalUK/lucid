@@ -21,4 +21,11 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	getSingle: {
+		body: undefined,
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 };

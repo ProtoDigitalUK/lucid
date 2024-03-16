@@ -10,13 +10,14 @@ export interface ServiceData {
 const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const user = await serviceConfig.db
 		.selectFrom("headless_users")
-		.select(["id", "password"])
+		.select(["id", "password", "is_deleted"])
 		.where((eb) =>
 			eb.or([
 				eb("username", "=", data.username_or_email),
 				eb("email", "=", data.username_or_email),
 			]),
 		)
+		.where("is_deleted", "=", false)
 		.executeTakeFirst();
 
 	if (!user || !user.password) {
@@ -24,6 +25,15 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),
+			status: 401,
+		});
+	}
+
+	if (user !== undefined && user.is_deleted === true) {
+		throw new APIError({
+			type: "authorisation",
+			name: T("login_error_name"),
+			message: T("login_suspended_error_message"),
 			status: 401,
 		});
 	}
