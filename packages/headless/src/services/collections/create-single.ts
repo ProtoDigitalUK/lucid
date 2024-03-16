@@ -96,7 +96,7 @@ const createSingle = async (
 	}
 
 	await serviceConfig.db
-		.insertInto("headless_collections_assigned_bricks")
+		.insertInto("headless_collection_assigned_bricks")
 		.values(
 			data.bricks.map((b) => ({
 				collection_key: collection.key,

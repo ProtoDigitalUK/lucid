@@ -34,14 +34,14 @@ const getMultiple = async (
 		collectionQuery = collectionQuery.select((eb) => [
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_collections_assigned_bricks")
+					.selectFrom("headless_collection_assigned_bricks")
 					.select([
-						"headless_collections_assigned_bricks.key",
-						"headless_collections_assigned_bricks.type",
-						"headless_collections_assigned_bricks.position",
+						"headless_collection_assigned_bricks.key",
+						"headless_collection_assigned_bricks.type",
+						"headless_collection_assigned_bricks.position",
 					])
 					.whereRef(
-						"headless_collections_assigned_bricks.collection_key",
+						"headless_collection_assigned_bricks.collection_key",
 						"=",
 						"headless_collections.key",
 					),

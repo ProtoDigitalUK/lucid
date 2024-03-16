@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS headless_collections (
 CREATE TYPE headless_collection_brick_type AS ENUM ('builder', 'fixed');
 CREATE TYPE headless_collection_brick_position AS ENUM ('bottom', 'top', 'sidebar');
 
-CREATE TABLE IF NOT EXISTS headless_collections_assigned_bricks (
+CREATE TABLE IF NOT EXISTS headless_collection_assigned_bricks (
     id SERIAL PRIMARY KEY,
     collection_key TEXT REFERENCES headless_collections(key) ON DELETE CASCADE,
     key TEXT NOT NULL,
