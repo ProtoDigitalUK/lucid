@@ -108,6 +108,7 @@ const getMultiple = async (
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
+		.where("headless_collection_multiple_page.is_deleted", "=", false)
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",
@@ -157,6 +158,7 @@ const getMultiple = async (
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
+		.where("headless_collection_multiple_page.is_deleted", "=", false)
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",

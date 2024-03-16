@@ -52,7 +52,9 @@ const getMultipleValidParents = async (
 			: ""
 	}
     AND NOT p.id IN (SELECT id FROM descendants)
-    AND NOT p.homepage;`)
+    AND NOT p.homepage
+    AND NOT p.is_deleted
+    AND p.slug IS NOT NULL;`)
 		.execute(serviceConfig.db);
 
 	if (validParents.rows.length === 0) {
@@ -148,6 +150,7 @@ const getMultipleValidParents = async (
 			"headless_users.username as author_username",
 		])
 		.where("headless_collection_multiple_page.id", "in", validParentIds)
+		.where("headless_collection_multiple_page.is_deleted", "=", false)
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",
@@ -187,6 +190,7 @@ const getMultipleValidParents = async (
 			"headless_users.username as author_username",
 		])
 		.where("headless_collection_multiple_page.id", "in", validParentIds)
+		.where("headless_collection_multiple_page.is_deleted", "=", false)
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",

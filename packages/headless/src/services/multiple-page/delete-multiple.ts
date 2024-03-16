@@ -1,7 +1,5 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import translationsServices from "../translations/index.js";
 
 export interface ServiceData {
 	ids: number[];
@@ -14,9 +12,15 @@ const deleteMultiple = async (
 	if (data.ids.length === 0) return;
 
 	const deletePages = await serviceConfig.db
-		.deleteFrom("headless_collection_multiple_page")
+		.updateTable("headless_collection_multiple_page")
+		.set({
+			is_deleted: true,
+			is_deleted_at: new Date(),
+			slug: null,
+			full_slug: null,
+		})
 		.where("id", "in", data.ids)
-		.returning(["title_translation_key_id", "excerpt_translation_key_id"])
+		.returning("id")
 		.execute();
 
 	if (deletePages.length === 0) {
@@ -31,16 +35,6 @@ const deleteMultiple = async (
 			status: 500,
 		});
 	}
-
-	await serviceWrapper(translationsServices.deleteMultiple, false)(
-		serviceConfig,
-		{
-			ids: deletePages.flatMap((page) => [
-				page.title_translation_key_id,
-				page.excerpt_translation_key_id,
-			]),
-		},
-	);
 };
 
 export default deleteMultiple;

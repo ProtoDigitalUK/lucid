@@ -25,6 +25,7 @@ const checkSlugIsUnique = async (
 		.selectFrom("headless_collection_multiple_page")
 		.where("collection_key", "=", data.collection_key)
 		.where("slug", "=", slugValue)
+		.where("is_deleted", "=", false)
 		.executeTakeFirst();
 
 	if (slugExists !== undefined) {

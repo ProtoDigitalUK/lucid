@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS headless_users (
   last_name TEXT,
   password TEXT NOT NULL,
 
-  delete BOOLEAN DEFAULT FALSE, -- Marked for deletion. Will be deleted on after 30 days.
-  deleted_at TIMESTAMP, -- When the user was marked for deletion.
+  is_deletet BOOLEAN DEFAULT FALSE,
+  is_deleted_at TIMESTAMP,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

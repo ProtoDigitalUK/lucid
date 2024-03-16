@@ -1,7 +1,5 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import translationsServices from "../translations/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -12,9 +10,15 @@ const deleteSingle = async (
 	data: ServiceData,
 ) => {
 	const deletePage = await serviceConfig.db
-		.deleteFrom("headless_collection_multiple_page")
+		.updateTable("headless_collection_multiple_page")
+		.set({
+			is_deleted: true,
+			is_deleted_at: new Date(),
+			slug: null,
+			full_slug: null,
+		})
 		.where("id", "=", data.id)
-		.returning(["title_translation_key_id", "excerpt_translation_key_id"])
+		.returning("id")
 		.executeTakeFirst();
 
 	if (deletePage === undefined) {
@@ -29,16 +33,6 @@ const deleteSingle = async (
 			status: 500,
 		});
 	}
-
-	await serviceWrapper(translationsServices.deleteMultiple, false)(
-		serviceConfig,
-		{
-			ids: [
-				deletePage.title_translation_key_id,
-				deletePage.excerpt_translation_key_id,
-			],
-		},
-	);
 };
 
 export default deleteSingle;

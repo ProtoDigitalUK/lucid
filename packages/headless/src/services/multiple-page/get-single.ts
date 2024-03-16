@@ -88,6 +88,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"headless_users.username as author_username",
 		])
 		.where("headless_collection_multiple_page.id", "=", data.id)
+		.where("headless_collection_multiple_page.is_deleted", "=", false)
 		.executeTakeFirst();
 
 	if (page === undefined || page.collection_key === null) {

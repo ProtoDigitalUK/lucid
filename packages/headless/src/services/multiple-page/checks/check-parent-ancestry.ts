@@ -2,6 +2,11 @@ import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
 import { sql } from "kysely";
 
+/*
+    Checks:
+    - If the parent is a child of the page
+*/
+
 export interface ServiceData {
 	page_id: number;
 	parent_id?: number | null;
