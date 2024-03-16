@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_multiple_page (
     published_at TIMESTAMP,
     author_id INT REFERENCES headless_users(id) ON DELETE SET NULL,
     created_by INT REFERENCES headless_users(id) ON DELETE SET NULL,
+    updated_by INT REFERENCES headless_users(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );

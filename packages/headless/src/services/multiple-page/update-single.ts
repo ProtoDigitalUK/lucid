@@ -140,6 +140,7 @@ const updateSingle = async (
 				published: data.published,
 				parent_id: parentId,
 				updated_at: new Date(),
+				published_at: data.published ? new Date() : null,
 			})
 			.where("id", "=", data.id)
 			.returning("id")
