@@ -49,6 +49,76 @@ export const BrickSchema = z.object({
 });
 export type BrickObjectT = z.infer<typeof BrickSchema>;
 
+export const swaggerBodyBricksObj = {
+	type: "object",
+	properties: {
+		id: {
+			type: ["number", "string"],
+		},
+		key: {
+			type: "string",
+		},
+		order: {
+			type: "number",
+		},
+		type: {
+			type: "string",
+		},
+		groups: {
+			type: "array",
+			items: {
+				type: "object",
+				properties: {
+					group_id: {
+						type: ["number", "string"],
+					},
+					group_order: {
+						type: "number",
+					},
+					parent_group_id: {
+						type: ["number", "string"],
+						nullable: true,
+					},
+					repeater_key: {
+						type: "string",
+					},
+					language_id: {
+						type: "number",
+					},
+				},
+			},
+		},
+		fields: {
+			type: "array",
+			items: {
+				type: "object",
+				properties: {
+					key: {
+						type: "string",
+					},
+					type: {
+						type: "string",
+					},
+					value: {
+						type: ["number", "string", "boolean", "object", "null"],
+						nullable: true,
+					},
+					language_id: {
+						type: "number",
+					},
+					fields_id: {
+						type: "number",
+					},
+					group_id: {
+						type: ["number", "string"],
+						nullable: true,
+					},
+				},
+			},
+		},
+	},
+};
+
 export default {
 	getAll: {
 		body: undefined,
