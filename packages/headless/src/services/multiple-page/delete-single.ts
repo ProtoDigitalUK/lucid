@@ -17,7 +17,7 @@ const deleteSingle = async (
 			is_deleted_at: new Date(),
 			slug: null,
 			full_slug: null,
-			updated_by: data.user_id,
+			deleted_by: data.user_id,
 		})
 		.where("id", "=", data.id)
 		.returning("id")

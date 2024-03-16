@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS headless_users (
 
   is_deleted BOOLEAN DEFAULT FALSE,
   is_deleted_at TIMESTAMP,
+  deleted_by INT REFERENCES headless_users(id) ON DELETE SET NULL,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

@@ -19,7 +19,7 @@ const deleteMultiple = async (
 			is_deleted_at: new Date(),
 			slug: null,
 			full_slug: null,
-			updated_by: data.user_id,
+			deleted_by: data.user_id,
 		})
 		.where("id", "in", data.ids)
 		.returning("id")
