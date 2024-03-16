@@ -69,6 +69,9 @@ export default {
 				{
 					key: "title",
 				},
+				{
+					key: "category_id",
+				},
 			],
 			sorts: ["created_at", "updated_at", "title"],
 			page: true,

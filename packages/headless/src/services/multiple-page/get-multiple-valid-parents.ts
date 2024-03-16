@@ -130,6 +130,13 @@ const getMultipleValidParents = async (
 				)
 				.on("title_translations.language_id", "=", data.language_id),
 		)
+		.leftJoin("headless_collection_multiple_page_categories", (join) =>
+			join.onRef(
+				"headless_collection_multiple_page_categories.collection_multiple_page_id",
+				"=",
+				"headless_collection_multiple_page.id",
+			),
+		)
 		.innerJoin(
 			"headless_collections",
 			"headless_collections.key",
@@ -169,6 +176,13 @@ const getMultipleValidParents = async (
 					"headless_collection_multiple_page.title_translation_key_id",
 				)
 				.on("title_translations.language_id", "=", data.language_id),
+		)
+		.leftJoin("headless_collection_multiple_page_categories", (join) =>
+			join.onRef(
+				"headless_collection_multiple_page_categories.collection_multiple_page_id",
+				"=",
+				"headless_collection_multiple_page.id",
+			),
 		)
 		.innerJoin(
 			"headless_collections",
@@ -222,6 +236,12 @@ const getMultipleValidParents = async (
 					{
 						queryKey: "collection_key",
 						tableKey: "collection_key",
+						operator: "=",
+					},
+					{
+						queryKey: "category_id",
+						tableKey:
+							"headless_collection_multiple_page_categories.category_id",
 						operator: "=",
 					},
 				],

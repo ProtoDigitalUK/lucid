@@ -111,6 +111,9 @@ export default {
 					title: z.string().optional(),
 					slug: z.string().optional(),
 					full_slug: z.string().optional(),
+					category_id: z
+						.union([z.string(), z.array(z.string())])
+						.optional(),
 				})
 				.optional(),
 			sort: z
@@ -140,6 +143,9 @@ export default {
 				.object({
 					collection_key: z.string().optional(),
 					title: z.string().optional(),
+					category_id: z
+						.union([z.string(), z.array(z.string())])
+						.optional(),
 				})
 				.optional(),
 			sort: z

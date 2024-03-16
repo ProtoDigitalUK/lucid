@@ -387,7 +387,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"slug\": \"dogs\",\n    // \"homepage\": false,\n    \"collection_key\": \"pages\",\n    \"parent_id\": 2,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dogs\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dogs\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+									"raw": "{\n    \"slug\": \"about-us\",\n    // \"homepage\": true,\n    \"collection_key\": \"pages\",\n    // \"parent_id\": 5,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"About us\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"I am the about us page\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -422,7 +422,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/1?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/6",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -431,12 +431,13 @@
 										"v1",
 										"collections",
 										"multiple-page",
-										"1"
+										"6"
 									],
 									"query": [
 										{
 											"key": "include",
-											"value": "bricks"
+											"value": "bricks",
+											"disabled": true
 										}
 									]
 								}
@@ -483,6 +484,11 @@
 											"disabled": true
 										},
 										{
+											"key": "filter[category_id]",
+											"value": "1,2",
+											"disabled": true
+										},
+										{
 											"key": "filter[slug]",
 											"value": "",
 											"disabled": true
@@ -520,7 +526,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/4/valid-parents",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/6/valid-parents",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -529,13 +535,18 @@
 										"v1",
 										"collections",
 										"multiple-page",
-										"4",
+										"6",
 										"valid-parents"
 									],
 									"query": [
 										{
 											"key": "filter[collection_key]",
 											"value": "blogs",
+											"disabled": true
+										},
+										{
+											"key": "filter[category_id]",
+											"value": "1",
 											"disabled": true
 										},
 										{
@@ -571,7 +582,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    // \"title_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"Homepage\"\n    //     }\n    // ],\n    // \"excerpt_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"I am the homepage excerpt\"\n    //     }\n    // ], \n    // \"slug\": \"/about-us\"\n\n    // \"author_id\": 2\n    // \"homepage\": false\n    \"parent_id\": 2\n    // \"category_ids\": [\n    //   2\n    // ]\n}",
+									"raw": "{\n    // \"title_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"Homepage\"\n    //     }\n    // ],\n    // \"excerpt_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"I am the homepage excerpt\"\n    //     }\n    // ], \n    // \"slug\": \"about-us\"\n\n    // \"author_id\": 2\n    // \"homepage\": false\n    // \"parent_id\": 5\n    \"category_ids\": [\n      1\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -579,7 +590,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/3",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/1",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -588,7 +599,7 @@
 										"v1",
 										"collections",
 										"multiple-page",
-										"3"
+										"1"
 									]
 								}
 							},
@@ -651,7 +662,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/2",
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/5",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -660,7 +671,7 @@
 										"v1",
 										"collections",
 										"multiple-page",
-										"2"
+										"5"
 									]
 								}
 							},
@@ -679,7 +690,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"ids\": []\r\n}",
+									"raw": "{\r\n    \"ids\": [\r\n        2\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

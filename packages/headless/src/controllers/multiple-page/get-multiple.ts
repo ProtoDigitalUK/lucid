@@ -70,6 +70,9 @@ export default {
 				{
 					key: "full_slug",
 				},
+				{
+					key: "category_id",
+				},
 			],
 			sorts: ["created_at", "updated_at", "title", "published_at"],
 			page: true,

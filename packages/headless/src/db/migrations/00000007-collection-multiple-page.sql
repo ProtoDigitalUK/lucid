@@ -67,4 +67,4 @@ $$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS trg_headless_collection_multiple_page ON headless_collection_multiple_page;
 CREATE TRIGGER trg_headless_collection_multiple_page AFTER UPDATE OF is_deleted ON headless_collection_multiple_page
-FOR EACH ROW WHEN (OLD.is_deleted IS NOT TRUE AND NEW.is_deleted IS TRUE) EXECUTE FUNCTION on_delete_set_children_parent_to_null();
+FOR EACH ROW WHEN (OLD.is_deleted IS NOT TRUE AND NEW.is_deleted IS TRUE) EXECUTE PROCEDURE on_delete_set_children_parent_to_null();

@@ -88,6 +88,13 @@ const getMultiple = async (
 				)
 				.on("excerpt_translations.language_id", "=", data.language_id),
 		)
+		.leftJoin("headless_collection_multiple_page_categories", (join) =>
+			join.onRef(
+				"headless_collection_multiple_page_categories.collection_multiple_page_id",
+				"=",
+				"headless_collection_multiple_page.id",
+			),
+		)
 		.innerJoin(
 			"headless_collections",
 			"headless_collections.key",
@@ -137,6 +144,13 @@ const getMultiple = async (
 					"headless_collection_multiple_page.excerpt_translation_key_id",
 				)
 				.on("excerpt_translations.language_id", "=", data.language_id),
+		)
+		.leftJoin("headless_collection_multiple_page_categories", (join) =>
+			join.onRef(
+				"headless_collection_multiple_page_categories.collection_multiple_page_id",
+				"=",
+				"headless_collection_multiple_page.id",
+			),
 		)
 		.innerJoin(
 			"headless_collections",
@@ -202,6 +216,12 @@ const getMultiple = async (
 						queryKey: "full_slug",
 						tableKey: "full_slug",
 						operator: "%",
+					},
+					{
+						queryKey: "category_id",
+						tableKey:
+							"headless_collection_multiple_page_categories.category_id",
+						operator: "=",
 					},
 				],
 				sorts: [
