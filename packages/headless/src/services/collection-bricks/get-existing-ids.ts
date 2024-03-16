@@ -19,22 +19,22 @@ const getExistingIds = async (
 			"headless_collection_bricks.id",
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_groups")
+					.selectFrom("headless_collection_groups")
 					.select("group_id")
 					.whereRef(
-						"headless_groups.collection_brick_id",
+						"headless_collection_groups.collection_brick_id",
 						"=",
-						"headless_groups.group_id",
+						"headless_collection_groups.group_id",
 					),
 			).as("groups"),
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_fields")
+					.selectFrom("headless_collection_fields")
 					.select("fields_id")
 					.whereRef(
-						"headless_fields.collection_brick_id",
+						"headless_collection_fields.collection_brick_id",
 						"=",
-						"headless_fields.fields_id",
+						"headless_collection_fields.fields_id",
 					),
 			).as("fields"),
 		]);

@@ -29,22 +29,22 @@ const getMultiple = async (
 			"headless_collection_bricks.brick_order",
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_groups")
+					.selectFrom("headless_collection_groups")
 					.selectAll()
 					.whereRef(
-						"headless_groups.collection_brick_id",
+						"headless_collection_groups.collection_brick_id",
 						"=",
 						"headless_collection_bricks.id",
 					),
 			).as("groups"),
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_fields")
+					.selectFrom("headless_collection_fields")
 					.leftJoin("headless_collection_multiple_page", (join) =>
 						join.onRef(
 							"headless_collection_multiple_page.id",
 							"=",
-							"headless_fields.page_link_id",
+							"headless_collection_fields.page_link_id",
 						),
 					)
 					.leftJoin(
@@ -56,22 +56,22 @@ const getMultiple = async (
 						join.onRef(
 							"headless_media.id",
 							"=",
-							"headless_fields.media_id",
+							"headless_collection_fields.media_id",
 						),
 					)
 					.select((eb) => [
-						"headless_fields.fields_id",
-						"headless_fields.collection_brick_id",
-						"headless_fields.group_id",
-						"headless_fields.language_id",
-						"headless_fields.key",
-						"headless_fields.type",
-						"headless_fields.text_value",
-						"headless_fields.int_value",
-						"headless_fields.bool_value",
-						"headless_fields.json_value",
-						"headless_fields.page_link_id",
-						"headless_fields.media_id",
+						"headless_collection_fields.fields_id",
+						"headless_collection_fields.collection_brick_id",
+						"headless_collection_fields.group_id",
+						"headless_collection_fields.language_id",
+						"headless_collection_fields.key",
+						"headless_collection_fields.type",
+						"headless_collection_fields.text_value",
+						"headless_collection_fields.int_value",
+						"headless_collection_fields.bool_value",
+						"headless_collection_fields.json_value",
+						"headless_collection_fields.page_link_id",
+						"headless_collection_fields.media_id",
 						// Page fields
 						"headless_collection_multiple_page.id as page_id",
 						"headless_collection_multiple_page.slug as page_slug",
@@ -141,7 +141,7 @@ const getMultiple = async (
 						).as("media_alt_translations"),
 					])
 					.whereRef(
-						"headless_fields.collection_brick_id",
+						"headless_collection_fields.collection_brick_id",
 						"=",
 						"headless_collection_bricks.id",
 					),
