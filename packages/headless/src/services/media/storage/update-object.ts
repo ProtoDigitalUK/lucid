@@ -71,8 +71,8 @@ const updateObject = async (
 		if (updateKeyRes.success === false) {
 			throw new APIError({
 				type: "basic",
-				name: T("update_error_message", {
-					name: T("media").toLowerCase(),
+				name: T("error_not_updated_name", {
+					name: T("media"),
 				}),
 				message: updateKeyRes.message,
 				status: 500,

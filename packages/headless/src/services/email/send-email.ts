@@ -70,7 +70,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		if (emailUpdated === undefined) {
 			throw new APIError({
 				type: "basic",
-				name: T("dynamic_error_name", {
+				name: T("error_not_updated_name", {
 					name: T("email"),
 				}),
 				message: T("update_error_message", {

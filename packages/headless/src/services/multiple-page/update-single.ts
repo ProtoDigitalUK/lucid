@@ -68,11 +68,11 @@ const updateSingle = async (
 	) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_created_name", {
+			name: T("error_not_updated_name", {
 				name: T("page"),
 			}),
-			message: T("error_not_created_message", {
-				name: T("page"),
+			message: T("update_error_message", {
+				name: T("page").toLowerCase(),
 			}),
 			status: 400,
 			errors: modelErrors({
@@ -102,6 +102,7 @@ const updateSingle = async (
 				collection_key: page.collection_key,
 				slug: data.slug,
 				homepage: homepage,
+				page_id: data.id,
 			},
 		),
 		serviceWrapper(multiplePageServices.checks.checkParentAncestry, false)(
@@ -193,11 +194,11 @@ const updateSingle = async (
 	if (pageRes === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_created_name", {
+			name: T("error_not_updated_name", {
 				name: T("page"),
 			}),
-			message: T("error_not_created_message", {
-				name: T("page"),
+			message: T("update_error_message", {
+				name: T("page").toLowerCase(),
 			}),
 			status: 500,
 		});

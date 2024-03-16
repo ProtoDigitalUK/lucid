@@ -44,6 +44,7 @@
 	"collection_with_key_not_found": "Collection with key '{{key}}' not found.",
 	"error_already_exists_name": "{{name}} Already Exists",
 	"error_not_created_name": "{{name}} Not Created",
+	"error_not_updated_name": "{{name}} Not Updated",
 	"error_not_created_message": "{{name}} could not be created. Please try again later.",
 	"error_not_min_entries_name": "{{name}} Not Enough Entries",
 	"error_not_min_entries_message": "{{name}} must have at least 1 entry at all times.",

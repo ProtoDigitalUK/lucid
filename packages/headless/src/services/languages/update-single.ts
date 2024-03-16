@@ -22,7 +22,7 @@ const updateSingle = async (
 	) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_updated_name", {
 				name: T("language"),
 			}),
 			message: T("update_error_message", {
@@ -42,7 +42,7 @@ const updateSingle = async (
 		if (language !== undefined) {
 			throw new APIError({
 				type: "basic",
-				name: T("dynamic_error_name", {
+				name: T("error_not_updated_name", {
 					name: T("language"),
 				}),
 				message: T("update_error_message", {
@@ -93,7 +93,7 @@ const updateSingle = async (
 	if (updateLanguage === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_updated_name", {
 				name: T("language"),
 			}),
 			message: T("update_error_message", {

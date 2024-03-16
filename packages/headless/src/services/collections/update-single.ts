@@ -73,7 +73,7 @@ const updateSingle = async (
 	if (updateCollectionRes.numUpdatedRows === 0n) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_updated_name", {
 				name: T("collection"),
 			}),
 			message: T("update_error_message", {

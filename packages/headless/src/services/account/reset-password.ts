@@ -37,7 +37,7 @@ const resetPassword = async (
 	if (user === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_updated_name", {
 				name: T("account"),
 			}),
 			message: T("update_error_message", {
