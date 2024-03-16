@@ -17,7 +17,6 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				eb("email", "=", data.username_or_email),
 			]),
 		)
-		.where("is_deleted", "=", false)
 		.executeTakeFirst();
 
 	if (!user || !user.password) {
