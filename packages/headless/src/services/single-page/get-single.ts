@@ -56,7 +56,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					name: T("page"),
 				}),
 				message: T("creation_error_message", {
-					name: T("page"),
+					name: T("page").toLowerCase(),
 				}),
 				status: 500,
 			});

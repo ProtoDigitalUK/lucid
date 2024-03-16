@@ -56,11 +56,11 @@ const createSingle = async (
 	if (newRoles === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: "Role Error",
+			name: T("error_not_created_name", {
+				name: T("role"),
 			}),
 			message: T("creation_error_message", {
-				name: "role",
+				name: T("role").toLowerCase(),
 			}),
 			status: 500,
 		});

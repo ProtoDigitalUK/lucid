@@ -81,7 +81,7 @@ const createSingle = async (
 	if (collection === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_created_name", {
 				name: T("collection"),
 			}),
 			message: T("creation_error_message", {

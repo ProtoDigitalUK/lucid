@@ -55,7 +55,7 @@ const validatePermissions = async (
 	if (permErrors.length > 0) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_created_name", {
 				name: T("role"),
 			}),
 			message: T("creation_error_message", {

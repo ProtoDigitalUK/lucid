@@ -69,7 +69,7 @@ const createSingle = async (
 	if (slugExists) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_created_name", {
 				name: T("category"),
 			}),
 			message: T("creation_error_message", {
