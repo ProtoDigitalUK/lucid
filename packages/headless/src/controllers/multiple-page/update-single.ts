@@ -26,6 +26,7 @@ const updateSingleController: ControllerT<
 			title_translations: request.body.title_translations,
 			excerpt_translations: request.body.excerpt_translations,
 			bricks: request.body.bricks,
+			user_id: request.auth?.id,
 		},
 	);
 

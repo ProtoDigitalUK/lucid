@@ -104,6 +104,7 @@ const createSingle = async (
 			parent_id: parentId,
 			title_translation_key_id: translationKeys.title,
 			excerpt_translation_key_id: translationKeys.excerpt,
+			updated_by: data.user_id,
 		})
 		.returning("id")
 		.executeTakeFirst();

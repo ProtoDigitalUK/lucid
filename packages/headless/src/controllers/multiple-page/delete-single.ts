@@ -17,6 +17,7 @@ const deleteSingleController: ControllerT<
 		},
 		{
 			id: parseInt(request.params.id),
+			user_id: request.auth.id,
 		},
 	);
 

@@ -17,6 +17,7 @@ const deleteMultipleController: ControllerT<
 		},
 		{
 			ids: request.body.ids,
+			user_id: request.auth.id,
 		},
 	);
 

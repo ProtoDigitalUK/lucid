@@ -3,6 +3,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	id: number;
+	user_id?: number;
 }
 
 const deleteSingle = async (
@@ -16,6 +17,7 @@ const deleteSingle = async (
 			is_deleted_at: new Date(),
 			slug: null,
 			full_slug: null,
+			updated_by: data.user_id,
 		})
 		.where("id", "=", data.id)
 		.returning("id")

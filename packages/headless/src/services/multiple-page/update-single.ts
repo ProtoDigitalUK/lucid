@@ -23,6 +23,7 @@ export interface ServiceData {
 		value: string | null;
 	}[];
 	bricks?: Array<BrickObjectT>;
+	user_id?: number;
 }
 
 const updateSingle = async (
@@ -140,7 +141,8 @@ const updateSingle = async (
 				published: data.published,
 				parent_id: parentId,
 				updated_at: new Date(),
-				published_at: data.published ? new Date() : null,
+				published_at: data.published ? new Date() : undefined,
+				updated_by: data.user_id,
 			})
 			.where("id", "=", data.id)
 			.returning("id")

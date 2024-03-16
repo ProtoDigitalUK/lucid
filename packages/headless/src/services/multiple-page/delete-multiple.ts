@@ -3,6 +3,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
 	ids: number[];
+	user_id?: number;
 }
 
 const deleteMultiple = async (
@@ -18,6 +19,7 @@ const deleteMultiple = async (
 			is_deleted_at: new Date(),
 			slug: null,
 			full_slug: null,
+			updated_by: data.user_id,
 		})
 		.where("id", "in", data.ids)
 		.returning("id")
