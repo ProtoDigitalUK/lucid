@@ -715,8 +715,66 @@
 					]
 				},
 				{
-					"name": "Single Builder",
-					"item": []
+					"name": "Single Page",
+					"item": [
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/single-page/settings",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"single-page",
+										"settings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Single",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 8,\n            \"key\": \"default_meta\",\n            \"order\": 0,\n            \"type\": \"fixed\",\n            \"groups\": [],\n            \"fields\": []\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/single-page/settings",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"single-page",
+										"settings"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Categories",
