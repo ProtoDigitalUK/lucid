@@ -26,6 +26,17 @@ const usersRoutes = async (fastify: FastifyInstance) => {
 		swaggerSchema: users.getSingle.swaggerSchema,
 		controller: users.getSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "",
+		middleware: {
+			authenticate: true,
+		},
+		zodSchema: users.getMultiple.zodSchema,
+		swaggerSchema: users.getMultiple.swaggerSchema,
+		controller: users.getMultiple.controller,
+	});
 };
 
 export default usersRoutes;

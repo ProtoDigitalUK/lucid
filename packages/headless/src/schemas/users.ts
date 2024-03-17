@@ -1,4 +1,5 @@
 import T from "../translations/index.js";
+import defaultQuery from "./default-query.js";
 import z from "zod";
 
 export default {
@@ -27,5 +28,41 @@ export default {
 		params: z.object({
 			id: z.string(),
 		}),
+	},
+	getMultiple: {
+		query: z.object({
+			filter: z
+				.object({
+					first_name: z.string().optional(),
+					last_name: z.string().optional(),
+					email: z.string().optional(),
+					username: z.string().optional(),
+					role_ids: z
+						.union([z.array(z.string()), z.string()])
+						.optional(),
+				})
+				.optional(),
+			sort: z
+				.array(
+					z.object({
+						key: z.enum([
+							"created_at",
+							"updated_at",
+							"first_name",
+							"last_name",
+							"email",
+							"username",
+						]),
+						value: z.enum(["asc", "desc"]),
+					}),
+				)
+				.optional(),
+			include: z.array(z.enum(["permissions"])).optional(),
+			exclude: defaultQuery.exclude,
+			page: defaultQuery.page,
+			per_page: defaultQuery.per_page,
+		}),
+		params: undefined,
+		body: undefined,
 	},
 };

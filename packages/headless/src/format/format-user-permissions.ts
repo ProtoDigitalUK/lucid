@@ -6,7 +6,7 @@ const formatUserPermissions = (
 		id: number;
 		description: string | null;
 		name: string;
-		permissions: {
+		permissions?: {
 			permission: string;
 		}[];
 	}[],
@@ -21,6 +21,7 @@ const formatUserPermissions = (
 	const permissionsSet: Set<PermissionT> = new Set();
 
 	for (const role of roles) {
+		if (!role.permissions) continue;
 		for (const permission of role.permissions) {
 			permissionsSet.add(permission.permission as PermissionT);
 		}

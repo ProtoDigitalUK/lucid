@@ -17,7 +17,7 @@ const formatUser = (user: {
 		id: number;
 		description: string | null;
 		name: string;
-		permissions: {
+		permissions?: {
 			permission: string;
 		}[];
 	}[];
