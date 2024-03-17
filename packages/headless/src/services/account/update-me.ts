@@ -105,27 +105,17 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	// TODO: send email to user to confirm email change
+	// TODO: send email to user to confirm email change ?
 
 	if (getUser.super_admin === false) return;
-	if (data.role_ids === undefined) return;
 
-	await serviceConfig.db
-		.deleteFrom("headless_user_roles")
-		.where("user_id", "=", data.auth.id)
-		.execute();
-
-	if (data.role_ids.length === 0) return;
-
-	await serviceConfig.db
-		.insertInto("headless_user_roles")
-		.values(
-			data.role_ids.map((roleId) => ({
-				user_id: data.auth.id,
-				role_id: roleId,
-			})),
-		)
-		.execute();
+	await serviceWrapper(usersService.updateMultipleRoles, false)(
+		serviceConfig,
+		{
+			user_id: data.auth.id,
+			role_ids: data.role_ids,
+		},
+	);
 };
 
 export default updateMe;

@@ -50,6 +50,19 @@ const usersRoutes = async (fastify: FastifyInstance) => {
 		swaggerSchema: users.deleteSingle.swaggerSchema,
 		controller: users.deleteSingle.controller,
 	});
+
+	r(fastify, {
+		method: "patch",
+		url: "/:id",
+		permissions: ["update_user"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		zodSchema: users.updateSingle.zodSchema,
+		swaggerSchema: users.updateSingle.swaggerSchema,
+		controller: users.updateSingle.controller,
+	});
 };
 
 export default usersRoutes;

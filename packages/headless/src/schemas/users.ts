@@ -22,6 +22,16 @@ export default {
 		query: undefined,
 		params: undefined,
 	},
+	updateSingle: {
+		body: z.object({
+			role_ids: z.array(z.number()).optional(),
+			super_admin: z.boolean().optional(),
+		}),
+		query: undefined,
+		params: z.object({
+			id: z.string(),
+		}),
+	},
 	getSingle: {
 		body: undefined,
 		query: undefined,
