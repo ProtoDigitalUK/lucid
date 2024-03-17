@@ -1,17 +1,16 @@
-// Internal
-import { CollectionConfigT } from "../../core/src/builders/collection-builder/index.js";
-
-export interface CollectionResT extends CollectionConfigT {
-  key: string;
+export interface CollectionResT {
+	key: string;
+	type: "single-page" | "multiple-page";
+	slug: string | null;
+	title: string;
+	singular: string;
+	description: string | null;
+	disable_homepages: boolean | null;
+	disable_parents: boolean | null;
+	bricks?: CollectionBrickConfigT[];
 }
-
-export interface CollectionCategoriesResT {
-  id: number;
-  environment_key: string;
-  collection_key: string;
-  title: string;
-  slug: string;
-  description: string | null;
-  created_at: string;
-  updated_at: string;
+export interface CollectionBrickConfigT {
+	key: string;
+	type: "builder" | "fixed";
+	position: "top" | "bottom" | "sidebar";
 }

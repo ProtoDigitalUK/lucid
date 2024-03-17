@@ -10,58 +10,47 @@ npm install @protodigital/headless
 
 - [Brick Builder]()
 - [Collection Builder]()
-- [Form Builder]()
 
 ## headless.config.ts/js
 
 ```ts
-import { buildConfig } from "@protodigital/headless";
+import { headlessConfig } from "@protodigital/headless";
+import { Banner, Intro, Meta } from "./src/bricks";
+import { Pages, Blogs, Settings } from "./src/collections";
 
-import { ContactForm } from "./src/forms";
-import { Banner, Intro, DefaultMeta } from "./src/bricks";
-import { Pages, Settings } from "./src/collections";
-
-export default buildConfig({
-  host: "http://localhost:8393",
-  origin: "*",
-  mode: "development",
-  postgresURL: process.env.HEADLESS_POSTGRES_URL as string,
-  secret: process.env.HEADLESS_SECRET_KEY as string,
-  email: {
-    from: {
-      name: "Headless CMS",
-      email: "hello@headlesscms.com",
+export default headlessConfig({
+    mode: "development",
+    host: "http://localhost:8393",
+    databaseURL: process.env.DATABASE_URL as string,
+    keys: {
+        cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
+        refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
+        accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
     },
-    templateDir: path.join(
-      dirname(fileURLToPath(import.meta.url)),
-      "./templates"
-    ),
-    smtp: {
-      host: "127.0.0.1",
-      port: 6969,
-      secure: false,
-      user: process.env.HEADLESS_SMPT_USER as string,
-      pass: process.env.HEADLESS_SMPT_PASS as string,
+    email: {
+        from: {
+            email: "admin@protoheadless.com",
+            name: "Proto Headless",
+        },
+        strategy: async (email, meta) => {},
     },
-  },
-  media: {
-    storageLimit: 5368709120,
-    maxFileSize: 20777216,
-    fallbackImage: "https://picsum.photos/600/400", // false to throw 404, undefined for default and URL string for custom
-    processedImageLimit: 10, // the total number of processed images to store per image
-    store: {
-      service: "cloudflare",
-      cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
-      region: process.env.HEADLESS_S3_REGION as string,
-      bucket: process.env.HEADLESS_S3_BUCKET as string,
-      accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
-      secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
+    media: {
+        store: {
+            service: "cloudflare",
+            cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
+            region: process.env.HEADLESS_S3_REGION as string,
+            bucket: process.env.HEADLESS_S3_BUCKET as string,
+            accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
+            secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
+        },
     },
-  },
-  forms: [ContactForm],
-  collections: [Pages, Settings],
-  bricks: [Banner, Intro, DefaultMeta],
+    collections: [Pages, Blogs, Settings],
+    bricks: [Banner, Intro, Meta]
 });
 ```
 
-> Check the example app: [example](https://github.com/ProtoDigitalUK/proto_headless/tree/master/apps/example-esm/headless.config.ts)
+> Check the example app: [example](https://github.com/ProtoDigitalUK/proto_headless/tree/master/apps/headless-example/headless.config.ts)
+
+## Notes
+
+- If you're using Supabase for your database, ensure you're using the session mode.

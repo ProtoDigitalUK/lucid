@@ -1,0 +1,2487 @@
+{
+	"info": {
+		"_postman_id": "cb052863-04a6-42a6-a3d0-d92f2af1977d",
+		"name": "Headless",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20656721"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "CSRF Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var CSRFToken = jsonData.data._csrf;\r",
+									"pm.collectionVariables.set(\"CSRF\", CSRFToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/csrf",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"csrf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username_or_email\": \"admin\",\r\n    \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/token",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/permissions",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Standard\",\r\n    \"description\": \"The standard role\",\r\n    \"permissions\": [\"create_role\", \"update_role\", \"delete_role\", \"update_user\", \"create_user\", \"create_content\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "permissions",
+									"disabled": true
+								},
+								{
+									"key": "filter[name]",
+									"value": "Admin",
+									"disabled": true
+								},
+								{
+									"key": "filter[role_ids]",
+									"value": "1,2",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name,-created_at",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Admin\",\r\n    \"description\": \"The default admin role\",\r\n    \"permissions\": [\"create_role\",  \"update_role\", \"create_content\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"1"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/roles/5",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"5"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"stand2ard@headless.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [1]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role_ids\": [2],\r\n    \"super_admin\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"2"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "filter[first_name]",
+									"value": "page",
+									"disabled": true
+								},
+								{
+									"key": "filter[last_name]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[role_ids]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "filter[email]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[username]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at,updated_at,first_name,last_name,username,email",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/users/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"2"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collections",
+			"item": [
+				{
+					"name": "Multiple Page",
+					"item": [
+						{
+							"name": "Create Single",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"slug\": \"about-us\",\n    // \"homepage\": true,\n    \"collection_key\": \"pages\",\n    // \"parent_id\": 5,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"About us\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"I am the about us page\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "headless-content-lang",
+										"value": "{{HEADLESS_CONTENT_LANG}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/6",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"6"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "bricks",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Multiple",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "headless-content-lang",
+										"value": "{{HEADLESS_CONTENT_LANG}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "created_at",
+											"disabled": true
+										},
+										{
+											"key": "filter[collection_key]",
+											"value": "blogs",
+											"disabled": true
+										},
+										{
+											"key": "filter[title]",
+											"value": "home",
+											"disabled": true
+										},
+										{
+											"key": "filter[category_id]",
+											"value": "1,2",
+											"disabled": true
+										},
+										{
+											"key": "filter[slug]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filter[full_slug]",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "-1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Multiple Valid Parents",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "headless-content-lang",
+										"value": "{{HEADLESS_CONTENT_LANG}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/6/valid-parents",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"6",
+										"valid-parents"
+									],
+									"query": [
+										{
+											"key": "filter[collection_key]",
+											"value": "blogs",
+											"disabled": true
+										},
+										{
+											"key": "filter[category_id]",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "filter[title]",
+											"value": "About us",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "-1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Single",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    // \"title_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"Homepage\"\n    //     }\n    // ],\n    // \"excerpt_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"I am the homepage excerpt\"\n    //     }\n    // ], \n    // \"slug\": \"about-us\"\n\n    // \"author_id\": 2\n    // \"homepage\": false\n    // \"parent_id\": 5\n    \"category_ids\": [\n      1\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/1",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Single (bricks)",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 13,\n            \"key\": \"banner\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"groups\": [\n                {\n                    \"group_id\": \"ref-group1\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 0,\n                    \"language_id\": 1\n                },\n                {\n                    \"group_id\": \"ref-group2\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 1,\n                    \"language_id\": 1\n                },\n                {\n                    \"group_id\": \"ref-group3\",\n                    \"parent_group_id\": \"ref-group2\",\n                    \"repeater_key\": \"social_links_2\",\n                    \"group_order\": 0,\n                    \"language_id\": 1\n                }\n            ],\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"test 2\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<h2>Hello 2</h2>\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"page-link\",\n                    \"type\": \"pagelink\",\n                    \"value\": {\n                        \"id\": 2,\n                        \"target\": \"_blank\",\n                        \"label\": \"Link label\"\n                    },\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group1\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group2\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\",\n                    \"language_id\": 1\n                }\n            ]\n        },\n        {\n            // \"id\": 14,\n            \"key\": \"intro\",\n            \"order\": 1,\n            \"type\": \"builder\",\n            \"fields\": []\n        }\n\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/4",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Single",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page/5",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Multiple",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ids\": [\r\n        2\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/multiple-page",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"multiple-page"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Single Page",
+					"item": [
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/single-page/settings",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"single-page",
+										"settings"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Single",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 8,\n            \"key\": \"default_meta\",\n            \"order\": 0,\n            \"type\": \"fixed\",\n            \"groups\": [],\n            \"fields\": []\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/single-page/settings",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"single-page",
+										"settings"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "Get Multiple",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "headless-content-lang",
+										"value": "{{HEADLESS_CONTENT_LANG}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/categories",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"categories"
+									],
+									"query": [
+										{
+											"key": "filter[slug]",
+											"value": "page-category-2",
+											"disabled": true
+										},
+										{
+											"key": "filter[collection_key]",
+											"value": "pages",
+											"disabled": true
+										},
+										{
+											"key": "filter[title]",
+											"value": "Te",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "title,-created_at",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "-1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/categories/3",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"categories",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Single",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"collection_key\": \"pages\",\n    \"slug\": \"dog\",\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dog\"\n        }\n    ],\n    \"description_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dog Category Description\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/categories",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Single",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/categories/4",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"categories",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Single",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "_csrf",
+										"value": "{{CSRF}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"slug\": \"technology\",\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Tech\"\n        }\n    ],\n    \"description_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": null\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/collections/categories/3",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"collections",
+										"categories",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections/pages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections?per_page=-1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections"
+							],
+							"query": [
+								{
+									"key": "filter[type]",
+									"value": "multiple-page",
+									"disabled": true
+								},
+								{
+									"key": "include",
+									"value": "bricks",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "title,created_at,updated_at",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "-1"
+								}
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"key\": \"pages\",\r\n    // \"slug\": \"/\",\r\n    \"type\": \"multiple-page\",\r\n    \"title\": \"Pages\",\r\n    \"singular\": \"Page\",\r\n    \"description\": \"The pages collection\",\r\n    \"disable_parents\": false,\r\n    \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"title\": \"Pages\",\r\n    // \"singular\": \"Page\",\r\n    // \"description\": \"The pages collection description\",\r\n    // \"disable_parents\": true,\r\n    // \"disable_homepages\": false,\r\n    \"bricks\": [\r\n        {\r\n            \"key\": \"banner\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"intro\",\r\n            \"type\": \"builder\"\r\n        },\r\n        {\r\n            \"key\": \"default_meta\",\r\n            \"type\": \"fixed\",\r\n            \"position\": \"sidebar\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections/pages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/collections/pages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"collections",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Get Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/account",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"account"
+							],
+							"query": [
+								{
+									"key": null,
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Me",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"role_ids\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/account",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"account"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password (send email)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@headless.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/account/reset-password",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password (update password)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/account/reset-password/7eed42d48689a73b3d5c63f573670f86e2f05f6a7cac032add8fbb0ca5f6fa43",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"reset-password",
+								"7eed42d48689a73b3d5c63f573670f86e2f05f6a7cac032add8fbb0ca5f6fa43"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password (verify token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/account/reset-password/f32511d8d8bc9be1fc28e0236d1f3f26872dcb902d78a4fe75e1a0ad69bd598c",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"account",
+								"reset-password",
+								"f32511d8d8bc9be1fc28e0236d1f3f26872dcb902d78a4fe75e1a0ad69bd598c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Languages",
+			"item": [
+				{
+					"name": "Get Multiple",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages?sort=code",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "code"
+								},
+								{
+									"key": "sort",
+									"value": "code,created_at,updated_at",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "-1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/en",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"en"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"en-GB\",\r\n    \"is_default\": true,\r\n    \"is_enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/en-GB",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"en-GB"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/languages/en-GB",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"languages",
+								"en-GB"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Emails",
+			"item": [
+				{
+					"name": "Get Multiple",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails"
+							],
+							"query": [
+								{
+									"key": "filter[to_address]",
+									"value": "admin@williamyallop.com",
+									"disabled": true
+								},
+								{
+									"key": "filter[subject]",
+									"value": "Hello",
+									"disabled": true
+								},
+								{
+									"key": "filter[delivery_status]",
+									"value": "failed",
+									"disabled": true
+								},
+								{
+									"key": "filter[type]",
+									"value": "external,internal",
+									"disabled": true
+								},
+								{
+									"key": "filter[template]",
+									"value": "contact-form",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at,updated_at,sent_count",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails/2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/emails/2/resend",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"emails",
+								"2",
+								"resend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send External Test",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/send-email",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"send-email"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Media",
+			"item": [
+				{
+					"name": "Upload Single",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/williamyallop/Pictures/c817472da039bc8783055d1648617822_Visual_Studio_Code.icns"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media?body={\"title_translations\":[{\"language_id\":1,\"value\":\"title value\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt value\"}]}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media"
+							],
+							"query": [
+								{
+									"key": "body",
+									"value": "{\"title_translations\":[{\"language_id\":1,\"value\":\"title value\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt value\"}]}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/williamyallop/Downloads/logo.png",
+									"disabled": true
+								},
+								{
+									"key": "empty",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/1?body={\"title_translations\":[{\"language_id\":1,\"value\":\"title\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt\"}]}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"1"
+							],
+							"query": [
+								{
+									"key": "body",
+									"value": "{\"title_translations\":[{\"language_id\":1,\"value\":\"title\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt\"}]}"
+								},
+								{
+									"key": "body",
+									"value": "{}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "headless-content-lang",
+								"value": "{{HEADLESS_CONTENT_LANG}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media"
+							],
+							"query": [
+								{
+									"key": "filter[key]",
+									"value": "placeholder-1708801580511",
+									"disabled": true
+								},
+								{
+									"key": "filter[mime_type]",
+									"value": "image/jpeg,image/png",
+									"disabled": true
+								},
+								{
+									"key": "filter[file_extension]",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-title",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "created_at,updated_at,title,file_size,width,height,mime_type,file_extension",
+									"disabled": true
+								},
+								{
+									"key": "filter[type]",
+									"value": "image,video",
+									"disabled": true
+								},
+								{
+									"key": "filter[title]",
+									"value": "Title",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Processed Images Single",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/placeholder-1708801580511/processed",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"placeholder-1708801580511",
+								"processed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Processed Images All",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "_csrf",
+								"value": "{{CSRF}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/media/processed",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"media",
+								"processed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Settings",
+			"item": [
+				{
+					"name": "Get Settings",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/settings",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"settings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CDN",
+			"item": [
+				{
+					"name": "Stream Media",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+								"description": "Accept AVIF Example",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+								"description": "Accept WebP Example",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "image/apng,image/svg+xml,image/*,*/*;q=0.8",
+								"description": "Accept no new formats",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/cdn/v1/logo-1708884843223",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cdn",
+								"v1",
+								"logo-1708884843223"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "png",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stream Media - Fallback",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cdn/v1/en-name-169895d6298714?fallback=1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cdn",
+								"v1",
+								"en-name-169895d6298714"
+							],
+							"query": [
+								{
+									"key": "fallback",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Steam Media - Process",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/cdn/v1/logo-1708884843223?width=200&height=200&format=avif&quality=90",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cdn",
+								"v1",
+								"logo-1708884843223"
+							],
+							"query": [
+								{
+									"key": "width",
+									"value": "200"
+								},
+								{
+									"key": "height",
+									"value": "200"
+								},
+								{
+									"key": "format",
+									"value": "avif"
+								},
+								{
+									"key": "quality",
+									"value": "90"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bricks Config",
+			"item": [
+				{
+					"name": "Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/bricks/config",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bricks",
+								"config"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "fields",
+									"disabled": true
+								},
+								{
+									"key": "filter[collection_key]",
+									"value": "pages",
+									"disabled": true
+								}
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/bricks/config/banner",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bricks",
+								"config",
+								"banner"
+							]
+						},
+						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Public",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/test.txt",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"test.txt"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "CSRF",
+			"value": ""
+		}
+	]
+}

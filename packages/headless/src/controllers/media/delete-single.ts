@@ -1,0 +1,44 @@
+import mediaSchema from "../../schemas/media.js";
+import {
+	swaggerResponse,
+	swaggerHeaders,
+} from "../../utils/swagger/response-helpers.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
+import mediaServices from "../../services/media/index.js";
+
+const deleteSingleController: ControllerT<
+	typeof mediaSchema.deleteSingle.params,
+	typeof mediaSchema.deleteSingle.body,
+	typeof mediaSchema.deleteSingle.query
+> = async (request, reply) => {
+	await serviceWrapper(mediaServices.deleteSingle, true)(
+		{
+			db: request.server.db,
+		},
+		{
+			id: parseInt(request.params.id),
+		},
+	);
+
+	reply.status(204).send();
+};
+
+export default {
+	controller: deleteSingleController,
+	zodSchema: mediaSchema.deleteSingle,
+	swaggerSchema: {
+		description:
+			"Delete a single media item by id and clear its processed images if media is an image.",
+		tags: ["media"],
+		summary: "Delete a single media item.",
+		response: {
+			204: swaggerResponse({
+				type: 204,
+				noPropertise: true,
+			}),
+		},
+		headers: swaggerHeaders({
+			csrf: true,
+		}),
+	},
+};
