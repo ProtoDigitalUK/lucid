@@ -28,7 +28,7 @@ const deleteSingle = async (
 	if (deleteMedia === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_deleted_name", {
 				name: T("media"),
 			}),
 			message: T("deletion_error_message", {

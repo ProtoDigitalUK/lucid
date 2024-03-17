@@ -36,10 +36,10 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	if (deleteLanguage.numDeletedRows === 0n) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_deleted_name", {
 				name: T("language"),
 			}),
-			message: T("error_not_found_message", {
+			message: T("deletion_error_message", {
 				name: T("language"),
 			}),
 			status: 404,
@@ -62,7 +62,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		if (firstLanguage === undefined) {
 			throw new APIError({
 				type: "basic",
-				name: T("dynamic_error_name", {
+				name: T("error_not_deleted_name", {
 					name: T("language"),
 				}),
 				message: T("deletion_error_message", {

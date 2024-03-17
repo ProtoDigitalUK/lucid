@@ -26,7 +26,7 @@ const deleteSingle = async (
 	if (deletePage === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_deleted_name", {
 				name: T("page"),
 			}),
 			message: T("deletion_error_message", {

@@ -17,7 +17,7 @@ const deleteSingle = async (
 	if (deleteRoles.numDeletedRows === 0n) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
+			name: T("error_not_deleted_name", {
 				name: T("role"),
 			}),
 			message: T("deletion_error_message", {
