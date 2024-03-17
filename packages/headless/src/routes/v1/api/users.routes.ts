@@ -37,6 +37,19 @@ const usersRoutes = async (fastify: FastifyInstance) => {
 		swaggerSchema: users.getMultiple.swaggerSchema,
 		controller: users.getMultiple.controller,
 	});
+
+	r(fastify, {
+		method: "delete",
+		url: "/:id",
+		permissions: ["delete_user"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		zodSchema: users.deleteSingle.zodSchema,
+		swaggerSchema: users.deleteSingle.swaggerSchema,
+		controller: users.deleteSingle.controller,
+	});
 };
 
 export default usersRoutes;
