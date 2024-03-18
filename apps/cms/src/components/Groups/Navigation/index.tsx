@@ -4,10 +4,10 @@ import { NavigationLink as Link } from "./Link";
 import { LinkGroup } from "./LinkGroup";
 
 const Navigation = {
-  EnvironmentBar,
-  IconLink,
-  Link,
-  LinkGroup,
+	EnvironmentBar,
+	IconLink,
+	Link,
+	LinkGroup,
 };
 
 export default Navigation;

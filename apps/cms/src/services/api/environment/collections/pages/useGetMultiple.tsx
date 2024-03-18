@@ -8,47 +8,49 @@ import type { APIResponse } from "@/types/api";
 import type { PagesResT } from "@headless/types/src/pages";
 
 interface QueryParams {
-  queryString?: Accessor<string>;
-  filters?: {
-    collection_key?: Accessor<string | undefined> | string;
-    title?: Accessor<string | undefined> | string;
-    slug?: Accessor<string | undefined> | string;
-    category_id?: Accessor<string[] | undefined> | string[];
-  };
-  headers: {
-    "headless-environment": Accessor<string | undefined> | string;
-    "headless-content-lang": Accessor<number | undefined> | number;
-  };
-  perPage?: Accessor<number> | number;
+	queryString?: Accessor<string>;
+	filters?: {
+		collection_key?: Accessor<string | undefined> | string;
+		title?: Accessor<string | undefined> | string;
+		slug?: Accessor<string | undefined> | string;
+		category_id?: Accessor<string[] | undefined> | string[];
+	};
+	headers: {
+		"headless-environment": Accessor<string | undefined> | string;
+		"headless-content-lang": Accessor<number | undefined> | number;
+	};
+	perPage?: Accessor<number> | number;
 }
 
 const useGetMultiple = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() =>
-    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
-  );
-  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
+	const queryParams = createMemo(() =>
+		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
+	);
+	const queryKey = createMemo(() =>
+		serviceHelpers.getQueryKey(queryParams()),
+	);
 
-  // -----------------------------
-  // Query
-  return createQuery(() => ({
-    queryKey: [
-      "environment.collections.pages.getMultiple",
-      queryKey(),
-      params.key?.(),
-    ],
-    queryFn: () =>
-      request<APIResponse<PagesResT[]>>({
-        url: `/api/v1/pages`,
-        query: queryParams(),
-        config: {
-          method: "GET",
-          headers: queryParams().headers,
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  }));
+	// -----------------------------
+	// Query
+	return createQuery(() => ({
+		queryKey: [
+			"environment.collections.pages.getMultiple",
+			queryKey(),
+			params.key?.(),
+		],
+		queryFn: () =>
+			request<APIResponse<PagesResT[]>>({
+				url: `/api/v1/pages`,
+				query: queryParams(),
+				config: {
+					method: "GET",
+					headers: queryParams().headers,
+				},
+			}),
+		get enabled() {
+			return params.enabled ? params.enabled() : true;
+		},
+	}));
 };
 
 export default useGetMultiple;

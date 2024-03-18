@@ -9,55 +9,55 @@ import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
 import Form from "@/components/Groups/Form";
 
 interface CategorySearchSelectProps {
-  value: ValueT;
-  setValue: (_value: ValueT) => void;
-  collectionKey: string;
-  name: string;
-  id: string;
-  copy?: SelectProps["copy"];
-  theme?: "basic";
+	value: ValueT;
+	setValue: (_value: ValueT) => void;
+	collectionKey: string;
+	name: string;
+	id: string;
+	copy?: SelectProps["copy"];
+	theme?: "basic";
 }
 
 const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
-  const [getSearchQuery, setSearchQuery] = createSignal<string>("");
+	const [getSearchQuery, setSearchQuery] = createSignal<string>("");
 
-  // ----------------------------------
-  // Queries
-  const categories = api.environment.collections.categories.useGetMultiple({
-    queryParams: {
-      filters: {
-        collection_key: props.collectionKey,
-      },
-      headers: {
-        "headless-environment": environment,
-      },
-      perPage: 10,
-    },
-  });
+	// ----------------------------------
+	// Queries
+	const categories = api.environment.collections.categories.useGetMultiple({
+		queryParams: {
+			filters: {
+				collection_key: props.collectionKey,
+			},
+			headers: {
+				"headless-environment": environment,
+			},
+			perPage: 10,
+		},
+	});
 
-  // ----------------------------------
-  // Render
-  return (
-    <Form.Select
-      id={props.id}
-      value={props.value}
-      onChange={props.setValue}
-      copy={props.copy}
-      name={props.name}
-      search={{
-        value: getSearchQuery(),
-        onChange: setSearchQuery,
-        isLoading: categories.isLoading,
-      }}
-      options={
-        categories.data?.data.map((cat) => ({
-          value: cat.id,
-          label: cat.title,
-        })) || []
-      }
-      theme={props.theme}
-    />
-  );
+	// ----------------------------------
+	// Render
+	return (
+		<Form.Select
+			id={props.id}
+			value={props.value}
+			onChange={props.setValue}
+			copy={props.copy}
+			name={props.name}
+			search={{
+				value: getSearchQuery(),
+				onChange: setSearchQuery,
+				isLoading: categories.isLoading,
+			}}
+			options={
+				categories.data?.data.map((cat) => ({
+					value: cat.id,
+					label: cat.title,
+				})) || []
+			}
+			theme={props.theme}
+		/>
+	);
 };
 
 export default CategorySearchSelect;

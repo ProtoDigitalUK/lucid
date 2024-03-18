@@ -14,37 +14,39 @@ import { APIResponse } from "@/types/api";
 interface QueryParams {}
 
 const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() =>
-    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
-  );
-  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
+	const queryParams = createMemo(() =>
+		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
+	);
+	const queryKey = createMemo(() =>
+		serviceHelpers.getQueryKey(queryParams()),
+	);
 
-  const logout = api.auth.useLogout();
+	const logout = api.auth.useLogout();
 
-  const query = createQuery(() => ({
-    queryKey: ["users.getSingle", queryKey(), params.key?.()],
-    queryFn: () =>
-      request<APIResponse<UserResT>>({
-        url: `/api/v1/auth/me`,
-        config: {
-          method: "GET",
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  }));
+	const query = createQuery(() => ({
+		queryKey: ["users.getSingle", queryKey(), params.key?.()],
+		queryFn: () =>
+			request<APIResponse<UserResT>>({
+				url: `/api/v1/auth/me`,
+				config: {
+					method: "GET",
+				},
+			}),
+		get enabled() {
+			return params.enabled ? params.enabled() : true;
+		},
+	}));
 
-  createEffect(() => {
-    if (query.isSuccess) {
-      userStore.set("user", query.data.data);
-    }
-    if (query.isError) {
-      logout.action.mutate({});
-    }
-  });
+	createEffect(() => {
+		if (query.isSuccess) {
+			userStore.set("user", query.data.data);
+		}
+		if (query.isError) {
+			logout.action.mutate({});
+		}
+	});
 
-  return query;
+	return query;
 };
 
 export default useGetAuthenticatedUser;

@@ -10,39 +10,41 @@ import { APIResponse } from "@/types/api";
 import { LanguageResT } from "@headless/types/src/language";
 
 interface QueryParams {
-  queryString?: Accessor<string> | string;
-  perPage?: Accessor<number> | number;
+	queryString?: Accessor<string> | string;
+	perPage?: Accessor<number> | number;
 }
 
 const useGetAll = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() =>
-    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
-  );
-  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
+	const queryParams = createMemo(() =>
+		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
+	);
+	const queryKey = createMemo(() =>
+		serviceHelpers.getQueryKey(queryParams()),
+	);
 
-  const query = createQuery(() => ({
-    queryKey: ["languages.getAll", queryKey(), params.key?.()],
-    queryFn: () =>
-      request<APIResponse<LanguageResT[]>>({
-        url: `/api/v1/languages`,
-        config: {
-          method: "GET",
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  }));
+	const query = createQuery(() => ({
+		queryKey: ["languages.getAll", queryKey(), params.key?.()],
+		queryFn: () =>
+			request<APIResponse<LanguageResT[]>>({
+				url: `/api/v1/languages`,
+				config: {
+					method: "GET",
+				},
+			}),
+		get enabled() {
+			return params.enabled ? params.enabled() : true;
+		},
+	}));
 
-  // Effects
-  createEffect(() => {
-    if (query.isSuccess) {
-      contentLanguageStore.get.syncContentLanguage(query.data?.data);
-      contentLanguageStore.set("languages", query.data?.data || []);
-    }
-  });
+	// Effects
+	createEffect(() => {
+		if (query.isSuccess) {
+			contentLanguageStore.get.syncContentLanguage(query.data?.data);
+			contentLanguageStore.set("languages", query.data?.data || []);
+		}
+	});
 
-  return query;
+	return query;
 };
 
 export default useGetAll;

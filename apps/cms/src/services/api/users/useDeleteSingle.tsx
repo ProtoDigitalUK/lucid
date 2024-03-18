@@ -7,37 +7,37 @@ import { APIResponse } from "@/types/api";
 import { UserResT } from "@headless/types/src/users";
 
 interface Params {
-  id: number;
+	id: number;
 }
 
 export const deleteSingleReq = (params: Params) => {
-  return request<APIResponse<UserResT>>({
-    url: `/api/v1/users/${params.id}`,
-    csrf: true,
-    config: {
-      method: "DELETE",
-    },
-  });
+	return request<APIResponse<UserResT>>({
+		url: `/api/v1/users/${params.id}`,
+		csrf: true,
+		config: {
+			method: "DELETE",
+		},
+	});
 };
 
 interface UseDeleteProps {
-  onSuccess?: () => void;
-  onError?: () => void;
+	onSuccess?: () => void;
+	onError?: () => void;
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
-  // -----------------------------
-  // Mutation
-  return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
-    mutationFn: deleteSingleReq,
-    successToast: {
-      title: T("user_deleted_toast_title"),
-      message: T("user_deleted_toast_message"),
-    },
-    invalidates: ["users.getMultiple", "users.getSingle"],
-    onSuccess: props.onSuccess,
-    onError: props.onError,
-  });
+	// -----------------------------
+	// Mutation
+	return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
+		mutationFn: deleteSingleReq,
+		successToast: {
+			title: T("user_deleted_toast_title"),
+			message: T("user_deleted_toast_message"),
+		},
+		invalidates: ["users.getMultiple", "users.getSingle"],
+		onSuccess: props.onSuccess,
+		onError: props.onError,
+	});
 };
 
 export default useDeleteSingle;

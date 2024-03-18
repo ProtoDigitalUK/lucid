@@ -4,10 +4,10 @@ import useDeleteSingle from "./useDeleteSingle";
 import useResendSingle from "./useResendSingle";
 
 const exportObject = {
-  useGetMultiple,
-  useGetSingle,
-  useDeleteSingle,
-  useResendSingle,
+	useGetMultiple,
+	useGetSingle,
+	useDeleteSingle,
+	useResendSingle,
 };
 
 export default exportObject;

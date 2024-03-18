@@ -14,93 +14,93 @@ import DeleteMedia from "@/components/Modals/Media/DeleteMedia";
 import ClearProcessedMedia from "@/components/Modals/Media/ClearProcessedImages";
 
 interface MediaGridProps {
-  searchParams: ReturnType<typeof useSearchParams>;
+	searchParams: ReturnType<typeof useSearchParams>;
 }
 
 const MediaGrid: Component<MediaGridProps> = (props) => {
-  // ----------------------------------
-  // Hooks
-  const rowTarget = useRowTarget({
-    triggers: {
-      update: false,
-      delete: false,
-      clear: false,
-    },
-  });
+	// ----------------------------------
+	// Hooks
+	const rowTarget = useRowTarget({
+		triggers: {
+			update: false,
+			delete: false,
+			clear: false,
+		},
+	});
 
-  // ----------------------------------
-  // Memos
-  const contentLanguage = createMemo(
-    () => contentLanguageStore.get.contentLanguage
-  );
+	// ----------------------------------
+	// Memos
+	const contentLanguage = createMemo(
+		() => contentLanguageStore.get.contentLanguage,
+	);
 
-  // ----------------------------------
-  // Queries
-  const media = api.media.useGetMultiple({
-    queryParams: {
-      queryString: props.searchParams.getQueryString,
-      headers: {
-        "headless-content-lang": contentLanguage,
-      },
-    },
-    enabled: () => props.searchParams.getSettled(),
-  });
+	// ----------------------------------
+	// Queries
+	const media = api.media.useGetMultiple({
+		queryParams: {
+			queryString: props.searchParams.getQueryString,
+			headers: {
+				"headless-content-lang": contentLanguage,
+			},
+		},
+		enabled: () => props.searchParams.getSettled(),
+	});
 
-  // ----------------------------------
-  // Render
-  return (
-    <>
-      <Grid.Root
-        items={media.data?.data.length || 0}
-        state={{
-          isLoading: media.isLoading,
-          isError: media.isError,
-          isSuccess: media.isSuccess,
-        }}
-        searchParams={props.searchParams}
-        meta={media.data?.meta}
-        loadingCard={<MediaCardLoading />}
-      >
-        <For each={media.data?.data}>
-          {(item) => (
-            <MediaCard
-              media={item}
-              rowTarget={rowTarget}
-              contentLanguage={contentLanguage()}
-            />
-          )}
-        </For>
-      </Grid.Root>
+	// ----------------------------------
+	// Render
+	return (
+		<>
+			<Grid.Root
+				items={media.data?.data.length || 0}
+				state={{
+					isLoading: media.isLoading,
+					isError: media.isError,
+					isSuccess: media.isSuccess,
+				}}
+				searchParams={props.searchParams}
+				meta={media.data?.meta}
+				loadingCard={<MediaCardLoading />}
+			>
+				<For each={media.data?.data}>
+					{(item) => (
+						<MediaCard
+							media={item}
+							rowTarget={rowTarget}
+							contentLanguage={contentLanguage()}
+						/>
+					)}
+				</For>
+			</Grid.Root>
 
-      <CreateUpdateMediaPanel
-        id={rowTarget.getTargetId}
-        state={{
-          open: rowTarget.getTriggers().update,
-          setOpen: (state: boolean) => {
-            rowTarget.setTrigger("update", state);
-          },
-        }}
-      />
-      <DeleteMedia
-        id={rowTarget.getTargetId}
-        state={{
-          open: rowTarget.getTriggers().delete,
-          setOpen: (state: boolean) => {
-            rowTarget.setTrigger("delete", state);
-          },
-        }}
-      />
-      <ClearProcessedMedia
-        id={rowTarget.getTargetId}
-        state={{
-          open: rowTarget.getTriggers().clear,
-          setOpen: (state: boolean) => {
-            rowTarget.setTrigger("clear", state);
-          },
-        }}
-      />
-    </>
-  );
+			<CreateUpdateMediaPanel
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().update,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("update", state);
+					},
+				}}
+			/>
+			<DeleteMedia
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().delete,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("delete", state);
+					},
+				}}
+			/>
+			<ClearProcessedMedia
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().clear,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("clear", state);
+					},
+				}}
+			/>
+		</>
+	);
 };
 
 export default MediaGrid;

@@ -5,19 +5,19 @@ import { Toaster } from "solid-toast";
 import Router from "@/Router";
 
 const App: Component = () => {
-  const queryClient = new QueryClient();
+	const queryClient = new QueryClient();
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Toaster
-        toastOptions={{
-          duration: 5000,
-          position: "bottom-right",
-        }}
-      />
-      <Router />
-    </QueryClientProvider>
-  );
+	return (
+		<QueryClientProvider client={queryClient}>
+			<Toaster
+				toastOptions={{
+					duration: 5000,
+					position: "bottom-right",
+				}}
+			/>
+			<Router />
+		</QueryClientProvider>
+	);
 };
 
 export default App;

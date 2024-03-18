@@ -8,36 +8,44 @@ import { APIResponse } from "@/types/api";
 import { CollectionResT } from "@headless/types/src/collections";
 
 interface QueryParams {
-  location: {
-    collection_key?: Accessor<string | undefined> | string;
-  };
-  headers: {
-    "headless-environment": Accessor<string | undefined> | string;
-  };
+	location: {
+		collection_key?: Accessor<string | undefined> | string;
+	};
+	headers: {
+		"headless-environment": Accessor<string | undefined> | string;
+	};
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() =>
-    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
-  );
-  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
+	const queryParams = createMemo(() =>
+		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
+	);
+	const queryKey = createMemo(() =>
+		serviceHelpers.getQueryKey(queryParams()),
+	);
 
-  // -----------------------------
-  // Query
-  return createQuery(() => ({
-    queryKey: ["environment.collections.getSingle", queryKey(), params.key?.()],
-    queryFn: () =>
-      request<APIResponse<CollectionResT>>({
-        url: `/api/v1/collections/${queryParams().location?.collection_key}`,
-        config: {
-          method: "GET",
-          headers: queryParams().headers,
-        },
-      }),
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  }));
+	// -----------------------------
+	// Query
+	return createQuery(() => ({
+		queryKey: [
+			"environment.collections.getSingle",
+			queryKey(),
+			params.key?.(),
+		],
+		queryFn: () =>
+			request<APIResponse<CollectionResT>>({
+				url: `/api/v1/collections/${
+					queryParams().location?.collection_key
+				}`,
+				config: {
+					method: "GET",
+					headers: queryParams().headers,
+				},
+			}),
+		get enabled() {
+			return params.enabled ? params.enabled() : true;
+		},
+	}));
 };
 
 export default useGetSingle;

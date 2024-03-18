@@ -1,42 +1,42 @@
 import { Component, Switch, Match } from "solid-js";
 // Components
 import ActionDropdown, {
-  ActionDropdownProps,
+	ActionDropdownProps,
 } from "@/components/Partials/ActionDropdown";
 import Table from "@/components/Groups/Table";
 
 interface ActionMenuColProps {
-  actions: ActionDropdownProps["actions"];
+	actions: ActionDropdownProps["actions"];
 }
 
 const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
-  // ----------------------------------------
-  // Render
-  return (
-    <Switch>
-      <Match when={props.actions.length > 0}>
-        <Table.Td
-          classes={
-            "row-actions-td text-right sticky right-0 bg-background pointer-events-none"
-          }
-          options={{
-            noMinWidth: true,
-          }}
-        >
-          <ActionDropdown actions={props.actions} />
-        </Table.Td>
-      </Match>
-      <Match when={props.actions.length === 0}>
-        <Table.Td
-          options={{
-            noMinWidth: true,
-          }}
-        >
-          <></>
-        </Table.Td>
-      </Match>
-    </Switch>
-  );
+	// ----------------------------------------
+	// Render
+	return (
+		<Switch>
+			<Match when={props.actions.length > 0}>
+				<Table.Td
+					classes={
+						"row-actions-td text-right sticky right-0 bg-background pointer-events-none"
+					}
+					options={{
+						noMinWidth: true,
+					}}
+				>
+					<ActionDropdown actions={props.actions} />
+				</Table.Td>
+			</Match>
+			<Match when={props.actions.length === 0}>
+				<Table.Td
+					options={{
+						noMinWidth: true,
+					}}
+				>
+					<></>
+				</Table.Td>
+			</Match>
+		</Switch>
+	);
 };
 
 export default ActionMenuCol;

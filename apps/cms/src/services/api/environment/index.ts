@@ -8,13 +8,13 @@ import collections from "./collections";
 import forms from "./forms";
 
 const exportObject = {
-  useGetAll,
-  useGetSingle,
-  useCreateSingle,
-  useUpdateSingle,
-  useDeleteSingle,
-  collections,
-  forms,
+	useGetAll,
+	useGetSingle,
+	useCreateSingle,
+	useUpdateSingle,
+	useDeleteSingle,
+	collections,
+	forms,
 };
 
 export default exportObject;

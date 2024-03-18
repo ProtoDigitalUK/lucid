@@ -19,25 +19,25 @@ import { Label } from "./Label";
 import { Tooltip } from "./Tooltip";
 
 const Form = {
-  Root,
-  Checkbox,
-  Input,
-  Textarea,
-  Select,
-  SelectMultiple,
-  SingleFileUpload,
-  Colour,
-  Switch,
-  JSONTextarea,
-  WYSIWYG,
-  MediaSelect,
-  LinkSelect,
-  Search,
+	Root,
+	Checkbox,
+	Input,
+	Textarea,
+	Select,
+	SelectMultiple,
+	SingleFileUpload,
+	Colour,
+	Switch,
+	JSONTextarea,
+	WYSIWYG,
+	MediaSelect,
+	LinkSelect,
+	Search,
 
-  ErrorMessage,
-  DescribedBy,
-  Label,
-  Tooltip,
+	ErrorMessage,
+	DescribedBy,
+	Label,
+	Tooltip,
 };
 
 export default Form;

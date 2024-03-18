@@ -10,16 +10,16 @@ import email from "./email";
 import languages from "./languages";
 
 const exportObject = {
-  auth,
-  environment,
-  brickConfig,
-  users,
-  roles,
-  permissions,
-  media,
-  settings,
-  email,
-  languages,
+	auth,
+	environment,
+	brickConfig,
+	users,
+	roles,
+	permissions,
+	media,
+	settings,
+	email,
+	languages,
 };
 
 export default exportObject;

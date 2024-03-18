@@ -7,13 +7,13 @@ import useVerifyResetToken from "./useVerifyResetToken";
 import useGetAuthenticatedUser from "./useGetAuthenticatedUser";
 
 const exportObject = {
-  useLogin,
-  useCsrf,
-  useLogout,
-  useForgotPassword,
-  useResetPassword,
-  useVerifyResetToken,
-  useGetAuthenticatedUser,
+	useLogin,
+	useCsrf,
+	useLogout,
+	useForgotPassword,
+	useResetPassword,
+	useVerifyResetToken,
+	useGetAuthenticatedUser,
 };
 
 export default exportObject;

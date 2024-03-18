@@ -5,11 +5,11 @@ import { Sort } from "./Sort";
 import { PerPage } from "./PerPage";
 
 const Query = {
-  Pagination,
-  Row,
-  Filter,
-  Sort,
-  PerPage,
+	Pagination,
+	Row,
+	Filter,
+	Sort,
+	PerPage,
 };
 
 export default Query;

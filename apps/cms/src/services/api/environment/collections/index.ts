@@ -6,11 +6,11 @@ import useGetAll from "./useGetAll";
 import useGetSingle from "./useGetSingle";
 
 const exportObject = {
-  pages,
-  categories,
-  singlePages,
-  useGetAll,
-  useGetSingle,
+	pages,
+	categories,
+	singlePages,
+	useGetAll,
+	useGetSingle,
 };
 
 export default exportObject;

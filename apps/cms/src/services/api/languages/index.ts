@@ -1,7 +1,7 @@
 import useGetMultiple from "./useGetMultiple";
 
 const exportObject = {
-  useGetMultiple,
+	useGetMultiple,
 };
 
 export default exportObject;

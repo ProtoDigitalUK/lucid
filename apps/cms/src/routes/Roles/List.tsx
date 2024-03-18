@@ -11,76 +11,77 @@ import RolesTable from "@/components/Tables/RolesTable";
 import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";
 
 const RolesListRoute: Component = () => {
-  // ----------------------------------
-  // Hooks & State
-  const searchParams = useSearchParams(
-    {
-      filters: {
-        name: {
-          value: "",
-          type: "text",
-        },
-      },
-      sorts: {
-        name: undefined,
-        created_at: undefined,
-      },
-    },
-    {
-      singleSort: true,
-    }
-  );
-  const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
+	// ----------------------------------
+	// Hooks & State
+	const searchParams = useSearchParams(
+		{
+			filters: {
+				name: {
+					value: "",
+					type: "text",
+				},
+			},
+			sorts: {
+				name: undefined,
+				created_at: undefined,
+			},
+		},
+		{
+			singleSort: true,
+		},
+	);
+	const [openCreateRolePanel, setOpenCreateRolePanel] = createSignal(false);
 
-  // ----------------------------------
-  // Render
-  return (
-    <Layout.PageLayout
-      title={T("roles_route_title")}
-      description={T("roles_route_description")}
-      options={{
-        noBorder: true,
-      }}
-      actions={{
-        create: {
-          open: openCreateRolePanel(),
-          setOpen: setOpenCreateRolePanel,
-          permission: userStore.get.hasPermission(["create_role"]).all,
-        },
-      }}
-      headingChildren={
-        <Query.Row
-          searchParams={searchParams}
-          filters={[
-            {
-              label: T("name"),
-              key: "name",
-              type: "text",
-            },
-          ]}
-          sorts={[
-            {
-              label: T("name"),
-              key: "name",
-            },
-            {
-              label: T("created_at"),
-              key: "created_at",
-            },
-          ]}
-          perPage={[]}
-        />
-      }
-    >
-      <RolesTable searchParams={searchParams} />
-      <UpsertRolePanel
-        state={{
-          open: openCreateRolePanel(),
-          setOpen: setOpenCreateRolePanel,
-        }}
-      />
-    </Layout.PageLayout>
-  );
+	// ----------------------------------
+	// Render
+	return (
+		<Layout.PageLayout
+			title={T("roles_route_title")}
+			description={T("roles_route_description")}
+			options={{
+				noBorder: true,
+			}}
+			actions={{
+				create: {
+					open: openCreateRolePanel(),
+					setOpen: setOpenCreateRolePanel,
+					permission: userStore.get.hasPermission(["create_role"])
+						.all,
+				},
+			}}
+			headingChildren={
+				<Query.Row
+					searchParams={searchParams}
+					filters={[
+						{
+							label: T("name"),
+							key: "name",
+							type: "text",
+						},
+					]}
+					sorts={[
+						{
+							label: T("name"),
+							key: "name",
+						},
+						{
+							label: T("created_at"),
+							key: "created_at",
+						},
+					]}
+					perPage={[]}
+				/>
+			}
+		>
+			<RolesTable searchParams={searchParams} />
+			<UpsertRolePanel
+				state={{
+					open: openCreateRolePanel(),
+					setOpen: setOpenCreateRolePanel,
+				}}
+			/>
+		</Layout.PageLayout>
+	);
 };
 
 export default RolesListRoute;

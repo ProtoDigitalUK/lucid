@@ -5,22 +5,22 @@ import { MediaResT } from "@headless/types/src/media";
 type SelectCallbackT = (_media: MediaResT) => void;
 
 type MediaSelectStoreT = {
-  open: boolean;
-  onSelectCallback: SelectCallbackT;
+	open: boolean;
+	onSelectCallback: SelectCallbackT;
 
-  extensions?: string;
-  type?: string;
-  selected?: MediaResT["id"];
+	extensions?: string;
+	type?: string;
+	selected?: MediaResT["id"];
 };
 
 const [get, set] = createStore<MediaSelectStoreT>({
-  open: false,
-  onSelectCallback: () => {},
+	open: false,
+	onSelectCallback: () => {},
 });
 
 const mediaSelectStore = {
-  get,
-  set,
+	get,
+	set,
 };
 
 export default mediaSelectStore;

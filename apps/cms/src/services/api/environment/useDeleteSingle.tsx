@@ -10,48 +10,48 @@ import { APIResponse } from "@/types/api";
 import { EnvironmentResT } from "@headless/types/src/environments";
 
 interface Params {
-  key: string;
+	key: string;
 }
 
 export const deleteSingleReq = (params: Params) => {
-  return request<APIResponse<EnvironmentResT>>({
-    url: `/api/v1/environments/${params.key}`,
-    csrf: true,
-    config: {
-      method: "DELETE",
-    },
-  });
+	return request<APIResponse<EnvironmentResT>>({
+		url: `/api/v1/environments/${params.key}`,
+		csrf: true,
+		config: {
+			method: "DELETE",
+		},
+	});
 };
 
 interface UseDeleteProps {
-  onSuccess?: () => void;
-  onError?: () => void;
+	onSuccess?: () => void;
+	onError?: () => void;
 }
 
 const useDeleteSingle = (props: UseDeleteProps) => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  // -----------------------------
-  // Mutation
-  return serviceHelpers.useMutationWrapper<
-    Params,
-    APIResponse<EnvironmentResT>
-  >({
-    mutationFn: deleteSingleReq,
-    successToast: {
-      title: T("environment_deleted_toast_title"),
-      message: T("environment_deleted_toast_message"),
-    },
-    invalidates: ["environment.getAll", "environment.collections.getAll"],
-    onSuccess: (data) => {
-      props.onSuccess?.();
-      if (data.data.key === environment()) {
-        setEnvironment(undefined);
-        navigate("/");
-      }
-    },
-    onError: props.onError,
-  });
+	// -----------------------------
+	// Mutation
+	return serviceHelpers.useMutationWrapper<
+		Params,
+		APIResponse<EnvironmentResT>
+	>({
+		mutationFn: deleteSingleReq,
+		successToast: {
+			title: T("environment_deleted_toast_title"),
+			message: T("environment_deleted_toast_message"),
+		},
+		invalidates: ["environment.getAll", "environment.collections.getAll"],
+		onSuccess: (data) => {
+			props.onSuccess?.();
+			if (data.data.key === environment()) {
+				setEnvironment(undefined);
+				navigate("/");
+			}
+		},
+		onError: props.onError,
+	});
 };
 
 export default useDeleteSingle;

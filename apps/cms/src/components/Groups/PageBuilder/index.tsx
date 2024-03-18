@@ -7,12 +7,12 @@ import { BrickBody } from "./BrickBody";
 import { Brick } from "./Brick";
 
 const PageBuilder = {
-  Sidebar,
-  Builder,
-  TopBar,
-  PreviewBar,
-  BrickBody,
-  Brick,
+	Sidebar,
+	Builder,
+	TopBar,
+	PreviewBar,
+	BrickBody,
+	Brick,
 };
 
 export default PageBuilder;

@@ -7,32 +7,32 @@ import PageLinkContent from "./PageLinkContent";
 import LinkContent from "./LinkContent";
 
 const LinkSelect: Component = () => {
-  // ------------------------------
-  // Memos
-  const open = createMemo(() => linkFieldStore.get.open);
+	// ------------------------------
+	// Memos
+	const open = createMemo(() => linkFieldStore.get.open);
 
-  // ------------------------------
-  // Render
-  return (
-    <Modal.Root
-      state={{
-        open: open(),
-        setOpen: () => linkFieldStore.set("open", false),
-      }}
-      options={{
-        noPadding: true,
-      }}
-    >
-      <Switch>
-        <Match when={linkFieldStore.get.type === "pagelink"}>
-          <PageLinkContent />
-        </Match>
-        <Match when={linkFieldStore.get.type === "link"}>
-          <LinkContent />
-        </Match>
-      </Switch>
-    </Modal.Root>
-  );
+	// ------------------------------
+	// Render
+	return (
+		<Modal.Root
+			state={{
+				open: open(),
+				setOpen: () => linkFieldStore.set("open", false),
+			}}
+			options={{
+				noPadding: true,
+			}}
+		>
+			<Switch>
+				<Match when={linkFieldStore.get.type === "pagelink"}>
+					<PageLinkContent />
+				</Match>
+				<Match when={linkFieldStore.get.type === "link"}>
+					<LinkContent />
+				</Match>
+			</Switch>
+		</Modal.Root>
+	);
 };
 
 export default LinkSelect;

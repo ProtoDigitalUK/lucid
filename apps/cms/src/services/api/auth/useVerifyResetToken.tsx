@@ -7,37 +7,41 @@ import serviceHelpers from "@/utils/service-helpers";
 import { APIResponse } from "@/types/api";
 
 interface QueryParams {
-  location: {
-    token: string;
-  };
+	location: {
+		token: string;
+	};
 }
 
 const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
-  const queryParams = createMemo(() =>
-    serviceHelpers.getQueryParams<QueryParams>(params.queryParams)
-  );
-  const queryKey = createMemo(() => serviceHelpers.getQueryKey(queryParams()));
+	const queryParams = createMemo(() =>
+		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
+	);
+	const queryKey = createMemo(() =>
+		serviceHelpers.getQueryKey(queryParams()),
+	);
 
-  // -----------------------------
-  // Query
-  return createQuery(() => ({
-    queryKey: ["auth.verifyResetToken", queryKey(), params.key?.()],
-    queryFn: () =>
-      request<
-        APIResponse<{
-          message: string;
-        }>
-      >({
-        url: `/api/v1/auth/reset-password/${queryParams().location?.token}`,
-        config: {
-          method: "GET",
-        },
-      }),
-    retry: 0,
-    get enabled() {
-      return params.enabled ? params.enabled() : true;
-    },
-  }));
+	// -----------------------------
+	// Query
+	return createQuery(() => ({
+		queryKey: ["auth.verifyResetToken", queryKey(), params.key?.()],
+		queryFn: () =>
+			request<
+				APIResponse<{
+					message: string;
+				}>
+			>({
+				url: `/api/v1/auth/reset-password/${
+					queryParams().location?.token
+				}`,
+				config: {
+					method: "GET",
+				},
+			}),
+		retry: 0,
+		get enabled() {
+			return params.enabled ? params.enabled() : true;
+		},
+	}));
 };
 
 export default useVerifyResetToken;

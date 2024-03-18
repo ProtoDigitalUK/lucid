@@ -6,47 +6,47 @@ import Modal from "@/components/Groups/Modal";
 import api from "@/services/api";
 
 interface ClearAllProcessedImagesProps {
-  state: {
-    open: boolean;
-    setOpen: (_open: boolean) => void;
-  };
+	state: {
+		open: boolean;
+		setOpen: (_open: boolean) => void;
+	};
 }
 
 const ClearAllProcessedImages: Component<ClearAllProcessedImagesProps> = (
-  props
+	props,
 ) => {
-  // ----------------------------------------
-  // Mutations
-  const clearAllProcessedImages = api.media.useDeleteAllProcessedImages({
-    onSuccess: () => {
-      props.state.setOpen(false);
-    },
-  });
+	// ----------------------------------------
+	// Mutations
+	const clearAllProcessedImages = api.media.useDeleteAllProcessedImages({
+		onSuccess: () => {
+			props.state.setOpen(false);
+		},
+	});
 
-  // ------------------------------
-  // Render
-  return (
-    <Modal.Confirmation
-      state={{
-        open: props.state.open,
-        setOpen: props.state.setOpen,
-        isLoading: clearAllProcessedImages.action.isPending,
-        isError: clearAllProcessedImages.action.isError,
-      }}
-      content={{
-        title: T("clear_all_processed_images_modal_title"),
-        description: T("clear_all_processed_images_modal_description"),
-        error: clearAllProcessedImages.errors()?.message,
-      }}
-      onConfirm={() => {
-        clearAllProcessedImages.action.mutate({});
-      }}
-      onCancel={() => {
-        props.state.setOpen(false);
-        clearAllProcessedImages.reset();
-      }}
-    />
-  );
+	// ------------------------------
+	// Render
+	return (
+		<Modal.Confirmation
+			state={{
+				open: props.state.open,
+				setOpen: props.state.setOpen,
+				isLoading: clearAllProcessedImages.action.isPending,
+				isError: clearAllProcessedImages.action.isError,
+			}}
+			content={{
+				title: T("clear_all_processed_images_modal_title"),
+				description: T("clear_all_processed_images_modal_description"),
+				error: clearAllProcessedImages.errors()?.message,
+			}}
+			onConfirm={() => {
+				clearAllProcessedImages.action.mutate({});
+			}}
+			onCancel={() => {
+				props.state.setOpen(false);
+				clearAllProcessedImages.reset();
+			}}
+		/>
+	);
 };
 
 export default ClearAllProcessedImages;

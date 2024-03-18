@@ -8,14 +8,14 @@ import useDeleteAllProcessedImages from "./useDeleteAllProcessedImages";
 import useDeleteProcessedImages from "./useDeleteProcessedImages";
 
 const exportObject = {
-  useGetMultiple,
-  useGetSingle,
-  useUpdateSingle,
-  useUploadFileSingle,
-  useDeleteSingle,
-  useDeleteAllProcessedImages,
-  useDeleteProcessedImages,
-  useUpdateFileSingle,
+	useGetMultiple,
+	useGetSingle,
+	useUpdateSingle,
+	useUploadFileSingle,
+	useDeleteSingle,
+	useDeleteAllProcessedImages,
+	useDeleteProcessedImages,
+	useUpdateFileSingle,
 };
 
 export default exportObject;

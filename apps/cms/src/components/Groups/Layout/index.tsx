@@ -6,12 +6,12 @@ import { PageContent } from "./PageContent";
 import { NavigationTabs } from "./NavigationTabs";
 
 const Layout = {
-  NavigationSidebar,
-  PageFooter,
-  PageHeading,
-  PageLayout,
-  PageContent,
-  NavigationTabs,
+	NavigationSidebar,
+	PageFooter,
+	PageHeading,
+	PageLayout,
+	PageContent,
+	NavigationTabs,
 };
 
 export default Layout;

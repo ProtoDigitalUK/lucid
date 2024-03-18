@@ -12,18 +12,18 @@ import { LinkField } from "./LinkField";
 import { PageLinkField } from "./PageLinkField";
 
 const CustomFields = {
-  DynamicField,
-  RepeaterField,
-  InputField,
-  TextareaField,
-  ColourField,
-  CheckboxField,
-  JSONField,
-  SelectField,
-  WYSIWYGField,
-  MediaField,
-  LinkField,
-  PageLinkField,
+	DynamicField,
+	RepeaterField,
+	InputField,
+	TextareaField,
+	ColourField,
+	CheckboxField,
+	JSONField,
+	SelectField,
+	WYSIWYGField,
+	MediaField,
+	LinkField,
+	PageLinkField,
 };
 
 export default CustomFields;

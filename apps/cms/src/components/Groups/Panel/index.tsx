@@ -1,7 +1,7 @@
 import { Panel as Root } from "./Panel";
 
 const Panel = {
-  Root,
+	Root,
 };
 
 export default Panel;

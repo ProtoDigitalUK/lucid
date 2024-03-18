@@ -5,11 +5,11 @@ import useCreateSingle from "./useCreateSingle";
 import useDeleteSingle from "./useDeleteSingle";
 
 const exportObject = {
-  useGetMultiple,
-  useGetSingle,
-  useUpdateSingle,
-  useCreateSingle,
-  useDeleteSingle,
+	useGetMultiple,
+	useGetSingle,
+	useUpdateSingle,
+	useCreateSingle,
+	useDeleteSingle,
 };
 
 export default exportObject;

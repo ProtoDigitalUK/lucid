@@ -2,8 +2,8 @@ import useGetSingle from "./useGetSingle";
 import useUpdateSingle from "./useUpdateSingle";
 
 const exportObject = {
-  useGetSingle,
-  useUpdateSingle,
+	useGetSingle,
+	useUpdateSingle,
 };
 
 export default exportObject;

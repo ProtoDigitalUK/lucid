@@ -1,7 +1,7 @@
 import useGetAll from "./useGetAll";
 
 const exportObject = {
-  useGetAll,
+	useGetAll,
 };
 
 export default exportObject;

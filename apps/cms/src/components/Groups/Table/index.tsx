@@ -6,12 +6,12 @@ import { SelectAction } from "./SelectAction";
 import { ColumnToggle } from "./ColumnToggle";
 
 const Table = {
-  Root,
-  Th,
-  Td,
-  Tr,
-  SelectAction,
-  ColumnToggle,
+	Root,
+	Th,
+	Td,
+	Tr,
+	SelectAction,
+	ColumnToggle,
 };
 
 export default Table;

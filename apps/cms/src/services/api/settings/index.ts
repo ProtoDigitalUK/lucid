@@ -1,7 +1,7 @@
 import useGetSettings from "./useGetSettings";
 
 const exportObject = {
-  useGetSettings,
+	useGetSettings,
 };
 
 export default exportObject;

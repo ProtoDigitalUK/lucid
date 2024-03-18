@@ -12,52 +12,54 @@ import UpsertEnvForm from "@/components/Forms/Environment/UpsertEnvForm";
 import DeleteEnvironment from "@/components/Modals/Environment/DeleteEnvironment";
 
 const ManageEnvrionemntRoute: Component = () => {
-  // ----------------------------------------
-  // State
-  const [openDelete, setOpenDelete] = createSignal(false);
+	// ----------------------------------------
+	// State
+	const [openDelete, setOpenDelete] = createSignal(false);
 
-  // ----------------------------------------
-  // Queries
-  const environmentData = api.environment.useGetSingle({
-    queryParams: {
-      location: {
-        environment_key: environment,
-      },
-    },
-    enabled: () => environment() !== undefined,
-  });
+	// ----------------------------------------
+	// Queries
+	const environmentData = api.environment.useGetSingle({
+		queryParams: {
+			location: {
+				environment_key: environment,
+			},
+		},
+		enabled: () => environment() !== undefined,
+	});
 
-  // ----------------------------------------
-  // Render
-  return (
-    <Layout.PageLayout
-      title={T("manage_environment_route_title", {
-        title: environmentData.data?.data.title ?? "",
-      })}
-      description={T("manage_environment_route_description")}
-      state={{
-        isLoading: environmentData.isLoading,
-        isError: environmentData.isError,
-        isSuccess: environmentData.isSuccess,
-      }}
-      actions={{
-        delete: {
-          open: openDelete(),
-          setOpen: setOpenDelete,
-          permission: userStore.get.hasPermission(["delete_environment"]).all,
-        },
-      }}
-    >
-      <UpsertEnvForm environment={environmentData.data?.data} />
-      <DeleteEnvironment
-        key={environmentData.data?.data.key}
-        state={{
-          open: openDelete(),
-          setOpen: setOpenDelete,
-        }}
-      />
-    </Layout.PageLayout>
-  );
+	// ----------------------------------------
+	// Render
+	return (
+		<Layout.PageLayout
+			title={T("manage_environment_route_title", {
+				title: environmentData.data?.data.title ?? "",
+			})}
+			description={T("manage_environment_route_description")}
+			state={{
+				isLoading: environmentData.isLoading,
+				isError: environmentData.isError,
+				isSuccess: environmentData.isSuccess,
+			}}
+			actions={{
+				delete: {
+					open: openDelete(),
+					setOpen: setOpenDelete,
+					permission: userStore.get.hasPermission([
+						"delete_environment",
+					]).all,
+				},
+			}}
+		>
+			<UpsertEnvForm environment={environmentData.data?.data} />
+			<DeleteEnvironment
+				key={environmentData.data?.data.key}
+				state={{
+					open: openDelete(),
+					setOpen: setOpenDelete,
+				}}
+			/>
+		</Layout.PageLayout>
+	);
 };
 
 export default ManageEnvrionemntRoute;
