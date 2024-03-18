@@ -35,8 +35,6 @@ import EmailListRoute from "@/routes/Emails/List";
 import EnvCollectionsPagesListRoute from "@/routes/Environments/Collections/Pages/List";
 import EnvCollectionsPagesEditRoute from "@/routes/Environments/Collections/Pages/Edit";
 import EnvCollectionsSinglePageEditRoute from "./routes/Environments/Collections/SinglePage/Edit";
-import CreateEnvrionemntRoute from "@/routes/Environments/Create";
-import ManageEnvrionemntRoute from "@/routes/Environments/Manage";
 
 const AppRouter: Component = () => {
 	return (
@@ -59,14 +57,6 @@ const AppRouter: Component = () => {
 					<Route
 						path={"/env/:envKey/:collectionKey"}
 						element={<EnvCollectionsSinglePageEditRoute />}
-					/>
-					<Route
-						path="/env/create"
-						element={<CreateEnvrionemntRoute />}
-					/>
-					<Route
-						path="/env/:envKey"
-						element={<ManageEnvrionemntRoute />}
 					/>
 					{/* Media */}
 					<Route path="/media" element={<MediaListRoute />} />
