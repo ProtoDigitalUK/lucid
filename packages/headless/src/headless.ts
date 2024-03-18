@@ -107,6 +107,12 @@ const headless = async (fastify: FastifyInstance) => {
 		});
 		fastify.setNotFoundHandler((request, reply) => {
 			const indexPath = path.resolve(currentDir, "../cms/index.html");
+
+			if (request.url.startsWith("/api")) {
+				reply.code(404).send("Page not found");
+				return;
+			}
+
 			if (fs.existsSync(indexPath)) {
 				const stream = fs.createReadStream(indexPath);
 				reply.type("text/html").send(stream);

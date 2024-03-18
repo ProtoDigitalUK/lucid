@@ -10,7 +10,6 @@ import {
 	onCleanup,
 } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
-import { parseTranslationBody } from "@/components/FieldGroups/Page";
 import { FaSolidTrash } from "solid-icons/fa";
 import { setDefualtTranslations } from "@/components/FieldGroups/Page";
 // Services
@@ -24,7 +23,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { CollectionResT } from "@headless/types/src/collections";
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";
@@ -45,9 +44,13 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 
 	// ------------------------------
 	// State
-	const [getTranslations, setTranslations] = createSignal<
-		PagesResT["translations"]
+	const [getTitleTranslations, setTitleTranslations] = createSignal<
+		PagesResT["title_translations"]
 	>([]);
+	const [getExcerptTranslations, setExcerptTranslations] = createSignal<
+		PagesResT["excerpt_translations"]
+	>([]);
+	const [getSlug, setSlug] = createSignal<string | null>(null);
 	const [getParentId, setParentId] = createSignal<number | undefined>(
 		undefined,
 	);
@@ -73,9 +76,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 		queryParams: {
 			filters: {
 				collection_key: collectionKey,
-			},
-			headers: {
-				"headless-environment": environment,
 			},
 			perPage: -1,
 		},
@@ -148,7 +148,10 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 				parent_id: page.data?.data.parent_id || null,
 				category_ids: page.data?.data.categories || [],
 				author_id: page.data?.data.author?.id || null,
-				translations: page.data?.data.translations || [],
+				title_translations: page.data?.data.title_translations || [],
+				excerpt_translations:
+					page.data?.data.excerpt_translations || [],
+				slug: page.data?.data.slug || null,
 			},
 			{
 				homepage: getIsHomepage(),
@@ -157,7 +160,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 					(cat) => cat.value,
 				) as number[],
 				author_id: getSelectedAuthor() || null,
-				translations: getTranslations(),
+				title_translations: getTitleTranslations(),
+				excerpt_translations: getExcerptTranslations(),
+				slug: getSlug(),
 			},
 		);
 	});
@@ -194,10 +199,12 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 		);
 	});
 	const pageTranslationErrors = createMemo(() => {
-		const errors = mutateErrors()?.errors?.body?.translations?.children;
-		if (errors) {
-			return errors.length > 0;
-		}
+		const titleErrors =
+			mutateErrors()?.errors?.body?.title_translations?.children;
+		const excerptErrors =
+			mutateErrors()?.errors?.body?.excerpt_translations?.children;
+		if (titleErrors) return titleErrors.length > 0;
+		if (excerptErrors) return excerptErrors.length > 0;
 		return false;
 	});
 
@@ -212,15 +219,10 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 				parent_id: body.parent_id,
 				category_ids: body.category_ids,
 				author_id: body.author_id,
-				translations: parseTranslationBody({
-					translations: body.translations,
-					isHomepage: getIsHomepage(),
-					mode: "update",
-				}),
+				title_translations: body.title_translations,
+				excerpt_translations: body.excerpt_translations,
+				slug: body.slug,
 				bricks: builderStore.get.bricks,
-			},
-			headers: {
-				"headless-environment": environment() || "",
 			},
 		});
 	};
@@ -230,12 +232,19 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 	createEffect(() => {
 		if (isSuccess()) {
 			builderStore.get.reset();
-			setTranslations(
+			setTitleTranslations(
 				setDefualtTranslations({
-					translations: page.data?.data.translations || [],
+					translations: page.data?.data.title_translations || [],
 					languages: languages(),
 				}),
 			);
+			setExcerptTranslations(
+				setDefualtTranslations({
+					translations: page.data?.data.excerpt_translations || [],
+					languages: languages(),
+				}),
+			);
+			setSlug(page.data?.data.slug || null);
 			setParentId(page.data?.data.parent_id || undefined);
 			setIsHomepage(page.data?.data.homepage || false);
 			setSelectedCategories(
@@ -246,7 +255,9 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 					?.map((cat) => {
 						return {
 							value: cat.id,
-							label: cat.title,
+							// TODO: return
+							label:
+								cat.title_translations[0]?.value || "No Title",
 						};
 					}) || [],
 			);
@@ -326,14 +337,18 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 									?.data as CollectionResT,
 								categories: categories.data?.data || [],
 								mutateErrors: mutateErrors,
-								getTranslations,
+								getTitleTranslations,
+								getExcerptTranslations,
+								getSlug,
 								getParentId,
 								getIsHomepage,
 								getSelectedCategories,
 								getSelectedAuthor,
 							}}
 							setState={{
-								setTranslations,
+								setTitleTranslations,
+								setExcerptTranslations,
+								setSlug,
 								setParentId,
 								setIsHomepage,
 								setSelectedCategories,

@@ -14,29 +14,26 @@ interface Params {
 		parent_id?: number | null;
 		category_ids?: number[];
 		author_id?: number | null;
-		translations?: {
-			title: string | null;
-			slug: string | null;
-			excerpt: string | null;
-			language_id: number;
+		slug?: string | null;
+		title_translations?: {
+			value: string | null;
+			language_id: number | null;
+		}[];
+		excerpt_translations?: {
+			value: string | null;
+			language_id: number | null;
 		}[];
 		bricks?: Array<BrickDataT>;
-	};
-	headers: {
-		"headless-environment": string;
 	};
 }
 
 export const updateSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/pages/${params.id}`,
+		url: `/api/v1/collections/multiple-page/${params.id}`,
 		csrf: true,
 		config: {
 			method: "PATCH",
 			body: params.body,
-			headers: {
-				"headless-environment": params.headers["headless-environment"],
-			},
 		},
 	});
 };

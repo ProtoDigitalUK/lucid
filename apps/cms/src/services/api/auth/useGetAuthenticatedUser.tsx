@@ -11,6 +11,7 @@ import api from "@/services/api";
 import { UserResT } from "@headless/types/src/users";
 import { APIResponse } from "@/types/api";
 
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
 
 const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
@@ -27,7 +28,7 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 		queryKey: ["users.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<UserResT>>({
-				url: `/api/v1/auth/me`,
+				url: "/api/v1/account",
 				config: {
 					method: "GET",
 				},

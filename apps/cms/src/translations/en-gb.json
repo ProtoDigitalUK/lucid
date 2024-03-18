@@ -84,6 +84,7 @@
 	"remove_all": "Remove All",
 	"name": "Name",
 	"file_extension": "File Extension",
+	"username_or_email": "Username or Email",
 	"file_size": "File Size",
 	"width": "Width",
 	"true": "True",

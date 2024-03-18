@@ -3,7 +3,7 @@ import shortUUID from "short-uuid";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Types
-import type { FieldTypes } from "@headless/types/src/pages";
+import type { FieldTypes } from "@headless/types/src/multiple-page";
 import type {
 	BrickFieldValueT,
 	CustomFieldT,
@@ -18,7 +18,7 @@ export interface BrickStoreFieldT {
 	type: FieldTypes;
 	value?: BrickFieldValueT;
 	meta?: BrickFieldMetaT;
-	group_id?: string | number;
+	group_id?: string | number | null;
 	language_id: number;
 }
 
@@ -157,32 +157,34 @@ const [get, set] = createStore<BuilderStoreT>({
 		);
 	},
 	addMissingFixedBricks(collectionBricks) {
+		if (!collectionBricks) return;
+
 		set(
 			"bricks",
 			produce((draft) => {
-				collectionBricks
-					.filter((brick) => brick.type === "fixed")
-					.forEach((brick) => {
-						const brickIndex = draft.findIndex(
-							(b) => b.key === brick.key && b.type === "fixed",
-						);
-						if (brickIndex !== -1) {
-							draft[brickIndex].position = brick.position;
-							return;
-						}
+				for (const brick of collectionBricks) {
+					if (brick.type !== "fixed") continue;
 
-						const newBrick: BrickDataT = {
-							id: `temp-${shortUUID.generate()}}`,
-							key: brick.key,
-							fields: [],
-							groups: [],
-							type: "fixed",
-							order: -1,
-							position: brick.position,
-						};
+					const brickIndex = draft.findIndex(
+						(b) => b.key === brick.key && b.type === "fixed",
+					);
+					if (brickIndex !== -1) {
+						draft[brickIndex].position = brick.position;
+						continue;
+					}
 
-						draft.push(newBrick);
-					});
+					const newBrick: BrickDataT = {
+						id: `temp-${shortUUID.generate()}}`,
+						key: brick.key,
+						fields: [],
+						groups: [],
+						type: "fixed",
+						order: -1,
+						position: brick.position,
+					};
+
+					draft.push(newBrick);
+				}
 			}),
 		);
 	},
@@ -261,7 +263,7 @@ const [get, set] = createStore<BuilderStoreT>({
 					language_id: params.contentLanguage,
 				};
 
-				params.fields.forEach((field) => {
+				for (const field of params.fields) {
 					const newField: BrickStoreFieldT = {
 						key: field.key,
 						type: field.type,
@@ -270,7 +272,7 @@ const [get, set] = createStore<BuilderStoreT>({
 						language_id: params.contentLanguage as number,
 					};
 					brick.fields.push(newField);
-				});
+				}
 
 				brick.groups.push(newGroup);
 			}),
@@ -290,12 +292,12 @@ const [get, set] = createStore<BuilderStoreT>({
 				const findChildGroups = (
 					group_id: BrickStoreGroupT["group_id"],
 				) => {
-					brick.groups.forEach((group) => {
+					for (const group of brick.groups) {
 						if (group.parent_group_id === group_id) {
 							removeGroupIds.push(group.group_id);
 							findChildGroups(group.group_id);
 						}
-					});
+					}
 				};
 				findChildGroups(params.groupId);
 

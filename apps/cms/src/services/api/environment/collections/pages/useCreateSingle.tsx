@@ -7,33 +7,30 @@ import { APIResponse } from "@/types/api";
 
 interface Params {
 	body: {
-		translations: {
-			language_id: number;
-			title: string | null;
-			slug: string | null;
-			excerpt: string | null;
+		title_translations: {
+			value: string | null;
+			language_id: number | null;
 		}[];
+		excerpt_translations: {
+			value: string | null;
+			language_id: number | null;
+		}[];
+		slug: string | null;
 		collection_key: string;
 		homepage?: boolean;
 		published?: boolean;
 		parent_id?: number;
 		category_ids?: number[];
 	};
-	headers: {
-		"headless-environment": string;
-	};
 }
 
 export const createSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/pages`,
+		url: "/api/v1/collections/multiple-page",
 		csrf: true,
 		config: {
 			method: "POST",
 			body: params.body,
-			headers: {
-				"headless-environment": params.headers["headless-environment"],
-			},
 		},
 	});
 };

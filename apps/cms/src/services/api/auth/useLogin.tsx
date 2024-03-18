@@ -8,13 +8,13 @@ import { APIResponse } from "@/types/api";
 import { UserResT } from "@headless/types/src/users";
 
 interface Params {
-	username: string;
+	username_or_email: string;
 	password: string;
 }
 
 export const loginReq = (params: Params) => {
 	return request<APIResponse<UserResT>>({
-		url: `/api/v1/auth/login`,
+		url: "/api/v1/auth/login",
 		csrf: true,
 		config: {
 			method: "POST",

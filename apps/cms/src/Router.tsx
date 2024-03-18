@@ -4,8 +4,8 @@ import { Router, Routes, Route } from "@solidjs/router";
 import AuthRoutes from "@/layouts/AuthRoutes";
 import MainLayout from "@/layouts/Main";
 // Guards
-import Authenticated from "@/guards/Authenticated";
-import AuthLocked from "@/guards/AuthLocked";
+// import Authenticated from "@/guards/Authenticated";
+// import AuthLocked from "@/guards/AuthLocked";
 // ------------------------------------------------------
 // Routes
 
@@ -43,64 +43,61 @@ const AppRouter: Component = () => {
 		<Router>
 			<Routes>
 				{/* Authenticated only */}
-				<Route path="/" component={Authenticated}>
-					<Route path="/" element={<MainLayout />}>
-						<Route path="/" element={<DashboardRoute />} />
-						<Route path="/test" element={<TestRoute />} />
-						{/* Environments */}
-						<Route
-							path="/env/:envKey/collection/:collectionKey"
-							element={<EnvCollectionsPagesListRoute />}
-						/>
-						<Route
-							path="/env/:envKey/collection/:collectionKey/:id"
-							element={<EnvCollectionsPagesEditRoute />}
-						/>
-						<Route
-							path={`/env/:envKey/:collectionKey`}
-							element={<EnvCollectionsSinglePageEditRoute />}
-						/>
-						<Route
-							path="/env/create"
-							element={<CreateEnvrionemntRoute />}
-						/>
-						<Route
-							path="/env/:envKey"
-							element={<ManageEnvrionemntRoute />}
-						/>
-						{/* Media */}
-						<Route path="/media" element={<MediaListRoute />} />
-						{/* Users */}
-						<Route path="/users" element={<UsersListRoute />} />
-						{/* Roles */}
-						<Route path="/roles" element={<RolesListRoute />} />
-						{/* Emails */}
-						<Route path="/emails" element={<EmailListRoute />} />
-						{/* Settings */}
-						<Route
-							path="/settings"
-							element={<SettingsListRoute />}
-						/>
-						<Route
-							path="/settings/integrations"
-							element={<SettingsListRoute />}
-						/>
-					</Route>
+				{/* <Route path="/" component={Authenticated}> */}
+				<Route path="/" element={<MainLayout />}>
+					<Route path="/" element={<DashboardRoute />} />
+					<Route path="/test" element={<TestRoute />} />
+					{/* Environments */}
+					<Route
+						path="/env/:envKey/collection/:collectionKey"
+						element={<EnvCollectionsPagesListRoute />}
+					/>
+					<Route
+						path="/env/:envKey/collection/:collectionKey/:id"
+						element={<EnvCollectionsPagesEditRoute />}
+					/>
+					<Route
+						path={"/env/:envKey/:collectionKey"}
+						element={<EnvCollectionsSinglePageEditRoute />}
+					/>
+					<Route
+						path="/env/create"
+						element={<CreateEnvrionemntRoute />}
+					/>
+					<Route
+						path="/env/:envKey"
+						element={<ManageEnvrionemntRoute />}
+					/>
+					{/* Media */}
+					<Route path="/media" element={<MediaListRoute />} />
+					{/* Users */}
+					<Route path="/users" element={<UsersListRoute />} />
+					{/* Roles */}
+					<Route path="/roles" element={<RolesListRoute />} />
+					{/* Emails */}
+					<Route path="/emails" element={<EmailListRoute />} />
+					{/* Settings */}
+					<Route path="/settings" element={<SettingsListRoute />} />
+					<Route
+						path="/settings/integrations"
+						element={<SettingsListRoute />}
+					/>
 				</Route>
+				{/* </Route> */}
 				{/* Non authenticated only */}
-				<Route path="/" component={AuthLocked}>
-					<Route path="/" component={AuthRoutes}>
-						<Route path="/login" component={LoginRoute} />
-						<Route
-							path="/forgot-password"
-							component={ForgotPasswordRoute}
-						/>
-						<Route
-							path="/reset-password"
-							component={ResetPasswordRoute}
-						/>
-					</Route>
+				{/* <Route path="/" component={AuthLocked}> */}
+				<Route path="/" component={AuthRoutes}>
+					<Route path="/login" component={LoginRoute} />
+					<Route
+						path="/forgot-password"
+						component={ForgotPasswordRoute}
+					/>
+					<Route
+						path="/reset-password"
+						component={ResetPasswordRoute}
+					/>
 				</Route>
+				{/* </Route> */}
 			</Routes>
 		</Router>
 	);

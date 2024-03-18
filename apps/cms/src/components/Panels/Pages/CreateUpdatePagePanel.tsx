@@ -16,12 +16,11 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 // Components
 import Panel from "@/components/Groups/Panel";
 import PageFieldGroup, {
 	setDefualtTranslations,
-	parseTranslationBody,
 } from "@/components/FieldGroups/Page";
 
 interface CreateUpdatePagePanelProps {
@@ -38,9 +37,13 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 ) => {
 	// ------------------------------
 	// State
-	const [getTranslations, setTranslations] = createSignal<
-		PagesResT["translations"]
+	const [getTitleTranslations, setTitleTranslations] = createSignal<
+		PagesResT["title_translations"]
 	>([]);
+	const [getExcerptTranslations, setExcerptTranslations] = createSignal<
+		PagesResT["excerpt_translations"]
+	>([]);
+	const [getSlug, setSlug] = createSignal<string | null>(null);
 	const [getParentId, setParentId] = createSignal<number | undefined>(
 		undefined,
 	);
@@ -66,9 +69,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 		queryParams: {
 			filters: {
 				collection_key: props.collection.key,
-			},
-			headers: {
-				"headless-environment": environment,
 			},
 			perPage: -1,
 		},
@@ -114,7 +114,10 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 				parent_id: page.data?.data.parent_id || null,
 				category_ids: page.data?.data.categories || [],
 				author_id: page.data?.data.author?.id || null,
-				translations: page.data?.data.translations || [],
+				title_translations: page.data?.data.title_translations || [],
+				excerpt_translations:
+					page.data?.data.excerpt_translations || [],
+				slug: page.data?.data.slug || null,
 			},
 			{
 				homepage: getIsHomepage(),
@@ -123,7 +126,9 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 					(cat) => cat.value,
 				) as number[],
 				author_id: getSelectedAuthor() || null,
-				translations: getTranslations(),
+				title_translations: getTitleTranslations(),
+				excerpt_translations: getExcerptTranslations(),
+				slug: getSlug(),
 			},
 		);
 	});
@@ -178,10 +183,12 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 	});
 
 	const hasTranslationErrors = createMemo(() => {
-		const errors = mutateErrors()?.errors?.body?.translations.children;
-		if (errors) {
-			return errors.length > 0;
-		}
+		const titleErrors =
+			mutateErrors()?.errors?.body?.title_translations.children;
+		const excerptErrors =
+			mutateErrors()?.errors?.body?.excerpt_translations.children;
+		if (titleErrors) return titleErrors.length > 0;
+		if (excerptErrors) return excerptErrors.length > 0;
 		return false;
 	});
 
@@ -194,12 +201,19 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 		if (page.isSuccess && categories.isSuccess) {
 			setParentId(page.data?.data.parent_id || undefined);
 			setIsHomepage(page.data?.data.homepage || false);
-			setTranslations(
+			setTitleTranslations(
 				setDefualtTranslations({
-					translations: page.data?.data.translations || [],
+					translations: page.data?.data.title_translations || [],
 					languages: languages(),
 				}),
 			);
+			setExcerptTranslations(
+				setDefualtTranslations({
+					translations: page.data?.data.excerpt_translations || [],
+					languages: languages(),
+				}),
+			);
+			setSlug(page.data?.data.slug || null);
 			setSelectedCategories(
 				categories.data?.data
 					.filter((cat) => {
@@ -208,7 +222,9 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 					?.map((cat) => {
 						return {
 							value: cat.id,
-							label: cat.title,
+							// TODO: return
+							label:
+								cat.title_translations[0]?.value || "No Title",
 						};
 					}) || [],
 			);
@@ -218,13 +234,22 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
 	createEffect(() => {
 		if (panelMode() !== "create") return;
-		if (getTranslations().length > 0) return;
-		setTranslations(
-			setDefualtTranslations({
-				translations: [],
-				languages: languages(),
-			}),
-		);
+		if (getTitleTranslations().length === 0) {
+			setTitleTranslations(
+				setDefualtTranslations({
+					translations: [],
+					languages: languages(),
+				}),
+			);
+		}
+		if (getExcerptTranslations().length === 0) {
+			setExcerptTranslations(
+				setDefualtTranslations({
+					translations: [],
+					languages: languages(),
+				}),
+			);
+		}
 	});
 
 	createEffect(() => {
@@ -249,25 +274,17 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 							parent_id: body.parent_id,
 							category_ids: body.category_ids,
 							author_id: body.author_id,
-							translations: parseTranslationBody({
-								translations: body.translations,
-								isHomepage: getIsHomepage(),
-								mode: "update",
-							}),
-						},
-						headers: {
-							"headless-environment": environment() || "",
+							title_translations: body.title_translations || [],
+							excerpt_translations:
+								body.excerpt_translations || [],
 						},
 					});
 				} else {
 					createPage.action.mutate({
 						body: {
-							translations:
-								parseTranslationBody({
-									translations: getTranslations(),
-									isHomepage: getIsHomepage(),
-									mode: "create",
-								}) || [],
+							title_translations: getTitleTranslations(),
+							excerpt_translations: getExcerptTranslations(),
+							slug: getSlug(),
 							collection_key: props.collection.key,
 							homepage: getIsHomepage(),
 							parent_id: getParentId(),
@@ -275,16 +292,15 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 								(cat) => cat.value,
 							) as number[],
 						},
-						headers: {
-							"headless-environment": environment() as string,
-						},
 					});
 				}
 			}}
 			reset={() => {
 				updatePage.reset();
 				createPage.reset();
-				setTranslations([]);
+				setTitleTranslations([]);
+				setExcerptTranslations([]);
+				setSlug(null);
 				setParentId(undefined);
 				setIsHomepage(false);
 				setSelectedCategories([]);
@@ -315,14 +331,18 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 						mutateErrors,
 						collection: props.collection,
 						categories: categories.data?.data || [],
-						getTranslations,
+						getTitleTranslations,
+						getExcerptTranslations,
+						getSlug,
 						getIsHomepage,
 						getParentId,
 						getSelectedCategories,
 						getSelectedAuthor,
 					}}
 					setState={{
-						setTranslations,
+						setTitleTranslations,
+						setExcerptTranslations,
+						setSlug,
 						setIsHomepage,
 						setParentId,
 						setSelectedCategories,

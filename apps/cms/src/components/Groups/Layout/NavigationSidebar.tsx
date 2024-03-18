@@ -1,31 +1,19 @@
 import T from "@/translations";
-import { Component, createEffect, createMemo } from "solid-js";
-import { useLocation, useParams } from "@solidjs/router";
+import { Component, createMemo } from "solid-js";
 // Assets
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
 // Store
 import userStore from "@/store/userStore";
-// Utils
-import helpers from "@/utils/helpers";
 // Services
 import api from "@/services/api";
 // Store
-import { environment, setEnvironment } from "@/store/environmentStore";
+import { environment } from "@/store/environmentStore";
 // Components
 import Navigation from "@/components/Groups/Navigation";
 
 export const NavigationSidebar: Component = () => {
 	// ----------------------------------
-	// Hooks & States
-	const location = useLocation();
-	const params = useParams();
-
-	// ----------------------------------
 	// Mutations & Queries
-	const environments = api.environment.useGetAll({
-		queryParams: {},
-	});
-
 	const collections = api.environment.collections.useGetAll({
 		queryParams: {
 			include: {
@@ -40,39 +28,14 @@ export const NavigationSidebar: Component = () => {
 
 	// ----------------------------------
 	// Effects
-	createEffect(() => {
-		// get env variable from url
-		if (params.envKey) {
-			const findEnv = environments.data?.data.find(
-				(env) => env.key === params.envKey,
-			);
-			if (!findEnv) return;
-			setEnvironment(findEnv.key);
-		}
-	});
 
 	// ----------------------------------
 	// Memos
-	const getFirstEnvHref = createMemo(() => {
-		return helpers.getFirstEnvLink({
-			collections: collections.data?.data || [],
-			canCreate: userStore.get.hasPermission(["create_environment"]).all,
-			environment: environment(),
-		});
-	});
-
-	const showEnvLink = createMemo(() => {
-		if (userStore.get.hasPermission(["create_environment"]).all)
-			return true;
-		if (!environment()) return false;
-		return true;
-	});
-
 	const envBarIsLoading = createMemo(() => {
-		return collections.isLoading || environments.isLoading;
+		return collections.isLoading;
 	});
 	const envBarIsError = createMemo(() => {
-		return collections.isError || environments.isError;
+		return collections.isError;
 	});
 
 	// ----------------------------------
@@ -93,13 +56,6 @@ export const NavigationSidebar: Component = () => {
 						href="/"
 						icon="dashboard"
 						title={T("home")}
-					/>
-					<Navigation.IconLink
-						href={getFirstEnvHref()}
-						icon="environment"
-						title={T("environment")}
-						active={location.pathname.includes("/env/")}
-						permission={showEnvLink()}
 					/>
 					<Navigation.IconLink
 						href="/media"
@@ -153,9 +109,8 @@ export const NavigationSidebar: Component = () => {
 				</ul>
 			</nav>
 			{/* Sidebar */}
-			<Navigation.EnvironmentBar
+			<Navigation.CollectionsBar
 				collections={collections.data?.data || []}
-				environments={environments.data?.data || []}
 				state={{
 					isLoading: envBarIsLoading(),
 					isError: envBarIsError(),

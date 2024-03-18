@@ -13,7 +13,7 @@ interface LoginFormProps {
 const LoginForm: Component<LoginFormProps> = (props) => {
 	// ----------------------------------------
 	// State
-	const [username, setUsername] = createSignal("");
+	const [usernameOrEmail, setUsernameOrEmail] = createSignal("");
 	const [password, setPassword] = createSignal("");
 
 	// ----------------------------------------
@@ -34,19 +34,19 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 			}}
 			onSubmit={() => {
 				login.action.mutate({
-					username: username(),
+					username_or_email: usernameOrEmail(),
 					password: password(),
 				});
 			}}
 		>
 			<Form.Input
-				id="username"
-				name="username"
+				id="username_or_email"
+				name="username_or_email"
 				type="text"
-				value={username()}
-				onChange={setUsername}
+				value={usernameOrEmail()}
+				onChange={setUsernameOrEmail}
 				copy={{
-					label: T("username"),
+					label: T("username_or_email"),
 				}}
 				required={true}
 				autoFoucs={true}

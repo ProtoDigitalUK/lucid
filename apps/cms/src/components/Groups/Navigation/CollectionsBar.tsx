@@ -9,29 +9,26 @@ import {
 	Switch,
 	Match,
 } from "solid-js";
-import { useLocation, useParams } from "@solidjs/router";
+import { useParams } from "@solidjs/router";
 // Store
 import { environment } from "@/store/environmentStore";
 // Types
 import { CollectionResT } from "@headless/types/src/collections";
-import { EnvironmentResT } from "@headless/types/src/environments";
 // Components
-import EnvironmentSelector from "@/components/Partials/EnvironmentSelector";
 import Navigation from "@/components/Groups/Navigation";
 
-interface EnvironmentBarProps {
+interface CollectionsBarProps {
 	collections: CollectionResT[];
-	environments: EnvironmentResT[];
 	state: {
 		isLoading: boolean;
 		isError: boolean;
 	};
 }
 
-export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
+export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 	// ----------------------------------
 	// Hooks & States
-	const location = useLocation();
+	// const location = useLocation();
 	const params = useParams();
 	const [showBar, setShowBar] = createSignal(false);
 
@@ -43,24 +40,25 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
 			setShowBar(false);
 			return;
 		}
-
-		if (location.pathname.includes("/env/")) {
-			setShowBar(true);
-		} else {
-			setShowBar(false);
-		}
+		setShowBar(true);
+		// TODO: update pathing
+		// if (location.pathname.includes("/env/")) {
+		// 	setShowBar(true);
+		// } else {
+		// 	setShowBar(false);
+		// }
 	});
 
 	// ----------------------------------
 	// Memos
 	const pagesCollections = createMemo(() => {
 		return props.collections.filter(
-			(collection) => collection.type === "pages",
+			(collection) => collection.type === "multiple-page",
 		);
 	});
 	const singlePagesCollections = createMemo(() => {
 		return props.collections.filter(
-			(collection) => collection.type === "singlepage",
+			(collection) => collection.type === "single-page",
 		);
 	});
 
@@ -69,7 +67,6 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
 	return (
 		<Show when={showBar() && environment() !== undefined}>
 			<div class="w-[240px] bg-container border-r border-border h-full">
-				<EnvironmentSelector environments={props.environments} />
 				<nav class="relative">
 					<Switch>
 						<Match when={props.state.isLoading}>
@@ -82,9 +79,7 @@ export const EnvironmentBar: Component<EnvironmentBarProps> = (props) => {
 								<span class="skeleton block h-12 w-full mb-2.5" />
 							</div>
 						</Match>
-						<Match when={props.state.isError}>
-							<></>
-						</Match>
+						<Match when={props.state.isError}>error</Match>
 						<Match when={true}>
 							{/* Multi Collections */}
 							<Show when={pagesCollections().length > 0}>

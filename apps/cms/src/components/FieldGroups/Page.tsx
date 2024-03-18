@@ -16,11 +16,9 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 import type { LanguageResT } from "@headless/types/src/language";
 import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@headless/types/src/pages";
-import type {
-	CollectionCategoriesResT,
-	CollectionResT,
-} from "@headless/types/src/collections";
+import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { CollectionResT } from "@headless/types/src/collections";
+import type { CategoryResT } from "@headless/types/src/categories";
 // Components
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
@@ -37,9 +35,11 @@ interface PageFieldGroupProps {
 		contentLanguage?: Accessor<number | undefined>;
 		mutateErrors: Accessor<APIErrorResponse | undefined>;
 		collection: CollectionResT;
-		categories: CollectionCategoriesResT[];
+		categories: CategoryResT[];
 		// Page Details
-		getTranslations: Accessor<PagesResT["translations"]>;
+		getTitleTranslations: Accessor<PagesResT["title_translations"]>;
+		getExcerptTranslations: Accessor<PagesResT["excerpt_translations"]>;
+		getSlug: Accessor<string | null>;
 		getParentId: Accessor<number | undefined>;
 		getIsHomepage: Accessor<boolean>;
 		getSelectedCategories: Accessor<SelectMultipleValueT[]>;
@@ -47,7 +47,9 @@ interface PageFieldGroupProps {
 	};
 	setState: {
 		// Page Details
-		setTranslations: Setter<PagesResT["translations"]>;
+		setTitleTranslations: Setter<PagesResT["title_translations"]>;
+		setExcerptTranslations: Setter<PagesResT["excerpt_translations"]>;
+		setSlug: Setter<string | null>;
 		setParentId: Setter<number | undefined>;
 		setIsHomepage: Setter<boolean>;
 		setSelectedCategories: Setter<SelectMultipleValueT[]>;
@@ -65,7 +67,7 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 	});
 	const hideSetParentPage = createMemo(() => {
 		return (
-			props.state.collection.disableHomepage === true ||
+			props.state.collection.disable_homepages === true ||
 			props.state.getIsHomepage()
 		);
 	});
@@ -79,39 +81,44 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 		return undefined;
 	};
 	const setSlugFromTitle = (language_id: number) => {
+		if (props.state.getSlug()) return;
 		if (props.state.getIsHomepage()) return;
-		const item = props.state.getTranslations().find((t) => {
+		const item = props.state.getTitleTranslations().find((t) => {
 			return t.language_id === language_id;
 		});
 
-		if (!item?.title) return;
-		if (item.slug) return;
-		const slugValue = slugify(item.title, { lower: true });
-		setTranslationsValues("slug", language_id, slugValue);
+		if (!item?.value) return;
+		const slugValue = slugify(item.value, { lower: true });
+		props.setState.setSlug(slugValue);
 	};
 	const setTranslationsValues = (
-		key: "title" | "slug" | "excerpt",
+		type: "title" | "excerpt",
 		language_id: number,
 		value: string | null,
 	) => {
-		const translations = props.state.getTranslations();
+		const translations =
+			type === "title"
+				? props.state.getTitleTranslations()
+				: props.state.getExcerptTranslations();
 		const translation = translations.find((t) => {
 			return t.language_id === language_id;
 		});
 		if (!translation) {
-			const item: PagesResT["translations"][0] = {
-				title: null,
-				slug: null,
-				excerpt: null,
+			const item: PagesResT["title_translations"][0] = {
+				value: value,
 				language_id,
 			};
-			item[key] = value;
 			translations.push(item);
-			props.setState.setTranslations([...translations]);
+
+			if (type === "title")
+				props.setState.setTitleTranslations([...translations]);
+			else props.setState.setExcerptTranslations([...translations]);
 			return;
 		}
-		translation[key] = value;
-		props.setState.setTranslations([...translations]);
+		translation.value = value;
+		if (type === "title")
+			props.setState.setTitleTranslations([...translations]);
+		else props.setState.setExcerptTranslations([...translations]);
 	};
 
 	// ------------------------------
@@ -138,9 +145,9 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 						<Form.Input
 							id="name"
 							value={
-								props.state.getTranslations().find((t) => {
+								props.state.getTitleTranslations().find((t) => {
 									return t.language_id === language.id;
-								})?.title || ""
+								})?.value || ""
 							}
 							onChange={(value) =>
 								setTranslationsValues(
@@ -159,38 +166,14 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 							required={language.is_default}
 							theme={props.theme}
 						/>
-						<Show when={!hideSlugInput()}>
-							<Form.Input
-								id="slug"
-								value={
-									props.state.getTranslations().find((t) => {
-										return t.language_id === language.id;
-									})?.slug || ""
-								}
-								onChange={(value) =>
-									setTranslationsValues(
-										"slug",
-										language.id,
-										value,
-									)
-								}
-								name={"slug"}
-								type="text"
-								copy={{
-									label: T("slug"),
-									tooltip: T("page_slug_description"),
-								}}
-								errors={inputError(index())?.slug}
-								required={language.is_default}
-								theme={props.theme}
-							/>
-						</Show>
 						<Form.Textarea
 							id="excerpt"
 							value={
-								props.state.getTranslations().find((t) => {
-									return t.language_id === language.id;
-								})?.excerpt || ""
+								props.state
+									.getExcerptTranslations()
+									.find((t) => {
+										return t.language_id === language.id;
+									})?.value || ""
 							}
 							onChange={(value) =>
 								setTranslationsValues(
@@ -212,18 +195,30 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 			<Show when={props.showTitles}>
 				<SectionHeading title={T("meta")} />
 			</Show>
-			<Show when={props.state.collection.disableHomepage !== true}>
+			<Show when={!hideSlugInput()}>
+				<Form.Input
+					id="slug"
+					value={props.state.getSlug() || ""}
+					onChange={(value) => props.setState.setSlug(value)}
+					name={"slug"}
+					type="text"
+					copy={{
+						label: T("slug"),
+						tooltip: T("page_slug_description"),
+					}}
+					errors={props.state.mutateErrors()?.errors?.body?.slug}
+					required={true}
+					theme={props.theme}
+				/>
+			</Show>
+			<Show when={props.state.collection.disable_homepages !== true}>
 				<Form.Checkbox
 					id="homepage"
 					value={props.state.getIsHomepage()}
 					onChange={(value) => {
 						props.setState.setIsHomepage(value);
 						if (props.mode === "create") return;
-						const translations = props.state.getTranslations();
-						for (let i = 0; i < translations.length; i++) {
-							translations[i].slug = null;
-						}
-						props.setState.setTranslations([...translations]);
+						props.setState.setSlug(null);
 					}}
 					name={"homepage"}
 					copy={{
@@ -285,7 +280,9 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 					props.state.categories.map((cat) => {
 						return {
 							value: cat.id,
-							label: cat.title,
+							label: cat.title_translations.find(
+								(t) => t.language_id === 1,
+							)?.value as string,
 						};
 					}) || []
 				}
@@ -310,12 +307,12 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 };
 
 export const setDefualtTranslations = (data: {
-	translations: PagesResT["translations"];
+	translations: PagesResT["title_translations"];
 	languages: LanguageResT[];
 }) => {
 	const translationsValues = JSON.parse(
 		JSON.stringify(data.translations),
-	) as PagesResT["translations"];
+	) as PagesResT["title_translations"];
 
 	const languagesValues = data.languages;
 	for (let i = 0; i < languagesValues.length; i++) {
@@ -324,43 +321,15 @@ export const setDefualtTranslations = (data: {
 			return t.language_id === language.id;
 		});
 		if (!translation) {
-			const item: PagesResT["translations"][0] = {
-				title: null,
-				slug: null,
-				excerpt: null,
+			const item: PagesResT["title_translations"][0] = {
+				value: null,
 				language_id: language.id,
 			};
 			translationsValues.push(item);
 		}
 	}
 
-	return translationsValues.map((translation) => {
-		if (translation.slug && translation.slug !== "/") {
-			translation.slug = translation.slug.replace(/^\//, "");
-		}
-		return translation;
-	});
-};
-
-export const parseTranslationBody = (data: {
-	translations?: PagesResT["translations"];
-	isHomepage: boolean;
-	mode: "create" | "update";
-}) => {
-	if (!data.translations) return undefined;
-	return data.translations.map((translation) => {
-		return {
-			title: translation.title,
-			slug:
-				data.mode === "create"
-					? translation.slug
-					: data.isHomepage
-					  ? null
-					  : translation.slug,
-			excerpt: translation.excerpt,
-			language_id: translation.language_id,
-		};
-	});
+	return translationsValues;
 };
 
 export default PageFieldGroup;

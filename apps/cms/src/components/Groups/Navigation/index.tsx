@@ -1,10 +1,10 @@
-import { EnvironmentBar } from "./EnvironmentBar";
+import { CollectionsBar } from "./CollectionsBar";
 import { IconLink } from "./IconLink";
 import { NavigationLink as Link } from "./Link";
 import { LinkGroup } from "./LinkGroup";
 
 const Navigation = {
-	EnvironmentBar,
+	CollectionsBar,
 	IconLink,
 	Link,
 	LinkGroup,

@@ -11,10 +11,7 @@ interface Params {
 	id: number;
 	body: {
 		name?: string;
-		permission_groups?: Array<{
-			environment_key?: string;
-			permissions: string[];
-		}>;
+		permissions: string[];
 	};
 }
 
@@ -52,7 +49,7 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 				}),
 				status: "success",
 			});
-			props?.onSuccess && props.onSuccess();
+			props?.onSuccess?.();
 		},
 		onError: props?.onError,
 	});

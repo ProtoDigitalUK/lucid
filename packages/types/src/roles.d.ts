@@ -4,8 +4,8 @@ export interface RoleResT {
 	description: string | null;
 
 	permissions?: {
-		id: RolePermissionT["id"];
-		permission: RolePermissionT["permission"];
+		id: number;
+		permission: string;
 	}[];
 
 	created_at: string | null;

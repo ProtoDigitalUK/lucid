@@ -8,15 +8,12 @@ import { RoleResT } from "@headless/types/src/roles";
 
 interface Params {
 	name: string;
-	permission_groups: Array<{
-		environment_key?: string;
-		permissions: string[];
-	}>;
+	permissions: string[];
 }
 
 export const createSingleReq = (params: Params) => {
 	return request<APIResponse<RoleResT>>({
-		url: `/api/v1/roles`,
+		url: "/api/v1/roles",
 		csrf: true,
 		config: {
 			method: "POST",

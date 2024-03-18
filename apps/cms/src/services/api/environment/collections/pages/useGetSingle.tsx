@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { APIResponse } from "@/types/api";
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 
 interface QueryParams {
 	location: {

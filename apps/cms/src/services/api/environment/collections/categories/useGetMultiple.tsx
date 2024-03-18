@@ -5,16 +5,13 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import { APIResponse } from "@/types/api";
-import { CollectionCategoriesResT } from "@headless/types/src/collections";
+import { CategoryResT } from "@headless/types/src/categories";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
 	filters?: {
 		title?: Accessor<string | undefined> | string;
 		collection_key?: Accessor<string | undefined> | string;
-	};
-	headers: {
-		"headless-environment": Accessor<string | undefined> | string;
 	};
 	perPage?: Accessor<number> | number;
 }
@@ -36,12 +33,11 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<APIResponse<CollectionCategoriesResT[]>>({
-				url: `/api/v1/categories`,
+			request<APIResponse<CategoryResT[]>>({
+				url: "/api/v1/collections/categories",
 				query: queryParams(),
 				config: {
 					method: "GET",
-					headers: queryParams().headers,
 				},
 			}),
 		get enabled() {

@@ -69,9 +69,6 @@ const EnvCollectionsPagesListRoute: Component = () => {
 			filters: {
 				collection_key: collectionKey,
 			},
-			headers: {
-				"headless-environment": environment,
-			},
 			perPage: -1,
 		},
 		enabled: () => !!collectionKey(),
@@ -125,7 +122,10 @@ const EnvCollectionsPagesListRoute: Component = () => {
 							type: "multi-select",
 							options:
 								categories.data?.data.map((cat) => ({
-									label: cat.title,
+									// TODO: Fix this
+									label:
+										cat.title_translations[0].value ||
+										"No title",
 									value: String(cat.id),
 								})) || [],
 						},
