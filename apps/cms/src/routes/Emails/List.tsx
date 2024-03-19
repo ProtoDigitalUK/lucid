@@ -37,7 +37,7 @@ const EmailListRoute: Component = () => {
 			sorts: {
 				sent_count: undefined,
 				created_at: undefined,
-				updated_at: "desc",
+				last_attempt_at: "desc",
 			},
 		},
 		{
@@ -118,8 +118,8 @@ const EmailListRoute: Component = () => {
 							key: "created_at",
 						},
 						{
-							label: T("updated_at"),
-							key: "updated_at",
+							label: T("last_attempt_at"),
+							key: "last_attempt_at",
 						},
 					]}
 					perPage={[]}

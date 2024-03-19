@@ -66,6 +66,7 @@
 	"last_name": "Last Name",
 	"created_at": "Created At",
 	"updated_at": "Updated At",
+	"last_attempt_at": "Last Attempt At",
 	"role": "Role",
 	"error": "Error",
 	"unknown_error_message": "An unknown error has occurred. Please try again later.",

@@ -96,7 +96,7 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
 					},
 					{
 						label: T("last_attempt"),
-						key: "updated_at",
+						key: "last_attempt_at",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
