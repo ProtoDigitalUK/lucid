@@ -93,11 +93,11 @@ const useMutationWrapper = <Params, Response>({
 				}
 				setErrors(undefined);
 				if (onSuccess) onSuccess(data);
-				invalidates.forEach((query) =>
+				for (const query of invalidates) {
 					queryClient.invalidateQueries({
 						queryKey: [query],
-					}),
-				);
+					});
+				}
 			} else if (error) {
 				if (errorToast) {
 					spawnToast({

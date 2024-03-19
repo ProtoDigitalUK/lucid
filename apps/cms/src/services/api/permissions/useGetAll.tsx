@@ -4,9 +4,10 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { PermissionsResT } from "@headless/types/src/permissions";
+import { PermissionGroup } from "@headless/types/src/permissions";
 import { APIResponse } from "@/types/api";
 
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
 
 const useGetAll = (params: QueryHook<QueryParams>) => {
@@ -22,8 +23,8 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["permissions.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<PermissionsResT>>({
-				url: `/api/v1/permissions`,
+			request<APIResponse<PermissionGroup[]>>({
+				url: "/api/v1/permissions",
 				query: queryParams(),
 				config: {
 					method: "GET",
