@@ -16,7 +16,7 @@ const MediaListRoute: Component = () => {
 	const searchParams = useSearchParams(
 		{
 			filters: {
-				name: {
+				title: {
 					value: "",
 					type: "text",
 				},
@@ -28,12 +28,22 @@ const MediaListRoute: Component = () => {
 					value: "",
 					type: "array",
 				},
+				mime_type: {
+					value: "",
+					type: "text",
+				},
+				key: {
+					value: "",
+					type: "text",
+				},
 			},
 			sorts: {
 				file_size: undefined,
-				name: undefined,
+				title: undefined,
 				width: undefined,
 				height: undefined,
+				mime_type: undefined,
+				file_extension: undefined,
 				created_at: undefined,
 				updated_at: "desc",
 			},
@@ -59,8 +69,18 @@ const MediaListRoute: Component = () => {
 					searchParams={searchParams}
 					filters={[
 						{
-							label: T("name"),
-							key: "name",
+							label: T("title"),
+							key: "title",
+							type: "text",
+						},
+						{
+							label: T("mime_type"),
+							key: "mime_type",
+							type: "text",
+						},
+						{
+							label: T("key"),
+							key: "key",
 							type: "text",
 						},
 						{
@@ -108,6 +128,14 @@ const MediaListRoute: Component = () => {
 						{
 							label: T("file_size"),
 							key: "file_size",
+						},
+						{
+							label: T("mime_type"),
+							key: "mime_type",
+						},
+						{
+							label: T("file_extension"),
+							key: "file_extension",
 						},
 						{
 							label: T("width"),

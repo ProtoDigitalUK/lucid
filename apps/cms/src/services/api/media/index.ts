@@ -6,6 +6,7 @@ import useUpdateFileSingle from "./useUpdateFileSingle";
 import useDeleteSingle from "./useDeleteSingle";
 import useDeleteAllProcessedImages from "./useDeleteAllProcessedImages";
 import useDeleteProcessedImages from "./useDeleteProcessedImages";
+import useCreateSingle from "./useCreateSingle";
 
 const exportObject = {
 	useGetMultiple,
@@ -16,6 +17,7 @@ const exportObject = {
 	useDeleteAllProcessedImages,
 	useDeleteProcessedImages,
 	useUpdateFileSingle,
+	useCreateSingle,
 };
 
 export default exportObject;
