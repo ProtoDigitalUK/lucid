@@ -31,7 +31,7 @@ const DashboardRoute: Component = () => {
 					type="submit"
 					theme="primary"
 					size="medium"
-					loading={logout.action.isLoading}
+					loading={logout.action.isPending}
 					onClick={() => logout.action.mutate({})}
 				>
 					{T("logout")}

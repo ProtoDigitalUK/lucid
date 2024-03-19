@@ -9,7 +9,7 @@ import Layout from "@/components/Groups/Layout";
 const MainLayout: Component = () => {
 	// ----------------------------------
 	// Mutations & Queries
-	const authenticatedUser = api.auth.useGetAuthenticatedUser({
+	const authenticatedUser = api.account.useGetAuthenticatedUser({
 		queryParams: {},
 	});
 	api.languages.useGetMultiple({

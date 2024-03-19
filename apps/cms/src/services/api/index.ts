@@ -1,4 +1,5 @@
 import auth from "./auth";
+import account from "./account";
 import environment from "./environment";
 import brickConfig from "./brick-config";
 import users from "./users";
@@ -11,6 +12,7 @@ import languages from "./languages";
 
 const exportObject = {
 	auth,
+	account,
 	environment,
 	brickConfig,
 	users,

@@ -18,7 +18,7 @@ export const resetPasswordReq = async (params: Params) => {
 			message: string;
 		}>
 	>({
-		url: `/api/v1/auth/reset-password/${params.token}`,
+		url: `/api/v1/account/reset-password/${params.token}`,
 		csrf: true,
 		config: {
 			method: "PATCH",

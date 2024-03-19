@@ -23,14 +23,14 @@ const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
 	// -----------------------------
 	// Query
 	return createQuery(() => ({
-		queryKey: ["auth.verifyResetToken", queryKey(), params.key?.()],
+		queryKey: ["account.verifyResetToken", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<
 				APIResponse<{
 					message: string;
 				}>
 			>({
-				url: `/api/v1/auth/reset-password/${
+				url: `/api/v1/account/reset-password/${
 					queryParams().location?.token
 				}`,
 				config: {

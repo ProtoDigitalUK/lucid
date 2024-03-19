@@ -17,7 +17,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 
 	// ----------------------------------------
 	// Mutations
-	const resetPassword = api.auth.useResetPassword();
+	const resetPassword = api.account.useResetPassword();
 
 	// ----------------------------------------
 	// Render

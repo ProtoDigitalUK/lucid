@@ -17,7 +17,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 
 	// ----------------------------------------
 	// Mutations
-	const forgotPassword = api.auth.useForgotPassword({
+	const forgotPassword = api.account.useForgotPassword({
 		onSuccess: () => {
 			setEmail("");
 		},

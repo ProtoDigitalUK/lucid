@@ -26,7 +26,7 @@ const ResetPasswordRoute: Component = () => {
 
 	// ----------------------------------------
 	// Queries / Mutations
-	const checkToken = api.auth.useVerifyResetToken({
+	const checkToken = api.account.useVerifyResetToken({
 		queryParams: {
 			location: {
 				token: token as string,
