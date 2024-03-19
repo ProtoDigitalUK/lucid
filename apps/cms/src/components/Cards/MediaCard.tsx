@@ -45,8 +45,13 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 		return userStore.get.hasPermission(["update_media"]).all;
 	});
 
-	const translation = createMemo(() => {
-		return props.media.translations.find(
+	const titleTranslation = createMemo(() => {
+		return props.media.title_translations.find(
+			(translation) => translation.language_id === props.contentLanguage,
+		);
+	});
+	const altTranslation = createMemo(() => {
+		return props.media.alt_translations.find(
 			(translation) => translation.language_id === props.contentLanguage,
 		);
 	});
@@ -67,6 +72,9 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 					props.rowTarget.setTrigger("update", true);
 				}
 			}}
+			onKeyUp={() => {}}
+			onKeyDown={() => {}}
+			onKeyPress={() => {}}
 		>
 			<div class="absolute top-15 right-15 z-10">
 				<ActionDropdown
@@ -111,7 +119,11 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
 				<MediaPreview
 					media={props.media}
-					alt={translation()?.alt || translation()?.name || ""}
+					alt={
+						altTranslation()?.value ||
+						titleTranslation()?.value ||
+						""
+					}
 				/>
 				<span class="inset-0 top-auto absolute flex gap-1 p-15">
 					<Pill theme="primary">
@@ -125,7 +137,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 			{/* Content */}
 			<div class="p-15 border-t border-border">
 				<h3 class="mb-0.5 line-clamp-1">
-					{translation()?.name || T("no_translation")}
+					{titleTranslation()?.value || T("no_translation")}
 				</h3>
 				<ClickToCopy
 					type="simple"

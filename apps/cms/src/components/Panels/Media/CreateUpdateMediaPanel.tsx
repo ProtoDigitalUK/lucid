@@ -12,6 +12,8 @@ import {
 import api from "@/services/api";
 // Hooks
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
+// Types
+import type { MediaResT } from "@headless/types/src/media";
 // Utils
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
@@ -29,12 +31,6 @@ interface CreateUpdateMediaPanelProps {
 		open: boolean;
 		setOpen: (_state: boolean) => void;
 	};
-}
-
-interface MediaTranslations {
-	language_id: number;
-	alt: string | null;
-	name: string | null;
 }
 
 const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
@@ -59,16 +55,25 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	// State
 	const [getUpdateDataLock, setUpdateDataLock] = createSignal(false);
 	const [getUpdateFileLock, setUpdateFileLock] = createSignal(false);
-	const [getTranslations, setTranslations] = createSignal<
-		Array<MediaTranslations>
+	const [getTitleTranslations, setTitleTranslations] = createSignal<
+		MediaResT["title_translations"]
 	>([]);
-	const [getMediaId, setMediaId] = createSignal<number | null>(null);
+	const [getAltTranslations, setAltTranslations] = createSignal<
+		MediaResT["alt_translations"]
+	>([]);
 
 	// ---------------------------------
 	// Mutations
-	const uploadSingleFile = api.media.useUploadFileSingle();
-	const updateSingleFile = api.media.useUpdateFileSingle();
-	const updateSingle = api.media.useUpdateSingle();
+	const createSingle = api.media.useCreateSingle({
+		onSuccess: () => {
+			props.state.setOpen(false);
+		},
+	});
+	const updateSingle = api.media.useUpdateSingle({
+		onSuccess: () => {
+			props.state.setOpen(false);
+		},
+	});
 
 	const MediaFile = useSingleFileUpload({
 		id: "file",
@@ -77,8 +82,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		required: true,
 		errors:
 			panelMode() === "create"
-				? uploadSingleFile.errors
-				: updateSingleFile.errors,
+				? createSingle.errors
+				: updateSingle.errors,
 		noMargin: false,
 	});
 
@@ -95,39 +100,35 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	});
 	const languages = createMemo(() => contentLanguageStore.get.languages);
 	const mutateIsLoading = createMemo(() => {
-		return (
-			uploadSingleFile.action.isPending ||
-			updateSingle.action.isPending ||
-			updateSingleFile.action.isPending
-		);
+		return updateSingle.action.isPending || createSingle.action.isPending;
 	});
 	const mutateErrors = createMemo(() => {
-		return (
-			uploadSingleFile.errors() ||
-			updateSingle.errors() ||
-			updateSingleFile.errors()
-		);
+		return updateSingle.errors() || createSingle.errors();
 	});
 	const hasTranslationErrors = createMemo(() => {
-		const errors =
-			updateSingle.errors()?.errors?.body?.translations.children;
-		if (errors) {
-			return errors.length > 0;
-		}
+		const titleErrors =
+			updateSingle.errors()?.errors?.body?.title_translations.children;
+		const altErrors =
+			updateSingle.errors()?.errors?.body?.alt_translations.children;
+		if (titleErrors) return titleErrors.length > 0;
+		if (altErrors) return altErrors.length > 0;
 		return false;
 	});
 	const updateData = createMemo(() => {
 		const { changed, data } = helpers.updateData(
 			{
-				translations: media.data?.data.translations || [],
+				title_translations: media.data?.data.title_translations || [],
+				alt_translations: media.data?.data.alt_translations || [],
 			},
 			{
-				translations: getTranslations(),
+				title_translations: getTitleTranslations(),
+				alt_translations: getAltTranslations(),
 			},
 		);
 
 		let resData: {
-			translations?: Array<MediaTranslations>;
+			title_translations?: MediaResT["title_translations"];
+			alt_translations?: MediaResT["alt_translations"];
 			file?: File;
 		} = data;
 		let resChanged = changed;
@@ -149,9 +150,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	const mutateIsDisabled = createMemo(() => {
 		if (panelMode() === "create") {
 			return MediaFile.getFile() === null;
-		} else {
-			return !updateData().changed;
 		}
+		return !updateData().changed;
 	});
 	const panelContent = createMemo(() => {
 		if (panelMode() === "create") {
@@ -160,136 +160,25 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				description: T("create_media_panel_description"),
 				submit: T("create"),
 			};
-		} else {
-			return {
-				title: T("update_media_panel_title"),
-				description: T("update_media_panel_description"),
-				submit: T("update"),
-			};
 		}
+		return {
+			title: T("update_media_panel_title"),
+			description: T("update_media_panel_description"),
+			submit: T("update"),
+		};
 	});
 	const panelFetchState = createMemo(() => {
 		if (panelMode() === "create") {
 			return undefined;
-		} else {
-			return {
-				isLoading: media.isLoading,
-				isError: media.isError,
-			};
 		}
+		return {
+			isLoading: media.isLoading,
+			isError: media.isError,
+		};
 	});
 
 	// ---------------------------------
 	// Functions
-	const setTranslationsValues = (
-		key: "name" | "alt",
-		value: string,
-		language_id: number,
-	) => {
-		const translations = getTranslations();
-		const translation = translations.find((t) => {
-			return t.language_id === language_id;
-		});
-		if (!translation) {
-			const item: MediaTranslations = {
-				language_id,
-				alt: null,
-				name: null,
-			};
-			item[key] = value;
-			translations.push(item);
-			setTranslations([...translations]);
-			return;
-		}
-		translation[key] = value;
-		setTranslations([...translations]);
-	};
-	const panelSubmitCreate = async () => {
-		const file = MediaFile.getFile();
-		if (file === null) return;
-
-		if (getMediaId() === null) {
-			const response = await Promise.allSettled([
-				uploadSingleFile.action.mutateAsync({
-					body: {
-						file: file,
-					},
-				}),
-			]);
-			if (response[0].status === "fulfilled") {
-				setMediaId(response[0].value.data.id);
-				updateTranslations(response[0].value.data.id);
-			}
-		} else {
-			updateTranslations(getMediaId()!);
-		}
-	};
-	const panelSubmitUpdate = async () => {
-		const id = props.id && props.id();
-		if (id === undefined) return;
-
-		const resultes = await Promise.allSettled([
-			updateSingle.action.mutateAsync({
-				id: id,
-				body: {
-					translations: updateData().data.translations || [],
-				},
-			}),
-			MediaFile.getFile() !== null
-				? updateSingleFile.action.mutateAsync({
-						id: id,
-						body: {
-							file: MediaFile.getFile() as File,
-						},
-				  })
-				: Promise.resolve(),
-		]);
-
-		if (
-			resultes[0].status === "rejected" ||
-			resultes[1].status === "rejected"
-		)
-			return;
-
-		props.state.setOpen(false);
-	};
-	const updateTranslations = async (id: number) => {
-		const response = await Promise.allSettled([
-			updateSingle.action.mutateAsync({
-				id: id,
-				body: {
-					translations: getTranslations(),
-				},
-			}),
-		]);
-		if (response[0].status === "fulfilled") {
-			props.state.setOpen(false);
-		}
-	};
-	const setDefualtTranslations = (translations: MediaTranslations[]) => {
-		const translationsValues = JSON.parse(
-			JSON.stringify(translations),
-		) as MediaTranslations[];
-
-		const languagesValues = languages();
-		for (let i = 0; i < languagesValues.length; i++) {
-			const language = languagesValues[i];
-			const translation = translationsValues.find((t) => {
-				return t.language_id === language.id;
-			});
-			if (!translation) {
-				const item: MediaTranslations = {
-					language_id: language.id,
-					alt: null,
-					name: null,
-				};
-				translationsValues.push(item);
-			}
-		}
-
-		setTranslations(translationsValues);
-	};
-
 	const inputError = (index: number) => {
 		const errors = mutateErrors()?.errors?.body?.translations.children;
 		if (errors) return errors[index];
@@ -299,15 +188,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	// ---------------------------------
 	// Effects
 	createEffect(() => {
-		if (panelMode() === "update") return;
-		if (getTranslations().length > 0) return;
-		setDefualtTranslations([]);
-	});
-
-	createEffect(() => {
 		if (media.isSuccess && panelMode() === "update") {
 			if (!getUpdateDataLock()) {
-				setDefualtTranslations(media.data?.data.translations || []);
+				setTitleTranslations(media.data?.data.title_translations || []);
+				setAltTranslations(media.data?.data.alt_translations || []);
 				setUpdateDataLock(true);
 			}
 			if (!getUpdateFileLock()) {
@@ -331,19 +215,30 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			open={props.state.open}
 			setOpen={props.state.setOpen}
 			onSubmit={() => {
-				if (panelMode() === "create") {
-					panelSubmitCreate();
+				if (!props.id) {
+					createSingle.action.mutate({
+						file: MediaFile.getFile() as File,
+						title_translations: getTitleTranslations(),
+						alt_translations: getAltTranslations(),
+					});
 				} else {
-					panelSubmitUpdate();
+					updateSingle.action.mutate({
+						id: props.id() as number,
+						body: {
+							file: MediaFile.getFile() as File,
+							title_translations: getTitleTranslations(),
+							alt_translations: getAltTranslations(),
+						},
+					});
 				}
 			}}
 			fetchState={panelFetchState()}
 			reset={() => {
-				uploadSingleFile.reset();
+				createSingle.reset();
 				updateSingle.reset();
 				MediaFile.reset();
-				setMediaId(null);
-				setTranslations([]);
+				setTitleTranslations([]);
+				setAltTranslations([]);
 				setUpdateDataLock(false);
 				setUpdateFileLock(false);
 			}}
@@ -375,17 +270,19 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								<Form.Input
 									id={`name-${language.id}`}
 									value={
-										getTranslations().find(
+										getTitleTranslations().find(
 											(item) =>
 												item.language_id ===
 												language.id,
-										)?.name || ""
+										)?.value || ""
 									}
 									onChange={(val) => {
-										setTranslationsValues(
-											"name",
-											val,
-											language.id,
+										helpers.updateTranslation(
+											setTitleTranslations,
+											{
+												language_id: language.id,
+												value: val,
+											},
 										);
 									}}
 									name={`name-${language.id}`}
@@ -399,17 +296,19 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									<Form.Input
 										id={`alt-${language.id}`}
 										value={
-											getTranslations().find(
+											getAltTranslations().find(
 												(item) =>
 													item.language_id ===
 													language.id,
-											)?.alt || ""
+											)?.value || ""
 										}
 										onChange={(val) => {
-											setTranslationsValues(
-												"alt",
-												val,
-												language.id,
+											helpers.updateTranslation(
+												setAltTranslations,
+												{
+													language_id: language.id,
+													value: val,
+												},
 											);
 										}}
 										name={`alt-${language.id}`}

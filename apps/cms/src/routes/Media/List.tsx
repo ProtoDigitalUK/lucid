@@ -122,8 +122,8 @@ const MediaListRoute: Component = () => {
 					]}
 					sorts={[
 						{
-							label: T("name"),
-							key: "name",
+							label: T("title"),
+							key: "title",
 						},
 						{
 							label: T("file_size"),

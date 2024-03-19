@@ -1,13 +1,11 @@
 import T from "@/translations";
-import { Accessor } from "solid-js";
+import { Accessor, Setter } from "solid-js";
 import equal from "fast-deep-equal/es6";
 // Types
 import type { MediaResT } from "@headless/types/src/media";
-import type { CollectionResT } from "@headless/types/src/collections";
 import type { UserResT } from "@headless/types/src/users";
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 
-// ---------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GenericObject = Record<string, any>;
 
@@ -92,7 +90,7 @@ const bytesToSize = (bytes?: number | null): string => {
 	const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 	if (bytes === 0) return "0 Byte";
 	const i = Math.floor(Math.log(bytes) / Math.log(1024));
-	return `${Math.round(bytes / Math.pow(1024, i))} ${sizes[i]}`;
+	return `${Math.round(bytes / 1024 ** i)} ${sizes[i]}`;
 };
 
 // ---------------------------------------------
@@ -119,43 +117,6 @@ const getMediaType = (mimeType?: string): MediaResT["type"] => {
 };
 
 // ---------------------------------------------
-// Get first env link
-const getFirstEnvLink = (data: {
-	collections: CollectionResT[];
-	canCreate: boolean;
-	environment?: string;
-}) => {
-	// work out the first link based on collections, forms, menus, etc. in the environment.
-	// If no envrionemtn, take the to the create environment route.
-
-	if (!data.environment) {
-		if (data.canCreate) return "/env/create";
-		return "/";
-	}
-
-	let url = `/env/${data.environment}/`;
-
-	const pagesCollections = data.collections.filter(
-		(collection) => collection.type === "pages",
-	);
-	const singlePagesCollections = data.collections.filter(
-		(collection) => collection.type === "singlepage",
-	);
-
-	if (pagesCollections.length) {
-		url += `collection/${data.collections[0].key}`;
-		return url;
-	}
-
-	if (singlePagesCollections.length) {
-		url += `${data.collections[0].key}`;
-		return url;
-	}
-
-	return url;
-};
-
-// ---------------------------------------------
 // Format user name
 const formatUserName = (user: {
 	username: UserResT["username"];
@@ -164,11 +125,12 @@ const formatUserName = (user: {
 }): string => {
 	if (user.first_name && user.last_name) {
 		return `${user.first_name} ${user.last_name} - (${user.username})`;
-	} else if (user.first_name) {
-		return `${user.first_name} - (${user.username})`;
-	} else {
-		return user.username;
 	}
+	if (user.first_name) {
+		return `${user.first_name} - (${user.username})`;
+	}
+
+	return user.username;
 };
 
 // ---------------------------------------------
@@ -180,11 +142,11 @@ const formatUserInitials = (user: {
 }): string => {
 	if (user.first_name && user.last_name) {
 		return `${user.first_name[0]}${user.last_name[0]}`;
-	} else if (user.first_name) {
-		return `${user.first_name[0]}${user.first_name[1]}`;
-	} else {
-		return `${user.username[0]}${user.username[1]}`;
 	}
+	if (user.first_name) {
+		return `${user.first_name[0]}${user.first_name[1]}`;
+	}
+	return `${user.username[0]}${user.username[1]}`;
 };
 
 // ---------------------------------------------
@@ -226,6 +188,32 @@ const getPageContentTranslations = (data: {
 };
 
 // ---------------------------------------------
+// Translation setter helper
+const updateTranslation = (
+	setter: Setter<
+		{
+			language_id: number | null;
+			value: string | null;
+		}[]
+	>,
+	translation: {
+		language_id: number | null;
+		value: string | null;
+	},
+) => {
+	setter((prev) => {
+		const index = prev.findIndex(
+			(t) => t.language_id === translation.language_id,
+		);
+		if (index === -1) return [...prev, translation];
+
+		return prev.map((item) =>
+			item.language_id === translation.language_id ? translation : item,
+		);
+	});
+};
+
+// ---------------------------------------------
 // Exports
 const helpers = {
 	deepMerge,
@@ -234,10 +222,10 @@ const helpers = {
 	resolveValue,
 	bytesToSize,
 	getMediaType,
-	getFirstEnvLink,
 	formatUserName,
 	formatUserInitials,
 	getPageContentTranslations,
+	updateTranslation,
 };
 
 export default helpers;

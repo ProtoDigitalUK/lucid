@@ -1,4 +1,4 @@
-const formatDate = (date?: string) => {
+const formatDate = (date?: string | null) => {
 	if (!date) return undefined;
 
 	const dateVal = new Date(date);

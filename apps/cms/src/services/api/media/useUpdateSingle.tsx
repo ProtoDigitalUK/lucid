@@ -2,28 +2,37 @@ import T from "@/translations";
 // Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
+import objectToFormData from "@/utils/object-to-formdata";
 // Types
 import { APIResponse } from "@/types/api";
-import { MediaResT } from "@headless/types/src/media";
 
 interface Params {
 	id: number;
 	body: {
-		translations: Array<{
-			language_id: number;
-			alt: string | null;
-			name: string | null;
+		file: File;
+		title_translations: Array<{
+			language_id: number | null;
+			value: string | null;
+		}>;
+		alt_translations: Array<{
+			language_id: number | null;
+			value: string | null;
 		}>;
 	};
 }
 
 export const updateSingleReq = (params: Params) => {
-	return request<APIResponse<MediaResT>>({
-		url: `/api/v1/media/${params.id}`,
+	const bodyQueryParam = JSON.stringify({
+		title_translations: params.body.title_translations,
+		alt_translations: params.body.alt_translations,
+	});
+
+	return request<APIResponse<null>>({
+		url: `/api/v1/media/${params.id}?body=${bodyQueryParam}`,
 		csrf: true,
 		config: {
 			method: "PATCH",
-			body: params.body,
+			body: objectToFormData(params.body),
 		},
 	});
 };
@@ -36,7 +45,7 @@ interface UseUpdateSingleProps {
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<MediaResT>>({
+	return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
 		mutationFn: updateSingleReq,
 		successToast: {
 			title: T("media_update_toast_title"),

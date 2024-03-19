@@ -72,7 +72,9 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 		props.state.setRemovedCurrent(false);
 	};
 	const openFileBrowser = () => {
-		inputRef!.click();
+		if (inputRef) {
+			inputRef.click();
+		}
 	};
 	const downloadFile = () => {
 		const url = props.currentFile?.url?.includes("?")
@@ -88,8 +90,8 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 	// ------------------------------------
 	// Effects
 	createEffect(() => {
-		if (props.state.value === null) {
-			inputRef!.value = "";
+		if (props.state.value === null && inputRef) {
+			inputRef.value = "";
 		}
 	});
 
@@ -317,6 +319,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 				</Match>
 				<Match when={props.data.type === "video"}>
 					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-backgroundAccent">
+						{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
 						<video
 							src={props.data.url}
 							class="w-full h-full object-contain"
@@ -327,6 +330,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 				</Match>
 				<Match when={props.data.type === "audio"}>
 					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-backgroundAccent flex justify-center items-center">
+						{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
 						<audio src={props.data.url} class="w-2/3" controls />
 					</div>
 				</Match>
