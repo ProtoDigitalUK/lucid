@@ -14,16 +14,16 @@ export class HeadlessError extends Error {
 }
 
 export const validateSetError = (error: unknown) => {
+	console.error(error);
 	if (error instanceof HeadlessError) {
 		return error.errorRes;
-	} else {
-		return {
-			status: 500,
-			name: T("error"),
-			message: T("unknown_error_message"),
-			errors: {},
-		};
 	}
+	return {
+		status: 500,
+		name: T("error"),
+		message: T("unknown_error_message"),
+		errors: {},
+	};
 };
 
 export const handleSiteErrors = (error: APIErrorResponse) => {

@@ -41,11 +41,11 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 			"roles.getSingle",
 			"users.getSingle",
 		],
-		onSuccess: (data) => {
+		onSuccess: () => {
 			spawnToast({
 				title: T("role_update_toast_title"),
 				message: T("role_update_toast_message", {
-					name: data.data.name,
+					name: T("role"),
 				}),
 				status: "success",
 			});

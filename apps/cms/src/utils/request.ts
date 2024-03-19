@@ -62,6 +62,8 @@ const request = async <Response, Data = unknown>(
 		credentials: "include",
 		headers: headers,
 	});
+	if (fetchRes.status === 204) return {} as Response;
+
 	const data = await fetchRes.json();
 	if (!fetchRes.ok) {
 		const errorObj = data as APIErrorResponse;
