@@ -57,6 +57,10 @@ const createMultiple = async <K extends string>(
 		{} as Record<K, number>,
 	);
 
+	if (data.translations.length === 0) {
+		return keys;
+	}
+
 	await serviceConfig.db
 		.insertInto("headless_translations")
 		.values(
