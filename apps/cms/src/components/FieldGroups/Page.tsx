@@ -19,6 +19,8 @@ import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultip
 import type { PagesResT } from "@headless/types/src/multiple-page";
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { CategoryResT } from "@headless/types/src/categories";
+// Utils
+import helpers from "@/utils/helpers";
 // Components
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
@@ -75,9 +77,14 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 	// ------------------------------
 	// Functions
 	const inputError = (index: number) => {
-		const errors =
-			props.state.mutateErrors()?.errors?.body?.translations?.children;
-		if (errors) return errors[index];
+		const titleErrors =
+			props.state.mutateErrors()?.errors?.body?.title_translations
+				?.children;
+		const excerptErrors =
+			props.state.mutateErrors()?.errors?.body?.excerpt_translations
+				?.children;
+		if (titleErrors) return titleErrors[index];
+		if (excerptErrors) return excerptErrors[index];
 		return undefined;
 	};
 	const setSlugFromTitle = (language_id: number) => {
@@ -90,35 +97,6 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 		if (!item?.value) return;
 		const slugValue = slugify(item.value, { lower: true });
 		props.setState.setSlug(slugValue);
-	};
-	const setTranslationsValues = (
-		type: "title" | "excerpt",
-		language_id: number,
-		value: string | null,
-	) => {
-		const translations =
-			type === "title"
-				? props.state.getTitleTranslations()
-				: props.state.getExcerptTranslations();
-		const translation = translations.find((t) => {
-			return t.language_id === language_id;
-		});
-		if (!translation) {
-			const item: PagesResT["title_translations"][0] = {
-				value: value,
-				language_id,
-			};
-			translations.push(item);
-
-			if (type === "title")
-				props.setState.setTitleTranslations([...translations]);
-			else props.setState.setExcerptTranslations([...translations]);
-			return;
-		}
-		translation.value = value;
-		if (type === "title")
-			props.setState.setTitleTranslations([...translations]);
-		else props.setState.setExcerptTranslations([...translations]);
 	};
 
 	// ------------------------------
@@ -150,10 +128,12 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 								})?.value || ""
 							}
 							onChange={(value) =>
-								setTranslationsValues(
-									"title",
-									language.id,
-									value,
+								helpers.updateTranslation(
+									props.setState.setTitleTranslations,
+									{
+										language_id: language.id,
+										value,
+									},
 								)
 							}
 							name={"title"}
@@ -176,10 +156,12 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 									})?.value || ""
 							}
 							onChange={(value) =>
-								setTranslationsValues(
-									"excerpt",
-									language.id,
-									value,
+								helpers.updateTranslation(
+									props.setState.setExcerptTranslations,
+									{
+										language_id: language.id,
+										value,
+									},
 								)
 							}
 							name={"excerpt"}
