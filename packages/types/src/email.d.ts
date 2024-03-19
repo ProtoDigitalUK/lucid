@@ -11,7 +11,7 @@ export interface EmailResT {
 		bcc: null | string;
 		template: string;
 	};
-	data: unknown | null;
+	data: Record<string, unknown> | null;
 	delivery_status: "sent" | "failed" | "pending";
 	type: "external" | "internal";
 	email_hash: string;

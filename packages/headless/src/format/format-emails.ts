@@ -1,4 +1,5 @@
 import { type EmailResT } from "@headless/types/src/email.js";
+import { type JsonValue } from "kysely-codegen";
 
 const formatEmails = (
 	email: {
@@ -19,12 +20,10 @@ const formatEmails = (
 		last_attempt_at: Date | null;
 		last_success_at: Date | null;
 		created_at: Date | null;
-		data?: unknown | null;
+		data?: JsonValue | null;
 	},
 	html?: string,
 ): EmailResT => {
-	console.log(email.data);
-
 	return {
 		id: email.id,
 		email_hash: email.email_hash,
@@ -41,7 +40,7 @@ const formatEmails = (
 			bcc: email.bcc,
 			template: email.template,
 		},
-		data: email.data ?? null,
+		data: (email.data as Record<string, unknown> | null) ?? null,
 		sent_count: email.sent_count || 0,
 		error_count: email.error_count || 0,
 		error_message: email.last_error_message,

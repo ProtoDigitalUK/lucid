@@ -88,21 +88,30 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 			/>
 			<PillCol
 				text={props.email.sent_count || 0}
-				theme={!props.email.sent_count ? "red" : "grey"}
+				theme={"green"}
 				options={{ include: props?.include[5] }}
+			/>
+			<PillCol
+				text={props.email.error_count || 0}
+				theme={"red"}
+				options={{ include: props?.include[6] }}
 			/>
 			<PillCol
 				text={props.email.type}
 				theme={"grey"}
-				options={{ include: props?.include[6] }}
-			/>
-			<DateCol
-				date={props.email.created_at}
 				options={{ include: props?.include[7] }}
 			/>
 			<DateCol
-				date={props.email.updated_at}
+				date={props.email.created_at}
 				options={{ include: props?.include[8] }}
+			/>
+			<DateCol
+				date={props.email.last_attempt_at}
+				options={{ include: props?.include[9] }}
+			/>
+			<DateCol
+				date={props.email.last_success_at}
+				options={{ include: props?.include[10] }}
 			/>
 		</Table.Tr>
 	);

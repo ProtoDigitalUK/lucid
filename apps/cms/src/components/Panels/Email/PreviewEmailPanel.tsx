@@ -86,27 +86,28 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 								value: email.data?.data.sent_count || 0,
 							},
 							{
+								label: T("failed_count"),
+								value: email.data?.data.error_count || 0,
+							},
+							{
 								label: T("type"),
 								value: email.data?.data.type || undefined,
 							},
 						]}
 					/>
-
-					<SectionHeading title={T("data")} />
-					<JSONPreview
-						title={T("view_data")}
-						json={email.data?.data.data || {}}
-					/>
-
 					<SectionHeading title={T("preview")} />
-
-					<div class="border border-border rounded-md overflow-hidden">
+					<div class="border border-border rounded-md overflow-hidden mb-15">
 						<iframe
 							class="w-full h-96"
 							srcdoc={email.data?.data.html || ""}
 							title="Preview"
 						/>
 					</div>
+					<SectionHeading title={T("data")} />
+					<JSONPreview
+						title={T("view_data")}
+						json={email.data?.data.data || {}}
+					/>
 				</>
 			)}
 		</Panel.Root>

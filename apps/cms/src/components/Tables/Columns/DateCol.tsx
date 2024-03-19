@@ -18,6 +18,10 @@ const DateCol: Component<TextColProps> = (props) => {
 		if (!props.date) return null;
 		return dateHelpers.formatDate(props.date);
 	});
+	const fullDate = createMemo(() => {
+		if (!props.date) return null;
+		return dateHelpers.formatFullDate(props.date);
+	});
 
 	// ----------------------------------
 	// Render
@@ -27,7 +31,9 @@ const DateCol: Component<TextColProps> = (props) => {
 				include: props?.options?.include,
 			}}
 		>
-			<span class="whitespace-nowrap">{date() || "-"}</span>
+			<span class="whitespace-nowrap" title={fullDate() || ""}>
+				{date() || "-"}
+			</span>
 		</Table.Td>
 	);
 };

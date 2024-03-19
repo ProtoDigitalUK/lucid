@@ -36,8 +36,10 @@ const EmailListRoute: Component = () => {
 			},
 			sorts: {
 				sent_count: undefined,
+				error_count: undefined,
 				created_at: undefined,
 				last_attempt_at: "desc",
+				last_success_at: undefined,
 			},
 		},
 		{
@@ -79,8 +81,8 @@ const EmailListRoute: Component = () => {
 							type: "multi-select",
 							options: [
 								{
-									label: T("sent"),
-									value: "sent",
+									label: T("delivered"),
+									value: "delivered",
 								},
 								{
 									label: T("failed"),
@@ -114,12 +116,20 @@ const EmailListRoute: Component = () => {
 							key: "sent_count",
 						},
 						{
-							label: T("created_at"),
-							key: "created_at",
+							label: T("failed_count"),
+							key: "error_count",
 						},
 						{
 							label: T("last_attempt_at"),
 							key: "last_attempt_at",
+						},
+						{
+							label: T("last_success_at"),
+							key: "last_success_at",
+						},
+						{
+							label: T("created_at"),
+							key: "created_at",
 						},
 					]}
 					perPage={[]}
