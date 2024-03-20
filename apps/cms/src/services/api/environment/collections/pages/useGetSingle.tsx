@@ -14,9 +14,6 @@ interface QueryParams {
 	include: {
 		bricks: Accessor<boolean | undefined> | boolean;
 	};
-	headers: {
-		"headless-environment": Accessor<string | undefined> | string;
-	};
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
@@ -37,11 +34,12 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		],
 		queryFn: () =>
 			request<APIResponse<PagesResT>>({
-				url: `/api/v1/pages/${queryParams().location?.id}`,
+				url: `/api/v1/collections/multiple-page/${
+					queryParams().location?.id
+				}`,
 				query: queryParams(),
 				config: {
 					method: "GET",
-					headers: queryParams().headers,
 				},
 			}),
 		get enabled() {

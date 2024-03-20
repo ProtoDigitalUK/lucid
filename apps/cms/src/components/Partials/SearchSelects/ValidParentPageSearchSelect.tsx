@@ -1,10 +1,8 @@
 import { Component, createSignal, createMemo } from "solid-js";
+import T from "@/translations";
 // Services
 import api from "@/services/api";
-// Utils
-import helpers from "@/utils/helpers";
 // Stores
-import { environment } from "@/store/environmentStore";
 import contentLanguage from "@/store/contentLanguageStore";
 // Types
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
@@ -42,7 +40,6 @@ const ValidParentPageSearchSelect: Component<ValidParentPageSearchSelectProps> =
 						title: getSearchQuery,
 					},
 					headers: {
-						"headless-environment": environment,
 						"headless-content-lang": language,
 					},
 					perPage: 10,
@@ -66,11 +63,10 @@ const ValidParentPageSearchSelect: Component<ValidParentPageSearchSelectProps> =
 				options={
 					validParents.data?.data.map((page) => ({
 						value: page.id,
-						label: helpers.getPageContentTranslations({
-							translations: page.translations,
-							default_title: page.default_title,
-							default_slug: page.default_slug,
-						}).title.value,
+						label:
+							page.title_translations.find(
+								(t) => t.language_id === language(),
+							)?.value || T("no_translation"),
 					})) || []
 				}
 				errors={props.errors}

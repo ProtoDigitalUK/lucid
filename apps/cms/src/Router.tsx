@@ -42,7 +42,7 @@ const AppRouter: Component = () => {
 				<Route path="/" element={<MainLayout />}>
 					<Route path="/" element={<DashboardRoute />} />
 					<Route path="/test" element={<TestRoute />} />
-					{/* Environments */}
+					{/* Collections */}
 					<Route
 						path="/collection/:collectionKey/multiple"
 						element={<CollectionsMultiplePageListRoute />}

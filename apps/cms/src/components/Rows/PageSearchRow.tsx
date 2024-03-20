@@ -1,9 +1,7 @@
 import { Component, createMemo, Show } from "solid-js";
 import { FaSolidCheck } from "solid-icons/fa";
-// Utils
-import helpers from "@/utils/helpers";
 // Types
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 
 interface PageSearchRowProps {
 	page: PagesResT;
@@ -15,18 +13,10 @@ interface PageSearchRowProps {
 const PageSearchRow: Component<PageSearchRowProps> = (props) => {
 	// ----------------------------------
 	// Memos
-	const currentTranslation = createMemo(() => {
-		return props.page.translations.find(
+	const titleTranslation = createMemo(() => {
+		return props.page.title_translations.find(
 			(translation) => translation.language_id === props.contentLanguage,
 		);
-	});
-
-	const translationContent = createMemo(() => {
-		return helpers.getPageContentTranslations({
-			translations: currentTranslation(),
-			default_title: props.page.default_title,
-			default_slug: props.page.default_slug,
-		});
 	});
 
 	// ----------------------------------
@@ -38,13 +28,14 @@ const PageSearchRow: Component<PageSearchRowProps> = (props) => {
 			}
 			onClick={() => {
 				props.onClick({
-					slug: translationContent().slug.value,
+					slug: props.page.slug || "",
 					id: props.page.id,
-					title: translationContent().title.value,
+					title: titleTranslation()?.value || "",
 				});
 			}}
+			onKeyDown={() => {}}
 		>
-			{translationContent().title.value}
+			{titleTranslation()?.value}
 			<Show when={props.selectedId === props.page.id}>
 				<span>
 					<FaSolidCheck size={12} class="fill-current" />

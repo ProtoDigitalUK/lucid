@@ -10,7 +10,6 @@ import { BrickConfigT } from "@headless/types/src/bricks";
 interface QueryParams {
 	include: Record<"fields", boolean>;
 	filters?: {
-		environment_key?: Accessor<string | undefined>;
 		collection_key?: Accessor<string | undefined>;
 	};
 }
@@ -29,7 +28,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 		queryKey: ["brickConfig.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<BrickConfigT[]>>({
-				url: `/api/v1/bricks/config`,
+				url: "/api/v1/bricks/config",
 				query: queryParams(),
 				config: {
 					method: "GET",

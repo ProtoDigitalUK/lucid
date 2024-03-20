@@ -18,7 +18,6 @@ import AuthorCol from "@/components/Tables/Columns/AuthorCol";
 interface PageRowProps extends TableRowProps {
 	page: PagesResT;
 	collection: CollectionResT;
-	environmentKey: string;
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"delete" | "update">>;
 	contentLanguage?: number;
@@ -45,11 +44,9 @@ const PageRow: Component<PageRowProps> = (props) => {
 				{
 					label: T("edit"),
 					type: "link",
-					href: `/env/${props.environmentKey}/collection/${props.collection.key}/${props.page.id}`,
-					permission: userStore.get.hasEnvPermission(
-						["update_content"],
-						props.environmentKey,
-					).all,
+					href: `/collection/${props.collection.key}/multiple/${props.page.id}`,
+					permission: userStore.get.hasPermission(["update_content"])
+						.all,
 				},
 				{
 					label: T("quick_edit"),
@@ -58,10 +55,8 @@ const PageRow: Component<PageRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.page.id);
 						props.rowTarget.setTrigger("update", true);
 					},
-					permission: userStore.get.hasEnvPermission(
-						["update_content"],
-						props.environmentKey,
-					).all,
+					permission: userStore.get.hasPermission(["update_content"])
+						.all,
 				},
 				{
 					label: T("delete"),
@@ -70,10 +65,8 @@ const PageRow: Component<PageRowProps> = (props) => {
 						props.rowTarget.setTargetId(props.page.id);
 						props.rowTarget.setTrigger("delete", true);
 					},
-					permission: userStore.get.hasEnvPermission(
-						["delete_content"],
-						props.environmentKey,
-					).all,
+					permission: userStore.get.hasPermission(["delete_content"])
+						.all,
 				},
 			]}
 		>

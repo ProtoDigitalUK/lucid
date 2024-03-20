@@ -1,4 +1,4 @@
-import { createMemo, Accessor } from "solid-js";
+import { createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
@@ -9,9 +9,6 @@ import { APIResponse } from "@/types/api";
 
 interface QueryParams {
 	include: Record<"fields", boolean>;
-	filters?: {
-		environment_key?: Accessor<string | undefined>;
-	};
 }
 
 const useGetAll = (params: QueryHook<QueryParams>) => {
@@ -28,7 +25,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 		queryKey: ["environment.forms.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<FormResT[]>>({
-				url: `/api/v1/forms`,
+				url: "/api/v1/forms",
 				query: queryParams(),
 				config: {
 					method: "GET",

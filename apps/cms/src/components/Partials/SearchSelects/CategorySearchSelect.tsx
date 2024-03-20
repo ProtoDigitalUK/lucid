@@ -1,8 +1,6 @@
 import { Component, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
-// Stores
-import { environment } from "@/store/environmentStore";
 // Types
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
 // Components
@@ -28,9 +26,6 @@ const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
 			filters: {
 				collection_key: props.collectionKey,
 			},
-			headers: {
-				"headless-environment": environment,
-			},
 			perPage: 10,
 		},
 	});
@@ -52,7 +47,8 @@ const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
 			options={
 				categories.data?.data.map((cat) => ({
 					value: cat.id,
-					label: cat.title,
+					// TODO: update this
+					label: cat.title_translations?.[0]?.value || "",
 				})) || []
 			}
 			theme={props.theme}

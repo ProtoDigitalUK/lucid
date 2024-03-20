@@ -5,7 +5,6 @@ import { Component, createMemo, createSignal } from "solid-js";
 import api from "@/services/api";
 // Store
 import userStore from "@/store/userStore";
-import { environment } from "@/store/environmentStore";
 // Types
 import { CollectionResT } from "@headless/types/src/collections";
 // Hooks
@@ -93,10 +92,8 @@ const CollectionsMultiplePageListRoute: Component = () => {
 				create: {
 					open: getOpenCreatePanel(),
 					setOpen: setOpenCreatePanel,
-					permission: userStore.get.hasEnvPermission(
-						["create_content"],
-						environment() || "",
-					).all,
+					permission: userStore.get.hasPermission(["create_content"])
+						.all,
 					label: T("create_dynamic", {
 						name: collection.data?.data.singular || "",
 					}),

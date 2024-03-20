@@ -9,21 +9,15 @@ interface Params {
 	body: {
 		ids: number[];
 	};
-	headers: {
-		"headless-environment": string;
-	};
 }
 
 export const deleteMultipleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/pages`,
+		url: "/api/v1/collections/multiple-page",
 		csrf: true,
 		config: {
 			method: "DELETE",
 			body: params.body,
-			headers: {
-				"headless-environment": params.headers["headless-environment"],
-			},
 		},
 	});
 };

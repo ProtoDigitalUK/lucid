@@ -12,7 +12,6 @@ import {
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 import linkFieldStore from "@/store/linkFieldStore";
-import { environment } from "@/store/environmentStore";
 // Services
 import api from "@/services/api";
 // Components
@@ -51,7 +50,6 @@ const PageLinkContent: Component = () => {
 				title: getSearchQuery,
 			},
 			headers: {
-				"headless-environment": environment,
 				"headless-content-lang": contentLanguage,
 			},
 			perPage: 10,

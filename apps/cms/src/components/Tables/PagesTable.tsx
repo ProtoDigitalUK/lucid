@@ -13,7 +13,6 @@ import { CollectionResT } from "@headless/types/src/collections";
 import api from "@/services/api";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
-import { environment } from "@/store/environmentStore";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 import useSearchParams from "@/hooks/useSearchParams";
@@ -73,9 +72,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 	return (
 		<>
 			<Table.Root
-				key={`collections.pages.list.${environment()}.${
-					props.collection.key
-				}`}
+				key={`collections.pages.list.${props.collection.key}`}
 				rows={pages.data?.data.length || 0}
 				meta={pages.data?.meta}
 				searchParams={props.searchParams}
@@ -127,9 +124,6 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 							body: {
 								ids: ids,
 							},
-							headers: {
-								"headless-environment": environment() || "",
-							},
 						});
 					},
 				}}
@@ -141,7 +135,6 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 								index={i}
 								page={page()}
 								collection={props.collection}
-								environmentKey={environment() as string}
 								include={include}
 								selected={selected[i]}
 								rowTarget={rowTarget}

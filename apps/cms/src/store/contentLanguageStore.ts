@@ -29,7 +29,6 @@ const [get, set] = createStore<ContentLangStoreT>({
 
 		const contentLangLs = localStorage.getItem("headless_content_language");
 		if (contentLangLs) {
-			// check if environment exists
 			const languageExists = languages.find(
 				(lang) => lang.id === Number(contentLangLs),
 			);

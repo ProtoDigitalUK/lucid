@@ -7,20 +7,14 @@ import { APIResponse } from "@/types/api";
 
 interface Params {
 	id: number;
-	headers: {
-		"headless-environment": string;
-	};
 }
 
 export const deleteSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/pages/${params.id}`,
+		url: `/api/v1/collections/multiple-page/${params.id}`,
 		csrf: true,
 		config: {
 			method: "DELETE",
-			headers: {
-				"headless-environment": params.headers["headless-environment"],
-			},
 		},
 	});
 };

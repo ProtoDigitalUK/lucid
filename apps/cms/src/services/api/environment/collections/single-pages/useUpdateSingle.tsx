@@ -11,9 +11,6 @@ interface Params {
 	body: {
 		bricks: Array<BrickDataT>;
 	};
-	headers: {
-		"headless-environment": string;
-	};
 }
 
 export const updateSingleReq = (params: Params) => {
@@ -23,9 +20,6 @@ export const updateSingleReq = (params: Params) => {
 		config: {
 			method: "PATCH",
 			body: params.body,
-			headers: {
-				"headless-environment": params.headers["headless-environment"],
-			},
 		},
 	});
 };

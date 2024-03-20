@@ -17,7 +17,6 @@ import api from "@/services/api";
 // Utils
 import helpers from "@/utils/helpers";
 // Stores
-import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
@@ -97,9 +96,6 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 			include: {
 				bricks: true,
 			},
-			headers: {
-				"headless-environment": environment,
-			},
 		},
 		enabled: () => !!pageId(),
 		refetchOnWindowFocus: false,
@@ -111,7 +107,6 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 			},
 			filters: {
 				collection_key: collectionKey,
-				environment_key: environment,
 			},
 		},
 	});
@@ -392,9 +387,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 						callbacks={{
 							onSuccess: () => {
 								navigate(
-									`/env/${environment()}/collection/${
-										collection.data?.data.key
-									}`,
+									`/collection/${collection.data?.data.key}/multiple`,
 								);
 							},
 						}}

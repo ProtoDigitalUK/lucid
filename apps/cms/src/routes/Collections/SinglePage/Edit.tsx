@@ -12,7 +12,6 @@ import { useParams } from "@solidjs/router";
 // Services
 import api from "@/services/api";
 // Stores
-import { environment } from "@/store/environmentStore";
 import builderStore from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
@@ -52,9 +51,6 @@ const CollectionsSinglePageEditRoute: Component = () => {
 			location: {
 				collection_key: collectionKey,
 			},
-			headers: {
-				"headless-environment": environment,
-			},
 		},
 		enabled: () => !!collectionKey(),
 		refetchOnWindowFocus: false,
@@ -66,7 +62,6 @@ const CollectionsSinglePageEditRoute: Component = () => {
 			},
 			filters: {
 				collection_key: collectionKey,
-				environment_key: environment,
 			},
 		},
 	});
@@ -137,9 +132,6 @@ const CollectionsSinglePageEditRoute: Component = () => {
 			collection_key: collectionKey(),
 			body: {
 				bricks: builderStore.get.bricks,
-			},
-			headers: {
-				"headless-environment": environment() || "",
 			},
 		});
 	};

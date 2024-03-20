@@ -2,8 +2,6 @@ import T from "@/translations";
 import { Component, Accessor } from "solid-js";
 // Components
 import Modal from "@/components/Groups/Modal";
-// Stores
-import { environment } from "@/store/environmentStore";
 // Types
 import type { CollectionResT } from "@headless/types/src/collections";
 // Services
@@ -60,9 +58,6 @@ const DeletePage: Component<DeletePageProps> = (props) => {
 				if (!id) return console.error("No id provided");
 				deletePage.action.mutate({
 					id: id,
-					headers: {
-						"headless-environment": environment() || "",
-					},
 				});
 			}}
 			onCancel={() => {

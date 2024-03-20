@@ -5,14 +5,11 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { APIResponse } from "@/types/api";
-import type { SinglePagesResT } from "@headless/types/src/pages";
+import type { SinglePagesResT } from "@headless/types/src/multiple-page";
 
 interface QueryParams {
 	location: {
 		collection_key?: Accessor<string | undefined> | string;
-	};
-	headers: {
-		"headless-environment": Accessor<string | undefined> | string;
 	};
 }
 
@@ -40,7 +37,6 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 				query: queryParams(),
 				config: {
 					method: "GET",
-					headers: queryParams().headers,
 				},
 			}),
 		get enabled() {

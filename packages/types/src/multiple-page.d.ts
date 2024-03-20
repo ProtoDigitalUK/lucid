@@ -39,7 +39,7 @@ export interface PagesResT {
 	bricks?: Array<BrickResT> | null;
 }
 
-export interface SingleBuilderResT {
+export interface SinglePagesResT {
 	id: number;
 	bricks: Array<BrickResT>;
 }

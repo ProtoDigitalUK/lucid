@@ -11,7 +11,6 @@ import api from "@/services/api";
 // Utils
 import helpers from "@/utils/helpers";
 // Stores
-import { environment } from "@/store/environmentStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { CollectionResT } from "@headless/types/src/collections";
@@ -81,9 +80,6 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 			},
 			include: {
 				bricks: false,
-			},
-			headers: {
-				"headless-environment": environment,
 			},
 		},
 		enabled: () => panelMode() === "update" && !!props.id?.(),
