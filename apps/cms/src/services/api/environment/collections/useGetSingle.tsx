@@ -11,9 +11,6 @@ interface QueryParams {
 	location: {
 		collection_key?: Accessor<string | undefined> | string;
 	};
-	headers: {
-		"headless-environment": Accessor<string | undefined> | string;
-	};
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
@@ -39,7 +36,6 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 				}`,
 				config: {
 					method: "GET",
-					headers: queryParams().headers,
 				},
 			}),
 		get enabled() {

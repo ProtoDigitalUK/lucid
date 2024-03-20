@@ -4,10 +4,10 @@ import {
 	FaSolidPhotoFilm,
 	FaSolidUsers,
 	FaSolidGear,
-	FaSolidEarthEurope,
 	FaSolidHouse,
 	FaSolidUserLock,
 	FaSolidEnvelope,
+	FaSolidBox,
 } from "solid-icons/fa";
 // Components
 import { Link } from "@solidjs/router";
@@ -19,7 +19,7 @@ interface IconLinkProps {
 	href: string;
 	icon:
 		| "dashboard"
-		| "environment"
+		| "collection"
 		| "media"
 		| "users"
 		| "settings"
@@ -56,8 +56,8 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 								<Match when={props.icon === "dashboard"}>
 									<FaSolidHouse class={iconClasses} />
 								</Match>
-								<Match when={props.icon === "environment"}>
-									<FaSolidEarthEurope class={iconClasses} />
+								<Match when={props.icon === "collection"}>
+									<FaSolidBox class={iconClasses} />
 								</Match>
 								<Match when={props.icon === "media"}>
 									<FaSolidPhotoFilm class={iconClasses} />

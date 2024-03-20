@@ -35,7 +35,7 @@ import NavigationGuard, {
 import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 
-const EnvCollectionsPagesEditRoute: Component = () => {
+const CollectionsMultiplePagesEditRoute: Component = () => {
 	// ------------------------------
 	// Hooks
 	const params = useParams();
@@ -85,9 +85,6 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
-			},
-			headers: {
-				"headless-environment": environment,
 			},
 		},
 		enabled: () => !!collectionKey(),
@@ -420,4 +417,4 @@ const EnvCollectionsPagesEditRoute: Component = () => {
 	);
 };
 
-export default EnvCollectionsPagesEditRoute;
+export default CollectionsMultiplePagesEditRoute;

@@ -2,12 +2,10 @@ import T from "@/translations";
 import { Component, createMemo } from "solid-js";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
-// Utils
-import helpers from "@/utils/helpers";
 // Types
 import { TableRowProps } from "@/types/components";
 import type { CollectionResT } from "@headless/types/src/collections";
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 // Stores
 import userStore from "@/store/userStore";
 // Components
@@ -29,18 +27,10 @@ interface PageRowProps extends TableRowProps {
 const PageRow: Component<PageRowProps> = (props) => {
 	// ----------------------------------
 	// Memos
-	const currentTranslation = createMemo(() => {
-		return props.page.translations.find(
+	const titleTranslation = createMemo(() => {
+		return props.page.title_translations.find(
 			(translation) => translation.language_id === props.contentLanguage,
 		);
-	});
-
-	const translationContent = createMemo(() => {
-		return helpers.getPageContentTranslations({
-			translations: currentTranslation(),
-			default_title: props.page.default_title,
-			default_slug: props.page.default_slug,
-		});
 	});
 
 	// ----------------------------------
@@ -88,8 +78,9 @@ const PageRow: Component<PageRowProps> = (props) => {
 			]}
 		>
 			<PageTitleCol
-				title={translationContent().title}
-				slug={translationContent().slug}
+				title={titleTranslation()?.value ?? null}
+				full_slug={props.page.full_slug}
+				slug={props.page.slug}
 				homepage={props.page.homepage}
 				options={{ include: props?.include[0] }}
 			/>

@@ -16,7 +16,7 @@ import Query from "@/components/Groups/Query";
 import PagesTable from "@/components/Tables/PagesTable";
 import CreateUpdatePagePanel from "@/components/Panels/Pages/CreateUpdatePagePanel";
 
-const EnvCollectionsPagesListRoute: Component = () => {
+const CollectionsMultiplePageListRoute: Component = () => {
 	// ----------------------------------
 	// State & Hooks
 	const params = useParams();
@@ -28,6 +28,10 @@ const EnvCollectionsPagesListRoute: Component = () => {
 					type: "text",
 				},
 				slug: {
+					value: "",
+					type: "text",
+				},
+				full_slug: {
 					value: "",
 					type: "text",
 				},
@@ -56,9 +60,6 @@ const EnvCollectionsPagesListRoute: Component = () => {
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
-			},
-			headers: {
-				"headless-environment": environment,
 			},
 		},
 		enabled: () => !!collectionKey(),
@@ -117,6 +118,11 @@ const EnvCollectionsPagesListRoute: Component = () => {
 							type: "text",
 						},
 						{
+							label: T("full_slug"),
+							key: "full_slug",
+							type: "text",
+						},
+						{
 							label: T("category"),
 							key: "category_id",
 							type: "multi-select",
@@ -155,4 +161,4 @@ const EnvCollectionsPagesListRoute: Component = () => {
 	);
 };
 
-export default EnvCollectionsPagesListRoute;
+export default CollectionsMultiplePageListRoute;

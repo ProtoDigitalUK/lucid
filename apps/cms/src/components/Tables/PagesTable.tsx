@@ -55,7 +55,6 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 				collection_key: collectionKey,
 			},
 			headers: {
-				"headless-environment": environment,
 				"headless-content-lang": contentLanguage,
 			},
 		},

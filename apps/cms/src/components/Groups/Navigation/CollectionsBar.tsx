@@ -1,17 +1,6 @@
 import T from "@/translations";
-import {
-	Component,
-	createEffect,
-	createSignal,
-	Show,
-	For,
-	createMemo,
-	Switch,
-	Match,
-} from "solid-js";
-import { useParams } from "@solidjs/router";
-// Store
-import { environment } from "@/store/environmentStore";
+import { Component, Show, For, createMemo, Switch, Match } from "solid-js";
+import { useParams, useLocation } from "@solidjs/router";
 // Types
 import { CollectionResT } from "@headless/types/src/collections";
 // Components
@@ -28,30 +17,21 @@ interface CollectionsBarProps {
 export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 	// ----------------------------------
 	// Hooks & States
-	// const location = useLocation();
+	const location = useLocation();
 	const params = useParams();
-	const [showBar, setShowBar] = createSignal(false);
-
-	// ----------------------------------
-	// Effects
-	createEffect(() => {
-		// Hides the bar when editing a single page of collection type pages
-		if (params.id !== undefined) {
-			setShowBar(false);
-			return;
-		}
-		setShowBar(true);
-		// TODO: update pathing
-		// if (location.pathname.includes("/env/")) {
-		// 	setShowBar(true);
-		// } else {
-		// 	setShowBar(false);
-		// }
-	});
 
 	// ----------------------------------
 	// Memos
-	const pagesCollections = createMemo(() => {
+	const showBar = createMemo(() => {
+		if (params.id !== undefined) {
+			return false;
+		}
+		if (location.pathname.includes("/collection/")) {
+			return true;
+		}
+		return false;
+	});
+	const multiplePageCollections = createMemo(() => {
 		return props.collections.filter(
 			(collection) => collection.type === "multiple-page",
 		);
@@ -65,8 +45,8 @@ export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 	// ----------------------------------
 	// Render
 	return (
-		<Show when={showBar() && environment() !== undefined}>
-			<div class="w-[240px] bg-container border-r border-border h-full">
+		<Show when={showBar()}>
+			<div class="w-[240px] py-15 bg-container border-r border-border h-full">
 				<nav class="relative">
 					<Switch>
 						<Match when={props.state.isLoading}>
@@ -82,17 +62,15 @@ export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 						<Match when={props.state.isError}>error</Match>
 						<Match when={true}>
 							{/* Multi Collections */}
-							<Show when={pagesCollections().length > 0}>
+							<Show when={multiplePageCollections().length > 0}>
 								<Navigation.LinkGroup
 									title={T("multi_collections")}
 								>
-									<For each={pagesCollections()}>
+									<For each={multiplePageCollections()}>
 										{(collection) => (
 											<Navigation.Link
 												title={collection.title}
-												href={`/env/${environment()}/collection/${
-													collection.key
-												}`}
+												href={`/collection/${collection.key}/multiple`}
 												icon="page"
 											/>
 										)}
@@ -108,9 +86,7 @@ export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 										{(collection) => (
 											<Navigation.Link
 												title={collection.title}
-												href={`/env/${environment()}/${
-													collection.key
-												}`}
+												href={`/${collection.key}/single`}
 												icon="page"
 											/>
 										)}

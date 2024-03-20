@@ -10,7 +10,7 @@ import { CollectionResT } from "@headless/types/src/collections";
 interface QueryParams {
 	include: Record<"bricks", boolean>;
 	filters?: {
-		environment_key?: Accessor<string | undefined>;
+		type?: Accessor<string | undefined>;
 	};
 }
 
@@ -32,7 +32,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 		],
 		queryFn: () =>
 			request<APIResponse<CollectionResT[]>>({
-				url: `/api/v1/collections`,
+				url: "/api/v1/collections",
 				query: queryParams(),
 				config: {
 					method: "GET",

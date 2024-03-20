@@ -3,9 +3,7 @@ import { Router, Routes, Route } from "@solidjs/router";
 // Layouts
 import AuthRoutes from "@/layouts/AuthRoutes";
 import MainLayout from "@/layouts/Main";
-// Guards
-// import Authenticated from "@/guards/Authenticated";
-// import AuthLocked from "@/guards/AuthLocked";
+
 // ------------------------------------------------------
 // Routes
 
@@ -31,32 +29,31 @@ import SettingsListRoute from "@/routes/Settings/List";
 // emails
 import EmailListRoute from "@/routes/Emails/List";
 
-// environments
-import EnvCollectionsPagesListRoute from "@/routes/Environments/Collections/Pages/List";
-import EnvCollectionsPagesEditRoute from "@/routes/Environments/Collections/Pages/Edit";
-import EnvCollectionsSinglePageEditRoute from "./routes/Environments/Collections/SinglePage/Edit";
+// collections
+import CollectionsMultiplePageListRoute from "@/routes/Collections/MultiplePage/List";
+import CollectionsMultiplePagesEditRoute from "@/routes/Collections/MultiplePage/Edit";
+import CollectionsSinglePageEditRoute from "./routes/Collections/SinglePage/Edit";
 
 const AppRouter: Component = () => {
 	return (
 		<Router>
 			<Routes>
-				{/* Authenticated only */}
-				{/* <Route path="/" component={Authenticated}> */}
+				{/* Authenticated */}
 				<Route path="/" element={<MainLayout />}>
 					<Route path="/" element={<DashboardRoute />} />
 					<Route path="/test" element={<TestRoute />} />
 					{/* Environments */}
 					<Route
-						path="/env/:envKey/collection/:collectionKey"
-						element={<EnvCollectionsPagesListRoute />}
+						path="/collection/:collectionKey/multiple"
+						element={<CollectionsMultiplePageListRoute />}
 					/>
 					<Route
-						path="/env/:envKey/collection/:collectionKey/:id"
-						element={<EnvCollectionsPagesEditRoute />}
+						path="/collection/:collectionKey/multiple/:id"
+						element={<CollectionsMultiplePagesEditRoute />}
 					/>
 					<Route
-						path={"/env/:envKey/:collectionKey"}
-						element={<EnvCollectionsSinglePageEditRoute />}
+						path={"/collection/:collectionKey/single"}
+						element={<CollectionsSinglePageEditRoute />}
 					/>
 					{/* Media */}
 					<Route path="/media" element={<MediaListRoute />} />
@@ -73,9 +70,7 @@ const AppRouter: Component = () => {
 						element={<SettingsListRoute />}
 					/>
 				</Route>
-				{/* </Route> */}
-				{/* Non authenticated only */}
-				{/* <Route path="/" component={AuthLocked}> */}
+				{/* Non authenticated */}
 				<Route path="/" component={AuthRoutes}>
 					<Route path="/login" component={LoginRoute} />
 					<Route
@@ -87,7 +82,6 @@ const AppRouter: Component = () => {
 						component={ResetPasswordRoute}
 					/>
 				</Route>
-				{/* </Route> */}
 			</Routes>
 		</Router>
 	);

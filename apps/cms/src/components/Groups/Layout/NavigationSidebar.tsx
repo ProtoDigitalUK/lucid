@@ -6,8 +6,6 @@ import LogoIcon from "@/assets/svgs/logo-icon.svg";
 import userStore from "@/store/userStore";
 // Services
 import api from "@/services/api";
-// Store
-import { environment } from "@/store/environmentStore";
 // Components
 import Navigation from "@/components/Groups/Navigation";
 
@@ -19,11 +17,7 @@ export const NavigationSidebar: Component = () => {
 			include: {
 				bricks: false,
 			},
-			filters: {
-				environment_key: environment,
-			},
 		},
-		enabled: () => environment() !== undefined,
 	});
 
 	// ----------------------------------
@@ -56,6 +50,11 @@ export const NavigationSidebar: Component = () => {
 						href="/"
 						icon="dashboard"
 						title={T("home")}
+					/>
+					<Navigation.IconLink
+						href="/collection/pages/multiple" // TODO: update so collectionKey is dynamic - first collection?
+						icon="collection"
+						title={T("collections")}
 					/>
 					<Navigation.IconLink
 						href="/media"

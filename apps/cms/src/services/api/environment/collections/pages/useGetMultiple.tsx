@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { APIResponse } from "@/types/api";
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
@@ -16,7 +16,6 @@ interface QueryParams {
 		category_id?: Accessor<string[] | undefined> | string[];
 	};
 	headers: {
-		"headless-environment": Accessor<string | undefined> | string;
 		"headless-content-lang": Accessor<number | undefined> | number;
 	};
 	perPage?: Accessor<number> | number;
@@ -40,7 +39,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 		],
 		queryFn: () =>
 			request<APIResponse<PagesResT[]>>({
-				url: `/api/v1/pages`,
+				url: "/api/v1/collections/multiple-page",
 				query: queryParams(),
 				config: {
 					method: "GET",
