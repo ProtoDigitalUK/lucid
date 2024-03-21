@@ -34,7 +34,7 @@ const useGetValidParents = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"environment.collections.pages.getMultiple",
+			"collections.multiplePages.getMultiple",
 			queryKey(),
 			params.key?.(),
 		],

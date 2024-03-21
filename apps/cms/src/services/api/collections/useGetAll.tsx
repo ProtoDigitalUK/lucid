@@ -25,11 +25,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	// -----------------------------
 	// Query
 	return createQuery(() => ({
-		queryKey: [
-			"environment.collections.getAll",
-			queryKey(),
-			params.key?.(),
-		],
+		queryKey: ["collections.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<CollectionResT[]>>({
 				url: "/api/v1/collections",

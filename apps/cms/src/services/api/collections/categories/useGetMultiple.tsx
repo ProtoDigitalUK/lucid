@@ -28,7 +28,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"environment.collections.categories.getMultiple",
+			"collections.categories.getMultiple",
 			queryKey(),
 			params.key?.(),
 		],

@@ -57,7 +57,7 @@ const useCreateSingle = (props: UseCreateSingleProps) => {
 				},
 			}),
 		},
-		invalidates: ["environment.collections.pages.getMultiple"],
+		invalidates: ["collections.multiplePages.getMultiple"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});

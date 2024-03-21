@@ -25,7 +25,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"environment.collections.singlePages.getSingle",
+			"collections.singlePages.getSingle",
 			queryKey(),
 			params.key?.(),
 		],

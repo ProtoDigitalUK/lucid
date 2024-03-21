@@ -6,30 +6,33 @@ import serviceHelpers from "@/utils/service-helpers";
 import { APIResponse } from "@/types/api";
 
 interface Params {
-	id: number;
+	body: {
+		ids: number[];
+	};
 }
 
-export const deleteSingleReq = (params: Params) => {
+export const deleteMultipleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/collections/multiple-page/${params.id}`,
+		url: "/api/v1/collections/multiple-page",
 		csrf: true,
 		config: {
 			method: "DELETE",
+			body: params.body,
 		},
 	});
 };
 
-interface UseDeleteProps {
+interface UseDeleteMultipleProps {
 	onSuccess?: () => void;
 	onError?: () => void;
 	collectionName: string;
 }
 
-const useDeleteSingle = (props: UseDeleteProps) => {
+const useDeleteMultiple = (props: UseDeleteMultipleProps) => {
 	// -----------------------------
 	// Mutation
 	return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
-		mutationFn: deleteSingleReq,
+		mutationFn: deleteMultipleReq,
 		successToast: {
 			title: T("deleted_toast_title", {
 				name: props.collectionName,
@@ -41,10 +44,10 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 				},
 			}),
 		},
-		invalidates: ["environment.collections.pages.getMultiple"],
+		invalidates: ["collections.multiplePages.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,
 	});
 };
 
-export default useDeleteSingle;
+export default useDeleteMultiple;

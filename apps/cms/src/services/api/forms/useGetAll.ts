@@ -22,7 +22,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	// -----------------------------
 	// Query
 	return createQuery(() => ({
-		queryKey: ["environment.forms.getAll", queryKey(), params.key?.()],
+		queryKey: ["forms.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<FormResT[]>>({
 				url: "/api/v1/forms",

@@ -61,8 +61,8 @@ const useUpdateSingle = (props: UseUpdateSingleProps) => {
 			}),
 		},
 		invalidates: [
-			"environment.collections.pages.getMultiple",
-			"environment.collections.pages.getSingle",
+			"collections.multiplePages.getMultiple",
+			"collections.multiplePages.getSingle",
 		],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

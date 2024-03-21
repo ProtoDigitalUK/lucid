@@ -27,7 +27,7 @@ const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
 
 	// ----------------------------------
 	// Queries
-	const pages = api.collections.pages.useGetMultiple({
+	const pages = api.collections.multiplePages.useGetMultiple({
 		queryParams: {
 			filters: {
 				collection_key: props.collectionKey,

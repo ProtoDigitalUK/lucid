@@ -88,7 +88,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 		},
 		enabled: () => !!collectionKey(),
 	});
-	const page = api.collections.pages.useGetSingle({
+	const page = api.collections.multiplePages.useGetSingle({
 		queryParams: {
 			location: {
 				id: pageId(),
@@ -113,7 +113,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Mutations
-	const updatePage = api.collections.pages.useUpdateSingle({
+	const updatePage = api.collections.multiplePages.useUpdateSingle({
 		onSuccess: () => {
 			builderStore.set("fieldsErrors", []);
 		},

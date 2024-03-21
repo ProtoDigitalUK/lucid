@@ -24,11 +24,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	// -----------------------------
 	// Query
 	return createQuery(() => ({
-		queryKey: [
-			"environment.collections.getSingle",
-			queryKey(),
-			params.key?.(),
-		],
+		queryKey: ["collections.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<CollectionResT>>({
 				url: `/api/v1/collections/${

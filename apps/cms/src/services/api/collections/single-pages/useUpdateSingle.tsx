@@ -46,7 +46,7 @@ const useUpdateSingle = (props: UseUpdateSingleProps) => {
 				},
 			}),
 		},
-		invalidates: ["environment.collections.singlePages.getSingle"],
+		invalidates: ["collections.singlePages.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});

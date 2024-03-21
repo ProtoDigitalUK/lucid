@@ -29,7 +29,7 @@ const ValidParentPageSearchSelect: Component<ValidParentPageSearchSelectProps> =
 
 		// ----------------------------------
 		// Queries
-		const validParents = api.collections.pages.useGetValidParents({
+		const validParents = api.collections.multiplePages.useGetValidParents({
 			queryParams: {
 				location: {
 					id: props?.pageId,
