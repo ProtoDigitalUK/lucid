@@ -31,6 +31,11 @@ const EnvCollectionCard: Component<EnvCollectionCardProps> = (props) => {
 				},
 			)}
 			onClick={() => props.setSelected(props.collection)}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					props.setSelected(props.collection);
+				}
+			}}
 		>
 			<div class="w-full p-15 flex flex-col">
 				<h3 class="text-base">{props.collection.title}</h3>

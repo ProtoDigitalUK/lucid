@@ -1,6 +1,6 @@
 import { Component, Switch, Match } from "solid-js";
 // Types
-import type { PagesResT } from "@headless/types/src/pages";
+import type { PagesResT } from "@headless/types/src/multiple-page";
 // Components
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";

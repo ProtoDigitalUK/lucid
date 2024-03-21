@@ -101,6 +101,7 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 				data-panel-ignore
 				class="bg-backgroundAccent hover:bg-backgroundAccentH flex justify-center top-1/2 -translate-y-1/2 items-center w-6 h-6 right-2.5 absolute rounded-full z-20 hover:text-error duration-200 transition-all shadow-md"
 				onClick={() => toast.dismiss(props.toast.id)}
+				type="button"
 			>
 				&times;
 			</button>

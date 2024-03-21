@@ -21,7 +21,7 @@ interface Params {
 
 export const createSingleReq = (params: Params) => {
 	return request<APIResponse<UserResT>>({
-		url: `/api/v1/users`,
+		url: "/api/v1/users",
 		csrf: true,
 		config: {
 			method: "POST",

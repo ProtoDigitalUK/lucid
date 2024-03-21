@@ -26,7 +26,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 		queryKey: ["languages.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<LanguageResT[]>>({
-				url: `/api/v1/languages`,
+				url: "/api/v1/languages",
 				config: {
 					method: "GET",
 				},

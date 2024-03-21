@@ -15,7 +15,7 @@ export const logoutReq = () => {
 			message: string;
 		}>
 	>({
-		url: `/api/v1/auth/logout`,
+		url: "/api/v1/auth/logout",
 		config: {
 			method: "POST",
 		},

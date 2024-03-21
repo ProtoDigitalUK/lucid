@@ -53,9 +53,8 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 					type: media.type,
 					width: media.meta.width || undefined,
 					height: media.meta.height || undefined,
-					// TODO: bllow might need to be changed
-					name: media.translations[0].name || undefined,
-					alt: media.translations[0].alt || undefined,
+					title_translations: media.title_translations,
+					alt_translations: media.alt_translations,
 				});
 			},
 			open: true,
@@ -104,8 +103,11 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 											type: props.meta?.type || "image",
 										}}
 										alt={
-											props.meta?.alt ||
-											props.meta?.name ||
+											// TODO: fix to use some translation helper with current lang
+											props.meta?.alt_translations?.[0]
+												.value ||
+											props.meta?.title_translations?.[0]
+												.value ||
 											""
 										}
 									/>

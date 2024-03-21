@@ -31,7 +31,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 		queryKey: ["users.getMultiple", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<UserResT[]>>({
-				url: `/api/v1/users`,
+				url: "/api/v1/users",
 				query: queryParams(),
 				config: {
 					method: "GET",

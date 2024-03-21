@@ -107,6 +107,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 										</Match>
 										<Match when={action.type === "button"}>
 											<button
+												type="button"
 												onClick={(e) => {
 													e.stopPropagation();
 													if (
@@ -124,8 +125,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 														});
 														return;
 													}
-													action.onClick &&
-														action.onClick();
+													action.onClick?.();
 												}}
 												class={classNames(
 													liItemClasses,

@@ -89,6 +89,7 @@ export const Builder: Component<BuilderProps> = (props) => {
 									<img
 										src={missingContent}
 										class="w-full max-w-[240px] mx-auto mb-10"
+										alt=""
 									/>
 									<h3 class="text-white mb-15">
 										{T("constructing_your_page")}

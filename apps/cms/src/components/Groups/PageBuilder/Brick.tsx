@@ -68,20 +68,22 @@ export const Brick: Component<BrickProps> = (props) => {
 		if (props.state.alwaysOpen) return;
 
 		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
+			for (const mutation of mutations) {
 				if (mutation.type === "childList") {
 					if (!getAccordionOpen()) return;
-					dropdownContentRef!.style.maxHeight = `${
-						dropdownContentRef!.scrollHeight
-					}px`;
-					dropdownContentRef!.style.transition = "";
+					if (dropdownContentRef) {
+						dropdownContentRef.style.maxHeight = `${dropdownContentRef.scrollHeight}px`;
+						dropdownContentRef.style.transition = "";
+					}
 				}
+			}
+		});
+		if (dropdownContentRef) {
+			observer.observe(dropdownContentRef, {
+				childList: true,
+				subtree: true,
 			});
-		});
-		observer.observe(dropdownContentRef!, {
-			childList: true,
-			subtree: true,
-		});
+		}
 	});
 
 	// ------------------------------
@@ -123,6 +125,11 @@ export const Brick: Component<BrickProps> = (props) => {
 						},
 					)}
 					onClick={() => toggleAccordion(!getAccordionOpen())}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							toggleAccordion(!getAccordionOpen());
+						}
+					}}
 				>
 					<div class="flex items-center">
 						<span class="w-7 h-7 rounded-md bg-secondary flex items-center justify-center mr-2.5 fill-white">
@@ -131,6 +138,7 @@ export const Brick: Component<BrickProps> = (props) => {
 									<img
 										src={defaultBrickIconWhite}
 										class="m-auto h-3.5"
+										alt=""
 									/>
 								</Match>
 								<Match when={isFixed() === true}>
@@ -166,6 +174,7 @@ export const Brick: Component<BrickProps> = (props) => {
 											!getAccordionOpen(),
 									},
 								)}
+								type="button"
 							>
 								<FaSolidChevronDown size={14} />
 							</button>

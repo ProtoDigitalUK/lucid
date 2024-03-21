@@ -33,8 +33,13 @@ export const MediaBasicCardLoading: Component = () => {
 const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 	// ----------------------------------
 	// Memos
-	const translation = createMemo(() => {
-		return props.media.translations.find(
+	const titleTranslations = createMemo(() => {
+		return props.media.title_translations.find(
+			(translation) => translation.language_id === props.contentLanguage,
+		);
+	});
+	const altTranslations = createMemo(() => {
+		return props.media.alt_translations.find(
 			(translation) => translation.language_id === props.contentLanguage,
 		);
 	});
@@ -52,18 +57,27 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 			onClick={() => {
 				props.onClick?.();
 			}}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					props.onClick?.();
+				}
+			}}
 		>
 			{/* Image */}
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
 				<MediaPreview
 					media={props.media}
-					alt={translation()?.alt || translation()?.name || ""}
+					alt={
+						altTranslations()?.value ||
+						titleTranslations()?.value ||
+						""
+					}
 				/>
 			</AspectRatio>
 			{/* Content */}
 			<div class="p-2.5 border-t border-border">
 				<h3 class="line-clamp-1 text-sm">
-					{translation()?.name || T("no_translation")}
+					{titleTranslations()?.value || T("no_translation")}
 				</h3>
 			</div>
 		</li>

@@ -10,7 +10,7 @@ import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
 // Components
 import Query from "@/components/Groups/Query";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import SkeletonCard from "@/components/Cards/SkeletonCard";
 import Layout from "@/components/Groups/Layout";
@@ -36,7 +36,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 		<>
 			<Switch>
 				<Match when={props.permission === false}>
-					<Error
+					<ErrorBlock
 						type="page-layout"
 						content={{
 							image: noPermission,
@@ -46,7 +46,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 					/>
 				</Match>
 				<Match when={props.state.isError}>
-					<Error
+					<ErrorBlock
 						type="page-layout"
 						content={{
 							image: notifySvg,
@@ -58,7 +58,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 				<Match
 					when={props.items === 0 && props.state.isLoading === false}
 				>
-					<Error
+					<ErrorBlock
 						type="page-layout"
 						content={{
 							image: emptySvg,
@@ -66,12 +66,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 							description: T("no_results_message"),
 						}}
 					>
-						<Show
-							when={
-								props.searchParams &&
-								props.searchParams.hasFiltersApplied()
-							}
-						>
+						<Show when={props.searchParams?.hasFiltersApplied()}>
 							<Button
 								type="submit"
 								theme="primary"
@@ -83,7 +78,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 								{T("reset_filters")}
 							</Button>
 						</Show>
-					</Error>
+					</ErrorBlock>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
 					<Layout.PageContent>

@@ -25,7 +25,8 @@ export const PageFooter: Component<PageLayoutFooterProps> = (props) => {
 		window.addEventListener("resize", setFooterHeight);
 
 		const observer = new MutationObserver(setFooterHeight);
-		observer.observe(footerEle!, { attributes: true, childList: true });
+		if (footerEle)
+			observer.observe(footerEle, { attributes: true, childList: true });
 
 		return () => {
 			window.removeEventListener("resize", setFooterHeight);

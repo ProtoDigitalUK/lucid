@@ -3,7 +3,7 @@ import classNames from "classnames";
 // Components
 import Link from "@/components/Partials/Link";
 
-interface ErrorProps {
+interface ErrorBlockProps {
 	type: "fill" | "page-layout" | "table";
 	content: {
 		image?: string;
@@ -17,7 +17,7 @@ interface ErrorProps {
 	children?: JSXElement;
 }
 
-const Error: Component<ErrorProps> = (props) => {
+const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 	return (
 		<div
 			class={classNames(
@@ -35,6 +35,7 @@ const Error: Component<ErrorProps> = (props) => {
 					<img
 						src={props.content.image}
 						class="h-auto mx-auto mb-10 max-w-xs w-full max-h-40 object-contain"
+						alt=""
 					/>
 				</Show>
 				<h2 class="mb-2">{props.content.title}</h2>
@@ -57,4 +58,4 @@ const Error: Component<ErrorProps> = (props) => {
 	);
 };
 
-export default Error;
+export default ErrorBlock;

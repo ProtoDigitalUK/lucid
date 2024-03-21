@@ -7,6 +7,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import { SettingsResT } from "@headless/types/src/settings";
 import { APIResponse } from "@/types/api";
 
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
 
 const useGetSettings = (params?: QueryHook<QueryParams>) => {
@@ -23,7 +24,7 @@ const useGetSettings = (params?: QueryHook<QueryParams>) => {
 		queryKey: ["settings.getSettings", queryKey(), params?.key?.()],
 		queryFn: () =>
 			request<APIResponse<SettingsResT>>({
-				url: `/api/v1/settings`,
+				url: "/api/v1/settings",
 				config: {
 					method: "GET",
 				},

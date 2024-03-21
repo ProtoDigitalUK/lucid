@@ -8,7 +8,7 @@ interface TdProps {
 		width?: number;
 		noMinWidth?: boolean;
 	};
-	children: JSXElement;
+	children?: JSXElement;
 }
 
 // Body Column

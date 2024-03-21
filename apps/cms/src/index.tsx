@@ -12,4 +12,4 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 	);
 }
 
-render(() => <App />, root!);
+if (root !== null) render(() => <App />, root);

@@ -72,7 +72,7 @@ const Button: Component<ButtonProps> = (props) => {
 			return;
 		}
 
-		props.onClick && props.onClick();
+		props.onClick?.();
 	};
 
 	// ----------------------------------------

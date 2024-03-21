@@ -7,7 +7,7 @@ import { APIResponse } from "@/types/api";
 
 export const deleteAllProcessedImagesReq = () => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/media/processed`,
+		url: "/api/v1/media/processed",
 		csrf: true,
 		config: {
 			method: "DELETE",

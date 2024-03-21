@@ -109,7 +109,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 							<For each={repeaterGroups()}>
 								{(group) => (
 									<div
-										class={classNames(`w-full flex`, {
+										class={classNames("w-full flex", {
 											"opacity-60":
 												dragDrop.getDragging()
 													?.index === group.group_id,
@@ -208,7 +208,9 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 										</div>
 										{/* Group Action Bar */}
 										<div
-											class={`ml-2.5 transition-opacity duration-200`}
+											class={
+												"ml-2.5 transition-opacity duration-200"
+											}
 										>
 											<button
 												type="button"

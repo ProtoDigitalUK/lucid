@@ -4,7 +4,7 @@ import equal from "fast-deep-equal/es6";
 import type { MediaResT } from "@headless/types/src/media";
 import type { UserResT } from "@headless/types/src/users";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type GenericObject = Record<string, any>;
 
 const deepMerge = (obj1: GenericObject, obj2: GenericObject): GenericObject => {
@@ -77,7 +77,7 @@ const updateData = <T>(obj1: T, obj2: T) => {
 // ---------------------------------------------
 // Resolve signals and return the value
 const resolveValue = <T>(value: Accessor<T> | T): T =>
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	typeof value === "function" ? (value as any)() : value;
 
 // ---------------------------------------------

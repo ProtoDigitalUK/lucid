@@ -17,18 +17,18 @@ const queryBuilder = (query: QueryBuilderProps) => {
 	// Append include query
 	if (query.include !== undefined && Object.keys(query.include).length > 0) {
 		let includeString = params.get("include") || "";
-		Object.keys(query.include).forEach((key) => {
-			if (query.include && query.include[key]) {
+		for (const key of Object.keys(query.include)) {
+			if (query.include?.[key]) {
 				includeString += `${key},`;
 			}
-		});
+		}
 		includeString = includeString.slice(0, -1);
 		if (includeString.length > 0) params.append("include", includeString);
 	}
 
 	// Append filters query
 	if (query.filters !== undefined && Object.keys(query.filters).length > 0) {
-		Object.keys(query.filters).forEach((key) => {
+		for (const key of Object.keys(query.filters)) {
 			const value = query.filters ? query.filters[key] : "";
 			if (value === undefined || value === null) return;
 
@@ -39,7 +39,7 @@ const queryBuilder = (query: QueryBuilderProps) => {
 			if (typeof value === "string" || typeof value === "number") {
 				params.append(`filter[${key}]`, value.toString());
 			}
-		});
+		}
 	}
 
 	// Append perPage query

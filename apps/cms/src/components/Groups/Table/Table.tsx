@@ -23,7 +23,7 @@ import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
 import SelectCol from "@/components/Tables/Columns/SelectCol";
 import LoadingRow from "@/components/Tables/Rows/LoadingRow";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 
 interface TableRootProps {
@@ -178,7 +178,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 		<>
 			<Switch>
 				<Match when={props.permission === false}>
-					<Error
+					<ErrorBlock
 						type="table"
 						content={{
 							image: noPermission,
@@ -188,7 +188,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 					/>
 				</Match>
 				<Match when={props.state.isError}>
-					<Error
+					<ErrorBlock
 						type="table"
 						content={{
 							image: notifySvg,
@@ -200,7 +200,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 				<Match
 					when={props.rows === 0 && props.state.isLoading === false}
 				>
-					<Error
+					<ErrorBlock
 						type="table"
 						content={{
 							image: emptySvg,
@@ -220,7 +220,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 								{T("reset_filters")}
 							</Button>
 						</Show>
-					</Error>
+					</ErrorBlock>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
 					{/* Table */}

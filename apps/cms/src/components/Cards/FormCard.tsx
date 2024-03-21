@@ -29,6 +29,11 @@ const EnvFormCard: Component<EnvFormCardProps> = (props) => {
 				},
 			)}
 			onClick={() => props.setSelected(props.form)}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					props.setSelected(props.form);
+				}
+			}}
 		>
 			<div class="w-full p-15 flex flex-col">
 				<h3 class="text-base">{props.form.title}</h3>

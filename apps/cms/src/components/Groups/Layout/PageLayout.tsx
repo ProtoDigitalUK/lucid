@@ -13,7 +13,7 @@ import notifySvg from "@/assets/illustrations/notify.svg";
 // Components
 import { PageHeadingProps } from "@/components/Groups/Layout/PageHeading";
 import Layout from "@/components/Groups/Layout";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Loading from "@/components/Partials/Loading";
 
 interface PageWrapperProps {
@@ -70,7 +70,7 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
 						<Loading type="page-layout" />
 					</Match>
 					<Match when={props.state?.isError}>
-						<Error
+						<ErrorBlock
 							type="page-layout"
 							content={{
 								image: notifySvg,

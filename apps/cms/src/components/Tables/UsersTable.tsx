@@ -87,7 +87,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 					isSelectable: false,
 				}}
 				callbacks={{
-					deleteRows: () => {
+					deleteRows: async () => {
 						alert("Delete rows");
 					},
 				}}

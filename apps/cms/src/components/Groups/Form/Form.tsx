@@ -4,7 +4,7 @@ import { Component, JSXElement, Switch, Match, Show } from "solid-js";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 // Types
@@ -34,7 +34,7 @@ export const Form: Component<FormProps> = (props) => {
 	return (
 		<Switch>
 			<Match when={props.queryState?.isError}>
-				<Error
+				<ErrorBlock
 					type={"page-layout"}
 					content={{
 						image: notifySvg,
@@ -56,12 +56,7 @@ export const Form: Component<FormProps> = (props) => {
 						<Match when={props.type === "standard"}>
 							{props.children}
 							<div class="mt-10 w-full">
-								<Show
-									when={
-										props.state.errors &&
-										props.state.errors?.message
-									}
-								>
+								<Show when={props.state.errors?.message}>
 									<ErrorMessage
 										theme="container"
 										message={props.state.errors?.message}
@@ -87,12 +82,7 @@ export const Form: Component<FormProps> = (props) => {
 								{props.children}
 							</Layout.PageContent>
 							<Layout.PageFooter>
-								<Show
-									when={
-										props.state.errors &&
-										props.state.errors?.message
-									}
-								>
+								<Show when={props.state.errors?.message}>
 									<ErrorMessage
 										theme="background"
 										message={props.state.errors?.message}

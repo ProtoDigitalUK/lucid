@@ -235,6 +235,15 @@ export const Select: Component<SelectProps> = (props) => {
 												setDebouncedValue("");
 												setOpen(false);
 											}}
+											onKeyDown={(e) => {
+												if (e.key === "Enter") {
+													props.onChange(
+														option.value,
+													);
+													setDebouncedValue("");
+													setOpen(false);
+												}
+											}}
 										>
 											<span>{option.label}</span>
 											<Show

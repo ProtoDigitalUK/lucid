@@ -31,6 +31,11 @@ const EnvBrickCard: Component<EnvBrickCardProps> = (props) => {
 				},
 			)}
 			onClick={() => props.setSelected(props.brick)}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					props.setSelected(props.brick);
+				}
+			}}
 		>
 			<div class="w-full p-15 flex">
 				<span class="block mr-2.5 mt-0.5">

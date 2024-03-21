@@ -57,10 +57,7 @@ const StartingPoints: Component = () => {
 	// Render
 	return (
 		<div class="mb-30">
-			<ul
-				role="list"
-				class="grid grid-cols-1 gap-6 pb-5 sm:grid-cols-2 lg:grid-cols-3"
-			>
+			<ul class="grid grid-cols-1 gap-6 pb-5 sm:grid-cols-2 lg:grid-cols-3">
 				<For each={items}>
 					{(item) => (
 						<li class="flow-root">
@@ -78,7 +75,7 @@ const StartingPoints: Component = () => {
 								</div>
 								<div>
 									<h3 class="text-sm font-medium text-gray-900">
-										<a href="#" class="focus:outline-none">
+										<a href="/" class="focus:outline-none">
 											<span
 												class="absolute inset-0"
 												aria-hidden="true"
@@ -101,7 +98,7 @@ const StartingPoints: Component = () => {
 			</ul>
 			<div class="mt-4 flex">
 				<a
-					href="#"
+					href="/"
 					class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
 				>
 					Or start from an empty project

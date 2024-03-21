@@ -8,7 +8,7 @@ import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Components
 import ResetPasswordForm from "@/components/Forms/Auth/ResetPasswordForm";
 import Loading from "@/components/Partials/Loading";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 
 const ResetPasswordRoute: Component = () => {
 	// ----------------------------------------
@@ -43,7 +43,7 @@ const ResetPasswordRoute: Component = () => {
 				<Loading type="fill" />
 			</Match>
 			<Match when={checkToken.isError}>
-				<Error
+				<ErrorBlock
 					type={"fill"}
 					content={{
 						image: notifyIllustration,

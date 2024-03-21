@@ -122,10 +122,10 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 								const start = textarea.selectionStart;
 								const end = textarea.selectionEnd;
 								const value = textarea.value;
-								textarea.value =
-									value.substring(0, start) +
-									"\t" +
-									value.substring(end, value.length);
+								textarea.value = `${value.substring(
+									0,
+									start,
+								)}\t${value.substring(end, value.length)}`;
 								textarea.selectionStart =
 									textarea.selectionEnd = start + 1;
 							}

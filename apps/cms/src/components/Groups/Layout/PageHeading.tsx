@@ -53,7 +53,8 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 		window.addEventListener("resize", setHeaderHeight);
 
 		const observer = new MutationObserver(setHeaderHeight);
-		observer.observe(headerEle!, { attributes: true, childList: true });
+		if (headerEle)
+			observer.observe(headerEle, { attributes: true, childList: true });
 
 		return () => {
 			window.removeEventListener("resize", setHeaderHeight);

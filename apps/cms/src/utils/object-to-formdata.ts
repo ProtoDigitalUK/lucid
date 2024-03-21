@@ -14,13 +14,12 @@ const objectToFormData = <T = Record<string, string | File>>(
 				formData.append(key, value);
 				continue;
 			}
-			if (stringify && stringify[key]) {
+			if (stringify?.[key]) {
 				formData.append(key, JSON.stringify(value));
 				continue;
 			}
 			if (typeof value === "string") {
 				formData.append(key, value);
-				continue;
 			}
 		}
 	}

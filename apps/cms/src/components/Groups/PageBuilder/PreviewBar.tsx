@@ -143,8 +143,24 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
 		);
 	});
 	const repeaterKey = createMemo(() => {
-		return `pagebuilder-preview`;
+		return "pagebuilder-preview";
 	});
+
+	// ------------------------------
+	// Functions
+	const onClickHandler = () => {
+		const brickEle = document.querySelector(
+			`#accordion-${props.data.brickId}`,
+		) as HTMLElement;
+		if (brickEle) {
+			brickEle.click();
+			brickEle.scrollIntoView({
+				behavior: "smooth",
+				block: "center",
+				inline: "center",
+			});
+		}
+	};
 
 	// ----------------------------------
 	// Render
@@ -179,17 +195,10 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
 			}
 			onDragOver={(e) => props.callbacks?.dragDrop?.onDragOver(e)}
 			draggable={props.type === "builder"}
-			onClick={() => {
-				const brickEle = document.querySelector(
-					"#accordion-" + props.data.brickId,
-				) as HTMLElement;
-				if (brickEle) {
-					brickEle.click();
-					brickEle.scrollIntoView({
-						behavior: "smooth",
-						block: "center",
-						inline: "center",
-					});
+			onClick={onClickHandler}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					onClickHandler();
 				}
 			}}
 		>

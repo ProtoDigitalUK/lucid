@@ -26,7 +26,7 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 		<Switch>
 			<Match when={props.value === undefined}>
 				<Form.Select
-					id={`content-language`}
+					id={"content-language"}
 					value={contentLanguage()}
 					onChange={(value) => {
 						if (!value)
@@ -38,7 +38,7 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 								Number(value),
 							);
 					}}
-					name={`content-language`}
+					name={"content-language"}
 					options={
 						languages().map((language) => ({
 							value: language.id,
@@ -56,13 +56,13 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 			</Match>
 			<Match when={props.value !== undefined}>
 				<Form.Select
-					id={`content-language`}
+					id={"content-language"}
 					value={props.value}
 					onChange={(value) => {
 						if (!value) props.setValue?.(undefined);
 						else props.setValue?.(Number(value));
 					}}
-					name={`content-language`}
+					name={"content-language"}
 					options={
 						languages().map((language) => ({
 							value: language.id,

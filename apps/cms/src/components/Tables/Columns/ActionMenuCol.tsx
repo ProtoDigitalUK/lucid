@@ -31,9 +31,7 @@ const ActionMenuCol: Component<ActionMenuColProps> = (props) => {
 					options={{
 						noMinWidth: true,
 					}}
-				>
-					<></>
-				</Table.Td>
+				/>
 			</Match>
 		</Switch>
 	);

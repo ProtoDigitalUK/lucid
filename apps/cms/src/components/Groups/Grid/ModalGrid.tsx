@@ -10,7 +10,7 @@ import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
 // Components
 import Query from "@/components/Groups/Query";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import SkeletonCard from "@/components/Cards/SkeletonCard";
 
@@ -35,7 +35,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 		<>
 			<Switch>
 				<Match when={props.permission === false}>
-					<Error
+					<ErrorBlock
 						type="fill"
 						content={{
 							image: noPermission,
@@ -45,7 +45,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 					/>
 				</Match>
 				<Match when={props.state.isError}>
-					<Error
+					<ErrorBlock
 						type="fill"
 						content={{
 							image: notifySvg,
@@ -57,7 +57,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 				<Match
 					when={props.items === 0 && props.state.isLoading === false}
 				>
-					<Error
+					<ErrorBlock
 						type="fill"
 						content={{
 							image: emptySvg,
@@ -65,12 +65,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 							description: T("no_results_message"),
 						}}
 					>
-						<Show
-							when={
-								props.searchParams &&
-								props.searchParams.hasFiltersApplied()
-							}
-						>
+						<Show when={props.searchParams?.hasFiltersApplied()}>
 							<Button
 								type="submit"
 								theme="primary"
@@ -82,7 +77,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 								{T("reset_filters")}
 							</Button>
 						</Show>
-					</Error>
+					</ErrorBlock>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
 					<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-15">

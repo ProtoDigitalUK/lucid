@@ -62,9 +62,9 @@ const useSearchParams = (
 		// Merge filters into search params
 		if (params.filters) {
 			for (const [key, value] of Object.entries(params.filters)) {
-				const toString = filterValueToString(value);
-				if (toString) {
-					searchParams.set(`filter[${key}]`, toString);
+				const filterVal = filterValueToString(value);
+				if (filterVal) {
+					searchParams.set(`filter[${key}]`, filterVal);
 				} else {
 					searchParams.delete(`filter[${key}]`);
 				}
@@ -98,7 +98,7 @@ const useSearchParams = (
 				if (currentSorts) {
 					const currentSortArr = currentSorts.split(",");
 
-					currentSortArr.forEach((sort) => {
+					for (const sort of currentSortArr) {
 						const sortKey = sort.startsWith("-")
 							? sort.slice(1)
 							: sort;
@@ -120,7 +120,7 @@ const useSearchParams = (
 								});
 							}
 						}
-					});
+					}
 				}
 
 				for (const [key, value] of Object.entries(params.sorts)) {
@@ -221,8 +221,8 @@ const useSearchParams = (
 					const asArray = value.split(",");
 					// if values are numbers, convert to numbers
 					const asNumber = asArray.map((val) => {
-						if (!isNaN(Number(val))) return Number(val);
-						else return val;
+						if (!Number.isNaN(Number(val))) return Number(val);
+						return val;
 					});
 					filters.set(filterKey, asNumber);
 				} else if (
@@ -234,7 +234,7 @@ const useSearchParams = (
 					schema.filters &&
 					schema.filters[filterKey].type === "number"
 				) {
-					const singleValue = isNaN(Number(value))
+					const singleValue = Number.isNaN(Number(value))
 						? value
 						: Number(value);
 					filters.set(filterKey, singleValue);
@@ -285,9 +285,9 @@ const useSearchParams = (
 
 		// Set filters
 		for (const [key, value] of getFilters()) {
-			const toString = filterValueToString(value);
-			if (toString !== undefined) {
-				searchParams.set(`filter[${key}]`, toString);
+			const filterVal = filterValueToString(value);
+			if (filterVal !== undefined) {
+				searchParams.set(`filter[${key}]`, filterVal);
 			}
 		}
 

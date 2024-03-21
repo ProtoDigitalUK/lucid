@@ -67,6 +67,7 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
 									},
 								)}
 								onClick={() => setActiveTab(tab.key)}
+								type="button"
 							>
 								{tab.title}
 							</button>

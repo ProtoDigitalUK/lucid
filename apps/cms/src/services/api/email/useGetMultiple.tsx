@@ -33,7 +33,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 		queryKey: ["email.getMultiple", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<EmailResT[]>>({
-				url: `/api/v1/emails`,
+				url: "/api/v1/emails",
 				query: queryParams(),
 				config: {
 					method: "GET",

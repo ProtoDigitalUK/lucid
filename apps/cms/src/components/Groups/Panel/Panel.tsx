@@ -21,7 +21,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
 import { Dialog } from "@kobalte/core";
 import Loading from "@/components/Partials/Loading";
-import Error from "@/components/Partials/Error";
+import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
@@ -210,7 +210,7 @@ export const Panel: Component<PanelProps> = (props) => {
 									</Match>
 									<Match when={props.fetchState?.isError}>
 										<div class="min-h-[300px]">
-											<Error
+											<ErrorBlock
 												type={"fill"}
 												content={{
 													image: notifyIllustration,
