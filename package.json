@@ -9,15 +9,11 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.5.3",
-		"prettier": "^2.5.1",
 		"turbo": "^1.12.5"
 	},
 	"name": "headless",
 	"packageManager": "npm@9.6.4",
-	"workspaces": [
-		"apps/*",
-		"packages/*"
-	],
+	"workspaces": ["apps/*", "packages/*"],
 	"volta": {
 		"node": "21.6.2"
 	}
