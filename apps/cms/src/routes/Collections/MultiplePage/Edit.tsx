@@ -71,7 +71,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Queries
-	const categories = api.environment.collections.categories.useGetMultiple({
+	const categories = api.collections.categories.useGetMultiple({
 		queryParams: {
 			filters: {
 				collection_key: collectionKey,
@@ -80,7 +80,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 		},
 		enabled: () => !!collectionKey(),
 	});
-	const collection = api.environment.collections.useGetSingle({
+	const collection = api.collections.useGetSingle({
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
@@ -88,7 +88,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 		},
 		enabled: () => !!collectionKey(),
 	});
-	const page = api.environment.collections.pages.useGetSingle({
+	const page = api.collections.pages.useGetSingle({
 		queryParams: {
 			location: {
 				id: pageId(),
@@ -113,7 +113,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Mutations
-	const updatePage = api.environment.collections.pages.useUpdateSingle({
+	const updatePage = api.collections.pages.useUpdateSingle({
 		onSuccess: () => {
 			builderStore.set("fieldsErrors", []);
 		},

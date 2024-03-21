@@ -38,7 +38,7 @@ const CollectionsSinglePageEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Queries
-	const collection = api.environment.collections.useGetSingle({
+	const collection = api.collections.useGetSingle({
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
@@ -46,7 +46,7 @@ const CollectionsSinglePageEditRoute: Component = () => {
 		},
 		enabled: () => !!collectionKey(),
 	});
-	const singlePage = api.environment.collections.singlePages.useGetSingle({
+	const singlePage = api.collections.singlePages.useGetSingle({
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
@@ -68,19 +68,18 @@ const CollectionsSinglePageEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Mutations
-	const updateSinglePage =
-		api.environment.collections.singlePages.useUpdateSingle({
-			onSuccess: () => {
-				builderStore.set("fieldsErrors", []);
-			},
-			onError: (errors) => {
-				builderStore.set(
-					"fieldsErrors",
-					errors?.errors?.body?.fields || [],
-				);
-			},
-			collectionName: collection.data?.data.singular || "",
-		});
+	const updateSinglePage = api.collections.singlePages.useUpdateSingle({
+		onSuccess: () => {
+			builderStore.set("fieldsErrors", []);
+		},
+		onError: (errors) => {
+			builderStore.set(
+				"fieldsErrors",
+				errors?.errors?.body?.fields || [],
+			);
+		},
+		collectionName: collection.data?.data.singular || "",
+	});
 
 	// ----------------------------------
 	// Memos

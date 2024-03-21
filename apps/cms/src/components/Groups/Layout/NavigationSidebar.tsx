@@ -12,7 +12,7 @@ import Navigation from "@/components/Groups/Navigation";
 export const NavigationSidebar: Component = () => {
 	// ----------------------------------
 	// Mutations & Queries
-	const collections = api.environment.collections.useGetAll({
+	const collections = api.collections.useGetAll({
 		queryParams: {
 			include: {
 				bricks: false,

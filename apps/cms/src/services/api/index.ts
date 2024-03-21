@@ -1,6 +1,5 @@
 import auth from "./auth";
 import account from "./account";
-import environment from "./environment";
 import brickConfig from "./brick-config";
 import users from "./users";
 import roles from "./roles";
@@ -9,11 +8,12 @@ import media from "./media";
 import settings from "./settings";
 import email from "./email";
 import languages from "./languages";
+import collections from "./collections";
+import forms from "./forms";
 
 const exportObject = {
 	auth,
 	account,
-	environment,
 	brickConfig,
 	users,
 	roles,
@@ -22,6 +22,8 @@ const exportObject = {
 	settings,
 	email,
 	languages,
+	collections,
+	forms,
 };
 
 export default exportObject;

@@ -21,7 +21,7 @@ const CategorySearchSelect: Component<CategorySearchSelectProps> = (props) => {
 
 	// ----------------------------------
 	// Queries
-	const categories = api.environment.collections.categories.useGetMultiple({
+	const categories = api.collections.categories.useGetMultiple({
 		queryParams: {
 			filters: {
 				collection_key: props.collectionKey,

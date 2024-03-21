@@ -47,7 +47,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 
 	// ----------------------------------
 	// Queries
-	const pages = api.environment.collections.pages.useGetMultiple({
+	const pages = api.collections.pages.useGetMultiple({
 		queryParams: {
 			queryString: props.searchParams.getQueryString,
 			filters: {
@@ -62,10 +62,9 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 
 	// ----------------------------------
 	// Mutations
-	const deleteMultiplePages =
-		api.environment.collections.pages.useDeleteMultiple({
-			collectionName: props.collection.singular,
-		});
+	const deleteMultiplePages = api.collections.pages.useDeleteMultiple({
+		collectionName: props.collection.singular,
+	});
 
 	// ----------------------------------
 	// Render

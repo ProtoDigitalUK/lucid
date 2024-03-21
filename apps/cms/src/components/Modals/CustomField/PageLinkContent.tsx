@@ -43,7 +43,7 @@ const PageLinkContent: Component = () => {
 
 	// ----------------------------------
 	// Queries
-	const pages = api.environment.collections.pages.useGetMultiple({
+	const pages = api.collections.pages.useGetMultiple({
 		queryParams: {
 			filters: {
 				collection_key: collectionKey,

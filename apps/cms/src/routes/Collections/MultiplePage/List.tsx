@@ -55,7 +55,7 @@ const CollectionsMultiplePageListRoute: Component = () => {
 
 	// ----------------------------------
 	// Queries
-	const collection = api.environment.collections.useGetSingle({
+	const collection = api.collections.useGetSingle({
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
@@ -64,7 +64,7 @@ const CollectionsMultiplePageListRoute: Component = () => {
 		enabled: () => !!collectionKey(),
 	});
 
-	const categories = api.environment.collections.categories.useGetMultiple({
+	const categories = api.collections.categories.useGetMultiple({
 		queryParams: {
 			filters: {
 				collection_key: collectionKey,
