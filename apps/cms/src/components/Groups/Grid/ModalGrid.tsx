@@ -1,9 +1,9 @@
 import T from "@/translations";
-import { Component, Show, Switch, Match, JSXElement } from "solid-js";
+import { type Component, Show, Switch, Match, type JSXElement } from "solid-js";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";

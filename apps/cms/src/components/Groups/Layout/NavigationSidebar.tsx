@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createMemo } from "solid-js";
+import { type Component, createMemo } from "solid-js";
 // Assets
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
 // Store

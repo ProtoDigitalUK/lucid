@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import { FaSolidChevronRight } from "solid-icons/fa";
 // Components
 import { Collapsible } from "@kobalte/core";

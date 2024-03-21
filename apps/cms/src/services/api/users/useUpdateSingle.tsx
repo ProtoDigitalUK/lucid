@@ -3,8 +3,8 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
-import { UserResT } from "@headless/types/src/users";
+import type { APIResponse } from "@/types/api";
+import type { UserResT } from "@headless/types/src/users";
 
 interface Params {
 	id: number;

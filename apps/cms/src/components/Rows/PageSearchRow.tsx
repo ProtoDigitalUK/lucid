@@ -1,4 +1,4 @@
-import { Component, createMemo, Show } from "solid-js";
+import { type Component, createMemo, Show } from "solid-js";
 import { FaSolidCheck } from "solid-icons/fa";
 // Types
 import type { PagesResT } from "@headless/types/src/multiple-page";

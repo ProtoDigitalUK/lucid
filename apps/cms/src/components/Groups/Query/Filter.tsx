@@ -1,6 +1,6 @@
 import T from "@/translations";
 import {
-	Component,
+	type Component,
 	Match,
 	Switch,
 	For,
@@ -11,7 +11,7 @@ import {
 } from "solid-js";
 import { FaSolidFilter, FaSolidXmark } from "solid-icons/fa";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Components
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
@@ -150,6 +150,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 								},
 							});
 						}}
+						type="button"
 					>
 						<FaSolidXmark class="w-3.5 h-3.5 fill-error" />
 					</button>

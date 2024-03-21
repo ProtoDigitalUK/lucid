@@ -1,11 +1,11 @@
-import { createMemo, Accessor } from "solid-js";
+import { createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { MediaResT } from "@headless/types/src/media";
-import { APIResponse } from "@/types/api";
+import type { MediaResT } from "@headless/types/src/media";
+import type { APIResponse } from "@/types/api";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
@@ -36,7 +36,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 		queryKey: ["media.getMultiple", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<APIResponse<MediaResT[]>>({
-				url: `/api/v1/media`,
+				url: "/api/v1/media",
 				query: queryParams(),
 				config: {
 					method: "GET",

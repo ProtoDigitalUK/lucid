@@ -1,8 +1,8 @@
 // Utils
-import queryBuilder, { QueryBuilderProps } from "@/utils/query-builder";
+import queryBuilder, { type QueryBuilderProps } from "@/utils/query-builder";
 import { HeadlessError, handleSiteErrors } from "@/utils/error-handling";
 // Types
-import { APIErrorResponse } from "@/types/api";
+import type { APIErrorResponse } from "@/types/api";
 // Services
 import { csrfReq } from "@/services/api/auth/useCsrf";
 

@@ -2,7 +2,7 @@
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 
 export const csrfReq = async () => {
 	const csrfToken = sessionStorage.getItem("_csrf");

@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, For, Switch, Match, Show } from "solid-js";
+import { type Component, For, Switch, Match, Show } from "solid-js";
 import { FaSolidEllipsisVertical, FaSolidChevronRight } from "solid-icons/fa";
 import classNames from "classnames";
 import spawnToast from "@/utils/spawn-toast";

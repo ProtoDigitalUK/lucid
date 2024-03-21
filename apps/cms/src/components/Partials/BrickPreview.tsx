@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 // Assets
 import brickPlaceholder from "@/assets/images/brick-placeholder.jpg";
 // Types

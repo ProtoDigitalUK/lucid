@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Switch, Match } from "solid-js";
+import { type Component, Switch, Match } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
 // Services
 import api from "@/services/api";

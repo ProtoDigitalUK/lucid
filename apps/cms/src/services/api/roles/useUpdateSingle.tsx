@@ -4,8 +4,8 @@ import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
-import { RoleResT } from "@headless/types/src/roles";
+import type { APIResponse } from "@/types/api";
+import type { RoleResT } from "@headless/types/src/roles";
 
 interface Params {
 	id: number;

@@ -1,7 +1,7 @@
 import T from "@/translations";
 import {
-	Component,
-	Accessor,
+	type Component,
+	type Accessor,
 	createMemo,
 	createSignal,
 	createEffect,
@@ -14,7 +14,7 @@ import userStore from "@/store/userStore";
 // Hooks
 import helpers from "@/utils/helpers";
 // Types
-import { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
+import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 // Components
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";

@@ -1,4 +1,4 @@
-import { Component, JSXElement, Show } from "solid-js";
+import { type Component, type JSXElement, Show } from "solid-js";
 
 interface InfoRowProps {
 	title: string;

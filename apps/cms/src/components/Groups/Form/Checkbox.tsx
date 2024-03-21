@@ -1,4 +1,4 @@
-import { Component, createSignal } from "solid-js";
+import { type Component, createSignal } from "solid-js";
 import classnames from "classnames";
 import { FaSolidCheck } from "solid-icons/fa";
 import { Checkbox } from "@kobalte/core";

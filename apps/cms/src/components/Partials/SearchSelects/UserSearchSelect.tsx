@@ -1,4 +1,4 @@
-import { Component, createSignal } from "solid-js";
+import { type Component, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
 // Utils

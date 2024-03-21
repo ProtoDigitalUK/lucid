@@ -1,4 +1,4 @@
-import { Component, createSignal, createMemo } from "solid-js";
+import { type Component, createSignal, createMemo } from "solid-js";
 import T from "@/translations";
 // Services
 import api from "@/services/api";

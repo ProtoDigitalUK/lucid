@@ -1,7 +1,7 @@
 import T from "@/translations";
 import {
-	Component,
-	JSXElement,
+	type Component,
+	type JSXElement,
 	Show,
 	createMemo,
 	Switch,
@@ -11,7 +11,7 @@ import classNames from "classnames";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 // Components
-import { PageHeadingProps } from "@/components/Groups/Layout/PageHeading";
+import type { PageHeadingProps } from "@/components/Groups/Layout/PageHeading";
 import Layout from "@/components/Groups/Layout";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Loading from "@/components/Partials/Loading";

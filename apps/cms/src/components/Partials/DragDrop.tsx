@@ -1,4 +1,9 @@
-import { Component, JSXElement, createSignal, Accessor } from "solid-js";
+import {
+	type Component,
+	type JSXElement,
+	createSignal,
+	type Accessor,
+} from "solid-js";
 import classNames from "classnames";
 
 interface DragItemProps {

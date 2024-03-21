@@ -1,5 +1,5 @@
 import {
-	Component,
+	type Component,
 	createSignal,
 	createEffect,
 	onCleanup,
@@ -8,7 +8,7 @@ import {
 	createMemo,
 	Show,
 } from "solid-js";
-import { toast, Toast } from "solid-toast";
+import { toast, type Toast } from "solid-toast";
 import classNames from "classnames";
 import {
 	FaSolidTriangleExclamation,

@@ -1,11 +1,11 @@
-import { Component, createSignal, createEffect } from "solid-js";
+import { type Component, createSignal, createEffect } from "solid-js";
 // Types
 import type { FieldError } from "@/types/api";
 import type { CustomFieldT, LinkValueT } from "@headless/types/src/bricks";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store
-import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
+import builderStore, { type BrickStoreFieldT } from "@/store/builderStore";
 // Components
 import Form from "@/components/Groups/Form";
 

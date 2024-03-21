@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns

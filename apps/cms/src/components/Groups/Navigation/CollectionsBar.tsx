@@ -1,8 +1,8 @@
 import T from "@/translations";
-import { Component, Show, For, createMemo, Switch, Match } from "solid-js";
+import { type Component, Show, For, createMemo, Switch, Match } from "solid-js";
 import { useParams, useLocation } from "@solidjs/router";
 // Types
-import { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResT } from "@headless/types/src/collections";
 // Components
 import Navigation from "@/components/Groups/Navigation";
 

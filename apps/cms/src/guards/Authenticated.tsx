@@ -1,4 +1,4 @@
-import { Component, Switch, Match } from "solid-js";
+import { type Component, Switch, Match } from "solid-js";
 import { Navigate, Outlet } from "@solidjs/router";
 import { getCookie } from "@/utils/cookie";
 

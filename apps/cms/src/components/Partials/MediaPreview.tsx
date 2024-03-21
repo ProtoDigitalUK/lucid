@@ -1,4 +1,4 @@
-import { Component, Switch, Match } from "solid-js";
+import { type Component, Switch, Match } from "solid-js";
 import {
 	FaSolidFileZipper,
 	FaSolidFileAudio,
@@ -7,7 +7,7 @@ import {
 	FaSolidFileLines,
 } from "solid-icons/fa";
 // Types
-import { MediaResT } from "@headless/types/src/media";
+import type { MediaResT } from "@headless/types/src/media";
 // Components
 import Image from "@/components/Partials/Image";
 

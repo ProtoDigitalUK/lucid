@@ -1,7 +1,7 @@
 import { createStore } from "solid-js/store";
 // Types
-import { UserResT } from "@headless/types/src/users";
-import { PermissionT } from "@headless/types/src/permissions";
+import type { UserResT } from "@headless/types/src/users";
+import type { PermissionT } from "@headless/types/src/permissions";
 
 type UserStoreT = {
 	user: UserResT | null;

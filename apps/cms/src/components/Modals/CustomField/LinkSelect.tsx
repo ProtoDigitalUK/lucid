@@ -1,4 +1,4 @@
-import { Component, Switch, createMemo, Match } from "solid-js";
+import { type Component, Switch, createMemo, Match } from "solid-js";
 // Store
 import linkFieldStore from "@/store/linkFieldStore";
 // Components

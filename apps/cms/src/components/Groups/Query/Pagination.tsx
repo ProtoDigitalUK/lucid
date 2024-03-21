@@ -1,6 +1,6 @@
 import T from "@/translations";
 import {
-	Component,
+	type Component,
 	Show,
 	Switch,
 	createEffect,
@@ -10,9 +10,9 @@ import {
 } from "solid-js";
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Layout from "@/components/Groups/Layout";
 import { Pagination as KobPagination } from "@kobalte/core";

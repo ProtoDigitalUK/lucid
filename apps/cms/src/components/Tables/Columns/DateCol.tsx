@@ -1,4 +1,4 @@
-import { Component, createMemo } from "solid-js";
+import { type Component, createMemo } from "solid-js";
 // Utils
 import dateHelpers from "@/utils/date-helpers";
 // Components

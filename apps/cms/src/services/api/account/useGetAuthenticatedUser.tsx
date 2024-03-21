@@ -8,8 +8,8 @@ import serviceHelpers from "@/utils/service-helpers";
 // Services
 import api from "@/services/api";
 // Types
-import { UserResT } from "@headless/types/src/users";
-import { APIResponse } from "@/types/api";
+import type { UserResT } from "@headless/types/src/users";
+import type { APIResponse } from "@/types/api";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}

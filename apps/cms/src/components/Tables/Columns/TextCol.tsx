@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 import classNames from "classnames";
 // Components
 import Table from "@/components/Groups/Table";

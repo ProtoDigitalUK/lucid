@@ -4,8 +4,8 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { SettingsResT } from "@headless/types/src/settings";
-import { APIResponse } from "@/types/api";
+import type { SettingsResT } from "@headless/types/src/settings";
+import type { APIResponse } from "@/types/api";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}

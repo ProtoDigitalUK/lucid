@@ -1,5 +1,5 @@
 import T from "@/translations/index";
-import { Component, For, Switch, Match, createMemo, Show } from "solid-js";
+import { type Component, For, Switch, Match, createMemo, Show } from "solid-js";
 // Assets
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types

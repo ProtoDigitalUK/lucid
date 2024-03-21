@@ -1,4 +1,4 @@
-import { Component, JSXElement, For, Switch, Match } from "solid-js";
+import { type Component, type JSXElement, For, Switch, Match } from "solid-js";
 import classNames from "classnames";
 // Components
 import SkeletonCard from "@/components/Cards/SkeletonCard";

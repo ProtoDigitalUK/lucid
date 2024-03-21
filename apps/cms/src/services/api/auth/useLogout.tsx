@@ -7,7 +7,7 @@ import { clearCookie } from "@/utils/cookie";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 
 export const logoutReq = () => {
 	return request<

@@ -1,11 +1,11 @@
 import T from "@/translations";
-import { Component, Show, createMemo, createSignal } from "solid-js";
+import { type Component, Show, createMemo, createSignal } from "solid-js";
 // Store
 import userStore from "@/store/userStore";
 // Services
 import api from "@/services/api";
 // Types
-import { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
+import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 // Components
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";

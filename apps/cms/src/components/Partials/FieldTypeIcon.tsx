@@ -1,6 +1,6 @@
-import { Component, Match, Switch } from "solid-js";
+import { type Component, Match, Switch } from "solid-js";
 // Types
-import { FieldTypesT } from "@headless/types/src/bricks";
+import type { FieldTypesT } from "@headless/types/src/bricks";
 import classNames from "classnames";
 
 interface FieldTypeIconProps {

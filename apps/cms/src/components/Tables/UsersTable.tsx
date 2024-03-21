@@ -1,12 +1,12 @@
 import T from "@/translations";
-import { Component, Index } from "solid-js";
+import { type Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidEnvelope } from "solid-icons/fa";
 // Services
 import api from "@/services/api";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Table from "@/components/Groups/Table";
 import UserRow from "@/components/Tables/Rows/UserRow";

@@ -1,4 +1,4 @@
-import { Component, Show, createSignal, createMemo } from "solid-js";
+import { type Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
 import { FaSolidEye, FaSolidEyeSlash } from "solid-icons/fa";
 // Types

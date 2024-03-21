@@ -1,8 +1,15 @@
 import T from "@/translations";
-import { Component, Show, createSignal, For, Switch, Match } from "solid-js";
+import {
+	type Component,
+	Show,
+	createSignal,
+	For,
+	Switch,
+	Match,
+} from "solid-js";
 import classnames from "classnames";
 // Types
-import { ErrorResult } from "@/types/api";
+import type { ErrorResult } from "@/types/api";
 // Components
 import { FaSolidCheck, FaSolidXmark, FaSolidSort } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";

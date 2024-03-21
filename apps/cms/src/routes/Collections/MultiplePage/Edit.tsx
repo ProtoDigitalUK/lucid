@@ -1,6 +1,6 @@
 import T from "@/translations/index";
 import {
-	Component,
+	type Component,
 	createSignal,
 	createMemo,
 	createEffect,

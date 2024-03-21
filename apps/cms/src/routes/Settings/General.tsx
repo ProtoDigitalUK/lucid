@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createMemo, createSignal } from "solid-js";
+import { type Component, createMemo, createSignal } from "solid-js";
 // Utils
 import helpers from "@/utils/helpers";
 // Store
@@ -10,7 +10,7 @@ import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 // Types
-import { SettingsResT } from "@headless/types/src/settings";
+import type { SettingsResT } from "@headless/types/src/settings";
 
 interface GeneralSettingsRouteProps {
 	settings?: SettingsResT;

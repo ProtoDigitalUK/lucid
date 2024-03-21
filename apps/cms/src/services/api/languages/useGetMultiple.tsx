@@ -1,4 +1,4 @@
-import { createEffect, createMemo, Accessor } from "solid-js";
+import { createEffect, createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
@@ -6,8 +6,8 @@ import serviceHelpers from "@/utils/service-helpers";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import { APIResponse } from "@/types/api";
-import { LanguageResT } from "@headless/types/src/language";
+import type { APIResponse } from "@/types/api";
+import type { LanguageResT } from "@headless/types/src/language";
 
 interface QueryParams {
 	queryString?: Accessor<string> | string;

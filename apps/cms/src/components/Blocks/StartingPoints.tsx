@@ -1,4 +1,4 @@
-import { Component, For } from "solid-js";
+import { type Component, For } from "solid-js";
 import classNames from "classnames";
 import { FaSolidBacon } from "solid-icons/fa";
 

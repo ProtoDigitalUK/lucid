@@ -1,10 +1,10 @@
 import T from "@/translations";
 import {
-	Component,
+	type Component,
 	createMemo,
 	Show,
-	Accessor,
-	Setter,
+	type Accessor,
+	type Setter,
 	Switch,
 	Match,
 	For,

@@ -2,7 +2,7 @@ export interface APIResponse<Data> {
 	data: Data;
 	meta: {
 		path: string;
-		links: Array<{}>;
+		links: Array<unknown>;
 		current_page: number | null;
 		per_page: number | null;
 		total: number | null;

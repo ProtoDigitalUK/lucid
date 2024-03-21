@@ -1,10 +1,10 @@
 import T from "@/translations";
 import {
-	Component,
+	type Component,
 	createMemo,
 	createSignal,
 	createEffect,
-	Accessor,
+	type Accessor,
 } from "solid-js";
 // Services
 import api from "@/services/api";

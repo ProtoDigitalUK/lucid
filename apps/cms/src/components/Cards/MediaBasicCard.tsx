@@ -1,8 +1,8 @@
 import T from "@/translations";
-import { Component, createMemo } from "solid-js";
+import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
-import { MediaResT } from "@headless/types/src/media";
+import type { MediaResT } from "@headless/types/src/media";
 // Components
 import AspectRatio from "@/components/Partials/AspectRatio";
 import MediaPreview from "@/components/Partials/MediaPreview";

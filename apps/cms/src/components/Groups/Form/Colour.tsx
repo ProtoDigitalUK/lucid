@@ -1,4 +1,4 @@
-import { Component, createSignal, For, Show } from "solid-js";
+import { type Component, createSignal, For, Show } from "solid-js";
 import classnames from "classnames";
 // Types
 import type { ErrorResult, FieldError } from "@/types/api";

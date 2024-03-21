@@ -4,8 +4,8 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { FormResT } from "@headless/types/src/forms";
-import { APIResponse } from "@/types/api";
+import type { FormResT } from "@headless/types/src/forms";
+import type { APIResponse } from "@/types/api";
 
 interface QueryParams {
 	include: Record<"fields", boolean>;

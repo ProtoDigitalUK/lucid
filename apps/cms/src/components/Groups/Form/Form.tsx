@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, JSXElement, Switch, Match, Show } from "solid-js";
+import { type Component, type JSXElement, Switch, Match, Show } from "solid-js";
 // Components
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
@@ -8,7 +8,7 @@ import ErrorBlock from "@/components/Partials/ErrorBlock";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 // Types
-import { APIErrorResponse } from "@/types/api";
+import type { APIErrorResponse } from "@/types/api";
 
 interface FormProps {
 	type: "standard" | "page-layout";

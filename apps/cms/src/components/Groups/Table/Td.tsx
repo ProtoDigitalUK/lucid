@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Component, JSXElement } from "solid-js";
+import type { Component, JSXElement } from "solid-js";
 
 interface TdProps {
 	classes?: string;

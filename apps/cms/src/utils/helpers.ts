@@ -1,4 +1,4 @@
-import { Accessor, Setter } from "solid-js";
+import type { Accessor, Setter } from "solid-js";
 import equal from "fast-deep-equal/es6";
 // Types
 import type { MediaResT } from "@headless/types/src/media";

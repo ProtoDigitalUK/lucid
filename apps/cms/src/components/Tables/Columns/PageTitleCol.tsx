@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Show } from "solid-js";
+import { type Component, Show } from "solid-js";
 import { FaSolidHouse } from "solid-icons/fa";
 // Components
 import Table from "@/components/Groups/Table";

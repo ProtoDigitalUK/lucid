@@ -1,7 +1,7 @@
-import { Component, Switch, Match } from "solid-js";
+import { type Component, Switch, Match } from "solid-js";
 // Components
 import ActionDropdown, {
-	ActionDropdownProps,
+	type ActionDropdownProps,
 } from "@/components/Partials/ActionDropdown";
 import Table from "@/components/Groups/Table";
 

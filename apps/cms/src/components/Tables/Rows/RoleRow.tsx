@@ -1,10 +1,10 @@
 import T from "@/translations";
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 // Hooks
-import useRowTarget from "@/hooks/useRowTarget";
+import type useRowTarget from "@/hooks/useRowTarget";
 // Types
-import { TableRowProps } from "@/types/components";
-import { RoleResT } from "@headless/types/src/roles";
+import type { TableRowProps } from "@/types/components";
+import type { RoleResT } from "@headless/types/src/roles";
 // Store
 import userStore from "@/store/userStore";
 // Components

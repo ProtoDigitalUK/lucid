@@ -1,7 +1,7 @@
 import T from "@/translations";
 import {
-	Accessor,
-	Component,
+	type Accessor,
+	type Component,
 	createEffect,
 	createMemo,
 	createSignal,

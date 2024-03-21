@@ -1,4 +1,4 @@
-import { Component, For, createMemo, Show } from "solid-js";
+import { type Component, For, createMemo, Show } from "solid-js";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";
 // Stores

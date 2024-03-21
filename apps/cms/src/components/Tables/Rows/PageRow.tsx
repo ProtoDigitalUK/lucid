@@ -1,9 +1,9 @@
 import T from "@/translations";
-import { Component, createMemo } from "solid-js";
+import { type Component, createMemo } from "solid-js";
 // Hooks
-import useRowTarget from "@/hooks/useRowTarget";
+import type useRowTarget from "@/hooks/useRowTarget";
 // Types
-import { TableRowProps } from "@/types/components";
+import type { TableRowProps } from "@/types/components";
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { PagesResT } from "@headless/types/src/multiple-page";
 // Stores

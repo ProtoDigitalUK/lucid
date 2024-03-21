@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createSignal, onCleanup, onMount } from "solid-js";
+import { type Component, createSignal, onCleanup, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 // Components
 import Modal from "@/components/Groups/Modal";
@@ -59,19 +59,19 @@ export const navGuardHook = () => {
 	onMount(() => {
 		setTimeout(() => {
 			const links = document.querySelectorAll("a");
-			links.forEach((link) => {
-				if (link.target === "_blank") return;
+			for (const link of links) {
+				if (link.target === "_blank") continue;
 				link.addEventListener("click", clickEvent);
-			});
+			}
 		}, 500);
 	});
 
 	onCleanup(() => {
 		const links = document.querySelectorAll("a");
-		links.forEach((link) => {
-			if (link.target === "_blank") return;
+		for (const link of links) {
+			if (link.target === "_blank") continue;
 			link.removeEventListener("click", clickEvent);
-		});
+		}
 	});
 
 	return {

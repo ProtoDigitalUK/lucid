@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Index, createMemo } from "solid-js";
+import { type Component, Index, createMemo } from "solid-js";
 import {
 	FaSolidT,
 	FaSolidCalendar,
@@ -8,14 +8,14 @@ import {
 } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 // Types
-import { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResT } from "@headless/types/src/collections";
 // Services
 import api from "@/services/api";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Table from "@/components/Groups/Table";
 import PageRow from "@/components/Tables/Rows/PageRow";

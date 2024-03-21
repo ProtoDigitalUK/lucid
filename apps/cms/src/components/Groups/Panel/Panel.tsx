@@ -1,7 +1,7 @@
 import T from "@/translations";
 import {
-	Component,
-	JSXElement,
+	type Component,
+	type JSXElement,
 	Show,
 	onMount,
 	createSignal,
@@ -9,13 +9,13 @@ import {
 	Match,
 	createEffect,
 	createMemo,
-	Accessor,
+	type Accessor,
 } from "solid-js";
 import { FaSolidArrowLeft } from "solid-icons/fa";
 // Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Types
-import { APIErrorResponse } from "@/types/api";
+import type { APIErrorResponse } from "@/types/api";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
@@ -236,7 +236,6 @@ export const Panel: Component<PanelProps> = (props) => {
 									<Switch fallback={<span />}>
 										<Match
 											when={
-												props.mutateState?.errors &&
 												props.mutateState?.errors
 													?.message
 											}

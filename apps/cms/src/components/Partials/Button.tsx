@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Show, JSX, createMemo } from "solid-js";
+import { type Component, Show, type JSX, createMemo } from "solid-js";
 import classnames from "classnames";
 import spawnToast from "@/utils/spawn-toast";
 

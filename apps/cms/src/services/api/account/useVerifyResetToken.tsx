@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 
 interface QueryParams {
 	location: {

@@ -1,4 +1,4 @@
-import { Component, For, createSignal, createMemo, Show } from "solid-js";
+import { type Component, For, createSignal, createMemo, Show } from "solid-js";
 import { FaSolidMagnifyingGlass, FaSolidXmark } from "solid-icons/fa";
 import classNames from "classnames";
 // Types
@@ -95,6 +95,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 						onClick={() => {
 							setSearchQuery("");
 						}}
+						type="button"
 					>
 						<FaSolidXmark class="w-15 fill-error" />
 					</button>
@@ -137,6 +138,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 											});
 											props.state.setOpen(false);
 										}}
+										type="button"
 									>
 										<img
 											src={brickIcon}

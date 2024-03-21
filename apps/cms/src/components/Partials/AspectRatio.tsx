@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Component, JSXElement } from "solid-js";
+import type { Component, JSXElement } from "solid-js";
 
 interface AspectRatioProps {
 	ratio: "1:1" | "4:3" | "16:9" | "21:9";

@@ -1,12 +1,12 @@
 import T from "@/translations";
-import { Component, createMemo } from "solid-js";
+import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
 // Stores
 import userStore from "@/store/userStore";
 // Types
-import { MediaResT } from "@headless/types/src/media";
+import type { MediaResT } from "@headless/types/src/media";
 // Hooks
-import useRowTarget from "@/hooks/useRowTarget";
+import type useRowTarget from "@/hooks/useRowTarget";
 // Utils
 import helpers from "@/utils/helpers";
 // Components

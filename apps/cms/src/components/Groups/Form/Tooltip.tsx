@@ -1,4 +1,4 @@
-import { Component, Show } from "solid-js";
+import { type Component, Show } from "solid-js";
 import classnames from "classnames";
 import { FaSolidInfo } from "solid-icons/fa";
 // Components

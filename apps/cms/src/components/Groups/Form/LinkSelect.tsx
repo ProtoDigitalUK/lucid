@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Match, Switch } from "solid-js";
+import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
 import { FaSolidPen } from "solid-icons/fa";
 // Types

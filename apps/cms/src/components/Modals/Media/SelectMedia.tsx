@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createMemo, For, onCleanup } from "solid-js";
+import { type Component, createMemo, For, onCleanup } from "solid-js";
 import { useNavigate, useLocation } from "@solidjs/router";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
@@ -16,9 +16,7 @@ import MediaBasicCard, {
 	MediaBasicCardLoading,
 } from "@/components/Cards/MediaBasicCard";
 
-interface SelectMediaProps {}
-
-const SelectMedia: Component<SelectMediaProps> = () => {
+const SelectMedia: Component = () => {
 	// ------------------------------
 	// Memos
 	const open = createMemo(() => mediaSelectStore.get.open);

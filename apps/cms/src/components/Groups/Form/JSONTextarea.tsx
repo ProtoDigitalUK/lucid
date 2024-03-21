@@ -1,4 +1,4 @@
-import { Component, Show, createSignal } from "solid-js";
+import { type Component, Show, createSignal } from "solid-js";
 import classnames from "classnames";
 // Types
 import type { ErrorResult, FieldError } from "@/types/api";
@@ -55,9 +55,9 @@ export const JSONTextarea: Component<JSONTextareaProps> = (props) => {
 			const column = message.match(/column (\d+)/);
 			setJsonError({
 				hasError: true,
-				line: line ? parseInt(line[1]) : 0,
-				column: column ? parseInt(column[1]) : 0,
-				position: position ? parseInt(position[1]) : 0,
+				line: line ? Number.parseInt(line[1]) : 0,
+				column: column ? Number.parseInt(column[1]) : 0,
+				position: position ? Number.parseInt(position[1]) : 0,
 			});
 		}
 	};

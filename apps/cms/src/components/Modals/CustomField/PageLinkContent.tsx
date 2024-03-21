@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { useParams } from "@solidjs/router";
 import {
-	Component,
+	type Component,
 	Switch,
 	createMemo,
 	Match,

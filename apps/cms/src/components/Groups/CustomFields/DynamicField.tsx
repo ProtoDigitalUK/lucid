@@ -1,4 +1,4 @@
-import { Component, For, Match, Switch, Show, createMemo } from "solid-js";
+import { type Component, For, Match, Switch, Show, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
 import type { CustomFieldT } from "@headless/types/src/bricks";

@@ -1,5 +1,10 @@
 import T from "@/translations";
-import { Component, createMemo, createSignal, createEffect } from "solid-js";
+import {
+	type Component,
+	createMemo,
+	createSignal,
+	createEffect,
+} from "solid-js";
 // Store
 import linkFieldStore from "@/store/linkFieldStore";
 // Components

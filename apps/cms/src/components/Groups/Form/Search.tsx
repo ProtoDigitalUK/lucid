@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createSignal, createEffect, Show } from "solid-js";
+import { type Component, createSignal, createEffect, Show } from "solid-js";
 import { debounce } from "@solid-primitives/scheduled";
 // Components
 import Spinner from "@/components/Partials/Spinner";

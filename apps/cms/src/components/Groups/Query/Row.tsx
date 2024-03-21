@@ -1,9 +1,9 @@
-import { Component, Show } from "solid-js";
+import { type Component, Show } from "solid-js";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Types
-import { FilterProps } from "@/components/Groups/Query/Filter";
-import { SortProps } from "@/components/Groups/Query/Sort";
+import type { FilterProps } from "@/components/Groups/Query/Filter";
+import type { SortProps } from "@/components/Groups/Query/Sort";
 // Components
 import Query from "@/components/Groups/Query";
 

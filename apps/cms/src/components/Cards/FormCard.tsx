@@ -1,6 +1,6 @@
 import T from "@/translations";
-import { Component, createMemo } from "solid-js";
-import { FormResT } from "@headless/types/src/forms";
+import { type Component, createMemo } from "solid-js";
+import type { FormResT } from "@headless/types/src/forms";
 import classNames from "classnames";
 // Components
 import Form from "@/components/Groups/Form";

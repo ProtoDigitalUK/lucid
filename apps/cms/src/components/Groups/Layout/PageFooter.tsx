@@ -1,4 +1,4 @@
-import { Component, JSXElement, onMount } from "solid-js";
+import { type Component, type JSXElement, onMount } from "solid-js";
 
 interface PageLayoutFooterProps {
 	children: JSXElement;

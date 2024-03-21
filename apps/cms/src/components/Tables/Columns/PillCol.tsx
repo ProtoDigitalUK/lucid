@@ -1,7 +1,7 @@
-import { Component, Match, Switch } from "solid-js";
+import { type Component, Match, Switch } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
-import Pill, { PillProps } from "@/components/Partials/Pill";
+import Pill, { type PillProps } from "@/components/Partials/Pill";
 
 interface PillColProps {
 	text?: string | number | null;

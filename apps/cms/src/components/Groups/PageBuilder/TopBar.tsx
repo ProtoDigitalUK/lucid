@@ -1,5 +1,5 @@
 import T from "@/translations/index";
-import { Component, createMemo, createSignal } from "solid-js";
+import { type Component, createMemo, createSignal } from "solid-js";
 import { FaSolidRobot } from "solid-icons/fa";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";

@@ -3,8 +3,8 @@ import request from "@/utils/request";
 import objectToFormData from "@/utils/object-to-formdata";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import { APIResponse } from "@/types/api";
-import { MediaResT } from "@headless/types/src/media";
+import type { APIResponse } from "@/types/api";
+import type { MediaResT } from "@headless/types/src/media";
 
 interface Params {
 	file: File;

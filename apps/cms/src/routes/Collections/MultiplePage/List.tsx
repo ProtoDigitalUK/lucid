@@ -1,12 +1,12 @@
 import T from "@/translations";
 import { useParams } from "@solidjs/router";
-import { Component, createMemo, createSignal } from "solid-js";
+import { type Component, createMemo, createSignal } from "solid-js";
 // Services
 import api from "@/services/api";
 // Store
 import userStore from "@/store/userStore";
 // Types
-import { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResT } from "@headless/types/src/collections";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns

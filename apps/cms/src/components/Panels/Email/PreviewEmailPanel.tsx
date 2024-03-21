@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Accessor } from "solid-js";
+import type { Component, Accessor } from "solid-js";
 // Services
 import api from "@/services/api";
 // Utils

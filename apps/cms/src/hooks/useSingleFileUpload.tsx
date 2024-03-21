@@ -1,7 +1,7 @@
-import { Accessor, createSignal } from "solid-js";
+import { type Accessor, createSignal } from "solid-js";
 // Types
-import { SingleFileUploadProps } from "@/components/Groups/Form/SingleFileUpload";
-import { APIErrorResponse } from "@/types/api";
+import type { SingleFileUploadProps } from "@/components/Groups/Form/SingleFileUpload";
+import type { APIErrorResponse } from "@/types/api";
 // Components
 import Form from "@/components/Groups/Form";
 

@@ -4,7 +4,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 
 interface Params {
 	id: number;

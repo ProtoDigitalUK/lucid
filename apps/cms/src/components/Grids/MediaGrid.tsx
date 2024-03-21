@@ -1,9 +1,9 @@
-import { Component, For, createMemo } from "solid-js";
+import { type Component, For, createMemo } from "solid-js";
 // Services
 import api from "@/services/api";
 // Hooks
 import useRowTarget from "@/hooks/useRowTarget";
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Components

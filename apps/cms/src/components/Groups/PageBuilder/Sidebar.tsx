@@ -1,4 +1,11 @@
-import { Component, Accessor, createMemo, Setter, For, Show } from "solid-js";
+import {
+	type Component,
+	type Accessor,
+	createMemo,
+	type Setter,
+	For,
+	Show,
+} from "solid-js";
 // Stores
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore from "@/store/builderStore";

@@ -1,6 +1,6 @@
 import T from "@/translations";
-import { Component, createMemo } from "solid-js";
-import { BrickConfigT } from "@headless/types/src/bricks";
+import { type Component, createMemo } from "solid-js";
+import type { BrickConfigT } from "@headless/types/src/bricks";
 import classNames from "classnames";
 // Assets
 import defaultBrickIcon from "@/assets/svgs/default-brick-icon.svg";

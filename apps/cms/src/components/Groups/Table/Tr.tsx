@@ -1,11 +1,11 @@
-import { Component, JSXElement, Show, createMemo } from "solid-js";
+import { type Component, type JSXElement, Show, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 // Types
-import { TableRowProps } from "@/types/components";
+import type { TableRowProps } from "@/types/components";
 // Components
 import SelectCol from "@/components/Tables/Columns/SelectCol";
 import ActionMenuCol from "@/components/Tables/Columns/ActionMenuCol";
-import { ActionDropdownProps } from "@/components/Partials/ActionDropdown";
+import type { ActionDropdownProps } from "@/components/Partials/ActionDropdown";
 import classNames from "classnames";
 
 interface TrProps extends TableRowProps {
@@ -31,6 +31,20 @@ export const Tr: Component<TrProps> = (props) => {
 	});
 
 	// ----------------------------------------
+	// Functions
+	const onClickHandler = () => {
+		const action = firstPermittedAction();
+
+		if (action) {
+			if (action?.href) {
+				navigate(action.href);
+			} else if (action.onClick) {
+				action.onClick();
+			}
+		}
+	};
+
+	// ----------------------------------------
 	// Render
 	return (
 		<tr
@@ -40,15 +54,10 @@ export const Tr: Component<TrProps> = (props) => {
 					"cursor-pointer": firstPermittedAction() !== undefined,
 				},
 			)}
-			onClick={() => {
-				const action = firstPermittedAction();
-
-				if (action) {
-					if (action?.href) {
-						navigate(action.href);
-					} else if (action.onClick) {
-						action.onClick();
-					}
+			onClick={onClickHandler}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					onClickHandler();
 				}
 			}}
 		>

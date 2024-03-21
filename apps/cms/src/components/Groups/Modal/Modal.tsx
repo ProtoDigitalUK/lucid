@@ -1,4 +1,4 @@
-import { Component, JSXElement } from "solid-js";
+import type { Component, JSXElement } from "solid-js";
 import classNames from "classnames";
 // Components
 import { Dialog } from "@kobalte/core";

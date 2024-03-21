@@ -1,4 +1,4 @@
-import { Component, For, Match, Show, Switch } from "solid-js";
+import { type Component, For, Match, Show, Switch } from "solid-js";
 // Components
 import Pill from "@/components/Partials/Pill";
 import classNames from "classnames";

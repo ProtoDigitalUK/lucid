@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, createSignal } from "solid-js";
+import { type Component, createSignal } from "solid-js";
 import classnames from "classnames";
 // Types
 import type { ErrorResult, FieldError } from "@/types/api";

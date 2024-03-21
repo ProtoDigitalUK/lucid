@@ -1,6 +1,6 @@
 import { createStore } from "solid-js/store";
 // Types
-import { LanguageResT } from "@headless/types/src/language";
+import type { LanguageResT } from "@headless/types/src/language";
 
 type ContentLangStoreT = {
 	contentLanguage: number | undefined;

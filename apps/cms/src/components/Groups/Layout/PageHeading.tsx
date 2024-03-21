@@ -1,5 +1,12 @@
 import T from "@/translations";
-import { Component, onMount, Switch, Match, Show, JSXElement } from "solid-js";
+import {
+	type Component,
+	onMount,
+	Switch,
+	Match,
+	Show,
+	type JSXElement,
+} from "solid-js";
 import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
 import classNames from "classnames";
 // Components

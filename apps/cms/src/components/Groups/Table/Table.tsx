@@ -1,7 +1,7 @@
 import T from "@/translations";
 import {
-	Component,
-	JSXElement,
+	type Component,
+	type JSXElement,
 	Show,
 	createSignal,
 	Index,
@@ -11,9 +11,9 @@ import {
 	Match,
 } from "solid-js";
 // Types
-import { APIResponse } from "@/types/api";
+import type { APIResponse } from "@/types/api";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
@@ -60,8 +60,7 @@ interface TableRootProps {
 }
 
 export const TableRoot: Component<TableRootProps> = (props) => {
-	// eslint-disable-next-line
-	let overflowRef: HTMLDivElement | undefined = undefined;
+	let overflowRef: HTMLDivElement | undefined;
 
 	const [include, setInclude] = createSignal<boolean[]>([]);
 	const [selected, setSelected] = createSignal<boolean[]>([]);
@@ -96,9 +95,8 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 		const include = localStorage.getItem(`${props.key}-include`);
 		if (include) {
 			return JSON.parse(include);
-		} else {
-			return props.head.map(() => true);
 		}
+		return props.head.map(() => true);
 	};
 	const setIncludeLS = (include: boolean[]) => {
 		localStorage.setItem(`${props.key}-include`, JSON.stringify(include));

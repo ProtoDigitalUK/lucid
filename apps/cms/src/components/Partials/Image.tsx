@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import type { Component } from "solid-js";
 // Components
 import { Image as KImage } from "@kobalte/core";
 import classNames from "classnames";

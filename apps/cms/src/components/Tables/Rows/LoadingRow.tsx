@@ -1,4 +1,4 @@
-import { Component, Index, Show } from "solid-js";
+import { type Component, Index, Show } from "solid-js";
 // Components
 import Table from "@/components/Groups/Table";
 

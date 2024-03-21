@@ -1,4 +1,4 @@
-import { Component, Match, Switch, createMemo } from "solid-js";
+import { type Component, Match, Switch, createMemo } from "solid-js";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Components

@@ -1,6 +1,6 @@
 import { createStore } from "solid-js/store";
 // Types
-import { MediaResT } from "@headless/types/src/media";
+import type { MediaResT } from "@headless/types/src/media";
 
 type SelectCallbackT = (_media: MediaResT) => void;
 

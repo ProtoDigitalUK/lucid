@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, JSX, createMemo } from "solid-js";
+import { type Component, type JSX, createMemo } from "solid-js";
 import classnames from "classnames";
 import { Link as RouterLink } from "@solidjs/router";
 import spawnToast from "@/utils/spawn-toast";

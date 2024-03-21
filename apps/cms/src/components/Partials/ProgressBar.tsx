@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Component, createSignal, onMount, Show } from "solid-js";
+import { type Component, createSignal, onMount, Show } from "solid-js";
 
 interface ProgressBarProps {
 	progress: number;

@@ -1,4 +1,4 @@
-import { Component, Switch, Match, JSXElement } from "solid-js";
+import { type Component, Switch, Match, type JSXElement } from "solid-js";
 
 interface SectionHeadingProps {
 	title: string;

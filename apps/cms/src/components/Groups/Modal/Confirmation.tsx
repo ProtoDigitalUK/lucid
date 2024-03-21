@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { Component, Show } from "solid-js";
+import { type Component, Show } from "solid-js";
 // Components
 import { FaSolidXmark } from "solid-icons/fa";
 import { AlertDialog } from "@kobalte/core";

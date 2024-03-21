@@ -1,8 +1,14 @@
 import classNames from "classnames";
-import { Component, JSXElement, Switch, Match, createMemo } from "solid-js";
+import {
+	type Component,
+	type JSXElement,
+	Switch,
+	Match,
+	createMemo,
+} from "solid-js";
 import { FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
 // Hooks
-import useSearchParams from "@/hooks/useSearchParams";
+import type useSearchParams from "@/hooks/useSearchParams";
 
 interface ThProps {
 	key?: string;
@@ -93,6 +99,7 @@ export const Th: Component<ThProps> = (props) => {
 										},
 									});
 								}}
+								type="button"
 							>
 								<div class="flex items-center">
 									<span class="text-base mr-2.5 fill-body">

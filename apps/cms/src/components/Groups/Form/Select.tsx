@@ -1,6 +1,6 @@
 import T from "@/translations";
 import {
-	Component,
+	type Component,
 	Show,
 	createSignal,
 	For,

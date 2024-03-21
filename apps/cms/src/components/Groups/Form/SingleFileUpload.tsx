@@ -1,6 +1,6 @@
 import T from "@/translations";
 import {
-	Component,
+	type Component,
 	Switch,
 	createMemo,
 	Match,
@@ -19,8 +19,8 @@ import {
 // Utils
 import helpers from "@/utils/helpers";
 // Types
-import { ErrorResult } from "@/types/api";
-import { MediaResT } from "@headless/types/src/media";
+import type { ErrorResult } from "@/types/api";
+import type { MediaResT } from "@headless/types/src/media";
 // Components
 import Form from "@/components/Groups/Form";
 

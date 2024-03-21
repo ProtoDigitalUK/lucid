@@ -1,7 +1,7 @@
 import T from "@/translations";
 import spawnToast from "@/utils/spawn-toast";
 // Types
-import { APIErrorResponse } from "@/types/api";
+import type { APIErrorResponse } from "@/types/api";
 
 export class HeadlessError extends Error {
 	errorRes: APIErrorResponse;

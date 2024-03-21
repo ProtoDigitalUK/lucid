@@ -1,5 +1,5 @@
 // Store
-import builderStore, { BrickStoreFieldT } from "@/store/builderStore";
+import builderStore, { type BrickStoreFieldT } from "@/store/builderStore";
 // Types
 import type { CustomFieldT } from "@headless/types/src/bricks";
 
