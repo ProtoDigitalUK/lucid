@@ -1,5 +1,5 @@
 import z from "zod";
-import { FieldTypesEnum } from "../builders/brick-builder/index.js";
+import { FieldTypesEnum } from "../libs/brick-builder/index.js";
 
 const FieldTypesSchema = z.nativeEnum(FieldTypesEnum);
 

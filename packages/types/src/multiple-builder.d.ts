@@ -1,5 +1,5 @@
 import type { BrickResT } from "./bricks.js";
-import type { FieldTypes } from "../../headless/src/builders/brick-builder/types.js";
+import type { FieldTypes } from "../../headless/src/libs/brick-builder/types.js";
 
 export interface MultipleBuilderResT {
 	id: number;

@@ -1,5 +1,5 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
+import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 
 const formatCollection = (
 	collectionInstance: CollectionBuilderT,

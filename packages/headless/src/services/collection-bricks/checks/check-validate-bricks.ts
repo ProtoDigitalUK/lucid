@@ -11,15 +11,15 @@ import type {
 	MediaReferenceData,
 	LinkReferenceData,
 	FieldTypes,
-} from "../../../builders/brick-builder/index.js";
-import type BrickBuilder from "../../../builders/brick-builder/index.js";
+} from "../../../libs/brick-builder/index.js";
+import type BrickBuilder from "../../../libs/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
 import type {
 	BrickObjectT,
 	BrickFieldObjectT,
 } from "../../../schemas/bricks.js";
-import type { CollectionDataT } from "../../../builders/collection-builder/index.js";
+import type { CollectionDataT } from "../../../libs/collection-builder/index.js";
 
 export interface ServiceData {
 	type: CollectionDataT["type"];

@@ -1,5 +1,5 @@
 import type { BrickFieldObjectT, BrickObjectT } from "../schemas/bricks.js";
-import type { FieldTypes } from "../builders/brick-builder/index.js";
+import type { FieldTypes } from "../libs/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { GroupsResT } from "../services/collection-bricks/upsert-multiple-groups.js";
 

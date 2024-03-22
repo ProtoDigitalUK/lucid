@@ -14,6 +14,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import routes from "./routes/index.js";
 import getDirName from "./utils/app/get-dirname.js";
 import getConfig from "./services/config.js";
+import getConfigTest from "./libs/config/get-config.js";
 import { decodeError } from "./utils/app/error-handler.js";
 import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
@@ -25,6 +26,7 @@ const currentDir = getDirName(import.meta.url);
 
 const headless = async (fastify: FastifyInstance) => {
 	try {
+		await getConfigTest();
 		const config = await getConfig();
 		await initialiseDB();
 
@@ -54,7 +56,7 @@ const headless = async (fastify: FastifyInstance) => {
 
 		// ------------------------------------
 		// Server wide middleware
-		log.white("----------------------------------------------------");
+		log.white("-".repeat(60));
 		fastify.register(cors, {
 			origin: "http://localhost:3000", // update
 			methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -81,13 +83,13 @@ const headless = async (fastify: FastifyInstance) => {
 
 		// ------------------------------------
 		// Migrate DB
-		log.white("----------------------------------------------------");
+		log.white("-".repeat(60));
 		await migrate(fastify.db);
 		log.yellow("Migrated");
 
 		// ------------------------------------
 		// Initialise
-		log.white("----------------------------------------------------");
+		log.white("-".repeat(60));
 		await serviceWrapper(
 			seedHeadless,
 			true,
@@ -99,7 +101,7 @@ const headless = async (fastify: FastifyInstance) => {
 
 		// ------------------------------------
 		// Routes
-		log.white("----------------------------------------------------");
+		log.white("-".repeat(60));
 		fastify.register(routes);
 		fastify.register(fastifyStatic, {
 			root: [path.resolve("public"), path.join(currentDir, "../cms")],

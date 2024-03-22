@@ -2,7 +2,7 @@ import type {
 	CustomField,
 	BrickConfigOptionsT,
 	FieldTypes,
-} from "../../headless/src/builders/brick-builder/index.js";
+} from "../../headless/src/libs/brick-builder/index.js";
 import type { MediaTypeT } from "./media.js";
 
 export interface BrickConfigT {

@@ -3,7 +3,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 import type {
 	CollectionBuilderT,
 	CollectionDataT,
-} from "../../builders/collection-builder/index.js";
+} from "../../libs/collection-builder/index.js";
 import formatCollection from "../../format/format-collection.js";
 import getConfig from "../config.js";
 

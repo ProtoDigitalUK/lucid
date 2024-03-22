@@ -1,4 +1,4 @@
-import type { CollectionDataT } from "../../builders/collection-builder/index.js";
+import type { CollectionDataT } from "../../libs/collection-builder/index.js";
 
 export interface ServiceData {
 	id: number;

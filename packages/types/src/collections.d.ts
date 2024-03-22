@@ -1,7 +1,7 @@
 import {
 	type CollectionDataT,
 	type CollectionBrickConfigT,
-} from "../../headless/src/builders/collection-builder/index.js";
+} from "../../headless/src/libs/collection-builder/index.js";
 
 export interface CollectionResT {
 	key: string;

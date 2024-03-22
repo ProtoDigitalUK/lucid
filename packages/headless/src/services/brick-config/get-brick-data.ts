@@ -1,7 +1,7 @@
 import type z from "zod";
 import type bricksSchema from "../../schemas/bricks.js";
 import type { BrickConfigT } from "@headless/types/src/bricks.js";
-import type { BrickBuilderT } from "../../builders/brick-builder/index.js";
+import type { BrickBuilderT } from "../../libs/brick-builder/index.js";
 
 export interface ServiceData {
 	instance: BrickBuilderT;

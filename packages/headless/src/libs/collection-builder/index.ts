@@ -8,20 +8,11 @@ export default class CollectionBuilder {
 		this.key = key;
 		this.config = config;
 
-		this.#validateOptions(config);
 		this.#removeDuplicateBricks();
 		this.#addBrickDefaults();
 	}
 	// ------------------------------------
 	// Private Methods
-	#validateOptions = (options: CollectionConfigT) => {
-		try {
-			CollectionOptionsSchema.parse(options);
-		} catch (err) {
-			console.error(err);
-			throw new Error("Invalid Collection Config");
-		}
-	};
 	#removeDuplicateBricks = () => {
 		if (!this.config.bricks) return;
 		const bricks = this.config.bricks;
@@ -82,7 +73,7 @@ export default class CollectionBuilder {
 	}
 }
 
-const CollectionOptionsSchema = z.object({
+export const CollectionConfigSchema = z.object({
 	type: z.enum(["builder"]),
 	multiple: z.boolean().default(false),
 	title: z.string(),
@@ -102,7 +93,7 @@ const CollectionOptionsSchema = z.object({
 		.optional(),
 });
 
-interface CollectionConfigT extends z.infer<typeof CollectionOptionsSchema> {
+interface CollectionConfigT extends z.infer<typeof CollectionConfigSchema> {
 	bricks?: {
 		brick: BrickBuilderT;
 		type: "builder" | "fixed";

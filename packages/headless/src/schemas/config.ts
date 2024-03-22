@@ -1,6 +1,6 @@
 import z from "zod";
-import type { BrickBuilderT } from "../builders/brick-builder/index.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
+import type { BrickBuilderT } from "../libs/brick-builder/index.js";
+import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 import constants from "../constants.js";
 
 export const headlessConfigSchema = z.object({
