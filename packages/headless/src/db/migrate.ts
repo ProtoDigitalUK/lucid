@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 import getDirName from "../utils/app/get-dirname.js";
 import { green } from "console-log-colors";
 import { InternalError } from "../utils/app/error-handler.js";
@@ -43,8 +43,8 @@ const getOutstanding = async (db: DB) => {
 			),
 		}))
 		.sort((a, b) => {
-			const aNum = parseInt(a.file.substring(0, 8));
-			const bNum = parseInt(b.file.substring(0, 8));
+			const aNum = Number.parseInt(a.file.substring(0, 8));
+			const bNum = Number.parseInt(b.file.substring(0, 8));
 			return aNum - bNum;
 		});
 

@@ -1,6 +1,6 @@
 import T from "../translations/index.js";
-import path from "path";
-import { pathToFileURL } from "url";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import fs from "fs-extra";
 import merge from "lodash.merge";
 import {

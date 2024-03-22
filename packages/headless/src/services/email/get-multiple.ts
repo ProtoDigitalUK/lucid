@@ -1,5 +1,5 @@
-import z from "zod";
-import emailSchema from "../../schemas/email.js";
+import type z from "zod";
+import type emailSchema from "../../schemas/email.js";
 import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/app/helpers.js";

@@ -1,8 +1,8 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
-import { type BrickBuilderT } from "../builders/brick-builder/index.js";
-import {
-	type CollectionBuilderT,
-	type CollectionBrickConfigT,
+import type { BrickBuilderT } from "../builders/brick-builder/index.js";
+import type {
+	CollectionBuilderT,
+	CollectionBrickConfigT,
 } from "../builders/collection-builder/index.js";
 
 const formatCollection = (

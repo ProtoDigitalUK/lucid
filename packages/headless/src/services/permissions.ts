@@ -1,4 +1,4 @@
-import { PermissionGroup } from "@headless/types/src/permissions.js";
+import type { PermissionGroup } from "@headless/types/src/permissions.js";
 import formatPermissions from "../format/format-permissions.js";
 
 export const permissionGroups: Record<string, PermissionGroup> = {

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import { type OptionNameT } from "@headless/types/src/options.js";
+import type { OptionNameT } from "@headless/types/src/options.js";
 
 export interface ServiceData {
 	name: OptionNameT;

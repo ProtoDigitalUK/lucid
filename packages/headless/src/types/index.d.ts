@@ -1,14 +1,10 @@
-import {
-	type FastifyInstance,
-	type FastifyRequest,
-	type FastifyReply,
-} from "fastify";
-import { type HeadlessConfigT } from "../schemas/config.js";
-import z from "zod";
-import { type Kysely } from "kysely";
+import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import type { HeadlessConfigT } from "../schemas/config.js";
+import type z from "zod";
+import type { Kysely } from "kysely";
 import type { UserPermissionsResT } from "@headless/types/src/users.js";
 import type { LanguageResT } from "@headless/types/src/language.js";
-import { type DB as DBSchema } from "kysely-codegen";
+import type { DB as DBSchema } from "kysely-codegen";
 
 declare module "fastify" {
 	interface FastifyInstance {

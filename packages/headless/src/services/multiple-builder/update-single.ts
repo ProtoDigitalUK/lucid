@@ -192,7 +192,7 @@ const updateSingle = async (
 						exclude_id: data.id,
 						page_id: data.id,
 					},
-			  )
+				)
 			: undefined,
 	]);
 

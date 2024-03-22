@@ -1,6 +1,6 @@
-import z from "zod";
+import type z from "zod";
 import formatLanguage from "../../format/format-language.js";
-import languagesSchema from "../../schemas/languages.js";
+import type languagesSchema from "../../schemas/languages.js";
 import { parseCount } from "../../utils/app/helpers.js";
 import { sql } from "kysely";
 import queryBuilder from "../../db/query-builder.js";

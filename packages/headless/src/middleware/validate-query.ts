@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { type FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
 import constants from "../constants.js";
 import { APIError } from "../utils/app/error-handler.js";
@@ -61,7 +61,7 @@ const buildPage = (query: unknown) => {
 	const page = queryObject.page;
 	if (!page) return constants.query.page;
 
-	return parseInt(page);
+	return Number.parseInt(page);
 };
 
 const buildPerPage = (query: unknown) => {
@@ -69,7 +69,7 @@ const buildPerPage = (query: unknown) => {
 	const perPage = queryObject.per_page;
 	if (!perPage) return constants.query.per_page;
 
-	return parseInt(perPage);
+	return Number.parseInt(perPage);
 };
 
 const buildInclude = (query: unknown) => {

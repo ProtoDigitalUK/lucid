@@ -1,8 +1,8 @@
 import { format, getHours } from "date-fns";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 export const parseCount = (count: string | undefined) => {
-	return parseInt(count || "0") || 0;
+	return Number.parseInt(count || "0") || 0;
 };
 
 export const getEmailHash = (data: {

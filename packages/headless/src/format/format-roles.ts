@@ -1,4 +1,4 @@
-import { RoleResT } from "@headless/types/src/roles.js";
+import type { RoleResT } from "@headless/types/src/roles.js";
 
 const formatRole = (role: {
 	created_at: Date | null;

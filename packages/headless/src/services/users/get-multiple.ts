@@ -1,5 +1,5 @@
-import z from "zod";
-import usersSchema from "../../schemas/users.js";
+import type z from "zod";
+import type usersSchema from "../../schemas/users.js";
 import { parseCount } from "../../utils/app/helpers.js";
 import { sql } from "kysely";
 import queryBuilder from "../../db/query-builder.js";

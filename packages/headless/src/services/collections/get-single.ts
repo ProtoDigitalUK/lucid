@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import {
-	type CollectionBuilderT,
-	type CollectionConfigT,
+import type {
+	CollectionBuilderT,
+	CollectionConfigT,
 } from "../../builders/collection-builder/index.js";
 import formatCollection from "../../format/format-collection.js";
 import getConfig from "../config.js";

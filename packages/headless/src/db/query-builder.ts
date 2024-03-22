@@ -1,8 +1,8 @@
-import { type RequestQueryParsedT } from "../middleware/validate-query.js";
-import {
-	type SelectQueryBuilder,
-	type ReferenceExpression,
-	type ComparisonOperatorExpression,
+import type { RequestQueryParsedT } from "../middleware/validate-query.js";
+import type {
+	SelectQueryBuilder,
+	ReferenceExpression,
+	ComparisonOperatorExpression,
 } from "kysely";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {

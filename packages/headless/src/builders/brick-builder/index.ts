@@ -1,7 +1,7 @@
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
 // Types
-import {
+import type {
 	BrickConfigOptionsT,
 	CustomField,
 	FieldTypes,

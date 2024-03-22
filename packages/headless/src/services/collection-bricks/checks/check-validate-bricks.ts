@@ -6,19 +6,20 @@ import {
 } from "../../../utils/app/error-handler.js";
 import getConfig from "../../config.js";
 import collectionsServices from "../../collections/index.js";
-import BrickBuilder, {
-	type ValidationProps,
-	type MediaReferenceData,
-	type LinkReferenceData,
-	type FieldTypes,
+import type {
+	ValidationProps,
+	MediaReferenceData,
+	LinkReferenceData,
+	FieldTypes,
 } from "../../../builders/brick-builder/index.js";
+import type BrickBuilder from "../../../builders/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
 import type {
 	BrickObjectT,
 	BrickFieldObjectT,
 } from "../../../schemas/bricks.js";
-import { type CollectionConfigT } from "../../../builders/collection-builder/index.js";
+import type { CollectionConfigT } from "../../../builders/collection-builder/index.js";
 
 export interface ServiceData {
 	type: CollectionConfigT["type"];

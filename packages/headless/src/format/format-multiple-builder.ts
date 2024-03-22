@@ -1,7 +1,7 @@
 import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder.js";
 import { swaggerBrickRes } from "./format-bricks.js";
-import { type BrickResT } from "@headless/types/src/bricks.js";
-import { type CollectionResT } from "@headless/types/src/collections.js";
+import type { BrickResT } from "@headless/types/src/bricks.js";
+import type { CollectionResT } from "@headless/types/src/collections.js";
 
 interface PageT {
 	id: number;

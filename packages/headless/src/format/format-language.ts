@@ -1,5 +1,5 @@
 import ISO6391 from "iso-639-1";
-import { LanguageResT } from "@headless/types/src/language.js";
+import type { LanguageResT } from "@headless/types/src/language.js";
 
 const formatLanguage = (language: {
 	id: number;

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 export interface ServiceData {
 	user_id: number;

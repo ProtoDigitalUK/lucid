@@ -18,7 +18,7 @@ const getSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			id: parseInt(request.params.id),
+			id: Number.parseInt(request.params.id),
 			query: request.query,
 			language_id: request.language.id,
 		},

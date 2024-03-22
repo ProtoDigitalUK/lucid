@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
-import z from "zod";
+import type z from "zod";
 import { APIError } from "../../utils/app/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import multipleBuilderSchema from "../../schemas/multiple-builder.js";
+import type multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import formatMultipleBuilder from "../../format/format-multiple-builder.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import collectionsServices from "../collections/index.js";

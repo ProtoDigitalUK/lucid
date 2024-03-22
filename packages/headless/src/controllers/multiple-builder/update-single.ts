@@ -17,7 +17,7 @@ const updateSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			id: parseInt(request.params.id),
+			id: Number.parseInt(request.params.id),
 			slug: request.body.slug,
 			homepage: request.body.homepage,
 			published: request.body.published,

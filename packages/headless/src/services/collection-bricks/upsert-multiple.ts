@@ -3,7 +3,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import { type CollectionConfigT } from "../../builders/collection-builder/index.js";
+import type { CollectionConfigT } from "../../builders/collection-builder/index.js";
 
 export interface ServiceData {
 	id: number;

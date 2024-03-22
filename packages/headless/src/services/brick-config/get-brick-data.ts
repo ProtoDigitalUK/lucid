@@ -1,5 +1,5 @@
-import z from "zod";
-import bricksSchema from "../../schemas/bricks.js";
+import type z from "zod";
+import type bricksSchema from "../../schemas/bricks.js";
 import type { BrickConfigT } from "@headless/types/src/bricks.js";
 import type { BrickBuilderT } from "../../builders/brick-builder/index.js";
 

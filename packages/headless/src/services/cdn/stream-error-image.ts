@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError, decodeError } from "../../utils/app/error-handler.js";
 import getConfig from "../config.js";
-import path from "path";
+import path from "node:path";
 import getDirName from "../../utils/app/get-dirname.js";
 import fs from "fs-extra";
 import cdnServices from "./index.js";

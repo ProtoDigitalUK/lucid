@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 // API
 import authRoutes from "./auth.routes.js";
 import permissionRoutes from "./permissions.routes.js";

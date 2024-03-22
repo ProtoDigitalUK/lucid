@@ -1,6 +1,6 @@
 import type { SingleBuilderResT } from "@headless/types/src/multiple-builder.js";
 import { swaggerBrickRes } from "./format-bricks.js";
-import { BrickResT } from "@headless/types/src/bricks.js";
+import type { BrickResT } from "@headless/types/src/bricks.js";
 
 const formatSingleBuilder = (
 	page: {

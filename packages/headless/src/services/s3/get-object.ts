@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { type Readable } from "stream";
+import type { Readable } from "node:stream";
 import getConfig from "../config.js";
 import getS3Client from "../../clients/s3-client.js";
 

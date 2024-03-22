@@ -41,18 +41,18 @@ const checkSlugIsUnique = async (
 				data.page_id === undefined
 					? T("error_not_created_name", {
 							name: T("page"),
-					  })
+						})
 					: T("error_not_updated_name", {
 							name: T("page"),
-					  }),
+						}),
 			message:
 				data.page_id === undefined
 					? T("error_not_created_message", {
 							name: T("page"),
-					  })
+						})
 					: T("update_error_message", {
 							name: T("page").toLowerCase(),
-					  }),
+						}),
 			status: 400,
 			errors: modelErrors({
 				slug: {

@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { type FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { APIError } from "../../utils/app/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
@@ -55,7 +55,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 						role_ids: data.role_ids,
 						is_create: false,
 					},
-			  )
+				)
 			: undefined,
 	]);
 

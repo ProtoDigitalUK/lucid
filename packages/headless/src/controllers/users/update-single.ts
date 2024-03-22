@@ -13,7 +13,7 @@ const updateSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			user_id: parseInt(request.params.id),
+			user_id: Number.parseInt(request.params.id),
 			role_ids: request.body.role_ids,
 			super_admin: request.body.super_admin,
 			auth_super_admin: request.auth.super_admin,

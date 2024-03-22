@@ -1,6 +1,6 @@
-import z from "zod";
+import type z from "zod";
 import formatRole from "../../format/format-roles.js";
-import rolesSchema from "../../schemas/roles.js";
+import type rolesSchema from "../../schemas/roles.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";

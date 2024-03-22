@@ -1,4 +1,4 @@
-import { type UserResT } from "@headless/types/src/users.js";
+import type { UserResT } from "@headless/types/src/users.js";
 import formatUserPermissions, {
 	swaggerPermissionsRes,
 	swaggerRolesRes,

@@ -1,5 +1,5 @@
-import { type FastifyRequest, type FastifyReply } from "fastify";
-import crypto from "crypto";
+import type { FastifyRequest, FastifyReply } from "fastify";
+import crypto from "node:crypto";
 import constants from "../../constants.js";
 import getConfig from "../config.js";
 

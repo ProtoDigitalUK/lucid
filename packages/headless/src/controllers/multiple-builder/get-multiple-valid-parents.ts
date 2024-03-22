@@ -24,7 +24,7 @@ const getMultipleValidParentsController: ControllerT<
 		{
 			query: request.query,
 			language_id: request.language.id,
-			page_id: parseInt(request.params.id),
+			page_id: Number.parseInt(request.params.id),
 		},
 	);
 
