@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_bricks (
     brick_key TEXT NOT NULL,
 
     multiple_page_id INT REFERENCES headless_collection_multiple_builder(id) ON DELETE CASCADE,
-    single_page_id INT REFERENCES headless_collection_single_page(id) ON DELETE CASCADE,
+    single_page_id INT REFERENCES headless_collection_single_builder(id) ON DELETE CASCADE,
 
     brick_order INT NOT NULL
 );

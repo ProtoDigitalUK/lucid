@@ -1,20 +1,20 @@
-import type { SinglePagesResT } from "@headless/types/src/multiple-builder.js";
+import type { SingleBuilderResT } from "@headless/types/src/multiple-builder.js";
 import { swaggerBrickRes } from "./format-bricks.js";
 import { BrickResT } from "@headless/types/src/bricks.js";
 
-const formatSinglepage = (
+const formatSingleBuilder = (
 	page: {
 		id: number;
 	},
 	bricks?: BrickResT[],
-): SinglePagesResT => {
+): SingleBuilderResT => {
 	return {
 		id: page.id,
 		bricks: bricks || [],
 	};
 };
 
-export const swaggerSinglePageRes = {
+export const swaggerSingleBuilderRes = {
 	type: "object",
 	properties: {
 		id: {
@@ -27,4 +27,4 @@ export const swaggerSinglePageRes = {
 	},
 };
 
-export default formatSinglepage;
+export default formatSingleBuilder;

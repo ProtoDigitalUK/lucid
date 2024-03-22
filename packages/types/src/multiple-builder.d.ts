@@ -1,7 +1,7 @@
 import type { BrickResT } from "./bricks.js";
 import type { FieldTypes } from "../../headless/src/builders/brick-builder/types.js";
 
-export interface PagesResT {
+export interface MultipleBuilderResT {
 	id: number;
 	parent_id: number | null;
 	collection_key: string | null;
@@ -39,7 +39,7 @@ export interface PagesResT {
 	bricks?: Array<BrickResT> | null;
 }
 
-export interface SinglePagesResT {
+export interface SingleBuilderResT {
 	id: number;
 	bricks: Array<BrickResT>;
 }

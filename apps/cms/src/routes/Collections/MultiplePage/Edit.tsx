@@ -22,7 +22,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { CollectionResT } from "@headless/types/src/collections";
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";
@@ -44,10 +44,10 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 	// ------------------------------
 	// State
 	const [getTitleTranslations, setTitleTranslations] = createSignal<
-		PagesResT["title_translations"]
+		MultipleBuilderResT["title_translations"]
 	>([]);
 	const [getExcerptTranslations, setExcerptTranslations] = createSignal<
-		PagesResT["excerpt_translations"]
+		MultipleBuilderResT["excerpt_translations"]
 	>([]);
 	const [getSlug, setSlug] = createSignal<string | null>(null);
 	const [getParentId, setParentId] = createSignal<number | undefined>(

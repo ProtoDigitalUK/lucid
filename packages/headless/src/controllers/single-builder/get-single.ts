@@ -1,16 +1,16 @@
-import singlePageSchema from "../../schemas/single-page.js";
+import singleBuilderSchema from "../../schemas/single-builder.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import singlePageServices from "../../services/single-page/index.js";
+import singleBuilderServices from "../../services/single-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerSinglePageRes } from "../../format/format-single-page.js";
+import { swaggerSingleBuilderRes } from "../../format/format-single-builder.js";
 
 const getSingleController: ControllerT<
-	typeof singlePageSchema.getSingle.params,
-	typeof singlePageSchema.getSingle.body,
-	typeof singlePageSchema.getSingle.query
+	typeof singleBuilderSchema.getSingle.params,
+	typeof singleBuilderSchema.getSingle.body,
+	typeof singleBuilderSchema.getSingle.query
 > = async (request, reply) => {
-	const page = await serviceWrapper(singlePageServices.getSingle, false)(
+	const page = await serviceWrapper(singleBuilderServices.getSingle, false)(
 		{
 			db: request.server.db,
 		},
@@ -31,15 +31,15 @@ const getSingleController: ControllerT<
 
 export default {
 	controller: getSingleController,
-	zodSchema: singlePageSchema.getSingle,
+	zodSchema: singleBuilderSchema.getSingle,
 	swaggerSchema: {
-		description: "Get a single-page entry.",
-		tags: ["collection-single-page"],
-		summary: "Get a single-page entry.",
+		description: "Get a single-builder entry.",
+		tags: ["collection-single-builder"],
+		summary: "Get a single-builder entry.",
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerSinglePageRes,
+				data: swaggerSingleBuilderRes,
 			}),
 		},
 	},

@@ -12,7 +12,7 @@ import builderStore from "@/store/builderStore";
 // Types
 import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 import type { BrickConfigT } from "@headless/types/src/bricks";
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { CategoryResT } from "@headless/types/src/categories";
@@ -29,8 +29,12 @@ interface SidebarProps {
 		collection: CollectionResT;
 		categories?: CategoryResT[];
 		mutateErrors: Accessor<APIErrorResponse | undefined>;
-		getTitleTranslations?: Accessor<PagesResT["title_translations"]>;
-		getExcerptTranslations?: Accessor<PagesResT["excerpt_translations"]>;
+		getTitleTranslations?: Accessor<
+			MultipleBuilderResT["title_translations"]
+		>;
+		getExcerptTranslations?: Accessor<
+			MultipleBuilderResT["excerpt_translations"]
+		>;
 		getSlug?: Accessor<string | null>;
 		getParentId?: Accessor<number | undefined>;
 		getIsHomepage?: Accessor<boolean>;
@@ -38,8 +42,10 @@ interface SidebarProps {
 		getSelectedAuthor?: Accessor<number | undefined>;
 	};
 	setState?: {
-		setTitleTranslations: Setter<PagesResT["title_translations"]>;
-		setExcerptTranslations: Setter<PagesResT["excerpt_translations"]>;
+		setTitleTranslations: Setter<MultipleBuilderResT["title_translations"]>;
+		setExcerptTranslations: Setter<
+			MultipleBuilderResT["excerpt_translations"]
+		>;
 		setSlug: Setter<string | null>;
 		setParentId: Setter<number | undefined>;
 		setIsHomepage: Setter<boolean>;
@@ -89,11 +95,11 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 								categories: props.state.categories || [],
 								getTitleTranslations: props.state
 									.getTitleTranslations as Accessor<
-									PagesResT["title_translations"]
+									MultipleBuilderResT["title_translations"]
 								>,
 								getExcerptTranslations: props.state
 									.getExcerptTranslations as Accessor<
-									PagesResT["excerpt_translations"]
+									MultipleBuilderResT["excerpt_translations"]
 								>,
 								getSlug: props.state.getSlug as Accessor<
 									string | null
@@ -116,11 +122,11 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 							setState={{
 								setTitleTranslations: props.setState
 									?.setTitleTranslations as Setter<
-									PagesResT["title_translations"]
+									MultipleBuilderResT["title_translations"]
 								>,
 								setExcerptTranslations: props.setState
 									?.setExcerptTranslations as Setter<
-									PagesResT["excerpt_translations"]
+									MultipleBuilderResT["excerpt_translations"]
 								>,
 								setSlug: props.setState?.setSlug as Setter<
 									string | null

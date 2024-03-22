@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import formatSinglePage from "../../format/format-single-page.js";
+import formatSingleBuilder from "../../format/format-single-builder.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import collectionsServices from "../collections/index.js";
@@ -32,14 +32,14 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	const page = await serviceConfig.db
-		.selectFrom("headless_collection_single_page")
+		.selectFrom("headless_collection_single_builder")
 		.select(["id", "collection_key"])
 		.where("collection_key", "=", data.collection_key)
 		.executeTakeFirst();
 
 	if (page === undefined) {
 		const newPage = await serviceConfig.db
-			.insertInto("headless_collection_single_page")
+			.insertInto("headless_collection_single_builder")
 			.values({
 				collection_key: data.collection_key,
 				updated_by: data.user_id,
@@ -60,11 +60,11 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			});
 		}
 
-		return formatSinglePage(newPage);
+		return formatSingleBuilder(newPage);
 	}
 
 	if (!data.include_bricks || data.language_id === undefined) {
-		return formatSinglePage(page);
+		return formatSingleBuilder(page);
 	}
 
 	const bricks = await serviceWrapper(
@@ -78,7 +78,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		collection_key: data.collection_key,
 	});
 
-	return formatSinglePage(page, bricks);
+	return formatSingleBuilder(page, bricks);
 };
 
 export default getSingle;

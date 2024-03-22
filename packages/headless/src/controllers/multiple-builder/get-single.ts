@@ -6,7 +6,7 @@ import {
 import multipleBuilderServices from "../../services/multiple-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerMultipleBuilderRes } from "../../format/format-multiple-builder.js";
+import { swaggerMultipleBuilderResT } from "../../format/format-multiple-builder.js";
 
 const getSingleController: ControllerT<
 	typeof multipleBuilderSchema.getSingle.params,
@@ -41,7 +41,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerMultipleBuilderRes,
+				data: swaggerMultipleBuilderResT,
 			}),
 		},
 		querystring: swaggerQueryString({

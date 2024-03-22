@@ -3,7 +3,7 @@ import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import singlePageService from "./index.js";
+import singleBuilderServices from "./index.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -15,18 +15,18 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const singlePage = await serviceWrapper(singlePageService.getSingle, false)(
-		serviceConfig,
-		{
-			collection_key: data.collection_key,
-			user_id: data.user_id,
-			include_bricks: false,
-		},
-	);
+	const singleBuilder = await serviceWrapper(
+		singleBuilderServices.getSingle,
+		false,
+	)(serviceConfig, {
+		collection_key: data.collection_key,
+		user_id: data.user_id,
+		include_bricks: false,
+	});
 
 	const [pageRes] = await Promise.all([
 		serviceConfig.db
-			.updateTable("headless_collection_single_page")
+			.updateTable("headless_collection_single_builder")
 			.set({
 				updated_by: data.user_id,
 				updated_at: new Date(),
@@ -37,7 +37,7 @@ const updateSingle = async (
 		serviceWrapper(collectionBricksServices.upsertMultiple, false)(
 			serviceConfig,
 			{
-				id: singlePage.id,
+				id: singleBuilder.id,
 				type: "builder",
 				multiple: false,
 				bricks: data.bricks || [],

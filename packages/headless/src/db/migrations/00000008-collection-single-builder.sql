@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS headless_collection_single_page (
+CREATE TABLE IF NOT EXISTS headless_collection_single_builder (
     id SERIAL PRIMARY KEY,
     collection_key TEXT NOT NULL,
 

@@ -1,12 +1,12 @@
 import { type Component, Switch, Match } from "solid-js";
 // Types
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 // Components
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";
 
 interface AuthorColProps {
-	author: PagesResT["author"];
+	author: MultipleBuilderResT["author"];
 	options?: {
 		include?: boolean;
 	};

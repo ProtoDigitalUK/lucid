@@ -13,7 +13,7 @@ import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
 import categoriesRoutes from "./categories.routes.js";
 import multipleBuilderRoutes from "./multiple-builder.routes.js";
-import singlePageRoutes from "./single-page.routes.js";
+import singleBuilderRoutes from "./single-builder.routes.js";
 import userRoutes from "./users.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
@@ -38,8 +38,8 @@ const routes = async (fastify: FastifyInstance) => {
 	fastify.register(multipleBuilderRoutes, {
 		prefix: "/collections/multiple-builder",
 	});
-	fastify.register(singlePageRoutes, {
-		prefix: "/collections/single-page",
+	fastify.register(singleBuilderRoutes, {
+		prefix: "/collections/single-builder",
 	});
 	fastify.register(userRoutes, {
 		prefix: "/users",

@@ -5,7 +5,7 @@ import type useRowTarget from "@/hooks/useRowTarget";
 // Types
 import type { TableRowProps } from "@/types/components";
 import type { CollectionResT } from "@headless/types/src/collections";
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 // Stores
 import userStore from "@/store/userStore";
 // Components
@@ -16,7 +16,7 @@ import PillCol from "@/components/Tables/Columns/PillCol";
 import AuthorCol from "@/components/Tables/Columns/AuthorCol";
 
 interface PageRowProps extends TableRowProps {
-	page: PagesResT;
+	page: MultipleBuilderResT;
 	collection: CollectionResT;
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"delete" | "update">>;

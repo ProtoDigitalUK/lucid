@@ -1,18 +1,18 @@
-import singlePageSchema from "../../schemas/single-page.js";
+import singleBuilderSchema from "../../schemas/single-builder.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import singlePageServices from "../../services/single-page/index.js";
+import singleBuilderServices from "../../services/single-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import { swaggerBodyBricksObj } from "../../schemas/bricks.js";
 
 const updateSingleController: ControllerT<
-	typeof singlePageSchema.updateSingle.params,
-	typeof singlePageSchema.updateSingle.body,
-	typeof singlePageSchema.updateSingle.query
+	typeof singleBuilderSchema.updateSingle.params,
+	typeof singleBuilderSchema.updateSingle.body,
+	typeof singleBuilderSchema.updateSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(singlePageServices.updateSingle, true)(
+	await serviceWrapper(singleBuilderServices.updateSingle, true)(
 		{
 			db: request.server.db,
 		},
@@ -28,12 +28,12 @@ const updateSingleController: ControllerT<
 
 export default {
 	controller: updateSingleController,
-	zodSchema: singlePageSchema.updateSingle,
+	zodSchema: singleBuilderSchema.updateSingle,
 	swaggerSchema: {
 		description:
-			"Update a single page from the single-page collection type.",
-		tags: ["collection-single-page"],
-		summary: "Update a single page",
+			"Update a single page from the single-builder collection type.",
+		tags: ["collection-single-builder"],
+		summary: "Update a single builder page",
 		response: {
 			204: swaggerResponse({
 				type: 204,

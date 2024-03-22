@@ -1,4 +1,4 @@
-import type { PagesResT } from "@headless/types/src/multiple-builder.js";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder.js";
 import { swaggerBrickRes } from "./format-bricks.js";
 import { type BrickResT } from "@headless/types/src/bricks.js";
 import { type CollectionResT } from "@headless/types/src/collections.js";
@@ -41,8 +41,8 @@ const formatMultipleBuilder = (
 	page: PageT,
 	collection?: CollectionResT,
 	bricks?: BrickResT[],
-): PagesResT => {
-	const res: PagesResT = {
+): MultipleBuilderResT => {
+	const res: MultipleBuilderResT = {
 		id: page.id,
 		parent_id: page.parent_id,
 		collection_key: page.collection_key,
@@ -94,7 +94,7 @@ export const formatPageFullSlug = (
 	return slug;
 };
 
-export const swaggerMultipleBuilderRes = {
+export const swaggerMultipleBuilderResT = {
 	type: "object",
 	properties: {
 		id: {

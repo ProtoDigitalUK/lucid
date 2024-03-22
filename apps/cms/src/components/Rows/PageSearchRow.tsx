@@ -1,10 +1,10 @@
 import { type Component, createMemo, Show } from "solid-js";
 import { FaSolidCheck } from "solid-icons/fa";
 // Types
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 
 interface PageSearchRowProps {
-	page: PagesResT;
+	page: MultipleBuilderResT;
 	contentLanguage?: number;
 	selectedId?: number | null;
 	onClick: (_page: { slug: string; id: number; title: string }) => void;

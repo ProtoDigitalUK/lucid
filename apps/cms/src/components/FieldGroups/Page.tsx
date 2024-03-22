@@ -16,7 +16,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 import type { LanguageResT } from "@headless/types/src/language";
 import type { APIErrorResponse } from "@/types/api";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { CategoryResT } from "@headless/types/src/categories";
 // Utils
@@ -39,8 +39,12 @@ interface PageFieldGroupProps {
 		collection: CollectionResT;
 		categories: CategoryResT[];
 		// Page Details
-		getTitleTranslations: Accessor<PagesResT["title_translations"]>;
-		getExcerptTranslations: Accessor<PagesResT["excerpt_translations"]>;
+		getTitleTranslations: Accessor<
+			MultipleBuilderResT["title_translations"]
+		>;
+		getExcerptTranslations: Accessor<
+			MultipleBuilderResT["excerpt_translations"]
+		>;
 		getSlug: Accessor<string | null>;
 		getParentId: Accessor<number | undefined>;
 		getIsHomepage: Accessor<boolean>;
@@ -49,8 +53,10 @@ interface PageFieldGroupProps {
 	};
 	setState: {
 		// Page Details
-		setTitleTranslations: Setter<PagesResT["title_translations"]>;
-		setExcerptTranslations: Setter<PagesResT["excerpt_translations"]>;
+		setTitleTranslations: Setter<MultipleBuilderResT["title_translations"]>;
+		setExcerptTranslations: Setter<
+			MultipleBuilderResT["excerpt_translations"]
+		>;
 		setSlug: Setter<string | null>;
 		setParentId: Setter<number | undefined>;
 		setIsHomepage: Setter<boolean>;
@@ -289,12 +295,12 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 };
 
 export const setDefualtTranslations = (data: {
-	translations: PagesResT["title_translations"];
+	translations: MultipleBuilderResT["title_translations"];
 	languages: LanguageResT[];
 }) => {
 	const translationsValues = JSON.parse(
 		JSON.stringify(data.translations),
-	) as PagesResT["title_translations"];
+	) as MultipleBuilderResT["title_translations"];
 
 	const languagesValues = data.languages;
 	for (let i = 0; i < languagesValues.length; i++) {
@@ -303,7 +309,7 @@ export const setDefualtTranslations = (data: {
 			return t.language_id === language.id;
 		});
 		if (!translation) {
-			const item: PagesResT["title_translations"][0] = {
+			const item: MultipleBuilderResT["title_translations"][0] = {
 				value: null,
 				language_id: language.id,
 			};

@@ -5,7 +5,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { APIResponse } from "@/types/api";
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 
 interface QueryParams {
 	location: {
@@ -33,7 +33,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<APIResponse<PagesResT>>({
+			request<APIResponse<MultipleBuilderResT>>({
 				url: `/api/v1/collections/multiple-page/${
 					queryParams().location?.id
 				}`,
