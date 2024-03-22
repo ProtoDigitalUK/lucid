@@ -1,4 +1,10 @@
 import { CollectionBuilder } from "@protodigital/headless";
+// Bricks
+import BannerBrick from "../bricks/banner.js";
+import IntroBrick from "../bricks/intro.js";
+import TestingBrick from "../bricks/testing.js";
+import DefaultMetaBrick from "../bricks/default-meta.js";
+import PageMetaBrick from "../bricks/page-meta.js";
 
 const PageCollection = new CollectionBuilder("page", {
 	type: "builder",
@@ -8,24 +14,24 @@ const PageCollection = new CollectionBuilder("page", {
 	description: "Pages are used to create static content on your website.",
 	bricks: [
 		{
-			key: "banner",
+			brick: BannerBrick,
 			type: "builder",
 		},
 		{
-			key: "intro",
+			brick: IntroBrick,
 			type: "builder",
 		},
 		{
-			key: "testing",
+			brick: TestingBrick,
 			type: "builder",
 		},
 		{
-			key: "default_meta",
+			brick: DefaultMetaBrick,
 			type: "fixed",
 			position: "bottom",
 		},
 		{
-			key: "page_meta",
+			brick: PageMetaBrick,
 			type: "fixed",
 			position: "sidebar",
 		},

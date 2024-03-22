@@ -1,30 +1,12 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
-import type { BrickBuilderT } from "../builders/brick-builder/index.js";
-import type {
-	CollectionBuilderT,
-	CollectionBrickConfigT,
-} from "../builders/collection-builder/index.js";
+import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
 
 const formatCollection = (
 	collectionInstance: CollectionBuilderT,
-	brickInstances?: BrickBuilderT[] | undefined,
+	bricks: boolean,
 ): CollectionResT => {
-	const collection = collectionInstance.config;
+	const collection = collectionInstance.data;
 	const key = collectionInstance.key;
-
-	let bricks: CollectionBrickConfigT[] | undefined = undefined;
-
-	if (brickInstances !== undefined) {
-		bricks = collection.bricks
-			?.filter((brick) =>
-				brickInstances?.find((b) => b.key === brick.key),
-			)
-			.map((brick) => ({
-				key: brick.key,
-				position: brick.position,
-				type: brick.type,
-			}));
-	}
 
 	return {
 		key: key,
@@ -36,7 +18,7 @@ const formatCollection = (
 		slug: collection.slug ?? null,
 		disable_homepages: collection.disableHomepages ?? false,
 		disable_parents: collection.disableParents ?? false,
-		bricks: bricks,
+		bricks: bricks ? collection.bricks : undefined,
 	};
 };
 

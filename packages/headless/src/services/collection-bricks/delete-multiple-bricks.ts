@@ -1,9 +1,9 @@
-import type { CollectionConfigT } from "../../builders/collection-builder/index.js";
+import type { CollectionDataT } from "../../builders/collection-builder/index.js";
 
 export interface ServiceData {
 	id: number;
-	type: CollectionConfigT["type"];
-	multiple: CollectionConfigT["multiple"];
+	type: CollectionDataT["type"];
+	multiple: CollectionDataT["multiple"];
 	bricks: {
 		id: number;
 		brick_key: string;

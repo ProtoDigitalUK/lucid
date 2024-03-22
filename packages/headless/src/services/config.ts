@@ -74,7 +74,7 @@ export const headlessConfig = (config: HeadlessConfigT) => {
 		const brickKeys = config.bricks?.map((b) => b.key);
 		checkDuplicateBuilderKeys("bricks", brickKeys);
 
-		const collectionKeys = config.collections?.map((c) => c.key);
+		const collectionKeys = config.collections?.map((c) => c.data.key);
 		checkDuplicateBuilderKeys("collections", collectionKeys);
 
 		return merge(

@@ -2,12 +2,12 @@ import getConfig from "../config.js";
 import collectionsServices from "../collections/index.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import formatBricks from "../../format/format-bricks.js";
-import type { CollectionConfigT } from "../../builders/collection-builder/index.js";
+import type { CollectionDataT } from "../../builders/collection-builder/index.js";
 
 export interface ServiceData {
 	id: number;
-	type: CollectionConfigT["type"];
-	multiple: CollectionConfigT["multiple"];
+	type: CollectionDataT["type"];
+	multiple: CollectionDataT["multiple"];
 	language_id: number;
 	collection_key: string;
 }

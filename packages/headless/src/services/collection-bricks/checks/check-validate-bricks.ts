@@ -19,10 +19,10 @@ import type {
 	BrickObjectT,
 	BrickFieldObjectT,
 } from "../../../schemas/bricks.js";
-import type { CollectionConfigT } from "../../../builders/collection-builder/index.js";
+import type { CollectionDataT } from "../../../builders/collection-builder/index.js";
 
 export interface ServiceData {
-	type: CollectionConfigT["type"];
+	type: CollectionDataT["type"];
 	bricks: Array<BrickObjectT>;
 	collection_key: string;
 }

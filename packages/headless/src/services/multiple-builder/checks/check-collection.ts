@@ -21,7 +21,7 @@ const checkCollection = async (
 ) => {
 	const config = await getConfig();
 	const collectionInstance = config.collections?.find(
-		(c) => c.key === data.collection_key,
+		(c) => c.data.key === data.collection_key,
 	);
 
 	if (collectionInstance === undefined) {
@@ -43,7 +43,7 @@ const checkCollection = async (
 		});
 	}
 
-	const collection = collectionInstance.config;
+	const collection = collectionInstance.data;
 
 	if (collection.disableHomepages === true && data.homepage === true) {
 		throw new APIError({

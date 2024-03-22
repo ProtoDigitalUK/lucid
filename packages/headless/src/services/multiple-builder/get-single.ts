@@ -103,7 +103,6 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const collection = await collectionsServices.getSingle({
 		key: page.collection_key,
-		no_bricks: true,
 	});
 
 	if (data.query.include?.includes("bricks") && data.language_id) {

@@ -2,15 +2,14 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 import type {
 	CollectionBuilderT,
-	CollectionConfigT,
+	CollectionDataT,
 } from "../../builders/collection-builder/index.js";
 import formatCollection from "../../format/format-collection.js";
 import getConfig from "../config.js";
 
 export interface ServiceData {
 	key: string;
-	type?: CollectionConfigT["type"];
-	no_bricks?: boolean;
+	type?: CollectionDataT["type"];
 }
 
 const getSingle = async (data: ServiceData) => {
@@ -20,10 +19,10 @@ const getSingle = async (data: ServiceData) => {
 
 	if (data.type !== undefined) {
 		collection = config.collections?.find(
-			(c) => c.key === data.key && c.config.type === data.type,
+			(c) => c.data.key === data.key && c.data.type === data.type,
 		);
 	} else {
-		collection = config.collections?.find((c) => c.key === data.key);
+		collection = config.collections?.find((c) => c.data.key === data.key);
 	}
 
 	if (collection === undefined) {
@@ -39,10 +38,7 @@ const getSingle = async (data: ServiceData) => {
 		});
 	}
 
-	return formatCollection(
-		collection,
-		data.no_bricks === true ? undefined : config.bricks,
-	);
+	return formatCollection(collection, true);
 };
 
 export default getSingle;

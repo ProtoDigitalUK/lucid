@@ -1,13 +1,14 @@
 import z from "zod";
+import type { BrickBuilderT } from "../brick-builder/index.js";
 
 export default class CollectionBuilder {
 	key: string;
 	config: CollectionConfigT;
-	constructor(key: string, options: CollectionConfigT) {
+	constructor(key: string, config: CollectionConfigT) {
 		this.key = key;
-		this.config = options;
+		this.config = config;
 
-		this.#validateOptions(options);
+		this.#validateOptions(config);
 		this.#removeDuplicateBricks();
 		this.#addBrickDefaults();
 	}
@@ -33,14 +34,18 @@ export default class CollectionBuilder {
 		// Remove duplicate builder bricks
 		const uniqueBuilderBricks = builderBricks.filter(
 			(brick, index) =>
-				builderBricks.findIndex((b) => b.key === brick.key) === index,
+				builderBricks.findIndex(
+					(b) => b.brick.key === brick.brick.key,
+				) === index,
 		);
 
 		// Remove duplicate fixed bricks
 		const uniqueFixedBricks = fixedBricks.filter(
 			(brick, index) =>
 				fixedBricks.findIndex(
-					(b) => b.key === brick.key && b.position === brick.position,
+					(b) =>
+						b.brick.key === brick.brick.key &&
+						b.position === brick.position,
 				) === index,
 		);
 		this.config.bricks = [...uniqueBuilderBricks, ...uniqueFixedBricks];
@@ -55,6 +60,26 @@ export default class CollectionBuilder {
 			return brick;
 		});
 	};
+	// ------------------------------------
+	// Getters
+	get data(): CollectionDataT {
+		return {
+			key: this.key,
+			type: this.config.type,
+			multiple: this.config.multiple,
+			title: this.config.title,
+			singular: this.config.singular,
+			description: this.config.description,
+			slug: this.config.slug,
+			disableParents: this.config.disableParents,
+			disableHomepages: this.config.disableHomepages,
+			bricks: this.config.bricks?.map((brick) => ({
+				key: brick.brick.key,
+				type: brick.type,
+				position: brick.position,
+			})),
+		};
+	}
 }
 
 const CollectionOptionsSchema = z.object({
@@ -69,7 +94,7 @@ const CollectionOptionsSchema = z.object({
 	bricks: z
 		.array(
 			z.object({
-				key: z.string(),
+				brick: z.unknown(),
 				type: z.enum(["builder", "fixed"]),
 				position: z.enum(["bottom", "top", "sidebar"]).optional(),
 			}),
@@ -77,7 +102,27 @@ const CollectionOptionsSchema = z.object({
 		.optional(),
 });
 
-export type CollectionConfigT = z.infer<typeof CollectionOptionsSchema>;
+interface CollectionConfigT extends z.infer<typeof CollectionOptionsSchema> {
+	bricks?: {
+		brick: BrickBuilderT;
+		type: "builder" | "fixed";
+		position?: "bottom" | "top" | "sidebar";
+	}[];
+}
+
+export type CollectionDataT = {
+	key: string;
+	type: CollectionConfigT["type"];
+	multiple: CollectionConfigT["multiple"];
+	title: CollectionConfigT["title"];
+	singular: CollectionConfigT["singular"];
+	description: CollectionConfigT["description"];
+	slug: CollectionConfigT["slug"];
+	disableParents: CollectionConfigT["disableParents"];
+	disableHomepages: CollectionConfigT["disableHomepages"];
+	bricks?: Array<CollectionBrickConfigT>;
+};
+
 export type CollectionBrickConfigT = {
 	key: string;
 	type: "builder" | "fixed";

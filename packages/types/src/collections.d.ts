@@ -1,12 +1,12 @@
 import {
-	type CollectionConfigT,
+	type CollectionDataT,
 	type CollectionBrickConfigT,
 } from "../../headless/src/builders/collection-builder/index.js";
 
 export interface CollectionResT {
 	key: string;
-	type: CollectionConfigT["type"];
-	multiple: CollectionConfigT["multiple"];
+	type: CollectionDataT["type"];
+	multiple: CollectionDataT["multiple"];
 	slug: string | null;
 	title: string;
 	singular: string;

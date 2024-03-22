@@ -5,8 +5,9 @@ const getAll = async () => {
 	const config = await getConfig();
 
 	return (
-		config.collections?.map((collection) => formatCollection(collection)) ??
-		[]
+		config.collections?.map((collection) =>
+			formatCollection(collection, false),
+		) ?? []
 	);
 };
 
