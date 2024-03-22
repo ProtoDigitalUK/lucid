@@ -1,8 +1,8 @@
 import settingsSchema from "../../schemas/settings.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import settingsServices from "../../services/settings/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerSettingsRes } from "../../format/format-settings.js";
 
 const getSettingsController: ControllerT<

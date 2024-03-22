@@ -2,9 +2,9 @@ import rolesSchema from "../../schemas/roles.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import rolesServices from "../../services/roles/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 const updateSingleController: ControllerT<
 	typeof rolesSchema.updateSingle.params,

@@ -1,8 +1,8 @@
 import collectionsSchema from "../../schemas/collections.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerCollectionRes } from "../../format/format-collection.js";
 
 const getAllController: ControllerT<

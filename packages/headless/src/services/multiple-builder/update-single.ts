@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../utils/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "../collection-bricks/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import multipleBuilderServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import multipleBuilderCategoriesServices from "../multiple-builder-categories/index.js";

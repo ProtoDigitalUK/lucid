@@ -1,6 +1,6 @@
 import accountSchema from "../../schemas/account.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import userTokens from "../../services/user-tokens/index.js";
 
 const verifyResetPasswordController: ControllerT<

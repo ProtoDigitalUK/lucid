@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import getConfig from "../../config.js";
 
 /*

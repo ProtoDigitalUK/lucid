@@ -4,7 +4,7 @@ import type rolesSchema from "../../schemas/roles.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";
-import { parseCount } from "../../utils/app/helpers.js";
+import { parseCount } from "../../utils/helpers.js";
 
 export interface ServiceData {
 	query: z.infer<typeof rolesSchema.getMultiple.query>;

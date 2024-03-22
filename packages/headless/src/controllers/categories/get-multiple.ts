@@ -3,10 +3,10 @@ import {
 	swaggerResponse,
 	swaggerHeaders,
 	swaggerQueryString,
-} from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+} from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import categoriesServices from "../../services/categories/index.js";
-import buildResponse from "../../utils/app/build-response.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerCategoryRes } from "../../format/format-category.js";
 
 const getMultipleController: ControllerT<

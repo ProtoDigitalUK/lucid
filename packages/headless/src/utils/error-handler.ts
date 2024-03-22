@@ -8,7 +8,7 @@
 
 import type z from "zod";
 import { bgRed } from "console-log-colors";
-import T from "../../translations/index.js";
+import T from "../translations/index.js";
 
 const DEFAULT_ERROR = {
 	name: T("default_error_name"),

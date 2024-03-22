@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import Handlebars from "handlebars";
 import mjml2html from "mjml";
 import path from "node:path";
-import getDirName from "../../utils/app/get-dirname.js";
+import { getDirName } from "../../utils/helpers.js";
 import getConfig from "../config.js";
 
 const currentDir = getDirName(import.meta.url);

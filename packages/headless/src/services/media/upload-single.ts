@@ -1,15 +1,15 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import languagesServices from "../languages/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import s3Services from "../s3/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
-} from "../../utils/translations/helpers.js";
+} from "../../utils/translation-helpers.js";
 
 export interface ServiceData {
 	file_data: MultipartFile | undefined;

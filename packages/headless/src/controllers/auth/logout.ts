@@ -2,7 +2,7 @@ import authSchema from "../../schemas/auth.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
 
 const logoutController: ControllerT<

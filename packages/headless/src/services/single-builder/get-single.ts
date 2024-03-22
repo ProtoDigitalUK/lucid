@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import formatSingleBuilder from "../../format/format-single-builder.js";
 import collectionBricksServices from "../collection-bricks/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionsServices from "../collections/index.js";
 
 export interface ServiceData {

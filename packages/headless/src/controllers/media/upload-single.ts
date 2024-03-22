@@ -2,10 +2,10 @@ import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+} from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
-import buildResponse from "../../utils/app/build-response.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerMediaRes } from "../../format/format-media.js";
 
 const uploadSingleController: ControllerT<

@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import auth from "../services/auth/index.js";
-import { APIError } from "../utils/app/error-handler.js";
+import { APIError } from "../utils/error-handler.js";
 
 const validateCSRF = async (request: FastifyRequest) => {
 	const verifyCSRF = auth.csrf.verifyCSRFToken(request);

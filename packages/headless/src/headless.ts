@@ -12,15 +12,15 @@ import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import routes from "./routes/index.js";
-import getDirName from "./utils/app/get-dirname.js";
+import { getDirName } from "./utils/helpers.js";
 import getConfig from "./services/config.js";
 import getConfigTest from "./libs/config/get-config.js";
-import { decodeError } from "./utils/app/error-handler.js";
+import { decodeError } from "./utils/error-handler.js";
 import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
 import migrate from "./db/migrate.js";
 import { initialiseDB, headlessDB } from "./db/db.js";
-import serviceWrapper from "./utils/app/service-wrapper.js";
+import serviceWrapper from "./utils/service-wrapper.js";
 
 const currentDir = getDirName(import.meta.url);
 

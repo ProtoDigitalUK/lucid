@@ -7,7 +7,7 @@ import {
 	type HeadlessConfigT,
 	headlessConfigSchema,
 } from "../schemas/config.js";
-import { InternalError } from "../utils/app/error-handler.js";
+import { InternalError } from "../utils/error-handler.js";
 import constants from "../constants.js";
 
 let config: HeadlessConfigT | undefined = undefined;

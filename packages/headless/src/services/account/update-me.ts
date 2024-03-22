@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];

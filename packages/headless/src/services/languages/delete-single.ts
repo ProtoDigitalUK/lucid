@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import { sql } from "kysely";
-import { parseCount } from "../../utils/app/helpers.js";
+import { parseCount } from "../../utils/helpers.js";
 
 export interface ServiceData {
 	code: string;

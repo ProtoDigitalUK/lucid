@@ -2,9 +2,9 @@ import emailsSchema from "../../schemas/email.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 const deleteSingleController: ControllerT<
 	typeof emailsSchema.deleteSingle.params,

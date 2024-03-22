@@ -1,9 +1,9 @@
 import T from "../../translations/index.js";
 import getConfig from "../config.js";
 import emailServices from "./index.js";
-import { getEmailHash } from "../../utils/app/helpers.js";
+import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 
 export interface ServiceData {
 	type: "internal" | "external";

@@ -1,12 +1,12 @@
 import T from "../../translations/index.js";
 import type z from "zod";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import type multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import formatMultipleBuilder from "../../format/format-multiple-builder.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import collectionsServices from "../collections/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;

@@ -1,6 +1,6 @@
 import type { FastifyRequest } from "fastify";
 // Services
-import getConfig from "../../services/config.js";
+import getConfig from "../services/config.js";
 
 // --------------------------------------------------
 // Types

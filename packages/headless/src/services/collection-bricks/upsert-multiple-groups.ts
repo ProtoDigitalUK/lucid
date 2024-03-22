@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
-import { values } from "../../utils/app/kysely-helpers.js";
+import { values } from "../../utils/kysely-helpers.js";
 import { sql } from "kysely";
 
 export interface GroupsResT {

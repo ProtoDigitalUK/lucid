@@ -1,8 +1,8 @@
 import categoriesSchema from "../../schemas/categories.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import categoriesServices from "../../services/categories/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerCategoryRes } from "../../format/format-category.js";
 
 const getSingleController: ControllerT<

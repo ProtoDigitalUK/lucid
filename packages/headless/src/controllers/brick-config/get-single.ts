@@ -1,7 +1,7 @@
 import bricksSchema from "../../schemas/bricks.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import brickConfigServices from "../../services/brick-config/index.js";
 import { swaggerBrickConfigsRes } from "../../format/format-brick-config.js";
 

@@ -1,6 +1,6 @@
 import permissionsSchema from "../../schemas/permissions.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import buildResponse from "../../utils/app/build-response.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import buildResponse from "../../utils/build-response.js";
 import formatPermissions from "../../format/format-permissions.js";
 import { permissionGroups } from "../../services/permissions.js";
 

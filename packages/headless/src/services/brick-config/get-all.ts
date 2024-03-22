@@ -1,6 +1,6 @@
 import type z from "zod";
 import type bricksSchema from "../../schemas/bricks.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionsServices from "../collections/index.js";
 import brickConfigService from "./index.js";
 

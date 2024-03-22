@@ -3,7 +3,7 @@ import {
 	APIError,
 	type ErrorResultT,
 	modelErrors,
-} from "../../utils/app/error-handler.js";
+} from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
 import type { PermissionT } from "@headless/types/src/permissions.js";
 

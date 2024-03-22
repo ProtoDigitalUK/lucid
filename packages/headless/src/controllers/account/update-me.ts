@@ -2,8 +2,8 @@ import accountSchema from "../../schemas/account.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+} from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import account from "../../services/account/index.js";
 
 const updateMeController: ControllerT<

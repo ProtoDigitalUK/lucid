@@ -1,12 +1,12 @@
 import T from "../../translations/index.js";
 import type { z } from "zod";
 import type { Readable } from "node:stream";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import type cdnSchema from "../../schemas/cdn.js";
 import s3Services from "../s3/index.js";
-import mediaHelpers from "../../utils/media/helpers.js";
+import mediaHelpers from "../../utils/media-helpers.js";
 import processedImageServices from "../processed-images/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;

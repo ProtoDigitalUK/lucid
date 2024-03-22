@@ -1,5 +1,5 @@
-import T from "../../translations/index.js";
-import constants from "../../constants.js";
+import T from "../translations/index.js";
+import constants from "../constants.js";
 
 const metaObject = {
 	type: "object",

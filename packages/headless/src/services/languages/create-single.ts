@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../utils/error-handler.js";
 import ISO6391 from "iso-639-1";
 
 export interface ServiceData {

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import r from "../../../utils/app/route.js";
+import r from "../../../utils/route.js";
 import collections from "../../../controllers/collections/index.js";
 
 const collectionRoutes = async (fastify: FastifyInstance) => {

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import r from "../../../utils/app/route.js";
+import r from "../../../utils/route.js";
 import media from "../../../controllers/media/index.js";
 
 const mediaRoutes = async (fastify: FastifyInstance) => {

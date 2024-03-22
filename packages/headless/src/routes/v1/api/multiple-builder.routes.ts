@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import r from "../../../utils/app/route.js";
+import r from "../../../utils/route.js";
 import multipleBuilder from "../../../controllers/multiple-builder/index.js";
 
 const multipleBuilderRoutes = async (fastify: FastifyInstance) => {

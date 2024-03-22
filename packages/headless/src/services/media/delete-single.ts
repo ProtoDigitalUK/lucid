@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import mediaServices from "./index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import processedImagesServices from "../processed-images/index.js";
 import translationsServices from "../translations/index.js";
 

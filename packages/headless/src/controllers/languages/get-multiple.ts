@@ -2,10 +2,10 @@ import languageSchema from "../../schemas/languages.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import languagesServices from "../../services/languages/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerLanguageRes } from "../../format/format-language.js";
 
 const getMultipleController: ControllerT<

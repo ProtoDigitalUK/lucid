@@ -1,4 +1,4 @@
-import serviceWrapper from "../../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../../utils/service-wrapper.js";
 import s3Services from "../../s3/index.js";
 import optionsServices from "../../options/index.js";
 

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import T from "../translations/index.js";
 import cron from "node-cron";
-import { InternalError } from "../utils/app/error-handler.js";
+import { InternalError } from "../utils/error-handler.js";
 
 const clearExpiredTokens = async (fastify: FastifyInstance) => {
 	try {

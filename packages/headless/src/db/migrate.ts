@@ -1,8 +1,8 @@
 import fs from "fs-extra";
 import path from "node:path";
-import getDirName from "../utils/app/get-dirname.js";
+import { getDirName } from "../utils/helpers.js";
 import { green } from "console-log-colors";
-import { InternalError } from "../utils/app/error-handler.js";
+import { InternalError } from "../utils/error-handler.js";
 import { sql } from "kysely";
 
 const currentDir = getDirName(import.meta.url);

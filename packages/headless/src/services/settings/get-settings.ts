@@ -1,4 +1,4 @@
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import optionsServices from "../../services/options/index.js";
 import processedImagesServices from "../../services/processed-images/index.js";
 import formatSettings from "../../format/format-settings.js";

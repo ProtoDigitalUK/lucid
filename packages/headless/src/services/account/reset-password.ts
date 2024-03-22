@@ -2,8 +2,8 @@ import T from "../../translations/index.js";
 import argon2 from "argon2";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import { APIError } from "../../utils/error-handler.js";
 
 export interface ServiceData {
 	token: string;

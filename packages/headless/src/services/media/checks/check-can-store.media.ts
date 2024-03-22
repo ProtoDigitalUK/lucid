@@ -1,7 +1,7 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import getConfig from "../../config.js";
-import serviceWrapper from "../../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
 import constants from "../../../constants.js";
 

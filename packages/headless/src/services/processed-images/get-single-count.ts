@@ -1,5 +1,5 @@
 import { sql } from "kysely";
-import { parseCount } from "../../utils/app/helpers.js";
+import { parseCount } from "../../utils/helpers.js";
 
 export interface ServiceData {
 	key: string;

@@ -1,7 +1,7 @@
 import usersSchema from "../../schemas/users.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import usersServices from "../../services/users/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 const updateSingleController: ControllerT<
 	typeof usersSchema.updateSingle.params,

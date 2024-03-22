@@ -1,5 +1,5 @@
 import emailServices from "./index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import { headlessDB } from "../../db/db.js";
 
 export interface ServiceData {

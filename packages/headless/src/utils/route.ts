@@ -1,13 +1,13 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type z from "zod";
 import type { PermissionT } from "@headless/types/src/permissions.js";
-import validateBody from "../../middleware/validate-body.js";
-import validateParams from "../../middleware/validate-params.js";
-import validateQuery from "../../middleware/validate-query.js";
-import authenticate from "../../middleware/authenticate.js";
-import validateCSRF from "../../middleware/validate-csrf.js";
-import permissions from "../../middleware/permissions.js";
-import contentLanguage from "../../middleware/content-language.js";
+import validateBody from "../middleware/validate-body.js";
+import validateParams from "../middleware/validate-params.js";
+import validateQuery from "../middleware/validate-query.js";
+import authenticate from "../middleware/authenticate.js";
+import validateCSRF from "../middleware/validate-csrf.js";
+import permissions from "../middleware/permissions.js";
+import contentLanguage from "../middleware/content-language.js";
 
 type RouteT = <
 	ParamsT extends z.ZodTypeAny | undefined,

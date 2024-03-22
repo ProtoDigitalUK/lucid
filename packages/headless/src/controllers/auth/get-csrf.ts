@@ -1,7 +1,7 @@
 import authSchema from "../../schemas/auth.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
-import buildResponse from "../../utils/app/build-response.js";
+import buildResponse from "../../utils/build-response.js";
 
 const getCSRFController: ControllerT<
 	typeof authSchema.getCSRF.params,

@@ -3,7 +3,7 @@ import {
 	APIError,
 	modelErrors,
 	type FieldErrorsT,
-} from "../../../utils/app/error-handler.js";
+} from "../../../utils/error-handler.js";
 import getConfig from "../../config.js";
 import collectionsServices from "../../collections/index.js";
 import type {

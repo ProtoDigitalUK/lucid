@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import { APIError } from "../../utils/error-handler.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import multipleBuilderServices from "./index.js";
 import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
@@ -8,7 +8,7 @@ import multipleBuilderCategoriesServices from "../multiple-builder-categories/in
 import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
-} from "../../utils/translations/helpers.js";
+} from "../../utils/translation-helpers.js";
 
 export interface ServiceData {
 	collection_key: string;

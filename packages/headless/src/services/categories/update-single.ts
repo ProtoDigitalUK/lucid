@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/app/error-handler.js";
+import { APIError, modelErrors } from "../../utils/error-handler.js";
 import slug from "slug";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import categoriesServices from "./index.js";
 import translationsServices from "../translations/index.js";
 

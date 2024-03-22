@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
 import ISO6391 from "iso-639-1";
 import { sql } from "kysely";
-import { APIError } from "../../utils/app/error-handler.js";
-import { parseCount } from "../../utils/app/helpers.js";
+import { APIError } from "../../utils/error-handler.js";
+import { parseCount } from "../../utils/helpers.js";
 
 export interface ServiceData {
 	current_code: string;

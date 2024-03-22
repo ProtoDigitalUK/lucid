@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import r from "../../../utils/app/route.js";
+import r from "../../../utils/route.js";
 import brickConfig from "../../../controllers/brick-config/index.js";
 
 const brickRoutes = async (fastify: FastifyInstance) => {

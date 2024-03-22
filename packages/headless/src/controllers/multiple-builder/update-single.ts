@@ -2,9 +2,9 @@ import multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import multipleBuilderServices from "../../services/multiple-builder/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import { swaggerBodyBricksObj } from "../../schemas/bricks.js";
 
 const updateSingleController: ControllerT<

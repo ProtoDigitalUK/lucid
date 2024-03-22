@@ -1,5 +1,5 @@
 import { pathToFileURL } from "node:url";
-import { type HeadlessConfigT } from "../../schemas/config.js";
+import type { HeadlessConfigT } from "../../schemas/config.js";
 import getConfigPath from "./get-config-path.js";
 
 let config: HeadlessConfigT | undefined = undefined;

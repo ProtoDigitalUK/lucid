@@ -1,5 +1,5 @@
 import usersServices from "./index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	user_id: number;

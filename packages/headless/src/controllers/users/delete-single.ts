@@ -2,8 +2,8 @@ import usersSchema from "../../schemas/users.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+} from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import usersServices from "../../services/users/index.js";
 
 const deleteSingleController: ControllerT<

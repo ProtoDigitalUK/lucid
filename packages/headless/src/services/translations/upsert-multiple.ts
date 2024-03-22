@@ -1,11 +1,11 @@
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import languagesServices from "../languages/index.js";
 import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
 	type TranslationsObjT,
-} from "../../utils/translations/helpers.js";
+} from "../../utils/translation-helpers.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;

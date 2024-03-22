@@ -5,7 +5,7 @@ import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import usersServices from "../users/index.js";
 
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 
 const key = "_access";
 

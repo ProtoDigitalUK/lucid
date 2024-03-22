@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import { APIError } from "../../utils/error-handler.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import translationsServices from "../translations/index.js";
 
 export interface ServiceData {

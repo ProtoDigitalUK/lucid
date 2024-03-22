@@ -2,10 +2,10 @@ import accountSchema from "../../schemas/account.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
-import buildResponse from "../../utils/app/build-response.js";
+} from "../../utils/swagger-helpers.js";
+import buildResponse from "../../utils/build-response.js";
 import account from "../../services/account/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 const sendResetPasswordController: ControllerT<
 	typeof accountSchema.sendResetPassword.params,

@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
 import constants from "../constants.js";
-import { APIError } from "../utils/app/error-handler.js";
+import { APIError } from "../utils/error-handler.js";
 
 export interface RequestQueryParsedT {
 	filter: Record<string, string | Array<string>> | undefined;

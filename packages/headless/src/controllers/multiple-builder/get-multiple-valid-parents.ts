@@ -3,10 +3,10 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import multipleBuilderServices from "../../services/multiple-builder/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerMultipleBuilderResT } from "../../format/format-multiple-builder.js";
 
 const getMultipleValidParentsController: ControllerT<

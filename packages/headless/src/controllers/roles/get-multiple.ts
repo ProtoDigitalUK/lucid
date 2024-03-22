@@ -2,10 +2,10 @@ import rolesSchema from "../../schemas/roles.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
-} from "../../utils/swagger/response-helpers.js";
+} from "../../utils/swagger-helpers.js";
 import rolesServices from "../../services/roles/index.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
-import buildResponse from "../../utils/app/build-response.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+import buildResponse from "../../utils/build-response.js";
 import { swaggerRoleRes } from "../../format/format-roles.js";
 
 const getMultipleController: ControllerT<

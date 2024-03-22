@@ -2,12 +2,12 @@ import T from "../../translations/index.js";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
 import s3Services from "../s3/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
-import mediaHelpers from "../../utils/media/helpers.js";
+import mediaHelpers from "../../utils/media-helpers.js";
 
 export interface ServiceData {
 	key: string;

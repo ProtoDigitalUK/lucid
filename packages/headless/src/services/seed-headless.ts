@@ -1,10 +1,10 @@
 import T from "../translations/index.js";
 import argon2 from "argon2";
 import constants from "../constants.js";
-import { InternalError } from "../utils/app/error-handler.js";
+import { InternalError } from "../utils/error-handler.js";
 import { sql } from "kysely";
-import { parseCount } from "../utils/app/helpers.js";
-import serviceWrapper from "../utils/app/service-wrapper.js";
+import { parseCount } from "../utils/helpers.js";
+import serviceWrapper from "../utils/service-wrapper.js";
 import rolesServices from "./roles/index.js";
 
 const addDefaultUser = async (serviceConfig: ServiceConfigT) => {

@@ -2,8 +2,8 @@ import bricksSchema from "../../schemas/bricks.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
-} from "../../utils/swagger/response-helpers.js";
-import buildResponse from "../../utils/app/build-response.js";
+} from "../../utils/swagger-helpers.js";
+import buildResponse from "../../utils/build-response.js";
 import brickConfigServices from "../../services/brick-config/index.js";
 import { swaggerBrickConfigsRes } from "../../format/format-brick-config.js";
 

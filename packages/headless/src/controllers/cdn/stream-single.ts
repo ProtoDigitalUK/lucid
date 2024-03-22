@@ -1,5 +1,5 @@
 import cdnSchema from "../../schemas/cdn.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import cdnServices from "../../services/cdn/index.js";
 
 const streamSingleController: ControllerT<

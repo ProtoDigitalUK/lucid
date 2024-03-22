@@ -3,7 +3,7 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 
 const key = "_refresh";

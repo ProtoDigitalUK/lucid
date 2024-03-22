@@ -1,9 +1,9 @@
 import accountSchema from "../../schemas/account.js";
-import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
-import buildResponse from "../../utils/app/build-response.js";
+import { swaggerResponse } from "../../utils/swagger-helpers.js";
+import buildResponse from "../../utils/build-response.js";
 import usersServices from "../../services/users/index.js";
 import { swaggerUsersRes } from "../../format/format-user.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 const getMeController: ControllerT<
 	typeof accountSchema.getMe.params,

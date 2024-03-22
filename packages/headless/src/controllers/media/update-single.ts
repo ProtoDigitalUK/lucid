@@ -2,8 +2,8 @@ import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
-} from "../../utils/swagger/response-helpers.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
+} from "../../utils/swagger-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 
 const updateSingleController: ControllerT<

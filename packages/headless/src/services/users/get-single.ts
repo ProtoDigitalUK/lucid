@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import formatUser from "../../format/format-user.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
