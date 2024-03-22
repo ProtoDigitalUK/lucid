@@ -12,7 +12,7 @@ const createMultiple = async (
 	}
 
 	await serviceConfig.db
-		.insertInto("headless_collection_multiple_page_categories")
+		.insertInto("headless_collection_multiple_builder_categories")
 		.values(
 			data.category_ids.map((category_id) => ({
 				collection_multiple_page_id: data.page_id,

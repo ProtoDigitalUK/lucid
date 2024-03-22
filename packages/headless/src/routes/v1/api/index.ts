@@ -12,7 +12,7 @@ import brickRoutes from "./bricks.routes.js";
 import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
 import categoriesRoutes from "./categories.routes.js";
-import multiplePageRoutes from "./multiple-page.routes.js";
+import multipleBuilderRoutes from "./multiple-builder.routes.js";
 import singlePageRoutes from "./single-page.routes.js";
 import userRoutes from "./users.routes.js";
 
@@ -35,8 +35,8 @@ const routes = async (fastify: FastifyInstance) => {
 	fastify.register(categoriesRoutes, {
 		prefix: "/collections/categories",
 	});
-	fastify.register(multiplePageRoutes, {
-		prefix: "/collections/multiple-page",
+	fastify.register(multipleBuilderRoutes, {
+		prefix: "/collections/multiple-builder",
 	});
 	fastify.register(singlePageRoutes, {
 		prefix: "/collections/single-page",

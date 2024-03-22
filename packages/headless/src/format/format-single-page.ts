@@ -1,4 +1,4 @@
-import type { SinglePagesResT } from "@headless/types/src/multiple-page.js";
+import type { SinglePagesResT } from "@headless/types/src/multiple-builder.js";
 import { swaggerBrickRes } from "./format-bricks.js";
 import { BrickResT } from "@headless/types/src/bricks.js";
 

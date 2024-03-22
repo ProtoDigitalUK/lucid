@@ -1,20 +1,23 @@
-import multiplePageSchema from "../../schemas/multiple-page.js";
+import multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import multiplePageServices from "../../services/multiple-page/index.js";
+import multipleBuilderServices from "../../services/multiple-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerMultiplePageRes } from "../../format/format-multiple-page.js";
+import { swaggerMultipleBuilderRes } from "../../format/format-multiple-builder.js";
 
 const getMultipleController: ControllerT<
-	typeof multiplePageSchema.getMultiple.params,
-	typeof multiplePageSchema.getMultiple.body,
-	typeof multiplePageSchema.getMultiple.query
+	typeof multipleBuilderSchema.getMultiple.params,
+	typeof multipleBuilderSchema.getMultiple.body,
+	typeof multipleBuilderSchema.getMultiple.query
 > = async (request, reply) => {
-	const pages = await serviceWrapper(multiplePageServices.getMultiple, false)(
+	const pages = await serviceWrapper(
+		multipleBuilderServices.getMultiple,
+		false,
+	)(
 		{
 			db: request.server.db,
 		},
@@ -38,17 +41,17 @@ const getMultipleController: ControllerT<
 
 export default {
 	controller: getMultipleController,
-	zodSchema: multiplePageSchema.getMultiple,
+	zodSchema: multipleBuilderSchema.getMultiple,
 	swaggerSchema: {
-		description: "Get a multiple multiple-page entries.",
-		tags: ["collection-multiple-page"],
-		summary: "Get a multiple multiple-page entries.",
+		description: "Get a multiple multiple-builder entries.",
+		tags: ["collection-multiple-builder"],
+		summary: "Get a multiple multiple-builder entries.",
 		response: {
 			200: swaggerResponse({
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerMultiplePageRes,
+					items: swaggerMultipleBuilderRes,
 				},
 				paginated: true,
 			}),

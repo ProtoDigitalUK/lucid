@@ -23,13 +23,13 @@ const checkParentAncestry = async (
 			id: number;
 		}>(`WITH RECURSIVE ancestry AS (
         SELECT id, parent_id
-        FROM headless_collection_multiple_page
+        FROM headless_collection_multiple_builder
         WHERE id = ${data.parent_id}
   
         UNION ALL
   
         SELECT p.id, p.parent_id
-        FROM headless_collection_multiple_page p
+        FROM headless_collection_multiple_builder p
         JOIN ancestry a ON p.id = a.parent_id
       )
       SELECT id

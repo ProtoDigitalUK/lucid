@@ -148,6 +148,8 @@ const validateBrickData = async (data: {
 							target: value?.target,
 							label: value?.label,
 						} satisfies LinkReferenceData;
+					} else {
+						field.value.id = null;
 					}
 					break;
 				}
@@ -160,6 +162,8 @@ const validateBrickData = async (data: {
 							height: media.height,
 							type: media.type,
 						} satisfies MediaReferenceData;
+					} else {
+						field.value = null;
 					}
 					break;
 				}
@@ -229,7 +233,7 @@ const getAllPages = async (
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");
 		if (ids.length === 0) return [];
 		return await serviceConfig.db
-			.selectFrom("headless_collection_multiple_page")
+			.selectFrom("headless_collection_multiple_builder")
 			.select("id")
 			.where("id", "in", ids)
 			.execute();

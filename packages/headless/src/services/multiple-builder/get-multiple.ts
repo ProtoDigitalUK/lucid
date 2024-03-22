@@ -3,86 +3,35 @@ import { parseCount } from "../../utils/app/helpers.js";
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
-import multiplePageSchema from "../../schemas/multiple-page.js";
-import formatMultiplePage from "../../format/format-multiple-page.js";
+import multipleBuilderSchema from "../../schemas/multiple-builder.js";
+import formatMultipleBuilder from "../../format/format-multiple-builder.js";
 import collectionsServices from "../collections/index.js";
 
 export interface ServiceData {
-	query: z.infer<typeof multiplePageSchema.getMultiple.query>;
-	page_id: number;
+	query: z.infer<typeof multipleBuilderSchema.getMultiple.query>;
 	language_id: number;
 }
 
-const getMultipleValidParents = async (
+const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const page = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
-		.select("homepage")
-		.where("id", "=", data.page_id)
-		.executeTakeFirst();
-
-	if (page === undefined || page.homepage === true) {
-		return {
-			data: [],
-			count: 0,
-		};
-	}
-
-	const validParents = await sql
-		.raw<{
-			id: number;
-		}>(`WITH RECURSIVE descendants AS (
-        SELECT id, parent_id
-        FROM headless_collection_multiple_page
-        WHERE id = ${data.page_id}
-
-        UNION ALL
-
-        SELECT p.id, p.parent_id
-        FROM headless_collection_multiple_page p
-        INNER JOIN descendants d ON p.parent_id = d.id
-    )
-    SELECT p.id
-    FROM headless_collection_multiple_page p
-    WHERE NOT p.id = ${data.page_id}
-    ${
-		data.query.filter?.collection_key !== undefined
-			? `AND p.collection_key = '${data.query.filter.collection_key}'`
-			: ""
-	}
-    AND NOT p.id IN (SELECT id FROM descendants)
-    AND NOT p.homepage
-    AND NOT p.is_deleted
-    AND p.slug IS NOT NULL;`)
-		.execute(serviceConfig.db);
-
-	if (validParents.rows.length === 0) {
-		return {
-			data: [],
-			count: 0,
-		};
-	}
-
-	const validParentIds = validParents.rows.map((row) => row.id);
-
 	const pagesQuery = serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
+		.selectFrom("headless_collection_multiple_builder")
 		.select((eb) => [
-			"headless_collection_multiple_page.id",
-			"headless_collection_multiple_page.parent_id",
-			"headless_collection_multiple_page.collection_key",
-			"headless_collection_multiple_page.slug",
-			"headless_collection_multiple_page.full_slug",
-			"headless_collection_multiple_page.homepage",
-			"headless_collection_multiple_page.created_by",
-			"headless_collection_multiple_page.created_at",
-			"headless_collection_multiple_page.updated_at",
-			"headless_collection_multiple_page.published",
-			"headless_collection_multiple_page.published_at",
-			"headless_collection_multiple_page.title_translation_key_id",
-			"headless_collection_multiple_page.excerpt_translation_key_id",
+			"headless_collection_multiple_builder.id",
+			"headless_collection_multiple_builder.parent_id",
+			"headless_collection_multiple_builder.collection_key",
+			"headless_collection_multiple_builder.slug",
+			"headless_collection_multiple_builder.full_slug",
+			"headless_collection_multiple_builder.homepage",
+			"headless_collection_multiple_builder.created_by",
+			"headless_collection_multiple_builder.created_at",
+			"headless_collection_multiple_builder.updated_at",
+			"headless_collection_multiple_builder.published",
+			"headless_collection_multiple_builder.published_at",
+			"headless_collection_multiple_builder.title_translation_key_id",
+			"headless_collection_multiple_builder.excerpt_translation_key_id",
 			jsonArrayFrom(
 				eb
 					.selectFrom("headless_translations")
@@ -94,7 +43,7 @@ const getMultipleValidParents = async (
 					.whereRef(
 						"headless_translations.translation_key_id",
 						"=",
-						"headless_collection_multiple_page.title_translation_key_id",
+						"headless_collection_multiple_builder.title_translation_key_id",
 					),
 			).as("title_translations"),
 			jsonArrayFrom(
@@ -108,17 +57,19 @@ const getMultipleValidParents = async (
 					.whereRef(
 						"headless_translations.translation_key_id",
 						"=",
-						"headless_collection_multiple_page.excerpt_translation_key_id",
+						"headless_collection_multiple_builder.excerpt_translation_key_id",
 					),
 			).as("excerpt_translations"),
 			jsonArrayFrom(
 				eb
-					.selectFrom("headless_collection_multiple_page_categories")
+					.selectFrom(
+						"headless_collection_multiple_builder_categories",
+					)
 					.select("category_id")
 					.whereRef(
-						"headless_collection_multiple_page_categories.collection_multiple_page_id",
+						"headless_collection_multiple_builder_categories.collection_multiple_page_id",
 						"=",
-						"headless_collection_multiple_page.id",
+						"headless_collection_multiple_builder.id",
 					),
 			).as("categories"),
 		])
@@ -127,75 +78,95 @@ const getMultipleValidParents = async (
 				.onRef(
 					"title_translations.translation_key_id",
 					"=",
-					"headless_collection_multiple_page.title_translation_key_id",
+					"headless_collection_multiple_builder.title_translation_key_id",
 				)
 				.on("title_translations.language_id", "=", data.language_id),
 		)
-		.leftJoin("headless_collection_multiple_page_categories", (join) =>
+		.leftJoin("headless_translations as excerpt_translations", (join) =>
+			join
+				.onRef(
+					"excerpt_translations.translation_key_id",
+					"=",
+					"headless_collection_multiple_builder.excerpt_translation_key_id",
+				)
+				.on("excerpt_translations.language_id", "=", data.language_id),
+		)
+		.leftJoin("headless_collection_multiple_builder_categories", (join) =>
 			join.onRef(
-				"headless_collection_multiple_page_categories.collection_multiple_page_id",
+				"headless_collection_multiple_builder_categories.collection_multiple_page_id",
 				"=",
-				"headless_collection_multiple_page.id",
+				"headless_collection_multiple_builder.id",
 			),
 		)
 		.innerJoin(
 			"headless_users",
 			"headless_users.id",
-			"headless_collection_multiple_page.created_by",
+			"headless_collection_multiple_builder.created_by",
 		)
 		.select([
 			"title_translations.value as title_translation_value",
+			"excerpt_translations.value as excerpt_translation_value",
 			"headless_users.id as author_id",
 			"headless_users.email as author_email",
 			"headless_users.first_name as author_first_name",
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
-		.where("headless_collection_multiple_page.id", "in", validParentIds)
-		.where("headless_collection_multiple_page.is_deleted", "=", false)
+		.where("headless_collection_multiple_builder.is_deleted", "=", false)
 		.groupBy([
-			"headless_collection_multiple_page.id",
+			"headless_collection_multiple_builder.id",
 			"title_translations.value",
+			"excerpt_translations.value",
 			"headless_users.id",
 		]);
 
 	const pagesCountQuery = serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
+		.selectFrom("headless_collection_multiple_builder")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_translations as title_translations", (join) =>
 			join
 				.onRef(
 					"title_translations.translation_key_id",
 					"=",
-					"headless_collection_multiple_page.title_translation_key_id",
+					"headless_collection_multiple_builder.title_translation_key_id",
 				)
 				.on("title_translations.language_id", "=", data.language_id),
 		)
-		.leftJoin("headless_collection_multiple_page_categories", (join) =>
+		.leftJoin("headless_translations as excerpt_translations", (join) =>
+			join
+				.onRef(
+					"excerpt_translations.translation_key_id",
+					"=",
+					"headless_collection_multiple_builder.excerpt_translation_key_id",
+				)
+				.on("excerpt_translations.language_id", "=", data.language_id),
+		)
+		.leftJoin("headless_collection_multiple_builder_categories", (join) =>
 			join.onRef(
-				"headless_collection_multiple_page_categories.collection_multiple_page_id",
+				"headless_collection_multiple_builder_categories.collection_multiple_page_id",
 				"=",
-				"headless_collection_multiple_page.id",
+				"headless_collection_multiple_builder.id",
 			),
 		)
 		.innerJoin(
 			"headless_users",
 			"headless_users.id",
-			"headless_collection_multiple_page.created_by",
+			"headless_collection_multiple_builder.created_by",
 		)
 		.select([
 			"title_translations.value as title_translation_value",
+			"excerpt_translations.value as excerpt_translation_value",
 			"headless_users.id as author_id",
 			"headless_users.email as author_email",
 			"headless_users.first_name as author_first_name",
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
-		.where("headless_collection_multiple_page.id", "in", validParentIds)
-		.where("headless_collection_multiple_page.is_deleted", "=", false)
+		.where("headless_collection_multiple_builder.is_deleted", "=", false)
 		.groupBy([
-			"headless_collection_multiple_page.id",
+			"headless_collection_multiple_builder.id",
 			"title_translations.value",
+			"excerpt_translations.value",
 			"headless_users.id",
 		]);
 
@@ -226,9 +197,19 @@ const getMultipleValidParents = async (
 						operator: "=",
 					},
 					{
+						queryKey: "slug",
+						tableKey: "slug",
+						operator: "%",
+					},
+					{
+						queryKey: "full_slug",
+						tableKey: "full_slug",
+						operator: "%",
+					},
+					{
 						queryKey: "category_id",
 						tableKey:
-							"headless_collection_multiple_page_categories.category_id",
+							"headless_collection_multiple_builder_categories.category_id",
 						operator: "=",
 					},
 				],
@@ -244,6 +225,10 @@ const getMultipleValidParents = async (
 					{
 						queryKey: "updated_at",
 						tableKey: "updated_at",
+					},
+					{
+						queryKey: "published_at",
+						tableKey: "published_at",
 					},
 				],
 			},
@@ -262,10 +247,10 @@ const getMultipleValidParents = async (
 			const collection = collections.find(
 				(c) => c.key === page.collection_key,
 			);
-			return formatMultiplePage(page, collection);
+			return formatMultipleBuilder(page, collection);
 		}),
 		count: parseCount(pagesCount?.count),
 	};
 };
 
-export default getMultipleValidParents;
+export default getMultiple;

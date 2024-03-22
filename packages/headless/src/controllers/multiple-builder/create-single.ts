@@ -1,20 +1,20 @@
-import multiplePageSchema from "../../schemas/multiple-page.js";
+import multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import multiplePageServices from "../../services/multiple-page/index.js";
+import multipleBuilderServices from "../../services/multiple-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerMultiplePageRes } from "../../format/format-multiple-page.js";
+import { swaggerMultipleBuilderRes } from "../../format/format-multiple-builder.js";
 
 const createSingleController: ControllerT<
-	typeof multiplePageSchema.createSingle.params,
-	typeof multiplePageSchema.createSingle.body,
-	typeof multiplePageSchema.createSingle.query
+	typeof multipleBuilderSchema.createSingle.params,
+	typeof multipleBuilderSchema.createSingle.body,
+	typeof multipleBuilderSchema.createSingle.query
 > = async (request, reply) => {
 	const pageId = await serviceWrapper(
-		multiplePageServices.createSingle,
+		multipleBuilderServices.createSingle,
 		true,
 	)(
 		{
@@ -33,7 +33,7 @@ const createSingleController: ControllerT<
 		},
 	);
 
-	const page = await serviceWrapper(multiplePageServices.getSingle, false)(
+	const page = await serviceWrapper(multipleBuilderServices.getSingle, false)(
 		{
 			db: request.server.db,
 		},
@@ -54,11 +54,11 @@ const createSingleController: ControllerT<
 
 export default {
 	controller: createSingleController,
-	zodSchema: multiplePageSchema.createSingle,
+	zodSchema: multipleBuilderSchema.createSingle,
 	swaggerSchema: {
-		description: "Creates a single multiple-page entry.",
-		tags: ["collection-multiple-page"],
-		summary: "Create a single multiple-page entry.",
+		description: "Creates a single multiple-builder entry.",
+		tags: ["collection-multiple-builder"],
+		summary: "Create a single multiple-builder entry.",
 		body: {
 			type: "object",
 			properties: {
@@ -117,7 +117,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerMultiplePageRes,
+				data: swaggerMultipleBuilderRes,
 			}),
 		},
 		headers: swaggerHeaders({

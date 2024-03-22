@@ -23,7 +23,7 @@ const checkSlugIsUnique = async (
 	const slugValue = slug(data.slug, { lower: true });
 
 	let slugExistsQuery = serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
+		.selectFrom("headless_collection_multiple_builder")
 		.where("collection_key", "=", data.collection_key)
 		.where("slug", "=", slugValue)
 		.where("is_deleted", "=", false);

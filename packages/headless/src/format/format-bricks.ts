@@ -10,7 +10,7 @@ import type { MediaTypeT } from "@headless/types/src/media.js";
 import type { JsonValue } from "kysely-codegen";
 import { type BrickBuilderT } from "../builders/brick-builder/index.js";
 import { createURL } from "./format-media.js";
-import { formatPageFullSlug } from "./format-multiple-page.js";
+import { formatPageFullSlug } from "./format-multiple-builder.js";
 
 export interface BrickQueryT {
 	id: number;

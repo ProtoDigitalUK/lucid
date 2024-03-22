@@ -2,18 +2,16 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
 
 export interface ServiceData {
-	ids: number[];
+	id: number;
 	user_id?: number;
 }
 
-const deleteMultiple = async (
+const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.ids.length === 0) return;
-
-	const deletePages = await serviceConfig.db
-		.updateTable("headless_collection_multiple_page")
+	const deletePage = await serviceConfig.db
+		.updateTable("headless_collection_multiple_builder")
 		.set({
 			is_deleted: true,
 			is_deleted_at: new Date(),
@@ -21,11 +19,11 @@ const deleteMultiple = async (
 			full_slug: null,
 			deleted_by: data.user_id,
 		})
-		.where("id", "in", data.ids)
+		.where("id", "=", data.id)
 		.returning("id")
-		.execute();
+		.executeTakeFirst();
 
-	if (deletePages.length === 0) {
+	if (deletePage === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_deleted_name", {
@@ -39,4 +37,4 @@ const deleteMultiple = async (
 	}
 };
 
-export default deleteMultiple;
+export default deleteSingle;

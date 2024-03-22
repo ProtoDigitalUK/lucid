@@ -1,18 +1,18 @@
-import multiplePageSchema from "../../schemas/multiple-page.js";
+import multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import multiplePageServices from "../../services/multiple-page/index.js";
+import multipleBuilderServices from "../../services/multiple-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import { swaggerBodyBricksObj } from "../../schemas/bricks.js";
 
 const updateSingleController: ControllerT<
-	typeof multiplePageSchema.updateSingle.params,
-	typeof multiplePageSchema.updateSingle.body,
-	typeof multiplePageSchema.updateSingle.query
+	typeof multipleBuilderSchema.updateSingle.params,
+	typeof multipleBuilderSchema.updateSingle.body,
+	typeof multipleBuilderSchema.updateSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(multiplePageServices.updateSingle, true)(
+	await serviceWrapper(multipleBuilderServices.updateSingle, true)(
 		{
 			db: request.server.db,
 		},
@@ -35,11 +35,11 @@ const updateSingleController: ControllerT<
 
 export default {
 	controller: updateSingleController,
-	zodSchema: multiplePageSchema.updateSingle,
+	zodSchema: multipleBuilderSchema.updateSingle,
 	swaggerSchema: {
 		description:
-			"Update a single page from the multiple-page collection type.",
-		tags: ["collection-multiple-page"],
+			"Update a single page from the multiple-builder collection type.",
+		tags: ["collection-multiple-builder"],
 		summary: "Update a single page",
 		response: {
 			204: swaggerResponse({

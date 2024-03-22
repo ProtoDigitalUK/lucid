@@ -38,9 +38,9 @@ const getMultiple = async (
 			jsonArrayFrom(
 				eb
 					.selectFrom("headless_collection_fields")
-					.leftJoin("headless_collection_multiple_page", (join) =>
+					.leftJoin("headless_collection_multiple_builder", (join) =>
 						join.onRef(
-							"headless_collection_multiple_page.id",
+							"headless_collection_multiple_builder.id",
 							"=",
 							"headless_collection_fields.page_link_id",
 						),
@@ -66,9 +66,9 @@ const getMultiple = async (
 						"headless_collection_fields.page_link_id",
 						"headless_collection_fields.media_id",
 						// Page fields
-						"headless_collection_multiple_page.id as page_id",
-						"headless_collection_multiple_page.slug as page_slug",
-						"headless_collection_multiple_page.full_slug as page_full_slug",
+						"headless_collection_multiple_builder.id as page_id",
+						"headless_collection_multiple_builder.slug as page_slug",
+						"headless_collection_multiple_builder.full_slug as page_full_slug",
 						jsonArrayFrom(
 							eb
 								.selectFrom("headless_translations")
@@ -84,7 +84,7 @@ const getMultiple = async (
 								.whereRef(
 									"headless_translations.translation_key_id",
 									"=",
-									"headless_collection_multiple_page.title_translation_key_id",
+									"headless_collection_multiple_builder.title_translation_key_id",
 								),
 						).as("page_title_translations"),
 						// Media fields

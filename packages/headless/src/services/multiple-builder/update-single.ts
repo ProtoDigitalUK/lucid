@@ -3,9 +3,9 @@ import { APIError, modelErrors } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "../collection-bricks/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
-import multiplePageServices from "./index.js";
+import multipleBuilderServices from "./index.js";
 import translationsServices from "../translations/index.js";
-import multiplePageCategoriesServices from "../multiple-page-categories/index.js";
+import multipleBuilderCategoriesServices from "../multiple-builder-categories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -33,7 +33,7 @@ const updateSingle = async (
 	// ---------------------------------------
 	// Data
 	const page = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
+		.selectFrom("headless_collection_multiple_builder")
 		.select([
 			"id",
 			"collection_key",
@@ -88,7 +88,7 @@ const updateSingle = async (
 	}
 
 	const [parentId, slug] = await Promise.all([
-		serviceWrapper(multiplePageServices.checks.checkParent, false)(
+		serviceWrapper(multipleBuilderServices.checks.checkParent, false)(
 			serviceConfig,
 			{
 				current_id: data.id,
@@ -97,7 +97,7 @@ const updateSingle = async (
 				homepage: homepage,
 			},
 		),
-		serviceWrapper(multiplePageServices.checks.checkSlugIsUnique, false)(
+		serviceWrapper(multipleBuilderServices.checks.checkSlugIsUnique, false)(
 			serviceConfig,
 			{
 				collection_key: page.collection_key,
@@ -106,14 +106,14 @@ const updateSingle = async (
 				page_id: data.id,
 			},
 		),
-		serviceWrapper(multiplePageServices.checks.checkParentAncestry, false)(
-			serviceConfig,
-			{
-				page_id: data.id,
-				parent_id: data.parent_id,
-			},
-		),
-		serviceWrapper(multiplePageServices.checks.checkCollection, false)(
+		serviceWrapper(
+			multipleBuilderServices.checks.checkParentAncestry,
+			false,
+		)(serviceConfig, {
+			page_id: data.id,
+			parent_id: data.parent_id,
+		}),
+		serviceWrapper(multipleBuilderServices.checks.checkCollection, false)(
 			serviceConfig,
 			{
 				collection_key: page.collection_key,
@@ -122,7 +122,8 @@ const updateSingle = async (
 			},
 		),
 		serviceWrapper(
-			multiplePageCategoriesServices.checks.checkCategoriesInCollection,
+			multipleBuilderCategoriesServices.checks
+				.checkCategoriesInCollection,
 			false,
 		)(serviceConfig, {
 			category_ids: data.category_ids || [],
@@ -134,7 +135,7 @@ const updateSingle = async (
 	// Updates
 	const [pageRes] = await Promise.all([
 		serviceConfig.db
-			.updateTable("headless_collection_multiple_page")
+			.updateTable("headless_collection_multiple_builder")
 			.set({
 				slug: slug,
 				homepage: homepage,
@@ -176,7 +177,7 @@ const updateSingle = async (
 				collection_key: page.collection_key,
 			},
 		),
-		serviceWrapper(multiplePageCategoriesServices.upsertMultiple, false)(
+		serviceWrapper(multipleBuilderCategoriesServices.upsertMultiple, false)(
 			serviceConfig,
 			{
 				page_id: data.id,
@@ -184,7 +185,7 @@ const updateSingle = async (
 			},
 		),
 		homepage === true
-			? serviceWrapper(multiplePageServices.resetHomepages, false)(
+			? serviceWrapper(multipleBuilderServices.resetHomepages, false)(
 					serviceConfig,
 					{
 						collection_key: page.collection_key,

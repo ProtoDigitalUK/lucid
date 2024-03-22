@@ -1,21 +1,21 @@
-import multiplePageSchema from "../../schemas/multiple-page.js";
+import multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import {
 	swaggerResponse,
 	swaggerQueryString,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import multiplePageServices from "../../services/multiple-page/index.js";
+import multipleBuilderServices from "../../services/multiple-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
-import { swaggerMultiplePageRes } from "../../format/format-multiple-page.js";
+import { swaggerMultipleBuilderRes } from "../../format/format-multiple-builder.js";
 
 const getMultipleValidParentsController: ControllerT<
-	typeof multiplePageSchema.getMultipleValidParents.params,
-	typeof multiplePageSchema.getMultipleValidParents.body,
-	typeof multiplePageSchema.getMultipleValidParents.query
+	typeof multipleBuilderSchema.getMultipleValidParents.params,
+	typeof multipleBuilderSchema.getMultipleValidParents.body,
+	typeof multipleBuilderSchema.getMultipleValidParents.query
 > = async (request, reply) => {
 	const pages = await serviceWrapper(
-		multiplePageServices.getMultipleValidParents,
+		multipleBuilderServices.getMultipleValidParents,
 		false,
 	)(
 		{
@@ -42,18 +42,18 @@ const getMultipleValidParentsController: ControllerT<
 
 export default {
 	controller: getMultipleValidParentsController,
-	zodSchema: multiplePageSchema.getMultipleValidParents,
+	zodSchema: multipleBuilderSchema.getMultipleValidParents,
 	swaggerSchema: {
 		description:
-			"Get a multiple valid multiple-page parent entries. A valid parent is a page that isnt a descendant of the current page.",
-		tags: ["collection-multiple-page"],
-		summary: "Get a multiple valid multiple-page parent entries.",
+			"Get a multiple valid multiple-builder parent entries. A valid parent is a page that isnt a descendant of the current page.",
+		tags: ["collection-multiple-builder"],
+		summary: "Get a multiple valid multiple-builder parent entries.",
 		response: {
 			200: swaggerResponse({
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerMultiplePageRes,
+					items: swaggerMultipleBuilderRes,
 				},
 				paginated: true,
 			}),

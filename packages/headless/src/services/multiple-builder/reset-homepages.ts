@@ -30,14 +30,14 @@ const resetHomepages = async (
 
 	const [homepages] = await Promise.all([
 		serviceConfig.db
-			.selectFrom("headless_collection_multiple_page")
-			.select(["headless_collection_multiple_page.id"])
+			.selectFrom("headless_collection_multiple_builder")
+			.select(["headless_collection_multiple_builder.id"])
 			.leftJoin("headless_translations as title_translations", (join) =>
 				join
 					.onRef(
 						"title_translations.translation_key_id",
 						"=",
-						"headless_collection_multiple_page.title_translation_key_id",
+						"headless_collection_multiple_builder.title_translation_key_id",
 					)
 					.on(
 						"title_translations.language_id",
@@ -47,24 +47,24 @@ const resetHomepages = async (
 			)
 			.select(["title_translations.value as title_translation_value"])
 			.groupBy([
-				"headless_collection_multiple_page.id",
+				"headless_collection_multiple_builder.id",
 				"title_translations.value",
 			])
 			.where(
-				"headless_collection_multiple_page.collection_key",
+				"headless_collection_multiple_builder.collection_key",
 				"=",
 				data.collection_key,
 			)
-			.where("headless_collection_multiple_page.homepage", "=", true)
+			.where("headless_collection_multiple_builder.homepage", "=", true)
 			.where(
-				"headless_collection_multiple_page.id",
+				"headless_collection_multiple_builder.id",
 				"!=",
 				data.exclude_id,
 			)
 			.execute(),
 		data.page_id !== undefined
 			? serviceConfig.db
-					.updateTable("headless_collection_multiple_page")
+					.updateTable("headless_collection_multiple_builder")
 					.where("parent_id", "=", data.page_id)
 					.set({
 						parent_id: null,
@@ -96,7 +96,7 @@ const resetHomepages = async (
 	await Promise.all(
 		newHomepageData.map((homepage) => {
 			return serviceConfig.db
-				.updateTable("headless_collection_multiple_page")
+				.updateTable("headless_collection_multiple_builder")
 				.set({
 					slug: homepage.slug,
 					homepage: false,

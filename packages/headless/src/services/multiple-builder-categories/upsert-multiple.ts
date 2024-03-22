@@ -12,7 +12,7 @@ const upsertMultiple = async (
 	}
 
 	const categories = await serviceConfig.db
-		.insertInto("headless_collection_multiple_page_categories")
+		.insertInto("headless_collection_multiple_builder_categories")
 		.values(
 			data.category_ids.map((category_id) => ({
 				collection_multiple_page_id: data.page_id,
@@ -30,7 +30,7 @@ const upsertMultiple = async (
 	if (categories.length === 0) return;
 
 	await serviceConfig.db
-		.deleteFrom("headless_collection_multiple_page_categories")
+		.deleteFrom("headless_collection_multiple_builder_categories")
 		.where("collection_multiple_page_id", "=", data.page_id)
 		.where("category_id", "not in", data.category_ids)
 		.execute();

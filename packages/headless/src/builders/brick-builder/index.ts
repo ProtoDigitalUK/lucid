@@ -409,6 +409,11 @@ export default class BrickBuilder {
 					break;
 				}
 				case "media": {
+					if (value === null) {
+						throw new ValidationError(
+							"Please ensure the media exists.",
+						);
+					}
 					this.#validateMediaType(
 						field,
 						referenceData as MediaReferenceData,
@@ -433,6 +438,12 @@ export default class BrickBuilder {
 					break;
 				}
 				case "pagelink": {
+					const id = (value as { id: number | null }).id;
+					if (id === null) {
+						throw new ValidationError(
+							"Please ensure the page exists.",
+						);
+					}
 					this.#validateLinkTarget(
 						referenceData as LinkReferenceData,
 					);

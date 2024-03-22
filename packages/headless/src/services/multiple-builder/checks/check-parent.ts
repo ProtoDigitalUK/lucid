@@ -44,7 +44,7 @@ const checkParent = async (
 	}
 
 	const pagePage = await serviceConfig.db
-		.selectFrom("headless_collection_multiple_page")
+		.selectFrom("headless_collection_multiple_builder")
 		.select(["homepage"])
 		.where("id", "=", data.parent_id)
 		.where("collection_key", "=", data.collection_key)

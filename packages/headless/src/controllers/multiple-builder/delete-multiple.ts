@@ -1,17 +1,17 @@
-import multiplePageSchema from "../../schemas/multiple-page.js";
+import multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger/response-helpers.js";
-import multiplePageServices from "../../services/multiple-page/index.js";
+import multipleBuilderServices from "../../services/multiple-builder/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 const deleteMultipleController: ControllerT<
-	typeof multiplePageSchema.deleteMultiple.params,
-	typeof multiplePageSchema.deleteMultiple.body,
-	typeof multiplePageSchema.deleteMultiple.query
+	typeof multipleBuilderSchema.deleteMultiple.params,
+	typeof multipleBuilderSchema.deleteMultiple.body,
+	typeof multipleBuilderSchema.deleteMultiple.query
 > = async (request, reply) => {
-	await serviceWrapper(multiplePageServices.deleteMultiple, true)(
+	await serviceWrapper(multipleBuilderServices.deleteMultiple, true)(
 		{
 			db: request.server.db,
 		},
@@ -26,12 +26,12 @@ const deleteMultipleController: ControllerT<
 
 export default {
 	controller: deleteMultipleController,
-	zodSchema: multiplePageSchema.deleteMultiple,
+	zodSchema: multipleBuilderSchema.deleteMultiple,
 	swaggerSchema: {
 		description:
-			"Delete a multiple pages from the multiple-page collection type.",
-		tags: ["collection-multiple-page"],
-		summary: "Delete multiple pages",
+			"Delete a multiple pages from the multiple-builder collection type.",
+		tags: ["collection-multiple-builder"],
+		summary: "Delete multiple builder pages.",
 		response: {
 			204: swaggerResponse({
 				type: 204,
