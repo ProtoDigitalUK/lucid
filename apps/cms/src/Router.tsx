@@ -30,9 +30,9 @@ import SettingsListRoute from "@/routes/Settings/List";
 import EmailListRoute from "@/routes/Emails/List";
 
 // collections
-import CollectionsMultiplePageListRoute from "@/routes/Collections/MultiplePage/List";
-import CollectionsMultiplePagesEditRoute from "@/routes/Collections/MultiplePage/Edit";
-import CollectionsSinglePageEditRoute from "./routes/Collections/SinglePage/Edit";
+import CollectionsMultipleBuildereListRoute from "@/routes/Collections/MultipleBuilder/List";
+import CollectionsMultipleBuilderEditRoute from "@/routes/Collections/MultipleBuilder/Edit";
+import CollectionsSingleBuilderEditRoute from "./routes/Collections/SingleBuilder/Edit";
 
 const AppRouter: Component = () => {
 	return (
@@ -44,16 +44,16 @@ const AppRouter: Component = () => {
 					<Route path="/test" element={<TestRoute />} />
 					{/* Collections */}
 					<Route
-						path="/collection/:collectionKey/multiple"
-						element={<CollectionsMultiplePageListRoute />}
+						path="/collection/:collectionKey/multiple-builder"
+						element={<CollectionsMultipleBuildereListRoute />}
 					/>
 					<Route
-						path="/collection/:collectionKey/multiple/:id"
-						element={<CollectionsMultiplePagesEditRoute />}
+						path="/collection/:collectionKey/multiple-builder/:id"
+						element={<CollectionsMultipleBuilderEditRoute />}
 					/>
 					<Route
-						path={"/collection/:collectionKey/single"}
-						element={<CollectionsSinglePageEditRoute />}
+						path={"/collection/:collectionKey/single-builder"}
+						element={<CollectionsSingleBuilderEditRoute />}
 					/>
 					{/* Media */}
 					<Route path="/media" element={<MediaListRoute />} />

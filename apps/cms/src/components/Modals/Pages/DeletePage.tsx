@@ -22,7 +22,7 @@ interface DeletePageProps {
 const DeletePage: Component<DeletePageProps> = (props) => {
 	// ----------------------------------------
 	// Mutations
-	const deletePage = api.collections.multiplePages.useDeleteSingle({
+	const deletePage = api.collections.multipleBuilder.useDeleteSingle({
 		onSuccess: () => {
 			props.state.setOpen(false);
 			if (props.callbacks?.onSuccess) props.callbacks.onSuccess();

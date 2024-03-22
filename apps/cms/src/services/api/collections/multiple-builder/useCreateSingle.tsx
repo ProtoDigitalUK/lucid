@@ -26,7 +26,7 @@ interface Params {
 
 export const createSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: "/api/v1/collections/multiple-page",
+		url: "/api/v1/collections/multiple-builder",
 		csrf: true,
 		config: {
 			method: "POST",
@@ -57,7 +57,7 @@ const useCreateSingle = (props: UseCreateSingleProps) => {
 				},
 			}),
 		},
-		invalidates: ["collections.multiplePages.getMultiple"],
+		invalidates: ["collections.multipleBuilder.getMultiple"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});

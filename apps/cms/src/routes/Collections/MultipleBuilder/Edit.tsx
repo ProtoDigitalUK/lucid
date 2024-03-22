@@ -34,7 +34,7 @@ import NavigationGuard, {
 import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 
-const CollectionsMultiplePagesEditRoute: Component = () => {
+const CollectionsMultipleBuilderEditRoute: Component = () => {
 	// ------------------------------
 	// Hooks
 	const params = useParams();
@@ -88,7 +88,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 		},
 		enabled: () => !!collectionKey(),
 	});
-	const page = api.collections.multiplePages.useGetSingle({
+	const page = api.collections.multipleBuilder.useGetSingle({
 		queryParams: {
 			location: {
 				id: pageId(),
@@ -113,7 +113,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Mutations
-	const updatePage = api.collections.multiplePages.useUpdateSingle({
+	const updatePage = api.collections.multipleBuilder.useUpdateSingle({
 		onSuccess: () => {
 			builderStore.set("fieldsErrors", []);
 		},
@@ -387,7 +387,7 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 						callbacks={{
 							onSuccess: () => {
 								navigate(
-									`/collection/${collection.data?.data.key}/multiple`,
+									`/collection/${collection.data?.data.key}/multiple-builder`,
 								);
 							},
 						}}
@@ -410,4 +410,4 @@ const CollectionsMultiplePagesEditRoute: Component = () => {
 	);
 };
 
-export default CollectionsMultiplePagesEditRoute;
+export default CollectionsMultipleBuilderEditRoute;

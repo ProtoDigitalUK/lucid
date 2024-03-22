@@ -148,7 +148,7 @@ const validateBrickData = async (data: {
 							target: value?.target,
 							label: value?.label,
 						} satisfies LinkReferenceData;
-					} else {
+					} else if (field.value) {
 						field.value.id = null;
 					}
 					break;
@@ -162,7 +162,7 @@ const validateBrickData = async (data: {
 							height: media.height,
 							type: media.type,
 						} satisfies MediaReferenceData;
-					} else {
+					} else if (field.value) {
 						field.value = null;
 					}
 					break;

@@ -11,7 +11,7 @@ interface Params {
 
 export const deleteSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/collections/multiple-page/${params.id}`,
+		url: `/api/v1/collections/multiple-builder/${params.id}`,
 		csrf: true,
 		config: {
 			method: "DELETE",
@@ -41,7 +41,7 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 				},
 			}),
 		},
-		invalidates: ["collections.multiplePages.getMultiple"],
+		invalidates: ["collections.multipleBuilder.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,
 	});

@@ -29,21 +29,23 @@ const ValidParentPageSearchSelect: Component<ValidParentPageSearchSelectProps> =
 
 		// ----------------------------------
 		// Queries
-		const validParents = api.collections.multiplePages.useGetValidParents({
-			queryParams: {
-				location: {
-					id: props?.pageId,
+		const validParents = api.collections.multipleBuilder.useGetValidParents(
+			{
+				queryParams: {
+					location: {
+						id: props?.pageId,
+					},
+					filters: {
+						collection_key: props.collectionKey,
+						title: getSearchQuery,
+					},
+					headers: {
+						"headless-content-lang": language,
+					},
+					perPage: 10,
 				},
-				filters: {
-					collection_key: props.collectionKey,
-					title: getSearchQuery,
-				},
-				headers: {
-					"headless-content-lang": language,
-				},
-				perPage: 10,
 			},
-		});
+		);
 
 		// ----------------------------------
 		// Render

@@ -29,7 +29,7 @@ interface Params {
 
 export const updateSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/collections/multiple-page/${params.id}`,
+		url: `/api/v1/collections/multiple-builder/${params.id}`,
 		csrf: true,
 		config: {
 			method: "PATCH",
@@ -61,8 +61,8 @@ const useUpdateSingle = (props: UseUpdateSingleProps) => {
 			}),
 		},
 		invalidates: [
-			"collections.multiplePages.getMultiple",
-			"collections.multiplePages.getSingle",
+			"collections.multipleBuilder.getMultiple",
+			"collections.multipleBuilder.getSingle",
 		],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,

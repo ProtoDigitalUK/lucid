@@ -9,11 +9,12 @@ import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
+	location: {
+		id?: Accessor<number | undefined> | number;
+	};
 	filters?: {
 		collection_key?: Accessor<string | undefined> | string;
 		title?: Accessor<string | undefined> | string;
-		slug?: Accessor<string | undefined> | string;
-		category_id?: Accessor<string[] | undefined> | string[];
 	};
 	headers: {
 		"headless-content-lang": Accessor<number | undefined> | number;
@@ -21,7 +22,7 @@ interface QueryParams {
 	perPage?: Accessor<number> | number;
 }
 
-const useGetMultiple = (params: QueryHook<QueryParams>) => {
+const useGetValidParents = (params: QueryHook<QueryParams>) => {
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
 	);
@@ -33,13 +34,15 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"collections.multiplePages.getMultiple",
+			"collections.multipleBuilder.getMultiple",
 			queryKey(),
 			params.key?.(),
 		],
 		queryFn: () =>
 			request<APIResponse<MultipleBuilderResT[]>>({
-				url: "/api/v1/collections/multiple-page",
+				url: `/api/v1/collections/multiple-builder/${
+					queryParams().location?.id
+				}/valid-parents`,
 				query: queryParams(),
 				config: {
 					method: "GET",
@@ -52,4 +55,4 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	}));
 };
 
-export default useGetMultiple;
+export default useGetValidParents;

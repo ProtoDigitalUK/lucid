@@ -52,7 +52,7 @@ export const NavigationSidebar: Component = () => {
 						title={T("home")}
 					/>
 					<Navigation.IconLink
-						href="/collection/pages/multiple" // TODO: update so collectionKey is dynamic - first collection?
+						href="/collection/page/multiple-builder" // TODO: update so collectionKey is dynamic - first collection?
 						icon="collection"
 						title={T("collections")}
 					/>

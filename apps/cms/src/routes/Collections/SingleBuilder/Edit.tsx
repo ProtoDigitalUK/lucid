@@ -26,7 +26,7 @@ import NavigationGuard, {
 import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 
-const CollectionsSinglePageEditRoute: Component = () => {
+const CollectionsSingleBuilderEditRoute: Component = () => {
 	// ------------------------------
 	// Hooks
 	const params = useParams();
@@ -46,7 +46,7 @@ const CollectionsSinglePageEditRoute: Component = () => {
 		},
 		enabled: () => !!collectionKey(),
 	});
-	const singlePage = api.collections.singlePages.useGetSingle({
+	const singleBuilder = api.collections.singleBuilder.useGetSingle({
 		queryParams: {
 			location: {
 				collection_key: collectionKey,
@@ -68,7 +68,7 @@ const CollectionsSinglePageEditRoute: Component = () => {
 
 	// ----------------------------------
 	// Mutations
-	const updateSinglePage = api.collections.singlePages.useUpdateSingle({
+	const updateSingleBuilder = api.collections.singleBuilder.useUpdateSingle({
 		onSuccess: () => {
 			builderStore.set("fieldsErrors", []);
 		},
@@ -90,22 +90,22 @@ const CollectionsSinglePageEditRoute: Component = () => {
 	const isLoading = createMemo(() => {
 		return (
 			collection.isLoading ||
-			singlePage.isLoading ||
+			singleBuilder.isLoading ||
 			brickConfig.isLoading
 		);
 	});
 	const isSuccess = createMemo(() => {
 		return (
 			collection.isSuccess &&
-			singlePage.isSuccess &&
+			singleBuilder.isSuccess &&
 			brickConfig.isSuccess
 		);
 	});
 	const isSaving = createMemo(() => {
-		return updateSinglePage.action.isPending;
+		return updateSingleBuilder.action.isPending;
 	});
 	const mutateErrors = createMemo(() => {
-		return updateSinglePage.errors();
+		return updateSingleBuilder.errors();
 	});
 
 	const brickTranslationErrors = createMemo(() => {
@@ -126,8 +126,8 @@ const CollectionsSinglePageEditRoute: Component = () => {
 
 	// ---------------------------------
 	// Functions
-	const savePage = async () => {
-		updateSinglePage.action.mutate({
+	const saveBuilder = async () => {
+		updateSingleBuilder.action.mutate({
 			collection_key: collectionKey(),
 			body: {
 				bricks: builderStore.get.bricks,
@@ -140,7 +140,7 @@ const CollectionsSinglePageEditRoute: Component = () => {
 	createEffect(() => {
 		if (isSuccess()) {
 			builderStore.get.reset();
-			builderStore.set("bricks", singlePage.data?.data.bricks || []);
+			builderStore.set("bricks", singleBuilder.data?.data.bricks || []);
 			builderStore.get.addMissingFixedBricks(
 				collection.data?.data.bricks || [],
 			);
@@ -174,7 +174,7 @@ const CollectionsSinglePageEditRoute: Component = () => {
 						type="button"
 						theme="primary"
 						size="small"
-						onClick={savePage}
+						onClick={saveBuilder}
 					>
 						{T("save", {
 							singular: collection.data?.data.singular || "",
@@ -252,4 +252,4 @@ const CollectionsSinglePageEditRoute: Component = () => {
 	);
 };
 
-export default CollectionsSinglePageEditRoute;
+export default CollectionsSingleBuilderEditRoute;

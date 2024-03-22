@@ -73,7 +73,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 		},
 	});
 
-	const page = api.collections.multiplePages.useGetSingle({
+	const page = api.collections.multipleBuilder.useGetSingle({
 		queryParams: {
 			location: {
 				id: props?.id,
@@ -87,14 +87,14 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
 	// ---------------------------------
 	// Mutations
-	const createPage = api.collections.multiplePages.useCreateSingle({
+	const createPage = api.collections.multipleBuilder.useCreateSingle({
 		onSuccess: () => {
 			props.state.setOpen(false);
 		},
 		collectionName: props.collection.singular,
 	});
 
-	const updatePage = api.collections.multiplePages.useUpdateSingle({
+	const updatePage = api.collections.multipleBuilder.useUpdateSingle({
 		onSuccess: () => {
 			props.state.setOpen(false);
 		},

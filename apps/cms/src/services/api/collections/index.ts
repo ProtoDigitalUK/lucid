@@ -1,14 +1,14 @@
 import categories from "./categories";
-import singlePages from "./single-pages";
-import multiplePages from "./multiple-pages";
+import singleBuilder from "./single-builder";
+import multipleBuilder from "./multiple-builder";
 
 import useGetAll from "./useGetAll";
 import useGetSingle from "./useGetSingle";
 
 const exportObject = {
 	categories,
-	multiplePages,
-	singlePages,
+	multipleBuilder,
+	singleBuilder,
 	useGetAll,
 	useGetSingle,
 };

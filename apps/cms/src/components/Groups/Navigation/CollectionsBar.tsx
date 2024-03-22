@@ -31,14 +31,16 @@ export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 		}
 		return false;
 	});
-	const multiplePageCollections = createMemo(() => {
+	const multipleBuilderCollections = createMemo(() => {
 		return props.collections.filter(
-			(collection) => collection.type === "multiple-page",
+			(collection) =>
+				collection.type === "builder" && collection.multiple === true,
 		);
 	});
-	const singlePagesCollections = createMemo(() => {
+	const singleBuilderCollections = createMemo(() => {
 		return props.collections.filter(
-			(collection) => collection.type === "single-page",
+			(collection) =>
+				collection.type === "builder" && collection.multiple === false,
 		);
 	});
 
@@ -62,15 +64,17 @@ export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 						<Match when={props.state.isError}>error</Match>
 						<Match when={true}>
 							{/* Multi Collections */}
-							<Show when={multiplePageCollections().length > 0}>
+							<Show
+								when={multipleBuilderCollections().length > 0}
+							>
 								<Navigation.LinkGroup
-									title={T("multi_collections")}
+									title={T("multi_builder_collections")}
 								>
-									<For each={multiplePageCollections()}>
+									<For each={multipleBuilderCollections()}>
 										{(collection) => (
 											<Navigation.Link
 												title={collection.title}
-												href={`/collection/${collection.key}/multiple`}
+												href={`/collection/${collection.key}/multiple-builder`}
 												icon="page"
 											/>
 										)}
@@ -78,15 +82,15 @@ export const CollectionsBar: Component<CollectionsBarProps> = (props) => {
 								</Navigation.LinkGroup>
 							</Show>
 							{/* Single Collections */}
-							<Show when={singlePagesCollections().length > 0}>
+							<Show when={singleBuilderCollections().length > 0}>
 								<Navigation.LinkGroup
-									title={T("single_collections")}
+									title={T("single_builder_collections")}
 								>
-									<For each={singlePagesCollections()}>
+									<For each={singleBuilderCollections()}>
 										{(collection) => (
 											<Navigation.Link
 												title={collection.title}
-												href={`/${collection.key}/single`}
+												href={`/collection/${collection.key}/single-builder`}
 												icon="page"
 											/>
 										)}

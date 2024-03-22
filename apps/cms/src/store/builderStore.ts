@@ -3,7 +3,7 @@ import shortUUID from "short-uuid";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Types
-import type { FieldTypes } from "@headless/types/src/multiple-page";
+import type { FieldTypes } from "@headless/types/src/multiple-builder";
 import type {
 	BrickFieldValueT,
 	CustomFieldT,

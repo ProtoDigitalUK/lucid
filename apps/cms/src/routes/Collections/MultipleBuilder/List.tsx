@@ -15,7 +15,7 @@ import Query from "@/components/Groups/Query";
 import PagesTable from "@/components/Tables/PagesTable";
 import CreateUpdatePagePanel from "@/components/Panels/Pages/CreateUpdatePagePanel";
 
-const CollectionsMultiplePageListRoute: Component = () => {
+const CollectionsMultipleBuilderListRoute: Component = () => {
 	// ----------------------------------
 	// State & Hooks
 	const params = useParams();
@@ -158,4 +158,4 @@ const CollectionsMultiplePageListRoute: Component = () => {
 	);
 };
 
-export default CollectionsMultiplePageListRoute;
+export default CollectionsMultipleBuilderListRoute;

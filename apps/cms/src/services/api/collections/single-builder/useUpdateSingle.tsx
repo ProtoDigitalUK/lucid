@@ -15,7 +15,7 @@ interface Params {
 
 export const updateSingleReq = (params: Params) => {
 	return request<APIResponse<null>>({
-		url: `/api/v1/single-page/${params.collection_key}`,
+		url: `/api/v1/collections/single-builder/${params.collection_key}`,
 		csrf: true,
 		config: {
 			method: "PATCH",
@@ -46,7 +46,7 @@ const useUpdateSingle = (props: UseUpdateSingleProps) => {
 				},
 			}),
 		},
-		invalidates: ["collections.singlePages.getSingle"],
+		invalidates: ["collections.singleBuilder.getSingle"],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});

@@ -44,7 +44,7 @@ const PageRow: Component<PageRowProps> = (props) => {
 				{
 					label: T("edit"),
 					type: "link",
-					href: `/collection/${props.collection.key}/multiple/${props.page.id}`,
+					href: `/collection/${props.collection.key}/multiple-builder/${props.page.id}`,
 					permission: userStore.get.hasPermission(["update_content"])
 						.all,
 				},

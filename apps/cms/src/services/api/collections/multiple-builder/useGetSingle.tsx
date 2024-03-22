@@ -5,11 +5,14 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { APIResponse } from "@/types/api";
-import type { SingleBuilderResT } from "@headless/types/src/multiple-builder";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 
 interface QueryParams {
 	location: {
-		collection_key?: Accessor<string | undefined> | string;
+		id?: Accessor<number | undefined> | number;
+	};
+	include: {
+		bricks: Accessor<boolean | undefined> | boolean;
 	};
 }
 
@@ -25,14 +28,14 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"collections.singlePages.getSingle",
+			"collections.multipleBuilder.getSingle",
 			queryKey(),
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<APIResponse<SingleBuilderResT>>({
-				url: `/api/v1/single-page/${
-					queryParams().location?.collection_key
+			request<APIResponse<MultipleBuilderResT>>({
+				url: `/api/v1/collections/multiple-builder/${
+					queryParams().location?.id
 				}`,
 				query: queryParams(),
 				config: {

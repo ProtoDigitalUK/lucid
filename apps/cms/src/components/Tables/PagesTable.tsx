@@ -47,7 +47,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 
 	// ----------------------------------
 	// Queries
-	const pages = api.collections.multiplePages.useGetMultiple({
+	const pages = api.collections.multipleBuilder.useGetMultiple({
 		queryParams: {
 			queryString: props.searchParams.getQueryString,
 			filters: {
@@ -62,18 +62,17 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 
 	// ----------------------------------
 	// Mutations
-	const deleteMultiplePages = api.collections.multiplePages.useDeleteMultiple(
-		{
+	const deleteMultipleBuilders =
+		api.collections.multipleBuilder.useDeleteMultiple({
 			collectionName: props.collection.singular,
-		},
-	);
+		});
 
 	// ----------------------------------
 	// Render
 	return (
 		<>
 			<Table.Root
-				key={`collections.multiplePages.list.${props.collection.key}`}
+				key={`collections.multipleBuilder.list.${props.collection.key}`}
 				rows={pages.data?.data.length || 0}
 				meta={pages.data?.meta}
 				searchParams={props.searchParams}
@@ -121,7 +120,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 								ids.push(pages.data?.data[i].id);
 							}
 						}
-						await deleteMultiplePages.action.mutateAsync({
+						await deleteMultipleBuilders.action.mutateAsync({
 							body: {
 								ids: ids,
 							},
