@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
-import { type MultipartFile } from "@fastify/multipart";
+import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/app/service-wrapper.js";
 import mediaHelpers from "../../../utils/media/helpers.js";
 import mediaServices from "../index.js";

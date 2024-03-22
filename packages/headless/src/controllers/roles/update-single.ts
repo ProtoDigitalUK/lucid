@@ -16,7 +16,7 @@ const updateSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			id: parseInt(request.params.id),
+			id: Number.parseInt(request.params.id),
 			name: request.body.name,
 			description: request.body.description,
 			permissions: request.body.permissions,

@@ -1,6 +1,6 @@
-import z from "zod";
+import type z from "zod";
 import formatMedia from "../../format/format-media.js";
-import mediaSchema from "../../schemas/media.js";
+import type mediaSchema from "../../schemas/media.js";
 import { parseCount } from "../../utils/app/helpers.js";
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";

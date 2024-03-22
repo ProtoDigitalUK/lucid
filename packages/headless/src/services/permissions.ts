@@ -1,4 +1,4 @@
-import { PermissionGroup } from "@headless/types/src/permissions.js";
+import type { PermissionGroup } from "@headless/types/src/permissions.js";
 import formatPermissions from "../format/format-permissions.js";
 
 export const permissionGroups: Record<string, PermissionGroup> = {
@@ -34,14 +34,6 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 			"delete_content",
 			"publish_content",
 			"unpublish_content",
-		],
-	},
-	collections: {
-		key: "collections_permissions",
-		permissions: [
-			"create_collection",
-			"update_collection",
-			"delete_collection",
 		],
 	},
 	category: {

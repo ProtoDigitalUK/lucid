@@ -21,7 +21,7 @@ const updateSingle = async (
 					{
 						permissions: data.permissions,
 					},
-			  )
+				)
 			: undefined,
 		data.name !== undefined
 			? serviceConfig.db

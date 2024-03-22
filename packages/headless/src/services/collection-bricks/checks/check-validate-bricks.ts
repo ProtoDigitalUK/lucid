@@ -5,23 +5,24 @@ import {
 	type FieldErrorsT,
 } from "../../../utils/app/error-handler.js";
 import getConfig from "../../config.js";
-import serviceWrapper from "../../../utils/app/service-wrapper.js";
 import collectionsServices from "../../collections/index.js";
-import BrickBuilder, {
-	type ValidationProps,
-	type MediaReferenceData,
-	type LinkReferenceData,
-	type FieldTypes,
+import type {
+	ValidationProps,
+	MediaReferenceData,
+	LinkReferenceData,
+	FieldTypes,
 } from "../../../builders/brick-builder/index.js";
+import type BrickBuilder from "../../../builders/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
 import type {
 	BrickObjectT,
 	BrickFieldObjectT,
 } from "../../../schemas/bricks.js";
+import type { CollectionDataT } from "../../../builders/collection-builder/index.js";
 
 export interface ServiceData {
-	type: "multiple-page" | "single-page";
+	type: CollectionDataT["type"];
 	bricks: Array<BrickObjectT>;
 	collection_key: string;
 }
@@ -38,7 +39,7 @@ const validateBricks = async (
 		}) || [];
 
 	const [collection, media, pages] = await Promise.all([
-		serviceWrapper(collectionsServices.getSingle, false)(serviceConfig, {
+		collectionsServices.getSingle({
 			key: data.collection_key,
 			type: data.type,
 		}),
@@ -148,6 +149,8 @@ const validateBrickData = async (data: {
 							target: value?.target,
 							label: value?.label,
 						} satisfies LinkReferenceData;
+					} else if (field.value) {
+						field.value.id = null;
 					}
 					break;
 				}
@@ -160,6 +163,8 @@ const validateBrickData = async (data: {
 							height: media.height,
 							type: media.type,
 						} satisfies MediaReferenceData;
+					} else if (field.value) {
+						field.value = null;
 					}
 					break;
 				}
@@ -229,7 +234,7 @@ const getAllPages = async (
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");
 		if (ids.length === 0) return [];
 		return await serviceConfig.db
-			.selectFrom("headless_collection_multiple_page")
+			.selectFrom("headless_collection_multiple_builder")
 			.select("id")
 			.where("id", "in", ids)
 			.execute();

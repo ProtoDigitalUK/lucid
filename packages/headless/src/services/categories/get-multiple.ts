@@ -1,5 +1,5 @@
-import z from "zod";
-import categoriesSchema from "../../schemas/categories.js";
+import type z from "zod";
+import type categoriesSchema from "../../schemas/categories.js";
 import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/app/helpers.js";

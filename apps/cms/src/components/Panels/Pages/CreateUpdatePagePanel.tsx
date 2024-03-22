@@ -15,7 +15,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { CollectionResT } from "@headless/types/src/collections";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { PagesResT } from "@headless/types/src/multiple-page";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 // Components
 import Panel from "@/components/Groups/Panel";
 import PageFieldGroup, {
@@ -37,10 +37,10 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 	// ------------------------------
 	// State
 	const [getTitleTranslations, setTitleTranslations] = createSignal<
-		PagesResT["title_translations"]
+		MultipleBuilderResT["title_translations"]
 	>([]);
 	const [getExcerptTranslations, setExcerptTranslations] = createSignal<
-		PagesResT["excerpt_translations"]
+		MultipleBuilderResT["excerpt_translations"]
 	>([]);
 	const [getSlug, setSlug] = createSignal<string | null>(null);
 	const [getParentId, setParentId] = createSignal<number | undefined>(
@@ -73,7 +73,7 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 		},
 	});
 
-	const page = api.collections.multiplePages.useGetSingle({
+	const page = api.collections.multipleBuilder.useGetSingle({
 		queryParams: {
 			location: {
 				id: props?.id,
@@ -87,14 +87,14 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
 	// ---------------------------------
 	// Mutations
-	const createPage = api.collections.multiplePages.useCreateSingle({
+	const createPage = api.collections.multipleBuilder.useCreateSingle({
 		onSuccess: () => {
 			props.state.setOpen(false);
 		},
 		collectionName: props.collection.singular,
 	});
 
-	const updatePage = api.collections.multiplePages.useUpdateSingle({
+	const updatePage = api.collections.multipleBuilder.useUpdateSingle({
 		onSuccess: () => {
 			props.state.setOpen(false);
 		},

@@ -6,7 +6,7 @@
     - When the error is being thorwn internall and outside of a request. Eg: in a migration or launch step
 */
 
-import z from "zod";
+import type z from "zod";
 import { bgRed } from "console-log-colors";
 import T from "../../translations/index.js";
 

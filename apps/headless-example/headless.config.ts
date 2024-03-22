@@ -1,12 +1,15 @@
 import { headlessConfig } from "@protodigital/headless";
-import transporter from "./src/services/email-transporter.js";
-import {
-	BannerBrick,
-	IntroBrick,
-	DefaultMetaBrick,
-	TestingBrick,
-	PageMetaBrick,
-} from "./src/headless/bricks/index.js";
+import transporter from "./src/headless/email-transporter.js";
+// Bricks
+import BannerBrick from "./src/headless/bricks/banner.js";
+import IntroBrick from "./src/headless/bricks/intro.js";
+import DefaultMetaBrick from "./src/headless/bricks/default-meta.js";
+import TestingBrick from "./src/headless/bricks/testing.js";
+import PageMetaBrick from "./src/headless/bricks/page-meta.js";
+// Collections
+import PageCollection from "./src/headless/collections/pages.js";
+import BlogCollection from "./src/headless/collections/blogs.js";
+import SettingsCollection from "./src/headless/collections/settings.js";
 
 export default headlessConfig({
 	mode: "development",
@@ -62,6 +65,7 @@ export default headlessConfig({
 			secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
 		},
 	},
+	collections: [PageCollection, BlogCollection, SettingsCollection],
 	bricks: [
 		BannerBrick,
 		IntroBrick,

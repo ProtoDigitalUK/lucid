@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
-import { z } from "zod";
-import { type Readable } from "stream";
+import type { z } from "zod";
+import type { Readable } from "node:stream";
 import { APIError } from "../../utils/app/error-handler.js";
-import cdnSchema from "../../schemas/cdn.js";
+import type cdnSchema from "../../schemas/cdn.js";
 import s3Services from "../s3/index.js";
 import mediaHelpers from "../../utils/media/helpers.js";
 import processedImageServices from "../processed-images/index.js";

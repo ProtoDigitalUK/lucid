@@ -65,8 +65,8 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 					props.email.delivery_status === "sent"
 						? "green"
 						: props.email.delivery_status === "failed"
-						  ? "red"
-						  : "grey"
+							? "red"
+							: "grey"
 				}
 				options={{ include: props?.include[0] }}
 			/>

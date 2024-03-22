@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS headless_collection_bricks (
     brick_type TEXT NOT NULL,
     brick_key TEXT NOT NULL,
 
-    multiple_page_id INT REFERENCES headless_collection_multiple_page(id) ON DELETE CASCADE,
-    single_page_id INT REFERENCES headless_collection_single_page(id) ON DELETE CASCADE,
+    multiple_page_id INT REFERENCES headless_collection_multiple_builder(id) ON DELETE CASCADE,
+    single_page_id INT REFERENCES headless_collection_single_builder(id) ON DELETE CASCADE,
 
     brick_order INT NOT NULL
 );
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_fields (
     int_value INT,
     bool_value BOOLEAN,
     json_value JSONB,
-    page_link_id INT REFERENCES headless_collection_multiple_page(id) ON DELETE SET NULL,
+    page_link_id INT REFERENCES headless_collection_multiple_builder(id) ON DELETE SET NULL,
     media_id INT REFERENCES headless_media(id) ON DELETE SET NULL
 );
 

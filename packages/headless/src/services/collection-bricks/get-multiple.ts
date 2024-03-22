@@ -1,15 +1,13 @@
-import T from "../../translations/index.js";
-import { APIError } from "../../utils/app/error-handler.js";
-import type { BrickObjectT } from "../../schemas/bricks.js";
-import serviceWrapper from "../../utils/app/service-wrapper.js";
 import getConfig from "../config.js";
 import collectionsServices from "../collections/index.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import formatBricks from "../../format/format-bricks.js";
+import type { CollectionDataT } from "../../builders/collection-builder/index.js";
 
 export interface ServiceData {
 	id: number;
-	type: "multiple-page" | "single-page";
+	type: CollectionDataT["type"];
+	multiple: CollectionDataT["multiple"];
 	language_id: number;
 	collection_key: string;
 }
@@ -40,17 +38,12 @@ const getMultiple = async (
 			jsonArrayFrom(
 				eb
 					.selectFrom("headless_collection_fields")
-					.leftJoin("headless_collection_multiple_page", (join) =>
+					.leftJoin("headless_collection_multiple_builder", (join) =>
 						join.onRef(
-							"headless_collection_multiple_page.id",
+							"headless_collection_multiple_builder.id",
 							"=",
 							"headless_collection_fields.page_link_id",
 						),
-					)
-					.leftJoin(
-						"headless_collections",
-						"headless_collections.key",
-						"headless_collection_multiple_page.collection_key",
 					)
 					.leftJoin("headless_media", (join) =>
 						join.onRef(
@@ -73,10 +66,9 @@ const getMultiple = async (
 						"headless_collection_fields.page_link_id",
 						"headless_collection_fields.media_id",
 						// Page fields
-						"headless_collection_multiple_page.id as page_id",
-						"headless_collection_multiple_page.slug as page_slug",
-						"headless_collection_multiple_page.full_slug as page_full_slug",
-						"headless_collections.slug as page_collection_slug",
+						"headless_collection_multiple_builder.id as page_id",
+						"headless_collection_multiple_builder.slug as page_slug",
+						"headless_collection_multiple_builder.full_slug as page_full_slug",
 						jsonArrayFrom(
 							eb
 								.selectFrom("headless_translations")
@@ -92,7 +84,7 @@ const getMultiple = async (
 								.whereRef(
 									"headless_translations.translation_key_id",
 									"=",
-									"headless_collection_multiple_page.title_translation_key_id",
+									"headless_collection_multiple_builder.title_translation_key_id",
 								),
 						).as("page_title_translations"),
 						// Media fields
@@ -149,7 +141,7 @@ const getMultiple = async (
 		])
 		.orderBy("headless_collection_bricks.brick_order", "asc");
 
-	if (data.type === "multiple-page") {
+	if (data.multiple) {
 		brickFieldsQuery = brickFieldsQuery.where(
 			"headless_collection_bricks.multiple_page_id",
 			"=",
@@ -165,7 +157,7 @@ const getMultiple = async (
 
 	const [bricks, collection, config] = await Promise.all([
 		brickFieldsQuery.execute(),
-		serviceWrapper(collectionsServices.getSingle, false)(serviceConfig, {
+		collectionsServices.getSingle({
 			key: data.collection_key,
 			type: data.type,
 		}),

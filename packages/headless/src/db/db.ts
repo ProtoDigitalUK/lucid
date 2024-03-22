@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import { getConfig } from "../services/config.js";
 import { InternalError } from "../utils/app/error-handler.js";
 import { Kysely, PostgresDialect } from "kysely";
-import { type DB as DBSchema } from "kysely-codegen";
+import type { DB as DBSchema } from "kysely-codegen";
 import pg from "pg";
 
 const { Pool } = pg;

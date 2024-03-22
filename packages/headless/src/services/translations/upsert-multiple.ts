@@ -4,7 +4,7 @@ import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
-	TranslationsObjT,
+	type TranslationsObjT,
 } from "../../utils/translations/helpers.js";
 
 export interface ServiceData<K extends string> {

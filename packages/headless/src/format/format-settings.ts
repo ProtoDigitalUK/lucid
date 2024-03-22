@@ -1,5 +1,5 @@
 import getConfig from "../services/config.js";
-import { type SettingsResT } from "@headless/types/src/settings.js";
+import type { SettingsResT } from "@headless/types/src/settings.js";
 
 const formatSettings = async (data: {
 	mediaStorageUsed: number;

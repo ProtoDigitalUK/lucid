@@ -1,9 +1,9 @@
 import T from "../../translations/index.js";
-import z from "zod";
-import cdnSchema from "../../schemas/cdn.js";
+import type z from "zod";
+import type cdnSchema from "../../schemas/cdn.js";
 import s3Services from "../s3/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import { PassThrough, type Readable } from "stream";
+import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import getConfig from "../config.js";
 import constants from "../../constants.js";

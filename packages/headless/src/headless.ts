@@ -1,9 +1,9 @@
 import("dotenv/config.js");
-import path from "path";
+import path from "node:path";
 import T from "./translations/index.js";
 import { log, red } from "console-log-colors";
 import fp from "fastify-plugin";
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";

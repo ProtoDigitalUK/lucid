@@ -1,5 +1,5 @@
-import z from "zod";
-import bricksSchema from "../../schemas/bricks.js";
+import type z from "zod";
+import type bricksSchema from "../../schemas/bricks.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import collectionsServices from "../collections/index.js";
 import brickConfigService from "./index.js";
@@ -8,14 +8,11 @@ export interface ServiceData {
 	query: z.infer<typeof bricksSchema.getAll.query>;
 }
 
-const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const getAll = async (data: ServiceData) => {
 	const collectionKey = data.query.filter?.collection_key;
 
 	if (collectionKey) {
-		const collection = await serviceWrapper(
-			collectionsServices.getSingle,
-			false,
-		)(serviceConfig, {
+		const collection = await collectionsServices.getSingle({
 			key: collectionKey,
 		});
 		return await brickConfigService.getBrickInstances({

@@ -1,5 +1,5 @@
-import z from "zod";
-import cdnSchema from "../../schemas/cdn.js";
+import type z from "zod";
+import type cdnSchema from "../../schemas/cdn.js";
 import sharp from "sharp";
 import mime from "mime-types";
 
@@ -31,7 +31,7 @@ const optimiseImage = async (
 		if (data.options.format) {
 			transform.toFormat(data.options.format, {
 				quality: data.options.quality
-					? parseInt(data.options.quality)
+					? Number.parseInt(data.options.quality)
 					: 80,
 			});
 		}
@@ -39,10 +39,10 @@ const optimiseImage = async (
 		if (data.options.width || data.options.height) {
 			transform.resize({
 				width: data.options.width
-					? parseInt(data.options.width)
+					? Number.parseInt(data.options.width)
 					: undefined,
 				height: data.options.height
-					? parseInt(data.options.height)
+					? Number.parseInt(data.options.height)
 					: undefined,
 			});
 		}

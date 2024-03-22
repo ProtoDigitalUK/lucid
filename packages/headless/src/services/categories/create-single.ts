@@ -3,6 +3,7 @@ import { APIError, modelErrors } from "../../utils/app/error-handler.js";
 import slug from "slug";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 import categoriesServices from "./index.js";
+import collectionsServices from "../collections/index.js";
 import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
 import {
@@ -27,13 +28,12 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const collectionExists = await serviceConfig.db
-		.selectFrom("headless_collections")
-		.select("key")
-		.where("key", "=", data.collection_key)
-		.executeTakeFirst();
+	const collectionExists =
+		await collectionsServices.checks.checkCollectionExists({
+			key: data.collection_key,
+		});
 
-	if (collectionExists === undefined) {
+	if (collectionExists === false) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {

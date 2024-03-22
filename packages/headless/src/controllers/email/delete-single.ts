@@ -16,7 +16,7 @@ const deleteSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			id: parseInt(request.params.id, 10),
+			id: Number.parseInt(request.params.id, 10),
 		},
 	);
 	reply.status(204).send();

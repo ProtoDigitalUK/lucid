@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { type FastifyRequest, type FastifyReply } from "fastify";
+import type { FastifyRequest, FastifyReply } from "fastify";
 import getConfig from "../config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";

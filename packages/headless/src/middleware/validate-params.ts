@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { type FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
 import { APIError } from "../utils/app/error-handler.js";
 

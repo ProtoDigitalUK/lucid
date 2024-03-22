@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import auth from "../services/auth/index.js";
 import { APIError } from "../utils/app/error-handler.js";
 

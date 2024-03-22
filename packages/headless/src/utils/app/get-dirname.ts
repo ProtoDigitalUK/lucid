@@ -1,5 +1,5 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 
 const getDirName = (metaUrl: string) => {
 	return dirname(fileURLToPath(metaUrl));

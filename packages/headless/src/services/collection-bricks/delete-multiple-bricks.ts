@@ -1,6 +1,9 @@
+import type { CollectionDataT } from "../../builders/collection-builder/index.js";
+
 export interface ServiceData {
 	id: number;
-	type: "multiple-page" | "single-page";
+	type: CollectionDataT["type"];
+	multiple: CollectionDataT["multiple"];
 	bricks: {
 		id: number;
 		brick_key: string;
@@ -20,7 +23,7 @@ const deleteMultipleBricks = async (
 			data.bricks.map((brick) => brick.id),
 		);
 
-	if (data.type === "multiple-page") {
+	if (data.multiple) {
 		deleteBricksQuery = deleteBricksQuery.where(
 			"multiple_page_id",
 			"=",

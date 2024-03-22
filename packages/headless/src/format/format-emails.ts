@@ -1,5 +1,5 @@
-import { type EmailResT } from "@headless/types/src/email.js";
-import { type JsonValue } from "kysely-codegen";
+import type { EmailResT } from "@headless/types/src/email.js";
+import type { JsonValue } from "kysely-codegen";
 
 const formatEmails = (
 	email: {

@@ -8,9 +8,9 @@ import type {
 } from "@headless/types/src/bricks.js";
 import type { MediaTypeT } from "@headless/types/src/media.js";
 import type { JsonValue } from "kysely-codegen";
-import { type BrickBuilderT } from "../builders/brick-builder/index.js";
+import type { BrickBuilderT } from "../builders/brick-builder/index.js";
 import { createURL } from "./format-media.js";
-import { formatPageFullSlug } from "./format-multiple-page.js";
+import { formatPageFullSlug } from "./format-multiple-builder.js";
 
 export interface BrickQueryT {
 	id: number;
@@ -46,7 +46,6 @@ export interface BrickQueryFieldT {
 	page_id: number | null;
 	page_slug: string | null;
 	page_full_slug: string | null;
-	page_collection_slug: string | null;
 	page_title_translations: Array<{
 		value: string | null;
 		language_id: number | null;
@@ -104,7 +103,12 @@ const formatBricks = (data: {
 				order: brick.brick_order,
 				type: brick.brick_type as "builder" | "fixed",
 				groups: formatGroups(brick.groups),
-				fields: formatFields(brick.fields, data.host, instance),
+				fields: formatFields(
+					brick.fields,
+					data.host,
+					data.collection.slug,
+					instance,
+				),
 			};
 		});
 };
@@ -112,6 +116,7 @@ const formatBricks = (data: {
 const formatFields = (
 	fields: BrickQueryFieldT[],
 	host: string,
+	collection_slug: string | null,
 	brick_instance?: BrickBuilderT,
 ): BrickResT["fields"] => {
 	const fieldsRes: BrickResT["fields"] = [];
@@ -127,6 +132,7 @@ const formatFields = (
 				instanceField.type,
 				instanceField,
 				field,
+				collection_slug,
 				host,
 			);
 
@@ -165,8 +171,9 @@ const formatGroups = (groups: BrickQueryT["groups"]): BrickResT["groups"] =>
 
 const customFieldValues = (
 	type: FieldTypesT,
-	builderField: CustomFieldT,
+	builder_field: CustomFieldT,
 	field: BrickQueryFieldT,
+	collection_slug: string | null,
 	host: string,
 ) => {
 	let value: BrickFieldValueT = null;
@@ -177,11 +184,11 @@ const customFieldValues = (
 			break;
 		}
 		case "text": {
-			value = field?.text_value ?? builderField?.default;
+			value = field?.text_value ?? builder_field?.default;
 			break;
 		}
 		case "wysiwyg": {
-			value = field?.text_value ?? builderField?.default;
+			value = field?.text_value ?? builder_field?.default;
 			break;
 		}
 		case "media": {
@@ -202,33 +209,33 @@ const customFieldValues = (
 			break;
 		}
 		case "number": {
-			value = field?.int_value ?? builderField?.default;
+			value = field?.int_value ?? builder_field?.default;
 			break;
 		}
 		case "checkbox": {
-			value = field?.bool_value ?? builderField?.default;
+			value = field?.bool_value ?? builder_field?.default;
 			break;
 		}
 		case "select": {
-			value = field?.text_value ?? builderField?.default;
+			value = field?.text_value ?? builder_field?.default;
 			break;
 		}
 		case "textarea": {
-			value = field?.text_value ?? builderField?.default;
+			value = field?.text_value ?? builder_field?.default;
 			break;
 		}
 		case "json": {
 			value =
 				(field?.json_value as Record<string, unknown>) ??
-				builderField?.default;
+				builder_field?.default;
 			break;
 		}
 		case "colour": {
-			value = field?.text_value ?? builderField?.default;
+			value = field?.text_value ?? builder_field?.default;
 			break;
 		}
 		case "datetime": {
-			value = field?.text_value ?? builderField?.default;
+			value = field?.text_value ?? builder_field?.default;
 			break;
 		}
 		case "pagelink": {
@@ -248,9 +255,9 @@ const customFieldValues = (
 				full_slug:
 					formatPageFullSlug(
 						field?.page_full_slug,
-						field?.page_collection_slug,
+						collection_slug,
 					) ?? undefined,
-				collection_slug: field?.page_collection_slug ?? undefined,
+				collection_slug: collection_slug ?? undefined,
 				title_translations: field?.page_title_translations,
 			};
 			break;
@@ -258,7 +265,7 @@ const customFieldValues = (
 		case "link": {
 			const jsonVal = field?.json_value as Record<string, unknown> | null;
 			value = {
-				url: field?.text_value ?? builderField?.default ?? "",
+				url: field?.text_value ?? builder_field?.default ?? "",
 				target: jsonVal?.target ?? "_self",
 				label: jsonVal?.label ?? undefined,
 			};

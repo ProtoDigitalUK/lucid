@@ -19,7 +19,7 @@ const getBrickInstances = async (data: ServiceData) => {
 			query: data.include_fields
 				? {
 						include: ["fields"],
-				  }
+					}
 				: undefined,
 		});
 		if (!data.filter_bricks) {

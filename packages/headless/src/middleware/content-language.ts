@@ -1,4 +1,4 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import serviceWrapper from "../utils/app/service-wrapper.js";
 import languagesServices from "../services/languages/index.js";
 

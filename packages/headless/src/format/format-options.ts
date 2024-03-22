@@ -1,4 +1,4 @@
-import { type HeadlessOptions } from "kysely-codegen";
+import type { HeadlessOptions } from "kysely-codegen";
 import type { OptionsResT } from "@headless/types/src/options.js";
 
 const formatOptions = (option: HeadlessOptions): OptionsResT => {

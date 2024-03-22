@@ -15,7 +15,7 @@ const getSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			user_id: parseInt(request.params.id),
+			user_id: Number.parseInt(request.params.id),
 		},
 	);
 

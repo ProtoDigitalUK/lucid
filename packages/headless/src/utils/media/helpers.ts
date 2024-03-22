@@ -1,10 +1,10 @@
 import fs from "fs-extra";
-import type { Readable } from "stream";
-import { pipeline } from "stream/promises";
-import { join } from "path";
+import type { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+import { join } from "node:path";
 import mime from "mime-types";
 import sharp from "sharp";
-import { type MediaResT } from "@headless/types/src/media.js";
+import type { MediaResT } from "@headless/types/src/media.js";
 import slug from "slug";
 
 export interface MediaMetaDataT {
