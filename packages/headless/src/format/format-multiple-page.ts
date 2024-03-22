@@ -1,12 +1,12 @@
 import type { PagesResT } from "@headless/types/src/multiple-page.js";
 import { swaggerBrickRes } from "./format-bricks.js";
-import { BrickResT } from "@headless/types/src/bricks.js";
+import { type BrickResT } from "@headless/types/src/bricks.js";
+import { type CollectionResT } from "@headless/types/src/collections.js";
 
 interface PageT {
 	id: number;
 	parent_id: number | null;
 	collection_key: string | null;
-	collection_slug: string | null;
 	slug: string | null;
 	full_slug: string | null;
 	homepage: boolean | null;
@@ -37,7 +37,11 @@ interface PageT {
 	author_username: string | null;
 }
 
-const formatMultiplePage = (page: PageT, bricks?: BrickResT[]): PagesResT => {
+const formatMultiplePage = (
+	page: PageT,
+	collection?: CollectionResT,
+	bricks?: BrickResT[],
+): PagesResT => {
 	const res: PagesResT = {
 		id: page.id,
 		parent_id: page.parent_id,
@@ -45,8 +49,8 @@ const formatMultiplePage = (page: PageT, bricks?: BrickResT[]): PagesResT => {
 		title_translations: page.title_translations,
 		excerpt_translations: page.excerpt_translations,
 		slug: page.slug,
-		full_slug: formatPageFullSlug(page.full_slug, page.collection_slug),
-		collection_slug: page.collection_slug,
+		full_slug: formatPageFullSlug(page.full_slug, collection?.slug),
+		collection_slug: collection?.slug ?? null,
 		homepage: page.homepage ?? false,
 		bricks: bricks || [],
 		created_by: page.created_by,
@@ -78,7 +82,7 @@ const formatMultiplePage = (page: PageT, bricks?: BrickResT[]): PagesResT => {
 
 export const formatPageFullSlug = (
 	full_slug: string | null,
-	collection_slug: string | null,
+	collection_slug?: string | null,
 ) => {
 	let slug = null;
 

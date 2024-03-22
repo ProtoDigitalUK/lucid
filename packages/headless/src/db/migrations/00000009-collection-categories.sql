@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS headless_collection_categories (
   id SERIAL PRIMARY KEY,
-  collection_key TEXT NOT NULL REFERENCES headless_collections(key) ON DELETE CASCADE,
+  collection_key TEXT NOT NULL,
 
   title_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
   description_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,

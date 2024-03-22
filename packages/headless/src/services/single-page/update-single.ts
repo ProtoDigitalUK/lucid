@@ -38,7 +38,8 @@ const updateSingle = async (
 			serviceConfig,
 			{
 				id: singlePage.id,
-				type: "single-page",
+				type: "builder",
+				multiple: false,
 				bricks: data.bricks || [],
 				collection_key: data.collection_key,
 			},

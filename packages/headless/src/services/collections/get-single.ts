@@ -1,50 +1,30 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/app/error-handler.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
+import {
+	type CollectionBuilderT,
+	type CollectionConfigT,
+} from "../../builders/collection-builder/index.js";
 import formatCollection from "../../format/format-collection.js";
 import getConfig from "../config.js";
 
 export interface ServiceData {
 	key: string;
-	type?: "single-page" | "multiple-page";
+	type?: CollectionConfigT["type"];
+	no_bricks?: boolean;
 }
 
-const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const collectionQuery = serviceConfig.db
-		.selectFrom("headless_collections")
-		.select((eb) => [
-			"key",
-			"title",
-			"singular",
-			"description",
-			"type",
-			"slug",
-			"created_at",
-			"updated_at",
-			"disable_homepages",
-			"disable_parents",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_collection_assigned_bricks")
-					.select([
-						"headless_collection_assigned_bricks.key",
-						"headless_collection_assigned_bricks.type",
-						"headless_collection_assigned_bricks.position",
-					])
-					.whereRef(
-						"headless_collection_assigned_bricks.collection_key",
-						"=",
-						"headless_collections.key",
-					),
-			).as("bricks"),
-		])
-		.where("key", "=", data.key);
+const getSingle = async (data: ServiceData) => {
+	const config = await getConfig();
 
-	if (data.type) {
-		collectionQuery.where("type", "=", data.type);
+	let collection: CollectionBuilderT | undefined;
+
+	if (data.type !== undefined) {
+		collection = config.collections?.find(
+			(c) => c.key === data.key && c.config.type === data.type,
+		);
+	} else {
+		collection = config.collections?.find((c) => c.key === data.key);
 	}
-
-	const collection = await collectionQuery.executeTakeFirst();
 
 	if (collection === undefined) {
 		throw new APIError({
@@ -59,8 +39,10 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const config = await getConfig();
-	return formatCollection(collection, config.bricks);
+	return formatCollection(
+		collection,
+		data.no_bricks === true ? undefined : config.bricks,
+	);
 };
 
 export default getSingle;

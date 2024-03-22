@@ -5,6 +5,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
 import multiplePageSchema from "../../schemas/multiple-page.js";
 import formatMultiplePage from "../../format/format-multiple-page.js";
+import collectionsServices from "../collections/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof multiplePageSchema.getMultiple.query>;
@@ -138,18 +139,12 @@ const getMultipleValidParents = async (
 			),
 		)
 		.innerJoin(
-			"headless_collections",
-			"headless_collections.key",
-			"headless_collection_multiple_page.collection_key",
-		)
-		.innerJoin(
 			"headless_users",
 			"headless_users.id",
 			"headless_collection_multiple_page.created_by",
 		)
 		.select([
 			"title_translations.value as title_translation_value",
-			"headless_collections.slug as collection_slug",
 			"headless_users.id as author_id",
 			"headless_users.email as author_email",
 			"headless_users.first_name as author_first_name",
@@ -161,7 +156,6 @@ const getMultipleValidParents = async (
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",
-			"headless_collections.slug",
 			"headless_users.id",
 		]);
 
@@ -185,18 +179,12 @@ const getMultipleValidParents = async (
 			),
 		)
 		.innerJoin(
-			"headless_collections",
-			"headless_collections.key",
-			"headless_collection_multiple_page.collection_key",
-		)
-		.innerJoin(
 			"headless_users",
 			"headless_users.id",
 			"headless_collection_multiple_page.created_by",
 		)
 		.select([
 			"title_translations.value as title_translation_value",
-			"headless_collections.slug as collection_slug",
 			"headless_users.id as author_id",
 			"headless_users.email as author_email",
 			"headless_users.first_name as author_first_name",
@@ -208,7 +196,6 @@ const getMultipleValidParents = async (
 		.groupBy([
 			"headless_collection_multiple_page.id",
 			"title_translations.value",
-			"headless_collections.slug",
 			"headless_users.id",
 		]);
 
@@ -268,8 +255,15 @@ const getMultipleValidParents = async (
 		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 	]);
 
+	const collections = await collectionsServices.getAll();
+
 	return {
-		data: pages.map((page) => formatMultiplePage(page)),
+		data: pages.map((page) => {
+			const collection = collections.find(
+				(c) => c.key === page.collection_key,
+			);
+			return formatMultiplePage(page, collection);
+		}),
 		count: parseCount(pagesCount?.count),
 	};
 };

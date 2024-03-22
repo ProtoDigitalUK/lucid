@@ -5,7 +5,6 @@ import {
 	type FieldErrorsT,
 } from "../../../utils/app/error-handler.js";
 import getConfig from "../../config.js";
-import serviceWrapper from "../../../utils/app/service-wrapper.js";
 import collectionsServices from "../../collections/index.js";
 import BrickBuilder, {
 	type ValidationProps,
@@ -19,9 +18,10 @@ import type {
 	BrickObjectT,
 	BrickFieldObjectT,
 } from "../../../schemas/bricks.js";
+import { type CollectionConfigT } from "../../../builders/collection-builder/index.js";
 
 export interface ServiceData {
-	type: "multiple-page" | "single-page";
+	type: CollectionConfigT["type"];
 	bricks: Array<BrickObjectT>;
 	collection_key: string;
 }
@@ -38,7 +38,7 @@ const validateBricks = async (
 		}) || [];
 
 	const [collection, media, pages] = await Promise.all([
-		serviceWrapper(collectionsServices.getSingle, false)(serviceConfig, {
+		collectionsServices.getSingle({
 			key: data.collection_key,
 			type: data.type,
 		}),

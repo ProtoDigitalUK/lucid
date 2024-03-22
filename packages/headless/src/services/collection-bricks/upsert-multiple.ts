@@ -3,10 +3,12 @@ import { APIError } from "../../utils/app/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
+import { type CollectionConfigT } from "../../builders/collection-builder/index.js";
 
 export interface ServiceData {
 	id: number;
-	type: "multiple-page" | "single-page";
+	type: CollectionConfigT["type"];
+	multiple: CollectionConfigT["multiple"];
 	bricks: Array<BrickObjectT>;
 	collection_key: string;
 }
@@ -34,10 +36,8 @@ const upsertMultiple = async (
 					brick_type: brick.type,
 					brick_key: brick.key,
 					brick_order: brick.order,
-					multiple_page_id:
-						data.type === "multiple-page" ? data.id : null,
-					single_page_id:
-						data.type === "single-page" ? data.id : null,
+					multiple_page_id: data.multiple === true ? data.id : null,
+					single_page_id: data.multiple === false ? data.id : null,
 				};
 			}),
 		)
@@ -97,6 +97,7 @@ const upsertMultiple = async (
 			{
 				id: data.id,
 				type: data.type,
+				multiple: data.multiple,
 				bricks: bricksRes,
 			},
 		),

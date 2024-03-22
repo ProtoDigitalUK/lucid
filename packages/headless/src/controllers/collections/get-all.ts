@@ -1,36 +1,43 @@
 import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger/response-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
+import serviceWrapper from "../../utils/app/service-wrapper.js";
 import buildResponse from "../../utils/app/build-response.js";
 import { swaggerCollectionRes } from "../../format/format-collection.js";
 
-const getSingleController: ControllerT<
-	typeof collectionsSchema.getSingle.params,
-	typeof collectionsSchema.getSingle.body,
-	typeof collectionsSchema.getSingle.query
+const getAllController: ControllerT<
+	typeof collectionsSchema.getAll.params,
+	typeof collectionsSchema.getAll.body,
+	typeof collectionsSchema.getAll.query
 > = async (request, reply) => {
-	const collection = await collectionsServices.getSingle({
-		key: request.params.key,
+	const collections = await serviceWrapper(
+		collectionsServices.getAll,
+		false,
+	)({
+		db: request.server.db,
 	});
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: collection,
+			data: collections,
 		}),
 	);
 };
 
 export default {
-	controller: getSingleController,
-	zodSchema: collectionsSchema.getSingle,
+	controller: getAllController,
+	zodSchema: collectionsSchema.getAll,
 	swaggerSchema: {
-		description: "Get a single collection instance.",
+		description: "Get all collection instances.",
 		tags: ["collections"],
-		summary: "Get a collection",
+		summary: "Get all collections",
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerCollectionRes,
+				data: {
+					type: "array",
+					items: swaggerCollectionRes,
+				},
 			}),
 		},
 	},

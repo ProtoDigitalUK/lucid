@@ -13,12 +13,10 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const collectionExists = await serviceWrapper(
-		collectionsServices.checks.checkCollectionExists,
-		false,
-	)(serviceConfig, {
-		key: data.collection_key,
-	});
+	const collectionExists =
+		await collectionsServices.checks.checkCollectionExists({
+			key: data.collection_key,
+		});
 
 	if (collectionExists === false) {
 		throw new APIError({
@@ -74,7 +72,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		false,
 	)(serviceConfig, {
 		id: page.id,
-		type: "single-page",
+		type: "builder",
+		multiple: false,
 		language_id: data.language_id,
 		collection_key: data.collection_key,
 	});

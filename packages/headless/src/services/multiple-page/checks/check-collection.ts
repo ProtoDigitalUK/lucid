@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/app/error-handler.js";
+import getConfig from "../../config.js";
 
 /*
     Checks:
@@ -18,13 +19,12 @@ const checkCollection = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const collection = await serviceConfig.db
-		.selectFrom("headless_collections")
-		.select(["key", "disable_homepages", "disable_parents"])
-		.where("key", "=", data.collection_key)
-		.executeTakeFirst();
+	const config = await getConfig();
+	const collectionInstance = config.collections?.find(
+		(c) => c.key === data.collection_key,
+	);
 
-	if (collection === undefined) {
+	if (collectionInstance === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
@@ -43,7 +43,9 @@ const checkCollection = async (
 		});
 	}
 
-	if (collection.disable_homepages === true && data.homepage === true) {
+	const collection = collectionInstance.config;
+
+	if (collection.disableHomepages === true && data.homepage === true) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
@@ -63,7 +65,7 @@ const checkCollection = async (
 	}
 
 	if (
-		collection.disable_parents === true &&
+		collection.disableParents === true &&
 		data.parent_id !== undefined &&
 		data.parent_id !== null
 	) {

@@ -5,6 +5,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import multiplePageSchema from "../../schemas/multiple-page.js";
 import formatMultiplePage from "../../format/format-multiple-page.js";
 import collectionBricksServices from "../collection-bricks/index.js";
+import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/app/service-wrapper.js";
 
 export interface ServiceData {
@@ -70,12 +71,6 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			).as("categories"),
 		])
 		.innerJoin(
-			"headless_collections",
-			"headless_collections.key",
-			"headless_collection_multiple_page.collection_key",
-		)
-		.select("headless_collections.slug as collection_slug")
-		.innerJoin(
 			"headless_users",
 			"headless_users.id",
 			"headless_collection_multiple_page.created_by",
@@ -104,20 +99,26 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
+	const collection = await collectionsServices.getSingle({
+		key: page.collection_key,
+		no_bricks: true,
+	});
+
 	if (data.query.include?.includes("bricks") && data.language_id) {
 		const bricks = await serviceWrapper(
 			collectionBricksServices.getMultiple,
 			false,
 		)(serviceConfig, {
 			id: data.id,
-			type: "multiple-page",
+			type: "builder",
+			multiple: true,
 			language_id: data.language_id,
 			collection_key: page.collection_key,
 		});
-		return formatMultiplePage(page, bricks);
+		return formatMultiplePage(page, collection, bricks);
 	}
 
-	return formatMultiplePage(page);
+	return formatMultiplePage(page, collection);
 };
 
 export default getSingle;

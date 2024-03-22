@@ -36,14 +36,6 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 			"unpublish_content",
 		],
 	},
-	collections: {
-		key: "collections_permissions",
-		permissions: [
-			"create_collection",
-			"update_collection",
-			"delete_collection",
-		],
-	},
 	category: {
 		key: "category_permissions",
 		permissions: ["create_category", "update_category", "delete_category"],

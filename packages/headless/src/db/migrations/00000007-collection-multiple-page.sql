@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS headless_collection_multiple_page (
     id SERIAL PRIMARY KEY,
-    collection_key TEXT REFERENCES headless_collections(key) ON DELETE CASCADE,
+    collection_key TEXT NOT NULL,
     parent_id INTEGER REFERENCES headless_collection_multiple_page(id) ON DELETE SET NULL,
     title_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,
     excerpt_translation_key_id INTEGER REFERENCES headless_translation_keys(id) ON DELETE SET NULL ON UPDATE CASCADE,

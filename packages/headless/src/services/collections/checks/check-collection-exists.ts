@@ -1,16 +1,15 @@
+import getConfig from "../../config.js";
+
 export interface ServiceData {
 	key: string;
 }
 
-const checkCollectionExists = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
-	const collectionExists = await serviceConfig.db
-		.selectFrom("headless_collections")
-		.select("key")
-		.where("key", "=", data.key)
-		.executeTakeFirst();
+const checkCollectionExists = async (data: ServiceData) => {
+	const config = await getConfig();
+
+	const collectionExists = config.collections?.find(
+		(c) => c.key === data.key,
+	);
 
 	return collectionExists !== undefined;
 };

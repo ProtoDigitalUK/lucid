@@ -6,7 +6,6 @@ import { sql } from "kysely";
 import { parseCount } from "../utils/app/helpers.js";
 import serviceWrapper from "../utils/app/service-wrapper.js";
 import rolesServices from "./roles/index.js";
-import collectionsServices from "./collections/index.js";
 
 const addDefaultUser = async (serviceConfig: ServiceConfigT) => {
 	try {
@@ -100,42 +99,11 @@ const addDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 	}
 };
 
-const addDefaultCollection = async (serviceConfig: ServiceConfigT) => {
-	try {
-		const totalCollectionCount = (await serviceConfig.db
-			.selectFrom("headless_collections")
-			.select(sql`count(*)`.as("count"))
-			.executeTakeFirst()) as { count: string } | undefined;
-
-		if (parseCount(totalCollectionCount?.count) > 0) return;
-
-		await serviceWrapper(collectionsServices.createSingle, false)(
-			{
-				db: serviceConfig.db,
-			},
-			{
-				key: constants.seedDefaults.collection.key,
-				type: constants.seedDefaults.collection.type,
-				title: constants.seedDefaults.collection.title,
-				singular: constants.seedDefaults.collection.singular,
-				description: constants.seedDefaults.collection.description,
-			},
-		);
-	} catch (error) {
-		throw new InternalError(
-			T("dynamic_an_error_occurred_saving_default", {
-				name: T("collection").toLowerCase(),
-			}),
-		);
-	}
-};
-
 const seedHeadless = async (serviceConfig: ServiceConfigT) => {
 	await Promise.allSettled([
 		addDefaultUser(serviceConfig),
 		addDefaultLanguage(serviceConfig),
 		addDefaultRoles(serviceConfig),
-		addDefaultCollection(serviceConfig),
 	]);
 };
 
