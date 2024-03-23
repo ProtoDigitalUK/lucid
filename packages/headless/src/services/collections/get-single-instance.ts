@@ -1,17 +1,12 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import formatCollection from "../../format/format-collection.js";
 import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	key: string;
-	include?: {
-		bricks?: boolean;
-		fields?: boolean;
-	};
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingleInstance = async (data: ServiceData) => {
 	const config = await getConfig();
 
 	const collection = config.collections?.find((c) => c.key === data.key);
@@ -29,7 +24,7 @@ const getSingle = async (data: ServiceData) => {
 		});
 	}
 
-	return formatCollection(collection, data.include);
+	return collection;
 };
 
-export default getSingle;
+export default getSingleInstance;

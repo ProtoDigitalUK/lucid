@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
-import collectionBricksServices from "../collection-bricks/index.js";
+import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import multipleBuilderServices from "./index.js";
 import translationsServices from "../translations/index.js";
@@ -167,7 +167,7 @@ const updateSingle = async (
 				],
 			},
 		),
-		serviceWrapper(collectionBricksServices.upsertMultiple, false)(
+		serviceWrapper(collectionDocumentBricksServices.upsertMultiple, false)(
 			serviceConfig,
 			{
 				id: data.id,
@@ -192,7 +192,7 @@ const updateSingle = async (
 						exclude_id: data.id,
 						page_id: data.id,
 					},
-				)
+			  )
 			: undefined,
 	]);
 

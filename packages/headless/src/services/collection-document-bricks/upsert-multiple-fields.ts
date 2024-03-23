@@ -3,6 +3,7 @@ import formatUpsertFields from "../../format/format-upsert-fields.js";
 import type { GroupsResT } from "./upsert-multiple-groups.js";
 
 export interface ServiceData {
+	document_id: number;
 	bricks: Array<BrickObjectT>;
 	groups: Array<GroupsResT>;
 }
@@ -22,11 +23,12 @@ const upsertMultipleFields = async (
 
 	// upsert fields
 	const fieldsRes = await serviceConfig.db
-		.insertInto("headless_collection_fields")
+		.insertInto("headless_collection_document_fields")
 		.values(
 			fields.map((field) => {
 				return {
 					fields_id: field.fields_id ?? undefined,
+					collection_document_id: data.document_id,
 					collection_brick_id: field.collection_brick_id,
 					key: field.key,
 					type: field.type,
@@ -59,7 +61,7 @@ const upsertMultipleFields = async (
 
 	// delete fields not in fieldsRes
 	await serviceConfig.db
-		.deleteFrom("headless_collection_fields")
+		.deleteFrom("headless_collection_document_fields")
 		.where(
 			"collection_brick_id",
 			"in",

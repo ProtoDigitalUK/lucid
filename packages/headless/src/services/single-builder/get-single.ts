@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatSingleBuilder from "../../format/format-single-builder.js";
-import collectionBricksServices from "../collection-bricks/index.js";
+import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionsServices from "../collections/index.js";
 
@@ -68,7 +68,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	const bricks = await serviceWrapper(
-		collectionBricksServices.getMultiple,
+		collectionDocumentBricksServices.getMultiple,
 		false,
 	)(serviceConfig, {
 		id: page.id,

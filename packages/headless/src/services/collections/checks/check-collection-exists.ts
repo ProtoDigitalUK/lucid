@@ -8,7 +8,7 @@ const checkCollectionExists = async (data: ServiceData) => {
 	const config = await getConfig();
 
 	const collectionExists = config.collections?.find(
-		(c) => c.data.key === data.key,
+		(c) => c.key === data.key,
 	);
 
 	return collectionExists !== undefined;

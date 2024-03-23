@@ -4,7 +4,7 @@ import { APIError } from "../../utils/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import type multipleBuilderSchema from "../../schemas/multiple-builder.js";
 import formatMultipleBuilder from "../../format/format-multiple-builder.js";
-import collectionBricksServices from "../collection-bricks/index.js";
+import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 
@@ -107,7 +107,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	if (data.query.include?.includes("bricks") && data.language_id) {
 		const bricks = await serviceWrapper(
-			collectionBricksServices.getMultiple,
+			collectionDocumentBricksServices.getMultiple,
 			false,
 		)(serviceConfig, {
 			id: data.id,

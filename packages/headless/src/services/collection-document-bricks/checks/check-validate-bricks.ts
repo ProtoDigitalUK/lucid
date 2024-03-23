@@ -4,7 +4,6 @@ import {
 	modelErrors,
 	type FieldErrorsT,
 } from "../../../utils/error-handler.js";
-import getConfig from "../../../libs/config/get-config.js";
 import collectionsServices from "../../collections/index.js";
 import type {
 	ValidationPropsT,
@@ -12,17 +11,11 @@ import type {
 	LinkReferenceDataT,
 	FieldTypesT,
 } from "../../../libs/field-builder/index.js";
-import type BrickBuilder from "../../../libs/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
-import type { CollectionResT } from "@headless/types/src/collections.js";
-import type {
-	BrickObjectT,
-	BrickFieldObjectT,
-} from "../../../schemas/bricks.js";
-import type { CollectionDataT } from "../../../libs/collection-builder/index.js";
+import { CollectionBuilderT } from "../../../libs/collection-builder/index.js";
+import type { BrickObjectT, FieldObjectT } from "../../../schemas/bricks.js";
 
 export interface ServiceData {
-	type: CollectionDataT["type"];
 	bricks: Array<BrickObjectT>;
 	collection_key: string;
 }
@@ -31,29 +24,25 @@ const validateBricks = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const config = await getConfig();
-
 	const flatFields =
 		data.bricks.flatMap((brick) => {
 			return brick.fields || [];
 		}) || [];
 
-	const [collection, media, pages] = await Promise.all([
-		collectionsServices.getSingle({
+	const [collection, media, documents] = await Promise.all([
+		collectionsServices.getSingleInstance({
 			key: data.collection_key,
-			type: data.type,
 		}),
 		getAllMedia(serviceConfig, flatFields),
-		getAllPages(serviceConfig, flatFields),
+		getAllDocuments(serviceConfig, flatFields),
 	]);
 
 	// validate bricks
 	const { errors, hasErrors } = await validateBrickData({
 		bricks: data.bricks,
-		builderInstances: config.bricks || [],
 		collection: collection,
 		media: media,
-		pages: pages,
+		documents: documents,
 	});
 
 	// If there are errors, throw them
@@ -72,8 +61,7 @@ const validateBricks = async (
 
 const validateBrickData = async (data: {
 	bricks: BrickObjectT[];
-	builderInstances: BrickBuilder[];
-	collection: CollectionResT;
+	collection: CollectionBuilderT;
 	media: Array<{
 		id: number;
 		file_extension: string;
@@ -81,18 +69,23 @@ const validateBrickData = async (data: {
 		height: number | null;
 		type: string;
 	}>;
-	pages: {
+	documents: {
 		id: number;
 	}[];
 }) => {
 	const errors: FieldErrorsT[] = [];
 	let hasErrors = false;
 
+	const brickInstances = [
+		...(data.collection.config.fixedBricks || []),
+		...(data.collection.config.builderBricks || []),
+	];
+
 	for (let i = 0; i < data.bricks.length; i++) {
 		const brick = data.bricks[i];
 
 		// Check if the brick instance exists
-		const instance = data.builderInstances.find((b) => b.key === brick.key);
+		const instance = brickInstances.find((b) => b.key === brick.key);
 		if (!instance) {
 			throw new APIError({
 				type: "basic",
@@ -103,22 +96,6 @@ const validateBrickData = async (data: {
 						key: brick.key,
 					},
 				),
-				status: 400,
-			});
-		}
-
-		// Check if the brick is permitted against the collection
-		const allowedInCollection = data.collection.bricks?.find(
-			(b) => b.key === brick.key && b.type === brick.type,
-		);
-		if (allowedInCollection === undefined) {
-			throw new APIError({
-				type: "basic",
-				name: T("error_saving_bricks"),
-				message: T("error_saving_page_brick_not_in_collection", {
-					key: brick.key,
-					type: brick.type,
-				}),
 				status: 400,
 			});
 		}
@@ -143,8 +120,10 @@ const validateBrickData = async (data: {
 				}
 				case "pagelink": {
 					const value = field.value as PageLinkValueT | undefined;
-					const page = data.pages.find((p) => p.id === value?.id);
-					if (page) {
+					const document = data.documents.find(
+						(p) => p.id === value?.id,
+					);
+					if (document) {
 						referenceData = {
 							target: value?.target,
 							label: value?.label,
@@ -194,10 +173,7 @@ const validateBrickData = async (data: {
 	return { errors, hasErrors };
 };
 
-const allFieldIdsOfType = <T>(
-	fields: BrickFieldObjectT[],
-	type: FieldTypesT,
-) => {
+const allFieldIdsOfType = <T>(fields: FieldObjectT[], type: FieldTypesT) => {
 	return fields
 		.filter((field) => field.type === type)
 		.map((field) => {
@@ -212,7 +188,7 @@ const allFieldIdsOfType = <T>(
 
 const getAllMedia = async (
 	serviceConfig: ServiceConfigT,
-	fields: BrickFieldObjectT[],
+	fields: FieldObjectT[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
@@ -226,15 +202,15 @@ const getAllMedia = async (
 		return [];
 	}
 };
-const getAllPages = async (
+const getAllDocuments = async (
 	serviceConfig: ServiceConfigT,
-	fields: BrickFieldObjectT[],
+	fields: FieldObjectT[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");
 		if (ids.length === 0) return [];
 		return await serviceConfig.db
-			.selectFrom("headless_collection_multiple_builder")
+			.selectFrom("headless_collection_documents")
 			.select("id")
 			.where("id", "in", ids)
 			.execute();

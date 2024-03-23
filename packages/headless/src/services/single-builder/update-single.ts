@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
-import collectionBricksServices from "../collection-bricks/index.js";
+import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import singleBuilderServices from "./index.js";
 
@@ -34,7 +34,7 @@ const updateSingle = async (
 			.where("collection_key", "=", data.collection_key)
 			.returning("id")
 			.executeTakeFirst(),
-		serviceWrapper(collectionBricksServices.upsertMultiple, false)(
+		serviceWrapper(collectionDocumentBricksServices.upsertMultiple, false)(
 			serviceConfig,
 			{
 				id: singleBuilder.id,

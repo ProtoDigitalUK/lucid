@@ -14,8 +14,16 @@ const PageCollection = new CollectionBuilder("page", {
 	enableHomepages: true,
 	enableSlugs: true,
 	enableParents: true,
+	enableTranslations: true,
+	enableCategories: true,
 	builderBricks: [BannerBrick, IntroBrick, TestingBrick],
 	fixedBricks: [DefaultMetaBrick, PageMetaBrick],
-});
+})
+	.addText({
+		key: "page_title",
+	})
+	.addTextarea({
+		key: "page_excerpt",
+	});
 
 export default PageCollection;

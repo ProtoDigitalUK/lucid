@@ -11,14 +11,14 @@ import type { JsonValue } from "kysely-codegen";
 import type { BrickBuilderT } from "../libs/brick-builder/index.js";
 import { createURL } from "./format-media.js";
 import { formatPageFullSlug } from "./format-multiple-builder.js";
+import { CollectionBuilderT } from "../libs/collection-builder/index.js";
 
 export interface BrickQueryT {
 	id: number;
 	brick_key: string;
 	brick_order: number;
 	brick_type: string;
-	multiple_page_id: number | null;
-	single_page_id: number | null;
+	collection_document_id: number;
 	groups: Array<{
 		group_id: number;
 		parent_group_id: number | null;
@@ -27,12 +27,14 @@ export interface BrickQueryT {
 		repeater_key: string;
 		group_order: number;
 		ref: string | null;
+		collection_document_id: number;
 	}>;
 	fields: Array<BrickQueryFieldT>;
 }
 export interface BrickQueryFieldT {
 	fields_id: number;
 	collection_brick_id: number | null;
+	collection_document_id: number;
 	group_id: number | null;
 	language_id: number;
 	key: string;
@@ -46,10 +48,6 @@ export interface BrickQueryFieldT {
 	page_id: number | null;
 	page_slug: string | null;
 	page_full_slug: string | null;
-	page_title_translations: Array<{
-		value: string | null;
-		language_id: number | null;
-	}>;
 	media_key: string | null;
 	media_mime_type: string | null;
 	media_file_extension: string | null;
@@ -69,31 +67,25 @@ export interface BrickQueryFieldT {
 
 const formatBricks = (data: {
 	bricks: BrickQueryT[];
-	collection: CollectionResT;
-	brick_instances: BrickBuilderT[];
+	collection: CollectionBuilderT;
 	host: string;
 }): BrickResT[] => {
+	const brickInstances = [
+		...(data.collection.config.builderBricks || []),
+		...(data.collection.config.fixedBricks || []),
+	];
+
 	return data.bricks
 		.filter((brick) => {
-			const instance = data.brick_instances.find((instance) => {
+			const instance = brickInstances.find((instance) => {
 				return instance.key === brick.brick_key;
 			});
 			if (!instance) return false;
 
-			const collectionInstance = data.collection.bricks?.find(
-				(assignedBrick) => {
-					return (
-						assignedBrick.key === brick.brick_key &&
-						assignedBrick.type === brick.brick_type
-					);
-				},
-			);
-			if (!collectionInstance) return false;
-
 			return true;
 		})
 		.map((brick) => {
-			const instance = data.brick_instances.find((instance) => {
+			const instance = brickInstances.find((instance) => {
 				return instance.key === brick.brick_key;
 			});
 
@@ -106,7 +98,7 @@ const formatBricks = (data: {
 				fields: formatFields(
 					brick.fields,
 					data.host,
-					data.collection.slug,
+					data.collection.data.slug,
 					instance,
 				),
 			};
@@ -243,12 +235,7 @@ const customFieldValues = (
 			value = {
 				id: field?.page_link_id ?? undefined,
 				target: jsonVal?.target || "_self",
-				label:
-					jsonVal?.label ||
-					defaultTranslationValue(
-						field?.page_title_translations,
-						field.language_id,
-					),
+				label: jsonVal?.label || "",
 			};
 			meta = {
 				slug: field?.page_slug ?? undefined,
@@ -258,7 +245,6 @@ const customFieldValues = (
 						collection_slug,
 					) ?? undefined,
 				collection_slug: collection_slug ?? undefined,
-				title_translations: field?.page_title_translations,
 			};
 			break;
 		}
@@ -276,22 +262,14 @@ const customFieldValues = (
 	return { value, meta };
 };
 
-const defaultTranslationValue = (
-	translations: Array<{
-		language_id: number | null;
-		value: string | null;
-	}>,
-	language_id: number,
-) => {
-	const translation = translations.find((t) => t.language_id === language_id);
-	return translation?.value ?? undefined;
-};
-
 export const swaggerBrickRes = {
 	type: "object",
 	additionalProperties: true,
 	properties: {
 		id: {
+			type: "number",
+		},
+		collection_document_id: {
 			type: "number",
 		},
 		key: {
@@ -319,6 +297,9 @@ export const swaggerBrickRes = {
 					parent_group_id: {
 						type: "number",
 						nullable: true,
+					},
+					collection_document_id: {
+						type: "number",
 					},
 					repeater_key: {
 						type: "string",
@@ -362,6 +343,9 @@ export const swaggerBrickRes = {
 					group_id: {
 						type: "number",
 						nullable: true,
+					},
+					collection_document_id: {
+						type: "number",
 					},
 					meta: {
 						type: "object",

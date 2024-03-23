@@ -10,6 +10,12 @@ const BlogCollection = new CollectionBuilder("blog", {
 	description: "Manage your blogs.",
 	enableSlugs: true,
 	builderBricks: [BannerBrick, IntroBrick],
-});
+})
+	.addText({
+		key: "page_title",
+	})
+	.addTextarea({
+		key: "page_excerpt",
+	});
 
 export default BlogCollection;

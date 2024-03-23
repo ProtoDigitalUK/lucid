@@ -10,6 +10,7 @@ import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
 import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
+import collectionDocumentsRoutes from "./collection-documents.routes.js";
 import categoriesRoutes from "./categories.routes.js";
 import multipleBuilderRoutes from "./multiple-builder.routes.js";
 import singleBuilderRoutes from "./single-builder.routes.js";
@@ -30,6 +31,9 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(collectionRoutes, {
 		prefix: "/collections",
+	});
+	fastify.register(collectionDocumentsRoutes, {
+		prefix: "/collections/documents",
 	});
 	fastify.register(categoriesRoutes, {
 		prefix: "/collections/categories",

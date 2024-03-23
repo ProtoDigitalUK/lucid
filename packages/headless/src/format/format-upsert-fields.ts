@@ -1,9 +1,9 @@
-import type { BrickFieldObjectT, BrickObjectT } from "../schemas/bricks.js";
+import type { FieldObjectT, BrickObjectT } from "../schemas/bricks.js";
 import type { FieldTypesT } from "../libs/field-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
-import type { GroupsResT } from "../services/collection-bricks/upsert-multiple-groups.js";
+import type { GroupsResT } from "../services/collection-document-bricks/upsert-multiple-groups.js";
 
-const valueKey = (type: BrickFieldObjectT["type"]) => {
+const valueKey = (type: FieldObjectT["type"]) => {
 	switch (type) {
 		case "text":
 			return "text_value";
@@ -34,7 +34,7 @@ const valueKey = (type: BrickFieldObjectT["type"]) => {
 	}
 };
 
-const fieldTypeValues = (field: BrickFieldObjectT) => {
+const fieldTypeValues = (field: FieldObjectT) => {
 	switch (field.type) {
 		case "link": {
 			const value = field.value as LinkValueT | undefined;

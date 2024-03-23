@@ -3,12 +3,9 @@ import { APIError } from "../../utils/error-handler.js";
 import type { BrickObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import type { CollectionDataT } from "../../libs/collection-builder/index.js";
 
 export interface ServiceData {
-	id: number;
-	type: CollectionDataT["type"];
-	multiple: CollectionDataT["multiple"];
+	document_id: number;
 	bricks: Array<BrickObjectT>;
 	collection_key: string;
 }
@@ -28,7 +25,7 @@ const upsertMultiple = async (
 
 	// upsert bricks and return all the ids, order and key
 	const bricksRes = await serviceConfig.db
-		.insertInto("headless_collection_bricks")
+		.insertInto("headless_collection_document_bricks")
 		.values(
 			data.bricks.map((brick) => {
 				return {
@@ -36,8 +33,7 @@ const upsertMultiple = async (
 					brick_type: brick.type,
 					brick_key: brick.key,
 					brick_order: brick.order,
-					multiple_page_id: data.multiple === true ? data.id : null,
-					single_page_id: data.multiple === false ? data.id : null,
+					collection_document_id: data.document_id,
 				};
 			}),
 		)
@@ -79,6 +75,7 @@ const upsertMultiple = async (
 		collectionBricksServices.upsertMultipleGroups,
 		false,
 	)(serviceConfig, {
+		document_id: data.document_id,
 		bricks: data.bricks,
 	});
 
@@ -87,6 +84,7 @@ const upsertMultiple = async (
 		serviceWrapper(collectionBricksServices.upsertMultipleFields, false)(
 			serviceConfig,
 			{
+				document_id: data.document_id,
 				bricks: data.bricks,
 				groups: groupsRes.groups,
 			},
@@ -95,9 +93,7 @@ const upsertMultiple = async (
 		serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
 			serviceConfig,
 			{
-				id: data.id,
-				type: data.type,
-				multiple: data.multiple,
+				document_id: data.document_id,
 				bricks: bricksRes,
 			},
 		),

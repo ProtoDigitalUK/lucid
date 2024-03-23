@@ -14,6 +14,7 @@ export interface GroupsResT {
 }
 
 export interface ServiceData {
+	document_id: number;
 	bricks: Array<BrickObjectT>;
 }
 
@@ -26,7 +27,7 @@ const upsertMultipleGroups = async (
 
 	// Update groups, on id conflict, update group_order, parent_group_id
 	const groupsRes = await serviceConfig.db
-		.insertInto("headless_collection_groups")
+		.insertInto("headless_collection_document_groups")
 		.values(
 			data.bricks.flatMap((brick) => {
 				if (!brick.groups) return [];
@@ -41,6 +42,7 @@ const upsertMultipleGroups = async (
 							typeof group.parent_group_id === "string"
 								? undefined
 								: group.parent_group_id,
+						collection_document_id: data.document_id,
 						collection_brick_id: brick.id as number,
 						group_order: group.group_order,
 						repeater_key: group.repeater_key,
@@ -161,7 +163,7 @@ const upsertMultipleGroups = async (
 		promises: [
 			// Delete groups not in groupsRes
 			serviceConfig.db
-				.deleteFrom("headless_collection_groups")
+				.deleteFrom("headless_collection_document_groups")
 				.where(
 					"collection_brick_id",
 					"in",
@@ -176,13 +178,13 @@ const upsertMultipleGroups = async (
 			// Update groups with their new parent_group_id
 			updateGroupParentIds.length > 0
 				? serviceConfig.db
-						.updateTable("headless_collection_groups")
+						.updateTable("headless_collection_document_groups")
 						.from(values(updateGroupParentIds, "c"))
 						.set({
 							parent_group_id: sql`c.parent_group_id::int`,
 						})
 						.whereRef(
-							"headless_collection_groups.group_id",
+							"headless_collection_document_groups.group_id",
 							"=",
 							sql`c.group_id::int`,
 						)
