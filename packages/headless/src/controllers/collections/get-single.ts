@@ -11,6 +11,10 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const collection = await collectionsServices.getSingle({
 		key: request.params.key,
+		include: {
+			bricks: true,
+			fields: true,
+		},
 	});
 
 	reply.status(200).send(

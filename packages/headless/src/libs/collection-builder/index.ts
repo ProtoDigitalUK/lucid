@@ -1,5 +1,5 @@
 import z from "zod";
-import FieldBuilder from "../field-builder/index.js";
+import FieldBuilder, { type CustomFieldT } from "../field-builder/index.js";
 import type { BrickBuilderT } from "../brick-builder/index.js";
 
 export default class CollectionBuilder extends FieldBuilder {
@@ -35,20 +35,37 @@ export default class CollectionBuilder extends FieldBuilder {
 			multiple: this.config.multiple,
 			title: this.config.title,
 			singular: this.config.singular,
-			description: this.config.description,
-			slug: this.config.slug,
-			enableParents: this.config.enableParents,
-			enableHomepages: this.config.enableHomepages,
-			enableSlugs: this.config.enableSlugs,
-			enableCategories: this.config.enableCategories,
-			fixedBricks: this.config.fixedBricks,
-			builderBricks: this.config.builderBricks,
+			description: this.config.description ?? null,
+			slug: this.config.slug ?? null,
+			enableParents: this.config.enableParents ?? false,
+			enableHomepages: this.config.enableHomepages ?? false,
+			enableSlugs: this.config.enableSlugs ?? false,
+			enableCategories: this.config.enableCategories ?? false,
 		};
+	}
+	get fixedBricks(): Array<CollectionBrickConfigT> {
+		return (
+			this.config.fixedBricks?.map((brick) => ({
+				key: brick.key,
+				title: brick.config.title,
+				preview: brick.config.preview,
+				fields: brick.fieldTree,
+			})) ?? []
+		);
+	}
+	get builderBricks(): Array<CollectionBrickConfigT> {
+		return (
+			this.config.builderBricks?.map((brick) => ({
+				key: brick.key,
+				title: brick.config.title,
+				preview: brick.config.preview,
+				fields: brick.fieldTree,
+			})) ?? []
+		);
 	}
 }
 
 export const CollectionConfigSchema = z.object({
-	// type: z.enum(["builder"]), will be inferred on FE if collection has bricks assigned
 	multiple: z.boolean().default(false),
 	title: z.string(),
 	singular: z.string(),
@@ -74,14 +91,19 @@ export type CollectionDataT = {
 	multiple: CollectionConfigT["multiple"];
 	title: CollectionConfigT["title"];
 	singular: CollectionConfigT["singular"];
-	description: CollectionConfigT["description"];
-	slug: CollectionConfigT["slug"];
-	enableParents: CollectionConfigT["enableParents"];
-	enableHomepages: CollectionConfigT["enableHomepages"];
-	enableSlugs: CollectionConfigT["enableSlugs"];
-	enableCategories: CollectionConfigT["enableCategories"];
-	fixedBricks?: Array<BrickBuilderT>;
-	builderBricks?: Array<BrickBuilderT>;
+	description: string | null;
+	slug: string | null;
+	enableParents: boolean;
+	enableHomepages: boolean;
+	enableSlugs: boolean;
+	enableCategories: boolean;
 };
+
+export interface CollectionBrickConfigT {
+	key: BrickBuilderT["key"];
+	title: BrickBuilderT["config"]["title"];
+	preview: BrickBuilderT["config"]["preview"];
+	fields: CustomFieldT[];
+}
 
 export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;

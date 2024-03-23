@@ -25,8 +25,8 @@ const headlessConfig = (config: Config) => {
 				CollectionConfigSchema.parse(collection.config);
 
 				for (const brick of [
-					...(collection.data.fixedBricks || []),
-					...(collection.data.builderBricks || []),
+					...(collection.config.fixedBricks || []),
+					...(collection.config.builderBricks || []),
 				]) {
 					BrickSchema.parse(brick.config);
 					for (const field of brick.flatFields)

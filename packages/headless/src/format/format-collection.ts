@@ -1,24 +1,37 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
+import { swaggerBrickConfigsRes } from "./format-brick-config.js";
+import { swaggerFieldConfigsRes } from "./format-field-config.js";
 
 const formatCollection = (
 	collectionInstance: CollectionBuilderT,
-	bricks: boolean,
+	include?: {
+		bricks?: boolean;
+		fields?: boolean;
+	},
 ): CollectionResT => {
-	const collection = collectionInstance.data;
+	const collectionData = collectionInstance.data;
 	const key = collectionInstance.key;
 
 	return {
 		key: key,
-		type: collection.type,
-		multiple: collection.multiple,
-		title: collection.title,
-		singular: collection.singular,
-		description: collection.description ?? null,
-		slug: collection.slug ?? null,
-		disable_homepages: collection.disableHomepages ?? false,
-		disable_parents: collection.disableParents ?? false,
-		bricks: bricks ? collection.bricks : undefined,
+		multiple: collectionData.multiple,
+		title: collectionData.title,
+		singular: collectionData.singular,
+		description: collectionData.description ?? null,
+		slug: collectionData.slug ?? null,
+		enable_parents: collectionData.enableParents ?? false,
+		enable_homepages: collectionData.enableHomepages ?? false,
+		enable_slugs: collectionData.enableSlugs ?? false,
+		enable_categories: collectionData.enableCategories ?? false,
+
+		fixed_bricks: include?.bricks
+			? collectionInstance.fixedBricks ?? []
+			: [],
+		builder_bricks: include?.bricks
+			? collectionInstance.builderBricks ?? []
+			: [],
+		fields: include?.fields ? collectionInstance.flatFields ?? [] : [],
 	};
 };
 
@@ -26,24 +39,31 @@ export const swaggerCollectionRes = {
 	type: "object",
 	properties: {
 		key: { type: "string", example: "pages" },
-		type: { type: "string", example: "builder" },
 		multiple: { type: "boolean", example: false },
-		slug: { type: "string", example: "pages", nullable: true },
 		title: { type: "string", example: "Pages" },
 		singular: { type: "string", example: "Page" },
-		description: { type: "string", example: "A collection of pages" },
-		disable_homepages: { type: "boolean", example: false },
-		disable_parents: { type: "boolean", example: false },
-		bricks: {
+		description: {
+			type: "string",
+			example: "A collection of pages",
+			nullable: true,
+		},
+		slug: { type: "string", example: "pages", nullable: true },
+
+		enable_parents: { type: "boolean", example: false },
+		enable_homepages: { type: "boolean", example: false },
+		enable_slugs: { type: "boolean", example: false },
+		enable_categories: { type: "boolean", example: false },
+		fixed_bricks: {
 			type: "array",
-			items: {
-				type: "object",
-				properties: {
-					key: { type: "string", example: "hero" },
-					type: { type: "string", example: "builder" },
-					position: { type: "string", example: "top" },
-				},
-			},
+			items: swaggerBrickConfigsRes,
+		},
+		builder_bricks: {
+			type: "array",
+			items: swaggerBrickConfigsRes,
+		},
+		fields: {
+			type: "array",
+			items: swaggerFieldConfigsRes,
 		},
 	},
 };

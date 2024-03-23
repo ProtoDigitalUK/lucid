@@ -2,18 +2,22 @@ import {
 	type CollectionDataT,
 	type CollectionBrickConfigT,
 } from "../../headless/src/libs/collection-builder/index.js";
+import { CustomFieldT } from "../../headless/src/libs/field-builder/types.js";
 
 export interface CollectionResT {
 	key: string;
-	type: CollectionDataT["type"];
-	multiple: CollectionDataT["multiple"];
-	slug: string | null;
+	multiple: boolean;
 	title: string;
 	singular: string;
 	description: string | null;
-	disable_homepages: boolean | null;
-	disable_parents: boolean | null;
-	bricks?: CollectionBrickConfigT[];
+	slug: string | null;
+	enable_parents: boolean;
+	enable_homepages: boolean;
+	enable_slugs: boolean;
+	enable_categories: boolean;
+	fixed_bricks: Array<CollectionBrickConfigT>;
+	builder_bricks: Array<CollectionBrickConfigT>;
+	fields: Array<CustomFieldT>;
 }
 
 // biome-ignore lint/suspicious/noRedeclare: <explanation>

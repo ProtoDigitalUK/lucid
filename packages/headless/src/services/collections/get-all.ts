@@ -6,7 +6,10 @@ const getAll = async () => {
 
 	return (
 		config.collections?.map((collection) =>
-			formatCollection(collection, false),
+			formatCollection(collection, {
+				bricks: false,
+				fields: false,
+			}),
 		) ?? []
 	);
 };
