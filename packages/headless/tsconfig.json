@@ -1,30 +1,32 @@
 {
-  "exclude": [
-    "./coverage",
-    "./dist",
-    "tests",
-    "jest.config.ts",
-    "./cms",
-    "./node_modules",
-    "./temp",
-    "./.turbo",
-  ],
-  "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "target": "ESNext",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "typeRoots": ["src/types/types/*"],
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
+    "exclude": [
+        "./coverage",
+        "./dist",
+        "tests",
+        "jest.config.ts",
+        "./cms",
+        "./node_modules",
+        "./temp",
+        "./.turbo",
+    ],
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "resolveJsonModule": true,
+        "target": "ESNext",
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "typeRoots": [
+            "src/types/types/*"
+        ],
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true
+    }
 }

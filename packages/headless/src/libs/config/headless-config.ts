@@ -27,8 +27,9 @@ const headlessConfig = (config: Config) => {
 		if (configRes.bricks) {
 			for (const brick of configRes.bricks) {
 				BrickSchema.parse(brick.config);
-				for (const field of brick.fields) FieldsSchema.parse(field);
-				checks.checkDuplicateFieldKeys(brick.key, brick.fields);
+				for (const field of brick.flatFields) FieldsSchema.parse(field);
+				checks.checkDuplicateFieldKeys(brick.key, brick.meta.fieldKeys);
+				checks.checkRepeaterDepth(brick.key, brick.meta.repeaterDepth);
 			}
 		}
 

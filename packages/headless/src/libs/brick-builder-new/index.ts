@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { string } from "zod";
 import constants from "../../constants.js";
 import type {
 	CustomFieldT,
@@ -19,13 +19,19 @@ import type {
 	TextareaConfigT,
 	WysiwygConfigT,
 	CustomFieldConfigsT,
-} from "./index.d.js";
+	DefaultFieldValuesT,
+	BrickBuilderMetaT,
+} from "./types.js";
 
-export default class BrickBuilder {
+class BrickBuilder {
 	key: string;
-	fields: CustomFieldT[] = [];
+	fields: Map<string, CustomFieldT> = new Map();
 	config: BrickConfigT = {};
-	targetRepeater: string[] = [];
+	repeaterStack: string[] = [];
+	meta: BrickBuilderMetaT = {
+		fieldKeys: [],
+		repeaterDepth: {},
+	};
 	constructor(key: string, config?: BrickConfigT) {
 		this.key = key;
 		this.config = config || {};
@@ -34,14 +40,46 @@ export default class BrickBuilder {
 	}
 	// Custom Fields
 	public addFields(BrickBuilder: BrickBuilder) {
-		const fields = BrickBuilder.fields;
+		const fields = Array.from(BrickBuilder.fields.values());
 		for (const field of fields) {
-			this.fields.push(field);
+			this.fields.set(field.key, field);
+			this.meta.fieldKeys.push(field.key);
 		}
 		return this;
 	}
 	public endRepeater() {
-		this.targetRepeater = this.targetRepeater.slice(0, -1);
+		const key = this.repeaterStack.pop();
+		if (!key) return;
+
+		const fields = Array.from(this.fields.values());
+		let selectedRepeaterIndex = 0;
+		let repeaterKey = "";
+
+		// find the selected repeater
+		for (let i = 0; i < fields.length; i++) {
+			if (fields[i].type === "repeater" && fields[i].key === key) {
+				selectedRepeaterIndex = i;
+				repeaterKey = fields[i].key;
+				break;
+			}
+		}
+
+		if (!repeaterKey) return;
+
+		const fieldsAfterSelectedRepeater = fields.slice(
+			selectedRepeaterIndex + 1,
+		);
+		const repeater = this.fields.get(repeaterKey);
+		if (repeater) {
+			// filter out tab fields
+			repeater.fields = fieldsAfterSelectedRepeater.filter(
+				(field) => field.type !== "tab",
+			);
+			fieldsAfterSelectedRepeater.map((field) => {
+				this.fields.delete(field.key);
+			});
+		}
+
 		return this;
 	}
 	public addTab(config: TabConfigT) {
@@ -61,8 +99,10 @@ export default class BrickBuilder {
 		return this;
 	}
 	public addRepeater(config: RepeaterConfigT) {
+		this.meta.repeaterDepth[config.key] = this.repeaterStack.length;
+
 		this.#addToFields("repeater", config);
-		this.targetRepeater?.push(config.key);
+		this.repeaterStack.push(config.key);
 		return this;
 	}
 	public addNumber(config: NumberConfigT) {
@@ -103,26 +143,61 @@ export default class BrickBuilder {
 	}
 	// Getters
 	get fieldTree(): CustomFieldT[] {
-		// Fields are currently normalised. Need to nest fields within tabs and repeaters
+		const fields = Array.from(this.fields.values());
+
 		const result: Array<CustomFieldT> = [];
+		let currentTab: CustomFieldT | null = null;
+
+		for (const item of fields) {
+			if (item.type === "tab") {
+				if (currentTab) {
+					result.push(currentTab);
+				}
+				currentTab = { ...item, fields: [] };
+			} else if (currentTab) {
+				if (!currentTab.fields) currentTab.fields = [];
+				currentTab.fields.push(item);
+			} else {
+				result.push(item);
+			}
+		}
+
+		if (currentTab) {
+			result.push(currentTab);
+		}
 
 		return result;
 	}
+	get flatFields(): CustomFieldT[] {
+		const fields: CustomFieldT[] = [];
+
+		const fieldArray = Array.from(this.fields.values());
+		const getFields = (field: CustomFieldT) => {
+			fields.push(field);
+			if (field.type === "repeater") {
+				for (const item of field.fields || []) {
+					getFields(item);
+				}
+			}
+		};
+
+		for (const field of fieldArray) {
+			getFields(field);
+		}
+
+		return fields;
+	}
 	// Private
 	#addToFields(type: FieldTypesT, config: CustomFieldConfigsT) {
-		let repeaterKey: string | undefined = undefined;
-		if (this.targetRepeater.length > 0) {
-			repeaterKey = this.targetRepeater[this.targetRepeater.length - 1];
-		}
-		if (type === "tab") repeaterKey = undefined;
-
-		this.fields.push({
-			type,
-			repeaterKey: repeaterKey,
-			title: config.title || this.#keyToTitle(config.key),
+		this.meta.fieldKeys.push(config.key);
+		this.fields.set(config.key, {
 			...config,
+			type: type,
+			title: config.title || this.#keyToTitle(config.key),
+			default: this.#fieldDefaults(type, config),
 		});
 	}
+	// Helpers
 	#keyToTitle(key: string) {
 		if (typeof key !== "string") return key;
 
@@ -133,8 +208,53 @@ export default class BrickBuilder {
 
 		return title;
 	}
+	#fieldDefaults(
+		type: FieldTypesT,
+		config: CustomFieldConfigsT,
+	): DefaultFieldValuesT {
+		switch (type) {
+			case "tab": {
+				break;
+			}
+			case "text": {
+				return (config as TextConfigT).default || "";
+			}
+			case "wysiwyg": {
+				return (config as WysiwygConfigT).default || "";
+			}
+			case "media": {
+				return undefined;
+			}
+			case "number": {
+				return (config as NumberConfigT).default || null;
+			}
+			case "checkbox": {
+				return (config as CheckboxConfigT).default || false;
+			}
+			case "select": {
+				return (config as SelectConfigT).default || "";
+			}
+			case "textarea": {
+				return (config as TextareaConfigT).default || "";
+			}
+			case "json": {
+				return (config as JSONConfigT).default || {};
+			}
+			case "colour": {
+				return (config as ColourConfigT).default || "";
+			}
+			case "datetime": {
+				return (config as DateTimeConfigT).default || "";
+			}
+			case "pagelink": {
+				return undefined;
+			}
+			case "link": {
+				return undefined;
+			}
+		}
+	}
 }
-export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 
 export const BrickSchema = z.object({
 	title: z.string(),
@@ -189,3 +309,7 @@ export const FieldsSchema = z.object({
 		})
 		.optional(),
 });
+
+export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
+export * from "./types.js";
+export default BrickBuilder;

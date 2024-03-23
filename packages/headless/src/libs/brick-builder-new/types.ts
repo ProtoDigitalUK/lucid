@@ -8,7 +8,7 @@ export interface BrickConfigT {
 	};
 }
 
-interface CustomFieldT {
+export interface CustomFieldT {
 	type: FieldTypesT;
 	key: string;
 	repeaterKey?: string;
@@ -60,6 +60,11 @@ export type FieldTypesT =
 	| "datetime"
 	| "pagelink"
 	| "link";
+
+export interface BrickBuilderMetaT {
+	fieldKeys: string[];
+	repeaterDepth: Record<string, number>;
+}
 
 // ----------------------------------------------
 // Custom Field Builder Config
@@ -205,5 +210,4 @@ export type DefaultFieldValuesT =
 	| JSONConfigT["default"]
 	| ColourConfigT["default"]
 	| DateTimeConfigT["default"]
-	| PageLinkConfigT["default"]
 	| LinkConfigT["default"];
