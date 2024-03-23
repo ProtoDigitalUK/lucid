@@ -8,7 +8,6 @@ import langaugeRoutes from "./languages.routes.js";
 import emailRoutes from "./emails.routes.js";
 import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
-import brickRoutes from "./bricks.routes.js";
 import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
 import categoriesRoutes from "./categories.routes.js";
@@ -55,9 +54,6 @@ const routes = async (fastify: FastifyInstance) => {
 	});
 	fastify.register(mediaRoutes, {
 		prefix: "/media",
-	});
-	fastify.register(brickRoutes, {
-		prefix: "/bricks",
 	});
 	// Public
 	fastify.register(publicPagesRoutes, {

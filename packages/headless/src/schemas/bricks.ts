@@ -118,25 +118,3 @@ export const swaggerBodyBricksObj = {
 		},
 	},
 };
-
-export default {
-	getAll: {
-		body: undefined,
-		query: z.object({
-			include: z.array(z.enum(["fields"])).optional(),
-			filter: z
-				.object({
-					collection_key: z.string().optional(),
-				})
-				.optional(),
-		}),
-		params: undefined,
-	},
-	getSingle: {
-		body: undefined,
-		query: undefined,
-		params: z.object({
-			brick_key: z.string().min(1),
-		}),
-	},
-};
