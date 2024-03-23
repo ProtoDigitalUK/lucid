@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
-import getConfig from "../../config.js";
+import getConfig from "../../../libs/config/get-config.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
 import constants from "../../../constants.js";

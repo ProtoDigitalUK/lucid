@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
 

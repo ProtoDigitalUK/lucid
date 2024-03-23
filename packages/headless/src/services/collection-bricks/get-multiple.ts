@@ -1,4 +1,4 @@
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 import collectionsServices from "../collections/index.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import formatBricks from "../../format/format-bricks.js";

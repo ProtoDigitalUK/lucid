@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import formatMedia from "../../format/format-media.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	id: number;

@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import crypto from "node:crypto";
 import constants from "../../constants.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 
 const key = "_csrf";
 

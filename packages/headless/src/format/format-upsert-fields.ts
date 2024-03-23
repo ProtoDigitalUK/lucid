@@ -1,5 +1,5 @@
 import type { BrickFieldObjectT, BrickObjectT } from "../schemas/bricks.js";
-import type { FieldTypes } from "../libs/brick-builder/index.js";
+import type { FieldTypesT } from "../libs/field-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { GroupsResT } from "../services/collection-bricks/upsert-multiple-groups.js";
 
@@ -80,7 +80,7 @@ interface BrickFieldUpdateObject {
 	fields_id?: number | undefined;
 	collection_brick_id: number;
 	key: string;
-	type: FieldTypes;
+	type: FieldTypesT;
 	group_id?: number | null;
 	text_value: string | null;
 	int_value: number | null;

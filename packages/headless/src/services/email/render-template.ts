@@ -3,7 +3,7 @@ import Handlebars from "handlebars";
 import mjml2html from "mjml";
 import path from "node:path";
 import { getDirName } from "../../utils/helpers.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 
 const currentDir = getDirName(import.meta.url);
 

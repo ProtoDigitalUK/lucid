@@ -5,7 +5,7 @@ import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
-import getConfig from "../../services/config.js";
+import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	query: z.infer<typeof mediaSchema.getMultiple.query>;

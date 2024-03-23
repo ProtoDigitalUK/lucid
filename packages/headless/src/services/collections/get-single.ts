@@ -5,7 +5,7 @@ import type {
 	CollectionDataT,
 } from "../../libs/collection-builder/index.js";
 import formatCollection from "../../format/format-collection.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	key: string;

@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError } from "../../../utils/error-handler.js";
-import getConfig from "../../config.js";
+import getConfig from "../../../libs/config/get-config.js";
 
 export interface ServiceData {
 	bricks: string[];

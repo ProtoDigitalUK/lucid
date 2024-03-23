@@ -1,5 +1,5 @@
 import formatCollection from "../../format/format-collection.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 
 const getAll = async () => {
 	const config = await getConfig();

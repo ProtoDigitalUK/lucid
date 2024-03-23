@@ -1,12 +1,5 @@
-import z from "zod";
+import type { ZodType } from "zod";
 import type { MediaTypeT } from "@headless/types/src/media.js";
-
-export interface BrickConfigT {
-	title?: string;
-	preview?: {
-		image?: string;
-	};
-}
 
 export interface CustomFieldT {
 	type: FieldTypesT;
@@ -29,7 +22,7 @@ export interface CustomFieldT {
 		value: string;
 	}>;
 	validation?: {
-		zod?: z.ZodType<unknown>;
+		zod?: ZodType<unknown>;
 		required?: boolean;
 		extensions?: string[];
 		type?: MediaTypeT;
@@ -61,7 +54,24 @@ export type FieldTypesT =
 	| "pagelink"
 	| "link";
 
-export interface BrickBuilderMetaT {
+export enum FieldTypesEnumT {
+	Tab = "tab",
+	Text = "text",
+	Wysiwyg = "wysiwyg",
+	Media = "media",
+	Repeater = "repeater",
+	Number = "number",
+	Checkbox = "checkbox",
+	Select = "select",
+	Textarea = "textarea",
+	JSON = "json",
+	Colour = "colour",
+	Datetime = "datetime",
+	Pagelink = "pagelink",
+	Link = "link",
+}
+
+export interface FieldBuilderMetaT {
 	fieldKeys: string[];
 	repeaterDepth: Record<string, number>;
 }
@@ -99,7 +109,7 @@ export interface TextConfigT extends CustomFieldConfigT {
 	placeholder?: string;
 	validation?: {
 		required?: boolean;
-		zod?: z.ZodType<unknown>;
+		zod?: ZodType<unknown>;
 	};
 }
 export interface WysiwygConfigT extends CustomFieldConfigT {
@@ -107,7 +117,7 @@ export interface WysiwygConfigT extends CustomFieldConfigT {
 	placeholder?: string;
 	validation?: {
 		required?: boolean;
-		zod?: z.ZodType<unknown>;
+		zod?: ZodType<unknown>;
 	};
 }
 export interface MediaConfigT extends CustomFieldConfigT {
@@ -135,7 +145,7 @@ export interface NumberConfigT extends CustomFieldConfigT {
 	placeholder?: string;
 	validation?: {
 		required?: boolean;
-		zod?: z.ZodType<unknown>;
+		zod?: ZodType<unknown>;
 	};
 }
 export interface CheckboxConfigT extends CustomFieldConfigT {
@@ -159,7 +169,7 @@ export interface TextareaConfigT extends CustomFieldConfigT {
 	placeholder?: string;
 	validation?: {
 		required?: boolean;
-		zod?: z.ZodType<unknown>;
+		zod?: ZodType<unknown>;
 	};
 }
 export interface JSONConfigT extends CustomFieldConfigT {
@@ -169,7 +179,7 @@ export interface JSONConfigT extends CustomFieldConfigT {
 	placeholder?: string;
 	validation?: {
 		required?: boolean;
-		zod?: z.ZodType<unknown>;
+		zod?: ZodType<unknown>;
 	};
 }
 export interface ColourConfigT extends CustomFieldConfigT {
@@ -211,3 +221,28 @@ export type DefaultFieldValuesT =
 	| ColourConfigT["default"]
 	| DateTimeConfigT["default"]
 	| LinkConfigT["default"];
+
+// Validation
+export interface ValidationPropsT {
+	type: FieldTypesT;
+	key: string;
+	value: unknown;
+	referenceData?: MediaReferenceDataT | LinkReferenceDataT;
+	flatFieldConfig: CustomFieldT[];
+}
+export interface ValidationResponseT {
+	valid: boolean;
+	message?: string;
+}
+
+export interface LinkReferenceDataT {
+	target?: string | null;
+	label?: string | null;
+}
+
+export interface MediaReferenceDataT {
+	extension: string;
+	width: number | null;
+	height: number | null;
+	type: string;
+}

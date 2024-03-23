@@ -1,5 +1,5 @@
 import { S3Client, type S3ClientConfig } from "@aws-sdk/client-s3";
-import getConfig from "../services/config.js";
+import getConfig from "../libs/config/get-config.js";
 
 let s3Client: S3Client | null = null;
 

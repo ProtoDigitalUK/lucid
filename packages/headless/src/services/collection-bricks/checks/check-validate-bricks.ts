@@ -4,14 +4,14 @@ import {
 	modelErrors,
 	type FieldErrorsT,
 } from "../../../utils/error-handler.js";
-import getConfig from "../../config.js";
+import getConfig from "../../../libs/config/get-config.js";
 import collectionsServices from "../../collections/index.js";
 import type {
-	ValidationProps,
-	MediaReferenceData,
-	LinkReferenceData,
-	FieldTypes,
-} from "../../../libs/brick-builder/index.js";
+	ValidationPropsT,
+	MediaReferenceDataT,
+	LinkReferenceDataT,
+	FieldTypesT,
+} from "../../../libs/field-builder/index.js";
 import type BrickBuilder from "../../../libs/brick-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
@@ -130,7 +130,7 @@ const validateBrickData = async (data: {
 			const field = flatFields[j];
 
 			// Set the secondary value
-			let referenceData: ValidationProps["referenceData"] = undefined;
+			let referenceData: ValidationPropsT["referenceData"] = undefined;
 
 			switch (field.type) {
 				case "link": {
@@ -138,7 +138,7 @@ const validateBrickData = async (data: {
 					referenceData = {
 						target: value?.target,
 						label: value?.label,
-					} satisfies LinkReferenceData;
+					} satisfies LinkReferenceDataT;
 					break;
 				}
 				case "pagelink": {
@@ -148,7 +148,7 @@ const validateBrickData = async (data: {
 						referenceData = {
 							target: value?.target,
 							label: value?.label,
-						} satisfies LinkReferenceData;
+						} satisfies LinkReferenceDataT;
 					} else if (field.value) {
 						field.value.id = null;
 					}
@@ -162,7 +162,7 @@ const validateBrickData = async (data: {
 							width: media.width,
 							height: media.height,
 							type: media.type,
-						} satisfies MediaReferenceData;
+						} satisfies MediaReferenceDataT;
 					} else if (field.value) {
 						field.value = null;
 					}
@@ -196,7 +196,7 @@ const validateBrickData = async (data: {
 
 const allFieldIdsOfType = <T>(
 	fields: BrickFieldObjectT[],
-	type: FieldTypes,
+	type: FieldTypesT,
 ) => {
 	return fields
 		.filter((field) => field.type === type)

@@ -13,8 +13,8 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers.js";
-import getConfig from "./services/config.js";
-import getConfigTest from "./libs/config/get-config.js";
+import getConfig from "./libs/config/get-config.js";
+import type { Config } from "./libs/config/config-schema.js";
 import { decodeError } from "./utils/error-handler.js";
 import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
@@ -26,12 +26,11 @@ const currentDir = getDirName(import.meta.url);
 
 const headless = async (fastify: FastifyInstance) => {
 	try {
-		await getConfigTest();
 		const config = await getConfig();
 		await initialiseDB();
 
 		fastify.decorate("db", headlessDB());
-		fastify.decorate("config", config);
+		fastify.decorate<Config>("config", config);
 
 		// ------------------------------------
 		// Swagger

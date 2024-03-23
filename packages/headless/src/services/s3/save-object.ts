@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import type { Readable } from "node:stream";
 import type { MediaMetaDataT } from "../../utils/media-helpers.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 import getS3Client from "../../clients/s3-client.js";
 
 export interface ServiceData {

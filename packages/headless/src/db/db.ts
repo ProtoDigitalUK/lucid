@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { getConfig } from "../services/config.js";
+import getConfig from "../libs/config/get-config.js";
 import { InternalError } from "../utils/error-handler.js";
 import { Kysely, PostgresDialect } from "kysely";
 import type { DB as DBSchema } from "kysely-codegen";
@@ -12,7 +12,7 @@ const initialiseDB = async () => {
 	const config = await getConfig();
 	const dialect = new PostgresDialect({
 		pool: new Pool({
-			connectionString: config.databaseURL,
+			connectionString: config.databaseUrl,
 			max: 20,
 			ssl: {
 				rejectUnauthorized: false,

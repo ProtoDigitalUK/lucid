@@ -5,8 +5,7 @@ import fs from "fs-extra";
 const getConfigPath = (cwd: string): string => {
 	let configPath: string | undefined = undefined;
 	const root = path.parse(cwd).root;
-	// const configFileName = "headless.config";
-	const configFileName = "headless.config-test";
+	const configFileName = "headless.config";
 	const configExtensions = [".ts", ".js"];
 
 	const search = (cwd: string): void => {

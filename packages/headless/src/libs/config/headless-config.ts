@@ -3,7 +3,8 @@ import { log } from "console-log-colors";
 import checks from "./checks/index.js";
 import ConfigSchema, { type Config } from "./config-schema.js";
 import { CollectionConfigSchema } from "../collection-builder/index.js";
-import { BrickSchema, FieldsSchema } from "../brick-builder-new/index.js";
+import { BrickSchema } from "../brick-builder/index.js";
+import { FieldsSchema } from "../field-builder/index.js";
 
 const headlessConfig = (config: Config) => {
 	try {

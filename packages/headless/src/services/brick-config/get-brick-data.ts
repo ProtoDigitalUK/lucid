@@ -11,7 +11,7 @@ export interface ServiceData {
 const getBrickData = async (data: ServiceData) => {
 	const brickData: BrickConfigT = {
 		key: data.instance.key,
-		title: data.instance.title,
+		title: data.instance.config.title,
 		preview: data.instance.config?.preview,
 	};
 

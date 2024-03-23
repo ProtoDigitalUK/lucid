@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import type { HeadlessConfigT } from "../schemas/config.js";
+import type { Config } from "../libs/config/config-schema.js";
 import type z from "zod";
 import type { Kysely } from "kysely";
 import type { UserPermissionsResT } from "@headless/types/src/users.js";
@@ -9,7 +9,7 @@ import type { DB as DBSchema } from "kysely-codegen";
 declare module "fastify" {
 	interface FastifyInstance {
 		db: DB;
-		config: HeadlessConfigT;
+		config: Config;
 	}
 
 	interface FastifyRequest {

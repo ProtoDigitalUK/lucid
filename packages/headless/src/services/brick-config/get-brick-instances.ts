@@ -1,5 +1,5 @@
 import brickConfigServices from "./index.js";
-import getConfig from "../config.js";
+import getConfig from "../../libs/config/get-config.js";
 import type { BrickConfigT } from "@headless/types/src/bricks.js";
 
 export interface ServiceData {

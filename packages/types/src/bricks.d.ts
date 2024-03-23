@@ -1,19 +1,21 @@
 import type {
-	CustomField,
-	BrickConfigOptionsT,
-	FieldTypes,
-} from "../../headless/src/libs/brick-builder/index.js";
+	CustomFieldT,
+	FieldTypesT,
+} from "../../headless/src/libs/field-builder/index.js";
+import type { BrickConfigPropsT } from "../../headless/src/libs/brick-builder/index.js";
 import type { MediaTypeT } from "./media.js";
 
 export interface BrickConfigT {
 	key: string;
 	title: string;
 	fields?: CustomField[];
-	preview?: BrickConfigOptionsT["preview"];
+	preview?: BrickConfigPropsT["preview"];
 }
 
-export type CustomFieldT = CustomField;
-export type FieldTypesT = FieldTypes;
+// biome-ignore lint/suspicious/noRedeclare: <explanation>
+export type CustomFieldT = CustomFieldT;
+// biome-ignore lint/suspicious/noRedeclare: <explanation>
+export type FieldTypesT = FieldTypesT;
 
 export type BrickFieldValueT =
 	| string

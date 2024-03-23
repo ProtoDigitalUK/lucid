@@ -1,5 +1,5 @@
 import type { BrickResT } from "./bricks.js";
-import type { FieldTypes } from "../../headless/src/libs/brick-builder/types.js";
+import type { FieldTypesT } from "../../headless/src/libs/field-builder/types.js";
 
 export interface MultipleBuilderResT {
 	id: number;
@@ -44,5 +44,5 @@ export interface SingleBuilderResT {
 	bricks: Array<BrickResT>;
 }
 
-// biome-ignore lint/suspicious/noRedeclare: <explanation> // TODO: return to this, why does it exist?
+// biome-ignore lint/suspicious/noRedeclare: <explanation>
 export type FieldTypes = FieldTypes;

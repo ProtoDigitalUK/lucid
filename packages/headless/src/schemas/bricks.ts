@@ -1,7 +1,7 @@
 import z from "zod";
-import { FieldTypesEnum } from "../libs/brick-builder/index.js";
+import { FieldTypesEnumT } from "../libs/field-builder/index.js";
 
-const FieldTypesSchema = z.nativeEnum(FieldTypesEnum);
+const FieldTypesSchema = z.nativeEnum(FieldTypesEnumT);
 
 export const FieldSchema = z.object({
 	key: z.string(),

@@ -14,7 +14,7 @@ import SettingsCollection from "./src/headless/collections/settings.js";
 export default headlessConfig({
 	mode: "development",
 	host: "http://localhost:8393",
-	databaseURL: process.env.DATABASE_URL as string,
+	databaseUrl: process.env.DATABASE_URL as string,
 	keys: {
 		cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
 		refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,

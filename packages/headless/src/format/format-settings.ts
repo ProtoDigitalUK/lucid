@@ -1,4 +1,4 @@
-import getConfig from "../services/config.js";
+import getConfig from "../libs/config/get-config.js";
 import type { SettingsResT } from "@headless/types/src/settings.js";
 
 const formatSettings = async (data: {
