@@ -46,6 +46,9 @@ export default {
 			},
 		],
 	},
+	brickBuilder: {
+		maxRepeaterDepth: 3,
+	},
 	query: {
 		page: 1,
 		per_page: 10,

@@ -1,10 +1,4 @@
-import { headlessConfigNew, BrickBuilder } from "@protodigital/headless";
-// Bricks
-import BannerBrick from "./src/headless/bricks/banner.js";
-import IntroBrick from "./src/headless/bricks/intro.js";
-import DefaultMetaBrick from "./src/headless/bricks/default-meta.js";
-import TestingBrick from "./src/headless/bricks/testing.js";
-import PageMetaBrick from "./src/headless/bricks/page-meta.js";
+import { headlessConfigNew, BrickBuilderNew } from "@protodigital/headless";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
@@ -21,14 +15,65 @@ export default headlessConfigNew({
 	},
 	collections: [PageCollection, BlogCollection, SettingsCollection],
 	bricks: [
-		BannerBrick,
-		IntroBrick,
-		DefaultMetaBrick,
-		TestingBrick,
-		PageMetaBrick,
-		new BrickBuilder("bannertest", {
+		new BrickBuilderNew("banner", {
 			preview: {
-				image: true,
+				image: "https://headless-dev.up.railway.app/public/banner-brick.png",
+			},
+		})
+			.addTab({
+				title: "Content",
+				key: "content_tab",
+			})
+			.addText({
+				key: "title",
+				description: "The title of the banner",
+				validation: {
+					required: true,
+				},
+			})
+			.addWysiwyg({
+				key: "intro",
+			})
+			.addPageLink({
+				key: "page-link",
+			})
+			.addRepeater({
+				key: "social_links",
+				validation: {
+					maxGroups: 3,
+				},
+			})
+			.addText({
+				key: "social_title",
+			})
+			.addText({
+				key: "social_url",
+			})
+			.addRepeater({
+				key: "icons",
+				validation: {
+					maxGroups: 3,
+				},
+			})
+			.addText({
+				key: "icon_text",
+			})
+			.addText({
+				key: "icon_url",
+			})
+			.endRepeater()
+			.endRepeater()
+			.addTab({
+				title: "Config",
+				key: "config_tab",
+			})
+			.addCheckbox({
+				key: "fullwidth",
+				description: "Make the banner fullwidth",
+			}),
+		new BrickBuilderNew("bannertest", {
+			preview: {
+				image: "true",
 			},
 		})
 			.addTab({
@@ -37,7 +82,7 @@ export default headlessConfigNew({
 			})
 			.addTab({
 				title: "Content",
-				key: "content_tab",
+				key: "content_tab_2",
 			}),
 	],
 });

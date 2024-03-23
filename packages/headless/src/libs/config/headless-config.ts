@@ -3,6 +3,7 @@ import { log } from "console-log-colors";
 import checks from "./checks/index.js";
 import ConfigSchema, { type Config } from "./config-schema.js";
 import { CollectionConfigSchema } from "../collection-builder/index.js";
+import { BrickSchema, FieldsSchema } from "../brick-builder-new/index.js";
 
 const headlessConfig = (config: Config) => {
 	try {
@@ -25,8 +26,9 @@ const headlessConfig = (config: Config) => {
 
 		if (configRes.bricks) {
 			for (const brick of configRes.bricks) {
-				// TODO: rework brick builder validation - currently validation runs on instantiation which happens outside of this function meaning errors are not caught and logged correctly. Doesnt give indication its broken atm.
-				console.log(brick.config);
+				BrickSchema.parse(brick.config);
+				for (const field of brick.fields) FieldsSchema.parse(field);
+				checks.checkDuplicateFieldKeys(brick.key, brick.fields);
 			}
 		}
 

@@ -1,6 +1,5 @@
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
-// Types
 import type {
 	BrickConfigOptionsT,
 	CustomField,
@@ -28,73 +27,6 @@ import type {
 	defaultFieldValues,
 } from "./types.js";
 
-// ------------------------------------
-// Schema
-const baseCustomFieldSchema = z.object({
-	type: z.string(),
-	key: z.string(),
-	title: z.string(),
-	description: z.string().optional(),
-	placeholder: z.string().optional(),
-	// boolean or string
-	default: z
-		.union([
-			z.boolean(),
-			z.string(),
-			z.number(),
-			z.undefined(),
-			z.object({}),
-			z.null(),
-		])
-		.optional(),
-	options: z
-		.array(
-			z.object({
-				label: z.string(),
-				value: z.string(),
-			}),
-		)
-		.optional(),
-	validation: z
-		.object({
-			zod: z.any().optional(),
-			required: z.boolean().optional(),
-			extensions: z.array(z.string()).optional(),
-			width: z
-				.object({
-					min: z.number().optional(),
-					max: z.number().optional(),
-				})
-				.optional(),
-			height: z
-				.object({
-					min: z.number().optional(),
-					max: z.number().optional(),
-				})
-				.optional(),
-		})
-		.optional(),
-});
-export type Fields = z.infer<typeof baseCustomFieldSchema> & {
-	fields?: Fields[];
-};
-const customFieldSchemaObject: z.ZodType<Fields> = baseCustomFieldSchema.extend(
-	{
-		fields: z.lazy(() => customFieldSchemaObject.array().optional()),
-	},
-);
-
-// ------------------------------------
-// Validation
-class ValidationError extends Error {
-	constructor(public message: string) {
-		super(message);
-		this.name = "ValidationError";
-	}
-}
-
-// ------------------------------------
-// BrickBuilder
 export default class BrickBuilder {
 	key: string;
 	title: string;
@@ -356,16 +288,12 @@ export default class BrickBuilder {
 			// Check if field exists in config
 			const field = flatFieldConfig.find((item) => item.key === key);
 			if (!field) {
-				throw new ValidationError(
-					`Field with key "${key}" does not exist.`,
-				);
+				throw new Error(`Field with key "${key}" does not exist.`);
 			}
 
 			// Check if field type matches
 			if (field.type !== type) {
-				throw new ValidationError(
-					`Field with key "${key}" is not a ${type}.`,
-				);
+				throw new Error(`Field with key "${key}" is not a ${type}.`);
 			}
 
 			// Check if field is required
@@ -376,7 +304,7 @@ export default class BrickBuilder {
 						message = "Please ensure the switch is checked.";
 					if (field.type === "select")
 						message = "Please ensure an option is selected.";
-					throw new ValidationError(message);
+					throw new Error(message);
 				}
 			}
 
@@ -391,7 +319,7 @@ export default class BrickBuilder {
 				if (dataType.nullable && value !== null) {
 					// biome-ignore lint/suspicious/useValidTypeof: <explanation>
 					if (typeof value !== dataType.type) {
-						throw new ValidationError(
+						throw new Error(
 							`The field value must be a ${dataType}.`,
 						);
 					}
@@ -420,9 +348,7 @@ export default class BrickBuilder {
 					if (!value) break;
 					const date = new Date(value as string);
 					if (Number.isNaN(date.getTime())) {
-						throw new ValidationError(
-							"Please ensure the date is valid.",
-						);
+						throw new Error("Please ensure the date is valid.");
 					}
 					break;
 				}
@@ -439,20 +365,17 @@ export default class BrickBuilder {
 					break;
 				}
 			}
-		} catch (error) {
-			// Catch validation errors and return them
-			if (error instanceof ValidationError) {
-				return {
-					valid: false,
-					message: error.message,
-				};
-			}
-			throw error;
-		}
 
-		return {
-			valid: true,
-		};
+			return {
+				valid: true,
+			};
+		} catch (err) {
+			const error = err as Error;
+			return {
+				valid: false,
+				message: error?.message || "An unknown error occurred.",
+			};
+		}
 	}
 	// ------------------------------------
 	#validateSelectType(field: CustomField, value: string) {
@@ -460,9 +383,7 @@ export default class BrickBuilder {
 		if (field.options) {
 			const optionValues = field.options.map((option) => option.value);
 			if (!optionValues.includes(value)) {
-				throw new ValidationError(
-					"Please ensure an option is selected.",
-				);
+				throw new Error("Please ensure an option is selected.");
 			}
 		}
 	}
@@ -485,16 +406,14 @@ export default class BrickBuilder {
 		if (field.validation?.required !== true && !value) return;
 
 		if (referenceData === undefined) {
-			throw new ValidationError(
-				"We couldn't find the media you selected.",
-			);
+			throw new Error("We couldn't find the media you selected.");
 		}
 
 		// Check if value is in the options
 		if (field.validation?.extensions?.length) {
 			const extension = referenceData.extension;
 			if (!field.validation.extensions.includes(extension)) {
-				throw new ValidationError(
+				throw new Error(
 					`Media must be one of the following extensions: ${field.validation.extensions.join(
 						", ",
 					)}`,
@@ -506,11 +425,11 @@ export default class BrickBuilder {
 		if (field.validation?.type) {
 			const type = referenceData.type;
 			if (!type) {
-				throw new ValidationError("This media does not have a type.");
+				throw new Error("This media does not have a type.");
 			}
 
 			if (field.validation.type !== type) {
-				throw new ValidationError(
+				throw new Error(
 					`Media must be of type "${field.validation.type}".`,
 				);
 			}
@@ -520,14 +439,14 @@ export default class BrickBuilder {
 		if (field.validation?.width) {
 			const width = referenceData.width;
 			if (!width) {
-				throw new ValidationError("This media does not have a width.");
+				throw new Error("This media does not have a width.");
 			}
 
 			if (
 				field.validation.width.min &&
 				width < field.validation.width.min
 			) {
-				throw new ValidationError(
+				throw new Error(
 					`Media width must be greater than ${field.validation.width.min}px.`,
 				);
 			}
@@ -535,7 +454,7 @@ export default class BrickBuilder {
 				field.validation.width.max &&
 				width > field.validation.width.max
 			) {
-				throw new ValidationError(
+				throw new Error(
 					`Media width must be less than ${field.validation.width.max}px.`,
 				);
 			}
@@ -545,14 +464,14 @@ export default class BrickBuilder {
 		if (field.validation?.height) {
 			const height = referenceData.height;
 			if (!height) {
-				throw new ValidationError("This media does not have a height.");
+				throw new Error("This media does not have a height.");
 			}
 
 			if (
 				field.validation.height.min &&
 				height < field.validation.height.min
 			) {
-				throw new ValidationError(
+				throw new Error(
 					`Media height must be greater than ${field.validation.height.min}px.`,
 				);
 			}
@@ -560,7 +479,7 @@ export default class BrickBuilder {
 				field.validation.height.max &&
 				height > field.validation.height.max
 			) {
-				throw new ValidationError(
+				throw new Error(
 					`Media height must be less than ${field.validation.height.max}px.`,
 				);
 			}
@@ -572,7 +491,7 @@ export default class BrickBuilder {
 		const allowedValues = ["_self", "_blank"];
 		if (!referenceData.target) return;
 		if (!allowedValues.includes(referenceData.target)) {
-			throw new ValidationError(
+			throw new Error(
 				`Please set the target to one of the following: ${allowedValues.join(
 					", ",
 				)}.`,
@@ -586,7 +505,7 @@ export default class BrickBuilder {
 			schema.parse(value);
 		} catch (error) {
 			const err = error as z.ZodError;
-			throw new ValidationError(err.issues[0].message);
+			throw new Error(err.issues[0].message);
 		}
 	}
 	// ------------------------------------
@@ -617,11 +536,6 @@ export default class BrickBuilder {
 			...(noUndefinedConfig as CustomFieldConfig),
 			default: this.#setFieldDefaults(type, config),
 		};
-
-		const validation = baseCustomFieldSchema.safeParse(data);
-		if (!validation.success) {
-			throw new Error(validation.error.message);
-		}
 
 		this.fields.set(config.key, data);
 	}
@@ -677,6 +591,67 @@ export default class BrickBuilder {
 		}
 	}
 }
+
+export const BrickConfigSchema = z.object({
+	preview: z
+		.object({
+			fields: z.array(z.string()),
+		})
+		.optional(),
+});
+
+export const BaseCustomFieldSchema = z.object({
+	type: z.string(),
+	key: z.string(),
+	title: z.string(),
+	description: z.string().optional(),
+	placeholder: z.string().optional(),
+	default: z
+		.union([
+			z.boolean(),
+			z.string(),
+			z.number(),
+			z.undefined(),
+			z.object({}),
+			z.null(),
+		])
+		.optional(),
+	options: z
+		.array(
+			z.object({
+				label: z.string(),
+				value: z.string(),
+			}),
+		)
+		.optional(),
+	validation: z
+		.object({
+			zod: z.any().optional(),
+			required: z.boolean().optional(),
+			extensions: z.array(z.string()).optional(),
+			width: z
+				.object({
+					min: z.number().optional(),
+					max: z.number().optional(),
+				})
+				.optional(),
+			height: z
+				.object({
+					min: z.number().optional(),
+					max: z.number().optional(),
+				})
+				.optional(),
+		})
+		.optional(),
+});
+export type Fields = z.infer<typeof BaseCustomFieldSchema> & {
+	fields?: Fields[];
+};
+const customFieldSchemaObject: z.ZodType<Fields> = BaseCustomFieldSchema.extend(
+	{
+		fields: z.lazy(() => customFieldSchemaObject.array().optional()),
+	},
+);
 
 export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 export * from "./types.js";

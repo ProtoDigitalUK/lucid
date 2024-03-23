@@ -1,5 +1,5 @@
 import z from "zod";
-import type { BrickBuilderT } from "../brick-builder/index.js";
+import type { BrickBuilderT } from "../brick-builder-new/index.js";
 import type { CollectionBuilderT } from "../collection-builder/index.js";
 
 const ConfigSchema = z.object({
