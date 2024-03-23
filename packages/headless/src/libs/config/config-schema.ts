@@ -1,5 +1,4 @@
 import z from "zod";
-import type { BrickBuilderT } from "../brick-builder/index.js";
 import type { CollectionBuilderT } from "../collection-builder/index.js";
 import constants from "../../constants.js";
 
@@ -55,7 +54,6 @@ const ConfigSchema = z.object({
 		}),
 	}),
 	collections: z.array(z.unknown()).optional(),
-	bricks: z.array(z.unknown()).optional(),
 });
 
 export type EmailStrategyT = (
@@ -85,7 +83,6 @@ export type EmailStrategyT = (
 }>;
 
 export interface Config extends z.infer<typeof ConfigSchema> {
-	bricks?: BrickBuilderT[];
 	collections?: CollectionBuilderT[];
 	email: {
 		from: {
