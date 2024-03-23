@@ -15,6 +15,7 @@ export interface CollectionResT {
 	enable_homepages: boolean;
 	enable_slugs: boolean;
 	enable_categories: boolean;
+	enable_translations: boolean;
 	fixed_bricks: Array<CollectionBrickConfigT>;
 	builder_bricks: Array<CollectionBrickConfigT>;
 	fields: Array<CustomFieldT>;

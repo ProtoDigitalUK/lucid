@@ -24,6 +24,7 @@ const formatCollection = (
 		enable_homepages: collectionData.enableHomepages ?? false,
 		enable_slugs: collectionData.enableSlugs ?? false,
 		enable_categories: collectionData.enableCategories ?? false,
+		enable_translations: collectionData.enableTranslations ?? false,
 
 		fixed_bricks: include?.bricks
 			? collectionInstance.fixedBricks ?? []
@@ -53,6 +54,8 @@ export const swaggerCollectionRes = {
 		enable_homepages: { type: "boolean", example: false },
 		enable_slugs: { type: "boolean", example: false },
 		enable_categories: { type: "boolean", example: false },
+		enable_translations: { type: "boolean", example: false },
+
 		fixed_bricks: {
 			type: "array",
 			items: swaggerBrickConfigsRes,

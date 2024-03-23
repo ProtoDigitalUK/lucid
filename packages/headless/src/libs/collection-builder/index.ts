@@ -41,6 +41,7 @@ export default class CollectionBuilder extends FieldBuilder {
 			enableHomepages: this.config.enableHomepages ?? false,
 			enableSlugs: this.config.enableSlugs ?? false,
 			enableCategories: this.config.enableCategories ?? false,
+			enableTranslations: this.config.enableTranslations ?? false,
 		};
 	}
 	get fixedBricks(): Array<CollectionBrickConfigT> {
@@ -76,6 +77,7 @@ export const CollectionConfigSchema = z.object({
 	enableHomepages: z.boolean().default(false).optional(),
 	enableSlugs: z.boolean().default(false).optional(),
 	enableCategories: z.boolean().default(false).optional(),
+	enableTranslations: z.boolean().default(false).optional(),
 
 	fixedBricks: z.array(z.unknown()).optional(),
 	builderBricks: z.array(z.unknown()).optional(),
@@ -97,6 +99,7 @@ export type CollectionDataT = {
 	enableHomepages: boolean;
 	enableSlugs: boolean;
 	enableCategories: boolean;
+	enableTranslations: boolean;
 };
 
 export interface CollectionBrickConfigT {
