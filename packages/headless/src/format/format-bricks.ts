@@ -11,7 +11,7 @@ import type { JsonValue } from "kysely-codegen";
 import type { BrickBuilderT } from "../libs/brick-builder/index.js";
 import { createURL } from "./format-media.js";
 import { formatPageFullSlug } from "./format-collection-document.js";
-import { CollectionBuilderT } from "../libs/collection-builder/index.js";
+import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 
 export interface BrickQueryT {
 	id: number;

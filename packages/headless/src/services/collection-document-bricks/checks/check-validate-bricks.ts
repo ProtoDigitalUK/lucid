@@ -12,7 +12,7 @@ import type {
 	FieldTypesT,
 } from "../../../libs/field-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
-import { CollectionBuilderT } from "../../../libs/collection-builder/index.js";
+import type { CollectionBuilderT } from "../../../libs/collection-builder/index.js";
 import type { BrickObjectT, FieldObjectT } from "../../../schemas/bricks.js";
 
 export interface ServiceData {
