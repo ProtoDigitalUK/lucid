@@ -195,7 +195,7 @@ const upsertSingle = async (
 						exclude_id: document.id,
 						document_id: data.document_id,
 					},
-			  )
+				)
 			: undefined,
 		serviceWrapper(
 			collectionDocumentCategoriesServices.upsertMultiple,
@@ -208,7 +208,7 @@ const upsertSingle = async (
 			serviceConfig,
 			{
 				document_id: document.id,
-				bricks: data.bricks || [],
+				bricks: data.bricks,
 				fields: data.fields || [],
 				collection_key: data.collection_key,
 			},

@@ -1,4 +1,5 @@
 export interface ServiceData {
+	apply: boolean;
 	document_id: number;
 	bricks: {
 		id: number;
@@ -12,7 +13,18 @@ const deleteMultipleBricks = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.bricks.length === 0) return;
+	if (!data.apply) return;
+
+	const ids = data.bricks.map((brick) => brick.id);
+
+	if (ids.length === 0) {
+		await serviceConfig.db
+			.deleteFrom("headless_collection_document_bricks")
+			.where("collection_document_id", "=", data.document_id)
+			.where("brick_type", "!=", "collection-fields")
+			.execute();
+		return;
+	}
 
 	await serviceConfig.db
 		.deleteFrom("headless_collection_document_bricks")
@@ -22,7 +34,7 @@ const deleteMultipleBricks = async (
 			data.bricks.map((brick) => brick.id),
 		)
 		.where("collection_document_id", "=", data.document_id)
-		.where("brick_type", "=", "collection-fields")
+		.where("brick_type", "!=", "collection-fields")
 		.execute();
 };
 

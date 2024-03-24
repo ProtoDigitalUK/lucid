@@ -3,14 +3,13 @@ import { APIError } from "../../utils/error-handler.js";
 import type {
 	BrickObjectT,
 	FieldCollectionObjectT,
-	FieldObjectT,
 } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	document_id: number;
-	bricks: Array<BrickObjectT>;
+	bricks?: Array<BrickObjectT>;
 	fields: Array<FieldCollectionObjectT>;
 	collection_key: string;
 }
@@ -19,6 +18,9 @@ const upsertMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const noBricks =
+		data.bricks === undefined ? false : data.bricks.length === 0;
+	const bricksLength = data.bricks?.length || 0;
 	let bricks = data.bricks || [];
 
 	const collectionContentBrick = await serviceConfig.db
@@ -129,8 +131,11 @@ const upsertMultiple = async (
 		serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
 			serviceConfig,
 			{
+				apply: noBricks || bricksLength > 0,
 				document_id: data.document_id,
-				bricks: bricksRes,
+				bricks: bricksRes.filter(
+					(res) => res.brick_type !== "collection-fields",
+				),
 			},
 		),
 		// group delete, parent update
