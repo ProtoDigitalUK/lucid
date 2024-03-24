@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import { sql } from "kysely";
+import type { ErrorContentT } from "../../../utils/helpers.js";
 
 /*
     Checks:
@@ -10,6 +11,7 @@ import { sql } from "kysely";
 export interface ServiceData {
 	document_id?: number;
 	parent_id?: number | null;
+	errorContent: ErrorContentT;
 }
 
 const checkParentAncestry = async (
@@ -41,12 +43,8 @@ const checkParentAncestry = async (
 	if (document.rows.length > 0) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("document"),
-			}),
-			message: T("error_not_found_message", {
-				name: T("document"),
-			}),
+			name: data.errorContent.name,
+			message: data.errorContent.message,
 			status: 400,
 			errors: modelErrors({
 				parent_id: {

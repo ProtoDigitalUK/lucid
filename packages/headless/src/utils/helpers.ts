@@ -1,3 +1,4 @@
+import T from "../translations/index.js";
 import { format, getHours } from "date-fns";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
@@ -23,4 +24,34 @@ export const getEmailHash = (data: {
 
 export const getDirName = (metaUrl: string) => {
 	return dirname(fileURLToPath(metaUrl));
+};
+
+export interface ErrorContentT {
+	name: string;
+	message: string;
+}
+
+export const upsertErrorContent = (
+	create: boolean,
+	translation: string,
+): ErrorContentT => {
+	if (create) {
+		return {
+			name: T("error_not_created_name", {
+				name: translation,
+			}),
+			message: T("error_not_created_message", {
+				name: translation,
+			}),
+		};
+	}
+
+	return {
+		name: T("error_not_updated_name", {
+			name: translation,
+		}),
+		message: T("update_error_message", {
+			name: translation.toLowerCase(),
+		}),
+	};
 };

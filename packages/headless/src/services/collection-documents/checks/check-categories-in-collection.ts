@@ -1,9 +1,11 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import type { ErrorContentT } from "../../../utils/helpers.js";
 
 export interface ServiceData {
 	category_ids?: Array<number>;
 	collection_key: string;
+	errorContent: ErrorContentT;
 }
 
 const checkCategoriesInCollection = async (
@@ -23,12 +25,8 @@ const checkCategoriesInCollection = async (
 	if (categories.length !== data.category_ids.length) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("document"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("document"),
-			}),
+			name: data.errorContent.name,
+			message: data.errorContent.message,
 			status: 400,
 			errors: modelErrors({
 				category_ids: {

@@ -1,10 +1,11 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentCategoriesServices from "../collection-document-categories/index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import type { BrickObjectT, CollectionContentT } from "../../schemas/bricks.js";
+import { upsertErrorContent } from "../../utils/helpers.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -24,6 +25,33 @@ const upsertSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const errorContent = upsertErrorContent(
+		data.document_id === undefined,
+		T("document"),
+	);
+
+	if (data.document_id !== undefined) {
+		const existingDocument = await serviceConfig.db
+			.selectFrom("headless_collection_documents")
+			.select("id")
+			.where("id", "=", data.document_id)
+			.where("collection_key", "=", data.collection_key)
+			.executeTakeFirst();
+
+		if (existingDocument === undefined) {
+			throw new APIError({
+				type: "basic",
+				name: T("error_not_found_name", {
+					name: T("document"),
+				}),
+				message: T("error_not_found_message", {
+					name: T("document"),
+				}),
+				status: 404,
+			});
+		}
+	}
+
 	/*
         Check:
         - Collection config
@@ -37,6 +65,7 @@ const upsertSingle = async (
 			has_parent_id:
 				data.parent_id !== undefined && data.parent_id !== null,
 			has_category_ids: data.category_ids !== undefined,
+			errorContent: errorContent,
 		});
 
 	const bodyDataEnabled = {
@@ -66,6 +95,7 @@ const upsertSingle = async (
 				collection_key: data.collection_key,
 				parent_id: bodyDataEnabled.parent_id,
 				homepage: bodyDataEnabled.homepage,
+				errorContent: errorContent,
 			},
 		),
 		serviceWrapper(
@@ -75,6 +105,7 @@ const upsertSingle = async (
 			collection_key: data.collection_key,
 			slug: bodyDataEnabled.slug,
 			document_id: data.document_id,
+			errorContent: errorContent,
 		}),
 		serviceWrapper(
 			collectionDocumentsServices.checks.checkCategoriesInCollection,
@@ -82,6 +113,7 @@ const upsertSingle = async (
 		)(serviceConfig, {
 			collection_key: data.collection_key,
 			category_ids: bodyDataEnabled.category_ids,
+			errorContent: errorContent,
 		}),
 		serviceWrapper(
 			collectionDocumentsServices.checks.checkParentAncestry,
@@ -89,6 +121,7 @@ const upsertSingle = async (
 		)(serviceConfig, {
 			document_id: data.document_id,
 			parent_id: bodyDataEnabled.parent_id,
+			errorContent: errorContent,
 		}),
 	]);
 
@@ -122,8 +155,12 @@ const upsertSingle = async (
 		.executeTakeFirst();
 
 	if (document === undefined) {
-		// TODO: update
-		throw new Error("Document not found");
+		throw new APIError({
+			type: "basic",
+			name: errorContent.name,
+			message: errorContent.message,
+			status: 400,
+		});
 	}
 
 	/*

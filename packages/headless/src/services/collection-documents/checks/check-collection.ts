@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import { APIError } from "../../../utils/error-handler.js";
 import getConfig from "../../../libs/config/get-config.js";
+import type { ErrorContentT } from "../../../utils/helpers.js";
 
 export interface ServiceData {
 	key: string;
@@ -8,6 +9,7 @@ export interface ServiceData {
 	has_homepage: boolean;
 	has_parent_id: boolean;
 	has_category_ids: boolean;
+	errorContent: ErrorContentT;
 }
 
 const checkCollection = async (data: ServiceData) => {
@@ -20,9 +22,7 @@ const checkCollection = async (data: ServiceData) => {
 	if (!collectionInstance) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_found_name", {
-				name: T("collection"),
-			}),
+			name: data.errorContent.name,
 			message: T("error_not_found_message", {
 				name: T("collection"),
 			}),
@@ -33,9 +33,7 @@ const checkCollection = async (data: ServiceData) => {
 	if (data.has_slug && collectionInstance.data.enableSlugs === false) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("collection"),
-			}),
+			name: data.errorContent.name,
 			message: T("collection_config_error_message", {
 				type: "enableSlugs",
 			}),
@@ -48,9 +46,7 @@ const checkCollection = async (data: ServiceData) => {
 	) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("collection"),
-			}),
+			name: data.errorContent.name,
 			message: T("collection_config_error_message", {
 				type: "enableHomepages",
 			}),
@@ -60,9 +56,7 @@ const checkCollection = async (data: ServiceData) => {
 	if (data.has_parent_id && collectionInstance.data.enableParents === false) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("collection"),
-			}),
+			name: data.errorContent.name,
 			message: T("collection_config_error_message", {
 				type: "enableParents",
 			}),
@@ -75,9 +69,7 @@ const checkCollection = async (data: ServiceData) => {
 	) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("collection"),
-			}),
+			name: data.errorContent.name,
 			message: T("collection_config_error_message", {
 				type: "enableCategories",
 			}),

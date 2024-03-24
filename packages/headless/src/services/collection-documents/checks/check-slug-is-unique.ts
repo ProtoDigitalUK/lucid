@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import slug from "slug";
+import type { ErrorContentT } from "../../../utils/helpers.js";
 
 /*
     Checks:
@@ -11,6 +12,7 @@ export interface ServiceData {
 	collection_key: string;
 	slug?: string;
 	document_id?: number;
+	errorContent: ErrorContentT;
 }
 
 const checkSlugIsUnique = async (
@@ -35,22 +37,8 @@ const checkSlugIsUnique = async (
 	if (slugExists !== undefined) {
 		throw new APIError({
 			type: "basic",
-			name:
-				data.document_id === undefined
-					? T("error_not_created_name", {
-							name: T("document"),
-					  })
-					: T("error_not_updated_name", {
-							name: T("document"),
-					  }),
-			message:
-				data.document_id === undefined
-					? T("error_not_created_message", {
-							name: T("document"),
-					  })
-					: T("update_error_message", {
-							name: T("document").toLowerCase(),
-					  }),
+			name: data.errorContent.name,
+			message: data.errorContent.message,
 			status: 400,
 			errors: modelErrors({
 				slug: {

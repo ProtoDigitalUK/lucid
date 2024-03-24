@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import type { ErrorContentT } from "../../../utils/helpers.js";
 
 /*
     Checks:
@@ -14,6 +15,7 @@ export interface ServiceData {
 	parent_id?: number | null;
 	homepage?: boolean;
 	current_id?: number;
+	errorContent: ErrorContentT;
 }
 
 const checkParent = async (
@@ -27,12 +29,8 @@ const checkParent = async (
 	if (data.current_id === data.parent_id) {
 		throw new APIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("document"),
-			}),
-			message: T("update_error_message", {
-				name: T("document").toLowerCase(),
-			}),
+			name: data.errorContent.name,
+			message: data.errorContent.message,
 			status: 400,
 			errors: modelErrors({
 				parent_id: {
@@ -53,12 +51,8 @@ const checkParent = async (
 	if (docRes === undefined) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("document"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("document"),
-			}),
+			name: data.errorContent.name,
+			message: data.errorContent.message,
 			status: 400,
 			errors: modelErrors({
 				parent_id: {
@@ -74,12 +68,8 @@ const checkParent = async (
 	if (docRes.homepage === true) {
 		throw new APIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("document"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("document"),
-			}),
+			name: data.errorContent.name,
+			message: data.errorContent.message,
 			status: 400,
 			errors: modelErrors({
 				parent_id: {

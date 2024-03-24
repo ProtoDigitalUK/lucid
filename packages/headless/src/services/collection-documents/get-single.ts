@@ -57,10 +57,10 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {
-				name: T("page"),
+				name: T("document"),
 			}),
 			message: T("error_not_found_message", {
-				name: T("page"),
+				name: T("document"),
 			}),
 			status: 404,
 		});
