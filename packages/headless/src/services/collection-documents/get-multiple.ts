@@ -8,6 +8,7 @@ import formatCollectionDocument from "../../format/format-collection-document.js
 import collectionsServices from "../collections/index.js";
 
 export interface ServiceData {
+	collection_key: string;
 	query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
 	language_id: number; // TODO: will be used for field joins
 	in_ids?: number[];
@@ -107,11 +108,6 @@ const getMultiple = async (
 			},
 			meta: {
 				filters: [
-					{
-						queryKey: "collection_key",
-						tableKey: "collection_key",
-						operator: "=",
-					},
 					{
 						queryKey: "slug",
 						tableKey: "slug",

@@ -5,7 +5,7 @@ import collectionDocuments from "../../../controllers/collection-documents/index
 const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "post",
-		url: "",
+		url: "/:collection_key",
 		permissions: ["update_content"],
 		middleware: {
 			authenticate: true,
@@ -18,7 +18,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "/:id",
+		url: "/:collection_key/:id",
 		middleware: {
 			authenticate: true,
 		},
@@ -29,7 +29,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "delete",
-		url: "/:id",
+		url: "/:collection_key/:id",
 		permissions: ["delete_content"],
 		middleware: {
 			authenticate: true,
@@ -42,7 +42,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "delete",
-		url: "",
+		url: "/:collection_key",
 		permissions: ["delete_content"],
 		middleware: {
 			authenticate: true,
@@ -55,7 +55,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "",
+		url: "/:collection_key",
 		middleware: {
 			authenticate: true,
 			contentLanguage: true,
@@ -67,7 +67,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "/:id/valid-parents",
+		url: "/:collection_key/:id/valid-parents",
 		middleware: {
 			authenticate: true,
 			contentLanguage: true,

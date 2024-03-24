@@ -22,9 +22,6 @@ const slugSchema = z
 const getMultipleQuerySchema = z.object({
 	filter: z
 		.object({
-			collection_key: z
-				.union([z.string(), z.array(z.string())])
-				.optional(),
 			slug: z.string().optional(),
 			full_slug: z.string().optional(),
 			category_id: z.union([z.string(), z.array(z.string())]).optional(),
@@ -47,7 +44,6 @@ const getMultipleQuerySchema = z.object({
 export default {
 	upsertSingle: {
 		body: z.object({
-			collection_key: z.string(),
 			document_id: z.number().optional(),
 			slug: slugSchema.optional(),
 			homepage: z.boolean().optional(),
@@ -57,7 +53,9 @@ export default {
 			fields: z.array(FieldSchemaCollection).optional(),
 		}),
 		query: undefined,
-		params: undefined,
+		params: z.object({
+			collection_key: z.string(),
+		}),
 	},
 	getSingle: {
 		query: z.object({
@@ -65,17 +63,21 @@ export default {
 		}),
 		params: z.object({
 			id: z.string(),
+			collection_key: z.string(),
 		}),
 		body: undefined,
 	},
 	getMultiple: {
 		query: getMultipleQuerySchema,
-		params: undefined,
+		params: z.object({
+			collection_key: z.string(),
+		}),
 		body: undefined,
 	},
 	getMultipleValidParents: {
 		query: getMultipleQuerySchema,
 		params: z.object({
+			collection_key: z.string(),
 			id: z.string(),
 		}),
 		body: undefined,
@@ -84,6 +86,7 @@ export default {
 		body: undefined,
 		query: undefined,
 		params: z.object({
+			collection_key: z.string(),
 			id: z.string(),
 		}),
 	},
@@ -92,6 +95,8 @@ export default {
 			ids: z.array(z.number()),
 		}),
 		query: undefined,
-		params: undefined,
+		params: z.object({
+			collection_key: z.string(),
+		}),
 	},
 };

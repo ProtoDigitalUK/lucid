@@ -21,7 +21,7 @@ const upsertSingleController: ControllerT<
 			db: request.server.db,
 		},
 		{
-			collection_key: request.body.collection_key,
+			collection_key: request.params.collection_key,
 			document_id: request.body.document_id,
 			user_id: request.auth.id,
 			slug: request.body.slug,

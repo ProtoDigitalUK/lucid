@@ -5,6 +5,7 @@ import collectionDocumentsServices from "../../services/collection-documents/ind
 import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
+	collection_key: string;
 	query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
 	document_id: number;
 	language_id: number;
@@ -44,11 +45,7 @@ const getMultipleValidParents = async (
     SELECT p.id
     FROM headless_collection_documents p
     WHERE NOT p.id = ${data.document_id}
-    ${
-		data.query.filter?.collection_key !== undefined
-			? `AND p.collection_key = '${data.query.filter.collection_key}'`
-			: ""
-	}
+    AND p.collection_key = '${data.collection_key}'
     AND NOT p.id IN (SELECT id FROM descendants)
     AND NOT p.homepage
     AND NOT p.is_deleted
@@ -72,6 +69,7 @@ const getMultipleValidParents = async (
 			query: data.query,
 			in_ids: validParentIds,
 			language_id: data.language_id,
+			collection_key: data.collection_key,
 		},
 	);
 };

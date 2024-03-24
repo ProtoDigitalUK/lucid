@@ -95,6 +95,10 @@ export default class CollectionBuilder extends FieldBuilder {
 				enableCategories: this.config.config?.enableCategories ?? false,
 				enableTranslations:
 					this.config.config?.enableTranslations ?? false,
+				fields: {
+					filter: this.filterableFieldKeys,
+					include: this.includeFieldKeys,
+				},
 			},
 		};
 	}
@@ -165,6 +169,10 @@ export type CollectionDataT = {
 		enableSlugs: boolean;
 		enableCategories: boolean;
 		enableTranslations: boolean;
+		fields: {
+			filter: string[];
+			include: string[];
+		};
 	};
 };
 

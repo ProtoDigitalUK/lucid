@@ -164,14 +164,6 @@ export const swaggerCollectionDocumentResT = {
 			type: "string",
 			nullable: true,
 		},
-		published: {
-			type: "boolean",
-			nullable: true,
-		},
-		published_at: {
-			type: "string",
-			nullable: true,
-		},
 	},
 };
 

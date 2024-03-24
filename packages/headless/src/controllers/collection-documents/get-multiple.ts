@@ -22,6 +22,7 @@ const getMultipleController: ControllerT<
 			db: request.server.db,
 		},
 		{
+			collection_key: request.params.collection_key,
 			query: request.query,
 			language_id: request.language.id,
 		},
@@ -61,9 +62,6 @@ export default {
 		}),
 		querystring: swaggerQueryString({
 			filters: [
-				{
-					key: "collection_key",
-				},
 				{
 					key: "slug",
 				},

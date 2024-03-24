@@ -22,6 +22,7 @@ const getMultipleValidParentsController: ControllerT<
 			db: request.server.db,
 		},
 		{
+			collection_key: request.params.collection_key,
 			query: request.query,
 			language_id: request.language.id,
 			document_id: Number.parseInt(request.params.id),
@@ -63,9 +64,6 @@ export default {
 		}),
 		querystring: swaggerQueryString({
 			filters: [
-				{
-					key: "collection_key",
-				},
 				{
 					key: "slug",
 				},
