@@ -42,16 +42,25 @@ export const BrickSchema = z.object({
 	id: z.union([z.number(), z.string()]).optional(),
 	key: z.string(),
 	order: z.number(),
-	type: z.union([
-		z.literal("builder"),
-		z.literal("fixed"),
-		z.literal("content"),
-	]),
+	type: z.union([z.literal("builder"), z.literal("fixed")]),
 
 	groups: z.array(GroupSchema).optional(),
 	fields: z.array(FieldSchema).optional(),
 });
-export type BrickObjectT = z.infer<typeof BrickSchema>;
+export interface BrickObjectT {
+	id?: number | string;
+	key?: string;
+	order?: number;
+	type: "builder" | "fixed" | "content";
+	groups?: GroupObjectT[];
+	fields?: FieldObjectT[];
+}
+
+export const CollectionContentSchema = z.object({
+	groups: z.array(GroupSchema).optional(),
+	fields: z.array(FieldSchema).optional(),
+});
+export type CollectionContentT = z.infer<typeof CollectionContentSchema>;
 
 const swaggerFieldObj = {
 	type: "object",
@@ -115,6 +124,20 @@ export const swaggerBodyBricksObj = {
 		type: {
 			type: "string",
 		},
+		groups: {
+			type: "array",
+			items: swaggerGroupObj,
+		},
+		fields: {
+			type: "array",
+			items: swaggerFieldObj,
+		},
+	},
+};
+
+export const swaggerBodyContentObj = {
+	type: "object",
+	properties: {
 		groups: {
 			type: "array",
 			items: swaggerGroupObj,

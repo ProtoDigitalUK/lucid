@@ -85,7 +85,10 @@ const validateBrickData = async (data: {
 		const brick = data.bricks[i];
 
 		// Check if the brick instance exists
-		const instance = brickInstances.find((b) => b.key === brick.key);
+		const instance =
+			brick.type !== "content"
+				? brickInstances.find((b) => b.key === brick.key)
+				: data.collection;
 		if (!instance) {
 			throw new APIError({
 				type: "basic",
@@ -93,7 +96,7 @@ const validateBrickData = async (data: {
 				message: T(
 					"error_saving_page_brick_couldnt_find_brick_config",
 					{
-						key: brick.key,
+						key: brick.key || "",
 					},
 				),
 				status: 400,

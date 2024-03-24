@@ -1,19 +1,11 @@
-import type { BrickResT } from "./bricks.js";
+import type { BrickResT, CollectionContentResT } from "./bricks.js";
 import type { FieldTypesT } from "../../headless/src/libs/field-builder/types.js";
 
-export interface MultipleBuilderResT {
+export interface CollectionDocumentResT {
 	id: number;
 	parent_id: number | null;
 	collection_key: string | null;
 
-	title_translations: {
-		language_id: number | null;
-		value: string | null;
-	}[];
-	excerpt_translations: {
-		language_id: number | null;
-		value: string | null;
-	}[];
 	slug: string | null;
 	full_slug: string | null;
 	collection_slug: string | null;
@@ -23,9 +15,6 @@ export interface MultipleBuilderResT {
 	created_by: number | null;
 	created_at: string | null;
 	updated_at: string | null;
-
-	published: boolean;
-	published_at: string | null;
 
 	author: {
 		id: number | null;
@@ -37,6 +26,7 @@ export interface MultipleBuilderResT {
 
 	categories?: Array<number> | null;
 	bricks?: Array<BrickResT> | null;
+	content?: CollectionContentResT | null;
 }
 
 export interface SingleBuilderResT {
@@ -44,5 +34,4 @@ export interface SingleBuilderResT {
 	bricks: Array<BrickResT>;
 }
 
-// biome-ignore lint/suspicious/noRedeclare: <explanation>
-export type FieldTypes = FieldTypes;
+export type FieldTypes = FieldTypesT;

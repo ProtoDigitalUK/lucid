@@ -15,6 +15,17 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		zodSchema: collectionDocuments.upsertSingle.zodSchema,
 		controller: collectionDocuments.upsertSingle.controller,
 	});
+
+	r(fastify, {
+		method: "get",
+		url: "/:id",
+		middleware: {
+			authenticate: true,
+		},
+		swaggerSchema: collectionDocuments.getSingle.swaggerSchema,
+		zodSchema: collectionDocuments.getSingle.zodSchema,
+		controller: collectionDocuments.getSingle.controller,
+	});
 };
 
 export default collectionDocumentsRoutes;

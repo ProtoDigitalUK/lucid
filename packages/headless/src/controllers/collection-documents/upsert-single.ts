@@ -5,14 +5,18 @@ import {
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import { swaggerBodyBricksObj } from "../../schemas/bricks.js";
+import {
+	swaggerBodyBricksObj,
+	swaggerBodyContentObj,
+} from "../../schemas/bricks.js";
+import buildResponse from "../../utils/build-response.js";
 
 const upsertSingleController: ControllerT<
 	typeof collectionDocumentsSchema.upsertSingle.params,
 	typeof collectionDocumentsSchema.upsertSingle.body,
 	typeof collectionDocumentsSchema.upsertSingle.query
 > = async (request, reply) => {
-	const document = await serviceWrapper(
+	const documentId = await serviceWrapper(
 		collectionDocumentsServices.upsertSingle,
 		true,
 	)(
@@ -21,16 +25,24 @@ const upsertSingleController: ControllerT<
 		},
 		{
 			collection_key: request.body.collection_key,
+			document_id: request.body.document_id,
 			user_id: request.auth.id,
 			slug: request.body.slug,
 			homepage: request.body.homepage,
 			parent_id: request.body.parent_id,
 			category_ids: request.body.category_ids,
 			bricks: request.body.bricks,
+			content: request.body.content,
 		},
 	);
 
-	reply.status(204).send();
+	reply.status(200).send(
+		await buildResponse(request, {
+			data: {
+				id: documentId,
+			},
+		}),
+	);
 };
 
 export default {
@@ -69,13 +81,21 @@ export default {
 					type: "array",
 					items: swaggerBodyBricksObj,
 				},
+				content: swaggerBodyContentObj,
 			},
 			required: ["collection_key"],
 		},
 		response: {
-			204: swaggerResponse({
-				type: 204,
-				noPropertise: true,
+			200: swaggerResponse({
+				type: 200,
+				data: {
+					type: "object",
+					properties: {
+						id: {
+							type: "number",
+						},
+					},
+				},
 			}),
 		},
 		headers: swaggerHeaders({

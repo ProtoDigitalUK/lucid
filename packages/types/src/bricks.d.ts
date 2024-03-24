@@ -53,6 +53,11 @@ export interface BrickResT {
 	}>;
 }
 
+export interface CollectionContentResT {
+	groups: BrickResT["groups"];
+	fields: BrickResT["fields"];
+}
+
 export interface PageLinkValueT {
 	id: number | null;
 	target?: string | null;

@@ -2,8 +2,9 @@ export interface ServiceData {
 	document_id: number;
 	bricks: {
 		id: number;
-		brick_key: string;
-		brick_order: number;
+		brick_key: string | null;
+		brick_order: number | null;
+		brick_type: string;
 	}[];
 }
 

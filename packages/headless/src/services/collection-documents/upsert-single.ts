@@ -4,7 +4,7 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentCategoriesServices from "../collection-document-categories/index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
-import type { BrickObjectT } from "../../schemas/bricks.js";
+import type { BrickObjectT, CollectionContentT } from "../../schemas/bricks.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -17,6 +17,7 @@ export interface ServiceData {
 	parent_id?: number | null;
 	category_ids?: number[];
 	bricks?: Array<BrickObjectT>;
+	content?: CollectionContentT;
 }
 
 const upsertSingle = async (
@@ -121,6 +122,7 @@ const upsertSingle = async (
 		.executeTakeFirst();
 
 	if (document === undefined) {
+		// TODO: update
 		throw new Error("Document not found");
 	}
 
@@ -154,10 +156,13 @@ const upsertSingle = async (
 			{
 				document_id: document.id,
 				bricks: data.bricks || [],
+				content: data.content,
 				collection_key: data.collection_key,
 			},
 		),
 	]);
+
+	return document.id;
 };
 
 export default upsertSingle;
