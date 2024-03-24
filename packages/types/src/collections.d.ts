@@ -11,6 +11,7 @@ export interface CollectionResT {
 	singular: string;
 	description: string | null;
 	slug: string | null;
+	document_id?: number | null;
 	enable_parents: boolean;
 	enable_homepages: boolean;
 	enable_slugs: boolean;

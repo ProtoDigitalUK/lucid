@@ -10,12 +10,14 @@ const getAllController: ControllerT<
 	typeof collectionsSchema.getAll.body,
 	typeof collectionsSchema.getAll.query
 > = async (request, reply) => {
-	const collections = await serviceWrapper(
-		collectionsServices.getAll,
-		false,
-	)({
-		db: request.server.db,
-	});
+	const collections = await serviceWrapper(collectionsServices.getAll, false)(
+		{
+			db: request.server.db,
+		},
+		{
+			include_document_id: true,
+		},
+	);
 
 	reply.status(200).send(
 		await buildResponse(request, {

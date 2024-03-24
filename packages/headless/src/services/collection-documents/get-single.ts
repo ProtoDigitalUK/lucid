@@ -66,7 +66,10 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const collection = await collectionsServices.getSingle({
+	const collection = await serviceWrapper(
+		collectionsServices.getSingle,
+		false,
+	)(serviceConfig, {
 		key: document.collection_key,
 	});
 

@@ -1,5 +1,9 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
-import { swaggerBrickRes, swaggerContentRes } from "./format-bricks.js";
+import {
+	swaggerBrickRes,
+	swaggerFieldRes,
+	swaggerGroupRes,
+} from "./format-bricks.js";
 import type {
 	BrickResT,
 	CollectionContentResT,
@@ -146,7 +150,20 @@ export const swaggerCollectionDocumentResT = {
 			type: "array",
 			items: swaggerBrickRes,
 		},
-		content: swaggerContentRes,
+		content: {
+			type: "object",
+			nullable: true,
+			properties: {
+				groups: {
+					type: "array",
+					items: swaggerGroupRes,
+				},
+				fields: {
+					type: "array",
+					items: swaggerFieldRes,
+				},
+			},
+		},
 		created_by: {
 			type: "number",
 			nullable: true,

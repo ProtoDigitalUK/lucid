@@ -8,7 +8,12 @@ const formatCollection = (
 	include?: {
 		bricks?: boolean;
 		fields?: boolean;
+		document_id?: boolean;
 	},
+	documents?: Array<{
+		id?: number;
+		collection_key: string;
+	}>,
 ): CollectionResT => {
 	const collectionData = collectionInstance.data;
 	const key = collectionInstance.key;
@@ -20,6 +25,9 @@ const formatCollection = (
 		singular: collectionData.singular,
 		description: collectionData.description ?? null,
 		slug: collectionData.slug ?? null,
+		document_id: include?.document_id
+			? getDocumentId(key, documents)
+			: undefined,
 		enable_parents: collectionData.enableParents ?? false,
 		enable_homepages: collectionData.enableHomepages ?? false,
 		enable_slugs: collectionData.enableSlugs ?? false,
@@ -36,6 +44,20 @@ const formatCollection = (
 	};
 };
 
+const getDocumentId = (
+	collectionKey: string,
+	documents?: Array<{
+		id?: number;
+		collection_key: string;
+	}>,
+) => {
+	const document = documents?.find(
+		(document) => document.collection_key === collectionKey,
+	);
+
+	return document?.id ?? undefined;
+};
+
 export const swaggerCollectionRes = {
 	type: "object",
 	properties: {
@@ -49,6 +71,7 @@ export const swaggerCollectionRes = {
 			nullable: true,
 		},
 		slug: { type: "string", example: "pages", nullable: true },
+		document_id: { type: "number", example: 1, nullable: true },
 
 		enable_parents: { type: "boolean", example: false },
 		enable_homepages: { type: "boolean", example: false },

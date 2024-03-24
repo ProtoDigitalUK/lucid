@@ -286,7 +286,7 @@ const customFieldValues = (
 	return { value, meta };
 };
 
-const swaggerGroupRes = {
+export const swaggerGroupRes = {
 	type: "object",
 	additionalProperties: true,
 	properties: {
@@ -312,7 +312,7 @@ const swaggerGroupRes = {
 	},
 };
 
-const swaggerFieldRes = {
+export const swaggerFieldRes = {
 	type: "object",
 	additionalProperties: true,
 	properties: {
@@ -459,21 +459,6 @@ export const swaggerBrickRes = {
 			type: "string",
 			enum: ["builder", "fixed"],
 		},
-		groups: {
-			type: "array",
-			items: swaggerGroupRes,
-		},
-		fields: {
-			type: "array",
-			items: swaggerFieldRes,
-		},
-	},
-};
-
-export const swaggerContentRes = {
-	type: "object",
-	additionalProperties: true,
-	properties: {
 		groups: {
 			type: "array",
 			items: swaggerGroupRes,

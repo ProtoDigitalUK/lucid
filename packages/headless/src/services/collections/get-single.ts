@@ -8,10 +8,11 @@ export interface ServiceData {
 	include?: {
 		bricks?: boolean;
 		fields?: boolean;
+		document_id?: boolean;
 	};
 }
 
-const getSingle = async (data: ServiceData) => {
+const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const config = await getConfig();
 
 	const collection = config.collections?.find((c) => c.key === data.key);
@@ -27,6 +28,26 @@ const getSingle = async (data: ServiceData) => {
 			}),
 			status: 404,
 		});
+	}
+
+	if (
+		data.include?.document_id === true &&
+		collection.data.multiple === false
+	) {
+		const document = await serviceConfig.db
+			.selectFrom("headless_collection_documents")
+			.select("id")
+			.where("collection_key", "=", collection.key)
+			.where("is_deleted", "=", false)
+			.limit(1)
+			.executeTakeFirst();
+
+		return formatCollection(collection, data.include, [
+			{
+				id: document?.id,
+				collection_key: collection.key,
+			},
+		]);
 	}
 
 	return formatCollection(collection, data.include);

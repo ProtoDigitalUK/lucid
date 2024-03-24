@@ -148,7 +148,9 @@ const getMultiple = async (
 		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 	]);
 
-	const collections = await collectionsServices.getAll();
+	const collections = await collectionsServices.getAll(serviceConfig, {
+		include_document_id: false,
+	});
 
 	return {
 		data: pages.map((page) => {
