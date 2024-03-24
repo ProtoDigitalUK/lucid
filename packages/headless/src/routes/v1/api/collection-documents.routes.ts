@@ -28,6 +28,32 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 	});
 
 	r(fastify, {
+		method: "delete",
+		url: "/:id",
+		permissions: ["delete_content"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collectionDocuments.deleteSingle.swaggerSchema,
+		zodSchema: collectionDocuments.deleteSingle.zodSchema,
+		controller: collectionDocuments.deleteSingle.controller,
+	});
+
+	r(fastify, {
+		method: "delete",
+		url: "",
+		permissions: ["delete_content"],
+		middleware: {
+			authenticate: true,
+			validateCSRF: true,
+		},
+		swaggerSchema: collectionDocuments.deleteMultiple.swaggerSchema,
+		zodSchema: collectionDocuments.deleteMultiple.zodSchema,
+		controller: collectionDocuments.deleteMultiple.controller,
+	});
+
+	r(fastify, {
 		method: "get",
 		url: "",
 		middleware: {
