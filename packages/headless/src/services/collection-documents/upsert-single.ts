@@ -179,7 +179,7 @@ const upsertSingle = async (
 						exclude_id: document.id,
 						document_id: data.document_id,
 					},
-			  )
+				)
 			: undefined,
 		serviceWrapper(
 			collectionDocumentCategoriesServices.upsertMultiple,
