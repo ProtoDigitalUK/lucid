@@ -20,7 +20,6 @@ const getMultiple = async (
 			"headless_collection_document_bricks.brick_key",
 			"headless_collection_document_bricks.collection_document_id",
 			"headless_collection_document_bricks.brick_order",
-			"headless_collection_document_bricks.is_content_type",
 			jsonArrayFrom(
 				eb
 					.selectFrom("headless_collection_document_groups")

@@ -1,4 +1,8 @@
-import type { BrickResT, CollectionContentResT } from "./bricks.js";
+import type {
+	BrickResFieldsT,
+	BrickResT,
+	CollectionContentResT,
+} from "./bricks.js";
 import type { FieldTypesT } from "../../headless/src/libs/field-builder/types.js";
 
 export interface CollectionDocumentResT {
@@ -26,12 +30,7 @@ export interface CollectionDocumentResT {
 
 	categories?: Array<number> | null;
 	bricks?: Array<BrickResT> | null;
-	content?: CollectionContentResT | null;
-}
-
-export interface SingleBuilderResT {
-	id: number;
-	bricks: Array<BrickResT>;
+	fields?: Array<BrickResFieldsT> | null;
 }
 
 export type FieldTypes = FieldTypesT;

@@ -1,13 +1,13 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import type { BrickObjectT, CollectionContentT } from "../../schemas/bricks.js";
+import type { BrickObjectT, FieldObjectT } from "../../schemas/bricks.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	document_id: number;
 	bricks: Array<BrickObjectT>;
-	content?: CollectionContentT;
+	fields: Array<FieldObjectT>;
 	collection_key: string;
 }
 
@@ -15,28 +15,27 @@ const upsertMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	let bricks = data.bricks;
+	let bricks = data.bricks || [];
 
 	const collectionContentBrick = await serviceConfig.db
 		.selectFrom("headless_collection_document_bricks")
 		.select("id")
 		.where("collection_document_id", "=", data.document_id)
-		.where("is_content_type", "=", true)
-		.where("brick_type", "=", "content")
+		.where("brick_type", "=", "collection-fields")
 		.executeTakeFirst();
 
 	if (collectionContentBrick !== undefined) {
 		bricks.push({
 			id: collectionContentBrick?.id,
-			type: "content",
-			groups: data.content?.groups || [],
-			fields: data.content?.fields || [],
+			type: "collection-fields",
+			groups: [],
+			fields: data.fields,
 		});
-	} else if (data.content !== undefined) {
+	} else {
 		bricks.push({
-			type: "content",
-			groups: data.content.groups || [],
-			fields: data.content.fields || [],
+			type: "collection-fields",
+			groups: [],
+			fields: data.fields,
 		});
 	}
 
@@ -56,7 +55,6 @@ const upsertMultiple = async (
 			bricks.map((brick) => {
 				return {
 					id: typeof brick.id === "string" ? undefined : brick.id,
-					is_content_type: brick.type === "content",
 					brick_type: brick.type,
 					brick_key: brick.key,
 					brick_order: brick.order,
@@ -75,7 +73,7 @@ const upsertMultiple = async (
 	// update data.bricks with the new ids where key and order match
 	bricks = bricks.map((brick) => {
 		const foundBrick = bricksRes.find((res) => {
-			if (brick.type === "content") {
+			if (brick.type === "collection-fields") {
 				return res.brick_type === brick.type;
 			}
 

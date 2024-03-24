@@ -23,8 +23,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_document_bricks (
     id SERIAL PRIMARY KEY,
     collection_document_id INT REFERENCES headless_collection_documents(id) ON DELETE CASCADE NOT NULL,
 
-    is_content_type BOOLEAN DEFAULT FALSE,
-    brick_type TEXT NOT NULL, -- builder, fixed, content
+    brick_type TEXT NOT NULL, -- builder, fixed, collection-fields
     brick_key TEXT,
     brick_order INT
 );

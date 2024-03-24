@@ -86,7 +86,7 @@ const validateBrickData = async (data: {
 
 		// Check if the brick instance exists
 		const instance =
-			brick.type !== "content"
+			brick.type !== "collection-fields"
 				? brickInstances.find((b) => b.key === brick.key)
 				: data.collection;
 		if (!instance) {

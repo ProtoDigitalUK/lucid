@@ -5,10 +5,7 @@ import {
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import {
-	swaggerBodyBricksObj,
-	swaggerBodyContentObj,
-} from "../../schemas/bricks.js";
+import { swaggerBodyBricksObj, swaggerFieldObj } from "../../schemas/bricks.js";
 import buildResponse from "../../utils/build-response.js";
 
 const upsertSingleController: ControllerT<
@@ -32,7 +29,7 @@ const upsertSingleController: ControllerT<
 			parent_id: request.body.parent_id,
 			category_ids: request.body.category_ids,
 			bricks: request.body.bricks,
-			content: request.body.content,
+			fields: request.body.fields,
 		},
 	);
 
@@ -81,7 +78,10 @@ export default {
 					type: "array",
 					items: swaggerBodyBricksObj,
 				},
-				content: swaggerBodyContentObj,
+				fields: {
+					type: "array",
+					items: swaggerFieldObj,
+				},
 			},
 			required: ["collection_key"],
 		},

@@ -85,7 +85,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			document,
 			collection,
 			bricksRes.bricks,
-			bricksRes.content,
+			bricksRes.fields,
 		);
 	}
 

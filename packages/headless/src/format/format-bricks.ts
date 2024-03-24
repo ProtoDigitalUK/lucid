@@ -4,7 +4,7 @@ import type {
 	FieldTypesT,
 	BrickFieldValueT,
 	BrickFieldMetaT,
-	CollectionContentResT,
+	BrickResFieldsT,
 } from "@headless/types/src/bricks.js";
 import type { MediaTypeT } from "@headless/types/src/media.js";
 import type { JsonValue } from "kysely-codegen";
@@ -19,7 +19,6 @@ export interface BrickQueryT {
 	brick_order: number | null;
 	brick_type: string;
 	collection_document_id: number;
-	is_content_type: boolean | null;
 	groups: Array<{
 		group_id: number;
 		parent_group_id: number | null;
@@ -72,7 +71,7 @@ const formatBricks = (data: {
 	host: string;
 }): {
 	bricks: BrickResT[];
-	content: CollectionContentResT | null;
+	fields: BrickResFieldsT[] | null;
 } => {
 	const brickInstances = [
 		...(data.collection.config.bricks?.builder || []),
@@ -81,7 +80,7 @@ const formatBricks = (data: {
 
 	const bricks = data.bricks
 		.filter((brick) => {
-			if (brick.brick_type === "content") return false;
+			if (brick.brick_type === "collection-fields") return false;
 			const instance = brickInstances.find((instance) => {
 				return instance.key === brick.brick_key;
 			});
@@ -109,24 +108,24 @@ const formatBricks = (data: {
 			};
 		});
 
-	const content = data.bricks
+	const collectionFields = data.bricks
 		.filter((brick) => {
-			if (brick.brick_type !== "content") return false;
+			if (brick.brick_type !== "collection-fields") return false;
 			return true;
 		})
-		.map((brick) => {
-			return {
-				groups: formatGroups(brick.groups),
-				fields: formatFields(
-					brick.fields,
-					data.host,
-					data.collection.data.slug,
-					data.collection,
-				),
-			};
-		});
+		.map((brick) =>
+			formatFields(
+				brick.fields,
+				data.host,
+				data.collection.data.slug,
+				data.collection,
+			),
+		);
 
-	return { bricks, content: content.length ? content[0] : null };
+	return {
+		bricks,
+		fields: collectionFields.length ? collectionFields[0] : null,
+	};
 };
 
 const formatFields = (

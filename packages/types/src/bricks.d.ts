@@ -42,20 +42,17 @@ export interface BrickResT {
 		repeater_key: string;
 		language_id: number;
 	}>;
-	fields: Array<{
-		fields_id: number;
-		key: string;
-		type: FieldTypes;
-		group_id?: number | null;
-		value?: BrickFieldValueT;
-		meta?: BrickFieldMetaT;
-		language_id: number;
-	}>;
+	fields: Array<BrickResFieldsT>;
 }
 
-export interface CollectionContentResT {
-	groups: BrickResT["groups"];
-	fields: BrickResT["fields"];
+export interface BrickResFieldsT {
+	fields_id: number;
+	key: string;
+	type: FieldTypes;
+	group_id?: number | null;
+	value?: BrickFieldValueT;
+	meta?: BrickFieldMetaT;
+	language_id: number;
 }
 
 export interface PageLinkValueT {

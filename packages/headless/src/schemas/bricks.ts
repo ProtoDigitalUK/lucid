@@ -51,18 +51,12 @@ export interface BrickObjectT {
 	id?: number | string;
 	key?: string;
 	order?: number;
-	type: "builder" | "fixed" | "content";
+	type: "builder" | "fixed" | "collection-fields";
 	groups?: GroupObjectT[];
 	fields?: FieldObjectT[];
 }
 
-export const CollectionContentSchema = z.object({
-	groups: z.array(GroupSchema).optional(),
-	fields: z.array(FieldSchema).optional(),
-});
-export type CollectionContentT = z.infer<typeof CollectionContentSchema>;
-
-const swaggerFieldObj = {
+export const swaggerFieldObj = {
 	type: "object",
 	properties: {
 		key: {
@@ -124,20 +118,6 @@ export const swaggerBodyBricksObj = {
 		type: {
 			type: "string",
 		},
-		groups: {
-			type: "array",
-			items: swaggerGroupObj,
-		},
-		fields: {
-			type: "array",
-			items: swaggerFieldObj,
-		},
-	},
-};
-
-export const swaggerBodyContentObj = {
-	type: "object",
-	properties: {
 		groups: {
 			type: "array",
 			items: swaggerGroupObj,

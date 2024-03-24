@@ -4,10 +4,7 @@ import {
 	swaggerFieldRes,
 	swaggerGroupRes,
 } from "./format-bricks.js";
-import type {
-	BrickResT,
-	CollectionContentResT,
-} from "@headless/types/src/bricks.js";
+import type { BrickResT, BrickResFieldsT } from "@headless/types/src/bricks.js";
 import type { CollectionResT } from "@headless/types/src/collections.js";
 
 interface DocumentT {
@@ -34,7 +31,7 @@ const formatCollectionDocument = (
 	page: DocumentT,
 	collection?: CollectionResT,
 	bricks?: BrickResT[],
-	content?: CollectionContentResT | null,
+	fields?: BrickResFieldsT[] | null,
 ): CollectionDocumentResT => {
 	const res: CollectionDocumentResT = {
 		id: page.id,
@@ -45,7 +42,7 @@ const formatCollectionDocument = (
 		collection_slug: collection?.slug ?? null,
 		homepage: page.homepage ?? false,
 		bricks: bricks || [],
-		content: content || null,
+		fields: fields || null,
 		created_by: page.created_by,
 		created_at: page.created_at?.toISOString() || null,
 		updated_at: page.updated_at?.toISOString() || null,
@@ -150,19 +147,10 @@ export const swaggerCollectionDocumentResT = {
 			type: "array",
 			items: swaggerBrickRes,
 		},
-		content: {
-			type: "object",
+		fields: {
+			type: "array",
 			nullable: true,
-			properties: {
-				groups: {
-					type: "array",
-					items: swaggerGroupRes,
-				},
-				fields: {
-					type: "array",
-					items: swaggerFieldRes,
-				},
-			},
+			items: swaggerFieldRes,
 		},
 		created_by: {
 			type: "number",

@@ -12,6 +12,8 @@ const deleteMultipleBricks = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	if (data.bricks.length === 0) return;
+
 	await serviceConfig.db
 		.deleteFrom("headless_collection_document_bricks")
 		.where(
@@ -20,6 +22,7 @@ const deleteMultipleBricks = async (
 			data.bricks.map((brick) => brick.id),
 		)
 		.where("collection_document_id", "=", data.document_id)
+		.where("brick_type", "=", "collection-fields")
 		.execute();
 };
 
