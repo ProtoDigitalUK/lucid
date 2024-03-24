@@ -1,24 +1,24 @@
-import type { CollectionResT } from "@headless/types/src/collections.js";
 import type {
 	BrickResT,
 	CustomFieldT,
 	FieldTypesT,
 	BrickFieldValueT,
 	BrickFieldMetaT,
+	BrickResFieldsT,
 } from "@headless/types/src/bricks.js";
 import type { MediaTypeT } from "@headless/types/src/media.js";
 import type { JsonValue } from "kysely-codegen";
 import type { BrickBuilderT } from "../libs/brick-builder/index.js";
 import { createURL } from "./format-media.js";
-import { formatPageFullSlug } from "./format-multiple-builder.js";
+import { formatPageFullSlug } from "./format-collection-document.js";
+import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 
 export interface BrickQueryT {
 	id: number;
-	brick_key: string;
-	brick_order: number;
+	brick_key: string | null;
+	brick_order: number | null;
 	brick_type: string;
-	multiple_page_id: number | null;
-	single_page_id: number | null;
+	collection_document_id: number;
 	groups: Array<{
 		group_id: number;
 		parent_group_id: number | null;
@@ -27,12 +27,14 @@ export interface BrickQueryT {
 		repeater_key: string;
 		group_order: number;
 		ref: string | null;
+		collection_document_id: number;
 	}>;
 	fields: Array<BrickQueryFieldT>;
 }
 export interface BrickQueryFieldT {
 	fields_id: number;
 	collection_brick_id: number | null;
+	collection_document_id: number;
 	group_id: number | null;
 	language_id: number;
 	key: string;
@@ -46,10 +48,6 @@ export interface BrickQueryFieldT {
 	page_id: number | null;
 	page_slug: string | null;
 	page_full_slug: string | null;
-	page_title_translations: Array<{
-		value: string | null;
-		language_id: number | null;
-	}>;
 	media_key: string | null;
 	media_mime_type: string | null;
 	media_file_extension: string | null;
@@ -69,59 +67,76 @@ export interface BrickQueryFieldT {
 
 const formatBricks = (data: {
 	bricks: BrickQueryT[];
-	collection: CollectionResT;
-	brick_instances: BrickBuilderT[];
+	collection: CollectionBuilderT;
 	host: string;
-}): BrickResT[] => {
-	return data.bricks
+}): {
+	bricks: BrickResT[];
+	fields: BrickResFieldsT[] | null;
+} => {
+	const brickInstances = [
+		...(data.collection.config.bricks?.builder || []),
+		...(data.collection.config.bricks?.fixed || []),
+	];
+
+	const bricks = data.bricks
 		.filter((brick) => {
-			const instance = data.brick_instances.find((instance) => {
+			if (brick.brick_type === "collection-fields") return false;
+			const instance = brickInstances.find((instance) => {
 				return instance.key === brick.brick_key;
 			});
 			if (!instance) return false;
 
-			const collectionInstance = data.collection.bricks?.find(
-				(assignedBrick) => {
-					return (
-						assignedBrick.key === brick.brick_key &&
-						assignedBrick.type === brick.brick_type
-					);
-				},
-			);
-			if (!collectionInstance) return false;
-
 			return true;
 		})
 		.map((brick) => {
-			const instance = data.brick_instances.find((instance) => {
+			const instance = brickInstances.find((instance) => {
 				return instance.key === brick.brick_key;
 			});
 
 			return {
 				id: brick.id,
-				key: brick.brick_key,
-				order: brick.brick_order,
+				key: brick.brick_key as string,
+				order: brick.brick_order as number,
 				type: brick.brick_type as "builder" | "fixed",
 				groups: formatGroups(brick.groups),
 				fields: formatFields(
 					brick.fields,
 					data.host,
-					data.collection.slug,
+					data.collection.data.slug,
 					instance,
 				),
 			};
 		});
+
+	const collectionFields = data.bricks
+		.filter((brick) => {
+			if (brick.brick_type !== "collection-fields") return false;
+			return true;
+		})
+		.map((brick) =>
+			formatFields(
+				brick.fields,
+				data.host,
+				data.collection.data.slug,
+				data.collection,
+			),
+		);
+
+	return {
+		bricks,
+		fields: collectionFields.length ? collectionFields[0] : null,
+	};
 };
 
 const formatFields = (
 	fields: BrickQueryFieldT[],
 	host: string,
 	collection_slug: string | null,
-	brick_instance?: BrickBuilderT,
+	builder_instance?: BrickBuilderT | CollectionBuilderT,
 ): BrickResT["fields"] => {
 	const fieldsRes: BrickResT["fields"] = [];
 
-	const instanceFields = brick_instance?.flatFields;
+	const instanceFields = builder_instance?.flatFields;
 	if (!instanceFields) return fieldsRes;
 
 	for (const instanceField of instanceFields) {
@@ -243,12 +258,7 @@ const customFieldValues = (
 			value = {
 				id: field?.page_link_id ?? undefined,
 				target: jsonVal?.target || "_self",
-				label:
-					jsonVal?.label ||
-					defaultTranslationValue(
-						field?.page_title_translations,
-						field.language_id,
-					),
+				label: jsonVal?.label || "",
 			};
 			meta = {
 				slug: field?.page_slug ?? undefined,
@@ -258,7 +268,6 @@ const customFieldValues = (
 						collection_slug,
 					) ?? undefined,
 				collection_slug: collection_slug ?? undefined,
-				title_translations: field?.page_title_translations,
 			};
 			break;
 		}
@@ -276,15 +285,157 @@ const customFieldValues = (
 	return { value, meta };
 };
 
-const defaultTranslationValue = (
-	translations: Array<{
-		language_id: number | null;
-		value: string | null;
-	}>,
-	language_id: number,
-) => {
-	const translation = translations.find((t) => t.language_id === language_id);
-	return translation?.value ?? undefined;
+export const swaggerGroupRes = {
+	type: "object",
+	additionalProperties: true,
+	properties: {
+		group_id: {
+			type: "number",
+		},
+		group_order: {
+			type: "number",
+		},
+		parent_group_id: {
+			type: "number",
+			nullable: true,
+		},
+		collection_document_id: {
+			type: "number",
+		},
+		repeater_key: {
+			type: "string",
+		},
+		language_id: {
+			type: "number",
+		},
+	},
+};
+
+export const swaggerFieldRes = {
+	type: "object",
+	additionalProperties: true,
+	properties: {
+		fields_id: {
+			type: "number",
+		},
+		key: {
+			type: "string",
+		},
+		type: {
+			type: "string",
+			enum: [
+				"tab",
+				"text",
+				"wysiwyg",
+				"media",
+				"number",
+				"checkbox",
+				"select",
+				"textarea",
+				"json",
+				"colour",
+				"datetime",
+				"pagelink",
+				"link",
+			],
+		},
+		group_id: {
+			type: "number",
+			nullable: true,
+		},
+		collection_document_id: {
+			type: "number",
+		},
+		meta: {
+			type: "object",
+			additionalProperties: true,
+			properties: {
+				id: {
+					type: "number",
+					nullable: true,
+				},
+				url: {
+					type: "string",
+					nullable: true,
+				},
+				key: {
+					type: "string",
+					nullable: true,
+				},
+				mime_type: {
+					type: "string",
+					nullable: true,
+				},
+				file_extension: {
+					type: "string",
+					nullable: true,
+				},
+				file_size: {
+					type: "number",
+					nullable: true,
+				},
+				width: {
+					type: "number",
+					nullable: true,
+				},
+				height: {
+					type: "number",
+					nullable: true,
+				},
+				title_translations: {
+					type: "array",
+					items: {
+						type: "object",
+						additionalProperties: true,
+						properties: {
+							value: {
+								type: "string",
+								nullable: true,
+							},
+							language_id: {
+								type: "number",
+								nullable: true,
+							},
+						},
+					},
+				},
+				alt_translations: {
+					type: "array",
+					items: {
+						type: "object",
+						additionalProperties: true,
+						properties: {
+							value: {
+								type: "string",
+								nullable: true,
+							},
+							language_id: {
+								type: "number",
+								nullable: true,
+							},
+						},
+					},
+				},
+				type: {
+					type: "string",
+					nullable: true,
+					enum: ["image", "video", "audio", "document"],
+				},
+				slug: {
+					type: "string",
+					nullable: true,
+				},
+				full_slug: {
+					type: "string",
+					nullable: true,
+				},
+				collection_slug: {
+					type: "string",
+					nullable: true,
+				},
+			},
+		},
+	},
 };
 
 export const swaggerBrickRes = {
@@ -292,6 +443,9 @@ export const swaggerBrickRes = {
 	additionalProperties: true,
 	properties: {
 		id: {
+			type: "number",
+		},
+		collection_document_id: {
 			type: "number",
 		},
 		key: {
@@ -306,154 +460,11 @@ export const swaggerBrickRes = {
 		},
 		groups: {
 			type: "array",
-			items: {
-				type: "object",
-				additionalProperties: true,
-				properties: {
-					group_id: {
-						type: "number",
-					},
-					group_order: {
-						type: "number",
-					},
-					parent_group_id: {
-						type: "number",
-						nullable: true,
-					},
-					repeater_key: {
-						type: "string",
-					},
-					language_id: {
-						type: "number",
-					},
-				},
-			},
+			items: swaggerGroupRes,
 		},
 		fields: {
 			type: "array",
-			items: {
-				type: "object",
-				additionalProperties: true,
-				properties: {
-					fields_id: {
-						type: "number",
-					},
-					key: {
-						type: "string",
-					},
-					type: {
-						type: "string",
-						enum: [
-							"tab",
-							"text",
-							"wysiwyg",
-							"media",
-							"number",
-							"checkbox",
-							"select",
-							"textarea",
-							"json",
-							"colour",
-							"datetime",
-							"pagelink",
-							"link",
-						],
-					},
-					group_id: {
-						type: "number",
-						nullable: true,
-					},
-					meta: {
-						type: "object",
-						additionalProperties: true,
-						properties: {
-							id: {
-								type: "number",
-								nullable: true,
-							},
-							url: {
-								type: "string",
-								nullable: true,
-							},
-							key: {
-								type: "string",
-								nullable: true,
-							},
-							mime_type: {
-								type: "string",
-								nullable: true,
-							},
-							file_extension: {
-								type: "string",
-								nullable: true,
-							},
-							file_size: {
-								type: "number",
-								nullable: true,
-							},
-							width: {
-								type: "number",
-								nullable: true,
-							},
-							height: {
-								type: "number",
-								nullable: true,
-							},
-							title_translations: {
-								type: "array",
-								items: {
-									type: "object",
-									additionalProperties: true,
-									properties: {
-										value: {
-											type: "string",
-											nullable: true,
-										},
-										language_id: {
-											type: "number",
-											nullable: true,
-										},
-									},
-								},
-							},
-							alt_translations: {
-								type: "array",
-								items: {
-									type: "object",
-									additionalProperties: true,
-									properties: {
-										value: {
-											type: "string",
-											nullable: true,
-										},
-										language_id: {
-											type: "number",
-											nullable: true,
-										},
-									},
-								},
-							},
-							type: {
-								type: "string",
-								nullable: true,
-								enum: ["image", "video", "audio", "document"],
-							},
-							slug: {
-								type: "string",
-								nullable: true,
-							},
-							full_slug: {
-								type: "string",
-								nullable: true,
-							},
-							collection_slug: {
-								type: "string",
-								nullable: true,
-							},
-						},
-					},
-				},
-			},
+			items: swaggerFieldRes,
 		},
 	},
 };

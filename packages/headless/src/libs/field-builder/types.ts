@@ -54,23 +54,6 @@ export type FieldTypesT =
 	| "pagelink"
 	| "link";
 
-export enum FieldTypesEnumT {
-	Tab = "tab",
-	Text = "text",
-	Wysiwyg = "wysiwyg",
-	Media = "media",
-	Repeater = "repeater",
-	Number = "number",
-	Checkbox = "checkbox",
-	Select = "select",
-	Textarea = "textarea",
-	JSON = "json",
-	Colour = "colour",
-	Datetime = "datetime",
-	Pagelink = "pagelink",
-	Link = "link",
-}
-
 export interface FieldBuilderMetaT {
 	fieldKeys: string[];
 	repeaterDepth: Record<string, number>;

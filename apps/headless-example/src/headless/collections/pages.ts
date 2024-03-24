@@ -7,35 +7,27 @@ import DefaultMetaBrick from "../bricks/default-meta.js";
 import PageMetaBrick from "../bricks/page-meta.js";
 
 const PageCollection = new CollectionBuilder("page", {
-	type: "builder",
-	multiple: true,
+	mode: "multiple",
 	title: "Pages",
 	singular: "Page",
 	description: "Pages are used to create static content on your website.",
-	bricks: [
-		{
-			brick: BannerBrick,
-			type: "builder",
-		},
-		{
-			brick: IntroBrick,
-			type: "builder",
-		},
-		{
-			brick: TestingBrick,
-			type: "builder",
-		},
-		{
-			brick: DefaultMetaBrick,
-			type: "fixed",
-			position: "bottom",
-		},
-		{
-			brick: PageMetaBrick,
-			type: "fixed",
-			position: "sidebar",
-		},
-	],
-});
+	config: {
+		enableParents: true,
+		enableHomepages: true,
+		enableSlugs: true,
+		enableCategories: true,
+		enableTranslations: true,
+	},
+	bricks: {
+		fixed: [DefaultMetaBrick, PageMetaBrick],
+		builder: [BannerBrick, IntroBrick, TestingBrick],
+	},
+})
+	.addText({
+		key: "page_title",
+	})
+	.addTextarea({
+		key: "page_excerpt",
+	});
 
 export default PageCollection;

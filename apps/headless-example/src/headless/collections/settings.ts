@@ -3,18 +3,13 @@ import { CollectionBuilder } from "@protodigital/headless";
 import DefaultMetaBrick from "../bricks/default-meta.js";
 
 const SettingsCollection = new CollectionBuilder("settings", {
-	type: "builder",
-	multiple: false,
+	mode: "single",
 	title: "Settings",
 	singular: "Setting",
 	description: "Set shared settings for your website.",
-	bricks: [
-		{
-			brick: DefaultMetaBrick,
-			type: "fixed",
-			position: "bottom",
-		},
-	],
+	bricks: {
+		fixed: [DefaultMetaBrick],
+	},
 });
 
 export default SettingsCollection;

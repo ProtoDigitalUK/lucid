@@ -3,15 +3,29 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
 import buildResponse from "../../utils/build-response.js";
 import { swaggerCollectionRes } from "../../format/format-collection.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 const getSingleController: ControllerT<
 	typeof collectionsSchema.getSingle.params,
 	typeof collectionsSchema.getSingle.body,
 	typeof collectionsSchema.getSingle.query
 > = async (request, reply) => {
-	const collection = await collectionsServices.getSingle({
-		key: request.params.key,
-	});
+	const collection = await serviceWrapper(
+		collectionsServices.getSingle,
+		false,
+	)(
+		{
+			db: request.server.db,
+		},
+		{
+			key: request.params.key,
+			include: {
+				bricks: true,
+				fields: true,
+				document_id: true,
+			},
+		},
+	);
 
 	reply.status(200).send(
 		await buildResponse(request, {

@@ -10,27 +10,36 @@ const headlessConfig = (config: Config) => {
 	try {
 		const configRes = ConfigSchema.parse(config) as Config;
 
-		checks.checkDuplicateBuilderKeys(
-			"bricks",
-			config.bricks?.map((b) => b.key),
-		);
+		// checks.checkDuplicateBuilderKeys(
+		// 	"bricks",
+		// 	config.bricks?.map((b) => b.key),
+		// );
 		checks.checkDuplicateBuilderKeys(
 			"collections",
 			config.collections?.map((c) => c.data.key),
 		);
 
+		// TODO: return to brick validation now bricks only exist as part of collections
 		if (configRes.collections) {
 			for (const collection of configRes.collections) {
 				CollectionConfigSchema.parse(collection.config);
-			}
-		}
 
-		if (configRes.bricks) {
-			for (const brick of configRes.bricks) {
-				BrickSchema.parse(brick.config);
-				for (const field of brick.flatFields) FieldsSchema.parse(field);
-				checks.checkDuplicateFieldKeys(brick.key, brick.meta.fieldKeys);
-				checks.checkRepeaterDepth(brick.key, brick.meta.repeaterDepth);
+				for (const brick of [
+					...(collection.config.bricks?.fixed || []),
+					...(collection.config.bricks?.builder || []),
+				]) {
+					BrickSchema.parse(brick.config);
+					for (const field of brick.flatFields)
+						FieldsSchema.parse(field);
+					checks.checkDuplicateFieldKeys(
+						brick.key,
+						brick.meta.fieldKeys,
+					);
+					checks.checkRepeaterDepth(
+						brick.key,
+						brick.meta.repeaterDepth,
+					);
+				}
 			}
 		}
 

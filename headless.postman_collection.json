@@ -570,10 +570,10 @@
 			"name": "Collections",
 			"item": [
 				{
-					"name": "Multiple Builder",
+					"name": "Documents",
 					"item": [
 						{
-							"name": "Create Single",
+							"name": "Upsert Single",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -585,7 +585,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"slug\": \"homepage\",\n    \"homepage\": true,\n    \"collection_key\": \"page\",\n    // \"parent_id\": 5,\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"About us\"\n        }\n    ],\n    \"excerpt_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"I am the about us page\"\n        }\n    ]\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n}",
+									"raw": "{\n    \"document_id\": 7,\n    \"collection_key\": \"page\",\n    // \"slug\": \"testing-fiedls\",\n    // \"homepage\": true\n    // \"parent_id\": 4\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"language_id\": 1\n                }\n            ]\n        }\n    ]\n    // \"fields\": [\n    //     {\n    //         \"fields_id\": 73,\n    //         \"key\": \"page_title\",\n    //         \"type\": \"text\",\n    //         \"value\": \"Homepage\",\n    //         \"language_id\": 1\n    //     }\n    // ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -593,7 +593,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -601,7 +601,7 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder"
+										"documents"
 									]
 								}
 							},
@@ -611,16 +611,9 @@
 							"name": "Get Single",
 							"request": {
 								"method": "GET",
-								"header": [
-									{
-										"key": "headless-content-lang",
-										"value": "{{HEADLESS_CONTENT_LANG}}",
-										"type": "text",
-										"disabled": true
-									}
-								],
+								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/1?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/7?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -628,8 +621,8 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder",
-										"1"
+										"documents",
+										"7"
 									],
 									"query": [
 										{
@@ -654,7 +647,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents?filter[collection_key]=page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -662,7 +655,7 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder"
+										"documents"
 									],
 									"query": [
 										{
@@ -672,13 +665,7 @@
 										},
 										{
 											"key": "filter[collection_key]",
-											"value": "page",
-											"disabled": true
-										},
-										{
-											"key": "filter[title]",
-											"value": "home",
-											"disabled": true
+											"value": "page"
 										},
 										{
 											"key": "filter[category_id]",
@@ -723,7 +710,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/6/valid-parents",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/4/valid-parents",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -731,8 +718,8 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder",
-										"6",
+										"documents",
+										"4",
 										"valid-parents"
 									],
 									"query": [
@@ -747,11 +734,6 @@
 											"disabled": true
 										},
 										{
-											"key": "filter[title]",
-											"value": "About us",
-											"disabled": true
-										},
-										{
 											"key": "page",
 											"value": "1",
 											"disabled": true
@@ -761,78 +743,6 @@
 											"value": "-1",
 											"disabled": true
 										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Single",
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    // \"title_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"Homepage\"\n    //     }\n    // ],\n    // \"excerpt_translations\": [\n    //     {\n    //         \"language_id\": 1,\n    //         \"value\": \"I am the homepage excerpt\"\n    //     }\n    // ], \n    // \"slug\": \"about-us\"\n\n    // \"author_id\": 2\n    // \"homepage\": false\n    // \"parent_id\": 5\n    \"category_ids\": [\n      1\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/1",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"multiple-builder",
-										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Single (bricks)",
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 13,\n            \"key\": \"banner\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"groups\": [\n                {\n                    \"group_id\": \"ref-group1\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 0,\n                    \"language_id\": 1\n                },\n                {\n                    \"group_id\": \"ref-group2\",\n                    // \"parent_group_id\": null,\n                    \"repeater_key\": \"social_links\",\n                    \"group_order\": 1,\n                    \"language_id\": 1\n                },\n                {\n                    \"group_id\": \"ref-group3\",\n                    \"parent_group_id\": \"ref-group2\",\n                    \"repeater_key\": \"social_links_2\",\n                    \"group_order\": 0,\n                    \"language_id\": 1\n                }\n            ],\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"test 2\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<h2>Hello 2</h2>\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 13,\n                    \"key\": \"page-link\",\n                    \"type\": \"pagelink\",\n                    \"value\": {\n                        \"id\": 1,\n                        \"target\": \"_blank\",\n                        \"label\": \"Link label\"\n                    },\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group1\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"social_title\",\n                    \"group_id\": \"ref-group2\",\n                    \"type\": \"text\",\n                    \"value\": \"Title 1\",\n                    \"language_id\": 1\n                }\n            ]\n        },\n        {\n            // \"id\": 14,\n            \"key\": \"intro\",\n            \"order\": 1,\n            \"type\": \"builder\",\n            \"fields\": []\n        }\n\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/1",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"multiple-builder",
-										"1"
 									]
 								}
 							},
@@ -859,7 +769,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder/5",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/8",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -867,8 +777,8 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder",
-										"5"
+										"documents",
+										"8"
 									]
 								}
 							},
@@ -895,7 +805,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/multiple-builder",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -903,69 +813,7 @@
 										"api",
 										"v1",
 										"collections",
-										"multiple-builder"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Single Builder",
-					"item": [
-						{
-							"name": "Get Single",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/single-builder/settings",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"single-builder",
-										"settings"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Single",
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"bricks\": [\n        {\n            // \"id\": 8,\n            \"key\": \"default_meta\",\n            \"order\": 0,\n            \"type\": \"fixed\",\n            \"groups\": [],\n            \"fields\": []\n        }\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/single-builder/settings",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"single-builder",
-										"settings"
+										"documents"
 									]
 								}
 							},
@@ -2233,89 +2081,6 @@
 								}
 							]
 						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Bricks Config",
-			"item": [
-				{
-					"name": "Get All",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/bricks/config?filter[collection_key]=pages",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"bricks",
-								"config"
-							],
-							"query": [
-								{
-									"key": "include",
-									"value": "fields",
-									"disabled": true
-								},
-								{
-									"key": "filter[collection_key]",
-									"value": "pages"
-								}
-							]
-						},
-						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
-					},
-					"response": []
-				},
-				{
-					"name": "Get Single",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/bricks/config/banner",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"bricks",
-								"config",
-								"banner"
-							]
-						},
-						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
 					},
 					"response": []
 				}
