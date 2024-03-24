@@ -5,6 +5,11 @@ import type { BrickBuilderT } from "../brick-builder/index.js";
 export default class CollectionBuilder extends FieldBuilder {
 	key: string;
 	config: CollectionConfigT;
+	enabledParents = false;
+	enabledHomepages = false;
+	enabledSlugs = false;
+	enabledCategories = false;
+	enabledTranslations = false;
 	constructor(key: string, config: CollectionConfigT) {
 		super();
 		this.key = key;
@@ -17,6 +22,28 @@ export default class CollectionBuilder extends FieldBuilder {
 			config.builderBricks,
 		);
 	}
+	// ------------------------------------
+	// Builder Methods
+	enableParents = () => {
+		this.enabledParents = true;
+		return this;
+	};
+	enableHomepages = () => {
+		this.enabledHomepages = true;
+		return this;
+	};
+	enableSlugs = () => {
+		this.enabledSlugs = true;
+		return this;
+	};
+	enableCategories = () => {
+		this.enabledCategories = true;
+		return this;
+	};
+	enableTranslations = () => {
+		this.enabledTranslations = true;
+		return this;
+	};
 	// ------------------------------------
 	// Private Methods
 	#removeDuplicateBricks = (bricks?: Array<BrickBuilderT>) => {
@@ -37,11 +64,11 @@ export default class CollectionBuilder extends FieldBuilder {
 			singular: this.config.singular,
 			description: this.config.description ?? null,
 			slug: this.config.slug ?? null,
-			enableParents: this.config.enableParents ?? false,
-			enableHomepages: this.config.enableHomepages ?? false,
-			enableSlugs: this.config.enableSlugs ?? false,
-			enableCategories: this.config.enableCategories ?? false,
-			enableTranslations: this.config.enableTranslations ?? false,
+			enableParents: this.enabledParents,
+			enableHomepages: this.enabledHomepages,
+			enableSlugs: this.enabledSlugs,
+			enableCategories: this.enabledCategories,
+			enableTranslations: this.enabledTranslations,
 		};
 	}
 	get fixedBricks(): Array<CollectionBrickConfigT> {
@@ -72,12 +99,6 @@ export const CollectionConfigSchema = z.object({
 	singular: z.string(),
 	description: z.string().optional(),
 	slug: z.string().optional(),
-
-	enableParents: z.boolean().default(false).optional(),
-	enableHomepages: z.boolean().default(false).optional(),
-	enableSlugs: z.boolean().default(false).optional(),
-	enableCategories: z.boolean().default(false).optional(),
-	enableTranslations: z.boolean().default(false).optional(),
 
 	fixedBricks: z.array(z.unknown()).optional(),
 	builderBricks: z.array(z.unknown()).optional(),

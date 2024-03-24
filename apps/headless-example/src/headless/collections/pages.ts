@@ -11,14 +11,14 @@ const PageCollection = new CollectionBuilder("page", {
 	title: "Pages",
 	singular: "Page",
 	description: "Pages are used to create static content on your website.",
-	enableHomepages: true,
-	enableSlugs: true,
-	enableParents: true,
-	enableTranslations: true,
-	enableCategories: true,
 	builderBricks: [BannerBrick, IntroBrick, TestingBrick],
 	fixedBricks: [DefaultMetaBrick, PageMetaBrick],
 })
+	.enableHomepages()
+	.enableSlugs()
+	.enableParents()
+	.enableTranslations()
+	.enableCategories()
 	.addText({
 		key: "page_title",
 	})

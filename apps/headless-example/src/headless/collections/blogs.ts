@@ -8,9 +8,9 @@ const BlogCollection = new CollectionBuilder("blog", {
 	title: "Blogs",
 	singular: "Blog",
 	description: "Manage your blogs.",
-	enableSlugs: true,
 	builderBricks: [BannerBrick, IntroBrick],
 })
+	.enableSlugs()
 	.addText({
 		key: "page_title",
 	})
