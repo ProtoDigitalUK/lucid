@@ -44,6 +44,7 @@
 	"brick_with_key_not_found": "Brick with key '{{key}}' not found.",
 	"invalid_collection_keys": "Invalid collection keys.",
 	"make_sure_all_assigned_collections_are_valid": "Please make sure all assigned collections are valid.",
+	"this_collection_has_a_document_already": "This collection has a document already.",
 	"collection_with_key_not_found": "Collection with key '{{key}}' not found.",
 	"error_already_exists_name": "{{name}} Already Exists",
 	"error_not_created_name": "{{name}} Not Created",

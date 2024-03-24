@@ -85,6 +85,7 @@ const upsertSingle = async (
         Check:
         - Parent
         - Slug
+        - Single collection document count
         - Categories
         - Parent ancestry
     */
@@ -104,6 +105,16 @@ const upsertSingle = async (
 		)(serviceConfig, {
 			collection_key: data.collection_key,
 			slug: bodyDataEnabled.slug,
+			document_id: data.document_id,
+			errorContent: errorContent,
+		}),
+		serviceWrapper(
+			collectionDocumentsServices.checks
+				.checkSingleCollectionDocumentCount,
+			false,
+		)(serviceConfig, {
+			collection_key: data.collection_key,
+			collection_multiple: collectionInstance.data.multiple,
 			document_id: data.document_id,
 			errorContent: errorContent,
 		}),
@@ -179,7 +190,7 @@ const upsertSingle = async (
 						exclude_id: document.id,
 						document_id: data.document_id,
 					},
-				)
+			  )
 			: undefined,
 		serviceWrapper(
 			collectionDocumentCategoriesServices.upsertMultiple,
