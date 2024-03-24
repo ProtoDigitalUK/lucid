@@ -9,7 +9,7 @@ import type { ErrorContentT } from "../../../utils/helpers.js";
 
 export interface ServiceData {
 	collection_key: string;
-	collection_multiple: boolean;
+	collection_mode: "single" | "multiple";
 	document_id?: number;
 	errorContent: ErrorContentT;
 }
@@ -19,7 +19,7 @@ const checkSingleCollectionDocumentCount = async (
 	data: ServiceData,
 ) => {
 	if (data.document_id !== undefined) return;
-	if (data.collection_multiple === true) return;
+	if (data.collection_mode === "multiple") return;
 
 	const hasDocument = await serviceConfig.db
 		.selectFrom("headless_collection_documents")

@@ -7,18 +7,22 @@ import DefaultMetaBrick from "../bricks/default-meta.js";
 import PageMetaBrick from "../bricks/page-meta.js";
 
 const PageCollection = new CollectionBuilder("page", {
-	multiple: true,
+	mode: "multiple",
 	title: "Pages",
 	singular: "Page",
 	description: "Pages are used to create static content on your website.",
-	builderBricks: [BannerBrick, IntroBrick, TestingBrick],
-	fixedBricks: [DefaultMetaBrick, PageMetaBrick],
+	config: {
+		enableParents: true,
+		enableHomepages: true,
+		enableSlugs: true,
+		enableCategories: true,
+		enableTranslations: true,
+	},
+	bricks: {
+		fixed: [DefaultMetaBrick, PageMetaBrick],
+		builder: [BannerBrick, IntroBrick, TestingBrick],
+	},
 })
-	.enableHomepages()
-	.enableSlugs()
-	.enableParents()
-	.enableTranslations()
-	.enableCategories()
 	.addText({
 		key: "page_title",
 	})

@@ -4,13 +4,17 @@ import BannerBrick from "../bricks/banner.js";
 import IntroBrick from "../bricks/intro.js";
 
 const BlogCollection = new CollectionBuilder("blog", {
-	multiple: true,
+	mode: "multiple",
 	title: "Blogs",
 	singular: "Blog",
 	description: "Manage your blogs.",
-	builderBricks: [BannerBrick, IntroBrick],
+	config: {
+		enableSlugs: true,
+	},
+	bricks: {
+		builder: [BannerBrick, IntroBrick],
+	},
 })
-	.enableSlugs()
 	.addText({
 		key: "page_title",
 	})

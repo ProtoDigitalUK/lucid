@@ -75,8 +75,8 @@ const formatBricks = (data: {
 	content: CollectionContentResT | null;
 } => {
 	const brickInstances = [
-		...(data.collection.config.builderBricks || []),
-		...(data.collection.config.fixedBricks || []),
+		...(data.collection.config.bricks?.builder || []),
+		...(data.collection.config.bricks?.fixed || []),
 	];
 
 	const bricks = data.bricks

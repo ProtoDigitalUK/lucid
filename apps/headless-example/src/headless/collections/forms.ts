@@ -1,7 +1,7 @@
 import { CollectionBuilder } from "@protodigital/headless";
 
 const FormsCollection = new CollectionBuilder("forms", {
-	multiple: true,
+	mode: "multiple",
 	title: "Forms",
 	singular: "Form",
 	description: "View and manage form submission data.",

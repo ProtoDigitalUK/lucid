@@ -15,35 +15,19 @@ export default class CollectionBuilder extends FieldBuilder {
 		this.key = key;
 		this.config = config;
 
-		this.config.fixedBricks = this.#removeDuplicateBricks(
-			config.fixedBricks,
-		);
-		this.config.builderBricks = this.#removeDuplicateBricks(
-			config.builderBricks,
-		);
+		if (this.config.bricks?.fixed) {
+			this.config.bricks.fixed = this.#removeDuplicateBricks(
+				config.bricks?.fixed,
+			);
+		}
+		if (this.config.bricks?.builder) {
+			this.config.bricks.builder = this.#removeDuplicateBricks(
+				config.bricks?.builder,
+			);
+		}
 	}
 	// ------------------------------------
 	// Builder Methods
-	enableParents = () => {
-		this.enabledParents = true;
-		return this;
-	};
-	enableHomepages = () => {
-		this.enabledHomepages = true;
-		return this;
-	};
-	enableSlugs = () => {
-		this.enabledSlugs = true;
-		return this;
-	};
-	enableCategories = () => {
-		this.enabledCategories = true;
-		return this;
-	};
-	enableTranslations = () => {
-		this.enabledTranslations = true;
-		return this;
-	};
 	// ------------------------------------
 	// Private Methods
 	#removeDuplicateBricks = (bricks?: Array<BrickBuilderT>) => {
@@ -59,21 +43,24 @@ export default class CollectionBuilder extends FieldBuilder {
 	get data(): CollectionDataT {
 		return {
 			key: this.key,
-			multiple: this.config.multiple,
+			mode: this.config.mode,
 			title: this.config.title,
 			singular: this.config.singular,
 			description: this.config.description ?? null,
 			slug: this.config.slug ?? null,
-			enableParents: this.enabledParents,
-			enableHomepages: this.enabledHomepages,
-			enableSlugs: this.enabledSlugs,
-			enableCategories: this.enabledCategories,
-			enableTranslations: this.enabledTranslations,
+			config: {
+				enableParents: this.config.config?.enableParents ?? false,
+				enableHomepages: this.config.config?.enableHomepages ?? false,
+				enableSlugs: this.config.config?.enableSlugs ?? false,
+				enableCategories: this.config.config?.enableCategories ?? false,
+				enableTranslations:
+					this.config.config?.enableTranslations ?? false,
+			},
 		};
 	}
 	get fixedBricks(): Array<CollectionBrickConfigT> {
 		return (
-			this.config.fixedBricks?.map((brick) => ({
+			this.config.bricks?.fixed?.map((brick) => ({
 				key: brick.key,
 				title: brick.config.title,
 				preview: brick.config.preview,
@@ -83,7 +70,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	get builderBricks(): Array<CollectionBrickConfigT> {
 		return (
-			this.config.builderBricks?.map((brick) => ({
+			this.config.bricks?.builder?.map((brick) => ({
 				key: brick.key,
 				title: brick.config.title,
 				preview: brick.config.preview,
@@ -94,33 +81,51 @@ export default class CollectionBuilder extends FieldBuilder {
 }
 
 export const CollectionConfigSchema = z.object({
-	multiple: z.boolean().default(false),
+	mode: z.enum(["single", "multiple"]),
+
 	title: z.string(),
 	singular: z.string(),
 	description: z.string().optional(),
 	slug: z.string().optional(),
 
-	fixedBricks: z.array(z.unknown()).optional(),
-	builderBricks: z.array(z.unknown()).optional(),
+	config: z
+		.object({
+			enableParents: z.boolean().default(false).optional(),
+			enableHomepages: z.boolean().default(false).optional(),
+			enableSlugs: z.boolean().default(false).optional(),
+			enableCategories: z.boolean().default(false).optional(),
+			enableTranslations: z.boolean().default(false).optional(),
+		})
+		.optional(),
+	bricks: z
+		.object({
+			fixed: z.array(z.unknown()).optional(),
+			builder: z.array(z.unknown()).optional(),
+		})
+		.optional(),
 });
 
 interface CollectionConfigT extends z.infer<typeof CollectionConfigSchema> {
-	fixedBricks?: Array<BrickBuilderT>;
-	builderBricks?: Array<BrickBuilderT>;
+	bricks?: {
+		fixed?: Array<BrickBuilderT>;
+		builder?: Array<BrickBuilderT>;
+	};
 }
 
 export type CollectionDataT = {
 	key: string;
-	multiple: CollectionConfigT["multiple"];
+	mode: CollectionConfigT["mode"];
 	title: CollectionConfigT["title"];
 	singular: CollectionConfigT["singular"];
 	description: string | null;
 	slug: string | null;
-	enableParents: boolean;
-	enableHomepages: boolean;
-	enableSlugs: boolean;
-	enableCategories: boolean;
-	enableTranslations: boolean;
+	config: {
+		enableParents: boolean;
+		enableHomepages: boolean;
+		enableSlugs: boolean;
+		enableCategories: boolean;
+		enableTranslations: boolean;
+	};
 };
 
 export interface CollectionBrickConfigT {

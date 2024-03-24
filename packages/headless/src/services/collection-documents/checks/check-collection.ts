@@ -30,7 +30,7 @@ const checkCollection = async (data: ServiceData) => {
 		});
 	}
 
-	if (data.has_slug && collectionInstance.data.enableSlugs === false) {
+	if (data.has_slug && collectionInstance.data.config.enableSlugs === false) {
 		throw new APIError({
 			type: "basic",
 			name: data.errorContent.name,
@@ -42,7 +42,7 @@ const checkCollection = async (data: ServiceData) => {
 	}
 	if (
 		data.has_homepage &&
-		collectionInstance.data.enableHomepages === false
+		collectionInstance.data.config.enableHomepages === false
 	) {
 		throw new APIError({
 			type: "basic",
@@ -53,7 +53,10 @@ const checkCollection = async (data: ServiceData) => {
 			status: 400,
 		});
 	}
-	if (data.has_parent_id && collectionInstance.data.enableParents === false) {
+	if (
+		data.has_parent_id &&
+		collectionInstance.data.config.enableParents === false
+	) {
 		throw new APIError({
 			type: "basic",
 			name: data.errorContent.name,
@@ -65,7 +68,7 @@ const checkCollection = async (data: ServiceData) => {
 	}
 	if (
 		data.has_category_ids &&
-		collectionInstance.data.enableCategories === false
+		collectionInstance.data.config.enableCategories === false
 	) {
 		throw new APIError({
 			type: "basic",

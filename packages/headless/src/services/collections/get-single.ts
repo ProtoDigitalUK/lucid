@@ -32,7 +32,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	if (
 		data.include?.document_id === true &&
-		collection.data.multiple === false
+		collection.data.mode === "single"
 	) {
 		const document = await serviceConfig.db
 			.selectFrom("headless_collection_documents")

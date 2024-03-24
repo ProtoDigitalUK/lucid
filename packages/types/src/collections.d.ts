@@ -6,7 +6,7 @@ import { CustomFieldT } from "../../headless/src/libs/field-builder/types.js";
 
 export interface CollectionResT {
 	key: string;
-	multiple: boolean;
+	mode: "single" | "multiple";
 	title: string;
 	singular: string;
 	description: string | null;

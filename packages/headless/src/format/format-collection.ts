@@ -20,7 +20,7 @@ const formatCollection = (
 
 	return {
 		key: key,
-		multiple: collectionData.multiple,
+		mode: collectionData.mode,
 		title: collectionData.title,
 		singular: collectionData.singular,
 		description: collectionData.description ?? null,
@@ -28,11 +28,11 @@ const formatCollection = (
 		document_id: include?.document_id
 			? getDocumentId(key, documents)
 			: undefined,
-		enable_parents: collectionData.enableParents ?? false,
-		enable_homepages: collectionData.enableHomepages ?? false,
-		enable_slugs: collectionData.enableSlugs ?? false,
-		enable_categories: collectionData.enableCategories ?? false,
-		enable_translations: collectionData.enableTranslations ?? false,
+		enable_parents: collectionData.config.enableParents ?? false,
+		enable_homepages: collectionData.config.enableHomepages ?? false,
+		enable_slugs: collectionData.config.enableSlugs ?? false,
+		enable_categories: collectionData.config.enableCategories ?? false,
+		enable_translations: collectionData.config.enableTranslations ?? false,
 
 		fixed_bricks: include?.bricks
 			? collectionInstance.fixedBricks ?? []
@@ -62,7 +62,7 @@ export const swaggerCollectionRes = {
 	type: "object",
 	properties: {
 		key: { type: "string", example: "pages" },
-		multiple: { type: "boolean", example: false },
+		mode: { type: "string", example: "single" },
 		title: { type: "string", example: "Pages" },
 		singular: { type: "string", example: "Page" },
 		description: {

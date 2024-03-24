@@ -77,8 +77,8 @@ const validateBrickData = async (data: {
 	let hasErrors = false;
 
 	const brickInstances = [
-		...(data.collection.config.fixedBricks || []),
-		...(data.collection.config.builderBricks || []),
+		...(data.collection.config.bricks?.fixed || []),
+		...(data.collection.config.bricks?.builder || []),
 	];
 
 	for (let i = 0; i < data.bricks.length; i++) {

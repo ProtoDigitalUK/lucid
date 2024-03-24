@@ -69,14 +69,16 @@ const upsertSingle = async (
 		});
 
 	const bodyDataEnabled = {
-		slug: collectionInstance.data.enableSlugs ? data.slug : undefined,
-		homepage: collectionInstance.data.enableHomepages
+		slug: collectionInstance.data.config.enableSlugs
+			? data.slug
+			: undefined,
+		homepage: collectionInstance.data.config.enableHomepages
 			? data.homepage
 			: undefined,
-		parent_id: collectionInstance.data.enableParents
+		parent_id: collectionInstance.data.config.enableParents
 			? data.parent_id
 			: undefined,
-		category_ids: collectionInstance.data.enableCategories
+		category_ids: collectionInstance.data.config.enableCategories
 			? data.category_ids
 			: undefined,
 	};
@@ -114,7 +116,7 @@ const upsertSingle = async (
 			false,
 		)(serviceConfig, {
 			collection_key: data.collection_key,
-			collection_multiple: collectionInstance.data.multiple,
+			collection_mode: collectionInstance.data.mode,
 			document_id: data.document_id,
 			errorContent: errorContent,
 		}),
@@ -190,7 +192,7 @@ const upsertSingle = async (
 						exclude_id: document.id,
 						document_id: data.document_id,
 					},
-				)
+			  )
 			: undefined,
 		serviceWrapper(
 			collectionDocumentCategoriesServices.upsertMultiple,

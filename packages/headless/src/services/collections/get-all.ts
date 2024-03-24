@@ -12,7 +12,7 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	if (data.include_document_id === true) {
 		const singleCollections = collections.filter(
-			(collection) => collection.data.multiple === false,
+			(collection) => collection.data.mode === "single",
 		);
 
 		const documents = await serviceConfig.db
