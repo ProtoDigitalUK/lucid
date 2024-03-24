@@ -27,7 +27,6 @@ export default {
 					...permissionGroups.languages.permissions,
 					...permissionGroups.emails.permissions,
 					...permissionGroups.content.permissions,
-					// ...permissionGroups.collections.permissions, // Should probs only be available to super admin
 					...permissionGroups.category.permissions,
 					...permissionGroups.menu.permissions,
 					...permissionGroups.form_submissions.permissions,
@@ -46,7 +45,7 @@ export default {
 			},
 		],
 	},
-	brickBuilder: {
+	fieldBuiler: {
 		maxRepeaterDepth: 3,
 	},
 	query: {

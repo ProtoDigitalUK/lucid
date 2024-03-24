@@ -5,9 +5,9 @@ const checkRepeaterDepth = (
 	repeaterDepth: Record<string, number>,
 ) => {
 	for (const [repeaterKey, depth] of Object.entries(repeaterDepth)) {
-		if (depth > constants.brickBuilder.maxRepeaterDepth) {
+		if (depth > constants.fieldBuiler.maxRepeaterDepth) {
 			throw new Error(
-				`Repeater depth is too high in brick: ${brickKey} with key: ${repeaterKey}. Please reduce the depth from ${depth} to ${constants.brickBuilder.maxRepeaterDepth}.`,
+				`Repeater depth is too high in brick: ${brickKey} with key: ${repeaterKey}. Please reduce the depth from ${depth} to ${constants.fieldBuiler.maxRepeaterDepth}.`,
 			);
 		}
 	}

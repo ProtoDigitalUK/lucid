@@ -1,7 +1,5 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
-import { swaggerBrickConfigsRes } from "./format-brick-config.js";
-import { swaggerFieldConfigsRes } from "./format-field-config.js";
 
 const formatCollection = (
 	collectionInstance: CollectionBuilderT,
@@ -56,6 +54,58 @@ const getDocumentId = (
 	);
 
 	return document?.id ?? undefined;
+};
+
+const swaggerFieldConfigsRes = {
+	type: "object",
+	additionalProperties: true,
+	properties: {
+		type: {
+			type: "string",
+		},
+		title: {
+			type: "string",
+		},
+		key: {
+			type: "string",
+		},
+		description: {
+			type: "string",
+		},
+		fields: {
+			type: "array",
+			items: {
+				type: "object",
+				additionalProperties: true,
+			},
+		},
+	},
+};
+
+const swaggerBrickConfigsRes = {
+	type: "object",
+	additionalProperties: true,
+	properties: {
+		key: {
+			type: "string",
+		},
+		title: {
+			type: "string",
+		},
+		preview: {
+			type: "object",
+			additionalProperties: true,
+			properties: {
+				image: {
+					type: "string",
+				},
+			},
+		},
+		fields: {
+			type: "array",
+			items: swaggerFieldConfigsRes,
+		},
+	},
 };
 
 export const swaggerCollectionRes = {
