@@ -1,5 +1,4 @@
 import z from "zod";
-import type { BrickBuilderT } from "../brick-builder/index.js";
 import sanitizeHtml from "sanitize-html";
 import type {
 	CustomFieldT,
@@ -12,9 +11,7 @@ import type {
 	MediaConfigT,
 	NumberConfigT,
 	PageLinkConfigT,
-	RepeaterConfigT,
 	SelectConfigT,
-	TabConfigT,
 	TextConfigT,
 	TextareaConfigT,
 	WysiwygConfigT,
@@ -29,112 +26,57 @@ import type {
 
 class FieldBuilder {
 	fields: Map<string, CustomFieldT> = new Map();
-	repeaterStack: string[] = [];
 	meta: FieldBuilderMetaT = {
 		fieldKeys: [],
 		repeaterDepth: {},
 	};
 	// Custom Fields
-	public addFields(Builder: FieldBuilder | BrickBuilderT) {
-		const fields = Array.from(Builder.fields.values());
-		for (const field of fields) {
-			this.fields.set(field.key, field);
-			this.meta.fieldKeys.push(field.key);
-		}
-		return this;
-	}
-	public endRepeater() {
-		const key = this.repeaterStack.pop();
-		if (!key) return this;
-
-		const fields = Array.from(this.fields.values());
-		let selectedRepeaterIndex = 0;
-		let repeaterKey = "";
-
-		// find the selected repeater
-		for (let i = 0; i < fields.length; i++) {
-			if (fields[i].type === "repeater" && fields[i].key === key) {
-				selectedRepeaterIndex = i;
-				repeaterKey = fields[i].key;
-				break;
-			}
-		}
-
-		if (!repeaterKey) return this;
-
-		const fieldsAfterSelectedRepeater = fields.slice(
-			selectedRepeaterIndex + 1,
-		);
-		const repeater = this.fields.get(repeaterKey);
-		if (repeater) {
-			// filter out tab fields
-			repeater.fields = fieldsAfterSelectedRepeater.filter(
-				(field) => field.type !== "tab",
-			);
-			fieldsAfterSelectedRepeater.map((field) => {
-				this.fields.delete(field.key);
-			});
-		}
-
-		return this;
-	}
-	public addTab(config: TabConfigT) {
-		this.#addToFields("tab", config);
-		return this;
-	}
 	public addText(config: TextConfigT) {
-		this.#addToFields("text", config);
+		this.addToFields("text", config);
 		return this;
 	}
 	public addWysiwyg(config: WysiwygConfigT) {
-		this.#addToFields("wysiwyg", config);
+		this.addToFields("wysiwyg", config);
 		return this;
 	}
 	public addMedia(config: MediaConfigT) {
-		this.#addToFields("media", config);
-		return this;
-	}
-	public addRepeater(config: RepeaterConfigT) {
-		this.meta.repeaterDepth[config.key] = this.repeaterStack.length;
-
-		this.#addToFields("repeater", config);
-		this.repeaterStack.push(config.key);
+		this.addToFields("media", config);
 		return this;
 	}
 	public addNumber(config: NumberConfigT) {
-		this.#addToFields("number", config);
+		this.addToFields("number", config);
 		return this;
 	}
 	public addCheckbox(config: CheckboxConfigT) {
-		this.#addToFields("checkbox", config);
+		this.addToFields("checkbox", config);
 		return this;
 	}
 	public addSelect(config: SelectConfigT) {
-		this.#addToFields("select", config);
+		this.addToFields("select", config);
 		return this;
 	}
 	public addTextarea(config: TextareaConfigT) {
-		this.#addToFields("textarea", config);
+		this.addToFields("textarea", config);
 		return this;
 	}
 	public addJSON(config: JSONConfigT) {
-		this.#addToFields("json", config);
+		this.addToFields("json", config);
 		return this;
 	}
 	public addColour(config: ColourConfigT) {
-		this.#addToFields("colour", config);
+		this.addToFields("colour", config);
 		return this;
 	}
 	public addDateTime(config: DateTimeConfigT) {
-		this.#addToFields("datetime", config);
+		this.addToFields("datetime", config);
 		return this;
 	}
 	public addPageLink(config: PageLinkConfigT) {
-		this.#addToFields("pagelink", config);
+		this.addToFields("pagelink", config);
 		return this;
 	}
 	public addLink(config: LinkConfigT) {
-		this.#addToFields("link", config);
+		this.addToFields("link", config);
 		return this;
 	}
 	// Getters
@@ -183,8 +125,8 @@ class FieldBuilder {
 
 		return fields;
 	}
-	// Private
-	#addToFields(type: FieldTypesT, config: CustomFieldConfigsT) {
+	//
+	protected addToFields(type: FieldTypesT, config: CustomFieldConfigsT) {
 		this.meta.fieldKeys.push(config.key);
 		this.fields.set(config.key, {
 			...config,
@@ -193,7 +135,16 @@ class FieldBuilder {
 			default: this.#fieldDefaults(type, config),
 		});
 	}
-	// Helpers
+	protected keyToTitle(key: string) {
+		if (typeof key !== "string") return key;
+
+		const title = key
+			.split(/[-_]/g)
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
+
+		return title;
+	}
 	#fieldDefaults(
 		type: FieldTypesT,
 		config: CustomFieldConfigsT,
@@ -239,16 +190,6 @@ class FieldBuilder {
 				return undefined;
 			}
 		}
-	}
-	protected keyToTitle(key: string) {
-		if (typeof key !== "string") return key;
-
-		const title = key
-			.split(/[-_]/g)
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(" ");
-
-		return title;
 	}
 	// -----------------------------------------
 	// Validation
