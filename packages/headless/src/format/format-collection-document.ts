@@ -33,6 +33,8 @@ const formatCollectionDocument = (
 	bricks?: BrickResT[],
 	fields?: BrickResFieldsT[] | null,
 ): CollectionDocumentResT => {
+	console.log(page);
+
 	const res: CollectionDocumentResT = {
 		id: page.id,
 		parent_id: page.parent_id,

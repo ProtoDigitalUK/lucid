@@ -6,6 +6,7 @@ import queryBuilder from "../../db/query-builder.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -18,6 +19,10 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const collectionInstance = await collectionsServices.getSingleInstance({
+		key: data.collection_key,
+	});
+
 	let pagesQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
@@ -79,6 +84,7 @@ const getMultiple = async (
 		)
 		.where("headless_collection_documents.is_deleted", "=", false);
 
+	// Filer by specified document ids
 	if (data.in_ids !== undefined && data.in_ids.length > 0) {
 		pagesQuery = pagesQuery.where(
 			"headless_collection_documents.id",
@@ -90,6 +96,57 @@ const getMultiple = async (
 			"in",
 			data.in_ids,
 		);
+	}
+
+	/* 
+        TODO: move login in a seperate file/function
+        * Use valueKey function from format-upsert-fields.ts to map field types to their respective value keys for the where
+    */
+	if (collectionInstance.data.config.fields.include.length > 0) {
+		// hardcoded example - remove
+		if (data.collection_key === "page") {
+			const fieldKeys = ["page_title", "page_excerpt"];
+			let querytemp = pagesQuery
+				.select((eb) => [
+					jsonArrayFrom(
+						eb
+							.selectFrom("headless_collection_document_fields")
+							.select([
+								"headless_collection_document_fields.text_value",
+								"headless_collection_document_fields.int_value",
+								"headless_collection_document_fields.bool_value",
+								"headless_collection_document_fields.language_id",
+								"headless_collection_document_fields.type",
+								"headless_collection_document_fields.key",
+							])
+							.whereRef(
+								"headless_collection_document_fields.collection_document_id",
+								"=",
+								"headless_collection_documents.id",
+							)
+							.where(
+								"headless_collection_document_fields.key",
+								"in",
+								fieldKeys,
+							),
+					).as("fields"),
+				])
+				.leftJoin(
+					"headless_collection_document_fields",
+					"headless_collection_document_fields.collection_document_id",
+					"headless_collection_documents.id",
+				);
+
+			// filter by field value
+			const filterValue = "Homepage";
+			querytemp = querytemp.where(
+				"headless_collection_document_fields.text_value",
+				"=",
+				filterValue,
+			);
+
+			pagesQuery = querytemp;
+		}
 	}
 
 	const { main, count } = queryBuilder(
