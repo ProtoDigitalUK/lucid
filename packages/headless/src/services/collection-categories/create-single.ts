@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import slug from "slug";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import categoriesServices from "./index.js";
+import collectionCategoriesServices from "./index.js";
 import collectionsServices from "../collections/index.js";
 import languagesServices from "../languages/index.js";
 import translationsServices from "../translations/index.js";
@@ -59,7 +59,7 @@ const createSingle = async (
 	});
 
 	const slugExists = await serviceWrapper(
-		categoriesServices.checks.checkSlugExists,
+		collectionCategoriesServices.checks.checkSlugExists,
 		false,
 	)(serviceConfig, {
 		collection_key: data.collection_key,

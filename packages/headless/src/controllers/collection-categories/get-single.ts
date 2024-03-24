@@ -1,16 +1,19 @@
-import categoriesSchema from "../../schemas/categories.js";
+import collectionCategoriesSchema from "../../schemas/collection-categories.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import categoriesServices from "../../services/categories/index.js";
+import collectionCategoriesServices from "../../services/collection-categories/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCategoryRes } from "../../format/format-category.js";
+import { swaggerCategoryRes } from "../../format/format-collection-categories.js";
 
 const getSingleController: ControllerT<
-	typeof categoriesSchema.getSingle.params,
-	typeof categoriesSchema.getSingle.body,
-	typeof categoriesSchema.getSingle.query
+	typeof collectionCategoriesSchema.getSingle.params,
+	typeof collectionCategoriesSchema.getSingle.body,
+	typeof collectionCategoriesSchema.getSingle.query
 > = async (request, reply) => {
-	const category = await serviceWrapper(categoriesServices.getSingle, false)(
+	const category = await serviceWrapper(
+		collectionCategoriesServices.getSingle,
+		false,
+	)(
 		{
 			db: request.server.db,
 		},
@@ -28,7 +31,7 @@ const getSingleController: ControllerT<
 
 export default {
 	controller: getSingleController,
-	zodSchema: categoriesSchema.getSingle,
+	zodSchema: collectionCategoriesSchema.getSingle,
 	swaggerSchema: {
 		description: "Get a single collection category by ID",
 		tags: ["collection-categories"],

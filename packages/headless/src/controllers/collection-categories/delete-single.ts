@@ -1,17 +1,17 @@
-import categoriesSchema from "../../schemas/categories.js";
+import collectionCategoriesSchema from "../../schemas/collection-categories.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import categoriesServices from "../../services/categories/index.js";
+import collectionCategoriesServices from "../../services/collection-categories/index.js";
 
 const deleteSingleController: ControllerT<
-	typeof categoriesSchema.deleteSingle.params,
-	typeof categoriesSchema.deleteSingle.body,
-	typeof categoriesSchema.deleteSingle.query
+	typeof collectionCategoriesSchema.deleteSingle.params,
+	typeof collectionCategoriesSchema.deleteSingle.body,
+	typeof collectionCategoriesSchema.deleteSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(categoriesServices.deleteSingle, true)(
+	await serviceWrapper(collectionCategoriesServices.deleteSingle, true)(
 		{
 			db: request.server.db,
 		},
@@ -25,7 +25,7 @@ const deleteSingleController: ControllerT<
 
 export default {
 	controller: deleteSingleController,
-	zodSchema: categoriesSchema.deleteSingle,
+	zodSchema: collectionCategoriesSchema.deleteSingle,
 	swaggerSchema: {
 		description: "Delete a single collection category by id.",
 		tags: ["collection-categories"],

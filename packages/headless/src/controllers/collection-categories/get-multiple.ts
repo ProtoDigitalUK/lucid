@@ -1,13 +1,13 @@
-import categorySchema from "../../schemas/categories.js";
+import categorySchema from "../../schemas/collection-categories.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 	swaggerQueryString,
 } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import categoriesServices from "../../services/categories/index.js";
+import collectionCategoriesServices from "../../services/collection-categories/index.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCategoryRes } from "../../format/format-category.js";
+import { swaggerCategoryRes } from "../../format/format-collection-categories.js";
 
 const getMultipleController: ControllerT<
 	typeof categorySchema.getMultiple.params,
@@ -15,7 +15,7 @@ const getMultipleController: ControllerT<
 	typeof categorySchema.getMultiple.query
 > = async (request, reply) => {
 	const categories = await serviceWrapper(
-		categoriesServices.getMultiple,
+		collectionCategoriesServices.getMultiple,
 		false,
 	)(
 		{

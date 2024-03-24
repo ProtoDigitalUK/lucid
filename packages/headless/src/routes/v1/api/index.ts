@@ -11,7 +11,7 @@ import settingsRoutes from "./settings.routes.js";
 import publicPagesRoutes from "./public-pages.routes.js";
 import collectionRoutes from "./collections.routes.js";
 import collectionDocumentsRoutes from "./collection-documents.routes.js";
-import categoriesRoutes from "./categories.routes.js";
+import collectionCategoriesRoutes from "./collection-categories.routes.js";
 import userRoutes from "./users.routes.js";
 
 const routes = async (fastify: FastifyInstance) => {
@@ -33,7 +33,7 @@ const routes = async (fastify: FastifyInstance) => {
 	fastify.register(collectionDocumentsRoutes, {
 		prefix: "/collections/documents",
 	});
-	fastify.register(categoriesRoutes, {
+	fastify.register(collectionCategoriesRoutes, {
 		prefix: "/collections/categories",
 	});
 	fastify.register(userRoutes, {

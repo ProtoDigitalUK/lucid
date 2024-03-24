@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import slug from "slug";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import categoriesServices from "./index.js";
+import collectionCategoriesServices from "./index.js";
 import translationsServices from "../translations/index.js";
 
 export interface ServiceData {
@@ -55,7 +55,7 @@ const updateSingle = async (
 		});
 
 		const slugExists = await serviceWrapper(
-			categoriesServices.checks.checkSlugExists,
+			collectionCategoriesServices.checks.checkSlugExists,
 			false,
 		)(serviceConfig, {
 			slug: newSlug,

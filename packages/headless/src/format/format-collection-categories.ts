@@ -1,6 +1,6 @@
 import type { CategoryResT } from "@headless/types/src/categories.js";
 
-const formatCategory = (category: {
+const formatCollectionCategories = (category: {
 	id: number;
 	created_at: Date | null;
 	updated_at: Date | null;
@@ -69,4 +69,4 @@ export const swaggerCategoryRes = {
 	},
 };
 
-export default formatCategory;
+export default formatCollectionCategories;

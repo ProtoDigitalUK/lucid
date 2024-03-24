@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import formatCategory from "../../format/format-category.js";
+import formatCollectionCategories from "../../format/format-collection-categories.js";
 
 export interface ServiceData {
 	id: number;
@@ -63,7 +63,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatCategory(category);
+	return formatCollectionCategories(category);
 };
 
 export default getSingle;

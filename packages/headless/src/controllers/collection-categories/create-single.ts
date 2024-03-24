@@ -1,19 +1,22 @@
-import categoriesSchema from "../../schemas/categories.js";
+import collectionCategoriesSchema from "../../schemas/collection-categories.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
-import categoriesServices from "../../services/categories/index.js";
+import collectionCategoriesServices from "../../services/collection-categories/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCategoryRes } from "../../format/format-category.js";
+import { swaggerCategoryRes } from "../../format/format-collection-categories.js";
 
 const createSingleController: ControllerT<
-	typeof categoriesSchema.createSingle.params,
-	typeof categoriesSchema.createSingle.body,
-	typeof categoriesSchema.createSingle.query
+	typeof collectionCategoriesSchema.createSingle.params,
+	typeof collectionCategoriesSchema.createSingle.body,
+	typeof collectionCategoriesSchema.createSingle.query
 > = async (request, reply) => {
-	const id = await serviceWrapper(categoriesServices.createSingle, true)(
+	const id = await serviceWrapper(
+		collectionCategoriesServices.createSingle,
+		true,
+	)(
 		{
 			db: request.server.db,
 		},
@@ -25,7 +28,10 @@ const createSingleController: ControllerT<
 		},
 	);
 
-	const category = await serviceWrapper(categoriesServices.getSingle, false)(
+	const category = await serviceWrapper(
+		collectionCategoriesServices.getSingle,
+		false,
+	)(
 		{
 			db: request.server.db,
 		},
@@ -43,7 +49,7 @@ const createSingleController: ControllerT<
 
 export default {
 	controller: createSingleController,
-	zodSchema: categoriesSchema.createSingle,
+	zodSchema: collectionCategoriesSchema.createSingle,
 	swaggerSchema: {
 		description:
 			"Creates a new collection category. These can be assigned to pages that belong to the multiple builder collection type.",

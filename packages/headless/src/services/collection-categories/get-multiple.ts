@@ -1,13 +1,13 @@
 import type z from "zod";
-import type categoriesSchema from "../../schemas/categories.js";
+import type collectionCategoriesSchema from "../../schemas/collection-categories.js";
 import queryBuilder from "../../db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
-import formatCategory from "../../format/format-category.js";
+import formatCollectionCategories from "../../format/format-collection-categories.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
-	query: z.infer<typeof categoriesSchema.getMultiple.query>;
+	query: z.infer<typeof collectionCategoriesSchema.getMultiple.query>;
 	language_id: number;
 }
 
@@ -181,7 +181,9 @@ const getMultiple = async (
 	]);
 
 	return {
-		data: categories.map((category) => formatCategory(category)),
+		data: categories.map((category) =>
+			formatCollectionCategories(category),
+		),
 		count: parseCount(categoriesCount?.count),
 	};
 };
