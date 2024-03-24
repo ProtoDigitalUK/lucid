@@ -17,23 +17,29 @@ const upsertMultiple = async (
 ) => {
 	let bricks = data.bricks;
 
-	if (data.content !== undefined) {
-		const collectionContentBrick = await serviceConfig.db
-			.selectFrom("headless_collection_document_bricks")
-			.select("id")
-			.where("collection_document_id", "=", data.document_id)
-			.where("is_content_type", "=", true)
-			.where("brick_type", "=", "content")
-			.executeTakeFirst();
+	const collectionContentBrick = await serviceConfig.db
+		.selectFrom("headless_collection_document_bricks")
+		.select("id")
+		.where("collection_document_id", "=", data.document_id)
+		.where("is_content_type", "=", true)
+		.where("brick_type", "=", "content")
+		.executeTakeFirst();
+
+	if (collectionContentBrick !== undefined) {
 		bricks.push({
 			id: collectionContentBrick?.id,
 			type: "content",
-			groups: data.content.groups,
-			fields: data.content.fields,
+			groups: data.content?.groups || [],
+			fields: data.content?.fields || [],
+		});
+	} else if (data.content !== undefined) {
+		bricks.push({
+			type: "content",
+			groups: data.content.groups || [],
+			fields: data.content.fields || [],
 		});
 	}
 
-	// TODO: fix duplicate key value violates unique constraint \"headless_collection_document__collection_document_id_is_con_key\" error on update
 	if (bricks.length === 0) return;
 
 	// validation

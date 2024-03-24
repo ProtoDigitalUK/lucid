@@ -472,6 +472,7 @@ export const swaggerBrickRes = {
 
 export const swaggerContentRes = {
 	type: "object",
+	nullable: true,
 	properties: {
 		groups: {
 			type: "array",

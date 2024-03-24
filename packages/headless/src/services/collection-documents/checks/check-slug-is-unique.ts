@@ -10,7 +10,6 @@ import slug from "slug";
 export interface ServiceData {
 	collection_key: string;
 	slug?: string;
-	homepage?: boolean;
 	document_id?: number;
 }
 
@@ -18,7 +17,6 @@ const checkSlugIsUnique = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.homepage) return "/";
 	if (data.slug === undefined) return undefined;
 	const slugValue = slug(data.slug, { lower: true });
 

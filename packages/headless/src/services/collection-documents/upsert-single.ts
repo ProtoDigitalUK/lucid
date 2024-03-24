@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { APIError, modelErrors } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentCategoriesServices from "../collection-document-categories/index.js";
@@ -74,7 +74,7 @@ const upsertSingle = async (
 		)(serviceConfig, {
 			collection_key: data.collection_key,
 			slug: bodyDataEnabled.slug,
-			homepage: bodyDataEnabled.homepage,
+			document_id: data.document_id,
 		}),
 		serviceWrapper(
 			collectionDocumentsServices.checks.checkCategoriesInCollection,

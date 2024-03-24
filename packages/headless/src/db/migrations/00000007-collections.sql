@@ -26,9 +26,7 @@ CREATE TABLE IF NOT EXISTS headless_collection_document_bricks (
     is_content_type BOOLEAN DEFAULT FALSE,
     brick_type TEXT NOT NULL, -- builder, fixed, content
     brick_key TEXT,
-    brick_order INT,
-
-    unique (collection_document_id, is_content_type)
+    brick_order INT
 );
 
 -- GROUPS
