@@ -19,6 +19,31 @@ const slugSchema = z
 		},
 	);
 
+const getMultipleQuerySchema = z.object({
+	filter: z
+		.object({
+			collection_key: z
+				.union([z.string(), z.array(z.string())])
+				.optional(),
+			slug: z.string().optional(),
+			full_slug: z.string().optional(),
+			category_id: z.union([z.string(), z.array(z.string())]).optional(),
+		})
+		.optional(),
+	sort: z
+		.array(
+			z.object({
+				key: z.enum(["created_at", "updated_at"]),
+				value: z.enum(["asc", "desc"]),
+			}),
+		)
+		.optional(),
+	include: defaultQuery.include,
+	exclude: defaultQuery.exclude,
+	page: defaultQuery.page,
+	per_page: defaultQuery.per_page,
+});
+
 export default {
 	upsertSingle: {
 		body: z.object({
@@ -44,33 +69,15 @@ export default {
 		body: undefined,
 	},
 	getMultiple: {
-		query: z.object({
-			filter: z
-				.object({
-					collection_key: z
-						.union([z.string(), z.array(z.string())])
-						.optional(),
-					slug: z.string().optional(),
-					full_slug: z.string().optional(),
-					category_id: z
-						.union([z.string(), z.array(z.string())])
-						.optional(),
-				})
-				.optional(),
-			sort: z
-				.array(
-					z.object({
-						key: z.enum(["created_at", "updated_at"]),
-						value: z.enum(["asc", "desc"]),
-					}),
-				)
-				.optional(),
-			include: defaultQuery.include,
-			exclude: defaultQuery.exclude,
-			page: defaultQuery.page,
-			per_page: defaultQuery.per_page,
-		}),
+		query: getMultipleQuerySchema,
 		params: undefined,
+		body: undefined,
+	},
+	getMultipleValidParents: {
+		query: getMultipleQuerySchema,
+		params: z.object({
+			id: z.string(),
+		}),
 		body: undefined,
 	},
 	deleteSingle: {

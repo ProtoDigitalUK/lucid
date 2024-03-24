@@ -10,13 +10,14 @@ import collectionsServices from "../collections/index.js";
 export interface ServiceData {
 	query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
 	language_id: number; // TODO: will be used for field joins
+	in_ids?: number[];
 }
 
 const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const pagesQuery = serviceConfig.db
+	let pagesQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
 			"headless_collection_documents.id",
@@ -60,7 +61,7 @@ const getMultiple = async (
 		])
 		.where("headless_collection_documents.is_deleted", "=", false);
 
-	const pagesCountQuery = serviceConfig.db
+	let pagesCountQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_collection_document_categories", (join) =>
@@ -76,6 +77,19 @@ const getMultiple = async (
 			"headless_collection_documents.created_by",
 		)
 		.where("headless_collection_documents.is_deleted", "=", false);
+
+	if (data.in_ids !== undefined && data.in_ids.length > 0) {
+		pagesQuery = pagesQuery.where(
+			"headless_collection_documents.id",
+			"in",
+			data.in_ids,
+		);
+		pagesCountQuery = pagesCountQuery.where(
+			"headless_collection_documents.id",
+			"in",
+			data.in_ids,
+		);
+	}
 
 	const { main, count } = queryBuilder(
 		{
