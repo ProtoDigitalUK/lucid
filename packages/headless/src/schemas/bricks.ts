@@ -1,11 +1,21 @@
 import z from "zod";
-import { FieldTypesEnumT } from "../libs/field-builder/index.js";
 
-const FieldTypesSchema = z.nativeEnum(FieldTypesEnumT);
-
-export const FieldSchema = z.object({
+export const FieldSchemaCollection = z.object({
 	key: z.string(),
-	type: FieldTypesSchema,
+	type: z.union([
+		z.literal("text"),
+		z.literal("wysiwyg"),
+		z.literal("media"),
+		z.literal("number"),
+		z.literal("checkbox"),
+		z.literal("select"),
+		z.literal("textarea"),
+		z.literal("json"),
+		z.literal("colour"),
+		z.literal("datetime"),
+		z.literal("pagelink"),
+		z.literal("link"),
+	]),
 	value: z.union([
 		z.string(),
 		z.boolean(),
@@ -25,6 +35,24 @@ export const FieldSchema = z.object({
 	]),
 	language_id: z.number(),
 	fields_id: z.number().optional(),
+});
+export type FieldCollectionObjectT = z.infer<typeof FieldSchemaCollection>;
+export const FieldSchema = FieldSchemaCollection.extend({
+	type: z.union([
+		z.literal("text"),
+		z.literal("wysiwyg"),
+		z.literal("media"),
+		z.literal("number"),
+		z.literal("checkbox"),
+		z.literal("select"),
+		z.literal("textarea"),
+		z.literal("json"),
+		z.literal("colour"),
+		z.literal("datetime"),
+		z.literal("pagelink"),
+		z.literal("link"),
+		z.literal("repeater"),
+	]),
 	group_id: z.union([z.number(), z.string()]).optional(),
 });
 export type FieldObjectT = z.infer<typeof FieldSchema>;

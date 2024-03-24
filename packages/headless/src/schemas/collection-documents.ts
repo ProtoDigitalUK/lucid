@@ -1,5 +1,5 @@
 import z from "zod";
-import { BrickSchema, FieldSchema } from "./bricks.js";
+import { BrickSchema, FieldSchemaCollection } from "./bricks.js";
 import defaultQuery from "./default-query.js";
 
 const slugRegex = /^[a-zA-Z0-9-_/]+$/;
@@ -54,7 +54,7 @@ export default {
 			parent_id: z.number().nullable().optional(),
 			category_ids: z.array(z.number()).optional(),
 			bricks: z.array(BrickSchema).optional(),
-			fields: z.array(FieldSchema).optional(),
+			fields: z.array(FieldSchemaCollection).optional(),
 		}),
 		query: undefined,
 		params: undefined,
