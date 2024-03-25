@@ -1,9 +1,11 @@
 import z from "zod";
 import type { CollectionBuilderT } from "../collection-builder/index.js";
+import type { DatabaseAdapterT } from "../db/adapter.js";
 import constants from "../../constants.js";
 
 const ConfigSchema = z.object({
 	mode: z.literal("production").or(z.literal("development")),
+	db: z.unknown(),
 	databaseUrl: z.string(),
 	host: z.string(),
 	keys: z.object({
@@ -83,6 +85,7 @@ export type EmailStrategyT = (
 }>;
 
 export interface Config extends z.infer<typeof ConfigSchema> {
+	db: DatabaseAdapterT;
 	collections?: CollectionBuilderT[];
 	email: {
 		from: {

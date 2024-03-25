@@ -1,4 +1,4 @@
-import { headlessConfig } from "@protodigital/headless";
+import { headlessConfig, LibsqlAdapter } from "@protodigital/headless";
 import transporter from "./src/headless/email-transporter.js";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
@@ -9,6 +9,9 @@ import FormsCollection from "./src/headless/collections/forms.js";
 export default headlessConfig({
 	mode: "development",
 	host: "http://localhost:8393",
+	db: new LibsqlAdapter({
+		url: "libsql://localhost:8080?tls=0",
+	}),
 	databaseUrl: process.env.DATABASE_URL as string,
 	keys: {
 		cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
