@@ -34,6 +34,7 @@ const PageCollection = new CollectionBuilder("page", {
 		key: "page_excerpt",
 		collection: {
 			list: true,
+			filterable: true,
 		},
 	});
 

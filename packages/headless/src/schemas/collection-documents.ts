@@ -25,6 +25,7 @@ const getMultipleQuerySchema = z.object({
 			slug: z.string().optional(),
 			full_slug: z.string().optional(),
 			category_id: z.union([z.string(), z.array(z.string())]).optional(),
+			fields: z.union([z.string(), z.array(z.string())]).optional(),
 		})
 		.optional(),
 	sort: z
