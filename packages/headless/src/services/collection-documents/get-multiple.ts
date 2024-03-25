@@ -8,6 +8,8 @@ import formatCollectionDocument from "../../format/format-collection-document.js
 import collectionsServices from "../collections/index.js";
 import type { DB } from "kysely-codegen";
 import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
+import { collectionFilters } from "../../utils/field-helpers.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -20,6 +22,12 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const collectionInstance = await collectionsServices.getSingleInstance({
+		key: data.collection_key,
+	});
+	const allowedIncludes = collectionInstance.data.config.fields.include;
+	const allowedFilters = collectionInstance.data.config.fields.filter;
+
 	let pagesQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
@@ -50,7 +58,7 @@ const getMultiple = async (
 				"headless_collection_documents.id",
 			),
 		)
-		.innerJoin(
+		.leftJoin(
 			"headless_users",
 			"headless_users.id",
 			"headless_collection_documents.created_by",
@@ -75,13 +83,12 @@ const getMultiple = async (
 				"headless_collection_documents.id",
 			),
 		)
-		.innerJoin(
+		.leftJoin(
 			"headless_users",
 			"headless_users.id",
 			"headless_collection_documents.created_by",
 		)
-		.where("headless_collection_documents.is_deleted", "=", false)
-		.groupBy(["headless_collection_documents.id", "headless_users.id"]);
+		.where("headless_collection_documents.is_deleted", "=", false);
 
 	// Filer by specified document ids
 	if (data.in_ids !== undefined && data.in_ids.length > 0) {
@@ -97,20 +104,62 @@ const getMultiple = async (
 		);
 	}
 
-	// TODO: fix types
-	const cFQueries = await customFieldQueryBuilder({
-		collection_key: data.collection_key,
-		filter: data.query.filter,
-		queries: {
-			main: pagesQuery,
-			count: pagesCountQuery,
-		},
-	});
+	const collectionFiltersRes = collectionFilters(
+		allowedFilters,
+		data.query.filter,
+	);
+
+	if (allowedIncludes.length > 0) {
+		pagesQuery = pagesQuery
+			.select((eb) => [
+				jsonArrayFrom(
+					eb
+						.selectFrom("headless_collection_document_fields")
+						.select([
+							"headless_collection_document_fields.text_value",
+							"headless_collection_document_fields.int_value",
+							"headless_collection_document_fields.bool_value",
+							"headless_collection_document_fields.language_id",
+							"headless_collection_document_fields.type",
+							"headless_collection_document_fields.key",
+						])
+						.whereRef(
+							"headless_collection_document_fields.collection_document_id",
+							"=",
+							"headless_collection_documents.id",
+						)
+						.where(
+							"headless_collection_document_fields.key",
+							"in",
+							allowedIncludes,
+						),
+				).as("fields"),
+			])
+			.leftJoin("headless_collection_document_fields", (join) =>
+				join.onRef(
+					"headless_collection_document_fields.collection_document_id",
+					"=",
+					"headless_collection_documents.id",
+				),
+			);
+
+		if (allowedFilters.length && collectionFiltersRes.length > 0) {
+			pagesCountQuery = pagesCountQuery.leftJoin(
+				"headless_collection_document_fields",
+				(join) =>
+					join.onRef(
+						"headless_collection_document_fields.collection_document_id",
+						"=",
+						"headless_collection_documents.id",
+					),
+			);
+		}
+	}
 
 	const { main, count } = queryBuilder(
 		{
-			main: cFQueries.main,
-			count: cFQueries.count,
+			main: pagesQuery,
+			count: pagesCountQuery,
 		},
 		{
 			requestQuery: {
@@ -151,6 +200,10 @@ const getMultiple = async (
 						tableKey: "updated_at",
 					},
 				],
+				collectionFilters:
+					allowedIncludes.length > 0
+						? collectionFiltersRes
+						: undefined,
 			},
 		},
 	);
@@ -160,178 +213,16 @@ const getMultiple = async (
 		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 	]);
 
-	const collections = await collectionsServices.getAll(serviceConfig, {
-		include_document_id: false,
+	const collection = await serviceWrapper(
+		collectionsServices.getSingle,
+		false,
+	)(serviceConfig, {
+		key: data.collection_key,
 	});
 
 	return {
-		data: pages.map((page) => {
-			const collection = collections.find(
-				// @ts-ignore
-				(c) => c.key === page.collection_key,
-			);
-			// @ts-ignore
-			return formatCollectionDocument(page, collection);
-		}),
+		data: pages.map((page) => formatCollectionDocument(page, collection)),
 		count: parseCount(pagesCount?.count),
-	};
-};
-
-interface CustomFieldQueryBuilderT {
-	collection_key: string;
-	filter: RequestQueryParsedT["filter"];
-	queries: {
-		main: SelectQueryBuilder<DB, "headless_collection_documents", unknown>;
-		count: SelectQueryBuilder<
-			DB,
-			"headless_collection_documents",
-			{ count: unknown }
-		>;
-	};
-}
-
-const customFieldQueryBuilder = async (params: CustomFieldQueryBuilderT) => {
-	const collectionInstance = await collectionsServices.getSingleInstance({
-		key: params.collection_key,
-	});
-
-	const allowedIncludes = collectionInstance.data.config.fields.include;
-	const allowedFilters = collectionInstance.data.config.fields.filter;
-
-	if (allowedIncludes.length === 0) {
-		return {
-			main: params.queries.main,
-			count: params.queries.count,
-		};
-	}
-
-	let mainQuery = params.queries.main
-		.select((eb) => [
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_collection_document_fields")
-					.select([
-						"headless_collection_document_fields.text_value",
-						"headless_collection_document_fields.int_value",
-						"headless_collection_document_fields.bool_value",
-						"headless_collection_document_fields.language_id",
-						"headless_collection_document_fields.type",
-						"headless_collection_document_fields.key",
-					])
-					.whereRef(
-						"headless_collection_document_fields.collection_document_id",
-						"=",
-						"headless_collection_documents.id",
-					)
-					.where(
-						"headless_collection_document_fields.key",
-						"in",
-						allowedIncludes,
-					),
-			).as("fields"),
-		])
-		.leftJoin(
-			"headless_collection_document_fields",
-			"headless_collection_document_fields.collection_document_id",
-			"headless_collection_documents.id",
-		);
-
-	let countQuery = params.queries.count
-		.select((eb) => [
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_collection_document_fields")
-					.select([
-						"headless_collection_document_fields.text_value",
-						"headless_collection_document_fields.int_value",
-						"headless_collection_document_fields.bool_value",
-						"headless_collection_document_fields.language_id",
-						"headless_collection_document_fields.type",
-						"headless_collection_document_fields.key",
-					])
-					.whereRef(
-						"headless_collection_document_fields.collection_document_id",
-						"=",
-						"headless_collection_documents.id",
-					)
-					.where(
-						"headless_collection_document_fields.key",
-						"in",
-						allowedIncludes,
-					),
-			).as("fields"),
-		])
-		.leftJoin(
-			"headless_collection_document_fields",
-			"headless_collection_document_fields.collection_document_id",
-			"headless_collection_documents.id",
-		);
-
-	let fieldFilters = params.filter?.fields;
-	if (fieldFilters === undefined) {
-		return {
-			main: mainQuery,
-			count: countQuery,
-		};
-	}
-
-	if (typeof fieldFilters === "string") {
-		fieldFilters = [fieldFilters];
-	}
-
-	const filterKeyValues: Array<{
-		key: string;
-		value: string | string[];
-	}> = [];
-	for (const key of allowedFilters) {
-		const filterValue = fieldFilters.filter((filter) =>
-			filter.startsWith(`${key}=`),
-		);
-
-		if (filterValue) {
-			const keyValues = filterValue
-				.map((filter) => filter.split("=")[1])
-				.filter((v) => v !== "");
-
-			if (keyValues.length === 0) continue;
-
-			filterKeyValues.push({
-				key,
-				value: keyValues.length > 1 ? keyValues : keyValues[0],
-			});
-		}
-	}
-
-	for (const { key, value } of filterKeyValues) {
-		console.log("key", key);
-		console.log("value", value);
-		mainQuery = mainQuery.where(({ eb, and }) =>
-			and([
-				eb("headless_collection_document_fields.key", "=", key),
-				eb(
-					// TODO: text_value needs replacing based on cusotm field type
-					"headless_collection_document_fields.text_value",
-					Array.isArray(value) ? "in" : "=",
-					value,
-				),
-			]),
-		);
-		countQuery = countQuery.where(({ eb, and }) =>
-			and([
-				eb("headless_collection_document_fields.key", "=", key),
-				eb(
-					// TODO: text_value needs replacing based on cusotm field type
-					"headless_collection_document_fields.text_value",
-					Array.isArray(value) ? "in" : "=",
-					value,
-				),
-			]),
-		);
-	}
-
-	return {
-		main: mainQuery,
-		count: countQuery,
 	};
 };
 

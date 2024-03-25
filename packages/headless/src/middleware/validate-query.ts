@@ -56,36 +56,6 @@ const buildFilter = (query: unknown) => {
 	return Object.keys(result).length === 0 ? undefined : result;
 };
 
-const buildCollectionFilter = (filters: Record<string, string | string[]>) => {
-	// format c_f filter
-	// value looks like: page_title=hello,page_title=world,page_excerpt=lorem,example=
-
-	// TODO: move to of buildCFFilter function. Values should exist seperate to this filter object so there arent name conflicts
-	// TODO: between collection filter keys and normal filter keys
-	if (filters.c_f !== undefined) {
-		// split the value by comma
-		const splitValue = Array.isArray(result.c_f)
-			? result.c_f
-			: [result.c_f];
-
-		// create a new object to store the filter
-		const filter: Record<string, string[]> = {};
-		// loop through the split value
-		for (const value of splitValue) {
-			// split the value by the equal sign
-			const [key, val] = value.split("=");
-			// if the key is not in the object, create an array
-			if (filter[key] === undefined) {
-				filter[key] = [];
-			}
-			// if the value is not empty, push it to the array
-			if (val !== "") {
-				filter[key].push(val);
-			}
-		}
-	}
-};
-
 const buildPage = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
 	const page = queryObject.page;

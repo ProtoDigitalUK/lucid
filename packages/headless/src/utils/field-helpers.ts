@@ -1,7 +1,9 @@
 import type { FieldObjectT } from "../schemas/bricks.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
+import type { RequestQueryParsedT } from "../middleware/validate-query.js";
+import type { FieldTypesT } from "../libs/field-builder/types.js";
 
-export const fieldTypeValueKey = (type: FieldObjectT["type"]) => {
+export const fieldTypeValueKey = (type: FieldTypesT) => {
 	switch (type) {
 		case "text":
 			return "text_value";
@@ -72,4 +74,44 @@ export const fieldColumnValueMap = (field: FieldObjectT) => {
 			};
 		}
 	}
+};
+
+export interface CollectionFiltersResT {
+	key: string;
+	value: string | string[];
+	column: string;
+}
+export const collectionFilters = (
+	allowed_filters: {
+		key: string;
+		type: FieldTypesT;
+	}[],
+	filter: RequestQueryParsedT["filter"],
+): Array<CollectionFiltersResT> => {
+	const values = typeof filter?.cf === "string" ? [filter?.cf] : filter?.cf;
+	if (!values) return [];
+
+	const filterKeyValues: Array<CollectionFiltersResT> = [];
+
+	for (const field of allowed_filters) {
+		const filterValue = values.filter((filter) =>
+			filter.startsWith(`${field.key}=`),
+		);
+
+		if (filterValue) {
+			const keyValues = filterValue
+				.map((filter) => filter.split("=")[1])
+				.filter((v) => v !== "");
+
+			if (keyValues.length === 0) continue;
+
+			filterKeyValues.push({
+				key: field.key,
+				value: keyValues.length > 1 ? keyValues : keyValues[0],
+				column: fieldTypeValueKey(field.type),
+			});
+		}
+	}
+
+	return filterKeyValues;
 };

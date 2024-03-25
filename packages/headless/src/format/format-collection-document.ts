@@ -25,44 +25,52 @@ interface DocumentT {
 	author_first_name: string | null;
 	author_last_name: string | null;
 	author_username: string | null;
+	fields?: Array<{
+		text_value: string | null;
+		int_value: number | null;
+		bool_value: boolean | null;
+		language_id: number | null;
+		type: string;
+		key: string;
+	}>;
 }
 
 const formatCollectionDocument = (
-	page: DocumentT,
+	document: DocumentT,
 	collection?: CollectionResT,
 	bricks?: BrickResT[],
 	fields?: BrickResFieldsT[] | null,
 ): CollectionDocumentResT => {
-	console.log(page);
+	// TODO: format fields
 
 	const res: CollectionDocumentResT = {
-		id: page.id,
-		parent_id: page.parent_id,
-		collection_key: page.collection_key,
-		slug: page.slug,
-		full_slug: formatPageFullSlug(page.full_slug, collection?.slug),
+		id: document.id,
+		parent_id: document.parent_id,
+		collection_key: document.collection_key,
+		slug: document.slug,
+		full_slug: formatPageFullSlug(document.full_slug, collection?.slug),
 		collection_slug: collection?.slug ?? null,
-		homepage: page.homepage ?? false,
+		homepage: document.homepage ?? false,
 		bricks: bricks || [],
 		fields: fields || null,
-		created_by: page.created_by,
-		created_at: page.created_at?.toISOString() || null,
-		updated_at: page.updated_at?.toISOString() || null,
+		created_by: document.created_by,
+		created_at: document.created_at?.toISOString() || null,
+		updated_at: document.updated_at?.toISOString() || null,
 		author: null,
 	};
 
-	if (page.author_id) {
+	if (document.author_id) {
 		res.author = {
-			id: page.author_id,
-			email: page.author_email,
-			first_name: page.author_first_name,
-			last_name: page.author_last_name,
-			username: page.author_username,
+			id: document.author_id,
+			email: document.author_email,
+			first_name: document.author_first_name,
+			last_name: document.author_last_name,
+			username: document.author_username,
 		};
 	}
 
-	if (page.categories) {
-		res.categories = page.categories.map(
+	if (document.categories) {
+		res.categories = document.categories.map(
 			(category) => category.category_id,
 		);
 	}

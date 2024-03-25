@@ -1,5 +1,8 @@
 import z from "zod";
-import FieldBuilder, { type CustomFieldT } from "../field-builder/index.js";
+import FieldBuilder, {
+	type FieldTypesT,
+	type CustomFieldT,
+} from "../field-builder/index.js";
 import type { BrickBuilderT } from "../brick-builder/index.js";
 import type {
 	CollectionTextConfigT,
@@ -15,7 +18,10 @@ export default class CollectionBuilder extends FieldBuilder {
 	key: string;
 	config: CollectionConfigT;
 	includeFieldKeys: string[] = [];
-	filterableFieldKeys: string[] = [];
+	filterableFieldKeys: Array<{
+		key: string;
+		type: FieldTypesT;
+	}> = [];
 	constructor(key: string, config: CollectionConfigT) {
 		super();
 		this.key = key;
@@ -35,32 +41,32 @@ export default class CollectionBuilder extends FieldBuilder {
 	// ------------------------------------
 	// Builder Methods
 	addText(config: CollectionTextConfigT) {
-		this.#fieldCollectionHelper(config.key, config.collection);
+		this.#fieldCollectionHelper(config.key, "text", config.collection);
 		super.addText(config);
 		return this;
 	}
 	addNumber(config: CollectionNumberConfigT) {
-		this.#fieldCollectionHelper(config.key, config.collection);
+		this.#fieldCollectionHelper(config.key, "number", config.collection);
 		super.addNumber(config);
 		return this;
 	}
 	addCheckbox(config: CollectionCheckboxConfigT) {
-		this.#fieldCollectionHelper(config.key, config.collection);
+		this.#fieldCollectionHelper(config.key, "checkbox", config.collection);
 		super.addCheckbox(config);
 		return this;
 	}
 	addSelect(config: CollectionSelectConfigT) {
-		this.#fieldCollectionHelper(config.key, config.collection);
+		this.#fieldCollectionHelper(config.key, "select", config.collection);
 		super.addSelect(config);
 		return this;
 	}
 	addTextarea(config: CollectionTextareaConfigT) {
-		this.#fieldCollectionHelper(config.key, config.collection);
+		this.#fieldCollectionHelper(config.key, "textarea", config.collection);
 		super.addTextarea(config);
 		return this;
 	}
 	addDateTime(config: CollectionDateTimeConfigT) {
-		this.#fieldCollectionHelper(config.key, config.collection);
+		this.#fieldCollectionHelper(config.key, "datetime", config.collection);
 		super.addDateTime(config);
 		return this;
 	}
@@ -74,9 +80,17 @@ export default class CollectionBuilder extends FieldBuilder {
 				bricks.findIndex((b) => b.key === brick.key) === index,
 		);
 	};
-	#fieldCollectionHelper = (key: string, config?: FieldCollectionConfigT) => {
+	#fieldCollectionHelper = (
+		key: string,
+		type: FieldTypesT,
+		config?: FieldCollectionConfigT,
+	) => {
 		if (config?.list) this.includeFieldKeys.push(key);
-		if (config?.filterable) this.filterableFieldKeys.push(key);
+		if (config?.filterable)
+			this.filterableFieldKeys.push({
+				key,
+				type,
+			});
 	};
 	// ------------------------------------
 	// Getters
@@ -170,7 +184,10 @@ export type CollectionDataT = {
 		enableCategories: boolean;
 		enableTranslations: boolean;
 		fields: {
-			filter: string[];
+			filter: Array<{
+				key: string;
+				type: FieldTypesT;
+			}>;
 			include: string[];
 		};
 	};

@@ -4,6 +4,7 @@ import type {
 	ReferenceExpression,
 	ComparisonOperatorExpression,
 } from "kysely";
+import type { CollectionFiltersResT } from "../utils/field-helpers.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;
@@ -17,6 +18,7 @@ export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 			queryKey: string;
 			tableKey: ReferenceExpression<DB, Table>;
 		}[];
+		collectionFilters?: CollectionFiltersResT[];
 	};
 }
 
@@ -66,6 +68,42 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 					tableKey,
 					operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
 					value,
+				);
+			}
+		}
+	}
+
+	// collection filters
+	if (
+		config.meta.collectionFilters &&
+		config.meta.collectionFilters.length > 0
+	) {
+		for (const { key, value, column } of config.meta.collectionFilters) {
+			console.log(key, value, column);
+			mainQuery = mainQuery.where(({ eb, and }) =>
+				and([
+					// @ts-expect-error
+					eb("headless_collection_document_fields.key", "=", key),
+					eb(
+						// @ts-expect-error
+						`headless_collection_document_fields.${column}`,
+						Array.isArray(value) ? "in" : "=",
+						value,
+					),
+				]),
+			);
+			if (countQuery) {
+				countQuery = countQuery.where(({ eb, and }) =>
+					and([
+						// @ts-expect-error
+						eb("headless_collection_document_fields.key", "=", key),
+						eb(
+							// @ts-expect-error
+							`headless_collection_document_fields.${column}`,
+							Array.isArray(value) ? "in" : "=",
+							value,
+						),
+					]),
 				);
 			}
 		}
