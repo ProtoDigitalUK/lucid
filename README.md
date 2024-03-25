@@ -1,5 +1,8 @@
 ![Proto Headless CMS](https://github.com/ProtoDigitalUK/proto_headless/blob/master/banner.png?raw=true)
 
+> [!CAUTION]
+> Under heavy construction!
+
 ## Installation
 
 ```bash
@@ -14,42 +17,45 @@ npm install @protodigital/headless
 ## headless.config.ts/js
 
 ```ts
-import { headlessConfig } from "@protodigital/headless";
-import { Banner, Intro, Meta } from "./src/bricks";
-import { Pages, Blogs, Settings } from "./src/collections";
+import { headlessConfig, LibsqlAdapter } from "@protodigital/headless";
+// Plugins
+import EmailResend from "@protodigital/plugin-email-resend";
+import LocalStorage from "@protodigital/plugin-local-storage";
+import FormBuilder from "@protodigital/plugin-form-builder";
+import CookieConsentRecord from "@protodigital/plugin-cookie-consent";
+// Collections
+import PageCollection from "./src/headless/collections/pages.js";
+import BlogCollection from "./src/headless/collections/blogs.js";
+import SettingsCollection from "./src/headless/collections/settings.js";
+import FormsCollection from "./src/headless/collections/forms.js";
 
 export default headlessConfig({
-    mode: "development",
-    host: "http://localhost:8393",
-    databaseURL: process.env.DATABASE_URL as string,
-    keys: {
-        cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
-        refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
-        accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
-    },
-    email: {
-        from: {
-            email: "admin@protoheadless.com",
-            name: "Proto Headless",
-        },
-        strategy: async (email, meta) => {},
-    },
-    media: {
-        store: {
-            service: "cloudflare",
-            cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
-            region: process.env.HEADLESS_S3_REGION as string,
-            bucket: process.env.HEADLESS_S3_BUCKET as string,
-            accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
-            secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
-        },
-    },
-    collections: [Pages, Blogs, Settings],
-    bricks: [Banner, Intro, Meta]
+  db: new LibsqlAdapter({
+    url: "libsql://localhost:8080?tls=0",
+  }),
+  host: "http://localhost:8393",
+  keys: {
+    cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
+    refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
+    accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
+  },
+  collections: [
+    PageCollection,
+    BlogCollection,
+    SettingsCollection,
+    FormsCollection,
+  ],
+  plugins: [
+    EmailResend({}),
+    LocalStorage({}),
+    FormBuilder,
+    CookieConsentRecord,
+  ],
 });
 ```
 
-> Check the example app: [example](https://github.com/ProtoDigitalUK/proto_headless/tree/master/apps/headless-example/headless.config.ts)
+> [!NOTE]
+> The above isnt fully implemented, but is the direction for v1.
 
 ## Notes
 
