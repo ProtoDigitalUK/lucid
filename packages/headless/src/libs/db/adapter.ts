@@ -1,18 +1,18 @@
 import T from "../../translations/index.js";
-import { type Dialect, FileMigrationProvider, Kysely, Migrator } from "kysely";
+import { type Dialect, Migration, Kysely, Migrator } from "kysely";
 import { InternalError } from "../../utils/error-handler.js";
 import type { DB as DBSchema } from "kysely-codegen";
 import fs from "node:fs/promises";
 import path from "node:path";
 
 export default class DatabaseAdapter {
-	migrationFolder: string | undefined;
+	migrations: Record<string, Migration>;
 	db: Kysely<DBSchema> | undefined;
 	constructor(config: {
 		dialect: Dialect;
-		migrationFolder: string;
+		migrations: Record<string, Migration>;
 	}) {
-		this.migrationFolder = config.migrationFolder;
+		this.migrations = config.migrations;
 
 		this.db = new Kysely<DBSchema>({
 			dialect: config.dialect,
@@ -52,17 +52,14 @@ export default class DatabaseAdapter {
 		return this.db;
 	}
 	get migrator() {
-		if (!this.migrationFolder) {
-			throw new InternalError("migration_folder_not_set");
-		}
-
+		const m = this.migrations;
 		return new Migrator({
 			db: this.database,
-			provider: new FileMigrationProvider({
-				fs,
-				path,
-				migrationFolder: this.migrationFolder,
-			}),
+			provider: {
+				async getMigrations() {
+					return m;
+				},
+			},
 		});
 	}
 }

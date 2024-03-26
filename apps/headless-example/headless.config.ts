@@ -1,4 +1,8 @@
-import { headlessConfig, LibsqlAdapter } from "@protodigital/headless";
+import {
+	headlessConfig,
+	LibsqlAdapter,
+	PostgresAdapter,
+} from "@protodigital/headless";
 import transporter from "./src/headless/email-transporter.js";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
@@ -9,8 +13,15 @@ import FormsCollection from "./src/headless/collections/forms.js";
 export default headlessConfig({
 	mode: "development",
 	host: "http://localhost:8393",
-	db: new LibsqlAdapter({
-		url: "libsql://localhost:8080?tls=0",
+	// db: new LibsqlAdapter({
+	// 	url: "libsql://localhost:8080?tls=0",
+	// }),
+	db: new PostgresAdapter({
+		connectionString: process.env.DATABASE_URL as string,
+		max: 20,
+		ssl: {
+			rejectUnauthorized: false,
+		},
 	}),
 	databaseUrl: process.env.DATABASE_URL as string,
 	keys: {

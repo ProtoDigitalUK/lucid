@@ -53,9 +53,6 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				collection_key: {
-					type: "string",
-				},
 				document_id: {
 					type: "number",
 				},
@@ -84,7 +81,6 @@ export default {
 					items: swaggerFieldObj,
 				},
 			},
-			required: ["collection_key"],
 		},
 		response: {
 			200: swaggerResponse({
