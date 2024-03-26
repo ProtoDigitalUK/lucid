@@ -585,7 +585,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"document_id\": 7,\n    \"collection_key\": \"page\",\n    // \"slug\": \"testing-fiedls\",\n    // \"homepage\": true\n    // \"parent_id\": 4\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"language_id\": 1\n                }\n            ]\n        }\n    ]\n    // \"fields\": [\n    //     {\n    //         \"fields_id\": 73,\n    //         \"key\": \"page_title\",\n    //         \"type\": \"text\",\n    //         \"value\": \"Homepage\",\n    //         \"language_id\": 1\n    //     }\n    // ]\n}",
+									"raw": "{\n    \"document_id\": 9\n    // \"slug\": \"testing-fiedls\",\n    // \"homepage\": true\n    // \"parent_id\": 4\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n    // \"bricks\": [\n    //     {\n    //         // \"id\": 1,\n    //         \"key\": \"intro\",\n    //         \"order\": 0,\n    //         \"type\": \"builder\",\n    //         \"fields\": [\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"title\",\n    //                 \"type\": \"text\",\n    //                 \"value\": \"Title Value\",\n    //                 \"language_id\": 1\n    //             },\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"intro\",\n    //                 \"type\": \"wysiwyg\",\n    //                 \"value\": \"<p>Hello</p>\",\n    //                 \"language_id\": 1\n    //             }\n    //         ]\n    //     }\n    // ],\n    // \"fields\": [\n    //     {\n    //         // \"fields_id\": 73,\n    //         \"key\": \"page_title\",\n    //         \"type\": \"text\",\n    //         \"value\": \"Homepage\",\n    //         \"language_id\": 1\n    //     }\n    // ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -593,7 +593,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -601,7 +601,8 @@
 										"api",
 										"v1",
 										"collections",
-										"documents"
+										"documents",
+										"page"
 									]
 								}
 							},
@@ -613,7 +614,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/7?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/9?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -622,7 +623,8 @@
 										"v1",
 										"collections",
 										"documents",
-										"7"
+										"page",
+										"9"
 									],
 									"query": [
 										{
@@ -647,7 +649,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents?filter[collection_key]=page",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -655,7 +657,8 @@
 										"api",
 										"v1",
 										"collections",
-										"documents"
+										"documents",
+										"page"
 									],
 									"query": [
 										{
@@ -664,17 +667,13 @@
 											"disabled": true
 										},
 										{
-											"key": "filter[collection_key]",
-											"value": "page"
-										},
-										{
 											"key": "filter[category_id]",
 											"value": "1,2",
 											"disabled": true
 										},
 										{
 											"key": "filter[slug]",
-											"value": "",
+											"value": "dogs",
 											"disabled": true
 										},
 										{
@@ -690,6 +689,16 @@
 										{
 											"key": "per_page",
 											"value": "-1",
+											"disabled": true
+										},
+										{
+											"key": "filter[cf]",
+											"value": "page_title=test",
+											"disabled": true
+										},
+										{
+											"key": "filter[cf]",
+											"value": "page_title=Homepage,page_title=Homdsd,page_excerpt=te",
 											"disabled": true
 										}
 									]
@@ -710,7 +719,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/4/valid-parents",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/4/valid-parents",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -719,15 +728,11 @@
 										"v1",
 										"collections",
 										"documents",
+										"page",
 										"4",
 										"valid-parents"
 									],
 									"query": [
-										{
-											"key": "filter[collection_key]",
-											"value": "blogs",
-											"disabled": true
-										},
 										{
 											"key": "filter[category_id]",
 											"value": "1",
@@ -769,7 +774,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/8",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/7",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -778,7 +783,8 @@
 										"v1",
 										"collections",
 										"documents",
-										"8"
+										"page",
+										"7"
 									]
 								}
 							},
@@ -805,7 +811,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -813,7 +819,8 @@
 										"api",
 										"v1",
 										"collections",
-										"documents"
+										"documents",
+										"page"
 									]
 								}
 							},

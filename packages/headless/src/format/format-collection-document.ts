@@ -32,8 +32,8 @@ interface DocumentQueryDataT {
 interface FormatCollectionDocumentT {
 	document: DocumentQueryDataT;
 	collection: CollectionBuilderT;
-	bricks: BrickResT[];
-	fields: FieldResT[] | null;
+	bricks?: BrickResT[];
+	fields?: FieldResT[] | null;
 	host: string;
 }
 
@@ -41,6 +41,18 @@ const formatCollectionDocument = (
 	props: FormatCollectionDocumentT,
 ): CollectionDocumentResT => {
 	const collectionData = props.collection?.data;
+
+	let fields: FieldResT[] | null = null;
+	if (props.fields) {
+		fields = props.fields;
+	} else if (props.document.fields) {
+		fields = formatCollectionFields({
+			fields: props.document.fields,
+			host: props.host,
+			collection_slug: collectionData?.slug,
+			builder: props.collection,
+		});
+	}
 
 	const res: CollectionDocumentResT = {
 		id: props.document.id,
@@ -54,15 +66,7 @@ const formatCollectionDocument = (
 		collection_slug: collectionData?.slug ?? null,
 		homepage: props.document.homepage ?? false,
 		bricks: props.bricks || [],
-		fields:
-			props.fields ||
-			formatCollectionFields({
-				fields: props.document.fields || [],
-				host: props.host,
-				collection_slug: collectionData?.slug,
-				builder: props.collection,
-			}) ||
-			null,
+		fields: fields,
 		created_by: props.document.created_by,
 		created_at: formatDate(props.document.created_at),
 		updated_at: formatDate(props.document.updated_at),

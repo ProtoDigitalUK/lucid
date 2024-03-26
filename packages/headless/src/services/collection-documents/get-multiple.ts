@@ -220,8 +220,6 @@ const getMultiple = async (
 			return formatCollectionDocument({
 				document: doc,
 				collection: collectionInstance,
-				bricks: [],
-				fields: [],
 				host: config.host,
 			});
 		}),
