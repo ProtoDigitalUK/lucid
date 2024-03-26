@@ -1,15 +1,14 @@
 import type z from "zod";
 import { parseCount } from "../../utils/helpers.js";
-import { type SelectQueryBuilder, sql } from "kysely";
+import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../db/query-builder.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
-import type { DB } from "kysely-codegen";
-import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
 import { collectionFilters } from "../../utils/field-helpers.js";
-import serviceWrapper from "../../utils/service-wrapper.js";
+import { formatFields } from "../../format/format-bricks.js";
+import { FieldTypesT } from "../../libs/field-builder/types.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -116,12 +115,15 @@ const getMultiple = async (
 					eb
 						.selectFrom("headless_collection_document_fields")
 						.select([
+							"headless_collection_document_fields.fields_id",
 							"headless_collection_document_fields.text_value",
 							"headless_collection_document_fields.int_value",
 							"headless_collection_document_fields.bool_value",
 							"headless_collection_document_fields.language_id",
 							"headless_collection_document_fields.type",
 							"headless_collection_document_fields.key",
+							"headless_collection_document_fields.collection_brick_id",
+							"headless_collection_document_fields.collection_document_id",
 						])
 						.whereRef(
 							"headless_collection_document_fields.collection_document_id",
@@ -208,21 +210,39 @@ const getMultiple = async (
 		},
 	);
 
-	const [pages, pagesCount] = await Promise.all([
+	const [documents, documentCount] = await Promise.all([
 		main.execute(),
 		count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 	]);
 
-	const collection = await serviceWrapper(
-		collectionsServices.getSingle,
-		false,
-	)(serviceConfig, {
-		key: data.collection_key,
-	});
-
 	return {
-		data: pages.map((page) => formatCollectionDocument(page, collection)),
-		count: parseCount(pagesCount?.count),
+		data: documents.map((doc) => {
+			const docFields = doc.fields as {
+				fields_id: number;
+				key: string;
+				type: FieldTypesT;
+				text_value: string | null;
+				int_value: number | null;
+				bool_value: boolean | null;
+				language_id: number;
+				collection_brick_id: number;
+				collection_document_id: number;
+			}[];
+			const fields = formatFields(
+				docFields,
+				"",
+				collectionInstance.data?.slug ?? null,
+				collectionInstance,
+			);
+
+			return formatCollectionDocument(
+				doc,
+				collectionInstance,
+				undefined,
+				fields,
+			);
+		}),
+		count: parseCount(documentCount?.count),
 	};
 };
 

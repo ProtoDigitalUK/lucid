@@ -66,10 +66,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const collection = await serviceWrapper(
-		collectionsServices.getSingle,
-		false,
-	)(serviceConfig, {
+	const collectionInstance = await collectionsServices.getSingleInstance({
 		key: document.collection_key,
 	});
 
@@ -83,13 +80,13 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 		return formatCollectionDocument(
 			document,
-			collection,
+			collectionInstance,
 			bricksRes.bricks,
 			bricksRes.fields,
 		);
 	}
 
-	return formatCollectionDocument(document, collection);
+	return formatCollectionDocument(document, collectionInstance);
 };
 
 export default getSingle;

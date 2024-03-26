@@ -128,7 +128,7 @@ const formatBricks = (data: {
 	};
 };
 
-const formatFields = (
+export const formatFields = (
 	fields: BrickQueryFieldT[],
 	host: string,
 	collection_slug: string | null,

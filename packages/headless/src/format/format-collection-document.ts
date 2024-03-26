@@ -1,11 +1,7 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
-import {
-	swaggerBrickRes,
-	swaggerFieldRes,
-	swaggerGroupRes,
-} from "./format-bricks.js";
+import { swaggerBrickRes, swaggerFieldRes } from "./format-bricks.js";
 import type { BrickResT, BrickResFieldsT } from "@headless/types/src/bricks.js";
-import type { CollectionResT } from "@headless/types/src/collections.js";
+import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 
 interface DocumentT {
 	id: number;
@@ -25,31 +21,32 @@ interface DocumentT {
 	author_first_name: string | null;
 	author_last_name: string | null;
 	author_username: string | null;
-	fields?: Array<{
-		text_value: string | null;
-		int_value: number | null;
-		bool_value: boolean | null;
-		language_id: number | null;
-		type: string;
-		key: string;
-	}>;
+	// fields?: BrickQueryFieldT[];
+	// {
+	// 	text_value: string | null;
+	// 	int_value: number | null;
+	// 	bool_value: boolean | null;
+	// 	language_id: number | null;
+	// 	type: string;
+	// 	key: string;
+	// }>;
 }
 
 const formatCollectionDocument = (
 	document: DocumentT,
-	collection?: CollectionResT,
+	collection?: CollectionBuilderT,
 	bricks?: BrickResT[],
 	fields?: BrickResFieldsT[] | null,
 ): CollectionDocumentResT => {
-	// TODO: format fields
+	const collectionData = collection?.data;
 
 	const res: CollectionDocumentResT = {
 		id: document.id,
 		parent_id: document.parent_id,
 		collection_key: document.collection_key,
 		slug: document.slug,
-		full_slug: formatPageFullSlug(document.full_slug, collection?.slug),
-		collection_slug: collection?.slug ?? null,
+		full_slug: formatPageFullSlug(document.full_slug, collectionData?.slug),
+		collection_slug: collectionData?.slug ?? null,
 		homepage: document.homepage ?? false,
 		bricks: bricks || [],
 		fields: fields || null,

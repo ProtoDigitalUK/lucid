@@ -79,7 +79,6 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 		config.meta.collectionFilters.length > 0
 	) {
 		for (const { key, value, column } of config.meta.collectionFilters) {
-			console.log(key, value, column);
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
 					// @ts-expect-error
