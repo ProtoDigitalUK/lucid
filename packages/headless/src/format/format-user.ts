@@ -3,6 +3,7 @@ import formatUserPermissions, {
 	swaggerPermissionsRes,
 	swaggerRolesRes,
 } from "./format-user-permissions.js";
+import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatUserT {
 	user: {
@@ -39,8 +40,8 @@ const formatUser = (props: FormatUserT): UserResT => {
 		last_name: props.user.last_name,
 		roles: roles,
 		permissions: permissions,
-		created_at: props.user.created_at?.toISOString() || null,
-		updated_at: props.user.updated_at?.toISOString() || null,
+		created_at: formatDate(props.user.created_at),
+		updated_at: formatDate(props.user.updated_at),
 	};
 };
 

@@ -6,6 +6,7 @@ import formatFields, {
 	type FieldQueryDataT,
 	swaggerFieldRes,
 } from "./format-fields.js";
+import { formatDate } from "../utils/format-helpers.js";
 
 interface DocumentQueryDataT {
 	id: number;
@@ -63,8 +64,8 @@ const formatCollectionDocument = (
 			}) ||
 			null,
 		created_by: props.document.created_by,
-		created_at: props.document.created_at?.toISOString() || null,
-		updated_at: props.document.updated_at?.toISOString() || null,
+		created_at: formatDate(props.document.created_at),
+		updated_at: formatDate(props.document.updated_at),
 		author: null,
 	};
 

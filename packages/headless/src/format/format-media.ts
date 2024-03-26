@@ -1,4 +1,5 @@
 import type { MediaResT, MediaTypeT } from "@headless/types/src/media.js";
+import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatMediaT {
 	media: {
@@ -44,8 +45,8 @@ const formatMedia = (props: FormatMediaT): MediaResT => {
 			width: props.media.width,
 			height: props.media.height,
 		},
-		created_at: props.media.created_at?.toISOString() ?? null,
-		updated_at: props.media.updated_at?.toISOString() ?? null,
+		created_at: formatDate(props.media.created_at),
+		updated_at: formatDate(props.media.updated_at),
 	};
 };
 

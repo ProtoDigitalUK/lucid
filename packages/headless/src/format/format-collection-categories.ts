@@ -1,4 +1,5 @@
 import type { CategoryResT } from "@headless/types/src/categories.js";
+import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatCollectionCateogriesT {
 	category: {
@@ -31,8 +32,8 @@ const formatCollectionCategories = (
 		slug: props.category.slug,
 		title_translations: props.category.title_translations ?? [],
 		description_translations: props.category.description_translations ?? [],
-		created_at: props.category.created_at?.toISOString() ?? null,
-		updated_at: props.category.updated_at?.toISOString() ?? null,
+		created_at: formatDate(props.category.created_at),
+		updated_at: formatDate(props.category.updated_at),
 	};
 };
 

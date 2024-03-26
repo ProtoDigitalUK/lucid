@@ -1,4 +1,5 @@
 import type { RoleResT } from "@headless/types/src/roles.js";
+import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatRoleT {
 	role: {
@@ -26,8 +27,8 @@ const formatRole = (props: FormatRoleT): RoleResT => {
 				permission: p.permission,
 			};
 		}),
-		created_at: props.role.created_at?.toISOString() || null,
-		updated_at: props.role.updated_at?.toISOString() || null,
+		created_at: formatDate(props.role.created_at),
+		updated_at: formatDate(props.role.updated_at),
 	};
 };
 
