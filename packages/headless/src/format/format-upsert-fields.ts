@@ -1,9 +1,9 @@
-import type { BrickObjectT } from "../schemas/bricks.js";
+import type { BrickSchemaT } from "../schemas/collection-bricks.js";
 import type { FieldTypesT } from "../libs/field-builder/index.js";
 import type { GroupsResT } from "../services/collection-document-bricks/upsert-multiple-groups.js";
 import { fieldColumnValueMap } from "../utils/field-helpers.js";
 
-interface BrickFieldUpdateObject {
+interface FieldUpsertObjectResT {
 	fields_id?: number | undefined;
 	collection_brick_id: number;
 	key: string;
@@ -19,13 +19,13 @@ interface BrickFieldUpdateObject {
 }
 
 interface FormatUpsertFieldsT {
-	brick: BrickObjectT;
+	brick: BrickSchemaT;
 	groups: Array<GroupsResT>;
 }
 
 const formatUpsertFields = (
 	props: FormatUpsertFieldsT,
-): Array<BrickFieldUpdateObject> => {
+): Array<FieldUpsertObjectResT> => {
 	return (
 		props.brick.fields?.map((field) => {
 			let groupId = null;

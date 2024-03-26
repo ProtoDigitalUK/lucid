@@ -11,7 +11,7 @@ export interface GroupQueryDataT {
 	collection_document_id: number;
 }
 
-const formatGroups = (groups: GroupQueryDataT[]): GroupResT[] =>
+const formatCollectionGroups = (groups: GroupQueryDataT[]): GroupResT[] =>
 	groups.map((group) => {
 		return {
 			group_id: group.group_id,
@@ -48,4 +48,4 @@ export const swaggerGroupRes = {
 	},
 };
 
-export default formatGroups;
+export default formatCollectionGroups;

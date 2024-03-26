@@ -1,8 +1,8 @@
 import T from "../../../translations/index.js";
 import { APIError } from "../../../utils/error-handler.js";
-import type { BrickObjectT } from "../../../schemas/bricks.js";
+import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
 
-const checkDuplicateOrder = (bricks: Array<BrickObjectT>) => {
+const checkDuplicateOrder = (bricks: Array<BrickSchemaT>) => {
 	const builderOrders = bricks
 		.filter((brick) => brick.type === "builder")
 		.map((brick) => brick.order);

@@ -16,13 +16,13 @@ import type {
 
 export default class CollectionBuilder extends FieldBuilder {
 	key: string;
-	config: CollectionConfigT;
+	config: CollectionConfigSchemaT;
 	includeFieldKeys: string[] = [];
 	filterableFieldKeys: Array<{
 		key: string;
 		type: FieldTypesT;
 	}> = [];
-	constructor(key: string, config: CollectionConfigT) {
+	constructor(key: string, config: CollectionConfigSchemaT) {
 		super();
 		this.key = key;
 		this.config = config;
@@ -163,7 +163,8 @@ export const CollectionConfigSchema = z.object({
 		.optional(),
 });
 
-interface CollectionConfigT extends z.infer<typeof CollectionConfigSchema> {
+interface CollectionConfigSchemaT
+	extends z.infer<typeof CollectionConfigSchema> {
 	bricks?: {
 		fixed?: Array<BrickBuilderT>;
 		builder?: Array<BrickBuilderT>;
@@ -172,9 +173,9 @@ interface CollectionConfigT extends z.infer<typeof CollectionConfigSchema> {
 
 export type CollectionDataT = {
 	key: string;
-	mode: CollectionConfigT["mode"];
-	title: CollectionConfigT["title"];
-	singular: CollectionConfigT["singular"];
+	mode: CollectionConfigSchemaT["mode"];
+	title: CollectionConfigSchemaT["title"];
+	singular: CollectionConfigSchemaT["singular"];
 	description: string | null;
 	slug: string | null;
 	config: {

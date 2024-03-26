@@ -4,10 +4,8 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentCategoriesServices from "../collection-document-categories/index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
-import type {
-	BrickObjectT,
-	FieldCollectionObjectT,
-} from "../../schemas/bricks.js";
+import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
+import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
 
 export interface ServiceData {
@@ -20,8 +18,8 @@ export interface ServiceData {
 	homepage?: boolean;
 	parent_id?: number | null;
 	category_ids?: number[];
-	bricks?: Array<BrickObjectT>;
-	fields?: Array<FieldCollectionObjectT>;
+	bricks?: Array<BrickSchemaT>;
+	fields?: Array<FieldCollectionSchemaT>;
 }
 
 const upsertSingle = async (

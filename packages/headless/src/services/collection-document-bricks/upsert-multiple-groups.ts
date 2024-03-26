@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import type { BrickObjectT } from "../../schemas/bricks.js";
+import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import { values } from "../../utils/kysely-helpers.js";
 import { sql } from "kysely";
 
@@ -15,7 +15,7 @@ export interface GroupsResT {
 
 export interface ServiceData {
 	document_id: number;
-	bricks: Array<BrickObjectT>;
+	bricks: Array<BrickSchemaT>;
 }
 
 const upsertMultipleGroups = async (

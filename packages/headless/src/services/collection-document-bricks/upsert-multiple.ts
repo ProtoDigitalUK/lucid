@@ -1,16 +1,14 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import type {
-	BrickObjectT,
-	FieldCollectionObjectT,
-} from "../../schemas/bricks.js";
+import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
+import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	document_id: number;
-	bricks?: Array<BrickObjectT>;
-	fields: Array<FieldCollectionObjectT>;
+	bricks?: Array<BrickSchemaT>;
+	fields: Array<FieldCollectionSchemaT>;
 	collection_key: string;
 }
 

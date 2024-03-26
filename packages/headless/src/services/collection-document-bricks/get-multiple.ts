@@ -1,7 +1,7 @@
 import getConfig from "../../libs/config/get-config.js";
 import collectionsServices from "../collections/index.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import formatBricks from "../../format/format-bricks.js";
+import formatCollectionBricks from "../../format/format-collection-bricks.js";
 
 export interface ServiceData {
 	document_id: number;
@@ -132,7 +132,7 @@ const getMultiple = async (
 		getConfig(),
 	]);
 
-	return formatBricks({
+	return formatCollectionBricks({
 		bricks: bricks,
 		collection: collection,
 		host: config.host,

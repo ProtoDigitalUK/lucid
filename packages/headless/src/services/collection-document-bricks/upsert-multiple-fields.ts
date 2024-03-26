@@ -1,10 +1,10 @@
-import type { BrickObjectT } from "../../schemas/bricks.js";
+import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import formatUpsertFields from "../../format/format-upsert-fields.js";
 import type { GroupsResT } from "./upsert-multiple-groups.js";
 
 export interface ServiceData {
 	document_id: number;
-	bricks: Array<BrickObjectT>;
+	bricks: Array<BrickSchemaT>;
 	groups: Array<GroupsResT>;
 }
 

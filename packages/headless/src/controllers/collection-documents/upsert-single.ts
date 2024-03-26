@@ -5,7 +5,8 @@ import {
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import { swaggerBodyBricksObj, swaggerFieldObj } from "../../schemas/bricks.js";
+import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
+import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import buildResponse from "../../utils/build-response.js";
 
 const upsertSingleController: ControllerT<

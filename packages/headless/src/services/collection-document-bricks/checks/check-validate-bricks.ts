@@ -13,10 +13,11 @@ import type {
 } from "../../../libs/field-builder/index.js";
 import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../../../libs/collection-builder/index.js";
-import type { BrickObjectT, FieldObjectT } from "../../../schemas/bricks.js";
+import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
+import type { FieldSchemaT } from "../../../schemas/collection-fields.js";
 
 export interface ServiceData {
-	bricks: Array<BrickObjectT>;
+	bricks: Array<BrickSchemaT>;
 	collection_key: string;
 }
 
@@ -60,7 +61,7 @@ const validateBricks = async (
 };
 
 const validateBrickData = async (data: {
-	bricks: BrickObjectT[];
+	bricks: BrickSchemaT[];
 	collection: CollectionBuilderT;
 	media: Array<{
 		id: number;
@@ -176,7 +177,7 @@ const validateBrickData = async (data: {
 	return { errors, hasErrors };
 };
 
-const allFieldIdsOfType = <T>(fields: FieldObjectT[], type: FieldTypesT) => {
+const allFieldIdsOfType = <T>(fields: FieldSchemaT[], type: FieldTypesT) => {
 	return fields
 		.filter((field) => field.type === type)
 		.map((field) => {
@@ -191,7 +192,7 @@ const allFieldIdsOfType = <T>(fields: FieldObjectT[], type: FieldTypesT) => {
 
 const getAllMedia = async (
 	serviceConfig: ServiceConfigT,
-	fields: FieldObjectT[],
+	fields: FieldSchemaT[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
@@ -207,7 +208,7 @@ const getAllMedia = async (
 };
 const getAllDocuments = async (
 	serviceConfig: ServiceConfigT,
-	fields: FieldObjectT[],
+	fields: FieldSchemaT[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");

@@ -1,11 +1,11 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
 import type { BrickResT, FieldResT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
-import { swaggerBrickRes } from "./format-bricks.js";
-import formatFields, {
+import { swaggerBrickRes } from "./format-collection-bricks.js";
+import formatCollectionFields, {
 	type FieldQueryDataT,
 	swaggerFieldRes,
-} from "./format-fields.js";
+} from "./format-collection-fields.js";
 import { formatDate } from "../utils/format-helpers.js";
 
 interface DocumentQueryDataT {
@@ -56,7 +56,7 @@ const formatCollectionDocument = (
 		bricks: props.bricks || [],
 		fields:
 			props.fields ||
-			formatFields({
+			formatCollectionFields({
 				fields: props.document.fields || [],
 				host: props.host,
 				collection_slug: collectionData?.slug,

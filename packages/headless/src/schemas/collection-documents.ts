@@ -1,5 +1,6 @@
 import z from "zod";
-import { BrickSchema, FieldSchemaCollection } from "./bricks.js";
+import { BrickSchema } from "./collection-bricks.js";
+import { FieldSchemaCollection } from "./collection-fields.js";
 import defaultQuery from "./default-query.js";
 
 const slugRegex = /^[a-zA-Z0-9-_/]+$/;

@@ -1,5 +1,5 @@
 import type { FieldResT, FieldTypesT } from "@headless/types/src/bricks.js";
-import { fieldTypeResponseValue } from "../utils/field-helpers.js";
+import { fieldResponseValueFormat } from "../utils/field-helpers.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 import type { BrickBuilderT } from "../libs/brick-builder/index.js";
 import type { JsonValue } from "kysely-codegen";
@@ -45,7 +45,7 @@ interface FormatFieldsT {
 	builder: BrickBuilderT | CollectionBuilderT;
 }
 
-const formatFields = (props: FormatFieldsT): FieldResT[] => {
+const formatCollectionFields = (props: FormatFieldsT): FieldResT[] => {
 	if (props.fields.length === 0) return [];
 	const fieldsRes: FieldResT[] = [];
 
@@ -58,13 +58,13 @@ const formatFields = (props: FormatFieldsT): FieldResT[] => {
 		);
 
 		for (const field of fieldData) {
-			const { value, meta } = fieldTypeResponseValue(
-				instanceField.type,
-				instanceField,
+			const { value, meta } = fieldResponseValueFormat({
+				type: instanceField.type,
+				builder_field: instanceField,
 				field,
-				props.collection_slug,
-				props.host,
-			);
+				collection_slug: props.collection_slug,
+				host: props.host,
+			});
 
 			if (field.type === "tab") continue;
 			if (field.type === "repeater") continue;
@@ -215,4 +215,4 @@ export const swaggerFieldRes = {
 	},
 };
 
-export default formatFields;
+export default formatCollectionFields;
