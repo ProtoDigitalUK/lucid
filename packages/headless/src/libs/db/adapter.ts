@@ -2,8 +2,6 @@ import T from "../../translations/index.js";
 import { type Dialect, Migration, Kysely, Migrator } from "kysely";
 import { InternalError } from "../../utils/error-handler.js";
 import type { DB as DBSchema } from "kysely-codegen";
-import fs from "node:fs/promises";
-import path from "node:path";
 
 export default class DatabaseAdapter {
 	migrations: Record<string, Migration>;

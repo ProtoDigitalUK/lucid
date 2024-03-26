@@ -19,13 +19,13 @@ export default class PostgresAdapter extends DatabaseAdapter {
 				pool: new Pool(config),
 			}),
 			migrations: {
-				"pg-00000001": Migration00000001,
-				"pg-00000002": Migration00000002,
-				"pg-00000003": Migration00000003,
-				"pg-00000004": Migration00000004,
-				"pg-00000005": Migration00000005,
-				"pg-00000006": Migration00000006,
-				"pg-00000007": Migration00000007,
+				"00000001": Migration00000001,
+				"00000002": Migration00000002,
+				"00000003": Migration00000003,
+				"00000004": Migration00000004,
+				"00000005": Migration00000005,
+				"00000006": Migration00000006,
+				"00000007": Migration00000007,
 			},
 		});
 	}

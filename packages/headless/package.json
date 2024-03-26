@@ -21,13 +21,10 @@
 		"format": "npx @biomejs/biome format --write ./src",
 		"lint": "npx @biomejs/biome lint ./src",
 		"lint:fix": "npx @biomejs/biome lint --apply ./src",
-		"clear-db": "node ./clear-db.js"
+		"clear-db:postgres": "node ./clear-db.js",
+		"clear-db:libsql": "node ./clear-db-libsql.js"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**"],
 	"author": "William Yallop",
 	"devDependencies": {
 		"@headless/types": "*",
