@@ -211,7 +211,8 @@ const getMultiple = async (
 
 	return {
 		data: medias.map((media) =>
-			formatMedia(media, {
+			formatMedia({
+				media: media,
 				host: config.host,
 			}),
 		),

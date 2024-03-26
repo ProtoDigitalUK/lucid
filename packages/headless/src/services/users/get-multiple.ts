@@ -132,7 +132,11 @@ const getMultiple = async (
 	]);
 
 	return {
-		data: users.map(formatUser),
+		data: users.map((u) => {
+			return formatUser({
+				user: u,
+			});
+		}),
 		count: parseCount(usersCount?.count),
 	};
 };

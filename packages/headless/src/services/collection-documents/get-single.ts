@@ -7,6 +7,7 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
+import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	id: number;
@@ -14,6 +15,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+	const config = await getConfig();
 	const document = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
@@ -78,15 +80,22 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			document_id: data.id,
 			collection_key: document.collection_key,
 		});
-		return formatCollectionDocument(
-			document,
-			collectionInstance,
-			bricksRes.bricks,
-			bricksRes.fields,
-		);
+		return formatCollectionDocument({
+			document: document,
+			collection: collectionInstance,
+			bricks: bricksRes.bricks,
+			fields: bricksRes.fields,
+			host: config.host,
+		});
 	}
 
-	return formatCollectionDocument(document, collectionInstance);
+	return formatCollectionDocument({
+		document: document,
+		collection: collectionInstance,
+		bricks: [],
+		fields: [],
+		host: config.host,
+	});
 };
 
 export default getSingle;

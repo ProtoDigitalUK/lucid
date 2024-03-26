@@ -9,7 +9,9 @@ const getAllController: ControllerT<
 	typeof permissionsSchema.getAll.body,
 	typeof permissionsSchema.getAll.query
 > = async (request, reply) => {
-	const permissionsRes = formatPermissions(permissionGroups);
+	const permissionsRes = formatPermissions({
+		permissions: permissionGroups,
+	});
 
 	reply.status(200).send(
 		await buildResponse(request, {

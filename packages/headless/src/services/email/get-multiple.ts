@@ -113,7 +113,11 @@ const getMultiple = async (
 	]);
 
 	return {
-		data: emails.map((email) => formatEmails(email)),
+		data: emails.map((email) =>
+			formatEmails({
+				email: email,
+			}),
+		),
 		count: parseCount(emailsCount?.count),
 	};
 };

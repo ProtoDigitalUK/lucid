@@ -1,19 +1,21 @@
 import type { PermissionGroup } from "@headless/types/src/permissions.js";
 
-const formatPermissions = (
-	permissions: Record<string, PermissionGroup>,
-): PermissionGroup[] => {
+interface FormatPermissionsT {
+	permissions: Record<string, PermissionGroup>;
+}
+
+const formatPermissions = (props: FormatPermissionsT): PermissionGroup[] => {
 	return [
-		permissions.users,
-		permissions.roles,
-		permissions.media,
-		permissions.settings,
-		permissions.emails,
-		permissions.languages,
-		permissions.content,
-		permissions.category,
-		permissions.menu,
-		permissions.form_submissions,
+		props.permissions.users,
+		props.permissions.roles,
+		props.permissions.media,
+		props.permissions.settings,
+		props.permissions.emails,
+		props.permissions.languages,
+		props.permissions.content,
+		props.permissions.category,
+		props.permissions.menu,
+		props.permissions.form_submissions,
 	];
 };
 

@@ -26,7 +26,9 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatLanguage(language);
+	return formatLanguage({
+		language: language,
+	});
 };
 
 export default getSingle;

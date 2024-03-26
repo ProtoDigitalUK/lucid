@@ -1,23 +1,27 @@
 import getConfig from "../libs/config/get-config.js";
 import type { SettingsResT } from "@headless/types/src/settings.js";
 
-const formatSettings = async (data: {
+interface FormatSettingsT {
 	mediaStorageUsed: number;
 	processedImageCount: number;
-}): Promise<SettingsResT> => {
+}
+
+const formatSettings = async (
+	props: FormatSettingsT,
+): Promise<SettingsResT> => {
 	const config = await getConfig();
 
 	return {
 		media: {
-			storage_used: data.mediaStorageUsed ?? null,
+			storage_used: props.mediaStorageUsed ?? null,
 			storage_limit: config.media?.storageLimit ?? null,
-			storage_remaining: data.mediaStorageUsed
-				? (config.media?.storageLimit || 0) - data.mediaStorageUsed
+			storage_remaining: props.mediaStorageUsed
+				? (config.media?.storageLimit || 0) - props.mediaStorageUsed
 				: null,
 			processed_images: {
 				stored: config.media?.processedImages?.store ?? false,
 				per_image_limit: config.media?.processedImages?.limit ?? null,
-				total: data.processedImageCount,
+				total: props.processedImageCount,
 			},
 		},
 	};

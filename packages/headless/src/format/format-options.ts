@@ -1,12 +1,16 @@
 import type { HeadlessOptions } from "kysely-codegen";
 import type { OptionsResT } from "@headless/types/src/options.js";
 
-const formatOptions = (option: HeadlessOptions): OptionsResT => {
+interface FormatOptionsT {
+	option: HeadlessOptions;
+}
+
+const formatOptions = (props: FormatOptionsT): OptionsResT => {
 	return {
-		name: option.name as OptionsResT["name"],
-		value_text: option.value_text,
-		value_int: option.value_int,
-		value_bool: option.value_bool,
+		name: props.option.name as OptionsResT["name"],
+		value_text: props.option.value_text,
+		value_int: props.option.value_int,
+		value_bool: props.option.value_bool,
 	};
 };
 

@@ -61,7 +61,11 @@ const getMultiple = async (
 	]);
 
 	return {
-		data: languages.map(formatLanguage),
+		data: languages.map((l) => {
+			return formatLanguage({
+				language: l,
+			});
+		}),
 		count: parseCount(languagesCount?.count),
 	};
 };

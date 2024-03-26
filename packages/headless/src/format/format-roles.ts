@@ -1,29 +1,33 @@
 import type { RoleResT } from "@headless/types/src/roles.js";
 
-const formatRole = (role: {
-	created_at: Date | null;
-	id: number;
-	name: string;
-	description: string | null;
-	updated_at: Date | null;
-	permissions?: {
+interface FormatRoleT {
+	role: {
+		created_at: Date | null;
 		id: number;
-		permission: string;
-		role_id: number;
-	}[];
-}): RoleResT => {
+		name: string;
+		description: string | null;
+		updated_at: Date | null;
+		permissions?: {
+			id: number;
+			permission: string;
+			role_id: number;
+		}[];
+	};
+}
+
+const formatRole = (props: FormatRoleT): RoleResT => {
 	return {
-		id: role.id,
-		name: role.name,
-		description: role.description,
-		permissions: role.permissions?.map((permission) => {
+		id: props.role.id,
+		name: props.role.name,
+		description: props.role.description,
+		permissions: props.role.permissions?.map((p) => {
 			return {
-				id: permission.id,
-				permission: permission.permission,
+				id: p.id,
+				permission: p.permission,
 			};
 		}),
-		created_at: role.created_at?.toISOString() || null,
-		updated_at: role.updated_at?.toISOString() || null,
+		created_at: props.role.created_at?.toISOString() || null,
+		updated_at: props.role.updated_at?.toISOString() || null,
 	};
 };
 

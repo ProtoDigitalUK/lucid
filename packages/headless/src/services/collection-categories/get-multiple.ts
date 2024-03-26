@@ -182,7 +182,9 @@ const getMultiple = async (
 
 	return {
 		data: categories.map((category) =>
-			formatCollectionCategories(category),
+			formatCollectionCategories({
+				category: category,
+			}),
 		),
 		count: parseCount(categoriesCount?.count),
 	};

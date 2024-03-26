@@ -4,37 +4,43 @@ import formatUserPermissions, {
 	swaggerRolesRes,
 } from "./format-user-permissions.js";
 
-const formatUser = (user: {
-	created_at: Date | null;
-	email: string;
-	first_name: string | null;
-	super_admin: boolean | null;
-	id: number;
-	last_name: string | null;
-	updated_at: Date | null;
-	username: string;
-	roles?: {
+interface FormatUserT {
+	user: {
+		created_at: Date | null;
+		email: string;
+		first_name: string | null;
+		super_admin: boolean | null;
 		id: number;
-		description: string | null;
-		name: string;
-		permissions?: {
-			permission: string;
+		last_name: string | null;
+		updated_at: Date | null;
+		username: string;
+		roles?: {
+			id: number;
+			description: string | null;
+			name: string;
+			permissions?: {
+				permission: string;
+			}[];
 		}[];
-	}[];
-}): UserResT => {
-	const { roles, permissions } = formatUserPermissions(user.roles);
+	};
+}
+
+const formatUser = (props: FormatUserT): UserResT => {
+	const { roles, permissions } = formatUserPermissions({
+		roles: props.user.roles,
+	});
 
 	return {
-		id: user.id,
-		super_admin: user.super_admin || false,
-		email: user.email,
-		username: user.username,
-		first_name: user.first_name,
-		last_name: user.last_name,
+		id: props.user.id,
+		super_admin: props.user.super_admin || false,
+		email: props.user.email,
+		username: props.user.username,
+		first_name: props.user.first_name,
+		last_name: props.user.last_name,
 		roles: roles,
 		permissions: permissions,
-		created_at: user.created_at?.toISOString() || null,
-		updated_at: user.updated_at?.toISOString() || null,
+		created_at: props.user.created_at?.toISOString() || null,
+		updated_at: props.user.updated_at?.toISOString() || null,
 	};
 };
 

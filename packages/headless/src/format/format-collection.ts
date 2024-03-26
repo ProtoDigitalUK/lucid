@@ -1,20 +1,22 @@
 import type { CollectionResT } from "@headless/types/src/collections.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
 
-const formatCollection = (
-	collectionInstance: CollectionBuilderT,
+interface FormatCollectionT {
+	collection: CollectionBuilderT;
 	include?: {
 		bricks?: boolean;
 		fields?: boolean;
 		document_id?: boolean;
-	},
+	};
 	documents?: Array<{
 		id?: number;
 		collection_key: string;
-	}>,
-): CollectionResT => {
-	const collectionData = collectionInstance.data;
-	const key = collectionInstance.key;
+	}>;
+}
+
+const formatCollection = (props: FormatCollectionT): CollectionResT => {
+	const collectionData = props.collection.data;
+	const key = props.collection.key;
 
 	return {
 		key: key,
@@ -23,8 +25,8 @@ const formatCollection = (
 		singular: collectionData.singular,
 		description: collectionData.description ?? null,
 		slug: collectionData.slug ?? null,
-		document_id: include?.document_id
-			? getDocumentId(key, documents)
+		document_id: props.include?.document_id
+			? getDocumentId(key, props.documents)
 			: undefined,
 		enable_parents: collectionData.config.enableParents ?? false,
 		enable_homepages: collectionData.config.enableHomepages ?? false,
@@ -32,13 +34,13 @@ const formatCollection = (
 		enable_categories: collectionData.config.enableCategories ?? false,
 		enable_translations: collectionData.config.enableTranslations ?? false,
 
-		fixed_bricks: include?.bricks
-			? collectionInstance.fixedBricks ?? []
+		fixed_bricks: props.include?.bricks
+			? props.collection.fixedBricks ?? []
 			: [],
-		builder_bricks: include?.bricks
-			? collectionInstance.builderBricks ?? []
+		builder_bricks: props.include?.bricks
+			? props.collection.builderBricks ?? []
 			: [],
-		fields: include?.fields ? collectionInstance.flatFields ?? [] : [],
+		fields: props.include?.fields ? props.collection.flatFields ?? [] : [],
 	};
 };
 

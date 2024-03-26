@@ -1,7 +1,7 @@
 import type { EmailResT } from "@headless/types/src/email.js";
 import type { JsonValue } from "kysely-codegen";
 
-const formatEmails = (
+interface FormatEmailsT {
 	email: {
 		id: number;
 		email_hash: string;
@@ -21,33 +21,38 @@ const formatEmails = (
 		last_success_at: Date | null;
 		created_at: Date | null;
 		data?: JsonValue | null;
-	},
-	html?: string,
-): EmailResT => {
+	};
+	html?: string;
+}
+
+const formatEmails = (props: FormatEmailsT): EmailResT => {
 	return {
-		id: email.id,
-		email_hash: email.email_hash,
-		type: email.type as "external" | "internal",
-		delivery_status: email.delivery_status as "sent" | "failed" | "pending",
+		id: props.email.id,
+		email_hash: props.email.email_hash,
+		type: props.email.type as "external" | "internal",
+		delivery_status: props.email.delivery_status as
+			| "sent"
+			| "failed"
+			| "pending",
 		mail_details: {
 			from: {
-				address: email.from_address,
-				name: email.from_name,
+				address: props.email.from_address,
+				name: props.email.from_name,
 			},
-			to: email.to_address,
-			subject: email.subject,
-			cc: email.cc,
-			bcc: email.bcc,
-			template: email.template,
+			to: props.email.to_address,
+			subject: props.email.subject,
+			cc: props.email.cc,
+			bcc: props.email.bcc,
+			template: props.email.template,
 		},
-		data: (email.data as Record<string, unknown> | null) ?? null,
-		sent_count: email.sent_count || 0,
-		error_count: email.error_count || 0,
-		error_message: email.last_error_message,
-		html: html ?? null,
-		last_success_at: email.last_success_at?.toISOString() ?? null,
-		last_attempt_at: email.last_attempt_at?.toISOString() ?? null,
-		created_at: email.created_at?.toISOString() ?? null,
+		data: (props.email.data as Record<string, unknown> | null) ?? null,
+		sent_count: props.email.sent_count || 0,
+		error_count: props.email.error_count || 0,
+		error_message: props.email.last_error_message,
+		html: props.html ?? null,
+		last_success_at: props.email.last_success_at?.toISOString() ?? null,
+		last_attempt_at: props.email.last_attempt_at?.toISOString() ?? null,
+		created_at: props.email.created_at?.toISOString() ?? null,
 	};
 };
 

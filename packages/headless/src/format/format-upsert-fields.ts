@@ -18,18 +18,22 @@ interface BrickFieldUpdateObject {
 	language_id: number;
 }
 
+interface FormatUpsertFieldsT {
+	brick: BrickObjectT;
+	groups: Array<GroupsResT>;
+}
+
 const formatUpsertFields = (
-	brick: BrickObjectT,
-	groups: Array<GroupsResT>,
+	props: FormatUpsertFieldsT,
 ): Array<BrickFieldUpdateObject> => {
 	return (
-		brick.fields?.map((field) => {
+		props.brick.fields?.map((field) => {
 			let groupId = null;
-			const findGroup = groups.find(
+			const findGroup = props.groups.find(
 				(group) => group.ref === field.group_id,
 			);
 			if (findGroup === undefined) {
-				const findGroupBrick = groups.find(
+				const findGroupBrick = props.groups.find(
 					(group) => group.group_id === field.group_id,
 				);
 				groupId = findGroupBrick?.group_id ?? null;
@@ -38,7 +42,7 @@ const formatUpsertFields = (
 			return {
 				language_id: field.language_id,
 				fields_id: field.fields_id,
-				collection_brick_id: brick.id as number,
+				collection_brick_id: props.brick.id as number,
 				key: field.key,
 				type: field.type,
 				group_id: groupId,

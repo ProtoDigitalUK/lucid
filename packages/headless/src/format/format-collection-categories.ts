@@ -1,32 +1,38 @@
 import type { CategoryResT } from "@headless/types/src/categories.js";
 
-const formatCollectionCategories = (category: {
-	id: number;
-	created_at: Date | null;
-	updated_at: Date | null;
-	collection_key: string;
-	description_translation_key_id: number | null;
-	slug: string;
-	title_translation_key_id: number | null;
-	title_translations?: Array<{
-		value: string | null;
-		language_id: number | null;
-	}>;
-	description_translations?: Array<{
-		value: string | null;
-		language_id: number | null;
-	}>;
-	title_translation_value?: string | null;
-	description_translation_value?: string | null;
-}): CategoryResT => {
+interface FormatCollectionCateogriesT {
+	category: {
+		id: number;
+		created_at: Date | null;
+		updated_at: Date | null;
+		collection_key: string;
+		description_translation_key_id: number | null;
+		slug: string;
+		title_translation_key_id: number | null;
+		title_translations?: Array<{
+			value: string | null;
+			language_id: number | null;
+		}>;
+		description_translations?: Array<{
+			value: string | null;
+			language_id: number | null;
+		}>;
+		title_translation_value?: string | null;
+		description_translation_value?: string | null;
+	};
+}
+
+const formatCollectionCategories = (
+	props: FormatCollectionCateogriesT,
+): CategoryResT => {
 	return {
-		id: category.id,
-		collection_key: category.collection_key,
-		slug: category.slug,
-		title_translations: category.title_translations ?? [],
-		description_translations: category.description_translations ?? [],
-		created_at: category.created_at?.toISOString() ?? null,
-		updated_at: category.updated_at?.toISOString() ?? null,
+		id: props.category.id,
+		collection_key: props.category.collection_key,
+		slug: props.category.slug,
+		title_translations: props.category.title_translations ?? [],
+		description_translations: props.category.description_translations ?? [],
+		created_at: props.category.created_at?.toISOString() ?? null,
+		updated_at: props.category.updated_at?.toISOString() ?? null,
 	};
 };
 

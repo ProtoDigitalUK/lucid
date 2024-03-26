@@ -1,9 +1,13 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
-import { swaggerBrickRes, swaggerFieldRes } from "./format-bricks.js";
-import type { BrickResT, BrickResFieldsT } from "@headless/types/src/bricks.js";
+import type { BrickResT, FieldResT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
+import { swaggerBrickRes } from "./format-bricks.js";
+import formatFields, {
+	type FieldQueryDataT,
+	swaggerFieldRes,
+} from "./format-fields.js";
 
-interface DocumentT {
+interface DocumentQueryDataT {
 	id: number;
 	parent_id: number | null;
 	collection_key: string | null;
@@ -21,53 +25,61 @@ interface DocumentT {
 	author_first_name: string | null;
 	author_last_name: string | null;
 	author_username: string | null;
-	// fields?: BrickQueryFieldT[];
-	// {
-	// 	text_value: string | null;
-	// 	int_value: number | null;
-	// 	bool_value: boolean | null;
-	// 	language_id: number | null;
-	// 	type: string;
-	// 	key: string;
-	// }>;
+	fields?: FieldQueryDataT[];
+}
+
+interface FormatCollectionDocumentT {
+	document: DocumentQueryDataT;
+	collection: CollectionBuilderT;
+	bricks: BrickResT[];
+	fields: FieldResT[] | null;
+	host: string;
 }
 
 const formatCollectionDocument = (
-	document: DocumentT,
-	collection?: CollectionBuilderT,
-	bricks?: BrickResT[],
-	fields?: BrickResFieldsT[] | null,
+	props: FormatCollectionDocumentT,
 ): CollectionDocumentResT => {
-	const collectionData = collection?.data;
+	const collectionData = props.collection?.data;
 
 	const res: CollectionDocumentResT = {
-		id: document.id,
-		parent_id: document.parent_id,
-		collection_key: document.collection_key,
-		slug: document.slug,
-		full_slug: formatPageFullSlug(document.full_slug, collectionData?.slug),
+		id: props.document.id,
+		parent_id: props.document.parent_id,
+		collection_key: props.document.collection_key,
+		slug: props.document.slug,
+		full_slug: formatDocumentFullSlug(
+			props.document.full_slug,
+			collectionData?.slug,
+		),
 		collection_slug: collectionData?.slug ?? null,
-		homepage: document.homepage ?? false,
-		bricks: bricks || [],
-		fields: fields || null,
-		created_by: document.created_by,
-		created_at: document.created_at?.toISOString() || null,
-		updated_at: document.updated_at?.toISOString() || null,
+		homepage: props.document.homepage ?? false,
+		bricks: props.bricks || [],
+		fields:
+			props.fields ||
+			formatFields({
+				fields: props.document.fields || [],
+				host: props.host,
+				collection_slug: collectionData?.slug,
+				builder: props.collection,
+			}) ||
+			null,
+		created_by: props.document.created_by,
+		created_at: props.document.created_at?.toISOString() || null,
+		updated_at: props.document.updated_at?.toISOString() || null,
 		author: null,
 	};
 
-	if (document.author_id) {
+	if (props.document.author_id) {
 		res.author = {
-			id: document.author_id,
-			email: document.author_email,
-			first_name: document.author_first_name,
-			last_name: document.author_last_name,
-			username: document.author_username,
+			id: props.document.author_id,
+			email: props.document.author_email,
+			first_name: props.document.author_first_name,
+			last_name: props.document.author_last_name,
+			username: props.document.author_username,
 		};
 	}
 
-	if (document.categories) {
-		res.categories = document.categories.map(
+	if (props.document.categories) {
+		res.categories = props.document.categories.map(
 			(category) => category.category_id,
 		);
 	}
@@ -75,7 +87,7 @@ const formatCollectionDocument = (
 	return res;
 };
 
-export const formatPageFullSlug = (
+export const formatDocumentFullSlug = (
 	full_slug: string | null,
 	collection_slug?: string | null,
 ) => {

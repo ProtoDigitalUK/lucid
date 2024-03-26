@@ -27,7 +27,9 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatOptions(optionRes);
+	return formatOptions({
+		option: optionRes,
+	});
 };
 
 export default getSingle;

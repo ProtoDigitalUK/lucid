@@ -29,14 +29,19 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	if (!data.render_template) {
-		return formatEmails(email);
+		return formatEmails({
+			email: email,
+		});
 	}
 
 	const html = await emailServices.renderTemplate(
 		email.template,
 		email.data as Record<string, unknown>,
 	);
-	return formatEmails(email, html);
+	return formatEmails({
+		email,
+		html,
+	});
 };
 
 export default getSingle;

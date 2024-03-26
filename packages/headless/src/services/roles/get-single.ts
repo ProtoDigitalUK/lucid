@@ -47,7 +47,9 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatRole(role);
+	return formatRole({
+		role: role,
+	});
 };
 
 export default getSingle;

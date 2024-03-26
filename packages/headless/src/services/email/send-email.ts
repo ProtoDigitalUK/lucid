@@ -80,7 +80,10 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			});
 		}
 
-		return formatEmails(emailUpdated, html);
+		return formatEmails({
+			email: emailUpdated,
+			html: html,
+		});
 	}
 
 	const newEmail = await serviceConfig.db
@@ -118,7 +121,10 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatEmails(newEmail, html);
+	return formatEmails({
+		email: newEmail,
+		html: html,
+	});
 };
 
 export default sendEmail;

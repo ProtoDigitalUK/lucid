@@ -17,7 +17,7 @@ export type CustomFieldT = CustomFieldT;
 // biome-ignore lint/suspicious/noRedeclare: <explanation>
 export type FieldTypesT = FieldTypesT;
 
-export type BrickFieldValueT =
+export type FieldResValueT =
 	| string
 	| number
 	| boolean
@@ -28,30 +28,31 @@ export type BrickFieldValueT =
 	| MediaValueT
 	| PageLinkValueT;
 
-export type BrickFieldMetaT = null | undefined | MediaMetaT | PageLinkMetaT;
+export type FieldResMetaT = null | undefined | MediaMetaT | PageLinkMetaT;
 
 export interface BrickResT {
 	id: number;
 	key: string;
 	order: number;
 	type: "builder" | "fixed";
-	groups: Array<{
-		group_id: number;
-		group_order: number;
-		parent_group_id: number | null;
-		repeater_key: string;
-		language_id: number;
-	}>;
-	fields: Array<BrickResFieldsT>;
+	groups: Array<GroupResT>;
+	fields: Array<FieldResT>;
 }
 
-export interface BrickResFieldsT {
+export interface FieldResT {
 	fields_id: number;
 	key: string;
 	type: FieldTypes;
 	group_id?: number | null;
 	value?: BrickFieldValueT;
 	meta?: BrickFieldMetaT;
+	language_id: number;
+}
+export interface GroupResT {
+	group_id: number;
+	group_order: number;
+	parent_group_id: number | null;
+	repeater_key: string;
 	language_id: number;
 }
 

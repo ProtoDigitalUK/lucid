@@ -42,15 +42,26 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			.limit(1)
 			.executeTakeFirst();
 
-		return formatCollection(collection, data.include, [
-			{
-				id: document?.id,
-				collection_key: collection.key,
+		return formatCollection({
+			collection: collection,
+			include: {
+				bricks: false,
+				fields: false,
+				document_id: true,
 			},
-		]);
+			documents: [
+				{
+					id: document?.id,
+					collection_key: collection.key,
+				},
+			],
+		});
 	}
 
-	return formatCollection(collection, data.include);
+	return formatCollection({
+		collection: collection,
+		include: data.include,
+	});
 };
 
 export default getSingle;

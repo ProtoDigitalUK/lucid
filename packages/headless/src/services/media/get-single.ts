@@ -72,7 +72,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatMedia(media, {
+	return formatMedia({
+		media: media,
 		host: config.host,
 	});
 };

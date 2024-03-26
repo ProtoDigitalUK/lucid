@@ -14,7 +14,10 @@ const upsertMultipleFields = async (
 ) => {
 	// format fields
 	const fields = data.bricks.flatMap((brick) =>
-		formatUpsertFields(brick, data.groups),
+		formatUpsertFields({
+			brick: brick,
+			groups: data.groups,
+		}),
 	);
 
 	if (fields.length === 0) {

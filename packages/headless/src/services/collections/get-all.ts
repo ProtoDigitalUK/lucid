@@ -28,25 +28,28 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 		return (
 			collections.map((collection) =>
-				formatCollection(
-					collection,
-					{
+				formatCollection({
+					collection: collection,
+					include: {
 						bricks: false,
 						fields: false,
 						document_id: true,
 					},
 					documents,
-				),
+				}),
 			) ?? []
 		);
 	}
 
 	return (
 		collections.map((collection) =>
-			formatCollection(collection, {
-				bricks: false,
-				fields: false,
-				document_id: false,
+			formatCollection({
+				collection: collection,
+				include: {
+					bricks: false,
+					fields: false,
+					document_id: false,
+				},
 			}),
 		) ?? []
 	);

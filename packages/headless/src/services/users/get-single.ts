@@ -58,7 +58,9 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatUser(user);
+	return formatUser({
+		user: user,
+	});
 };
 
 export default getSingle;

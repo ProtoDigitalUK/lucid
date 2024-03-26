@@ -55,7 +55,9 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 };
 
 const getPermissions = () => {
-	const formattedPermissions = formatPermissions(permissionGroups);
+	const formattedPermissions = formatPermissions({
+		permissions: permissionGroups,
+	});
 	return formattedPermissions.flatMap((group) => group.permissions);
 };
 

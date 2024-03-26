@@ -88,7 +88,11 @@ const getMultiple = async (
 	]);
 
 	return {
-		data: roles.map(formatRole),
+		data: roles.map((r) => {
+			return formatRole({
+				role: r,
+			});
+		}),
 		count: parseCount(rolesCount?.count),
 	};
 };

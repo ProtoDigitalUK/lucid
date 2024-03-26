@@ -7,8 +7,7 @@ import type collectionDocumentsSchema from "../../schemas/collection-documents.j
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
 import { collectionFilters } from "../../utils/field-helpers.js";
-import { formatFields } from "../../format/format-bricks.js";
-import { FieldTypesT } from "../../libs/field-builder/types.js";
+import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -21,6 +20,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const config = await getConfig();
 	const collectionInstance = await collectionsServices.getSingleInstance({
 		key: data.collection_key,
 	});
@@ -217,30 +217,13 @@ const getMultiple = async (
 
 	return {
 		data: documents.map((doc) => {
-			const docFields = doc.fields as {
-				fields_id: number;
-				key: string;
-				type: FieldTypesT;
-				text_value: string | null;
-				int_value: number | null;
-				bool_value: boolean | null;
-				language_id: number;
-				collection_brick_id: number;
-				collection_document_id: number;
-			}[];
-			const fields = formatFields(
-				docFields,
-				"",
-				collectionInstance.data?.slug ?? null,
-				collectionInstance,
-			);
-
-			return formatCollectionDocument(
-				doc,
-				collectionInstance,
-				undefined,
-				fields,
-			);
+			return formatCollectionDocument({
+				document: doc,
+				collection: collectionInstance,
+				bricks: [],
+				fields: [],
+				host: config.host,
+			});
 		}),
 		count: parseCount(documentCount?.count),
 	};
