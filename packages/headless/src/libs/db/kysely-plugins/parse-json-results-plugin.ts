@@ -19,13 +19,9 @@ export class ParseJSONResultsPlugin implements KyselyPlugin {
 	transformQuery(args: PluginTransformQueryArgs): RootOperationNode {
 		return args.node;
 	}
-
 	async transformResult(
 		args: PluginTransformResultArgs,
 	): Promise<QueryResult<UnknownRow>> {
-		const first = args.result.rows[0];
-		console.log(isPropertyReadOnly(first, "id"));
-
 		return {
 			...args.result,
 			rows: parseArray(args.result.rows),
@@ -72,10 +68,10 @@ function parseString(str: string): unknown {
 function maybeJson(value: string): boolean {
 	return value.match(/^[\[\{]/) != null;
 }
-
 function parseObject(obj: Record<string, unknown>): Record<string, unknown> {
-	// console.log(isPropertyReadOnly(obj, "id"));
-	// obj = { ...obj }; // TODO: ob is not writable - debug why
+	// ** Fixes bug with @libsql/hrana-client? used in libsql dialect. Obj is immutable (writable: false). Only on executeTakeFirst/executeTakeFirstOrThrow?
+	// biome-ignore lint/style/noParameterAssign: <explanation>
+	obj = Object.assign({}, obj);
 
 	for (const key in obj) {
 		obj[key] = parse(obj[key]);
@@ -108,17 +104,4 @@ export function isArrayBufferOrView(
 	obj: unknown,
 ): obj is ArrayBuffer | ArrayBufferView {
 	return obj instanceof ArrayBuffer || ArrayBuffer.isView(obj);
-}
-
-function isPropertyReadOnly(
-	obj: Record<string, unknown>,
-	propName: string,
-): boolean {
-	const descriptor = Object.getOwnPropertyDescriptor(obj, propName);
-
-	// If the descriptor does not exist, the property is not defined on the object
-	if (!descriptor) return false;
-
-	// Check if property is writable, considering both the descriptor and whether the object is frozen
-	return !descriptor.writable;
 }
