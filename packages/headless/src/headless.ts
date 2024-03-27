@@ -16,11 +16,7 @@ import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
 import type { Config } from "./libs/config/config-schema.js";
 import { decodeError } from "./utils/error-handler.js";
-import seedHeadless from "./services/seed-headless.js";
 import registerCronJobs from "./services/cron-jobs.js";
-// import migrate from "./db/migrate.js";
-// import { initialiseDB, headlessDB } from "./db/db.js";
-import serviceWrapper from "./utils/service-wrapper.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -82,19 +78,13 @@ const headless = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Migrate DB
 		log.white("-".repeat(60));
-		// await migrate(fastify.db);
-		await config.db.migrate();
+		await config.db.migrateToLatest();
 		log.yellow("Migrated");
 
 		// ------------------------------------
 		// Initialise
 		log.white("-".repeat(60));
-		await serviceWrapper(
-			seedHeadless,
-			true,
-		)({
-			db: fastify.db,
-		});
+		await config.db.seed();
 		registerCronJobs(fastify);
 		log.yellow("Initialised");
 

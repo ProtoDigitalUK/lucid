@@ -9,6 +9,11 @@ import {
 import { InternalError } from "../../utils/error-handler.js";
 import type { DB as DBSchema } from "kysely-codegen";
 import { AdapterType } from "./db.js";
+import serviceWrapper from "../../utils/service-wrapper.js";
+// Seeds
+import seedDefaultUser from "./seed/seed-default-user.js";
+import seedDefaultLanguages from "./seed/seed-default-language.js";
+import seedDefaultRoles from "./seed/seed-default-roles.js";
 // Migrations
 import Migration00000001 from "./migrations/00000001-languages.js";
 import Migration00000002 from "./migrations/00000002-translations.js";
@@ -57,6 +62,22 @@ export default class DatabaseAdapter {
 			console.error(error);
 			process.exit(1);
 		}
+	}
+	async seed() {
+		const seedData = async (serviceConfig: ServiceConfigT) => {
+			await Promise.allSettled([
+				seedDefaultUser(serviceConfig),
+				seedDefaultLanguages(serviceConfig),
+				seedDefaultRoles(serviceConfig),
+			]);
+		};
+
+		await serviceWrapper(
+			seedData,
+			true,
+		)({
+			db: this.database,
+		});
 	}
 	// getters
 	get database() {
