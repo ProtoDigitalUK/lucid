@@ -5,7 +5,7 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"start": "node --loader ts-node/esm src/index.ts",
+		"start": "node --loader ts-node/esm src/index.ts --transpileOnly",
 		"dev": "nodemon"
 	},
 	"dependencies": {

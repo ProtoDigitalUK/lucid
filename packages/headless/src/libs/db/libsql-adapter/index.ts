@@ -1,5 +1,6 @@
 import { LibsqlDialect, type LibsqlDialectConfig } from "@libsql/kysely-libsql";
 import DatabaseAdapter from "../adapter.js";
+import { ParseJSONResultsPlugin } from "../parse-json-results-plugin.js";
 // Migrations
 import Migration00000001 from "./migrations/00000001-languages.js";
 import Migration00000002 from "./migrations/00000002-translations.js";
@@ -13,6 +14,7 @@ export default class LibsqlAdapter extends DatabaseAdapter {
 	constructor(config: LibsqlDialectConfig) {
 		super({
 			dialect: new LibsqlDialect(config),
+			plugins: [new ParseJSONResultsPlugin()], // TODO: this isnt working. Needed to parse JSON results as libsql returns them as string
 			migrations: {
 				"00000001": Migration00000001,
 				"00000002": Migration00000002,

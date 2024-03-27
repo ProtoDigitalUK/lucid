@@ -1,5 +1,11 @@
 import T from "../../translations/index.js";
-import { type Dialect, Migration, Kysely, Migrator } from "kysely";
+import {
+	type Dialect,
+	Migration,
+	Kysely,
+	Migrator,
+	KyselyPlugin,
+} from "kysely";
 import { InternalError } from "../../utils/error-handler.js";
 import type { DB as DBSchema } from "kysely-codegen";
 
@@ -8,12 +14,14 @@ export default class DatabaseAdapter {
 	db: Kysely<DBSchema> | undefined;
 	constructor(config: {
 		dialect: Dialect;
+		plugins?: Array<KyselyPlugin>;
 		migrations: Record<string, Migration>;
 	}) {
 		this.migrations = config.migrations;
 
 		this.db = new Kysely<DBSchema>({
 			dialect: config.dialect,
+			plugins: config.plugins,
 		});
 	}
 	// Public methods
