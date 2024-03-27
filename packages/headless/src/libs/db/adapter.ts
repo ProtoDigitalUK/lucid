@@ -8,24 +8,32 @@ import {
 } from "kysely";
 import { InternalError } from "../../utils/error-handler.js";
 import type { DB as DBSchema } from "kysely-codegen";
+import { AdapterType } from "./db.js";
+// Migrations
+import Migration00000001 from "./migrations/00000001-languages.js";
+import Migration00000002 from "./migrations/00000002-translations.js";
+import Migration00000003 from "./migrations/00000003-options.js";
+import Migration00000004 from "./migrations/00000004-users-and-permissions.js";
+import Migration00000005 from "./migrations/00000005-emails.js";
+import Migration00000006 from "./migrations/00000006-media.js";
+import Migration00000007 from "./migrations/00000007-collections.js";
 
 export default class DatabaseAdapter {
-	migrations: Record<string, Migration>;
 	db: Kysely<DBSchema> | undefined;
+	adapter: AdapterType;
 	constructor(config: {
+		adapter: AdapterType;
 		dialect: Dialect;
 		plugins?: Array<KyselyPlugin>;
-		migrations: Record<string, Migration>;
 	}) {
-		this.migrations = config.migrations;
-
+		this.adapter = config.adapter;
 		this.db = new Kysely<DBSchema>({
 			dialect: config.dialect,
 			plugins: config.plugins,
 		});
 	}
 	// Public methods
-	async migrate() {
+	async migrateToLatest() {
 		const migrator = this.migrator;
 
 		const { error, results } = await migrator.migrateToLatest();
@@ -57,7 +65,18 @@ export default class DatabaseAdapter {
 		}
 		return this.db;
 	}
-	get migrator() {
+	private get migrations(): Record<string, Migration> {
+		return {
+			"00000001-languages": Migration00000001(this.adapter),
+			"00000002-translations": Migration00000002(this.adapter),
+			"00000003-options": Migration00000003(this.adapter),
+			"00000004-users-and-permissions": Migration00000004(this.adapter),
+			"00000005-emails": Migration00000005(this.adapter),
+			"00000006-media": Migration00000006(this.adapter),
+			"00000007-collections": Migration00000007(this.adapter),
+		};
+	}
+	private get migrator() {
 		const m = this.migrations;
 		return new Migrator({
 			db: this.database,

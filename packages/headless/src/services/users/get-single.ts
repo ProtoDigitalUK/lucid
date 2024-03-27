@@ -1,8 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatUser from "../../format/format-user.js";
-// import { jsonArrayFrom } from "kysely/helpers/postgres";
-import { jsonArrayFrom } from "kysely/helpers/sqlite"; // TODO: this needs to be imported from db adapter from config
+import { jsonArrayFrom } from "kysely/helpers/postgres"; // TODO: this needs to be imported from db adapter from config
 
 export interface ServiceData {
 	user_id: number;

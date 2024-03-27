@@ -83,18 +83,18 @@ const headless = async (fastify: FastifyInstance) => {
 		// Migrate DB
 		log.white("-".repeat(60));
 		// await migrate(fastify.db);
-		// await config.db.migrate();
+		await config.db.migrate();
 		log.yellow("Migrated");
 
 		// ------------------------------------
 		// Initialise
 		log.white("-".repeat(60));
-		// await serviceWrapper(
-		// 	seedHeadless,
-		// 	true,
-		// )({
-		// 	db: fastify.db,
-		// });
+		await serviceWrapper(
+			seedHeadless,
+			true,
+		)({
+			db: fastify.db,
+		});
 		registerCronJobs(fastify);
 		log.yellow("Initialised");
 
