@@ -1,6 +1,6 @@
 import emailServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import { headlessDB } from "../../db/db.js";
+import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	to: string;
@@ -14,10 +14,12 @@ export interface ServiceData {
 	};
 }
 
-const sendExternal = async (data: ServiceData) =>
-	serviceWrapper(emailServices.sendEmail, true)(
+// TODO: look into how db connection is passed to this function
+const sendExternal = async (data: ServiceData) => {
+	const config = await getConfig();
+	return serviceWrapper(emailServices.sendEmail, true)(
 		{
-			db: headlessDB(),
+			db: config.db.database,
 		},
 		{
 			type: "external",
@@ -30,5 +32,6 @@ const sendExternal = async (data: ServiceData) =>
 			data: data.data,
 		},
 	);
+};
 
 export default sendExternal;
