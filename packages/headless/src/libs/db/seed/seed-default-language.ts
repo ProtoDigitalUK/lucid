@@ -17,8 +17,8 @@ const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
 			.insertInto("headless_languages")
 			.values({
 				code: constants.seedDefaults.language.code,
-				is_default: constants.seedDefaults.language.is_default,
-				is_enabled: constants.seedDefaults.language.is_enabled,
+				is_default: constants.seedDefaults.language.is_default as 0 | 1,
+				is_enabled: constants.seedDefaults.language.is_enabled as 0 | 1,
 			})
 			.execute();
 	} catch (error) {

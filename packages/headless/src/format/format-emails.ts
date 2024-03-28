@@ -1,5 +1,5 @@
 import type { EmailResT } from "@headless/types/src/email.js";
-import type { JsonValue } from "kysely-codegen";
+import type { JSONString } from "../libs/db/types.js";
 import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatEmailsT {
@@ -21,7 +21,7 @@ interface FormatEmailsT {
 		last_attempt_at: Date | null;
 		last_success_at: Date | null;
 		created_at: Date | null;
-		data?: JsonValue | null;
+		data?: JSONString | null;
 	};
 	html?: string;
 }

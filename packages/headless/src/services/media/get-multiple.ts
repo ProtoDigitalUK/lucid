@@ -4,7 +4,7 @@ import type mediaSchema from "../../schemas/media.js";
 import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {

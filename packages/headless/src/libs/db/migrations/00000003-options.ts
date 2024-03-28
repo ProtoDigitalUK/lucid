@@ -11,6 +11,7 @@ const Migration00000003: MigrationFn = (adapter) => {
 				)
 				.addColumn("value_int", "integer")
 				.addColumn("value_text", "text")
+				.addColumn("value_bool", "integer")
 				.execute();
 		},
 		async down(db: Kysely<unknown>) {},

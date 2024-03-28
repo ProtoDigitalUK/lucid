@@ -7,8 +7,7 @@ import {
 	KyselyPlugin,
 } from "kysely";
 import { InternalError } from "../../utils/error-handler.js";
-import type { DB as DBSchema } from "kysely-codegen";
-import { AdapterType } from "./types.js";
+import type { AdapterType, HeadlessDB } from "./types.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 // Seeds
 import seedDefaultUser from "./seed/seed-default-user.js";
@@ -24,7 +23,7 @@ import Migration00000006 from "./migrations/00000006-media.js";
 import Migration00000007 from "./migrations/00000007-collections.js";
 
 export default class DatabaseAdapter {
-	db: Kysely<DBSchema> | undefined;
+	db: Kysely<HeadlessDB> | undefined;
 	adapter: AdapterType;
 	constructor(config: {
 		adapter: AdapterType;
@@ -32,7 +31,7 @@ export default class DatabaseAdapter {
 		plugins?: Array<KyselyPlugin>;
 	}) {
 		this.adapter = config.adapter;
-		this.db = new Kysely<DBSchema>({
+		this.db = new Kysely<HeadlessDB>({
 			dialect: config.dialect,
 			plugins: config.plugins,
 		});

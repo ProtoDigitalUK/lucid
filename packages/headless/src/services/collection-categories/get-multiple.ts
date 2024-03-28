@@ -1,6 +1,6 @@
 import type z from "zod";
 import type collectionCategoriesSchema from "../../schemas/collection-categories.js";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
 import formatCollectionCategories from "../../format/format-collection-categories.js";

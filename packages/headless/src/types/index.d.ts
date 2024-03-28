@@ -4,7 +4,7 @@ import type z from "zod";
 import type { Kysely } from "kysely";
 import type { UserPermissionsResT } from "@headless/types/src/users.js";
 import type { LanguageResT } from "@headless/types/src/language.js";
-import type { DB as DBSchema } from "kysely-codegen";
+import type { HeadlessDB } from "../libs/db/types.ts";
 
 declare module "fastify" {
 	interface FastifyInstance {
@@ -29,7 +29,7 @@ declare module "fastify" {
 }
 
 declare global {
-	type DB = Kysely<DBSchema>;
+	type DB = Kysely<HeadlessDB>;
 
 	type ControllerT<ParamsT, BodyT, QueryT> = (
 		request: FastifyRequest<{

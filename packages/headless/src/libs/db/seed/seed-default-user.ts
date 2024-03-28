@@ -20,7 +20,7 @@ const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 		await serviceConfig.db
 			.insertInto("headless_users")
 			.values({
-				super_admin: constants.seedDefaults.user.super_admin,
+				super_admin: constants.seedDefaults.user.super_admin as 0 | 1,
 				email: constants.seedDefaults.user.email,
 				username: constants.seedDefaults.user.username,
 				first_name: constants.seedDefaults.user.first_name,

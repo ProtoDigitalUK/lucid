@@ -2,7 +2,7 @@ import type z from "zod";
 import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";

@@ -1,10 +1,10 @@
-import type { RequestQueryParsedT } from "../middleware/validate-query.js";
+import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
 import type {
 	SelectQueryBuilder,
 	ReferenceExpression,
 	ComparisonOperatorExpression,
 } from "kysely";
-import type { CollectionFiltersResT } from "../utils/field-helpers.js";
+import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;

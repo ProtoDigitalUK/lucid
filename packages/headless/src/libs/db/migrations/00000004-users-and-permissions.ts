@@ -14,7 +14,9 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
-				.addColumn("super_admin", "integer", (col) => col.defaultTo(0))
+				.addColumn("super_admin", "integer", (col) =>
+					col.defaultTo(0).notNull(),
+				)
 				.addColumn("email", "text", (col) => col.notNull().unique())
 				.addColumn("username", "text", (col) => col.notNull().unique())
 				.addColumn("first_name", "text")

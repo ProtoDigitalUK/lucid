@@ -2,7 +2,7 @@ import type z from "zod";
 import type usersSchema from "../../schemas/users.js";
 import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import formatUser from "../../format/format-user.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
