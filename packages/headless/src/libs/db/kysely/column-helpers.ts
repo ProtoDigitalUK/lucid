@@ -1,5 +1,5 @@
 import { ColumnDefinitionBuilder, sql } from "kysely";
-import { AdapterType } from "../db.js";
+import { AdapterType } from "../types.js";
 
 export const defaultTimestamp = (
 	col: ColumnDefinitionBuilder,

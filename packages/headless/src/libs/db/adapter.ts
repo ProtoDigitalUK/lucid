@@ -8,7 +8,7 @@ import {
 } from "kysely";
 import { InternalError } from "../../utils/error-handler.js";
 import type { DB as DBSchema } from "kysely-codegen";
-import { AdapterType } from "./db.js";
+import { AdapterType } from "./types.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 // Seeds
 import seedDefaultUser from "./seed/seed-default-user.js";

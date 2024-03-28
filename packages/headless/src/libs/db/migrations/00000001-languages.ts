@@ -1,5 +1,5 @@
 import { Kysely } from "kysely";
-import { MigrationFn } from "../db.js";
+import { MigrationFn } from "../types.js";
 import {
 	defaultTimestamp,
 	primaryKeyColumnType,
