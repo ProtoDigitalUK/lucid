@@ -1,10 +1,10 @@
 import {
 	headlessConfig,
-	LibSQLAdapter,
+	// LibSQLAdapter,
 	SQLLiteAdapter,
-	PostgresAdapter,
+	// PostgresAdapter,
 } from "@protodigital/headless";
-// import Database from "better-sqlite3";
+import Database from "better-sqlite3";
 import transporter from "./src/headless/email-transporter.js";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
@@ -15,13 +15,13 @@ import FormsCollection from "./src/headless/collections/forms.js";
 export default headlessConfig({
 	mode: "development",
 	host: "http://localhost:8393",
-	// db: new SQLLiteAdapter({
-	// 	database: async () => new Database("db.sqlite"),
-	// }),
-	db: new LibSQLAdapter({
-		url: "libsql://headless-cms-willyallop.turso.io",
-		authToken: process.env.TURSO_AUTH_TOKEN as string,
+	db: new SQLLiteAdapter({
+		database: async () => new Database("db.sqlite"),
 	}),
+	// db: new LibSQLAdapter({
+	// 	url: "libsql://headless-cms-willyallop.turso.io",
+	// 	authToken: process.env.TURSO_AUTH_TOKEN as string,
+	// }),
 	// db: new PostgresAdapter({
 	// 	connectionString: process.env.DATABASE_URL as string,
 	// 	max: 20,

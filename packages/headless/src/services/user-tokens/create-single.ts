@@ -1,6 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import crypto from "node:crypto";
+import RepositoryFactory from "../../repositories/repository-factory.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -12,18 +13,19 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const service = RepositoryFactory.getRepository(
+		"user-tokens",
+		serviceConfig.config,
+	);
+
 	const token = crypto.randomBytes(32).toString("hex");
 
-	const userToken = await serviceConfig.db
-		.insertInto("headless_user_tokens")
-		.values({
-			user_id: data.user_id,
-			token: token,
-			token_type: data.token_type,
-			expiry_date: data.expiry_date,
-		})
-		.returning("token")
-		.executeTakeFirst();
+	const userToken = await service.createSingle({
+		userId: data.user_id,
+		tokenType: data.token_type,
+		expiryDate: data.expiry_date,
+		token: token,
+	});
 
 	if (userToken === undefined) {
 		throw new APIError({

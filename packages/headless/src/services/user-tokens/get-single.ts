@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../repositories/repository-factory.js";
 
 export interface ServiceData {
 	token_type: "password_reset";
@@ -7,13 +8,16 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const userToken = await serviceConfig.db
-		.selectFrom("headless_user_tokens")
-		.select(["id", "user_id"])
-		.where("token", "=", data.token)
-		.where("token_type", "=", data.token_type)
-		.where("expiry_date", ">", new Date())
-		.executeTakeFirst();
+	const service = RepositoryFactory.getRepository(
+		"user-tokens",
+		serviceConfig.config,
+	);
+
+	const userToken = await service.getSingle({
+		token: data.token,
+		tokenType: data.token_type,
+		expiryDate: new Date().toISOString(),
+	});
 
 	if (userToken === undefined) {
 		throw new APIError({

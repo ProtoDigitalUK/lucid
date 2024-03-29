@@ -101,7 +101,7 @@ export interface HeadlessUserRoles {
 export interface HeadlessUserTokens {
 	id: Generated<number>;
 	user_id: number | null;
-	token_type: string;
+	token_type: "password_reset" | "refresh";
 	token: string;
 	created_at: TimestampImmutable;
 	expiry_date: TimestampMutateable;
