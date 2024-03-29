@@ -1,5 +1,5 @@
 import pg from "pg";
-import { PostgresDialect } from "kysely";
+import { PostgresDialect, sql } from "kysely";
 import DatabaseAdapter from "../../adapter.js";
 import { AdapterType } from "../../types.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
@@ -14,6 +14,13 @@ export default class PostgresAdapter extends DatabaseAdapter {
 				pool: new Pool(config),
 			}),
 		});
+	}
+	// Static
+	static defaultTimestamp() {
+		return sql`NOW()`;
+	}
+	static primaryKeyColumnType() {
+		return "serial" as const;
 	}
 	// Getters
 	get jsonArrayFrom() {

@@ -1,32 +1,45 @@
-import { type ColumnDefinitionBuilder, sql } from "kysely";
+import { type ColumnDefinitionBuilder } from "kysely";
 import { AdapterType } from "../types.js";
+
+import SqlLiteAdapter from "../adapters/sqllite/index.js";
+import PostgresAdapter from "../adapters/postgres/index.js";
+import LibsqlAdapter from "../adapters/libsql/index.js";
 
 export const defaultTimestamp = (
 	col: ColumnDefinitionBuilder,
 	adapter: AdapterType,
 ) => {
-	if (adapter === AdapterType.POSTGRES) {
-		return col.defaultTo(sql`NOW()`);
+	switch (adapter) {
+		case AdapterType.SQLITE:
+			return col.defaultTo(SqlLiteAdapter.defaultTimestamp());
+		case AdapterType.POSTGRES:
+			return col.defaultTo(PostgresAdapter.defaultTimestamp());
+		case AdapterType.LIBSQL:
+			return col.defaultTo(LibsqlAdapter.defaultTimestamp());
 	}
-
-	return col.defaultTo(sql`CURRENT_TIMESTAMP`);
 };
 
 export const primaryKeyColumnType = (adapter: AdapterType) => {
-	if (adapter === AdapterType.POSTGRES) {
-		return "serial";
+	switch (adapter) {
+		case AdapterType.SQLITE:
+			return SqlLiteAdapter.primaryKeyColumnType();
+		case AdapterType.POSTGRES:
+			return PostgresAdapter.primaryKeyColumnType();
+		case AdapterType.LIBSQL:
+			return LibsqlAdapter.primaryKeyColumnType();
 	}
-
-	return "integer";
 };
 
 export const primaryKeyColumn = (
 	col: ColumnDefinitionBuilder,
 	adapter: AdapterType,
 ) => {
-	if (adapter === AdapterType.POSTGRES) {
-		col.primaryKey();
+	switch (adapter) {
+		case AdapterType.SQLITE:
+			return col.primaryKey().autoIncrement();
+		case AdapterType.POSTGRES:
+			return col.primaryKey();
+		case AdapterType.LIBSQL:
+			return col.primaryKey().autoIncrement();
 	}
-
-	return col.primaryKey().autoIncrement();
 };
