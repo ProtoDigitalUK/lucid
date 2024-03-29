@@ -18,18 +18,17 @@ export default headlessConfig({
 	// db: new SQLLiteAdapter({
 	// 	database: async () => new Database("db.sqlite"),
 	// }),
-	// db: new LibSQLAdapter({
-	// 	url: "libsql://headless-cms-willyallop.turso.io",
-	// 	authToken: process.env.TURSO_AUTH_TOKEN as string,
-	// }),
-	db: new PostgresAdapter({
-		connectionString: process.env.DATABASE_URL as string,
-		max: 20,
-		ssl: {
-			rejectUnauthorized: false,
-		},
+	db: new LibSQLAdapter({
+		url: "libsql://headless-cms-willyallop.turso.io",
+		authToken: process.env.TURSO_AUTH_TOKEN as string,
 	}),
-	databaseUrl: process.env.DATABASE_URL as string,
+	// db: new PostgresAdapter({
+	// 	connectionString: process.env.DATABASE_URL as string,
+	// 	max: 20,
+	// 	ssl: {
+	// 		rejectUnauthorized: false,
+	// 	},
+	// }),
 	keys: {
 		cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
 		refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,

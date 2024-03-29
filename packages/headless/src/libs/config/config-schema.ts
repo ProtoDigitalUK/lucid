@@ -6,7 +6,6 @@ import constants from "../../constants.js";
 const ConfigSchema = z.object({
 	mode: z.literal("production").or(z.literal("development")),
 	db: z.unknown(),
-	databaseUrl: z.string(),
 	host: z.string(),
 	keys: z.object({
 		cookieSecret: z.string(),
