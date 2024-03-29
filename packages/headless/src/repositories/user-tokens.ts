@@ -1,19 +1,18 @@
 import type { Config } from "../libs/config/config-schema.js";
-import type { HeadlessUserTokens } from "../libs/db/types.js";
-import type {
-	ComparisonOperatorExpression,
-	OperandValueExpressionOrList,
-} from "kysely";
-import type { HeadlessDB } from "../libs/db/types.js";
-import { deleteQB, selectQB } from "../libs/db/query-builder.js";
+import type { HeadlessUserTokens, HeadlessDB } from "../libs/db/types.js";
+import {
+	deleteQB,
+	selectQB,
+	type QueryBuilderWhereT,
+} from "../libs/db/query-builder.js";
 
 export default class UserTokens {
 	constructor(private config: Config) {}
 
 	// dynamic query methods
 	getSingle = async (data: {
-		select: UserTokenSelectT;
-		where: UserTokenWhereT;
+		select: Array<keyof HeadlessUserTokens>;
+		where: QueryBuilderWhereT<HeadlessDB, "headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client
 			.selectFrom("headless_user_tokens")
@@ -26,7 +25,7 @@ export default class UserTokens {
 		return res;
 	};
 	deleteSingle = async (data: {
-		where: UserTokenWhereT;
+		where: QueryBuilderWhereT<HeadlessDB, "headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client.deleteFrom("headless_user_tokens");
 
@@ -57,16 +56,3 @@ export default class UserTokens {
 	};
 	// fixed query methods
 }
-
-// ------------------------------------------------------------------
-// Types
-type UserTokenWhereT = Array<{
-	key: keyof HeadlessUserTokens;
-	operator: ComparisonOperatorExpression;
-	value: OperandValueExpressionOrList<
-		HeadlessDB,
-		"headless_user_tokens",
-		keyof HeadlessUserTokens
-	>;
-}>;
-type UserTokenSelectT = Array<keyof HeadlessUserTokens>;

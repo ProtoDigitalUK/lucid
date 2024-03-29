@@ -140,13 +140,15 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	};
 };
 
+export type QueryBuilderWhereT<DB, Table extends keyof DB> = Array<{
+	key: ReferenceExpression<DB, Table>;
+	operator: ComparisonOperatorExpression;
+	value: OperandValueExpressionOrList<DB, Table, keyof Table>;
+}>;
+
 export const selectQB = <DB, Table extends keyof DB, O>(
 	query: SelectQueryBuilder<DB, Table, O>,
-	where: Array<{
-		key: ReferenceExpression<DB, Table>;
-		operator: ComparisonOperatorExpression;
-		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
-	}>,
+	where: QueryBuilderWhereT<DB, Table>,
 ) => {
 	let kyselyQuery = query;
 
@@ -159,11 +161,7 @@ export const selectQB = <DB, Table extends keyof DB, O>(
 
 export const deleteQB = <DB, Table extends keyof DB, O>(
 	query: DeleteQueryBuilder<DB, Table, O>,
-	where: Array<{
-		key: ReferenceExpression<DB, Table>;
-		operator: ComparisonOperatorExpression;
-		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
-	}>,
+	where: QueryBuilderWhereT<DB, Table>,
 ) => {
 	let kyselyQuery = query;
 
