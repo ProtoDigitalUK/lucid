@@ -15,7 +15,7 @@ const createSingle = async (
 	// If is default, it has to be enabled
 	// There can only be one default language
 
-	const codeUnique = await serviceConfig.db
+	const codeUnique = await serviceConfig.config.db.client
 		.selectFrom("headless_languages")
 		.select("id")
 		.where("code", "=", data.code)
@@ -56,7 +56,7 @@ const createSingle = async (
 		});
 	}
 
-	const language = await serviceConfig.db
+	const language = await serviceConfig.config.db.client
 		.insertInto("headless_languages")
 		.values({
 			code: data.code,
@@ -80,7 +80,7 @@ const createSingle = async (
 	}
 
 	if (data.is_default) {
-		await serviceConfig.db
+		await serviceConfig.config.db.client
 			.updateTable("headless_languages")
 			.set({
 				is_default: false,

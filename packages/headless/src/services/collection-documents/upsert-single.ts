@@ -32,7 +32,7 @@ const upsertSingle = async (
 	);
 
 	if (data.document_id !== undefined) {
-		const existingDocument = await serviceConfig.db
+		const existingDocument = await serviceConfig.config.db.client
 			.selectFrom("headless_collection_documents")
 			.select("id")
 			.where("id", "=", data.document_id)
@@ -143,7 +143,7 @@ const upsertSingle = async (
         Insert:
         - Document
     */
-	const document = await serviceConfig.db
+	const document = await serviceConfig.config.db.client
 		.insertInto("headless_collection_documents")
 		.values({
 			id: data.document_id,
@@ -193,7 +193,7 @@ const upsertSingle = async (
 						exclude_id: document.id,
 						document_id: data.document_id,
 					},
-				)
+			  )
 			: undefined,
 		serviceWrapper(
 			collectionDocumentCategoriesServices.upsertMultiple,

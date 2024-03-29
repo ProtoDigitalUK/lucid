@@ -49,7 +49,7 @@ const upsertMultiple = async <K extends string>(
 			return;
 		}
 
-		await serviceConfig.db
+		await serviceConfig.config.db.client
 			.insertInto("headless_translations")
 			.values(translations)
 			.onConflict((oc) =>

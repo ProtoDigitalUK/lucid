@@ -197,7 +197,7 @@ const getAllMedia = async (
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
 		if (ids.length === 0) return [];
-		return await serviceConfig.db
+		return await serviceConfig.config.db.client
 			.selectFrom("headless_media")
 			.select(["id", "file_extension", "width", "height", "type"])
 			.where("id", "in", allFieldIdsOfType<number>(fields, "media"))
@@ -213,7 +213,7 @@ const getAllDocuments = async (
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");
 		if (ids.length === 0) return [];
-		return await serviceConfig.db
+		return await serviceConfig.config.db.client
 			.selectFrom("headless_collection_documents")
 			.select("id")
 			.where("id", "in", ids)

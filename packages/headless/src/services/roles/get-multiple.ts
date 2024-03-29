@@ -1,7 +1,6 @@
 import type z from "zod";
 import formatRole from "../../format/format-roles.js";
 import type rolesSchema from "../../schemas/roles.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../libs/db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
@@ -14,30 +13,32 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	let rolesQuery = serviceConfig.db
+	let rolesQuery = serviceConfig.config.db.client
 		.selectFrom("headless_roles")
 		.select(["id", "name", "created_at", "updated_at", "description"]);
 
 	if (data.query.include?.includes("permissions")) {
 		rolesQuery = rolesQuery.select((eb) => [
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_role_permissions")
-					.select([
-						"headless_role_permissions.id",
-						"headless_role_permissions.permission",
-						"headless_role_permissions.role_id",
-					])
-					.whereRef(
-						"headless_role_permissions.role_id",
-						"=",
-						"headless_roles.id",
-					),
-			).as("permissions"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_role_permissions")
+						.select([
+							"headless_role_permissions.id",
+							"headless_role_permissions.permission",
+							"headless_role_permissions.role_id",
+						])
+						.whereRef(
+							"headless_role_permissions.role_id",
+							"=",
+							"headless_roles.id",
+						),
+				)
+				.as("permissions"),
 		]);
 	}
 
-	const rolesCountQuery = serviceConfig.db
+	const rolesCountQuery = serviceConfig.config.db.client
 		.selectFrom("headless_roles")
 		.select(sql`count(*)`.as("count"));
 

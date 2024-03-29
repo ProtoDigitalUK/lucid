@@ -12,7 +12,7 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const user = await serviceWrapper(usersServices.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			user_id: Number.parseInt(request.params.id),

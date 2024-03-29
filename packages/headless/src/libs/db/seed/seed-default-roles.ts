@@ -8,7 +8,7 @@ import rolesServices from "../../../services/roles/index.js";
 
 const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const totalRoleCount = (await serviceConfig.db
+		const totalRoleCount = (await serviceConfig.config.db.client
 			.selectFrom("headless_roles")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst()) as { count: string } | undefined;
@@ -19,9 +19,7 @@ const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 		for (const role of constants.seedDefaults.roles) {
 			rolePromises.push(
 				serviceWrapper(rolesServices.createSingle, false)(
-					{
-						db: serviceConfig.db,
-					},
+					serviceConfig,
 					{
 						name: role.name,
 						description: role.description,

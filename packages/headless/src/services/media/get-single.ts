@@ -1,16 +1,13 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 import formatMedia from "../../format/format-media.js";
-import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
-	const media = await serviceConfig.db
+	const media = await serviceConfig.config.db.client
 		.selectFrom("headless_media")
 		.select((eb) => [
 			"id",
@@ -26,34 +23,38 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"alt_translation_key_id",
 			"created_at",
 			"updated_at",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_translations")
-					.select([
-						"headless_translations.value",
-						"headless_translations.language_id",
-					])
-					.where("headless_translations.value", "is not", null)
-					.whereRef(
-						"headless_translations.translation_key_id",
-						"=",
-						"headless_media.title_translation_key_id",
-					),
-			).as("title_translations"),
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_translations")
-					.select([
-						"headless_translations.value",
-						"headless_translations.language_id",
-					])
-					.where("headless_translations.value", "is not", null)
-					.whereRef(
-						"headless_translations.translation_key_id",
-						"=",
-						"headless_media.alt_translation_key_id",
-					),
-			).as("alt_translations"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_translations")
+						.select([
+							"headless_translations.value",
+							"headless_translations.language_id",
+						])
+						.where("headless_translations.value", "is not", null)
+						.whereRef(
+							"headless_translations.translation_key_id",
+							"=",
+							"headless_media.title_translation_key_id",
+						),
+				)
+				.as("title_translations"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_translations")
+						.select([
+							"headless_translations.value",
+							"headless_translations.language_id",
+						])
+						.where("headless_translations.value", "is not", null)
+						.whereRef(
+							"headless_translations.translation_key_id",
+							"=",
+							"headless_media.alt_translation_key_id",
+						),
+				)
+				.as("alt_translations"),
 		])
 		.where("visible", "=", true)
 		.where("id", "=", data.id)
@@ -74,7 +75,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	return formatMedia({
 		media: media,
-		host: config.host,
+		host: serviceConfig.config.host,
 	});
 };
 

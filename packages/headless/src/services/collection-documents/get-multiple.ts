@@ -1,13 +1,11 @@
 import type z from "zod";
 import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 import queryBuilder from "../../libs/db/query-builder.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
 import { collectionFilters } from "../../utils/field-helpers.js";
-import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -20,14 +18,13 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const config = await getConfig();
 	const collectionInstance = await collectionsServices.getSingleInstance({
 		key: data.collection_key,
 	});
 	const allowedIncludes = collectionInstance.data.config.fields.include;
 	const allowedFilters = collectionInstance.data.config.fields.filter;
 
-	let pagesQuery = serviceConfig.db
+	let pagesQuery = serviceConfig.config.db.client
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
 			"headless_collection_documents.id",
@@ -39,16 +36,18 @@ const getMultiple = async (
 			"headless_collection_documents.created_by",
 			"headless_collection_documents.created_at",
 			"headless_collection_documents.updated_at",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_collection_document_categories")
-					.select("category_id")
-					.whereRef(
-						"headless_collection_document_categories.collection_document_id",
-						"=",
-						"headless_collection_documents.id",
-					),
-			).as("categories"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_collection_document_categories")
+						.select("category_id")
+						.whereRef(
+							"headless_collection_document_categories.collection_document_id",
+							"=",
+							"headless_collection_documents.id",
+						),
+				)
+				.as("categories"),
 		])
 		.leftJoin("headless_collection_document_categories", (join) =>
 			join.onRef(
@@ -72,7 +71,7 @@ const getMultiple = async (
 		.where("headless_collection_documents.is_deleted", "=", false)
 		.groupBy(["headless_collection_documents.id", "headless_users.id"]);
 
-	let pagesCountQuery = serviceConfig.db
+	let pagesCountQuery = serviceConfig.config.db.client
 		.selectFrom("headless_collection_documents")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_collection_document_categories", (join) =>
@@ -111,31 +110,33 @@ const getMultiple = async (
 	if (allowedIncludes.length > 0) {
 		pagesQuery = pagesQuery
 			.select((eb) => [
-				jsonArrayFrom(
-					eb
-						.selectFrom("headless_collection_document_fields")
-						.select([
-							"headless_collection_document_fields.fields_id",
-							"headless_collection_document_fields.text_value",
-							"headless_collection_document_fields.int_value",
-							"headless_collection_document_fields.bool_value",
-							"headless_collection_document_fields.language_id",
-							"headless_collection_document_fields.type",
-							"headless_collection_document_fields.key",
-							"headless_collection_document_fields.collection_brick_id",
-							"headless_collection_document_fields.collection_document_id",
-						])
-						.whereRef(
-							"headless_collection_document_fields.collection_document_id",
-							"=",
-							"headless_collection_documents.id",
-						)
-						.where(
-							"headless_collection_document_fields.key",
-							"in",
-							allowedIncludes,
-						),
-				).as("fields"),
+				serviceConfig.config.db
+					.jsonArrayFrom(
+						eb
+							.selectFrom("headless_collection_document_fields")
+							.select([
+								"headless_collection_document_fields.fields_id",
+								"headless_collection_document_fields.text_value",
+								"headless_collection_document_fields.int_value",
+								"headless_collection_document_fields.bool_value",
+								"headless_collection_document_fields.language_id",
+								"headless_collection_document_fields.type",
+								"headless_collection_document_fields.key",
+								"headless_collection_document_fields.collection_brick_id",
+								"headless_collection_document_fields.collection_document_id",
+							])
+							.whereRef(
+								"headless_collection_document_fields.collection_document_id",
+								"=",
+								"headless_collection_documents.id",
+							)
+							.where(
+								"headless_collection_document_fields.key",
+								"in",
+								allowedIncludes,
+							),
+					)
+					.as("fields"),
 			])
 			.leftJoin("headless_collection_document_fields", (join) =>
 				join.onRef(
@@ -220,7 +221,7 @@ const getMultiple = async (
 			return formatCollectionDocument({
 				document: doc,
 				collection: collectionInstance,
-				host: config.host,
+				host: serviceConfig.config.host,
 			});
 		}),
 		count: parseCount(documentCount?.count),

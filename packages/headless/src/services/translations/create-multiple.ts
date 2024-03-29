@@ -34,7 +34,7 @@ const createMultiple = async <K extends string>(
         SELECT nextval('headless_translation_keys_id_seq')
         FROM generate_series(1, ${data.keys.length})
         RETURNING id`)
-		.execute(serviceConfig.db);
+		.execute(serviceConfig.config.db.client);
 
 	if (rows.length !== data.keys.length) {
 		throw new APIError({
@@ -61,7 +61,7 @@ const createMultiple = async <K extends string>(
 		return keys;
 	}
 
-	await serviceConfig.db
+	await serviceConfig.config.db.client
 		.insertInto("headless_translations")
 		.values(
 			data.translations.map((translation) => {

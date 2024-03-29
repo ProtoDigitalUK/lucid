@@ -10,7 +10,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteUserRes = await serviceConfig.db
+	const deleteUserRes = await serviceConfig.config.db.client
 		.updateTable("headless_users")
 		.set({
 			is_deleted: true,

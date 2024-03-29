@@ -13,7 +13,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteMedia = await serviceConfig.db
+	const deleteMedia = await serviceConfig.config.db.client
 		.deleteFrom("headless_media")
 		.where("id", "=", data.id)
 		.returning([

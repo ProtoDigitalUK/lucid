@@ -12,7 +12,7 @@ const createSingleController: ControllerT<
 > = async (request, reply) => {
 	const userId = await serviceWrapper(usersServices.createSingle, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			email: request.body.email,
@@ -29,7 +29,7 @@ const createSingleController: ControllerT<
 
 	const user = await serviceWrapper(usersServices.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			user_id: userId,

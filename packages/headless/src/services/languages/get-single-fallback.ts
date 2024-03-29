@@ -10,7 +10,7 @@ const getSingleFallback = async (
 	data: ServiceData,
 ) => {
 	if (data.id !== undefined) {
-		const language = await serviceConfig.db
+		const language = await serviceConfig.config.db.client
 			.selectFrom("headless_languages")
 			.select(["id", "code"])
 			.where("id", "=", data.id)
@@ -35,7 +35,7 @@ const getSingleFallback = async (
 		};
 	}
 
-	const defaultLanguage = await serviceConfig.db
+	const defaultLanguage = await serviceConfig.config.db.client
 		.selectFrom("headless_languages")
 		.select(["id", "code"])
 		.where("is_default", "=", true)

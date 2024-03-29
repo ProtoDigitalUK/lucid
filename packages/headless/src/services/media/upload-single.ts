@@ -73,7 +73,7 @@ const uploadSingle = async (
 		objectStored = true;
 		objectKey = uploadObjectRes.key;
 
-		const mediaRes = await serviceConfig.db
+		const mediaRes = await serviceConfig.config.db.client
 			.insertInto("headless_media")
 			.values({
 				key: uploadObjectRes.key,

@@ -15,7 +15,7 @@ const createSingleController: ControllerT<
 > = async (request, reply) => {
 	const roleId = await serviceWrapper(rolesServices.createSingle, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			name: request.body.name,
@@ -26,7 +26,7 @@ const createSingleController: ControllerT<
 
 	const role = await serviceWrapper(rolesServices.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			id: roleId,

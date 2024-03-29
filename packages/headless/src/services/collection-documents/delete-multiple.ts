@@ -12,7 +12,7 @@ const deleteMultiple = async (
 ) => {
 	if (data.ids.length === 0) return;
 
-	const deletePages = await serviceConfig.db
+	const deletePages = await serviceConfig.config.db.client
 		.updateTable("headless_collection_documents")
 		.set({
 			is_deleted: true,

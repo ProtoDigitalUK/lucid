@@ -8,7 +8,7 @@ const clearSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const allProcessedImages = await serviceConfig.db
+	const allProcessedImages = await serviceConfig.config.db.client
 		.selectFrom("headless_processed_images")
 		.select("key")
 		.where("media_key", "=", data.key)
@@ -22,7 +22,7 @@ const clearSingle = async (
 				key: image.key,
 			})),
 		}),
-		serviceConfig.db
+		serviceConfig.config.db.client
 			.deleteFrom("headless_processed_images")
 			.where("media_key", "=", data.key)
 			.execute(),

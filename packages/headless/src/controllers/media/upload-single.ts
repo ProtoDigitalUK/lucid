@@ -15,7 +15,7 @@ const uploadSingleController: ControllerT<
 > = async (request, reply) => {
 	const mediaId = await serviceWrapper(mediaServices.uploadSingle, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			file_data: await request.file(),
@@ -26,7 +26,7 @@ const uploadSingleController: ControllerT<
 	);
 	const media = await serviceWrapper(mediaServices.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			id: mediaId,

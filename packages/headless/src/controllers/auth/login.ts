@@ -13,7 +13,7 @@ const loginController: ControllerT<
 > = async (request, reply) => {
 	const user = await serviceWrapper(auth.login, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			username_or_email: request.body.username_or_email,

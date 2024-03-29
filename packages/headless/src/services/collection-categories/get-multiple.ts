@@ -4,7 +4,6 @@ import queryBuilder from "../../libs/db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
 import formatCollectionCategories from "../../format/format-collection-categories.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
 	query: z.infer<typeof collectionCategoriesSchema.getMultiple.query>;
@@ -15,7 +14,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const categoryQuery = serviceConfig.db
+	const categoryQuery = serviceConfig.config.db.client
 		.selectFrom("headless_collection_categories")
 		.select((eb) => [
 			"headless_collection_categories.id",
@@ -25,34 +24,38 @@ const getMultiple = async (
 			"headless_collection_categories.description_translation_key_id",
 			"headless_collection_categories.created_at",
 			"headless_collection_categories.updated_at",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_translations")
-					.select([
-						"headless_translations.value",
-						"headless_translations.language_id",
-					])
-					.where("headless_translations.value", "is not", null)
-					.whereRef(
-						"headless_translations.translation_key_id",
-						"=",
-						"headless_collection_categories.title_translation_key_id",
-					),
-			).as("title_translations"),
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_translations")
-					.select([
-						"headless_translations.value",
-						"headless_translations.language_id",
-					])
-					.where("headless_translations.value", "is not", null)
-					.whereRef(
-						"headless_translations.translation_key_id",
-						"=",
-						"headless_collection_categories.description_translation_key_id",
-					),
-			).as("description_translations"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_translations")
+						.select([
+							"headless_translations.value",
+							"headless_translations.language_id",
+						])
+						.where("headless_translations.value", "is not", null)
+						.whereRef(
+							"headless_translations.translation_key_id",
+							"=",
+							"headless_collection_categories.title_translation_key_id",
+						),
+				)
+				.as("title_translations"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_translations")
+						.select([
+							"headless_translations.value",
+							"headless_translations.language_id",
+						])
+						.where("headless_translations.value", "is not", null)
+						.whereRef(
+							"headless_translations.translation_key_id",
+							"=",
+							"headless_collection_categories.description_translation_key_id",
+						),
+				)
+				.as("description_translations"),
 		])
 		.leftJoin("headless_translations as title_translations", (join) =>
 			join
@@ -86,7 +89,7 @@ const getMultiple = async (
 			"description_translations.value",
 		]);
 
-	const categoryCountQuery = serviceConfig.db
+	const categoryCountQuery = serviceConfig.config.db.client
 		.selectFrom("headless_collection_categories")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_translations as title_translations", (join) =>

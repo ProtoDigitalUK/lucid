@@ -14,7 +14,7 @@ const createSingle = async (
 ) => {
 	const token = crypto.randomBytes(32).toString("hex");
 
-	const userToken = await serviceConfig.db
+	const userToken = await serviceConfig.config.db.client
 		.insertInto("headless_user_tokens")
 		.values({
 			user_id: data.user_id,

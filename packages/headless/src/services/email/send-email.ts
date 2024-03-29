@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import getConfig from "../../libs/config/get-config.js";
 import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
@@ -19,15 +18,14 @@ export interface ServiceData {
 }
 
 const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);
 
-	const result = await config.email.strategy(
+	const result = await serviceConfig.config.email.strategy(
 		{
 			to: data.to,
 			subject: data.subject,
-			from: config.email.from,
+			from: serviceConfig.config.email.from,
 			cc: data.cc,
 			bcc: data.bcc,
 			replyTo: data.reply_to,
@@ -46,14 +44,14 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		lastSuccessAt: result.success ? new Date() : undefined,
 	};
 
-	const emailExists = await serviceConfig.db
+	const emailExists = await serviceConfig.config.db.client
 		.selectFrom("headless_emails")
 		.select(["id", "email_hash", "sent_count", "error_count"])
 		.where("email_hash", "=", emailHash)
 		.executeTakeFirst();
 
 	if (emailExists) {
-		const emailUpdated = await serviceConfig.db
+		const emailUpdated = await serviceConfig.config.db.client
 			.updateTable("headless_emails")
 			.set({
 				delivery_status: emailRecord.deliveryStatus,
@@ -86,12 +84,12 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const newEmail = await serviceConfig.db
+	const newEmail = await serviceConfig.config.db.client
 		.insertInto("headless_emails")
 		.values({
 			email_hash: emailHash,
-			from_address: config.email.from.email,
-			from_name: config.email.from.name,
+			from_address: serviceConfig.config.email.from.email,
+			from_name: serviceConfig.config.email.from.name,
 			to_address: data.to,
 			subject: data.subject,
 			template: data.template,

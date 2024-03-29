@@ -21,7 +21,7 @@ const upsertMultiple = async (
 	const bricksLength = data.bricks?.length || 0;
 	let bricks = data.bricks || [];
 
-	const collectionContentBrick = await serviceConfig.db
+	const collectionContentBrick = await serviceConfig.config.db.client
 		.selectFrom("headless_collection_document_bricks")
 		.select("id")
 		.where("collection_document_id", "=", data.document_id)
@@ -53,7 +53,7 @@ const upsertMultiple = async (
 	});
 
 	// upsert bricks and return all the ids, order and key
-	const bricksRes = await serviceConfig.db
+	const bricksRes = await serviceConfig.config.db.client
 		.insertInto("headless_collection_document_bricks")
 		.values(
 			bricks.map((brick) => {

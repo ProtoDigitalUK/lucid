@@ -14,7 +14,7 @@ const resendSingleController: ControllerT<
 > = async (request, reply) => {
 	const emailRes = await serviceWrapper(emailServices.resendSingle, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			id: Number.parseInt(request.params.id, 10),

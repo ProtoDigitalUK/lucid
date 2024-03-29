@@ -41,7 +41,7 @@ const checkParent = async (
 		});
 	}
 
-	const docRes = await serviceConfig.db
+	const docRes = await serviceConfig.config.db.client
 		.selectFrom("headless_collection_documents")
 		.select(["homepage"])
 		.where("id", "=", data.parent_id)

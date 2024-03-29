@@ -15,7 +15,7 @@ const createSingleController: ControllerT<
 > = async (request, reply) => {
 	const languageCode = await serviceWrapper(languages.createSingle, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			code: request.body.code,
@@ -26,7 +26,7 @@ const createSingleController: ControllerT<
 
 	const language = await serviceWrapper(languages.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			code: languageCode,

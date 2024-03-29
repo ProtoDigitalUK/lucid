@@ -13,7 +13,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const emailsQuery = serviceConfig.db
+	const emailsQuery = serviceConfig.config.db.client
 		.selectFrom("headless_emails")
 		.select([
 			"id",
@@ -35,7 +35,7 @@ const getMultiple = async (
 			"created_at",
 		]);
 
-	const emailsCountQuery = serviceConfig.db
+	const emailsCountQuery = serviceConfig.config.db.client
 		.selectFrom("headless_emails")
 		.select(sql`count(*)`.as("count"));
 

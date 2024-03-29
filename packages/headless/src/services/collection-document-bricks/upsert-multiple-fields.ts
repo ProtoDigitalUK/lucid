@@ -25,7 +25,7 @@ const upsertMultipleFields = async (
 	}
 
 	// upsert fields
-	const fieldsRes = await serviceConfig.db
+	const fieldsRes = await serviceConfig.config.db.client
 		.insertInto("headless_collection_document_fields")
 		.values(
 			fields.map((field) => {
@@ -63,7 +63,7 @@ const upsertMultipleFields = async (
 		.execute();
 
 	// delete fields not in fieldsRes
-	await serviceConfig.db
+	await serviceConfig.config.db.client
 		.deleteFrom("headless_collection_document_fields")
 		.where(
 			"collection_brick_id",

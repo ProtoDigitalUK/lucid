@@ -16,7 +16,7 @@ const getMultipleController: ControllerT<
 > = async (request, reply) => {
 	const media = await serviceWrapper(mediaServices.getMultiple, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			query: request.query,

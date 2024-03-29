@@ -13,7 +13,7 @@ const deleteMultipleController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(collectionDocumentsServices.deleteMultiple, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			ids: request.body.ids,

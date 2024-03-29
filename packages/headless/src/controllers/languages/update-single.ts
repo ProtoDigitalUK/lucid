@@ -13,7 +13,7 @@ const updateSingleController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(languages.updateSingle, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			current_code: request.params.code,

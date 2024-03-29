@@ -15,7 +15,7 @@ const getMultipleController: ControllerT<
 > = async (request, reply) => {
 	const emails = await serviceWrapper(emailServices.getMultiple, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			query: request.query,

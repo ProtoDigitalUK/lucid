@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const language = await serviceConfig.db
+	const language = await serviceConfig.config.db.client
 		.selectFrom("headless_languages")
 		.selectAll()
 		.where("code", "=", data.code)

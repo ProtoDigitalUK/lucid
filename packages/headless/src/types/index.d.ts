@@ -8,7 +8,6 @@ import type { HeadlessDB } from "../libs/db/types.ts";
 
 declare module "fastify" {
 	interface FastifyInstance {
-		db: DB;
 		config: Config;
 	}
 
@@ -41,7 +40,7 @@ declare global {
 	) => void;
 
 	interface ServiceConfigT {
-		db: DB;
+		config: Config;
 		inTransaction?: boolean; // If the function is within a transaction
 	}
 

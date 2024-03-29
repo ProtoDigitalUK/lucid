@@ -9,7 +9,7 @@ const resetHomepages = async (
 	data: ServiceData,
 ) => {
 	await Promise.all([
-		serviceConfig.db
+		serviceConfig.config.db.client
 			.updateTable("headless_collection_documents")
 			.set({
 				homepage: false,
@@ -23,7 +23,7 @@ const resetHomepages = async (
 			.where("headless_collection_documents.id", "!=", data.exclude_id)
 			.execute(),
 		data.document_id !== undefined
-			? serviceConfig.db
+			? serviceConfig.config.db.client
 					.updateTable("headless_collection_documents")
 					.where("parent_id", "=", data.document_id)
 					.set({

@@ -11,7 +11,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteCategory = await serviceConfig.db
+	const deleteCategory = await serviceConfig.config.db.client
 		.deleteFrom("headless_collection_categories")
 		.where("id", "=", data.id)
 		.returning([

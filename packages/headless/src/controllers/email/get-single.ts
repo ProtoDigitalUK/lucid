@@ -12,7 +12,7 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const email = await serviceWrapper(emailServices.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			id: Number.parseInt(request.params.id, 10),

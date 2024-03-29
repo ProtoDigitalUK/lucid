@@ -12,7 +12,7 @@ const getAllController: ControllerT<
 > = async (request, reply) => {
 	const collections = await serviceWrapper(collectionsServices.getAll, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			include_document_id: true,

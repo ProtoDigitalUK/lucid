@@ -26,10 +26,15 @@ const serviceWrapper =
 		}
 
 		// If its a transaction
-		return await serviceConfig.db.transaction().execute(async (tx) => {
-			const result = await fn({ db: tx, inTransaction: true }, ...args);
-			return result;
-		});
+		return await serviceConfig.config.db.client
+			.transaction()
+			.execute(async (tx) => {
+				const result = await fn(
+					{ db: tx, inTransaction: true },
+					...args,
+				);
+				return result;
+			});
 	};
 
 export default serviceWrapper;

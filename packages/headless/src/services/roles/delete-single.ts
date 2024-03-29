@@ -9,7 +9,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteRoles = await serviceConfig.db
+	const deleteRoles = await serviceConfig.config.db.client
 		.deleteFrom("headless_roles")
 		.where("id", "=", data.id)
 		.executeTakeFirst();

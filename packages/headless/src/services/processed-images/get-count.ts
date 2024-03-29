@@ -7,7 +7,7 @@ const getCount = async (
 	serviceConfig: ServiceConfigT,
 	// data: ServiceData,
 ) => {
-	const processedImageCount = (await serviceConfig.db
+	const processedImageCount = (await serviceConfig.config.db.client
 		.selectFrom("headless_processed_images")
 		.select(sql`count(*)`.as("count"))
 		.executeTakeFirst()) as { count: string };

@@ -15,7 +15,7 @@ const getMultipleValidParents = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const page = await serviceConfig.db
+	const page = await serviceConfig.config.db.client
 		.selectFrom("headless_collection_documents")
 		.select("homepage")
 		.where("id", "=", data.document_id)
@@ -50,7 +50,7 @@ const getMultipleValidParents = async (
     AND NOT p.homepage
     AND NOT p.is_deleted
     AND p.slug IS NOT NULL;`)
-		.execute(serviceConfig.db);
+		.execute(serviceConfig.config.db.client);
 
 	if (validParents.rows.length === 0) {
 		return {

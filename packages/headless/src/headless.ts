@@ -24,7 +24,6 @@ const headless = async (fastify: FastifyInstance) => {
 	try {
 		const config = await getConfig();
 
-		fastify.decorate("db", config.db.database);
 		fastify.decorate<Config>("config", config);
 
 		// ------------------------------------
@@ -84,7 +83,7 @@ const headless = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Initialise
 		log.white("-".repeat(60));
-		await config.db.seed();
+		await config.db.seed(config);
 		registerCronJobs(fastify);
 		log.yellow("Initialised");
 

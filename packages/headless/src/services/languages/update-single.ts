@@ -33,7 +33,7 @@ const updateSingle = async (
 	}
 
 	if (data.code) {
-		const language = await serviceConfig.db
+		const language = await serviceConfig.config.db.client
 			.selectFrom("headless_languages")
 			.select("id")
 			.where("code", "=", data.code)
@@ -69,7 +69,7 @@ const updateSingle = async (
 		}
 	}
 
-	const languagesCountQuery = (await serviceConfig.db
+	const languagesCountQuery = (await serviceConfig.config.db.client
 		.selectFrom("headless_languages")
 		.select(sql`count(*)`.as("count"))
 		.executeTakeFirst()) as { count: string } | undefined;
@@ -78,7 +78,7 @@ const updateSingle = async (
 
 	const isDefault = count === 1 ? true : data.is_default;
 
-	const updateLanguage = await serviceConfig.db
+	const updateLanguage = await serviceConfig.config.db.client
 		.updateTable("headless_languages")
 		.set({
 			code: data.code,
@@ -104,7 +104,7 @@ const updateSingle = async (
 	}
 
 	if (isDefault) {
-		await serviceConfig.db
+		await serviceConfig.config.db.client
 			.updateTable("headless_languages")
 			.set({
 				is_default: false,

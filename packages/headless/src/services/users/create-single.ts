@@ -21,7 +21,7 @@ const createSingle = async (
 	data: ServiceData,
 ) => {
 	const [userExists] = await Promise.all([
-		serviceConfig.db
+		serviceConfig.config.db.client
 			.selectFrom("headless_users")
 			.select(["id", "username", "email"])
 			.where((eb) =>
@@ -32,9 +32,7 @@ const createSingle = async (
 			)
 			.executeTakeFirst(),
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
-			{
-				db: serviceConfig.db,
-			},
+			serviceConfig,
 			{
 				role_ids: data.role_ids,
 				is_create: true,
@@ -58,14 +56,14 @@ const createSingle = async (
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-							}
+						  }
 						: undefined,
 				username:
 					userExists.username === data.username
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-							}
+						  }
 						: undefined,
 			}),
 		});
@@ -73,7 +71,7 @@ const createSingle = async (
 
 	const hashedPassword = await argon2.hash(data.password);
 
-	const newUser = await serviceConfig.db
+	const newUser = await serviceConfig.config.db.client
 		.insertInto("headless_users")
 		.values({
 			email: data.email,
@@ -102,7 +100,7 @@ const createSingle = async (
 	if (data.role_ids === undefined || data.role_ids.length === 0)
 		return newUser.id;
 
-	await serviceConfig.db
+	await serviceConfig.config.db.client
 		.insertInto("headless_user_roles")
 		.values(
 			data.role_ids.map((roleId) => ({

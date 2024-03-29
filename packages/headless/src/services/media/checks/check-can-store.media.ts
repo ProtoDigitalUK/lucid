@@ -1,6 +1,5 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
-import getConfig from "../../../libs/config/get-config.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
 import constants from "../../../constants.js";
@@ -14,11 +13,10 @@ const checkCanStoreMedia = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const config = await getConfig();
-
-	const maxFileSize = config.media.maxFileSize || constants.media.maxFileSize;
+	const maxFileSize =
+		serviceConfig.config.media.maxFileSize || constants.media.maxFileSize;
 	const storageLimit =
-		config.media.storageLimit || constants.media.storageLimit;
+		serviceConfig.config.media.storageLimit || constants.media.storageLimit;
 
 	if (data.size > maxFileSize) {
 		throw new APIError({

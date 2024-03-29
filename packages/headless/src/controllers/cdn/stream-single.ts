@@ -10,7 +10,7 @@ const streamSingleController: ControllerT<
 	try {
 		const response = await serviceWrapper(cdnServices.streamMedia, false)(
 			{
-				db: request.server.db,
+				config: request.server.config,
 			},
 			{
 				key: request.params.key,

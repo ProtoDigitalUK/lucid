@@ -7,7 +7,7 @@ import { parseCount } from "../../../utils/helpers.js";
 
 const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const totalUserCount = (await serviceConfig.db
+		const totalUserCount = (await serviceConfig.config.db.client
 			.selectFrom("headless_users")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst()) as { count: string } | undefined;
@@ -17,7 +17,7 @@ const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 		const hashedPassword = await argon2.hash(
 			constants.seedDefaults.user.password,
 		);
-		await serviceConfig.db
+		await serviceConfig.config.db.client
 			.insertInto("headless_users")
 			.values({
 				super_admin: constants.seedDefaults.user.super_admin as 0 | 1,

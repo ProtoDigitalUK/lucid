@@ -14,7 +14,7 @@ export interface ServiceData {
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const getUser = await serviceConfig.db
+	const getUser = await serviceConfig.config.db.client
 		.selectFrom("headless_users")
 		.select(["super_admin"])
 		.where("id", "=", data.auth.id)
@@ -35,14 +35,14 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const [userWithEmail, userWithUsername] = await Promise.all([
 		data.email !== undefined
-			? serviceConfig.db
+			? serviceConfig.config.db.client
 					.selectFrom("headless_users")
 					.where("email", "=", data.email)
 					.where("id", "!=", data.auth.id)
 					.executeTakeFirst()
 			: undefined,
 		data.username !== undefined
-			? serviceConfig.db
+			? serviceConfig.config.db.client
 					.selectFrom("headless_users")
 					.where("username", "=", data.username)
 					.where("id", "!=", data.auth.id)
@@ -55,7 +55,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 						role_ids: data.role_ids,
 						is_create: false,
 					},
-				)
+			  )
 			: undefined,
 	]);
 
@@ -80,7 +80,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const updateMe = await serviceConfig.db
+	const updateMe = await serviceConfig.config.db.client
 		.updateTable("headless_users")
 		.set({
 			first_name: data.first_name,

@@ -6,9 +6,11 @@ import {
 	Migrator,
 	KyselyPlugin,
 } from "kysely";
+import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { InternalError } from "../../utils/error-handler.js";
 import type { AdapterType, HeadlessDB } from "./types.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import type { Config } from "../config/config-schema.js";
 // Seeds
 import seedDefaultUser from "./seed/seed-default-user.js";
 import seedDefaultLanguages from "./seed/seed-default-language.js";
@@ -62,7 +64,7 @@ export default class DatabaseAdapter {
 			process.exit(1);
 		}
 	}
-	async seed() {
+	async seed(config: Config) {
 		const seedData = async (serviceConfig: ServiceConfigT) => {
 			await Promise.allSettled([
 				seedDefaultUser(serviceConfig),
@@ -75,15 +77,18 @@ export default class DatabaseAdapter {
 			seedData,
 			true,
 		)({
-			db: this.database,
+			config: config,
 		});
 	}
 	// getters
-	get database() {
+	get client() {
 		if (!this.db) {
 			throw new InternalError(T("db_connection_error"));
 		}
 		return this.db;
+	}
+	get jsonArrayFrom() {
+		return jsonArrayFrom;
 	}
 	private get migrations(): Record<string, Migration> {
 		return {
@@ -99,7 +104,7 @@ export default class DatabaseAdapter {
 	private get migrator() {
 		const m = this.migrations;
 		return new Migrator({
-			db: this.database,
+			db: this.client,
 			provider: {
 				async getMigrations() {
 					return m;

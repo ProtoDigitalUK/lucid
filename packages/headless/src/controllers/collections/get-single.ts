@@ -15,7 +15,7 @@ const getSingleController: ControllerT<
 		false,
 	)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			key: request.params.key,

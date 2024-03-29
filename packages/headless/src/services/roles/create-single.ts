@@ -20,7 +20,7 @@ const createSingle = async (
 				permissions: data.permissions,
 			},
 		),
-		serviceConfig.db
+		serviceConfig.config.db.client
 			.selectFrom("headless_roles")
 			.select("id")
 			.where("name", "=", data.name)
@@ -44,7 +44,7 @@ const createSingle = async (
 		});
 	}
 
-	const newRoles = await serviceConfig.db
+	const newRoles = await serviceConfig.config.db.client
 		.insertInto("headless_roles")
 		.values({
 			name: data.name,
@@ -67,7 +67,7 @@ const createSingle = async (
 	}
 
 	if (validatePerms.length > 0) {
-		await serviceConfig.db
+		await serviceConfig.config.db.client
 			.insertInto("headless_role_permissions")
 			.values(
 				validatePerms.map((permission) => ({

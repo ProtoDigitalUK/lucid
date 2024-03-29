@@ -14,7 +14,7 @@ const sendResetPasswordController: ControllerT<
 > = async (request, reply) => {
 	const resetPassword = await serviceWrapper(account.sendResetPassword, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			email: request.body.email,

@@ -11,7 +11,7 @@ const checkRolesExist = async (
 	data: ServiceData,
 ) => {
 	if (data.role_ids.length === 0) return;
-	const roles = await serviceConfig.db
+	const roles = await serviceConfig.config.db.client
 		.selectFrom("headless_roles")
 		.select("id")
 		.where("id", "in", data.role_ids)
@@ -23,17 +23,17 @@ const checkRolesExist = async (
 			name: data.is_create
 				? T("error_not_created_name", {
 						name: T("user"),
-					})
+				  })
 				: T("error_not_updated_name", {
 						name: T("user"),
-					}),
+				  }),
 			message: data.is_create
 				? T("creation_error_message", {
 						name: T("user"),
-					})
+				  })
 				: T("update_error_message", {
 						name: T("user"),
-					}),
+				  }),
 			status: 400,
 			errors: modelErrors({
 				role_ids: {

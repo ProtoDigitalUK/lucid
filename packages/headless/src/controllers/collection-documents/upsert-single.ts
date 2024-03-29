@@ -19,7 +19,7 @@ const upsertSingleController: ControllerT<
 		true,
 	)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			collection_key: request.params.collection_key,

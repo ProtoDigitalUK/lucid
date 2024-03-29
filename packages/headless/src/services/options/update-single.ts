@@ -13,7 +13,7 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const updateOption = await serviceConfig.db
+	const updateOption = await serviceConfig.config.db.client
 		.updateTable("headless_options")
 		.set({
 			value_text: data.value_text,

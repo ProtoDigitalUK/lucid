@@ -14,15 +14,13 @@ const updateMultipleRoles = async (
 
 	await Promise.all([
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
-			{
-				db: serviceConfig.db,
-			},
+			serviceConfig,
 			{
 				role_ids: data.role_ids || [],
 				is_create: true,
 			},
 		),
-		serviceConfig.db
+		serviceConfig.config.db.client
 			.deleteFrom("headless_user_roles")
 			.where("user_id", "=", data.user_id)
 			.execute(),
@@ -30,7 +28,7 @@ const updateMultipleRoles = async (
 
 	if (data.role_ids.length === 0) return;
 
-	await serviceConfig.db
+	await serviceConfig.config.db.client
 		.insertInto("headless_user_roles")
 		.values(
 			data.role_ids.map((roleId) => ({

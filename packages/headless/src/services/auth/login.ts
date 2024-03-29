@@ -8,7 +8,7 @@ export interface ServiceData {
 }
 
 const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const user = await serviceConfig.db
+	const user = await serviceConfig.config.db.client
 		.selectFrom("headless_users")
 		.select(["id", "password", "is_deleted"])
 		.where((eb) =>

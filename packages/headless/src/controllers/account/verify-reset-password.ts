@@ -10,7 +10,7 @@ const verifyResetPasswordController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(userTokens.getSingle, false)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			token_type: "password_reset",

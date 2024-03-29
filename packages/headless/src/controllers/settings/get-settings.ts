@@ -14,7 +14,7 @@ const getSettingsController: ControllerT<
 		settingsServices.getSettings,
 		false,
 	)({
-		db: request.server.db,
+		config: request.server.config,
 	});
 
 	reply.status(200).send(

@@ -9,7 +9,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const email = await serviceConfig.db
+	const email = await serviceConfig.config.db.client
 		.selectFrom("headless_emails")
 		.selectAll()
 		.where("id", "=", data.id)

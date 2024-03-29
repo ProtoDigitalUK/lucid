@@ -18,7 +18,7 @@ const createSingleController: ControllerT<
 		true,
 	)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			collection_key: request.body.collection_key,
@@ -33,7 +33,7 @@ const createSingleController: ControllerT<
 		false,
 	)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			id,

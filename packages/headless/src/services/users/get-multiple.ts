@@ -4,7 +4,6 @@ import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
 import queryBuilder from "../../libs/db/query-builder.js";
 import formatUser from "../../format/format-user.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
 	query: z.infer<typeof usersSchema.getMultiple.query>;
@@ -14,7 +13,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const usersQuery = serviceConfig.db
+	const usersQuery = serviceConfig.config.db.client
 		.selectFrom("headless_users")
 		.select((eb) => [
 			"headless_users.email",
@@ -25,28 +24,30 @@ const getMultiple = async (
 			"headless_users.updated_at",
 			"headless_users.username",
 			"headless_users.super_admin",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_user_roles")
-					.innerJoin(
-						"headless_roles",
-						"headless_roles.id",
-						"headless_user_roles.role_id",
-					)
-					.select([
-						"headless_roles.id",
-						"headless_roles.name",
-						"headless_roles.description",
-					])
-					.whereRef("user_id", "=", "headless_users.id"),
-			).as("roles"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_user_roles")
+						.innerJoin(
+							"headless_roles",
+							"headless_roles.id",
+							"headless_user_roles.role_id",
+						)
+						.select([
+							"headless_roles.id",
+							"headless_roles.name",
+							"headless_roles.description",
+						])
+						.whereRef("user_id", "=", "headless_users.id"),
+				)
+				.as("roles"),
 		])
 		.leftJoin("headless_user_roles", (join) =>
 			join.onRef("headless_user_roles.user_id", "=", "headless_users.id"),
 		)
 		.where("headless_users.is_deleted", "=", false);
 
-	const usersCountQuery = serviceConfig.db
+	const usersCountQuery = serviceConfig.config.db.client
 		.selectFrom("headless_users")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_user_roles", (join) =>

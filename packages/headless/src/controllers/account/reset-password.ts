@@ -13,7 +13,7 @@ const resetPasswordController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(account.resetPassword, true)(
 		{
-			db: request.server.db,
+			config: request.server.config,
 		},
 		{
 			token: request.params.token,

@@ -21,7 +21,7 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const user = await serviceConfig.db
+	const user = await serviceConfig.config.db.client
 		.selectFrom("headless_users")
 		.select(["id"])
 		.where("id", "=", data.user_id)
@@ -43,14 +43,14 @@ const updateSingle = async (
 
 	const [emailExists, usernameExists] = await Promise.all([
 		data.email
-			? serviceConfig.db
+			? serviceConfig.config.db.client
 					.selectFrom("headless_users")
 					.select("email")
 					.where("email", "=", data.email)
 					.executeTakeFirst()
 			: undefined,
 		data.username
-			? serviceConfig.db
+			? serviceConfig.config.db.client
 					.selectFrom("headless_users")
 					.select("username")
 					.where("username", "=", data.username)
@@ -101,7 +101,7 @@ const updateSingle = async (
 	}
 
 	const [updateUser] = await Promise.all([
-		serviceConfig.db
+		serviceConfig.config.db.client
 			.updateTable("headless_users")
 			.set({
 				first_name: data.first_name,
