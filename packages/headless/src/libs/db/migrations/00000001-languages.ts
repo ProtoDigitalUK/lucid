@@ -1,5 +1,5 @@
-import type { Kysely } from "kysely";
-import type { MigrationFn } from "../types.js";
+import { sql, type Kysely } from "kysely";
+import { AdapterType, type MigrationFn } from "../types.js";
 import {
 	defaultTimestamp,
 	primaryKeyColumnType,
@@ -9,6 +9,10 @@ import {
 const Migration00000001: MigrationFn = (adapter) => {
 	return {
 		async up(db: Kysely<unknown>) {
+			if (adapter === AdapterType.POSTGRES) {
+				await sql`CREATE EXTENSION IF NOT EXISTS pg_trgm`.execute(db);
+			}
+
 			await db.schema
 				.createTable("headless_languages")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>

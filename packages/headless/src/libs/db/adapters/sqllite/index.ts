@@ -12,13 +12,6 @@ export default class SqlLiteAdapter extends DatabaseAdapter {
 			plugins: [new ParseJSONResultsPlugin()],
 		});
 	}
-	// Static
-	static defaultTimestamp() {
-		return sql`CURRENT_TIMESTAMP`;
-	}
-	static primaryKeyColumnType() {
-		return "integer" as const;
-	}
 	// Getters
 	get jsonArrayFrom() {
 		return jsonArrayFrom;

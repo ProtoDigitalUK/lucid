@@ -15,13 +15,6 @@ export default class PostgresAdapter extends DatabaseAdapter {
 			}),
 		});
 	}
-	// Static
-	static defaultTimestamp() {
-		return sql`NOW()`;
-	}
-	static primaryKeyColumnType() {
-		return "serial" as const;
-	}
 	// Getters
 	get jsonArrayFrom() {
 		return jsonArrayFrom;

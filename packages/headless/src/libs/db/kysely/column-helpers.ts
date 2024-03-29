@@ -1,9 +1,5 @@
-import { type ColumnDefinitionBuilder } from "kysely";
+import { type ColumnDefinitionBuilder, sql } from "kysely";
 import { AdapterType } from "../types.js";
-
-import SqlLiteAdapter from "../adapters/sqllite/index.js";
-import PostgresAdapter from "../adapters/postgres/index.js";
-import LibsqlAdapter from "../adapters/libsql/index.js";
 
 export const defaultTimestamp = (
 	col: ColumnDefinitionBuilder,
@@ -11,22 +7,22 @@ export const defaultTimestamp = (
 ) => {
 	switch (adapter) {
 		case AdapterType.SQLITE:
-			return col.defaultTo(SqlLiteAdapter.defaultTimestamp());
+			return col.defaultTo(sql`CURRENT_TIMESTAMP`);
 		case AdapterType.POSTGRES:
-			return col.defaultTo(PostgresAdapter.defaultTimestamp());
+			return col.defaultTo(sql`NOW()`);
 		case AdapterType.LIBSQL:
-			return col.defaultTo(LibsqlAdapter.defaultTimestamp());
+			return col.defaultTo(sql`CURRENT_TIMESTAMP`);
 	}
 };
 
 export const primaryKeyColumnType = (adapter: AdapterType) => {
 	switch (adapter) {
 		case AdapterType.SQLITE:
-			return SqlLiteAdapter.primaryKeyColumnType();
+			return "integer";
 		case AdapterType.POSTGRES:
-			return PostgresAdapter.primaryKeyColumnType();
+			return "serial";
 		case AdapterType.LIBSQL:
-			return LibsqlAdapter.primaryKeyColumnType();
+			return "integer";
 	}
 };
 
