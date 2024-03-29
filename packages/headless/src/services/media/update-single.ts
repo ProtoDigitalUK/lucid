@@ -95,7 +95,7 @@ const updateSingle = async (
 			file_size: updateObjectRes.size,
 			width: updateObjectRes.width,
 			height: updateObjectRes.height,
-			updated_at: new Date(),
+			updated_at: new Date().toISOString(),
 		})
 		.returning("id")
 		.executeTakeFirst();

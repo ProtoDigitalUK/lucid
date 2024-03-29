@@ -4,8 +4,8 @@ export default {
 	seedDefaults: {
 		language: {
 			code: "en",
-			is_default: true,
-			is_enabled: true,
+			is_default: 1,
+			is_enabled: 1,
 		},
 		user: {
 			first_name: "Headless",
@@ -13,7 +13,7 @@ export default {
 			email: "admin@headless.com",
 			username: "admin",
 			password: "password",
-			super_admin: true,
+			super_admin: 1,
 		},
 		roles: [
 			{

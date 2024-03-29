@@ -1,10 +1,10 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import getConfig from "../../libs/config/get-config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 const key = "_refresh";
 
@@ -13,36 +13,40 @@ export const generateRefreshToken = async (
 	request: FastifyRequest,
 	user_id: number,
 ) => {
-	const config = await getConfig();
 	await clearRefreshToken(request, reply);
+	const userTokensRepo = RepositoryFactory.getRepository(
+		"user-tokens",
+		request.server.config,
+	);
 
 	const payload = {
 		id: user_id,
 	};
 
-	const token = jwt.sign(payload, config.keys.refreshTokenSecret, {
-		expiresIn: constants.refreshTokenExpiration,
-	});
+	const token = jwt.sign(
+		payload,
+		request.server.config.keys.refreshTokenSecret,
+		{
+			expiresIn: constants.refreshTokenExpiration,
+		},
+	);
 
 	reply.setCookie(key, token, {
 		maxAge: constants.refreshTokenExpiration,
 		httpOnly: true,
-		secure: config.mode === "production",
+		secure: request.server.config.mode === "production",
 		sameSite: "strict",
 		path: "/",
 	});
 
-	await request.server.db
-		.insertInto("headless_user_tokens")
-		.values({
-			user_id: user_id,
-			token: token,
-			token_type: "refresh",
-			expiry_date: new Date(
-				Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
-			).toISOString(),
-		})
-		.execute();
+	await userTokensRepo.createSingle({
+		userId: user_id,
+		token: token,
+		tokenType: "refresh",
+		expiryDate: new Date(
+			Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
+		).toISOString(),
+	});
 };
 
 export const verifyRefreshToken = async (
@@ -51,24 +55,48 @@ export const verifyRefreshToken = async (
 ) => {
 	try {
 		const _refresh = request.cookies[key];
-		const config = await getConfig();
 
 		if (!_refresh) {
 			throw new Error("No refresh token found");
 		}
 
-		const decode = jwt.verify(_refresh, config.keys.refreshTokenSecret) as {
+		const userTokensRepo = RepositoryFactory.getRepository(
+			"user-tokens",
+			request.server.config,
+		);
+
+		const decode = jwt.verify(
+			_refresh,
+			request.server.config.keys.refreshTokenSecret,
+		) as {
 			id: number;
 		};
 
-		const token = await request.server.db
-			.selectFrom("headless_user_tokens")
-			.select("id")
-			.where("user_id", "=", decode.id)
-			.where("token", "=", _refresh)
-			.where("token_type", "=", "refresh")
-			.where("expiry_date", ">=", new Date())
-			.executeTakeFirst();
+		const token = await userTokensRepo.getSingle({
+			select: ["id", "user_id"],
+			where: [
+				{
+					key: "token",
+					operator: "=",
+					value: _refresh,
+				},
+				{
+					key: "token_type",
+					operator: "=",
+					value: "refresh",
+				},
+				{
+					key: "user_id",
+					operator: "=",
+					value: decode.id,
+				},
+				{
+					key: "expiry_date",
+					operator: ">",
+					value: new Date().toISOString(),
+				},
+			],
+		});
 
 		if (token === undefined) {
 			throw new Error("No refresh token found");
@@ -98,20 +126,39 @@ export const clearRefreshToken = async (
 	const _refresh = request.cookies[key];
 	if (!_refresh) return;
 
-	const config = await getConfig();
+	const userTokensRepo = RepositoryFactory.getRepository(
+		"user-tokens",
+		request.server.config,
+	);
 
-	const decode = jwt.verify(_refresh, config.keys.refreshTokenSecret) as {
+	const decode = jwt.verify(
+		_refresh,
+		request.server.config.keys.refreshTokenSecret,
+	) as {
 		id: number;
 	};
 
 	reply.clearCookie(key, { path: "/" });
 
-	await request.server.db
-		.deleteFrom("headless_user_tokens")
-		.where("user_id", "=", decode.id)
-		.where("token", "=", _refresh)
-		.where("token_type", "=", "refresh")
-		.execute();
+	await userTokensRepo.deleteSingle({
+		where: [
+			{
+				key: "token",
+				operator: "=",
+				value: _refresh,
+			},
+			{
+				key: "token_type",
+				operator: "=",
+				value: "refresh",
+			},
+			{
+				key: "user_id",
+				operator: "=",
+				value: decode.id,
+			},
+		],
+	});
 };
 
 export default {

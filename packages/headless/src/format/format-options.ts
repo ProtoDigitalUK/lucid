@@ -1,4 +1,4 @@
-import type { HeadlessOptions } from "kysely-codegen";
+import type { HeadlessOptions } from "../libs/db/types.js";
 import type { OptionsResT } from "@headless/types/src/options.js";
 
 interface FormatOptionsT {

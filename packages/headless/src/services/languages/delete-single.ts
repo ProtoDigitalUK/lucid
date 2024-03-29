@@ -48,7 +48,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const defaultLanguages = await serviceConfig.db
 		.selectFrom("headless_languages")
-		.where("is_default", "=", true)
+		.select("id")
+		.where("is_default", "=", 1)
 		.execute();
 
 	if (defaultLanguages.length === 0) {
@@ -76,8 +77,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			await serviceConfig.db
 				.updateTable("headless_languages")
 				.set({
-					is_default: true,
-					is_enabled: true,
+					is_default: 1,
+					is_enabled: 1,
 				})
 				.where("id", "=", firstLanguage.id)
 				.execute();

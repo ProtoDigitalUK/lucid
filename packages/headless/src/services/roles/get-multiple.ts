@@ -1,8 +1,7 @@
 import type z from "zod";
 import formatRole from "../../format/format-roles.js";
 import type rolesSchema from "../../schemas/roles.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
 
@@ -20,20 +19,22 @@ const getMultiple = async (
 
 	if (data.query.include?.includes("permissions")) {
 		rolesQuery = rolesQuery.select((eb) => [
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_role_permissions")
-					.select([
-						"headless_role_permissions.id",
-						"headless_role_permissions.permission",
-						"headless_role_permissions.role_id",
-					])
-					.whereRef(
-						"headless_role_permissions.role_id",
-						"=",
-						"headless_roles.id",
-					),
-			).as("permissions"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_role_permissions")
+						.select([
+							"headless_role_permissions.id",
+							"headless_role_permissions.permission",
+							"headless_role_permissions.role_id",
+						])
+						.whereRef(
+							"headless_role_permissions.role_id",
+							"=",
+							"headless_roles.id",
+						),
+				)
+				.as("permissions"),
 		]);
 	}
 
@@ -60,7 +61,7 @@ const getMultiple = async (
 					{
 						queryKey: "name",
 						tableKey: "name",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "role_ids",

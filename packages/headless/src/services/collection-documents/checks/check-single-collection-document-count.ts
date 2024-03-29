@@ -25,7 +25,7 @@ const checkSingleCollectionDocumentCount = async (
 		.selectFrom("headless_collection_documents")
 		.select("id")
 		.where("collection_key", "=", data.collection_key)
-		.where("is_deleted", "=", false)
+		.where("is_deleted", "=", 0)
 		.limit(1)
 		.executeTakeFirst();
 

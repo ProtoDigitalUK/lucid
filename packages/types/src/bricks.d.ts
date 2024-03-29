@@ -1,8 +1,8 @@
 import type {
 	CustomFieldT,
 	FieldTypesT,
-} from "../../headless/src/libs/field-builder/index.js";
-import type { BrickConfigPropsT } from "../../headless/src/libs/brick-builder/index.js";
+} from "../../headless/src/libs/builders/field-builder/index.js";
+import type { BrickConfigPropsT } from "../../headless/src/libs/builders/brick-builder/index.js";
 import type { MediaTypeT } from "./media.js";
 
 export interface BrickConfigT {

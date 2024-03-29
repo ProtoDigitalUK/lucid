@@ -13,7 +13,8 @@ const clearSingleProcessedController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(processedImagesServices.clearSingle, true)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			key: request.params.key,

@@ -1,10 +1,12 @@
-import type { RequestQueryParsedT } from "../middleware/validate-query.js";
+import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
 import type {
 	SelectQueryBuilder,
 	ReferenceExpression,
 	ComparisonOperatorExpression,
+	DeleteQueryBuilder,
+	OperandValueExpressionOrList,
 } from "kysely";
-import type { CollectionFiltersResT } from "../utils/field-helpers.js";
+import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;
@@ -60,13 +62,13 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 		} else {
 			mainQuery = mainQuery.where(
 				tableKey,
-				operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
+				operator as ComparisonOperatorExpression,
 				value,
 			);
 			if (countQuery) {
 				countQuery = countQuery.where(
 					tableKey,
-					operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
+					operator as ComparisonOperatorExpression,
 					value,
 				);
 			}
@@ -136,6 +138,40 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 		main: mainQuery,
 		count: countQuery,
 	};
+};
+
+export const selectQB = <DB, Table extends keyof DB, O>(
+	query: SelectQueryBuilder<DB, Table, O>,
+	where: Array<{
+		key: ReferenceExpression<DB, Table>;
+		operator: ComparisonOperatorExpression;
+		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
+	}>,
+) => {
+	let kyselyQuery = query;
+
+	for (const { key, operator, value } of where) {
+		kyselyQuery = query.where(key, operator, value);
+	}
+
+	return kyselyQuery;
+};
+
+export const deleteQB = <DB, Table extends keyof DB, O>(
+	query: DeleteQueryBuilder<DB, Table, O>,
+	where: Array<{
+		key: ReferenceExpression<DB, Table>;
+		operator: ComparisonOperatorExpression;
+		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
+	}>,
+) => {
+	let kyselyQuery = query;
+
+	for (const { key, operator, value } of where) {
+		kyselyQuery = query.where(key, operator, value);
+	}
+
+	return kyselyQuery;
 };
 
 export default queryBuilder;

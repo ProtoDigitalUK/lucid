@@ -1,6 +1,6 @@
 import type z from "zod";
 import type emailSchema from "../../schemas/email.js";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
@@ -63,7 +63,7 @@ const getMultiple = async (
 					{
 						queryKey: "subject",
 						tableKey: "subject",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "delivery_status",
@@ -78,7 +78,7 @@ const getMultiple = async (
 					{
 						queryKey: "template",
 						tableKey: "template",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 				],
 				sorts: [

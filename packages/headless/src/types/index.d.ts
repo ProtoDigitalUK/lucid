@@ -4,11 +4,10 @@ import type z from "zod";
 import type { Kysely } from "kysely";
 import type { UserPermissionsResT } from "@headless/types/src/users.js";
 import type { LanguageResT } from "@headless/types/src/language.js";
-import type { DB as DBSchema } from "kysely-codegen";
+import type { HeadlessDB, BooleanInt } from "../libs/db/types.ts";
 
 declare module "fastify" {
 	interface FastifyInstance {
-		db: DB;
 		config: Config;
 	}
 
@@ -17,7 +16,7 @@ declare module "fastify" {
 			id: number;
 			username: string;
 			email: string;
-			super_admin: boolean;
+			super_admin: BooleanInt;
 			permissions: UserPermissionsResT["permissions"] | undefined;
 		};
 		language: {
@@ -29,7 +28,7 @@ declare module "fastify" {
 }
 
 declare global {
-	type DB = Kysely<DBSchema>;
+	type DB = Kysely<HeadlessDB>;
 
 	type ControllerT<ParamsT, BodyT, QueryT> = (
 		request: FastifyRequest<{
@@ -42,6 +41,7 @@ declare global {
 
 	interface ServiceConfigT {
 		db: DB;
+		config: Config;
 		inTransaction?: boolean; // If the function is within a transaction
 	}
 
@@ -67,5 +67,11 @@ declare global {
 			per_page?: number | null;
 			total?: number | null;
 		};
+	}
+
+	declare module "kysely" {
+		export type ComparisonOperatorExpression =
+			| ComparisonOperatorExpression
+			| "%";
 	}
 }

@@ -3,7 +3,7 @@ import type {
 	BrickResT,
 	CollectionContentResT,
 } from "./bricks.js";
-import type { FieldTypesT } from "../../headless/src/libs/field-builder/types.js";
+import type { FieldTypesT } from "../../headless/src/libs/builders/field-builder/types.js";
 
 export interface CollectionDocumentResT {
 	id: number;
@@ -14,7 +14,7 @@ export interface CollectionDocumentResT {
 	full_slug: string | null;
 	collection_slug: string | null;
 
-	homepage: boolean;
+	homepage: 1 | 0;
 
 	created_by: number | null;
 	created_at: string | null;

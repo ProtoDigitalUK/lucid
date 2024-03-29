@@ -1,9 +1,9 @@
 import T from "../../translations/index.js";
-import getConfig from "../../libs/config/get-config.js";
 import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
 import { APIError } from "../../utils/error-handler.js";
+import { stringifyJSON } from "../../utils/format-helpers.js";
 
 export interface ServiceData {
 	type: "internal" | "external";
@@ -13,21 +13,18 @@ export interface ServiceData {
 	cc?: string;
 	bcc?: string;
 	reply_to?: string;
-	data: {
-		[key: string]: unknown;
-	};
+	data: Record<string, unknown>;
 }
 
 const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);
 
-	const result = await config.email.strategy(
+	const result = await serviceConfig.config.email.strategy(
 		{
 			to: data.to,
 			subject: data.subject,
-			from: config.email.from,
+			from: serviceConfig.config.email.from,
 			cc: data.cc,
 			bcc: data.bcc,
 			replyTo: data.reply_to,
@@ -41,9 +38,11 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	);
 
 	const emailRecord = {
-		deliveryStatus: result.success ? "delivered" : "failed",
+		deliveryStatus: result.success
+			? "delivered"
+			: ("failed" as "delivered" | "failed"),
 		lastErrorMessage: result.success ? undefined : result.message,
-		lastSuccessAt: result.success ? new Date() : undefined,
+		lastSuccessAt: result.success ? new Date().toISOString() : undefined,
 	};
 
 	const emailExists = await serviceConfig.db
@@ -61,7 +60,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				last_success_at: emailRecord.lastSuccessAt,
 				sent_count: emailExists.sent_count + (result.success ? 1 : 0),
 				error_count: emailExists.error_count + (result.success ? 0 : 1),
-				last_attempt_at: new Date(),
+				last_attempt_at: new Date().toISOString(),
 			})
 			.where("id", "=", emailExists.id)
 			.returningAll()
@@ -90,14 +89,14 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		.insertInto("headless_emails")
 		.values({
 			email_hash: emailHash,
-			from_address: config.email.from.email,
-			from_name: config.email.from.name,
+			from_address: serviceConfig.config.email.from.email,
+			from_name: serviceConfig.config.email.from.name,
 			to_address: data.to,
 			subject: data.subject,
 			template: data.template,
 			cc: data.cc,
 			bcc: data.bcc,
-			data: JSON.stringify(data.data),
+			data: stringifyJSON(data.data),
 			type: data.type,
 			sent_count: result.success ? 1 : 0,
 			error_count: result.success ? 0 : 1,

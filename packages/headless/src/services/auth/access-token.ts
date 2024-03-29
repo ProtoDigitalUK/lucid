@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import getConfig from "../../libs/config/get-config.js";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import usersServices from "../users/index.js";
@@ -15,11 +14,10 @@ export const generateAccessToken = async (
 	user_id: number,
 ) => {
 	try {
-		const config = await getConfig();
-
 		const user = await usersServices.getSingle(
 			{
-				db: request.server.db,
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
 			{
 				user_id,
@@ -31,17 +29,21 @@ export const generateAccessToken = async (
 			username: user.username,
 			email: user.email,
 			permissions: user.permissions,
-			super_admin: user.super_admin || false,
+			super_admin: user.super_admin || 0,
 		} satisfies FastifyRequest["auth"];
 
-		const token = jwt.sign(payload, config.keys.accessTokenSecret, {
-			expiresIn: constants.accessTokenExpiration,
-		});
+		const token = jwt.sign(
+			payload,
+			request.server.config.keys.accessTokenSecret,
+			{
+				expiresIn: constants.accessTokenExpiration,
+			},
+		);
 
 		reply.setCookie(key, token, {
 			maxAge: constants.accessTokenExpiration,
 			httpOnly: true,
-			secure: config.mode === "production",
+			secure: request.server.config.mode === "production",
 			sameSite: "strict",
 			path: "/",
 		});
@@ -58,7 +60,6 @@ export const generateAccessToken = async (
 export const verifyAccessToken = async (request: FastifyRequest) => {
 	try {
 		const _access = request.cookies[key];
-		const config = await getConfig();
 
 		if (!_access) {
 			return {
@@ -69,7 +70,7 @@ export const verifyAccessToken = async (request: FastifyRequest) => {
 
 		const decode = jwt.verify(
 			_access,
-			config.keys.accessTokenSecret,
+			request.server.config.keys.accessTokenSecret,
 		) as FastifyRequest["auth"];
 
 		return {

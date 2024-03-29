@@ -12,7 +12,8 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const languageRes = await serviceWrapper(languages.getSingle, false)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			code: request.params.code,

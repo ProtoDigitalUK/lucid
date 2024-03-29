@@ -10,7 +10,8 @@ const updateSingleController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(usersServices.updateSingle, true)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			user_id: Number.parseInt(request.params.id),

@@ -5,7 +5,6 @@ import s3Services from "../s3/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
-import getConfig from "../../libs/config/get-config.js";
 import constants from "../../constants.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 
@@ -24,7 +23,6 @@ const processImage = async (
 	contentType: string | undefined;
 	body: Readable;
 }> => {
-	const config = await getConfig();
 	const res = await s3Services.getObject({
 		key: data.key,
 	});
@@ -80,7 +78,7 @@ const processImage = async (
 	);
 
 	const processedLimit =
-		config.media.processedImages?.limit ??
+		serviceConfig.config.media.processedImages?.limit ??
 		constants.media.processedImages.limit;
 
 	if (processedCount >= processedLimit) {
@@ -92,7 +90,7 @@ const processImage = async (
 		};
 	}
 
-	if (config.media.processedImages?.store === true) {
+	if (serviceConfig.config.media.processedImages?.store === true) {
 		Promise.all([
 			serviceConfig.db
 				.insertInto("headless_processed_images")

@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import { sql } from "kysely";
 
 export interface ServiceData<K extends string> {
 	keys: K[];
@@ -28,15 +27,15 @@ const createMultiple = async <K extends string>(
 		});
 	}
 
-	const { rows } = await sql
-		.raw<{ id: number }>(`
-        INSERT INTO headless_translation_keys (id)
-        SELECT nextval('headless_translation_keys_id_seq')
-        FROM generate_series(1, ${data.keys.length})
-        RETURNING id`)
-		.execute(serviceConfig.db);
+	const translationKeyEntries = await serviceConfig.db
+		.insertInto("headless_translation_keys")
+		.values(
+			data.keys.map((key) => ({ created_at: new Date().toISOString() })),
+		)
+		.returning("id")
+		.execute();
 
-	if (rows.length !== data.keys.length) {
+	if (translationKeyEntries.length !== data.keys.length) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
@@ -51,7 +50,7 @@ const createMultiple = async <K extends string>(
 
 	const keys: Record<K, number> = data.keys.reduce(
 		(keys, key, index) => {
-			keys[key] = rows[index].id;
+			keys[key] = translationKeyEntries[index].id;
 			return keys;
 		},
 		{} as Record<K, number>,

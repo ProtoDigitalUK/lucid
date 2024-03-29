@@ -1,8 +1,8 @@
 import type { FieldResT, FieldTypesT } from "@headless/types/src/bricks.js";
 import { fieldResponseValueFormat } from "../utils/field-helpers.js";
-import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
-import type { BrickBuilderT } from "../libs/brick-builder/index.js";
-import type { JsonValue } from "kysely-codegen";
+import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
+import type { BrickBuilderT } from "../libs/builders/brick-builder/index.js";
+import type { JSONString } from "../libs/db/types.js";
 
 export interface FieldQueryDataT {
 	fields_id: number;
@@ -14,8 +14,8 @@ export interface FieldQueryDataT {
 	type: string;
 	text_value: string | null;
 	int_value: number | null;
-	bool_value: boolean | null;
-	json_value?: JsonValue | null;
+	bool_value: 1 | 0 | null;
+	json_value?: JSONString | null;
 	page_link_id?: number | null;
 	media_id?: number | null;
 	page_id?: number | null;

@@ -3,6 +3,7 @@ import { APIError, modelErrors } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 export interface ServiceData {
 	email: string;
@@ -11,9 +12,9 @@ export interface ServiceData {
 	password_confirmation: string;
 	first_name?: string;
 	last_name?: string;
-	super_admin?: boolean;
+	super_admin?: BooleanInt;
 	role_ids: Array<number>;
-	auth_super_admin: boolean;
+	auth_super_admin: BooleanInt;
 }
 
 const createSingle = async (
@@ -32,9 +33,7 @@ const createSingle = async (
 			)
 			.executeTakeFirst(),
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
-			{
-				db: serviceConfig.db,
-			},
+			serviceConfig,
 			{
 				role_ids: data.role_ids,
 				is_create: true,
@@ -81,7 +80,7 @@ const createSingle = async (
 			password: hashedPassword,
 			first_name: data.first_name,
 			last_name: data.last_name,
-			super_admin: data.auth_super_admin ? data.super_admin : false,
+			super_admin: data.auth_super_admin === 1 ? data.super_admin : 0,
 		})
 		.returning("id")
 		.executeTakeFirst();

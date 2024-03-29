@@ -7,10 +7,6 @@ import getConfig from "../../libs/config/get-config.js";
 
 const currentDir = getDirName(import.meta.url);
 
-export interface RenderTemplateDataT {
-	[key: string]: unknown;
-}
-
 const getTemplateData = async (template: string) => {
 	const config = await getConfig();
 
@@ -34,7 +30,10 @@ const getTemplateData = async (template: string) => {
 	throw new Error(`Template ${template} not found`);
 };
 
-const renderTemplate = async (template: string, data: RenderTemplateDataT) => {
+const renderTemplate = async (
+	template: string,
+	data: Record<string, unknown> | null,
+) => {
 	const mjmlFile = await getTemplateData(template);
 	const mjmlTemplate = Handlebars.compile(mjmlFile);
 	const mjml = mjmlTemplate(data);

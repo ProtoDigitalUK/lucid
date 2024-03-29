@@ -19,7 +19,8 @@ const getMultipleValidParentsController: ControllerT<
 		false,
 	)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			collection_key: request.params.collection_key,

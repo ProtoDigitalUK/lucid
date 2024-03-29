@@ -39,9 +39,7 @@ const upsertMultipleFields = async (
 					text_value: field.text_value,
 					int_value: field.int_value,
 					bool_value: field.bool_value,
-					json_value: field.json_value
-						? JSON.stringify(field.json_value)
-						: null,
+					json_value: field.json_value,
 					page_link_id: field.page_link_id,
 					media_id: field.media_id,
 					language_id: field.language_id,

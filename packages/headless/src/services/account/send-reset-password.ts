@@ -4,7 +4,6 @@ import constants from "../../constants.js";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	email: string;
@@ -14,8 +13,6 @@ const sendResetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const config = await getConfig();
-
 	const userExists = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select(["id", "first_name", "last_name", "email"])
@@ -50,7 +47,7 @@ const sendResetPassword = async (
 			first_name: userExists.first_name,
 			last_name: userExists.last_name,
 			email: userExists.email,
-			reset_link: `${config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
+			reset_link: `${serviceConfig.config.host}${constants.locations.resetPassword}?token=${userToken.token}`,
 		},
 	});
 

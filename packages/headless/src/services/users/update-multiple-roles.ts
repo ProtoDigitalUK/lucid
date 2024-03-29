@@ -14,9 +14,7 @@ const updateMultipleRoles = async (
 
 	await Promise.all([
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
-			{
-				db: serviceConfig.db,
-			},
+			serviceConfig,
 			{
 				role_ids: data.role_ids || [],
 				is_create: true,

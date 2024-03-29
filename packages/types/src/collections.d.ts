@@ -1,8 +1,8 @@
 import {
 	type CollectionDataT,
 	type CollectionBrickConfigT,
-} from "../../headless/src/libs/collection-builder/index.js";
-import { CustomFieldT } from "../../headless/src/libs/field-builder/types.js";
+} from "../../headless/src/libs/builders/collection-builder/index.js";
+import { CustomFieldT } from "../../headless/src/libs/builders/field-builder/types.js";
 
 export interface CollectionResT {
 	key: string;

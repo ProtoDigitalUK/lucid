@@ -3,7 +3,7 @@ import formatLanguage from "../../format/format-language.js";
 import type languagesSchema from "../../schemas/languages.js";
 import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 
 export interface ServiceData {
 	query: z.infer<typeof languagesSchema.getMultiple.query>;

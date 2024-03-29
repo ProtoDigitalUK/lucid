@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import getConfig from "../../libs/config/get-config.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
 
@@ -11,8 +10,6 @@ const resendSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const config = await getConfig();
-
 	const email = await serviceConfig.db
 		.selectFrom("headless_emails")
 		.selectAll()
@@ -38,7 +35,7 @@ const resendSingle = async (
 		templateData,
 	);
 
-	const result = await config.email.strategy(
+	const result = await serviceConfig.config.email.strategy(
 		{
 			to: email.to_address,
 			subject: email.subject ?? "",
@@ -62,10 +59,12 @@ const resendSingle = async (
 		.set({
 			delivery_status: result.success ? "delivered" : "failed",
 			last_error_message: result.success ? undefined : result.message,
-			last_success_at: result.success ? new Date() : undefined,
+			last_success_at: result.success
+				? new Date().toISOString()
+				: undefined,
 			sent_count: email.sent_count + (result.success ? 1 : 0),
 			error_count: email.error_count + (result.success ? 0 : 1),
-			last_attempt_at: new Date(),
+			last_attempt_at: new Date().toISOString(),
 		})
 		.where("id", "=", email.id)
 		.execute();

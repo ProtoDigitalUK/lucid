@@ -2,9 +2,9 @@ import { ZodError } from "zod";
 import { log } from "console-log-colors";
 import checks from "./checks/index.js";
 import ConfigSchema, { type Config } from "./config-schema.js";
-import { CollectionConfigSchema } from "../collection-builder/index.js";
-import { BrickSchema } from "../brick-builder/index.js";
-import { FieldsSchema } from "../field-builder/index.js";
+import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
+import { BrickSchema } from "../builders/brick-builder/index.js";
+import { FieldsSchema } from "../builders/field-builder/index.js";
 
 const headlessConfig = (config: Config) => {
 	try {

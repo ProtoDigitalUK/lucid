@@ -1,12 +1,11 @@
 import z from "zod";
-import type { CollectionBuilderT } from "../collection-builder/index.js";
+import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
 import type { DatabaseAdapterT } from "../db/adapter.js";
 import constants from "../../constants.js";
 
 const ConfigSchema = z.object({
 	mode: z.literal("production").or(z.literal("development")),
 	db: z.unknown(),
-	databaseUrl: z.string(),
 	host: z.string(),
 	keys: z.object({
 		cookieSecret: z.string(),

@@ -6,6 +6,7 @@ import collectionDocumentCategoriesServices from "../collection-document-categor
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
 
 export interface ServiceData {
@@ -15,7 +16,7 @@ export interface ServiceData {
 	document_id?: number;
 
 	slug?: string;
-	homepage?: boolean;
+	homepage?: BooleanInt;
 	parent_id?: number | null;
 	category_ids?: number[];
 	bricks?: Array<BrickSchemaT>;
@@ -139,6 +140,8 @@ const upsertSingle = async (
 		}),
 	]);
 
+	console.log("checks done");
+
 	/*
         Insert:
         - Document
@@ -185,7 +188,7 @@ const upsertSingle = async (
         - Upsert Collection fields
     */
 	await Promise.all([
-		bodyDataEnabled.homepage === true
+		bodyDataEnabled.homepage === 1
 			? serviceWrapper(collectionDocumentsServices.resetHomepages, false)(
 					serviceConfig,
 					{

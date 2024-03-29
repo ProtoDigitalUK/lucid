@@ -15,7 +15,8 @@ const getSingleController: ControllerT<
 		false,
 	)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			id: Number.parseInt(request.params.id),

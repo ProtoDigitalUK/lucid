@@ -13,8 +13,8 @@ const deleteSingle = async (
 	const deleteUserRes = await serviceConfig.db
 		.updateTable("headless_users")
 		.set({
-			is_deleted: true,
-			is_deleted_at: new Date(),
+			is_deleted: 1,
+			is_deleted_at: new Date().toISOString(),
 			deleted_by: data.current_user_id,
 		})
 		.where("id", "=", data.user_id)

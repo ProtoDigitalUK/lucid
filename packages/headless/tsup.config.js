@@ -7,10 +7,6 @@ const directoriesToCopy = [
 		dir: "src/assets",
 		dest: "assets",
 	},
-	{
-		dir: "src/db/migrations",
-		dest: "migrations",
-	},
 ];
 
 export default defineConfig({

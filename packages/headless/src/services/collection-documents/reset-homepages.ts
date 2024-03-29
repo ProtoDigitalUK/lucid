@@ -12,14 +12,14 @@ const resetHomepages = async (
 		serviceConfig.db
 			.updateTable("headless_collection_documents")
 			.set({
-				homepage: false,
+				homepage: 0,
 			})
 			.where(
 				"headless_collection_documents.collection_key",
 				"=",
 				data.collection_key,
 			)
-			.where("headless_collection_documents.homepage", "=", true)
+			.where("headless_collection_documents.homepage", "=", 1)
 			.where("headless_collection_documents.id", "!=", data.exclude_id)
 			.execute(),
 		data.document_id !== undefined

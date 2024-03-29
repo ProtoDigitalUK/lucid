@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import formatEmails from "../../format/format-emails.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
+import { parseJSON } from "../../utils/format-helpers.js";
 
 export interface ServiceData {
 	id: number;
@@ -36,7 +37,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const html = await emailServices.renderTemplate(
 		email.template,
-		email.data as Record<string, unknown>,
+		parseJSON<Record<string, unknown>>(email.data),
 	);
 	return formatEmails({
 		email,

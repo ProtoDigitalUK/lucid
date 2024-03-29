@@ -1,11 +1,12 @@
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
 
 export interface ServiceData {
 	code: string;
-	is_enabled: boolean;
-	is_default: boolean;
+	is_enabled: BooleanInt;
+	is_default: BooleanInt;
 }
 
 const createSingle = async (
@@ -60,7 +61,7 @@ const createSingle = async (
 		.insertInto("headless_languages")
 		.values({
 			code: data.code,
-			is_enabled: data.is_default ? true : data.is_enabled,
+			is_enabled: data.is_default ? 1 : data.is_enabled,
 			is_default: data.is_default,
 		})
 		.returning(["id", "code"])
@@ -83,7 +84,7 @@ const createSingle = async (
 		await serviceConfig.db
 			.updateTable("headless_languages")
 			.set({
-				is_default: false,
+				is_default: 0,
 			})
 			.where("id", "!=", language.id)
 			.execute();

@@ -13,7 +13,8 @@ const deleteSingleController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(languages.deleteSingle, true)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			code: request.params.code,

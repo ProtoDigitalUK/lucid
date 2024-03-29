@@ -4,6 +4,7 @@ import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	token: string;
@@ -14,6 +15,11 @@ const resetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const userTokensRepo = RepositoryFactory.getRepository(
+		"user-tokens",
+		serviceConfig.config,
+	);
+
 	const token = await serviceWrapper(userTokens.getSingle, false)(
 		serviceConfig,
 		{
@@ -28,7 +34,7 @@ const resetPassword = async (
 		.updateTable("headless_users")
 		.set({
 			password: hashedPassword,
-			updated_at: new Date(),
+			updated_at: new Date().toISOString(),
 		})
 		.where("id", "=", token.user_id)
 		.returning(["first_name", "last_name", "email"])
@@ -48,10 +54,15 @@ const resetPassword = async (
 	}
 
 	await Promise.all([
-		serviceConfig.db
-			.deleteFrom("headless_user_tokens")
-			.where("id", "=", token.id)
-			.execute(),
+		userTokensRepo.deleteSingle({
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: token.id,
+				},
+			],
+		}),
 		serviceWrapper(email.sendEmail, false)(serviceConfig, {
 			template: "password-reset",
 			type: "internal",

@@ -19,7 +19,8 @@ const upsertSingleController: ControllerT<
 		true,
 	)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			collection_key: request.params.collection_key,
@@ -53,9 +54,6 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				collection_key: {
-					type: "string",
-				},
 				document_id: {
 					type: "number",
 				},
@@ -63,7 +61,7 @@ export default {
 					type: "string",
 				},
 				homepage: {
-					type: "boolean",
+					type: "number",
 				},
 				parent_id: {
 					type: "number",
@@ -84,7 +82,6 @@ export default {
 					items: swaggerFieldObj,
 				},
 			},
-			required: ["collection_key"],
 		},
 		response: {
 			200: swaggerResponse({

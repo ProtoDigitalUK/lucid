@@ -13,7 +13,8 @@ const updateMeController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(account.updateMe, true)(
 		{
-			db: request.server.db,
+			db: request.server.config.db.client,
+			config: request.server.config,
 		},
 		{
 			auth: request.auth,

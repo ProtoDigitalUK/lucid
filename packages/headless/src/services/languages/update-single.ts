@@ -3,12 +3,13 @@ import ISO6391 from "iso-639-1";
 import { sql } from "kysely";
 import { APIError } from "../../utils/error-handler.js";
 import { parseCount } from "../../utils/helpers.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 export interface ServiceData {
 	current_code: string;
 	code?: string;
-	is_default?: boolean;
-	is_enabled?: boolean;
+	is_default?: BooleanInt;
+	is_enabled?: BooleanInt;
 }
 
 const updateSingle = async (
@@ -76,14 +77,14 @@ const updateSingle = async (
 
 	const count = parseCount(languagesCountQuery?.count);
 
-	const isDefault = count === 1 ? true : data.is_default;
+	const isDefault = count === 1 ? 1 : data.is_default;
 
 	const updateLanguage = await serviceConfig.db
 		.updateTable("headless_languages")
 		.set({
 			code: data.code,
 			is_default: isDefault,
-			is_enabled: isDefault === true ? true : data.is_enabled,
+			is_enabled: isDefault === 1 ? 1 : data.is_enabled,
 			updated_at: new Date().toISOString(),
 		})
 		.where("code", "=", data.current_code)
@@ -107,7 +108,7 @@ const updateSingle = async (
 		await serviceConfig.db
 			.updateTable("headless_languages")
 			.set({
-				is_default: false,
+				is_default: 0,
 			})
 			.where("id", "!=", updateLanguage.id)
 			.execute();

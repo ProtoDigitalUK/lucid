@@ -28,7 +28,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	if (user !== undefined && user.is_deleted === true) {
+	if (user !== undefined && user.is_deleted === 1) {
 		throw new APIError({
 			type: "authorisation",
 			name: T("login_error_name"),

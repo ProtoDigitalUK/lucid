@@ -37,6 +37,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		data.email !== undefined
 			? serviceConfig.db
 					.selectFrom("headless_users")
+					.select("id")
 					.where("email", "=", data.email)
 					.where("id", "!=", data.auth.id)
 					.executeTakeFirst()
@@ -44,6 +45,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		data.username !== undefined
 			? serviceConfig.db
 					.selectFrom("headless_users")
+					.select("id")
 					.where("username", "=", data.username)
 					.where("id", "!=", data.auth.id)
 					.executeTakeFirst()
@@ -107,7 +109,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	// TODO: send email to user to confirm email change ?
 
-	if (getUser.super_admin === false) return;
+	if (getUser.super_admin === 0) return;
 
 	await serviceWrapper(usersService.updateMultipleRoles, false)(
 		serviceConfig,

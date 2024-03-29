@@ -48,7 +48,7 @@ export default {
 		body: z.object({
 			document_id: z.number().optional(),
 			slug: slugSchema.optional(),
-			homepage: z.boolean().optional(),
+			homepage: z.union([z.literal(1), z.literal(0)]).optional(),
 			parent_id: z.number().nullable().optional(),
 			category_ids: z.array(z.number()).optional(),
 			bricks: z.array(BrickSchema).optional(),

@@ -1,14 +1,11 @@
 import formatCollection from "../../format/format-collection.js";
-import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	include_document_id?: boolean;
 }
 
 const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
-
-	const collections = config.collections ?? [];
+	const collections = serviceConfig.config.collections ?? [];
 
 	if (data.include_document_id === true) {
 		const singleCollections = collections.filter(
@@ -18,7 +15,7 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		const documents = await serviceConfig.db
 			.selectFrom("headless_collection_documents")
 			.select(["collection_key", "id"])
-			.where("is_deleted", "=", false)
+			.where("is_deleted", "=", 0)
 			.where(
 				"collection_key",
 				"in",

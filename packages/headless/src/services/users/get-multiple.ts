@@ -2,9 +2,8 @@ import type z from "zod";
 import type usersSchema from "../../schemas/users.js";
 import { parseCount } from "../../utils/helpers.js";
 import { sql } from "kysely";
-import queryBuilder from "../../db/query-builder.js";
+import queryBuilder from "../../libs/db/query-builder.js";
 import formatUser from "../../format/format-user.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export interface ServiceData {
 	query: z.infer<typeof usersSchema.getMultiple.query>;
@@ -25,26 +24,28 @@ const getMultiple = async (
 			"headless_users.updated_at",
 			"headless_users.username",
 			"headless_users.super_admin",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_user_roles")
-					.innerJoin(
-						"headless_roles",
-						"headless_roles.id",
-						"headless_user_roles.role_id",
-					)
-					.select([
-						"headless_roles.id",
-						"headless_roles.name",
-						"headless_roles.description",
-					])
-					.whereRef("user_id", "=", "headless_users.id"),
-			).as("roles"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_user_roles")
+						.innerJoin(
+							"headless_roles",
+							"headless_roles.id",
+							"headless_user_roles.role_id",
+						)
+						.select([
+							"headless_roles.id",
+							"headless_roles.name",
+							"headless_roles.description",
+						])
+						.whereRef("user_id", "=", "headless_users.id"),
+				)
+				.as("roles"),
 		])
 		.leftJoin("headless_user_roles", (join) =>
 			join.onRef("headless_user_roles.user_id", "=", "headless_users.id"),
 		)
-		.where("headless_users.is_deleted", "=", false);
+		.where("headless_users.is_deleted", "=", 0);
 
 	const usersCountQuery = serviceConfig.db
 		.selectFrom("headless_users")
@@ -52,7 +53,7 @@ const getMultiple = async (
 		.leftJoin("headless_user_roles", (join) =>
 			join.onRef("headless_user_roles.user_id", "=", "headless_users.id"),
 		)
-		.where("is_deleted", "=", false);
+		.where("is_deleted", "=", 0);
 
 	const { main, count } = queryBuilder(
 		{
@@ -73,22 +74,22 @@ const getMultiple = async (
 					{
 						queryKey: "first_name",
 						tableKey: "first_name",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "last_name",
 						tableKey: "last_name",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "email",
 						tableKey: "email",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "username",
 						tableKey: "username",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "role_ids",

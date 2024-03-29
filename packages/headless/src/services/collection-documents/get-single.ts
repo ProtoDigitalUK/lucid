@@ -1,13 +1,11 @@
 import T from "../../translations/index.js";
 import type z from "zod";
 import { APIError } from "../../utils/error-handler.js";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
-import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
 	id: number;
@@ -15,7 +13,6 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const config = await getConfig();
 	const document = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
@@ -28,16 +25,18 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"headless_collection_documents.created_by",
 			"headless_collection_documents.created_at",
 			"headless_collection_documents.updated_at",
-			jsonArrayFrom(
-				eb
-					.selectFrom("headless_collection_document_categories")
-					.select("category_id")
-					.whereRef(
-						"headless_collection_document_categories.collection_document_id",
-						"=",
-						"headless_collection_documents.id",
-					),
-			).as("categories"),
+			serviceConfig.config.db
+				.jsonArrayFrom(
+					eb
+						.selectFrom("headless_collection_document_categories")
+						.select("category_id")
+						.whereRef(
+							"headless_collection_document_categories.collection_document_id",
+							"=",
+							"headless_collection_documents.id",
+						),
+				)
+				.as("categories"),
 		])
 		.innerJoin(
 			"headless_users",
@@ -52,7 +51,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"headless_users.username as author_username",
 		])
 		.where("headless_collection_documents.id", "=", data.id)
-		.where("headless_collection_documents.is_deleted", "=", false)
+		.where("headless_collection_documents.is_deleted", "=", 0)
 		.executeTakeFirst();
 
 	if (document === undefined || document.collection_key === null) {
@@ -85,7 +84,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			collection: collectionInstance,
 			bricks: bricksRes.bricks,
 			fields: bricksRes.fields,
-			host: config.host,
+			host: serviceConfig.config.host,
 		});
 	}
 
@@ -94,7 +93,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		collection: collectionInstance,
 		bricks: [],
 		fields: [],
-		host: config.host,
+		host: serviceConfig.config.host,
 	});
 };
 

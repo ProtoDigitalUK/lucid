@@ -4,8 +4,8 @@ import { formatDate } from "../utils/format-helpers.js";
 interface FormatCollectionCateogriesT {
 	category: {
 		id: number;
-		created_at: Date | null;
-		updated_at: Date | null;
+		created_at: Date | string | null;
+		updated_at: Date | string | null;
 		collection_key: string;
 		description_translation_key_id: number | null;
 		slug: string;

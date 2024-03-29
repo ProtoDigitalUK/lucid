@@ -15,7 +15,8 @@ const clearAllProcessedController: ControllerT<
 		processedImagesServices.clearAll,
 		true,
 	)({
-		db: request.server.db,
+		db: request.server.config.db.client,
+		config: request.server.config,
 	});
 
 	reply.status(204).send();

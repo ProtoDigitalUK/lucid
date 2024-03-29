@@ -1,12 +1,13 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "@headless/types/src/options.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 export interface ServiceData {
 	name: OptionNameT;
 	value_text?: string;
 	value_int?: number;
-	value_bool?: boolean;
+	value_bool?: BooleanInt;
 }
 
 const updateSingle = async (
