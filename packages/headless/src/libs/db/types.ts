@@ -1,4 +1,4 @@
-import { type Migration } from "kysely";
+import type { Migration, Generated } from "kysely";
 import type { FieldTypesT } from "../field-builder/types.js";
 
 // ------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ export type JSONString = string;
 // Tables
 
 export interface HeadlessLanguages {
-	id: number | null;
+	id: Generated<number>;
 	code: string;
 	is_default: BooleanInt;
 	is_enabled: BooleanInt;
@@ -32,11 +32,11 @@ export interface HeadlessLanguages {
 }
 
 export interface HeadlessTranslationKeys {
-	id: number | null;
+	id: Generated<number>;
 }
 
 export interface HeadlessTranslations {
-	id: number | null;
+	id: Generated<number>;
 	translation_key_id: number;
 	language_id: number;
 	value: string | null;
@@ -50,7 +50,7 @@ export interface HeadlessOptions {
 }
 
 export interface HeadlessUsers {
-	id: number | null;
+	id: Generated<number>;
 	super_admin: BooleanInt;
 	email: string;
 	username: string;
@@ -65,7 +65,7 @@ export interface HeadlessUsers {
 }
 
 export interface HeadlessRoles {
-	id: number | null;
+	id: Generated<number>;
 	name: string;
 	description: string | null;
 	created_at: Timestamp | null;
@@ -73,7 +73,7 @@ export interface HeadlessRoles {
 }
 
 export interface HeadlessRolePermissions {
-	id: number | null;
+	id: Generated<number>;
 	role_id: number | null;
 	permission: string;
 	created_at: Timestamp | null;
@@ -81,7 +81,7 @@ export interface HeadlessRolePermissions {
 }
 
 export interface HeadlessUserRoles {
-	id: number | null;
+	id: Generated<number>;
 	user_id: number | null;
 	role_id: number | null;
 	created_at: Timestamp | null;
@@ -89,7 +89,7 @@ export interface HeadlessUserRoles {
 }
 
 export interface HeadlessUserTokens {
-	id: number | null;
+	id: Generated<number>;
 	user_id: number | null;
 	token_type: string;
 	token: string;
@@ -98,7 +98,7 @@ export interface HeadlessUserTokens {
 }
 
 export interface HeadlessEmails {
-	id: number | null;
+	id: Generated<number>;
 	email_hash: string;
 	from_address: string;
 	from_name: string;
@@ -119,7 +119,7 @@ export interface HeadlessEmails {
 }
 
 export interface HeadlessMedia {
-	id: number | null;
+	id: Generated<number>;
 	key: string;
 	e_tag: string | null;
 	visible: BooleanInt;
@@ -141,7 +141,7 @@ export interface HeadlessProcessedImages {
 }
 
 export interface HeadlessCollectionDocuments {
-	id: number | null;
+	id: Generated<number>;
 	collection_key: string;
 	parent_id: number | null;
 	slug: string | null;
@@ -158,7 +158,7 @@ export interface HeadlessCollectionDocuments {
 }
 
 export interface HeadlessCollectionDocumentBricks {
-	id: number | null;
+	id: Generated<number>;
 	collection_document_id: number;
 	brick_type: "builder" | "fixed" | "collection-fields";
 	brick_key: string | null;
@@ -166,7 +166,7 @@ export interface HeadlessCollectionDocumentBricks {
 }
 
 export interface HeadlessCollectionDocumentGroups {
-	group_id: number | null;
+	group_id: Generated<number>;
 	collection_document_id: number;
 	collection_brick_id: number;
 	parent_group_id: number | null;
@@ -177,7 +177,7 @@ export interface HeadlessCollectionDocumentGroups {
 }
 
 export interface HeadlessCollectionDocumentFields {
-	fields_id: number | null;
+	fields_id: Generated<number>;
 	collection_document_id: number;
 	collection_brick_id: number;
 	group_id: number | null;
@@ -193,7 +193,7 @@ export interface HeadlessCollectionDocumentFields {
 }
 
 export interface HeadlessCollectionCategories {
-	id: number | null;
+	id: Generated<number>;
 	collection_key: string;
 	title_translation_key_id: number | null;
 	description_translation_key_id: number | null;
