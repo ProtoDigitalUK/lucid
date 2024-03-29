@@ -6,7 +6,10 @@ import type {
 } from "@headless/types/src/bricks.js";
 import type { MediaTypeT } from "@headless/types/src/media.js";
 import type { RequestQueryParsedT } from "../middleware/validate-query.js";
-import type { FieldTypesT, CustomFieldT } from "../libs/field-builder/types.js";
+import type {
+	FieldTypesT,
+	CustomFieldT,
+} from "../libs/builders/field-builder/types.js";
 import type { FieldQueryDataT } from "../format/format-collection-fields.js";
 import type { FieldResValueT } from "@headless/types/src/bricks.js";
 import { createURL } from "../format/format-media.js";

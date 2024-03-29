@@ -1,5 +1,5 @@
 import type { Migration, Generated, ColumnType } from "kysely";
-import type { FieldTypesT } from "../field-builder/types.js";
+import type { FieldTypesT } from "../builders/field-builder/types.js";
 
 // ------------------------------------------------------------------------------
 // Migration / Adapters

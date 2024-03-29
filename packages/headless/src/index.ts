@@ -1,8 +1,8 @@
 import("dotenv/config.js");
 import headless from "./headless.js";
 import headlessConfig from "./libs/config/headless-config.js";
-import BrickBuilder from "./libs/brick-builder/index.js";
-import CollectionBuilder from "./libs/collection-builder/index.js";
+import BrickBuilder from "./libs/builders/brick-builder/index.js";
+import CollectionBuilder from "./libs/builders/collection-builder/index.js";
 import sendEmail from "./services/email/send-external.js";
 import serviceWrapper from "./utils/service-wrapper.js";
 import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";

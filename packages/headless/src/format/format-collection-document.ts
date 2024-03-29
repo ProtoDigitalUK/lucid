@@ -1,6 +1,6 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
 import type { BrickResT, FieldResT } from "@headless/types/src/bricks.js";
-import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
+import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
 import type { BooleanInt } from "../libs/db/types.js";
 import { swaggerBrickRes } from "./format-collection-bricks.js";
 import formatCollectionFields, {

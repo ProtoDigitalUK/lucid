@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../repositories/repository-factory.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	token_type: "password_reset";
@@ -14,9 +14,24 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	);
 
 	const userToken = await userTokensRepo.getSingle({
-		token: data.token,
-		tokenType: data.token_type,
-		expiryDate: new Date().toISOString(),
+		select: ["id", "user_id"],
+		where: [
+			{
+				key: "token",
+				operator: "=",
+				value: data.token,
+			},
+			{
+				key: "token_type",
+				operator: "=",
+				value: data.token_type,
+			},
+			{
+				key: "expiry_date",
+				operator: ">",
+				value: new Date().toISOString(),
+			},
+		],
 	});
 
 	if (userToken === undefined) {

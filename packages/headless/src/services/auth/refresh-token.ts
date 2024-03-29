@@ -4,7 +4,7 @@ import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
-import RepositoryFactory from "../../repositories/repository-factory.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 const key = "_refresh";
 
@@ -72,11 +72,30 @@ export const verifyRefreshToken = async (
 			id: number;
 		};
 
-		const token = await userTokensRepo.getSingleValid({
-			token: _refresh,
-			tokenType: "refresh",
-			expiryDate: new Date().toISOString(),
-			userId: decode.id,
+		const token = await userTokensRepo.getSingle({
+			select: ["id", "user_id"],
+			where: [
+				{
+					key: "token",
+					operator: "=",
+					value: _refresh,
+				},
+				{
+					key: "token_type",
+					operator: "=",
+					value: "refresh",
+				},
+				{
+					key: "user_id",
+					operator: "=",
+					value: decode.id,
+				},
+				{
+					key: "expiry_date",
+					operator: ">",
+					value: new Date().toISOString(),
+				},
+			],
 		});
 
 		if (token === undefined) {
@@ -122,9 +141,23 @@ export const clearRefreshToken = async (
 	reply.clearCookie(key, { path: "/" });
 
 	await userTokensRepo.deleteSingle({
-		userId: decode.id,
-		token: _refresh,
-		tokenType: "refresh",
+		where: [
+			{
+				key: "token",
+				operator: "=",
+				value: _refresh,
+			},
+			{
+				key: "token_type",
+				operator: "=",
+				value: "refresh",
+			},
+			{
+				key: "user_id",
+				operator: "=",
+				value: decode.id,
+			},
+		],
 	});
 };
 

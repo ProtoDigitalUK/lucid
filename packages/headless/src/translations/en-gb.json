@@ -106,5 +106,6 @@
 	"parent_is_child_of_document": "The document you are trying to set as the parent is currently a child of this document.",
 	"config_duplicate_keys": "Duplicate keys found for {{builder}} builder.",
 	"cannot_find_config_path": "Cannot find the headless.config.ts or headless.config.js file at the root of your project.",
-	"cannot_find_repository": "Cannot find the repository for the {{name}}."
+	"cannot_find_repository": "Cannot find the repository for the {{name}}.",
+	"cannot_find_formatter": "Cannot find the formatter for the {{name}}."
 }

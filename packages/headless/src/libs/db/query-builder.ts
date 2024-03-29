@@ -3,6 +3,8 @@ import type {
 	SelectQueryBuilder,
 	ReferenceExpression,
 	ComparisonOperatorExpression,
+	DeleteQueryBuilder,
+	OperandValueExpressionOrList,
 } from "kysely";
 import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
 
@@ -136,6 +138,40 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 		main: mainQuery,
 		count: countQuery,
 	};
+};
+
+export const selectQB = <DB, Table extends keyof DB, O>(
+	query: SelectQueryBuilder<DB, Table, O>,
+	where: Array<{
+		key: ReferenceExpression<DB, Table>;
+		operator: ComparisonOperatorExpression;
+		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
+	}>,
+) => {
+	let kyselyQuery = query;
+
+	for (const { key, operator, value } of where) {
+		kyselyQuery = query.where(key, operator, value);
+	}
+
+	return kyselyQuery;
+};
+
+export const deleteQB = <DB, Table extends keyof DB, O>(
+	query: DeleteQueryBuilder<DB, Table, O>,
+	where: Array<{
+		key: ReferenceExpression<DB, Table>;
+		operator: ComparisonOperatorExpression;
+		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
+	}>,
+) => {
+	let kyselyQuery = query;
+
+	for (const { key, operator, value } of where) {
+		kyselyQuery = query.where(key, operator, value);
+	}
+
+	return kyselyQuery;
 };
 
 export default queryBuilder;

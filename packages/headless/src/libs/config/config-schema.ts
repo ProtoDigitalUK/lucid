@@ -1,5 +1,5 @@
 import z from "zod";
-import type { CollectionBuilderT } from "../collection-builder/index.js";
+import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
 import type { DatabaseAdapterT } from "../db/adapter.js";
 import constants from "../../constants.js";
 

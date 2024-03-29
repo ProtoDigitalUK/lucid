@@ -1,5 +1,5 @@
 import type { BrickSchemaT } from "../schemas/collection-bricks.js";
-import type { FieldTypesT } from "../libs/field-builder/index.js";
+import type { FieldTypesT } from "../libs/builders/field-builder/index.js";
 import type { GroupsResT } from "../services/collection-document-bricks/upsert-multiple-groups.js";
 import { fieldColumnValueMap } from "../utils/field-helpers.js";
 

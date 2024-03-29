@@ -1,7 +1,7 @@
-import T from "../translations/index.js";
-import type { Config } from "../libs/config/config-schema.js";
-import { InternalError } from "../utils/error-handler.js";
-import UserTokens from "./user-tokens.js";
+import T from "../../translations/index.js";
+import type { Config } from "../config/config-schema.js";
+import { InternalError } from "../../utils/error-handler.js";
+import UserTokens from "../../repositories/user-tokens.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class RepositoryFactory {
