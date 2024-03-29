@@ -4,6 +4,7 @@ import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
+import RepositoryFactory from "../../repositories/repository-factory.js";
 
 const key = "_refresh";
 
@@ -13,6 +14,10 @@ export const generateRefreshToken = async (
 	user_id: number,
 ) => {
 	await clearRefreshToken(request, reply);
+	const userTokensRepo = RepositoryFactory.getRepository(
+		"user-tokens",
+		request.server.config,
+	);
 
 	const payload = {
 		id: user_id,
@@ -34,17 +39,14 @@ export const generateRefreshToken = async (
 		path: "/",
 	});
 
-	await request.server.config.db.client
-		.insertInto("headless_user_tokens")
-		.values({
-			user_id: user_id,
-			token: token,
-			token_type: "refresh",
-			expiry_date: new Date(
-				Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
-			).toISOString(),
-		})
-		.execute();
+	await userTokensRepo.createSingle({
+		userId: user_id,
+		token: token,
+		tokenType: "refresh",
+		expiryDate: new Date(
+			Date.now() + constants.refreshTokenExpiration * 1000, // convert to ms
+		).toISOString(),
+	});
 };
 
 export const verifyRefreshToken = async (
@@ -58,6 +60,11 @@ export const verifyRefreshToken = async (
 			throw new Error("No refresh token found");
 		}
 
+		const userTokensRepo = RepositoryFactory.getRepository(
+			"user-tokens",
+			request.server.config,
+		);
+
 		const decode = jwt.verify(
 			_refresh,
 			request.server.config.keys.refreshTokenSecret,
@@ -65,14 +72,12 @@ export const verifyRefreshToken = async (
 			id: number;
 		};
 
-		const token = await request.server.config.db.client
-			.selectFrom("headless_user_tokens")
-			.select("id")
-			.where("user_id", "=", decode.id)
-			.where("token", "=", _refresh)
-			.where("token_type", "=", "refresh")
-			.where("expiry_date", ">=", new Date().toISOString())
-			.executeTakeFirst();
+		const token = await userTokensRepo.getSingleValid({
+			token: _refresh,
+			tokenType: "refresh",
+			expiryDate: new Date().toISOString(),
+			userId: decode.id,
+		});
 
 		if (token === undefined) {
 			throw new Error("No refresh token found");
@@ -102,6 +107,11 @@ export const clearRefreshToken = async (
 	const _refresh = request.cookies[key];
 	if (!_refresh) return;
 
+	const userTokensRepo = RepositoryFactory.getRepository(
+		"user-tokens",
+		request.server.config,
+	);
+
 	const decode = jwt.verify(
 		_refresh,
 		request.server.config.keys.refreshTokenSecret,
@@ -111,12 +121,11 @@ export const clearRefreshToken = async (
 
 	reply.clearCookie(key, { path: "/" });
 
-	await request.server.config.db.client
-		.deleteFrom("headless_user_tokens")
-		.where("user_id", "=", decode.id)
-		.where("token", "=", _refresh)
-		.where("token_type", "=", "refresh")
-		.execute();
+	await userTokensRepo.deleteSingle({
+		userId: decode.id,
+		token: _refresh,
+		tokenType: "refresh",
+	});
 };
 
 export default {

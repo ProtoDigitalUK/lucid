@@ -8,12 +8,12 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const service = RepositoryFactory.getRepository(
+	const userTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
 		serviceConfig.config,
 	);
 
-	const userToken = await service.getSingle({
+	const userToken = await userTokensRepo.getSingle({
 		token: data.token,
 		tokenType: data.token_type,
 		expiryDate: new Date().toISOString(),
