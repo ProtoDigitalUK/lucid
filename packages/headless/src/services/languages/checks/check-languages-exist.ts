@@ -13,7 +13,7 @@ const checkLanguagesExist = async (
 
 	if (languageIds.length === 0) return;
 
-	const languages = await serviceConfig.config.db.client
+	const languages = await serviceConfig.db
 		.selectFrom("headless_languages")
 		.select("id")
 		.where("id", "in", languageIds)

@@ -18,6 +18,7 @@ const createSingleController: ControllerT<
 		true,
 	)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{
@@ -33,6 +34,7 @@ const createSingleController: ControllerT<
 		false,
 	)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

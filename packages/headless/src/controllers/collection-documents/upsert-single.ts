@@ -19,6 +19,7 @@ const upsertSingleController: ControllerT<
 		true,
 	)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{
@@ -60,7 +61,7 @@ export default {
 					type: "string",
 				},
 				homepage: {
-					type: "boolean",
+					type: "number",
 				},
 				parent_id: {
 					type: "number",

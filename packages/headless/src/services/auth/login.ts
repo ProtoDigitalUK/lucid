@@ -8,7 +8,7 @@ export interface ServiceData {
 }
 
 const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const user = await serviceConfig.config.db.client
+	const user = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select(["id", "password", "is_deleted"])
 		.where((eb) =>
@@ -28,7 +28,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	if (user !== undefined && user.is_deleted === true) {
+	if (user !== undefined && user.is_deleted === 1) {
 		throw new APIError({
 			type: "authorisation",
 			name: T("login_error_name"),

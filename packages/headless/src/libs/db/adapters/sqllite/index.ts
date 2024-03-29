@@ -1,5 +1,5 @@
 import DatabaseAdapter from "../../adapter.js";
-import { SqliteDialect, SqliteDialectConfig } from "kysely";
+import { SqliteDialect, type SqliteDialectConfig } from "kysely";
 import { ParseJSONResultsPlugin } from "../../kysely/parse-json-results-plugin.js";
 import { AdapterType } from "../../types.js";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
@@ -15,5 +15,8 @@ export default class SqlLiteAdapter extends DatabaseAdapter {
 	// Getters
 	get jsonArrayFrom() {
 		return jsonArrayFrom;
+	}
+	get fuzzOperator() {
+		return "like" as const;
 	}
 }

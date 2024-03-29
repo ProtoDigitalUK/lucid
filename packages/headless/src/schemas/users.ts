@@ -13,7 +13,7 @@ export default {
 				role_ids: z.array(z.number()),
 				first_name: z.string().optional(),
 				last_name: z.string().optional(),
-				super_admin: z.boolean().optional(),
+				super_admin: z.union([z.literal(1), z.literal(0)]).optional(),
 			})
 			.refine((data) => data.password === data.password_confirmation, {
 				message: T("please_ensure_passwords_match"),
@@ -25,7 +25,7 @@ export default {
 	updateSingle: {
 		body: z.object({
 			role_ids: z.array(z.number()).optional(),
-			super_admin: z.boolean().optional(),
+			super_admin: z.union([z.literal(1), z.literal(0)]).optional(),
 		}),
 		query: undefined,
 		params: z.object({

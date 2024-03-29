@@ -13,7 +13,7 @@ const sendResetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const userExists = await serviceConfig.config.db.client
+	const userExists = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select(["id", "first_name", "last_name", "email"])
 		.where("email", "=", data.email)

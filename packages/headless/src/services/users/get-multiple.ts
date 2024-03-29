@@ -13,7 +13,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const usersQuery = serviceConfig.config.db.client
+	const usersQuery = serviceConfig.db
 		.selectFrom("headless_users")
 		.select((eb) => [
 			"headless_users.email",
@@ -45,15 +45,15 @@ const getMultiple = async (
 		.leftJoin("headless_user_roles", (join) =>
 			join.onRef("headless_user_roles.user_id", "=", "headless_users.id"),
 		)
-		.where("headless_users.is_deleted", "=", false);
+		.where("headless_users.is_deleted", "=", 0);
 
-	const usersCountQuery = serviceConfig.config.db.client
+	const usersCountQuery = serviceConfig.db
 		.selectFrom("headless_users")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_user_roles", (join) =>
 			join.onRef("headless_user_roles.user_id", "=", "headless_users.id"),
 		)
-		.where("is_deleted", "=", false);
+		.where("is_deleted", "=", 0);
 
 	const { main, count } = queryBuilder(
 		{
@@ -74,22 +74,22 @@ const getMultiple = async (
 					{
 						queryKey: "first_name",
 						tableKey: "first_name",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "last_name",
 						tableKey: "last_name",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "email",
 						tableKey: "email",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "username",
 						tableKey: "username",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "role_ids",

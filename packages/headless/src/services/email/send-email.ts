@@ -39,19 +39,21 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	);
 
 	const emailRecord = {
-		deliveryStatus: result.success ? "delivered" : "failed",
+		deliveryStatus: result.success
+			? "delivered"
+			: ("failed" as "delivered" | "failed"),
 		lastErrorMessage: result.success ? undefined : result.message,
-		lastSuccessAt: result.success ? new Date() : undefined,
+		lastSuccessAt: result.success ? new Date().toISOString() : undefined,
 	};
 
-	const emailExists = await serviceConfig.config.db.client
+	const emailExists = await serviceConfig.db
 		.selectFrom("headless_emails")
 		.select(["id", "email_hash", "sent_count", "error_count"])
 		.where("email_hash", "=", emailHash)
 		.executeTakeFirst();
 
 	if (emailExists) {
-		const emailUpdated = await serviceConfig.config.db.client
+		const emailUpdated = await serviceConfig.db
 			.updateTable("headless_emails")
 			.set({
 				delivery_status: emailRecord.deliveryStatus,
@@ -59,7 +61,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				last_success_at: emailRecord.lastSuccessAt,
 				sent_count: emailExists.sent_count + (result.success ? 1 : 0),
 				error_count: emailExists.error_count + (result.success ? 0 : 1),
-				last_attempt_at: new Date(),
+				last_attempt_at: new Date().toISOString(),
 			})
 			.where("id", "=", emailExists.id)
 			.returningAll()
@@ -84,7 +86,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const newEmail = await serviceConfig.config.db.client
+	const newEmail = await serviceConfig.db
 		.insertInto("headless_emails")
 		.values({
 			email_hash: emailHash,

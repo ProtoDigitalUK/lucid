@@ -13,7 +13,7 @@ import type { ErrorContentT } from "../../../utils/helpers.js";
 export interface ServiceData {
 	collection_key: string;
 	parent_id?: number | null;
-	homepage?: boolean;
+	homepage?: 1 | 0;
 	current_id?: number;
 	errorContent: ErrorContentT;
 }
@@ -24,7 +24,7 @@ const checkParent = async (
 ) => {
 	if (data.parent_id === null) return null;
 	if (data.parent_id === undefined) return undefined;
-	if (data.homepage) return null;
+	if (data.homepage === 1) return null;
 
 	if (data.current_id === data.parent_id) {
 		throw new APIError({
@@ -41,7 +41,7 @@ const checkParent = async (
 		});
 	}
 
-	const docRes = await serviceConfig.config.db.client
+	const docRes = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select(["homepage"])
 		.where("id", "=", data.parent_id)
@@ -65,7 +65,7 @@ const checkParent = async (
 		});
 	}
 
-	if (docRes.homepage === true) {
+	if (docRes.homepage === 1) {
 		throw new APIError({
 			type: "basic",
 			name: data.errorContent.name,

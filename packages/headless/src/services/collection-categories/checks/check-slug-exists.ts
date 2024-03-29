@@ -8,7 +8,7 @@ const checkSlugExists = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	let slugExistsQuery = serviceConfig.config.db.client
+	let slugExistsQuery = serviceConfig.db
 		.selectFrom("headless_collection_categories")
 		.select("id")
 		.where("slug", "=", data.slug)

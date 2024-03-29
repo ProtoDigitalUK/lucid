@@ -13,6 +13,7 @@ const deleteSingleController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(mediaServices.deleteSingle, true)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

@@ -3,11 +3,11 @@ import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatRoleT {
 	role: {
-		created_at: Date | null;
+		created_at: Date | string | null;
 		id: number;
 		name: string;
 		description: string | null;
-		updated_at: Date | null;
+		updated_at: Date | string | null;
 		permissions?: {
 			id: number;
 			permission: string;

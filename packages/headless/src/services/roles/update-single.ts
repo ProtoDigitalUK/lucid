@@ -21,10 +21,10 @@ const updateSingle = async (
 					{
 						permissions: data.permissions,
 					},
-			  )
+				)
 			: undefined,
 		data.name !== undefined
-			? serviceConfig.config.db.client
+			? serviceConfig.db
 					.selectFrom("headless_roles")
 					.select("id")
 					.where("name", "=", data.name)
@@ -50,7 +50,7 @@ const updateSingle = async (
 		});
 	}
 
-	const updateRoleRes = await serviceConfig.config.db.client
+	const updateRoleRes = await serviceConfig.db
 		.updateTable("headless_roles")
 		.set({
 			name: data.name,
@@ -74,13 +74,13 @@ const updateSingle = async (
 	}
 
 	if (validatePerms !== undefined) {
-		await serviceConfig.config.db.client
+		await serviceConfig.db
 			.deleteFrom("headless_role_permissions")
 			.where("role_id", "=", data.id)
 			.executeTakeFirst();
 
 		if (validatePerms.length > 0) {
-			await serviceConfig.config.db.client
+			await serviceConfig.db
 				.insertInto("headless_role_permissions")
 				.values(
 					validatePerms.map((permission) => ({

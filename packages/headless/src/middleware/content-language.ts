@@ -10,6 +10,7 @@ const contentLanguage = async (request: FastifyRequest) => {
 		false,
 	)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

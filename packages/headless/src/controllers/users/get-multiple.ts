@@ -15,6 +15,7 @@ const getMultipleController: ControllerT<
 > = async (request, reply) => {
 	const users = await serviceWrapper(usersServices.getMultiple, false)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

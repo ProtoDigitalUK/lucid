@@ -19,4 +19,7 @@ export default class PostgresAdapter extends DatabaseAdapter {
 	get jsonArrayFrom() {
 		return jsonArrayFrom;
 	}
+	get fuzzOperator() {
+		return "%" as const;
+	}
 }

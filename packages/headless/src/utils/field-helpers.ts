@@ -11,6 +11,7 @@ import type { FieldQueryDataT } from "../format/format-collection-fields.js";
 import type { FieldResValueT } from "@headless/types/src/bricks.js";
 import { createURL } from "../format/format-media.js";
 import { formatDocumentFullSlug } from "../format/format-collection-document.js";
+import { stringifyJSON, parseJSON } from "./format-helpers.js";
 
 export const fieldTypeValueKey = (type: FieldTypesT) => {
 	switch (type) {
@@ -55,10 +56,10 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			}
 			return {
 				text_value: value.url,
-				json_value: {
+				json_value: stringifyJSON({
 					target: value.target,
 					label: value.label,
-				},
+				}),
 			};
 		}
 		case "pagelink": {
@@ -71,10 +72,10 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			}
 			return {
 				page_link_id: value.id,
-				json_value: {
+				json_value: stringifyJSON({
 					target: value.target,
 					label: value.label,
-				},
+				}),
 			};
 		}
 		default: {
@@ -170,7 +171,8 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "checkbox": {
-			value = props.field?.bool_value ?? props.builder_field?.default;
+			value =
+				props.field?.bool_value ?? props.builder_field?.default ? 1 : 0;
 			break;
 		}
 		case "select": {
@@ -183,7 +185,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 		}
 		case "json": {
 			value =
-				(props.field?.json_value as Record<string, unknown>) ??
+				parseJSON<Record<string, unknown>>(props.field?.json_value) ??
 				props.builder_field?.default;
 			break;
 		}
@@ -196,10 +198,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "pagelink": {
-			const jsonVal = props.field?.json_value as Record<
-				string,
-				unknown
-			> | null;
+			const jsonVal = parseJSON<PageLinkValueT>(props.field?.json_value);
 			value = {
 				id: props.field?.page_link_id ?? undefined,
 				target: jsonVal?.target || "_self",
@@ -217,10 +216,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "link": {
-			const jsonVal = props.field?.json_value as Record<
-				string,
-				unknown
-			> | null;
+			const jsonVal = parseJSON<LinkValueT>(props.field?.json_value);
 			value = {
 				url:
 					props.field?.text_value ??

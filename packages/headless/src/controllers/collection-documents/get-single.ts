@@ -18,6 +18,7 @@ const getSingleController: ControllerT<
 		false,
 	)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

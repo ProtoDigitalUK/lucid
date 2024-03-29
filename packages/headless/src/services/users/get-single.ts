@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const user = await serviceConfig.config.db.client
+	const user = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select((eb) => [
 			"email",
@@ -49,7 +49,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				.as("roles"),
 		])
 		.where("id", "=", data.user_id)
-		.where("is_deleted", "=", false)
+		.where("is_deleted", "=", 0)
 		.executeTakeFirst();
 
 	if (!user) {

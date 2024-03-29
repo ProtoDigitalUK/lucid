@@ -1,15 +1,16 @@
 import ISO6391 from "iso-639-1";
 import type { LanguageResT } from "@headless/types/src/language.js";
+import type { BooleanInt } from "../libs/db/types.js";
 import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatLanguageT {
 	language: {
 		id: number;
 		code: string;
-		created_at: Date | null;
-		is_default: boolean;
-		is_enabled: boolean;
-		updated_at: Date | null;
+		created_at: Date | string | null;
+		is_default: BooleanInt;
+		is_enabled: BooleanInt;
+		updated_at: Date | string | null;
 	};
 }
 
@@ -35,8 +36,8 @@ export const swaggerLanguageRes = {
 		code: { type: "string", example: "en" },
 		name: { type: "string", example: "English" },
 		native_name: { type: "string", example: "English" },
-		is_default: { type: "boolean", example: true },
-		is_enabled: { type: "boolean", example: true },
+		is_default: { type: "number", example: 1 },
+		is_enabled: { type: "number", example: 1 },
 		created_at: { type: "string", example: "2021-10-05T14:48:00.000Z" },
 		updated_at: { type: "string", example: "2021-10-05T14:48:00.000Z" },
 	},

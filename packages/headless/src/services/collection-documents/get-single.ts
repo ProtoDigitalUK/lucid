@@ -13,7 +13,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const document = await serviceConfig.config.db.client
+	const document = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
 			"headless_collection_documents.id",
@@ -51,7 +51,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			"headless_users.username as author_username",
 		])
 		.where("headless_collection_documents.id", "=", data.id)
-		.where("headless_collection_documents.is_deleted", "=", false)
+		.where("headless_collection_documents.is_deleted", "=", 0)
 		.executeTakeFirst();
 
 	if (document === undefined || document.collection_key === null) {

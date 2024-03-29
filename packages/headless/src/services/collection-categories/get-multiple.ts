@@ -14,7 +14,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const categoryQuery = serviceConfig.config.db.client
+	const categoryQuery = serviceConfig.db
 		.selectFrom("headless_collection_categories")
 		.select((eb) => [
 			"headless_collection_categories.id",
@@ -89,7 +89,7 @@ const getMultiple = async (
 			"description_translations.value",
 		]);
 
-	const categoryCountQuery = serviceConfig.config.db.client
+	const categoryCountQuery = serviceConfig.db
 		.selectFrom("headless_collection_categories")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_translations as title_translations", (join) =>
@@ -143,7 +143,7 @@ const getMultiple = async (
 					{
 						queryKey: "title",
 						tableKey: "title_translations.value",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "collection_key",

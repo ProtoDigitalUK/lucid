@@ -1,4 +1,4 @@
-import type { Migration, Generated } from "kysely";
+import type { Migration, Generated, ColumnType } from "kysely";
 import type { FieldTypesT } from "../field-builder/types.js";
 
 // ------------------------------------------------------------------------------
@@ -15,7 +15,16 @@ export type MigrationFn = (adapter: AdapterType) => Migration;
 // ------------------------------------------------------------------------------
 // Column types
 
-export type Timestamp = string; // TODO: may not be correct
+export type TimestampMutateable = ColumnType<
+	Date | string,
+	string | undefined,
+	string
+>;
+export type TimestampImmutable = ColumnType<
+	Date | string,
+	string | undefined,
+	never
+>;
 export type BooleanInt = 0 | 1;
 export type JSONString = string;
 
@@ -27,12 +36,13 @@ export interface HeadlessLanguages {
 	code: string;
 	is_default: BooleanInt;
 	is_enabled: BooleanInt;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessTranslationKeys {
 	id: Generated<number>;
+	created_at: TimestampImmutable;
 }
 
 export interface HeadlessTranslations {
@@ -51,41 +61,41 @@ export interface HeadlessOptions {
 
 export interface HeadlessUsers {
 	id: Generated<number>;
-	super_admin: BooleanInt;
+	super_admin: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	email: string;
 	username: string;
 	first_name: string | null;
 	last_name: string | null;
 	password: string;
 	is_deleted: BooleanInt | null;
-	is_deleted_at: Timestamp | null;
+	is_deleted_at: TimestampMutateable | null;
 	deleted_by: number | null;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessRoles {
 	id: Generated<number>;
 	name: string;
 	description: string | null;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessRolePermissions {
 	id: Generated<number>;
-	role_id: number | null;
+	role_id: number;
 	permission: string;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessUserRoles {
 	id: Generated<number>;
 	user_id: number | null;
 	role_id: number | null;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessUserTokens {
@@ -93,8 +103,8 @@ export interface HeadlessUserTokens {
 	user_id: number | null;
 	token_type: string;
 	token: string;
-	created_at: Timestamp | null;
-	expiry_date: Timestamp;
+	created_at: TimestampImmutable;
+	expiry_date: TimestampMutateable;
 }
 
 export interface HeadlessEmails {
@@ -113,9 +123,9 @@ export interface HeadlessEmails {
 	sent_count: number;
 	error_count: number;
 	last_error_message: string | null;
-	last_attempt_at: Timestamp | null;
-	last_success_at: Timestamp | null;
-	created_at: Timestamp | null;
+	last_attempt_at: TimestampMutateable | null;
+	last_success_at: TimestampMutateable | null;
+	created_at: TimestampImmutable;
 }
 
 export interface HeadlessMedia {
@@ -131,8 +141,8 @@ export interface HeadlessMedia {
 	height: number | null;
 	title_translation_key_id: number | null;
 	alt_translation_key_id: number | null;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessProcessedImages {
@@ -146,15 +156,15 @@ export interface HeadlessCollectionDocuments {
 	parent_id: number | null;
 	slug: string | null;
 	full_slug: string | null;
-	homepage: BooleanInt;
-	is_deleted: BooleanInt;
-	is_deleted_at: Timestamp | null;
+	homepage: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
+	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
+	is_deleted_at: TimestampMutateable | null;
 	author_id: number | null;
 	deleted_by: number | null;
 	created_by: number | null;
 	updated_by: number | null;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessCollectionDocumentBricks {
@@ -198,8 +208,8 @@ export interface HeadlessCollectionCategories {
 	title_translation_key_id: number | null;
 	description_translation_key_id: number | null;
 	slug: string;
-	created_at: Timestamp | null;
-	updated_at: Timestamp | null;
+	created_at: TimestampImmutable;
+	updated_at: TimestampMutateable | null;
 }
 
 export interface HeadlessCollectionDocumentCategories {

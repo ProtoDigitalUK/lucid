@@ -14,6 +14,7 @@ const getSettingsController: ControllerT<
 		settingsServices.getSettings,
 		false,
 	)({
+		db: request.server.config.db.client,
 		config: request.server.config,
 	});
 

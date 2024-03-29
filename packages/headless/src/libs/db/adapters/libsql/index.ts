@@ -16,4 +16,7 @@ export default class LibsqlAdapter extends DatabaseAdapter {
 	get jsonArrayFrom() {
 		return jsonArrayFrom;
 	}
+	get fuzzOperator() {
+		return "like" as const;
+	}
 }

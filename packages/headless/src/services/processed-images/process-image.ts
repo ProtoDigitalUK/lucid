@@ -92,7 +92,7 @@ const processImage = async (
 
 	if (serviceConfig.config.media.processedImages?.store === true) {
 		Promise.all([
-			serviceConfig.config.db.client
+			serviceConfig.db
 				.insertInto("headless_processed_images")
 				.values({
 					key: data.processKey,

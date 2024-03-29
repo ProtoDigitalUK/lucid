@@ -5,8 +5,8 @@ export default {
 	createSingle: {
 		body: z.object({
 			code: z.string().min(2),
-			is_default: z.boolean(),
-			is_enabled: z.boolean(),
+			is_default: z.union([z.literal(1), z.literal(0)]),
+			is_enabled: z.union([z.literal(1), z.literal(0)]),
 		}),
 		query: undefined,
 		params: undefined,
@@ -40,8 +40,8 @@ export default {
 	updateSingle: {
 		body: z.object({
 			code: z.string().min(2).optional(),
-			is_default: z.boolean().optional(),
-			is_enabled: z.boolean().optional(),
+			is_default: z.union([z.literal(1), z.literal(0)]).optional(),
+			is_enabled: z.union([z.literal(1), z.literal(0)]).optional(),
 		}),
 		query: undefined,
 		params: z.object({

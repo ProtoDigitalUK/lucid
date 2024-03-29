@@ -26,7 +26,7 @@ const updateSingle = async (
 	// do translations first so if they throw an error, the file is not uploaded
 	// if the file upload throws an error, the translations are not inserted due to the transaction
 
-	const media = await serviceConfig.config.db.client
+	const media = await serviceConfig.db
 		.selectFrom("headless_media")
 		.select([
 			"id",
@@ -84,7 +84,7 @@ const updateSingle = async (
 		key: media.key,
 	});
 
-	const mediaUpdateRes = await serviceConfig.config.db.client
+	const mediaUpdateRes = await serviceConfig.db
 		.updateTable("headless_media")
 		.set({
 			key: updateObjectRes.key,
@@ -95,7 +95,7 @@ const updateSingle = async (
 			file_size: updateObjectRes.size,
 			width: updateObjectRes.width,
 			height: updateObjectRes.height,
-			updated_at: new Date(),
+			updated_at: new Date().toISOString(),
 		})
 		.returning("id")
 		.executeTakeFirst();

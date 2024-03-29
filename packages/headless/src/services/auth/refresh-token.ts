@@ -71,7 +71,7 @@ export const verifyRefreshToken = async (
 			.where("user_id", "=", decode.id)
 			.where("token", "=", _refresh)
 			.where("token_type", "=", "refresh")
-			.where("expiry_date", ">=", new Date())
+			.where("expiry_date", ">=", new Date().toISOString())
 			.executeTakeFirst();
 
 		if (token === undefined) {

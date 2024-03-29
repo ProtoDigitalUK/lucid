@@ -1,5 +1,5 @@
-import { Kysely } from "kysely";
-import { MigrationFn } from "../types.js";
+import type { Kysely } from "kysely";
+import type { MigrationFn } from "../types.js";
 import {
 	primaryKeyColumnType,
 	primaryKeyColumn,
@@ -13,6 +13,7 @@ const Migration00000002: MigrationFn = (adapter) => {
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
+				.addColumn("created_at", "timestamp", (col) => col.notNull())
 				.execute();
 
 			await db.schema

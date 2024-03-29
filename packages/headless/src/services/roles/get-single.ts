@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const role = await serviceConfig.config.db.client
+	const role = await serviceConfig.db
 		.selectFrom("headless_roles")
 		.select((eb) => [
 			"id",

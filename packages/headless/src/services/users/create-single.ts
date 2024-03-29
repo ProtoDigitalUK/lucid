@@ -3,6 +3,7 @@ import { APIError, modelErrors } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 export interface ServiceData {
 	email: string;
@@ -11,9 +12,9 @@ export interface ServiceData {
 	password_confirmation: string;
 	first_name?: string;
 	last_name?: string;
-	super_admin?: boolean;
+	super_admin?: BooleanInt;
 	role_ids: Array<number>;
-	auth_super_admin: boolean;
+	auth_super_admin: BooleanInt;
 }
 
 const createSingle = async (
@@ -21,7 +22,7 @@ const createSingle = async (
 	data: ServiceData,
 ) => {
 	const [userExists] = await Promise.all([
-		serviceConfig.config.db.client
+		serviceConfig.db
 			.selectFrom("headless_users")
 			.select(["id", "username", "email"])
 			.where((eb) =>
@@ -56,14 +57,14 @@ const createSingle = async (
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-						  }
+							}
 						: undefined,
 				username:
 					userExists.username === data.username
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-						  }
+							}
 						: undefined,
 			}),
 		});
@@ -71,7 +72,7 @@ const createSingle = async (
 
 	const hashedPassword = await argon2.hash(data.password);
 
-	const newUser = await serviceConfig.config.db.client
+	const newUser = await serviceConfig.db
 		.insertInto("headless_users")
 		.values({
 			email: data.email,
@@ -79,7 +80,7 @@ const createSingle = async (
 			password: hashedPassword,
 			first_name: data.first_name,
 			last_name: data.last_name,
-			super_admin: data.auth_super_admin ? data.super_admin : false,
+			super_admin: data.auth_super_admin === 1 ? data.super_admin : 0,
 		})
 		.returning("id")
 		.executeTakeFirst();
@@ -100,7 +101,7 @@ const createSingle = async (
 	if (data.role_ids === undefined || data.role_ids.length === 0)
 		return newUser.id;
 
-	await serviceConfig.config.db.client
+	await serviceConfig.db
 		.insertInto("headless_user_roles")
 		.values(
 			data.role_ids.map((roleId) => ({

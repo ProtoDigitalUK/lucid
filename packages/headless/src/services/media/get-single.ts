@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const media = await serviceConfig.config.db.client
+	const media = await serviceConfig.db
 		.selectFrom("headless_media")
 		.select((eb) => [
 			"id",
@@ -56,7 +56,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 				)
 				.as("alt_translations"),
 		])
-		.where("visible", "=", true)
+		.where("visible", "=", 1)
 		.where("id", "=", data.id)
 		.executeTakeFirst();
 

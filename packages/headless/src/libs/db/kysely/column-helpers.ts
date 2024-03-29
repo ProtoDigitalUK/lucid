@@ -1,4 +1,4 @@
-import { ColumnDefinitionBuilder, sql } from "kysely";
+import { type ColumnDefinitionBuilder, sql } from "kysely";
 import { AdapterType } from "../types.js";
 
 export const defaultTimestamp = (
@@ -9,7 +9,7 @@ export const defaultTimestamp = (
 		return col.defaultTo(sql`NOW()`);
 	}
 
-	return col.defaultTo("CURRENT_TIMESTAMP");
+	return col.defaultTo(sql`CURRENT_TIMESTAMP`);
 };
 
 export const primaryKeyColumnType = (adapter: AdapterType) => {

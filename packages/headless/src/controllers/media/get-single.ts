@@ -12,6 +12,7 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const media = await serviceWrapper(mediaServices.getSingle, false)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

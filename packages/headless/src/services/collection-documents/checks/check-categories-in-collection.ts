@@ -15,7 +15,7 @@ const checkCategoriesInCollection = async (
 	if (data.category_ids === undefined) return;
 	if (data.category_ids.length === 0) return;
 
-	const categories = await serviceConfig.config.db.client
+	const categories = await serviceConfig.db
 		.selectFrom("headless_collection_categories")
 		.select(["id"])
 		.where("collection_key", "=", data.collection_key)

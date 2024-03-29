@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const userToken = await serviceConfig.config.db.client
+	const userToken = await serviceConfig.db
 		.selectFrom("headless_user_tokens")
 		.select(["id", "user_id"])
 		.where("token", "=", data.token)

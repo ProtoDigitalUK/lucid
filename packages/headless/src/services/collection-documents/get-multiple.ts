@@ -24,7 +24,7 @@ const getMultiple = async (
 	const allowedIncludes = collectionInstance.data.config.fields.include;
 	const allowedFilters = collectionInstance.data.config.fields.filter;
 
-	let pagesQuery = serviceConfig.config.db.client
+	let pagesQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select((eb) => [
 			"headless_collection_documents.id",
@@ -68,10 +68,10 @@ const getMultiple = async (
 			"headless_users.last_name as author_last_name",
 			"headless_users.username as author_username",
 		])
-		.where("headless_collection_documents.is_deleted", "=", false)
+		.where("headless_collection_documents.is_deleted", "=", 0)
 		.groupBy(["headless_collection_documents.id", "headless_users.id"]);
 
-	let pagesCountQuery = serviceConfig.config.db.client
+	let pagesCountQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_collection_document_categories", (join) =>
@@ -86,7 +86,7 @@ const getMultiple = async (
 			"headless_users.id",
 			"headless_collection_documents.created_by",
 		)
-		.where("headless_collection_documents.is_deleted", "=", false);
+		.where("headless_collection_documents.is_deleted", "=", 0);
 
 	// Filer by specified document ids
 	if (data.in_ids !== undefined && data.in_ids.length > 0) {
@@ -178,16 +178,15 @@ const getMultiple = async (
 					{
 						queryKey: "slug",
 						tableKey: "slug",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "full_slug",
 						tableKey: "full_slug",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "category_id",
-						// @ts-ignore
 						tableKey:
 							"headless_collection_document_categories.category_id",
 						operator: "=",

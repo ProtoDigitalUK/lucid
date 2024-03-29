@@ -12,6 +12,7 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const role = await serviceWrapper(rolesServices.getSingle, false)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

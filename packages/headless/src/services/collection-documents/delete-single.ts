@@ -10,11 +10,11 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deletePage = await serviceConfig.config.db.client
+	const deletePage = await serviceConfig.db
 		.updateTable("headless_collection_documents")
 		.set({
-			is_deleted: true,
-			is_deleted_at: new Date(),
+			is_deleted: 1,
+			is_deleted_at: new Date().toISOString(),
 			slug: null,
 			full_slug: null,
 			deleted_by: data.user_id,

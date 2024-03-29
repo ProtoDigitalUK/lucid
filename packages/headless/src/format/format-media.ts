@@ -14,8 +14,8 @@ interface FormatMediaT {
 		height: number | null;
 		title_translation_key_id: number | null;
 		alt_translation_key_id: number | null;
-		created_at: Date | null;
-		updated_at: Date | null;
+		created_at: Date | string | null;
+		updated_at: Date | string | null;
 		title_translations?: Array<{
 			value: string | null;
 			language_id: number | null;

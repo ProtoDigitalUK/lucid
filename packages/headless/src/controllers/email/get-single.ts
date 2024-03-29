@@ -12,6 +12,7 @@ const getSingleController: ControllerT<
 > = async (request, reply) => {
 	const email = await serviceWrapper(emailServices.getSingle, false)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

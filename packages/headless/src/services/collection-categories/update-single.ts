@@ -22,7 +22,7 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const categoryRes = await serviceConfig.config.db.client
+	const categoryRes = await serviceConfig.db
 		.selectFrom("headless_collection_categories")
 		.select([
 			"id",
@@ -103,7 +103,7 @@ const updateSingle = async (
 		},
 	);
 
-	const categoryUpdateRes = await serviceConfig.config.db.client
+	const categoryUpdateRes = await serviceConfig.db
 		.updateTable("headless_collection_categories")
 		.set({
 			slug: newSlug,

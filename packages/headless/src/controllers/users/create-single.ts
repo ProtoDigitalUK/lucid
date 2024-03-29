@@ -12,6 +12,7 @@ const createSingleController: ControllerT<
 > = async (request, reply) => {
 	const userId = await serviceWrapper(usersServices.createSingle, true)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{
@@ -29,6 +30,7 @@ const createSingleController: ControllerT<
 
 	const user = await serviceWrapper(usersServices.getSingle, false)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{

@@ -9,7 +9,7 @@ const getSingleCount = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const processedImageCount = (await serviceConfig.config.db.client
+	const processedImageCount = (await serviceConfig.db
 		.selectFrom("headless_processed_images")
 		.select(sql`count(*)`.as("count"))
 		.where("media_key", "=", data.key)

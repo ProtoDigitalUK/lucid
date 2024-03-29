@@ -15,13 +15,13 @@ const getMultipleValidParents = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const page = await serviceConfig.config.db.client
+	const document = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select("homepage")
 		.where("id", "=", data.document_id)
 		.executeTakeFirst();
 
-	if (page === undefined || page.homepage === true) {
+	if (document === undefined || document.homepage === 1) {
 		return {
 			data: [],
 			count: 0,
@@ -47,10 +47,10 @@ const getMultipleValidParents = async (
     WHERE NOT p.id = ${data.document_id}
     AND p.collection_key = '${data.collection_key}'
     AND NOT p.id IN (SELECT id FROM descendants)
-    AND NOT p.homepage
-    AND NOT p.is_deleted
+    AND NOT p.homepage = 1
+    AND NOT p.is_deleted = 1
     AND p.slug IS NOT NULL;`)
-		.execute(serviceConfig.config.db.client);
+		.execute(serviceConfig.db);
 
 	if (validParents.rows.length === 0) {
 		return {

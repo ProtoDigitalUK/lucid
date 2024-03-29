@@ -3,6 +3,7 @@ import { APIError, modelErrors } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -12,20 +13,20 @@ export interface ServiceData {
 	email?: string;
 	password?: string;
 	role_ids?: number[];
-	super_admin?: boolean;
+	super_admin?: BooleanInt;
 
-	auth_super_admin: boolean;
+	auth_super_admin: BooleanInt;
 }
 
 const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const user = await serviceConfig.config.db.client
+	const user = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select(["id"])
 		.where("id", "=", data.user_id)
-		.where("is_deleted", "=", false)
+		.where("is_deleted", "=", 0)
 		.executeTakeFirst();
 
 	if (!user) {
@@ -43,14 +44,14 @@ const updateSingle = async (
 
 	const [emailExists, usernameExists] = await Promise.all([
 		data.email
-			? serviceConfig.config.db.client
+			? serviceConfig.db
 					.selectFrom("headless_users")
 					.select("email")
 					.where("email", "=", data.email)
 					.executeTakeFirst()
 			: undefined,
 		data.username
-			? serviceConfig.config.db.client
+			? serviceConfig.db
 					.selectFrom("headless_users")
 					.select("username")
 					.where("username", "=", data.username)
@@ -101,7 +102,7 @@ const updateSingle = async (
 	}
 
 	const [updateUser] = await Promise.all([
-		serviceConfig.config.db.client
+		serviceConfig.db
 			.updateTable("headless_users")
 			.set({
 				first_name: data.first_name,
@@ -109,9 +110,8 @@ const updateSingle = async (
 				username: data.username,
 				email: data.email,
 				password: hashedPassword,
-				super_admin: data.auth_super_admin
-					? data.super_admin
-					: undefined,
+				super_admin:
+					data.auth_super_admin === 1 ? data.super_admin : undefined,
 				updated_at: new Date().toISOString(),
 			})
 			.where("id", "=", data.user_id)

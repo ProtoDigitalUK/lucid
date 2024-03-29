@@ -1,6 +1,7 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
 import type { BrickResT, FieldResT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../libs/collection-builder/index.js";
+import type { BooleanInt } from "../libs/db/types.js";
 import { swaggerBrickRes } from "./format-collection-bricks.js";
 import formatCollectionFields, {
 	type FieldQueryDataT,
@@ -14,10 +15,10 @@ interface DocumentQueryDataT {
 	collection_key: string | null;
 	slug: string | null;
 	full_slug: string | null;
-	homepage: boolean | null;
+	homepage: BooleanInt | null;
 	created_by: number | null;
-	created_at: Date | null;
-	updated_at: Date | null;
+	created_at: Date | string | null;
+	updated_at: Date | string | null;
 	categories: Array<{
 		category_id: number;
 	}> | null;
@@ -64,7 +65,7 @@ const formatCollectionDocument = (
 			collectionData?.slug,
 		),
 		collection_slug: collectionData?.slug ?? null,
-		homepage: props.document.homepage ?? false,
+		homepage: props.document.homepage ?? 0,
 		bricks: props.bricks || [],
 		fields: fields,
 		created_by: props.document.created_by,
@@ -133,7 +134,7 @@ export const swaggerCollectionDocumentResT = {
 			nullable: true,
 		},
 		homepage: {
-			type: "boolean",
+			type: "number",
 		},
 		author: {
 			type: "object",

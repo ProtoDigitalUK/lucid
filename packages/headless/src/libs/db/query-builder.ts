@@ -60,13 +60,13 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 		} else {
 			mainQuery = mainQuery.where(
 				tableKey,
-				operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
+				operator as ComparisonOperatorExpression,
 				value,
 			);
 			if (countQuery) {
 				countQuery = countQuery.where(
 					tableKey,
-					operator as ComparisonOperatorExpression, // TODO: needs looking at to add support for the "%" operator
+					operator as ComparisonOperatorExpression,
 					value,
 				);
 			}

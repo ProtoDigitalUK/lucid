@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const category = await serviceConfig.config.db.client
+	const category = await serviceConfig.db
 		.selectFrom("headless_collection_categories")
 		.select((eb) => [
 			"id",

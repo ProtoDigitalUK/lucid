@@ -13,7 +13,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	let rolesQuery = serviceConfig.config.db.client
+	let rolesQuery = serviceConfig.db
 		.selectFrom("headless_roles")
 		.select(["id", "name", "created_at", "updated_at", "description"]);
 
@@ -38,7 +38,7 @@ const getMultiple = async (
 		]);
 	}
 
-	const rolesCountQuery = serviceConfig.config.db.client
+	const rolesCountQuery = serviceConfig.db
 		.selectFrom("headless_roles")
 		.select(sql`count(*)`.as("count"));
 
@@ -61,7 +61,7 @@ const getMultiple = async (
 					{
 						queryKey: "name",
 						tableKey: "name",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "role_ids",

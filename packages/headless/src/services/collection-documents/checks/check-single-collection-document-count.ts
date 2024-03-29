@@ -21,11 +21,11 @@ const checkSingleCollectionDocumentCount = async (
 	if (data.document_id !== undefined) return;
 	if (data.collection_mode === "multiple") return;
 
-	const hasDocument = await serviceConfig.config.db.client
+	const hasDocument = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select("id")
 		.where("collection_key", "=", data.collection_key)
-		.where("is_deleted", "=", false)
+		.where("is_deleted", "=", 0)
 		.limit(1)
 		.executeTakeFirst();
 

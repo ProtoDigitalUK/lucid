@@ -1,7 +1,7 @@
 import s3Services from "../s3/index.js";
 
 const clearAll = async (serviceConfig: ServiceConfigT) => {
-	const allProcessedImages = await serviceConfig.config.db.client
+	const allProcessedImages = await serviceConfig.db
 		.selectFrom("headless_processed_images")
 		.select("key")
 		.execute();
@@ -14,9 +14,7 @@ const clearAll = async (serviceConfig: ServiceConfigT) => {
 				key: image.key,
 			})),
 		}),
-		serviceConfig.config.db.client
-			.deleteFrom("headless_processed_images")
-			.execute(),
+		serviceConfig.db.deleteFrom("headless_processed_images").execute(),
 	]);
 };
 

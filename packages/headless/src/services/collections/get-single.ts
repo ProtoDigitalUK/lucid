@@ -33,11 +33,11 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		data.include?.document_id === true &&
 		collection.data.mode === "single"
 	) {
-		const document = await serviceConfig.config.db.client
+		const document = await serviceConfig.db
 			.selectFrom("headless_collection_documents")
 			.select("id")
 			.where("collection_key", "=", collection.key)
-			.where("is_deleted", "=", false)
+			.where("is_deleted", "=", 0)
 			.limit(1)
 			.executeTakeFirst();
 

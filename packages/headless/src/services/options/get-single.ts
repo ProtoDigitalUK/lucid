@@ -8,7 +8,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const optionRes = await serviceConfig.config.db.client
+	const optionRes = await serviceConfig.db
 		.selectFrom("headless_options")
 		.selectAll()
 		.where("name", "=", data.name)

@@ -9,7 +9,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteEmail = await serviceConfig.config.db.client
+	const deleteEmail = await serviceConfig.db
 		.deleteFrom("headless_emails")
 		.where("id", "=", data.id)
 		.executeTakeFirst();

@@ -14,7 +14,7 @@ export interface ServiceData {
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const getUser = await serviceConfig.config.db.client
+	const getUser = await serviceConfig.db
 		.selectFrom("headless_users")
 		.select(["super_admin"])
 		.where("id", "=", data.auth.id)
@@ -35,15 +35,17 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const [userWithEmail, userWithUsername] = await Promise.all([
 		data.email !== undefined
-			? serviceConfig.config.db.client
+			? serviceConfig.db
 					.selectFrom("headless_users")
+					.select("id")
 					.where("email", "=", data.email)
 					.where("id", "!=", data.auth.id)
 					.executeTakeFirst()
 			: undefined,
 		data.username !== undefined
-			? serviceConfig.config.db.client
+			? serviceConfig.db
 					.selectFrom("headless_users")
+					.select("id")
 					.where("username", "=", data.username)
 					.where("id", "!=", data.auth.id)
 					.executeTakeFirst()
@@ -55,7 +57,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 						role_ids: data.role_ids,
 						is_create: false,
 					},
-			  )
+				)
 			: undefined,
 	]);
 
@@ -80,7 +82,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const updateMe = await serviceConfig.config.db.client
+	const updateMe = await serviceConfig.db
 		.updateTable("headless_users")
 		.set({
 			first_name: data.first_name,
@@ -107,7 +109,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	// TODO: send email to user to confirm email change ?
 
-	if (getUser.super_admin === false) return;
+	if (getUser.super_admin === 0) return;
 
 	await serviceWrapper(usersService.updateMultipleRoles, false)(
 		serviceConfig,

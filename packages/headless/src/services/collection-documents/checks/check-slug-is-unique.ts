@@ -22,11 +22,12 @@ const checkSlugIsUnique = async (
 	if (data.slug === undefined) return undefined;
 	const slugValue = slug(data.slug, { lower: true });
 
-	let slugExistsQuery = serviceConfig.config.db.client
+	let slugExistsQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
+		.select("id")
 		.where("collection_key", "=", data.collection_key)
 		.where("slug", "=", slugValue)
-		.where("is_deleted", "=", false);
+		.where("is_deleted", "=", 0);
 
 	if (data.document_id !== undefined) {
 		slugExistsQuery = slugExistsQuery.where("id", "!=", data.document_id);

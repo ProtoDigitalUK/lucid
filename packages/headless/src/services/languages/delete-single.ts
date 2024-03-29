@@ -8,7 +8,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const languagesCountQuery = (await serviceConfig.config.db.client
+	const languagesCountQuery = (await serviceConfig.db
 		.selectFrom("headless_languages")
 		.select(sql`count(*)`.as("count"))
 		.executeTakeFirst()) as { count: string } | undefined;
@@ -28,7 +28,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const deleteLanguage = await serviceConfig.config.db.client
+	const deleteLanguage = await serviceConfig.db
 		.deleteFrom("headless_languages")
 		.where("code", "=", data.code)
 		.executeTakeFirst();
@@ -46,13 +46,14 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const defaultLanguages = await serviceConfig.config.db.client
+	const defaultLanguages = await serviceConfig.db
 		.selectFrom("headless_languages")
-		.where("is_default", "=", true)
+		.select("id")
+		.where("is_default", "=", 1)
 		.execute();
 
 	if (defaultLanguages.length === 0) {
-		const firstLanguage = await serviceConfig.config.db.client
+		const firstLanguage = await serviceConfig.db
 			.selectFrom("headless_languages")
 			.select("id")
 			.orderBy("id")
@@ -73,11 +74,11 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		}
 
 		if (firstLanguage) {
-			await serviceConfig.config.db.client
+			await serviceConfig.db
 				.updateTable("headless_languages")
 				.set({
-					is_default: true,
-					is_enabled: true,
+					is_default: 1,
+					is_enabled: 1,
 				})
 				.where("id", "=", firstLanguage.id)
 				.execute();

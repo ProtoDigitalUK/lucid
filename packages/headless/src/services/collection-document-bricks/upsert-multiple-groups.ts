@@ -26,7 +26,7 @@ const upsertMultipleGroups = async (
 	if (brickGroups.length === 0) return { groups: [], promises: [] };
 
 	// Update groups, on id conflict, update group_order, parent_group_id
-	const groupsRes = await serviceConfig.config.db.client
+	const groupsRes = await serviceConfig.db
 		.insertInto("headless_collection_document_groups")
 		.values(
 			data.bricks.flatMap((brick) => {
@@ -162,7 +162,7 @@ const upsertMultipleGroups = async (
 		groups,
 		promises: [
 			// Delete groups not in groupsRes
-			serviceConfig.config.db.client
+			serviceConfig.db
 				.deleteFrom("headless_collection_document_groups")
 				.where(
 					"collection_brick_id",
@@ -177,7 +177,7 @@ const upsertMultipleGroups = async (
 				.execute(),
 			// Update groups with their new parent_group_id
 			updateGroupParentIds.length > 0
-				? serviceConfig.config.db.client
+				? serviceConfig.db
 						.updateTable("headless_collection_document_groups")
 						.from(values(updateGroupParentIds, "c"))
 						.set({

@@ -38,7 +38,7 @@ const checkParentAncestry = async (
       SELECT id
       FROM ancestry
       WHERE id = ${data.document_id}`)
-		.execute(serviceConfig.config.db.client);
+		.execute(serviceConfig.db);
 
 	if (document.rows.length > 0) {
 		throw new APIError({

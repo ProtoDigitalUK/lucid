@@ -10,7 +10,7 @@ const resendSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const email = await serviceConfig.config.db.client
+	const email = await serviceConfig.db
 		.selectFrom("headless_emails")
 		.selectAll()
 		.where("id", "=", data.id)
@@ -54,15 +54,17 @@ const resendSingle = async (
 		},
 	);
 
-	await serviceConfig.config.db.client
+	await serviceConfig.db
 		.updateTable("headless_emails")
 		.set({
 			delivery_status: result.success ? "delivered" : "failed",
 			last_error_message: result.success ? undefined : result.message,
-			last_success_at: result.success ? new Date() : undefined,
+			last_success_at: result.success
+				? new Date().toISOString()
+				: undefined,
 			sent_count: email.sent_count + (result.success ? 1 : 0),
 			error_count: email.error_count + (result.success ? 0 : 1),
-			last_attempt_at: new Date(),
+			last_attempt_at: new Date().toISOString(),
 		})
 		.where("id", "=", email.id)
 		.execute();

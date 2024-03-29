@@ -12,10 +12,10 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			(collection) => collection.data.mode === "single",
 		);
 
-		const documents = await serviceConfig.config.db.client
+		const documents = await serviceConfig.db
 			.selectFrom("headless_collection_documents")
 			.select(["collection_key", "id"])
-			.where("is_deleted", "=", false)
+			.where("is_deleted", "=", 0)
 			.where(
 				"collection_key",
 				"in",

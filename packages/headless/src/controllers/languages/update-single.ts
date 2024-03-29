@@ -13,6 +13,7 @@ const updateSingleController: ControllerT<
 > = async (request, reply) => {
 	await serviceWrapper(languages.updateSingle, true)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{
@@ -46,10 +47,10 @@ export default {
 					type: "string",
 				},
 				is_default: {
-					type: "boolean",
+					type: "number",
 				},
 				is_enabled: {
-					type: "boolean",
+					type: "number",
 				},
 			},
 		},

@@ -16,6 +16,7 @@ export const generateAccessToken = async (
 	try {
 		const user = await usersServices.getSingle(
 			{
+				db: request.server.config.db.client,
 				config: request.server.config,
 			},
 			{
@@ -28,7 +29,7 @@ export const generateAccessToken = async (
 			username: user.username,
 			email: user.email,
 			permissions: user.permissions,
-			super_admin: user.super_admin || false,
+			super_admin: user.super_admin || 0,
 		} satisfies FastifyRequest["auth"];
 
 		const token = jwt.sign(

@@ -18,9 +18,9 @@ interface FormatEmailsT {
 		sent_count: number;
 		error_count: number;
 		last_error_message: string | null;
-		last_attempt_at: Date | null;
-		last_success_at: Date | null;
-		created_at: Date | null;
+		last_attempt_at: Date | string | null;
+		last_success_at: Date | string | null;
+		created_at: Date | string | null;
 		data?: JSONString | null;
 	};
 	html?: string;

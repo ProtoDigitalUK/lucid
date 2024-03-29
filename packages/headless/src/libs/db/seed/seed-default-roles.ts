@@ -8,7 +8,7 @@ import rolesServices from "../../../services/roles/index.js";
 
 const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const totalRoleCount = (await serviceConfig.config.db.client
+		const totalRoleCount = (await serviceConfig.db
 			.selectFrom("headless_roles")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst()) as { count: string } | undefined;

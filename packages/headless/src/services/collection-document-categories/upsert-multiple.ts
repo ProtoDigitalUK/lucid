@@ -11,7 +11,7 @@ const upsertMultiple = async (
 		return;
 	}
 
-	const categories = await serviceConfig.config.db.client
+	const categories = await serviceConfig.db
 		.insertInto("headless_collection_document_categories")
 		.values(
 			data.category_ids.map((category_id) => ({
@@ -27,7 +27,7 @@ const upsertMultiple = async (
 
 	if (categories.length === 0) return;
 
-	await serviceConfig.config.db.client
+	await serviceConfig.db
 		.deleteFrom("headless_collection_document_categories")
 		.where("collection_document_id", "=", data.document_id)
 		.where("category_id", "not in", data.category_ids)

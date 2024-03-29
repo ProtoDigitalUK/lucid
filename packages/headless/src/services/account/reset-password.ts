@@ -24,11 +24,11 @@ const resetPassword = async (
 
 	const hashedPassword = await argon2.hash(data.password);
 
-	const user = await serviceConfig.config.db.client
+	const user = await serviceConfig.db
 		.updateTable("headless_users")
 		.set({
 			password: hashedPassword,
-			updated_at: new Date(),
+			updated_at: new Date().toISOString(),
 		})
 		.where("id", "=", token.user_id)
 		.returning(["first_name", "last_name", "email"])
@@ -48,7 +48,7 @@ const resetPassword = async (
 	}
 
 	await Promise.all([
-		serviceConfig.config.db.client
+		serviceConfig.db
 			.deleteFrom("headless_user_tokens")
 			.where("id", "=", token.id)
 			.execute(),

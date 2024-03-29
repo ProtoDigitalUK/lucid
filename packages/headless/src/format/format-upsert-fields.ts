@@ -11,8 +11,8 @@ interface FieldUpsertObjectResT {
 	group_id?: number | null;
 	text_value: string | null;
 	int_value: number | null;
-	bool_value: boolean | null;
-	json_value: unknown | null;
+	bool_value: 1 | 0 | null;
+	json_value: string | null;
 	page_link_id: number | null;
 	media_id: number | null;
 	language_id: number;

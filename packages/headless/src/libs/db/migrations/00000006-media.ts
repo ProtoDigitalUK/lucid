@@ -1,5 +1,5 @@
-import { Kysely } from "kysely";
-import { MigrationFn } from "../types.js";
+import type { Kysely } from "kysely";
+import type { MigrationFn } from "../types.js";
 import {
 	defaultTimestamp,
 	primaryKeyColumnType,

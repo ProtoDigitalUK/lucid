@@ -10,6 +10,7 @@ import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
 } from "../../utils/translation-helpers.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 
 export interface ServiceData {
 	file_data: MultipartFile | undefined;
@@ -21,7 +22,7 @@ export interface ServiceData {
 		language_id: number;
 		value: string | null;
 	}[];
-	visible?: boolean;
+	visible?: BooleanInt;
 }
 
 const uploadSingle = async (
@@ -73,12 +74,12 @@ const uploadSingle = async (
 		objectStored = true;
 		objectKey = uploadObjectRes.key;
 
-		const mediaRes = await serviceConfig.config.db.client
+		const mediaRes = await serviceConfig.db
 			.insertInto("headless_media")
 			.values({
 				key: uploadObjectRes.key,
 				e_tag: uploadObjectRes.etag,
-				visible: data.visible ?? true,
+				visible: data.visible ?? 1,
 				type: uploadObjectRes.type,
 				mime_type: uploadObjectRes.mimeType,
 				file_extension: uploadObjectRes.fileExtension,

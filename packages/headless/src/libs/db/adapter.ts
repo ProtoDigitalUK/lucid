@@ -1,10 +1,10 @@
 import T from "../../translations/index.js";
 import {
 	type Dialect,
-	Migration,
+	type Migration,
 	Kysely,
 	Migrator,
-	KyselyPlugin,
+	type KyselyPlugin,
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { InternalError } from "../../utils/error-handler.js";
@@ -12,6 +12,7 @@ import type { AdapterType, HeadlessDB } from "./types.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { Config } from "../config/config-schema.js";
 // Seeds
+import seedDefaultOptions from "./seed/seed-default-options.js";
 import seedDefaultUser from "./seed/seed-default-user.js";
 import seedDefaultLanguages from "./seed/seed-default-language.js";
 import seedDefaultRoles from "./seed/seed-default-roles.js";
@@ -67,6 +68,7 @@ export default class DatabaseAdapter {
 	async seed(config: Config) {
 		const seedData = async (serviceConfig: ServiceConfigT) => {
 			await Promise.allSettled([
+				seedDefaultOptions(serviceConfig),
 				seedDefaultUser(serviceConfig),
 				seedDefaultLanguages(serviceConfig),
 				seedDefaultRoles(serviceConfig),
@@ -77,6 +79,7 @@ export default class DatabaseAdapter {
 			seedData,
 			true,
 		)({
+			db: this.client,
 			config: config,
 		});
 	}
@@ -89,6 +92,9 @@ export default class DatabaseAdapter {
 	}
 	get jsonArrayFrom() {
 		return jsonArrayFrom;
+	}
+	get fuzzOperator(): "like" | "ilike" | "%" {
+		return "like";
 	}
 	private get migrations(): Record<string, Migration> {
 		return {

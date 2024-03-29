@@ -18,7 +18,6 @@ export const FieldSchemaCollection = z.object({
 	]),
 	value: z.union([
 		z.string(),
-		z.boolean(),
 		z.number(),
 		z.object({
 			id: z.number().nullable(),
@@ -68,7 +67,7 @@ export const swaggerFieldObj = {
 			type: "string",
 		},
 		value: {
-			type: ["number", "string", "boolean", "object", "null"],
+			type: ["number", "string", "object", "null"],
 			nullable: true,
 		},
 		language_id: {

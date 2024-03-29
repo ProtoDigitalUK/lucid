@@ -112,7 +112,7 @@ const createSingle = async (
 		]),
 	});
 
-	const categoryRes = await serviceConfig.config.db.client
+	const categoryRes = await serviceConfig.db
 		.insertInto("headless_collection_categories")
 		.values({
 			collection_key: data.collection_key,

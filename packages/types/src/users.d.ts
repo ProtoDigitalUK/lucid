@@ -3,7 +3,7 @@ import { PermissionT, EnvironmentPermissionT } from "./permissions.d.ts";
 // User
 export interface UserResT {
 	id: number;
-	super_admin?: boolean;
+	super_admin?: 1 | 0;
 	email: string;
 	username: string;
 	first_name: string | null;

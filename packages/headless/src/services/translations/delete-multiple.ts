@@ -6,7 +6,7 @@ const deleteMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	await serviceConfig.config.db.client
+	await serviceConfig.db
 		.deleteFrom("headless_translation_keys")
 		.where(
 			"id",

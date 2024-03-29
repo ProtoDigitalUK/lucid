@@ -14,7 +14,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const mediasQuery = serviceConfig.config.db.client
+	const mediasQuery = serviceConfig.db
 		.selectFrom("headless_media")
 		.select((eb) => [
 			"headless_media.id",
@@ -90,9 +90,9 @@ const getMultiple = async (
 			"title_translations.value",
 			"alt_translations.value",
 		])
-		.where("visible", "=", true);
+		.where("visible", "=", 1);
 
-	const mediasCountQuery = serviceConfig.config.db.client
+	const mediasCountQuery = serviceConfig.db
 		.selectFrom("headless_media")
 		.select(sql`count(*)`.as("count"))
 		.leftJoin("headless_translations as title_translations", (join) =>
@@ -122,7 +122,7 @@ const getMultiple = async (
 			"title_translations.value",
 			"alt_translations.value",
 		])
-		.where("visible", "=", true);
+		.where("visible", "=", 1);
 
 	const { main, count } = queryBuilder(
 		{
@@ -143,7 +143,7 @@ const getMultiple = async (
 					{
 						queryKey: "title",
 						tableKey: "title_translations.value",
-						operator: "%",
+						operator: serviceConfig.config.db.fuzzOperator,
 					},
 					{
 						queryKey: "key",

@@ -4,7 +4,7 @@ import type z from "zod";
 import type { Kysely } from "kysely";
 import type { UserPermissionsResT } from "@headless/types/src/users.js";
 import type { LanguageResT } from "@headless/types/src/language.js";
-import type { HeadlessDB } from "../libs/db/types.ts";
+import type { HeadlessDB, BooleanInt } from "../libs/db/types.ts";
 
 declare module "fastify" {
 	interface FastifyInstance {
@@ -16,7 +16,7 @@ declare module "fastify" {
 			id: number;
 			username: string;
 			email: string;
-			super_admin: boolean;
+			super_admin: BooleanInt;
 			permissions: UserPermissionsResT["permissions"] | undefined;
 		};
 		language: {
@@ -40,6 +40,7 @@ declare global {
 	) => void;
 
 	interface ServiceConfigT {
+		db: DB;
 		config: Config;
 		inTransaction?: boolean; // If the function is within a transaction
 	}
@@ -66,5 +67,11 @@ declare global {
 			per_page?: number | null;
 			total?: number | null;
 		};
+	}
+
+	declare module "kysely" {
+		export type ComparisonOperatorExpression =
+			| ComparisonOperatorExpression
+			| "%";
 	}
 }

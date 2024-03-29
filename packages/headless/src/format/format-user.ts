@@ -4,16 +4,17 @@ import formatUserPermissions, {
 	swaggerRolesRes,
 } from "./format-user-permissions.js";
 import { formatDate } from "../utils/format-helpers.js";
+import type { BooleanInt } from "../libs/db/types.js";
 
 interface FormatUserT {
 	user: {
-		created_at: Date | null;
+		created_at: Date | string | null;
 		email: string;
 		first_name: string | null;
-		super_admin: boolean | null;
+		super_admin: BooleanInt | null;
 		id: number;
 		last_name: string | null;
-		updated_at: Date | null;
+		updated_at: Date | string | null;
 		username: string;
 		roles?: {
 			id: number;
@@ -33,7 +34,7 @@ const formatUser = (props: FormatUserT): UserResT => {
 
 	return {
 		id: props.user.id,
-		super_admin: props.user.super_admin || false,
+		super_admin: props.user.super_admin ?? 0,
 		email: props.user.email,
 		username: props.user.username,
 		first_name: props.user.first_name,
@@ -49,7 +50,7 @@ export const swaggerUsersRes = {
 	type: "object",
 	properties: {
 		id: { type: "number", example: 1 },
-		super_admin: { type: "boolean", example: false },
+		super_admin: { type: "number", example: 1 },
 		email: { type: "string", example: "admin@headless.com" },
 		username: { type: "string", example: "admin" },
 		first_name: { type: "string", example: "Admin" },

@@ -19,6 +19,7 @@ const sendExternal = async (data: ServiceData) => {
 	const config = await getConfig();
 	return serviceWrapper(emailServices.sendEmail, true)(
 		{
+			db: config.db.client,
 			config: config,
 		},
 		{

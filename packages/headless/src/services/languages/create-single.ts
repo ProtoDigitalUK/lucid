@@ -1,11 +1,12 @@
 import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
+import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
 
 export interface ServiceData {
 	code: string;
-	is_enabled: boolean;
-	is_default: boolean;
+	is_enabled: BooleanInt;
+	is_default: BooleanInt;
 }
 
 const createSingle = async (
@@ -15,7 +16,7 @@ const createSingle = async (
 	// If is default, it has to be enabled
 	// There can only be one default language
 
-	const codeUnique = await serviceConfig.config.db.client
+	const codeUnique = await serviceConfig.db
 		.selectFrom("headless_languages")
 		.select("id")
 		.where("code", "=", data.code)
@@ -56,11 +57,11 @@ const createSingle = async (
 		});
 	}
 
-	const language = await serviceConfig.config.db.client
+	const language = await serviceConfig.db
 		.insertInto("headless_languages")
 		.values({
 			code: data.code,
-			is_enabled: data.is_default ? true : data.is_enabled,
+			is_enabled: data.is_default ? 1 : data.is_enabled,
 			is_default: data.is_default,
 		})
 		.returning(["id", "code"])
@@ -80,10 +81,10 @@ const createSingle = async (
 	}
 
 	if (data.is_default) {
-		await serviceConfig.config.db.client
+		await serviceConfig.db
 			.updateTable("headless_languages")
 			.set({
-				is_default: false,
+				is_default: 0,
 			})
 			.where("id", "!=", language.id)
 			.execute();

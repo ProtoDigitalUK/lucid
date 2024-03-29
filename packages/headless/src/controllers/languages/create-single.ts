@@ -15,6 +15,7 @@ const createSingleController: ControllerT<
 > = async (request, reply) => {
 	const languageCode = await serviceWrapper(languages.createSingle, true)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{
@@ -26,6 +27,7 @@ const createSingleController: ControllerT<
 
 	const language = await serviceWrapper(languages.getSingle, false)(
 		{
+			db: request.server.config.db.client,
 			config: request.server.config,
 		},
 		{
@@ -55,10 +57,10 @@ export default {
 					type: "string",
 				},
 				is_enabled: {
-					type: "boolean",
+					type: "number",
 				},
 				is_default: {
-					type: "boolean",
+					type: "number",
 				},
 			},
 			required: ["code", "is_enabled", "is_default"],

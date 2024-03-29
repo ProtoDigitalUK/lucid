@@ -13,11 +13,11 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const languagesQuery = serviceConfig.config.db.client
+	const languagesQuery = serviceConfig.db
 		.selectFrom("headless_languages")
 		.selectAll();
 
-	const languagesCountQuery = serviceConfig.config.db.client
+	const languagesCountQuery = serviceConfig.db
 		.selectFrom("headless_languages")
 		.select(sql`count(*)`.as("count"));
 
