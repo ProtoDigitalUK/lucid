@@ -1,5 +1,9 @@
 import type { Config } from "../libs/config/config-schema.js";
-import type { HeadlessUserTokens, HeadlessDB } from "../libs/db/types.js";
+import type {
+	HeadlessUserTokens,
+	HeadlessDB,
+	Select,
+} from "../libs/db/types.js";
 import {
 	deleteQB,
 	selectQB,
@@ -10,30 +14,28 @@ export default class UserTokens {
 	constructor(private config: Config) {}
 
 	// dynamic query methods
-	getSingle = async (data: {
-		select: Array<keyof HeadlessUserTokens>;
-		where: QueryBuilderWhereT<HeadlessDB, "headless_user_tokens">;
+	getSingle = async <K extends keyof Select<HeadlessUserTokens>>(data: {
+		select: K[];
+		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client
 			.selectFrom("headless_user_tokens")
-			.select(data.select);
+			.select<K>(data.select);
 
 		query = selectQB(query, data.where);
 
-		const res = await query.executeTakeFirst();
-
-		return res;
+		return query.executeTakeFirst() as Promise<
+			Pick<Select<HeadlessUserTokens>, K> | undefined
+		>;
 	};
 	deleteSingle = async (data: {
-		where: QueryBuilderWhereT<HeadlessDB, "headless_user_tokens">;
+		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client.deleteFrom("headless_user_tokens");
 
 		query = deleteQB(query, data.where);
 
-		const res = await query.execute();
-
-		return res;
+		return query.execute();
 	};
 	createSingle = async (data: {
 		userId: number;
@@ -41,7 +43,7 @@ export default class UserTokens {
 		expiryDate: string;
 		token: string;
 	}) => {
-		const res = await this.config.db.client
+		return this.config.db.client
 			.insertInto("headless_user_tokens")
 			.values({
 				user_id: data.userId,
@@ -51,8 +53,6 @@ export default class UserTokens {
 			})
 			.returning("token")
 			.executeTakeFirst();
-
-		return res;
 	};
 	// fixed query methods
 }

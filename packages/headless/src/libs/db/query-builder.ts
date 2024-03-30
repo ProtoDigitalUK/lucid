@@ -5,8 +5,10 @@ import type {
 	ComparisonOperatorExpression,
 	DeleteQueryBuilder,
 	OperandValueExpressionOrList,
+	SelectExpression,
 } from "kysely";
 import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
+import { HeadlessDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;
@@ -140,15 +142,15 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	};
 };
 
-export type QueryBuilderWhereT<DB, Table extends keyof DB> = Array<{
-	key: ReferenceExpression<DB, Table>;
+export type QueryBuilderWhereT<Table extends keyof HeadlessDB> = Array<{
+	key: ReferenceExpression<HeadlessDB, Table>;
 	operator: ComparisonOperatorExpression;
-	value: OperandValueExpressionOrList<DB, Table, keyof Table>;
+	value: OperandValueExpressionOrList<HeadlessDB, Table, keyof Table>;
 }>;
 
-export const selectQB = <DB, Table extends keyof DB, O>(
-	query: SelectQueryBuilder<DB, Table, O>,
-	where: QueryBuilderWhereT<DB, Table>,
+export const selectQB = <Table extends keyof HeadlessDB, O>(
+	query: SelectQueryBuilder<HeadlessDB, Table, O>,
+	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
 
@@ -159,9 +161,9 @@ export const selectQB = <DB, Table extends keyof DB, O>(
 	return kyselyQuery;
 };
 
-export const deleteQB = <DB, Table extends keyof DB, O>(
-	query: DeleteQueryBuilder<DB, Table, O>,
-	where: QueryBuilderWhereT<DB, Table>,
+export const deleteQB = <Table extends keyof HeadlessDB, O>(
+	query: DeleteQueryBuilder<HeadlessDB, Table, O>,
+	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
 

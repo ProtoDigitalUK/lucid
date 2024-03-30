@@ -1,9 +1,6 @@
 import type { Migration, Generated, ColumnType } from "kysely";
 import type { FieldTypesT } from "../builders/field-builder/types.js";
 
-// ------------------------------------------------------------------------------
-// Migration / Adapters
-
 export enum AdapterType {
 	SQLITE = 0,
 	POSTGRES = 1,
@@ -12,16 +9,20 @@ export enum AdapterType {
 
 export type MigrationFn = (adapter: AdapterType) => Migration;
 
+export type Select<T> = {
+	[P in keyof T]: T[P] extends { __select__: infer S } ? S : T[P];
+};
+
 // ------------------------------------------------------------------------------
 // Column types
 
 export type TimestampMutateable = ColumnType<
-	Date | string,
+	string | Date,
 	string | undefined,
 	string
 >;
 export type TimestampImmutable = ColumnType<
-	Date | string,
+	string | Date,
 	string | undefined,
 	never
 >;
