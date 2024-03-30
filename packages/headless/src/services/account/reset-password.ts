@@ -15,7 +15,7 @@ const resetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const userTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
 		serviceConfig.config,
 	);
@@ -54,7 +54,7 @@ const resetPassword = async (
 	}
 
 	await Promise.all([
-		userTokensRepo.deleteSingle({
+		UserTokensRepo.delete({
 			where: [
 				{
 					key: "id",

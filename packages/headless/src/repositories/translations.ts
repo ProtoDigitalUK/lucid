@@ -8,8 +8,4 @@ import {
 
 export default class Translations {
 	constructor(private config: Config) {}
-
-	// dynamic query methods
-
-	// fixed query methods
 }

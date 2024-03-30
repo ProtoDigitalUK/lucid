@@ -8,8 +8,4 @@ import {
 
 export default class CollectionDocuments {
 	constructor(private config: Config) {}
-
-	// dynamic query methods
-
-	// fixed query methods
 }

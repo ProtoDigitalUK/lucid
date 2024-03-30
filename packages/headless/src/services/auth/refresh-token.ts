@@ -14,7 +14,7 @@ export const generateRefreshToken = async (
 	user_id: number,
 ) => {
 	await clearRefreshToken(request, reply);
-	const userTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
 		request.server.config,
 	);
@@ -39,7 +39,7 @@ export const generateRefreshToken = async (
 		path: "/",
 	});
 
-	await userTokensRepo.createSingle({
+	await UserTokensRepo.createSingle({
 		userId: user_id,
 		token: token,
 		tokenType: "refresh",
@@ -60,7 +60,7 @@ export const verifyRefreshToken = async (
 			throw new Error("No refresh token found");
 		}
 
-		const userTokensRepo = RepositoryFactory.getRepository(
+		const UserTokensRepo = RepositoryFactory.getRepository(
 			"user-tokens",
 			request.server.config,
 		);
@@ -72,7 +72,7 @@ export const verifyRefreshToken = async (
 			id: number;
 		};
 
-		const token = await userTokensRepo.getSingle({
+		const token = await UserTokensRepo.getSingle({
 			select: ["id", "user_id"],
 			where: [
 				{
@@ -126,7 +126,7 @@ export const clearRefreshToken = async (
 	const _refresh = request.cookies[key];
 	if (!_refresh) return;
 
-	const userTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
 		request.server.config,
 	);
@@ -140,7 +140,7 @@ export const clearRefreshToken = async (
 
 	reply.clearCookie(key, { path: "/" });
 
-	await userTokensRepo.deleteSingle({
+	await UserTokensRepo.delete({
 		where: [
 			{
 				key: "token",

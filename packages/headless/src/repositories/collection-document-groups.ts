@@ -11,8 +11,4 @@ import {
 
 export default class CollectionDocumentGroups {
 	constructor(private config: Config) {}
-
-	// dynamic query methods
-
-	// fixed query methods
 }

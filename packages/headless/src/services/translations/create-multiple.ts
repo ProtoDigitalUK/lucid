@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData<K extends string> {
 	keys: K[];
@@ -27,13 +28,14 @@ const createMultiple = async <K extends string>(
 		});
 	}
 
-	const translationKeyEntries = await serviceConfig.db
-		.insertInto("headless_translation_keys")
-		.values(
-			data.keys.map((key) => ({ created_at: new Date().toISOString() })),
-		)
-		.returning("id")
-		.execute();
+	const TranslationKeysRepo = RepositoryFactory.getRepository(
+		"translation-keys",
+		serviceConfig.config,
+	);
+
+	const translationKeyEntries = await TranslationKeysRepo.createMultiple(
+		data.keys.map((k) => ({ createdAt: new Date().toISOString() })),
+	);
 
 	if (translationKeyEntries.length !== data.keys.length) {
 		throw new APIError({

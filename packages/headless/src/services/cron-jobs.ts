@@ -6,12 +6,12 @@ import RepositoryFactory from "../libs/factories/repository-factory.js";
 
 const clearExpiredTokens = async (config: Config) => {
 	try {
-		const userTokensRepo = RepositoryFactory.getRepository(
+		const UserTokensRepo = RepositoryFactory.getRepository(
 			"user-tokens",
 			config,
 		);
 
-		await userTokensRepo.deleteSingle({
+		await UserTokensRepo.delete({
 			where: [
 				{
 					key: "expiry_date",

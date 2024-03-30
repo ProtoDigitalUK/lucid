@@ -1,15 +1,29 @@
 import type { Config } from "../libs/config/config-schema.js";
-import type { HeadlessTranslationKeys, Select } from "../libs/db/types.js";
-import {
-	deleteQB,
-	selectQB,
-	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
+import { deleteQB, type QueryBuilderWhereT } from "../libs/db/query-builder.js";
 
 export default class TranslationKeys {
 	constructor(private config: Config) {}
 
-	// dynamic query methods
+	delete = async (data: {
+		where: QueryBuilderWhereT<"headless_translation_keys">;
+	}) => {
+		let query = this.config.db.client.deleteFrom(
+			"headless_translation_keys",
+		);
 
-	// fixed query methods
+		query = deleteQB(query, data.where);
+
+		return query.execute();
+	};
+	createMultiple = async (
+		data: {
+			createdAt: string;
+		}[],
+	) => {
+		return this.config.db.client
+			.insertInto("headless_translation_keys")
+			.values(data.map((d) => ({ created_at: d.createdAt })))
+			.returning("id")
+			.execute();
+	};
 }

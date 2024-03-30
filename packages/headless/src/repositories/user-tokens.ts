@@ -9,7 +9,6 @@ import {
 export default class UserTokens {
 	constructor(private config: Config) {}
 
-	// dynamic query methods
 	getSingle = async <K extends keyof Select<HeadlessUserTokens>>(data: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_user_tokens">;
@@ -24,7 +23,7 @@ export default class UserTokens {
 			Pick<Select<HeadlessUserTokens>, K> | undefined
 		>;
 	};
-	deleteSingle = async (data: {
+	delete = async (data: {
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client.deleteFrom("headless_user_tokens");
@@ -50,5 +49,4 @@ export default class UserTokens {
 			.returning("token")
 			.executeTakeFirst();
 	};
-	// fixed query methods
 }

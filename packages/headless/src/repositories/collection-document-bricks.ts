@@ -11,8 +11,4 @@ import {
 
 export default class CollectionDocumentBricks {
 	constructor(private config: Config) {}
-
-	// dynamic query methods
-
-	// fixed query methods
 }
