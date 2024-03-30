@@ -1,9 +1,5 @@
 import type { Config } from "../libs/config/config-schema.js";
-import type {
-	HeadlessUserTokens,
-	HeadlessDB,
-	Select,
-} from "../libs/db/types.js";
+import type { HeadlessUserTokens, Select } from "../libs/db/types.js";
 import {
 	deleteQB,
 	selectQB,
