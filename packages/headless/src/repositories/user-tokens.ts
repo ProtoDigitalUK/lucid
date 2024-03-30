@@ -9,30 +9,30 @@ import {
 export default class UserTokens {
 	constructor(private config: Config) {}
 
-	getSingle = <K extends keyof Select<HeadlessUserTokens>>(data: {
+	getSingle = <K extends keyof Select<HeadlessUserTokens>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client
 			.selectFrom("headless_user_tokens")
-			.select<K>(data.select);
+			.select<K>(props.select);
 
-		query = selectQB(query, data.where);
+		query = selectQB(query, props.where);
 
 		return query.executeTakeFirst() as Promise<
 			Pick<Select<HeadlessUserTokens>, K> | undefined
 		>;
 	};
-	delete = (data: {
+	delete = (props: {
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client.deleteFrom("headless_user_tokens");
 
-		query = deleteQB(query, data.where);
+		query = deleteQB(query, props.where);
 
 		return query.execute();
 	};
-	createSingle = (data: {
+	createSingle = (props: {
 		userId: number;
 		tokenType: HeadlessUserTokens["token_type"];
 		expiryDate: string;
@@ -41,10 +41,10 @@ export default class UserTokens {
 		return this.config.db.client
 			.insertInto("headless_user_tokens")
 			.values({
-				user_id: data.userId,
-				token: data.token,
-				token_type: data.tokenType,
-				expiry_date: data.expiryDate,
+				user_id: props.userId,
+				token: props.token,
+				token_type: props.tokenType,
+				expiry_date: props.expiryDate,
 			})
 			.returning("token")
 			.executeTakeFirst();

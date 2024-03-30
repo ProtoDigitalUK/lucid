@@ -54,7 +54,7 @@ export interface HeadlessTranslations {
 }
 
 export interface HeadlessOptions {
-	name: string;
+	name: "media_storage_used";
 	value_int: number | null;
 	value_text: string | null;
 	value_bool: BooleanInt | null;

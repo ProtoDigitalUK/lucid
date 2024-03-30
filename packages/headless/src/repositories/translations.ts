@@ -4,7 +4,7 @@ export default class Translations {
 	constructor(private config: Config) {}
 
 	upsertMultiple = (
-		data: {
+		props: {
 			value: string | null;
 			languageId: number;
 			translationKeyId: number;
@@ -13,7 +13,7 @@ export default class Translations {
 		return this.config.db.client
 			.insertInto("headless_translations")
 			.values(
-				data.map((t) => ({
+				props.map((t) => ({
 					value: t.value,
 					language_id: t.languageId,
 					translation_key_id: t.translationKeyId,

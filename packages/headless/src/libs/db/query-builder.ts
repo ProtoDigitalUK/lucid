@@ -1,11 +1,12 @@
 import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
-import type {
-	SelectQueryBuilder,
-	ReferenceExpression,
-	ComparisonOperatorExpression,
-	DeleteQueryBuilder,
-	OperandValueExpressionOrList,
-	SelectExpression,
+import {
+	type SelectQueryBuilder,
+	type ReferenceExpression,
+	type ComparisonOperatorExpression,
+	type DeleteQueryBuilder,
+	type OperandValueExpressionOrList,
+	type SelectExpression,
+	UpdateQueryBuilder,
 } from "kysely";
 import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
 import { HeadlessDB } from "./types.js";
@@ -163,6 +164,23 @@ export const selectQB = <Table extends keyof HeadlessDB, O>(
 
 export const deleteQB = <Table extends keyof HeadlessDB, O>(
 	query: DeleteQueryBuilder<HeadlessDB, Table, O>,
+	where: QueryBuilderWhereT<Table>,
+) => {
+	let kyselyQuery = query;
+
+	for (const { key, operator, value } of where) {
+		kyselyQuery = query.where(key, operator, value);
+	}
+
+	return kyselyQuery;
+};
+
+export const updateQB = <
+	UT extends keyof HeadlessDB,
+	Table extends keyof HeadlessDB,
+	O,
+>(
+	query: UpdateQueryBuilder<HeadlessDB, UT, Table, O>,
 	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
