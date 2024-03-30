@@ -4,7 +4,7 @@ import { deleteQB, type QueryBuilderWhereT } from "../libs/db/query-builder.js";
 export default class TranslationKeys {
 	constructor(private config: Config) {}
 
-	delete = async (data: {
+	delete = (data: {
 		where: QueryBuilderWhereT<"headless_translation_keys">;
 	}) => {
 		let query = this.config.db.client.deleteFrom(
@@ -15,7 +15,7 @@ export default class TranslationKeys {
 
 		return query.execute();
 	};
-	createMultiple = async (
+	createMultiple = (
 		data: {
 			createdAt: string;
 		}[],

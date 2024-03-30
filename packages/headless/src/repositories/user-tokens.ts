@@ -9,7 +9,7 @@ import {
 export default class UserTokens {
 	constructor(private config: Config) {}
 
-	getSingle = async <K extends keyof Select<HeadlessUserTokens>>(data: {
+	getSingle = <K extends keyof Select<HeadlessUserTokens>>(data: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
@@ -23,7 +23,7 @@ export default class UserTokens {
 			Pick<Select<HeadlessUserTokens>, K> | undefined
 		>;
 	};
-	delete = async (data: {
+	delete = (data: {
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.config.db.client.deleteFrom("headless_user_tokens");
@@ -32,7 +32,7 @@ export default class UserTokens {
 
 		return query.execute();
 	};
-	createSingle = async (data: {
+	createSingle = (data: {
 		userId: number;
 		tokenType: HeadlessUserTokens["token_type"];
 		expiryDate: string;

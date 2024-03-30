@@ -62,18 +62,20 @@ const createMultiple = async <K extends string>(
 		return keys;
 	}
 
-	await serviceConfig.db
-		.insertInto("headless_translations")
-		.values(
-			data.translations.map((translation) => {
-				return {
-					translation_key_id: keys[translation.key],
-					language_id: translation.language_id,
-					value: translation.value,
-				};
-			}),
-		)
-		.execute();
+	const TranslationsRepo = RepositoryFactory.getRepository(
+		"translations",
+		serviceConfig.config,
+	);
+
+	await TranslationsRepo.upsertMultiple(
+		data.translations.map((translation) => {
+			return {
+				translationKeyId: keys[translation.key],
+				languageId: translation.language_id,
+				value: translation.value,
+			};
+		}),
+	);
 
 	return keys;
 };
