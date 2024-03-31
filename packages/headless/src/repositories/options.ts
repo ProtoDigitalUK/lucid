@@ -36,7 +36,7 @@ export default class Options {
 			})
 			.execute();
 	};
-	updateSingle = (props: {
+	update = (props: {
 		where: QueryBuilderWhereT<"headless_options">;
 		data: {
 			valueInt?: HeadlessOptions["value_int"];
@@ -52,6 +52,6 @@ export default class Options {
 
 		query = updateQB(query, props.where);
 
-		return query.executeTakeFirst();
+		return query.execute();
 	};
 }

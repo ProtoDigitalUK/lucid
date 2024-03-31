@@ -20,7 +20,7 @@ const updateSingle = async (
 		serviceConfig.db,
 	);
 
-	const updateOption = await OptionsRepo.updateSingle({
+	const updateOption = await OptionsRepo.update({
 		where: [
 			{
 				key: "name",
@@ -35,7 +35,7 @@ const updateSingle = async (
 		},
 	});
 
-	if (updateOption.numUpdatedRows === 0n) {
+	if (updateOption.length === 0) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_updated_name", {

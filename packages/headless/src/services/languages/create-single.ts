@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	code: string;
@@ -16,13 +17,23 @@ const createSingle = async (
 	// If is default, it has to be enabled
 	// There can only be one default language
 
-	const codeUnique = await serviceConfig.db
-		.selectFrom("headless_languages")
-		.select("id")
-		.where("code", "=", data.code)
-		.executeTakeFirst();
+	const LanguagesRepo = RepositoryFactory.getRepository(
+		"languages",
+		serviceConfig.db,
+	);
 
-	if (codeUnique) {
+	const codeUnique = await LanguagesRepo.getSingle({
+		select: ["id"],
+		where: [
+			{
+				key: "code",
+				operator: "=",
+				value: data.code,
+			},
+		],
+	});
+
+	if (codeUnique !== undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_created_name", {
@@ -57,15 +68,11 @@ const createSingle = async (
 		});
 	}
 
-	const language = await serviceConfig.db
-		.insertInto("headless_languages")
-		.values({
-			code: data.code,
-			is_enabled: data.is_default ? 1 : data.is_enabled,
-			is_default: data.is_default,
-		})
-		.returning(["id", "code"])
-		.executeTakeFirst();
+	const language = await LanguagesRepo.createSingle({
+		code: data.code,
+		isEnabled: data.is_default ? 1 : data.is_enabled,
+		isDefault: data.is_default,
+	});
 
 	if (language === undefined) {
 		throw new APIError({
@@ -81,13 +88,18 @@ const createSingle = async (
 	}
 
 	if (data.is_default) {
-		await serviceConfig.db
-			.updateTable("headless_languages")
-			.set({
-				is_default: 0,
-			})
-			.where("id", "!=", language.id)
-			.execute();
+		await LanguagesRepo.update({
+			data: {
+				isDefault: 0,
+			},
+			where: [
+				{
+					key: "id",
+					operator: "!=",
+					value: language.id,
+				},
+			],
+		});
 	}
 
 	return language.code;

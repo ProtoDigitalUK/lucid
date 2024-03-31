@@ -17,7 +17,7 @@ export type Select<T> = {
 // Column types
 
 export type TimestampMutateable = ColumnType<
-	string | Date,
+	string | Date | null,
 	string | undefined,
 	string
 >;
@@ -38,7 +38,7 @@ export interface HeadlessLanguages {
 	is_default: BooleanInt;
 	is_enabled: BooleanInt;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessTranslationKeys {
@@ -69,10 +69,10 @@ export interface HeadlessUsers {
 	last_name: string | null;
 	password: string;
 	is_deleted: BooleanInt | null;
-	is_deleted_at: TimestampMutateable | null;
+	is_deleted_at: TimestampMutateable;
 	deleted_by: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessRoles {
@@ -80,7 +80,7 @@ export interface HeadlessRoles {
 	name: string;
 	description: string | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessRolePermissions {
@@ -88,7 +88,7 @@ export interface HeadlessRolePermissions {
 	role_id: number;
 	permission: string;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessUserRoles {
@@ -96,7 +96,7 @@ export interface HeadlessUserRoles {
 	user_id: number | null;
 	role_id: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessUserTokens {
@@ -124,8 +124,8 @@ export interface HeadlessEmails {
 	sent_count: number;
 	error_count: number;
 	last_error_message: string | null;
-	last_attempt_at: TimestampMutateable | null;
-	last_success_at: TimestampMutateable | null;
+	last_attempt_at: TimestampMutateable;
+	last_success_at: TimestampMutateable;
 	created_at: TimestampImmutable;
 }
 
@@ -143,7 +143,7 @@ export interface HeadlessMedia {
 	title_translation_key_id: number | null;
 	alt_translation_key_id: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessProcessedImages {
@@ -159,13 +159,13 @@ export interface HeadlessCollectionDocuments {
 	full_slug: string | null;
 	homepage: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
-	is_deleted_at: TimestampMutateable | null;
+	is_deleted_at: TimestampMutateable;
 	author_id: number | null;
 	deleted_by: number | null;
 	created_by: number | null;
 	updated_by: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessCollectionDocumentBricks {
@@ -210,7 +210,7 @@ export interface HeadlessCollectionCategories {
 	description_translation_key_id: number | null;
 	slug: string;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessCollectionDocumentCategories {
