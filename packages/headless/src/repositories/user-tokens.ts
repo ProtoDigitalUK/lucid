@@ -1,72 +1,51 @@
-import type { Config } from "../libs/config/config-schema.js";
-import type { HeadlessUserTokens } from "../libs/db/types.js";
-import type {
-	ComparisonOperatorExpression,
-	OperandValueExpressionOrList,
-} from "kysely";
-import type { HeadlessDB } from "../libs/db/types.js";
-import { deleteQB, selectQB } from "../libs/db/query-builder.js";
+import type { HeadlessUserTokens, Select } from "../libs/db/types.js";
+import {
+	deleteQB,
+	selectQB,
+	type QueryBuilderWhereT,
+} from "../libs/db/query-builder.js";
 
 export default class UserTokens {
-	constructor(private config: Config) {}
+	constructor(private db: DB) {}
 
-	// dynamic query methods
-	getSingle = async (data: {
-		select: UserTokenSelectT;
-		where: UserTokenWhereT;
+	getSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
+		select: K[];
+		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
-		let query = this.config.db.client
+		let query = this.db
 			.selectFrom("headless_user_tokens")
-			.select(data.select);
+			.select<K>(props.select);
 
-		query = selectQB(query, data.where);
+		query = selectQB(query, props.where);
 
-		const res = await query.executeTakeFirst();
-
-		return res;
+		return query.executeTakeFirst() as Promise<
+			Pick<Select<HeadlessUserTokens>, K> | undefined
+		>;
 	};
-	deleteSingle = async (data: {
-		where: UserTokenWhereT;
+	delete = async (props: {
+		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
-		let query = this.config.db.client.deleteFrom("headless_user_tokens");
+		let query = this.db.deleteFrom("headless_user_tokens");
 
-		query = deleteQB(query, data.where);
+		query = deleteQB(query, props.where);
 
-		const res = await query.execute();
-
-		return res;
+		return query.execute();
 	};
-	createSingle = async (data: {
+	createSingle = async (props: {
 		userId: number;
 		tokenType: HeadlessUserTokens["token_type"];
 		expiryDate: string;
 		token: string;
 	}) => {
-		const res = await this.config.db.client
+		return this.db
 			.insertInto("headless_user_tokens")
 			.values({
-				user_id: data.userId,
-				token: data.token,
-				token_type: data.tokenType,
-				expiry_date: data.expiryDate,
+				user_id: props.userId,
+				token: props.token,
+				token_type: props.tokenType,
+				expiry_date: props.expiryDate,
 			})
 			.returning("token")
 			.executeTakeFirst();
-
-		return res;
 	};
-	// fixed query methods
 }
-
-// ------------------------------------------------------------------
-// Types
-type UserTokenWhereT = Array<{
-	key: keyof HeadlessUserTokens;
-	operator: ComparisonOperatorExpression;
-	value: OperandValueExpressionOrList<
-		HeadlessDB,
-		"headless_user_tokens",
-		keyof HeadlessUserTokens
-	>;
-}>;
-type UserTokenSelectT = Array<keyof HeadlessUserTokens>;

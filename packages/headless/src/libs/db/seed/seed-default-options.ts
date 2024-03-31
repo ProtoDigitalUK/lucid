@@ -1,22 +1,30 @@
 import T from "../../../translations/index.js";
 import { InternalError } from "../../../utils/error-handler.js";
+import RepositoryFactory from "../../factories/repository-factory.js";
 
 const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const mediaStorageOption = await serviceConfig.db
-			.selectFrom("headless_options")
-			.select("name")
-			.where("name", "=", "media_storage_used")
-			.executeTakeFirst();
+		const OptionsRepo = RepositoryFactory.getRepository(
+			"options",
+			serviceConfig.db,
+		);
+
+		const mediaStorageOption = await OptionsRepo.getSingle({
+			select: ["name"],
+			where: [
+				{
+					key: "name",
+					operator: "=",
+					value: "media_storage_used",
+				},
+			],
+		});
 
 		if (mediaStorageOption === undefined) {
-			await serviceConfig.db
-				.insertInto("headless_options")
-				.values({
-					name: "media_storage_used",
-					value_int: 0,
-				})
-				.execute();
+			await OptionsRepo.createSingle({
+				name: "media_storage_used",
+				valueInt: 0,
+			});
 		}
 	} catch (error) {
 		throw new InternalError(

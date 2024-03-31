@@ -1,17 +1,10 @@
 import ISO6391 from "iso-639-1";
 import type { LanguageResT } from "@headless/types/src/language.js";
-import type { BooleanInt } from "../libs/db/types.js";
+import type { HeadlessLanguages, Select } from "../libs/db/types.js";
 import { formatDate } from "../utils/format-helpers.js";
 
 interface FormatLanguageT {
-	language: {
-		id: number;
-		code: string;
-		created_at: Date | string | null;
-		is_default: BooleanInt;
-		is_enabled: BooleanInt;
-		updated_at: Date | string | null;
-	};
+	language: Select<HeadlessLanguages>;
 }
 
 const formatLanguage = (props: FormatLanguageT): LanguageResT => {

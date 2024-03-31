@@ -2,17 +2,28 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "@headless/types/src/options.js";
 import formatOptions from "../../format/format-options.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	name: OptionNameT;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const optionRes = await serviceConfig.db
-		.selectFrom("headless_options")
-		.selectAll()
-		.where("name", "=", data.name)
-		.executeTakeFirst();
+	const OptionsRepo = RepositoryFactory.getRepository(
+		"options",
+		serviceConfig.db,
+	);
+
+	const optionRes = await OptionsRepo.getSingle({
+		select: ["name", "value_bool", "value_int", "value_text"],
+		where: [
+			{
+				key: "name",
+				operator: "=",
+				value: data.name,
+			},
+		],
+	});
 
 	if (optionRes === undefined) {
 		throw new APIError({

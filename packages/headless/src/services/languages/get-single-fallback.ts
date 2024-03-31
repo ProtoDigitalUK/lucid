@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id?: number;
@@ -9,12 +10,22 @@ const getSingleFallback = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const LanguagesRepo = RepositoryFactory.getRepository(
+		"languages",
+		serviceConfig.db,
+	);
+
 	if (data.id !== undefined) {
-		const language = await serviceConfig.db
-			.selectFrom("headless_languages")
-			.select(["id", "code"])
-			.where("id", "=", data.id)
-			.executeTakeFirst();
+		const language = await LanguagesRepo.getSingle({
+			select: ["id", "code"],
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: data.id,
+				},
+			],
+		});
 
 		if (language === undefined) {
 			throw new APIError({
@@ -35,11 +46,16 @@ const getSingleFallback = async (
 		};
 	}
 
-	const defaultLanguage = await serviceConfig.db
-		.selectFrom("headless_languages")
-		.select(["id", "code"])
-		.where("is_default", "=", 1)
-		.executeTakeFirst();
+	const defaultLanguage = await LanguagesRepo.getSingle({
+		select: ["id", "code"],
+		where: [
+			{
+				key: "is_default",
+				operator: "=",
+				value: 1,
+			},
+		],
+	});
 
 	if (defaultLanguage === undefined) {
 		throw new APIError({

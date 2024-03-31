@@ -6,6 +6,7 @@ import {
 	getUniqueLanguageIDs,
 	type TranslationsObjT,
 } from "../../utils/translation-helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;
@@ -33,33 +34,28 @@ const upsertMultiple = async <K extends string>(
 			.map((translation) => {
 				return {
 					value: translation.value ?? "",
-					language_id: translation.language_id,
-					translation_key_id: data.keys[translation.key] ?? null,
+					languageId: translation.language_id,
+					translationKeyId: data.keys[translation.key] ?? null,
 				};
 			})
 			.filter(
-				(translation) => translation.translation_key_id !== null,
+				(translation) => translation.translationKeyId !== null,
 			) as Array<{
 			value: string;
-			language_id: number;
-			translation_key_id: number;
+			languageId: number;
+			translationKeyId: number;
 		}>;
 
 		if (translations.length === 0) {
 			return;
 		}
 
-		await serviceConfig.db
-			.insertInto("headless_translations")
-			.values(translations)
-			.onConflict((oc) =>
-				oc
-					.columns(["translation_key_id", "language_id"])
-					.doUpdateSet((eb) => ({
-						value: eb.ref("excluded.value"),
-					})),
-			)
-			.execute();
+		const TranslationsRepo = RepositoryFactory.getRepository(
+			"translations",
+			serviceConfig.db,
+		);
+
+		await TranslationsRepo.upsertMultiple(translations);
 	}
 };
 

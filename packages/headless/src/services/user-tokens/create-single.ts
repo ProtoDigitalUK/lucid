@@ -13,14 +13,14 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const userTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	const token = crypto.randomBytes(32).toString("hex");
 
-	const userToken = await userTokensRepo.createSingle({
+	const userToken = await UserTokensRepo.createSingle({
 		userId: data.user_id,
 		tokenType: data.token_type,
 		expiryDate: data.expiry_date,

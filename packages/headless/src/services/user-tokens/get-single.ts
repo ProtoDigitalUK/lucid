@@ -8,12 +8,12 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const userTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
-	const userToken = await userTokensRepo.getSingle({
+	const userToken = await UserTokensRepo.getSingle({
 		select: ["id", "user_id"],
 		where: [
 			{

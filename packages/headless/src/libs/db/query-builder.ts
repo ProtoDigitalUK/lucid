@@ -1,12 +1,15 @@
 import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
-import type {
-	SelectQueryBuilder,
-	ReferenceExpression,
-	ComparisonOperatorExpression,
-	DeleteQueryBuilder,
-	OperandValueExpressionOrList,
+import {
+	type SelectQueryBuilder,
+	type ReferenceExpression,
+	type ComparisonOperatorExpression,
+	type DeleteQueryBuilder,
+	type OperandValueExpressionOrList,
+	type SelectExpression,
+	UpdateQueryBuilder,
 } from "kysely";
 import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
+import { HeadlessDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;
@@ -140,13 +143,15 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	};
 };
 
-export const selectQB = <DB, Table extends keyof DB, O>(
-	query: SelectQueryBuilder<DB, Table, O>,
-	where: Array<{
-		key: ReferenceExpression<DB, Table>;
-		operator: ComparisonOperatorExpression;
-		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
-	}>,
+export type QueryBuilderWhereT<Table extends keyof HeadlessDB> = Array<{
+	key: ReferenceExpression<HeadlessDB, Table>;
+	operator: ComparisonOperatorExpression;
+	value: OperandValueExpressionOrList<HeadlessDB, Table, keyof Table>;
+}>;
+
+export const selectQB = <Table extends keyof HeadlessDB, O>(
+	query: SelectQueryBuilder<HeadlessDB, Table, O>,
+	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
 
@@ -157,13 +162,26 @@ export const selectQB = <DB, Table extends keyof DB, O>(
 	return kyselyQuery;
 };
 
-export const deleteQB = <DB, Table extends keyof DB, O>(
-	query: DeleteQueryBuilder<DB, Table, O>,
-	where: Array<{
-		key: ReferenceExpression<DB, Table>;
-		operator: ComparisonOperatorExpression;
-		value: OperandValueExpressionOrList<DB, Table, keyof Table>;
-	}>,
+export const deleteQB = <Table extends keyof HeadlessDB, O>(
+	query: DeleteQueryBuilder<HeadlessDB, Table, O>,
+	where: QueryBuilderWhereT<Table>,
+) => {
+	let kyselyQuery = query;
+
+	for (const { key, operator, value } of where) {
+		kyselyQuery = query.where(key, operator, value);
+	}
+
+	return kyselyQuery;
+};
+
+export const updateQB = <
+	UT extends keyof HeadlessDB,
+	Table extends keyof HeadlessDB,
+	O,
+>(
+	query: UpdateQueryBuilder<HeadlessDB, UT, Table, O>,
+	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
 

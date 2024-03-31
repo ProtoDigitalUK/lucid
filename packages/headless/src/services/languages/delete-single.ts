@@ -1,18 +1,19 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	code: string;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const languagesCountQuery = (await serviceConfig.db
-		.selectFrom("headless_languages")
-		.select(sql`count(*)`.as("count"))
-		.executeTakeFirst()) as { count: string } | undefined;
+	const LanguagesRepo = RepositoryFactory.getRepository(
+		"languages",
+		serviceConfig.db,
+	);
 
+	const languagesCountQuery = await LanguagesRepo.getCount();
 	const count = parseCount(languagesCountQuery?.count);
 
 	if (count === 1) {
@@ -28,12 +29,17 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const deleteLanguage = await serviceConfig.db
-		.deleteFrom("headless_languages")
-		.where("code", "=", data.code)
-		.executeTakeFirst();
+	const deleteLanguage = await LanguagesRepo.delete({
+		where: [
+			{
+				key: "code",
+				operator: "=",
+				value: data.code,
+			},
+		],
+	});
 
-	if (deleteLanguage.numDeletedRows === 0n) {
+	if (deleteLanguage.length === 0) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_deleted_name", {
@@ -46,20 +52,22 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const defaultLanguages = await serviceConfig.db
-		.selectFrom("headless_languages")
-		.select("id")
-		.where("is_default", "=", 1)
-		.execute();
+	const defaultLanguages = await LanguagesRepo.getMultiple({
+		select: ["id"],
+		where: [
+			{
+				key: "is_default",
+				operator: "=",
+				value: 1,
+			},
+		],
+	});
 
 	if (defaultLanguages.length === 0) {
-		const firstLanguage = await serviceConfig.db
-			.selectFrom("headless_languages")
-			.select("id")
-			.orderBy("id")
-			.limit(1)
-			.executeTakeFirst();
-
+		const firstLanguage = await LanguagesRepo.getSingle({
+			select: ["id"],
+			where: [],
+		});
 		if (firstLanguage === undefined) {
 			throw new APIError({
 				type: "basic",
@@ -74,14 +82,19 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		}
 
 		if (firstLanguage) {
-			await serviceConfig.db
-				.updateTable("headless_languages")
-				.set({
-					is_default: 1,
-					is_enabled: 1,
-				})
-				.where("id", "=", firstLanguage.id)
-				.execute();
+			await LanguagesRepo.update({
+				data: {
+					isDefault: 1,
+					isEnabled: 1,
+				},
+				where: [
+					{
+						key: "id",
+						operator: "=",
+						value: firstLanguage.id,
+					},
+				],
+			});
 		}
 	}
 };

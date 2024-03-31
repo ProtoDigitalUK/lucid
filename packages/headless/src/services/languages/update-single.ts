@@ -4,6 +4,7 @@ import { sql } from "kysely";
 import { APIError } from "../../utils/error-handler.js";
 import { parseCount } from "../../utils/helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	current_code: string;
@@ -33,12 +34,22 @@ const updateSingle = async (
 		});
 	}
 
+	const LanguagesRepo = RepositoryFactory.getRepository(
+		"languages",
+		serviceConfig.db,
+	);
+
 	if (data.code) {
-		const language = await serviceConfig.db
-			.selectFrom("headless_languages")
-			.select("id")
-			.where("code", "=", data.code)
-			.executeTakeFirst();
+		const language = await LanguagesRepo.getSingle({
+			select: ["id"],
+			where: [
+				{
+					key: "code",
+					operator: "=",
+					value: data.code,
+				},
+			],
+		});
 
 		if (language !== undefined) {
 			throw new APIError({
@@ -70,26 +81,25 @@ const updateSingle = async (
 		}
 	}
 
-	const languagesCountQuery = (await serviceConfig.db
-		.selectFrom("headless_languages")
-		.select(sql`count(*)`.as("count"))
-		.executeTakeFirst()) as { count: string } | undefined;
-
+	const languagesCountQuery = await LanguagesRepo.getCount();
 	const count = parseCount(languagesCountQuery?.count);
 
 	const isDefault = count === 1 ? 1 : data.is_default;
 
-	const updateLanguage = await serviceConfig.db
-		.updateTable("headless_languages")
-		.set({
-			code: data.code,
-			is_default: isDefault,
-			is_enabled: isDefault === 1 ? 1 : data.is_enabled,
+	const updateLanguage = await LanguagesRepo.update({
+		data: {
+			isDefault: isDefault,
+			isEnabled: isDefault === 1 ? 1 : data.is_enabled,
 			updated_at: new Date().toISOString(),
-		})
-		.where("code", "=", data.current_code)
-		.returning("id")
-		.executeTakeFirst();
+		},
+		where: [
+			{
+				key: "code",
+				operator: "=",
+				value: data.current_code,
+			},
+		],
+	});
 
 	if (updateLanguage === undefined) {
 		throw new APIError({
@@ -105,13 +115,18 @@ const updateSingle = async (
 	}
 
 	if (isDefault) {
-		await serviceConfig.db
-			.updateTable("headless_languages")
-			.set({
-				is_default: 0,
-			})
-			.where("id", "!=", updateLanguage.id)
-			.execute();
+		await LanguagesRepo.update({
+			data: {
+				isDefault: 0,
+			},
+			where: [
+				{
+					key: "id",
+					operator: "!=",
+					value: updateLanguage.id,
+				},
+			],
+		});
 	}
 };
 

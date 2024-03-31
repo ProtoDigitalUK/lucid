@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "@headless/types/src/options.js";
 import type { BooleanInt } from "../../libs/db/types.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	name: OptionNameT;
@@ -14,17 +15,27 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const updateOption = await serviceConfig.db
-		.updateTable("headless_options")
-		.set({
-			value_text: data.value_text,
-			value_int: data.value_int,
-			value_bool: data.value_bool,
-		})
-		.where("name", "=", data.name)
-		.executeTakeFirst();
+	const OptionsRepo = RepositoryFactory.getRepository(
+		"options",
+		serviceConfig.db,
+	);
 
-	if (updateOption.numUpdatedRows === 0n) {
+	const updateOption = await OptionsRepo.update({
+		where: [
+			{
+				key: "name",
+				operator: "=",
+				value: data.name,
+			},
+		],
+		data: {
+			valueBool: data.value_bool,
+			valueInt: data.value_int,
+			valueText: data.value_text,
+		},
+	});
+
+	if (updateOption.length === 0) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_updated_name", {

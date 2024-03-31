@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import RepositoryFactory from "../../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	language_ids: number[];
@@ -13,11 +14,21 @@ const checkLanguagesExist = async (
 
 	if (languageIds.length === 0) return;
 
-	const languages = await serviceConfig.db
-		.selectFrom("headless_languages")
-		.select("id")
-		.where("id", "in", languageIds)
-		.execute();
+	const LanguagesRepo = RepositoryFactory.getRepository(
+		"languages",
+		serviceConfig.db,
+	);
+
+	const languages = await LanguagesRepo.getMultiple({
+		select: ["id"],
+		where: [
+			{
+				key: "id",
+				operator: "in",
+				value: languageIds,
+			},
+		],
+	});
 
 	if (languages.length !== languageIds.length) {
 		throw new APIError({

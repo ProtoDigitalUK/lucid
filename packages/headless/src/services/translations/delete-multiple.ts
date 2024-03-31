@@ -1,3 +1,5 @@
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
+
 export interface ServiceData {
 	ids: Array<number | null>;
 }
@@ -6,14 +8,20 @@ const deleteMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	await serviceConfig.db
-		.deleteFrom("headless_translation_keys")
-		.where(
-			"id",
-			"in",
-			data.ids.filter((id) => id !== null),
-		)
-		.execute();
+	const TranslationKeysRepo = RepositoryFactory.getRepository(
+		"translation-keys",
+		serviceConfig.db,
+	);
+
+	await TranslationKeysRepo.delete({
+		where: [
+			{
+				key: "id",
+				operator: "in",
+				value: data.ids.filter((id) => id !== null),
+			},
+		],
+	});
 };
 
 export default deleteMultiple;

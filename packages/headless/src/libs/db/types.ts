@@ -1,9 +1,6 @@
 import type { Migration, Generated, ColumnType } from "kysely";
 import type { FieldTypesT } from "../builders/field-builder/types.js";
 
-// ------------------------------------------------------------------------------
-// Migration / Adapters
-
 export enum AdapterType {
 	SQLITE = 0,
 	POSTGRES = 1,
@@ -12,16 +9,20 @@ export enum AdapterType {
 
 export type MigrationFn = (adapter: AdapterType) => Migration;
 
+export type Select<T> = {
+	[P in keyof T]: T[P] extends { __select__: infer S } ? S : T[P];
+};
+
 // ------------------------------------------------------------------------------
 // Column types
 
 export type TimestampMutateable = ColumnType<
-	Date | string,
+	string | Date | null,
 	string | undefined,
 	string
 >;
 export type TimestampImmutable = ColumnType<
-	Date | string,
+	string | Date,
 	string | undefined,
 	never
 >;
@@ -37,7 +38,7 @@ export interface HeadlessLanguages {
 	is_default: BooleanInt;
 	is_enabled: BooleanInt;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessTranslationKeys {
@@ -53,7 +54,7 @@ export interface HeadlessTranslations {
 }
 
 export interface HeadlessOptions {
-	name: string;
+	name: "media_storage_used";
 	value_int: number | null;
 	value_text: string | null;
 	value_bool: BooleanInt | null;
@@ -68,10 +69,10 @@ export interface HeadlessUsers {
 	last_name: string | null;
 	password: string;
 	is_deleted: BooleanInt | null;
-	is_deleted_at: TimestampMutateable | null;
+	is_deleted_at: TimestampMutateable;
 	deleted_by: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessRoles {
@@ -79,7 +80,7 @@ export interface HeadlessRoles {
 	name: string;
 	description: string | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessRolePermissions {
@@ -87,7 +88,7 @@ export interface HeadlessRolePermissions {
 	role_id: number;
 	permission: string;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessUserRoles {
@@ -95,7 +96,7 @@ export interface HeadlessUserRoles {
 	user_id: number | null;
 	role_id: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessUserTokens {
@@ -123,8 +124,8 @@ export interface HeadlessEmails {
 	sent_count: number;
 	error_count: number;
 	last_error_message: string | null;
-	last_attempt_at: TimestampMutateable | null;
-	last_success_at: TimestampMutateable | null;
+	last_attempt_at: TimestampMutateable;
+	last_success_at: TimestampMutateable;
 	created_at: TimestampImmutable;
 }
 
@@ -142,7 +143,7 @@ export interface HeadlessMedia {
 	title_translation_key_id: number | null;
 	alt_translation_key_id: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessProcessedImages {
@@ -158,13 +159,13 @@ export interface HeadlessCollectionDocuments {
 	full_slug: string | null;
 	homepage: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
-	is_deleted_at: TimestampMutateable | null;
+	is_deleted_at: TimestampMutateable;
 	author_id: number | null;
 	deleted_by: number | null;
 	created_by: number | null;
 	updated_by: number | null;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessCollectionDocumentBricks {
@@ -209,7 +210,7 @@ export interface HeadlessCollectionCategories {
 	description_translation_key_id: number | null;
 	slug: string;
 	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable | null;
+	updated_at: TimestampMutateable;
 }
 
 export interface HeadlessCollectionDocumentCategories {
