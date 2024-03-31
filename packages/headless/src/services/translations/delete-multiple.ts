@@ -10,7 +10,7 @@ const deleteMultiple = async (
 ) => {
 	const TranslationKeysRepo = RepositoryFactory.getRepository(
 		"translation-keys",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	await TranslationKeysRepo.delete({

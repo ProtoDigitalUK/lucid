@@ -1,4 +1,3 @@
-import type { Config } from "../libs/config/config-schema.js";
 import type { HeadlessOptions, Select } from "../libs/db/types.js";
 import {
 	selectQB,
@@ -7,15 +6,13 @@ import {
 } from "../libs/db/query-builder.js";
 
 export default class Options {
-	constructor(private config: Config) {}
+	constructor(private db: DB) {}
 
 	getSingle = <K extends keyof Select<HeadlessOptions>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_options">;
 	}) => {
-		let query = this.config.db.client
-			.selectFrom("headless_options")
-			.select(props.select);
+		let query = this.db.selectFrom("headless_options").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -29,7 +26,7 @@ export default class Options {
 		valueBool?: HeadlessOptions["value_bool"];
 		valueText?: HeadlessOptions["value_text"];
 	}) => {
-		return this.config.db.client
+		return this.db
 			.insertInto("headless_options")
 			.values({
 				name: props.name,
@@ -47,7 +44,7 @@ export default class Options {
 			valueText?: HeadlessOptions["value_text"];
 		};
 	}) => {
-		let query = this.config.db.client.updateTable("headless_options").set({
+		let query = this.db.updateTable("headless_options").set({
 			value_text: props.data.valueText,
 			value_int: props.data.valueInt,
 			value_bool: props.data.valueBool,

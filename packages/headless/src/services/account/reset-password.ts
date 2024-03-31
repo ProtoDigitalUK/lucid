@@ -17,7 +17,7 @@ const resetPassword = async (
 ) => {
 	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	const token = await serviceWrapper(userTokens.getSingle, false)(

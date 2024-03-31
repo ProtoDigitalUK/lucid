@@ -1,4 +1,3 @@
-import type { Config } from "../libs/config/config-schema.js";
 import type {
 	HeadlessCollectionDocumentBricks,
 	Select,
@@ -10,5 +9,5 @@ import {
 } from "../libs/db/query-builder.js";
 
 export default class CollectionDocumentBricks {
-	constructor(private config: Config) {}
+	constructor(private db: DB) {}
 }

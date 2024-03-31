@@ -16,7 +16,7 @@ export const generateRefreshToken = async (
 	await clearRefreshToken(request, reply);
 	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
-		request.server.config,
+		request.server.config.db.client,
 	);
 
 	const payload = {
@@ -62,7 +62,7 @@ export const verifyRefreshToken = async (
 
 		const UserTokensRepo = RepositoryFactory.getRepository(
 			"user-tokens",
-			request.server.config,
+			request.server.config.db.client,
 		);
 
 		const decode = jwt.verify(
@@ -128,7 +128,7 @@ export const clearRefreshToken = async (
 
 	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
-		request.server.config,
+		request.server.config.db.client,
 	);
 
 	const decode = jwt.verify(

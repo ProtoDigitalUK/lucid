@@ -1,4 +1,3 @@
-import type { Config } from "../libs/config/config-schema.js";
 import type { HeadlessRolePermissions, Select } from "../libs/db/types.js";
 import {
 	deleteQB,
@@ -7,5 +6,5 @@ import {
 } from "../libs/db/query-builder.js";
 
 export default class RolePermissions {
-	constructor(private config: Config) {}
+	constructor(private db: DB) {}
 }

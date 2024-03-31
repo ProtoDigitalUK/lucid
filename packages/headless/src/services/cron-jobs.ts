@@ -8,7 +8,7 @@ const clearExpiredTokens = async (config: Config) => {
 	try {
 		const UserTokensRepo = RepositoryFactory.getRepository(
 			"user-tokens",
-			config,
+			config.db.client,
 		);
 
 		await UserTokensRepo.delete({

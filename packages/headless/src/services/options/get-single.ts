@@ -11,7 +11,7 @@ export interface ServiceData {
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const OptionsRepo = RepositoryFactory.getRepository(
 		"options",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	const optionRes = await OptionsRepo.getSingle({

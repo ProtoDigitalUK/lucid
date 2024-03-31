@@ -30,7 +30,7 @@ const createMultiple = async <K extends string>(
 
 	const TranslationKeysRepo = RepositoryFactory.getRepository(
 		"translation-keys",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	const translationKeyEntries = await TranslationKeysRepo.createMultiple(
@@ -64,7 +64,7 @@ const createMultiple = async <K extends string>(
 
 	const TranslationsRepo = RepositoryFactory.getRepository(
 		"translations",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	await TranslationsRepo.upsertMultiple(

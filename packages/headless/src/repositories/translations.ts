@@ -1,7 +1,5 @@
-import type { Config } from "../libs/config/config-schema.js";
-
 export default class Translations {
-	constructor(private config: Config) {}
+	constructor(private db: DB) {}
 
 	upsertMultiple = (
 		props: {
@@ -10,7 +8,7 @@ export default class Translations {
 			translationKeyId: number;
 		}[],
 	) => {
-		return this.config.db.client
+		return this.db
 			.insertInto("headless_translations")
 			.values(
 				props.map((t) => ({

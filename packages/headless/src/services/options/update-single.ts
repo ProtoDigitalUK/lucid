@@ -17,7 +17,7 @@ const updateSingle = async (
 ) => {
 	const OptionsRepo = RepositoryFactory.getRepository(
 		"options",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	const updateOption = await OptionsRepo.updateSingle({

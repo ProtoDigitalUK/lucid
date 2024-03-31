@@ -15,7 +15,7 @@ const createSingle = async (
 ) => {
 	const UserTokensRepo = RepositoryFactory.getRepository(
 		"user-tokens",
-		serviceConfig.config,
+		serviceConfig.db,
 	);
 
 	const token = crypto.randomBytes(32).toString("hex");

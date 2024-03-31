@@ -52,7 +52,7 @@ const upsertMultiple = async <K extends string>(
 
 		const TranslationsRepo = RepositoryFactory.getRepository(
 			"translations",
-			serviceConfig.config,
+			serviceConfig.db,
 		);
 
 		await TranslationsRepo.upsertMultiple(translations);

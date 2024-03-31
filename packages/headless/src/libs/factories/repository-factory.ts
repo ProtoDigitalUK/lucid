@@ -25,57 +25,53 @@ import Users from "../../repositories/users.js";
 class RepositoryFactory {
 	static getRepository<T extends keyof RepositoryClassMap>(
 		repository: T,
-		config: Config,
+		db: DB,
 	): RepositoryReturnType<T> {
 		switch (repository) {
 			case "user-tokens":
-				return new UserTokens(config) as RepositoryReturnType<T>;
+				return new UserTokens(db) as RepositoryReturnType<T>;
 			case "collection-categories":
-				return new CollectionCategories(
-					config,
-				) as RepositoryReturnType<T>;
+				return new CollectionCategories(db) as RepositoryReturnType<T>;
 			case "collection-document-bricks":
 				return new CollectionDocumentBricks(
-					config,
+					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-categories":
 				return new CollectionDocumentCategories(
-					config,
+					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-fields":
 				return new CollectionDocumentFields(
-					config,
+					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-groups":
 				return new CollectionDocumentGroups(
-					config,
+					db,
 				) as RepositoryReturnType<T>;
 			case "collection-documents":
-				return new CollectionDocuments(
-					config,
-				) as RepositoryReturnType<T>;
+				return new CollectionDocuments(db) as RepositoryReturnType<T>;
 			case "emails":
-				return new Emails(config) as RepositoryReturnType<T>;
+				return new Emails(db) as RepositoryReturnType<T>;
 			case "languages":
-				return new Languages(config) as RepositoryReturnType<T>;
+				return new Languages(db) as RepositoryReturnType<T>;
 			case "media":
-				return new Media(config) as RepositoryReturnType<T>;
+				return new Media(db) as RepositoryReturnType<T>;
 			case "options":
-				return new Options(config) as RepositoryReturnType<T>;
+				return new Options(db) as RepositoryReturnType<T>;
 			case "processed-images":
-				return new ProcessedImages(config) as RepositoryReturnType<T>;
+				return new ProcessedImages(db) as RepositoryReturnType<T>;
 			case "role-permissions":
-				return new RolePermissions(config) as RepositoryReturnType<T>;
+				return new RolePermissions(db) as RepositoryReturnType<T>;
 			case "roles":
-				return new Roles(config) as RepositoryReturnType<T>;
+				return new Roles(db) as RepositoryReturnType<T>;
 			case "translation-keys":
-				return new TranslationKeys(config) as RepositoryReturnType<T>;
+				return new TranslationKeys(db) as RepositoryReturnType<T>;
 			case "translations":
-				return new Translations(config) as RepositoryReturnType<T>;
+				return new Translations(db) as RepositoryReturnType<T>;
 			case "user-roles":
-				return new UserRoles(config) as RepositoryReturnType<T>;
+				return new UserRoles(db) as RepositoryReturnType<T>;
 			case "users":
-				return new Users(config) as RepositoryReturnType<T>;
+				return new Users(db) as RepositoryReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_repository", {

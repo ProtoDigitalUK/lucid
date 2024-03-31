@@ -1,4 +1,3 @@
-import type { Config } from "../libs/config/config-schema.js";
 import type { HeadlessUserTokens, Select } from "../libs/db/types.js";
 import {
 	deleteQB,
@@ -7,13 +6,13 @@ import {
 } from "../libs/db/query-builder.js";
 
 export default class UserTokens {
-	constructor(private config: Config) {}
+	constructor(private db: DB) {}
 
 	getSingle = <K extends keyof Select<HeadlessUserTokens>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
-		let query = this.config.db.client
+		let query = this.db
 			.selectFrom("headless_user_tokens")
 			.select<K>(props.select);
 
@@ -26,7 +25,7 @@ export default class UserTokens {
 	delete = (props: {
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
-		let query = this.config.db.client.deleteFrom("headless_user_tokens");
+		let query = this.db.deleteFrom("headless_user_tokens");
 
 		query = deleteQB(query, props.where);
 
@@ -38,7 +37,7 @@ export default class UserTokens {
 		expiryDate: string;
 		token: string;
 	}) => {
-		return this.config.db.client
+		return this.db
 			.insertInto("headless_user_tokens")
 			.values({
 				user_id: props.userId,
