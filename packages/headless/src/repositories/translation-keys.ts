@@ -3,7 +3,7 @@ import { deleteQB, type QueryBuilderWhereT } from "../libs/db/query-builder.js";
 export default class TranslationKeys {
 	constructor(private db: DB) {}
 
-	delete = (props: {
+	delete = async (props: {
 		where: QueryBuilderWhereT<"headless_translation_keys">;
 	}) => {
 		let query = this.db.deleteFrom("headless_translation_keys");
@@ -12,7 +12,7 @@ export default class TranslationKeys {
 
 		return query.execute();
 	};
-	createMultiple = (
+	createMultiple = async (
 		props: {
 			createdAt: string;
 		}[],

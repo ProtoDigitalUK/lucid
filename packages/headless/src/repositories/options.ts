@@ -8,7 +8,7 @@ import {
 export default class Options {
 	constructor(private db: DB) {}
 
-	getSingle = <K extends keyof Select<HeadlessOptions>>(props: {
+	getSingle = async <K extends keyof Select<HeadlessOptions>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_options">;
 	}) => {
@@ -20,7 +20,7 @@ export default class Options {
 			Pick<Select<HeadlessOptions>, K> | undefined
 		>;
 	};
-	createSingle = (props: {
+	createSingle = async (props: {
 		name: HeadlessOptions["name"];
 		valueInt?: HeadlessOptions["value_int"];
 		valueBool?: HeadlessOptions["value_bool"];
@@ -36,7 +36,7 @@ export default class Options {
 			})
 			.execute();
 	};
-	update = (props: {
+	update = async (props: {
 		where: QueryBuilderWhereT<"headless_options">;
 		data: {
 			valueInt?: HeadlessOptions["value_int"];

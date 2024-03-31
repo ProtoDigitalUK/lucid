@@ -1,7 +1,7 @@
 export default class Translations {
 	constructor(private db: DB) {}
 
-	upsertMultiple = (
+	upsertMultiple = async (
 		props: {
 			value: string | null;
 			languageId: number;

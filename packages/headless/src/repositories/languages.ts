@@ -16,13 +16,13 @@ import queryBuilder, {
 export default class Languages {
 	constructor(private db: DB) {}
 
-	getCount = () => {
+	getCount = async () => {
 		return this.db
 			.selectFrom("headless_languages")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
-	createSingle = (props: {
+	createSingle = async (props: {
 		code: string;
 		isDefault: BooleanInt;
 		isEnabled: BooleanInt;
@@ -37,7 +37,7 @@ export default class Languages {
 			.returning(["id", "code"])
 			.executeTakeFirst();
 	};
-	getSingle = <K extends keyof Select<HeadlessLanguages>>(props: {
+	getSingle = async <K extends keyof Select<HeadlessLanguages>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_languages">;
 	}) => {
@@ -51,7 +51,7 @@ export default class Languages {
 			Pick<Select<HeadlessLanguages>, K> | undefined
 		>;
 	};
-	getMultiple = <K extends keyof Select<HeadlessLanguages>>(props: {
+	getMultiple = async <K extends keyof Select<HeadlessLanguages>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_languages">;
 	}) => {
@@ -65,7 +65,7 @@ export default class Languages {
 			Array<Pick<Select<HeadlessLanguages>, K>>
 		>;
 	};
-	update = (props: {
+	update = async (props: {
 		where: QueryBuilderWhereT<"headless_languages">;
 		data: {
 			code?: HeadlessLanguages["code"];
@@ -74,17 +74,20 @@ export default class Languages {
 			updated_at?: string;
 		};
 	}) => {
-		let query = this.db.updateTable("headless_languages").set({
-			code: props.data.code,
-			is_default: props.data.isDefault,
-			is_enabled: props.data.isEnabled,
-		});
+		let query = this.db
+			.updateTable("headless_languages")
+			.set({
+				code: props.data.code,
+				is_default: props.data.isDefault,
+				is_enabled: props.data.isEnabled,
+			})
+			.returning("id");
 
 		query = updateQB(query, props.where);
 
 		return query.executeTakeFirst();
 	};
-	delete = (props: {
+	delete = async (props: {
 		where: QueryBuilderWhereT<"headless_languages">;
 	}) => {
 		let query = this.db.deleteFrom("headless_languages").returning("id");
@@ -93,7 +96,7 @@ export default class Languages {
 
 		return query.execute();
 	};
-	getMultipleWithCount = (props: {
+	getMultipleQueryBuilder = async (props: {
 		query: z.infer<typeof languagesSchema.getMultiple.query>;
 	}) => {
 		const languagesQuery = this.db

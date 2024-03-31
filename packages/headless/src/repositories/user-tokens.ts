@@ -8,7 +8,7 @@ import {
 export default class UserTokens {
 	constructor(private db: DB) {}
 
-	getSingle = <K extends keyof Select<HeadlessUserTokens>>(props: {
+	getSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
@@ -22,7 +22,7 @@ export default class UserTokens {
 			Pick<Select<HeadlessUserTokens>, K> | undefined
 		>;
 	};
-	delete = (props: {
+	delete = async (props: {
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.db.deleteFrom("headless_user_tokens");
@@ -31,7 +31,7 @@ export default class UserTokens {
 
 		return query.execute();
 	};
-	createSingle = (props: {
+	createSingle = async (props: {
 		userId: number;
 		tokenType: HeadlessUserTokens["token_type"];
 		expiryDate: string;

@@ -17,7 +17,7 @@ const getMultiple = async (
 		serviceConfig.db,
 	);
 
-	const [languages, count] = await LanguagesRepo.getMultipleWithCount({
+	const [languages, count] = await LanguagesRepo.getMultipleQueryBuilder({
 		query: data.query,
 	});
 
