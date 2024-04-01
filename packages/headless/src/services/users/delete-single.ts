@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -10,16 +11,25 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteUserRes = await serviceConfig.db
-		.updateTable("headless_users")
-		.set({
-			is_deleted: 1,
-			is_deleted_at: new Date().toISOString(),
-			deleted_by: data.current_user_id,
-		})
-		.where("id", "=", data.user_id)
-		.returning("id")
-		.executeTakeFirst();
+	const UsersRepo = RepositoryFactory.getRepository(
+		"users",
+		serviceConfig.db,
+	);
+
+	const deleteUserRes = await UsersRepo.updateSingle({
+		data: {
+			isDeleted: 1,
+			isDeletedAt: new Date().toISOString(),
+			deletedBy: data.current_user_id,
+		},
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.user_id,
+			},
+		],
+	});
 
 	if (deleteUserRes === undefined) {
 		throw new APIError({

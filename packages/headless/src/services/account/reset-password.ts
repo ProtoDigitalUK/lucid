@@ -19,6 +19,10 @@ const resetPassword = async (
 		"user-tokens",
 		serviceConfig.db,
 	);
+	const UsersRepo = RepositoryFactory.getRepository(
+		"users",
+		serviceConfig.db,
+	);
 
 	const token = await serviceWrapper(userTokens.getSingle, false)(
 		serviceConfig,
@@ -30,15 +34,19 @@ const resetPassword = async (
 
 	const hashedPassword = await argon2.hash(data.password);
 
-	const user = await serviceConfig.db
-		.updateTable("headless_users")
-		.set({
+	const user = await UsersRepo.updateSingle({
+		data: {
 			password: hashedPassword,
-			updated_at: new Date().toISOString(),
-		})
-		.where("id", "=", token.user_id)
-		.returning(["first_name", "last_name", "email"])
-		.executeTakeFirst();
+			updatedAt: new Date().toISOString(),
+		},
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: token.user_id,
+			},
+		],
+	});
 
 	if (user === undefined) {
 		throw new APIError({

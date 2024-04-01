@@ -3,6 +3,7 @@ import type { FastifyRequest } from "fastify";
 import { APIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
@@ -14,11 +15,21 @@ export interface ServiceData {
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const getUser = await serviceConfig.db
-		.selectFrom("headless_users")
-		.select(["super_admin"])
-		.where("id", "=", data.auth.id)
-		.executeTakeFirst();
+	const UsersRepo = RepositoryFactory.getRepository(
+		"users",
+		serviceConfig.db,
+	);
+
+	const getUser = await UsersRepo.getSingle({
+		select: ["super_admin"],
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.auth.id,
+			},
+		],
+	});
 
 	if (getUser === undefined) {
 		throw new APIError({
@@ -35,20 +46,38 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const [userWithEmail, userWithUsername] = await Promise.all([
 		data.email !== undefined
-			? serviceConfig.db
-					.selectFrom("headless_users")
-					.select("id")
-					.where("email", "=", data.email)
-					.where("id", "!=", data.auth.id)
-					.executeTakeFirst()
+			? UsersRepo.getSingle({
+					select: ["id"],
+					where: [
+						{
+							key: "email",
+							operator: "=",
+							value: data.email,
+						},
+						{
+							key: "id",
+							operator: "!=",
+							value: data.auth.id,
+						},
+					],
+			  })
 			: undefined,
 		data.username !== undefined
-			? serviceConfig.db
-					.selectFrom("headless_users")
-					.select("id")
-					.where("username", "=", data.username)
-					.where("id", "!=", data.auth.id)
-					.executeTakeFirst()
+			? UsersRepo.getSingle({
+					select: ["id"],
+					where: [
+						{
+							key: "username",
+							operator: "=",
+							value: data.username,
+						},
+						{
+							key: "id",
+							operator: "!=",
+							value: data.auth.id,
+						},
+					],
+			  })
 			: undefined,
 		data.role_ids !== undefined
 			? serviceWrapper(usersService.checks.checkRolesExist, false)(
@@ -57,7 +86,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 						role_ids: data.role_ids,
 						is_create: false,
 					},
-				)
+			  )
 			: undefined,
 	]);
 
@@ -82,19 +111,24 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const updateMe = await serviceConfig.db
-		.updateTable("headless_users")
-		.set({
-			first_name: data.first_name,
-			last_name: data.last_name,
+	const updateMe = await UsersRepo.updateSingle({
+		data: {
+			firstName: data.first_name,
+			lastName: data.last_name,
 			username: data.username,
 			email: data.email,
-			updated_at: new Date().toISOString(),
-		})
-		.where("id", "=", data.auth.id)
-		.executeTakeFirst();
+			updatedAt: new Date().toISOString(),
+		},
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.auth.id,
+			},
+		],
+	});
 
-	if (updateMe.numUpdatedRows === 0n) {
+	if (updateMe === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_updated_name", {

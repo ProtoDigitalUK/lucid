@@ -4,6 +4,7 @@ import constants from "../../constants.js";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	email: string;
@@ -13,11 +14,21 @@ const sendResetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const userExists = await serviceConfig.db
-		.selectFrom("headless_users")
-		.select(["id", "first_name", "last_name", "email"])
-		.where("email", "=", data.email)
-		.executeTakeFirst();
+	const UsersRepo = RepositoryFactory.getRepository(
+		"users",
+		serviceConfig.db,
+	);
+
+	const userExists = await UsersRepo.getSingle({
+		select: ["id", "first_name", "last_name", "email"],
+		where: [
+			{
+				key: "email",
+				operator: "=",
+				value: data.email,
+			},
+		],
+	});
 
 	if (userExists === undefined) {
 		return {

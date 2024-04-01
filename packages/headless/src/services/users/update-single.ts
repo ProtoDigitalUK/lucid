@@ -4,6 +4,7 @@ import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -22,12 +23,26 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const user = await serviceConfig.db
-		.selectFrom("headless_users")
-		.select(["id"])
-		.where("id", "=", data.user_id)
-		.where("is_deleted", "=", 0)
-		.executeTakeFirst();
+	const UsersRepo = RepositoryFactory.getRepository(
+		"users",
+		serviceConfig.db,
+	);
+
+	const user = await UsersRepo.getSingle({
+		select: ["id"],
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.user_id,
+			},
+			{
+				key: "is_deleted",
+				operator: "=",
+				value: 0,
+			},
+		],
+	});
 
 	if (!user) {
 		throw new APIError({
@@ -44,18 +59,28 @@ const updateSingle = async (
 
 	const [emailExists, usernameExists] = await Promise.all([
 		data.email
-			? serviceConfig.db
-					.selectFrom("headless_users")
-					.select("email")
-					.where("email", "=", data.email)
-					.executeTakeFirst()
+			? UsersRepo.getSingle({
+					select: ["email"],
+					where: [
+						{
+							key: "email",
+							operator: "=",
+							value: data.email,
+						},
+					],
+			  })
 			: undefined,
 		data.username
-			? serviceConfig.db
-					.selectFrom("headless_users")
-					.select("username")
-					.where("username", "=", data.username)
-					.executeTakeFirst()
+			? UsersRepo.getSingle({
+					select: ["username"],
+					where: [
+						{
+							key: "username",
+							operator: "=",
+							value: data.username,
+						},
+					],
+			  })
 			: undefined,
 	]);
 
@@ -102,20 +127,25 @@ const updateSingle = async (
 	}
 
 	const [updateUser] = await Promise.all([
-		serviceConfig.db
-			.updateTable("headless_users")
-			.set({
-				first_name: data.first_name,
-				last_name: data.last_name,
+		UsersRepo.updateSingle({
+			data: {
+				firstName: data.first_name,
+				lastName: data.last_name,
 				username: data.username,
 				email: data.email,
 				password: hashedPassword,
-				super_admin:
+				superAdmin:
 					data.auth_super_admin === 1 ? data.super_admin : undefined,
-				updated_at: new Date().toISOString(),
-			})
-			.where("id", "=", data.user_id)
-			.executeTakeFirst(),
+				updatedAt: new Date().toISOString(),
+			},
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: data.user_id,
+				},
+			],
+		}),
 		serviceWrapper(usersServices.updateMultipleRoles, false)(
 			serviceConfig,
 			{
@@ -125,7 +155,7 @@ const updateSingle = async (
 		),
 	]);
 
-	if (updateUser.numUpdatedRows === 0n) {
+	if (updateUser === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_updated_name", {

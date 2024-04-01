@@ -1,6 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	username_or_email: string;
@@ -8,16 +9,18 @@ export interface ServiceData {
 }
 
 const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const user = await serviceConfig.db
-		.selectFrom("headless_users")
-		.select(["id", "password", "is_deleted"])
-		.where((eb) =>
-			eb.or([
-				eb("username", "=", data.username_or_email),
-				eb("email", "=", data.username_or_email),
-			]),
-		)
-		.executeTakeFirst();
+	const UsersRepo = RepositoryFactory.getRepository(
+		"users",
+		serviceConfig.db,
+	);
+
+	const user = await UsersRepo.getSingleByEmailUsername({
+		select: ["id", "password", "is_deleted"],
+		data: {
+			username: data.username_or_email,
+			email: data.username_or_email,
+		},
+	});
 
 	if (!user || !user.password) {
 		throw new APIError({
