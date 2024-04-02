@@ -4,7 +4,6 @@ import { type Config } from "../libs/config/config-schema.js";
 import type usersSchema from "../schemas/users.js";
 import type { BooleanInt, HeadlessUsers, Select } from "../libs/db/types.js";
 import queryBuilder, {
-	deleteQB,
 	selectQB,
 	updateQB,
 	type QueryBuilderWhereT,
@@ -240,7 +239,7 @@ export default class Users {
 			count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 		]);
 	};
-	getSingleWithRoles = async (props: {
+	getSingleFull = async (props: {
 		userId: number;
 		config: Config;
 	}) => {

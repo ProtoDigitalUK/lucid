@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	name: string;
@@ -13,6 +14,11 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const RolesRepo = RepositoryFactory.getRepository(
+		"roles",
+		serviceConfig.db,
+	);
+
 	const [validatePerms, checkNameIsUnique] = await Promise.all([
 		serviceWrapper(rolesServices.validatePermissions, false)(
 			serviceConfig,
@@ -20,11 +26,16 @@ const createSingle = async (
 				permissions: data.permissions,
 			},
 		),
-		serviceConfig.db
-			.selectFrom("headless_roles")
-			.select("id")
-			.where("name", "=", data.name)
-			.executeTakeFirst(),
+		RolesRepo.getSingle({
+			select: ["id"],
+			where: [
+				{
+					key: "name",
+					operator: "=",
+					value: data.name,
+				},
+			],
+		}),
 	]);
 
 	if (checkNameIsUnique !== undefined) {
@@ -44,14 +55,10 @@ const createSingle = async (
 		});
 	}
 
-	const newRoles = await serviceConfig.db
-		.insertInto("headless_roles")
-		.values({
-			name: data.name,
-			description: data.description,
-		})
-		.returning("id")
-		.executeTakeFirst();
+	const newRoles = await RolesRepo.createSingle({
+		name: data.name,
+		description: data.description,
+	});
 
 	if (newRoles === undefined) {
 		throw new APIError({

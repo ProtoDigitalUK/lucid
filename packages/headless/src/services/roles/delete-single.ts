@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
@@ -9,12 +10,22 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const deleteRoles = await serviceConfig.db
-		.deleteFrom("headless_roles")
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+	const RolesRepo = RepositoryFactory.getRepository(
+		"roles",
+		serviceConfig.db,
+	);
 
-	if (deleteRoles.numDeletedRows === 0n) {
+	const deleteRoles = await RolesRepo.delete({
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+	});
+
+	if (deleteRoles.length === 0) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_deleted_name", {

@@ -1,39 +1,21 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatRole from "../../format/format-roles.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const role = await serviceConfig.db
-		.selectFrom("headless_roles")
-		.select((eb) => [
-			"id",
-			"name",
-			"created_at",
-			"updated_at",
-			"description",
-			serviceConfig.config.db
-				.jsonArrayFrom(
-					eb
-						.selectFrom("headless_role_permissions")
-						.select([
-							"headless_role_permissions.id",
-							"headless_role_permissions.permission",
-							"headless_role_permissions.role_id",
-						])
-						.whereRef(
-							"headless_role_permissions.role_id",
-							"=",
-							"headless_roles.id",
-						),
-				)
-				.as("permissions"),
-		])
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+	const RolesRepo = RepositoryFactory.getRepository(
+		"roles",
+		serviceConfig.db,
+	);
+	const role = await RolesRepo.getSingleFull({
+		id: data.id,
+		config: serviceConfig.config,
+	});
 
 	if (role === undefined) {
 		throw new APIError({

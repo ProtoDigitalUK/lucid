@@ -1,5 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import RepositoryFactory from "../../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	role_ids: number[];
@@ -11,11 +12,14 @@ const checkRolesExist = async (
 	data: ServiceData,
 ) => {
 	if (data.role_ids.length === 0) return;
-	const roles = await serviceConfig.db
-		.selectFrom("headless_roles")
-		.select("id")
-		.where("id", "in", data.role_ids)
-		.execute();
+
+	const RolesRepo = RepositoryFactory.getRepository(
+		"roles",
+		serviceConfig.db,
+	);
+	const roles = await RolesRepo.getMultipleById({
+		ids: data.role_ids,
+	});
 
 	if (roles.length !== data.role_ids.length) {
 		throw new APIError({
@@ -23,17 +27,17 @@ const checkRolesExist = async (
 			name: data.is_create
 				? T("error_not_created_name", {
 						name: T("user"),
-					})
+				  })
 				: T("error_not_updated_name", {
 						name: T("user"),
-					}),
+				  }),
 			message: data.is_create
 				? T("creation_error_message", {
 						name: T("user"),
-					})
+				  })
 				: T("update_error_message", {
 						name: T("user"),
-					}),
+				  }),
 			status: 400,
 			errors: modelErrors({
 				role_ids: {

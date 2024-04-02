@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
@@ -14,6 +15,11 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const RolesRepo = RepositoryFactory.getRepository(
+		"roles",
+		serviceConfig.db,
+	);
+
 	const [validatePerms, checkNameIsUnique] = await Promise.all([
 		data.permissions !== undefined
 			? serviceWrapper(rolesServices.validatePermissions, false)(
@@ -21,15 +27,24 @@ const updateSingle = async (
 					{
 						permissions: data.permissions,
 					},
-				)
+			  )
 			: undefined,
 		data.name !== undefined
-			? serviceConfig.db
-					.selectFrom("headless_roles")
-					.select("id")
-					.where("name", "=", data.name)
-					.where("id", "!=", data.id)
-					.executeTakeFirst()
+			? RolesRepo.getSingle({
+					select: ["id"],
+					where: [
+						{
+							key: "name",
+							operator: "=",
+							value: data.name,
+						},
+						{
+							key: "id",
+							operator: "!=",
+							value: data.id,
+						},
+					],
+			  })
 			: undefined,
 	]);
 
@@ -49,18 +64,22 @@ const updateSingle = async (
 			}),
 		});
 	}
-
-	const updateRoleRes = await serviceConfig.db
-		.updateTable("headless_roles")
-		.set({
+	const updateRoleRes = await RolesRepo.updateSingle({
+		data: {
 			name: data.name,
 			description: data.description,
-			updated_at: new Date().toISOString(),
-		})
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+			updatedAt: new Date().toISOString(),
+		},
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+	});
 
-	if (updateRoleRes.numUpdatedRows === 0n) {
+	if (updateRoleRes === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_updated_name", {

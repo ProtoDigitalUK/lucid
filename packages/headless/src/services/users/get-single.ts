@@ -13,7 +13,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const user = await UsersRepo.getSingleWithRoles({
+	const user = await UsersRepo.getSingleFull({
 		userId: data.user_id,
 		config: serviceConfig.config,
 	});
