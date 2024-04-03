@@ -15,6 +15,7 @@ import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../../../libs/builders/collection-builder/index.js";
 import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaT } from "../../../schemas/collection-fields.js";
+import RepositoryFactory from "../../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	bricks: Array<BrickSchemaT>;
@@ -197,11 +198,20 @@ const getAllMedia = async (
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
 		if (ids.length === 0) return [];
-		return await serviceConfig.db
-			.selectFrom("headless_media")
-			.select(["id", "file_extension", "width", "height", "type"])
-			.where("id", "in", allFieldIdsOfType<number>(fields, "media"))
-			.execute();
+		const MediaRepo = RepositoryFactory.getRepository(
+			"media",
+			serviceConfig.db,
+		);
+		return MediaRepo.selectMultiple({
+			select: ["id", "file_extension", "width", "height", "type"],
+			where: [
+				{
+					key: "id",
+					operator: "in",
+					value: ids,
+				},
+			],
+		});
 	} catch (err) {
 		return [];
 	}

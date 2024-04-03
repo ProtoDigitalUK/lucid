@@ -17,8 +17,15 @@ const checkRolesExist = async (
 		"roles",
 		serviceConfig.db,
 	);
-	const roles = await RolesRepo.selectMultipleByIds({
-		ids: data.role_ids,
+	const roles = await RolesRepo.selectMultiple({
+		select: ["id"],
+		where: [
+			{
+				key: "id",
+				operator: "in",
+				value: data.role_ids,
+			},
+		],
 	});
 
 	if (roles.length !== data.role_ids.length) {

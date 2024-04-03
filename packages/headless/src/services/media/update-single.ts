@@ -4,6 +4,7 @@ import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
@@ -25,18 +26,27 @@ const updateSingle = async (
 	// if translations are present, insert on conflict update
 	// do translations first so if they throw an error, the file is not uploaded
 	// if the file upload throws an error, the translations are not inserted due to the transaction
+	const MediaRepo = RepositoryFactory.getRepository(
+		"media",
+		serviceConfig.db,
+	);
 
-	const media = await serviceConfig.db
-		.selectFrom("headless_media")
-		.select([
+	const media = await MediaRepo.selectSingle({
+		select: [
 			"id",
 			"key",
 			"file_size",
 			"title_translation_key_id",
 			"alt_translation_key_id",
-		])
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+		],
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+	});
 
 	if (media === undefined) {
 		throw new APIError({
@@ -84,21 +94,26 @@ const updateSingle = async (
 		key: media.key,
 	});
 
-	const mediaUpdateRes = await serviceConfig.db
-		.updateTable("headless_media")
-		.set({
+	const mediaUpdateRes = await MediaRepo.updateSingle({
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+		data: {
 			key: updateObjectRes.key,
-			e_tag: updateObjectRes.etag,
+			eTag: updateObjectRes.etag,
 			type: updateObjectRes.type,
-			mime_type: updateObjectRes.mimeType,
-			file_extension: updateObjectRes.fileExtension,
-			file_size: updateObjectRes.size,
+			mimeType: updateObjectRes.mimeType,
+			fileExtension: updateObjectRes.fileExtension,
+			fileSize: updateObjectRes.size,
 			width: updateObjectRes.width,
 			height: updateObjectRes.height,
-			updated_at: new Date().toISOString(),
-		})
-		.returning("id")
-		.executeTakeFirst();
+			updatedAt: new Date().toISOString(),
+		},
+	});
 
 	if (mediaUpdateRes === undefined) {
 		throw new APIError({

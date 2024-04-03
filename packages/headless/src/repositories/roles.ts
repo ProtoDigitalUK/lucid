@@ -65,6 +65,18 @@ export default class RolesRepo {
 			.where("id", "=", props.id)
 			.executeTakeFirst();
 	};
+	selectMultiple = async <K extends keyof Select<HeadlessRoles>>(props: {
+		select: K[];
+		where: QueryBuilderWhereT<"headless_roles">;
+	}) => {
+		let query = this.db.selectFrom("headless_roles").select(props.select);
+
+		query = selectQB(query, props.where);
+
+		return query.execute() as Promise<
+			Array<Pick<Select<HeadlessRoles>, K>>
+		>;
+	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof rolesSchema.getMultiple.query>;
 		config: Config;
@@ -143,15 +155,6 @@ export default class RolesRepo {
 			main.execute(),
 			count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 		]);
-	};
-	selectMultipleByIds = async (props: {
-		ids: number[];
-	}) => {
-		return this.db
-			.selectFrom("headless_roles")
-			.select("id")
-			.where("id", "in", props.ids)
-			.execute();
 	};
 	// ----------------------------------------
 	// delete

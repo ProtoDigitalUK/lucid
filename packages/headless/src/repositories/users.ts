@@ -252,9 +252,9 @@ export default class UsersRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_roles">;
+		where: QueryBuilderWhereT<"headless_users">;
 	}) => {
-		let query = this.db.deleteFrom("headless_roles").returning("id");
+		let query = this.db.deleteFrom("headless_users").returning("id");
 
 		query = deleteQB(query, props.where);
 

@@ -1,64 +1,22 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatMedia from "../../format/format-media.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const media = await serviceConfig.db
-		.selectFrom("headless_media")
-		.select((eb) => [
-			"id",
-			"key",
-			"e_tag",
-			"type",
-			"mime_type",
-			"file_extension",
-			"file_size",
-			"width",
-			"height",
-			"title_translation_key_id",
-			"alt_translation_key_id",
-			"created_at",
-			"updated_at",
-			serviceConfig.config.db
-				.jsonArrayFrom(
-					eb
-						.selectFrom("headless_translations")
-						.select([
-							"headless_translations.value",
-							"headless_translations.language_id",
-						])
-						.where("headless_translations.value", "is not", null)
-						.whereRef(
-							"headless_translations.translation_key_id",
-							"=",
-							"headless_media.title_translation_key_id",
-						),
-				)
-				.as("title_translations"),
-			serviceConfig.config.db
-				.jsonArrayFrom(
-					eb
-						.selectFrom("headless_translations")
-						.select([
-							"headless_translations.value",
-							"headless_translations.language_id",
-						])
-						.where("headless_translations.value", "is not", null)
-						.whereRef(
-							"headless_translations.translation_key_id",
-							"=",
-							"headless_media.alt_translation_key_id",
-						),
-				)
-				.as("alt_translations"),
-		])
-		.where("visible", "=", 1)
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+	const MediaRepo = RepositoryFactory.getRepository(
+		"media",
+		serviceConfig.db,
+	);
+
+	const media = await MediaRepo.selectSingleById({
+		id: data.id,
+		config: serviceConfig.config,
+	});
 
 	if (media === undefined) {
 		throw new APIError({

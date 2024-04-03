@@ -11,6 +11,7 @@ import {
 	getUniqueLanguageIDs,
 } from "../../utils/translation-helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	file_data: MultipartFile | undefined;
@@ -33,6 +34,11 @@ const uploadSingle = async (
 	let objectKey = undefined;
 
 	try {
+		const MediaRepo = RepositoryFactory.getRepository(
+			"media",
+			serviceConfig.db,
+		);
+
 		await serviceWrapper(
 			languagesServices.checks.checkLanguagesExist,
 			false,
@@ -74,23 +80,19 @@ const uploadSingle = async (
 		objectStored = true;
 		objectKey = uploadObjectRes.key;
 
-		const mediaRes = await serviceConfig.db
-			.insertInto("headless_media")
-			.values({
-				key: uploadObjectRes.key,
-				e_tag: uploadObjectRes.etag,
-				visible: data.visible ?? 1,
-				type: uploadObjectRes.type,
-				mime_type: uploadObjectRes.mimeType,
-				file_extension: uploadObjectRes.fileExtension,
-				file_size: uploadObjectRes.size,
-				width: uploadObjectRes.width,
-				height: uploadObjectRes.height,
-				title_translation_key_id: translationKeyIds.title,
-				alt_translation_key_id: translationKeyIds.alt,
-			})
-			.returning("id")
-			.executeTakeFirst();
+		const mediaRes = await MediaRepo.createSingle({
+			key: uploadObjectRes.key,
+			eTag: uploadObjectRes.etag,
+			visible: data.visible ?? 1,
+			type: uploadObjectRes.type,
+			mimeType: uploadObjectRes.mimeType,
+			fileExtension: uploadObjectRes.fileExtension,
+			fileSize: uploadObjectRes.size,
+			width: uploadObjectRes.width,
+			height: uploadObjectRes.height,
+			titleTranslationKeyId: translationKeyIds.title,
+			altTranslationKeyId: translationKeyIds.alt,
+		});
 
 		if (mediaRes === undefined) {
 			throw new APIError({
