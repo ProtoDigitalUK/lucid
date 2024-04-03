@@ -7,6 +7,7 @@ import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import constants from "../../constants.js";
 import mediaHelpers from "../../utils/media-helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	key: string;
@@ -90,15 +91,17 @@ const processImage = async (
 		};
 	}
 
+	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+		"processed-images",
+		serviceConfig.db,
+	);
+
 	if (serviceConfig.config.media.processedImages?.store === true) {
 		Promise.all([
-			serviceConfig.db
-				.insertInto("headless_processed_images")
-				.values({
-					key: data.processKey,
-					media_key: data.key,
-				})
-				.executeTakeFirst(),
+			ProcessedImagesRepo.createSingle({
+				key: data.processKey,
+				mediaKey: data.key,
+			}),
 			s3Services.saveObject({
 				type: "buffer",
 				key: data.processKey,

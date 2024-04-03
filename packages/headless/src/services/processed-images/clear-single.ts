@@ -1,4 +1,5 @@
 import s3Services from "../s3/index.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	key: string;
@@ -8,11 +9,21 @@ const clearSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const allProcessedImages = await serviceConfig.db
-		.selectFrom("headless_processed_images")
-		.select("key")
-		.where("media_key", "=", data.key)
-		.execute();
+	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+		"processed-images",
+		serviceConfig.db,
+	);
+
+	const allProcessedImages = await ProcessedImagesRepo.selectMultiple({
+		select: ["key"],
+		where: [
+			{
+				key: "media_key",
+				operator: "=",
+				value: data.key,
+			},
+		],
+	});
 
 	if (allProcessedImages.length === 0) return;
 
@@ -22,10 +33,15 @@ const clearSingle = async (
 				key: image.key,
 			})),
 		}),
-		serviceConfig.db
-			.deleteFrom("headless_processed_images")
-			.where("media_key", "=", data.key)
-			.execute(),
+		ProcessedImagesRepo.deleteMultiple({
+			where: [
+				{
+					key: "media_key",
+					operator: "=",
+					value: data.key,
+				},
+			],
+		}),
 	]);
 };
 

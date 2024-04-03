@@ -1,10 +1,16 @@
 import s3Services from "../s3/index.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 const clearAll = async (serviceConfig: ServiceConfigT) => {
-	const allProcessedImages = await serviceConfig.db
-		.selectFrom("headless_processed_images")
-		.select("key")
-		.execute();
+	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+		"processed-images",
+		serviceConfig.db,
+	);
+
+	const allProcessedImages = await ProcessedImagesRepo.selectMultiple({
+		select: ["key"],
+		where: [],
+	});
 
 	if (allProcessedImages.length === 0) return;
 
@@ -14,7 +20,9 @@ const clearAll = async (serviceConfig: ServiceConfigT) => {
 				key: image.key,
 			})),
 		}),
-		serviceConfig.db.deleteFrom("headless_processed_images").execute(),
+		ProcessedImagesRepo.deleteMultiple({
+			where: [],
+		}),
 	]);
 };
 

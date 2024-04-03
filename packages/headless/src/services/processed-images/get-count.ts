@@ -1,5 +1,5 @@
-import { sql } from "kysely";
 import { parseCount } from "../../utils/helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 // export interface ServiceData {}
 
@@ -7,12 +7,15 @@ const getCount = async (
 	serviceConfig: ServiceConfigT,
 	// data: ServiceData,
 ) => {
-	const processedImageCount = (await serviceConfig.db
-		.selectFrom("headless_processed_images")
-		.select(sql`count(*)`.as("count"))
-		.executeTakeFirst()) as { count: string };
+	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+		"processed-images",
+		serviceConfig.db,
+	);
 
-	return parseCount(processedImageCount.count);
+	const processedImageCount = await ProcessedImagesRepo.count({
+		where: [],
+	});
+	return parseCount(processedImageCount?.count);
 };
 
 export default getCount;
