@@ -14,7 +14,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const user = await UsersRepo.getSingleByEmailUsername({
+	const user = await UsersRepo.selectSingleByEmailUsername({
 		select: ["id", "password", "is_deleted"],
 		data: {
 			username: data.username_or_email,

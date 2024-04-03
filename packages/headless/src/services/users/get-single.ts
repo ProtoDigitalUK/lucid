@@ -13,8 +13,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const user = await UsersRepo.getSingleFull({
-		userId: data.user_id,
+	const user = await UsersRepo.selectSingleById({
+		id: data.user_id,
 		config: serviceConfig.config,
 	});
 

@@ -30,7 +30,7 @@ const updateSingle = async (
 			  )
 			: undefined,
 		data.name !== undefined
-			? RolesRepo.getSingle({
+			? RolesRepo.selectSingle({
 					select: ["id"],
 					where: [
 						{

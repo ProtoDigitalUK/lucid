@@ -16,7 +16,7 @@ const getSingleFallback = async (
 	);
 
 	if (data.id !== undefined) {
-		const language = await LanguagesRepo.getSingle({
+		const language = await LanguagesRepo.selectSingle({
 			select: ["id", "code"],
 			where: [
 				{
@@ -46,7 +46,7 @@ const getSingleFallback = async (
 		};
 	}
 
-	const defaultLanguage = await LanguagesRepo.getSingle({
+	const defaultLanguage = await LanguagesRepo.selectSingle({
 		select: ["id", "code"],
 		where: [
 			{

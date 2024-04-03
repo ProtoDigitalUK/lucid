@@ -11,7 +11,7 @@ const clearExpiredTokens = async (config: Config) => {
 			config.db.client,
 		);
 
-		await UserTokensRepo.delete({
+		await UserTokensRepo.deleteMultiple({
 			where: [
 				{
 					key: "expiry_date",

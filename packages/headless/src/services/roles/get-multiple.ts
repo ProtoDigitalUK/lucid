@@ -17,7 +17,7 @@ const getMultiple = async (
 		serviceConfig.db,
 	);
 
-	const [roles, rolesCount] = await RolesRepo.getMultipleQueryBuilder({
+	const [roles, rolesCount] = await RolesRepo.selectMultipleFiltered({
 		query: data.query,
 		config: serviceConfig.config,
 	});

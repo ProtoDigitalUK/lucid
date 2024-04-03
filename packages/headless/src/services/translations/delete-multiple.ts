@@ -13,7 +13,7 @@ const deleteMultiple = async (
 		serviceConfig.db,
 	);
 
-	await TranslationKeysRepo.delete({
+	await TranslationKeysRepo.deleteMultiple({
 		where: [
 			{
 				key: "id",

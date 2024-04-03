@@ -14,7 +14,7 @@ const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 			serviceConfig.db,
 		);
 
-		const totalRoleCount = await RolesRepo.getCount();
+		const totalRoleCount = await RolesRepo.count();
 		if (parseCount(totalRoleCount?.count) > 0) return;
 
 		const rolePromises = [];

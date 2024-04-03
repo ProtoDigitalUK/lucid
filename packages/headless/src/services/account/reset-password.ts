@@ -62,7 +62,7 @@ const resetPassword = async (
 	}
 
 	await Promise.all([
-		UserTokensRepo.delete({
+		UserTokensRepo.deleteMultiple({
 			where: [
 				{
 					key: "id",

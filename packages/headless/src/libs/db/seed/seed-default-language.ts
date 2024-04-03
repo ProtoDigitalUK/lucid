@@ -12,7 +12,7 @@ const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
 			serviceConfig.db,
 		);
 
-		const totalLanguagesCount = await LanguagesRepo.getCount();
+		const totalLanguagesCount = await LanguagesRepo.count();
 
 		if (parseCount(totalLanguagesCount?.count) > 0) return;
 

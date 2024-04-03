@@ -1,25 +1,24 @@
 import T from "../../translations/index.js";
-import type { Config } from "../config/config-schema.js";
 import { InternalError } from "../../utils/error-handler.js";
 // Repositories
-import UserTokens from "../../repositories/user-tokens.js";
-import CollectionCategories from "../../repositories/collection-categories.js";
-import CollectionDocumentBricks from "../../repositories/collection-document-bricks.js";
-import CollectionDocumentCategories from "../../repositories/collection-document-categories.js";
-import CollectionDocumentFields from "../../repositories/collection-document-fields.js";
-import CollectionDocumentGroups from "../../repositories/collection-document-groups.js";
-import CollectionDocuments from "../../repositories/collection-documents.js";
-import Emails from "../../repositories/emails.js";
-import Languages from "../../repositories/languages.js";
-import Media from "../../repositories/media.js";
-import Options from "../../repositories/options.js";
-import ProcessedImages from "../../repositories/processed-images.js";
-import RolePermissions from "../../repositories/role-permissions.js";
-import Roles from "../../repositories/roles.js";
-import TranslationKeys from "../../repositories/translation-keys.js";
-import Translations from "../../repositories/translations.js";
-import UserRoles from "../../repositories/user-roles.js";
-import Users from "../../repositories/users.js";
+import UserTokensRepo from "../../repositories/user-tokens.js";
+import CollectionCategoriesRepo from "../../repositories/collection-categories.js";
+import CollectionDocumentBricksRepo from "../../repositories/collection-document-bricks.js";
+import CollectionDocumentCategoriesRepo from "../../repositories/collection-document-categories.js";
+import CollectionDocumentFieldsRepo from "../../repositories/collection-document-fields.js";
+import CollectionDocumentGroupsRepo from "../../repositories/collection-document-groups.js";
+import CollectionDocumentsRepo from "../../repositories/collection-documents.js";
+import EmailsRepo from "../../repositories/emails.js";
+import LanguagesRepo from "../../repositories/languages.js";
+import MediaRepo from "../../repositories/media.js";
+import OptionsRepo from "../../repositories/options.js";
+import ProcessedImagesRepo from "../../repositories/processed-images.js";
+import RolePermissionsRepo from "../../repositories/role-permissions.js";
+import RolesRepo from "../../repositories/roles.js";
+import TranslationKeysRepo from "../../repositories/translation-keys.js";
+import TranslationsRepo from "../../repositories/translations.js";
+import UserRolesRepo from "../../repositories/user-roles.js";
+import UsersRepo from "../../repositories/users.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class RepositoryFactory {
@@ -29,49 +28,53 @@ class RepositoryFactory {
 	): RepositoryReturnType<T> {
 		switch (repository) {
 			case "user-tokens":
-				return new UserTokens(db) as RepositoryReturnType<T>;
+				return new UserTokensRepo(db) as RepositoryReturnType<T>;
 			case "collection-categories":
-				return new CollectionCategories(db) as RepositoryReturnType<T>;
+				return new CollectionCategoriesRepo(
+					db,
+				) as RepositoryReturnType<T>;
 			case "collection-document-bricks":
-				return new CollectionDocumentBricks(
+				return new CollectionDocumentBricksRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-categories":
-				return new CollectionDocumentCategories(
+				return new CollectionDocumentCategoriesRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-fields":
-				return new CollectionDocumentFields(
+				return new CollectionDocumentFieldsRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-groups":
-				return new CollectionDocumentGroups(
+				return new CollectionDocumentGroupsRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-documents":
-				return new CollectionDocuments(db) as RepositoryReturnType<T>;
+				return new CollectionDocumentsRepo(
+					db,
+				) as RepositoryReturnType<T>;
 			case "emails":
-				return new Emails(db) as RepositoryReturnType<T>;
+				return new EmailsRepo(db) as RepositoryReturnType<T>;
 			case "languages":
-				return new Languages(db) as RepositoryReturnType<T>;
+				return new LanguagesRepo(db) as RepositoryReturnType<T>;
 			case "media":
-				return new Media(db) as RepositoryReturnType<T>;
+				return new MediaRepo(db) as RepositoryReturnType<T>;
 			case "options":
-				return new Options(db) as RepositoryReturnType<T>;
+				return new OptionsRepo(db) as RepositoryReturnType<T>;
 			case "processed-images":
-				return new ProcessedImages(db) as RepositoryReturnType<T>;
+				return new ProcessedImagesRepo(db) as RepositoryReturnType<T>;
 			case "role-permissions":
-				return new RolePermissions(db) as RepositoryReturnType<T>;
+				return new RolePermissionsRepo(db) as RepositoryReturnType<T>;
 			case "roles":
-				return new Roles(db) as RepositoryReturnType<T>;
+				return new RolesRepo(db) as RepositoryReturnType<T>;
 			case "translation-keys":
-				return new TranslationKeys(db) as RepositoryReturnType<T>;
+				return new TranslationKeysRepo(db) as RepositoryReturnType<T>;
 			case "translations":
-				return new Translations(db) as RepositoryReturnType<T>;
+				return new TranslationsRepo(db) as RepositoryReturnType<T>;
 			case "user-roles":
-				return new UserRoles(db) as RepositoryReturnType<T>;
+				return new UserRolesRepo(db) as RepositoryReturnType<T>;
 			case "users":
-				return new Users(db) as RepositoryReturnType<T>;
+				return new UsersRepo(db) as RepositoryReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_repository", {
@@ -83,24 +86,24 @@ class RepositoryFactory {
 }
 
 type RepositoryClassMap = {
-	"user-tokens": UserTokens;
-	"collection-categories": CollectionCategories;
-	"collection-document-bricks": CollectionDocumentBricks;
-	"collection-document-categories": CollectionDocumentCategories;
-	"collection-document-fields": CollectionDocumentFields;
-	"collection-document-groups": CollectionDocumentGroups;
-	"collection-documents": CollectionDocuments;
-	emails: Emails;
-	languages: Languages;
-	media: Media;
-	options: Options;
-	"processed-images": ProcessedImages;
-	"role-permissions": RolePermissions;
-	roles: Roles;
-	"translation-keys": TranslationKeys;
-	translations: Translations;
-	"user-roles": UserRoles;
-	users: Users;
+	"user-tokens": UserTokensRepo;
+	"collection-categories": CollectionCategoriesRepo;
+	"collection-document-bricks": CollectionDocumentBricksRepo;
+	"collection-document-categories": CollectionDocumentCategoriesRepo;
+	"collection-document-fields": CollectionDocumentFieldsRepo;
+	"collection-document-groups": CollectionDocumentGroupsRepo;
+	"collection-documents": CollectionDocumentsRepo;
+	emails: EmailsRepo;
+	languages: LanguagesRepo;
+	media: MediaRepo;
+	options: OptionsRepo;
+	"processed-images": ProcessedImagesRepo;
+	"role-permissions": RolePermissionsRepo;
+	roles: RolesRepo;
+	"translation-keys": TranslationKeysRepo;
+	translations: TranslationsRepo;
+	"user-roles": UserRolesRepo;
+	users: UsersRepo;
 };
 
 type RepositoryReturnType<T extends keyof RepositoryClassMap> =

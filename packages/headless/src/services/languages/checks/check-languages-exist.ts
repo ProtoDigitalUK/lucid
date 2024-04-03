@@ -19,7 +19,7 @@ const checkLanguagesExist = async (
 		serviceConfig.db,
 	);
 
-	const languages = await LanguagesRepo.getMultiple({
+	const languages = await LanguagesRepo.selectMultiple({
 		select: ["id"],
 		where: [
 			{

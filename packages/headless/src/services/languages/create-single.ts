@@ -22,7 +22,7 @@ const createSingle = async (
 		serviceConfig.db,
 	);
 
-	const codeUnique = await LanguagesRepo.getSingle({
+	const codeUnique = await LanguagesRepo.selectSingle({
 		select: ["id"],
 		where: [
 			{
@@ -88,7 +88,7 @@ const createSingle = async (
 	}
 
 	if (data.is_default) {
-		await LanguagesRepo.update({
+		await LanguagesRepo.updateSingle({
 			data: {
 				isDefault: 0,
 			},

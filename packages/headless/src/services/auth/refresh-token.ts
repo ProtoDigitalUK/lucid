@@ -72,7 +72,7 @@ export const verifyRefreshToken = async (
 			id: number;
 		};
 
-		const token = await UserTokensRepo.getSingle({
+		const token = await UserTokensRepo.selectSingle({
 			select: ["id", "user_id"],
 			where: [
 				{
@@ -140,7 +140,7 @@ export const clearRefreshToken = async (
 
 	reply.clearCookie(key, { path: "/" });
 
-	await UserTokensRepo.delete({
+	await UserTokensRepo.deleteMultiple({
 		where: [
 			{
 				key: "token",

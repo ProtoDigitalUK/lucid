@@ -5,6 +5,6 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class Emails {
+export default class EmailsRepo {
 	constructor(private db: DB) {}
 }

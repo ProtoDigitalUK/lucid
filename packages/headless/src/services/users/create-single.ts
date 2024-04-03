@@ -28,7 +28,7 @@ const createSingle = async (
 	);
 
 	const [userExists] = await Promise.all([
-		UsersRepo.getSingleByEmailUsername({
+		UsersRepo.selectSingleByEmailUsername({
 			select: ["id", "username", "email"],
 			data: {
 				username: data.username,

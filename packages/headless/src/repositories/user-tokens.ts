@@ -5,10 +5,12 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class UserTokens {
+export default class UserTokensRepo {
 	constructor(private db: DB) {}
 
-	getSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
+	// ----------------------------------------
+	// selects
+	selectSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
@@ -22,7 +24,9 @@ export default class UserTokens {
 			Pick<Select<HeadlessUserTokens>, K> | undefined
 		>;
 	};
-	delete = async (props: {
+	// ----------------------------------------
+	// delete
+	deleteMultiple = async (props: {
 		where: QueryBuilderWhereT<"headless_user_tokens">;
 	}) => {
 		let query = this.db.deleteFrom("headless_user_tokens");
@@ -31,6 +35,8 @@ export default class UserTokens {
 
 		return query.execute();
 	};
+	// ----------------------------------------
+	// create
 	createSingle = async (props: {
 		userId: number;
 		tokenType: HeadlessUserTokens["token_type"];

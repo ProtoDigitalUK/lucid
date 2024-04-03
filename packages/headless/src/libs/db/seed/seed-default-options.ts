@@ -9,7 +9,7 @@ const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
 			serviceConfig.db,
 		);
 
-		const mediaStorageOption = await OptionsRepo.getSingle({
+		const mediaStorageOption = await OptionsRepo.selectSingle({
 			select: ["name"],
 			where: [
 				{

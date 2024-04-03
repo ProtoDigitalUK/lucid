@@ -15,7 +15,7 @@ const deleteSingle = async (
 		serviceConfig.db,
 	);
 
-	const deleteRoles = await RolesRepo.delete({
+	const deleteRoles = await RolesRepo.deleteMultiple({
 		where: [
 			{
 				key: "id",

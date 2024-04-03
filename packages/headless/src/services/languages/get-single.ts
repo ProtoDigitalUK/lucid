@@ -13,7 +13,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const language = await LanguagesRepo.getSingle({
+	const language = await LanguagesRepo.selectSingle({
 		select: [
 			"code",
 			"id",

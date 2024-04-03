@@ -8,6 +8,6 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class CollectionDocumentFields {
+export default class CollectionDocumentFieldsRepo {
 	constructor(private db: DB) {}
 }

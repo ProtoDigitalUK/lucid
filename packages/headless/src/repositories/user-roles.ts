@@ -5,6 +5,6 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class UserRoles {
+export default class UserRolesRepo {
 	constructor(private db: DB) {}
 }

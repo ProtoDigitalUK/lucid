@@ -13,7 +13,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const userToken = await UserTokensRepo.getSingle({
+	const userToken = await UserTokensRepo.selectSingle({
 		select: ["id", "user_id"],
 		where: [
 			{

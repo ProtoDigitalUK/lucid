@@ -5,6 +5,6 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class RolePermissions {
+export default class RolePermissionsRepo {
 	constructor(private db: DB) {}
 }

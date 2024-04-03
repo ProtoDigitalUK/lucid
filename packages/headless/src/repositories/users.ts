@@ -6,75 +6,22 @@ import type { BooleanInt, HeadlessUsers, Select } from "../libs/db/types.js";
 import queryBuilder, {
 	selectQB,
 	updateQB,
+	deleteQB,
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class Users {
+export default class UsersRepo {
 	constructor(private db: DB) {}
 
-	getCount = async () => {
+	count = async () => {
 		return this.db
 			.selectFrom("headless_users")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
-	createSingle = async (props: {
-		superAdmin?: BooleanInt;
-		email: string;
-		username: string;
-		firstName?: string;
-		lastName?: string;
-		password: string;
-	}) => {
-		return this.db
-			.insertInto("headless_users")
-			.returning("id")
-			.values({
-				super_admin: props.superAdmin,
-				email: props.email,
-				username: props.username,
-				first_name: props.firstName,
-				last_name: props.lastName,
-				password: props.password,
-			})
-			.executeTakeFirst();
-	};
-	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_users">;
-		data: {
-			password?: string;
-			updatedAt?: string;
-			firstName?: string;
-			lastName?: string;
-			username?: string;
-			superAdmin?: BooleanInt;
-			email?: string;
-			isDeleted?: BooleanInt;
-			isDeletedAt?: string;
-			deletedBy?: number;
-		};
-	}) => {
-		let query = this.db
-			.updateTable("headless_users")
-			.set({
-				first_name: props.data.firstName,
-				last_name: props.data.lastName,
-				username: props.data.username,
-				email: props.data.email,
-				password: props.data.password,
-				super_admin: props.data.superAdmin,
-				updated_at: props.data.updatedAt,
-				is_deleted: props.data.isDeleted,
-				is_deleted_at: props.data.isDeletedAt,
-				deleted_by: props.data.deletedBy,
-			})
-			.returning(["id", "first_name", "last_name", "email"]);
-
-		query = updateQB(query, props.where);
-
-		return query.executeTakeFirst();
-	};
-	getSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
+	// ----------------------------------------
+	// selects
+	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_users">;
 	}) => {
@@ -86,7 +33,58 @@ export default class Users {
 			Pick<Select<HeadlessUsers>, K> | undefined
 		>;
 	};
-	getSingleByEmailUsername = async <
+	selectSingleById = async (props: {
+		id: number;
+		config: Config;
+	}) => {
+		return this.db
+			.selectFrom("headless_users")
+			.select((eb) => [
+				"email",
+				"first_name",
+				"last_name",
+				"id",
+				"created_at",
+				"updated_at",
+				"username",
+				"super_admin",
+				props.config.db
+					.jsonArrayFrom(
+						eb
+							.selectFrom("headless_user_roles")
+							.innerJoin(
+								"headless_roles",
+								"headless_roles.id",
+								"headless_user_roles.role_id",
+							)
+							.select((eb) => [
+								"headless_roles.id",
+								"headless_roles.name",
+								"headless_roles.description",
+								props.config.db
+									.jsonArrayFrom(
+										eb
+											.selectFrom(
+												"headless_role_permissions",
+											)
+											.select(["permission"])
+											.whereRef(
+												"role_id",
+												"=",
+												"headless_roles.id",
+											),
+									)
+									.as("permissions"),
+							])
+							.whereRef("user_id", "=", "headless_users.id"),
+					)
+					.as("roles"),
+			])
+			.where("id", "=", props.id)
+			.where("is_deleted", "=", 0)
+			.executeTakeFirst();
+	};
+	selectSingleByEmailUsername = async <
 		K extends keyof Select<HeadlessUsers>,
 	>(props: {
 		select: K[];
@@ -108,7 +106,19 @@ export default class Users {
 			Pick<Select<HeadlessUsers>, K> | undefined
 		>;
 	};
-	getMultipleQueryBuilder = async (props: {
+	selectMultiple = async <K extends keyof Select<HeadlessUsers>>(props: {
+		select: K[];
+		where: QueryBuilderWhereT<"headless_users">;
+	}) => {
+		let query = this.db.selectFrom("headless_users").select(props.select);
+
+		query = selectQB(query, props.where);
+
+		return query.execute() as Promise<
+			Array<Pick<Select<HeadlessUsers>, K>>
+		>;
+	};
+	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;
 		config: Config;
 	}) => {
@@ -239,55 +249,75 @@ export default class Users {
 			count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 		]);
 	};
-	getSingleFull = async (props: {
-		userId: number;
-		config: Config;
+	// ----------------------------------------
+	// delete
+	deleteMultiple = async (props: {
+		where: QueryBuilderWhereT<"headless_roles">;
+	}) => {
+		let query = this.db.deleteFrom("headless_roles").returning("id");
+
+		query = deleteQB(query, props.where);
+
+		return query.execute();
+	};
+	// ----------------------------------------
+	// update
+	updateSingle = async (props: {
+		where: QueryBuilderWhereT<"headless_users">;
+		data: {
+			password?: string;
+			updatedAt?: string;
+			firstName?: string;
+			lastName?: string;
+			username?: string;
+			superAdmin?: BooleanInt;
+			email?: string;
+			isDeleted?: BooleanInt;
+			isDeletedAt?: string;
+			deletedBy?: number;
+		};
+	}) => {
+		let query = this.db
+			.updateTable("headless_users")
+			.set({
+				first_name: props.data.firstName,
+				last_name: props.data.lastName,
+				username: props.data.username,
+				email: props.data.email,
+				password: props.data.password,
+				super_admin: props.data.superAdmin,
+				updated_at: props.data.updatedAt,
+				is_deleted: props.data.isDeleted,
+				is_deleted_at: props.data.isDeletedAt,
+				deleted_by: props.data.deletedBy,
+			})
+			.returning(["id", "first_name", "last_name", "email"]);
+
+		query = updateQB(query, props.where);
+
+		return query.executeTakeFirst();
+	};
+	// ----------------------------------------
+	// create
+	createSingle = async (props: {
+		superAdmin?: BooleanInt;
+		email: string;
+		username: string;
+		firstName?: string;
+		lastName?: string;
+		password: string;
 	}) => {
 		return this.db
-			.selectFrom("headless_users")
-			.select((eb) => [
-				"email",
-				"first_name",
-				"last_name",
-				"id",
-				"created_at",
-				"updated_at",
-				"username",
-				"super_admin",
-				props.config.db
-					.jsonArrayFrom(
-						eb
-							.selectFrom("headless_user_roles")
-							.innerJoin(
-								"headless_roles",
-								"headless_roles.id",
-								"headless_user_roles.role_id",
-							)
-							.select((eb) => [
-								"headless_roles.id",
-								"headless_roles.name",
-								"headless_roles.description",
-								props.config.db
-									.jsonArrayFrom(
-										eb
-											.selectFrom(
-												"headless_role_permissions",
-											)
-											.select(["permission"])
-											.whereRef(
-												"role_id",
-												"=",
-												"headless_roles.id",
-											),
-									)
-									.as("permissions"),
-							])
-							.whereRef("user_id", "=", "headless_users.id"),
-					)
-					.as("roles"),
-			])
-			.where("id", "=", props.userId)
-			.where("is_deleted", "=", 0)
+			.insertInto("headless_users")
+			.returning("id")
+			.values({
+				super_admin: props.superAdmin,
+				email: props.email,
+				username: props.username,
+				first_name: props.firstName,
+				last_name: props.lastName,
+				password: props.password,
+			})
 			.executeTakeFirst();
 	};
 }

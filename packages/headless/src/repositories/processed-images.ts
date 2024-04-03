@@ -5,6 +5,6 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class ProcessedImages {
+export default class ProcessedImagesRepo {
 	constructor(private db: DB) {}
 }

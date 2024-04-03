@@ -28,7 +28,7 @@ const updateSingle = async (
 		serviceConfig.db,
 	);
 
-	const user = await UsersRepo.getSingle({
+	const user = await UsersRepo.selectSingle({
 		select: ["id"],
 		where: [
 			{
@@ -59,7 +59,7 @@ const updateSingle = async (
 
 	const [emailExists, usernameExists] = await Promise.all([
 		data.email
-			? UsersRepo.getSingle({
+			? UsersRepo.selectSingle({
 					select: ["email"],
 					where: [
 						{
@@ -71,7 +71,7 @@ const updateSingle = async (
 			  })
 			: undefined,
 		data.username
-			? UsersRepo.getSingle({
+			? UsersRepo.selectSingle({
 					select: ["username"],
 					where: [
 						{

@@ -17,7 +17,7 @@ const checkRolesExist = async (
 		"roles",
 		serviceConfig.db,
 	);
-	const roles = await RolesRepo.getMultipleById({
+	const roles = await RolesRepo.selectMultipleByIds({
 		ids: data.role_ids,
 	});
 

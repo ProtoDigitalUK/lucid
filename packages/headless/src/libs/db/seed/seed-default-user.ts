@@ -12,7 +12,7 @@ const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 			serviceConfig.db,
 		);
 
-		const totalUserCount = await UsersRepo.getCount();
+		const totalUserCount = await UsersRepo.count();
 		if (parseCount(totalUserCount?.count) > 0) return;
 
 		const hashedPassword = await argon2.hash(

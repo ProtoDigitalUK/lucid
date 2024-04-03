@@ -14,7 +14,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const optionRes = await OptionsRepo.getSingle({
+	const optionRes = await OptionsRepo.selectSingle({
 		select: ["name", "value_bool", "value_int", "value_text"],
 		where: [
 			{

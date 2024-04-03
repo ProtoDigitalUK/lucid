@@ -5,6 +5,6 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class Media {
+export default class MediaRepo {
 	constructor(private db: DB) {}
 }

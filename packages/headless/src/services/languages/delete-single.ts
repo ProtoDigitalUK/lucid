@@ -13,7 +13,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const languagesCountQuery = await LanguagesRepo.getCount();
+	const languagesCountQuery = await LanguagesRepo.count();
 	const count = parseCount(languagesCountQuery?.count);
 
 	if (count === 1) {
@@ -29,7 +29,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const deleteLanguage = await LanguagesRepo.delete({
+	const deleteLanguage = await LanguagesRepo.deleteSingle({
 		where: [
 			{
 				key: "code",
@@ -39,7 +39,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		],
 	});
 
-	if (deleteLanguage.length === 0) {
+	if (deleteLanguage === undefined) {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_deleted_name", {
@@ -52,7 +52,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	const defaultLanguages = await LanguagesRepo.getMultiple({
+	const defaultLanguages = await LanguagesRepo.selectMultiple({
 		select: ["id"],
 		where: [
 			{
@@ -64,7 +64,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (defaultLanguages.length === 0) {
-		const firstLanguage = await LanguagesRepo.getSingle({
+		const firstLanguage = await LanguagesRepo.selectSingle({
 			select: ["id"],
 			where: [],
 		});
@@ -82,7 +82,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		}
 
 		if (firstLanguage) {
-			await LanguagesRepo.update({
+			await LanguagesRepo.updateSingle({
 				data: {
 					isDefault: 1,
 					isEnabled: 1,

@@ -26,7 +26,7 @@ const createSingle = async (
 				permissions: data.permissions,
 			},
 		),
-		RolesRepo.getSingle({
+		RolesRepo.selectSingle({
 			select: ["id"],
 			where: [
 				{

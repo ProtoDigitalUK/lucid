@@ -13,31 +13,18 @@ import queryBuilder, {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class Languages {
+export default class LanguagesRepo {
 	constructor(private db: DB) {}
 
-	getCount = async () => {
+	count = async () => {
 		return this.db
 			.selectFrom("headless_languages")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
-	createSingle = async (props: {
-		code: string;
-		isDefault: BooleanInt;
-		isEnabled: BooleanInt;
-	}) => {
-		return this.db
-			.insertInto("headless_languages")
-			.values({
-				code: props.code,
-				is_default: props.isDefault,
-				is_enabled: props.isEnabled,
-			})
-			.returning(["id", "code"])
-			.executeTakeFirst();
-	};
-	getSingle = async <K extends keyof Select<HeadlessLanguages>>(props: {
+	// ----------------------------------------
+	// select
+	selectSingle = async <K extends keyof Select<HeadlessLanguages>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_languages">;
 	}) => {
@@ -51,7 +38,7 @@ export default class Languages {
 			Pick<Select<HeadlessLanguages>, K> | undefined
 		>;
 	};
-	getMultiple = async <K extends keyof Select<HeadlessLanguages>>(props: {
+	selectMultiple = async <K extends keyof Select<HeadlessLanguages>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_languages">;
 	}) => {
@@ -65,38 +52,7 @@ export default class Languages {
 			Array<Pick<Select<HeadlessLanguages>, K>>
 		>;
 	};
-	update = async (props: {
-		where: QueryBuilderWhereT<"headless_languages">;
-		data: {
-			code?: HeadlessLanguages["code"];
-			isDefault?: HeadlessLanguages["is_default"];
-			isEnabled?: HeadlessLanguages["is_enabled"];
-			updated_at?: string;
-		};
-	}) => {
-		let query = this.db
-			.updateTable("headless_languages")
-			.set({
-				code: props.data.code,
-				is_default: props.data.isDefault,
-				is_enabled: props.data.isEnabled,
-			})
-			.returning("id");
-
-		query = updateQB(query, props.where);
-
-		return query.executeTakeFirst();
-	};
-	delete = async (props: {
-		where: QueryBuilderWhereT<"headless_languages">;
-	}) => {
-		let query = this.db.deleteFrom("headless_languages").returning("id");
-
-		query = deleteQB(query, props.where);
-
-		return query.execute();
-	};
-	getMultipleQueryBuilder = async (props: {
+	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof languagesSchema.getMultiple.query>;
 	}) => {
 		const languagesQuery = this.db
@@ -145,5 +101,57 @@ export default class Languages {
 			main.execute(),
 			count?.executeTakeFirst() as Promise<{ count: string } | undefined>,
 		]);
+	};
+	// ----------------------------------------
+	// create
+	createSingle = async (props: {
+		code: string;
+		isDefault: BooleanInt;
+		isEnabled: BooleanInt;
+	}) => {
+		return this.db
+			.insertInto("headless_languages")
+			.values({
+				code: props.code,
+				is_default: props.isDefault,
+				is_enabled: props.isEnabled,
+			})
+			.returning(["id", "code"])
+			.executeTakeFirst();
+	};
+	// ----------------------------------------
+	// update
+	updateSingle = async (props: {
+		where: QueryBuilderWhereT<"headless_languages">;
+		data: {
+			code?: HeadlessLanguages["code"];
+			isDefault?: HeadlessLanguages["is_default"];
+			isEnabled?: HeadlessLanguages["is_enabled"];
+			updated_at?: string;
+		};
+	}) => {
+		let query = this.db
+			.updateTable("headless_languages")
+			.set({
+				code: props.data.code,
+				is_default: props.data.isDefault,
+				is_enabled: props.data.isEnabled,
+			})
+			.returning("id");
+
+		query = updateQB(query, props.where);
+
+		return query.executeTakeFirst();
+	};
+	// ----------------------------------------
+	// delete
+	deleteSingle = async (props: {
+		where: QueryBuilderWhereT<"headless_languages">;
+	}) => {
+		let query = this.db.deleteFrom("headless_languages").returning("id");
+
+		query = deleteQB(query, props.where);
+
+		return query.executeTakeFirst();
 	};
 }

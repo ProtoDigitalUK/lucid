@@ -19,7 +19,7 @@ const sendResetPassword = async (
 		serviceConfig.db,
 	);
 
-	const userExists = await UsersRepo.getSingle({
+	const userExists = await UsersRepo.selectSingle({
 		select: ["id", "first_name", "last_name", "email"],
 		where: [
 			{

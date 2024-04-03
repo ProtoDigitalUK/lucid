@@ -1,6 +1,8 @@
-export default class Translations {
+export default class TranslationsRepo {
 	constructor(private db: DB) {}
 
+	// ----------------------------------------
+	// update / create
 	upsertMultiple = async (
 		props: {
 			value: string | null;

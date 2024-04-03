@@ -40,7 +40,7 @@ const updateSingle = async (
 	);
 
 	if (data.code) {
-		const language = await LanguagesRepo.getSingle({
+		const language = await LanguagesRepo.selectSingle({
 			select: ["id"],
 			where: [
 				{
@@ -81,12 +81,12 @@ const updateSingle = async (
 		}
 	}
 
-	const languagesCountQuery = await LanguagesRepo.getCount();
+	const languagesCountQuery = await LanguagesRepo.count();
 	const count = parseCount(languagesCountQuery?.count);
 
 	const isDefault = count === 1 ? 1 : data.is_default;
 
-	const updateLanguage = await LanguagesRepo.update({
+	const updateLanguage = await LanguagesRepo.updateSingle({
 		data: {
 			isDefault: isDefault,
 			isEnabled: isDefault === 1 ? 1 : data.is_enabled,
@@ -115,7 +115,7 @@ const updateSingle = async (
 	}
 
 	if (isDefault) {
-		await LanguagesRepo.update({
+		await LanguagesRepo.updateSingle({
 			data: {
 				isDefault: 0,
 			},

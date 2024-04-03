@@ -20,7 +20,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		serviceConfig.db,
 	);
 
-	const getUser = await UsersRepo.getSingle({
+	const getUser = await UsersRepo.selectSingle({
 		select: ["super_admin"],
 		where: [
 			{
@@ -46,7 +46,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const [userWithEmail, userWithUsername] = await Promise.all([
 		data.email !== undefined
-			? UsersRepo.getSingle({
+			? UsersRepo.selectSingle({
 					select: ["id"],
 					where: [
 						{
@@ -63,7 +63,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			  })
 			: undefined,
 		data.username !== undefined
-			? UsersRepo.getSingle({
+			? UsersRepo.selectSingle({
 					select: ["id"],
 					where: [
 						{

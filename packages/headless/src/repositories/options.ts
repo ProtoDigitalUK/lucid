@@ -5,10 +5,12 @@ import {
 	type QueryBuilderWhereT,
 } from "../libs/db/query-builder.js";
 
-export default class Options {
+export default class OptionsRepo {
 	constructor(private db: DB) {}
 
-	getSingle = async <K extends keyof Select<HeadlessOptions>>(props: {
+	// ----------------------------------------
+	// select
+	selectSingle = async <K extends keyof Select<HeadlessOptions>>(props: {
 		select: K[];
 		where: QueryBuilderWhereT<"headless_options">;
 	}) => {
@@ -20,6 +22,8 @@ export default class Options {
 			Pick<Select<HeadlessOptions>, K> | undefined
 		>;
 	};
+	// ----------------------------------------
+	// create
 	createSingle = async (props: {
 		name: HeadlessOptions["name"];
 		valueInt?: HeadlessOptions["value_int"];
@@ -34,9 +38,11 @@ export default class Options {
 				value_int: props.valueInt,
 				value_text: props.valueText,
 			})
-			.execute();
+			.executeTakeFirst();
 	};
-	update = async (props: {
+	// ----------------------------------------
+	// update
+	updateSingle = async (props: {
 		where: QueryBuilderWhereT<"headless_options">;
 		data: {
 			valueInt?: HeadlessOptions["value_int"];
@@ -44,14 +50,17 @@ export default class Options {
 			valueText?: HeadlessOptions["value_text"];
 		};
 	}) => {
-		let query = this.db.updateTable("headless_options").set({
-			value_text: props.data.valueText,
-			value_int: props.data.valueInt,
-			value_bool: props.data.valueBool,
-		});
+		let query = this.db
+			.updateTable("headless_options")
+			.set({
+				value_text: props.data.valueText,
+				value_int: props.data.valueInt,
+				value_bool: props.data.valueBool,
+			})
+			.returning("name");
 
 		query = updateQB(query, props.where);
 
-		return query.execute();
+		return query.executeTakeFirst();
 	};
 }
