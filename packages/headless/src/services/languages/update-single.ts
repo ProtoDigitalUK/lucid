@@ -1,6 +1,5 @@
 import T from "../../translations/index.js";
 import ISO6391 from "iso-639-1";
-import { sql } from "kysely";
 import { APIError } from "../../utils/error-handler.js";
 import { parseCount } from "../../utils/helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
