@@ -6,7 +6,7 @@ export default class UserRolesRepo {
 	// ----------------------------------------
 	// create
 	createMultiple = async (props: {
-		userRoles: Array<{
+		items: Array<{
 			userId: number;
 			roleId: number;
 		}>;
@@ -14,9 +14,9 @@ export default class UserRolesRepo {
 		return this.db
 			.insertInto("headless_user_roles")
 			.values(
-				props.userRoles.map((ur) => ({
-					user_id: ur.userId,
-					role_id: ur.roleId,
+				props.items.map((i) => ({
+					user_id: i.userId,
+					role_id: i.roleId,
 				})),
 			)
 			.execute();

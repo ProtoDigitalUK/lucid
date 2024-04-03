@@ -106,7 +106,7 @@ const createSingle = async (
 	);
 
 	await UserRolesRepo.createMultiple({
-		userRoles: data.role_ids.map((r) => ({
+		items: data.role_ids.map((r) => ({
 			userId: newUser.id,
 			roleId: r,
 		})),

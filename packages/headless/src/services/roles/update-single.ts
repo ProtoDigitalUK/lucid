@@ -93,21 +93,28 @@ const updateSingle = async (
 	}
 
 	if (validatePerms !== undefined) {
-		await serviceConfig.db
-			.deleteFrom("headless_role_permissions")
-			.where("role_id", "=", data.id)
-			.executeTakeFirst();
+		const RolePermissionsRepo = RepositoryFactory.getRepository(
+			"role-permissions",
+			serviceConfig.db,
+		);
+
+		await RolePermissionsRepo.deleteMultiple({
+			where: [
+				{
+					key: "role_id",
+					operator: "=",
+					value: data.id,
+				},
+			],
+		});
 
 		if (validatePerms.length > 0) {
-			await serviceConfig.db
-				.insertInto("headless_role_permissions")
-				.values(
-					validatePerms.map((permission) => ({
-						role_id: data.id,
-						permission: permission.permission,
-					})),
-				)
-				.execute();
+			await RolePermissionsRepo.createMultiple({
+				items: validatePerms.map((p) => ({
+					roleId: data.id,
+					permission: p.permission,
+				})),
+			});
 		}
 	}
 };

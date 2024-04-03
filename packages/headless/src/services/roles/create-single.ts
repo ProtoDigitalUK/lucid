@@ -74,15 +74,17 @@ const createSingle = async (
 	}
 
 	if (validatePerms.length > 0) {
-		await serviceConfig.db
-			.insertInto("headless_role_permissions")
-			.values(
-				validatePerms.map((permission) => ({
-					role_id: newRoles.id,
-					permission: permission.permission,
-				})),
-			)
-			.execute();
+		const RolePermissionsRepo = RepositoryFactory.getRepository(
+			"role-permissions",
+			serviceConfig.db,
+		);
+
+		await RolePermissionsRepo.createMultiple({
+			items: validatePerms.map((p) => ({
+				roleId: newRoles.id,
+				permission: p.permission,
+			})),
+		});
 	}
 
 	return newRoles.id;

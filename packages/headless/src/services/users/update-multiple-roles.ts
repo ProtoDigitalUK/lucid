@@ -40,7 +40,7 @@ const updateMultipleRoles = async (
 	if (data.role_ids.length === 0) return;
 
 	await UserRolesRepo.createMultiple({
-		userRoles: data.role_ids.map((r) => ({
+		items: data.role_ids.map((r) => ({
 			userId: data.user_id,
 			roleId: r,
 		})),
