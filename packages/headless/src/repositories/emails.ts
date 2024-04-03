@@ -212,9 +212,9 @@ export default class EmailsRepo {
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_roles">;
+		where: QueryBuilderWhereT<"headless_emails">;
 	}) => {
-		let query = this.db.deleteFrom("headless_roles").returning("id");
+		let query = this.db.deleteFrom("headless_emails").returning("id");
 
 		query = deleteQB(query, props.where);
 
