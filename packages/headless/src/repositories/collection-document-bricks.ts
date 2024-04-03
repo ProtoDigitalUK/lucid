@@ -10,4 +10,13 @@ import {
 
 export default class CollectionDocumentBricksRepo {
 	constructor(private db: DB) {}
+
+	// ----------------------------------------
+	// selects
+	// ----------------------------------------
+	// create
+	// ----------------------------------------
+	// update
+	// ----------------------------------------
+	// delete
 }

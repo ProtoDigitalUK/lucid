@@ -7,4 +7,13 @@ import {
 
 export default class CollectionCategoriesRepo {
 	constructor(private db: DB) {}
+
+	// ----------------------------------------
+	// selects
+	// ----------------------------------------
+	// create
+	// ----------------------------------------
+	// update
+	// ----------------------------------------
+	// delete
 }

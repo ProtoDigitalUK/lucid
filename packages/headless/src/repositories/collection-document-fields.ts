@@ -10,4 +10,13 @@ import {
 
 export default class CollectionDocumentFieldsRepo {
 	constructor(private db: DB) {}
+
+	// ----------------------------------------
+	// selects
+	// ----------------------------------------
+	// create
+	// ----------------------------------------
+	// update
+	// ----------------------------------------
+	// delete
 }

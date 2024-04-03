@@ -1,5 +1,6 @@
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -12,6 +13,11 @@ const updateMultipleRoles = async (
 ) => {
 	if (data.role_ids === undefined) return;
 
+	const UserRolesRepo = RepositoryFactory.getRepository(
+		"user-roles",
+		serviceConfig.db,
+	);
+
 	await Promise.all([
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
 			serviceConfig,
@@ -20,23 +26,25 @@ const updateMultipleRoles = async (
 				is_create: true,
 			},
 		),
-		serviceConfig.db
-			.deleteFrom("headless_user_roles")
-			.where("user_id", "=", data.user_id)
-			.execute(),
+		UserRolesRepo.deleteMultiple({
+			where: [
+				{
+					key: "user_id",
+					operator: "=",
+					value: data.user_id,
+				},
+			],
+		}),
 	]);
 
 	if (data.role_ids.length === 0) return;
 
-	await serviceConfig.db
-		.insertInto("headless_user_roles")
-		.values(
-			data.role_ids.map((roleId) => ({
-				user_id: data.user_id,
-				role_id: roleId,
-			})),
-		)
-		.execute();
+	await UserRolesRepo.createMultiple({
+		userRoles: data.role_ids.map((r) => ({
+			userId: data.user_id,
+			roleId: r,
+		})),
+	});
 };
 
 export default updateMultipleRoles;

@@ -100,15 +100,17 @@ const createSingle = async (
 	if (data.role_ids === undefined || data.role_ids.length === 0)
 		return newUser.id;
 
-	await serviceConfig.db
-		.insertInto("headless_user_roles")
-		.values(
-			data.role_ids.map((roleId) => ({
-				user_id: newUser.id,
-				role_id: roleId,
-			})),
-		)
-		.execute();
+	const UserRolesRepo = RepositoryFactory.getRepository(
+		"user-roles",
+		serviceConfig.db,
+	);
+
+	await UserRolesRepo.createMultiple({
+		userRoles: data.role_ids.map((r) => ({
+			userId: newUser.id,
+			roleId: r,
+		})),
+	});
 
 	return newUser.id;
 };

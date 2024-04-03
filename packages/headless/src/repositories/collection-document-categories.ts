@@ -10,4 +10,13 @@ import {
 
 export default class CollectionDocumentCategoriesRepo {
 	constructor(private db: DB) {}
+
+	// ----------------------------------------
+	// selects
+	// ----------------------------------------
+	// create
+	// ----------------------------------------
+	// update
+	// ----------------------------------------
+	// delete
 }
