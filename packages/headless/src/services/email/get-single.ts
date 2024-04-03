@@ -3,6 +3,7 @@ import formatEmails from "../../format/format-emails.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { parseJSON } from "../../utils/format-helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
@@ -10,11 +11,14 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const email = await serviceConfig.db
-		.selectFrom("headless_emails")
-		.selectAll()
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+	const EmailsRepo = RepositoryFactory.getRepository(
+		"emails",
+		serviceConfig.db,
+	);
+
+	const email = await EmailsRepo.selectSingleById({
+		id: data.id,
+	});
 
 	if (email === undefined) {
 		throw new APIError({

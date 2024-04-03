@@ -4,6 +4,7 @@ import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
 import { APIError } from "../../utils/error-handler.js";
 import { stringifyJSON } from "../../utils/format-helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	type: "internal" | "external";
@@ -17,6 +18,11 @@ export interface ServiceData {
 }
 
 const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+	const EmailsRepo = RepositoryFactory.getRepository(
+		"emails",
+		serviceConfig.db,
+	);
+
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);
 
@@ -45,26 +51,35 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		lastSuccessAt: result.success ? new Date().toISOString() : undefined,
 	};
 
-	const emailExists = await serviceConfig.db
-		.selectFrom("headless_emails")
-		.select(["id", "email_hash", "sent_count", "error_count"])
-		.where("email_hash", "=", emailHash)
-		.executeTakeFirst();
+	const emailExists = await EmailsRepo.selectSingle({
+		select: ["id", "email_hash", "sent_count", "error_count"],
+		where: [
+			{
+				key: "email_hash",
+				operator: "=",
+				value: emailHash,
+			},
+		],
+	});
 
 	if (emailExists) {
-		const emailUpdated = await serviceConfig.db
-			.updateTable("headless_emails")
-			.set({
-				delivery_status: emailRecord.deliveryStatus,
-				last_error_message: emailRecord.lastErrorMessage,
-				last_success_at: emailRecord.lastSuccessAt,
-				sent_count: emailExists.sent_count + (result.success ? 1 : 0),
-				error_count: emailExists.error_count + (result.success ? 0 : 1),
-				last_attempt_at: new Date().toISOString(),
-			})
-			.where("id", "=", emailExists.id)
-			.returningAll()
-			.executeTakeFirst();
+		const emailUpdated = await EmailsRepo.updateSingle({
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: emailExists.id,
+				},
+			],
+			data: {
+				deliveryStatus: emailRecord.deliveryStatus,
+				lastErrorMessage: emailRecord.lastErrorMessage,
+				lastSuccessAt: emailRecord.lastSuccessAt,
+				sentCount: emailExists.sent_count + (result.success ? 1 : 0),
+				errorCount: emailExists.error_count + (result.success ? 0 : 1),
+				lastAttemptAt: new Date().toISOString(),
+			},
+		});
 
 		if (emailUpdated === undefined) {
 			throw new APIError({
@@ -84,28 +99,23 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			html: html,
 		});
 	}
-
-	const newEmail = await serviceConfig.db
-		.insertInto("headless_emails")
-		.values({
-			email_hash: emailHash,
-			from_address: serviceConfig.config.email.from.email,
-			from_name: serviceConfig.config.email.from.name,
-			to_address: data.to,
-			subject: data.subject,
-			template: data.template,
-			cc: data.cc,
-			bcc: data.bcc,
-			data: stringifyJSON(data.data),
-			type: data.type,
-			sent_count: result.success ? 1 : 0,
-			error_count: result.success ? 0 : 1,
-			delivery_status: emailRecord.deliveryStatus,
-			last_error_message: emailRecord.lastErrorMessage,
-			last_success_at: emailRecord.lastSuccessAt,
-		})
-		.returningAll()
-		.executeTakeFirst();
+	const newEmail = await EmailsRepo.createSingle({
+		emailHash: emailHash,
+		fromAddress: serviceConfig.config.email.from.email,
+		fromName: serviceConfig.config.email.from.name,
+		toAddress: data.to,
+		subject: data.subject,
+		template: data.template,
+		cc: data.cc,
+		bcc: data.bcc,
+		data: stringifyJSON(data.data),
+		type: data.type,
+		sentCount: result.success ? 1 : 0,
+		errorCount: result.success ? 0 : 1,
+		deliveryStatus: emailRecord.deliveryStatus,
+		lastErrorMessage: emailRecord.lastErrorMessage,
+		lastSuccessAt: emailRecord.lastSuccessAt,
+	});
 
 	if (newEmail === undefined) {
 		throw new APIError({

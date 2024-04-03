@@ -1,6 +1,7 @@
 import T from "../../translations/index.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
@@ -10,11 +11,14 @@ const resendSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const email = await serviceConfig.db
-		.selectFrom("headless_emails")
-		.selectAll()
-		.where("id", "=", data.id)
-		.executeTakeFirst();
+	const EmailsRepo = RepositoryFactory.getRepository(
+		"emails",
+		serviceConfig.db,
+	);
+
+	const email = await EmailsRepo.selectSingleById({
+		id: data.id,
+	});
 
 	if (email === undefined) {
 		throw new APIError({
@@ -54,20 +58,25 @@ const resendSingle = async (
 		},
 	);
 
-	await serviceConfig.db
-		.updateTable("headless_emails")
-		.set({
-			delivery_status: result.success ? "delivered" : "failed",
-			last_error_message: result.success ? undefined : result.message,
-			last_success_at: result.success
+	await EmailsRepo.updateSingle({
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: email.id,
+			},
+		],
+		data: {
+			deliveryStatus: result.success ? "delivered" : "failed",
+			lastErrorMessage: result.success ? undefined : result.message,
+			lastSuccessAt: result.success
 				? new Date().toISOString()
 				: undefined,
-			sent_count: email.sent_count + (result.success ? 1 : 0),
-			error_count: email.error_count + (result.success ? 0 : 1),
-			last_attempt_at: new Date().toISOString(),
-		})
-		.where("id", "=", email.id)
-		.execute();
+			sentCount: email.sent_count + (result.success ? 1 : 0),
+			errorCount: email.error_count + (result.success ? 0 : 1),
+			lastAttemptAt: new Date().toISOString(),
+		},
+	});
 
 	return {
 		success: result.success,
