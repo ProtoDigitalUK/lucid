@@ -60,14 +60,14 @@ const createSingle = async (
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-						  }
+							}
 						: undefined,
 				username:
 					userExists.username === data.username
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-						  }
+							}
 						: undefined,
 			}),
 		});
