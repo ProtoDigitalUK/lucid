@@ -6,7 +6,7 @@ import {
 import usersServices from "../../services/users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerUsersRes } from "../../format/format-user.js";
+import UsersFormatter from "../../formatters/users.js";
 
 const getMultipleController: ControllerT<
 	typeof usersSchema.getMultiple.params,
@@ -47,7 +47,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerUsersRes,
+					items: UsersFormatter.swagger,
 				},
 				paginated: true,
 			}),

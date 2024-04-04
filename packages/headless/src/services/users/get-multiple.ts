@@ -1,8 +1,8 @@
 import type z from "zod";
 import type usersSchema from "../../schemas/users.js";
 import { parseCount } from "../../utils/helpers.js";
-import formatUser from "../../format/format-user.js";
 import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import FormatterFactory from "../../libs/factories/formatter-factory.js";
 
 export interface ServiceData {
 	query: z.infer<typeof usersSchema.getMultiple.query>;
@@ -16,6 +16,7 @@ const getMultiple = async (
 		"users",
 		serviceConfig.db,
 	);
+	const UsersFormatter = FormatterFactory.getFormatter("users");
 
 	const [users, count] = await UsersRepo.selectMultipleFiltered({
 		query: data.query,
@@ -23,10 +24,8 @@ const getMultiple = async (
 	});
 
 	return {
-		data: users.map((u) => {
-			return formatUser({
-				user: u,
-			});
+		data: UsersFormatter.formatMultiple({
+			user: users,
 		}),
 		count: parseCount(count?.count),
 	};

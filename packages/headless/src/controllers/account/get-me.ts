@@ -2,8 +2,8 @@ import accountSchema from "../../schemas/account.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import buildResponse from "../../utils/build-response.js";
 import usersServices from "../../services/users/index.js";
-import { swaggerUsersRes } from "../../format/format-user.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import UsersFormatter from "../../formatters/users.js";
 
 const getMeController: ControllerT<
 	typeof accountSchema.getMe.params,
@@ -37,7 +37,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerUsersRes,
+				data: UsersFormatter.swagger,
 			}),
 		},
 	},

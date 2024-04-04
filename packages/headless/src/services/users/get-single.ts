@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import formatUser from "../../format/format-user.js";
+import FormatterFactory from "../../libs/factories/formatter-factory.js";
 import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
@@ -12,6 +12,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		"users",
 		serviceConfig.db,
 	);
+	const UsersFormatter = FormatterFactory.getFormatter("users");
 
 	const user = await UsersRepo.selectSingleById({
 		id: data.user_id,
@@ -31,7 +32,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatUser({
+	return UsersFormatter.formatSingle({
 		user: user,
 	});
 };
