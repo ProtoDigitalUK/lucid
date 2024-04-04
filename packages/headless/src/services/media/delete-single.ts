@@ -4,7 +4,7 @@ import mediaServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import processedImagesServices from "../processed-images/index.js";
 import translationsServices from "../translations/index.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;

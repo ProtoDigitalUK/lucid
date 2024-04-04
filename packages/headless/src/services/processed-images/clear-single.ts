@@ -1,5 +1,5 @@
 import s3Services from "../s3/index.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	key: string;

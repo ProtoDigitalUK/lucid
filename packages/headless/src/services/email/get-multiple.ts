@@ -2,7 +2,7 @@ import type z from "zod";
 import type emailSchema from "../../schemas/email.js";
 import { parseCount } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof emailSchema.getMultiple.query>;

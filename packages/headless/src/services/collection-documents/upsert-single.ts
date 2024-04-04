@@ -6,7 +6,7 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	collection_key: string;

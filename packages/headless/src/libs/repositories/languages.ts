@@ -1,17 +1,13 @@
 import type z from "zod";
 import { sql } from "kysely";
-import type languagesSchema from "../schemas/languages.js";
-import type {
-	HeadlessLanguages,
-	Select,
-	BooleanInt,
-} from "../libs/db/types.js";
+import type languagesSchema from "../../schemas/languages.js";
+import type { HeadlessLanguages, Select, BooleanInt } from "../db/types.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,
 	updateQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
+} from "../db/query-builder.js";
 
 export default class LanguagesRepo {
 	constructor(private db: DB) {}

@@ -3,7 +3,7 @@ import formatEmails from "../../format/format-emails.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { parseJSON } from "../../utils/format-helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;

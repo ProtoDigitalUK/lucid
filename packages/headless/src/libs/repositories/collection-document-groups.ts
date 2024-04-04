@@ -1,6 +1,6 @@
 import { sql } from "kysely";
-import { deleteQB, type QueryBuilderWhereT } from "../libs/db/query-builder.js";
-import values from "../libs/db/kysely/values.js";
+import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
+import values from "../db/kysely/values.js";
 
 export default class CollectionDocumentGroupsRepo {
 	constructor(private db: DB) {}

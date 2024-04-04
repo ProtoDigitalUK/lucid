@@ -4,7 +4,7 @@ import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 const key = "_refresh";
 

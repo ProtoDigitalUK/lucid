@@ -1,8 +1,8 @@
 import type z from "zod";
 import type usersSchema from "../../schemas/users.js";
 import { parseCount } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
-import FormatterFactory from "../../libs/factories/formatter-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
+import FormatterFactory from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof usersSchema.getMultiple.query>;

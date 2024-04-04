@@ -1,14 +1,11 @@
-import type {
-	HeadlessCollectionDocumentBricks,
-	Select,
-} from "../libs/db/types.js";
+import type { HeadlessCollectionDocumentBricks, Select } from "../db/types.js";
 import {
 	deleteQB,
 	selectQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
-import type { Config } from "../libs/config/config-schema.js";
-import type { BrickSchemaT } from "../schemas/collection-bricks.js";
+} from "../db/query-builder.js";
+import type { Config } from "../config/config-schema.js";
+import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 
 export default class CollectionDocumentBricksRepo {
 	constructor(private db: DB) {}

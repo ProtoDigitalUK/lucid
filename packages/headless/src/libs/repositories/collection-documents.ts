@@ -4,17 +4,17 @@ import type {
 	BooleanInt,
 	HeadlessCollectionDocuments,
 	Select,
-} from "../libs/db/types.js";
-import type { Config } from "../libs/config/config-schema.js";
+} from "../db/types.js";
+import type { Config } from "../config/config-schema.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,
 	updateQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
-import type collectionDocumentsSchema from "../schemas/collection-documents.js";
-import { collectionFilters } from "../utils/field-helpers.js";
-import type { FieldFiltersT } from "../libs/builders/collection-builder/index.js";
+} from "../db/query-builder.js";
+import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
+import { collectionFilters } from "../../utils/field-helpers.js";
+import type { FieldFiltersT } from "../builders/collection-builder/index.js";
 
 export default class CollectionDocumentsRepo {
 	constructor(private db: DB) {}

@@ -1,22 +1,22 @@
 import T from "../../translations/index.js";
 import { InternalError } from "../../utils/error-handler.js";
 // Repositories
-import UserTokensRepo from "../../repositories/user-tokens.js";
-import CollectionDocumentBricksRepo from "../../repositories/collection-document-bricks.js";
-import CollectionDocumentFieldsRepo from "../../repositories/collection-document-fields.js";
-import CollectionDocumentGroupsRepo from "../../repositories/collection-document-groups.js";
-import CollectionDocumentsRepo from "../../repositories/collection-documents.js";
-import EmailsRepo from "../../repositories/emails.js";
-import LanguagesRepo from "../../repositories/languages.js";
-import MediaRepo from "../../repositories/media.js";
-import OptionsRepo from "../../repositories/options.js";
-import ProcessedImagesRepo from "../../repositories/processed-images.js";
-import RolePermissionsRepo from "../../repositories/role-permissions.js";
-import RolesRepo from "../../repositories/roles.js";
-import TranslationKeysRepo from "../../repositories/translation-keys.js";
-import TranslationsRepo from "../../repositories/translations.js";
-import UserRolesRepo from "../../repositories/user-roles.js";
-import UsersRepo from "../../repositories/users.js";
+import UserTokensRepo from "./user-tokens.js";
+import CollectionDocumentBricksRepo from "./collection-document-bricks.js";
+import CollectionDocumentFieldsRepo from "./collection-document-fields.js";
+import CollectionDocumentGroupsRepo from "./collection-document-groups.js";
+import CollectionDocumentsRepo from "./collection-documents.js";
+import EmailsRepo from "./emails.js";
+import LanguagesRepo from "./languages.js";
+import MediaRepo from "./media.js";
+import OptionsRepo from "./options.js";
+import ProcessedImagesRepo from "./processed-images.js";
+import RolePermissionsRepo from "./role-permissions.js";
+import RolesRepo from "./roles.js";
+import TranslationKeysRepo from "./translation-keys.js";
+import TranslationsRepo from "./translations.js";
+import UserRolesRepo from "./user-roles.js";
+import UsersRepo from "./users.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class RepositoryFactory {

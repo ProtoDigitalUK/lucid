@@ -4,7 +4,7 @@ import constants from "../../constants.js";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	email: string;

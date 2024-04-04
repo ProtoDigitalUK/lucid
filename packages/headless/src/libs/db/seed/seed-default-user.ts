@@ -3,7 +3,7 @@ import argon2 from "argon2";
 import constants from "../../../constants.js";
 import { InternalError } from "../../../utils/error-handler.js";
 import { parseCount } from "../../../utils/helpers.js";
-import RepositoryFactory from "../../factories/repository-factory.js";
+import RepositoryFactory from "../../repositories/index.js";
 
 const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 	try {

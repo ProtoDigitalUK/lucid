@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { InternalError } from "../../../utils/error-handler.js";
-import RepositoryFactory from "../../factories/repository-factory.js";
+import RepositoryFactory from "../../repositories/index.js";
 
 const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
 	try {

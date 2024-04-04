@@ -1,10 +1,10 @@
-import type { HeadlessProcessedImages, Select } from "../libs/db/types.js";
+import type { HeadlessProcessedImages, Select } from "../db/types.js";
 import { sql } from "kysely";
 import {
 	deleteQB,
 	selectQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
+} from "../db/query-builder.js";
 
 export default class ProcessedImagesRepo {
 	constructor(private db: DB) {}

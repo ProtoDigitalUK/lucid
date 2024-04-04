@@ -1,6 +1,6 @@
 import type { UserResT } from "@headless/types/src/users.js";
-import type { BooleanInt } from "../libs/db/types.js";
-import { formatDate } from "../utils/format-helpers.js";
+import type { BooleanInt } from "../db/types.js";
+import { formatDate } from "../../utils/format-helpers.js";
 import UserPermissionsFormatter from "./user-permissions.js";
 
 interface UserPropT {

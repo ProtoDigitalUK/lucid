@@ -1,14 +1,14 @@
 import type z from "zod";
-import type { HeadlessEmails, Select } from "../libs/db/types.js";
+import type { HeadlessEmails, Select } from "../db/types.js";
 import { sql } from "kysely";
-import type { Config } from "../libs/config/config-schema.js";
+import type { Config } from "../config/config-schema.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,
 	updateQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
-import type emailsSchema from "../schemas/email.js";
+} from "../db/query-builder.js";
+import type emailsSchema from "../../schemas/email.js";
 
 export default class EmailsRepo {
 	constructor(private db: DB) {}

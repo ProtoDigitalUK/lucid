@@ -1,4 +1,4 @@
-import { deleteQB, type QueryBuilderWhereT } from "../libs/db/query-builder.js";
+import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
 
 export default class TranslationKeysRepo {
 	constructor(private db: DB) {}

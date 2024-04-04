@@ -3,7 +3,7 @@ import { parseCount } from "../../utils/helpers.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	collection_key: string;

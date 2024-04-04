@@ -1,5 +1,5 @@
 import formatCollection from "../../format/format-collection.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	include_document_id?: boolean;

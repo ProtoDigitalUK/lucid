@@ -1,14 +1,14 @@
 import type z from "zod";
 import { sql } from "kysely";
-import type { Config } from "../libs/config/config-schema.js";
-import type usersSchema from "../schemas/users.js";
-import type { BooleanInt, HeadlessUsers, Select } from "../libs/db/types.js";
+import type { Config } from "../config/config-schema.js";
+import type usersSchema from "../../schemas/users.js";
+import type { BooleanInt, HeadlessUsers, Select } from "../db/types.js";
 import queryBuilder, {
 	selectQB,
 	updateQB,
 	deleteQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
+} from "../db/query-builder.js";
 
 export default class UsersRepo {
 	constructor(private db: DB) {}

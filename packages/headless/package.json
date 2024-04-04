@@ -22,7 +22,7 @@
 		"lint:fix": "npx @biomejs/biome lint --apply ./src",
 		"clear-db:postgres": "node ./clear-db-pg.js"
 	},
-	"files": ["dist/**", "cms/**", "templates/**"],
+	"files": ["dist/**", "cms/**", "templates/**", "assets/**"],
 	"author": "William Yallop",
 	"devDependencies": {
 		"@headless/types": "*",
@@ -63,7 +63,6 @@
 		"iso-639-1": "^3.1.0",
 		"jsonwebtoken": "^9.0.2",
 		"kysely": "^0.27.2",
-		"lodash.merge": "^4.6.2",
 		"mime-types": "^2.1.35",
 		"mjml": "^4.15.3",
 		"node-cron": "^3.0.3",
@@ -71,7 +70,6 @@
 		"sanitize-html": "^2.11.0",
 		"sharp": "^0.33.2",
 		"slug": "^8.2.3",
-		"unique-names-generator": "^4.7.1",
 		"zod": "^3.22.4"
 	},
 	"license": "UNLICENSED"

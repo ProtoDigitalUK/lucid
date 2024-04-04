@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "@headless/types/src/options.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	name: OptionNameT;

@@ -1,7 +1,7 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import type { ErrorContentT } from "../../../utils/helpers.js";
-import RepositoryFactory from "../../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../../libs/repositories/index.js";
 
 /*
     Checks:

@@ -3,7 +3,7 @@ import ISO6391 from "iso-639-1";
 import { APIError } from "../../utils/error-handler.js";
 import { parseCount } from "../../utils/helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	current_code: string;

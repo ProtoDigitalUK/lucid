@@ -6,7 +6,7 @@ import {
 import usersServices from "../../services/users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import UsersFormatter from "../../formatters/users.js";
+import UsersFormatter from "../../libs/formatters/users.js";
 
 const getMultipleController: ControllerT<
 	typeof usersSchema.getMultiple.params,

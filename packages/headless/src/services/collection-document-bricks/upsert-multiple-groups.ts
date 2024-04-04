@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface GroupsResT {
 	group_id: number;
@@ -174,7 +174,7 @@ const upsertMultipleGroups = async (
 			updateGroupParentIds.length > 0
 				? CollectionDocumentGroupsRepo.updateMultipleParentIds({
 						items: updateGroupParentIds,
-					})
+				  })
 				: undefined,
 		],
 	};

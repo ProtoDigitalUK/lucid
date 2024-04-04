@@ -11,7 +11,7 @@ import {
 	getUniqueLanguageIDs,
 } from "../../utils/translation-helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	file_data: MultipartFile | undefined;

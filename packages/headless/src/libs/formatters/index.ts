@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
 import { InternalError } from "../../utils/error-handler.js";
 // Formatters
-import UsersFormatter from "../../formatters/users.js";
-import UserPermissionsFormatter from "../../formatters/user-permissions.js";
+import UsersFormatter from "./users.js";
+import UserPermissionsFormatter from "./user-permissions.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class FormatterFactory {

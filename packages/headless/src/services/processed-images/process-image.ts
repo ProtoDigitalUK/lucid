@@ -7,7 +7,7 @@ import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import constants from "../../constants.js";
 import mediaHelpers from "../../utils/media-helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	key: string;

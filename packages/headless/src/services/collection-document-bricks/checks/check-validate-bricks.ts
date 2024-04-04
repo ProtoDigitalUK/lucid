@@ -15,7 +15,7 @@ import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../../../libs/builders/collection-builder/index.js";
 import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaT } from "../../../schemas/collection-fields.js";
-import RepositoryFactory from "../../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	bricks: Array<BrickSchemaT>;

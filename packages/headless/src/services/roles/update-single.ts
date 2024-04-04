@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -27,7 +27,7 @@ const updateSingle = async (
 					{
 						permissions: data.permissions,
 					},
-				)
+			  )
 			: undefined,
 		data.name !== undefined
 			? RolesRepo.selectSingle({
@@ -44,7 +44,7 @@ const updateSingle = async (
 							value: data.id,
 						},
 					],
-				})
+			  })
 			: undefined,
 	]);
 

@@ -5,7 +5,7 @@ import { InternalError } from "../../../utils/error-handler.js";
 import { parseCount } from "../../../utils/helpers.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
-import RepositoryFactory from "../../factories/repository-factory.js";
+import RepositoryFactory from "../../repositories/index.js";
 
 const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 	try {

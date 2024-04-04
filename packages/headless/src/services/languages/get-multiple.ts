@@ -2,7 +2,7 @@ import type z from "zod";
 import formatLanguage from "../../format/format-language.js";
 import type languagesSchema from "../../schemas/languages.js";
 import { parseCount } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof languagesSchema.getMultiple.query>;

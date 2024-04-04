@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import FormatterFactory from "../../libs/factories/formatter-factory.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import FormatterFactory from "../../libs/formatters/index.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	user_id: number;

@@ -6,7 +6,7 @@ import {
 	getUniqueLanguageIDs,
 	type TranslationsObjT,
 } from "../../utils/translation-helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;

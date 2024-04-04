@@ -4,7 +4,7 @@ import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	email: string;
@@ -60,14 +60,14 @@ const createSingle = async (
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-							}
+						  }
 						: undefined,
 				username:
 					userExists.username === data.username
 						? {
 								code: "invalid",
 								message: T("duplicate_entry_error_message"),
-							}
+						  }
 						: undefined,
 			}),
 		});

@@ -4,7 +4,7 @@ import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
 import { APIError } from "../../utils/error-handler.js";
 import { stringifyJSON } from "../../utils/format-helpers.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	type: "internal" | "external";

@@ -1,6 +1,6 @@
-import type { BooleanInt } from "../libs/db/types.js";
-import { deleteQB, type QueryBuilderWhereT } from "../libs/db/query-builder.js";
-import type { FieldTypesT } from "../libs/builders/field-builder/index.js";
+import type { BooleanInt } from "../db/types.js";
+import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
+import type { FieldTypesT } from "../builders/field-builder/index.js";
 
 export default class CollectionDocumentFieldsRepo {
 	constructor(private db: DB) {}

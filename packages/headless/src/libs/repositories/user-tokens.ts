@@ -1,9 +1,9 @@
-import type { HeadlessUserTokens, Select } from "../libs/db/types.js";
+import type { HeadlessUserTokens, Select } from "../db/types.js";
 import {
 	deleteQB,
 	selectQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
+} from "../db/query-builder.js";
 
 export default class UserTokensRepo {
 	constructor(private db: DB) {}

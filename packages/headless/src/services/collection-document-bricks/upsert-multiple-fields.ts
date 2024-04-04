@@ -1,7 +1,7 @@
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import formatUpsertFields from "../../format/format-upsert-fields.js";
 import type { GroupsResT } from "./upsert-multiple-groups.js";
-import RepositoryFactory from "../../libs/factories/repository-factory.js";
+import RepositoryFactory from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	document_id: number;

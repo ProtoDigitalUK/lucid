@@ -3,7 +3,7 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import usersServices from "../../services/users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import UsersFormatter from "../../formatters/users.js";
+import UsersFormatter from "../../libs/formatters/users.js";
 
 const getSingleController: ControllerT<
 	typeof usersSchema.getSingle.params,

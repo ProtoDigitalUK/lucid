@@ -53,7 +53,7 @@ const streamErrorImage = async (data: ServiceData) => {
 };
 
 const pipeLocalImage = () => {
-	const pathVal = path.join(currentDir, "./assets/404.jpg");
+	const pathVal = path.join(currentDir, "../assets/404.jpg");
 	const contentType = "image/jpeg";
 
 	const steam = fs.createReadStream(pathVal);

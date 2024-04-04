@@ -1,9 +1,9 @@
-import type { HeadlessOptions, Select } from "../libs/db/types.js";
+import type { HeadlessOptions, Select } from "../db/types.js";
 import {
 	selectQB,
 	updateQB,
 	type QueryBuilderWhereT,
-} from "../libs/db/query-builder.js";
+} from "../db/query-builder.js";
 
 export default class OptionsRepo {
 	constructor(private db: DB) {}
