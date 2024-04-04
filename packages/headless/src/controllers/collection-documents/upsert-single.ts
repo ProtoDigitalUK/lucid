@@ -26,10 +26,6 @@ const upsertSingleController: ControllerT<
 			collection_key: request.params.collection_key,
 			document_id: request.body.document_id,
 			user_id: request.auth.id,
-			slug: request.body.slug,
-			homepage: request.body.homepage,
-			parent_id: request.body.parent_id,
-			category_ids: request.body.category_ids,
 			bricks: request.body.bricks,
 			fields: request.body.fields,
 		},
@@ -56,22 +52,6 @@ export default {
 			properties: {
 				document_id: {
 					type: "number",
-				},
-				slug: {
-					type: "string",
-				},
-				homepage: {
-					type: "number",
-				},
-				parent_id: {
-					type: "number",
-					nullable: true,
-				},
-				category_ids: {
-					type: "array",
-					items: {
-						type: "number",
-					},
 				},
 				bricks: {
 					type: "array",

@@ -26,36 +26,13 @@ const getMultiple = async (
 
 	let pagesQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
-		.select((eb) => [
+		.select([
 			"headless_collection_documents.id",
-			"headless_collection_documents.parent_id",
 			"headless_collection_documents.collection_key",
-			"headless_collection_documents.slug",
-			"headless_collection_documents.full_slug",
-			"headless_collection_documents.homepage",
 			"headless_collection_documents.created_by",
 			"headless_collection_documents.created_at",
 			"headless_collection_documents.updated_at",
-			serviceConfig.config.db
-				.jsonArrayFrom(
-					eb
-						.selectFrom("headless_collection_document_categories")
-						.select("category_id")
-						.whereRef(
-							"headless_collection_document_categories.collection_document_id",
-							"=",
-							"headless_collection_documents.id",
-						),
-				)
-				.as("categories"),
 		])
-		.leftJoin("headless_collection_document_categories", (join) =>
-			join.onRef(
-				"headless_collection_document_categories.collection_document_id",
-				"=",
-				"headless_collection_documents.id",
-			),
-		)
 		.leftJoin(
 			"headless_users",
 			"headless_users.id",
@@ -74,13 +51,6 @@ const getMultiple = async (
 	let pagesCountQuery = serviceConfig.db
 		.selectFrom("headless_collection_documents")
 		.select(sql`count(*)`.as("count"))
-		.leftJoin("headless_collection_document_categories", (join) =>
-			join.onRef(
-				"headless_collection_document_categories.collection_document_id",
-				"=",
-				"headless_collection_documents.id",
-			),
-		)
 		.leftJoin(
 			"headless_users",
 			"headless_users.id",
@@ -174,24 +144,7 @@ const getMultiple = async (
 				per_page: data.query.per_page,
 			},
 			meta: {
-				filters: [
-					{
-						queryKey: "slug",
-						tableKey: "slug",
-						operator: serviceConfig.config.db.fuzzOperator,
-					},
-					{
-						queryKey: "full_slug",
-						tableKey: "full_slug",
-						operator: serviceConfig.config.db.fuzzOperator,
-					},
-					{
-						queryKey: "category_id",
-						tableKey:
-							"headless_collection_document_categories.category_id",
-						operator: "=",
-					},
-				],
+				filters: [],
 				sorts: [
 					{
 						queryKey: "created_at",

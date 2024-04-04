@@ -8,9 +8,6 @@ const BlogCollection = new CollectionBuilder("blog", {
 	title: "Blogs",
 	singular: "Blog",
 	description: "Manage your blogs.",
-	config: {
-		enableSlugs: true,
-	},
 	bricks: {
 		builder: [BannerBrick, IntroBrick],
 	},

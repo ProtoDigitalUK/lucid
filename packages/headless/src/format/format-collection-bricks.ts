@@ -61,7 +61,6 @@ const formatCollectionBricks = (
 				fields: formatCollectionFields({
 					fields: brick.fields,
 					host: props.host,
-					collection_slug: props.collection.data.slug,
 					builder: builder,
 				}),
 			};
@@ -76,7 +75,6 @@ const formatCollectionBricks = (
 			formatCollectionFields({
 				fields: brick.fields,
 				host: props.host,
-				collection_slug: props.collection.data.slug,
 				builder: props.collection,
 			}),
 		);

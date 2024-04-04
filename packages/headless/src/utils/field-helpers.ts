@@ -13,7 +13,6 @@ import type {
 import type { FieldQueryDataT } from "../format/format-collection-fields.js";
 import type { FieldResValueT } from "@headless/types/src/bricks.js";
 import { createURL } from "../format/format-media.js";
-import { formatDocumentFullSlug } from "../format/format-collection-document.js";
 import { stringifyJSON, parseJSON } from "./format-helpers.js";
 
 export const fieldTypeValueKey = (type: FieldTypesT) => {
@@ -133,7 +132,6 @@ interface FieldResponseValueFormatT {
 	type: FieldTypesT;
 	builder_field: CustomFieldT;
 	field: FieldQueryDataT;
-	collection_slug: string | null | undefined;
 	host: string;
 }
 export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
@@ -207,15 +205,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 				target: jsonVal?.target || "_self",
 				label: jsonVal?.label || "",
 			};
-			meta = {
-				slug: props.field?.page_slug ?? undefined,
-				full_slug:
-					formatDocumentFullSlug(
-						props.field?.page_full_slug ?? null,
-						props.collection_slug,
-					) ?? undefined,
-				collection_slug: props.collection_slug ?? undefined,
-			};
+			// meta = {};
 			break;
 		}
 		case "link": {

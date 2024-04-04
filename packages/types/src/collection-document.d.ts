@@ -7,14 +7,7 @@ import type { FieldTypesT } from "../../headless/src/libs/builders/field-builder
 
 export interface CollectionDocumentResT {
 	id: number;
-	parent_id: number | null;
 	collection_key: string | null;
-
-	slug: string | null;
-	full_slug: string | null;
-	collection_slug: string | null;
-
-	homepage: 1 | 0;
 
 	created_by: number | null;
 	created_at: string | null;
@@ -28,7 +21,6 @@ export interface CollectionDocumentResT {
 		username: string | null;
 	} | null;
 
-	categories?: Array<number> | null;
 	bricks?: Array<BrickResT> | null;
 	fields?: Array<BrickResFieldsT> | null;
 }

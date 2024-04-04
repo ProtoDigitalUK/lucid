@@ -3,29 +3,9 @@ import { BrickSchema } from "./collection-bricks.js";
 import { FieldSchemaCollection } from "./collection-fields.js";
 import defaultQuery from "./default-query.js";
 
-const slugRegex = /^[a-zA-Z0-9-_/]+$/;
-const slugSchema = z
-	.string()
-	.refine(
-		(slug) =>
-			slug === null ||
-			slug === undefined ||
-			(typeof slug === "string" && slug.length === 0) ||
-			(typeof slug === "string" &&
-				slug.length >= 2 &&
-				slugRegex.test(slug)),
-		{
-			message:
-				"Slug must be at least 2 characters long and contain only letters, numbers, hyphens, and underscores",
-		},
-	);
-
 const getMultipleQuerySchema = z.object({
 	filter: z
 		.object({
-			slug: z.string().optional(),
-			full_slug: z.string().optional(),
-			category_id: z.union([z.string(), z.array(z.string())]).optional(),
 			cf: z.union([z.string(), z.array(z.string())]).optional(),
 		})
 		.optional(),
@@ -47,10 +27,6 @@ export default {
 	upsertSingle: {
 		body: z.object({
 			document_id: z.number().optional(),
-			slug: slugSchema.optional(),
-			homepage: z.union([z.literal(1), z.literal(0)]).optional(),
-			parent_id: z.number().nullable().optional(),
-			category_ids: z.array(z.number()).optional(),
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchemaCollection).optional(),
 		}),
@@ -73,14 +49,6 @@ export default {
 		query: getMultipleQuerySchema,
 		params: z.object({
 			collection_key: z.string(),
-		}),
-		body: undefined,
-	},
-	getMultipleValidParents: {
-		query: getMultipleQuerySchema,
-		params: z.object({
-			collection_key: z.string(),
-			id: z.string(),
 		}),
 		body: undefined,
 	},

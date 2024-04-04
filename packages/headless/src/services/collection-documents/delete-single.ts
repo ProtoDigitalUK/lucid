@@ -15,8 +15,6 @@ const deleteSingle = async (
 		.set({
 			is_deleted: 1,
 			is_deleted_at: new Date().toISOString(),
-			slug: null,
-			full_slug: null,
 			deleted_by: data.user_id,
 		})
 		.where("id", "=", data.id)

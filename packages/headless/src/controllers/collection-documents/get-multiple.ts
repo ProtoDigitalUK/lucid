@@ -62,17 +62,7 @@ export default {
 			contentLanguage: true,
 		}),
 		querystring: swaggerQueryString({
-			filters: [
-				{
-					key: "slug",
-				},
-				{
-					key: "full_slug",
-				},
-				{
-					key: "category_id",
-				},
-			],
+			filters: [],
 			sorts: ["created_at", "updated_at"],
 			page: true,
 			perPage: true,

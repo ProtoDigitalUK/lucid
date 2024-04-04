@@ -16,14 +16,6 @@ const Migration00000007: MigrationFn = (adapter) => {
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("collection_key", "text", (col) => col.notNull())
-				.addColumn("parent_id", "integer", (col) =>
-					col
-						.references("headless_collection_documents.id")
-						.onDelete("set null"),
-				)
-				.addColumn("slug", "text")
-				.addColumn("full_slug", "text")
-				.addColumn("homepage", "integer", (col) => col.defaultTo(0))
 				.addColumn("is_deleted", "integer", (col) => col.defaultTo(0))
 				.addColumn("is_deleted_at", "timestamp")
 				.addColumn("author_id", "integer", (col) =>
@@ -180,62 +172,6 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.createIndex("idx_headless_fields_group_id")
 				.on("headless_collection_document_fields")
 				.column("group_id")
-				.execute();
-
-			// Categories
-			await db.schema
-				.createTable("headless_collection_categories")
-				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
-					primaryKeyColumn(col, adapter),
-				)
-				.addColumn("collection_key", "text", (col) => col.notNull())
-				.addColumn("title_translation_key_id", "integer", (col) =>
-					col
-						.references("headless_translation_keys.id")
-						.onDelete("set null")
-						.onUpdate("cascade"),
-				)
-				.addColumn("description_translation_key_id", "integer", (col) =>
-					col
-						.references("headless_translation_keys.id")
-						.onDelete("set null")
-						.onUpdate("cascade"),
-				)
-				.addColumn("slug", "text", (col) => col.notNull())
-				.addColumn("created_at", "timestamp", (col) =>
-					defaultTimestamp(col, adapter),
-				)
-				.addColumn("updated_at", "timestamp", (col) =>
-					defaultTimestamp(col, adapter),
-				)
-				.addUniqueConstraint(
-					"headless_collection_categories_collection_key_slug_unique",
-					["collection_key", "slug"],
-				)
-				.execute();
-
-			await db.schema
-				.createTable("headless_collection_document_categories")
-				.addColumn("collection_document_id", "integer", (col) =>
-					col
-						.references("headless_collection_documents.id")
-						.onDelete("cascade")
-						.notNull(),
-				)
-				.addColumn("category_id", "integer", (col) =>
-					col
-						.references("headless_collection_categories.id")
-						.onDelete("cascade")
-						.notNull(),
-				)
-				.addPrimaryKeyConstraint("primary_key", [
-					"collection_document_id",
-					"category_id",
-				])
-				.addUniqueConstraint(
-					"headless_collection_document_categories_collection_document_id_category_id_unique",
-					["collection_document_id", "category_id"],
-				)
 				.execute();
 		},
 		async down(db: Kysely<unknown>) {},

@@ -101,14 +101,8 @@ export default class CollectionBuilder extends FieldBuilder {
 			title: this.config.title,
 			singular: this.config.singular,
 			description: this.config.description ?? null,
-			slug: this.config.slug ?? null,
 			config: {
-				enableParents: this.config.config?.enableParents ?? false,
-				enableHomepages: this.config.config?.enableHomepages ?? false,
-				enableSlugs: this.config.config?.enableSlugs ?? false,
-				enableCategories: this.config.config?.enableCategories ?? false,
-				enableTranslations:
-					this.config.config?.enableTranslations ?? false,
+				translations: this.config?.translations ?? false,
 				fields: {
 					filter: this.filterableFieldKeys,
 					include: this.includeFieldKeys,
@@ -144,17 +138,8 @@ export const CollectionConfigSchema = z.object({
 	title: z.string(),
 	singular: z.string(),
 	description: z.string().optional(),
-	slug: z.string().optional(),
+	translations: z.boolean().default(false).optional(),
 
-	config: z
-		.object({
-			enableParents: z.boolean().default(false).optional(),
-			enableHomepages: z.boolean().default(false).optional(),
-			enableSlugs: z.boolean().default(false).optional(),
-			enableCategories: z.boolean().default(false).optional(),
-			enableTranslations: z.boolean().default(false).optional(),
-		})
-		.optional(),
 	bricks: z
 		.object({
 			fixed: z.array(z.unknown()).optional(),
@@ -177,13 +162,8 @@ export type CollectionDataT = {
 	title: CollectionConfigSchemaT["title"];
 	singular: CollectionConfigSchemaT["singular"];
 	description: string | null;
-	slug: string | null;
 	config: {
-		enableParents: boolean;
-		enableHomepages: boolean;
-		enableSlugs: boolean;
-		enableCategories: boolean;
-		enableTranslations: boolean;
+		translations: boolean;
 		fields: {
 			filter: Array<{
 				key: string;

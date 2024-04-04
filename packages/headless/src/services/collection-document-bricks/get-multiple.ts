@@ -73,8 +73,6 @@ const getMultiple = async (
 							"headless_collection_document_fields.collection_document_id",
 							// Page fields
 							"headless_collection_documents.id as page_id",
-							"headless_collection_documents.slug as page_slug",
-							"headless_collection_documents.full_slug as page_full_slug",
 							// Media fields
 							"headless_media.key as media_key",
 							"headless_media.mime_type as media_mime_type",

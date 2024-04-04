@@ -154,10 +154,6 @@ export interface HeadlessProcessedImages {
 export interface HeadlessCollectionDocuments {
 	id: Generated<number>;
 	collection_key: string;
-	parent_id: number | null;
-	slug: string | null;
-	full_slug: string | null;
-	homepage: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	is_deleted_at: TimestampMutateable;
 	author_id: number | null;
@@ -203,21 +199,6 @@ export interface HeadlessCollectionDocumentFields {
 	media_id: number | null;
 }
 
-export interface HeadlessCollectionCategories {
-	id: Generated<number>;
-	collection_key: string;
-	title_translation_key_id: number | null;
-	description_translation_key_id: number | null;
-	slug: string;
-	created_at: TimestampImmutable;
-	updated_at: TimestampMutateable;
-}
-
-export interface HeadlessCollectionDocumentCategories {
-	collection_document_id: number;
-	category_id: number;
-}
-
 // ------------------------------------------------------------------------------
 // Database
 
@@ -238,6 +219,4 @@ export interface HeadlessDB {
 	headless_collection_document_bricks: HeadlessCollectionDocumentBricks;
 	headless_collection_document_groups: HeadlessCollectionDocumentGroups;
 	headless_collection_document_fields: HeadlessCollectionDocumentFields;
-	headless_collection_categories: HeadlessCollectionCategories;
-	headless_collection_document_categories: HeadlessCollectionDocumentCategories;
 }

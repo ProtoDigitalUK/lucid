@@ -15,28 +15,12 @@ export interface ServiceData {
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const document = await serviceConfig.db
 		.selectFrom("headless_collection_documents")
-		.select((eb) => [
+		.select([
 			"headless_collection_documents.id",
-			"headless_collection_documents.parent_id",
 			"headless_collection_documents.collection_key",
-			"headless_collection_documents.slug",
-			"headless_collection_documents.full_slug",
-			"headless_collection_documents.homepage",
 			"headless_collection_documents.created_by",
 			"headless_collection_documents.created_at",
 			"headless_collection_documents.updated_at",
-			serviceConfig.config.db
-				.jsonArrayFrom(
-					eb
-						.selectFrom("headless_collection_document_categories")
-						.select("category_id")
-						.whereRef(
-							"headless_collection_document_categories.collection_document_id",
-							"=",
-							"headless_collection_documents.id",
-						),
-				)
-				.as("categories"),
 		])
 		.innerJoin(
 			"headless_users",

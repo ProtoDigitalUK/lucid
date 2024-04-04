@@ -13,7 +13,6 @@ const formatPermissions = (props: FormatPermissionsT): PermissionGroup[] => {
 		props.permissions.emails,
 		props.permissions.languages,
 		props.permissions.content,
-		props.permissions.category,
 		props.permissions.menu,
 		props.permissions.form_submissions,
 	];

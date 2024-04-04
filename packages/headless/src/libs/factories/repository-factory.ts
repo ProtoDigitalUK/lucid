@@ -2,9 +2,7 @@ import T from "../../translations/index.js";
 import { InternalError } from "../../utils/error-handler.js";
 // Repositories
 import UserTokensRepo from "../../repositories/user-tokens.js";
-import CollectionCategoriesRepo from "../../repositories/collection-categories.js";
 import CollectionDocumentBricksRepo from "../../repositories/collection-document-bricks.js";
-import CollectionDocumentCategoriesRepo from "../../repositories/collection-document-categories.js";
 import CollectionDocumentFieldsRepo from "../../repositories/collection-document-fields.js";
 import CollectionDocumentGroupsRepo from "../../repositories/collection-document-groups.js";
 import CollectionDocumentsRepo from "../../repositories/collection-documents.js";
@@ -29,16 +27,8 @@ class RepositoryFactory {
 		switch (repository) {
 			case "user-tokens":
 				return new UserTokensRepo(db) as RepositoryReturnType<T>;
-			case "collection-categories":
-				return new CollectionCategoriesRepo(
-					db,
-				) as RepositoryReturnType<T>;
 			case "collection-document-bricks":
 				return new CollectionDocumentBricksRepo(
-					db,
-				) as RepositoryReturnType<T>;
-			case "collection-document-categories":
-				return new CollectionDocumentCategoriesRepo(
 					db,
 				) as RepositoryReturnType<T>;
 			case "collection-document-fields":
@@ -87,9 +77,7 @@ class RepositoryFactory {
 
 type RepositoryClassMap = {
 	"user-tokens": UserTokensRepo;
-	"collection-categories": CollectionCategoriesRepo;
 	"collection-document-bricks": CollectionDocumentBricksRepo;
-	"collection-document-categories": CollectionDocumentCategoriesRepo;
 	"collection-document-fields": CollectionDocumentFieldsRepo;
 	"collection-document-groups": CollectionDocumentGroupsRepo;
 	"collection-documents": CollectionDocumentsRepo;

@@ -10,13 +10,8 @@ export interface CollectionResT {
 	title: string;
 	singular: string;
 	description: string | null;
-	slug: string | null;
 	document_id?: number | null;
-	enable_parents: boolean;
-	enable_homepages: boolean;
-	enable_slugs: boolean;
-	enable_categories: boolean;
-	enable_translations: boolean;
+	translations: boolean;
 	fixed_bricks: Array<CollectionBrickConfigT>;
 	builder_bricks: Array<CollectionBrickConfigT>;
 	fields: Array<CustomFieldT>;

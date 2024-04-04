@@ -11,13 +11,7 @@ const PageCollection = new CollectionBuilder("page", {
 	title: "Pages",
 	singular: "Page",
 	description: "Pages are used to create static content on your website.",
-	config: {
-		enableParents: true,
-		enableHomepages: true,
-		enableSlugs: true,
-		enableCategories: true,
-		enableTranslations: true,
-	},
+	translations: true,
 	bricks: {
 		fixed: [DefaultMetaBrick, PageMetaBrick],
 		builder: [BannerBrick, IntroBrick, TestingBrick],

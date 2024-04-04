@@ -63,9 +63,6 @@ export interface PageLinkValueT {
 }
 
 export interface PageLinkMetaT {
-	slug?: string;
-	full_slug?: string;
-	collection_slug?: string;
 	title_translations?: Array<{
 		value: string | null;
 		language_id: number | null;

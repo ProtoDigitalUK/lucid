@@ -19,8 +19,6 @@ export interface FieldQueryDataT {
 	page_link_id?: number | null;
 	media_id?: number | null;
 	page_id?: number | null;
-	page_slug?: string | null;
-	page_full_slug?: string | null;
 	media_key?: string | null;
 	media_mime_type?: string | null;
 	media_file_extension?: string | null;
@@ -41,7 +39,6 @@ export interface FieldQueryDataT {
 interface FormatFieldsT {
 	fields: FieldQueryDataT[];
 	host: string;
-	collection_slug: string | null | undefined;
 	builder: BrickBuilderT | CollectionBuilderT;
 }
 
@@ -62,7 +59,6 @@ const formatCollectionFields = (props: FormatFieldsT): FieldResT[] => {
 				type: instanceField.type,
 				builder_field: instanceField,
 				field,
-				collection_slug: props.collection_slug,
 				host: props.host,
 			});
 
@@ -197,18 +193,6 @@ export const swaggerFieldRes = {
 					type: "string",
 					nullable: true,
 					enum: ["image", "video", "audio", "document"],
-				},
-				slug: {
-					type: "string",
-					nullable: true,
-				},
-				full_slug: {
-					type: "string",
-					nullable: true,
-				},
-				collection_slug: {
-					type: "string",
-					nullable: true,
 				},
 			},
 		},

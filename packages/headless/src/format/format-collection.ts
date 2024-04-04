@@ -24,15 +24,10 @@ const formatCollection = (props: FormatCollectionT): CollectionResT => {
 		title: collectionData.title,
 		singular: collectionData.singular,
 		description: collectionData.description ?? null,
-		slug: collectionData.slug ?? null,
 		document_id: props.include?.document_id
 			? getDocumentId(key, props.documents)
 			: undefined,
-		enable_parents: collectionData.config.enableParents ?? false,
-		enable_homepages: collectionData.config.enableHomepages ?? false,
-		enable_slugs: collectionData.config.enableSlugs ?? false,
-		enable_categories: collectionData.config.enableCategories ?? false,
-		enable_translations: collectionData.config.enableTranslations ?? false,
+		translations: collectionData.config.translations ?? false,
 
 		fixed_bricks: props.include?.bricks
 			? props.collection.fixedBricks ?? []
@@ -122,15 +117,8 @@ export const swaggerCollectionRes = {
 			example: "A collection of pages",
 			nullable: true,
 		},
-		slug: { type: "string", example: "pages", nullable: true },
 		document_id: { type: "number", example: 1, nullable: true },
-
-		enable_parents: { type: "boolean", example: false },
-		enable_homepages: { type: "boolean", example: false },
-		enable_slugs: { type: "boolean", example: false },
-		enable_categories: { type: "boolean", example: false },
-		enable_translations: { type: "boolean", example: false },
-
+		translations: { type: "boolean", example: false },
 		fixed_bricks: {
 			type: "array",
 			items: swaggerBrickConfigsRes,

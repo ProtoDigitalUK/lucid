@@ -11,17 +11,10 @@ import { formatDate } from "../utils/format-helpers.js";
 
 interface DocumentQueryDataT {
 	id: number;
-	parent_id: number | null;
 	collection_key: string | null;
-	slug: string | null;
-	full_slug: string | null;
-	homepage: BooleanInt | null;
 	created_by: number | null;
 	created_at: Date | string | null;
 	updated_at: Date | string | null;
-	categories: Array<{
-		category_id: number;
-	}> | null;
 	author_id: number | null;
 	author_email: string | null;
 	author_first_name: string | null;
@@ -41,8 +34,6 @@ interface FormatCollectionDocumentT {
 const formatCollectionDocument = (
 	props: FormatCollectionDocumentT,
 ): CollectionDocumentResT => {
-	const collectionData = props.collection?.data;
-
 	let fields: FieldResT[] | null = null;
 	if (props.fields) {
 		fields = props.fields;
@@ -50,22 +41,13 @@ const formatCollectionDocument = (
 		fields = formatCollectionFields({
 			fields: props.document.fields,
 			host: props.host,
-			collection_slug: collectionData?.slug,
 			builder: props.collection,
 		});
 	}
 
 	const res: CollectionDocumentResT = {
 		id: props.document.id,
-		parent_id: props.document.parent_id,
 		collection_key: props.document.collection_key,
-		slug: props.document.slug,
-		full_slug: formatDocumentFullSlug(
-			props.document.full_slug,
-			collectionData?.slug,
-		),
-		collection_slug: collectionData?.slug ?? null,
-		homepage: props.document.homepage ?? 0,
 		bricks: props.bricks || [],
 		fields: fields,
 		created_by: props.document.created_by,
@@ -84,27 +66,7 @@ const formatCollectionDocument = (
 		};
 	}
 
-	if (props.document.categories) {
-		res.categories = props.document.categories.map(
-			(category) => category.category_id,
-		);
-	}
-
 	return res;
-};
-
-export const formatDocumentFullSlug = (
-	full_slug: string | null,
-	collection_slug?: string | null,
-) => {
-	let slug = null;
-
-	if (!full_slug) return slug;
-	if (collection_slug !== null) slug = [collection_slug, full_slug].join("/");
-	else slug = full_slug;
-
-	if (!slug.startsWith("/")) return `/${slug}`;
-	return slug;
 };
 
 export const swaggerCollectionDocumentResT = {
@@ -113,28 +75,9 @@ export const swaggerCollectionDocumentResT = {
 		id: {
 			type: "number",
 		},
-		parent_id: {
-			type: "number",
-			nullable: true,
-		},
 		collection_key: {
 			type: "string",
 			nullable: true,
-		},
-		slug: {
-			type: "string",
-			nullable: true,
-		},
-		full_slug: {
-			type: "string",
-			nullable: true,
-		},
-		collection_slug: {
-			type: "string",
-			nullable: true,
-		},
-		homepage: {
-			type: "number",
 		},
 		author: {
 			type: "object",
@@ -161,12 +104,6 @@ export const swaggerCollectionDocumentResT = {
 				},
 			},
 			nullable: true,
-		},
-		categories: {
-			type: "array",
-			items: {
-				type: "number",
-			},
 		},
 		bricks: {
 			type: "array",
