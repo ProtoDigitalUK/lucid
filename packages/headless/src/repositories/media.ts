@@ -1,7 +1,7 @@
-import z from "zod";
+import type z from "zod";
 import type { BooleanInt, HeadlessMedia, Select } from "../libs/db/types.js";
 import { sql } from "kysely";
-import mediaSchema from "../schemas/media.js";
+import type mediaSchema from "../schemas/media.js";
 import type { Config } from "../libs/config/config-schema.js";
 import queryBuilder, {
 	deleteQB,

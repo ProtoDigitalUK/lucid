@@ -3,7 +3,7 @@ import constants from "../../../constants.js";
 import { InternalError } from "../../../utils/error-handler.js";
 import { parseCount } from "../../../utils/helpers.js";
 import RepositoryFactory from "../../factories/repository-factory.js";
-import { BooleanInt } from "../types.js";
+import type { BooleanInt } from "../types.js";
 
 const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
 	try {

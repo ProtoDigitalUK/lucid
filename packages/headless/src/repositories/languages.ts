@@ -1,4 +1,4 @@
-import z from "zod";
+import type z from "zod";
 import { sql } from "kysely";
 import type languagesSchema from "../schemas/languages.js";
 import type {

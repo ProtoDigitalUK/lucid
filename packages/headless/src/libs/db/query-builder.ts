@@ -1,15 +1,15 @@
 import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
-import {
-	type SelectQueryBuilder,
-	type ReferenceExpression,
-	type ComparisonOperatorExpression,
-	type DeleteQueryBuilder,
-	type OperandValueExpressionOrList,
-	type SelectExpression,
+import type {
+	SelectQueryBuilder,
+	ReferenceExpression,
+	ComparisonOperatorExpression,
+	DeleteQueryBuilder,
+	OperandValueExpressionOrList,
+	SelectExpression,
 	UpdateQueryBuilder,
 } from "kysely";
 import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
-import { HeadlessDB } from "./types.js";
+import type { HeadlessDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsedT;

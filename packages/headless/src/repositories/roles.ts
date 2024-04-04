@@ -1,8 +1,8 @@
-import z from "zod";
+import type z from "zod";
 import { sql } from "kysely";
 import type { HeadlessRoles, Select } from "../libs/db/types.js";
-import { type Config } from "../libs/config/config-schema.js";
-import rolesSchema from "../schemas/roles.js";
+import type { Config } from "../libs/config/config-schema.js";
+import type rolesSchema from "../schemas/roles.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,
