@@ -448,7 +448,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/2",
+							"raw": "{{BASE_URL}}/api/v1/users/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -456,7 +456,7 @@
 								"api",
 								"v1",
 								"users",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -585,7 +585,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"document_id\": 9\n    // \"slug\": \"testing-fiedls\",\n    // \"homepage\": true\n    // \"parent_id\": 4\n    // \"category_ids\": [\n    //   5,\n    //   6\n    // ]\n    // \"bricks\": [\n    //     {\n    //         // \"id\": 1,\n    //         \"key\": \"intro\",\n    //         \"order\": 0,\n    //         \"type\": \"builder\",\n    //         \"fields\": [\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"title\",\n    //                 \"type\": \"text\",\n    //                 \"value\": \"Title Value\",\n    //                 \"language_id\": 1\n    //             },\n    //             {\n    //                 // \"fields_id\": 1,\n    //                 \"key\": \"intro\",\n    //                 \"type\": \"wysiwyg\",\n    //                 \"value\": \"<p>Hello</p>\",\n    //                 \"language_id\": 1\n    //             }\n    //         ]\n    //     }\n    // ],\n    // \"fields\": [\n    //     {\n    //         // \"fields_id\": 73,\n    //         \"key\": \"page_title\",\n    //         \"type\": \"text\",\n    //         \"value\": \"Homepage\",\n    //         \"language_id\": 1\n    //     }\n    // ]\n}",
+									"raw": "{\n    // \"document_id\": 1,\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"language_id\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            // \"fields_id\": 73,\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"language_id\": 1\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -614,7 +614,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/9?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/1?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -624,7 +624,7 @@
 										"collections",
 										"documents",
 										"page",
-										"9"
+										"1"
 									],
 									"query": [
 										{
@@ -649,7 +649,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page?filter[cf]=page_title=Homepage",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -667,21 +667,6 @@
 											"disabled": true
 										},
 										{
-											"key": "filter[category_id]",
-											"value": "1,2",
-											"disabled": true
-										},
-										{
-											"key": "filter[slug]",
-											"value": "dogs",
-											"disabled": true
-										},
-										{
-											"key": "filter[full_slug]",
-											"value": "1",
-											"disabled": true
-										},
-										{
 											"key": "page",
 											"value": "1",
 											"disabled": true
@@ -693,59 +678,11 @@
 										},
 										{
 											"key": "filter[cf]",
-											"value": "page_title=test",
-											"disabled": true
+											"value": "page_title=Homepage"
 										},
 										{
 											"key": "filter[cf]",
 											"value": "page_title=Homepage,page_title=Homdsd,page_excerpt=te",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Multiple Valid Parents",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "headless-content-lang",
-										"value": "{{HEADLESS_CONTENT_LANG}}",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/4/valid-parents",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"documents",
-										"page",
-										"4",
-										"valid-parents"
-									],
-									"query": [
-										{
-											"key": "filter[category_id]",
-											"value": "1",
-											"disabled": true
-										},
-										{
-											"key": "page",
-											"value": "1",
-											"disabled": true
-										},
-										{
-											"key": "per_page",
-											"value": "-1",
 											"disabled": true
 										}
 									]
@@ -774,7 +711,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/7",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/1",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -784,7 +721,7 @@
 										"collections",
 										"documents",
 										"page",
-										"7"
+										"1"
 									]
 								}
 							},
@@ -821,197 +758,6 @@
 										"collections",
 										"documents",
 										"page"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Categories",
-					"item": [
-						{
-							"name": "Get Multiple",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "headless-content-lang",
-										"value": "{{HEADLESS_CONTENT_LANG}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/categories",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"categories"
-									],
-									"query": [
-										{
-											"key": "filter[slug]",
-											"value": "page-category-2",
-											"disabled": true
-										},
-										{
-											"key": "filter[collection_key]",
-											"value": "pages",
-											"disabled": true
-										},
-										{
-											"key": "filter[title]",
-											"value": "Te",
-											"disabled": true
-										},
-										{
-											"key": "sort",
-											"value": "title,-created_at",
-											"disabled": true
-										},
-										{
-											"key": "page",
-											"value": "1",
-											"disabled": true
-										},
-										{
-											"key": "per_page",
-											"value": "-1",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Single",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/categories/3",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"categories",
-										"3"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create Single",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"collection_key\": \"page\",\n    \"slug\": \"dog\",\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dog\"\n        }\n    ],\n    \"description_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Dog Category Description\"\n        }\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/categories",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"categories"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Single",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/categories/4",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"categories",
-										"4"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Single",
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "_csrf",
-										"value": "{{CSRF}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"slug\": \"technology\",\n    \"title_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": \"Tech\"\n        }\n    ],\n    \"description_translations\": [\n        {\n            \"language_id\": 1,\n            \"value\": null\n        }\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/categories/3",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"api",
-										"v1",
-										"collections",
-										"categories",
-										"3"
 									]
 								}
 							},
@@ -1115,7 +861,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    // \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"role_ids\": []\r\n}",
+							"raw": "{\r\n    // \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"role_ids\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1325,7 +1071,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"fr\",\r\n    \"is_default\": false,\r\n    \"is_enabled\": true\r\n}",
+							"raw": "{\r\n    \"code\": \"fr\",\r\n    \"is_default\": 0,\r\n    \"is_enabled\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1634,7 +1380,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": []
+									"src": "/Users/williamyallop/Documents/projects/protodigital/internal/proto-headless/banner.png"
 								}
 							]
 						},
@@ -1844,7 +1590,7 @@
 								},
 								{
 									"key": "filter[title]",
-									"value": "Title",
+									"value": "title value",
 									"disabled": true
 								}
 							]
