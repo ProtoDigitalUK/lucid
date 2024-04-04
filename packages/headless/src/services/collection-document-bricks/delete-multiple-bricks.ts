@@ -1,3 +1,5 @@
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
+
 export interface ServiceData {
 	apply: boolean;
 	document_id: number;
@@ -17,25 +19,48 @@ const deleteMultipleBricks = async (
 
 	const ids = data.bricks.map((brick) => brick.id);
 
+	const CollectionDocumentBricksRepo = RepositoryFactory.getRepository(
+		"collection-document-bricks",
+		serviceConfig.db,
+	);
+
 	if (ids.length === 0) {
-		await serviceConfig.db
-			.deleteFrom("headless_collection_document_bricks")
-			.where("collection_document_id", "=", data.document_id)
-			.where("brick_type", "!=", "collection-fields")
-			.execute();
+		await CollectionDocumentBricksRepo.deleteMultiple({
+			where: [
+				{
+					key: "collection_document_id",
+					operator: "=",
+					value: data.document_id,
+				},
+				{
+					key: "brick_type",
+					operator: "!=",
+					value: "collection-fields",
+				},
+			],
+		});
 		return;
 	}
 
-	await serviceConfig.db
-		.deleteFrom("headless_collection_document_bricks")
-		.where(
-			"id",
-			"not in",
-			data.bricks.map((brick) => brick.id),
-		)
-		.where("collection_document_id", "=", data.document_id)
-		.where("brick_type", "!=", "collection-fields")
-		.execute();
+	await CollectionDocumentBricksRepo.deleteMultiple({
+		where: [
+			{
+				key: "id",
+				operator: "not in",
+				value: data.bricks.map((b) => b.id),
+			},
+			{
+				key: "collection_document_id",
+				operator: "=",
+				value: data.document_id,
+			},
+			{
+				key: "brick_type",
+				operator: "!=",
+				value: "collection-fields",
+			},
+		],
+	});
 };
 
 export default deleteMultipleBricks;
