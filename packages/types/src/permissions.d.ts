@@ -26,9 +26,6 @@ export type PermissionT =
 	| "delete_collection"
 	| "create_collection"
 	| "update_collection"
-	| "create_category"
-	| "update_category"
-	| "delete_category"
 	| "read_form_submissions"
 	| "delete_form_submissions"
 	| "update_form_submissions";
