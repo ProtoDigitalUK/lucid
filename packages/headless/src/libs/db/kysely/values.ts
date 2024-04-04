@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
 // https://old.kyse.link/?p=s&i=C0yoagEodj9vv4AxE3TH
-export const values = <R extends Record<string, unknown>, A extends string>(
+const values = <R extends Record<string, unknown>, A extends string>(
 	records: R[],
 	alias: A,
 ) => {
@@ -27,3 +27,5 @@ export const values = <R extends Record<string, unknown>, A extends string>(
 	// raw sql snippet as the alias.
 	return sql<R>`(values ${values})`.as<A>(aliasSql);
 };
+
+export default values;

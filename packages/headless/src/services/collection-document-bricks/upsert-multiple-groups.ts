@@ -1,8 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import { values } from "../../utils/kysely-helpers.js";
-import { sql } from "kysely";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface GroupsResT {
 	group_id: number;
@@ -25,44 +24,39 @@ const upsertMultipleGroups = async (
 	const brickGroups = data.bricks.flatMap((brick) => brick.groups || []);
 	if (brickGroups.length === 0) return { groups: [], promises: [] };
 
-	// Update groups, on id conflict, update group_order, parent_group_id
-	const groupsRes = await serviceConfig.db
-		.insertInto("headless_collection_document_groups")
-		.values(
-			data.bricks.flatMap((brick) => {
-				if (!brick.groups) return [];
+	const CollectionDocumentGroupsRepo = RepositoryFactory.getRepository(
+		"collection-document-groups",
+		serviceConfig.db,
+	);
 
-				return brick.groups.map((group) => {
-					return {
-						group_id:
-							typeof group.group_id === "string"
-								? undefined
-								: group.group_id,
-						parent_group_id:
-							typeof group.parent_group_id === "string"
-								? undefined
-								: group.parent_group_id,
-						collection_document_id: data.document_id,
-						collection_brick_id: brick.id as number,
-						group_order: group.group_order,
-						repeater_key: group.repeater_key,
-						language_id: group.language_id,
-						ref:
-							typeof group.group_id === "string"
-								? group.group_id
-								: undefined,
-					};
-				});
-			}),
-		)
-		.onConflict((oc) =>
-			oc.column("group_id").doUpdateSet((eb) => ({
-				group_order: eb.ref("excluded.group_order"),
-				parent_group_id: eb.ref("excluded.parent_group_id"),
-			})),
-		)
-		.returning(["group_id", "ref"])
-		.execute();
+	// Update groups, on id conflict, update group_order, parent_group_id
+	const groupsRes = await CollectionDocumentGroupsRepo.upsertMultiple({
+		items: data.bricks.flatMap((brick) => {
+			if (!brick.groups) return [];
+
+			return brick.groups.map((group) => {
+				return {
+					groupId:
+						typeof group.group_id === "string"
+							? undefined
+							: group.group_id,
+					parentGroupId:
+						typeof group.parent_group_id === "string"
+							? undefined
+							: group.parent_group_id,
+					collectionDocumentId: data.document_id,
+					collectionBrickId: brick.id as number,
+					groupOrder: group.group_order,
+					repeaterKey: group.repeater_key,
+					languageId: group.language_id,
+					ref:
+						typeof group.group_id === "string"
+							? group.group_id
+							: undefined,
+				};
+			});
+		}),
+	});
 
 	// update groups with their new parent_group_id
 	const updateGroupParentIds: {
@@ -162,33 +156,25 @@ const upsertMultipleGroups = async (
 		groups,
 		promises: [
 			// Delete groups not in groupsRes
-			serviceConfig.db
-				.deleteFrom("headless_collection_document_groups")
-				.where(
-					"collection_brick_id",
-					"in",
-					data.bricks.map((brick) => brick.id as number),
-				)
-				.where(
-					"group_id",
-					"not in",
-					groups.map((group) => group.group_id),
-				)
-				.execute(),
+			CollectionDocumentGroupsRepo.deleteMultiple({
+				where: [
+					{
+						key: "collection_brick_id",
+						operator: "in",
+						value: data.bricks.map((b) => b.id),
+					},
+					{
+						key: "group_id",
+						operator: "not in",
+						value: groups.map((g) => g.group_id),
+					},
+				],
+			}),
 			// Update groups with their new parent_group_id
 			updateGroupParentIds.length > 0
-				? serviceConfig.db
-						.updateTable("headless_collection_document_groups")
-						.from(values(updateGroupParentIds, "c"))
-						.set({
-							parent_group_id: sql`c.parent_group_id::int`,
-						})
-						.whereRef(
-							"headless_collection_document_groups.group_id",
-							"=",
-							sql`c.group_id::int`,
-						)
-						.execute()
+				? CollectionDocumentGroupsRepo.updateMultipleParentIds({
+						items: updateGroupParentIds,
+				  })
 				: undefined,
 		],
 	};
