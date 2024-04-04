@@ -6,6 +6,7 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	id: number;
@@ -13,30 +14,15 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const document = await serviceConfig.db
-		.selectFrom("headless_collection_documents")
-		.select([
-			"headless_collection_documents.id",
-			"headless_collection_documents.collection_key",
-			"headless_collection_documents.created_by",
-			"headless_collection_documents.created_at",
-			"headless_collection_documents.updated_at",
-		])
-		.innerJoin(
-			"headless_users",
-			"headless_users.id",
-			"headless_collection_documents.created_by",
-		)
-		.select([
-			"headless_users.id as author_id",
-			"headless_users.email as author_email",
-			"headless_users.first_name as author_first_name",
-			"headless_users.last_name as author_last_name",
-			"headless_users.username as author_username",
-		])
-		.where("headless_collection_documents.id", "=", data.id)
-		.where("headless_collection_documents.is_deleted", "=", 0)
-		.executeTakeFirst();
+	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		"collection-documents",
+		serviceConfig.db,
+	);
+
+	const document = await CollectionDocumentsRepo.selectSingleById({
+		id: data.id,
+		config: serviceConfig.config,
+	});
 
 	if (document === undefined || document.collection_key === null) {
 		throw new APIError({

@@ -198,10 +198,12 @@ const getAllMedia = async (
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
 		if (ids.length === 0) return [];
+
 		const MediaRepo = RepositoryFactory.getRepository(
 			"media",
 			serviceConfig.db,
 		);
+
 		return MediaRepo.selectMultiple({
 			select: ["id", "file_extension", "width", "height", "type"],
 			where: [
@@ -223,11 +225,22 @@ const getAllDocuments = async (
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");
 		if (ids.length === 0) return [];
-		return await serviceConfig.db
-			.selectFrom("headless_collection_documents")
-			.select("id")
-			.where("id", "in", ids)
-			.execute();
+
+		const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+			"collection-documents",
+			serviceConfig.db,
+		);
+
+		return await CollectionDocumentsRepo.selectMultiple({
+			select: ["id"],
+			where: [
+				{
+					key: "id",
+					operator: "in",
+					value: ids,
+				},
+			],
+		});
 	} catch (err) {
 		return [];
 	}

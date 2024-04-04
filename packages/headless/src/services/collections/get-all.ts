@@ -1,4 +1,5 @@
 import formatCollection from "../../format/format-collection.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	include_document_id?: boolean;
@@ -12,16 +13,26 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			(collection) => collection.data.mode === "single",
 		);
 
-		const documents = await serviceConfig.db
-			.selectFrom("headless_collection_documents")
-			.select(["collection_key", "id"])
-			.where("is_deleted", "=", 0)
-			.where(
-				"collection_key",
-				"in",
-				singleCollections.map((collection) => collection.key),
-			)
-			.execute();
+		const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+			"collection-documents",
+			serviceConfig.db,
+		);
+
+		const documents = await CollectionDocumentsRepo.selectMultiple({
+			select: ["collection_key", "id"],
+			where: [
+				{
+					key: "is_deleted",
+					operator: "=",
+					value: 0,
+				},
+				{
+					key: "collection_key",
+					operator: "in",
+					value: singleCollections.map((c) => c.key),
+				},
+			],
+		});
 
 		return (
 			collections.map((collection) =>

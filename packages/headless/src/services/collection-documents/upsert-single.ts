@@ -6,6 +6,7 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -25,13 +26,27 @@ const upsertSingle = async (
 		T("document"),
 	);
 
+	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		"collection-documents",
+		serviceConfig.db,
+	);
+
 	if (data.document_id !== undefined) {
-		const existingDocument = await serviceConfig.db
-			.selectFrom("headless_collection_documents")
-			.select("id")
-			.where("id", "=", data.document_id)
-			.where("collection_key", "=", data.collection_key)
-			.executeTakeFirst();
+		const existingDocument = await CollectionDocumentsRepo.selectSingle({
+			select: ["id"],
+			where: [
+				{
+					key: "id",
+					operator: "=",
+					value: data.document_id,
+				},
+				{
+					key: "collection_key",
+					operator: "=",
+					value: data.collection_key,
+				},
+			],
+		});
 
 		if (existingDocument === undefined) {
 			throw new APIError({
@@ -79,24 +94,13 @@ const upsertSingle = async (
         Insert:
         - Document
     */
-	const document = await serviceConfig.db
-		.insertInto("headless_collection_documents")
-		.values({
-			id: data.document_id,
-			collection_key: data.collection_key,
-			author_id: data.user_id,
-			created_by: data.user_id,
-			updated_by: data.user_id,
-		})
-		.returning("id")
-		.onConflict((oc) =>
-			oc.column("id").doUpdateSet({
-				author_id: data.user_id,
-				created_by: data.user_id,
-				updated_by: data.user_id,
-			}),
-		)
-		.executeTakeFirst();
+	const document = await CollectionDocumentsRepo.upsertSingle({
+		id: data.document_id,
+		collectionKey: data.collection_key,
+		authorId: data.user_id,
+		createdBy: data.user_id,
+		updatedBy: data.user_id,
+	});
 
 	if (document === undefined) {
 		throw new APIError({

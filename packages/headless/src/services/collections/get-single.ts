@@ -1,6 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatCollection from "../../format/format-collection.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	key: string;
@@ -33,13 +34,26 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		data.include?.document_id === true &&
 		collection.data.mode === "single"
 	) {
-		const document = await serviceConfig.db
-			.selectFrom("headless_collection_documents")
-			.select("id")
-			.where("collection_key", "=", collection.key)
-			.where("is_deleted", "=", 0)
-			.limit(1)
-			.executeTakeFirst();
+		const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+			"collection-documents",
+			serviceConfig.db,
+		);
+
+		const document = await CollectionDocumentsRepo.selectSingle({
+			select: ["id"],
+			where: [
+				{
+					key: "is_deleted",
+					operator: "=",
+					value: 0,
+				},
+				{
+					key: "collection_key",
+					operator: "=",
+					value: collection.key,
+				},
+			],
+		});
 
 		return formatCollection({
 			collection: collection,

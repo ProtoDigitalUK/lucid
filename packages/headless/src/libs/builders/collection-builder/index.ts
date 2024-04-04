@@ -18,10 +18,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	key: string;
 	config: CollectionConfigSchemaT;
 	includeFieldKeys: string[] = [];
-	filterableFieldKeys: Array<{
-		key: string;
-		type: FieldTypesT;
-	}> = [];
+	filterableFieldKeys: FieldFiltersT = [];
 	constructor(key: string, config: CollectionConfigSchemaT) {
 		super();
 		this.key = key;
@@ -165,14 +162,16 @@ export type CollectionDataT = {
 	config: {
 		translations: boolean;
 		fields: {
-			filter: Array<{
-				key: string;
-				type: FieldTypesT;
-			}>;
+			filter: FieldFiltersT;
 			include: string[];
 		};
 	};
 };
+
+export type FieldFiltersT = Array<{
+	key: string;
+	type: FieldTypesT;
+}>;
 
 export interface CollectionBrickConfigT {
 	key: BrickBuilderT["key"];

@@ -1,6 +1,7 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import type { ErrorContentT } from "../../../utils/helpers.js";
+import RepositoryFactory from "../../../libs/factories/repository-factory.js";
 
 /*
     Checks:
@@ -21,13 +22,26 @@ const checkSingleCollectionDocumentCount = async (
 	if (data.document_id !== undefined) return;
 	if (data.collection_mode === "multiple") return;
 
-	const hasDocument = await serviceConfig.db
-		.selectFrom("headless_collection_documents")
-		.select("id")
-		.where("collection_key", "=", data.collection_key)
-		.where("is_deleted", "=", 0)
-		.limit(1)
-		.executeTakeFirst();
+	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		"collection-documents",
+		serviceConfig.db,
+	);
+
+	const hasDocument = await CollectionDocumentsRepo.selectSingle({
+		select: ["id"],
+		where: [
+			{
+				key: "collection_key",
+				operator: "=",
+				value: data.collection_key,
+			},
+			{
+				key: "is_deleted",
+				operator: "=",
+				value: 0,
+			},
+		],
+	});
 
 	if (hasDocument !== undefined) {
 		throw new APIError({

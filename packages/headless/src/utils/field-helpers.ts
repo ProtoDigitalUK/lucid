@@ -14,6 +14,7 @@ import type { FieldQueryDataT } from "../format/format-collection-fields.js";
 import type { FieldResValueT } from "@headless/types/src/bricks.js";
 import { createURL } from "../format/format-media.js";
 import { stringifyJSON, parseJSON } from "./format-helpers.js";
+import type { FieldFiltersT } from "../libs/builders/collection-builder/index.js";
 
 export const fieldTypeValueKey = (type: FieldTypesT) => {
 	switch (type) {
@@ -94,10 +95,7 @@ export interface CollectionFiltersResT {
 	column: string;
 }
 export const collectionFilters = (
-	allowed_filters: {
-		key: string;
-		type: FieldTypesT;
-	}[],
+	allowed_filters: FieldFiltersT,
 	filter: RequestQueryParsedT["filter"],
 ): Array<CollectionFiltersResT> => {
 	const values = typeof filter?.cf === "string" ? [filter?.cf] : filter?.cf;

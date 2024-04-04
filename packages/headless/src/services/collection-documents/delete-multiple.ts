@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
+import RepositoryFactory from "../../libs/factories/repository-factory.js";
 
 export interface ServiceData {
 	ids: number[];
@@ -12,16 +13,25 @@ const deleteMultiple = async (
 ) => {
 	if (data.ids.length === 0) return;
 
-	const deletePages = await serviceConfig.db
-		.updateTable("headless_collection_documents")
-		.set({
-			is_deleted: 1,
-			is_deleted_at: new Date().toISOString(),
-			deleted_by: data.user_id,
-		})
-		.where("id", "in", data.ids)
-		.returning("id")
-		.execute();
+	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		"collection-documents",
+		serviceConfig.db,
+	);
+
+	const deletePages = await CollectionDocumentsRepo.updateMultiple({
+		where: [
+			{
+				key: "id",
+				operator: "in",
+				value: data.ids,
+			},
+		],
+		data: {
+			isDeleted: 1,
+			isDeletedAt: new Date().toISOString(),
+			deletedBy: data.user_id,
+		},
+	});
 
 	if (deletePages.length === 0) {
 		throw new APIError({
