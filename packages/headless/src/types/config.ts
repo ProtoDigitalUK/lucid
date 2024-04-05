@@ -4,6 +4,10 @@ import type { DatabaseAdapterT } from "../libs/db/adapter.js";
 import type ConfigSchema from "../libs/config/config-schema.js";
 
 export type HeadlessPlugin = (config: Config) => Config;
+export type HeadlessPluginOptions<T> = (
+	config: Config,
+	pluginOptions: T,
+) => Config;
 
 export type EmailStrategy = (
 	email: {
@@ -34,11 +38,12 @@ export type EmailStrategy = (
 export interface Config extends z.infer<typeof ConfigSchema> {
 	db: DatabaseAdapterT;
 	collections?: CollectionBuilderT[];
-	email: {
+	email?: {
 		from: {
 			email: string;
 			name: string;
 		};
 		strategy: EmailStrategy;
 	};
+	plugins?: Array<HeadlessPlugin>;
 }

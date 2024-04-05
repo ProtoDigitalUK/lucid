@@ -20,14 +20,18 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 	const EmailsFormatter = Formatter.get("emails");
 
+	const emailConfig = emailServices.checks.checkHasEmailConfig({
+		config: serviceConfig.config,
+	});
+
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);
 
-	const result = await serviceConfig.config.email.strategy(
+	const result = await emailConfig.strategy(
 		{
 			to: data.to,
 			subject: data.subject,
-			from: serviceConfig.config.email.from,
+			from: emailConfig.from,
 			cc: data.cc,
 			bcc: data.bcc,
 			replyTo: data.reply_to,
@@ -98,8 +102,8 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 	const newEmail = await EmailsRepo.createSingle({
 		emailHash: emailHash,
-		fromAddress: serviceConfig.config.email.from.email,
-		fromName: serviceConfig.config.email.from.name,
+		fromAddress: emailConfig.from.email,
+		fromName: emailConfig.from.name,
 		toAddress: data.to,
 		subject: data.subject,
 		template: data.template,

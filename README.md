@@ -29,7 +29,7 @@ npm install @protodigital/headless
 ```ts
 import { headlessConfig, LibsqlAdapter } from "@protodigital/headless";
 
-import ResendPlugin from "@protodigital/headless-plugin-resend";
+import NodemailerPlugin from "@protodigital/headless-plugin-nodemailer";
 import LocalStoragePlugin from "@protodigital/headless-plugin-local-storage";
 import FormsPlugin from "@protodigital/headless-plugin-forms";
 import CookieConsentPlugin from "@protodigital/headless-plugin-cookie-consent";
@@ -40,10 +40,10 @@ import SettingsCollection from "./src/headless/collections/settings.js";
 import FormsCollection from "./src/headless/collections/forms.js";
 
 export default headlessConfig({
+  host: "http://localhost:8393",
   db: new LibsqlAdapter({
     url: "libsql://localhost:8080?tls=0",
   }),
-  host: "http://localhost:8393",
   keys: {
     cookieSecret: process.env.HEADLESS_COOKIE_SECRET as string,
     refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
@@ -56,7 +56,13 @@ export default headlessConfig({
     FormsCollection,
   ],
   plugins: [
-    ResendPlugin({}),
+    NodemailerPlugin({
+      from: {
+        email: "admin@protoheadless.com",
+        name: "Protoheadless",
+      },
+      transporter: transporter,
+    }),
     LocalStoragePlugin({}),
     FormsPlugin,
     CookieConsentPlugin,

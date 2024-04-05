@@ -44,6 +44,17 @@ const headlessConfig = (config: Config) => {
 			}
 		}
 
+		// TODO: add solution for handling errors thrown within plugins, provide callback or something?
+		// Merge plugin config
+		if (Array.isArray(config.plugins)) {
+			const postPluginConfig = config.plugins?.reduce((acc, plugin) => {
+				const configAfterPlugin = acc;
+				return plugin(configAfterPlugin);
+			}, config);
+
+			return postPluginConfig;
+		}
+
 		return configRes;
 	} catch (err) {
 		log.white("-".repeat(60));

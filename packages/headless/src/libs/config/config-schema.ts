@@ -16,14 +16,15 @@ const ConfigSchema = z.object({
 			emailTemplates: z.string().optional(),
 		})
 		.optional(),
-	// TODO: REMOVE THIS IN FAVOUR OF HOOKS/PLUGINS
-	email: z.object({
-		from: z.object({
-			email: z.string(),
-			name: z.string(),
-		}),
-		strategy: z.any(),
-	}),
+	email: z
+		.object({
+			from: z.object({
+				email: z.string(),
+				name: z.string(),
+			}),
+			strategy: z.any(),
+		})
+		.optional(),
 	// TODO: REMOVE THIS IN FAVOUR OF HOOKS/PLUGINS
 	media: z.object({
 		storageLimit: z
@@ -54,6 +55,7 @@ const ConfigSchema = z.object({
 		}),
 	}),
 	collections: z.array(z.unknown()).optional(),
+	plugins: z.array(z.unknown()).optional(),
 });
 
 export default ConfigSchema;

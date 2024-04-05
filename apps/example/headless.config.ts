@@ -6,6 +6,8 @@ import {
 } from "@protodigital/headless";
 import Database from "better-sqlite3";
 import transporter from "./src/headless/email-transporter.js";
+// Plugins
+import NodemailerPlugin from "@protodigital/headless-plugin-nodemailer";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
@@ -34,37 +36,6 @@ export default headlessConfig({
 		refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
 	},
-	email: {
-		from: {
-			email: "admin@protoheadless.com",
-			name: "Protoheadless",
-		},
-		strategy: async (email, meta) => {
-			try {
-				await transporter.sendMail({
-					from: `${email.from.name} <${email.from.email}>`,
-					to: email.to,
-					subject: email.subject,
-					cc: email.cc,
-					bcc: email.bcc,
-					replyTo: email.replyTo,
-					text: email.text,
-					html: email.html,
-				});
-
-				return {
-					success: true,
-					message: "Email sent successfully",
-				};
-			} catch (error) {
-				const err = error as Error;
-				return {
-					success: false,
-					message: err.message,
-				};
-			}
-		},
-	},
 	media: {
 		processedImages: {
 			store: false,
@@ -84,5 +55,14 @@ export default headlessConfig({
 		BlogCollection,
 		SettingsCollection,
 		FormsCollection,
+	],
+	plugins: [
+		NodemailerPlugin({
+			from: {
+				email: "admin@protoheadless.com",
+				name: "Protoheadless",
+			},
+			transporter: transporter,
+		}),
 	],
 });

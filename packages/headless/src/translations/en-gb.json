@@ -106,5 +106,7 @@
 	"config_duplicate_keys": "Duplicate keys found for {{builder}} builder.",
 	"cannot_find_config_path": "Cannot find the headless.config.ts or headless.config.js file at the root of your project.",
 	"cannot_find_repository": "Cannot find the repository for the {{name}}.",
-	"cannot_find_formatter": "Cannot find the formatter for the {{name}}."
+	"cannot_find_formatter": "Cannot find the formatter for the {{name}}.",
+	"config_error_name": "Config Not Configured",
+	"email_not_configured_message": "Email functionality is disabled because the email configuration is missing. Please provide the necessary email settings in the 'headless.config.ts/js' file to enable email features."
 }

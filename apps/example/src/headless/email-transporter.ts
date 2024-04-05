@@ -6,13 +6,4 @@ const transporter = nodemailer.createTransport({
 	secure: false,
 });
 
-transporter
-	.verify()
-	.then(() => {
-		console.log("Email transporter is ready");
-	})
-	.catch((error) => {
-		console.error("Email transporter is not ready", error);
-	});
-
 export default transporter;

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
-import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
+import emailServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -11,6 +11,10 @@ const resendSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const emailConfig = emailServices.checks.checkHasEmailConfig({
+		config: serviceConfig.config,
+	});
+
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 
 	const email = await EmailsRepo.selectSingleById({
@@ -36,7 +40,7 @@ const resendSingle = async (
 		templateData,
 	);
 
-	const result = await serviceConfig.config.email.strategy(
+	const result = await emailConfig.strategy(
 		{
 			to: email.to_address,
 			subject: email.subject ?? "",

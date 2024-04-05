@@ -5,11 +5,12 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"start": "node --trace-warnings --loader ts-node/esm src/index.ts --transpileOnly",
+		"start": "node --loader ts-node/esm src/index.ts --transpileOnly",
 		"dev": "nodemon"
 	},
 	"dependencies": {
 		"@protodigital/headless": "*",
+		"@protodigital/headless-plugin-nodemailer": "*",
 		"better-sqlite3": "^9.4.3",
 		"fastify": "^4.24.3",
 		"nodemailer": "^6.9.9",
