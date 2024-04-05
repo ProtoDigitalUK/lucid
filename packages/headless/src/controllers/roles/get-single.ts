@@ -3,7 +3,7 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerRoleRes } from "../../format/format-roles.js";
+import RolesFormatter from "../../libs/formatters/roles.js";
 
 const getSingleController: ControllerT<
 	typeof rolesSchema.getSingle.params,
@@ -37,7 +37,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerRoleRes,
+				data: RolesFormatter.swagger,
 			}),
 		},
 	},

@@ -22,7 +22,7 @@ const getMultiple = async (
 
 	return {
 		data: UsersFormatter.formatMultiple({
-			user: users,
+			users: users,
 		}),
 		count: parseCount(count?.count),
 	};

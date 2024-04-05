@@ -24,9 +24,9 @@ interface UserPropT {
 
 export default class UsersFormatter {
 	formatMultiple = (props: {
-		user: UserPropT[];
+		users: UserPropT[];
 	}) => {
-		return props.user.map((u) =>
+		return props.users.map((u) =>
 			this.formatSingle({
 				user: u,
 			}),

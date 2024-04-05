@@ -35,3 +35,17 @@ export interface SettingsResT {
 		};
 	};
 }
+
+export interface RoleResT {
+	id: number;
+	name: string;
+	description: string | null;
+
+	permissions?: {
+		id: number;
+		permission: PermissionT;
+	}[];
+
+	created_at: string | null;
+	updated_at: string | null;
+}

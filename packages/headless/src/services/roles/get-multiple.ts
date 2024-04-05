@@ -1,8 +1,8 @@
 import type z from "zod";
-import formatRole from "../../format/format-roles.js";
 import type rolesSchema from "../../schemas/roles.js";
 import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof rolesSchema.getMultiple.query>;
@@ -13,6 +13,7 @@ const getMultiple = async (
 	data: ServiceData,
 ) => {
 	const RolesRepo = Repository.get("roles", serviceConfig.db);
+	const RolesFormatter = Formatter.get("roles");
 
 	const [roles, rolesCount] = await RolesRepo.selectMultipleFiltered({
 		query: data.query,
@@ -20,10 +21,8 @@ const getMultiple = async (
 	});
 
 	return {
-		data: roles.map((r) => {
-			return formatRole({
-				role: r,
-			});
+		data: RolesFormatter.formatMultiple({
+			roles: roles,
 		}),
 		count: parseCount(rolesCount?.count),
 	};

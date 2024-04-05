@@ -6,7 +6,7 @@ import {
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerRoleRes } from "../../format/format-roles.js";
+import RolesFormatter from "../../libs/formatters/roles.js";
 
 const createSingleController: ControllerT<
 	typeof rolesSchema.createSingle.params,
@@ -53,7 +53,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerRoleRes,
+				data: RolesFormatter.swagger,
 			}),
 		},
 		body: {

@@ -6,7 +6,7 @@ import {
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerRoleRes } from "../../format/format-roles.js";
+import RolesFormatter from "../../libs/formatters/roles.js";
 
 const getMultipleController: ControllerT<
 	typeof rolesSchema.getMultiple.params,
@@ -47,7 +47,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerRoleRes,
+					items: RolesFormatter.swagger,
 				},
 				paginated: true,
 			}),

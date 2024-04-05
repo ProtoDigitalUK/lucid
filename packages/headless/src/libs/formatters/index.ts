@@ -3,7 +3,8 @@ import { InternalError } from "../../utils/error-handler.js";
 // Formatters
 import UsersFormatter from "./users.js";
 import UserPermissionsFormatter from "./user-permissions.js";
-import SettgingsFormatter from "./settings.js";
+import RolesFormatter from "./roles.js";
+import SettingsFormatter from "./settings.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -16,7 +17,9 @@ class Formatter {
 			case "user-permissions":
 				return new UserPermissionsFormatter() as FormatterReturnType<T>;
 			case "settings":
-				return new SettgingsFormatter() as FormatterReturnType<T>;
+				return new SettingsFormatter() as FormatterReturnType<T>;
+			case "roles":
+				return new RolesFormatter() as FormatterReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_formatter", {
@@ -30,7 +33,8 @@ class Formatter {
 type FormatterClassMap = {
 	users: UsersFormatter;
 	"user-permissions": UserPermissionsFormatter;
-	settings: SettgingsFormatter;
+	settings: SettingsFormatter;
+	roles: RolesFormatter;
 };
 
 type FormatterReturnType<T extends keyof FormatterClassMap> =
