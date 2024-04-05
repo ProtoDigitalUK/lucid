@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import formatLanguage from "../../format/format-language.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	code: string;
@@ -9,6 +9,7 @@ export interface ServiceData {
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
+	const LanguagesFormatter = Formatter.get("languages");
 
 	const language = await LanguagesRepo.selectSingle({
 		select: [
@@ -41,7 +42,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatLanguage({
+	return LanguagesFormatter.formatSingle({
 		language: language,
 	});
 };

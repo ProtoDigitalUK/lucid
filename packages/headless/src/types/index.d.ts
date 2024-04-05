@@ -2,8 +2,7 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type { Config } from "../libs/config/config-schema.js";
 import type z from "zod";
 import type { Kysely } from "kysely";
-import type { UserPermissionsResT } from "./response.js";
-import type { LanguageResT } from "@headless/types/src/language.js";
+import type { UserPermissionsResT, LanguageResT } from "./response.js";
 import type { HeadlessDB, BooleanInt } from "../libs/db/types.ts";
 
 declare module "fastify" {

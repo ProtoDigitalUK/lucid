@@ -1,5 +1,4 @@
 import type z from "zod";
-import formatLanguage from "../../format/format-language.js";
 import type languagesSchema from "../../schemas/languages.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -13,16 +12,15 @@ const getMultiple = async (
 	data: ServiceData,
 ) => {
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
+	const LanguagesFormatter = Formatter.get("languages");
 
 	const [languages, count] = await LanguagesRepo.selectMultipleFiltered({
 		query: data.query,
 	});
 
 	return {
-		data: languages.map((l) => {
-			return formatLanguage({
-				language: l,
-			});
+		data: LanguagesFormatter.formatMultiple({
+			languages: languages,
 		}),
 		count: Formatter.parseCount(count?.count),
 	};

@@ -6,7 +6,7 @@ import {
 import languages from "../../services/languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerLanguageRes } from "../../format/format-language.js";
+import LanguagesFormatter from "../../libs/formatters/languages.js";
 
 const createSingleController: ControllerT<
 	typeof languageSchema.createSingle.params,
@@ -68,7 +68,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerLanguageRes,
+				data: LanguagesFormatter.swagger,
 			}),
 		},
 		headers: swaggerHeaders({

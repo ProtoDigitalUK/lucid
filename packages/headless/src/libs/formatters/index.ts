@@ -8,6 +8,7 @@ import SettingsFormatter from "./settings.js";
 import PermissionsFormatter from "./permissions.js";
 import OptionsFormatter from "./options.js";
 import MediaFormatter from "./media.js";
+import LanguagesFormatter from "./languages.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -29,6 +30,8 @@ class Formatter {
 				return new OptionsFormatter() as FormatterReturnType<T>;
 			case "media":
 				return new MediaFormatter() as FormatterReturnType<T>;
+			case "languages":
+				return new LanguagesFormatter() as FormatterReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_formatter", {
@@ -71,6 +74,7 @@ type FormatterClassMap = {
 	permissions: PermissionsFormatter;
 	options: OptionsFormatter;
 	media: MediaFormatter;
+	languages: LanguagesFormatter;
 };
 
 type FormatterReturnType<T extends keyof FormatterClassMap> =

@@ -3,7 +3,7 @@ import type { BooleanInt } from "../libs/db/types.ts";
 
 export interface UserResT {
 	id: number;
-	super_admin?: 1 | 0;
+	super_admin?: BooleanInt;
 	email: string;
 	username: string;
 	first_name: string | null;
@@ -88,6 +88,17 @@ export interface MediaResT {
 		width: number | null;
 		height: number | null;
 	};
+	created_at: string | null;
+	updated_at: string | null;
+}
+
+export interface LanguageResT {
+	id: number;
+	code: string;
+	name: string | null;
+	native_name: string | null;
+	is_default: BooleanInt;
+	is_enabled: BooleanInt;
 	created_at: string | null;
 	updated_at: string | null;
 }
