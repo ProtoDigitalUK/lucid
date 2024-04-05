@@ -3,7 +3,7 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import settingsServices from "../../services/settings/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerSettingsRes } from "../../format/format-settings.js";
+import SettingsFormatter from "../../libs/formatters/settings.js";
 
 const getSettingsController: ControllerT<
 	typeof settingsSchema.getSettings.params,
@@ -35,7 +35,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerSettingsRes,
+				data: SettingsFormatter.swagger,
 			}),
 		},
 	},
