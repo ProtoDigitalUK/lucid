@@ -1,5 +1,5 @@
 import type { CollectionDocumentResT } from "@headless/types/src/collection-document.js";
-import type { BrickResT, FieldResT } from "@headless/types/src/bricks.js";
+import type { BrickResT, FieldResT } from "../types/response.js";
 import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
 import { swaggerBrickRes } from "./format-collection-bricks.js";
 import formatCollectionFields, {

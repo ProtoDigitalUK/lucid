@@ -1,8 +1,9 @@
-import type { FieldResT, FieldTypesT } from "@headless/types/src/bricks.js";
-import { fieldResponseValueFormat } from "../utils/field-helpers.js";
+import type { FieldResT } from "../types/response.js";
 import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
 import type { BrickBuilderT } from "../libs/builders/brick-builder/index.js";
+import type { FieldTypesT } from "../libs/builders/field-builder/index.js";
 import type { JSONString } from "../libs/db/types.js";
+import { fieldResponseValueFormat } from "../utils/field-helpers.js";
 
 export interface FieldQueryDataT {
 	fields_id: number;

@@ -147,3 +147,30 @@ export interface CollectionResT {
 	builder_bricks: Array<CollectionBrickConfigT>;
 	fields: Array<CustomFieldT>;
 }
+
+export interface BrickResT {
+	id: number;
+	key: string;
+	order: number;
+	type: "builder" | "fixed";
+	groups: Array<GroupResT>;
+	fields: Array<FieldResT>;
+}
+
+export interface FieldResT {
+	fields_id: number;
+	key: string;
+	type: FieldTypes;
+	group_id?: number | null;
+	value?: BrickFieldValueT; // TODO: type missing
+	meta?: BrickFieldMetaT; // TODO: type missing
+	language_id: number;
+}
+
+export interface GroupResT {
+	group_id: number;
+	group_order: number;
+	parent_group_id: number | null;
+	repeater_key: string;
+	language_id: number;
+}

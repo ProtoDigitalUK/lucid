@@ -11,6 +11,7 @@ import MediaFormatter from "./media.js";
 import LanguagesFormatter from "./languages.js";
 import EmailsFormatter from "./emails.js";
 import CollectionsFormatter from "./collections.js";
+import CollectionDocumentGroupsFormatter from "./collection-document-groups.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -38,6 +39,8 @@ class Formatter {
 				return new EmailsFormatter() as FormatterReturnType<T>;
 			case "collections":
 				return new CollectionsFormatter() as FormatterReturnType<T>;
+			case "collection-document-groups":
+				return new CollectionDocumentGroupsFormatter() as FormatterReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_formatter", {
@@ -83,6 +86,7 @@ type FormatterClassMap = {
 	languages: LanguagesFormatter;
 	emails: EmailsFormatter;
 	collections: CollectionsFormatter;
+	"collection-document-groups": CollectionDocumentGroupsFormatter;
 };
 
 type FormatterReturnType<T extends keyof FormatterClassMap> =
