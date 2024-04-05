@@ -1,4 +1,4 @@
-import formatPermissions from "../format/format-permissions.js";
+import Formatter from "../libs/formatters/index.js";
 
 export type PermissionT =
 	| "create_user"
@@ -87,9 +87,12 @@ export const permissionGroups: Record<string, PermissionGroup> = {
 };
 
 const getPermissions = () => {
-	const formattedPermissions = formatPermissions({
+	const PermissionsFormatter = Formatter.get("permissions");
+
+	const formattedPermissions = PermissionsFormatter.formatMultiple({
 		permissions: permissionGroups,
 	});
+
 	return formattedPermissions.flatMap((group) => group.permissions);
 };
 

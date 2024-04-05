@@ -1,21 +1,22 @@
 import permissionsSchema from "../../schemas/permissions.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import buildResponse from "../../utils/build-response.js";
-import formatPermissions from "../../format/format-permissions.js";
 import { permissionGroups } from "../../services/permissions.js";
+import Formatter from "../../libs/formatters/index.js";
+import PermissionsFormatter from "../../libs/formatters/permissions.js";
 
 const getAllController: ControllerT<
 	typeof permissionsSchema.getAll.params,
 	typeof permissionsSchema.getAll.body,
 	typeof permissionsSchema.getAll.query
 > = async (request, reply) => {
-	const permissionsRes = formatPermissions({
-		permissions: permissionGroups,
-	});
+	const PermissionsFormatter = Formatter.get("permissions");
 
 	reply.status(200).send(
 		await buildResponse(request, {
-			data: permissionsRes,
+			data: PermissionsFormatter.formatMultiple({
+				permissions: permissionGroups,
+			}),
 		}),
 	);
 };
@@ -32,23 +33,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: {
-						type: "object",
-						properties: {
-							key: {
-								type: "string",
-								example: "users_permissions",
-							},
-							permissions: {
-								type: "array",
-								example: [
-									"create_user",
-									"update_user",
-									"delete_user",
-								],
-							},
-						},
-					},
+					items: PermissionsFormatter.swagger,
 				},
 			}),
 		},
