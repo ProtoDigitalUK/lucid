@@ -11,7 +11,7 @@ import type {
 	LinkReferenceDataT,
 	FieldTypesT,
 } from "../../../libs/builders/field-builder/index.js";
-import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
+import type { PageLinkValueT, LinkValueT } from "../../../types/response.js";
 import type { CollectionBuilderT } from "../../../libs/builders/collection-builder/index.js";
 import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaT } from "../../../schemas/collection-fields.js";

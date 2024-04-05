@@ -1,17 +1,17 @@
 import type { FieldSchemaT } from "../schemas/collection-fields.js";
 import type {
+	MediaTypeT,
+	FieldResValueT,
 	PageLinkValueT,
 	LinkValueT,
 	FieldResMetaT,
-} from "@headless/types/src/bricks.js";
-import type { MediaTypeT } from "../types/response.js";
+} from "../types/response.js";
 import type { RequestQueryParsedT } from "../middleware/validate-query.js";
 import type {
 	FieldTypesT,
 	CustomFieldT,
 } from "../libs/builders/field-builder/types.js";
 import type { FieldPropT } from "../libs/formatters/collection-document-fields.js";
-import type { FieldResValueT } from "@headless/types/src/bricks.js";
 import type { FieldFiltersT } from "../libs/builders/collection-builder/index.js";
 import type { BrickSchemaT } from "../schemas/collection-bricks.js";
 import type { GroupsResT } from "../services/collection-document-bricks/upsert-multiple-groups.js";
