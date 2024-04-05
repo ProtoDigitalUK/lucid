@@ -5,8 +5,8 @@ import type collectionDocumentsSchema from "../../schemas/collection-documents.j
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import formatCollectionDocument from "../../format/format-collection-document.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -18,6 +18,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		"collection-documents",
 		serviceConfig.db,
 	);
+	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
 	const document = await CollectionDocumentsRepo.selectSingleById({
 		id: data.id,
@@ -49,7 +50,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			document_id: data.id,
 			collection_key: document.collection_key,
 		});
-		return formatCollectionDocument({
+
+		return CollectionDocumentsFormatter.formatSingle({
 			document: document,
 			collection: collectionInstance,
 			bricks: bricksRes.bricks,
@@ -58,7 +60,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatCollectionDocument({
+	return CollectionDocumentsFormatter.formatSingle({
 		document: document,
 		collection: collectionInstance,
 		bricks: [],

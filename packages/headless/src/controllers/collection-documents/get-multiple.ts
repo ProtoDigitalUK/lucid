@@ -7,7 +7,7 @@ import {
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCollectionDocumentResT } from "../../format/format-collection-document.js";
+import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
 
 const getMultipleController: ControllerT<
 	typeof collectionDocumentsSchema.getMultiple.params,
@@ -53,7 +53,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerCollectionDocumentResT,
+					items: CollectionDocumentsFormatter.swagger,
 				},
 				paginated: true,
 			}),

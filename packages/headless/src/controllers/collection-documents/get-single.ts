@@ -6,7 +6,7 @@ import {
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCollectionDocumentResT } from "../../format/format-collection-document.js";
+import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
 
 const getSingleController: ControllerT<
 	typeof collectionDocumentsSchema.getSingle.params,
@@ -44,7 +44,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerCollectionDocumentResT,
+				data: CollectionDocumentsFormatter.swagger,
 			}),
 		},
 		querystring: swaggerQueryString({

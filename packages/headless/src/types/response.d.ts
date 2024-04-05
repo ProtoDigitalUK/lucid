@@ -1,6 +1,9 @@
 import type { PermissionT } from "../services/permissions.ts";
 import type { BooleanInt } from "../libs/db/types.ts";
-import type { CustomFieldT } from "../libs/builders/field-builder/types.ts";
+import type {
+	CustomFieldT,
+	FieldTypesT,
+} from "../libs/builders/field-builder/types.ts";
 import type {
 	CollectionDataT,
 	CollectionBrickConfigT,
@@ -160,7 +163,7 @@ export interface BrickResT {
 export interface FieldResT {
 	fields_id: number;
 	key: string;
-	type: FieldTypes;
+	type: FieldTypesT;
 	group_id?: number | null;
 	value?: BrickFieldValueT; // TODO: type missing
 	meta?: BrickFieldMetaT; // TODO: type missing
@@ -173,4 +176,24 @@ export interface GroupResT {
 	parent_group_id: number | null;
 	repeater_key: string;
 	language_id: number;
+}
+
+export interface CollectionDocumentResT {
+	id: number;
+	collection_key: string | null;
+
+	created_by: number | null;
+	created_at: string | null;
+	updated_at: string | null;
+
+	author: {
+		id: number | null;
+		email: string | null;
+		first_name: string | null;
+		last_name: string | null;
+		username: string | null;
+	} | null;
+
+	bricks?: Array<BrickResT> | null;
+	fields?: Array<FieldResT> | null;
 }

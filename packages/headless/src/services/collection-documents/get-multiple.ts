@@ -1,6 +1,5 @@
 import type z from "zod";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
-import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -23,6 +22,7 @@ const getMultiple = async (
 		"collection-documents",
 		serviceConfig.db,
 	);
+	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
 	const [documents, documentCount] =
 		await CollectionDocumentsRepo.selectMultipleFiltered({
@@ -34,12 +34,10 @@ const getMultiple = async (
 		});
 
 	return {
-		data: documents.map((doc) => {
-			return formatCollectionDocument({
-				document: doc,
-				collection: collectionInstance,
-				host: serviceConfig.config.host,
-			});
+		data: CollectionDocumentsFormatter.formatMultiple({
+			documents: documents,
+			collection: collectionInstance,
+			host: serviceConfig.config.host,
 		}),
 		count: Formatter.parseCount(documentCount?.count),
 	};

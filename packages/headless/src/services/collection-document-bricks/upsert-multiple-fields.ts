@@ -1,6 +1,6 @@
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import formatUpsertFields from "../../format/format-upsert-fields.js";
 import type { GroupsResT } from "./upsert-multiple-groups.js";
+import { fieldUpsertPrep } from "../../utils/field-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -15,7 +15,7 @@ const upsertMultipleFields = async (
 ) => {
 	// format fields
 	const fields = data.bricks.flatMap((brick) =>
-		formatUpsertFields({
+		fieldUpsertPrep({
 			brick: brick,
 			groups: data.groups,
 		}),

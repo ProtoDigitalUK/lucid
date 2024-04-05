@@ -13,6 +13,8 @@ import EmailsFormatter from "./emails.js";
 import CollectionsFormatter from "./collections.js";
 import CollectionDocumentGroupsFormatter from "./collection-document-groups.js";
 import CollectionDocumentFieldsFormatter from "./collection-document-fields.js";
+import CollectionDocumentsFormatter from "./collection-documents.js";
+import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -40,6 +42,10 @@ class Formatter {
 				return new EmailsFormatter() as FormatterReturnType<T>;
 			case "collections":
 				return new CollectionsFormatter() as FormatterReturnType<T>;
+			case "collection-documents":
+				return new CollectionDocumentsFormatter() as FormatterReturnType<T>;
+			case "collection-document-bricks":
+				return new CollectionDocumentBricksFormatter() as FormatterReturnType<T>;
 			case "collection-document-groups":
 				return new CollectionDocumentGroupsFormatter() as FormatterReturnType<T>;
 			case "collection-document-fields":
@@ -89,6 +95,8 @@ type FormatterClassMap = {
 	languages: LanguagesFormatter;
 	emails: EmailsFormatter;
 	collections: CollectionsFormatter;
+	"collection-documents": CollectionDocumentsFormatter;
+	"collection-document-bricks": CollectionDocumentBricksFormatter;
 	"collection-document-groups": CollectionDocumentGroupsFormatter;
 	"collection-document-fields": CollectionDocumentFieldsFormatter;
 };
