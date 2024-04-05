@@ -1,5 +1,5 @@
 {
-	"name": "example",
+	"name": "@protodigital/headless-example",
 	"version": "1.0.0",
 	"description": "",
 	"main": "src/index.ts",
