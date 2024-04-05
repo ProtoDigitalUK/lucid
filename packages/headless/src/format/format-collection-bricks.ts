@@ -1,13 +1,13 @@
 import type { BrickResT, FieldResT } from "../types/response.js";
 import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
 import type { BrickBuilderT } from "../libs/builders/brick-builder/index.js";
-import formatCollectionFields, {
-	type FieldQueryDataT,
-	swaggerFieldRes,
-} from "./format-collection-fields.js";
+
 import CollectionDocumentGroupsFormatter, {
 	type GroupPropT,
 } from "../libs/formatters/collection-document-groups.js";
+import CollectionDocumentFieldsFormatter, {
+	type FieldPropT,
+} from "../libs/formatters/collection-document-fields.js";
 
 export interface BrickQueryDataT {
 	id: number;
@@ -16,7 +16,7 @@ export interface BrickQueryDataT {
 	brick_type: string;
 	collection_document_id: number;
 	groups: Array<GroupPropT>;
-	fields: Array<FieldQueryDataT>;
+	fields: Array<FieldPropT>;
 }
 
 interface FormatBricksT {
@@ -59,7 +59,7 @@ const formatCollectionBricks = (
 				groups: new CollectionDocumentGroupsFormatter().formatMultiple({
 					groups: brick.groups,
 				}),
-				fields: formatCollectionFields({
+				fields: new CollectionDocumentFieldsFormatter().formatMultiple({
 					fields: brick.fields,
 					host: props.host,
 					builder: builder,
@@ -73,7 +73,7 @@ const formatCollectionBricks = (
 			return true;
 		})
 		.map((brick) =>
-			formatCollectionFields({
+			new CollectionDocumentFieldsFormatter().formatMultiple({
 				fields: brick.fields,
 				host: props.host,
 				builder: props.collection,
@@ -112,7 +112,7 @@ export const swaggerBrickRes = {
 		},
 		fields: {
 			type: "array",
-			items: swaggerFieldRes,
+			items: CollectionDocumentFieldsFormatter.swagger,
 		},
 	},
 };

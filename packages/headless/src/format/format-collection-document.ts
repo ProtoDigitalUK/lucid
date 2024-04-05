@@ -2,11 +2,11 @@ import type { CollectionDocumentResT } from "@headless/types/src/collection-docu
 import type { BrickResT, FieldResT } from "../types/response.js";
 import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
 import { swaggerBrickRes } from "./format-collection-bricks.js";
-import formatCollectionFields, {
-	type FieldQueryDataT,
-	swaggerFieldRes,
-} from "./format-collection-fields.js";
+
 import Formatter from "../libs/formatters/index.js";
+import CollectionDocumentFieldsFormatter, {
+	type FieldPropT,
+} from "../libs/formatters/collection-document-fields.js";
 
 interface DocumentQueryDataT {
 	id: number;
@@ -19,7 +19,7 @@ interface DocumentQueryDataT {
 	author_first_name: string | null;
 	author_last_name: string | null;
 	author_username: string | null;
-	fields?: FieldQueryDataT[];
+	fields?: FieldPropT[];
 }
 
 interface FormatCollectionDocumentT {
@@ -37,7 +37,7 @@ const formatCollectionDocument = (
 	if (props.fields) {
 		fields = props.fields;
 	} else if (props.document.fields) {
-		fields = formatCollectionFields({
+		fields = new CollectionDocumentFieldsFormatter().formatMultiple({
 			fields: props.document.fields,
 			host: props.host,
 			builder: props.collection,
@@ -111,7 +111,7 @@ export const swaggerCollectionDocumentResT = {
 		fields: {
 			type: "array",
 			nullable: true,
-			items: swaggerFieldRes,
+			items: CollectionDocumentFieldsFormatter.swagger,
 		},
 		created_by: {
 			type: "number",

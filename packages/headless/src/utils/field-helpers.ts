@@ -10,7 +10,7 @@ import type {
 	FieldTypesT,
 	CustomFieldT,
 } from "../libs/builders/field-builder/types.js";
-import type { FieldQueryDataT } from "../format/format-collection-fields.js";
+import type { FieldPropT } from "../libs/formatters/collection-document-fields.js";
 import type { FieldResValueT } from "@headless/types/src/bricks.js";
 import type { FieldFiltersT } from "../libs/builders/collection-builder/index.js";
 import Formatter from "../libs/formatters/index.js";
@@ -129,7 +129,7 @@ export const collectionFilters = (
 interface FieldResponseValueFormatT {
 	type: FieldTypesT;
 	builder_field: CustomFieldT;
-	field: FieldQueryDataT;
+	field: FieldPropT;
 	host: string;
 }
 export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
