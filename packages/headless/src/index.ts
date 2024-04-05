@@ -9,6 +9,9 @@ import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";
 import PostgresAdapter from "./libs/db/adapters/postgres/index.js";
 import SQLLiteAdapter from "./libs/db/adapters/sqllite/index.js";
 
+export * from "./types/config.js";
+export * from "./types/response.js";
+
 export {
 	// Core
 	headless,
@@ -25,8 +28,5 @@ export {
 	SQLLiteAdapter,
 	PostgresAdapter,
 };
-
-export type { EmailStrategyT } from "./libs/config/config-schema.js";
-export * from "./types/response.js";
 
 export default headless;

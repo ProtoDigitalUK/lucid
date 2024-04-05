@@ -14,9 +14,9 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
-import type { Config } from "./libs/config/config-schema.js";
 import { decodeError } from "./utils/error-handler.js";
 import registerCronJobs from "./services/cron-jobs.js";
+import type { Config } from "./types/config.js";
 
 const currentDir = getDirName(import.meta.url);
 

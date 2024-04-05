@@ -1,7 +1,7 @@
 import type z from "zod";
 import type { HeadlessEmails, Select } from "../db/types.js";
+import type { Config } from "../../types/config.js";
 import { sql } from "kysely";
-import type { Config } from "../config/config-schema.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,

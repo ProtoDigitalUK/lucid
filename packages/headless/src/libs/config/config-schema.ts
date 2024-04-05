@@ -1,6 +1,5 @@
 import z from "zod";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
-import type { DatabaseAdapterT } from "../db/adapter.js";
+
 import constants from "../../constants.js";
 
 const ConfigSchema = z.object({
@@ -56,43 +55,5 @@ const ConfigSchema = z.object({
 	}),
 	collections: z.array(z.unknown()).optional(),
 });
-
-export type EmailStrategyT = (
-	email: {
-		to: string;
-		subject: string;
-		from: {
-			email: string;
-			name: string;
-		};
-		html: string;
-		text?: string;
-		cc?: string;
-		bcc?: string;
-		replyTo?: string;
-	},
-	meta: {
-		data: {
-			[key: string]: unknown;
-		};
-		template: string;
-		hash: string;
-	},
-) => Promise<{
-	success: boolean;
-	message: string;
-}>;
-
-export interface Config extends z.infer<typeof ConfigSchema> {
-	db: DatabaseAdapterT;
-	collections?: CollectionBuilderT[];
-	email: {
-		from: {
-			email: string;
-			name: string;
-		};
-		strategy: EmailStrategyT;
-	};
-}
 
 export default ConfigSchema;

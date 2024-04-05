@@ -1,5 +1,5 @@
-import type { Config } from "../config/config-schema.js";
 import type { SettingsResT } from "../../types/response.js";
+import type { Config } from "../../types/config.js";
 
 interface SettingsPropsT {
 	mediaStorageUsed: number;

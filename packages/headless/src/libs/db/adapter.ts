@@ -8,9 +8,9 @@ import {
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { InternalError } from "../../utils/error-handler.js";
-import type { AdapterType, HeadlessDB } from "./types.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import type { Config } from "../config/config-schema.js";
+import type { AdapterType, HeadlessDB } from "./types.js";
+import type { Config } from "../../types/config.js";
 // Seeds
 import seedDefaultOptions from "./seed/seed-default-options.js";
 import seedDefaultUser from "./seed/seed-default-user.js";

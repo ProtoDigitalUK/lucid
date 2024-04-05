@@ -4,7 +4,7 @@ import {
 	selectQB,
 	type QueryBuilderWhereT,
 } from "../db/query-builder.js";
-import type { Config } from "../config/config-schema.js";
+import type { Config } from "../../types/config.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 
 export default class CollectionDocumentBricksRepo {

@@ -5,7 +5,7 @@ import type {
 	HeadlessCollectionDocuments,
 	Select,
 } from "../db/types.js";
-import type { Config } from "../config/config-schema.js";
+import type { Config } from "../../types/config.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,

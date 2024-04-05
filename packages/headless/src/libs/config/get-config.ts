@@ -1,6 +1,6 @@
 import { pathToFileURL } from "node:url";
-import type { Config } from "./config-schema.js";
 import getConfigPath from "./get-config-path.js";
+import type { Config } from "../../types/config.js";
 
 let config: Config | undefined = undefined;
 

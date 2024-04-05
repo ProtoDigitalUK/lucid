@@ -1,6 +1,6 @@
 import type z from "zod";
 import { sql } from "kysely";
-import type { Config } from "../config/config-schema.js";
+import type { Config } from "../../types/config.js";
 import type usersSchema from "../../schemas/users.js";
 import type { BooleanInt, HeadlessUsers, Select } from "../db/types.js";
 import queryBuilder, {

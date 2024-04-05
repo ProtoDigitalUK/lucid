@@ -2,7 +2,7 @@ import type z from "zod";
 import type { BooleanInt, HeadlessMedia, Select } from "../db/types.js";
 import { sql } from "kysely";
 import type mediaSchema from "../../schemas/media.js";
-import type { Config } from "../config/config-schema.js";
+import type { Config } from "../../types/config.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,
