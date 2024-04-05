@@ -17,7 +17,7 @@ npm install @protodigital/headless
 ## Plugins
 
 - [Forms]()
-- [Neseted Documents]()
+- [Nested Documents]()
 - [Cookie Consent]()
 - [Resend]()
 - [Nodemailer]()
