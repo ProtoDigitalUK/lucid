@@ -5,26 +5,25 @@
 	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
-	"main": "dist/index.cjs",
 	"module": "dist/index.js",
 	"exports": {
 		".": {
 			"import": "./dist/index.js",
-			"require": "./dist/index.cjs",
 			"types": "./dist/index.d.ts"
 		}
 	},
 	"scripts": {
 		"build": "tsc && tsup",
 		"dev": "tsup --watch",
-		"format": "npx @biomejs/biome format --write ./src",
-		"lint": "npx @biomejs/biome lint ./src",
-		"lint:fix": "npx @biomejs/biome lint --apply ./src",
+		"format": "biome format --write ./src",
+		"lint": "biome lint ./src",
+		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./clear-db-pg.js"
 	},
 	"files": ["dist/**", "cms/**", "templates/**", "assets/**"],
-	"author": "William Yallop",
+	"author": "Proto Digital",
 	"devDependencies": {
+		"@protodigital/config": "*",
 		"@types/fs-extra": "^11.0.1",
 		"@types/jsonwebtoken": "^9.0.2",
 		"@types/lodash.merge": "^4.6.9",
@@ -35,11 +34,9 @@
 		"@types/pg": "^8.10.1",
 		"@types/sanitize-html": "^2.9.0",
 		"@types/slug": "^5.0.7",
-		"tsup": "^8.0.1",
-		"typescript": "^5.3.3"
-	},
-	"volta": {
-		"node": "21.6.2"
+		"@biomejs/biome": "^1.6.4",
+		"tsup": "^8.0.2",
+		"typescript": "^5.4.4"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.515.0",
@@ -70,6 +67,9 @@
 		"sharp": "^0.33.2",
 		"slug": "^8.2.3",
 		"zod": "^3.22.4"
+	},
+	"volta": {
+		"node": "21.6.2"
 	},
 	"license": "UNLICENSED"
 }

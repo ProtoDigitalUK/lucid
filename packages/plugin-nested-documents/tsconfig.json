@@ -1,20 +1,15 @@
 {
     "extends": "@protodigital/config/tsconfig.base.json",
-    "exclude": [
-        "./coverage",
-        "./dist",
-        "tests",
-        "jest.config.ts",
-        "./cms",
-        "./node_modules",
-        "./temp",
-        "./.turbo"
-    ],
     "compilerOptions": {
         "rootDir": "./src",
         "outDir": "./dist",
         "typeRoots": [
             "src/types/*"
         ]
-    }
+    },
+    "exclude": [
+        "./dist",
+        "./node_modules",
+        "./.turbo"
+    ]
 }

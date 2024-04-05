@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import { join } from "path";
+import { join } from "node:path";
 import { defineConfig } from "tsup";
 
 export default defineConfig({

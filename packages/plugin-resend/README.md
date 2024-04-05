@@ -1,0 +1,1 @@
+# @protodigital/headless-plugin-resend

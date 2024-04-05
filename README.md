@@ -14,16 +14,26 @@ npm install @protodigital/headless
 - [Brick Builder]()
 - [Collection Builder]()
 
+## Plugins
+
+- [Forms]()
+- [Neseted Documents]()
+- [Cookie Consent]()
+- [Resend]()
+- [Nodemailer]()
+- [S3]()
+- [Local Storage]()
+
 ## headless.config.ts/js
 
 ```ts
 import { headlessConfig, LibsqlAdapter } from "@protodigital/headless";
-// Plugins
-import EmailResend from "@protodigital/plugin-email-resend";
-import LocalStorage from "@protodigital/plugin-local-storage";
-import FormBuilder from "@protodigital/plugin-form-builder";
-import CookieConsentRecord from "@protodigital/plugin-cookie-consent";
-// Collections
+
+import ResendPlugin from "@protodigital/headless-plugin-resend";
+import LocalStoragePlugin from "@protodigital/headless-plugin-local-storage";
+import FormsPlugin from "@protodigital/headless-plugin-forms";
+import CookieConsentPlugin from "@protodigital/headless-plugin-cookie-consent";
+
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
 import SettingsCollection from "./src/headless/collections/settings.js";
@@ -46,17 +56,10 @@ export default headlessConfig({
     FormsCollection,
   ],
   plugins: [
-    EmailResend({}),
-    LocalStorage({}),
-    FormBuilder,
-    CookieConsentRecord,
+    ResendPlugin({}),
+    LocalStoragePlugin({}),
+    FormsPlugin,
+    CookieConsentPlugin,
   ],
 });
 ```
-
-> [!NOTE]
-> The above isnt fully implemented, but is the direction for v1.
-
-## Notes
-
-- If you're using Supabase for your database, ensure you're using the session mode.
