@@ -1,7 +1,6 @@
 import T from "../../translations/index.js";
 import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
-import formatEmails from "../../format/format-emails.js";
 import { APIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -19,6 +18,7 @@ export interface ServiceData {
 
 const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+	const EmailsFormatter = Formatter.get("emails");
 
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);
@@ -91,7 +91,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			});
 		}
 
-		return formatEmails({
+		return EmailsFormatter.formatSingle({
 			email: emailUpdated,
 			html: html,
 		});
@@ -127,7 +127,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatEmails({
+	return EmailsFormatter.formatSingle({
 		email: newEmail,
 		html: html,
 	});

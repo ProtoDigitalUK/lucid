@@ -1,5 +1,4 @@
 import T from "../../translations/index.js";
-import formatEmails from "../../format/format-emails.js";
 import emailServices from "./index.js";
 import { APIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
@@ -12,6 +11,7 @@ export interface ServiceData {
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+	const EmailsFormatter = Formatter.get("emails");
 
 	const email = await EmailsRepo.selectSingleById({
 		id: data.id,
@@ -31,7 +31,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	if (!data.render_template) {
-		return formatEmails({
+		return EmailsFormatter.formatSingle({
 			email: email,
 		});
 	}
@@ -40,9 +40,10 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		email.template,
 		Formatter.parseJSON<Record<string, unknown>>(email.data),
 	);
-	return formatEmails({
-		email,
-		html,
+
+	return EmailsFormatter.formatSingle({
+		email: email,
+		html: html,
 	});
 };
 

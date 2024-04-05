@@ -3,7 +3,7 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerEmailsRes } from "../../format/format-emails.js";
+import EmailsFormatter from "../../libs/formatters/emails.js";
 
 const getSingleController: ControllerT<
 	typeof emailsSchema.getSingle.params,
@@ -38,7 +38,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerEmailsRes,
+				data: EmailsFormatter.swagger,
 			}),
 		},
 	},

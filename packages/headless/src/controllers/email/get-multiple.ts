@@ -6,7 +6,7 @@ import {
 import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerEmailsRes } from "../../format/format-emails.js";
+import EmailsFormatter from "../../libs/formatters/emails.js";
 
 const getMultipleController: ControllerT<
 	typeof emailsSchema.getMultiple.params,
@@ -47,7 +47,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerEmailsRes,
+					items: EmailsFormatter.swagger,
 				},
 				paginated: true,
 			}),

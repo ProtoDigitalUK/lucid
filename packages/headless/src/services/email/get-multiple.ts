@@ -1,6 +1,5 @@
 import type z from "zod";
 import type emailSchema from "../../schemas/email.js";
-import formatEmails from "../../format/format-emails.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
@@ -13,6 +12,7 @@ const getMultiple = async (
 	data: ServiceData,
 ) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
+	const EmailsFormatter = Formatter.get("emails");
 
 	const [emails, emailsCount] = await EmailsRepo.selectMultipleFiltered({
 		query: data.query,
@@ -20,11 +20,9 @@ const getMultiple = async (
 	});
 
 	return {
-		data: emails.map((email) =>
-			formatEmails({
-				email: email,
-			}),
-		),
+		data: EmailsFormatter.formatMultiple({
+			emails: emails,
+		}),
 		count: Formatter.parseCount(emailsCount?.count),
 	};
 };
