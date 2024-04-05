@@ -1,10 +1,10 @@
 import fs from "fs-extra";
 import type { Readable } from "node:stream";
+import type { MediaResT } from "../types/response.js";
 import { pipeline } from "node:stream/promises";
 import { join } from "node:path";
 import mime from "mime-types";
 import sharp from "sharp";
-import type { MediaResT } from "@headless/types/src/media.js";
 import slug from "slug";
 
 export interface MediaMetaDataT {
@@ -148,6 +148,9 @@ const streamToBuffer = (readable: Readable): Promise<Buffer> => {
 	});
 };
 
+// CDN URL
+const createURL = (host: string, key: string) => `${host}/cdn/v1/${key}`;
+
 const mediaHelpers = {
 	getMediaType,
 	uniqueKey,
@@ -158,6 +161,7 @@ const mediaHelpers = {
 	chooseFormat,
 	createProcessKey,
 	streamToBuffer,
+	createURL,
 };
 
 export default mediaHelpers;

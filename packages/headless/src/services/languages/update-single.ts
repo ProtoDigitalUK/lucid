@@ -1,9 +1,9 @@
 import T from "../../translations/index.js";
 import ISO6391 from "iso-639-1";
 import { APIError } from "../../utils/error-handler.js";
-import { parseCount } from "../../utils/helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	current_code: string;
@@ -78,7 +78,7 @@ const updateSingle = async (
 	}
 
 	const languagesCountQuery = await LanguagesRepo.count();
-	const count = parseCount(languagesCountQuery?.count);
+	const count = Formatter.parseCount(languagesCountQuery?.count);
 
 	const isDefault = count === 1 ? 1 : data.is_default;
 

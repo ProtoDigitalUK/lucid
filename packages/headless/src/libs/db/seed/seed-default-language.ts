@@ -1,7 +1,7 @@
 import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
 import { InternalError } from "../../../utils/error-handler.js";
-import { parseCount } from "../../../utils/helpers.js";
+import Formatter from "../../formatters/index.js";
 import Repository from "../../repositories/index.js";
 import type { BooleanInt } from "../types.js";
 
@@ -11,7 +11,7 @@ const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
 
 		const totalLanguagesCount = await LanguagesRepo.count();
 
-		if (parseCount(totalLanguagesCount?.count) > 0) return;
+		if (Formatter.parseCount(totalLanguagesCount?.count) > 0) return;
 
 		await LanguagesRepo.createSingle({
 			code: constants.seedDefaults.language.code,

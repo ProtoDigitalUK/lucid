@@ -1,5 +1,5 @@
-import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 // export interface ServiceData {}
 
@@ -15,7 +15,7 @@ const getCount = async (
 	const processedImageCount = await ProcessedImagesRepo.count({
 		where: [],
 	});
-	return parseCount(processedImageCount?.count);
+	return Formatter.parseCount(processedImageCount?.count);
 };
 
 export default getCount;

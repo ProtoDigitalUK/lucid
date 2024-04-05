@@ -1,6 +1,6 @@
 import type { EmailResT } from "@headless/types/src/email.js";
 import type { JSONString } from "../libs/db/types.js";
-import { formatDate } from "../utils/format-helpers.js";
+import Formatter from "../libs/formatters/index.js";
 
 interface FormatEmailsT {
 	email: {
@@ -51,9 +51,9 @@ const formatEmails = (props: FormatEmailsT): EmailResT => {
 		error_count: props.email.error_count || 0,
 		error_message: props.email.last_error_message,
 		html: props.html ?? null,
-		last_success_at: formatDate(props.email.last_success_at),
-		last_attempt_at: formatDate(props.email.last_attempt_at),
-		created_at: formatDate(props.email.created_at),
+		last_success_at: Formatter.formatDate(props.email.last_success_at),
+		last_attempt_at: Formatter.formatDate(props.email.last_attempt_at),
+		created_at: Formatter.formatDate(props.email.created_at),
 	};
 };
 

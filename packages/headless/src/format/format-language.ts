@@ -1,7 +1,7 @@
 import ISO6391 from "iso-639-1";
 import type { LanguageResT } from "@headless/types/src/language.js";
 import type { HeadlessLanguages, Select } from "../libs/db/types.js";
-import { formatDate } from "../utils/format-helpers.js";
+import Formatter from "../libs/formatters/index.js";
 
 interface FormatLanguageT {
 	language: Select<HeadlessLanguages>;
@@ -17,8 +17,8 @@ const formatLanguage = (props: FormatLanguageT): LanguageResT => {
 		native_name: ISO6391.getNativeName(iso6391Code),
 		is_default: props.language.is_default,
 		is_enabled: props.language.is_enabled,
-		created_at: formatDate(props.language.created_at),
-		updated_at: formatDate(props.language.updated_at),
+		created_at: Formatter.formatDate(props.language.created_at),
+		updated_at: Formatter.formatDate(props.language.updated_at),
 	};
 };
 

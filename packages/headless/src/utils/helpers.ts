@@ -3,11 +3,7 @@ import { format, getHours } from "date-fns";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
-import { stringifyJSON } from "./format-helpers.js";
-
-export const parseCount = (count: string | undefined) => {
-	return Number.parseInt(count || "0") || 0;
-};
+import Formatter from "../libs/formatters/index.js";
 
 export const getEmailHash = (data: {
 	to: string;
@@ -16,7 +12,7 @@ export const getEmailHash = (data: {
 }) => {
 	const date = format(new Date(), "dd/MM/yyyy");
 	const currentHour = getHours(new Date());
-	const hashString = `${stringifyJSON(data.data)}${data.template}${
+	const hashString = `${Formatter.stringifyJSON(data.data)}${data.template}${
 		data.to
 	}${date}${currentHour}`;
 

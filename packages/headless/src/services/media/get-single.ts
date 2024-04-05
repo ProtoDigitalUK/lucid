@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import formatMedia from "../../format/format-media.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -9,6 +9,7 @@ export interface ServiceData {
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const MediaRepo = Repository.get("media", serviceConfig.db);
+	const MediaFormatter = Formatter.get("media");
 
 	const media = await MediaRepo.selectSingleById({
 		id: data.id,
@@ -28,7 +29,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatMedia({
+	return MediaFormatter.formatSingle({
 		media: media,
 		host: serviceConfig.config.host,
 	});

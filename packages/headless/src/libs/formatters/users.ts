@@ -1,7 +1,7 @@
 import type { BooleanInt } from "../db/types.js";
-import { formatDate } from "../../utils/format-helpers.js";
-import UserPermissionsFormatter from "./user-permissions.js";
 import type { UserResT } from "../../types/response.js";
+import UserPermissionsFormatter from "./user-permissions.js";
+import Formatter from "./index.js";
 
 interface UserPropT {
 	created_at: Date | string | null;
@@ -49,8 +49,8 @@ export default class UsersFormatter {
 			last_name: props.user.last_name,
 			roles: roles,
 			permissions: permissions,
-			created_at: formatDate(props.user.created_at),
-			updated_at: formatDate(props.user.updated_at),
+			created_at: Formatter.formatDate(props.user.created_at),
+			updated_at: Formatter.formatDate(props.user.updated_at),
 		};
 	};
 	static swagger = {

@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	code: string;
@@ -11,7 +11,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	const languagesCountQuery = await LanguagesRepo.count();
-	const count = parseCount(languagesCountQuery?.count);
+	const count = Formatter.parseCount(languagesCountQuery?.count);
 
 	if (count === 1) {
 		throw new APIError({

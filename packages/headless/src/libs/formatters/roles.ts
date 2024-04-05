@@ -1,6 +1,6 @@
-import { formatDate } from "../../utils/format-helpers.js";
 import type { PermissionT } from "../../services/permissions.js";
 import type { RoleResT } from "../../types/response.js";
+import Formatter from "./index.js";
 
 interface RolePropsT {
 	id: number;
@@ -38,8 +38,8 @@ export default class RolesFormatter {
 					permission: p.permission as PermissionT,
 				};
 			}),
-			created_at: formatDate(props.role.created_at),
-			updated_at: formatDate(props.role.updated_at),
+			created_at: Formatter.formatDate(props.role.created_at),
+			updated_at: Formatter.formatDate(props.role.updated_at),
 		};
 	};
 	static swagger = {

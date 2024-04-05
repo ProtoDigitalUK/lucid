@@ -3,8 +3,8 @@ import emailServices from "./index.js";
 import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
 import { APIError } from "../../utils/error-handler.js";
-import { stringifyJSON } from "../../utils/format-helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	type: "internal" | "external";
@@ -105,7 +105,7 @@ const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		template: data.template,
 		cc: data.cc,
 		bcc: data.bcc,
-		data: stringifyJSON(data.data),
+		data: Formatter.stringifyJSON(data.data),
 		type: data.type,
 		sentCount: result.success ? 1 : 0,
 		errorCount: result.success ? 0 : 1,

@@ -1,8 +1,8 @@
 import type z from "zod";
 import type emailSchema from "../../schemas/email.js";
-import { parseCount } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof emailSchema.getMultiple.query>;
@@ -25,7 +25,7 @@ const getMultiple = async (
 				email: email,
 			}),
 		),
-		count: parseCount(emailsCount?.count),
+		count: Formatter.parseCount(emailsCount?.count),
 	};
 };
 

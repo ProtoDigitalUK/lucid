@@ -6,7 +6,7 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerMediaRes } from "../../format/format-media.js";
+import MediaFormatter from "../../libs/formatters/media.js";
 
 const uploadSingleController: ControllerT<
 	typeof mediaSchema.uploadSingle.params,
@@ -52,7 +52,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerMediaRes,
+				data: MediaFormatter.swagger,
 			}),
 		},
 		consumes: ["multipart/form-data"],

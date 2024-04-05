@@ -1,6 +1,5 @@
 import type z from "zod";
 import type usersSchema from "../../schemas/users.js";
-import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
@@ -24,7 +23,7 @@ const getMultiple = async (
 		data: UsersFormatter.formatMultiple({
 			users: users,
 		}),
-		count: parseCount(count?.count),
+		count: Formatter.parseCount(count?.count),
 	};
 };
 

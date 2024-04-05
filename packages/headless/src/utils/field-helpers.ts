@@ -4,7 +4,7 @@ import type {
 	LinkValueT,
 	FieldResMetaT,
 } from "@headless/types/src/bricks.js";
-import type { MediaTypeT } from "@headless/types/src/media.js";
+import type { MediaTypeT } from "../types/response.js";
 import type { RequestQueryParsedT } from "../middleware/validate-query.js";
 import type {
 	FieldTypesT,
@@ -12,9 +12,9 @@ import type {
 } from "../libs/builders/field-builder/types.js";
 import type { FieldQueryDataT } from "../format/format-collection-fields.js";
 import type { FieldResValueT } from "@headless/types/src/bricks.js";
-import { createURL } from "../format/format-media.js";
-import { stringifyJSON, parseJSON } from "./format-helpers.js";
 import type { FieldFiltersT } from "../libs/builders/collection-builder/index.js";
+import Formatter from "../libs/formatters/index.js";
+import mediaHelpers from "./media-helpers.js";
 
 export const fieldTypeValueKey = (type: FieldTypesT) => {
 	switch (type) {
@@ -59,7 +59,7 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			}
 			return {
 				text_value: value.url,
-				json_value: stringifyJSON({
+				json_value: Formatter.stringifyJSON({
 					target: value.target,
 					label: value.label,
 				}),
@@ -75,7 +75,7 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			}
 			return {
 				page_link_id: value.id,
-				json_value: stringifyJSON({
+				json_value: Formatter.stringifyJSON({
 					target: value.target,
 					label: value.label,
 				}),
@@ -152,7 +152,10 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			value = props.field?.media_id ?? undefined;
 			meta = {
 				id: props.field?.media_id ?? undefined,
-				url: createURL(props.host, props.field?.media_key ?? ""),
+				url: mediaHelpers.createURL(
+					props.host,
+					props.field?.media_key ?? "",
+				),
 				key: props.field?.media_key ?? undefined,
 				mime_type: props.field?.media_mime_type ?? undefined,
 				file_extension: props.field?.media_file_extension ?? undefined,
@@ -184,8 +187,9 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 		}
 		case "json": {
 			value =
-				parseJSON<Record<string, unknown>>(props.field?.json_value) ??
-				props.builder_field?.default;
+				Formatter.parseJSON<Record<string, unknown>>(
+					props.field?.json_value,
+				) ?? props.builder_field?.default;
 			break;
 		}
 		case "colour": {
@@ -197,7 +201,9 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "pagelink": {
-			const jsonVal = parseJSON<PageLinkValueT>(props.field?.json_value);
+			const jsonVal = Formatter.parseJSON<PageLinkValueT>(
+				props.field?.json_value,
+			);
 			value = {
 				id: props.field?.page_link_id ?? undefined,
 				target: jsonVal?.target || "_self",
@@ -207,7 +213,9 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "link": {
-			const jsonVal = parseJSON<LinkValueT>(props.field?.json_value);
+			const jsonVal = Formatter.parseJSON<LinkValueT>(
+				props.field?.json_value,
+			);
 			value = {
 				url:
 					props.field?.text_value ??

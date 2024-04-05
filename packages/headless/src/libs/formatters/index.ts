@@ -7,6 +7,7 @@ import RolesFormatter from "./roles.js";
 import SettingsFormatter from "./settings.js";
 import PermissionsFormatter from "./permissions.js";
 import OptionsFormatter from "./options.js";
+import MediaFormatter from "./media.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -26,6 +27,8 @@ class Formatter {
 				return new PermissionsFormatter() as FormatterReturnType<T>;
 			case "options":
 				return new OptionsFormatter() as FormatterReturnType<T>;
+			case "media":
+				return new MediaFormatter() as FormatterReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_formatter", {
@@ -34,6 +37,30 @@ class Formatter {
 				);
 		}
 	}
+	// helpers
+	static formatDate = (date: Date | string | null): string | null => {
+		if (typeof date === "string") {
+			return date;
+		}
+		return date ? date.toISOString() : null;
+	};
+	static parseJSON = <T>(json: string | null | undefined): T | null => {
+		if (!json) return null;
+		try {
+			return JSON.parse(json);
+		} catch (error) {
+			return null;
+		}
+	};
+	static stringifyJSON = (
+		json: Record<string, unknown> | null,
+	): string | null => {
+		if (!json) return null;
+		return JSON.stringify(json);
+	};
+	static parseCount = (count: string | undefined) => {
+		return Number.parseInt(count || "0") || 0;
+	};
 }
 
 type FormatterClassMap = {
@@ -43,6 +70,7 @@ type FormatterClassMap = {
 	roles: RolesFormatter;
 	permissions: PermissionsFormatter;
 	options: OptionsFormatter;
+	media: MediaFormatter;
 };
 
 type FormatterReturnType<T extends keyof FormatterClassMap> =

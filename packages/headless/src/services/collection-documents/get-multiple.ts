@@ -1,9 +1,9 @@
 import type z from "zod";
-import { parseCount } from "../../utils/helpers.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -41,7 +41,7 @@ const getMultiple = async (
 				host: serviceConfig.config.host,
 			});
 		}),
-		count: parseCount(documentCount?.count),
+		count: Formatter.parseCount(documentCount?.count),
 	};
 };
 

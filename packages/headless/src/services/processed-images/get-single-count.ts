@@ -1,5 +1,5 @@
-import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -24,7 +24,7 @@ const getSingleCount = async (
 		],
 	});
 
-	return parseCount(processedImageCount?.count);
+	return Formatter.parseCount(processedImageCount?.count);
 };
 
 export default getSingleCount;

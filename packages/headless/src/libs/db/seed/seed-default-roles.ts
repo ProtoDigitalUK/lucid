@@ -1,18 +1,17 @@
 import T from "../../../translations/index.js";
-import { sql } from "kysely";
 import constants from "../../../constants.js";
 import { InternalError } from "../../../utils/error-handler.js";
-import { parseCount } from "../../../utils/helpers.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
 import Repository from "../../repositories/index.js";
+import Formatter from "../../formatters/index.js";
 
 const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 	try {
 		const RolesRepo = Repository.get("roles", serviceConfig.db);
 
 		const totalRoleCount = await RolesRepo.count();
-		if (parseCount(totalRoleCount?.count) > 0) return;
+		if (Formatter.parseCount(totalRoleCount?.count) > 0) return;
 
 		const rolePromises = [];
 		for (const role of constants.seedDefaults.roles) {

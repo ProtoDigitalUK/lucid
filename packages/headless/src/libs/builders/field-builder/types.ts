@@ -1,5 +1,5 @@
 import type { ZodType } from "zod";
-import type { MediaTypeT } from "@headless/types/src/media.js";
+import type { MediaTypeT } from "../../../types/response.js";
 
 export interface CustomFieldT {
 	type: FieldTypesT;

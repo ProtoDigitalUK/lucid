@@ -7,7 +7,7 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerMediaRes } from "../../format/format-media.js";
+import MediaFormatter from "../../libs/formatters/media.js";
 
 const getMultipleController: ControllerT<
 	typeof mediaSchema.getMultiple.params,
@@ -49,7 +49,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerMediaRes,
+					items: MediaFormatter.swagger,
 				},
 				paginated: true,
 			}),

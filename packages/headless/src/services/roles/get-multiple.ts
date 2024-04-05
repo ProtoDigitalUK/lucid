@@ -1,6 +1,5 @@
 import type z from "zod";
 import type rolesSchema from "../../schemas/roles.js";
-import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
@@ -24,7 +23,7 @@ const getMultiple = async (
 		data: RolesFormatter.formatMultiple({
 			roles: roles,
 		}),
-		count: parseCount(rolesCount?.count),
+		count: Formatter.parseCount(rolesCount?.count),
 	};
 };
 

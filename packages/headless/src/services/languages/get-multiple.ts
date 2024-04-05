@@ -1,8 +1,8 @@
 import type z from "zod";
 import formatLanguage from "../../format/format-language.js";
 import type languagesSchema from "../../schemas/languages.js";
-import { parseCount } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof languagesSchema.getMultiple.query>;
@@ -24,7 +24,7 @@ const getMultiple = async (
 				language: l,
 			});
 		}),
-		count: parseCount(count?.count),
+		count: Formatter.parseCount(count?.count),
 	};
 };
 
