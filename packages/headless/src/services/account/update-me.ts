@@ -57,7 +57,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 							value: data.auth.id,
 						},
 					],
-			  })
+				})
 			: undefined,
 		data.username !== undefined
 			? UsersRepo.selectSingle({
@@ -74,7 +74,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 							value: data.auth.id,
 						},
 					],
-			  })
+				})
 			: undefined,
 		data.role_ids !== undefined
 			? serviceWrapper(usersService.checks.checkRolesExist, false)(
@@ -83,7 +83,7 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 						role_ids: data.role_ids,
 						is_create: false,
 					},
-			  )
+				)
 			: undefined,
 	]);
 

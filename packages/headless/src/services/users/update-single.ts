@@ -65,7 +65,7 @@ const updateSingle = async (
 							value: data.email,
 						},
 					],
-			  })
+				})
 			: undefined,
 		data.username
 			? UsersRepo.selectSingle({
@@ -77,7 +77,7 @@ const updateSingle = async (
 							value: data.username,
 						},
 					],
-			  })
+				})
 			: undefined,
 	]);
 

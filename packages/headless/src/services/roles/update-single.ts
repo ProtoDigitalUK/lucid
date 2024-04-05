@@ -24,7 +24,7 @@ const updateSingle = async (
 					{
 						permissions: data.permissions,
 					},
-			  )
+				)
 			: undefined,
 		data.name !== undefined
 			? RolesRepo.selectSingle({
@@ -41,7 +41,7 @@ const updateSingle = async (
 							value: data.id,
 						},
 					],
-			  })
+				})
 			: undefined,
 	]);
 

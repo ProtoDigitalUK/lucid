@@ -17,7 +17,7 @@ export default class SettingsFormatter {
 				storage_limit: props.config.media?.storageLimit ?? null,
 				storage_remaining: props.settings.mediaStorageUsed
 					? (props.config.media?.storageLimit || 0) -
-					  props.settings.mediaStorageUsed
+						props.settings.mediaStorageUsed
 					: null,
 				processed_images: {
 					stored: props.config.media?.processedImages?.store ?? false,

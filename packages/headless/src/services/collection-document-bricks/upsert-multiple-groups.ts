@@ -174,7 +174,7 @@ const upsertMultipleGroups = async (
 			updateGroupParentIds.length > 0
 				? CollectionDocumentGroupsRepo.updateMultipleParentIds({
 						items: updateGroupParentIds,
-				  })
+					})
 				: undefined,
 		],
 	};
