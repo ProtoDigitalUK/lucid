@@ -25,6 +25,8 @@ export {
 	SQLLiteAdapter,
 	PostgresAdapter,
 };
+
 export type { EmailStrategyT } from "./libs/config/config-schema.js";
+export * from "./types/response.js";
 
 export default headless;

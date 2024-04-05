@@ -1,13 +1,13 @@
-import type { PermissionT } from "../services/permissions.ts";
-import type { BooleanInt } from "../libs/db/types.ts";
+import type { PermissionT } from "../services/permissions.js";
+import type { BooleanInt } from "../libs/db/types.js";
 import type {
 	CustomFieldT,
 	FieldTypesT,
-} from "../libs/builders/field-builder/types.ts";
+} from "../libs/builders/field-builder/types.js";
 import type {
 	CollectionDataT,
 	CollectionBrickConfigT,
-} from "../libs/builders/collection-builder/index.ts";
+} from "../libs/builders/collection-builder/index.js";
 
 export interface UserResT {
 	id: number;
