@@ -1,8 +1,8 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import type { OptionNameT } from "@headless/types/src/options.js";
-import formatOptions from "../../format/format-options.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
+import type { OptionNameT } from "../../types/response.js";
 
 export interface ServiceData {
 	name: OptionNameT;
@@ -10,6 +10,7 @@ export interface ServiceData {
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const OptionsRepo = Repository.get("options", serviceConfig.db);
+	const OptionsFormatter = Formatter.get("options");
 
 	const optionRes = await OptionsRepo.selectSingle({
 		select: ["name", "value_bool", "value_int", "value_text"],
@@ -35,7 +36,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatOptions({
+	return OptionsFormatter.formatSingle({
 		option: optionRes,
 	});
 };

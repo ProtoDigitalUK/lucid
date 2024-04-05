@@ -1,4 +1,5 @@
-import { type PermissionT } from "../services/permissions.ts";
+import type { PermissionT } from "../services/permissions.ts";
+import type { BooleanInt } from "../libs/db/types.ts";
 
 export interface UserResT {
 	id: number;
@@ -48,4 +49,13 @@ export interface RoleResT {
 
 	created_at: string | null;
 	updated_at: string | null;
+}
+
+export type OptionNameT = "media_storage_used";
+
+export interface OptionsResT {
+	name: OptionNameT;
+	value_text: string | null;
+	value_int: number | null;
+	value_bool: BooleanInt | null;
 }

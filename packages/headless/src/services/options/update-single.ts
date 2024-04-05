@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import type { OptionNameT } from "@headless/types/src/options.js";
+import type { OptionNameT } from "../../types/response.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 

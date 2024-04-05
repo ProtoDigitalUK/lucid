@@ -1,5 +1,6 @@
 import type { Migration, Generated, ColumnType } from "kysely";
 import type { FieldTypesT } from "../builders/field-builder/types.js";
+import type { OptionNameT } from "../../types/response.js";
 
 export enum AdapterType {
 	SQLITE = 0,
@@ -54,7 +55,7 @@ export interface HeadlessTranslations {
 }
 
 export interface HeadlessOptions {
-	name: "media_storage_used";
+	name: OptionNameT;
 	value_int: number | null;
 	value_text: string | null;
 	value_bool: BooleanInt | null;
