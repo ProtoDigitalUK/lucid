@@ -1,13 +1,11 @@
 import type { PermissionT } from "../services/permissions.js";
 import type { BooleanInt } from "../libs/db/types.js";
+import type { Config } from "./config.js";
 import type {
 	CustomFieldT,
 	FieldTypesT,
 } from "../libs/builders/field-builder/types.js";
-import type {
-	CollectionDataT,
-	CollectionBrickConfigT,
-} from "../libs/builders/collection-builder/index.js";
+import type { CollectionBrickConfigT } from "../libs/builders/collection-builder/index.js";
 
 export interface UserResT {
 	id: number;
@@ -33,6 +31,13 @@ export interface UserPermissionsResT {
 }
 
 export interface SettingsResT {
+	email: {
+		enabled: boolean;
+		from: {
+			email: string;
+			name: string;
+		} | null;
+	};
 	media: {
 		storage_used: number | null;
 		storage_limit: number | null;

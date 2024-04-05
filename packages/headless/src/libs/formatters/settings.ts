@@ -12,6 +12,10 @@ export default class SettingsFormatter {
 		config: Config;
 	}): SettingsResT => {
 		return {
+			email: {
+				enabled: props.config.email !== undefined,
+				from: props.config.email?.from ?? null,
+			},
 			media: {
 				storage_used: props.settings.mediaStorageUsed ?? null,
 				storage_limit: props.config.media?.storageLimit ?? null,
@@ -31,6 +35,20 @@ export default class SettingsFormatter {
 	static swagger = {
 		type: "object",
 		properties: {
+			email: {
+				type: "object",
+				properties: {
+					enabled: { type: "boolean" },
+					from: {
+						type: "object",
+						nullable: true,
+						properties: {
+							email: { type: "string" },
+							name: { type: "string" },
+						},
+					},
+				},
+			},
 			media: {
 				type: "object",
 				properties: {
