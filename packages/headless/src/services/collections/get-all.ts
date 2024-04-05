@@ -1,5 +1,5 @@
-import formatCollection from "../../format/format-collection.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	include_document_id?: boolean;
@@ -7,6 +7,8 @@ export interface ServiceData {
 
 const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const collections = serviceConfig.config.collections ?? [];
+
+	const CollectionsFormatter = Formatter.get("collections");
 
 	if (data.include_document_id === true) {
 		const singleCollections = collections.filter(
@@ -34,33 +36,25 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			],
 		});
 
-		return (
-			collections.map((collection) =>
-				formatCollection({
-					collection: collection,
-					include: {
-						bricks: false,
-						fields: false,
-						document_id: true,
-					},
-					documents,
-				}),
-			) ?? []
-		);
+		return CollectionsFormatter.formatMultiple({
+			collections: collections,
+			include: {
+				bricks: false,
+				fields: false,
+				document_id: true,
+			},
+			documents: documents,
+		});
 	}
 
-	return (
-		collections.map((collection) =>
-			formatCollection({
-				collection: collection,
-				include: {
-					bricks: false,
-					fields: false,
-					document_id: false,
-				},
-			}),
-		) ?? []
-	);
+	return CollectionsFormatter.formatMultiple({
+		collections: collections,
+		include: {
+			bricks: false,
+			fields: false,
+			document_id: false,
+		},
+	});
 };
 
 export default getAll;

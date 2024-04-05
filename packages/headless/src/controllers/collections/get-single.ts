@@ -2,8 +2,8 @@ import collectionsSchema from "../../schemas/collections.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCollectionRes } from "../../format/format-collection.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import CollectionsFormatter from "../../libs/formatters/collections.js";
 
 const getSingleController: ControllerT<
 	typeof collectionsSchema.getSingle.params,
@@ -45,7 +45,7 @@ export default {
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: swaggerCollectionRes,
+				data: CollectionsFormatter.swagger,
 			}),
 		},
 	},

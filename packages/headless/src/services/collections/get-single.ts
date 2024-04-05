@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import formatCollection from "../../format/format-collection.js";
 import Repository from "../../libs/repositories/index.js";
+import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -30,6 +30,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
+	const CollectionsFormatter = Formatter.get("collections");
+
 	if (
 		data.include?.document_id === true &&
 		collection.data.mode === "single"
@@ -55,7 +57,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			],
 		});
 
-		return formatCollection({
+		return CollectionsFormatter.formatSingle({
 			collection: collection,
 			include: {
 				bricks: false,
@@ -71,7 +73,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	return formatCollection({
+	return CollectionsFormatter.formatSingle({
 		collection: collection,
 		include: data.include,
 	});

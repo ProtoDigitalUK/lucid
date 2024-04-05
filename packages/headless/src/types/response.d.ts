@@ -1,5 +1,10 @@
 import type { PermissionT } from "../services/permissions.ts";
 import type { BooleanInt } from "../libs/db/types.ts";
+import type { CustomFieldT } from "../libs/builders/field-builder/types.ts";
+import type {
+	CollectionDataT,
+	CollectionBrickConfigT,
+} from "../libs/builders/collection-builder/index.ts";
 
 export interface UserResT {
 	id: number;
@@ -128,4 +133,17 @@ export interface EmailResT {
 	created_at: string | null;
 	last_success_at: string | null;
 	last_attempt_at: string | null;
+}
+
+export interface CollectionResT {
+	key: string;
+	mode: "single" | "multiple";
+	title: string;
+	singular: string;
+	description: string | null;
+	document_id?: number | null;
+	translations: boolean;
+	fixed_bricks: Array<CollectionBrickConfigT>;
+	builder_bricks: Array<CollectionBrickConfigT>;
+	fields: Array<CustomFieldT>;
 }

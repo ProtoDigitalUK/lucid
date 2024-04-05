@@ -3,7 +3,7 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import collectionsServices from "../../services/collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import { swaggerCollectionRes } from "../../format/format-collection.js";
+import CollectionsFormatter from "../../libs/formatters/collections.js";
 
 const getAllController: ControllerT<
 	typeof collectionsSchema.getAll.params,
@@ -39,7 +39,7 @@ export default {
 				type: 200,
 				data: {
 					type: "array",
-					items: swaggerCollectionRes,
+					items: CollectionsFormatter.swagger,
 				},
 			}),
 		},

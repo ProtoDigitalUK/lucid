@@ -10,6 +10,7 @@ import OptionsFormatter from "./options.js";
 import MediaFormatter from "./media.js";
 import LanguagesFormatter from "./languages.js";
 import EmailsFormatter from "./emails.js";
+import CollectionsFormatter from "./collections.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {
@@ -35,6 +36,8 @@ class Formatter {
 				return new LanguagesFormatter() as FormatterReturnType<T>;
 			case "emails":
 				return new EmailsFormatter() as FormatterReturnType<T>;
+			case "collections":
+				return new CollectionsFormatter() as FormatterReturnType<T>;
 			default:
 				throw new InternalError(
 					T("cannot_find_formatter", {
@@ -79,6 +82,7 @@ type FormatterClassMap = {
 	media: MediaFormatter;
 	languages: LanguagesFormatter;
 	emails: EmailsFormatter;
+	collections: CollectionsFormatter;
 };
 
 type FormatterReturnType<T extends keyof FormatterClassMap> =
