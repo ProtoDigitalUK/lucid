@@ -1,13 +1,10 @@
 import T from "../../../translations/index.js";
 import { InternalError } from "../../../utils/error-handler.js";
-import RepositoryFactory from "../../repositories/index.js";
+import Repository from "../../repositories/index.js";
 
 const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const OptionsRepo = RepositoryFactory.getRepository(
-			"options",
-			serviceConfig.db,
-		);
+		const OptionsRepo = Repository.get("options", serviceConfig.db);
 
 		const mediaStorageOption = await OptionsRepo.selectSingle({
 			select: ["name"],

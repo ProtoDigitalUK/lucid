@@ -3,14 +3,11 @@ import argon2 from "argon2";
 import constants from "../../../constants.js";
 import { InternalError } from "../../../utils/error-handler.js";
 import { parseCount } from "../../../utils/helpers.js";
-import RepositoryFactory from "../../repositories/index.js";
+import Repository from "../../repositories/index.js";
 
 const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const UsersRepo = RepositoryFactory.getRepository(
-			"users",
-			serviceConfig.db,
-		);
+		const UsersRepo = Repository.get("users", serviceConfig.db);
 
 		const totalUserCount = await UsersRepo.count();
 		if (parseCount(totalUserCount?.count) > 0) return;

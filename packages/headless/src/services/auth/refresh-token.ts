@@ -4,7 +4,7 @@ import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 const key = "_refresh";
 
@@ -14,7 +14,7 @@ export const generateRefreshToken = async (
 	user_id: number,
 ) => {
 	await clearRefreshToken(request, reply);
-	const UserTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = Repository.get(
 		"user-tokens",
 		request.server.config.db.client,
 	);
@@ -60,7 +60,7 @@ export const verifyRefreshToken = async (
 			throw new Error("No refresh token found");
 		}
 
-		const UserTokensRepo = RepositoryFactory.getRepository(
+		const UserTokensRepo = Repository.get(
 			"user-tokens",
 			request.server.config.db.client,
 		);
@@ -126,7 +126,7 @@ export const clearRefreshToken = async (
 	const _refresh = request.cookies[key];
 	if (!_refresh) return;
 
-	const UserTokensRepo = RepositoryFactory.getRepository(
+	const UserTokensRepo = Repository.get(
 		"user-tokens",
 		request.server.config.db.client,
 	);

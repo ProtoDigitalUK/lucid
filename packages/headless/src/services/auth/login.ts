@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	username_or_email: string;
@@ -9,10 +9,7 @@ export interface ServiceData {
 }
 
 const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const UsersRepo = RepositoryFactory.getRepository(
-		"users",
-		serviceConfig.db,
-	);
+	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const user = await UsersRepo.selectSingleByEmailUsername({
 		select: ["id", "password", "is_deleted"],

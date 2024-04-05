@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	ids: number[];
@@ -13,7 +13,7 @@ const deleteMultiple = async (
 ) => {
 	if (data.ids.length === 0) return;
 
-	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,
 	);

@@ -1,17 +1,14 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatMedia from "../../format/format-media.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const MediaRepo = RepositoryFactory.getRepository(
-		"media",
-		serviceConfig.db,
-	);
+	const MediaRepo = Repository.get("media", serviceConfig.db);
 
 	const media = await MediaRepo.selectSingleById({
 		id: data.id,

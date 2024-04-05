@@ -4,7 +4,7 @@ import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -26,10 +26,7 @@ const updateSingle = async (
 	// if translations are present, insert on conflict update
 	// do translations first so if they throw an error, the file is not uploaded
 	// if the file upload throws an error, the translations are not inserted due to the transaction
-	const MediaRepo = RepositoryFactory.getRepository(
-		"media",
-		serviceConfig.db,
-	);
+	const MediaRepo = Repository.get("media", serviceConfig.db);
 
 	const media = await MediaRepo.selectSingle({
 		select: [

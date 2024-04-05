@@ -4,7 +4,7 @@ import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	token: string;
@@ -15,14 +15,8 @@ const resetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const UserTokensRepo = RepositoryFactory.getRepository(
-		"user-tokens",
-		serviceConfig.db,
-	);
-	const UsersRepo = RepositoryFactory.getRepository(
-		"users",
-		serviceConfig.db,
-	);
+	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
+	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const token = await serviceWrapper(userTokens.getSingle, false)(
 		serviceConfig,

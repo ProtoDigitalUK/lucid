@@ -2,14 +2,11 @@ import T from "../translations/index.js";
 import cron from "node-cron";
 import { InternalError } from "../utils/error-handler.js";
 import type { Config } from "../libs/config/config-schema.js";
-import RepositoryFactory from "../libs/repositories/index.js";
+import Repository from "../libs/repositories/index.js";
 
 const clearExpiredTokens = async (config: Config) => {
 	try {
-		const UserTokensRepo = RepositoryFactory.getRepository(
-			"user-tokens",
-			config.db.client,
-		);
+		const UserTokensRepo = Repository.get("user-tokens", config.db.client);
 
 		await UserTokensRepo.deleteMultiple({
 			where: [

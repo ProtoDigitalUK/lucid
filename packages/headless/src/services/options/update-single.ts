@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "@headless/types/src/options.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	name: OptionNameT;
@@ -15,10 +15,7 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const OptionsRepo = RepositoryFactory.getRepository(
-		"options",
-		serviceConfig.db,
-	);
+	const OptionsRepo = Repository.get("options", serviceConfig.db);
 
 	const updateOption = await OptionsRepo.updateSingle({
 		where: [

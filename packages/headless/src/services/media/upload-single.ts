@@ -11,7 +11,7 @@ import {
 	getUniqueLanguageIDs,
 } from "../../utils/translation-helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	file_data: MultipartFile | undefined;
@@ -34,10 +34,7 @@ const uploadSingle = async (
 	let objectKey = undefined;
 
 	try {
-		const MediaRepo = RepositoryFactory.getRepository(
-			"media",
-			serviceConfig.db,
-		);
+		const MediaRepo = Repository.get("media", serviceConfig.db);
 
 		await serviceWrapper(
 			languagesServices.checks.checkLanguagesExist,

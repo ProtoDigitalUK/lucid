@@ -4,7 +4,7 @@ import mediaServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import processedImagesServices from "../processed-images/index.js";
 import translationsServices from "../translations/index.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -14,10 +14,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const MediaRepo = RepositoryFactory.getRepository(
-		"media",
-		serviceConfig.db,
-	);
+	const MediaRepo = Repository.get("media", serviceConfig.db);
 
 	const deleteMedia = await MediaRepo.deleteSingle({
 		where: [

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -10,10 +10,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const EmailsRepo = RepositoryFactory.getRepository(
-		"emails",
-		serviceConfig.db,
-	);
+	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 
 	const deleteEmail = await EmailsRepo.deleteSingle({
 		where: [

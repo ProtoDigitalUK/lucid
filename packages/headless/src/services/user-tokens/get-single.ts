@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	token_type: "password_reset";
@@ -8,10 +8,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const UserTokensRepo = RepositoryFactory.getRepository(
-		"user-tokens",
-		serviceConfig.db,
-	);
+	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
 
 	const userToken = await UserTokensRepo.selectSingle({
 		select: ["id", "user_id"],

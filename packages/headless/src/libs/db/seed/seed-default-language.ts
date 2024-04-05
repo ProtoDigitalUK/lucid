@@ -2,15 +2,12 @@ import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
 import { InternalError } from "../../../utils/error-handler.js";
 import { parseCount } from "../../../utils/helpers.js";
-import RepositoryFactory from "../../repositories/index.js";
+import Repository from "../../repositories/index.js";
 import type { BooleanInt } from "../types.js";
 
 const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const LanguagesRepo = RepositoryFactory.getRepository(
-			"languages",
-			serviceConfig.db,
-		);
+		const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 		const totalLanguagesCount = await LanguagesRepo.count();
 

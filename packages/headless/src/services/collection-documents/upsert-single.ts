@@ -6,7 +6,7 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -26,7 +26,7 @@ const upsertSingle = async (
 		T("document"),
 	);
 
-	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,
 	);

@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
-import RepositoryFactory from "../../../libs/repositories/index.js";
+import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	role_ids: number[];
@@ -13,10 +13,7 @@ const checkRolesExist = async (
 ) => {
 	if (data.role_ids.length === 0) return;
 
-	const RolesRepo = RepositoryFactory.getRepository(
-		"roles",
-		serviceConfig.db,
-	);
+	const RolesRepo = Repository.get("roles", serviceConfig.db);
 	const roles = await RolesRepo.selectMultiple({
 		select: ["id"],
 		where: [

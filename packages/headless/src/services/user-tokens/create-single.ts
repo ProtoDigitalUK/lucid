@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import crypto from "node:crypto";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -13,10 +13,7 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const UserTokensRepo = RepositoryFactory.getRepository(
-		"user-tokens",
-		serviceConfig.db,
-	);
+	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
 
 	const token = crypto.randomBytes(32).toString("hex");
 

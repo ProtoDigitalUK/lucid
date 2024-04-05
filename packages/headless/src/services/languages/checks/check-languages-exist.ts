@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
-import RepositoryFactory from "../../../libs/repositories/index.js";
+import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	language_ids: number[];
@@ -14,10 +14,7 @@ const checkLanguagesExist = async (
 
 	if (languageIds.length === 0) return;
 
-	const LanguagesRepo = RepositoryFactory.getRepository(
-		"languages",
-		serviceConfig.db,
-	);
+	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	const languages = await LanguagesRepo.selectMultiple({
 		select: ["id"],

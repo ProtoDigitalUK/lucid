@@ -1,6 +1,6 @@
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -13,10 +13,7 @@ const updateMultipleRoles = async (
 ) => {
 	if (data.role_ids === undefined) return;
 
-	const UserRolesRepo = RepositoryFactory.getRepository(
-		"user-roles",
-		serviceConfig.db,
-	);
+	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
 
 	await Promise.all([
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(

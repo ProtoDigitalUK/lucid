@@ -5,8 +5,8 @@ import UsersFormatter from "./users.js";
 import UserPermissionsFormatter from "./user-permissions.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
-class FormatterFactory {
-	static getFormatter<T extends keyof FormatterClassMap>(
+class Formatter {
+	static get<T extends keyof FormatterClassMap>(
 		format: T,
 	): FormatterReturnType<T> {
 		switch (format) {
@@ -32,4 +32,4 @@ type FormatterClassMap = {
 type FormatterReturnType<T extends keyof FormatterClassMap> =
 	FormatterClassMap[T];
 
-export default FormatterFactory;
+export default Formatter;

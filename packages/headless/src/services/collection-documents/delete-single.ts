@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -11,7 +11,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,
 	);

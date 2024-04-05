@@ -4,7 +4,7 @@ import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	user_id: number;
@@ -23,10 +23,7 @@ const updateSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const UsersRepo = RepositoryFactory.getRepository(
-		"users",
-		serviceConfig.db,
-	);
+	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const user = await UsersRepo.selectSingle({
 		select: ["id"],

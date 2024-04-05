@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface GroupsResT {
 	group_id: number;
@@ -24,7 +24,7 @@ const upsertMultipleGroups = async (
 	const brickGroups = data.bricks.flatMap((brick) => brick.groups || []);
 	if (brickGroups.length === 0) return { groups: [], promises: [] };
 
-	const CollectionDocumentGroupsRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentGroupsRepo = Repository.get(
 		"collection-document-groups",
 		serviceConfig.db,
 	);

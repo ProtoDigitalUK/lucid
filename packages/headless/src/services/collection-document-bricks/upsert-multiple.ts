@@ -4,7 +4,7 @@ import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	document_id: number;
@@ -22,7 +22,7 @@ const upsertMultiple = async (
 	const bricksLength = data.bricks?.length || 0;
 	let bricks = data.bricks || [];
 
-	const CollectionDocumentBricksRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
 		serviceConfig.db,
 	);

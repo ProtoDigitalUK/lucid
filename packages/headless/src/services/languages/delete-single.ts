@@ -1,17 +1,14 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { parseCount } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	code: string;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const LanguagesRepo = RepositoryFactory.getRepository(
-		"languages",
-		serviceConfig.db,
-	);
+	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	const languagesCountQuery = await LanguagesRepo.count();
 	const count = parseCount(languagesCountQuery?.count);

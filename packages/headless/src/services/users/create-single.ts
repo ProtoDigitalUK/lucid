@@ -4,7 +4,7 @@ import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	email: string;
@@ -22,10 +22,7 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const UsersRepo = RepositoryFactory.getRepository(
-		"users",
-		serviceConfig.db,
-	);
+	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const [userExists] = await Promise.all([
 		UsersRepo.selectSingleByEmailUsername({
@@ -100,10 +97,7 @@ const createSingle = async (
 	if (data.role_ids === undefined || data.role_ids.length === 0)
 		return newUser.id;
 
-	const UserRolesRepo = RepositoryFactory.getRepository(
-		"user-roles",
-		serviceConfig.db,
-	);
+	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
 
 	await UserRolesRepo.createMultiple({
 		items: data.role_ids.map((r) => ({

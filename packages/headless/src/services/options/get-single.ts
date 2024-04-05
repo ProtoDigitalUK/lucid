@@ -2,17 +2,14 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "@headless/types/src/options.js";
 import formatOptions from "../../format/format-options.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	name: OptionNameT;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const OptionsRepo = RepositoryFactory.getRepository(
-		"options",
-		serviceConfig.db,
-	);
+	const OptionsRepo = Repository.get("options", serviceConfig.db);
 
 	const optionRes = await OptionsRepo.selectSingle({
 		select: ["name", "value_bool", "value_int", "value_text"],

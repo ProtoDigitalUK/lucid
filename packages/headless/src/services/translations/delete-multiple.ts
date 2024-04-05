@@ -1,4 +1,4 @@
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	ids: Array<number | null>;
@@ -8,7 +8,7 @@ const deleteMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const TranslationKeysRepo = RepositoryFactory.getRepository(
+	const TranslationKeysRepo = Repository.get(
 		"translation-keys",
 		serviceConfig.db,
 	);

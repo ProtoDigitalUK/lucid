@@ -2,7 +2,7 @@ import type z from "zod";
 import formatMedia from "../../format/format-media.js";
 import type mediaSchema from "../../schemas/media.js";
 import { parseCount } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof mediaSchema.getMultiple.query>;
@@ -13,10 +13,7 @@ const getMultiple = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const MediaRepo = RepositoryFactory.getRepository(
-		"media",
-		serviceConfig.db,
-	);
+	const MediaRepo = Repository.get("media", serviceConfig.db);
 
 	const [medias, mediasCount] = await MediaRepo.selectMultipleFiltered({
 		languageId: data.language_id,

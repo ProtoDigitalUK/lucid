@@ -7,7 +7,7 @@ import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import constants from "../../constants.js";
 import mediaHelpers from "../../utils/media-helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -91,7 +91,7 @@ const processImage = async (
 		};
 	}
 
-	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
 	);

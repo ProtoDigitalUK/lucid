@@ -15,7 +15,7 @@ import type { PageLinkValueT, LinkValueT } from "@headless/types/src/bricks.js";
 import type { CollectionBuilderT } from "../../../libs/builders/collection-builder/index.js";
 import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaT } from "../../../schemas/collection-fields.js";
-import RepositoryFactory from "../../../libs/repositories/index.js";
+import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	bricks: Array<BrickSchemaT>;
@@ -199,10 +199,7 @@ const getAllMedia = async (
 		const ids = allFieldIdsOfType<number>(fields, "media");
 		if (ids.length === 0) return [];
 
-		const MediaRepo = RepositoryFactory.getRepository(
-			"media",
-			serviceConfig.db,
-		);
+		const MediaRepo = Repository.get("media", serviceConfig.db);
 
 		return MediaRepo.selectMultiple({
 			select: ["id", "file_extension", "width", "height", "type"],
@@ -226,7 +223,7 @@ const getAllDocuments = async (
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");
 		if (ids.length === 0) return [];
 
-		const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		const CollectionDocumentsRepo = Repository.get(
 			"collection-documents",
 			serviceConfig.db,
 		);

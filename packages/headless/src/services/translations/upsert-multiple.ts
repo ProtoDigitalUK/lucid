@@ -6,7 +6,7 @@ import {
 	getUniqueLanguageIDs,
 	type TranslationsObjT,
 } from "../../utils/translation-helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;
@@ -50,7 +50,7 @@ const upsertMultiple = async <K extends string>(
 			return;
 		}
 
-		const TranslationsRepo = RepositoryFactory.getRepository(
+		const TranslationsRepo = Repository.get(
 			"translations",
 			serviceConfig.db,
 		);

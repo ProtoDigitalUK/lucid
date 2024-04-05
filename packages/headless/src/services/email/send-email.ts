@@ -4,7 +4,7 @@ import { getEmailHash } from "../../utils/helpers.js";
 import formatEmails from "../../format/format-emails.js";
 import { APIError } from "../../utils/error-handler.js";
 import { stringifyJSON } from "../../utils/format-helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	type: "internal" | "external";
@@ -18,10 +18,7 @@ export interface ServiceData {
 }
 
 const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const EmailsRepo = RepositoryFactory.getRepository(
-		"emails",
-		serviceConfig.db,
-	);
+	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 
 	const html = await emailServices.renderTemplate(data.template, data.data);
 	const emailHash = getEmailHash(data);

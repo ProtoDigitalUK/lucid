@@ -1,5 +1,5 @@
 import formatCollection from "../../format/format-collection.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	include_document_id?: boolean;
@@ -13,7 +13,7 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			(collection) => collection.data.mode === "single",
 		);
 
-		const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		const CollectionDocumentsRepo = Repository.get(
 			"collection-documents",
 			serviceConfig.db,
 		);

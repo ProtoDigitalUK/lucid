@@ -5,14 +5,11 @@ import { InternalError } from "../../../utils/error-handler.js";
 import { parseCount } from "../../../utils/helpers.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
-import RepositoryFactory from "../../repositories/index.js";
+import Repository from "../../repositories/index.js";
 
 const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const RolesRepo = RepositoryFactory.getRepository(
-			"roles",
-			serviceConfig.db,
-		);
+		const RolesRepo = Repository.get("roles", serviceConfig.db);
 
 		const totalRoleCount = await RolesRepo.count();
 		if (parseCount(totalRoleCount?.count) > 0) return;

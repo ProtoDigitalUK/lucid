@@ -1,5 +1,5 @@
 import { parseCount } from "../../utils/helpers.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -9,7 +9,7 @@ const getSingleCount = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
 	);

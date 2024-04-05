@@ -1,17 +1,14 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatRole from "../../format/format-roles.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const RolesRepo = RepositoryFactory.getRepository(
-		"roles",
-		serviceConfig.db,
-	);
+	const RolesRepo = Repository.get("roles", serviceConfig.db);
 	const role = await RolesRepo.selectSingleById({
 		id: data.id,
 		config: serviceConfig.config,

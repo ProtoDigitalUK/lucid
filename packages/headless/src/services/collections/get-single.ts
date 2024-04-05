@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import formatCollection from "../../format/format-collection.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -34,7 +34,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		data.include?.document_id === true &&
 		collection.data.mode === "single"
 	) {
-		const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+		const CollectionDocumentsRepo = Repository.get(
 			"collection-documents",
 			serviceConfig.db,
 		);

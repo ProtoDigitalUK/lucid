@@ -3,7 +3,7 @@ import type { FastifyRequest } from "fastify";
 import { APIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
@@ -15,10 +15,7 @@ export interface ServiceData {
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const UsersRepo = RepositoryFactory.getRepository(
-		"users",
-		serviceConfig.db,
-	);
+	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const getUser = await UsersRepo.selectSingle({
 		select: ["super_admin"],

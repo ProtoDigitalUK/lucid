@@ -1,4 +1,4 @@
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	apply: boolean;
@@ -19,7 +19,7 @@ const deleteMultipleBricks = async (
 
 	const ids = data.bricks.map((brick) => brick.id);
 
-	const CollectionDocumentBricksRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
 		serviceConfig.db,
 	);

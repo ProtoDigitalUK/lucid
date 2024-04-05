@@ -1,8 +1,8 @@
 import s3Services from "../s3/index.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 const clearAll = async (serviceConfig: ServiceConfigT) => {
-	const ProcessedImagesRepo = RepositoryFactory.getRepository(
+	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
 	);

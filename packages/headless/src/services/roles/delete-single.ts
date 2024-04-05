@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -10,10 +10,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const RolesRepo = RepositoryFactory.getRepository(
-		"roles",
-		serviceConfig.db,
-	);
+	const RolesRepo = Repository.get("roles", serviceConfig.db);
 
 	const deleteRoles = await RolesRepo.deleteMultiple({
 		where: [

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id?: number;
@@ -10,10 +10,7 @@ const getSingleFallback = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const LanguagesRepo = RepositoryFactory.getRepository(
-		"languages",
-		serviceConfig.db,
-	);
+	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	if (data.id !== undefined) {
 		const language = await LanguagesRepo.selectSingle({

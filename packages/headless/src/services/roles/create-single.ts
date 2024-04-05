@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { APIError, modelErrors } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	name: string;
@@ -14,10 +14,7 @@ const createSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const RolesRepo = RepositoryFactory.getRepository(
-		"roles",
-		serviceConfig.db,
-	);
+	const RolesRepo = Repository.get("roles", serviceConfig.db);
 
 	const [validatePerms, checkNameIsUnique] = await Promise.all([
 		serviceWrapper(rolesServices.validatePermissions, false)(
@@ -74,7 +71,7 @@ const createSingle = async (
 	}
 
 	if (validatePerms.length > 0) {
-		const RolePermissionsRepo = RepositoryFactory.getRepository(
+		const RolePermissionsRepo = Repository.get(
 			"role-permissions",
 			serviceConfig.db,
 		);

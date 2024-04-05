@@ -6,7 +6,7 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import formatCollectionDocument from "../../format/format-collection-document.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
@@ -14,7 +14,7 @@ export interface ServiceData {
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
-	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,
 	);

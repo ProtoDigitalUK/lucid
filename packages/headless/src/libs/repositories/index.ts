@@ -19,8 +19,8 @@ import UserRolesRepo from "./user-roles.js";
 import UsersRepo from "./users.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
-class RepositoryFactory {
-	static getRepository<T extends keyof RepositoryClassMap>(
+class Repository {
+	static get<T extends keyof RepositoryClassMap>(
 		repository: T,
 		db: DB,
 	): RepositoryReturnType<T> {
@@ -97,4 +97,4 @@ type RepositoryClassMap = {
 type RepositoryReturnType<T extends keyof RepositoryClassMap> =
 	RepositoryClassMap[T];
 
-export default RepositoryFactory;
+export default Repository;

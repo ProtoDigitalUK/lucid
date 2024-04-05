@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData<K extends string> {
 	keys: K[];
@@ -28,7 +28,7 @@ const createMultiple = async <K extends string>(
 		});
 	}
 
-	const TranslationKeysRepo = RepositoryFactory.getRepository(
+	const TranslationKeysRepo = Repository.get(
 		"translation-keys",
 		serviceConfig.db,
 	);
@@ -62,10 +62,7 @@ const createMultiple = async <K extends string>(
 		return keys;
 	}
 
-	const TranslationsRepo = RepositoryFactory.getRepository(
-		"translations",
-		serviceConfig.db,
-	);
+	const TranslationsRepo = Repository.get("translations", serviceConfig.db);
 
 	await TranslationsRepo.upsertMultiple(
 		data.translations.map((translation) => {

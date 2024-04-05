@@ -1,7 +1,7 @@
 import T from "../../../translations/index.js";
 import { APIError, modelErrors } from "../../../utils/error-handler.js";
 import type { ErrorContentT } from "../../../utils/helpers.js";
-import RepositoryFactory from "../../../libs/repositories/index.js";
+import Repository from "../../../libs/repositories/index.js";
 
 /*
     Checks:
@@ -22,7 +22,7 @@ const checkSingleCollectionDocumentCount = async (
 	if (data.document_id !== undefined) return;
 	if (data.collection_mode === "multiple") return;
 
-	const CollectionDocumentsRepo = RepositoryFactory.getRepository(
+	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,
 	);

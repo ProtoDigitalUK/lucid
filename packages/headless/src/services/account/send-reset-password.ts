@@ -4,7 +4,7 @@ import constants from "../../constants.js";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import RepositoryFactory from "../../libs/repositories/index.js";
+import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	email: string;
@@ -14,10 +14,7 @@ const sendResetPassword = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const UsersRepo = RepositoryFactory.getRepository(
-		"users",
-		serviceConfig.db,
-	);
+	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const userExists = await UsersRepo.selectSingle({
 		select: ["id", "first_name", "last_name", "email"],
