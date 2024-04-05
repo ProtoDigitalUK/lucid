@@ -1,5 +1,5 @@
-import type { UserPermissionsResT } from "@headless/types/src/users.js";
-import type { PermissionT } from "@headless/types/src/permissions.js";
+import type { PermissionT } from "../../services/permissions.js";
+import type { UserPermissionsResT } from "../../types/response.js";
 
 interface UserPermissionRolesPropsT {
 	id: number;

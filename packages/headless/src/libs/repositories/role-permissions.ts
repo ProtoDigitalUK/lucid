@@ -1,5 +1,5 @@
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
-import type { PermissionT } from "@headless/types/src/permissions.js";
+import type { PermissionT } from "../../services/permissions.js";
 
 export default class RolePermissionsRepo {
 	constructor(private db: DB) {}

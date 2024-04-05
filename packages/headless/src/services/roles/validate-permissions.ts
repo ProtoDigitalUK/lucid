@@ -5,7 +5,7 @@ import {
 	modelErrors,
 } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
-import type { PermissionT } from "@headless/types/src/permissions.js";
+import type { PermissionT } from "../../services/permissions.js";
 
 export interface ServiceData {
 	permissions: string[];

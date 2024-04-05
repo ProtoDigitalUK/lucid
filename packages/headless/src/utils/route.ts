@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type z from "zod";
-import type { PermissionT } from "@headless/types/src/permissions.js";
+import type { PermissionT } from "../services/permissions.js";
 import validateBody from "../middleware/validate-body.js";
 import validateParams from "../middleware/validate-params.js";
 import validateQuery from "../middleware/validate-query.js";

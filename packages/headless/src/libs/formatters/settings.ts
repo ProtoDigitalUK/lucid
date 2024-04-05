@@ -1,4 +1,10 @@
 import type { Config } from "../config/config-schema.js";
+import type { SettingsResT } from "../../types/response.js";
+
+interface SettingsPropsT {
+	mediaStorageUsed: number;
+	processedImageCount: number;
+}
 
 export default class SettingsFormatter {
 	formatSingle = (props: {
@@ -42,26 +48,5 @@ export default class SettingsFormatter {
 				},
 			},
 		},
-	};
-}
-
-// -----------------------------------------------------
-// Types
-
-interface SettingsPropsT {
-	mediaStorageUsed: number;
-	processedImageCount: number;
-}
-
-export interface SettingsResT {
-	media: {
-		storage_used: number | null;
-		storage_limit: number | null;
-		storage_remaining: number | null;
-		processed_images: {
-			stored: boolean | null;
-			per_image_limit: number | null;
-			total: number | null;
-		};
 	};
 }

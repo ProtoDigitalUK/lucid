@@ -1,4 +1,4 @@
-import type { PermissionGroup } from "@headless/types/src/permissions.js";
+import type { PermissionGroup } from "../services/permissions.js";
 
 interface FormatPermissionsT {
 	permissions: Record<string, PermissionGroup>;

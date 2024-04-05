@@ -1,6 +1,5 @@
-import { PermissionT, EnvironmentPermissionT } from "./permissions.d.ts";
+import { type PermissionT } from "../services/permissions.ts";
 
-// User
 export interface UserResT {
 	id: number;
 	super_admin?: 1 | 0;
@@ -16,12 +15,23 @@ export interface UserResT {
 	updated_at?: string | null;
 }
 
-export interface UserRoleResT {
-	id: number;
-	name: string;
+export interface UserPermissionsResT {
+	roles: Array<{
+		id: number;
+		name: string;
+	}>;
+	permissions: PermissionT[];
 }
 
-export interface UserPermissionsResT {
-	roles: UserRoleResT[];
-	permissions: PermissionT[];
+export interface SettingsResT {
+	media: {
+		storage_used: number | null;
+		storage_limit: number | null;
+		storage_remaining: number | null;
+		processed_images: {
+			stored: boolean | null;
+			per_image_limit: number | null;
+			total: number | null;
+		};
+	};
 }

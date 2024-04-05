@@ -1,7 +1,7 @@
-import type { UserResT } from "@headless/types/src/users.js";
 import type { BooleanInt } from "../db/types.js";
 import { formatDate } from "../../utils/format-helpers.js";
 import UserPermissionsFormatter from "./user-permissions.js";
+import type { UserResT } from "../../types/response.js";
 
 interface UserPropT {
 	created_at: Date | string | null;
