@@ -36,20 +36,20 @@ export default headlessConfig({
 		refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
 	},
-	media: {
-		processedImages: {
-			store: false,
-			limit: 10,
-		},
-		store: {
-			service: "cloudflare",
-			cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
-			region: process.env.HEADLESS_S3_REGION as string,
-			bucket: process.env.HEADLESS_S3_BUCKET as string,
-			accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
-			secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
-		},
-	},
+	// media: {
+	// 	processedImages: {
+	// 		store: false,
+	// 		limit: 10,
+	// 	},
+	// 	store: {
+	// 		service: "cloudflare",
+	// 		cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
+	// 		region: process.env.HEADLESS_S3_REGION as string,
+	// 		bucket: process.env.HEADLESS_S3_BUCKET as string,
+	// 		accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
+	// 		secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
+	// 	},
+	// },
 	collections: [
 		PageCollection,
 		BlogCollection,

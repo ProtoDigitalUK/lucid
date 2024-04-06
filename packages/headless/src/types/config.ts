@@ -35,6 +35,15 @@ export type EmailStrategy = (
 	message: string;
 }>;
 
+export type MediaStrategy = {
+	stream?: () => void;
+	uploadSingle?: () => void;
+	uploadMultiple?: () => void;
+	updateSingle?: () => void;
+	deleteSingle?: () => void;
+	deleteMultiple?: () => void;
+};
+
 export interface Config extends z.infer<typeof ConfigSchema> {
 	db: DatabaseAdapterT;
 	collections?: CollectionBuilderT[];
@@ -44,6 +53,16 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 			name: string;
 		};
 		strategy: EmailStrategy;
+	};
+	media?: {
+		storageLimit?: number;
+		maxFileSize?: number;
+		processedImages?: {
+			limit: number;
+			store: boolean;
+		};
+		fallbackImage?: string | boolean;
+		stategy?: MediaStrategy;
 	};
 	plugins?: Array<HeadlessPlugin>;
 }

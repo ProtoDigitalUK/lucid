@@ -15,7 +15,7 @@ const deleteObjects = async (data: ServiceData) => {
 		const S3 = await getS3Client;
 
 		const command = new DeleteObjectsCommand({
-			Bucket: config.media.store.bucket,
+			Bucket: "", // config.media.store.bucket,
 			Delete: {
 				Objects: data.objects.map((object) => ({
 					Key: object.key,

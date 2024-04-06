@@ -20,7 +20,7 @@ const saveObject = async (data: ServiceData) => {
 		const S3 = await getS3Client;
 
 		const command = new PutObjectCommand({
-			Bucket: config.media.store.bucket,
+			Bucket: "", //config.media.store.bucket,
 			Key: data.key,
 			Body: data.type === "readable" ? data.readable : data.buffer,
 			ContentType: data.meta.mimeType,

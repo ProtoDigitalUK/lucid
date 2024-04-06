@@ -11,6 +11,19 @@ const headlessConfig = (config: Config) => {
 	try {
 		const configRes = ConfigSchema.parse(config) as Config;
 
+		// TODO: Add a merge with default
+
+		// TODO: add solution for handling errors thrown within plugins, provide callback or something?
+		// Merge plugin config
+		if (Array.isArray(config.plugins)) {
+			const postPluginConfig = config.plugins?.reduce((acc, plugin) => {
+				const configAfterPlugin = acc;
+				return plugin(configAfterPlugin);
+			}, config);
+
+			return postPluginConfig;
+		}
+
 		// checks.checkDuplicateBuilderKeys(
 		// 	"bricks",
 		// 	config.bricks?.map((b) => b.key),
@@ -42,17 +55,6 @@ const headlessConfig = (config: Config) => {
 					);
 				}
 			}
-		}
-
-		// TODO: add solution for handling errors thrown within plugins, provide callback or something?
-		// Merge plugin config
-		if (Array.isArray(config.plugins)) {
-			const postPluginConfig = config.plugins?.reduce((acc, plugin) => {
-				const configAfterPlugin = acc;
-				return plugin(configAfterPlugin);
-			}, config);
-
-			return postPluginConfig;
 		}
 
 		return configRes;

@@ -25,35 +25,32 @@ const ConfigSchema = z.object({
 			strategy: z.any(),
 		})
 		.optional(),
-	// TODO: REMOVE THIS IN FAVOUR OF HOOKS/PLUGINS
-	media: z.object({
-		storageLimit: z
-			.number()
-			.default(constants.media.storageLimit)
-			.optional(),
-		maxFileSize: z.number().default(constants.media.maxFileSize).optional(),
-		processedImages: z
-			.object({
-				limit: z
-					.number()
-					.default(constants.media.processedImages.limit)
-					.optional(),
-				store: z
-					.boolean()
-					.default(constants.media.processedImages.store)
-					.optional(),
-			})
-			.optional(),
-		fallbackImage: z.union([z.string(), z.boolean()]).optional(),
-		store: z.object({
-			service: z.enum(["aws", "cloudflare"]),
-			cloudflareAccountId: z.string().optional(),
-			region: z.string(),
-			bucket: z.string(),
-			accessKeyId: z.string(),
-			secretAccessKey: z.string(),
-		}),
-	}),
+	media: z
+		.object({
+			storageLimit: z
+				.number()
+				.default(constants.media.storageLimit)
+				.optional(),
+			maxFileSize: z
+				.number()
+				.default(constants.media.maxFileSize)
+				.optional(),
+			processedImages: z
+				.object({
+					limit: z
+						.number()
+						.default(constants.media.processedImages.limit)
+						.optional(),
+					store: z
+						.boolean()
+						.default(constants.media.processedImages.store)
+						.optional(),
+				})
+				.optional(),
+			fallbackImage: z.union([z.string(), z.boolean()]).optional(),
+			strategy: z.any().optional(),
+		})
+		.optional(),
 	collections: z.array(z.unknown()).optional(),
 	plugins: z.array(z.unknown()).optional(),
 });

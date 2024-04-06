@@ -21,7 +21,7 @@ const streamErrorImage = async (data: ServiceData) => {
 	}
 
 	const config = await getConfig();
-	if (config.media.fallbackImage === false || data.fallback === "0") {
+	if (config.media?.fallbackImage === false || data.fallback === "0") {
 		throw new APIError({
 			type: "basic",
 			name: T("error_not_found_name", {
@@ -34,13 +34,13 @@ const streamErrorImage = async (data: ServiceData) => {
 		});
 	}
 
-	if (config.media.fallbackImage === undefined) {
+	if (config.media?.fallbackImage === undefined) {
 		return pipeLocalImage();
 	}
 
 	try {
 		const { buffer, contentType } = await cdnServices.pipeRemoteUrl({
-			url: config.media.fallbackImage as string,
+			url: config.media?.fallbackImage as string,
 		});
 
 		return {

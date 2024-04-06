@@ -14,9 +14,10 @@ const checkCanStoreMedia = async (
 	data: ServiceData,
 ) => {
 	const maxFileSize =
-		serviceConfig.config.media.maxFileSize || constants.media.maxFileSize;
+		serviceConfig.config.media?.maxFileSize || constants.media.maxFileSize;
 	const storageLimit =
-		serviceConfig.config.media.storageLimit || constants.media.storageLimit;
+		serviceConfig.config.media?.storageLimit ||
+		constants.media.storageLimit;
 
 	if (data.size > maxFileSize) {
 		throw new APIError({

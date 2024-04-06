@@ -14,7 +14,7 @@ const getObject = async (data: ServiceData) => {
 		const S3 = await getS3Client;
 
 		const command = new GetObjectCommand({
-			Bucket: config.media.store.bucket,
+			Bucket: "", //config.media.store.bucket,
 			Key: data.key,
 		});
 		const response = await S3.send(command);

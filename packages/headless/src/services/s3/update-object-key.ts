@@ -14,14 +14,14 @@ const updateObjectKey = async (data: ServiceData) => {
 		const S3 = await getS3Client;
 
 		const copyCommand = new CopyObjectCommand({
-			Bucket: config.media.store.bucket,
-			CopySource: `${config.media.store.bucket}/${data.oldKey}`,
+			Bucket: "", //config.media.store.bucket,
+			CopySource: "", // `${config.media.store.bucket}/${data.oldKey}`,
 			Key: data.newKey,
 		});
 		await S3.send(copyCommand);
 
 		const command = new DeleteObjectCommand({
-			Bucket: config.media.store.bucket,
+			Bucket: "", //config.media.store.bucket,
 			Key: data.oldKey,
 		});
 

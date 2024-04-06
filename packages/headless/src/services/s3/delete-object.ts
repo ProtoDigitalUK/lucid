@@ -13,7 +13,7 @@ const deleteObject = async (data: ServiceData) => {
 		const S3 = await getS3Client;
 
 		const command = new DeleteObjectCommand({
-			Bucket: config.media.store.bucket,
+			Bucket: "", // config.media?.store?.bucket,
 			Key: data.key,
 		});
 

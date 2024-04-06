@@ -79,7 +79,7 @@ const processImage = async (
 	);
 
 	const processedLimit =
-		serviceConfig.config.media.processedImages?.limit ??
+		serviceConfig.config.media?.processedImages?.limit ??
 		constants.media.processedImages.limit;
 
 	if (processedCount >= processedLimit) {
@@ -96,7 +96,7 @@ const processImage = async (
 		serviceConfig.db,
 	);
 
-	if (serviceConfig.config.media.processedImages?.store === true) {
+	if (serviceConfig.config.media?.processedImages?.store === true) {
 		Promise.all([
 			ProcessedImagesRepo.createSingle({
 				key: data.processKey,
