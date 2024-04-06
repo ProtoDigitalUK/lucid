@@ -2,6 +2,8 @@ import type z from "zod";
 import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
 import type { DatabaseAdapterT } from "../libs/db/adapter.js";
 import type ConfigSchema from "../libs/config/config-schema.js";
+import type { Readable } from "node:stream";
+import type { MediaMetaDataT } from "../utils/media-helpers.js";
 
 export type HeadlessPlugin = (config: Config) => Config;
 export type HeadlessPluginOptions<T> = (
@@ -35,13 +37,51 @@ export type EmailStrategy = (
 	message: string;
 }>;
 
+export type MediaStrategyStream = (key: string) => Promise<{
+	success: boolean;
+	message: string;
+	response: {
+		contentLength: number | undefined;
+		contentType: string | undefined;
+		body: Readable;
+	} | null;
+}>;
+export type MediaStrategyUploadSingle = (props: {
+	key: string;
+	data: Readable | Buffer;
+	meta: MediaMetaDataT;
+}) => Promise<{
+	success: boolean;
+	message: string;
+	response: {
+		etag?: string;
+	} | null;
+}>;
+export type MediaStrategyUpdateSingle = (props: {
+	key: string;
+	newKey: string;
+}) => Promise<{
+	success: boolean;
+	message: string;
+}>;
+export type MediaStrategyDeleteSingle = (key: string) => Promise<{
+	success: boolean;
+	message: string;
+}>;
+export type MediaStrategyDeleteMultiple = (keys: string[]) => Promise<{
+	success: boolean;
+	message: string;
+	response: {
+		deleted: string[];
+	} | null;
+}>;
+
 export type MediaStrategy = {
-	stream?: () => void;
-	uploadSingle?: () => void;
-	uploadMultiple?: () => void;
-	updateSingle?: () => void;
-	deleteSingle?: () => void;
-	deleteMultiple?: () => void;
+	stream?: MediaStrategyStream;
+	uploadSingle?: MediaStrategyUploadSingle;
+	updateSingle?: MediaStrategyUpdateSingle;
+	deleteSingle?: MediaStrategyDeleteSingle;
+	deleteMultiple?: MediaStrategyDeleteMultiple;
 };
 
 export interface Config extends z.infer<typeof ConfigSchema> {
