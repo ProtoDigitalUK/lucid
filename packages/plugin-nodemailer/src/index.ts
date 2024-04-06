@@ -1,4 +1,5 @@
 import type { Config } from "@protodigital/headless";
+import type { PluginOptions } from "./types/types.js";
 import plugin from "./plugin.js";
 
 const headlessNodemailerPlugin =

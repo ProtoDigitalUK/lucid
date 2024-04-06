@@ -19,20 +19,24 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"author": "Proto Digital",
 	"devDependencies": {
+		"@biomejs/biome": "^1.6.4",
 		"@protodigital/config": "*",
 		"@protodigital/headless": "*",
 		"@types/node": "^20.2.1",
-		"@biomejs/biome": "^1.6.4",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
 		"@protodigital/headless": "^0.0.1"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"@aws-sdk/client-s3": "^3.550.0"
+	},
 	"volta": {
 		"node": "21.6.2"
 	},

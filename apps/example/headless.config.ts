@@ -8,6 +8,7 @@ import Database from "better-sqlite3";
 import transporter from "./src/headless/email-transporter.js";
 // Plugins
 import NodemailerPlugin from "@protodigital/headless-plugin-nodemailer";
+import S3Plugin from "@protodigital/headless-plugin-s3";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
@@ -36,20 +37,6 @@ export default headlessConfig({
 		refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
 	},
-	// media: {
-	// 	processedImages: {
-	// 		store: false,
-	// 		limit: 10,
-	// 	},
-	// 	store: {
-	// 		service: "cloudflare",
-	// 		cloudflareAccountId: process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID,
-	// 		region: process.env.HEADLESS_S3_REGION as string,
-	// 		bucket: process.env.HEADLESS_S3_BUCKET as string,
-	// 		accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
-	// 		secretAccessKey: process.env.HEADLESS_S3_SECRET_KEY as string,
-	// 	},
-	// },
 	collections: [
 		PageCollection,
 		BlogCollection,
@@ -63,6 +50,18 @@ export default headlessConfig({
 				name: "Protoheadless",
 			},
 			transporter: transporter,
+		}),
+		S3Plugin({
+			clientConfig: {
+				endpoint: `https://${process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+				region: "auto",
+				credentials: {
+					accessKeyId: process.env.HEADLESS_S3_ACCESS_KEY as string,
+					secretAccessKey: process.env
+						.HEADLESS_S3_SECRET_KEY as string,
+				},
+			},
+			bucket: "headless-cms",
 		}),
 	],
 });

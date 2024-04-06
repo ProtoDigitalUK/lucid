@@ -1,4 +1,5 @@
 import type { HeadlessPluginOptions } from "@protodigital/headless";
+import type { PluginOptions } from "./types/types.js";
 import verifyTransporter from "./utils/verify-transporter.js";
 
 /*
