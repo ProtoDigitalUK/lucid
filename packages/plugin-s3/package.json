@@ -1,7 +1,6 @@
 {
 	"name": "@protodigital/headless-plugin-s3",
 	"version": "0.0.1",
-	"private": true,
 	"description": "The official S3 plugin for Proto Digital Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -21,6 +20,10 @@
 	},
 	"files": ["dist/**"],
 	"author": "Proto Digital",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-s3"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
 		"@protodigital/config": "*",
