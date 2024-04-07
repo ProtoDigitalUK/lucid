@@ -39,6 +39,7 @@ export interface SettingsResT {
 		} | null;
 	};
 	media: {
+		enabled: boolean;
 		storage_used: number | null;
 		storage_limit: number | null;
 		storage_remaining: number | null;

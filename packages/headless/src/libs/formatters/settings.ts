@@ -17,6 +17,7 @@ export default class SettingsFormatter {
 				from: props.config.email?.from ?? null,
 			},
 			media: {
+				enabled: props.config.media?.stategy !== undefined,
 				storage_used: props.settings.mediaStorageUsed ?? null,
 				storage_limit: props.config.media?.storageLimit ?? null,
 				storage_remaining: props.settings.mediaStorageUsed
@@ -52,6 +53,7 @@ export default class SettingsFormatter {
 			media: {
 				type: "object",
 				properties: {
+					enabled: { type: "boolean" },
 					storage_used: { type: "number" },
 					storage_limit: { type: "number" },
 					storage_remaining: { type: "number" },
