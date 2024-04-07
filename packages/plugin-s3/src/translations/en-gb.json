@@ -1,0 +1,8 @@
+{
+	"object_saved_successfully": "The object has been saved successfully.",
+	"object_updated_successfully": "The object has been updated successfully.",
+	"object_get_request_successful": "The object get request was successful.",
+	"object_body_undefined": "The object get request Body is undefined.",
+	"object_deleted_successfully_single": "The object has been deleted successfully",
+	"object_deleted_successfully_multiple": "The objects have been deleted successfully"
+}

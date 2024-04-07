@@ -71,9 +71,6 @@ export type MediaStrategyDeleteSingle = (key: string) => Promise<{
 export type MediaStrategyDeleteMultiple = (keys: string[]) => Promise<{
 	success: boolean;
 	message: string;
-	response: {
-		deleted: string[];
-	} | null;
 }>;
 
 export type MediaStrategy = {

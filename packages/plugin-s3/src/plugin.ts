@@ -1,6 +1,6 @@
 import type { HeadlessPluginOptions } from "@protodigital/headless";
 import type { PluginOptions } from "./types/types.js";
-import getS3Client from "./s3-client.js";
+import getS3Client from "./clients/s3-client.js";
 import stream from "./services/steam.js";
 import deletSingle from "./services/delete-single.js";
 import deleteMultiple from "./services/delete-multiple.js";
