@@ -5,7 +5,6 @@ import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
-import s3Services from "../s3/index.js";
 import {
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
@@ -107,9 +106,7 @@ const uploadSingle = async (
 		return mediaRes.id;
 	} catch (e) {
 		if (objectStored && objectKey !== undefined) {
-			s3Services.deleteObject({
-				key: objectKey,
-			});
+			serviceConfig.config.media?.stategy?.deleteSingle(objectKey);
 		}
 		throw e;
 	}

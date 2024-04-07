@@ -74,11 +74,11 @@ export type MediaStrategyDeleteMultiple = (keys: string[]) => Promise<{
 }>;
 
 export type MediaStrategy = {
-	stream?: MediaStrategyStream;
-	uploadSingle?: MediaStrategyUploadSingle;
-	updateSingle?: MediaStrategyUpdateSingle;
-	deleteSingle?: MediaStrategyDeleteSingle;
-	deleteMultiple?: MediaStrategyDeleteMultiple;
+	stream: MediaStrategyStream;
+	uploadSingle: MediaStrategyUploadSingle;
+	updateSingle: MediaStrategyUpdateSingle;
+	deleteSingle: MediaStrategyDeleteSingle;
+	deleteMultiple: MediaStrategyDeleteMultiple;
 };
 
 export interface Config extends z.infer<typeof ConfigSchema> {

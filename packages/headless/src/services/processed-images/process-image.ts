@@ -1,13 +1,13 @@
 import T from "../../translations/index.js";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
-import s3Services from "../s3/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import constants from "../../constants.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import mediaServices from "../media/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -24,9 +24,11 @@ const processImage = async (
 	contentType: string | undefined;
 	body: Readable;
 }> => {
-	const res = await s3Services.getObject({
-		key: data.key,
+	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+		config: serviceConfig.config,
 	});
+
+	const res = await mediaStategy.stream(data.key);
 
 	// If there is no response
 	if (!res.success || !res.response) {
@@ -102,10 +104,9 @@ const processImage = async (
 				key: data.processKey,
 				mediaKey: data.key,
 			}),
-			s3Services.saveObject({
-				type: "buffer",
+			mediaStategy.uploadSingle({
 				key: data.processKey,
-				buffer: imageRes.data.buffer,
+				data: imageRes.data.buffer,
 				meta: {
 					mimeType: imageRes.data.mimeType,
 					fileExtension: imageRes.data.extension,

@@ -3,10 +3,10 @@ import type { z } from "zod";
 import type { Readable } from "node:stream";
 import { APIError } from "../../utils/error-handler.js";
 import type cdnSchema from "../../schemas/cdn.js";
-import s3Services from "../s3/index.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import processedImageServices from "../processed-images/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import mediaServices from "../media/index.js";
 
 export interface ServiceData {
 	key: string;
@@ -25,6 +25,10 @@ const streamMedia = async (
 }> => {
 	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
 
+	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+		config: serviceConfig.config,
+	});
+
 	// ------------------------------
 	// OG Image
 	if (
@@ -32,9 +36,8 @@ const streamMedia = async (
 		data.query?.width === undefined &&
 		data.query?.height === undefined
 	) {
-		const res = await s3Services.getObject({
-			key: data.key,
-		});
+		const res = await mediaStategy.stream(data.key);
+
 		if (!res.success || !res.response) {
 			throw new APIError({
 				type: "basic",
@@ -68,9 +71,8 @@ const streamMedia = async (
 	});
 
 	// Try and stream the processed media (may already exist)
-	const res = await s3Services.getObject({
-		key: processKey,
-	});
+	const res = await mediaStategy.stream(processKey);
+
 	if (res.success && res.response) {
 		return {
 			key: processKey,

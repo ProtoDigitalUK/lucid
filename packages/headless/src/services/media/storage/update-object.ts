@@ -4,7 +4,6 @@ import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import mediaServices from "../index.js";
-import s3Services from "../../s3/index.js";
 import optionsServices from "../../options/index.js";
 import processedImagesServices from "../../processed-images/index.js";
 
@@ -40,6 +39,10 @@ const updateObject = async (
 			});
 		}
 
+		const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+			config: serviceConfig.config,
+		});
+
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
 			data.file_data.file,
@@ -63,8 +66,8 @@ const updateObject = async (
 		});
 
 		// Save file to storage
-		const updateKeyRes = await s3Services.updateObjectKey({
-			oldKey: data.key,
+		const updateKeyRes = await mediaStategy.updateSingle({
+			key: data.key,
 			newKey: metaData.key,
 		});
 
@@ -85,10 +88,9 @@ const updateObject = async (
 			});
 		}
 
-		const saveObjectPromise = s3Services.saveObject({
-			type: "readable",
+		const saveObjectPromise = mediaStategy.uploadSingle({
 			key: metaData.key,
-			readable: mediaHelpers.streamTempFile(tempFilePath),
+			data: mediaHelpers.streamTempFile(tempFilePath),
 			meta: metaData,
 		});
 		const updateStoragePromise = serviceWrapper(
@@ -128,7 +130,7 @@ const updateObject = async (
 			});
 		}
 
-		metaData.etag = saveObjectRes.etag;
+		metaData.etag = saveObjectRes.response?.etag;
 
 		return metaData;
 	} finally {

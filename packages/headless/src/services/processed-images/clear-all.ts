@@ -1,7 +1,11 @@
-import s3Services from "../s3/index.js";
 import Repository from "../../libs/repositories/index.js";
+import mediaServices from "../media/index.js";
 
 const clearAll = async (serviceConfig: ServiceConfigT) => {
+	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+		config: serviceConfig.config,
+	});
+
 	const ProcessedImagesRepo = Repository.get(
 		"processed-images",
 		serviceConfig.db,
@@ -15,11 +19,7 @@ const clearAll = async (serviceConfig: ServiceConfigT) => {
 	if (allProcessedImages.length === 0) return;
 
 	await Promise.all([
-		s3Services.deleteObjects({
-			objects: allProcessedImages.map((image) => ({
-				key: image.key,
-			})),
-		}),
+		mediaStategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
 		ProcessedImagesRepo.deleteMultiple({
 			where: [],
 		}),

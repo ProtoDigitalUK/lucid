@@ -4,7 +4,6 @@ import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
 import mediaServices from "../index.js";
-import s3Services from "../../s3/index.js";
 import optionsServices from "../../options/index.js";
 
 export interface ServiceData {
@@ -37,6 +36,10 @@ const uploadObject = async (
 			});
 		}
 
+		const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+			config: serviceConfig.config,
+		});
+
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
 			data.file_data.file,
@@ -59,10 +62,9 @@ const uploadObject = async (
 		});
 
 		// Save file to storage
-		const saveObjectRes = await s3Services.saveObject({
-			type: "readable",
+		const saveObjectRes = await mediaStategy.uploadSingle({
 			key: metaData.key,
-			readable: mediaHelpers.streamTempFile(tempFilePath),
+			data: mediaHelpers.streamTempFile(tempFilePath),
 			meta: metaData,
 		});
 
@@ -83,7 +85,7 @@ const uploadObject = async (
 			});
 		}
 
-		metaData.etag = saveObjectRes.etag;
+		metaData.etag = saveObjectRes.response?.etag;
 
 		// Update storage usage stats
 		await serviceWrapper(optionsServices.updateSingle, false)(

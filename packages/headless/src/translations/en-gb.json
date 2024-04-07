@@ -77,10 +77,6 @@
 	"parent": "Parent",
 	"file_too_large_max_size_is": "File {{name}} is too large. Max file size is {{size}} bytes.",
 	"file_exceeds_storage_limit_max_limit_is": "Files exceed storage limit. Max storage limit is {{size}} bytes.",
-	"object_successfully_saved": "Object successfully saved to S3",
-	"object_successfully_updated": "Object successfully updated in S3",
-	"objects_successfully_deleted": "Objects successfully deleted from S3",
-	"object_successfully_deleted": "Object successfully deleted from S3",
 	"translation": "Translation",
 	"swagger_content_language_header_description": "The language id of the content you wish to filter translations by. If left empty, the default language will be used.",
 	"collection": "Collection",
@@ -107,6 +103,7 @@
 	"cannot_find_config_path": "Cannot find the headless.config.ts or headless.config.js file at the root of your project.",
 	"cannot_find_repository": "Cannot find the repository for the {{name}}.",
 	"cannot_find_formatter": "Cannot find the formatter for the {{name}}.",
-	"config_error_name": "Config Not Configured",
-	"email_not_configured_message": "Email functionality is disabled because the email configuration is missing. Please provide the necessary email settings in the 'headless.config.ts/js' file to enable email features."
+	"config_error_name": "Configuration Error",
+	"email_not_configured_message": "Email functionality is disabled because the email configuration is missing. Please provide the necessary email settings in the 'headless.config.ts/js' file to enable email features.",
+	"media_strategy_not_configured_message": "Media functionality is disabled because the media stategy configuration is missing."
 }
