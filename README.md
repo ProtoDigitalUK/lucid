@@ -21,7 +21,7 @@ npm install @protodigital/headless
 - [Cookie Consent]()
 - [Resend]()
 - [Nodemailer]()
-- [S3]()
+- [S3](https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-s3)
 - [Local Storage]()
 
 ## headless.config.ts/js
