@@ -1,11 +1,12 @@
 import fs from "fs-extra";
 import type { Readable } from "node:stream";
-import type { MediaResT } from "../types/response.js";
+import type { MediaResT, MediaTypeT } from "../types/response.js";
 import { pipeline } from "node:stream/promises";
 import { join } from "node:path";
 import mime from "mime-types";
 import sharp from "sharp";
 import slug from "slug";
+import { getMonth, getYear } from "date-fns";
 
 export interface MediaMetaDataT {
 	mimeType: string;
@@ -53,7 +54,7 @@ const getMetaData = async (data: {
 };
 
 // Workout media type
-const getMediaType = (mimeType: string): MediaResT["type"] => {
+const getMediaType = (mimeType: string): MediaTypeT => {
 	const normalizedMimeType = mimeType.toLowerCase();
 
 	if (normalizedMimeType.includes("image")) return "image";
@@ -75,10 +76,15 @@ const getMediaType = (mimeType: string): MediaResT["type"] => {
 
 // Generate unique key
 const uniqueKey = (name: string) => {
-	const slugVal = slug(name.split(".")[0], {
+	const filename = slug(name.split(".")[0], {
 		lower: true,
 	});
-	return `${slugVal}-${new Date().getTime()}`;
+	const uuid = Math.random().toString(36).slice(-6);
+	const date = new Date();
+	const month = getMonth(date);
+	const monthF = month + 1 >= 10 ? `${month + 1}` : `0${month + 1}`;
+
+	return `${getYear(date)}/${monthF}/${uuid}-${filename}`;
 };
 
 // Save stream to a temporary file
