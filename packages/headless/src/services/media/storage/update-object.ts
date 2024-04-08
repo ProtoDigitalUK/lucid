@@ -66,33 +66,29 @@ const updateObject = async (
 		});
 
 		// Save file to storage
-		const updateKeyRes = await mediaStategy.updateSingle({
-			key: data.key,
-			newKey: metaData.key,
+		const updateObjectRes = await mediaStategy.updateSingle(data.key, {
+			key: metaData.key,
+			data: mediaHelpers.streamTempFile(tempFilePath),
+			meta: metaData,
 		});
 
-		if (updateKeyRes.success === false) {
+		if (updateObjectRes.success === false) {
 			throw new APIError({
 				type: "basic",
 				name: T("error_not_updated_name", {
 					name: T("media"),
 				}),
-				message: updateKeyRes.message,
+				message: updateObjectRes.message,
 				status: 500,
 				errors: modelErrors({
 					file: {
 						code: "s3_error",
-						message: updateKeyRes.message,
+						message: updateObjectRes.message,
 					},
 				}),
 			});
 		}
 
-		const saveObjectPromise = mediaStategy.uploadSingle({
-			key: metaData.key,
-			data: mediaHelpers.streamTempFile(tempFilePath),
-			meta: metaData,
-		});
 		const updateStoragePromise = serviceWrapper(
 			optionsServices.updateSingle,
 			false,
@@ -107,30 +103,9 @@ const updateObject = async (
 			key: data.key,
 		});
 
-		const [saveObjectRes] = await Promise.all([
-			saveObjectPromise,
-			updateStoragePromise,
-			clearProcessedPromise,
-		]);
+		await Promise.all([updateStoragePromise, clearProcessedPromise]);
 
-		if (saveObjectRes.success === false) {
-			throw new APIError({
-				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
-				message: saveObjectRes.message,
-				status: 500,
-				errors: modelErrors({
-					file: {
-						code: "s3_error",
-						message: saveObjectRes.message,
-					},
-				}),
-			});
-		}
-
-		metaData.etag = saveObjectRes.response?.etag;
+		metaData.etag = updateObjectRes.response?.etag;
 
 		return metaData;
 	} finally {

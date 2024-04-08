@@ -57,12 +57,19 @@ export type MediaStrategyUploadSingle = (props: {
 		etag?: string;
 	} | null;
 }>;
-export type MediaStrategyUpdateSingle = (props: {
-	key: string;
-	newKey: string;
-}) => Promise<{
+export type MediaStrategyUpdateSingle = (
+	oldKey: string,
+	props: {
+		key: string;
+		data: Readable | Buffer;
+		meta: MediaMetaDataT;
+	},
+) => Promise<{
 	success: boolean;
 	message: string;
+	response: {
+		etag?: string;
+	} | null;
 }>;
 export type MediaStrategyDeleteSingle = (key: string) => Promise<{
 	success: boolean;
