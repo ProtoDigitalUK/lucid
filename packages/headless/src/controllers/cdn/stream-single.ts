@@ -14,7 +14,7 @@ const streamSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				key: request.params.key,
+				key: request.params["*"],
 				query: request.query,
 				accept: request.headers.accept,
 			},

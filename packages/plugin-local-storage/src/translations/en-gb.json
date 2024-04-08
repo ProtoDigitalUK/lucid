@@ -1,0 +1,9 @@
+{
+	"file_saved_successfully": "The file has been saved successfully.",
+	"file_updated_successfully": "The file has been updated successfully.",
+	"file_get_request_successful": "The file get request was successful.",
+	"file_body_undefined": "The file get request Body is undefined.",
+	"file_deleted_successfully_single": "The file has been deleted successfully",
+	"file_deleted_successfully_multiple": "The file have been deleted successfully",
+	"file_not_found": "The file was not found."
+}

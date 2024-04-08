@@ -5,7 +5,7 @@ import cdn from "../../../controllers/cdn/index.js";
 const cdnRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "get",
-		url: "/:key",
+		url: "/*",
 		swaggerSchema: cdn.streamSingle.swaggerSchema,
 		zodSchema: cdn.streamSingle.zodSchema,
 		controller: cdn.streamSingle.controller,

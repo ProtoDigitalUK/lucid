@@ -9,6 +9,7 @@ import transporter from "./src/headless/email-transporter.js";
 // Plugins
 import NodemailerPlugin from "@protodigital/headless-plugin-nodemailer";
 import S3Plugin from "@protodigital/headless-plugin-s3";
+import LocalStoragePlugin from "@protodigital/headless-plugin-local-storage";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
@@ -63,5 +64,8 @@ export default headlessConfig({
 			},
 			bucket: "headless-cms",
 		}),
+		// LocalStoragePlugin({
+		// 	uploadDir: "uploads",
+		// }),
 	],
 });

@@ -76,7 +76,8 @@ const getMediaType = (mimeType: string): MediaTypeT => {
 
 // Generate unique key
 const uniqueKey = (name: string) => {
-	const filename = slug(name.split(".")[0], {
+	const [fname, extension] = name.split(".");
+	const filename = slug(fname, {
 		lower: true,
 	});
 	const uuid = Math.random().toString(36).slice(-6);
@@ -84,7 +85,7 @@ const uniqueKey = (name: string) => {
 	const month = getMonth(date);
 	const monthF = month + 1 >= 10 ? `${month + 1}` : `0${month + 1}`;
 
-	return `${getYear(date)}/${monthF}/${uuid}-${filename}`;
+	return `${getYear(date)}/${monthF}/${uuid}-${filename}.${extension}`;
 };
 
 // Save stream to a temporary file
@@ -136,10 +137,10 @@ const createProcessKey = (data: {
 	};
 }) => {
 	let key = `processed/${data.key}`;
-	if (data.options.format) key = key.concat(`.${data.options.format}`);
-	if (data.options.quality) key = key.concat(`.${data.options.quality}`);
-	if (data.options.width) key = key.concat(`.${data.options.width}`);
-	if (data.options.height) key = key.concat(`.${data.options.height}`);
+	if (data.options.format) key = key.concat(`-${data.options.format}`);
+	if (data.options.quality) key = key.concat(`-${data.options.quality}`);
+	if (data.options.width) key = key.concat(`-${data.options.width}`);
+	if (data.options.height) key = key.concat(`-${data.options.height}`);
 
 	return key;
 };

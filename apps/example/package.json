@@ -12,6 +12,7 @@
 		"@protodigital/headless": "*",
 		"@protodigital/headless-plugin-nodemailer": "*",
 		"@protodigital/headless-plugin-s3": "*",
+		"@protodigital/headless-plugin-local-storage": "*",
 		"better-sqlite3": "^9.4.3",
 		"fastify": "^4.24.3",
 		"nodemailer": "^6.9.9",

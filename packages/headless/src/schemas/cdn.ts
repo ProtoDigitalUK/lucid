@@ -35,7 +35,7 @@ export default {
 			fallback: z.enum(["1", "0"]).optional(),
 		}),
 		params: z.object({
-			key: z.string(),
+			"*": z.string(),
 		}),
 	},
 };
