@@ -18,7 +18,9 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
@@ -32,7 +34,8 @@
 		"@protodigital/headless": "^0.0.1"
 	},
 	"dependencies": {
-		"fs-extra": "^11.2.0"
+		"fs-extra": "^11.2.0",
+		"mime-types": "^2.1.35"
 	},
 	"volta": {
 		"node": "21.6.2"

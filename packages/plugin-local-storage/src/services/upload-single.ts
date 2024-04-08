@@ -7,8 +7,6 @@ import type { MediaStrategyUploadSingle } from "@protodigital/headless";
 export default (pluginOptions: PluginOptions) => {
 	const uploadSingle: MediaStrategyUploadSingle = async (props) => {
 		// key example: 2024/01/gdfh4-banner
-		// Meta includes extension
-
 		const keyPath = props.key.split("/").slice(0, -1).join("/");
 		const fileName = props.key.split("/").pop();
 

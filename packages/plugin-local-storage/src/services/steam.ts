@@ -1,6 +1,7 @@
 import T from "../translations/index.js";
 import fs from "fs-extra";
 import path from "node:path";
+import mime from "mime-types";
 import type { PluginOptions } from "../types/types.js";
 import type { MediaStrategyStream } from "@protodigital/headless";
 
@@ -21,12 +22,15 @@ export default (pluginOptions: PluginOptions) => {
 			const body = fs.createReadStream(uploadDir);
 			const stats = await fs.stat(uploadDir);
 
+			const fileExtension = path.extname(uploadDir);
+			const mimeType = mime.lookup(fileExtension);
+
 			return {
 				success: true,
 				message: T("file_get_request_successful"),
 				response: {
 					contentLength: stats.size,
-					contentType: undefined,
+					contentType: mimeType || undefined,
 					body: body,
 				},
 			};

@@ -34,7 +34,8 @@ const streamMedia = async (
 	if (
 		format === undefined &&
 		data.query?.width === undefined &&
-		data.query?.height === undefined
+		data.query?.height === undefined &&
+		data.query?.quality === undefined
 	) {
 		const res = await mediaStategy.stream(data.key);
 
