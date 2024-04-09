@@ -1,8 +1,7 @@
 {
 	"name": "@protoheadless/plugin-nodemailer",
 	"version": "0.0.1",
-	"private": true,
-	"description": "The official Nodemailer plugin for Proto Digital Headless",
+	"description": "The official Nodemailer plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"module": "dist/index.js",
@@ -21,6 +20,22 @@
 	},
 	"files": ["dist/**"],
 	"author": "Proto Digital",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-nodemailer"
+	},
+	"bugs": {
+		"url": "https://github.com/ProtoDigitalUK/proto_headless/issues"
+	},
+	"homepage": "https://github.com/ProtoDigitalUK/proto_headless",
+	"keywords": [
+		"CMS",
+		"Headless CMS",
+		"Proto Headless",
+		"Proto Digital",
+		"Nodemailer",
+		"Plugin"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
 		"@protoheadless/config": "*",
@@ -39,5 +54,5 @@
 	"volta": {
 		"node": "21.6.2"
 	},
-	"license": "UNLICENSED"
+	"license": "MIT"
 }

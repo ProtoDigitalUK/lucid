@@ -1,13 +1,13 @@
+import T from "../translations/index.js";
 import type { Transporter } from "nodemailer";
 
 const verifyTransporter = (transporter: Transporter) => {
 	transporter
 		.verify()
-		.then(() => {
-			console.log("Email transporter is ready");
-		})
+		.then(() => {})
 		.catch((error) => {
-			console.error("Email transporter is not ready", error);
+			// TODO: update to use internal logger / error class
+			console.error(T("email_transporter_not_ready"), error);
 		});
 };
 

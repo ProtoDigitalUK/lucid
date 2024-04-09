@@ -1,11 +1,7 @@
+import T from "./translations/index.js";
+import verifyTransporter from "./utils/verify-transporter.js";
 import type { HeadlessPluginOptions } from "@protoheadless/headless";
 import type { PluginOptions } from "./types/types.js";
-import verifyTransporter from "./utils/verify-transporter.js";
-
-/*
-    TODO:
-    - Update error message handling
-*/
 
 const plugin: HeadlessPluginOptions<PluginOptions> = (
 	config,
@@ -30,7 +26,7 @@ const plugin: HeadlessPluginOptions<PluginOptions> = (
 
 				return {
 					success: true,
-					message: "Email sent successfully",
+					message: T("email_successfully_sent"),
 				};
 			} catch (error) {
 				const err = error as Error;

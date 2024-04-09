@@ -1,7 +1,7 @@
 {
 	"name": "@protoheadless/plugin-s3",
 	"version": "0.0.1",
-	"description": "The official S3 plugin for Proto Digital Headless",
+	"description": "The official S3 plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"module": "dist/index.js",
@@ -24,6 +24,18 @@
 		"type": "git",
 		"url": "https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-s3"
 	},
+	"bugs": {
+		"url": "https://github.com/ProtoDigitalUK/proto_headless/issues"
+	},
+	"homepage": "https://github.com/ProtoDigitalUK/proto_headless",
+	"keywords": [
+		"CMS",
+		"Headless CMS",
+		"Proto Headless",
+		"Proto Digital",
+		"S3",
+		"Plugin"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
 		"@protoheadless/config": "*",
