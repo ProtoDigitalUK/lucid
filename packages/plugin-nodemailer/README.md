@@ -1,1 +1,1 @@
-# @protodigital/headless-plugin-nodemailer
+# @protoheadless/plugin-nodemailer

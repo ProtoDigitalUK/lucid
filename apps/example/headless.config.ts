@@ -3,13 +3,13 @@ import {
 	// LibSQLAdapter,
 	SQLLiteAdapter,
 	// PostgresAdapter,
-} from "@protodigital/headless";
+} from "@protoheadless/headless";
 import Database from "better-sqlite3";
 import transporter from "./src/headless/email-transporter.js";
 // Plugins
-import NodemailerPlugin from "@protodigital/headless-plugin-nodemailer";
-import S3Plugin from "@protodigital/headless-plugin-s3";
-import LocalStoragePlugin from "@protodigital/headless-plugin-local-storage";
+import HeadlessNodemailer from "@protoheadless/plugin-nodemailer";
+import HeadlessS3 from "@protoheadless/plugin-s3";
+import HeadlessLocalStorage from "@protoheadless/plugin-local-storage";
 // Collections
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
@@ -51,14 +51,14 @@ export default headlessConfig({
 		FormsCollection,
 	],
 	plugins: [
-		NodemailerPlugin({
+		HeadlessNodemailer({
 			from: {
 				email: "admin@protoheadless.com",
 				name: "Protoheadless",
 			},
 			transporter: transporter,
 		}),
-		// S3Plugin({
+		// HeadlessS3({
 		// 	clientConfig: {
 		// 		endpoint: `https://${process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
 		// 		region: "auto",
@@ -70,7 +70,7 @@ export default headlessConfig({
 		// 	},
 		// 	bucket: "headless-cms",
 		// }),
-		LocalStoragePlugin({
+		HeadlessLocalStorage({
 			uploadDir: "uploads",
 		}),
 	],

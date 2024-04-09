@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import { log } from "console-log-colors";
-import headless, { sendEmail } from "@protodigital/headless";
+import headless, { sendEmail } from "@protoheadless/headless";
 
 const fastify = Fastify({
 	logger: true,

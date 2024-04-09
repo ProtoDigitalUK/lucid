@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protodigital/headless";
+import { CollectionBuilder } from "@protoheadless/headless";
 
 const FormsCollection = new CollectionBuilder("forms", {
 	mode: "multiple",

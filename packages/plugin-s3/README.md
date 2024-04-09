@@ -7,7 +7,7 @@ This plugin registers the required media strategy functions to stream, upload, u
 ## Installation
 
 ```bash
-npm install @protodigital/headless-plugin-s3
+npm install @protoheadless/plugin-s3
 ```
 
 ## headless.config.ts/js

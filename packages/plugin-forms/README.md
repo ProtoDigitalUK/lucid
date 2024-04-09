@@ -1,1 +1,1 @@
-# @protodigital/headless-plugin-forms
+# @protoheadless/plugin-forms

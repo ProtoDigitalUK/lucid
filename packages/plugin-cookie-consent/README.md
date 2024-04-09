@@ -1,1 +1,1 @@
-# @protodigital/headless-plugin-cookie-consent
+# @protoheadless/plugin-cookie-consent

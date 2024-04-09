@@ -1,5 +1,5 @@
 {
-    "extends": "@protodigital/config/tsconfig.base.json",
+    "extends": "@protoheadless/config/tsconfig.base.json",
     "exclude": [
         "./coverage",
         "./dist",

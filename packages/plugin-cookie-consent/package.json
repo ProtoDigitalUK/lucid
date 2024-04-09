@@ -1,5 +1,5 @@
 {
-	"name": "@protodigital/headless-plugin-cookie-consent",
+	"name": "@protoheadless/plugin-cookie-consent",
 	"version": "0.0.1",
 	"private": true,
 	"description": "The official Cookie Consent plugin for Proto Digital Headless",
@@ -22,15 +22,15 @@
 	"files": ["dist/**"],
 	"author": "Proto Digital",
 	"devDependencies": {
-		"@protodigital/config": "*",
-		"@protodigital/headless": "*",
+		"@protoheadless/config": "*",
+		"@protoheadless/headless": "*",
 		"@types/node": "^20.2.1",
 		"@biomejs/biome": "^1.6.4",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protodigital/headless": "^0.0.1"
+		"@protoheadless/headless": "^0.0.1"
 	},
 	"dependencies": {},
 	"volta": {

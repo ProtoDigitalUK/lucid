@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import { type S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import type { NodeJsClient } from "@smithy/types";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyDeleteSingle } from "@protodigital/headless";
+import type { MediaStrategyDeleteSingle } from "@protoheadless/headless";
 
 export default (
 	client: NodeJsClient<S3Client>,

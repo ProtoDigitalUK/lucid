@@ -6,7 +6,7 @@
 ## Installation
 
 ```bash
-npm install @protodigital/headless
+npm install @protoheadless/headless
 ```
 
 ## Builders
@@ -27,12 +27,12 @@ npm install @protodigital/headless
 ## headless.config.ts/js
 
 ```ts
-import { headlessConfig, LibsqlAdapter } from "@protodigital/headless";
+import { headlessConfig, LibsqlAdapter } from "@protoheadless/headless";
 
-import NodemailerPlugin from "@protodigital/headless-plugin-nodemailer";
-import LocalStoragePlugin from "@protodigital/headless-plugin-local-storage";
-import FormsPlugin from "@protodigital/headless-plugin-forms";
-import CookieConsentPlugin from "@protodigital/headless-plugin-cookie-consent";
+import NodemailerPlugin from "@protoheadless/plugin-nodemailer";
+import LocalStoragePlugin from "@protoheadless/plugin-local-storage";
+import FormsPlugin from "@protoheadless/plugin-forms";
+import CookieConsentPlugin from "@protoheadless/plugin-cookie-consent";
 
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";

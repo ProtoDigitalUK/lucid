@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import { type S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import type { NodeJsClient } from "@smithy/types";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyStream } from "@protodigital/headless";
+import type { MediaStrategyStream } from "@protoheadless/headless";
 
 export default (
 	client: NodeJsClient<S3Client>,

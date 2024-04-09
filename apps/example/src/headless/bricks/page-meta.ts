@@ -1,4 +1,4 @@
-import { BrickBuilder } from "@protodigital/headless";
+import { BrickBuilder } from "@protoheadless/headless";
 
 const PageMetaBrick = new BrickBuilder("page_meta")
 	.addText({

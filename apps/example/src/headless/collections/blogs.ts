@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protodigital/headless";
+import { CollectionBuilder } from "@protoheadless/headless";
 // Bricks
 import BannerBrick from "../bricks/banner.js";
 import IntroBrick from "../bricks/intro.js";

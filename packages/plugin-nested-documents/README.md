@@ -1,1 +1,1 @@
-# @protodigital/headless-plugin-nested-documents
+# @protoheadless/plugin-nested-documents

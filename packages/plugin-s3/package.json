@@ -1,5 +1,5 @@
 {
-	"name": "@protodigital/headless-plugin-s3",
+	"name": "@protoheadless/plugin-s3",
 	"version": "0.0.1",
 	"description": "The official S3 plugin for Proto Digital Headless",
 	"type": "module",
@@ -26,14 +26,14 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
-		"@protodigital/config": "*",
-		"@protodigital/headless": "*",
+		"@protoheadless/config": "*",
+		"@protoheadless/headless": "*",
 		"@types/node": "^20.2.1",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protodigital/headless": "^0.0.1"
+		"@protoheadless/headless": "^0.0.1"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.550.0",
