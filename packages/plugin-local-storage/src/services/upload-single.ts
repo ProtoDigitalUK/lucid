@@ -1,27 +1,22 @@
 import T from "../translations/index.js";
 import fs from "fs-extra";
-import path from "node:path";
+import { keyPaths } from "../utils/helpers.js";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyUploadSingle } from "@protodigital/headless";
+import type { MediaStrategyUploadSingle } from "@protoheadless/headless";
 
 export default (pluginOptions: PluginOptions) => {
 	const uploadSingle: MediaStrategyUploadSingle = async (props) => {
-		// key example: 2024/01/gdfh4-banner
-		const keyPath = props.key.split("/").slice(0, -1).join("/");
-		const fileName = props.key.split("/").pop();
+		const { targetDir, targetPath } = keyPaths(
+			props.key,
+			pluginOptions.uploadDir,
+		);
 
-		if (!fileName) throw new Error("Invalid key"); // TODO: update message
-
-		const uploadDir = path.join(pluginOptions.uploadDir, keyPath);
-
-		await fs.ensureDir(uploadDir);
-
-		const filePath = path.join(uploadDir, fileName);
+		await fs.ensureDir(targetDir);
 
 		if (Buffer.isBuffer(props.data)) {
-			await fs.writeFile(filePath, props.data);
+			await fs.writeFile(targetPath, props.data);
 		} else {
-			const writeStream = fs.createWriteStream(filePath);
+			const writeStream = fs.createWriteStream(targetPath);
 			props.data.pipe(writeStream);
 			await new Promise((resolve, reject) => {
 				writeStream.on("finish", resolve);

@@ -2,15 +2,16 @@ import T from "../translations/index.js";
 import fs from "fs-extra";
 import path from "node:path";
 import mime from "mime-types";
+import { keyPaths } from "../utils/helpers.js";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyStream } from "@protodigital/headless";
+import type { MediaStrategyStream } from "@protoheadless/headless";
 
 export default (pluginOptions: PluginOptions) => {
 	const stream: MediaStrategyStream = async (key) => {
 		try {
-			const uploadDir = path.join(pluginOptions.uploadDir, key);
+			const { targetPath } = keyPaths(key, pluginOptions.uploadDir);
 
-			const exists = await fs.pathExists(uploadDir);
+			const exists = await fs.pathExists(targetPath);
 			if (!exists) {
 				return {
 					success: false,
@@ -19,10 +20,10 @@ export default (pluginOptions: PluginOptions) => {
 				};
 			}
 
-			const body = fs.createReadStream(uploadDir);
-			const stats = await fs.stat(uploadDir);
+			const body = fs.createReadStream(targetPath);
+			const stats = await fs.stat(targetPath);
 
-			const fileExtension = path.extname(uploadDir);
+			const fileExtension = path.extname(targetPath);
 			const mimeType = mime.lookup(fileExtension);
 
 			return {

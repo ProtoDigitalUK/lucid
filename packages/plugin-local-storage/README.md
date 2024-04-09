@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-npm install @protodigital/headless-plugin-local-storage
+npm install @protoheadless/plugin-local-storage
 ```
 
 ## headless.config.ts/js

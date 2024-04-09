@@ -1,6 +1,8 @@
-import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyUpdateSingle } from "@protodigital/headless";
+import fs from "fs-extra";
+import { keyPaths } from "../utils/helpers.js";
 import uploadSingle from "./upload-single.js";
+import type { PluginOptions } from "../types/types.js";
+import type { MediaStrategyUpdateSingle } from "@protoheadless/headless";
 
 export default (pluginOptions: PluginOptions) => {
 	const updateSingle: MediaStrategyUpdateSingle = async (oldKey, props) => {
@@ -8,7 +10,14 @@ export default (pluginOptions: PluginOptions) => {
 			const uploadRes = await uploadSingle(pluginOptions)(props);
 
 			if (oldKey !== props.key) {
-				// delete single
+				const { targetPath } = keyPaths(
+					oldKey,
+					pluginOptions.uploadDir,
+				);
+				const exists = await fs.pathExists(targetPath);
+				if (exists) {
+					await fs.unlink(targetPath);
+				}
 			}
 
 			return uploadRes;

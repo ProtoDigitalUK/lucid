@@ -5,5 +5,6 @@
 	"file_body_undefined": "The file get request Body is undefined.",
 	"file_deleted_successfully_single": "The file has been deleted successfully",
 	"file_deleted_successfully_multiple": "The file have been deleted successfully",
-	"file_not_found": "The file was not found."
+	"file_not_found": "The file was not found.",
+	"invalid_key": "Invalid key"
 }
