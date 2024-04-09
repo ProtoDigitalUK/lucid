@@ -4,7 +4,7 @@
 	"description": "The official Local Storage plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
-	"module": "dist/index.js",
+	"module": "./dist/index.js",
 	"exports": {
 		".": {
 			"import": "./dist/index.js",
@@ -18,16 +18,15 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-local-storage"
+		"url": "git+https://github.com/ProtoDigitalUK/proto_headless.git",
+		"directory": "packages/plugin-local-storage"
 	},
-	"bugs": {
-		"url": "https://github.com/ProtoDigitalUK/proto_headless/issues"
-	},
-	"homepage": "https://github.com/ProtoDigitalUK/proto_headless",
 	"keywords": [
 		"CMS",
 		"Headless CMS",

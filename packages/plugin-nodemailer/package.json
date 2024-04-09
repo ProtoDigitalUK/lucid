@@ -18,16 +18,15 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist"
+	],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-nodemailer"
+		"url": "git+https://github.com/ProtoDigitalUK/proto_headless.git",
+		"directory": "packages/plugin-nodemailer"
 	},
-	"bugs": {
-		"url": "https://github.com/ProtoDigitalUK/proto_headless/issues"
-	},
-	"homepage": "https://github.com/ProtoDigitalUK/proto_headless",
 	"keywords": [
 		"CMS",
 		"Headless CMS",

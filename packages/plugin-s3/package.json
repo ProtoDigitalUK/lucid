@@ -1,6 +1,7 @@
 {
 	"name": "@protoheadless/plugin-s3",
 	"version": "0.0.1",
+	"private": false,
 	"description": "The official S3 plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -18,16 +19,15 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist"
+	],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ProtoDigitalUK/proto_headless/tree/master/packages/plugin-s3"
+		"url": "git+https://github.com/ProtoDigitalUK/proto_headless.git",
+		"directory": "packages/plugin-s3"
 	},
-	"bugs": {
-		"url": "https://github.com/ProtoDigitalUK/proto_headless/issues"
-	},
-	"homepage": "https://github.com/ProtoDigitalUK/proto_headless",
 	"keywords": [
 		"CMS",
 		"Headless CMS",
@@ -41,6 +41,7 @@
 		"@protoheadless/config": "*",
 		"@protoheadless/headless": "*",
 		"@types/node": "^20.2.1",
+		"@smithy/types": "^2.12.0",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
@@ -48,8 +49,7 @@
 		"@protoheadless/headless": "^0.0.1"
 	},
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.550.0",
-		"@smithy/types": "^2.12.0"
+		"@aws-sdk/client-s3": "^3.550.0"
 	},
 	"volta": {
 		"node": "21.6.2"
