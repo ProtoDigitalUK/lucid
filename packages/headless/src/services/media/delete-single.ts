@@ -2,7 +2,6 @@ import T from "../../translations/index.js";
 import { APIError } from "../../utils/error-handler.js";
 import mediaServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import processedImagesServices from "../processed-images/index.js";
 import translationsServices from "../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
 
@@ -14,8 +13,50 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const MediaRepo = Repository.get("media", serviceConfig.db);
+	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+		config: serviceConfig.config,
+	});
 
+	const MediaRepo = Repository.get("media", serviceConfig.db);
+	const ProcessedImagesRepo = Repository.get(
+		"processed-images",
+		serviceConfig.db,
+	);
+
+	const getMedia = await MediaRepo.selectSingle({
+		select: ["key"],
+		where: [
+			{
+				key: "id",
+				operator: "=",
+				value: data.id,
+			},
+		],
+	});
+
+	if (getMedia === undefined) {
+		throw new APIError({
+			type: "basic",
+			name: T("error_not_found_name", {
+				name: T("media"),
+			}),
+			message: T("error_not_found_message", {
+				name: T("media"),
+			}),
+			status: 404,
+		});
+	}
+
+	const allProcessedImages = await ProcessedImagesRepo.selectMultiple({
+		select: ["key"],
+		where: [
+			{
+				key: "media_key",
+				operator: "=",
+				value: getMedia.key,
+			},
+		],
+	});
 	const deleteMedia = await MediaRepo.deleteSingle({
 		where: [
 			{
@@ -40,12 +81,7 @@ const deleteSingle = async (
 	}
 
 	await Promise.all([
-		serviceWrapper(processedImagesServices.clearSingle, false)(
-			serviceConfig,
-			{
-				key: deleteMedia.key,
-			},
-		),
+		mediaStategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
 		serviceWrapper(mediaServices.storage.deleteObject, false)(
 			serviceConfig,
 			{

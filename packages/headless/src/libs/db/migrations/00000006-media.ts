@@ -51,7 +51,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 				.addColumn("media_key", "text", (col) =>
 					col
 						.references("headless_media.key")
-						.onDelete("set null")
+						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
 				.execute();
