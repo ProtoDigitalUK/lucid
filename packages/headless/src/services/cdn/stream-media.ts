@@ -61,7 +61,7 @@ const streamMedia = async (
 
 	// ------------------------------
 	// Processed Image
-	const processKey = mediaHelpers.createProcessKey({
+	const processKey = mediaHelpers.generateProcessKey({
 		key: data.key,
 		options: {
 			format,

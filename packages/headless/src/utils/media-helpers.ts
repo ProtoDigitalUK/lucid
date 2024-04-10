@@ -49,7 +49,7 @@ const getMetaData = async (data: {
 		width: width || null,
 		height: height || null,
 		type: getMediaType(mimeType),
-		key: uniqueKey(data.fileName),
+		key: generateKey(data.fileName),
 	};
 };
 
@@ -75,11 +75,12 @@ const getMediaType = (mimeType: string): MediaTypeT => {
 };
 
 // Generate unique key
-const uniqueKey = (name: string) => {
+const generateKey = (name: string) => {
 	const [fname, extension] = name.split(".");
-	const filename = slug(fname, {
+	let filename = slug(fname, {
 		lower: true,
 	});
+	if (filename.length > 254) filename = filename.slice(0, 254);
 	const uuid = Math.random().toString(36).slice(-6);
 	const date = new Date();
 	const month = getMonth(date);
@@ -127,7 +128,7 @@ const chooseFormat = (
 };
 
 // Create process key
-const createProcessKey = (data: {
+const generateProcessKey = (data: {
 	key: string;
 	options: {
 		format?: string;
@@ -164,13 +165,13 @@ const createURL = (host: string, key: string) => `${host}/cdn/v1/${key}`;
 
 const mediaHelpers = {
 	getMediaType,
-	uniqueKey,
+	generateKey,
 	streamTempFile,
 	saveStreamToTempFile,
 	getMetaData,
 	deleteTempFile,
 	chooseFormat,
-	createProcessKey,
+	generateProcessKey,
 	streamToBuffer,
 	createURL,
 };
