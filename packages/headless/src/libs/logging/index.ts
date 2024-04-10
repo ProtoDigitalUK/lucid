@@ -23,6 +23,7 @@ const headlessLogger = (
 	data: {
 		message: string;
 		scope?: string;
+		data?: Record<string, unknown>;
 	},
 ) => {
 	let logLevelFn = logger.error;
@@ -46,9 +47,9 @@ const headlessLogger = (
 	}
 
 	if (data.scope) {
-		logLevelFn(`[${data.scope}]: ${data.message}`);
+		logLevelFn(`[${data.scope}]: ${data.message}`, data.data);
 	} else {
-		logLevelFn(data.message);
+		logLevelFn(data.message, data.data);
 	}
 };
 

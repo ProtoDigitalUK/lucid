@@ -69,6 +69,9 @@ const headlessConfig = async (config: Config) => {
 			for (const error of err.errors) {
 				headlessLogger("error", {
 					message: error.message,
+					data: {
+						path: error.path.join("."),
+					},
 				});
 			}
 		} else if (err instanceof HeadlessError) {
