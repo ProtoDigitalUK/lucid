@@ -4,10 +4,12 @@ import type { Config } from "./config.ts";
 import type { Kysely } from "kysely";
 import type { UserPermissionsResT, LanguageResT } from "./response.js";
 import type { HeadlessDB, BooleanInt } from "../libs/db/types.ts";
+import type headlessLogger from "../libs/logging/index.ts";
 
 declare module "fastify" {
 	interface FastifyInstance {
 		config: Config;
+		logger: typeof headlessLogger;
 	}
 
 	interface FastifyRequest {

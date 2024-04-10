@@ -9,6 +9,7 @@ import {
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 import { HeadlessError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import headlessLogger from "../logging/index.js";
 import type { AdapterType, HeadlessDB } from "./types.js";
 import type { Config } from "../../types/config.js";
 // Seeds
@@ -48,21 +49,24 @@ export default class DatabaseAdapter {
 		if (results) {
 			for (const it of results) {
 				if (it.status === "Success") {
-					console.log(
-						`migration "${it.migrationName}" was executed successfully`,
-					);
+					headlessLogger("info", {
+						message: `"${it.migrationName}" was executed successfully`,
+						scope: "migration",
+					});
 				} else if (it.status === "Error") {
-					console.error(
-						`failed to execute migration "${it.migrationName}"`,
-					);
+					headlessLogger("error", {
+						message: `failed to execute migration "${it.migrationName}"`,
+						scope: "migration",
+					});
 				}
 			}
 		}
 
 		if (error) {
-			console.error("failed to migrate");
-			console.error(error);
-			process.exit(1);
+			throw new HeadlessError({
+				message: T("db_migration_failed"),
+				kill: true,
+			});
 		}
 	}
 	async seed(config: Config) {

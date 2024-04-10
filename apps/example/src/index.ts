@@ -2,9 +2,7 @@ import Fastify from "fastify";
 import { log } from "console-log-colors";
 import headless, { sendEmail } from "@protoheadless/headless";
 
-const fastify = Fastify({
-	logger: false,
-});
+const fastify = Fastify();
 
 fastify.register(headless);
 
