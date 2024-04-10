@@ -6,7 +6,7 @@ import deleteMultiple from "./services/delete-multiple.js";
 import updateSingle from "./services/update-single.js";
 import uploadSingle from "./services/upload-single.js";
 
-const plugin: HeadlessPluginOptions<PluginOptions> = (
+const plugin: HeadlessPluginOptions<PluginOptions> = async (
 	config,
 	pluginOptions,
 ) => {

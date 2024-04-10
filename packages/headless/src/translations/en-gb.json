@@ -5,6 +5,7 @@
 	"validation_error": "Validation error!",
 	"authorisation_error": "Authorisation error.",
 	"forbidden_error": "Forbidden error!",
+	"an_unknown_error_occurred": "An unknown error occurred.",
 	"dynamic_an_error_occurred_saving_default": "An error occurred while saving the default {{name}}.",
 	"an_error_occurred_clearing_expired_tokens": "An error occurred while clearing expired tokens.",
 	"swagger_response_200": "Successfull response",

@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { InternalError } from "../../utils/error-handler.js";
+import { HeadlessError } from "../../utils/error-handler.js";
 // Repositories
 import UserTokensRepo from "./user-tokens.js";
 import CollectionDocumentBricksRepo from "./collection-document-bricks.js";
@@ -66,11 +66,11 @@ class Repository {
 			case "users":
 				return new UsersRepo(db) as RepositoryReturnType<T>;
 			default:
-				throw new InternalError(
-					T("cannot_find_repository", {
+				throw new HeadlessError({
+					message: T("cannot_find_repository", {
 						name: repository,
 					}),
-				);
+				});
 		}
 	}
 }

@@ -8,6 +8,7 @@ import serviceWrapper from "./utils/service-wrapper.js";
 import LibSQLAdapter from "./libs/db/adapters/libsql/index.js";
 import PostgresAdapter from "./libs/db/adapters/postgres/index.js";
 import SQLLiteAdapter from "./libs/db/adapters/sqllite/index.js";
+import { HeadlessError } from "./utils/error-handler.js";
 
 export * from "./types/config.js";
 export * from "./types/response.js";
@@ -27,6 +28,8 @@ export {
 	LibSQLAdapter,
 	SQLLiteAdapter,
 	PostgresAdapter,
+	// Misc
+	HeadlessError,
 };
 
 export default headless;

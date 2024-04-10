@@ -3,11 +3,11 @@ import verifyTransporter from "./utils/verify-transporter.js";
 import type { HeadlessPluginOptions } from "@protoheadless/headless";
 import type { PluginOptions } from "./types/types.js";
 
-const plugin: HeadlessPluginOptions<PluginOptions> = (
+const plugin: HeadlessPluginOptions<PluginOptions> = async (
 	config,
 	pluginOptions,
 ) => {
-	verifyTransporter(pluginOptions.transporter);
+	await verifyTransporter(pluginOptions.transporter);
 
 	config.email = {
 		from: pluginOptions.from,

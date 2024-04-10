@@ -3,7 +3,7 @@ import { log } from "console-log-colors";
 import headless, { sendEmail } from "@protoheadless/headless";
 
 const fastify = Fastify({
-	logger: true,
+	logger: false,
 });
 
 fastify.register(headless);

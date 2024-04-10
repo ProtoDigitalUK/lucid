@@ -1,7 +1,7 @@
 import T from "../../../translations/index.js";
 import argon2 from "argon2";
 import constants from "../../../constants.js";
-import { InternalError } from "../../../utils/error-handler.js";
+import { HeadlessError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
 
@@ -25,11 +25,11 @@ const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 			password: hashedPassword,
 		});
 	} catch (error) {
-		throw new InternalError(
-			T("dynamic_an_error_occurred_saving_default", {
+		throw new HeadlessError({
+			message: T("dynamic_an_error_occurred_saving_default", {
 				name: T("user").toLowerCase(),
 			}),
-		);
+		});
 	}
 };
 

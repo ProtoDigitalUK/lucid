@@ -7,7 +7,7 @@ import {
 	type KyselyPlugin,
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
-import { InternalError } from "../../utils/error-handler.js";
+import { HeadlessError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { AdapterType, HeadlessDB } from "./types.js";
 import type { Config } from "../../types/config.js";
@@ -86,7 +86,9 @@ export default class DatabaseAdapter {
 	// getters
 	get client() {
 		if (!this.db) {
-			throw new InternalError(T("db_connection_error"));
+			throw new HeadlessError({
+				message: T("db_connection_error"),
+			});
 		}
 		return this.db;
 	}

@@ -2,12 +2,13 @@
   When to use APIError:
     - When the error is being thrown from a route or middleware
 
-  When to use InternalError:
+  When to use HeadlessError:
     - When the error is being thorwn internall and outside of a request. Eg: in a migration or launch step
 */
 
 import type z from "zod";
-import { bgRed } from "console-log-colors";
+import { log } from "console-log-colors";
+import { ZodError } from "zod";
 import T from "../translations/index.js";
 
 const DEFAULT_ERROR = {
@@ -87,10 +88,18 @@ class APIError extends Error {
 	}
 }
 
-class InternalError extends Error {
-	constructor(message: string) {
-		super(message);
-		console.error(bgRed(`[INTERNAL ERROR] ${message}`));
+class HeadlessError extends Error {
+	plugin?: string;
+	hard?: boolean;
+	constructor(data: {
+		message: string;
+		plugin?: string;
+		hard?: boolean;
+	}) {
+		super(data.message);
+		this.plugin = data.plugin;
+		this.hard = data.hard;
+		if (data.plugin === undefined) errorLogger("Headless Error", this);
 	}
 }
 
@@ -119,6 +128,35 @@ const modelErrors = (error: ErrorResultT): ErrorResultT => {
 	return {
 		body: error,
 	};
+};
+
+export const errorLogger = (title: string, err: Error) => {
+	log.white("-".repeat(60));
+	log.yellow(title);
+	log.white("-".repeat(60));
+
+	if (err instanceof ZodError) {
+		console.table(
+			err.errors.map((error) => {
+				return {
+					path: error.path.join("."),
+					message: error.message,
+				};
+			}),
+		);
+	} else if (err instanceof HeadlessError) {
+		if (err.plugin !== undefined) {
+			log.red(`(${err.plugin}): ${err.message}`);
+		} else {
+			log.red(err.message);
+		}
+	} else if (err instanceof Error) {
+		log.red(err.message);
+	} else {
+		log.red(T("an_unknown_error_occurred"));
+	}
+
+	log.white("-".repeat(60));
 };
 
 // ------------------------------------
@@ -158,4 +196,4 @@ export interface ErrorResultT {
 
 // ------------------------------------
 // Export
-export { APIError, InternalError, modelErrors };
+export { APIError, HeadlessError, modelErrors };

@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { InternalError } from "../../../utils/error-handler.js";
+import { HeadlessError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 
 const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
@@ -24,11 +24,11 @@ const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
 			});
 		}
 	} catch (error) {
-		throw new InternalError(
-			T("dynamic_an_error_occurred_saving_default", {
+		throw new HeadlessError({
+			message: T("dynamic_an_error_occurred_saving_default", {
 				name: T("option").toLowerCase(),
 			}),
-		);
+		});
 	}
 };
 
