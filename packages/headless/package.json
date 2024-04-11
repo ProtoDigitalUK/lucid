@@ -19,7 +19,7 @@
 		"format": "biome format --write ./src",
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src",
-		"clear-db:postgres": "node ./clear-db-pg.js"
+		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
 	"files": ["dist/**", "cms/**", "templates/**", "assets/**"],
 	"author": "Proto Digital",
