@@ -67,8 +67,24 @@ export const swaggerFieldObj = {
 			type: "string",
 		},
 		value: {
-			type: ["number", "string", "object", "null"],
-			nullable: true,
+			anyOf: [
+				{
+					type: "number",
+					nullable: true,
+				},
+				{
+					type: "string",
+					nullable: true,
+				},
+				{
+					type: "object",
+					additionalProperties: true,
+					nullable: true,
+				},
+				{
+					type: "null",
+				},
+			],
 		},
 		language_id: {
 			type: "number",
@@ -77,8 +93,19 @@ export const swaggerFieldObj = {
 			type: "number",
 		},
 		group_id: {
-			type: ["number", "string"],
-			nullable: true,
+			anyOf: [
+				{
+					type: "number",
+					nullable: true,
+				},
+				{
+					type: "string",
+					nullable: true,
+				},
+				{
+					type: "null",
+				},
+			],
 		},
 	},
 };
