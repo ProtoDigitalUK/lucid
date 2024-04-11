@@ -18,16 +18,16 @@ export default class SettingsFormatter {
 			},
 			media: {
 				enabled: props.config.media?.stategy !== undefined,
-				storage_used: props.settings.mediaStorageUsed ?? null,
-				storage_limit: props.config.media.storage ?? null,
-				storage_remaining: props.settings.mediaStorageUsed
-					? (props.config.media?.storage || 0) -
-						props.settings.mediaStorageUsed
-					: null,
-				processed_images: {
-					stored: props.config.media?.processed?.store ?? false,
-					per_image_limit:
-						props.config.media?.processed?.limit ?? null,
+				storage: {
+					total: props.config.media.storage,
+					remaining:
+						props.config.media.storage -
+						props.settings.mediaStorageUsed,
+					used: props.settings.mediaStorageUsed,
+				},
+				processed: {
+					stored: props.config.media.processed.store,
+					image_limit: props.config.media.processed.limit,
 					total: props.settings.processedImageCount,
 				},
 			},
@@ -54,15 +54,20 @@ export default class SettingsFormatter {
 				type: "object",
 				properties: {
 					enabled: { type: "boolean" },
-					storage_used: { type: "number" },
-					storage_limit: { type: "number" },
-					storage_remaining: { type: "number" },
-					processed_images: {
+					storage: {
+						type: "object",
+						properties: {
+							total: { type: "number" },
+							remaining: { type: "number", nullable: true },
+							used: { type: "number", nullable: true },
+						},
+					},
+					processed: {
 						type: "object",
 						properties: {
 							stored: { type: "boolean" },
-							per_image_limit: { type: "number" },
-							total: { type: "number" },
+							image_limit: { type: "number" },
+							total: { type: "number", nullable: true },
 						},
 					},
 				},

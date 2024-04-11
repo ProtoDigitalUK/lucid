@@ -40,8 +40,7 @@ export default headlessConfig({
 	},
 	media: {
 		processed: {
-			// @ts-ignore
-			store: 1,
+			store: true,
 		},
 	},
 	collections: [

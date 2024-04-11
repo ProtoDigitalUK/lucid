@@ -28,7 +28,7 @@ const checkCanUpdateMedia = async (
 			status: 500,
 			errors: modelErrors({
 				file: {
-					code: "storage_limit",
+					code: "storage",
 					message: T("file_too_large_max_size_is", {
 						name: data.filename,
 						size: maxFileSize,
@@ -57,7 +57,7 @@ const checkCanUpdateMedia = async (
 			status: 500,
 			errors: modelErrors({
 				file: {
-					code: "storage_limit",
+					code: "storage",
 					message: T("file_exceeds_storage_limit_max_limit_is", {
 						size: storageLimit,
 					}),
