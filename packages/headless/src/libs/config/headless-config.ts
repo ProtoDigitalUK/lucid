@@ -1,10 +1,13 @@
+import T from "../../translations/index.js";
+import type { Config } from "../../types/config.js";
 import checks from "./checks/index.js";
+import { ZodError } from "zod";
 import ConfigSchema from "./config-schema.js";
 import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
 import { BrickSchema } from "../builders/brick-builder/index.js";
 import { FieldsSchema } from "../builders/field-builder/index.js";
-import type { Config } from "../../types/config.js";
-import { errorLogger, HeadlessError } from "../../utils/error-handler.js";
+import { HeadlessError } from "../../utils/error-handler.js";
+import headlessLogger from "../logging/index.js";
 
 const headlessConfig = async (config: Config) => {
 	let configRes = config;
@@ -62,14 +65,28 @@ const headlessConfig = async (config: Config) => {
 
 		return configRes;
 	} catch (err) {
-		errorLogger("Config Error", err as Error);
-
-		if (err instanceof HeadlessError) {
-			if (err.hard === true) {
-				process.exit(1);
-			} else return configRes;
+		if (err instanceof ZodError) {
+			for (const error of err.errors) {
+				headlessLogger("error", {
+					message: error.message,
+					data: {
+						path: error.path.join("."),
+					},
+				});
+			}
+		} else if (err instanceof HeadlessError) {
+		} else if (err instanceof Error) {
+			headlessLogger("error", {
+				message: err.message,
+			});
+		} else {
+			headlessLogger("error", {
+				message: T("an_unknown_error_occurred"),
+			});
 		}
 
+		if (err instanceof HeadlessError && err.kill === false)
+			return configRes;
 		process.exit(1);
 	}
 };

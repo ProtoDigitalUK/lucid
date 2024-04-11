@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { HeadlessError } from "@protoheadless/headless";
+import { headlessLogger } from "@protoheadless/headless";
 import type { Transporter } from "nodemailer";
 
 const verifyTransporter = async (transporter: Transporter) => {
@@ -7,14 +7,16 @@ const verifyTransporter = async (transporter: Transporter) => {
 		await transporter.verify();
 	} catch (error) {
 		if (error instanceof Error) {
-			throw new HeadlessError({
+			headlessLogger("warn", {
 				message: error.message,
-				plugin: "plugin-nodemailer",
+				scope: T("scope"),
 			});
+			return;
 		}
-		throw new HeadlessError({
+
+		headlessLogger("warn", {
 			message: T("email_transporter_not_ready"),
-			plugin: "plugin-nodemailer",
+			scope: T("scope"),
 		});
 	}
 };

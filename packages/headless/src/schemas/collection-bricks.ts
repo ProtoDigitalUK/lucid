@@ -32,7 +32,14 @@ export const swaggerBodyBricksObj = {
 	type: "object",
 	properties: {
 		id: {
-			type: ["number", "string"],
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "string",
+				},
+			],
 		},
 		key: {
 			type: "string",

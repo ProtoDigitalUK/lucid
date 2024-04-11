@@ -1,9 +1,9 @@
 import("dotenv/config.js");
+import type { FastifyInstance } from "fastify";
+import type { Config } from "./types/config.js";
 import path from "node:path";
 import T from "./translations/index.js";
-import { log, red } from "console-log-colors";
 import fp from "fastify-plugin";
-import type { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
@@ -16,7 +16,7 @@ import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-handler.js";
 import registerCronJobs from "./services/cron-jobs.js";
-import type { Config } from "./types/config.js";
+import headlessLogger from "./libs/logging/index.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -25,6 +25,7 @@ const headless = async (fastify: FastifyInstance) => {
 		const config = await getConfig();
 
 		fastify.decorate<Config>("config", config);
+		fastify.decorate("logger", headlessLogger);
 
 		// ------------------------------------
 		// Swagger
@@ -49,7 +50,6 @@ const headless = async (fastify: FastifyInstance) => {
 
 		// ------------------------------------
 		// Server wide middleware
-		log.white("-".repeat(60));
 		fastify.register(cors, {
 			origin: "http://localhost:3000", // update
 			methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -72,24 +72,18 @@ const headless = async (fastify: FastifyInstance) => {
 				fileSize: 10 * 1024 * 1024, // 10MB TODO: move to config
 			},
 		});
-		log.yellow("Middleware configured");
 
 		// ------------------------------------
 		// Migrate DB
-		log.white("-".repeat(60));
 		await config.db.migrateToLatest();
-		log.yellow("Migrated");
 
 		// ------------------------------------
 		// Initialise
-		log.white("-".repeat(60));
 		await config.db.seed(config);
 		registerCronJobs(config);
-		log.yellow("Initialised");
 
 		// ------------------------------------
 		// Routes
-		log.white("-".repeat(60));
 		fastify.register(routes);
 		fastify.register(fastifyStatic, {
 			root: [path.resolve("public"), path.join(currentDir, "../cms")],
@@ -110,17 +104,21 @@ const headless = async (fastify: FastifyInstance) => {
 				reply.code(404).send("Page not found");
 			}
 		});
-		log.yellow("Routes initialised");
 
 		// ------------------------------------
 		// Error handling
 		fastify.setErrorHandler((error, request, reply) => {
 			const { name, message, status, errors, code } = decodeError(error);
 
-			request.log.error(red(`${status} - ${message}`));
+			headlessLogger("error", {
+				message: message,
+				scope: status.toString(),
+			});
 
 			if (reply.sent) {
-				request.log.error(T("headers_already_sent"));
+				headlessLogger("error", {
+					message: T("headers_already_sent"),
+				});
 				return;
 			}
 
@@ -137,8 +135,10 @@ const headless = async (fastify: FastifyInstance) => {
 			reply.status(status).send(response);
 		});
 	} catch (error) {
-		const err = error as Error;
-		fastify.log.error(err.message);
+		headlessLogger("error", {
+			message:
+				"An error occurred during the initialisation of the headless server",
+		});
 	}
 };
 

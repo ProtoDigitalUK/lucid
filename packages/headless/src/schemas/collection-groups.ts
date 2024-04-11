@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { nullable } from "zod";
 
 export const GroupSchema = z.object({
 	group_id: z.union([z.number(), z.string()]), // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
@@ -13,14 +13,32 @@ export const swaggerGroupObj = {
 	type: "object",
 	properties: {
 		group_id: {
-			type: ["number", "string"],
+			anyOf: [
+				{
+					type: "number",
+				},
+				{
+					type: "string",
+				},
+			],
 		},
 		group_order: {
 			type: "number",
 		},
 		parent_group_id: {
-			type: ["number", "string"],
-			nullable: true,
+			anyOf: [
+				{
+					type: "number",
+					nullable: true,
+				},
+				{
+					type: "string",
+					nullable: true,
+				},
+				{
+					type: "null",
+				},
+			],
 		},
 		repeater_key: {
 			type: "string",

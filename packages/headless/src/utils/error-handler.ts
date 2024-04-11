@@ -1,15 +1,6 @@
-/*
-  When to use APIError:
-    - When the error is being thrown from a route or middleware
-
-  When to use HeadlessError:
-    - When the error is being thorwn internall and outside of a request. Eg: in a migration or launch step
-*/
-
 import type z from "zod";
-import { log } from "console-log-colors";
-import { ZodError } from "zod";
 import T from "../translations/index.js";
+import headlessLogger from "../libs/logging/index.js";
 
 const DEFAULT_ERROR = {
 	name: T("default_error_name"),
@@ -19,8 +10,6 @@ const DEFAULT_ERROR = {
 	errors: null,
 };
 
-// ------------------------------------
-// Error Classes
 class APIError extends Error {
 	code: APIErrorDataT["code"] | null = null;
 	status: number;
@@ -89,22 +78,26 @@ class APIError extends Error {
 }
 
 class HeadlessError extends Error {
-	plugin?: string;
-	hard?: boolean;
+	scope?: string;
+	kill?: boolean;
 	constructor(data: {
 		message: string;
-		plugin?: string;
-		hard?: boolean;
+		scope?: string;
+		kill?: boolean;
 	}) {
 		super(data.message);
-		this.plugin = data.plugin;
-		this.hard = data.hard;
-		if (data.plugin === undefined) errorLogger("Headless Error", this);
+		this.scope = data.scope;
+		this.kill = data.kill;
+
+		headlessLogger("error", {
+			message: this.message,
+			scope: this.scope,
+		});
+
+		if (this.kill) process.exit(1);
 	}
 }
 
-// ------------------------------------
-// Util Functions
 export const decodeError = (error: Error) => {
 	if (error instanceof APIError) {
 		return {
@@ -130,37 +123,6 @@ const modelErrors = (error: ErrorResultT): ErrorResultT => {
 	};
 };
 
-export const errorLogger = (title: string, err: Error) => {
-	log.white("-".repeat(60));
-	log.yellow(title);
-	log.white("-".repeat(60));
-
-	if (err instanceof ZodError) {
-		console.table(
-			err.errors.map((error) => {
-				return {
-					path: error.path.join("."),
-					message: error.message,
-				};
-			}),
-		);
-	} else if (err instanceof HeadlessError) {
-		if (err.plugin !== undefined) {
-			log.red(`(${err.plugin}): ${err.message}`);
-		} else {
-			log.red(err.message);
-		}
-	} else if (err instanceof Error) {
-		log.red(err.message);
-	} else {
-		log.red(T("an_unknown_error_occurred"));
-	}
-
-	log.white("-".repeat(60));
-};
-
-// ------------------------------------
-// Types
 interface APIErrorDataT {
 	type: "validation" | "basic" | "forbidden" | "authorisation";
 
@@ -194,6 +156,4 @@ export interface ErrorResultT {
 		| FieldErrorsT[];
 }
 
-// ------------------------------------
-// Export
 export { APIError, HeadlessError, modelErrors };

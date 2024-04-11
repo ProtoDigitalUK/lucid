@@ -5,7 +5,6 @@ import type {
 	ComparisonOperatorExpression,
 	DeleteQueryBuilder,
 	OperandValueExpressionOrList,
-	SelectExpression,
 	UpdateQueryBuilder,
 } from "kysely";
 import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
