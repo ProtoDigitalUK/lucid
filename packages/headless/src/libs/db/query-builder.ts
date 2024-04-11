@@ -155,7 +155,7 @@ export const selectQB = <Table extends keyof HeadlessDB, O>(
 	let kyselyQuery = query;
 
 	for (const { key, operator, value } of where) {
-		kyselyQuery = query.where(key, operator, value);
+		kyselyQuery = kyselyQuery.where(key, operator, value);
 	}
 
 	return kyselyQuery;
@@ -168,7 +168,7 @@ export const deleteQB = <Table extends keyof HeadlessDB, O>(
 	let kyselyQuery = query;
 
 	for (const { key, operator, value } of where) {
-		kyselyQuery = query.where(key, operator, value);
+		kyselyQuery = kyselyQuery.where(key, operator, value);
 	}
 
 	return kyselyQuery;
@@ -185,7 +185,7 @@ export const updateQB = <
 	let kyselyQuery = query;
 
 	for (const { key, operator, value } of where) {
-		kyselyQuery = query.where(key, operator, value);
+		kyselyQuery = kyselyQuery.where(key, operator, value);
 	}
 
 	return kyselyQuery;
