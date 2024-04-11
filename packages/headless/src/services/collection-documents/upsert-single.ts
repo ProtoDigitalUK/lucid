@@ -115,17 +115,15 @@ const upsertSingle = async (
         Update:
         - Upsert Bricks / Collection fields
     */
-	await Promise.all([
-		serviceWrapper(collectionDocumentBricksServices.upsertMultiple, false)(
-			serviceConfig,
-			{
-				document_id: document.id,
-				bricks: data.bricks,
-				fields: data.fields || [],
-				collection_key: data.collection_key,
-			},
-		),
-	]);
+	await serviceWrapper(
+		collectionDocumentBricksServices.upsertMultiple,
+		false,
+	)(serviceConfig, {
+		document_id: document.id,
+		bricks: data.bricks,
+		fields: data.fields,
+		collection_key: data.collection_key,
+	});
 
 	return document.id;
 };
