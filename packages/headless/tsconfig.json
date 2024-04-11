@@ -9,7 +9,8 @@
         "./node_modules",
         "./temp",
         "./.turbo",
-        "./scripts"
+        "./scripts",
+        "./vitest.config.ts"
     ],
     "compilerOptions": {
         "rootDir": "./src",

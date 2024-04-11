@@ -135,6 +135,8 @@ const headless = async (fastify: FastifyInstance) => {
 			reply.status(status).send(response);
 		});
 	} catch (error) {
+		// @ts-ignore
+		console.log(error.message);
 		headlessLogger("error", {
 			message:
 				"An error occurred during the initialisation of the headless server",

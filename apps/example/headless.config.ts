@@ -39,9 +39,9 @@ export default headlessConfig({
 		accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
 	},
 	media: {
-		processedImages: {
-			store: true,
-			limit: 10,
+		processed: {
+			// @ts-ignore
+			store: 1,
 		},
 	},
 	collections: [

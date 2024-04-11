@@ -14,11 +14,8 @@ const checkCanUpdateMedia = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const maxFileSize =
-		serviceConfig.config.media?.maxFileSize || constants.media.maxFileSize;
-	const storageLimit =
-		serviceConfig.config.media?.storageLimit ||
-		constants.media.storageLimit;
+	const maxFileSize = serviceConfig.config.media?.maxSize;
+	const storageLimit = serviceConfig.config.media?.storage;
 
 	if (data.size > maxFileSize) {
 		throw new APIError({

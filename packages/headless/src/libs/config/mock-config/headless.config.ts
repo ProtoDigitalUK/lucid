@@ -12,12 +12,6 @@ export default headlessConfig({
 		refreshTokenSecret: "refreshTokenSecret",
 		accessTokenSecret: "accessTokenSecret",
 	},
-	media: {
-		processedImages: {
-			store: true,
-			limit: 10,
-		},
-	},
 	collections: [],
 	plugins: [],
 });

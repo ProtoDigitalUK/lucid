@@ -1,9 +1,7 @@
 import z from "zod";
 
-import constants from "../../constants.js";
-
 const ConfigSchema = z.object({
-	mode: z.literal("production").or(z.literal("development")),
+	mode: z.union([z.literal("production"), z.literal("development")]),
 	db: z.unknown(),
 	host: z.string(),
 	keys: z.object({
@@ -22,37 +20,21 @@ const ConfigSchema = z.object({
 				email: z.string(),
 				name: z.string(),
 			}),
-			strategy: z.any(),
+			strategy: z.unknown(),
 		})
 		.optional(),
-	media: z
-		.object({
-			storageLimit: z
-				.number()
-				.default(constants.media.storageLimit)
-				.optional(),
-			maxFileSize: z
-				.number()
-				.default(constants.media.maxFileSize)
-				.optional(),
-			processedImages: z
-				.object({
-					limit: z
-						.number()
-						.default(constants.media.processedImages.limit)
-						.optional(),
-					store: z
-						.boolean()
-						.default(constants.media.processedImages.store)
-						.optional(),
-				})
-				.optional(),
-			fallbackImage: z.union([z.string(), z.boolean()]).optional(),
-			strategy: z.any().optional(),
-		})
-		.optional(),
-	collections: z.array(z.unknown()).optional(),
-	plugins: z.array(z.unknown()).optional(),
+	media: z.object({
+		storage: z.number(),
+		maxSize: z.number(),
+		processed: z.object({
+			limit: z.number(),
+			store: z.boolean(),
+		}),
+		fallbackImage: z.union([z.string(), z.boolean()]).optional(),
+		strategy: z.unknown().optional(),
+	}),
+	collections: z.array(z.unknown()),
+	plugins: z.array(z.unknown()),
 });
 
 export default ConfigSchema;

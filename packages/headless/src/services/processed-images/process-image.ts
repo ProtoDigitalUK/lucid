@@ -4,7 +4,6 @@ import type cdnSchema from "../../schemas/cdn.js";
 import { APIError } from "../../utils/error-handler.js";
 import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
-import constants from "../../constants.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
@@ -80,9 +79,7 @@ const processImage = async (
 		},
 	);
 
-	const processedLimit =
-		serviceConfig.config.media?.processedImages?.limit ??
-		constants.media.processedImages.limit;
+	const processedLimit = serviceConfig.config.media.processed.limit;
 
 	if (processedCount >= processedLimit) {
 		return {
@@ -98,7 +95,7 @@ const processImage = async (
 		serviceConfig.db,
 	);
 
-	if (serviceConfig.config.media?.processedImages?.store === true) {
+	if (serviceConfig.config.media.processed.store === true) {
 		Promise.all([
 			ProcessedImagesRepo.createSingle({
 				key: data.processKey,

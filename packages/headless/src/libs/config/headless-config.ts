@@ -1,34 +1,33 @@
 import T from "../../translations/index.js";
-import type { Config } from "../../types/config.js";
+import type { Config, HeadlessConfig } from "../../types/config.js";
 import checks from "./checks/index.js";
 import { ZodError } from "zod";
 import ConfigSchema from "./config-schema.js";
+import mergeConfig from "./merge-config.js";
+import defaultConfig from "./default.js";
 import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
 import { BrickSchema } from "../builders/brick-builder/index.js";
 import { FieldsSchema } from "../builders/field-builder/index.js";
 import { HeadlessError } from "../../utils/error-handler.js";
 import headlessLogger from "../logging/index.js";
 
-const headlessConfig = async (config: Config) => {
-	let configRes = config;
+const headlessConfig = async (config: HeadlessConfig) => {
+	let configRes = mergeConfig(config, defaultConfig);
 	try {
-		configRes = ConfigSchema.parse(config) as Config;
-
-		// TODO: Add a merge with default
-
-		// Merge plugin config
-
-		if (Array.isArray(config.plugins)) {
-			const postPluginConfig = config.plugins.reduce(
+		// merge plugin config
+		if (Array.isArray(configRes.plugins)) {
+			const postPluginConfig = configRes.plugins.reduce(
 				async (acc, plugin) => {
 					const configAfterPlugin = await acc;
 					return plugin(configAfterPlugin);
 				},
-				Promise.resolve(config),
+				Promise.resolve(configRes),
 			);
-
 			configRes = await postPluginConfig;
 		}
+
+		// validate config
+		configRes = ConfigSchema.parse(configRes) as Config;
 
 		// checks.checkDuplicateBuilderKeys(
 		// 	"bricks",
@@ -69,6 +68,7 @@ const headlessConfig = async (config: Config) => {
 			for (const error of err.errors) {
 				headlessLogger("error", {
 					message: error.message,
+					scope: "config",
 					data: {
 						path: error.path.join("."),
 					},
@@ -77,10 +77,12 @@ const headlessConfig = async (config: Config) => {
 		} else if (err instanceof HeadlessError) {
 		} else if (err instanceof Error) {
 			headlessLogger("error", {
+				scope: "config",
 				message: err.message,
 			});
 		} else {
 			headlessLogger("error", {
+				scope: "config",
 				message: T("an_unknown_error_occurred"),
 			});
 		}
