@@ -15,17 +15,13 @@
 	"scripts": {
 		"build": "tsc && tsup",
 		"dev": "tsup --watch",
+		"test": "vitest",
 		"format": "biome format --write ./src",
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./clear-db-pg.js"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**",
-		"assets/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**", "assets/**"],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
@@ -40,7 +36,8 @@
 		"@types/sanitize-html": "^2.9.0",
 		"@types/slug": "^5.0.7",
 		"tsup": "^8.0.2",
-		"typescript": "^5.4.4"
+		"typescript": "^5.4.4",
+		"vitest": "^1.5.0"
 	},
 	"dependencies": {
 		"@fastify/cookie": "^9.3.1",
