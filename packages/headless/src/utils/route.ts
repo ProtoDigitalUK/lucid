@@ -1,6 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type z from "zod";
 import type { PermissionT } from "../services/permissions.js";
+import logRoute from "../middleware/log-route.js";
 import validateBody from "../middleware/validate-body.js";
 import validateParams from "../middleware/validate-params.js";
 import validateQuery from "../middleware/validate-query.js";
@@ -66,7 +67,7 @@ const route: RouteT = (fastify, opts) => {
 		opts;
 
 	const preValidation: PreHookT = [];
-	const preHandler: PreHookT = [];
+	const preHandler: PreHookT = [logRoute];
 
 	if (middleware?.authenticate) preHandler.push(authenticate);
 	if (middleware?.validateCSRF) preHandler.push(validateCSRF);
