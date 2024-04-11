@@ -1,8 +1,9 @@
 import { expect, test } from "vitest";
+import path from "node:path";
 import getConfigPath from "./get-config-path.js";
 
 test("finds headless.config.ts file", async () => {
-	const configPath = getConfigPath(process.cwd());
+	const configPath = getConfigPath(path.resolve(__dirname, "./mock-config"));
 	expect(configPath).toContain("headless.config.ts");
 });
 

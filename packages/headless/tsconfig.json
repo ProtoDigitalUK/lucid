@@ -9,8 +9,7 @@
         "./node_modules",
         "./temp",
         "./.turbo",
-        "./scripts",
-        "headless.config.ts"
+        "./scripts"
     ],
     "compilerOptions": {
         "rootDir": "./src",
