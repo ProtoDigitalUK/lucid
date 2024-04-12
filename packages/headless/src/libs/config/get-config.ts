@@ -4,12 +4,12 @@ import type { Config } from "../../types/config.js";
 
 let config: Config | undefined = undefined;
 
-export const getConfig = async () => {
+export const getConfig = async (path?: string) => {
 	if (config) {
 		return config;
 	}
 
-	const configPath = getConfigPath(process.cwd());
+	const configPath = path ? path : getConfigPath(process.cwd());
 	const configUrl = pathToFileURL(configPath).href;
 	const configModule = await import(configUrl);
 

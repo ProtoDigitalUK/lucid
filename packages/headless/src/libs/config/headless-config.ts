@@ -1,65 +1,80 @@
 import T from "../../translations/index.js";
-import type { Config } from "../../types/config.js";
+import type { Config, HeadlessConfig } from "../../types/config.js";
 import checks from "./checks/index.js";
 import { ZodError } from "zod";
 import ConfigSchema from "./config-schema.js";
+import mergeConfig from "./merge-config.js";
+import defaultConfig from "./default-config.js";
 import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
 import { BrickSchema } from "../builders/brick-builder/index.js";
 import { FieldsSchema } from "../builders/field-builder/index.js";
 import { HeadlessError } from "../../utils/error-handler.js";
-import headlessLogger from "../logging/index.js";
+import headlessLogger, { LoggerScopes } from "../logging/index.js";
 
-const headlessConfig = async (config: Config) => {
-	let configRes = config;
+const headlessConfig = async (config: HeadlessConfig) => {
+	let configRes = mergeConfig(config, defaultConfig);
+
 	try {
-		configRes = ConfigSchema.parse(config) as Config;
-
-		// TODO: Add a merge with default
-
-		// Merge plugin config
-
-		if (Array.isArray(config.plugins)) {
-			const postPluginConfig = config.plugins.reduce(
+		// merge plugin config
+		if (Array.isArray(configRes.plugins)) {
+			const postPluginConfig = configRes.plugins.reduce(
 				async (acc, plugin) => {
 					const configAfterPlugin = await acc;
-					return plugin(configAfterPlugin);
+					const pluginRes = await plugin(configAfterPlugin);
+					checks.checkPluginVersion({
+						key: pluginRes.key,
+						requiredVersions: pluginRes.headless,
+					});
+					return pluginRes.config;
 				},
-				Promise.resolve(config),
+				Promise.resolve(configRes),
 			);
-
-			configRes = await postPluginConfig;
+			const res = await postPluginConfig;
+			configRes = res;
 		}
 
-		// checks.checkDuplicateBuilderKeys(
-		// 	"bricks",
-		// 	config.bricks?.map((b) => b.key),
-		// );
+		// validate config
+		configRes = ConfigSchema.parse(configRes) as Config;
+
+		// collection checks
 		checks.checkDuplicateBuilderKeys(
 			"collections",
-			config.collections?.map((c) => c.data.key),
+			configRes.collections.map((c) => c.data.key),
 		);
 
-		// TODO: return to brick validation now bricks only exist as part of collections
-		if (configRes.collections) {
-			for (const collection of configRes.collections) {
-				CollectionConfigSchema.parse(collection.config);
+		for (const collection of configRes.collections) {
+			CollectionConfigSchema.parse(collection.config);
 
-				for (const brick of [
-					...(collection.config.bricks?.fixed || []),
-					...(collection.config.bricks?.builder || []),
-				]) {
-					BrickSchema.parse(brick.config);
-					for (const field of brick.flatFields)
-						FieldsSchema.parse(field);
-					checks.checkDuplicateFieldKeys(
-						brick.key,
-						brick.meta.fieldKeys,
-					);
-					checks.checkRepeaterDepth(
-						brick.key,
-						brick.meta.repeaterDepth,
-					);
-				}
+			checks.checkDuplicateBuilderKeys(
+				"bricks",
+				collection.builderBricks.map((b) => b.key),
+			);
+
+			checks.checkDuplicateFieldKeys(
+				"collection",
+				collection.key,
+				collection.meta.fieldKeys,
+			);
+
+			checks.checkRepeaterDepth(
+				"collection",
+				collection.key,
+				collection.meta.repeaterDepth,
+			);
+
+			for (const brick of collection.brickInstances) {
+				BrickSchema.parse(brick.config);
+				for (const field of brick.flatFields) FieldsSchema.parse(field);
+				checks.checkDuplicateFieldKeys(
+					"brick",
+					brick.key,
+					brick.meta.fieldKeys,
+				);
+				checks.checkRepeaterDepth(
+					"brick",
+					brick.key,
+					brick.meta.repeaterDepth,
+				);
 			}
 		}
 
@@ -69,6 +84,7 @@ const headlessConfig = async (config: Config) => {
 			for (const error of err.errors) {
 				headlessLogger("error", {
 					message: error.message,
+					scope: LoggerScopes.CONFIG,
 					data: {
 						path: error.path.join("."),
 					},
@@ -77,10 +93,12 @@ const headlessConfig = async (config: Config) => {
 		} else if (err instanceof HeadlessError) {
 		} else if (err instanceof Error) {
 			headlessLogger("error", {
+				scope: LoggerScopes.CONFIG,
 				message: err.message,
 			});
 		} else {
 			headlessLogger("error", {
+				scope: LoggerScopes.CONFIG,
 				message: T("an_unknown_error_occurred"),
 			});
 		}

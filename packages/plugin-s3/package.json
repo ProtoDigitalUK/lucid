@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-s3",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"private": false,
 	"description": "The official S3 plugin for Proto Headless",
 	"type": "module",

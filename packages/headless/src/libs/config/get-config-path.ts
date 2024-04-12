@@ -2,10 +2,10 @@ import T from "../../translations/index.js";
 import path from "node:path";
 import fs from "fs-extra";
 
-const getConfigPath = (cwd: string): string => {
+const getConfigPath = (cwd: string, filename?: string): string => {
 	let configPath: string | undefined = undefined;
 	const root = path.parse(cwd).root;
-	const configFileName = "headless.config";
+	const configFileName = filename ?? "headless.config";
 	const configExtensions = [".ts", ".js"];
 
 	const search = (cwd: string): void => {

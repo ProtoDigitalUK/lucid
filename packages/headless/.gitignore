@@ -2,3 +2,5 @@
 /cms/
 /node_modules/
 /restart.txt
+db.sqlite
+/uploads/

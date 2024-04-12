@@ -5,11 +5,20 @@ import type ConfigSchema from "../libs/config/config-schema.js";
 import type { Readable } from "node:stream";
 import type { MediaMetaDataT } from "../utils/media-helpers.js";
 
-export type HeadlessPlugin = (config: Config) => Promise<Config>;
+export type HeadlessPlugin = (config: Config) => Promise<{
+	key: string;
+	headless: string;
+	config: Config;
+}>;
+
 export type HeadlessPluginOptions<T> = (
 	config: Config,
 	pluginOptions: T,
-) => Promise<Config>;
+) => Promise<{
+	key: string;
+	headless: string;
+	config: Config;
+}>;
 
 export type EmailStrategy = (
 	email: {
@@ -88,9 +97,19 @@ export type MediaStrategy = {
 	deleteMultiple: MediaStrategyDeleteMultiple;
 };
 
-export interface Config extends z.infer<typeof ConfigSchema> {
+// the version of config that is used in the headless.config.ts file
+export interface HeadlessConfig {
+	mode: "production" | "development";
 	db: DatabaseAdapterT;
-	collections?: CollectionBuilderT[];
+	host: string;
+	keys: {
+		cookieSecret: string;
+		accessTokenSecret: string;
+		refreshTokenSecret: string;
+	};
+	paths?: {
+		emailTemplates?: string;
+	};
 	email?: {
 		from: {
 			email: string;
@@ -99,14 +118,39 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		strategy: EmailStrategy;
 	};
 	media?: {
-		storageLimit?: number;
-		maxFileSize?: number;
-		processedImages?: {
+		storage?: number;
+		maxSize?: number;
+		processed?: {
+			limit?: number;
+			store?: boolean;
+		};
+		fallbackImage?: string | boolean | undefined;
+		stategy?: MediaStrategy;
+	};
+	collections?: CollectionBuilderT[];
+	plugins?: HeadlessPlugin[];
+}
+
+export interface Config extends z.infer<typeof ConfigSchema> {
+	mode: "production" | "development";
+	db: DatabaseAdapterT;
+	email?: {
+		from: {
+			email: string;
+			name: string;
+		};
+		strategy: EmailStrategy;
+	};
+	media: {
+		storage: number;
+		maxSize: number;
+		processed: {
 			limit: number;
 			store: boolean;
 		};
-		fallbackImage?: string | boolean;
+		fallbackImage: string | boolean | undefined;
 		stategy?: MediaStrategy;
 	};
-	plugins?: Array<HeadlessPlugin>;
+	collections: CollectionBuilderT[];
+	plugins: Array<HeadlessPlugin>;
 }

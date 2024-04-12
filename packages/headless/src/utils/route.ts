@@ -67,7 +67,7 @@ const route: RouteT = (fastify, opts) => {
 		opts;
 
 	const preValidation: PreHookT = [];
-	const preHandler: PreHookT = [logRoute];
+	const preHandler: PreHookT = [logRoute("prehandler")];
 
 	if (middleware?.authenticate) preHandler.push(authenticate);
 	if (middleware?.validateCSRF) preHandler.push(validateCSRF);
@@ -88,6 +88,7 @@ const route: RouteT = (fastify, opts) => {
 		preValidation: preValidation,
 		preHandler: preHandler,
 		schema: swaggerSchema,
+		onResponse: [logRoute("onResponse")],
 	});
 };
 

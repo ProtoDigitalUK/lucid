@@ -197,12 +197,10 @@ export default class CollectionDocumentBricksRepo {
 	deleteMultiple = async (props: {
 		where: QueryBuilderWhereT<"headless_collection_document_bricks">;
 	}) => {
-		let query = this.db
-			.deleteFrom("headless_collection_document_bricks")
-			.returning(["id"]);
+		let query = this.db.deleteFrom("headless_collection_document_bricks");
 
 		query = deleteQB(query, props.where);
 
-		return query.executeTakeFirst();
+		return query.execute();
 	};
 }

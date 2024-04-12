@@ -40,12 +40,14 @@ export interface SettingsResT {
 	};
 	media: {
 		enabled: boolean;
-		storage_used: number | null;
-		storage_limit: number | null;
-		storage_remaining: number | null;
-		processed_images: {
-			stored: boolean | null;
-			per_image_limit: number | null;
+		storage: {
+			total: number;
+			remaining: number | null;
+			used: number | null;
+		};
+		processed: {
+			stored: boolean;
+			image_limit: number;
 			total: number | null;
 		};
 	};

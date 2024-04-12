@@ -1,7 +1,6 @@
 {
 	"name": "@protoheadless/headless",
 	"version": "0.0.1",
-	"private": true,
 	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -18,26 +17,23 @@
 		"format": "biome format --write ./src",
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src",
-		"clear-db:postgres": "node ./clear-db-pg.js"
+		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**",
-		"assets/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**", "assets/**"],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
 		"@protoheadless/config": "*",
 		"@types/fs-extra": "^11.0.1",
 		"@types/jsonwebtoken": "^9.0.2",
+		"@types/lodash.merge": "^4.6.9",
 		"@types/mime-types": "^2.1.4",
 		"@types/mjml": "^4.7.4",
 		"@types/node": "^20.2.1",
 		"@types/node-cron": "^3.0.11",
 		"@types/pg": "^8.10.1",
 		"@types/sanitize-html": "^2.9.0",
+		"@types/semver": "^7.5.8",
 		"@types/slug": "^5.0.7",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
@@ -61,11 +57,13 @@
 		"iso-639-1": "^3.1.0",
 		"jsonwebtoken": "^9.0.2",
 		"kysely": "^0.27.2",
+		"lodash.merge": "^4.6.2",
 		"mime-types": "^2.1.35",
 		"mjml": "^4.15.3",
 		"node-cron": "^3.0.3",
 		"pg": "^8.11.3",
 		"sanitize-html": "^2.11.0",
+		"semver": "^7.6.0",
 		"sharp": "^0.33.2",
 		"slug": "^8.2.3",
 		"winston": "^3.13.0",

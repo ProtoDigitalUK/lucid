@@ -4,16 +4,22 @@
 		"start": "turbo run start",
 		"build": "turbo run build",
 		"dev": "turbo run dev --no-daemon",
+		"test": "vitest",
 		"format": "turbo run format",
 		"lint": "turbo run lint",
 		"lint:fix": "turbo run lint:fix"
 	},
 	"devDependencies": {
-		"turbo": "^1.12.5"
+		"@changesets/cli": "^2.27.1",
+		"turbo": "^1.12.5",
+		"vitest": "^1.5.0"
 	},
 	"name": "headless",
 	"packageManager": "npm@10.2.4",
-	"workspaces": ["apps/*", "packages/*"],
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
 	"volta": {
 		"node": "21.6.2"
 	}
