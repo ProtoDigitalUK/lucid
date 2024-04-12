@@ -51,7 +51,7 @@ const getMetaData = async (data: {
 		width: width || null,
 		height: height || null,
 		type: getMediaType(mimeType),
-		key: await generateKey(data.fileName),
+		key: await generateKey(data.fileName, fileExtension),
 	};
 };
 
@@ -77,10 +77,11 @@ const getMediaType = (mimeType: string): MediaTypeT => {
 };
 
 // Generate unique key
-const generateKey = async (name: string) => {
+const generateKey = async (name: string, fileExtension: string | false) => {
 	const [fname, extension] = name.split(".");
+	const ext = fileExtension || extension;
 
-	if (!fname || !extension) {
+	if (!fname || !ext) {
 		throw new APIError({
 			type: "basic",
 			name: T("media_name_invalid"),
@@ -98,7 +99,7 @@ const generateKey = async (name: string) => {
 	const month = getMonth(date);
 	const monthF = month + 1 >= 10 ? `${month + 1}` : `0${month + 1}`;
 
-	return `${getYear(date)}/${monthF}/${uuid}-${filename}.${extension}`;
+	return `${getYear(date)}/${monthF}/${uuid}-${filename}.${ext}`;
 };
 
 // Save stream to a temporary file
