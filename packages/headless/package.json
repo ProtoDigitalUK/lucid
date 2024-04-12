@@ -14,7 +14,8 @@
 	"scripts": {
 		"build": "tsc && tsup",
 		"dev": "tsup --watch",
-		"format": "biome format --write ./src",
+		"format": "biome format ./src",
+		"format:fix": "biome format --write ./src",
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
