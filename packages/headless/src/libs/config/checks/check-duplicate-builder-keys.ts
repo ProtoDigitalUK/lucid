@@ -7,6 +7,7 @@ const checkDuplicateBuilderKeys = (
 	if (keys === undefined) return;
 	if (keys.length === 0) return;
 	const uniqueKeys = [...new Set(keys)];
+
 	const hasDuplicates = keys.length !== uniqueKeys.length;
 
 	if (hasDuplicates) {

@@ -33,7 +33,7 @@ const headlessConfig = async (config: HeadlessConfig) => {
 		// collection checks
 		checks.checkDuplicateBuilderKeys(
 			"collections",
-			config.collections?.map((c) => c.data.key),
+			configRes.collections.map((c) => c.data.key),
 		);
 
 		for (const collection of configRes.collections) {
@@ -44,11 +44,31 @@ const headlessConfig = async (config: HeadlessConfig) => {
 				collection.builderBricks.map((b) => b.key),
 			);
 
+			checks.checkDuplicateFieldKeys(
+				"collection",
+				collection.key,
+				collection.meta.fieldKeys,
+			);
+
+			checks.checkRepeaterDepth(
+				"collection",
+				collection.key,
+				collection.meta.repeaterDepth,
+			);
+
 			for (const brick of collection.brickInstances) {
 				BrickSchema.parse(brick.config);
 				for (const field of brick.flatFields) FieldsSchema.parse(field);
-				checks.checkDuplicateFieldKeys(brick.key, brick.meta.fieldKeys);
-				checks.checkRepeaterDepth(brick.key, brick.meta.repeaterDepth);
+				checks.checkDuplicateFieldKeys(
+					"brick",
+					brick.key,
+					brick.meta.fieldKeys,
+				);
+				checks.checkRepeaterDepth(
+					"brick",
+					brick.key,
+					brick.meta.repeaterDepth,
+				);
 			}
 		}
 

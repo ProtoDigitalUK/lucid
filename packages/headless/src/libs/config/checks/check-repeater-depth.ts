@@ -1,13 +1,21 @@
+import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
 
 const checkRepeaterDepth = (
-	brickKey: string,
+	type: "brick" | "collection",
+	typeKey: string,
 	repeaterDepth: Record<string, number>,
 ) => {
 	for (const [repeaterKey, depth] of Object.entries(repeaterDepth)) {
 		if (depth > constants.fieldBuiler.maxRepeaterDepth) {
 			throw new Error(
-				`Repeater depth is too high in brick: ${brickKey} with key: ${repeaterKey}. Please reduce the depth from ${depth} to ${constants.fieldBuiler.maxRepeaterDepth}.`,
+				T("repeater_depth_message", {
+					type: type,
+					typeKey: typeKey,
+					repeaterKey: repeaterKey,
+					depth: depth,
+					maxRepeaterDepth: constants.fieldBuiler.maxRepeaterDepth,
+				}),
 			);
 		}
 	}

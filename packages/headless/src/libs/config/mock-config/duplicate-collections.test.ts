@@ -1,27 +1,22 @@
 import { expect, test, vi } from "vitest";
-import T from "../../translations/index.js";
+import T from "../../../translations/index.js";
 import path from "node:path";
-import getConfig from "./get-config.js";
-import logger from "../logging/logger.js";
-import { messageFormat, LoggerScopes } from "../logging/index.js";
+import getConfig from "../get-config.js";
+import logger from "../../logging/logger.js";
+import { messageFormat, LoggerScopes } from "../../logging/index.js";
 
-test("should throw duplicate collection error", async () => {
+test("should throw duplicate collection key error", async () => {
 	const consoleLogSpy = vi
 		.spyOn(logger, "error")
-		// @ts-ignore
+		// @ts-expect-error
 		.mockImplementation(() => {});
 
 	const processExitSpy = vi
 		.spyOn(process, "exit")
-		// @ts-ignore
+		// @ts-expect-error
 		.mockImplementation(() => {});
 
-	await getConfig(
-		path.resolve(
-			__dirname,
-			"./mock-config/duplicate-collections.config.ts",
-		),
-	);
+	await getConfig(path.resolve(__dirname, "./duplicate-collections.ts"));
 
 	expect(consoleLogSpy).toHaveBeenCalledWith(
 		messageFormat({
