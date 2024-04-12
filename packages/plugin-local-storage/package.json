@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-local-storage",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "The official Local Storage plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
