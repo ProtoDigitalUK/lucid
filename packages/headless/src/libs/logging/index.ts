@@ -2,39 +2,50 @@ import logger from "./logger.js";
 
 export type LogLevel = "error" | "warn" | "info" | "debug";
 
+export enum LoggerScopes {
+	CONFIG = "config",
+}
+
 const headlessLogger = (
 	level: LogLevel,
 	data: {
 		message: string;
-		scope?: string;
+		scope?: LoggerScopes | string;
 		data?: Record<string, unknown>;
 	},
 ) => {
-	let logLevelFn = logger.error;
+	let logFn = logger.error;
 
 	switch (level) {
 		case "error":
-			logLevelFn = logger.error;
+			logFn = logger.error;
 			break;
 		case "warn":
-			logLevelFn = logger.warn;
+			logFn = logger.warn;
 			break;
 		case "info":
-			logLevelFn = logger.info;
+			logFn = logger.info;
 			break;
 		case "debug":
-			logLevelFn = logger.debug;
+			logFn = logger.debug;
 			break;
 		default:
-			logLevelFn = logger.error;
+			logFn = logger.error;
 			break;
 	}
 
+	logFn(messageFormat(data), data.data);
+};
+
+export const messageFormat = (data: {
+	message: string;
+	scope?: LoggerScopes | string;
+}) => {
 	if (data.scope) {
-		logLevelFn(`[${data.scope}]: ${data.message}`, data.data);
-	} else {
-		logLevelFn(data.message, data.data);
+		return `[${data.scope}]: ${data.message}`;
 	}
+
+	return data.message;
 };
 
 export default headlessLogger;

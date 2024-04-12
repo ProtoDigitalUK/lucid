@@ -127,6 +127,12 @@ export default class CollectionBuilder extends FieldBuilder {
 			})) ?? []
 		);
 	}
+	get brickInstances(): Array<BrickBuilderT> {
+		return [
+			...(this.config.bricks?.builder || []),
+			...(this.config.bricks?.fixed || []),
+		];
+	}
 }
 
 export const CollectionConfigSchema = z.object({

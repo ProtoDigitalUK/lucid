@@ -78,18 +78,15 @@ const validateBrickData = async (data: {
 	const errors: FieldErrorsT[] = [];
 	let hasErrors = false;
 
-	const brickInstances = [
-		...(data.collection.config.bricks?.fixed || []),
-		...(data.collection.config.bricks?.builder || []),
-	];
-
 	for (let i = 0; i < data.bricks.length; i++) {
 		const brick = data.bricks[i];
 
 		// Check if the brick instance exists
 		const instance =
 			brick.type !== "collection-fields"
-				? brickInstances.find((b) => b.key === brick.key)
+				? data.collection.brickInstances.find(
+						(b) => b.key === brick.key,
+					)
 				: data.collection;
 		if (!instance) {
 			throw new APIError({

@@ -1,4 +1,5 @@
 import { expect, test } from "vitest";
+import T from "../../translations/index.js";
 import path from "node:path";
 import getConfigPath from "./get-config-path.js";
 
@@ -9,6 +10,6 @@ test("finds headless.config.ts file", async () => {
 
 test("throws on missing file", async () => {
 	expect(() => getConfigPath(process.cwd(), "test.cfdonfig")).toThrowError(
-		/^Cannot find the headless.config.ts or headless.config.js file at the root of your project.$/,
+		T("cannot_find_config_path"),
 	);
 });

@@ -27,15 +27,10 @@ export default class CollectionDocumentBricksFormatter {
 		bricks: BrickResT[];
 		fields: FieldResT[] | null;
 	} => {
-		const brickBuilders = [
-			...(props.collection.config.bricks?.builder || []),
-			...(props.collection.config.bricks?.fixed || []),
-		];
-
 		const bricks = props.bricks
 			.filter((brick) => {
 				if (brick.brick_type === "collection-fields") return false;
-				const builder = brickBuilders.find((b) => {
+				const builder = props.collection.brickInstances.find((b) => {
 					return b.key === brick.brick_key;
 				});
 				if (!builder) return false;
@@ -43,7 +38,7 @@ export default class CollectionDocumentBricksFormatter {
 				return true;
 			})
 			.map((brick) => {
-				const builder = brickBuilders.find((b) => {
+				const builder = props.collection.brickInstances.find((b) => {
 					return b.key === brick.brick_key;
 				}) as BrickBuilderT;
 
