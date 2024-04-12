@@ -20,11 +20,17 @@ const headlessConfig = async (config: HeadlessConfig) => {
 			const postPluginConfig = configRes.plugins.reduce(
 				async (acc, plugin) => {
 					const configAfterPlugin = await acc;
-					return plugin(configAfterPlugin);
+					const pluginRes = await plugin(configAfterPlugin);
+					checks.checkPluginVersion({
+						key: pluginRes.key,
+						requiredVersions: pluginRes.headless,
+					});
+					return pluginRes.config;
 				},
 				Promise.resolve(configRes),
 			);
-			configRes = await postPluginConfig;
+			const res = await postPluginConfig;
+			configRes = res;
 		}
 
 		// validate config

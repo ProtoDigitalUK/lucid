@@ -5,11 +5,20 @@ import type ConfigSchema from "../libs/config/config-schema.js";
 import type { Readable } from "node:stream";
 import type { MediaMetaDataT } from "../utils/media-helpers.js";
 
-export type HeadlessPlugin = (config: Config) => Promise<Config>;
+export type HeadlessPlugin = (config: Config) => Promise<{
+	key: string;
+	headless: string;
+	config: Config;
+}>;
+
 export type HeadlessPluginOptions<T> = (
 	config: Config,
 	pluginOptions: T,
-) => Promise<Config>;
+) => Promise<{
+	key: string;
+	headless: string;
+	config: Config;
+}>;
 
 export type EmailStrategy = (
 	email: {

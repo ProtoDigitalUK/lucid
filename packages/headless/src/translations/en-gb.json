@@ -109,5 +109,6 @@
 	"media_strategy_not_configured_message": "Media functionality is disabled because the media stategy configuration is missing.",
 	"db_migration_failed": "Database migration failed.",
 	"duplicate_field_keys_message": "Duplicate field keys found ({{keys}}) in {{type}}: {{typeKey}}.",
-	"repeater_depth_message": "Repeater depth is too high in {{type}}: {{typeKey}} with key: {{repeaterKey}}. Please reduce the depth from {{depth}} to {{maxRepeaterDepth}}."
+	"repeater_depth_message": "Repeater depth is too high in {{type}}: {{typeKey}} with key: {{repeaterKey}}. Please reduce the depth from {{depth}} to {{maxRepeaterDepth}}.",
+	"plugin_version_not_supported": "This plugin does not support version {{version}} of Headless, only versions {{supportedVersions}}."
 }

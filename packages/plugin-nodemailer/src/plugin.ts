@@ -2,6 +2,7 @@ import T from "./translations/index.js";
 import verifyTransporter from "./utils/verify-transporter.js";
 import type { HeadlessPluginOptions } from "@protoheadless/headless";
 import type { PluginOptions } from "./types/types.js";
+import { PLUGIN_KEY, HEADLESS_VERSION } from "./constants.js";
 
 const plugin: HeadlessPluginOptions<PluginOptions> = async (
 	config,
@@ -38,7 +39,11 @@ const plugin: HeadlessPluginOptions<PluginOptions> = async (
 		},
 	};
 
-	return config;
+	return {
+		key: PLUGIN_KEY,
+		headless: HEADLESS_VERSION,
+		config: config,
+	};
 };
 
 export default plugin;

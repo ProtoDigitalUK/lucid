@@ -39,6 +39,7 @@
 		"@types/node-cron": "^3.0.11",
 		"@types/pg": "^8.10.1",
 		"@types/sanitize-html": "^2.9.0",
+		"@types/semver": "^7.5.8",
 		"@types/slug": "^5.0.7",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
@@ -68,6 +69,7 @@
 		"node-cron": "^3.0.3",
 		"pg": "^8.11.3",
 		"sanitize-html": "^2.11.0",
+		"semver": "^7.6.0",
 		"sharp": "^0.33.2",
 		"slug": "^8.2.3",
 		"winston": "^3.13.0",
