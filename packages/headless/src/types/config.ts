@@ -4,6 +4,7 @@ import type { DatabaseAdapterT } from "../libs/db/adapter.js";
 import type ConfigSchema from "../libs/config/config-schema.js";
 import type { Readable } from "node:stream";
 import type { MediaMetaDataT } from "../utils/media-helpers.js";
+import type { HeadlessHook, AllHooks } from "./hooks.js";
 
 export type HeadlessPlugin = (config: Config) => Promise<{
 	key: string;
@@ -127,6 +128,7 @@ export interface HeadlessConfig {
 		fallbackImage?: string | boolean | undefined;
 		stategy?: MediaStrategy;
 	};
+	hooks?: Array<AllHooks>;
 	collections?: CollectionBuilderT[];
 	plugins?: HeadlessPlugin[];
 }
