@@ -1,3 +1,4 @@
+import T from "../../../translations/index.js";
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
 import type {
@@ -419,7 +420,11 @@ class FieldBuilder {
 			schema.parse(value);
 		} catch (error) {
 			const err = error as z.ZodError;
-			throw new Error(err.issues[0].message);
+			const firstIssue = err.issues[0];
+			if (firstIssue?.message) {
+				throw new Error(firstIssue.message);
+			}
+			throw new Error(T("an_unknown_error_occurred"));
 		}
 	}
 	private fieldTypeToDataType: Record<

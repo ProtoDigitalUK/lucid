@@ -37,7 +37,18 @@ export type PermissionGroup = {
 	permissions: PermissionT[];
 };
 
-export const permissionGroups: Record<string, PermissionGroup> = {
+export type PermissionGroupKey =
+	| "users"
+	| "roles"
+	| "media"
+	| "settings"
+	| "languages"
+	| "emails"
+	| "content"
+	| "menu"
+	| "form_submissions";
+
+export const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 	users: {
 		key: "users_permissions",
 		permissions: ["create_user", "update_user", "delete_user"],

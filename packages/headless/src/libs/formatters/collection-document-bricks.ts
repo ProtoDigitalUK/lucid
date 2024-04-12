@@ -77,7 +77,10 @@ export default class CollectionDocumentBricksFormatter {
 
 		return {
 			bricks,
-			fields: collectionFields.length ? collectionFields[0] : null,
+			fields:
+				collectionFields.length && collectionFields[0]
+					? collectionFields[0]
+					: null,
 		};
 	};
 	static swagger = {

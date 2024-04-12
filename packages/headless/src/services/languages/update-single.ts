@@ -63,7 +63,7 @@ const updateSingle = async (
 		const code = data.code.split("-");
 		const iso6391 = code[0];
 
-		if (!ISO6391.validate(iso6391)) {
+		if (iso6391 && !ISO6391.validate(iso6391)) {
 			throw new APIError({
 				type: "basic",
 				name: T("dynamic_error_name", {

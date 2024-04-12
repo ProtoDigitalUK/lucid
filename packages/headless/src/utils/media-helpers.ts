@@ -1,6 +1,8 @@
+import T from "../translations/index.js";
 import fs from "fs-extra";
 import type { Readable } from "node:stream";
 import type { MediaResT, MediaTypeT } from "../types/response.js";
+import { APIError } from "./error-handler.js";
 import { pipeline } from "node:stream/promises";
 import { join } from "node:path";
 import mime from "mime-types";
@@ -49,7 +51,7 @@ const getMetaData = async (data: {
 		width: width || null,
 		height: height || null,
 		type: getMediaType(mimeType),
-		key: generateKey(data.fileName),
+		key: await generateKey(data.fileName),
 	};
 };
 
@@ -75,8 +77,18 @@ const getMediaType = (mimeType: string): MediaTypeT => {
 };
 
 // Generate unique key
-const generateKey = (name: string) => {
+const generateKey = async (name: string) => {
 	const [fname, extension] = name.split(".");
+
+	if (!fname || !extension) {
+		throw new APIError({
+			type: "basic",
+			name: T("media_name_invalid"),
+			message: T("media_name_invalid_message"),
+			status: 400,
+		});
+	}
+
 	let filename = slug(fname, {
 		lower: true,
 	});

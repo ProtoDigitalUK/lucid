@@ -1,4 +1,6 @@
+import T from "../../../translations/index.js";
 import { sql } from "kysely";
+import { HeadlessError } from "../../../utils/error-handler.js";
 
 // https://old.kyse.link/?p=s&i=C0yoagEodj9vv4AxE3TH
 const values = <R extends Record<string, unknown>, A extends string>(
@@ -7,7 +9,13 @@ const values = <R extends Record<string, unknown>, A extends string>(
 ) => {
 	// Assume there's at least one record and all records
 	// have the same keys.
-	const keys = Object.keys(records[0]);
+	const firstRecord = records[0];
+	if (!firstRecord) {
+		throw new HeadlessError({
+			message: T("no_records_provided"),
+		});
+	}
+	const keys = Object.keys(firstRecord);
 
 	// Transform the records into a list of lists such as
 	// ($1, $2, $3), ($4, $5, $6)

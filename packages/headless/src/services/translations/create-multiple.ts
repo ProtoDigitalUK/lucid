@@ -52,7 +52,11 @@ const createMultiple = async <K extends string>(
 
 	const keys: Record<K, number> = data.keys.reduce(
 		(keys, key, index) => {
-			keys[key] = translationKeyEntries[index].id;
+			const translationKeyId = translationKeyEntries[index]?.id;
+			if (translationKeyId === undefined) {
+				return keys;
+			}
+			keys[key] = translationKeyId;
 			return keys;
 		},
 		{} as Record<K, number>,
