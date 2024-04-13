@@ -1,5 +1,5 @@
-import type { CollectionDocumentUpsertData } from "../services/collection-documents/upsert-single.js";
-import type { CollectionDocumentResT } from "./response.js";
+import type { BrickSchemaT } from "../schemas/collection-bricks.js";
+import type { FieldCollectionSchemaT } from "../schemas/collection-fields.js";
 
 // --------------------------------------------------
 // types
@@ -34,14 +34,28 @@ export type HookServiceHandlers = {
 				collection_key: string;
 				user_id: number;
 			};
-			data: CollectionDocumentUpsertData;
-		}) => Promise<CollectionDocumentUpsertData> | Promise<void>;
+			data: {
+				document_id?: number;
+				bricks?: Array<BrickSchemaT>;
+				fields?: Array<FieldCollectionSchemaT>;
+			};
+		}) =>
+			| Promise<{
+					document_id?: number;
+					bricks?: Array<BrickSchemaT>;
+					fields?: Array<FieldCollectionSchemaT>;
+			  }>
+			| Promise<void>;
 		afterUpsert: (props: {
 			meta: {
 				collection_key: string;
 				user_id: number;
 			};
-			data: CollectionDocumentUpsertData;
+			data: {
+				document_id?: number;
+				bricks?: Array<BrickSchemaT>;
+				fields?: Array<FieldCollectionSchemaT>;
+			};
 		}) => Promise<void>;
 		beforeDelete: (props: {
 			meta: {
@@ -61,10 +75,6 @@ export type HookServiceHandlers = {
 				ids: number[];
 			};
 		}) => Promise<void>;
-		// TODO: implement when we have a public endpoint - data type will likely be different (nested bricks & fields etc.)
-		beforePublicResponse: (
-			data: CollectionDocumentResT,
-		) => Promise<unknown>;
 	};
 };
 
@@ -76,15 +86,13 @@ export type CollectionDocumentBuilderHooks =
 	| HeadlessHookCollection<"beforeUpsert">
 	| HeadlessHookCollection<"afterUpsert">
 	| HeadlessHookCollection<"beforeDelete">
-	| HeadlessHookCollection<"afterDelete">
-	| HeadlessHookCollection<"beforePublicResponse">;
+	| HeadlessHookCollection<"afterDelete">;
 
 export type CollectionDocumentHooks =
 	| HeadlessHook<"collection-documents", "beforeUpsert">
 	| HeadlessHook<"collection-documents", "afterUpsert">
 	| HeadlessHook<"collection-documents", "beforeDelete">
-	| HeadlessHook<"collection-documents", "afterDelete">
-	| HeadlessHook<"collection-documents", "beforePublicResponse">;
+	| HeadlessHook<"collection-documents", "afterDelete">;
 
 // add all hooks to this type
 export type AllHooks = CollectionDocumentHooks;

@@ -25,11 +25,9 @@ const upsertSingleController: ControllerT<
 		{
 			collection_key: request.params.collection_key,
 			user_id: request.auth.id,
-			data: {
-				document_id: request.body.document_id,
-				bricks: request.body.bricks,
-				fields: request.body.fields,
-			},
+			document_id: request.body.document_id,
+			bricks: request.body.bricks,
+			fields: request.body.fields,
 		},
 	);
 
