@@ -7,6 +7,13 @@ export interface HeadlessHook<
 	handler: HookServiceHandlers[S][E];
 }
 
+export interface HeadlessHookCollection<
+	E extends keyof HookServiceHandlers["collection-documents"],
+> {
+	event: E;
+	handler: HookServiceHandlers["collection-documents"][E];
+}
+
 // --------------------------------------------------
 // service handlers
 export type HookServiceHandlers = {
@@ -35,6 +42,18 @@ export type HookServiceHandlers = {
 		beforeResponse: (data: unknown, context: unknown) => Promise<void>;
 	};
 };
+
+export type CollectionDocumentBuilderHooks =
+	| HeadlessHookCollection<"beforeValidate">
+	| HeadlessHookCollection<"beforeCreate">
+	| HeadlessHookCollection<"afterCreate">
+	| HeadlessHookCollection<"beforeUpdate">
+	| HeadlessHookCollection<"afterUpdate">
+	| HeadlessHookCollection<"beforeDelete">
+	| HeadlessHookCollection<"afterDelete">
+	| HeadlessHookCollection<"beforeRead">
+	| HeadlessHookCollection<"afterRead">
+	| HeadlessHookCollection<"beforeResponse">;
 
 export type CollectionDocumentHooks =
 	| HeadlessHook<"collection-documents", "beforeValidate">

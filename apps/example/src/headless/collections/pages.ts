@@ -12,6 +12,14 @@ const PageCollection = new CollectionBuilder("page", {
 	singular: "Page",
 	description: "Pages are used to create static content on your website.",
 	translations: true,
+	hooks: [
+		{
+			event: "beforeCreate",
+			handler: async (data, context) => {
+				console.log("beforeCreate hook collection");
+			},
+		},
+	],
 	bricks: {
 		fixed: [DefaultMetaBrick, PageMetaBrick],
 		builder: [BannerBrick, IntroBrick, TestingBrick],

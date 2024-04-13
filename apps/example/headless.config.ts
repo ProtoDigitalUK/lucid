@@ -48,7 +48,7 @@ export default headlessConfig({
 			service: "collection-documents",
 			event: "beforeCreate",
 			handler: async (data, context) => {
-				console.log("beforeCreate hook", data, context);
+				console.log("beforeCreate hook global");
 			},
 		},
 	],
