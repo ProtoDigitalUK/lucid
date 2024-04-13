@@ -33,6 +33,13 @@ const ConfigSchema = z.object({
 		fallbackImage: z.union([z.string(), z.boolean()]).optional(),
 		strategy: z.unknown().optional(),
 	}),
+	hooks: z.array(
+		z.object({
+			service: z.string(),
+			event: z.string(),
+			handler: z.unknown(),
+		}),
+	),
 	collections: z.array(z.unknown()),
 	plugins: z.array(z.unknown()),
 });

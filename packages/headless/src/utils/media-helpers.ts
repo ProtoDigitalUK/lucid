@@ -81,6 +81,7 @@ const generateKey = async (name: string, fileExtension: string | false) => {
 	const [fname, extension] = name.split(".");
 	const ext = fileExtension || extension;
 
+	// TODO: probs shouldnt throw API error, instead standard one and caller can handle
 	if (!fname || !ext) {
 		throw new APIError({
 			type: "basic",

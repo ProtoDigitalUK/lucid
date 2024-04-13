@@ -43,6 +43,15 @@ export default headlessConfig({
 			store: true,
 		},
 	},
+	hooks: [
+		{
+			service: "collection-documents",
+			event: "beforeUpsert",
+			handler: async (props) => {
+				console.log("collection doc hook", props.meta.collection_key);
+			},
+		},
+	],
 	collections: [
 		PageCollection,
 		BlogCollection,

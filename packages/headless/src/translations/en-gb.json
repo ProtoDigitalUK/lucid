@@ -89,6 +89,7 @@
 	"swagger_query_string_page_description": "The page number of the paginated response",
 	"swagger_query_string_per_page_description": "The number of items per page in the paginated response",
 	"page": "Page",
+	"only_found_ids_error_message": "Only found the following ids: {{ids}}",
 	"homepage_parent_error_message": "The homepage cannot be set as a parent.",
 	"error_not_unique_message": "Please ensure that the value is unique and try again.",
 	"error_saving_bricks": "Error saving bricks",

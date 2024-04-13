@@ -16,6 +16,7 @@ export const defaultConfig: Partial<HeadlessConfig> = {
 		fallbackImage: undefined,
 		stategy: undefined,
 	},
+	hooks: [],
 	collections: [],
 	plugins: [],
 };

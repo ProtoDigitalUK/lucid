@@ -14,7 +14,6 @@ export interface ServiceData {
 	};
 }
 
-// TODO: look into how db connection is passed to this function
 const sendExternal = async (data: ServiceData) => {
 	const config = await getConfig();
 	return serviceWrapper(emailServices.sendEmail, true)(
