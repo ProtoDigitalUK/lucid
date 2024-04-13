@@ -48,10 +48,7 @@ export default headlessConfig({
 			service: "collection-documents",
 			event: "beforeUpsert",
 			handler: async (props) => {
-				console.log(
-					"beforeCreate hook global",
-					props.meta.collection_key,
-				);
+				console.log("collection doc hook", props.meta.collection_key);
 			},
 		},
 	],

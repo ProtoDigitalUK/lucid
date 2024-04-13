@@ -16,28 +16,28 @@ const PageCollection = new CollectionBuilder("page", {
 		{
 			event: "beforeUpsert",
 			handler: async (props) => {
-				console.log(
-					"beforeCreate hook collection",
-					props.meta.collection_key,
-				);
+				return {
+					document_id: props.data.document_id,
+					fields: props.data.fields?.map((field) => {
+						if (field.key === "page_title") {
+							field.value = `${field.value} - Modified`;
+						}
+						return field;
+					}),
+					bricks: props.data.bricks,
+				};
 			},
 		},
 		{
 			event: "beforeDelete",
 			handler: async (props) => {
-				console.log(
-					"beforeDelete hook collection",
-					props.data.document_ids,
-				);
+				console.log("beforeDelete hook collection", props.data.ids);
 			},
 		},
 		{
 			event: "afterDelete",
 			handler: async (props) => {
-				console.log(
-					"afterDelete hook collection",
-					props.data.document_ids,
-				);
+				console.log("afterDelete hook collection", props.data.ids);
 			},
 		},
 	],

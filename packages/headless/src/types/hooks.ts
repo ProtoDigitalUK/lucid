@@ -1,5 +1,4 @@
-import type { BrickSchemaT } from "../schemas/collection-bricks.js";
-import type { FieldCollectionSchemaT } from "../schemas/collection-fields.js";
+import type { CollectionDocumentUpsertData } from "../services/collection-documents/upsert-single.js";
 import type { CollectionDocumentResT } from "./response.js";
 
 // --------------------------------------------------
@@ -35,22 +34,14 @@ export type HookServiceHandlers = {
 				collection_key: string;
 				user_id: number;
 			};
-			data: {
-				document_id?: number;
-				bricks?: Array<BrickSchemaT>;
-				fields?: Array<FieldCollectionSchemaT>;
-			};
-		}) => Promise<void>;
+			data: CollectionDocumentUpsertData;
+		}) => Promise<CollectionDocumentUpsertData> | Promise<void>;
 		afterUpsert: (props: {
 			meta: {
 				collection_key: string;
 				user_id: number;
 			};
-			data: {
-				document_id?: number;
-				bricks?: Array<BrickSchemaT>;
-				fields?: Array<FieldCollectionSchemaT>;
-			};
+			data: CollectionDocumentUpsertData;
 		}) => Promise<void>;
 		beforeDelete: (props: {
 			meta: {
@@ -58,7 +49,7 @@ export type HookServiceHandlers = {
 				user_id: number;
 			};
 			data: {
-				document_ids: number[];
+				ids: number[];
 			};
 		}) => Promise<void>;
 		afterDelete: (props: {
@@ -67,7 +58,7 @@ export type HookServiceHandlers = {
 				user_id: number;
 			};
 			data: {
-				document_ids: number[];
+				ids: number[];
 			};
 		}) => Promise<void>;
 		// TODO: implement when we have a public endpoint - data type will likely be different (nested bricks & fields etc.)

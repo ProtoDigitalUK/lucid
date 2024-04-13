@@ -24,10 +24,12 @@ const upsertSingleController: ControllerT<
 		},
 		{
 			collection_key: request.params.collection_key,
-			document_id: request.body.document_id,
 			user_id: request.auth.id,
-			bricks: request.body.bricks,
-			fields: request.body.fields,
+			data: {
+				document_id: request.body.document_id,
+				bricks: request.body.bricks,
+				fields: request.body.fields,
+			},
 		},
 	);
 

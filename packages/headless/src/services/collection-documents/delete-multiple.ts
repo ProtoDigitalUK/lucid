@@ -87,7 +87,7 @@ const deleteMultiple = async (
 				user_id: data.user_id,
 			},
 			data: {
-				document_ids: data.ids,
+				ids: data.ids,
 			},
 		},
 	);
@@ -133,7 +133,7 @@ const deleteMultiple = async (
 				user_id: data.user_id,
 			},
 			data: {
-				document_ids: deletePages.map((page) => page.id),
+				ids: deletePages.map((page) => page.id),
 			},
 		},
 	);

@@ -77,7 +77,7 @@ const deleteSingle = async (
 				user_id: data.user_id,
 			},
 			data: {
-				document_ids: [data.id],
+				ids: [data.id],
 			},
 		},
 	);
@@ -123,7 +123,7 @@ const deleteSingle = async (
 				user_id: data.user_id,
 			},
 			data: {
-				document_ids: [data.id],
+				ids: [data.id],
 			},
 		},
 	);
