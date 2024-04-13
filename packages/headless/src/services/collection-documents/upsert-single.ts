@@ -3,12 +3,11 @@ import { APIError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
-import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
-import type { HookServiceHandlers } from "../../types/hooks.js";
+import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
+import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -23,20 +22,16 @@ const upsertSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const response = await executeHooks(
-		{
-			service: "collection-documents",
-			event: "beforeCreate",
-			config: serviceConfig.config,
-		},
-		"hello",
-		"test",
-	);
-
 	const errorContent = upsertErrorContent(
 		data.document_id === undefined,
 		T("document"),
 	);
+
+	const collectionInstance =
+		await collectionDocumentsServices.checks.checkCollection({
+			key: data.collection_key,
+			errorContent: errorContent,
+		});
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -74,21 +69,6 @@ const upsertSingle = async (
 		}
 	}
 
-	/*
-        Check:
-        - Collection config
-        - Collection existence
-    */
-	const collectionInstance =
-		await collectionDocumentsServices.checks.checkCollection({
-			key: data.collection_key,
-			errorContent: errorContent,
-		});
-
-	/*
-        Check:
-        - Single collection document count
-    */
 	await Promise.all([
 		serviceWrapper(
 			collectionDocumentsServices.checks
@@ -102,10 +82,26 @@ const upsertSingle = async (
 		}),
 	]);
 
-	/*
-        Insert:
-        - Document
-    */
+	await executeHooks(
+		{
+			service: "collection-documents",
+			event: "beforeUpsert",
+			config: serviceConfig.config,
+			collectionInstance: collectionInstance,
+		},
+		{
+			meta: {
+				collection_key: data.collection_key,
+				user_id: data.user_id,
+			},
+			data: {
+				document_id: data.document_id,
+				bricks: data.bricks,
+				fields: data.fields,
+			},
+		},
+	);
+
 	const document = await CollectionDocumentsRepo.upsertSingle({
 		id: data.document_id,
 		collectionKey: data.collection_key,
@@ -123,10 +119,6 @@ const upsertSingle = async (
 		});
 	}
 
-	/*
-        Update:
-        - Upsert Bricks / Collection fields
-    */
 	await serviceWrapper(
 		collectionDocumentBricksServices.upsertMultiple,
 		false,
@@ -136,6 +128,26 @@ const upsertSingle = async (
 		fields: data.fields,
 		collection_key: data.collection_key,
 	});
+
+	await executeHooks(
+		{
+			service: "collection-documents",
+			event: "afterUpsert",
+			config: serviceConfig.config,
+			collectionInstance: collectionInstance,
+		},
+		{
+			meta: {
+				collection_key: data.collection_key,
+				user_id: data.user_id,
+			},
+			data: {
+				document_id: document.id,
+				bricks: data.bricks,
+				fields: data.fields,
+			},
+		},
+	);
 
 	return document.id;
 };

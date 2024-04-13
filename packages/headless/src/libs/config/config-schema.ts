@@ -37,7 +37,7 @@ const ConfigSchema = z.object({
 		z.object({
 			service: z.string(),
 			event: z.string(),
-			handle: z.unknown(),
+			handler: z.unknown(),
 		}),
 	),
 	collections: z.array(z.unknown()),

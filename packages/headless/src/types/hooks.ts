@@ -1,3 +1,10 @@
+import type { BrickSchemaT } from "../schemas/collection-bricks.js";
+import type { FieldCollectionSchemaT } from "../schemas/collection-fields.js";
+import type { CollectionDocumentResT } from "./response.js";
+
+// --------------------------------------------------
+// types
+
 export interface HeadlessHook<
 	S extends keyof HookServiceHandlers,
 	E extends keyof HookServiceHandlers[S],
@@ -20,72 +27,73 @@ export type ArgumentsType<T> = T extends (...args: infer U) => unknown
 
 // --------------------------------------------------
 // service handlers
+
 export type HookServiceHandlers = {
 	"collection-documents": {
-		beforeValidate: (data: unknown, context: unknown) => Promise<void>;
-		beforeCreate: (
-			data: "hello",
-			context: "test",
-		) => Promise<{
-			collection_key: string;
-		}>;
-		afterCreate: (data: unknown, context: unknown) => Promise<void>;
-		beforeUpdate: (data: unknown, context: unknown) => Promise<void>;
-		afterUpdate: (data: unknown, context: unknown) => Promise<void>;
-		beforeDelete: (data: unknown, context: "unknown") => Promise<void>;
-		afterDelete: (data: unknown, context: unknown) => Promise<void>;
-		beforeRead: (data: unknown, context: unknown) => Promise<void>;
-		afterRead: (data: unknown, context: unknown) => Promise<void>;
-		beforeResponse: (data: unknown, context: unknown) => Promise<void>;
-	};
-	media: {
-		beforeValidate: (data: unknown, context: unknown) => Promise<void>;
-		beforeCreate: (data: unknown, context: unknown) => Promise<void>;
-		afterCreate: (data: unknown, context: unknown) => Promise<void>;
-		beforeUpdate: (data: unknown, context: unknown) => Promise<void>;
-		afterUpdate: (data: unknown, context: unknown) => Promise<void>;
-		beforeDelete: (data: unknown, context: unknown) => Promise<void>;
-		afterDelete: (data: unknown, context: unknown) => Promise<void>;
-		beforeRead: (data: unknown, context: unknown) => Promise<void>;
-		afterRead: (data: unknown, context: unknown) => Promise<void>;
-		beforeResponse: (data: unknown, context: unknown) => Promise<void>;
+		beforeUpsert: (props: {
+			meta: {
+				collection_key: string;
+				user_id: number;
+			};
+			data: {
+				document_id?: number;
+				bricks?: Array<BrickSchemaT>;
+				fields?: Array<FieldCollectionSchemaT>;
+			};
+		}) => Promise<void>;
+		afterUpsert: (props: {
+			meta: {
+				collection_key: string;
+				user_id: number;
+			};
+			data: {
+				document_id?: number;
+				bricks?: Array<BrickSchemaT>;
+				fields?: Array<FieldCollectionSchemaT>;
+			};
+		}) => Promise<void>;
+		beforeDelete: (props: {
+			meta: {
+				collection_key: string;
+				user_id: number;
+			};
+			data: {
+				document_ids: number[];
+			};
+		}) => Promise<void>;
+		afterDelete: (props: {
+			meta: {
+				collection_key: string;
+				user_id: number;
+			};
+			data: {
+				document_ids: number[];
+			};
+		}) => Promise<void>;
+		// TODO: implement when we have a public endpoint - data type will likely be different (nested bricks & fields etc.)
+		beforePublicResponse: (
+			data: CollectionDocumentResT,
+		) => Promise<unknown>;
 	};
 };
 
+// --------------------------------------------------
+// service config
+
+// used for collection builder hook config
 export type CollectionDocumentBuilderHooks =
-	| HeadlessHookCollection<"beforeValidate">
-	| HeadlessHookCollection<"beforeCreate">
-	| HeadlessHookCollection<"afterCreate">
-	| HeadlessHookCollection<"beforeUpdate">
-	| HeadlessHookCollection<"afterUpdate">
+	| HeadlessHookCollection<"beforeUpsert">
+	| HeadlessHookCollection<"afterUpsert">
 	| HeadlessHookCollection<"beforeDelete">
 	| HeadlessHookCollection<"afterDelete">
-	| HeadlessHookCollection<"beforeRead">
-	| HeadlessHookCollection<"afterRead">
-	| HeadlessHookCollection<"beforeResponse">;
+	| HeadlessHookCollection<"beforePublicResponse">;
 
 export type CollectionDocumentHooks =
-	| HeadlessHook<"collection-documents", "beforeValidate">
-	| HeadlessHook<"collection-documents", "beforeCreate">
-	| HeadlessHook<"collection-documents", "afterCreate">
-	| HeadlessHook<"collection-documents", "beforeUpdate">
-	| HeadlessHook<"collection-documents", "afterUpdate">
+	| HeadlessHook<"collection-documents", "beforeUpsert">
+	| HeadlessHook<"collection-documents", "afterUpsert">
 	| HeadlessHook<"collection-documents", "beforeDelete">
 	| HeadlessHook<"collection-documents", "afterDelete">
-	| HeadlessHook<"collection-documents", "beforeRead">
-	| HeadlessHook<"collection-documents", "afterRead">
-	| HeadlessHook<"collection-documents", "beforeResponse">;
+	| HeadlessHook<"collection-documents", "beforePublicResponse">;
 
-export type MediaHooks =
-	| HeadlessHook<"media", "beforeValidate">
-	| HeadlessHook<"media", "beforeCreate">
-	| HeadlessHook<"media", "afterCreate">
-	| HeadlessHook<"media", "beforeUpdate">
-	| HeadlessHook<"media", "afterUpdate">
-	| HeadlessHook<"media", "beforeDelete">
-	| HeadlessHook<"media", "afterDelete">
-	| HeadlessHook<"media", "beforeRead">
-	| HeadlessHook<"media", "afterRead">
-	| HeadlessHook<"media", "beforeResponse">;
-
-export type AllHooks = CollectionDocumentHooks | MediaHooks;
+// add all hooks to this type
+export type AllHooks = CollectionDocumentHooks;

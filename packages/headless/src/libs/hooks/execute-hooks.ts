@@ -1,6 +1,7 @@
 import type { Config } from "../../types/config.js";
 import type { HookServiceHandlers, ArgumentsType } from "../../types/hooks.js";
 import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
+import merge from "lodash.merge";
 
 const executeHooks = async <
 	S extends keyof HookServiceHandlers,
@@ -16,7 +17,7 @@ const executeHooks = async <
 		collectionInstance?: CollectionBuilderT;
 	},
 	...args: HandlerArgs
-): Promise<Array<Result>> => {
+): Promise<Result> => {
 	const results: Array<Result> = [];
 
 	for (let i = 0; i < options.config.hooks.length; i++) {
@@ -28,7 +29,9 @@ const executeHooks = async <
 		}
 	}
 
-	if (options.collectionInstance?.config.hooks === undefined) return results;
+	if (options.collectionInstance?.config.hooks === undefined) {
+		return merge({}, ...results);
+	}
 
 	for (let i = 0; i < options.collectionInstance.config.hooks.length; i++) {
 		const hook = options.collectionInstance.config.hooks[i];
@@ -39,7 +42,7 @@ const executeHooks = async <
 		}
 	}
 
-	return results;
+	return merge({}, ...results);
 };
 
 export default executeHooks;

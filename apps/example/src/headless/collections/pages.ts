@@ -14,9 +14,30 @@ const PageCollection = new CollectionBuilder("page", {
 	translations: true,
 	hooks: [
 		{
-			event: "beforeCreate",
-			handler: async (data, context) => {
-				console.log("beforeCreate hook collection");
+			event: "beforeUpsert",
+			handler: async (props) => {
+				console.log(
+					"beforeCreate hook collection",
+					props.meta.collection_key,
+				);
+			},
+		},
+		{
+			event: "beforeDelete",
+			handler: async (props) => {
+				console.log(
+					"beforeDelete hook collection",
+					props.data.document_ids,
+				);
+			},
+		},
+		{
+			event: "afterDelete",
+			handler: async (props) => {
+				console.log(
+					"afterDelete hook collection",
+					props.data.document_ids,
+				);
 			},
 		},
 	],
