@@ -57,14 +57,14 @@ class APIError extends Error {
 			let current = result;
 			for (const key of item.path) {
 				if (typeof key === "number") {
-					// @ts-ignore
+					// @ts-expect-error
 					// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 					current = current.children || (current.children = []);
-					// @ts-ignore
+					// @ts-expect-error
 					// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 					current = current[key] || (current[key] = {});
 				} else {
-					// @ts-ignore
+					// @ts-expect-error
 					// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 					current = current[key] || (current[key] = {});
 				}

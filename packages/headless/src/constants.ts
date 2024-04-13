@@ -1,3 +1,4 @@
+import T from "./translations/index.js";
 import { permissionGroups } from "./services/permissions.js";
 
 export default {
@@ -52,6 +53,13 @@ export default {
 	},
 	locations: {
 		resetPassword: "/reset-password",
+	},
+	errors: {
+		name: T("default_error_name"),
+		message: T("default_error_message"),
+		status: 500,
+		code: null,
+		errors: null,
 	},
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds
