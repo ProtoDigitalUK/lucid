@@ -44,7 +44,12 @@ const buildFilter = (query: unknown) => {
 
 	for (const [key, value] of Object.entries(queryObject)) {
 		if (key.includes("filter[")) {
-			const name = key.split("[")[1].split("]")[0];
+			const splitBracket = key.split("[")[1];
+			if (splitBracket === undefined) continue;
+
+			const name = splitBracket.split("]")[0];
+			if (name === undefined) continue;
+
 			if (value.includes(",")) {
 				result[name] = value.split(",");
 			} else if (value !== "") {

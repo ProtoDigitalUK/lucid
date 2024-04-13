@@ -13,6 +13,7 @@ import type {
 	CollectionTextareaConfigT,
 	CollectionDateTimeConfigT,
 } from "./types.js";
+import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
 export default class CollectionBuilder extends FieldBuilder {
 	key: string;
@@ -142,7 +143,14 @@ export const CollectionConfigSchema = z.object({
 	singular: z.string(),
 	description: z.string().optional(),
 	translations: z.boolean().default(false).optional(),
-
+	hooks: z
+		.array(
+			z.object({
+				event: z.string(),
+				handler: z.unknown(),
+			}),
+		)
+		.optional(),
 	bricks: z
 		.object({
 			fixed: z.array(z.unknown()).optional(),
@@ -153,6 +161,7 @@ export const CollectionConfigSchema = z.object({
 
 interface CollectionConfigSchemaT
 	extends z.infer<typeof CollectionConfigSchema> {
+	hooks?: CollectionDocumentBuilderHooks[];
 	bricks?: {
 		fixed?: Array<BrickBuilderT>;
 		builder?: Array<BrickBuilderT>;

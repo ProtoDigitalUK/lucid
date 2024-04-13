@@ -13,7 +13,6 @@ import headlessLogger, { LoggerScopes } from "../logging/index.js";
 
 const headlessConfig = async (config: HeadlessConfig) => {
 	let configRes = mergeConfig(config, defaultConfig);
-
 	try {
 		// merge plugin config
 		if (Array.isArray(configRes.plugins)) {

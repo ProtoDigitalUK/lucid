@@ -232,6 +232,7 @@ export default class CollectionDocumentsRepo {
 		authorId: number;
 		createdBy: number;
 		updatedBy: number;
+		isDeleted: BooleanInt;
 	}) => {
 		return this.db
 			.insertInto("headless_collection_documents")
@@ -241,12 +242,14 @@ export default class CollectionDocumentsRepo {
 				author_id: props.authorId,
 				created_by: props.createdBy,
 				updated_by: props.updatedBy,
+				is_deleted: props.isDeleted,
 			})
 			.onConflict((oc) =>
 				oc.column("id").doUpdateSet({
 					author_id: props.authorId,
 					created_by: props.createdBy,
 					updated_by: props.updatedBy,
+					is_deleted: props.isDeleted,
 				}),
 			)
 			.returning("id")

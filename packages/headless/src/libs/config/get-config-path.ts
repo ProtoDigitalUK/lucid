@@ -15,7 +15,7 @@ const getConfigPath = (cwd: string, filename?: string): string => {
 			return name === configFileName && configExtensions.includes(ext);
 		});
 
-		if (configFiles.length > 0) {
+		if (configFiles.length > 0 && configFiles[0]) {
 			configPath = path.resolve(cwd, configFiles[0]);
 			return;
 		}

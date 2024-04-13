@@ -69,7 +69,7 @@ const headless = async (fastify: FastifyInstance) => {
 		});
 		fastify.register(fastifyMultipart, {
 			limits: {
-				fileSize: 10 * 1024 * 1024, // 10MB TODO: move to config
+				fileSize: config.media.maxSize,
 			},
 		});
 

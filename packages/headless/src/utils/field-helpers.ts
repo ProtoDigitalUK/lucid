@@ -113,15 +113,26 @@ export const collectionFilters = (
 		if (filterValue) {
 			const keyValues = filterValue
 				.map((filter) => filter.split("=")[1])
-				.filter((v) => v !== "");
+				.filter((v) => v !== "")
+				.filter((v) => v !== undefined) as string[];
 
 			if (keyValues.length === 0) continue;
 
-			filterKeyValues.push({
-				key: field.key,
-				value: keyValues.length > 1 ? keyValues : keyValues[0],
-				column: fieldTypeValueKey(field.type),
-			});
+			if (keyValues.length > 1) {
+				filterKeyValues.push({
+					key: field.key,
+					value: keyValues,
+					column: fieldTypeValueKey(field.type),
+				});
+			} else {
+				const firstValue = keyValues[0];
+				if (!firstValue) continue;
+				filterKeyValues.push({
+					key: field.key,
+					value: firstValue,
+					column: fieldTypeValueKey(field.type),
+				});
+			}
 		}
 	}
 

@@ -46,9 +46,11 @@ class BrickBuilder extends FieldBuilder {
 
 		// find the selected repeater
 		for (let i = 0; i < fields.length; i++) {
-			if (fields[i].type === "repeater" && fields[i].key === key) {
+			const field = fields[i];
+			if (!field) continue;
+			if (field.type === "repeater" && field.key === key) {
 				selectedRepeaterIndex = i;
-				repeaterKey = fields[i].key;
+				repeaterKey = field.key;
 				break;
 			}
 		}

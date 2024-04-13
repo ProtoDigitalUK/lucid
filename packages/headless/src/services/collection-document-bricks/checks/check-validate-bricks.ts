@@ -81,6 +81,8 @@ const validateBrickData = async (data: {
 	for (let i = 0; i < data.bricks.length; i++) {
 		const brick = data.bricks[i];
 
+		if (brick === undefined) continue;
+
 		// Check if the brick instance exists
 		const instance =
 			brick.type !== "collection-fields"
@@ -107,6 +109,8 @@ const validateBrickData = async (data: {
 		// For fields, validate them against the instance
 		for (let j = 0; j < flatFields.length; j++) {
 			const field = flatFields[j];
+
+			if (field === undefined) continue;
 
 			// Set the secondary value
 			let referenceData: ValidationPropsT["referenceData"] = undefined;

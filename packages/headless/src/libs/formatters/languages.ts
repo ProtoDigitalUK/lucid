@@ -21,8 +21,9 @@ export default class LanguagesFormatter {
 		return {
 			id: props.language.id,
 			code: props.language.code,
-			name: ISO6391.getName(iso6391Code),
-			native_name: ISO6391.getNativeName(iso6391Code),
+			name: (iso6391Code && ISO6391.getName(iso6391Code)) || null,
+			native_name:
+				(iso6391Code && ISO6391.getNativeName(iso6391Code)) || null,
 			is_default: props.language.is_default,
 			is_enabled: props.language.is_enabled,
 			created_at: Formatter.formatDate(props.language.created_at),

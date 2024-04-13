@@ -14,13 +14,12 @@
 	"scripts": {
 		"build": "tsc && tsup",
 		"dev": "tsup --watch",
-		"format": "biome format --write ./src",
+		"format": "biome format ./src",
+		"format:fix": "biome format --write ./src",
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": [
-		"dist/**"
-	],
+	"files": ["dist/**"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",

@@ -25,7 +25,7 @@ const getPath = async (request: FastifyRequest) => {
 	const config = await getConfig();
 
 	const originalUrl = request.originalUrl;
-	return `${config.host}${originalUrl}`.split("?")[0];
+	return `${config.host}${originalUrl}`.split("?")[0] ?? "";
 };
 
 const buildMetaLinks = (

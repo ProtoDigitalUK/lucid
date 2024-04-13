@@ -89,6 +89,7 @@
 	"swagger_query_string_page_description": "The page number of the paginated response",
 	"swagger_query_string_per_page_description": "The number of items per page in the paginated response",
 	"page": "Page",
+	"only_found_ids_error_message": "Only found the following ids: {{ids}}",
 	"homepage_parent_error_message": "The homepage cannot be set as a parent.",
 	"error_not_unique_message": "Please ensure that the value is unique and try again.",
 	"error_saving_bricks": "Error saving bricks",
@@ -110,5 +111,8 @@
 	"db_migration_failed": "Database migration failed.",
 	"duplicate_field_keys_message": "Duplicate field keys found ({{keys}}) in {{type}}: {{typeKey}}.",
 	"repeater_depth_message": "Repeater depth is too high in {{type}}: {{typeKey}} with key: {{repeaterKey}}. Please reduce the depth from {{depth}} to {{maxRepeaterDepth}}.",
-	"plugin_version_not_supported": "This plugin does not support version {{version}} of Headless, only versions {{supportedVersions}}."
+	"plugin_version_not_supported": "This plugin does not support version {{version}} of Headless, only versions {{supportedVersions}}.",
+	"no_records_provided": "No records provided.",
+	"media_name_invalid": "Invalid media name.",
+	"media_name_invalid_message": "The media name is invalid. Please ensure the media name is a valid string."
 }

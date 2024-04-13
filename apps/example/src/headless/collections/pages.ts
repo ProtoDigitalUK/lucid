@@ -12,6 +12,35 @@ const PageCollection = new CollectionBuilder("page", {
 	singular: "Page",
 	description: "Pages are used to create static content on your website.",
 	translations: true,
+	hooks: [
+		{
+			event: "beforeUpsert",
+			handler: async (props) => {
+				return {
+					document_id: props.data.document_id,
+					fields: props.data.fields?.map((field) => {
+						if (field.key === "page_title") {
+							field.value = `${field.value} - Modified`;
+						}
+						return field;
+					}),
+					bricks: props.data.bricks,
+				};
+			},
+		},
+		{
+			event: "beforeDelete",
+			handler: async (props) => {
+				console.log("beforeDelete hook collection", props.data.ids);
+			},
+		},
+		{
+			event: "afterDelete",
+			handler: async (props) => {
+				console.log("afterDelete hook collection", props.data.ids);
+			},
+		},
+	],
 	bricks: {
 		fixed: [DefaultMetaBrick, PageMetaBrick],
 		builder: [BannerBrick, IntroBrick, TestingBrick],
