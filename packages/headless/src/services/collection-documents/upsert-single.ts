@@ -7,6 +7,8 @@ import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import { upsertErrorContent } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import executeHooks from "../../libs/hooks/execute-hooks.js";
+import type { HookServiceHandlers } from "../../types/hooks.js";
 
 export interface ServiceData {
 	collection_key: string;
@@ -21,6 +23,16 @@ const upsertSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
+	const response = await executeHooks(
+		{
+			service: "collection-documents",
+			event: "beforeCreate",
+			config: serviceConfig.config,
+		},
+		"hello",
+		"test",
+	);
+
 	const errorContent = upsertErrorContent(
 		data.document_id === undefined,
 		T("document"),

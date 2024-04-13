@@ -153,6 +153,7 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		fallbackImage: string | boolean | undefined;
 		stategy?: MediaStrategy;
 	};
+	hooks: Array<AllHooks>;
 	collections: CollectionBuilderT[];
 	plugins: Array<HeadlessPlugin>;
 }

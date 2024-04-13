@@ -14,12 +14,21 @@ export interface HeadlessHookCollection<
 	handler: HookServiceHandlers["collection-documents"][E];
 }
 
+export type ArgumentsType<T> = T extends (...args: infer U) => unknown
+	? U
+	: never;
+
 // --------------------------------------------------
 // service handlers
 export type HookServiceHandlers = {
 	"collection-documents": {
 		beforeValidate: (data: unknown, context: unknown) => Promise<void>;
-		beforeCreate: (data: "hello", context: "test") => Promise<void>;
+		beforeCreate: (
+			data: "hello",
+			context: "test",
+		) => Promise<{
+			collection_key: string;
+		}>;
 		afterCreate: (data: unknown, context: unknown) => Promise<void>;
 		beforeUpdate: (data: unknown, context: unknown) => Promise<void>;
 		afterUpdate: (data: unknown, context: unknown) => Promise<void>;
