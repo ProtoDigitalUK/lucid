@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
 import Repository from "../../libs/repositories/index.js";
@@ -31,16 +31,10 @@ const createSingle = async (
 	});
 
 	if (codeUnique !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("language"),
-			}),
-			message: T("creation_error_message", {
-				name: T("language").toLowerCase(),
-			}),
 			status: 400,
-			errors: {
+			errorResponse: {
 				body: {
 					code_value: {
 						code: "duplicate",
@@ -55,11 +49,8 @@ const createSingle = async (
 	const iso6391 = code[0];
 
 	if (iso6391 && !ISO6391.validate(iso6391)) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("language"),
-			}),
 			message: T("error_invalid", {
 				type: T("language_iso_639_1"),
 			}),
@@ -74,14 +65,8 @@ const createSingle = async (
 	});
 
 	if (language === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("language"),
-			}),
-			message: T("creation_error_message", {
-				name: T("language").toLowerCase(),
-			}),
 			status: 400,
 		});
 	}

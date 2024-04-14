@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessError } from "../../utils/errors.js";
+import { HeadlessError } from "../../utils/error-handler.js";
 // Repositories
 import UserTokensRepo from "./user-tokens.js";
 import CollectionDocumentBricksRepo from "./collection-document-bricks.js";

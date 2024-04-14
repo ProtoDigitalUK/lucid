@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import { PassThrough, type Readable } from "node:stream";
 import processedImageServices from "./index.js";
 import mediaHelpers from "../../utils/media-helpers.js";
@@ -31,7 +31,7 @@ const processImage = async (
 
 	// If there is no response
 	if (!res.success || !res.response) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("media"),

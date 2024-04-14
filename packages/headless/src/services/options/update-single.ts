@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "../../types/response.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
@@ -33,14 +33,8 @@ const updateSingle = async (
 	});
 
 	if (updateOption === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("option"),
-			}),
-			message: T("update_error_message", {
-				name: T("option").toLowerCase(),
-			}),
 			status: 400,
 		});
 	}

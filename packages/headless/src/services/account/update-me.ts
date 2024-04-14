@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
@@ -29,11 +29,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (getUser === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("account"),
-			}),
 			message: T("error_not_found_message", {
 				name: T("account"),
 			}),
@@ -81,28 +78,21 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					serviceConfig,
 					{
 						role_ids: data.role_ids,
-						is_create: false,
 					},
 				)
 			: undefined,
 	]);
 
 	if (data.email !== undefined && userWithEmail !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("account"),
-			}),
 			message: T("this_email_is_already_in_use"),
 			status: 400,
 		});
 	}
 	if (data.username !== undefined && userWithUsername !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("account"),
-			}),
 			message: T("this_username_is_already_in_use"),
 			status: 400,
 		});
@@ -126,11 +116,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (updateMe === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("account"),
-			}),
 			message: T("update_error_message", {
 				name: T("your_account"),
 			}),

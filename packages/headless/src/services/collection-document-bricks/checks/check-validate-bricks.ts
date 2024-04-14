@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import type { FieldErrors } from "../../../types/errors.js";
 import collectionsServices from "../../collections/index.js";
 import type {
@@ -46,12 +46,12 @@ const validateBricks = async (
 
 	// If there are errors, throw them
 	if (hasErrors) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_saving_bricks"),
 			message: T("there_was_an_error_updating_bricks"),
 			status: 400,
-			errors: {
+			errorResponse: {
 				body: {
 					fields: errors,
 				},
@@ -90,7 +90,7 @@ const validateBrickData = async (data: {
 					)
 				: data.collection;
 		if (!instance) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_saving_bricks"),
 				message: T(

@@ -45,10 +45,17 @@ const upsertSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("document"),
+				name: T("document"),
 				method: request.body.document_id ? T("update") : T("create"),
 			}),
-			message: T("default_error_message"),
+			message: T(
+				request.body.document_id
+					? "update_error_message"
+					: "creation_error_message",
+				{
+					name: T("document").toLowerCase(),
+				},
+			),
 			status: 500,
 		});
 	}

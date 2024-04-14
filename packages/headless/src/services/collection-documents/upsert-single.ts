@@ -1,9 +1,8 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
-import { upsertErrorContent } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 import merge from "lodash.merge";
@@ -23,15 +22,9 @@ const upsertSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const errorContent = upsertErrorContent(
-		data.document_id === undefined,
-		T("document"),
-	);
-
 	const collectionInstance =
 		await collectionDocumentsServices.checks.checkCollection({
 			key: data.collection_key,
-			errorContent: errorContent,
 		});
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -57,7 +50,7 @@ const upsertSingle = async (
 		});
 
 		if (existingDocument === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_not_found_name", {
 					name: T("document"),
@@ -79,7 +72,6 @@ const upsertSingle = async (
 			collection_key: data.collection_key,
 			collection_mode: collectionInstance.data.mode,
 			document_id: data.document_id,
-			errorContent: errorContent,
 		}),
 	]);
 
@@ -110,10 +102,8 @@ const upsertSingle = async (
 	});
 
 	if (document === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: errorContent.name,
-			message: errorContent.message,
 			status: 400,
 		});
 	}

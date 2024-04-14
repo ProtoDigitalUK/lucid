@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
 import type { ErrorResult } from "../../types/errors.js";
 import type { PermissionT } from "../../services/permissions.js";
@@ -50,16 +50,10 @@ const validatePermissions = async (
 	}
 
 	if (permErrors.length > 0) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("role"),
-			}),
-			message: T("creation_error_message", {
-				name: T("role").toLowerCase(),
-			}),
 			status: 500,
-			errors: {
+			errorResponse: {
 				body: {
 					permissions: permErrors.reduce<ErrorResult>((acc, e) => {
 						acc[e.key] = e.error;

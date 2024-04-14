@@ -3,8 +3,7 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
 import usersServices from "../users/index.js";
-
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 
 const key = "_access";
 
@@ -48,7 +47,7 @@ export const generateAccessToken = async (
 			path: "/",
 		});
 	} catch (err) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("access_token_error_name"),
 			message: T("access_token_error_message"),

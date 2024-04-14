@@ -1,6 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError } from "../../../utils/error-handler.js";
-import type { ErrorContentT } from "../../../utils/helpers.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 /*
@@ -12,7 +11,6 @@ export interface ServiceData {
 	collection_key: string;
 	collection_mode: "single" | "multiple";
 	document_id?: number;
-	errorContent: ErrorContentT;
 }
 
 const checkSingleCollectionDocumentCount = async (
@@ -44,12 +42,11 @@ const checkSingleCollectionDocumentCount = async (
 	});
 
 	if (hasDocument !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: data.errorContent.name,
-			message: data.errorContent.message,
+			message: T("this_collection_has_a_document_already"),
 			status: 400,
-			errors: {
+			errorResponse: {
 				body: {
 					collection_key: {
 						code: "invalid",

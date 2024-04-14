@@ -47,10 +47,12 @@ const createSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("language"),
+				name: T("language"),
 				method: T("create"),
 			}),
-			message: T("default_error_message"),
+			message: T("creation_error_message", {
+				name: T("language").toLowerCase(),
+			}),
 			status: 500,
 		});
 	}

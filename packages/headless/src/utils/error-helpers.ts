@@ -1,5 +1,5 @@
 import type { HeadlessAPIErrorData } from "../types/errors.js";
-import { HeadlessAPIError } from "./errors.js";
+import { HeadlessAPIError } from "./error-handler.js";
 import constants from "../constants.js";
 
 export const ensureThrowAPIError = (

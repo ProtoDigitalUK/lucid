@@ -28,10 +28,12 @@ const deleteSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("email"),
+				name: T("email"),
 				method: T("delete"),
 			}),
-			message: T("default_error_message"),
+			message: T("deletion_error_message", {
+				name: T("email").toLowerCase(),
+			}),
 			status: 500,
 		});
 	}

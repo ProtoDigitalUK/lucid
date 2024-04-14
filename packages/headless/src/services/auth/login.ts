@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
@@ -20,7 +20,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (!user || !user.password) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),
@@ -29,7 +29,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	if (user !== undefined && user.is_deleted === 1) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_suspended_error_message"),
@@ -43,7 +43,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (!passwordValid) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),

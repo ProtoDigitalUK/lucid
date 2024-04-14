@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
@@ -19,12 +19,6 @@ const deleteMultiple = async (
 	const collectionInstance =
 		await collectionDocumentsServices.checks.checkCollection({
 			key: data.collection_key,
-			errorContent: {
-				name: T("error_not_found_name", {
-					name: T("collection"),
-				}),
-				message: T("collection_not_found_message"),
-			},
 		});
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -54,7 +48,7 @@ const deleteMultiple = async (
 	});
 
 	if (getDocuments.length !== data.ids.length) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("document"),
@@ -62,7 +56,7 @@ const deleteMultiple = async (
 			message: T("error_not_found_message", {
 				name: T("document"),
 			}),
-			errors: {
+			errorResponse: {
 				body: {
 					ids: {
 						code: "only_found",
@@ -110,14 +104,8 @@ const deleteMultiple = async (
 	});
 
 	if (deletePages.length === 0) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_deleted_name", {
-				name: T("document"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("document").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}

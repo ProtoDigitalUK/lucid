@@ -29,10 +29,12 @@ const deleteSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("media"),
+				name: T("media"),
 				method: T("delete"),
 			}),
-			message: T("default_error_message"),
+			message: T("deletion_error_message", {
+				name: T("media").toLowerCase(),
+			}),
 			status: 500,
 		});
 	}

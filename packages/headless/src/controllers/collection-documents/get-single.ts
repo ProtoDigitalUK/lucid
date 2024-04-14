@@ -39,7 +39,7 @@ const getSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("document"),
+				name: T("document"),
 				method: T("fetch"),
 			}),
 			message: T("default_error_message"),

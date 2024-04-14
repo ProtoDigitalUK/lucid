@@ -34,7 +34,7 @@ const resendSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("email"),
+				name: T("email"),
 				method: T("resend"),
 			}),
 			message: T("default_error_message"),

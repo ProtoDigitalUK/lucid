@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import emailServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
@@ -22,7 +22,7 @@ const resendSingle = async (
 	});
 
 	if (email === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("email"),

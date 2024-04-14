@@ -27,10 +27,12 @@ const clearAllProcessedController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("processed_images"),
+				name: T("processed_images"),
 				method: T("delete"),
 			}),
-			message: T("default_error_message"),
+			message: T("deletion_error_message", {
+				name: T("processed_images").toLowerCase(),
+			}),
 			status: 500,
 		});
 	}

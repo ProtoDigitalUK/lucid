@@ -20,7 +20,6 @@ const updateMultipleRoles = async (
 			serviceConfig,
 			{
 				role_ids: data.role_ids || [],
-				is_create: true,
 			},
 		),
 		UserRolesRepo.deleteMultiple({

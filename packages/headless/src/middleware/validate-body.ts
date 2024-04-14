@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
-import { APIError } from "../utils/error-handler.js";
+import { HeadlessAPIError } from "../utils/error-handler.js";
 
 const validateBody =
 	(schema: ZodTypeAny, isMultipart?: boolean) =>
@@ -16,7 +16,7 @@ const validateBody =
 				>;
 				if (queryObject.body) bodyData = JSON.parse(queryObject.body);
 			} catch (error) {
-				throw new APIError({
+				throw new HeadlessAPIError({
 					type: "validation",
 					message: T("multipart_body_validation_error_message"),
 				});
@@ -31,7 +31,7 @@ const validateBody =
 		});
 
 		if (!validateResult.success) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "validation",
 				message: T("validation_body_error_message"),
 				zod: validateResult.error,

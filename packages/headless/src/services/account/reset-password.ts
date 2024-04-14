@@ -3,7 +3,7 @@ import argon2 from "argon2";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -43,14 +43,8 @@ const resetPassword = async (
 	});
 
 	if (user === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("account"),
-			}),
-			message: T("update_error_message", {
-				name: T("your_account"),
-			}),
 			status: 400,
 		});
 	}

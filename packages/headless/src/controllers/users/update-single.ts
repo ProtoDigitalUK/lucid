@@ -29,10 +29,12 @@ const updateSingleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("user"),
+				name: T("user"),
 				method: T("update"),
 			}),
-			message: T("default_error_message"),
+			message: T("update_error_message", {
+				name: T("user").toLowerCase(),
+			}),
 			status: 500,
 		});
 	}

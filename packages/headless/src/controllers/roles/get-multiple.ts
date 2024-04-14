@@ -40,7 +40,7 @@ const getMultipleController: ControllerT<
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				service: T("role"),
+				name: T("role"),
 				method: T("fetch"),
 			}),
 			message: T("default_error_message"),

@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -42,7 +42,7 @@ const updateSingle = async (
 	});
 
 	if (!user) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("user"),
@@ -82,16 +82,10 @@ const updateSingle = async (
 	]);
 
 	if (data.email !== undefined && emailExists !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("user"),
-			}),
-			message: T("update_error_message", {
-				name: T("user"),
-			}),
 			status: 500,
-			errors: {
+			errorResponse: {
 				body: {
 					email: {
 						code: "invalid",
@@ -102,16 +96,10 @@ const updateSingle = async (
 		});
 	}
 	if (data.username !== undefined && usernameExists !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("user"),
-			}),
-			message: T("update_error_message", {
-				name: T("user"),
-			}),
 			status: 500,
-			errors: {
+			errorResponse: {
 				body: {
 					username: {
 						code: "invalid",
@@ -157,14 +145,8 @@ const updateSingle = async (
 	]);
 
 	if (updateUser === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("user"),
-			}),
-			message: T("update_error_message", {
-				name: T("user"),
-			}),
 			status: 500,
 		});
 	}

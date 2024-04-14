@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import mediaServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import translationsServices from "../translations/index.js";
@@ -35,7 +35,7 @@ const deleteSingle = async (
 	});
 
 	if (getMedia === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("media"),
@@ -68,14 +68,8 @@ const deleteSingle = async (
 	});
 
 	if (deleteMedia === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_deleted_name", {
-				name: T("media"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("media").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}

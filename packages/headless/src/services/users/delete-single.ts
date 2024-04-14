@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -29,14 +29,8 @@ const deleteSingle = async (
 	});
 
 	if (deleteUserRes === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_deleted_name", {
-				name: T("user"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("user").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}

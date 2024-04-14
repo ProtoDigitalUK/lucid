@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import ISO6391 from "iso-639-1";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -21,14 +21,8 @@ const updateSingle = async (
 		data.is_default === undefined &&
 		data.is_enabled === undefined
 	) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("language"),
-			}),
-			message: T("update_error_message", {
-				name: T("language"),
-			}),
 			status: 400,
 		});
 	}
@@ -48,14 +42,8 @@ const updateSingle = async (
 		});
 
 		if (language !== undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_updated_name", {
-					name: T("language"),
-				}),
-				message: T("update_error_message", {
-					name: T("language"),
-				}),
 				status: 400,
 			});
 		}
@@ -64,11 +52,8 @@ const updateSingle = async (
 		const iso6391 = code[0];
 
 		if (iso6391 && !ISO6391.validate(iso6391)) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("dynamic_error_name", {
-					name: T("language"),
-				}),
 				message: T("error_invalid", {
 					type: T("language_iso_639_1"),
 				}),
@@ -98,14 +83,8 @@ const updateSingle = async (
 	});
 
 	if (updateLanguage === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("language"),
-			}),
-			message: T("update_error_message", {
-				name: T("language").toLowerCase(),
-			}),
 			status: 400,
 		});
 	}

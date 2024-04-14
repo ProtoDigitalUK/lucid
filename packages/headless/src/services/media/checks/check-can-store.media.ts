@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
 
@@ -16,7 +16,7 @@ const checkCanStoreMedia = async (
 	const storageLimit = serviceConfig.config.media.storage;
 
 	if (data.size > maxFileSize) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("file_too_large_max_size_is", {
@@ -24,7 +24,7 @@ const checkCanStoreMedia = async (
 				size: maxFileSize,
 			}),
 			status: 500,
-			errors: {
+			errorResponse: {
 				body: {
 					file: {
 						code: "storage",
@@ -47,14 +47,14 @@ const checkCanStoreMedia = async (
 
 	const proposedSize = (storageUsed.value_int || 0) + data.size;
 	if (proposedSize > storageLimit) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("file_exceeds_storage_limit_max_limit_is", {
 				size: storageLimit,
 			}),
 			status: 500,
-			errors: {
+			errorResponse: {
 				body: {
 					file: {
 						code: "storage",

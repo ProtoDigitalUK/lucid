@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
-import { HeadlessError } from "../../../utils/errors.js";
+import { HeadlessError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
 import Repository from "../../repositories/index.js";

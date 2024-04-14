@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -28,16 +28,10 @@ const checkLanguagesExist = async (
 	});
 
 	if (languages.length !== languageIds.length) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("translation"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("translation"),
-			}),
 			status: 400,
-			errors: {
+			errorResponse: {
 				body: {
 					translations: {
 						code: "invalid",

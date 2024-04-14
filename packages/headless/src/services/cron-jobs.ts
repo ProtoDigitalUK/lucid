@@ -1,6 +1,6 @@
 import T from "../translations/index.js";
 import cron from "node-cron";
-import { HeadlessError } from "../utils/errors.js";
+import { HeadlessError } from "../utils/error-handler.js";
 import Repository from "../libs/repositories/index.js";
 
 const clearExpiredTokens = async (serviceConfig: ServiceConfigT) => {

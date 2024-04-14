@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
@@ -36,14 +36,11 @@ const createSingle = async (
 	]);
 
 	if (checkNameIsUnique !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: "Role Error",
-			}),
 			message: T("not_unique_error_message"),
 			status: 400,
-			errors: {
+			errorResponse: {
 				body: {
 					name: {
 						code: "invalid",
@@ -60,14 +57,8 @@ const createSingle = async (
 	});
 
 	if (newRoles === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("role"),
-			}),
-			message: T("creation_error_message", {
-				name: T("role").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}
