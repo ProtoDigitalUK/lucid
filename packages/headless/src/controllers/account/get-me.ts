@@ -1,4 +1,4 @@
-import { HeadlessAPIError } from "../../utils/errors.js";
+import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import buildResponse from "../../utils/build-response.js";
@@ -31,8 +31,11 @@ const getMeController: ControllerT<
 	} catch (error) {
 		ensureThrowAPIError(error, {
 			type: "basic",
-			name: "Fetch User Error",
-			message: "Error while fetching user data",
+			name: T("method_error_name", {
+				service: T("user"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
 			status: 500,
 		});
 	}

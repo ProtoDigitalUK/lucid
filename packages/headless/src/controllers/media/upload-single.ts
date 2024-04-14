@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
@@ -7,39 +8,52 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const uploadSingleController: ControllerT<
 	typeof mediaSchema.uploadSingle.params,
 	typeof mediaSchema.uploadSingle.body,
 	typeof mediaSchema.uploadSingle.query
 > = async (request, reply) => {
-	const mediaId = await serviceWrapper(mediaServices.uploadSingle, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			file_data: await request.file(),
-			title_translations: request.body.title_translations,
-			alt_translations: request.body.alt_translations,
-			visible: 1,
-		},
-	);
-	const media = await serviceWrapper(mediaServices.getSingle, false)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			id: mediaId,
-		},
-	);
+	try {
+		const mediaId = await serviceWrapper(mediaServices.uploadSingle, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				file_data: await request.file(),
+				title_translations: request.body.title_translations,
+				alt_translations: request.body.alt_translations,
+				visible: 1,
+			},
+		);
+		const media = await serviceWrapper(mediaServices.getSingle, false)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				id: mediaId,
+			},
+		);
 
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: media,
-		}),
-	);
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: media,
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				service: T("media"),
+				method: T("create"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {

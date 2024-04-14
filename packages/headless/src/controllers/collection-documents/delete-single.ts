@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import {
 	swaggerResponse,
@@ -5,25 +6,38 @@ import {
 } from "../../utils/swagger-helpers.js";
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const deleteSingleController: ControllerT<
 	typeof collectionDocumentsSchema.deleteSingle.params,
 	typeof collectionDocumentsSchema.deleteSingle.body,
 	typeof collectionDocumentsSchema.deleteSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(collectionDocumentsServices.deleteSingle, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			id: Number.parseInt(request.params.id),
-			collection_key: request.params.collection_key,
-			user_id: request.auth.id,
-		},
-	);
+	try {
+		await serviceWrapper(collectionDocumentsServices.deleteSingle, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				id: Number.parseInt(request.params.id),
+				collection_key: request.params.collection_key,
+				user_id: request.auth.id,
+			},
+		);
 
-	reply.status(204).send();
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				service: T("document"),
+				method: T("delete"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {

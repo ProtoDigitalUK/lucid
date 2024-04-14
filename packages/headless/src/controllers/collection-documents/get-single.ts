@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import {
 	swaggerResponse,
@@ -7,31 +8,44 @@ import collectionDocumentsServices from "../../services/collection-documents/ind
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getSingleController: ControllerT<
 	typeof collectionDocumentsSchema.getSingle.params,
 	typeof collectionDocumentsSchema.getSingle.body,
 	typeof collectionDocumentsSchema.getSingle.query
 > = async (request, reply) => {
-	const document = await serviceWrapper(
-		collectionDocumentsServices.getSingle,
-		false,
-	)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			id: Number.parseInt(request.params.id),
-			query: request.query,
-		},
-	);
+	try {
+		const document = await serviceWrapper(
+			collectionDocumentsServices.getSingle,
+			false,
+		)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				id: Number.parseInt(request.params.id),
+				query: request.query,
+			},
+		);
 
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: document,
-		}),
-	);
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: document,
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				service: T("document"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {

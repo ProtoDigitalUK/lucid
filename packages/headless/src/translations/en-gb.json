@@ -114,5 +114,13 @@
 	"plugin_version_not_supported": "This plugin does not support version {{version}} of Headless, only versions {{supportedVersions}}.",
 	"no_records_provided": "No records provided.",
 	"media_name_invalid": "Invalid media name.",
-	"media_name_invalid_message": "The media name is invalid. Please ensure the media name is a valid string."
+	"media_name_invalid_message": "The media name is invalid. Please ensure the media name is a valid string.",
+	"method_error_name": "{{service}} {{method}} Error",
+	"update": "Update",
+	"delete": "Delete",
+	"create": "Create",
+	"fetch": "Fetch",
+	"resend": "Resend",
+	"processed_images": "Processed Images",
+	"settings": "Settings"
 }

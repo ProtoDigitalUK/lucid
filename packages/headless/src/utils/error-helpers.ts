@@ -14,6 +14,18 @@ export const ensureThrowAPIError = (
 		throw error;
 	}
 
+	if (error instanceof Error) {
+		throw new HeadlessAPIError({
+			type: data.type,
+			name: data.name,
+			message: error.message || data.message,
+			status: data.status,
+			code: data.code,
+			errorResponse: data.errorResponse,
+			zod: data.zod,
+		});
+	}
+
 	throw new HeadlessAPIError(data);
 };
 

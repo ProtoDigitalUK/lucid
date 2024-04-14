@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import usersSchema from "../../schemas/users.js";
 import {
 	swaggerResponse,
@@ -7,32 +8,45 @@ import usersServices from "../../services/users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getMultipleController: ControllerT<
 	typeof usersSchema.getMultiple.params,
 	typeof usersSchema.getMultiple.body,
 	typeof usersSchema.getMultiple.query
 > = async (request, reply) => {
-	const users = await serviceWrapper(usersServices.getMultiple, false)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			query: request.query,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: users.data,
-			pagination: {
-				count: users.count,
-				page: request.query.page,
-				perPage: request.query.per_page,
+	try {
+		const users = await serviceWrapper(usersServices.getMultiple, false)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
-		}),
-	);
+			{
+				query: request.query,
+			},
+		);
+
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: users.data,
+				pagination: {
+					count: users.count,
+					page: request.query.page,
+					perPage: request.query.per_page,
+				},
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				service: T("user"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {

@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import rolesSchema from "../../schemas/roles.js";
 import {
 	swaggerResponse,
@@ -7,32 +8,45 @@ import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getMultipleController: ControllerT<
 	typeof rolesSchema.getMultiple.params,
 	typeof rolesSchema.getMultiple.body,
 	typeof rolesSchema.getMultiple.query
 > = async (request, reply) => {
-	const role = await serviceWrapper(rolesServices.getMultiple, false)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			query: request.query,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: role.data,
-			pagination: {
-				count: role.count,
-				page: request.query.page,
-				perPage: request.query.per_page,
+	try {
+		const role = await serviceWrapper(rolesServices.getMultiple, false)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
-		}),
-	);
+			{
+				query: request.query,
+			},
+		);
+
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: role.data,
+				pagination: {
+					count: role.count,
+					page: request.query.page,
+					perPage: request.query.per_page,
+				},
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				service: T("role"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {

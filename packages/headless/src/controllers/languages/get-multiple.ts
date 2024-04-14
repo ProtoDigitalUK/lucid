@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import languageSchema from "../../schemas/languages.js";
 import {
 	swaggerResponse,
@@ -7,35 +8,48 @@ import languagesServices from "../../services/languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import LanguagesFormatter from "../../libs/formatters/languages.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getMultipleController: ControllerT<
 	typeof languageSchema.getMultiple.params,
 	typeof languageSchema.getMultiple.body,
 	typeof languageSchema.getMultiple.query
 > = async (request, reply) => {
-	const languages = await serviceWrapper(
-		languagesServices.getMultiple,
-		false,
-	)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			query: request.query,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: languages.data,
-			pagination: {
-				count: languages.count,
-				page: request.query.page,
-				perPage: request.query.per_page,
+	try {
+		const languages = await serviceWrapper(
+			languagesServices.getMultiple,
+			false,
+		)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
-		}),
-	);
+			{
+				query: request.query,
+			},
+		);
+
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: languages.data,
+				pagination: {
+					count: languages.count,
+					page: request.query.page,
+					perPage: request.query.per_page,
+				},
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				service: T("language"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {
