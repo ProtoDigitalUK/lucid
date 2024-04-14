@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import constants from "../../constants.js";
 import jwt from "jsonwebtoken";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
@@ -110,7 +110,7 @@ export const verifyRefreshToken = async (
 			clearRefreshToken(request, reply),
 			auth.accessToken.clearAccessToken(reply),
 		]);
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("refresh_token_error_name"),
 			message: T("refresh_token_error_message"),

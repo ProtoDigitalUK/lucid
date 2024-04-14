@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData<K extends string> {
@@ -16,14 +16,8 @@ const createMultiple = async <K extends string>(
 	data: ServiceData<K>,
 ) => {
 	if (data.keys.length === 0) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("translation"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("translation"),
-			}),
 			status: 400,
 		});
 	}
@@ -38,14 +32,8 @@ const createMultiple = async <K extends string>(
 	);
 
 	if (translationKeyEntries.length !== data.keys.length) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("translation"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("translation"),
-			}),
 			status: 400,
 		});
 	}

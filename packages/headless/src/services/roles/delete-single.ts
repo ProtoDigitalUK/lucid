@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -23,14 +23,8 @@ const deleteSingle = async (
 	});
 
 	if (deleteRoles.length === 0) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_deleted_name", {
-				name: T("role"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("role").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}

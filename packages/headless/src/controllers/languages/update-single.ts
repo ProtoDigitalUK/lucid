@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import languageSchema from "../../schemas/languages.js";
 import {
 	swaggerResponse,
@@ -5,26 +6,41 @@ import {
 } from "../../utils/swagger-helpers.js";
 import languages from "../../services/languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const updateSingleController: ControllerT<
 	typeof languageSchema.updateSingle.params,
 	typeof languageSchema.updateSingle.body,
 	typeof languageSchema.updateSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(languages.updateSingle, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			current_code: request.params.code,
-			code: request.body.code,
-			is_default: request.body.is_default,
-			is_enabled: request.body.is_enabled,
-		},
-	);
+	try {
+		await serviceWrapper(languages.updateSingle, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				current_code: request.params.code,
+				code: request.body.code,
+				is_default: request.body.is_default,
+				is_enabled: request.body.is_enabled,
+			},
+		);
 
-	reply.status(204).send();
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("language"),
+				method: T("update"),
+			}),
+			message: T("update_error_message", {
+				name: T("language").toLowerCase(),
+			}),
+			status: 500,
+		});
+	}
 };
 
 export default {

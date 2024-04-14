@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
@@ -5,23 +6,38 @@ import {
 } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import processedImagesServices from "../../services/processed-images/index.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const clearSingleProcessedController: ControllerT<
 	typeof mediaSchema.clearSingleProcessed.params,
 	typeof mediaSchema.clearSingleProcessed.body,
 	typeof mediaSchema.clearSingleProcessed.query
 > = async (request, reply) => {
-	await serviceWrapper(processedImagesServices.clearSingle, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			key: request.params.key,
-		},
-	);
+	try {
+		await serviceWrapper(processedImagesServices.clearSingle, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				key: request.params.key,
+			},
+		);
 
-	reply.status(204).send();
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("processed_images"),
+				method: T("delete"),
+			}),
+			message: T("deletion_error_message", {
+				name: T("processed_images").toLowerCase(),
+			}),
+			status: 500,
+		});
+	}
 };
 
 export default {

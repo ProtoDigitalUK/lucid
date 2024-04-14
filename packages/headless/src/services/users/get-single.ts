@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Formatter from "../../libs/formatters/index.js";
 import Repository from "../../libs/repositories/index.js";
 
@@ -17,7 +17,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (!user) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("user"),

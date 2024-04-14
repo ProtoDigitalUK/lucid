@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -91,14 +91,8 @@ const uploadSingle = async (
 		});
 
 		if (mediaRes === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
-				message: T("error_not_created_message", {
-					name: T("media"),
-				}),
 				status: 500,
 			});
 		}

@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
@@ -46,7 +46,7 @@ const updateSingle = async (
 	});
 
 	if (media === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("media"),
@@ -113,14 +113,8 @@ const updateSingle = async (
 	});
 
 	if (mediaUpdateRes === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("media"),
-			}),
-			message: T("update_error_message", {
-				name: T("media").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}

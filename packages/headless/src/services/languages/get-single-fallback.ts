@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -25,7 +25,7 @@ const getSingleFallback = async (
 		});
 
 		if (language === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_not_found_name", {
 					name: T("language"),
@@ -55,7 +55,7 @@ const getSingleFallback = async (
 	});
 
 	if (defaultLanguage === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("language"),

@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
-import { APIError } from "../utils/error-handler.js";
+import { HeadlessAPIError } from "../utils/error-handler.js";
 
 const validateParams =
 	(schema: ZodTypeAny) => async (request: FastifyRequest) => {
@@ -13,7 +13,7 @@ const validateParams =
 		});
 
 		if (!validateResult.success) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "validation",
 				message: T("validation_params_error_message"),
 				zod: validateResult.error,

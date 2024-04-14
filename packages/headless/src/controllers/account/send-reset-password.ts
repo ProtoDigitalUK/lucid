@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
 import {
 	swaggerResponse,
@@ -6,27 +7,40 @@ import {
 import buildResponse from "../../utils/build-response.js";
 import account from "../../services/account/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const sendResetPasswordController: ControllerT<
 	typeof accountSchema.sendResetPassword.params,
 	typeof accountSchema.sendResetPassword.body,
 	typeof accountSchema.sendResetPassword.query
 > = async (request, reply) => {
-	const resetPassword = await serviceWrapper(account.sendResetPassword, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			email: request.body.email,
-		},
-	);
+	try {
+		const resetPassword = await serviceWrapper(
+			account.sendResetPassword,
+			true,
+		)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				email: request.body.email,
+			},
+		);
 
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: resetPassword,
-		}),
-	);
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: resetPassword,
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("default_error_name"),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {

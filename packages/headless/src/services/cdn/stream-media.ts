@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import type { z } from "zod";
 import type { Readable } from "node:stream";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type cdnSchema from "../../schemas/cdn.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import processedImageServices from "../processed-images/index.js";
@@ -40,7 +40,7 @@ const streamMedia = async (
 		const res = await mediaStategy.stream(data.key);
 
 		if (!res.success || !res.response) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_not_found_name", {
 					name: T("media"),

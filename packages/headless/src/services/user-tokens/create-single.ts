@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import crypto from "node:crypto";
 import Repository from "../../libs/repositories/index.js";
 
@@ -25,9 +25,8 @@ const createSingle = async (
 	});
 
 	if (userToken === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("default_error_name"),
 			message: T("error_creating_user_token"),
 			status: 500,
 		});

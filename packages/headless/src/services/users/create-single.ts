@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -36,37 +36,32 @@ const createSingle = async (
 			serviceConfig,
 			{
 				role_ids: data.role_ids,
-				is_create: true,
 			},
 		),
 	]);
 
 	if (userExists !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("user"),
-			}),
-			message: T("creation_error_message", {
-				name: T("user"),
-			}),
 			status: 500,
-			errors: modelErrors({
-				email:
-					userExists.email === data.email
-						? {
-								code: "invalid",
-								message: T("duplicate_entry_error_message"),
-							}
-						: undefined,
-				username:
-					userExists.username === data.username
-						? {
-								code: "invalid",
-								message: T("duplicate_entry_error_message"),
-							}
-						: undefined,
-			}),
+			errorResponse: {
+				body: {
+					email:
+						userExists.email === data.email
+							? {
+									code: "invalid",
+									message: T("duplicate_entry_error_message"),
+								}
+							: undefined,
+					username:
+						userExists.username === data.username
+							? {
+									code: "invalid",
+									message: T("duplicate_entry_error_message"),
+								}
+							: undefined,
+				},
+			},
 		});
 	}
 
@@ -82,14 +77,8 @@ const createSingle = async (
 	});
 
 	if (newUser === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("user"),
-			}),
-			message: T("creation_error_message", {
-				name: T("user"),
-			}),
 			status: 500,
 		});
 	}

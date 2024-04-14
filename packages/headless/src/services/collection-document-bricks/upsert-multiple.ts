@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import collectionBricksServices from "./index.js";
@@ -164,7 +164,7 @@ const assignBrickIdsFromUpsert = (
 		);
 
 		if (!foundBrick) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_saving_bricks"),
 				message: T("there_was_an_error_updating_bricks"),

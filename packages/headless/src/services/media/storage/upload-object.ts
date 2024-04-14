@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
@@ -18,21 +18,17 @@ const uploadObject = async (
 
 	try {
 		if (data.file_data === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
-				message: T("error_not_created_message", {
-					name: T("media"),
-				}),
 				status: 400,
-				errors: modelErrors({
-					file: {
-						code: "required",
-						message: T("ensure_file_has_been_uploaded"),
+				errorResponse: {
+					body: {
+						file: {
+							code: "required",
+							message: T("ensure_file_has_been_uploaded"),
+						},
 					},
-				}),
+				},
 			});
 		}
 
@@ -69,19 +65,18 @@ const uploadObject = async (
 		});
 
 		if (saveObjectRes.success === false) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
 				message: saveObjectRes.message,
 				status: 500,
-				errors: modelErrors({
-					file: {
-						code: "s3_error",
-						message: saveObjectRes.message,
+				errorResponse: {
+					body: {
+						file: {
+							code: "s3_error",
+							message: saveObjectRes.message,
+						},
 					},
-				}),
+				},
 			});
 		}
 

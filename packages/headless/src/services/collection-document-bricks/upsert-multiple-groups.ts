@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import Repository from "../../libs/repositories/index.js";
 
@@ -116,7 +116,7 @@ const upsertMultipleGroups = async (
 					(res) => res.ref === group.group_id,
 				);
 				if (!foundGroup) {
-					throw new APIError({
+					throw new HeadlessAPIError({
 						type: "basic",
 						name: T("error_saving_group"),
 						message: T("there_was_an_error_updating_group"),

@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
@@ -5,26 +6,41 @@ import {
 } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const updateSingleController: ControllerT<
 	typeof mediaSchema.updateSingle.params,
 	typeof mediaSchema.updateSingle.body,
 	typeof mediaSchema.updateSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(mediaServices.updateSingle, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			id: Number.parseInt(request.params.id),
-			file_data: await request.file(),
-			title_translations: request.body.title_translations,
-			alt_translations: request.body.alt_translations,
-		},
-	);
+	try {
+		await serviceWrapper(mediaServices.updateSingle, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				id: Number.parseInt(request.params.id),
+				file_data: await request.file(),
+				title_translations: request.body.title_translations,
+				alt_translations: request.body.alt_translations,
+			},
+		);
 
-	reply.status(204).send();
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("media"),
+				method: T("update"),
+			}),
+			message: T("update_error_message", {
+				name: T("media").toLowerCase(),
+			}),
+			status: 500,
+		});
+	}
 };
 
 export default {
