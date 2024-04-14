@@ -1,12 +1,11 @@
 import T from "../translations/index.js";
-import type { Config } from "../types/config.js";
 import cron from "node-cron";
 import { HeadlessError } from "../utils/errors.js";
 import Repository from "../libs/repositories/index.js";
 
-const clearExpiredTokens = async (config: Config) => {
+const clearExpiredTokens = async (serviceConfig: ServiceConfigT) => {
 	try {
-		const UserTokensRepo = Repository.get("user-tokens", config.db.client);
+		const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
 
 		await UserTokensRepo.deleteMultiple({
 			where: [
@@ -24,9 +23,9 @@ const clearExpiredTokens = async (config: Config) => {
 	}
 };
 
-const registerCronJobs = (config: Config) => {
+const registerCronJobs = async (serviceConfig: ServiceConfigT) => {
 	cron.schedule("0 0 * * *", async () => {
-		await clearExpiredTokens(config);
+		await clearExpiredTokens(serviceConfig);
 	});
 };
 

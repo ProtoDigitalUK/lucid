@@ -17,6 +17,7 @@ import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-helpers.js";
 import registerCronJobs from "./services/cron-jobs.js";
 import headlessLogger from "./libs/logging/index.js";
+import serviceWrapper from "./utils/service-wrapper.js";
 
 const currentDir = getDirName(import.meta.url);
 
@@ -80,7 +81,13 @@ const headless = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Initialise
 		await config.db.seed(config);
-		registerCronJobs(config);
+		await serviceWrapper(
+			registerCronJobs,
+			true,
+		)({
+			db: config.db.client,
+			config: config,
+		});
 
 		// ------------------------------------
 		// Routes
