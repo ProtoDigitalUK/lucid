@@ -1,6 +1,5 @@
 import type z from "zod";
 import T from "../translations/index.js";
-import headlessLogger from "../libs/logging/index.js";
 
 const DEFAULT_ERROR = {
 	name: T("default_error_name"),
@@ -77,52 +76,7 @@ class APIError extends Error {
 	}
 }
 
-class HeadlessError extends Error {
-	scope?: string;
-	kill?: boolean;
-	constructor(data: {
-		message: string;
-		scope?: string;
-		kill?: boolean;
-	}) {
-		super(data.message);
-		this.scope = data.scope;
-		this.kill = data.kill;
-
-		headlessLogger("error", {
-			message: this.message,
-			scope: this.scope,
-		});
-
-		if (this.kill) process.exit(1);
-	}
-}
-
-export const decodeError = (error: Error) => {
-	if (error instanceof APIError) {
-		return {
-			name: error.name,
-			message: error.message,
-			status: error.status,
-			errors: error.errors,
-			code: error.code,
-		};
-	}
-	return {
-		name: DEFAULT_ERROR.name,
-		message: error.message,
-		status: DEFAULT_ERROR.status,
-		errors: DEFAULT_ERROR.errors,
-		code: DEFAULT_ERROR.code,
-	};
-};
-
-const modelErrors = (error: ErrorResultT): ErrorResultT => {
-	return {
-		body: error,
-	};
-};
-
+// TODO: replace with new types ones in errors.ts type file
 interface APIErrorDataT {
 	type: "validation" | "basic" | "forbidden" | "authorisation";
 
@@ -156,4 +110,4 @@ export interface ErrorResultT {
 		| FieldErrorsT[];
 }
 
-export { APIError, HeadlessError, modelErrors };
+export { APIError };

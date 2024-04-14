@@ -1,9 +1,6 @@
 import T from "../../../translations/index.js";
-import {
-	APIError,
-	modelErrors,
-	type FieldErrorsT,
-} from "../../../utils/error-handler.js";
+import { APIError } from "../../../utils/error-handler.js";
+import type { FieldErrors } from "../../../types/errors.js";
 import collectionsServices from "../../collections/index.js";
 import type {
 	ValidationPropsT,
@@ -54,9 +51,11 @@ const validateBricks = async (
 			name: T("error_saving_bricks"),
 			message: T("there_was_an_error_updating_bricks"),
 			status: 400,
-			errors: modelErrors({
-				fields: errors,
-			}),
+			errors: {
+				body: {
+					fields: errors,
+				},
+			},
 		});
 	}
 };
@@ -75,7 +74,7 @@ const validateBrickData = async (data: {
 		id: number;
 	}[];
 }) => {
-	const errors: FieldErrorsT[] = [];
+	const errors: FieldErrors[] = [];
 	let hasErrors = false;
 
 	for (let i = 0; i < data.bricks.length; i++) {

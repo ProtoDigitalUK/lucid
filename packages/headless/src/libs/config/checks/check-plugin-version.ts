@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessError } from "../../../utils/error-handler.js";
+import { HeadlessError } from "../../../utils/errors.js";
 import packageJson from "../../../../package.json";
 import semver from "semver";
 

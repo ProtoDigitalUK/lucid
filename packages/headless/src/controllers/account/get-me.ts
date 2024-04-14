@@ -1,10 +1,11 @@
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/errors.js";
 import accountSchema from "../../schemas/account.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import buildResponse from "../../utils/build-response.js";
 import usersServices from "../../services/users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import UsersFormatter from "../../libs/formatters/users.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getMeController: ControllerT<
 	typeof accountSchema.getMe.params,
@@ -28,15 +29,7 @@ const getMeController: ControllerT<
 			}),
 		);
 	} catch (error) {
-		if (error instanceof APIError) {
-			if (error.name === undefined) error.name = "Fetch User Error";
-			if (error.message === undefined)
-				error.message = "Error while fetching user data";
-			if (error.status === undefined) error.status = 500;
-			throw error;
-		}
-
-		throw new APIError({
+		ensureThrowAPIError(error, {
 			type: "basic",
 			name: "Fetch User Error",
 			message: "Error while fetching user data",

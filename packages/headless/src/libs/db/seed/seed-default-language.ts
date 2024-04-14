@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
-import { HeadlessError } from "../../../utils/error-handler.js";
+import { HeadlessError } from "../../../utils/errors.js";
 import Formatter from "../../formatters/index.js";
 import Repository from "../../repositories/index.js";
 import type { BooleanInt } from "../types.js";

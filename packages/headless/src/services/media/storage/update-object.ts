@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { APIError } from "../../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
@@ -30,12 +30,14 @@ const updateObject = async (
 					name: T("media"),
 				}),
 				status: 400,
-				errors: modelErrors({
-					file: {
-						code: "required",
-						message: T("ensure_file_has_been_uploaded"),
+				errors: {
+					body: {
+						file: {
+							code: "required",
+							message: T("ensure_file_has_been_uploaded"),
+						},
 					},
-				}),
+				},
 			});
 		}
 
@@ -80,12 +82,14 @@ const updateObject = async (
 				}),
 				message: updateObjectRes.message,
 				status: 500,
-				errors: modelErrors({
-					file: {
-						code: "s3_error",
-						message: updateObjectRes.message,
+				errors: {
+					body: {
+						file: {
+							code: "s3_error",
+							message: updateObjectRes.message,
+						},
 					},
-				}),
+				},
 			});
 		}
 

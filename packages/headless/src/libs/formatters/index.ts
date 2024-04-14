@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessError } from "../../utils/error-handler.js";
+import { HeadlessError } from "../../utils/errors.js";
 // Formatters
 import UsersFormatter from "./users.js";
 import UserPermissionsFormatter from "./user-permissions.js";

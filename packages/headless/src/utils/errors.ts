@@ -1,10 +1,6 @@
 import T from "../translations/index.js";
 import type z from "zod";
-import {
-	type ErrorResult,
-	type HeadlessAPIErrorData,
-	HeadlessAPIErrorTypes,
-} from "../types/errors.js";
+import type { ErrorResult, HeadlessAPIErrorData } from "../types/errors.js";
 import headlessLogger from "../libs/logging/index.js";
 
 /**
@@ -43,37 +39,36 @@ import headlessLogger from "../libs/logging/index.js";
  * });
  */
 export class HeadlessAPIError extends Error {
-	type: HeadlessAPIErrorData["type"] = HeadlessAPIErrorTypes.Basic;
+	type: HeadlessAPIErrorData["type"] = "basic";
 	code: HeadlessAPIErrorData["code"];
-	errors: HeadlessAPIErrorData["errors"];
+	errorResponse: HeadlessAPIErrorData["errorResponse"];
 	status: HeadlessAPIErrorData["status"];
-
 	constructor(data: HeadlessAPIErrorData) {
 		super(data.message);
 		this.type = data.type;
 		this.code = data.code;
-		this.errors = data.errors;
+		this.errorResponse = data.errorResponse;
 		this.status = data.status;
 
 		if (data.zod !== undefined) {
-			this.errors = HeadlessAPIError.formatZodErrors(
+			this.errorResponse = HeadlessAPIError.formatZodErrors(
 				data.zod?.issues || [],
 			);
 		}
 
 		switch (data.type) {
-			case HeadlessAPIErrorTypes.Validation: {
+			case "validation": {
 				if (data.status === undefined) this.status = 400;
 				if (data.name === undefined) this.name = T("validation_error");
 				break;
 			}
-			case HeadlessAPIErrorTypes.Authorisation: {
+			case "authorisation": {
 				if (data.status === undefined) this.status = 401;
 				if (data.name === undefined)
 					this.name = T("authorisation_error");
 				break;
 			}
-			case HeadlessAPIErrorTypes.Forbidden: {
+			case "forbidden": {
 				if (data.status === undefined) this.status = 403;
 				if (data.name === undefined) this.name = T("forbidden_error");
 				break;
@@ -84,6 +79,23 @@ export class HeadlessAPIError extends Error {
 			}
 		}
 	}
+	// public methods
+	setMissingValues(data: Partial<HeadlessAPIErrorData>) {
+		if (this.name === undefined && data.name !== undefined)
+			this.name = data.name;
+		if (this.message === undefined && data.message !== undefined)
+			this.message = data.message;
+		if (this.status === undefined && data.status !== undefined)
+			this.status = data.status;
+		if (this.code === undefined && data.code !== undefined)
+			this.code = data.code;
+		if (
+			this.errorResponse === undefined &&
+			data.errorResponse !== undefined
+		)
+			this.errorResponse = data.errorResponse;
+	}
+	// static
 	static formatZodErrors(error: z.ZodIssue[]) {
 		const result: ErrorResult = {};
 

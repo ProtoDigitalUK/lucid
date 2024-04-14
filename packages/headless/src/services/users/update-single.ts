@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -91,12 +91,14 @@ const updateSingle = async (
 				name: T("user"),
 			}),
 			status: 500,
-			errors: modelErrors({
-				email: {
-					code: "invalid",
-					message: T("duplicate_entry_error_message"),
+			errors: {
+				body: {
+					email: {
+						code: "invalid",
+						message: T("duplicate_entry_error_message"),
+					},
 				},
-			}),
+			},
 		});
 	}
 	if (data.username !== undefined && usernameExists !== undefined) {
@@ -109,12 +111,14 @@ const updateSingle = async (
 				name: T("user"),
 			}),
 			status: 500,
-			errors: modelErrors({
-				username: {
-					code: "invalid",
-					message: T("duplicate_entry_error_message"),
+			errors: {
+				body: {
+					username: {
+						code: "invalid",
+						message: T("duplicate_entry_error_message"),
+					},
 				},
-			}),
+			},
 		});
 	}
 

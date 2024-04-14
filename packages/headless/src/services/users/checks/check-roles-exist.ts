@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { APIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -43,14 +43,16 @@ const checkRolesExist = async (
 						name: T("user"),
 					}),
 			status: 400,
-			errors: modelErrors({
-				role_ids: {
-					code: "invalid",
-					message: T("error_not_found_message", {
-						name: T("role"),
-					}),
+			errors: {
+				body: {
+					role_ids: {
+						code: "invalid",
+						message: T("error_not_found_message", {
+							name: T("role"),
+						}),
+					},
 				},
-			}),
+			},
 		});
 	}
 

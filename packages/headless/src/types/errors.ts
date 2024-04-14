@@ -1,25 +1,14 @@
 import type z from "zod";
 
-export enum HeadlessAPIErrorTypes {
-	Basic = "basic",
-	Validation = "validation",
-	Forbidden = "forbidden",
-	Authorisation = "authorisation",
-}
-
-export enum HeadlessAPIErrorCodes {
-	CSRF = "csrf",
-}
-
 export interface HeadlessAPIErrorData {
-	type: HeadlessAPIErrorTypes;
+	type: "validation" | "basic" | "forbidden" | "authorisation";
 
 	name?: string;
 	message?: string;
 	status?: number;
-	code?: HeadlessAPIErrorCodes;
+	code?: "csrf";
 	zod?: z.ZodError;
-	errors?: ErrorResult;
+	errorResponse?: ErrorResult;
 }
 
 export interface ErrorResult {

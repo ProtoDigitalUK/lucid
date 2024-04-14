@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
 import Repository from "../../libs/repositories/index.js";
@@ -40,12 +40,14 @@ const createSingle = async (
 				name: T("language").toLowerCase(),
 			}),
 			status: 400,
-			errors: modelErrors({
-				code_value: {
-					code: "duplicate",
-					message: T("not_unique_error_message"),
+			errors: {
+				body: {
+					code_value: {
+						code: "duplicate",
+						message: T("not_unique_error_message"),
+					},
 				},
-			}),
+			},
 		});
 	}
 

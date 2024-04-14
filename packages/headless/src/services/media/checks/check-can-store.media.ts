@@ -1,8 +1,7 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { APIError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
-import constants from "../../../constants.js";
 
 export interface ServiceData {
 	size: number;
@@ -25,15 +24,17 @@ const checkCanStoreMedia = async (
 				size: maxFileSize,
 			}),
 			status: 500,
-			errors: modelErrors({
-				file: {
-					code: "storage",
-					message: T("file_too_large_max_size_is", {
-						name: data.filename,
-						size: maxFileSize,
-					}),
+			errors: {
+				body: {
+					file: {
+						code: "storage",
+						message: T("file_too_large_max_size_is", {
+							name: data.filename,
+							size: maxFileSize,
+						}),
+					},
 				},
-			}),
+			},
 		});
 	}
 
@@ -53,14 +54,16 @@ const checkCanStoreMedia = async (
 				size: storageLimit,
 			}),
 			status: 500,
-			errors: modelErrors({
-				file: {
-					code: "storage",
-					message: T("file_exceeds_storage_limit_max_limit_is", {
-						size: storageLimit,
-					}),
+			errors: {
+				body: {
+					file: {
+						code: "storage",
+						message: T("file_exceeds_storage_limit_max_limit_is", {
+							size: storageLimit,
+						}),
+					},
 				},
-			}),
+			},
 		});
 	}
 

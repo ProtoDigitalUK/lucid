@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { APIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
@@ -37,12 +37,16 @@ const checkLanguagesExist = async (
 				name: T("translation"),
 			}),
 			status: 400,
-			errors: modelErrors({
-				translations: {
-					code: "invalid",
-					message: T("make_sure_all_translations_languages_exist"),
+			errors: {
+				body: {
+					translations: {
+						code: "invalid",
+						message: T(
+							"make_sure_all_translations_languages_exist",
+						),
+					},
 				},
-			}),
+			},
 		});
 	}
 };

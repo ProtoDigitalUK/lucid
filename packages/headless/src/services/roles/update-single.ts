@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
@@ -53,12 +53,14 @@ const updateSingle = async (
 			}),
 			message: T("not_unique_error_message"),
 			status: 400,
-			errors: modelErrors({
-				name: {
-					code: "invalid",
-					message: T("not_unique_error_message"),
+			errors: {
+				body: {
+					name: {
+						code: "invalid",
+						message: T("not_unique_error_message"),
+					},
 				},
-			}),
+			},
 		});
 	}
 	const updateRoleRes = await RolesRepo.updateSingle({

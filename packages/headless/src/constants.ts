@@ -59,7 +59,7 @@ export default {
 		message: T("default_error_message"),
 		status: 500,
 		code: null,
-		errors: null,
+		errorResponse: null,
 	},
 	csrfExpiration: 604800, // 7 days in seconds
 	refreshTokenExpiration: 604800, // 7 days in seconds

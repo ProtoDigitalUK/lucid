@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
@@ -62,14 +62,16 @@ const deleteMultiple = async (
 			message: T("error_not_found_message", {
 				name: T("document"),
 			}),
-			errors: modelErrors({
-				ids: {
-					code: "only_found",
-					message: T("only_found_ids_error_message", {
-						ids: getDocuments.map((doc) => doc.id).join(", "),
-					}),
+			errors: {
+				body: {
+					ids: {
+						code: "only_found",
+						message: T("only_found_ids_error_message", {
+							ids: getDocuments.map((doc) => doc.id).join(", "),
+						}),
+					},
 				},
-			}),
+			},
 			status: 404,
 		});
 	}

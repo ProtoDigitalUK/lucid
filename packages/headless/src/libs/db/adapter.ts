@@ -7,7 +7,7 @@ import {
 	type KyselyPlugin,
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
-import { HeadlessError } from "../../utils/error-handler.js";
+import { HeadlessError } from "../../utils/errors.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import headlessLogger from "../logging/index.js";
 import type { AdapterType, HeadlessDB } from "./types.js";

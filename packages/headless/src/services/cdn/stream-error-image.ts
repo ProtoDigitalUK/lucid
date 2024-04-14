@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
-import { APIError, decodeError } from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
+import { decodeError } from "../../utils/error-helpers.js";
 import getConfig from "../../libs/config/get-config.js";
 import path from "node:path";
 import { getDirName } from "../../utils/helpers.js";

@@ -14,7 +14,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import routes from "./routes/index.js";
 import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
-import { decodeError } from "./utils/error-handler.js";
+import { decodeError } from "./utils/error-helpers.js";
 import registerCronJobs from "./services/cron-jobs.js";
 import headlessLogger from "./libs/logging/index.js";
 
@@ -108,11 +108,12 @@ const headless = async (fastify: FastifyInstance) => {
 		// ------------------------------------
 		// Error handling
 		fastify.setErrorHandler((error, request, reply) => {
-			const { name, message, status, errors, code } = decodeError(error);
+			const { name, message, status, errorResponse, code } =
+				decodeError(error);
 
 			headlessLogger("error", {
 				message: message,
-				scope: status.toString(),
+				scope: status?.toString() ?? "500",
 			});
 
 			if (reply.sent) {
@@ -128,11 +129,10 @@ const headless = async (fastify: FastifyInstance) => {
 					status,
 					name,
 					message,
-					errors,
+					errorResponse,
 				}).filter(([_, value]) => value !== null),
 			);
-
-			reply.status(status).send(response);
+			reply.status(status ?? 500).send(response);
 		});
 	} catch (error) {
 		// @ts-ignore

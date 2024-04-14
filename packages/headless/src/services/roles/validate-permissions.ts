@@ -1,10 +1,7 @@
 import T from "../../translations/index.js";
-import {
-	APIError,
-	type ErrorResultT,
-	modelErrors,
-} from "../../utils/error-handler.js";
+import { APIError } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
+import type { ErrorResult } from "../../types/errors.js";
 import type { PermissionT } from "../../services/permissions.js";
 
 export interface ServiceData {
@@ -21,7 +18,7 @@ const validatePermissions = async (
 
 	const permErrors: Array<{
 		key: string;
-		error: ErrorResultT;
+		error: ErrorResult;
 	}> = [];
 	const validPerms: Array<{
 		permission: PermissionT;
@@ -62,12 +59,14 @@ const validatePermissions = async (
 				name: T("role").toLowerCase(),
 			}),
 			status: 500,
-			errors: modelErrors({
-				permissions: permErrors.reduce<ErrorResultT>((acc, e) => {
-					acc[e.key] = e.error;
-					return acc;
-				}, {}),
-			}),
+			errors: {
+				body: {
+					permissions: permErrors.reduce<ErrorResult>((acc, e) => {
+						acc[e.key] = e.error;
+						return acc;
+					}, {}),
+				},
+			},
 		});
 	}
 

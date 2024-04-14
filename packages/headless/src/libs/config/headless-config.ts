@@ -8,7 +8,7 @@ import defaultConfig from "./default-config.js";
 import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
 import { BrickSchema } from "../builders/brick-builder/index.js";
 import { FieldsSchema } from "../builders/field-builder/index.js";
-import { HeadlessError } from "../../utils/error-handler.js";
+import { HeadlessError } from "../../utils/errors.js";
 import headlessLogger, { LoggerScopes } from "../logging/index.js";
 
 const headlessConfig = async (config: HeadlessConfig) => {

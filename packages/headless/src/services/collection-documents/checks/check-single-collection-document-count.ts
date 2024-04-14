@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { APIError } from "../../../utils/error-handler.js";
 import type { ErrorContentT } from "../../../utils/helpers.js";
 import Repository from "../../../libs/repositories/index.js";
 
@@ -49,12 +49,14 @@ const checkSingleCollectionDocumentCount = async (
 			name: data.errorContent.name,
 			message: data.errorContent.message,
 			status: 400,
-			errors: modelErrors({
-				collection_key: {
-					code: "invalid",
-					message: T("this_collection_has_a_document_already"),
+			errors: {
+				body: {
+					collection_key: {
+						code: "invalid",
+						message: T("this_collection_has_a_document_already"),
+					},
 				},
-			}),
+			},
 		});
 	}
 };

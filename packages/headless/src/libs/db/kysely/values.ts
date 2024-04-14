@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import { sql } from "kysely";
-import { HeadlessError } from "../../../utils/error-handler.js";
+import { HeadlessError } from "../../../utils/errors.js";
 
 // https://old.kyse.link/?p=s&i=C0yoagEodj9vv4AxE3TH
 const values = <R extends Record<string, unknown>, A extends string>(
