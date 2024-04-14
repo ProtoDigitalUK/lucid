@@ -3,14 +3,14 @@ import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
-	role_ids: number[];
+	roleIds: number[];
 }
 
 const checkRolesExist = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.role_ids.length === 0) return;
+	if (data.roleIds.length === 0) return;
 
 	const RolesRepo = Repository.get("roles", serviceConfig.db);
 	const roles = await RolesRepo.selectMultiple({
@@ -19,12 +19,12 @@ const checkRolesExist = async (
 			{
 				key: "id",
 				operator: "in",
-				value: data.role_ids,
+				value: data.roleIds,
 			},
 		],
 	});
 
-	if (roles.length !== data.role_ids.length) {
+	if (roles.length !== data.roleIds.length) {
 		throw new HeadlessAPIError({
 			type: "basic",
 			status: 400,

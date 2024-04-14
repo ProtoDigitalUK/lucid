@@ -8,7 +8,7 @@ export interface ServiceData {
 	include?: {
 		bricks?: boolean;
 		fields?: boolean;
-		document_id?: boolean;
+		documentId?: boolean;
 	};
 }
 
@@ -33,7 +33,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const CollectionsFormatter = Formatter.get("collections");
 
 	if (
-		data.include?.document_id === true &&
+		data.include?.documentId === true &&
 		collection.data.mode === "single"
 	) {
 		const CollectionDocumentsRepo = Repository.get(

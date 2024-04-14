@@ -6,8 +6,8 @@ import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	code: string;
-	is_enabled: BooleanInt;
-	is_default: BooleanInt;
+	isEnabled: BooleanInt;
+	isDefault: BooleanInt;
 }
 
 const createSingle = async (
@@ -60,8 +60,8 @@ const createSingle = async (
 
 	const language = await LanguagesRepo.createSingle({
 		code: data.code,
-		isEnabled: data.is_default ? 1 : data.is_enabled,
-		isDefault: data.is_default,
+		isEnabled: data.isDefault ? 1 : data.isEnabled,
+		isDefault: data.isDefault,
 	});
 
 	if (language === undefined) {
@@ -71,7 +71,7 @@ const createSingle = async (
 		});
 	}
 
-	if (data.is_default) {
+	if (data.isDefault) {
 		await LanguagesRepo.updateSingle({
 			data: {
 				isDefault: 0,

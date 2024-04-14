@@ -4,16 +4,16 @@ import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface GroupsResT {
-	group_id: number;
-	parent_group_id: number | null;
-	group_order: number;
-	repeater_key: string;
-	language_id: number;
+	groupId: number;
+	parentGroupId: number | null;
+	groupOrder: number;
+	repeaterKey: string;
+	languageId: number;
 	ref: string;
 }
 
 export interface ServiceData {
-	document_id: number;
+	documentId: number;
 	bricks: Array<BrickSchemaT>;
 }
 
@@ -44,7 +44,7 @@ const upsertMultipleGroups = async (
 						typeof group.parent_group_id === "string"
 							? undefined
 							: group.parent_group_id,
-					collectionDocumentId: data.document_id,
+					collectionDocumentId: data.documentId,
 					collectionBrickId: brick.id as number,
 					groupOrder: group.group_order,
 					repeaterKey: group.repeater_key,
@@ -101,7 +101,7 @@ const upsertMultipleGroups = async (
 	}
 
 	// Create groups array from bricks and update groups by the group_id with their new parent_group_id
-	const groups = data.bricks.flatMap((brick) => {
+	const groups: GroupsResT[] = data.bricks.flatMap((brick) => {
 		if (!brick.groups) return [];
 
 		return brick.groups.map((group) => {
@@ -142,11 +142,11 @@ const upsertMultipleGroups = async (
 			}
 
 			return {
-				group_id: group.group_id as number,
-				parent_group_id: group.parent_group_id as number | null,
-				group_order: group.group_order,
-				repeater_key: group.repeater_key,
-				language_id: group.language_id,
+				groupId: group.group_id as number,
+				parentGroupId: group.parent_group_id as number | null,
+				groupOrder: group.group_order,
+				repeaterKey: group.repeater_key,
+				languageId: group.language_id,
 				ref: ref as string,
 			};
 		});
@@ -166,7 +166,7 @@ const upsertMultipleGroups = async (
 					{
 						key: "group_id",
 						operator: "not in",
-						value: groups.map((g) => g.group_id),
+						value: groups.map((g) => g.groupId),
 					},
 				],
 			}),

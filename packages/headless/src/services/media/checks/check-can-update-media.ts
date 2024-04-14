@@ -5,7 +5,7 @@ import optionsServices from "../../options/index.js";
 
 export interface ServiceData {
 	size: number;
-	previous_size: number;
+	previousSize: number;
 	filename: string;
 }
 
@@ -47,7 +47,7 @@ const checkCanUpdateMedia = async (
 	);
 
 	const proposedSize =
-		(storageUsed.value_int || 0) + data.size - data.previous_size;
+		(storageUsed.value_int || 0) + data.size - data.previousSize;
 	if (proposedSize > storageLimit) {
 		throw new HeadlessAPIError({
 			type: "basic",

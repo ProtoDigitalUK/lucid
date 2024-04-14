@@ -7,7 +7,7 @@ import mediaServices from "../index.js";
 import optionsServices from "../../options/index.js";
 
 export interface ServiceData {
-	file_data: MultipartFile | undefined;
+	fileData: MultipartFile | undefined;
 }
 
 const uploadObject = async (
@@ -17,7 +17,7 @@ const uploadObject = async (
 	let tempFilePath = undefined;
 
 	try {
-		if (data.file_data === undefined) {
+		if (data.fileData === undefined) {
 			throw new HeadlessAPIError({
 				type: "basic",
 				status: 400,
@@ -38,14 +38,14 @@ const uploadObject = async (
 
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
-			data.file_data.file,
-			data.file_data.filename,
+			data.fileData.file,
+			data.fileData.filename,
 		);
 		// Get meta data from file
 		const metaData = await mediaHelpers.getMetaData({
 			filePath: tempFilePath,
-			mimeType: data.file_data.mimetype,
-			fileName: data.file_data.filename,
+			mimeType: data.fileData.mimetype,
+			fileName: data.fileData.filename,
 		});
 
 		// Ensure we available storage space
@@ -53,7 +53,7 @@ const uploadObject = async (
 			mediaServices.checks.checkCanStoreMedia,
 			false,
 		)(serviceConfig, {
-			filename: data.file_data.filename,
+			filename: data.fileData.filename,
 			size: metaData.size,
 		});
 
@@ -87,7 +87,7 @@ const uploadObject = async (
 			serviceConfig,
 			{
 				name: "media_storage_used",
-				value_int: proposedSize,
+				valueInt: proposedSize,
 			},
 		);
 

@@ -47,8 +47,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			collectionDocumentBricksServices.getMultiple,
 			false,
 		)(serviceConfig, {
-			document_id: data.id,
-			collection_key: document.collection_key,
+			documentId: data.id,
+			collectionKey: document.collection_key,
 		});
 
 		return CollectionDocumentsFormatter.formatSingle({

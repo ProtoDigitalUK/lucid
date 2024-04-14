@@ -28,7 +28,7 @@ const sendExternal = async (data: ServiceData) => {
 			template: data.template,
 			cc: data.cc,
 			bcc: data.bcc,
-			reply_to: data.replyTo,
+			replyTo: data.replyTo,
 			data: data.data,
 		},
 	);

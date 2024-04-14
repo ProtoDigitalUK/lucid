@@ -1,4 +1,3 @@
-import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 

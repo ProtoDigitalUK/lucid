@@ -6,10 +6,10 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
-	current_code: string;
+	currentCode: string;
 	code?: string;
-	is_default?: BooleanInt;
-	is_enabled?: BooleanInt;
+	isDefault?: BooleanInt;
+	isEnabled?: BooleanInt;
 }
 
 const updateSingle = async (
@@ -18,8 +18,8 @@ const updateSingle = async (
 ) => {
 	if (
 		data.code === undefined &&
-		data.is_default === undefined &&
-		data.is_enabled === undefined
+		data.isDefault === undefined &&
+		data.isEnabled === undefined
 	) {
 		throw new HeadlessAPIError({
 			type: "basic",
@@ -65,19 +65,19 @@ const updateSingle = async (
 	const languagesCountQuery = await LanguagesRepo.count();
 	const count = Formatter.parseCount(languagesCountQuery?.count);
 
-	const isDefault = count === 1 ? 1 : data.is_default;
+	const isDefault = count === 1 ? 1 : data.isDefault;
 
 	const updateLanguage = await LanguagesRepo.updateSingle({
 		data: {
 			isDefault: isDefault,
-			isEnabled: isDefault === 1 ? 1 : data.is_enabled,
+			isEnabled: isDefault === 1 ? 1 : data.isEnabled,
 			updated_at: new Date().toISOString(),
 		},
 		where: [
 			{
 				key: "code",
 				operator: "=",
-				value: data.current_code,
+				value: data.currentCode,
 			},
 		],
 	});

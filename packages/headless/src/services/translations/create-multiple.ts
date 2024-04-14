@@ -6,7 +6,7 @@ export interface ServiceData<K extends string> {
 	keys: K[];
 	translations: Array<{
 		value: string | null;
-		language_id: number;
+		languageId: number;
 		key: K;
 	}>;
 }
@@ -60,7 +60,7 @@ const createMultiple = async <K extends string>(
 		data.translations.map((translation) => {
 			return {
 				translationKeyId: keys[translation.key],
-				languageId: translation.language_id,
+				languageId: translation.languageId,
 				value: translation.value,
 			};
 		}),

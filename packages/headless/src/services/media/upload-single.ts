@@ -13,13 +13,13 @@ import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	file_data: MultipartFile | undefined;
-	title_translations?: {
-		language_id: number;
+	fileData: MultipartFile | undefined;
+	titleTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
-	alt_translations?: {
-		language_id: number;
+	altTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
 	visible?: BooleanInt;
@@ -39,9 +39,9 @@ const uploadSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			language_ids: getUniqueLanguageIDs([
-				data.title_translations || [],
-				data.alt_translations || [],
+			languageIds: getUniqueLanguageIDs([
+				data.titleTranslations || [],
+				data.altTranslations || [],
 			]),
 		});
 
@@ -52,11 +52,11 @@ const uploadSingle = async (
 			keys: ["title", "alt"],
 			translations: mergeTranslationGroups([
 				{
-					translations: data.title_translations || [],
+					translations: data.titleTranslations || [],
 					key: "title",
 				},
 				{
-					translations: data.alt_translations || [],
+					translations: data.altTranslations || [],
 					key: "alt",
 				},
 			]),
@@ -65,7 +65,7 @@ const uploadSingle = async (
 			mediaServices.storage.uploadObject,
 			false,
 		)(serviceConfig, {
-			file_data: data.file_data,
+			fileData: data.fileData,
 		});
 
 		const [translationKeyIds, uploadObjectRes] = await Promise.all([

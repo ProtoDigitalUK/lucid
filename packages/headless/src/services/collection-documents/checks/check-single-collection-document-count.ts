@@ -8,17 +8,17 @@ import Repository from "../../../libs/repositories/index.js";
 */
 
 export interface ServiceData {
-	collection_key: string;
-	collection_mode: "single" | "multiple";
-	document_id?: number;
+	collectionKey: string;
+	collectionMode: "single" | "multiple";
+	documentId?: number;
 }
 
 const checkSingleCollectionDocumentCount = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.document_id !== undefined) return;
-	if (data.collection_mode === "multiple") return;
+	if (data.documentId !== undefined) return;
+	if (data.collectionMode === "multiple") return;
 
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
@@ -31,7 +31,7 @@ const checkSingleCollectionDocumentCount = async (
 			{
 				key: "collection_key",
 				operator: "=",
-				value: data.collection_key,
+				value: data.collectionKey,
 			},
 			{
 				key: "is_deleted",

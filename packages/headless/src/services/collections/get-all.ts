@@ -2,7 +2,7 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
-	include_document_id?: boolean;
+	includeDocumentId?: boolean;
 }
 
 const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -10,7 +10,7 @@ const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const CollectionsFormatter = Formatter.get("collections");
 
-	if (data.include_document_id === true) {
+	if (data.includeDocumentId === true) {
 		const singleCollections = collections.filter(
 			(collection) => collection.data.mode === "single",
 		);

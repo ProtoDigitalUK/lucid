@@ -16,7 +16,7 @@ import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	bricks: Array<BrickSchemaT>;
-	collection_key: string;
+	collectionKey: string;
 }
 
 const validateBricks = async (
@@ -30,7 +30,7 @@ const validateBricks = async (
 
 	const [collection, media, documents] = await Promise.all([
 		collectionsServices.getSingleInstance({
-			key: data.collection_key,
+			key: data.collectionKey,
 		}),
 		getAllMedia(serviceConfig, flatFields),
 		getAllDocuments(serviceConfig, flatFields),

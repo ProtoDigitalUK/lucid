@@ -7,11 +7,11 @@ import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
-	first_name?: string;
-	last_name?: string;
+	firstName?: string;
+	lastName?: string;
 	username?: string;
 	email?: string;
-	role_ids?: number[];
+	roleIds?: number[];
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -73,11 +73,11 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					],
 				})
 			: undefined,
-		data.role_ids !== undefined
+		data.roleIds !== undefined
 			? serviceWrapper(usersService.checks.checkRolesExist, false)(
 					serviceConfig,
 					{
-						role_ids: data.role_ids,
+						roleIds: data.roleIds,
 					},
 				)
 			: undefined,
@@ -100,8 +100,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const updateMe = await UsersRepo.updateSingle({
 		data: {
-			firstName: data.first_name,
-			lastName: data.last_name,
+			firstName: data.firstName,
+			lastName: data.lastName,
 			username: data.username,
 			email: data.email,
 			updatedAt: new Date().toISOString(),
@@ -132,8 +132,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	await serviceWrapper(usersService.updateMultipleRoles, false)(
 		serviceConfig,
 		{
-			user_id: data.auth.id,
-			role_ids: data.role_ids,
+			userId: data.auth.id,
+			roleIds: data.roleIds,
 		},
 	);
 };

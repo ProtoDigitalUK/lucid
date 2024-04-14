@@ -22,7 +22,7 @@ const resetPassword = async (
 		serviceConfig,
 		{
 			token: data.token,
-			token_type: "password_reset",
+			tokenType: "password_reset",
 		},
 	);
 

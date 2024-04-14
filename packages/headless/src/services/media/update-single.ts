@@ -8,13 +8,13 @@ import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
-	file_data: MultipartFile | undefined;
-	title_translations?: {
-		language_id: number;
+	fileData: MultipartFile | undefined;
+	titleTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
-	alt_translations?: {
-		language_id: number;
+	altTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
 }
@@ -67,18 +67,18 @@ const updateSingle = async (
 			},
 			items: [
 				{
-					translations: data.title_translations || [],
+					translations: data.titleTranslations || [],
 					key: "title",
 				},
 				{
-					translations: data.alt_translations || [],
+					translations: data.altTranslations || [],
 					key: "alt",
 				},
 			],
 		},
 	);
 
-	if (data.file_data === undefined) {
+	if (data.fileData === undefined) {
 		return;
 	}
 
@@ -86,8 +86,8 @@ const updateSingle = async (
 		mediaServices.storage.updateObject,
 		false,
 	)(serviceConfig, {
-		file_data: data.file_data,
-		previous_size: media.file_size,
+		fileData: data.fileData,
+		previousSize: media.file_size,
 		key: media.key,
 	});
 

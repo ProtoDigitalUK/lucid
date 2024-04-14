@@ -4,7 +4,7 @@ import { fieldUpsertPrep } from "../../utils/field-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	document_id: number;
+	documentId: number;
 	bricks: Array<BrickSchemaT>;
 	groups: Array<GroupsResT>;
 }
@@ -35,7 +35,7 @@ const upsertMultipleFields = async (
 		items: fields.map((field) => {
 			return {
 				fieldsId: field.fields_id ?? undefined,
-				collectionDocumentId: data.document_id,
+				collectionDocumentId: data.documentId,
 				collectionBrickId: field.collection_brick_id,
 				key: field.key,
 				type: field.type,

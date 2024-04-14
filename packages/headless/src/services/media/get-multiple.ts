@@ -5,7 +5,7 @@ import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	query: z.infer<typeof mediaSchema.getMultiple.query>;
-	language_id: number;
+	languageId: number;
 }
 
 const getMultiple = async (
@@ -16,7 +16,7 @@ const getMultiple = async (
 	const MediaFormatter = Formatter.get("media");
 
 	const [medias, mediasCount] = await MediaRepo.selectMultipleFiltered({
-		languageId: data.language_id,
+		languageId: data.languageId,
 		query: data.query,
 		config: serviceConfig.config,
 	});

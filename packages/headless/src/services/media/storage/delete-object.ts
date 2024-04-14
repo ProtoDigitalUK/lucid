@@ -28,7 +28,7 @@ const deleteObject = async (
 		mediaStategy.deleteSingle(data.key),
 		serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
 			name: "media_storage_used",
-			value_int: newStorageUsed < 0 ? 0 : newStorageUsed,
+			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),
 	]);
 };
