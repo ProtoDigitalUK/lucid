@@ -1,9 +1,8 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
-import { upsertErrorContent } from "../../utils/helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 import merge from "lodash.merge";
@@ -11,10 +10,10 @@ import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 
 export interface ServiceData {
-	collection_key: string;
-	user_id: number;
+	collectionKey: string;
+	userId: number;
 
-	document_id?: number;
+	documentId?: number;
 	bricks?: Array<BrickSchemaT>;
 	fields?: Array<FieldCollectionSchemaT>;
 }
@@ -23,15 +22,9 @@ const upsertSingle = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const errorContent = upsertErrorContent(
-		data.document_id === undefined,
-		T("document"),
-	);
-
 	const collectionInstance =
 		await collectionDocumentsServices.checks.checkCollection({
-			key: data.collection_key,
-			errorContent: errorContent,
+			key: data.collectionKey,
 		});
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -39,25 +32,25 @@ const upsertSingle = async (
 		serviceConfig.db,
 	);
 
-	if (data.document_id !== undefined) {
+	if (data.documentId !== undefined) {
 		const existingDocument = await CollectionDocumentsRepo.selectSingle({
 			select: ["id"],
 			where: [
 				{
 					key: "id",
 					operator: "=",
-					value: data.document_id,
+					value: data.documentId,
 				},
 				{
 					key: "collection_key",
 					operator: "=",
-					value: data.collection_key,
+					value: data.collectionKey,
 				},
 			],
 		});
 
 		if (existingDocument === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_not_found_name", {
 					name: T("document"),
@@ -76,10 +69,9 @@ const upsertSingle = async (
 				.checkSingleCollectionDocumentCount,
 			false,
 		)(serviceConfig, {
-			collection_key: data.collection_key,
-			collection_mode: collectionInstance.data.mode,
-			document_id: data.document_id,
-			errorContent: errorContent,
+			collectionKey: data.collectionKey,
+			collectionMode: collectionInstance.data.mode,
+			documentId: data.documentId,
 		}),
 	]);
 
@@ -92,8 +84,8 @@ const upsertSingle = async (
 		},
 		{
 			meta: {
-				collection_key: data.collection_key,
-				user_id: data.user_id,
+				collectionKey: data.collectionKey,
+				userId: data.userId,
 			},
 			data: data,
 		},
@@ -101,19 +93,17 @@ const upsertSingle = async (
 	const bodyData = merge(data, hookResponse);
 
 	const document = await CollectionDocumentsRepo.upsertSingle({
-		id: data.document_id,
-		collectionKey: data.collection_key,
-		authorId: data.user_id,
-		createdBy: data.user_id,
-		updatedBy: data.user_id,
+		id: data.documentId,
+		collectionKey: data.collectionKey,
+		authorId: data.userId,
+		createdBy: data.userId,
+		updatedBy: data.userId,
 		isDeleted: 0,
 	});
 
 	if (document === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: errorContent.name,
-			message: errorContent.message,
 			status: 400,
 		});
 	}
@@ -122,10 +112,10 @@ const upsertSingle = async (
 		collectionDocumentBricksServices.upsertMultiple,
 		false,
 	)(serviceConfig, {
-		document_id: document.id,
+		documentId: document.id,
 		bricks: bodyData.bricks,
 		fields: bodyData.fields,
-		collection_key: data.collection_key,
+		collectionKey: data.collectionKey,
 	});
 
 	await executeHooks(
@@ -137,11 +127,11 @@ const upsertSingle = async (
 		},
 		{
 			meta: {
-				collection_key: data.collection_key,
-				user_id: data.user_id,
+				collectionKey: data.collectionKey,
+				userId: data.userId,
 			},
 			data: {
-				document_id: document.id,
+				documentId: document.id,
 				bricks: bodyData.bricks,
 				fields: bodyData.fields,
 			},

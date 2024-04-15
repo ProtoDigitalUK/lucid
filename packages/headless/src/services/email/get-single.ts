@@ -1,12 +1,12 @@
 import T from "../../translations/index.js";
 import emailServices from "./index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	id: number;
-	render_template: boolean;
+	renderTemplate: boolean;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -18,7 +18,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (email === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("email"),
@@ -30,7 +30,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	if (!data.render_template) {
+	if (!data.renderTemplate) {
 		return EmailsFormatter.formatSingle({
 			email: email,
 		});

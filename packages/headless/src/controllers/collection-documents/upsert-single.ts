@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import {
 	swaggerResponse,
@@ -8,36 +9,56 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
 import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import buildResponse from "../../utils/build-response.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const upsertSingleController: ControllerT<
 	typeof collectionDocumentsSchema.upsertSingle.params,
 	typeof collectionDocumentsSchema.upsertSingle.body,
 	typeof collectionDocumentsSchema.upsertSingle.query
 > = async (request, reply) => {
-	const documentId = await serviceWrapper(
-		collectionDocumentsServices.upsertSingle,
-		true,
-	)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			collection_key: request.params.collection_key,
-			user_id: request.auth.id,
-			document_id: request.body.document_id,
-			bricks: request.body.bricks,
-			fields: request.body.fields,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: {
-				id: documentId,
+	try {
+		const documentId = await serviceWrapper(
+			collectionDocumentsServices.upsertSingle,
+			true,
+		)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
-		}),
-	);
+			{
+				collectionKey: request.params.collectionKey,
+				userId: request.auth.id,
+				documentId: request.body.documentId,
+				bricks: request.body.bricks,
+				fields: request.body.fields,
+			},
+		);
+
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: {
+					id: documentId,
+				},
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("document"),
+				method: request.body.documentId ? T("update") : T("create"),
+			}),
+			message: T(
+				request.body.documentId
+					? "update_error_message"
+					: "creation_error_message",
+				{
+					name: T("document").toLowerCase(),
+				},
+			),
+			status: 500,
+		});
+	}
 };
 
 export default {
@@ -50,7 +71,7 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				document_id: {
+				documentId: {
 					type: "number",
 				},
 				bricks: {

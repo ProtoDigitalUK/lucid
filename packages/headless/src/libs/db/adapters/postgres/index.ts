@@ -1,5 +1,5 @@
 import pg from "pg";
-import { PostgresDialect, sql } from "kysely";
+import { PostgresDialect } from "kysely";
 import DatabaseAdapter from "../../adapter.js";
 import { AdapterType } from "../../types.js";
 import { jsonArrayFrom } from "kysely/helpers/postgres";

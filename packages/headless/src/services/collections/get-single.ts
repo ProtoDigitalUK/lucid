@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
@@ -8,7 +8,7 @@ export interface ServiceData {
 	include?: {
 		bricks?: boolean;
 		fields?: boolean;
-		document_id?: boolean;
+		documentId?: boolean;
 	};
 }
 
@@ -18,7 +18,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	);
 
 	if (collection === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("collection"),
@@ -33,7 +33,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const CollectionsFormatter = Formatter.get("collections");
 
 	if (
-		data.include?.document_id === true &&
+		data.include?.documentId === true &&
 		collection.data.mode === "single"
 	) {
 		const CollectionDocumentsRepo = Repository.get(

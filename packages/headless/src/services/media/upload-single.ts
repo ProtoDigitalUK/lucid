@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -13,13 +13,13 @@ import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	file_data: MultipartFile | undefined;
-	title_translations?: {
-		language_id: number;
+	fileData: MultipartFile | undefined;
+	titleTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
-	alt_translations?: {
-		language_id: number;
+	altTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
 	visible?: BooleanInt;
@@ -39,9 +39,9 @@ const uploadSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			language_ids: getUniqueLanguageIDs([
-				data.title_translations || [],
-				data.alt_translations || [],
+			languageIds: getUniqueLanguageIDs([
+				data.titleTranslations || [],
+				data.altTranslations || [],
 			]),
 		});
 
@@ -52,11 +52,11 @@ const uploadSingle = async (
 			keys: ["title", "alt"],
 			translations: mergeTranslationGroups([
 				{
-					translations: data.title_translations || [],
+					translations: data.titleTranslations || [],
 					key: "title",
 				},
 				{
-					translations: data.alt_translations || [],
+					translations: data.altTranslations || [],
 					key: "alt",
 				},
 			]),
@@ -65,7 +65,7 @@ const uploadSingle = async (
 			mediaServices.storage.uploadObject,
 			false,
 		)(serviceConfig, {
-			file_data: data.file_data,
+			fileData: data.fileData,
 		});
 
 		const [translationKeyIds, uploadObjectRes] = await Promise.all([
@@ -91,14 +91,8 @@ const uploadSingle = async (
 		});
 
 		if (mediaRes === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
-				message: T("error_not_created_message", {
-					name: T("media"),
-				}),
 				status: 500,
 			});
 		}

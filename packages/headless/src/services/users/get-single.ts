@@ -1,10 +1,10 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Formatter from "../../libs/formatters/index.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	user_id: number;
+	userId: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -12,12 +12,12 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const UsersFormatter = Formatter.get("users");
 
 	const user = await UsersRepo.selectSingleById({
-		id: data.user_id,
+		id: data.userId,
 		config: serviceConfig.config,
 	});
 
 	if (!user) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("user"),

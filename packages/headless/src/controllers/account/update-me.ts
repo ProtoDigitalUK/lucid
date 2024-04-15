@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import accountSchema from "../../schemas/account.js";
 import {
 	swaggerResponse,
@@ -5,28 +6,43 @@ import {
 } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import account from "../../services/account/index.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const updateMeController: ControllerT<
 	typeof accountSchema.updateMe.params,
 	typeof accountSchema.updateMe.body,
 	typeof accountSchema.updateMe.query
 > = async (request, reply) => {
-	await serviceWrapper(account.updateMe, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			auth: request.auth,
-			first_name: request.body.first_name,
-			last_name: request.body.last_name,
-			username: request.body.username,
-			email: request.body.email,
-			role_ids: request.body.role_ids,
-		},
-	);
+	try {
+		await serviceWrapper(account.updateMe, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				auth: request.auth,
+				firstName: request.body.firstName,
+				lastName: request.body.lastName,
+				username: request.body.username,
+				email: request.body.email,
+				roleIds: request.body.roleIds,
+			},
+		);
 
-	reply.status(204).send();
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("user"),
+				method: T("update"),
+			}),
+			message: T("update_error_message", {
+				name: T("user").toLowerCase(),
+			}),
+			status: 500,
+		});
+	}
 };
 
 export default {
@@ -46,10 +62,10 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				first_name: {
+				firstName: {
 					type: "string",
 				},
-				last_name: {
+				lastName: {
 					type: "string",
 				},
 				username: {
@@ -58,7 +74,7 @@ export default {
 				email: {
 					type: "string",
 				},
-				role_ids: {
+				roleIds: {
 					type: "array",
 					items: {
 						type: "number",

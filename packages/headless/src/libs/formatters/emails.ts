@@ -39,13 +39,13 @@ export default class EmailsFormatter {
 	}): EmailResT => {
 		return {
 			id: props.email.id,
-			email_hash: props.email.email_hash,
+			emailHash: props.email.email_hash,
 			type: props.email.type as "external" | "internal",
-			delivery_status: props.email.delivery_status as
+			deliveryStatus: props.email.delivery_status as
 				| "sent"
 				| "failed"
 				| "pending",
-			mail_details: {
+			mailDetails: {
 				from: {
 					address: props.email.from_address,
 					name: props.email.from_name,
@@ -57,13 +57,13 @@ export default class EmailsFormatter {
 				template: props.email.template,
 			},
 			data: (props.email.data as Record<string, unknown> | null) ?? null,
-			sent_count: props.email.sent_count || 0,
-			error_count: props.email.error_count || 0,
-			error_message: props.email.last_error_message,
+			sentCount: props.email.sent_count || 0,
+			errorCount: props.email.error_count || 0,
+			errorMessage: props.email.last_error_message,
 			html: props.html ?? null,
-			last_success_at: Formatter.formatDate(props.email.last_success_at),
-			last_attempt_at: Formatter.formatDate(props.email.last_attempt_at),
-			created_at: Formatter.formatDate(props.email.created_at),
+			lastSuccessAt: Formatter.formatDate(props.email.last_success_at),
+			lastAttemptAt: Formatter.formatDate(props.email.last_attempt_at),
+			createdAt: Formatter.formatDate(props.email.created_at),
 		};
 	};
 	static swagger = {
@@ -72,18 +72,18 @@ export default class EmailsFormatter {
 			id: {
 				type: "number",
 			},
-			email_hash: {
+			emailHash: {
 				type: "string",
 			},
 			type: {
 				type: "string",
 				enum: ["external", "internal"],
 			},
-			delivery_status: {
+			deliveryStatus: {
 				type: "string",
 				enum: ["sent", "failed", "pending"],
 			},
-			mail_details: {
+			mailDetails: {
 				type: "object",
 				properties: {
 					from: {
@@ -121,13 +121,13 @@ export default class EmailsFormatter {
 				nullable: true,
 				additionalProperties: true,
 			},
-			sent_count: {
+			sentCount: {
 				type: "number",
 			},
-			error_count: {
+			errorCount: {
 				type: "number",
 			},
-			error_message: {
+			errorMessage: {
 				type: "string",
 				nullable: true,
 			},
@@ -135,15 +135,15 @@ export default class EmailsFormatter {
 				type: "string",
 				nullable: true,
 			},
-			last_success_at: {
+			lastSuccessAt: {
 				type: "string",
 				nullable: true,
 			},
-			last_attempt_at: {
+			lastAttemptAt: {
 				type: "string",
 				nullable: true,
 			},
-			created_at: {
+			createdAt: {
 				type: "string",
 				nullable: true,
 			},

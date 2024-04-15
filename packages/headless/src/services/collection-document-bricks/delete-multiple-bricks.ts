@@ -1,7 +1,7 @@
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	document_id: number;
+	documentId: number;
 	bricks: {
 		id: number;
 		brick_key: string | null;
@@ -38,7 +38,7 @@ const deleteMultipleBricks = async (
 				{
 					key: "collection_document_id",
 					operator: "=",
-					value: data.document_id,
+					value: data.documentId,
 				},
 				{
 					key: "brick_type",
@@ -59,7 +59,7 @@ const deleteMultipleBricks = async (
 				{
 					key: "collection_document_id",
 					operator: "=",
-					value: data.document_id,
+					value: data.documentId,
 				},
 				{
 					key: "brick_type",

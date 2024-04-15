@@ -1,10 +1,10 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	username_or_email: string;
+	usernameOrEmail: string;
 	password: string;
 }
 
@@ -14,13 +14,13 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const user = await UsersRepo.selectSingleByEmailUsername({
 		select: ["id", "password", "is_deleted"],
 		data: {
-			username: data.username_or_email,
-			email: data.username_or_email,
+			username: data.usernameOrEmail,
+			email: data.usernameOrEmail,
 		},
 	});
 
 	if (!user || !user.password) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),
@@ -29,7 +29,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	if (user !== undefined && user.is_deleted === 1) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_suspended_error_message"),
@@ -38,12 +38,12 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	const passwordValid = await auth.validatePassword({
-		hashed_password: user.password,
+		hashedPassword: user.password,
 		password: data.password,
 	});
 
 	if (!passwordValid) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),

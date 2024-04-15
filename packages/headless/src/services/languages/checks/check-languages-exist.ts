@@ -1,16 +1,16 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
-	language_ids: number[];
+	languageIds: number[];
 }
 
 const checkLanguagesExist = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const languageIds = Array.from(new Set(data.language_ids));
+	const languageIds = Array.from(new Set(data.languageIds));
 
 	if (languageIds.length === 0) return;
 
@@ -28,21 +28,19 @@ const checkLanguagesExist = async (
 	});
 
 	if (languages.length !== languageIds.length) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_created_name", {
-				name: T("translation"),
-			}),
-			message: T("error_not_created_message", {
-				name: T("translation"),
-			}),
 			status: 400,
-			errors: modelErrors({
-				translations: {
-					code: "invalid",
-					message: T("make_sure_all_translations_languages_exist"),
+			errorResponse: {
+				body: {
+					translations: {
+						code: "invalid",
+						message: T(
+							"make_sure_all_translations_languages_exist",
+						),
+					},
 				},
-			}),
+			},
 		});
 	}
 };

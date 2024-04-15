@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import fs from "fs-extra";
 import type { Readable } from "node:stream";
 import type { MediaResT, MediaTypeT } from "../types/response.js";
-import { APIError } from "./error-handler.js";
+import { HeadlessAPIError } from "./error-handler.js";
 import { pipeline } from "node:stream/promises";
 import { join } from "node:path";
 import mime from "mime-types";
@@ -81,9 +81,8 @@ const generateKey = async (name: string, fileExtension: string | false) => {
 	const [fname, extension] = name.split(".");
 	const ext = fileExtension || extension;
 
-	// TODO: probs shouldnt throw API error, instead standard one and caller can handle
 	if (!fname || !ext) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("media_name_invalid"),
 			message: T("media_name_invalid_message"),

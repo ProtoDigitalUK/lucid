@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
 
 const checkDuplicateOrder = (bricks: Array<BrickSchemaT>) => {
@@ -12,7 +12,7 @@ const checkDuplicateOrder = (bricks: Array<BrickSchemaT>) => {
 	);
 
 	if (builderOrderDuplicates.length > 0) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_saving_bricks"),
 			message: T("error_saving_page_duplicate_order", {

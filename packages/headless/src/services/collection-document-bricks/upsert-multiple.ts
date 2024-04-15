@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
 import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
 import collectionBricksServices from "./index.js";
@@ -7,10 +7,10 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	document_id: number;
+	documentId: number;
 	bricks?: Array<BrickSchemaT>;
 	fields?: Array<FieldCollectionSchemaT>;
-	collection_key: string;
+	collectionKey: string;
 }
 
 const upsertMultiple = async (
@@ -27,7 +27,7 @@ const upsertMultiple = async (
 
 	bricks = await addCollectionSudoBrick(serviceConfig, {
 		fields: data.fields,
-		document_id: data.document_id,
+		document_id: data.documentId,
 		bricks: bricks,
 	});
 
@@ -36,7 +36,7 @@ const upsertMultiple = async (
 	// validation
 	collectionBricksServices.checks.checkDuplicateOrder(bricks);
 	await collectionBricksServices.checks.checkValidateBricks(serviceConfig, {
-		collection_key: data.collection_key,
+		collectionKey: data.collectionKey,
 		bricks: bricks,
 	});
 
@@ -47,7 +47,7 @@ const upsertMultiple = async (
 			brickType: b.type,
 			brickKey: b.key,
 			brickOrder: b.order,
-			collectionDocumentId: data.document_id,
+			collectionDocumentId: data.documentId,
 		})),
 	});
 
@@ -60,7 +60,7 @@ const upsertMultiple = async (
 		collectionBricksServices.upsertMultipleGroups,
 		false,
 	)(serviceConfig, {
-		document_id: data.document_id,
+		documentId: data.documentId,
 		bricks: bricks,
 	});
 
@@ -69,7 +69,7 @@ const upsertMultiple = async (
 		serviceWrapper(collectionBricksServices.upsertMultipleFields, false)(
 			serviceConfig,
 			{
-				document_id: data.document_id,
+				documentId: data.documentId,
 				bricks: bricks,
 				groups: groupsRes.groups,
 			},
@@ -78,7 +78,7 @@ const upsertMultiple = async (
 		serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
 			serviceConfig,
 			{
-				document_id: data.document_id,
+				documentId: data.documentId,
 				bricks: bricksRes,
 				apply: {
 					bricks: data.bricks !== undefined,
@@ -164,7 +164,7 @@ const assignBrickIdsFromUpsert = (
 		);
 
 		if (!foundBrick) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_saving_bricks"),
 				message: T("there_was_an_error_updating_bricks"),

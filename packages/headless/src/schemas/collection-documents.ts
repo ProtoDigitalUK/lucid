@@ -12,7 +12,7 @@ const getMultipleQuerySchema = z.object({
 	sort: z
 		.array(
 			z.object({
-				key: z.enum(["created_at", "updated_at"]),
+				key: z.enum(["createdAt", "updatedAt"]),
 				value: z.enum(["asc", "desc"]),
 			}),
 		)
@@ -20,19 +20,19 @@ const getMultipleQuerySchema = z.object({
 	include: defaultQuery.include,
 	exclude: defaultQuery.exclude,
 	page: defaultQuery.page,
-	per_page: defaultQuery.per_page,
+	perPage: defaultQuery.perPage,
 });
 
 export default {
 	upsertSingle: {
 		body: z.object({
-			document_id: z.number().optional(),
+			documentId: z.number().optional(),
 			bricks: z.array(BrickSchema).optional(),
 			fields: z.array(FieldSchemaCollection).optional(),
 		}),
 		query: undefined,
 		params: z.object({
-			collection_key: z.string(),
+			collectionKey: z.string(),
 		}),
 	},
 	getSingle: {
@@ -41,14 +41,14 @@ export default {
 		}),
 		params: z.object({
 			id: z.string(),
-			collection_key: z.string(),
+			collectionKey: z.string(),
 		}),
 		body: undefined,
 	},
 	getMultiple: {
 		query: getMultipleQuerySchema,
 		params: z.object({
-			collection_key: z.string(),
+			collectionKey: z.string(),
 		}),
 		body: undefined,
 	},
@@ -56,7 +56,7 @@ export default {
 		body: undefined,
 		query: undefined,
 		params: z.object({
-			collection_key: z.string(),
+			collectionKey: z.string(),
 			id: z.string(),
 		}),
 	},
@@ -66,7 +66,7 @@ export default {
 		}),
 		query: undefined,
 		params: z.object({
-			collection_key: z.string(),
+			collectionKey: z.string(),
 		}),
 	},
 };

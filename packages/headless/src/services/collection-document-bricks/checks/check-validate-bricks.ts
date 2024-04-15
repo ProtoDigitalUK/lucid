@@ -1,9 +1,6 @@
 import T from "../../../translations/index.js";
-import {
-	APIError,
-	modelErrors,
-	type FieldErrorsT,
-} from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
+import type { FieldErrors } from "../../../types/errors.js";
 import collectionsServices from "../../collections/index.js";
 import type {
 	ValidationPropsT,
@@ -19,7 +16,7 @@ import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	bricks: Array<BrickSchemaT>;
-	collection_key: string;
+	collectionKey: string;
 }
 
 const validateBricks = async (
@@ -33,7 +30,7 @@ const validateBricks = async (
 
 	const [collection, media, documents] = await Promise.all([
 		collectionsServices.getSingleInstance({
-			key: data.collection_key,
+			key: data.collectionKey,
 		}),
 		getAllMedia(serviceConfig, flatFields),
 		getAllDocuments(serviceConfig, flatFields),
@@ -49,14 +46,16 @@ const validateBricks = async (
 
 	// If there are errors, throw them
 	if (hasErrors) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_saving_bricks"),
 			message: T("there_was_an_error_updating_bricks"),
 			status: 400,
-			errors: modelErrors({
-				fields: errors,
-			}),
+			errorResponse: {
+				body: {
+					fields: errors,
+				},
+			},
 		});
 	}
 };
@@ -75,7 +74,7 @@ const validateBrickData = async (data: {
 		id: number;
 	}[];
 }) => {
-	const errors: FieldErrorsT[] = [];
+	const errors: FieldErrors[] = [];
 	let hasErrors = false;
 
 	for (let i = 0; i < data.bricks.length; i++) {
@@ -91,7 +90,7 @@ const validateBrickData = async (data: {
 					)
 				: data.collection;
 		if (!instance) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
 				name: T("error_saving_bricks"),
 				message: T(
@@ -166,9 +165,9 @@ const validateBrickData = async (data: {
 			if (err.valid === false) {
 				errors.push({
 					key: field.key,
-					brick_id: brick.id,
-					language_id: field.language_id,
-					group_id: field.group_id,
+					brickId: brick.id,
+					languageId: field.languageId,
+					groupId: field.groupId,
 					message: err.message || T("invalid_value"),
 				});
 				hasErrors = true;

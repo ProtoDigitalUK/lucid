@@ -1,11 +1,9 @@
 import T from "../../../translations/index.js";
-import { APIError } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import getConfig from "../../../libs/config/get-config.js";
-import type { ErrorContentT } from "../../../utils/helpers.js";
 
 export interface ServiceData {
 	key: string;
-	errorContent: ErrorContentT;
 }
 
 const checkCollection = async (data: ServiceData) => {
@@ -16,9 +14,8 @@ const checkCollection = async (data: ServiceData) => {
 	);
 
 	if (!collectionInstance) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: data.errorContent.name,
 			message: T("error_not_found_message", {
 				name: T("collection"),
 			}),

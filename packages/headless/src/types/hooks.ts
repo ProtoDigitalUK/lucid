@@ -31,36 +31,36 @@ export type HookServiceHandlers = {
 	"collection-documents": {
 		beforeUpsert: (props: {
 			meta: {
-				collection_key: string;
-				user_id: number;
+				collectionKey: string;
+				userId: number;
 			};
 			data: {
-				document_id?: number;
+				documentId?: number;
 				bricks?: Array<BrickSchemaT>;
 				fields?: Array<FieldCollectionSchemaT>;
 			};
 		}) =>
 			| Promise<{
-					document_id?: number;
+					documentId?: number;
 					bricks?: Array<BrickSchemaT>;
 					fields?: Array<FieldCollectionSchemaT>;
 			  }>
 			| Promise<void>;
 		afterUpsert: (props: {
 			meta: {
-				collection_key: string;
-				user_id: number;
+				collectionKey: string;
+				userId: number;
 			};
 			data: {
-				document_id?: number;
+				documentId?: number;
 				bricks?: Array<BrickSchemaT>;
 				fields?: Array<FieldCollectionSchemaT>;
 			};
 		}) => Promise<void>;
 		beforeDelete: (props: {
 			meta: {
-				collection_key: string;
-				user_id: number;
+				collectionKey: string;
+				userId: number;
 			};
 			data: {
 				ids: number[];
@@ -68,8 +68,8 @@ export type HookServiceHandlers = {
 		}) => Promise<void>;
 		afterDelete: (props: {
 			meta: {
-				collection_key: string;
-				user_id: number;
+				collectionKey: string;
+				userId: number;
 			};
 			data: {
 				ids: number[];

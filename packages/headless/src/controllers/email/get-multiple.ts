@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import {
 	swaggerResponse,
@@ -7,32 +8,45 @@ import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import EmailsFormatter from "../../libs/formatters/emails.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getMultipleController: ControllerT<
 	typeof emailsSchema.getMultiple.params,
 	typeof emailsSchema.getMultiple.body,
 	typeof emailsSchema.getMultiple.query
 > = async (request, reply) => {
-	const emails = await serviceWrapper(emailServices.getMultiple, false)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			query: request.query,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: emails.data,
-			pagination: {
-				count: emails.count,
-				page: request.query.page,
-				perPage: request.query.per_page,
+	try {
+		const emails = await serviceWrapper(emailServices.getMultiple, false)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
-		}),
-	);
+			{
+				query: request.query,
+			},
+		);
+
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: emails.data,
+				pagination: {
+					count: emails.count,
+					page: request.query.page,
+					perPage: request.query.perPage,
+				},
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("email"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {
@@ -55,13 +69,13 @@ export default {
 		querystring: swaggerQueryString({
 			filters: [
 				{
-					key: "to_address",
+					key: "toAddress",
 				},
 				{
 					key: "subject",
 				},
 				{
-					key: "delivery_status",
+					key: "deliveryStatus",
 					enum: ["sent", "failed", "pending"],
 				},
 				{
@@ -72,7 +86,7 @@ export default {
 					key: "template",
 				},
 			],
-			sorts: ["sent_count", "created_at", "updated_at"],
+			sorts: ["sentCount", "createdAt", "updatedAt"],
 			page: true,
 			perPage: true,
 		}),

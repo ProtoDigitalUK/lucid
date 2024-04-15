@@ -25,34 +25,34 @@ export default class CollectionDocumentGroupsFormatter {
 		group: GroupPropT;
 	}): GroupResT => {
 		return {
-			group_id: props.group.group_id,
-			group_order: props.group.group_order,
-			repeater_key: props.group.repeater_key,
-			parent_group_id: props.group.parent_group_id,
-			language_id: props.group.language_id,
+			groupId: props.group.group_id,
+			groupOrder: props.group.group_order,
+			repeaterKey: props.group.repeater_key,
+			parentGroupId: props.group.parent_group_id,
+			languageId: props.group.language_id,
 		};
 	};
 	static swagger = {
 		type: "object",
 		additionalProperties: true,
 		properties: {
-			group_id: {
+			groupId: {
 				type: "number",
 			},
-			group_order: {
+			groupOrder: {
 				type: "number",
 			},
-			parent_group_id: {
+			parentGroupId: {
 				type: "number",
 				nullable: true,
 			},
-			collection_document_id: {
+			collectionDocumentId: {
 				type: "number",
 			},
-			repeater_key: {
+			repeaterKey: {
 				type: "string",
 			},
-			language_id: {
+			languageId: {
 				type: "number",
 			},
 		},

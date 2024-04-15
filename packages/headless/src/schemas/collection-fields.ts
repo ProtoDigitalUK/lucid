@@ -32,8 +32,8 @@ export const FieldSchemaCollection = z.object({
 		z.null(),
 		z.any(),
 	]),
-	language_id: z.number(),
-	fields_id: z.number().optional(),
+	languageId: z.number(),
+	fieldsId: z.number().optional(),
 });
 export type FieldCollectionSchemaT = z.infer<typeof FieldSchemaCollection>;
 
@@ -53,7 +53,7 @@ export const FieldSchema = FieldSchemaCollection.extend({
 		z.literal("link"),
 		z.literal("repeater"),
 	]),
-	group_id: z.union([z.number(), z.string()]).optional(),
+	groupId: z.union([z.number(), z.string()]).optional(),
 });
 export type FieldSchemaT = z.infer<typeof FieldSchema>;
 
@@ -86,13 +86,13 @@ export const swaggerFieldObj = {
 				},
 			],
 		},
-		language_id: {
+		languageId: {
 			type: "number",
 		},
-		fields_id: {
+		fieldsId: {
 			type: "number",
 		},
-		group_id: {
+		groupId: {
 			anyOf: [
 				{
 					type: "number",

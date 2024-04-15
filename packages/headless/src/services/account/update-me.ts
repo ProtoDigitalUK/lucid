@@ -1,17 +1,17 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
-	first_name?: string;
-	last_name?: string;
+	firstName?: string;
+	lastName?: string;
 	username?: string;
 	email?: string;
-	role_ids?: number[];
+	roleIds?: number[];
 }
 
 const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -29,11 +29,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (getUser === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("account"),
-			}),
 			message: T("error_not_found_message", {
 				name: T("account"),
 			}),
@@ -76,33 +73,26 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 					],
 				})
 			: undefined,
-		data.role_ids !== undefined
+		data.roleIds !== undefined
 			? serviceWrapper(usersService.checks.checkRolesExist, false)(
 					serviceConfig,
 					{
-						role_ids: data.role_ids,
-						is_create: false,
+						roleIds: data.roleIds,
 					},
 				)
 			: undefined,
 	]);
 
 	if (data.email !== undefined && userWithEmail !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("account"),
-			}),
 			message: T("this_email_is_already_in_use"),
 			status: 400,
 		});
 	}
 	if (data.username !== undefined && userWithUsername !== undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("dynamic_error_name", {
-				name: T("account"),
-			}),
 			message: T("this_username_is_already_in_use"),
 			status: 400,
 		});
@@ -110,8 +100,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 
 	const updateMe = await UsersRepo.updateSingle({
 		data: {
-			firstName: data.first_name,
-			lastName: data.last_name,
+			firstName: data.firstName,
+			lastName: data.lastName,
 			username: data.username,
 			email: data.email,
 			updatedAt: new Date().toISOString(),
@@ -126,11 +116,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (updateMe === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("account"),
-			}),
 			message: T("update_error_message", {
 				name: T("your_account"),
 			}),
@@ -145,8 +132,8 @@ const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	await serviceWrapper(usersService.updateMultipleRoles, false)(
 		serviceConfig,
 		{
-			user_id: data.auth.id,
-			role_ids: data.role_ids,
+			userId: data.auth.id,
+			roleIds: data.roleIds,
 		},
 	);
 };

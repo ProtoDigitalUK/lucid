@@ -1,13 +1,13 @@
 import T from "../../translations/index.js";
-import { APIError, modelErrors } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 
 export interface ServiceData {
 	ids: number[];
-	collection_key: string;
-	user_id: number;
+	collectionKey: string;
+	userId: number;
 }
 
 const deleteMultiple = async (
@@ -18,13 +18,7 @@ const deleteMultiple = async (
 
 	const collectionInstance =
 		await collectionDocumentsServices.checks.checkCollection({
-			key: data.collection_key,
-			errorContent: {
-				name: T("error_not_found_name", {
-					name: T("collection"),
-				}),
-				message: T("collection_not_found_message"),
-			},
+			key: data.collectionKey,
 		});
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -43,7 +37,7 @@ const deleteMultiple = async (
 			{
 				key: "collection_key",
 				operator: "=",
-				value: data.collection_key,
+				value: data.collectionKey,
 			},
 			{
 				key: "is_deleted",
@@ -54,7 +48,7 @@ const deleteMultiple = async (
 	});
 
 	if (getDocuments.length !== data.ids.length) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("document"),
@@ -62,14 +56,16 @@ const deleteMultiple = async (
 			message: T("error_not_found_message", {
 				name: T("document"),
 			}),
-			errors: modelErrors({
-				ids: {
-					code: "only_found",
-					message: T("only_found_ids_error_message", {
-						ids: getDocuments.map((doc) => doc.id).join(", "),
-					}),
+			errorResponse: {
+				body: {
+					ids: {
+						code: "only_found",
+						message: T("only_found_ids_error_message", {
+							ids: getDocuments.map((doc) => doc.id).join(", "),
+						}),
+					},
 				},
-			}),
+			},
 			status: 404,
 		});
 	}
@@ -83,8 +79,8 @@ const deleteMultiple = async (
 		},
 		{
 			meta: {
-				collection_key: data.collection_key,
-				user_id: data.user_id,
+				collectionKey: data.collectionKey,
+				userId: data.userId,
 			},
 			data: {
 				ids: data.ids,
@@ -103,19 +99,13 @@ const deleteMultiple = async (
 		data: {
 			isDeleted: 1,
 			isDeletedAt: new Date().toISOString(),
-			deletedBy: data.user_id,
+			deletedBy: data.userId,
 		},
 	});
 
 	if (deletePages.length === 0) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_deleted_name", {
-				name: T("document"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("document").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}
@@ -129,8 +119,8 @@ const deleteMultiple = async (
 		},
 		{
 			meta: {
-				collection_key: data.collection_key,
-				user_id: data.user_id,
+				collectionKey: data.collectionKey,
+				userId: data.userId,
 			},
 			data: {
 				ids: deletePages.map((page) => page.id),

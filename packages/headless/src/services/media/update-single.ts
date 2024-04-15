@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "./index.js";
@@ -8,13 +8,13 @@ import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	id: number;
-	file_data: MultipartFile | undefined;
-	title_translations?: {
-		language_id: number;
+	fileData: MultipartFile | undefined;
+	titleTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
-	alt_translations?: {
-		language_id: number;
+	altTranslations?: {
+		languageId: number;
 		value: string | null;
 	}[];
 }
@@ -46,7 +46,7 @@ const updateSingle = async (
 	});
 
 	if (media === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("media"),
@@ -67,18 +67,18 @@ const updateSingle = async (
 			},
 			items: [
 				{
-					translations: data.title_translations || [],
+					translations: data.titleTranslations || [],
 					key: "title",
 				},
 				{
-					translations: data.alt_translations || [],
+					translations: data.altTranslations || [],
 					key: "alt",
 				},
 			],
 		},
 	);
 
-	if (data.file_data === undefined) {
+	if (data.fileData === undefined) {
 		return;
 	}
 
@@ -86,8 +86,8 @@ const updateSingle = async (
 		mediaServices.storage.updateObject,
 		false,
 	)(serviceConfig, {
-		file_data: data.file_data,
-		previous_size: media.file_size,
+		fileData: data.fileData,
+		previousSize: media.file_size,
 		key: media.key,
 	});
 
@@ -113,14 +113,8 @@ const updateSingle = async (
 	});
 
 	if (mediaUpdateRes === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("media"),
-			}),
-			message: T("update_error_message", {
-				name: T("media").toLowerCase(),
-			}),
 			status: 500,
 		});
 	}

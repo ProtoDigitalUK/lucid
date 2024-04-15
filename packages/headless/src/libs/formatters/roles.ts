@@ -38,8 +38,8 @@ export default class RolesFormatter {
 					permission: p.permission as PermissionT,
 				};
 			}),
-			created_at: Formatter.formatDate(props.role.created_at),
-			updated_at: Formatter.formatDate(props.role.updated_at),
+			createdAt: Formatter.formatDate(props.role.created_at),
+			updatedAt: Formatter.formatDate(props.role.updated_at),
 		};
 	};
 	static swagger = {
@@ -78,11 +78,11 @@ export default class RolesFormatter {
 					},
 				},
 			},
-			created_at: {
+			createdAt: {
 				type: "string",
 				example: "2021-06-10T20:00:00.000Z",
 			},
-			updated_at: {
+			updatedAt: {
 				type: "string",
 				example: "2021-06-10T20:00:00.000Z",
 			},

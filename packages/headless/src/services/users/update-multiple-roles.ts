@@ -3,15 +3,15 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	user_id: number;
-	role_ids?: number[];
+	userId: number;
+	roleIds?: number[];
 }
 
 const updateMultipleRoles = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	if (data.role_ids === undefined) return;
+	if (data.roleIds === undefined) return;
 
 	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
 
@@ -19,8 +19,7 @@ const updateMultipleRoles = async (
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
 			serviceConfig,
 			{
-				role_ids: data.role_ids || [],
-				is_create: true,
+				roleIds: data.roleIds || [],
 			},
 		),
 		UserRolesRepo.deleteMultiple({
@@ -28,17 +27,17 @@ const updateMultipleRoles = async (
 				{
 					key: "user_id",
 					operator: "=",
-					value: data.user_id,
+					value: data.userId,
 				},
 			],
 		}),
 	]);
 
-	if (data.role_ids.length === 0) return;
+	if (data.roleIds.length === 0) return;
 
 	await UserRolesRepo.createMultiple({
-		items: data.role_ids.map((r) => ({
-			userId: data.user_id,
+		items: data.roleIds.map((r) => ({
+			userId: data.userId,
 			roleId: r,
 		})),
 	});

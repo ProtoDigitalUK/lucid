@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
 import constants from "../constants.js";
-import { APIError } from "../utils/error-handler.js";
+import { HeadlessAPIError } from "../utils/error-handler.js";
 
 export interface RequestQueryParsedT {
 	filter: Record<string, string | Array<string>> | undefined;
@@ -15,7 +15,7 @@ export interface RequestQueryParsedT {
 	include: Array<string> | undefined;
 	exclude: Array<string> | undefined;
 	page: number;
-	per_page: number;
+	perPage: number;
 }
 
 const buildSort = (query: unknown) => {
@@ -72,7 +72,7 @@ const buildPage = (query: unknown) => {
 const buildPerPage = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
 	const perPage = queryObject.per_page;
-	if (!perPage) return constants.query.per_page;
+	if (!perPage) return constants.query.perPage;
 
 	return Number.parseInt(perPage);
 };
@@ -103,7 +103,7 @@ const addRemainingQuery = (query: unknown) => {
 					"filter",
 					"sort",
 					"page",
-					"per_page",
+					"perPage",
 				].includes(key),
 		),
 	);
@@ -123,13 +123,13 @@ const validateQuery =
 				include: buildInclude(request.query),
 				exclude: buildExclude(request.query),
 				page: buildPage(request.query),
-				per_page: buildPerPage(request.query),
+				perPage: buildPerPage(request.query),
 				...addRemainingQuery(request.query),
 			},
 		});
 
 		if (!validateResult.success) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "validation",
 				message: T("validation_query_error_message"),
 				zod: validateResult.error,

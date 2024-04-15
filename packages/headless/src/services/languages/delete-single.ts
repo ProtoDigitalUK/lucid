@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
@@ -14,7 +14,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const count = Formatter.parseCount(languagesCountQuery?.count);
 
 	if (count === 1) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_min_entries_name", {
 				name: T("language"),
@@ -37,14 +37,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (deleteLanguage === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_deleted_name", {
-				name: T("language"),
-			}),
-			message: T("deletion_error_message", {
-				name: T("language"),
-			}),
 			status: 404,
 		});
 	}
@@ -66,14 +60,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			where: [],
 		});
 		if (firstLanguage === undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_deleted_name", {
-					name: T("language"),
-				}),
-				message: T("deletion_error_message", {
-					name: T("language").toLowerCase(),
-				}),
 				status: 500,
 			});
 		}

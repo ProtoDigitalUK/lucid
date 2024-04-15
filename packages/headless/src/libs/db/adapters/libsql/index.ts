@@ -1,5 +1,4 @@
 import { LibsqlDialect, type LibsqlDialectConfig } from "@libsql/kysely-libsql";
-import { sql } from "kysely";
 import DatabaseAdapter from "../../adapter.js";
 import { AdapterType } from "../../types.js";
 import { ParseJSONResultsPlugin } from "../../kysely/parse-json-results-plugin.js";

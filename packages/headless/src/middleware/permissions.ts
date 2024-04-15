@@ -1,10 +1,10 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { APIError } from "../utils/error-handler.js";
+import { HeadlessAPIError } from "../utils/error-handler.js";
 import type { PermissionT } from "../services/permissions.js";
 
 const throwPermissionError = () => {
-	throw new APIError({
+	throw new HeadlessAPIError({
 		type: "basic",
 		name: T("dynamic_error_name", {
 			name: T("permission"),
@@ -18,7 +18,7 @@ const permissions =
 	(permissions: PermissionT[]) => async (request: FastifyRequest) => {
 		const payloadPermissions = request.auth.permissions;
 
-		if (request.auth.super_admin) return;
+		if (request.auth.superAdmin) return;
 		if (payloadPermissions === undefined) return throwPermissionError();
 
 		if (permissions) {

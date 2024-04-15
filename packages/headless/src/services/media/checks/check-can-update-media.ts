@@ -1,12 +1,11 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
-import constants from "../../../constants.js";
 
 export interface ServiceData {
 	size: number;
-	previous_size: number;
+	previousSize: number;
 	filename: string;
 }
 
@@ -18,7 +17,7 @@ const checkCanUpdateMedia = async (
 	const storageLimit = serviceConfig.config.media?.storage;
 
 	if (data.size > maxFileSize) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("file_too_large_max_size_is", {
@@ -26,15 +25,17 @@ const checkCanUpdateMedia = async (
 				size: maxFileSize,
 			}),
 			status: 500,
-			errors: modelErrors({
-				file: {
-					code: "storage",
-					message: T("file_too_large_max_size_is", {
-						name: data.filename,
-						size: maxFileSize,
-					}),
+			errorResponse: {
+				body: {
+					file: {
+						code: "storage",
+						message: T("file_too_large_max_size_is", {
+							name: data.filename,
+							size: maxFileSize,
+						}),
+					},
 				},
-			}),
+			},
 		});
 	}
 
@@ -46,23 +47,25 @@ const checkCanUpdateMedia = async (
 	);
 
 	const proposedSize =
-		(storageUsed.value_int || 0) + data.size - data.previous_size;
+		(storageUsed.valueInt || 0) + data.size - data.previousSize;
 	if (proposedSize > storageLimit) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("default_error_name"),
 			message: T("file_exceeds_storage_limit_max_limit_is", {
 				size: storageLimit,
 			}),
 			status: 500,
-			errors: modelErrors({
-				file: {
-					code: "storage",
-					message: T("file_exceeds_storage_limit_max_limit_is", {
-						size: storageLimit,
-					}),
+			errorResponse: {
+				body: {
+					file: {
+						code: "storage",
+						message: T("file_exceeds_storage_limit_max_limit_is", {
+							size: storageLimit,
+						}),
+					},
 				},
-			}),
+			},
 		});
 	}
 

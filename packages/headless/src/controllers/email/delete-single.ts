@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import emailsSchema from "../../schemas/email.js";
 import {
 	swaggerResponse,
@@ -5,22 +6,37 @@ import {
 } from "../../utils/swagger-helpers.js";
 import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const deleteSingleController: ControllerT<
 	typeof emailsSchema.deleteSingle.params,
 	typeof emailsSchema.deleteSingle.body,
 	typeof emailsSchema.deleteSingle.query
 > = async (request, reply) => {
-	await serviceWrapper(emailServices.deleteSingle, true)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			id: Number.parseInt(request.params.id, 10),
-		},
-	);
-	reply.status(204).send();
+	try {
+		await serviceWrapper(emailServices.deleteSingle, true)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				id: Number.parseInt(request.params.id, 10),
+			},
+		);
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("email"),
+				method: T("delete"),
+			}),
+			message: T("deletion_error_message", {
+				name: T("email").toLowerCase(),
+			}),
+			status: 500,
+		});
+	}
 };
 
 export default {

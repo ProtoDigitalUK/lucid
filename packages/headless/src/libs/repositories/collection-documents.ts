@@ -197,17 +197,17 @@ export default class CollectionDocumentsRepo {
 					include: props.query.include,
 					exclude: props.query.exclude,
 					page: props.query.page,
-					per_page: props.query.per_page,
+					perPage: props.query.perPage,
 				},
 				meta: {
 					filters: [],
 					sorts: [
 						{
-							queryKey: "created_at",
+							queryKey: "createdAt",
 							tableKey: "created_at",
 						},
 						{
-							queryKey: "updated_at",
+							queryKey: "updatedAt",
 							tableKey: "updated_at",
 						},
 					],

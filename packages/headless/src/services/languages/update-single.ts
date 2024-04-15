@@ -1,15 +1,15 @@
 import T from "../../translations/index.js";
 import ISO6391 from "iso-639-1";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
-	current_code: string;
+	currentCode: string;
 	code?: string;
-	is_default?: BooleanInt;
-	is_enabled?: BooleanInt;
+	isDefault?: BooleanInt;
+	isEnabled?: BooleanInt;
 }
 
 const updateSingle = async (
@@ -18,17 +18,11 @@ const updateSingle = async (
 ) => {
 	if (
 		data.code === undefined &&
-		data.is_default === undefined &&
-		data.is_enabled === undefined
+		data.isDefault === undefined &&
+		data.isEnabled === undefined
 	) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("language"),
-			}),
-			message: T("update_error_message", {
-				name: T("language"),
-			}),
 			status: 400,
 		});
 	}
@@ -48,14 +42,8 @@ const updateSingle = async (
 		});
 
 		if (language !== undefined) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_updated_name", {
-					name: T("language"),
-				}),
-				message: T("update_error_message", {
-					name: T("language"),
-				}),
 				status: 400,
 			});
 		}
@@ -64,11 +52,8 @@ const updateSingle = async (
 		const iso6391 = code[0];
 
 		if (iso6391 && !ISO6391.validate(iso6391)) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("dynamic_error_name", {
-					name: T("language"),
-				}),
 				message: T("error_invalid", {
 					type: T("language_iso_639_1"),
 				}),
@@ -80,32 +65,26 @@ const updateSingle = async (
 	const languagesCountQuery = await LanguagesRepo.count();
 	const count = Formatter.parseCount(languagesCountQuery?.count);
 
-	const isDefault = count === 1 ? 1 : data.is_default;
+	const isDefault = count === 1 ? 1 : data.isDefault;
 
 	const updateLanguage = await LanguagesRepo.updateSingle({
 		data: {
 			isDefault: isDefault,
-			isEnabled: isDefault === 1 ? 1 : data.is_enabled,
+			isEnabled: isDefault === 1 ? 1 : data.isEnabled,
 			updated_at: new Date().toISOString(),
 		},
 		where: [
 			{
 				key: "code",
 				operator: "=",
-				value: data.current_code,
+				value: data.currentCode,
 			},
 		],
 	});
 
 	if (updateLanguage === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("language"),
-			}),
-			message: T("update_error_message", {
-				name: T("language").toLowerCase(),
-			}),
 			status: 400,
 		});
 	}

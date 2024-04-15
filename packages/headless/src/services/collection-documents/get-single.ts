@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import type z from "zod";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import collectionsServices from "../collections/index.js";
@@ -26,7 +26,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	});
 
 	if (document === undefined || document.collection_key === null) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("document"),
@@ -47,8 +47,8 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			collectionDocumentBricksServices.getMultiple,
 			false,
 		)(serviceConfig, {
-			document_id: data.id,
-			collection_key: document.collection_key,
+			documentId: data.id,
+			collectionKey: document.collection_key,
 		});
 
 		return CollectionDocumentsFormatter.formatSingle({

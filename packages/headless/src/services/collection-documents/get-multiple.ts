@@ -5,9 +5,9 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
-	collection_key: string;
+	collectionKey: string;
 	query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
-	language_id: number;
+	languageId: number;
 }
 
 const getMultiple = async (
@@ -15,7 +15,7 @@ const getMultiple = async (
 	data: ServiceData,
 ) => {
 	const collectionInstance = await collectionsServices.getSingleInstance({
-		key: data.collection_key,
+		key: data.collectionKey,
 	});
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -27,7 +27,7 @@ const getMultiple = async (
 	const [documents, documentCount] =
 		await CollectionDocumentsRepo.selectMultipleFiltered({
 			query: data.query,
-			languageId: data.language_id,
+			languageId: data.languageId,
 			allowedFieldFilters: collectionInstance.data.config.fields.filter,
 			allowedFieldIncludes: collectionInstance.data.config.fields.include,
 			config: serviceConfig.config,

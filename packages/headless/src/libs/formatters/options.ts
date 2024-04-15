@@ -7,9 +7,9 @@ export default class OptionsFormatter {
 	}): OptionsResT => {
 		return {
 			name: props.option.name,
-			value_text: props.option.value_text,
-			value_int: props.option.value_int,
-			value_bool: props.option.value_bool,
+			valueText: props.option.value_text,
+			valueInt: props.option.value_int,
+			valueBool: props.option.value_bool,
 		};
 	};
 }

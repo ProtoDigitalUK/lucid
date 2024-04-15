@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { APIError, modelErrors } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
@@ -7,7 +7,7 @@ import mediaServices from "../index.js";
 import optionsServices from "../../options/index.js";
 
 export interface ServiceData {
-	file_data: MultipartFile | undefined;
+	fileData: MultipartFile | undefined;
 }
 
 const uploadObject = async (
@@ -17,22 +17,18 @@ const uploadObject = async (
 	let tempFilePath = undefined;
 
 	try {
-		if (data.file_data === undefined) {
-			throw new APIError({
+		if (data.fileData === undefined) {
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
-				message: T("error_not_created_message", {
-					name: T("media"),
-				}),
 				status: 400,
-				errors: modelErrors({
-					file: {
-						code: "required",
-						message: T("ensure_file_has_been_uploaded"),
+				errorResponse: {
+					body: {
+						file: {
+							code: "required",
+							message: T("ensure_file_has_been_uploaded"),
+						},
 					},
-				}),
+				},
 			});
 		}
 
@@ -42,14 +38,14 @@ const uploadObject = async (
 
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
-			data.file_data.file,
-			data.file_data.filename,
+			data.fileData.file,
+			data.fileData.filename,
 		);
 		// Get meta data from file
 		const metaData = await mediaHelpers.getMetaData({
 			filePath: tempFilePath,
-			mimeType: data.file_data.mimetype,
-			fileName: data.file_data.filename,
+			mimeType: data.fileData.mimetype,
+			fileName: data.fileData.filename,
 		});
 
 		// Ensure we available storage space
@@ -57,7 +53,7 @@ const uploadObject = async (
 			mediaServices.checks.checkCanStoreMedia,
 			false,
 		)(serviceConfig, {
-			filename: data.file_data.filename,
+			filename: data.fileData.filename,
 			size: metaData.size,
 		});
 
@@ -69,19 +65,18 @@ const uploadObject = async (
 		});
 
 		if (saveObjectRes.success === false) {
-			throw new APIError({
+			throw new HeadlessAPIError({
 				type: "basic",
-				name: T("error_not_created_name", {
-					name: T("media"),
-				}),
 				message: saveObjectRes.message,
 				status: 500,
-				errors: modelErrors({
-					file: {
-						code: "s3_error",
-						message: saveObjectRes.message,
+				errorResponse: {
+					body: {
+						file: {
+							code: "s3_error",
+							message: saveObjectRes.message,
+						},
 					},
-				}),
+				},
 			});
 		}
 
@@ -92,7 +87,7 @@ const uploadObject = async (
 			serviceConfig,
 			{
 				name: "media_storage_used",
-				value_int: proposedSize,
+				valueInt: proposedSize,
 			},
 		);
 

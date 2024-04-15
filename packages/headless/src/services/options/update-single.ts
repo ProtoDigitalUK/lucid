@@ -1,14 +1,14 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { OptionNameT } from "../../types/response.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	name: OptionNameT;
-	value_text?: string;
-	value_int?: number;
-	value_bool?: BooleanInt;
+	valueText?: string;
+	valueInt?: number;
+	valueBool?: BooleanInt;
 }
 
 const updateSingle = async (
@@ -26,21 +26,15 @@ const updateSingle = async (
 			},
 		],
 		data: {
-			valueBool: data.value_bool,
-			valueInt: data.value_int,
-			valueText: data.value_text,
+			valueBool: data.valueBool,
+			valueInt: data.valueInt,
+			valueText: data.valueText,
 		},
 	});
 
 	if (updateOption === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("error_not_updated_name", {
-				name: T("option"),
-			}),
-			message: T("update_error_message", {
-				name: T("option").toLowerCase(),
-			}),
 			status: 400,
 		});
 	}

@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import type { Config } from "../../../types/config.js";
-import { APIError } from "../../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../../utils/error-handler.js";
 
 export interface ServiceData {
 	config: Config;
@@ -8,7 +8,7 @@ export interface ServiceData {
 
 const checkHasMediaStrategy = (data: ServiceData) => {
 	if (data.config.media?.stategy === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("config_error_name"),
 			message: T("media_strategy_not_configured_message"),

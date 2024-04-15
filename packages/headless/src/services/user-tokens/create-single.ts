@@ -1,12 +1,12 @@
 import T from "../../translations/index.js";
-import { APIError } from "../../utils/error-handler.js";
+import { HeadlessAPIError } from "../../utils/error-handler.js";
 import crypto from "node:crypto";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	user_id: number;
-	token_type: "password_reset";
-	expiry_date: string;
+	userId: number;
+	tokenType: "password_reset";
+	expiryDate: string;
 }
 
 const createSingle = async (
@@ -18,16 +18,15 @@ const createSingle = async (
 	const token = crypto.randomBytes(32).toString("hex");
 
 	const userToken = await UserTokensRepo.createSingle({
-		userId: data.user_id,
-		tokenType: data.token_type,
-		expiryDate: data.expiry_date,
+		userId: data.userId,
+		tokenType: data.tokenType,
+		expiryDate: data.expiryDate,
 		token: token,
 	});
 
 	if (userToken === undefined) {
-		throw new APIError({
+		throw new HeadlessAPIError({
 			type: "basic",
-			name: T("default_error_name"),
 			message: T("error_creating_user_token"),
 			status: 500,
 		});

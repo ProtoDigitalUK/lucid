@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import mediaSchema from "../../schemas/media.js";
 import {
 	swaggerResponse,
@@ -8,33 +9,46 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const getMultipleController: ControllerT<
 	typeof mediaSchema.getMultiple.params,
 	typeof mediaSchema.getMultiple.body,
 	typeof mediaSchema.getMultiple.query
 > = async (request, reply) => {
-	const media = await serviceWrapper(mediaServices.getMultiple, false)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			query: request.query,
-			language_id: request.language.id,
-		},
-	);
-
-	reply.status(200).send(
-		await buildResponse(request, {
-			data: media.data,
-			pagination: {
-				count: media.count,
-				page: request.query.page,
-				perPage: request.query.per_page,
+	try {
+		const media = await serviceWrapper(mediaServices.getMultiple, false)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
 			},
-		}),
-	);
+			{
+				query: request.query,
+				languageId: request.language.id,
+			},
+		);
+
+		reply.status(200).send(
+			await buildResponse(request, {
+				data: media.data,
+				pagination: {
+					count: media.count,
+					page: request.query.page,
+					perPage: request.query.perPage,
+				},
+			}),
+		);
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("method_error_name", {
+				name: T("media"),
+				method: T("fetch"),
+			}),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {
@@ -63,10 +77,10 @@ export default {
 					key: "key",
 				},
 				{
-					key: "mime_type",
+					key: "mimeType",
 				},
 				{
-					key: "file_extension",
+					key: "fileExtension",
 				},
 				{
 					key: "type",
@@ -76,14 +90,14 @@ export default {
 				},
 			],
 			sorts: [
-				"created_at",
-				"updated_at",
+				"createdAt",
+				"updatedAt",
 				"title",
-				"file_size",
+				"fileSize",
 				"width",
 				"height",
-				"mime_type",
-				"file_extension",
+				"mimeType",
+				"fileExtension",
 			],
 			page: true,
 			perPage: true,

@@ -1,3 +1,4 @@
+import T from "../../translations/index.js";
 import authSchema from "../../schemas/auth.js";
 import {
 	swaggerResponse,
@@ -5,29 +6,39 @@ import {
 } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const loginController: ControllerT<
 	typeof authSchema.login.params,
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
 > = async (request, reply) => {
-	const user = await serviceWrapper(auth.login, false)(
-		{
-			db: request.server.config.db.client,
-			config: request.server.config,
-		},
-		{
-			username_or_email: request.body.username_or_email,
-			password: request.body.password,
-		},
-	);
+	try {
+		const user = await serviceWrapper(auth.login, false)(
+			{
+				db: request.server.config.db.client,
+				config: request.server.config,
+			},
+			{
+				usernameOrEmail: request.body.usernameOrEmail,
+				password: request.body.password,
+			},
+		);
 
-	await Promise.all([
-		auth.refreshToken.generateRefreshToken(reply, request, user.id),
-		auth.accessToken.generateAccessToken(reply, request, user.id),
-	]);
+		await Promise.all([
+			auth.refreshToken.generateRefreshToken(reply, request, user.id),
+			auth.accessToken.generateAccessToken(reply, request, user.id),
+		]);
 
-	reply.status(204).send();
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("default_error_name"),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {
@@ -41,10 +52,10 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				username_or_email: { type: "string" },
+				usernameOrEmail: { type: "string" },
 				password: { type: "string" },
 			},
-			required: ["username_or_email", "password"],
+			required: ["usernameOrEmail", "password"],
 		},
 		response: {
 			204: swaggerResponse({

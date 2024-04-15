@@ -1,34 +1,45 @@
+import T from "../../translations/index.js";
 import authSchema from "../../schemas/auth.js";
 import {
 	swaggerResponse,
 	swaggerHeaders,
 } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
+import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 
 const tokenController: ControllerT<
 	typeof authSchema.token.params,
 	typeof authSchema.token.body,
 	typeof authSchema.token.query
 > = async (request, reply) => {
-	const refreshPayload = await auth.refreshToken.verifyRefreshToken(
-		request,
-		reply,
-	);
-
-	await Promise.all([
-		auth.refreshToken.generateRefreshToken(
-			reply,
+	try {
+		const refreshPayload = await auth.refreshToken.verifyRefreshToken(
 			request,
-			refreshPayload.userId as number,
-		),
-		auth.accessToken.generateAccessToken(
 			reply,
-			request,
-			refreshPayload.userId as number,
-		),
-	]);
+		);
 
-	reply.status(204).send();
+		await Promise.all([
+			auth.refreshToken.generateRefreshToken(
+				reply,
+				request,
+				refreshPayload.userId as number,
+			),
+			auth.accessToken.generateAccessToken(
+				reply,
+				request,
+				refreshPayload.userId as number,
+			),
+		]);
+
+		reply.status(204).send();
+	} catch (error) {
+		ensureThrowAPIError(error, {
+			type: "basic",
+			name: T("default_error_name"),
+			message: T("default_error_message"),
+			status: 500,
+		});
+	}
 };
 
 export default {
