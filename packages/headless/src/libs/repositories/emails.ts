@@ -78,12 +78,12 @@ export default class EmailsRepo {
 					include: props.query.include,
 					exclude: props.query.exclude,
 					page: props.query.page,
-					per_page: props.query.per_page,
+					perPage: props.query.perPage,
 				},
 				meta: {
 					filters: [
 						{
-							queryKey: "to_address",
+							queryKey: "toAddress",
 							tableKey: "to_address",
 							operator: "=",
 						},
@@ -93,7 +93,7 @@ export default class EmailsRepo {
 							operator: props.config.db.fuzzOperator,
 						},
 						{
-							queryKey: "delivery_status",
+							queryKey: "deliveryStatus",
 							tableKey: "delivery_status",
 							operator: "=",
 						},
@@ -110,23 +110,23 @@ export default class EmailsRepo {
 					],
 					sorts: [
 						{
-							queryKey: "last_attempt_at",
+							queryKey: "lastAttemptAt",
 							tableKey: "last_attempt_at",
 						},
 						{
-							queryKey: "last_success_at",
+							queryKey: "lastSuccessAt",
 							tableKey: "last_success_at",
 						},
 						{
-							queryKey: "created_at",
+							queryKey: "createdAt",
 							tableKey: "created_at",
 						},
 						{
-							queryKey: "sent_count",
+							queryKey: "sentCount",
 							tableKey: "sent_count",
 						},
 						{
-							queryKey: "error_count",
+							queryKey: "errorCount",
 							tableKey: "error_count",
 						},
 					],

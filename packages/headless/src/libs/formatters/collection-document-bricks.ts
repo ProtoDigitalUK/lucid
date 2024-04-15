@@ -90,7 +90,7 @@ export default class CollectionDocumentBricksFormatter {
 			id: {
 				type: "number",
 			},
-			collection_document_id: {
+			collectionDocumentId: {
 				type: "number",
 			},
 			key: {

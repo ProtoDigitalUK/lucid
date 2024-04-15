@@ -15,7 +15,7 @@ export interface RequestQueryParsedT {
 	include: Array<string> | undefined;
 	exclude: Array<string> | undefined;
 	page: number;
-	per_page: number;
+	perPage: number;
 }
 
 const buildSort = (query: unknown) => {
@@ -72,7 +72,7 @@ const buildPage = (query: unknown) => {
 const buildPerPage = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
 	const perPage = queryObject.per_page;
-	if (!perPage) return constants.query.per_page;
+	if (!perPage) return constants.query.perPage;
 
 	return Number.parseInt(perPage);
 };
@@ -103,7 +103,7 @@ const addRemainingQuery = (query: unknown) => {
 					"filter",
 					"sort",
 					"page",
-					"per_page",
+					"perPage",
 				].includes(key),
 		),
 	);
@@ -123,7 +123,7 @@ const validateQuery =
 				include: buildInclude(request.query),
 				exclude: buildExclude(request.query),
 				page: buildPage(request.query),
-				per_page: buildPerPage(request.query),
+				perPage: buildPerPage(request.query),
 				...addRemainingQuery(request.query),
 			},
 		});

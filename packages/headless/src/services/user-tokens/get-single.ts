@@ -3,7 +3,7 @@ import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	token_type: "password_reset";
+	tokenType: "password_reset";
 	token: string;
 }
 
@@ -21,7 +21,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 			{
 				key: "token_type",
 				operator: "=",
-				value: data.token_type,
+				value: data.tokenType,
 			},
 			{
 				key: "expiry_date",

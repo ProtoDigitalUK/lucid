@@ -35,7 +35,7 @@ export default {
 			filter: z
 				.object({
 					name: z.string().optional(),
-					role_ids: z
+					roleIds: z
 						.union([z.string(), z.array(z.string())])
 						.optional(),
 				})
@@ -43,7 +43,7 @@ export default {
 			sort: z
 				.array(
 					z.object({
-						key: z.enum(["created_at", "name"]),
+						key: z.enum(["createdAt", "name"]),
 						value: z.enum(["asc", "desc"]),
 					}),
 				)
@@ -51,7 +51,7 @@ export default {
 			include: z.array(z.enum(["permissions"])).optional(),
 			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
-			per_page: defaultQuery.per_page,
+			perPage: defaultQuery.perPage,
 		}),
 		params: undefined,
 	},

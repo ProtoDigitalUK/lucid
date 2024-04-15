@@ -17,7 +17,7 @@ declare module "fastify" {
 			id: number;
 			username: string;
 			email: string;
-			super_admin: BooleanInt;
+			superAdmin: BooleanInt;
 			permissions: UserPermissionsResT["permissions"] | undefined;
 		};
 		language: {
@@ -63,9 +63,9 @@ declare global {
 			}>;
 			path: string;
 
-			current_page?: number | null;
-			last_page?: number | null;
-			per_page?: number | null;
+			currentPage?: number | null;
+			lastPage?: number | null;
+			perPage?: number | null;
 			total?: number | null;
 		};
 	}

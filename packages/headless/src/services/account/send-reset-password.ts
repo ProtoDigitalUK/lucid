@@ -40,9 +40,9 @@ const sendResetPassword = async (
 	const userToken = await serviceWrapper(userTokens.createSingle, false)(
 		serviceConfig,
 		{
-			user_id: userExists.id,
-			token_type: "password_reset",
-			expiry_date: expiryDate,
+			userId: userExists.id,
+			tokenType: "password_reset",
+			expiryDate: expiryDate,
 		},
 	);
 

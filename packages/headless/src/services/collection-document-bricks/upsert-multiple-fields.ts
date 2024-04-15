@@ -4,7 +4,7 @@ import { fieldUpsertPrep } from "../../utils/field-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	document_id: number;
+	documentId: number;
 	bricks: Array<BrickSchemaT>;
 	groups: Array<GroupsResT>;
 }
@@ -34,19 +34,19 @@ const upsertMultipleFields = async (
 	const fieldsRes = await CollectionDocumentFieldsRepo.upsertMultiple({
 		items: fields.map((field) => {
 			return {
-				fieldsId: field.fields_id ?? undefined,
-				collectionDocumentId: data.document_id,
-				collectionBrickId: field.collection_brick_id,
+				fieldsId: field.fieldsId ?? undefined,
+				collectionDocumentId: data.documentId,
+				collectionBrickId: field.collectionBrickId,
 				key: field.key,
 				type: field.type,
-				groupId: field.group_id,
-				textValue: field.text_value,
-				intValue: field.int_value,
-				boolValue: field.bool_value,
-				jsonValue: field.json_value,
-				pageLinkId: field.page_link_id,
-				mediaId: field.media_id,
-				languageId: field.language_id,
+				groupId: field.groupId,
+				textValue: field.textValue,
+				intValue: field.intValue,
+				boolValue: field.boolValue,
+				jsonValue: field.jsonValue,
+				pageLinkId: field.pageLinkId,
+				mediaId: field.mediaId,
+				languageId: field.languageId,
 			};
 		}),
 	});
@@ -57,7 +57,7 @@ const upsertMultipleFields = async (
 			{
 				key: "collection_brick_id",
 				operator: "in",
-				value: fields.map((f) => f.collection_brick_id),
+				value: fields.map((f) => f.collectionBrickId),
 			},
 			{
 				key: "fields_id",

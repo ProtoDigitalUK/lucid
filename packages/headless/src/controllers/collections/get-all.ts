@@ -22,7 +22,7 @@ const getAllController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				include_document_id: true,
+				includeDocumentId: true,
 			},
 		);
 

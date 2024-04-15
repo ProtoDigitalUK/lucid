@@ -3,8 +3,8 @@ import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
-	document_id: number;
-	collection_key: string;
+	documentId: number;
+	collectionKey: string;
 }
 
 const getMultiple = async (
@@ -21,11 +21,11 @@ const getMultiple = async (
 
 	const [bricks, collection] = await Promise.all([
 		CollectionDocumentBricksRepo.selectMultipleByDocumentId({
-			documentId: data.document_id,
+			documentId: data.documentId,
 			config: serviceConfig.config,
 		}),
 		collectionsServices.getSingleInstance({
-			key: data.collection_key,
+			key: data.collectionKey,
 		}),
 	]);
 

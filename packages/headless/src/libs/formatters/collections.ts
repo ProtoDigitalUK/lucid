@@ -43,15 +43,15 @@ export default class CollectionsFormatter {
 			title: collectionData.title,
 			singular: collectionData.singular,
 			description: collectionData.description ?? null,
-			document_id: props.include?.document_id
+			documentId: props.include?.document_id
 				? this.getDocumentId(key, props.documents)
 				: undefined,
 			translations: collectionData.config.translations ?? false,
 
-			fixed_bricks: props.include?.bricks
+			fixedBricks: props.include?.bricks
 				? props.collection.fixedBricks ?? []
 				: [],
-			builder_bricks: props.include?.bricks
+			builderBricks: props.include?.bricks
 				? props.collection.builderBricks ?? []
 				: [],
 			fields: props.include?.fields
@@ -134,13 +134,13 @@ export default class CollectionsFormatter {
 				example: "A collection of pages",
 				nullable: true,
 			},
-			document_id: { type: "number", example: 1, nullable: true },
+			documentId: { type: "number", example: 1, nullable: true },
 			translations: { type: "boolean", example: false },
-			fixed_bricks: {
+			fixedBricks: {
 				type: "array",
 				items: this.swaggerBricksConfig,
 			},
-			builder_bricks: {
+			builderBricks: {
 				type: "array",
 				items: this.swaggerBricksConfig,
 			},

@@ -1,4 +1,3 @@
-import T from "../translations/index.js";
 import { format, getHours } from "date-fns";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";

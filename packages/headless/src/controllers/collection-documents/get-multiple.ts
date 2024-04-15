@@ -26,9 +26,9 @@ const getMultipleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				collection_key: request.params.collection_key,
+				collectionKey: request.params.collectionKey,
 				query: request.query,
-				language_id: request.language.id,
+				languageId: request.language.id,
 			},
 		);
 
@@ -38,7 +38,7 @@ const getMultipleController: ControllerT<
 				pagination: {
 					count: documents.count,
 					page: request.query.page,
-					perPage: request.query.per_page,
+					perPage: request.query.perPage,
 				},
 			}),
 		);
@@ -77,7 +77,7 @@ export default {
 		}),
 		querystring: swaggerQueryString({
 			filters: [],
-			sorts: ["created_at", "updated_at"],
+			sorts: ["createdAt", "updatedAt"],
 			page: true,
 			perPage: true,
 		}),

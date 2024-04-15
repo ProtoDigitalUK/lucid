@@ -17,11 +17,11 @@ const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
 		);
 
 		await UsersRepo.createSingle({
-			superAdmin: constants.seedDefaults.user.super_admin as 0 | 1,
+			superAdmin: constants.seedDefaults.user.superAdmin as 0 | 1,
 			email: constants.seedDefaults.user.email,
 			username: constants.seedDefaults.user.username,
-			firstName: constants.seedDefaults.user.first_name,
-			lastName: constants.seedDefaults.user.last_name,
+			firstName: constants.seedDefaults.user.firstName,
+			lastName: constants.seedDefaults.user.lastName,
 			password: hashedPassword,
 		});
 	} catch (error) {

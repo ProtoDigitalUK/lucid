@@ -21,11 +21,11 @@ const updateMeController: ControllerT<
 			},
 			{
 				auth: request.auth,
-				first_name: request.body.first_name,
-				last_name: request.body.last_name,
+				firstName: request.body.firstName,
+				lastName: request.body.lastName,
 				username: request.body.username,
 				email: request.body.email,
-				role_ids: request.body.role_ids,
+				roleIds: request.body.roleIds,
 			},
 		);
 
@@ -62,10 +62,10 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				first_name: {
+				firstName: {
 					type: "string",
 				},
-				last_name: {
+				lastName: {
 					type: "string",
 				},
 				username: {
@@ -74,7 +74,7 @@ export default {
 				email: {
 					type: "string",
 				},
-				role_ids: {
+				roleIds: {
 					type: "array",
 					items: {
 						type: "number",

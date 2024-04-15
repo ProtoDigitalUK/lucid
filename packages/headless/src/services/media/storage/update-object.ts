@@ -8,8 +8,8 @@ import optionsServices from "../../options/index.js";
 import processedImagesServices from "../../processed-images/index.js";
 
 export interface ServiceData {
-	file_data: MultipartFile | undefined;
-	previous_size: number;
+	fileData: MultipartFile | undefined;
+	previousSize: number;
 	key: string;
 }
 
@@ -20,7 +20,7 @@ const updateObject = async (
 	let tempFilePath = undefined;
 
 	try {
-		if (data.file_data === undefined) {
+		if (data.fileData === undefined) {
 			throw new HeadlessAPIError({
 				type: "basic",
 				status: 400,
@@ -41,14 +41,14 @@ const updateObject = async (
 
 		// Save file to temp folder
 		tempFilePath = await mediaHelpers.saveStreamToTempFile(
-			data.file_data.file,
-			data.file_data.filename,
+			data.fileData.file,
+			data.fileData.filename,
 		);
 		// Get meta data from file
 		const metaData = await mediaHelpers.getMetaData({
 			filePath: tempFilePath,
-			mimeType: data.file_data.mimetype,
-			fileName: data.file_data.filename,
+			mimeType: data.fileData.mimetype,
+			fileName: data.fileData.filename,
 		});
 
 		// Ensure we available storage space
@@ -56,9 +56,9 @@ const updateObject = async (
 			mediaServices.checks.checkCanUpdateMedia,
 			false,
 		)(serviceConfig, {
-			filename: data.file_data.filename,
+			filename: data.fileData.filename,
 			size: metaData.size,
-			previous_size: data.previous_size,
+			previousSize: data.previousSize,
 		});
 
 		// Save file to storage
@@ -89,7 +89,7 @@ const updateObject = async (
 			false,
 		)(serviceConfig, {
 			name: "media_storage_used",
-			value_int: proposedSize,
+			valueInt: proposedSize,
 		});
 		const clearProcessedPromise = serviceWrapper(
 			processedImagesServices.clearSingle,

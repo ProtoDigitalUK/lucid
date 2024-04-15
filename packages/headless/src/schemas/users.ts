@@ -9,23 +9,23 @@ export default {
 				email: z.string().email(),
 				username: z.string(),
 				password: z.string().min(8).max(128),
-				password_confirmation: z.string().min(8).max(128),
-				role_ids: z.array(z.number()),
-				first_name: z.string().optional(),
-				last_name: z.string().optional(),
-				super_admin: z.union([z.literal(1), z.literal(0)]).optional(),
+				passwordConfirmation: z.string().min(8).max(128),
+				roleIds: z.array(z.number()),
+				firstName: z.string().optional(),
+				lastName: z.string().optional(),
+				superAdmin: z.union([z.literal(1), z.literal(0)]).optional(),
 			})
-			.refine((data) => data.password === data.password_confirmation, {
+			.refine((data) => data.password === data.passwordConfirmation, {
 				message: T("please_ensure_passwords_match"),
-				path: ["password_confirmation"],
+				path: ["passwordConfirmation"],
 			}),
 		query: undefined,
 		params: undefined,
 	},
 	updateSingle: {
 		body: z.object({
-			role_ids: z.array(z.number()).optional(),
-			super_admin: z.union([z.literal(1), z.literal(0)]).optional(),
+			roleIds: z.array(z.number()).optional(),
+			superAdmin: z.union([z.literal(1), z.literal(0)]).optional(),
 		}),
 		query: undefined,
 		params: z.object({
@@ -43,11 +43,11 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					first_name: z.string().optional(),
-					last_name: z.string().optional(),
+					firstName: z.string().optional(),
+					lastName: z.string().optional(),
 					email: z.string().optional(),
 					username: z.string().optional(),
-					role_ids: z
+					roleIds: z
 						.union([z.array(z.string()), z.string()])
 						.optional(),
 				})
@@ -56,10 +56,10 @@ export default {
 				.array(
 					z.object({
 						key: z.enum([
-							"created_at",
-							"updated_at",
-							"first_name",
-							"last_name",
+							"createdAt",
+							"updatedAt",
+							"firstName",
+							"lastName",
 							"email",
 							"username",
 						]),
@@ -70,7 +70,7 @@ export default {
 			include: z.array(z.enum(["permissions"])).optional(),
 			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
-			per_page: defaultQuery.per_page,
+			perPage: defaultQuery.perPage,
 		}),
 		params: undefined,
 		body: undefined,

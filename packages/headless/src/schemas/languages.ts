@@ -5,8 +5,8 @@ export default {
 	createSingle: {
 		body: z.object({
 			code: z.string().min(2),
-			is_default: z.union([z.literal(1), z.literal(0)]),
-			is_enabled: z.union([z.literal(1), z.literal(0)]),
+			isDefault: z.union([z.literal(1), z.literal(0)]),
+			isEnabled: z.union([z.literal(1), z.literal(0)]),
 		}),
 		query: undefined,
 		params: undefined,
@@ -24,7 +24,7 @@ export default {
 			sort: z
 				.array(
 					z.object({
-						key: z.enum(["created_at", "code", "updated_at"]),
+						key: z.enum(["createdAt", "code", "updatedAt"]),
 						value: z.enum(["asc", "desc"]),
 					}),
 				)
@@ -32,7 +32,7 @@ export default {
 			include: defaultQuery.include,
 			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
-			per_page: defaultQuery.per_page,
+			perPage: defaultQuery.perPage,
 		}),
 		params: undefined,
 		body: undefined,
@@ -40,8 +40,8 @@ export default {
 	updateSingle: {
 		body: z.object({
 			code: z.string().min(2).optional(),
-			is_default: z.union([z.literal(1), z.literal(0)]).optional(),
-			is_enabled: z.union([z.literal(1), z.literal(0)]).optional(),
+			isDefault: z.union([z.literal(1), z.literal(0)]).optional(),
+			isEnabled: z.union([z.literal(1), z.literal(0)]).optional(),
 		}),
 		query: undefined,
 		params: z.object({

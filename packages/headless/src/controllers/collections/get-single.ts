@@ -26,7 +26,7 @@ const getSingleController: ControllerT<
 				include: {
 					bricks: true,
 					fields: true,
-					document_id: true,
+					documentId: true,
 				},
 			},
 		);

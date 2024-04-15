@@ -9,11 +9,11 @@ export default {
 	},
 	updateMe: {
 		body: z.object({
-			first_name: z.string().optional(),
-			last_name: z.string().optional(),
+			firstName: z.string().optional(),
+			lastName: z.string().optional(),
 			username: z.string().min(3).optional(),
 			email: z.string().email().optional(),
-			role_ids: z.array(z.number()).optional(),
+			roleIds: z.array(z.number()).optional(),
 		}),
 		query: undefined,
 		params: undefined,
@@ -36,11 +36,11 @@ export default {
 		body: z
 			.object({
 				password: z.string().min(8).max(128),
-				password_confirmation: z.string().min(8).max(128),
+				passwordConfirmation: z.string().min(8).max(128),
 			})
-			.refine((data) => data.password === data.password_confirmation, {
+			.refine((data) => data.password === data.passwordConfirmation, {
 				message: T("please_ensure_passwords_match"),
-				path: ["password_confirmation"],
+				path: ["passwordConfirmation"],
 			}),
 		query: undefined,
 		params: z.object({

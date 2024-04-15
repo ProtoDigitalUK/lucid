@@ -4,7 +4,7 @@ import Formatter from "../../libs/formatters/index.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	user_id: number;
+	userId: number;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -12,7 +12,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const UsersFormatter = Formatter.get("users");
 
 	const user = await UsersRepo.selectSingleById({
-		id: data.user_id,
+		id: data.userId,
 		config: serviceConfig.config,
 	});
 

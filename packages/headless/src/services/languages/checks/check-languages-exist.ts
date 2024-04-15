@@ -3,14 +3,14 @@ import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
-	language_ids: number[];
+	languageIds: number[];
 }
 
 const checkLanguagesExist = async (
 	serviceConfig: ServiceConfigT,
 	data: ServiceData,
 ) => {
-	const languageIds = Array.from(new Set(data.language_ids));
+	const languageIds = Array.from(new Set(data.languageIds));
 
 	if (languageIds.length === 0) return;
 

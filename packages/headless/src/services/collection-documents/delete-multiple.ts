@@ -6,8 +6,8 @@ import executeHooks from "../../libs/hooks/execute-hooks.js";
 
 export interface ServiceData {
 	ids: number[];
-	collection_key: string;
-	user_id: number;
+	collectionKey: string;
+	userId: number;
 }
 
 const deleteMultiple = async (
@@ -18,7 +18,7 @@ const deleteMultiple = async (
 
 	const collectionInstance =
 		await collectionDocumentsServices.checks.checkCollection({
-			key: data.collection_key,
+			key: data.collectionKey,
 		});
 
 	const CollectionDocumentsRepo = Repository.get(
@@ -37,7 +37,7 @@ const deleteMultiple = async (
 			{
 				key: "collection_key",
 				operator: "=",
-				value: data.collection_key,
+				value: data.collectionKey,
 			},
 			{
 				key: "is_deleted",
@@ -79,8 +79,8 @@ const deleteMultiple = async (
 		},
 		{
 			meta: {
-				collection_key: data.collection_key,
-				user_id: data.user_id,
+				collectionKey: data.collectionKey,
+				userId: data.userId,
 			},
 			data: {
 				ids: data.ids,
@@ -99,7 +99,7 @@ const deleteMultiple = async (
 		data: {
 			isDeleted: 1,
 			isDeletedAt: new Date().toISOString(),
-			deletedBy: data.user_id,
+			deletedBy: data.userId,
 		},
 	});
 
@@ -119,8 +119,8 @@ const deleteMultiple = async (
 		},
 		{
 			meta: {
-				collection_key: data.collection_key,
-				user_id: data.user_id,
+				collectionKey: data.collectionKey,
+				userId: data.userId,
 			},
 			data: {
 				ids: deletePages.map((page) => page.id),

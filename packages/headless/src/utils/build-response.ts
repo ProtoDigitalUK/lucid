@@ -116,13 +116,13 @@ const buildResponse: BuildResponseT = async (request, params) => {
 		}
 	}
 
-	const meta = {
+	const meta: ResponseBodyT["meta"] = {
 		path: await getPath(request),
 		links: buildMetaLinks(request, params),
-		current_page: params.pagination?.page ?? null,
-		per_page: params.pagination?.perPage ?? null,
+		currentPage: params.pagination?.page ?? null,
+		perPage: params.pagination?.perPage ?? null,
 		total: Number(params.pagination?.count) || null,
-		last_page: lastPage,
+		lastPage: lastPage,
 	};
 	const links = buildLinks(request, params);
 

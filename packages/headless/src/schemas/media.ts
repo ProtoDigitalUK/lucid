@@ -22,11 +22,11 @@ export default {
 				.object({
 					title: z.string().optional(),
 					key: z.string().optional(),
-					mime_type: z
+					mimeType: z
 						.union([z.string(), z.array(z.string())])
 						.optional(),
 					type: z.union([z.string(), z.array(z.string())]).optional(),
-					file_extension: z
+					fileExtension: z
 						.union([z.string(), z.array(z.string())])
 						.optional(),
 				})
@@ -35,14 +35,14 @@ export default {
 				.array(
 					z.object({
 						key: z.enum([
-							"created_at",
-							"updated_at",
+							"createdAt",
+							"updatedAt",
 							"title",
-							"file_size",
+							"fileSize",
 							"width",
 							"height",
-							"mime_type",
-							"file_extension",
+							"mimeType",
+							"fileExtension",
 						]),
 						value: z.enum(["asc", "desc"]),
 					}),
@@ -51,25 +51,25 @@ export default {
 			include: z.array(z.enum(["permissions"])).optional(),
 			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
-			per_page: defaultQuery.per_page,
+			perPage: defaultQuery.perPage,
 		}),
 		params: undefined,
 		body: undefined,
 	},
 	uploadSingle: {
 		body: z.object({
-			title_translations: z
+			titleTranslations: z
 				.array(
 					z.object({
-						language_id: z.number(),
+						languageId: z.number(),
 						value: z.string().nullable(),
 					}),
 				)
 				.optional(),
-			alt_translations: z
+			altTranslations: z
 				.array(
 					z.object({
-						language_id: z.number(),
+						languageId: z.number(),
 						value: z.string().nullable(),
 					}),
 				)
@@ -80,18 +80,18 @@ export default {
 	},
 	updateSingle: {
 		body: z.object({
-			title_translations: z
+			titleTranslations: z
 				.array(
 					z.object({
-						language_id: z.number(),
+						languageId: z.number(),
 						value: z.string().nullable(),
 					}),
 				)
 				.optional(),
-			alt_translations: z
+			altTranslations: z
 				.array(
 					z.object({
-						language_id: z.number(),
+						languageId: z.number(),
 						value: z.string().nullable(),
 					}),
 				)

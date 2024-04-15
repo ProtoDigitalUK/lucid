@@ -42,30 +42,30 @@ export default class UsersFormatter {
 
 		return {
 			id: props.user.id,
-			super_admin: props.user.super_admin ?? 0,
+			superAdmin: props.user.super_admin ?? 0,
 			email: props.user.email,
 			username: props.user.username,
-			first_name: props.user.first_name,
-			last_name: props.user.last_name,
+			firstName: props.user.first_name,
+			lastName: props.user.last_name,
 			roles: roles,
 			permissions: permissions,
-			created_at: Formatter.formatDate(props.user.created_at),
-			updated_at: Formatter.formatDate(props.user.updated_at),
+			createdAt: Formatter.formatDate(props.user.created_at),
+			updatedAt: Formatter.formatDate(props.user.updated_at),
 		};
 	};
 	static swagger = {
 		type: "object",
 		properties: {
 			id: { type: "number", example: 1 },
-			super_admin: { type: "number", example: 1 },
+			superAdmin: { type: "number", example: 1 },
 			email: { type: "string", example: "admin@headless.com" },
 			username: { type: "string", example: "admin" },
-			first_name: { type: "string", example: "Admin" },
-			last_name: { type: "string", example: "User" },
+			firstAame: { type: "string", example: "Admin" },
+			lastName: { type: "string", example: "User" },
 			roles: UserPermissionsFormatter.swaggerRoles,
 			permissions: UserPermissionsFormatter.swaggerPermissions,
-			created_at: { type: "string", example: "2021-06-10T20:00:00.000Z" },
-			updated_at: { type: "string", example: "2021-06-10T20:00:00.000Z" },
+			createdAt: { type: "string", example: "2021-06-10T20:00:00.000Z" },
+			updatedAt: { type: "string", example: "2021-06-10T20:00:00.000Z" },
 		},
 	};
 }

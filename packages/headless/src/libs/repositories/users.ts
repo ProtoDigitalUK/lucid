@@ -184,17 +184,17 @@ export default class UsersRepo {
 					include: props.query.include,
 					exclude: props.query.exclude,
 					page: props.query.page,
-					per_page: props.query.per_page,
+					perPage: props.query.perPage,
 				},
 				meta: {
 					filters: [
 						{
-							queryKey: "first_name",
+							queryKey: "firstName",
 							tableKey: "first_name",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
-							queryKey: "last_name",
+							queryKey: "lastName",
 							tableKey: "last_name",
 							operator: props.config.db.fuzzOperator,
 						},
@@ -209,26 +209,26 @@ export default class UsersRepo {
 							operator: props.config.db.fuzzOperator,
 						},
 						{
-							queryKey: "role_ids",
+							queryKey: "roleIds",
 							tableKey: "headless_user_roles.role_id",
 							operator: "=",
 						},
 					],
 					sorts: [
 						{
-							queryKey: "created_at",
+							queryKey: "createdAt",
 							tableKey: "created_at",
 						},
 						{
-							queryKey: "updated_at",
+							queryKey: "updatedAt",
 							tableKey: "updated_at",
 						},
 						{
-							queryKey: "first_name",
+							queryKey: "firstName",
 							tableKey: "first_name",
 						},
 						{
-							queryKey: "last_name",
+							queryKey: "lastName",
 							tableKey: "last_name",
 						},
 						{

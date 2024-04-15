@@ -6,7 +6,7 @@ import Formatter from "../../libs/formatters/index.js";
 
 export interface ServiceData {
 	id: number;
-	render_template: boolean;
+	renderTemplate: boolean;
 }
 
 const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
@@ -30,7 +30,7 @@ const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 		});
 	}
 
-	if (!data.render_template) {
+	if (!data.renderTemplate) {
 		return EmailsFormatter.formatSingle({
 			email: email,
 		});

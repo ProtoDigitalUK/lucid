@@ -32,7 +32,7 @@ const getMultipleController: ControllerT<
 				pagination: {
 					count: role.count,
 					page: request.query.page,
-					perPage: request.query.per_page,
+					perPage: request.query.perPage,
 				},
 			}),
 		);
@@ -73,10 +73,10 @@ export default {
 					key: "name",
 				},
 				{
-					key: "role_ids",
+					key: "roleIds",
 				},
 			],
-			sorts: ["name", "created_at"],
+			sorts: ["name", "createdAt"],
 			page: true,
 			perPage: true,
 		}),

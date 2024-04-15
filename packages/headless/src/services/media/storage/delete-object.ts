@@ -22,13 +22,13 @@ const deleteObject = async (
 		},
 	);
 
-	const newStorageUsed = (storageUsed.value_int || 0) - data.size;
+	const newStorageUsed = (storageUsed.valueInt || 0) - data.size;
 
 	await Promise.all([
 		mediaStategy.deleteSingle(data.key),
 		serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
 			name: "media_storage_used",
-			value_int: newStorageUsed < 0 ? 0 : newStorageUsed,
+			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,
 		}),
 	]);
 };

@@ -20,7 +20,7 @@ const getSettings = async (
 
 	return SettingsFormatter.formatSingle({
 		settings: {
-			mediaStorageUsed: mediaStorageUsed.value_int || 0,
+			mediaStorageUsed: mediaStorageUsed.valueInt || 0,
 			processedImageCount: processedImageCount,
 		},
 		config: serviceConfig.config,

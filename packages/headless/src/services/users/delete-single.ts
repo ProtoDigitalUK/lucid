@@ -3,8 +3,8 @@ import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	user_id: number;
-	current_user_id: number;
+	userId: number;
+	currentUserId: number;
 }
 
 const deleteSingle = async (
@@ -17,13 +17,13 @@ const deleteSingle = async (
 		data: {
 			isDeleted: 1,
 			isDeletedAt: new Date().toISOString(),
-			deletedBy: data.current_user_id,
+			deletedBy: data.currentUserId,
 		},
 		where: [
 			{
 				key: "id",
 				operator: "=",
-				value: data.user_id,
+				value: data.userId,
 			},
 		],
 	});

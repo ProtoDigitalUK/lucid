@@ -32,7 +32,7 @@ const getMultipleController: ControllerT<
 				pagination: {
 					count: users.count,
 					page: request.query.page,
-					perPage: request.query.per_page,
+					perPage: request.query.perPage,
 				},
 			}),
 		);
@@ -69,10 +69,10 @@ export default {
 		querystring: swaggerQueryString({
 			filters: [
 				{
-					key: "first_name",
+					key: "firstName",
 				},
 				{
-					key: "last_name",
+					key: "lastName",
 				},
 				{
 					key: "email",
@@ -81,14 +81,14 @@ export default {
 					key: "username",
 				},
 				{
-					key: "role_ids",
+					key: "roleIds",
 				},
 			],
 			sorts: [
-				"created_at",
-				"updated_at",
-				"first_name",
-				"last_name",
+				"createdAt",
+				"updatedAt",
+				"firstName",
+				"lastName",
 				"email",
 				"username",
 			],

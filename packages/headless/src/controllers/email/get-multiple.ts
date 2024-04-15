@@ -32,7 +32,7 @@ const getMultipleController: ControllerT<
 				pagination: {
 					count: emails.count,
 					page: request.query.page,
-					perPage: request.query.per_page,
+					perPage: request.query.perPage,
 				},
 			}),
 		);
@@ -69,13 +69,13 @@ export default {
 		querystring: swaggerQueryString({
 			filters: [
 				{
-					key: "to_address",
+					key: "toAddress",
 				},
 				{
 					key: "subject",
 				},
 				{
-					key: "delivery_status",
+					key: "deliveryStatus",
 					enum: ["sent", "failed", "pending"],
 				},
 				{
@@ -86,7 +86,7 @@ export default {
 					key: "template",
 				},
 			],
-			sorts: ["sent_count", "created_at", "updated_at"],
+			sorts: ["sentCount", "createdAt", "updatedAt"],
 			page: true,
 			perPage: true,
 		}),

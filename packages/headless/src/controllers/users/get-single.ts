@@ -19,7 +19,7 @@ const getSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				user_id: Number.parseInt(request.params.id),
+				userId: Number.parseInt(request.params.id),
 			},
 		);
 

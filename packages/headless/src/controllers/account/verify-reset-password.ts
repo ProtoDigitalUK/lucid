@@ -17,7 +17,7 @@ const verifyResetPasswordController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				token_type: "password_reset",
+				tokenType: "password_reset",
 				token: request.params.token,
 			},
 		);

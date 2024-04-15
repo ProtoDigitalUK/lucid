@@ -19,7 +19,7 @@ const getMeController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				user_id: request.auth.id,
+				userId: request.auth.id,
 			},
 		);
 

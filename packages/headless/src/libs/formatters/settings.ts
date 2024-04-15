@@ -27,7 +27,7 @@ export default class SettingsFormatter {
 				},
 				processed: {
 					stored: props.config.media.processed.store,
-					image_limit: props.config.media.processed.limit,
+					imageLimit: props.config.media.processed.limit,
 					total: props.settings.processedImageCount,
 				},
 			},
@@ -66,7 +66,7 @@ export default class SettingsFormatter {
 						type: "object",
 						properties: {
 							stored: { type: "boolean" },
-							image_limit: { type: "number" },
+							imageLimit: { type: "number" },
 							total: { type: "number", nullable: true },
 						},
 					},

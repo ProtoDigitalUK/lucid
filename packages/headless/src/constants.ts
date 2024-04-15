@@ -5,16 +5,16 @@ export default {
 	seedDefaults: {
 		language: {
 			code: "en",
-			is_default: 1,
-			is_enabled: 1,
+			isDefault: 1,
+			isEnabled: 1,
 		},
 		user: {
-			first_name: "Headless",
-			last_name: "Admin",
+			firstName: "Headless",
+			lastName: "Admin",
 			email: "admin@headless.com",
 			username: "admin",
 			password: "password",
-			super_admin: 1,
+			superAdmin: 1,
 		},
 		roles: [
 			{
@@ -49,7 +49,7 @@ export default {
 	},
 	query: {
 		page: 1,
-		per_page: 10,
+		perPage: 10,
 	},
 	locations: {
 		resetPassword: "/reset-password",

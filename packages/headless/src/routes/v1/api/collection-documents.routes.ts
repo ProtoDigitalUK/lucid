@@ -5,7 +5,7 @@ import collectionDocuments from "../../../controllers/collection-documents/index
 const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 	r(fastify, {
 		method: "post",
-		url: "/:collection_key",
+		url: "/:collectionKey",
 		permissions: ["update_content"],
 		middleware: {
 			authenticate: true,
@@ -18,7 +18,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "/:collection_key/:id",
+		url: "/:collectionKey/:id",
 		middleware: {
 			authenticate: true,
 		},
@@ -29,7 +29,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "delete",
-		url: "/:collection_key/:id",
+		url: "/:collectionKey/:id",
 		permissions: ["delete_content"],
 		middleware: {
 			authenticate: true,
@@ -42,7 +42,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "delete",
-		url: "/:collection_key",
+		url: "/:collectionKey",
 		permissions: ["delete_content"],
 		middleware: {
 			authenticate: true,
@@ -55,7 +55,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 
 	r(fastify, {
 		method: "get",
-		url: "/:collection_key",
+		url: "/:collectionKey",
 		middleware: {
 			authenticate: true,
 			contentLanguage: true,

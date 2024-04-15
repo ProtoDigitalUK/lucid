@@ -10,12 +10,12 @@ export interface ServiceData {
 	email: string;
 	username: string;
 	password: string;
-	password_confirmation: string;
-	first_name?: string;
-	last_name?: string;
-	super_admin?: BooleanInt;
-	role_ids: Array<number>;
-	auth_super_admin: BooleanInt;
+	passwordConfirmation: string;
+	firstName?: string;
+	lastName?: string;
+	superAdmin?: BooleanInt;
+	roleIds: Array<number>;
+	authSuperAdmin: BooleanInt;
 }
 
 const createSingle = async (
@@ -35,7 +35,7 @@ const createSingle = async (
 		serviceWrapper(usersServices.checks.checkRolesExist, false)(
 			serviceConfig,
 			{
-				role_ids: data.role_ids,
+				roleIds: data.roleIds,
 			},
 		),
 	]);
@@ -71,9 +71,9 @@ const createSingle = async (
 		email: data.email,
 		username: data.username,
 		password: hashedPassword,
-		firstName: data.first_name,
-		lastName: data.last_name,
-		superAdmin: data.auth_super_admin === 1 ? data.super_admin : 0,
+		firstName: data.firstName,
+		lastName: data.lastName,
+		superAdmin: data.authSuperAdmin === 1 ? data.superAdmin : 0,
 	});
 
 	if (newUser === undefined) {
@@ -83,13 +83,13 @@ const createSingle = async (
 		});
 	}
 
-	if (data.role_ids === undefined || data.role_ids.length === 0)
+	if (data.roleIds === undefined || data.roleIds.length === 0)
 		return newUser.id;
 
 	const UserRolesRepo = Repository.get("user-roles", serviceConfig.db);
 
 	await UserRolesRepo.createMultiple({
-		items: data.role_ids.map((r) => ({
+		items: data.roleIds.map((r) => ({
 			userId: newUser.id,
 			roleId: r,
 		})),

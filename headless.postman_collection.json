@@ -67,7 +67,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username_or_email\": \"admin\",\r\n    \"password\": \"password\"\r\n}",
+							"raw": "{\r\n    \"usernameOrEmail\": \"admin\",\r\n    \"password\": \"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -270,13 +270,13 @@
 									"disabled": true
 								},
 								{
-									"key": "filter[role_ids]",
+									"key": "filter[roleIds]",
 									"value": "1,2",
 									"disabled": true
 								},
 								{
 									"key": "sort",
-									"value": "name,-created_at",
+									"value": "name,-createdAt",
 									"disabled": true
 								},
 								{
@@ -285,7 +285,7 @@
 									"disabled": true
 								},
 								{
-									"key": "per_page",
+									"key": "perPage",
 									"value": "10",
 									"disabled": true
 								}
@@ -384,7 +384,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"stand2ard@headless.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"password_confirmation\": \"password\",\r\n    \"first_name\": \"First2\",\r\n    \"last_name\": \"Last\",\r\n    \"super_admin\": true,\r\n    \"role_ids\": [1]\r\n}",
+							"raw": "{\r\n    \"email\": \"stand2ard@headless.com\",\r\n    \"username\": \"standard2\",\r\n    \"password\": \"password\",\r\n    \"passwordConfirmation\": \"password\",\r\n    \"firstName\": \"First2\",\r\n    \"lastName\": \"Last\",\r\n    \"superAdmin\": true,\r\n    \"roleIds\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -419,7 +419,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"role_ids\": [2],\r\n    \"super_admin\": false\r\n}",
+							"raw": "{\r\n    \"roleIds\": [20],\r\n    \"superAdmin\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -427,7 +427,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/2",
+							"raw": "{{BASE_URL}}/api/v1/users/1",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -435,7 +435,7 @@
 								"api",
 								"v1",
 								"users",
-								"2"
+								"1"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -479,17 +479,17 @@
 							],
 							"query": [
 								{
-									"key": "filter[first_name]",
+									"key": "filter[firstName]",
 									"value": "page",
 									"disabled": true
 								},
 								{
-									"key": "filter[last_name]",
+									"key": "filter[lastName]",
 									"value": "",
 									"disabled": true
 								},
 								{
-									"key": "filter[role_ids]",
+									"key": "filter[roleIds]",
 									"value": "1",
 									"disabled": true
 								},
@@ -505,7 +505,7 @@
 								},
 								{
 									"key": "sort",
-									"value": "created_at",
+									"value": "createdAt",
 									"disabled": true
 								},
 								{
@@ -514,13 +514,13 @@
 									"disabled": true
 								},
 								{
-									"key": "per_page",
+									"key": "perPage",
 									"value": "1",
 									"disabled": true
 								},
 								{
 									"key": "sort",
-									"value": "created_at,updated_at,first_name,last_name,username,email",
+									"value": "createdAt,updatedAt,firstName,lastName,username,email",
 									"disabled": true
 								}
 							]
@@ -549,7 +549,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/users/2",
+							"raw": "{{BASE_URL}}/api/v1/users/20",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -557,7 +557,7 @@
 								"api",
 								"v1",
 								"users",
-								"2"
+								"20"
 							]
 						},
 						"description": "## Description\n\nRecieves config for bricks. This is whats defined with the BrickBuilder class in the project setup."
@@ -585,7 +585,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    // \"document_id\": 1,\n    \"bricks\": [\n        {\n            // \"id\": 1,\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"language_id\": 1\n                },\n                {\n                    // \"fields_id\": 1,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"language_id\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            // \"fields_id\": 73,\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"language_id\": 1\n        }\n    ]\n}",
+									"raw": "{\n    \"documentId\": 1,\n    // \"published\": 1,\n    \"bricks\": [\n        {\n            \"id\": 99,\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    // \"fieldsId\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"languageId\": 1\n                },\n                {\n                    // \"fieldsId\": 1,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"languageId\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            \"fieldsId\": 95,\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"languageId\": 1\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -649,7 +649,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page?filter[cf]=page_title=Homepage",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -672,13 +672,14 @@
 											"disabled": true
 										},
 										{
-											"key": "per_page",
+											"key": "perPage",
 											"value": "-1",
 											"disabled": true
 										},
 										{
 											"key": "filter[cf]",
-											"value": "page_title=Homepage"
+											"value": "page_title=Homepage",
+											"disabled": true
 										},
 										{
 											"key": "filter[cf]",
@@ -861,7 +862,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    // \"first_name\": \"William\",\r\n    // \"last_name\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"role_ids\": [1]\r\n}",
+							"raw": "{\r\n    // \"firstName\": \"William\",\r\n    // \"lastName\": \"\",\r\n    // \"username\": \"admin\",\r\n    // \"email\": \"admin@admin.com\",\r\n    \"roleIds\": [1]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1020,7 +1021,7 @@
 								},
 								{
 									"key": "sort",
-									"value": "code,created_at,updated_at",
+									"value": "code,createdAt,updatedAt",
 									"disabled": true
 								},
 								{
@@ -1029,7 +1030,7 @@
 									"disabled": true
 								},
 								{
-									"key": "per_page",
+									"key": "perPage",
 									"value": "-1",
 									"disabled": true
 								}
@@ -1071,7 +1072,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"fr\",\r\n    \"is_default\": 0,\r\n    \"is_enabled\": 1\r\n}",
+							"raw": "{\r\n    \"code\": \"fr\",\r\n    \"isDefault\": 0,\r\n    \"isEnabled\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1199,7 +1200,7 @@
 							],
 							"query": [
 								{
-									"key": "filter[to_address]",
+									"key": "filter[toAddress]",
 									"value": "admin@williamyallop.com",
 									"disabled": true
 								},
@@ -1209,7 +1210,7 @@
 									"disabled": true
 								},
 								{
-									"key": "filter[delivery_status]",
+									"key": "filter[deliveryStatus]",
 									"value": "failed",
 									"disabled": true
 								},
@@ -1225,12 +1226,12 @@
 								},
 								{
 									"key": "sort",
-									"value": "created_at",
+									"value": "createdAt",
 									"disabled": true
 								},
 								{
 									"key": "sort",
-									"value": "created_at,last_attempt_at,sent_count",
+									"value": "createdAt,lastAttemptAt,sentCount",
 									"disabled": true
 								}
 							]
@@ -1385,7 +1386,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media?body={\"title_translations\":[{\"language_id\":1,\"value\":\"title value\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt value\"}]}",
+							"raw": "{{BASE_URL}}/api/v1/media?body={\"titleTranslations\":[{\"languageId\":1,\"value\":\"title value\"}],\"altTranslations\":[{\"languageId\":1,\"value\":\"alt value\"}]}",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1397,7 +1398,7 @@
 							"query": [
 								{
 									"key": "body",
-									"value": "{\"title_translations\":[{\"language_id\":1,\"value\":\"title value\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt value\"}]}"
+									"value": "{\"titleTranslations\":[{\"languageId\":1,\"value\":\"title value\"}],\"altTranslations\":[{\"languageId\":1,\"value\":\"alt value\"}]}"
 								}
 							]
 						}
@@ -1421,18 +1422,18 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/Users/williamyallop/Downloads/logo.png",
-									"disabled": true
+									"src": "/Users/williamyallop/Pictures/HLH.png"
 								},
 								{
 									"key": "empty",
 									"value": "",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/media/1?body={\"title_translations\":[{\"language_id\":1,\"value\":\"title\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt\"}]}",
+							"raw": "{{BASE_URL}}/api/v1/media/2?body={}",
 							"host": [
 								"{{BASE_URL}}"
 							],
@@ -1440,17 +1441,17 @@
 								"api",
 								"v1",
 								"media",
-								"1"
+								"2"
 							],
 							"query": [
 								{
 									"key": "body",
-									"value": "{\"title_translations\":[{\"language_id\":1,\"value\":\"title\"}],\"alt_translations\":[{\"language_id\":1,\"value\":\"alt\"}]}"
+									"value": "{\"titleTranslations\":[{\"languageId\":1,\"value\":\"title\"}],\"altTranslations\":[{\"languageId\":1,\"value\":\"alt\"}]}",
+									"disabled": true
 								},
 								{
 									"key": "body",
-									"value": "{}",
-									"disabled": true
+									"value": "{}"
 								}
 							]
 						}
@@ -1564,12 +1565,12 @@
 									"disabled": true
 								},
 								{
-									"key": "filter[mime_type]",
+									"key": "filter[mimeType]",
 									"value": "image/jpeg,image/png",
 									"disabled": true
 								},
 								{
-									"key": "filter[file_extension]",
+									"key": "filter[fileExtension]",
 									"value": "",
 									"disabled": true
 								},
@@ -1580,7 +1581,7 @@
 								},
 								{
 									"key": "sort",
-									"value": "created_at,updated_at,title,file_size,width,height,mime_type,file_extension",
+									"value": "createdAt,updatedAt,title,fileSize,width,height,mimeType,fileExtension",
 									"disabled": true
 								},
 								{
@@ -1719,7 +1720,8 @@
 								"key": "Accept",
 								"value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept AVIF Example",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Accept",
@@ -1737,14 +1739,16 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/logo-1708884843223",
+							"raw": "{{BASE_URL}}/cdn/v1/2024/04/fh2bug-banner.png",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"logo-1708884843223"
+								"2024",
+								"04",
+								"fh2bug-banner.png"
 							],
 							"query": [
 								{
@@ -1798,7 +1802,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1806,19 +1811,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/cdn/v1/logo-1708884843223?width=200&height=200&format=avif&quality=90",
+							"raw": "{{BASE_URL}}/cdn/v1/2024/04/1mh6le-hlh.png?height=200&format=avif",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"cdn",
 								"v1",
-								"logo-1708884843223"
+								"2024",
+								"04",
+								"1mh6le-hlh.png"
 							],
 							"query": [
 								{
 									"key": "width",
-									"value": "200"
+									"value": "200",
+									"disabled": true
 								},
 								{
 									"key": "height",
@@ -1830,7 +1838,8 @@
 								},
 								{
 									"key": "quality",
-									"value": "90"
+									"value": "90",
+									"disabled": true
 								}
 							]
 						}

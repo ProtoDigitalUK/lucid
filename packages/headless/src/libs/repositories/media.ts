@@ -247,7 +247,7 @@ export default class MediaRepo {
 					include: props.query.include,
 					exclude: props.query.exclude,
 					page: props.query.page,
-					per_page: props.query.per_page,
+					perPage: props.query.perPage,
 				},
 				meta: {
 					filters: [
@@ -262,7 +262,7 @@ export default class MediaRepo {
 							operator: "=",
 						},
 						{
-							queryKey: "mime_type",
+							queryKey: "mimeType",
 							tableKey: "mime_type",
 							operator: "=",
 						},
@@ -272,7 +272,7 @@ export default class MediaRepo {
 							operator: "=",
 						},
 						{
-							queryKey: "file_extension",
+							queryKey: "fileExtension",
 							tableKey: "file_extension",
 							operator: "=",
 						},
@@ -283,15 +283,15 @@ export default class MediaRepo {
 							tableKey: "title_translations.value",
 						},
 						{
-							queryKey: "created_at",
+							queryKey: "createdAt",
 							tableKey: "created_at",
 						},
 						{
-							queryKey: "updated_at",
+							queryKey: "updatedAt",
 							tableKey: "updated_at",
 						},
 						{
-							queryKey: "file_size",
+							queryKey: "fileSize",
 							tableKey: "file_size",
 						},
 						{
@@ -303,11 +303,11 @@ export default class MediaRepo {
 							tableKey: "height",
 						},
 						{
-							queryKey: "mime_type",
+							queryKey: "mimeType",
 							tableKey: "mime_type",
 						},
 						{
-							queryKey: "file_extension",
+							queryKey: "fileExtension",
 							tableKey: "file_extension",
 						},
 					],

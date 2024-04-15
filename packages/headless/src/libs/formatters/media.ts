@@ -48,18 +48,26 @@ export default class MediaFormatter {
 			id: props.media.id,
 			key: props.media.key,
 			url: mediaHelpers.createURL(props.host, props.media.key),
-			title_translations: props.media.title_translations ?? [],
-			alt_translations: props.media.alt_translations ?? [],
+			titleTranslations:
+				props.media.title_translations?.map((t) => ({
+					value: t.value,
+					languageId: t.language_id,
+				})) ?? [],
+			altTranslations:
+				props.media.alt_translations?.map((t) => ({
+					value: t.value,
+					languageId: t.language_id,
+				})) ?? [],
 			type: props.media.type as MediaTypeT,
 			meta: {
-				mime_type: props.media.mime_type,
-				file_extension: props.media.file_extension,
-				file_size: props.media.file_size,
+				mimeType: props.media.mime_type,
+				fileExtension: props.media.file_extension,
+				fileSize: props.media.file_size,
 				width: props.media.width,
 				height: props.media.height,
 			},
-			created_at: Formatter.formatDate(props.media.created_at),
-			updated_at: Formatter.formatDate(props.media.updated_at),
+			createdAt: Formatter.formatDate(props.media.created_at),
+			updatedAt: Formatter.formatDate(props.media.updated_at),
 		};
 	};
 	static swagger = {
@@ -68,22 +76,22 @@ export default class MediaFormatter {
 			id: { type: "number", example: 1 },
 			key: { type: "string", example: "placeholder-1708786317482" },
 			url: { type: "string", example: "https://example.com/cdn/v1/key" },
-			title_translations: {
+			titleTranslations: {
 				type: "array",
 				items: {
 					type: "object",
 					properties: {
-						language_id: { type: "number", example: 1 },
+						languageId: { type: "number", example: 1 },
 						value: { type: "string" },
 					},
 				},
 			},
-			alt_translations: {
+			altTranslations: {
 				type: "array",
 				items: {
 					type: "object",
 					properties: {
-						language_id: { type: "number", example: 1 },
+						languageId: { type: "number", example: 1 },
 						value: {
 							type: "string",
 						},
@@ -94,15 +102,15 @@ export default class MediaFormatter {
 			meta: {
 				type: "object",
 				properties: {
-					mime_type: { type: "string", example: "image/jpeg" },
-					file_extension: { type: "string", example: "jpeg" },
-					file_size: { type: "number", example: 100 },
+					mimeType: { type: "string", example: "image/jpeg" },
+					fileExtension: { type: "string", example: "jpeg" },
+					fileSize: { type: "number", example: 100 },
 					width: { type: "number", example: 100 },
 					height: { type: "number", example: 100 },
 				},
 			},
-			created_at: { type: "string", example: "2022-01-01T00:00:00Z" },
-			updated_at: { type: "string", example: "2022-01-01T00:00:00Z" },
+			createdAt: { type: "string", example: "2022-01-01T00:00:00Z" },
+			updatedAt: { type: "string", example: "2022-01-01T00:00:00Z" },
 		},
 	};
 }

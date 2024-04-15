@@ -25,7 +25,7 @@ const upsertMultiple = async <K extends string>(
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			language_ids: getUniqueLanguageIDs(
+			languageIds: getUniqueLanguageIDs(
 				data.items.map((item) => item.translations || []),
 			),
 		});
@@ -34,7 +34,7 @@ const upsertMultiple = async <K extends string>(
 			.map((translation) => {
 				return {
 					value: translation.value ?? "",
-					languageId: translation.language_id,
+					languageId: translation.languageId,
 					translationKeyId: data.keys[translation.key] ?? null,
 				};
 			})

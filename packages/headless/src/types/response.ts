@@ -1,6 +1,5 @@
 import type { PermissionT } from "../services/permissions.js";
 import type { BooleanInt } from "../libs/db/types.js";
-import type { Config } from "./config.js";
 import type {
 	CustomFieldT,
 	FieldTypesT,
@@ -9,17 +8,17 @@ import type { CollectionBrickConfigT } from "../libs/builders/collection-builder
 
 export interface UserResT {
 	id: number;
-	super_admin?: BooleanInt;
+	superAdmin?: BooleanInt;
 	email: string;
 	username: string;
-	first_name: string | null;
-	last_name: string | null;
+	firstName: string | null;
+	lastName: string | null;
 
 	roles?: UserPermissionsResT["roles"];
 	permissions?: UserPermissionsResT["permissions"];
 
-	created_at: string | null;
-	updated_at?: string | null;
+	createdAt: string | null;
+	updatedAt?: string | null;
 }
 
 export interface UserPermissionsResT {
@@ -47,7 +46,7 @@ export interface SettingsResT {
 		};
 		processed: {
 			stored: boolean;
-			image_limit: number;
+			imageLimit: number;
 			total: number | null;
 		};
 	};
@@ -63,17 +62,17 @@ export interface RoleResT {
 		permission: PermissionT;
 	}[];
 
-	created_at: string | null;
-	updated_at: string | null;
+	createdAt: string | null;
+	updatedAt: string | null;
 }
 
 export type OptionNameT = "media_storage_used";
 
 export interface OptionsResT {
 	name: OptionNameT;
-	value_text: string | null;
-	value_int: number | null;
-	value_bool: BooleanInt | null;
+	valueText: string | null;
+	valueInt: number | null;
+	valueBool: BooleanInt | null;
 }
 
 export type MediaTypeT =
@@ -88,40 +87,40 @@ export interface MediaResT {
 	id: number;
 	key: string;
 	url: string;
-	title_translations: {
-		language_id: number | null;
+	titleTranslations: {
+		languageId: number | null;
 		value: string | null;
 	}[];
-	alt_translations: {
-		language_id: number | null;
+	altTranslations: {
+		languageId: number | null;
 		value: string | null;
 	}[];
 	type: MediaTypeT;
 	meta: {
-		mime_type: string;
-		file_extension: string;
-		file_size: number;
+		mimeType: string;
+		fileExtension: string;
+		fileSize: number;
 		width: number | null;
 		height: number | null;
 	};
-	created_at: string | null;
-	updated_at: string | null;
+	createdAt: string | null;
+	updatedAt: string | null;
 }
 
 export interface LanguageResT {
 	id: number;
 	code: string;
 	name: string | null;
-	native_name: string | null;
-	is_default: BooleanInt;
-	is_enabled: BooleanInt;
-	created_at: string | null;
-	updated_at: string | null;
+	nativeName: string | null;
+	isDefault: BooleanInt;
+	isEnabled: BooleanInt;
+	createdAt: string | null;
+	updatedAt: string | null;
 }
 
 export interface EmailResT {
 	id: number;
-	mail_details: {
+	mailDetails: {
 		from: {
 			address: string;
 			name: string;
@@ -133,17 +132,17 @@ export interface EmailResT {
 		template: string;
 	};
 	data: Record<string, unknown> | null;
-	delivery_status: "sent" | "failed" | "pending";
+	deliveryStatus: "sent" | "failed" | "pending";
 	type: "external" | "internal";
-	email_hash: string;
-	sent_count: number;
-	error_count: number;
+	emailHash: string;
+	sentCount: number;
+	errorCount: number;
 	html: string | null;
-	error_message: string | null;
+	errorMessage: string | null;
 
-	created_at: string | null;
-	last_success_at: string | null;
-	last_attempt_at: string | null;
+	createdAt: string | null;
+	lastSuccessAt: string | null;
+	lastAttemptAt: string | null;
 }
 
 export interface CollectionResT {
@@ -152,10 +151,10 @@ export interface CollectionResT {
 	title: string;
 	singular: string;
 	description: string | null;
-	document_id?: number | null;
+	documentId?: number | null;
 	translations: boolean;
-	fixed_bricks: Array<CollectionBrickConfigT>;
-	builder_bricks: Array<CollectionBrickConfigT>;
+	fixedBricks: Array<CollectionBrickConfigT>;
+	builderBricks: Array<CollectionBrickConfigT>;
 	fields: Array<CustomFieldT>;
 }
 
@@ -169,13 +168,13 @@ export interface BrickResT {
 }
 
 export interface FieldResT {
-	fields_id: number;
+	fieldsId: number;
 	key: string;
 	type: FieldTypesT;
-	group_id?: number | null;
+	groupId?: number | null;
 	value?: FieldResValueT;
 	meta?: FieldResMetaT;
-	language_id: number;
+	languageId: number;
 }
 
 export type FieldResValueT =
@@ -198,9 +197,9 @@ export interface PageLinkValueT {
 }
 
 export interface PageLinkMetaT {
-	title_translations?: Array<{
+	titleTranslations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		languageId: number | null;
 	}>;
 }
 
@@ -216,43 +215,43 @@ export interface MediaMetaT {
 	id?: number;
 	url?: string;
 	key?: string;
-	mime_type?: string;
-	file_extension?: string;
-	file_size?: number;
+	mimeType?: string;
+	fileExtension?: string;
+	fileSize?: number;
 	width?: number;
 	height?: number;
-	title_translations?: Array<{
+	titleTranslations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		languageId: number | null;
 	}>;
-	alt_translations?: Array<{
+	altTranslations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		languageId: number | null;
 	}>;
 	type?: MediaTypeT;
 }
 
 export interface GroupResT {
-	group_id: number;
-	group_order: number;
-	parent_group_id: number | null;
-	repeater_key: string;
-	language_id: number;
+	groupId: number;
+	groupOrder: number;
+	parentGroupId: number | null;
+	repeaterKey: string;
+	languageId: number;
 }
 
 export interface CollectionDocumentResT {
 	id: number;
-	collection_key: string | null;
+	collectionKey: string | null;
 
-	created_by: number | null;
-	created_at: string | null;
-	updated_at: string | null;
+	createdBy: number | null;
+	createdAt: string | null;
+	updatedAt: string | null;
 
 	author: {
 		id: number | null;
 		email: string | null;
-		first_name: string | null;
-		last_name: string | null;
+		firstName: string | null;
+		lastName: string | null;
 		username: string | null;
 	} | null;
 

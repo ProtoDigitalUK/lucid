@@ -22,12 +22,12 @@ export default class LanguagesFormatter {
 			id: props.language.id,
 			code: props.language.code,
 			name: (iso6391Code && ISO6391.getName(iso6391Code)) || null,
-			native_name:
+			nativeName:
 				(iso6391Code && ISO6391.getNativeName(iso6391Code)) || null,
-			is_default: props.language.is_default,
-			is_enabled: props.language.is_enabled,
-			created_at: Formatter.formatDate(props.language.created_at),
-			updated_at: Formatter.formatDate(props.language.updated_at),
+			isDefault: props.language.is_default,
+			isEnabled: props.language.is_enabled,
+			createdAt: Formatter.formatDate(props.language.created_at),
+			updatedAt: Formatter.formatDate(props.language.updated_at),
 		};
 	};
 	static swagger = {
@@ -36,11 +36,11 @@ export default class LanguagesFormatter {
 			id: { type: "number", example: 1 },
 			code: { type: "string", example: "en" },
 			name: { type: "string", example: "English" },
-			native_name: { type: "string", example: "English" },
-			is_default: { type: "number", example: 1 },
-			is_enabled: { type: "number", example: 1 },
-			created_at: { type: "string", example: "2021-10-05T14:48:00.000Z" },
-			updated_at: { type: "string", example: "2021-10-05T14:48:00.000Z" },
+			nativeName: { type: "string", example: "English" },
+			isDefault: { type: "number", example: 1 },
+			isEnabled: { type: "number", example: 1 },
+			createdAt: { type: "string", example: "2021-10-05T14:48:00.000Z" },
+			updatedAt: { type: "string", example: "2021-10-05T14:48:00.000Z" },
 		},
 	};
 }

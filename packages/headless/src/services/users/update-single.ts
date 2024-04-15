@@ -7,16 +7,16 @@ import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	user_id: number;
-	first_name?: string;
-	last_name?: string;
+	userId: number;
+	firstName?: string;
+	lastName?: string;
 	username?: string;
 	email?: string;
 	password?: string;
-	role_ids?: number[];
-	super_admin?: BooleanInt;
+	roleIds?: number[];
+	superAdmin?: BooleanInt;
 
-	auth_super_admin: BooleanInt;
+	authSuperAdmin: BooleanInt;
 }
 
 const updateSingle = async (
@@ -31,7 +31,7 @@ const updateSingle = async (
 			{
 				key: "id",
 				operator: "=",
-				value: data.user_id,
+				value: data.userId,
 			},
 			{
 				key: "is_deleted",
@@ -118,28 +118,28 @@ const updateSingle = async (
 	const [updateUser] = await Promise.all([
 		UsersRepo.updateSingle({
 			data: {
-				firstName: data.first_name,
-				lastName: data.last_name,
+				firstName: data.firstName,
+				lastName: data.lastName,
 				username: data.username,
 				email: data.email,
 				password: hashedPassword,
 				superAdmin:
-					data.auth_super_admin === 1 ? data.super_admin : undefined,
+					data.authSuperAdmin === 1 ? data.superAdmin : undefined,
 				updatedAt: new Date().toISOString(),
 			},
 			where: [
 				{
 					key: "id",
 					operator: "=",
-					value: data.user_id,
+					value: data.userId,
 				},
 			],
 		}),
 		serviceWrapper(usersServices.updateMultipleRoles, false)(
 			serviceConfig,
 			{
-				user_id: data.user_id,
-				role_ids: data.role_ids,
+				userId: data.userId,
+				roleIds: data.roleIds,
 			},
 		),
 	]);

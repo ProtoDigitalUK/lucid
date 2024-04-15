@@ -45,7 +45,7 @@ const checkCanStoreMedia = async (
 		},
 	);
 
-	const proposedSize = (storageUsed.value_int || 0) + data.size;
+	const proposedSize = (storageUsed.valueInt || 0) + data.size;
 	if (proposedSize > storageLimit) {
 		throw new HeadlessAPIError({
 			type: "basic",

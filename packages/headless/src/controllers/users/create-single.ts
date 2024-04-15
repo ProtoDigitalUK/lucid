@@ -22,12 +22,12 @@ const createSingleController: ControllerT<
 				email: request.body.email,
 				username: request.body.username,
 				password: request.body.password,
-				password_confirmation: request.body.password_confirmation,
-				role_ids: request.body.role_ids,
-				first_name: request.body.first_name,
-				last_name: request.body.last_name,
-				super_admin: request.body.super_admin,
-				auth_super_admin: request.auth.super_admin,
+				passwordConfirmation: request.body.passwordConfirmation,
+				roleIds: request.body.roleIds,
+				firstName: request.body.firstName,
+				lastName: request.body.lastName,
+				superAdmin: request.body.superAdmin,
+				authSuperAdmin: request.auth.superAdmin,
 			},
 		);
 
@@ -37,7 +37,7 @@ const createSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				user_id: userId,
+				userId: userId,
 			},
 		);
 

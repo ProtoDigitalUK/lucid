@@ -20,7 +20,7 @@ const loginController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				username_or_email: request.body.username_or_email,
+				usernameOrEmail: request.body.usernameOrEmail,
 				password: request.body.password,
 			},
 		);
@@ -52,10 +52,10 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				username_or_email: { type: "string" },
+				usernameOrEmail: { type: "string" },
 				password: { type: "string" },
 			},
-			required: ["username_or_email", "password"],
+			required: ["usernameOrEmail", "password"],
 		},
 		response: {
 			204: swaggerResponse({

@@ -15,8 +15,8 @@ const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
 
 		await LanguagesRepo.createSingle({
 			code: constants.seedDefaults.language.code,
-			isDefault: constants.seedDefaults.language.is_default as BooleanInt,
-			isEnabled: constants.seedDefaults.language.is_enabled as BooleanInt,
+			isDefault: constants.seedDefaults.language.isDefault as BooleanInt,
+			isEnabled: constants.seedDefaults.language.isEnabled as BooleanInt,
 		});
 	} catch (error) {
 		throw new HeadlessError({

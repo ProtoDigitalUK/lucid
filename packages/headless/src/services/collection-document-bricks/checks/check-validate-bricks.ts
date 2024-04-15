@@ -16,7 +16,7 @@ import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
 	bricks: Array<BrickSchemaT>;
-	collection_key: string;
+	collectionKey: string;
 }
 
 const validateBricks = async (
@@ -30,7 +30,7 @@ const validateBricks = async (
 
 	const [collection, media, documents] = await Promise.all([
 		collectionsServices.getSingleInstance({
-			key: data.collection_key,
+			key: data.collectionKey,
 		}),
 		getAllMedia(serviceConfig, flatFields),
 		getAllDocuments(serviceConfig, flatFields),
@@ -165,9 +165,9 @@ const validateBrickData = async (data: {
 			if (err.valid === false) {
 				errors.push({
 					key: field.key,
-					brick_id: brick.id,
-					language_id: field.language_id,
-					group_id: field.group_id,
+					brickId: brick.id,
+					languageId: field.languageId,
+					groupId: field.groupId,
 					message: err.message || T("invalid_value"),
 				});
 				hasErrors = true;

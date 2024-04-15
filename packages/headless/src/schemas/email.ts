@@ -7,9 +7,9 @@ export default {
 		query: z.object({
 			filter: z
 				.object({
-					to_address: z.string().optional(),
+					toAddress: z.string().optional(),
 					subject: z.string().optional(),
-					delivery_status: z
+					deliveryStatus: z
 						.union([z.string(), z.array(z.string())])
 						.optional(),
 					type: z.union([z.string(), z.array(z.string())]).optional(), // internal | external
@@ -20,11 +20,11 @@ export default {
 				.array(
 					z.object({
 						key: z.enum([
-							"last_attempt_at",
-							"last_success_at",
-							"created_at",
-							"sent_count",
-							"error_count",
+							"lastAttemptAt",
+							"lastSuccessAt",
+							"createdAt",
+							"sentCount",
+							"errorCount",
 						]),
 						value: z.enum(["asc", "desc"]),
 					}),
@@ -33,7 +33,7 @@ export default {
 			include: defaultQuery.include,
 			exclude: defaultQuery.exclude,
 			page: defaultQuery.page,
-			per_page: defaultQuery.per_page,
+			perPage: defaultQuery.perPage,
 		}),
 		params: undefined,
 	},

@@ -4,7 +4,7 @@ import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
-	username_or_email: string;
+	usernameOrEmail: string;
 	password: string;
 }
 
@@ -14,8 +14,8 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	const user = await UsersRepo.selectSingleByEmailUsername({
 		select: ["id", "password", "is_deleted"],
 		data: {
-			username: data.username_or_email,
-			email: data.username_or_email,
+			username: data.usernameOrEmail,
+			email: data.usernameOrEmail,
 		},
 	});
 
@@ -38,7 +38,7 @@ const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
 	}
 
 	const passwordValid = await auth.validatePassword({
-		hashed_password: user.password,
+		hashedPassword: user.password,
 		password: data.password,
 	});
 

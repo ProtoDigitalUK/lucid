@@ -6,9 +6,9 @@ import Repository from "../../libs/repositories/index.js";
 
 export interface ServiceData {
 	name: OptionNameT;
-	value_text?: string;
-	value_int?: number;
-	value_bool?: BooleanInt;
+	valueText?: string;
+	valueInt?: number;
+	valueBool?: BooleanInt;
 }
 
 const updateSingle = async (
@@ -26,9 +26,9 @@ const updateSingle = async (
 			},
 		],
 		data: {
-			valueBool: data.value_bool,
-			valueInt: data.value_int,
-			valueText: data.value_text,
+			valueBool: data.valueBool,
+			valueInt: data.valueInt,
+			valueText: data.valueText,
 		},
 	});
 
