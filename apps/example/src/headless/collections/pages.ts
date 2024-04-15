@@ -17,7 +17,7 @@ const PageCollection = new CollectionBuilder("page", {
 			event: "beforeUpsert",
 			handler: async (props) => {
 				return {
-					document_id: props.data.document_id,
+					document_id: props.data.documentId,
 					fields: props.data.fields?.map((field) => {
 						if (field.key === "page_title") {
 							field.value = `${field.value} - Modified`;
