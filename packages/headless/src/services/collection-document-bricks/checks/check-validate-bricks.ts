@@ -165,9 +165,9 @@ const validateBrickData = async (data: {
 			if (err.valid === false) {
 				errors.push({
 					key: field.key,
-					brick_id: brick.id,
-					language_id: field.language_id,
-					group_id: field.group_id,
+					brickId: brick.id,
+					languageId: field.languageId,
+					groupId: field.groupId,
 					message: err.message || T("invalid_value"),
 				});
 				hasErrors = true;

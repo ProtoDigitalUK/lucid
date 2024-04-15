@@ -21,8 +21,8 @@ const deleteMultipleController: ControllerT<
 			},
 			{
 				ids: request.body.ids,
-				collection_key: request.params.collection_key,
-				user_id: request.auth.id,
+				collectionKey: request.params.collectionKey,
+				userId: request.auth.id,
 			},
 		);
 

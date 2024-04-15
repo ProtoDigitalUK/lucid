@@ -20,7 +20,7 @@ const getSingleController: ControllerT<
 			},
 			{
 				id: Number.parseInt(request.params.id, 10),
-				render_template: true,
+				renderTemplate: true,
 			},
 		);
 

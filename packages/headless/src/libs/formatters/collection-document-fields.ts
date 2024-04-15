@@ -67,12 +67,12 @@ export default class CollectionDocumentFieldsFormatter {
 
 				if (field) {
 					const fieldsData: FieldResT = {
-						fields_id: field.fields_id,
+						fieldsId: field.fields_id,
 						key: field.key,
 						type: field.type as FieldTypesT,
-						language_id: field.language_id,
+						languageId: field.language_id,
 					};
-					if (field.group_id) fieldsData.group_id = field.group_id;
+					if (field.group_id) fieldsData.groupId = field.group_id;
 					if (meta) fieldsData.meta = meta;
 					fieldsData.value = value;
 
@@ -87,7 +87,7 @@ export default class CollectionDocumentFieldsFormatter {
 		type: "object",
 		additionalProperties: true,
 		properties: {
-			fields_id: {
+			fieldsId: {
 				type: "number",
 			},
 			key: {
@@ -111,11 +111,11 @@ export default class CollectionDocumentFieldsFormatter {
 					"link",
 				],
 			},
-			group_id: {
+			groupId: {
 				type: "number",
 				nullable: true,
 			},
-			collection_document_id: {
+			collectionDocumentId: {
 				type: "number",
 			},
 			meta: {
@@ -134,15 +134,15 @@ export default class CollectionDocumentFieldsFormatter {
 						type: "string",
 						nullable: true,
 					},
-					mime_type: {
+					mimeType: {
 						type: "string",
 						nullable: true,
 					},
-					file_extension: {
+					fileExtension: {
 						type: "string",
 						nullable: true,
 					},
-					file_size: {
+					fileSize: {
 						type: "number",
 						nullable: true,
 					},
@@ -154,7 +154,7 @@ export default class CollectionDocumentFieldsFormatter {
 						type: "number",
 						nullable: true,
 					},
-					title_translations: {
+					titleTranslations: {
 						type: "array",
 						items: {
 							type: "object",
@@ -164,14 +164,14 @@ export default class CollectionDocumentFieldsFormatter {
 									type: "string",
 									nullable: true,
 								},
-								language_id: {
+								languageId: {
 									type: "number",
 									nullable: true,
 								},
 							},
 						},
 					},
-					alt_translations: {
+					altTranslations: {
 						type: "array",
 						items: {
 							type: "object",
@@ -181,7 +181,7 @@ export default class CollectionDocumentFieldsFormatter {
 									type: "string",
 									nullable: true,
 								},
-								language_id: {
+								languageId: {
 									type: "number",
 									nullable: true,
 								},

@@ -58,12 +58,12 @@ export default class CollectionDocumentsFormatter {
 
 		const res: CollectionDocumentResT = {
 			id: props.document.id,
-			collection_key: props.document.collection_key,
+			collectionKey: props.document.collection_key,
 			bricks: props.bricks || [],
 			fields: fields,
-			created_by: props.document.created_by,
-			created_at: Formatter.formatDate(props.document.created_at),
-			updated_at: Formatter.formatDate(props.document.updated_at),
+			createdBy: props.document.created_by,
+			createdAt: Formatter.formatDate(props.document.created_at),
+			updatedAt: Formatter.formatDate(props.document.updated_at),
 			author: null,
 		};
 
@@ -71,8 +71,8 @@ export default class CollectionDocumentsFormatter {
 			res.author = {
 				id: props.document.author_id,
 				email: props.document.author_email,
-				first_name: props.document.author_first_name,
-				last_name: props.document.author_last_name,
+				firstName: props.document.author_first_name,
+				lastName: props.document.author_last_name,
 				username: props.document.author_username,
 			};
 		}
@@ -85,7 +85,7 @@ export default class CollectionDocumentsFormatter {
 			id: {
 				type: "number",
 			},
-			collection_key: {
+			collectionKey: {
 				type: "string",
 				nullable: true,
 			},
@@ -100,11 +100,11 @@ export default class CollectionDocumentsFormatter {
 						type: "string",
 						nullable: true,
 					},
-					first_name: {
+					firstName: {
 						type: "string",
 						nullable: true,
 					},
-					last_name: {
+					lastName: {
 						type: "string",
 						nullable: true,
 					},
@@ -124,15 +124,15 @@ export default class CollectionDocumentsFormatter {
 				nullable: true,
 				items: CollectionDocumentFieldsFormatter.swagger,
 			},
-			created_by: {
+			createdBy: {
 				type: "number",
 				nullable: true,
 			},
-			created_at: {
+			createdAt: {
 				type: "string",
 				nullable: true,
 			},
-			updated_at: {
+			updatedAt: {
 				type: "string",
 				nullable: true,
 			},

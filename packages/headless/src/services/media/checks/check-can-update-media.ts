@@ -47,7 +47,7 @@ const checkCanUpdateMedia = async (
 	);
 
 	const proposedSize =
-		(storageUsed.value_int || 0) + data.size - data.previousSize;
+		(storageUsed.valueInt || 0) + data.size - data.previousSize;
 	if (proposedSize > storageLimit) {
 		throw new HeadlessAPIError({
 			type: "basic",

@@ -10,7 +10,7 @@ const key = "_access";
 export const generateAccessToken = async (
 	reply: FastifyReply,
 	request: FastifyRequest,
-	user_id: number,
+	userId: number,
 ) => {
 	try {
 		const user = await usersServices.getSingle(
@@ -19,7 +19,7 @@ export const generateAccessToken = async (
 				config: request.server.config,
 			},
 			{
-				user_id,
+				userId: userId,
 			},
 		);
 
@@ -28,7 +28,7 @@ export const generateAccessToken = async (
 			username: user.username,
 			email: user.email,
 			permissions: user.permissions,
-			super_admin: user.super_admin || 0,
+			superAdmin: user.superAdmin || 0,
 		} satisfies FastifyRequest["auth"];
 
 		const token = jwt.sign(

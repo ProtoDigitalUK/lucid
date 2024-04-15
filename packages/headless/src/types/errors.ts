@@ -26,9 +26,9 @@ export interface ErrorResult {
 }
 
 export interface FieldErrors {
-	brick_id: string | number | undefined;
-	group_id: string | number | undefined;
+	brickId: string | number | undefined;
+	groupId: string | number | undefined;
 	key: string;
-	language_id: number;
+	languageId: number;
 	message: string;
 }

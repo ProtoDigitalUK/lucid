@@ -20,10 +20,10 @@ const updateSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				current_code: request.params.code,
+				currentCode: request.params.code,
 				code: request.body.code,
-				is_default: request.body.is_default,
-				is_enabled: request.body.is_enabled,
+				isDefault: request.body.isDefault,
+				isEnabled: request.body.isEnabled,
 			},
 		);
 
@@ -62,10 +62,10 @@ export default {
 				code: {
 					type: "string",
 				},
-				is_default: {
+				isDefault: {
 					type: "number",
 				},
-				is_enabled: {
+				isEnabled: {
 					type: "number",
 				},
 			},

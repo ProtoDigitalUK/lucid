@@ -37,21 +37,21 @@ const upsertMultipleGroups = async (
 			return brick.groups.map((group) => {
 				return {
 					groupId:
-						typeof group.group_id === "string"
+						typeof group.groupId === "string"
 							? undefined
-							: group.group_id,
+							: group.groupId,
 					parentGroupId:
-						typeof group.parent_group_id === "string"
+						typeof group.parentGroupId === "string"
 							? undefined
-							: group.parent_group_id,
+							: group.parentGroupId,
 					collectionDocumentId: data.documentId,
 					collectionBrickId: brick.id as number,
-					groupOrder: group.group_order,
-					repeaterKey: group.repeater_key,
-					languageId: group.language_id,
+					groupOrder: group.groupOrder,
+					repeaterKey: group.repeaterKey,
+					languageId: group.languageId,
 					ref:
-						typeof group.group_id === "string"
-							? group.group_id
+						typeof group.groupId === "string"
+							? group.groupId
 							: undefined,
 				};
 			});
@@ -70,22 +70,22 @@ const upsertMultipleGroups = async (
 			let parentGroupId = null;
 
 			if (
-				typeof group.group_id === "string" &&
-				group.group_id.startsWith("ref-")
+				typeof group.groupId === "string" &&
+				group.groupId.startsWith("ref-")
 			) {
 				const foundGroup = groupsRes.find(
-					(res) => res.ref === group.group_id,
+					(res) => res.ref === group.groupId,
 				);
 				if (!foundGroup) continue;
 				groupId = foundGroup.group_id;
 			}
 
 			if (
-				typeof group.parent_group_id === "string" &&
-				group.parent_group_id.startsWith("ref-")
+				typeof group.parentGroupId === "string" &&
+				group.parentGroupId.startsWith("ref-")
 			) {
 				const parentGroup = groupsRes.find(
-					(res) => res.ref === group.parent_group_id,
+					(res) => res.ref === group.parentGroupId,
 				);
 				if (!parentGroup) continue;
 				parentGroupId = parentGroup.group_id;
@@ -109,11 +109,11 @@ const upsertMultipleGroups = async (
 
 			// set group_id and ref
 			if (
-				typeof group.group_id === "string" &&
-				group.group_id.startsWith("ref-")
+				typeof group.groupId === "string" &&
+				group.groupId.startsWith("ref-")
 			) {
 				const foundGroup = groupsRes.find(
-					(res) => res.ref === group.group_id,
+					(res) => res.ref === group.groupId,
 				);
 				if (!foundGroup) {
 					throw new HeadlessAPIError({
@@ -124,29 +124,29 @@ const upsertMultipleGroups = async (
 					});
 				}
 
-				group.group_id = foundGroup.group_id;
+				group.groupId = foundGroup.group_id;
 				ref = foundGroup.ref;
 			}
 
 			// set parent_group_id
 			if (
-				typeof group.parent_group_id === "string" &&
-				group.parent_group_id.startsWith("ref-")
+				typeof group.parentGroupId === "string" &&
+				group.parentGroupId.startsWith("ref-")
 			) {
 				const parentGroup = groupsRes.find(
-					(res) => res.ref === group.parent_group_id,
+					(res) => res.ref === group.parentGroupId,
 				);
 				if (parentGroup !== undefined)
-					group.parent_group_id = parentGroup.group_id;
-				group.parent_group_id = null;
+					group.parentGroupId = parentGroup.group_id;
+				group.parentGroupId = null;
 			}
 
 			return {
-				groupId: group.group_id as number,
-				parentGroupId: group.parent_group_id as number | null,
-				groupOrder: group.group_order,
-				repeaterKey: group.repeater_key,
-				languageId: group.language_id,
+				groupId: group.groupId as number,
+				parentGroupId: group.parentGroupId as number | null,
+				groupOrder: group.groupOrder,
+				repeaterKey: group.repeaterKey,
+				languageId: group.languageId,
 				ref: ref as string,
 			};
 		});

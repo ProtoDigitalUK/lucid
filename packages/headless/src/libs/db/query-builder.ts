@@ -130,10 +130,10 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	// -----------------------------------------
 	// Pagination
 
-	if (requestQuery.per_page !== -1) {
+	if (requestQuery.perPage !== -1) {
 		mainQuery = mainQuery
-			.limit(requestQuery.per_page)
-			.offset((requestQuery.page - 1) * requestQuery.per_page);
+			.limit(requestQuery.perPage)
+			.offset((requestQuery.page - 1) * requestQuery.perPage);
 	}
 
 	return {

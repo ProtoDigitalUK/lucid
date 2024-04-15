@@ -35,7 +35,7 @@ const getMultipleController: ControllerT<
 				pagination: {
 					count: languages.count,
 					page: request.query.page,
-					perPage: request.query.per_page,
+					perPage: request.query.perPage,
 				},
 			}),
 		);
@@ -71,7 +71,7 @@ export default {
 			}),
 		},
 		querystring: swaggerQueryString({
-			sorts: ["code", "created_at", "updated_at"],
+			sorts: ["code", "createdAt", "updatedAt"],
 			page: true,
 			perPage: true,
 		}),

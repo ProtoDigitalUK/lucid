@@ -26,9 +26,9 @@ const upsertSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				collection_key: request.params.collection_key,
-				user_id: request.auth.id,
-				document_id: request.body.document_id,
+				collectionKey: request.params.collectionKey,
+				userId: request.auth.id,
+				documentId: request.body.documentId,
 				bricks: request.body.bricks,
 				fields: request.body.fields,
 			},
@@ -46,10 +46,10 @@ const upsertSingleController: ControllerT<
 			type: "basic",
 			name: T("method_error_name", {
 				name: T("document"),
-				method: request.body.document_id ? T("update") : T("create"),
+				method: request.body.documentId ? T("update") : T("create"),
 			}),
 			message: T(
-				request.body.document_id
+				request.body.documentId
 					? "update_error_message"
 					: "creation_error_message",
 				{
@@ -71,7 +71,7 @@ export default {
 		body: {
 			type: "object",
 			properties: {
-				document_id: {
+				documentId: {
 					type: "number",
 				},
 				bricks: {

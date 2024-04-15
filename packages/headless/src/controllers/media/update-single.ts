@@ -21,9 +21,9 @@ const updateSingleController: ControllerT<
 			},
 			{
 				id: Number.parseInt(request.params.id),
-				file_data: await request.file(),
-				title_translations: request.body.title_translations,
-				alt_translations: request.body.alt_translations,
+				fileData: await request.file(),
+				titleTranslations: request.body.titleTranslations,
+				altTranslations: request.body.altTranslations,
 			},
 		);
 
@@ -74,7 +74,7 @@ export default {
 				body: {
 					type: "string",
 					description:
-						'Stringified JSON data containing tile_translations and alt_translations for the media.<br><br>Example: <code>{"title_translations":[{"language_id":1,"value":"title value"}],"alt_translations":[{"language_id":1,"value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
+						'Stringified JSON data containing tileTranslations and altTranslations for the media.<br><br>Example: <code>{"titleTranslations":[{"languageId":1,"value":"title value"}],"altTranslations":[{"languageId":1,"value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
 				},
 			},
 		},

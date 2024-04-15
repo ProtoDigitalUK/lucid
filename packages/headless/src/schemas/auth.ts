@@ -8,7 +8,7 @@ export default {
 	},
 	login: {
 		body: z.object({
-			username_or_email: z.string(),
+			usernameOrEmail: z.string(),
 			password: z.string(),
 		}),
 		query: undefined,

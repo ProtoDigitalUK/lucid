@@ -18,7 +18,7 @@ const permissions =
 	(permissions: PermissionT[]) => async (request: FastifyRequest) => {
 		const payloadPermissions = request.auth.permissions;
 
-		if (request.auth.super_admin) return;
+		if (request.auth.superAdmin) return;
 		if (payloadPermissions === undefined) return throwPermissionError();
 
 		if (permissions) {

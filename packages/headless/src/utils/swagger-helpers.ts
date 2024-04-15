@@ -8,9 +8,9 @@ const metaObject = {
 		links: {
 			type: "array",
 		},
-		current_page: { type: "number", nullable: true, example: null },
-		last_page: { type: "number", nullable: true, example: null },
-		per_page: { type: "number", nullable: true, example: null },
+		currentPage: { type: "number", nullable: true, example: null },
+		lastPage: { type: "number", nullable: true, example: null },
+		perPage: { type: "number", nullable: true, example: null },
 		total: { type: "number", nullable: true, example: null },
 	},
 };
@@ -31,20 +31,20 @@ const paginatedMetaObject = {
 				},
 			},
 		},
-		current_page: {
+		currentPage: {
 			type: "number",
 			nullable: true,
 			example: constants.query.page,
 		},
-		last_page: {
+		lastPage: {
 			type: "number",
 			nullable: true,
-			example: 200 / constants.query.per_page,
+			example: 200 / constants.query.perPage,
 		},
-		per_page: {
+		perPage: {
 			type: "number",
 			nullable: true,
-			example: constants.query.per_page,
+			example: constants.query.perPage,
 		},
 		total: { type: "number", nullable: true, example: 200 },
 	},
@@ -219,7 +219,7 @@ export const swaggerQueryString = (config: SwaggerQueryStringConfigT) => {
 	}
 
 	if (config.perPage) {
-		queryString.properties.per_page = {
+		queryString.properties.perPage = {
 			type: "number",
 			description: T("swagger_query_string_per_page_description"),
 		};

@@ -21,31 +21,31 @@ import mediaHelpers from "./media-helpers.js";
 export const fieldTypeValueKey = (type: FieldTypesT) => {
 	switch (type) {
 		case "text":
-			return "text_value";
+			return "textValue";
 		case "wysiwyg":
-			return "text_value";
+			return "textValue";
 		case "media":
-			return "media_id";
+			return "mediaId";
 		case "number":
-			return "int_value";
+			return "intValue";
 		case "checkbox":
-			return "bool_value";
+			return "boolValue";
 		case "select":
-			return "text_value";
+			return "textValue";
 		case "textarea":
-			return "text_value";
+			return "textValue";
 		case "json":
-			return "json_value";
+			return "jsonValue";
 		case "pagelink":
-			return "page_link_id";
+			return "pageLinkId";
 		case "link":
-			return "text_value";
+			return "textValue";
 		case "datetime":
-			return "text_value";
+			return "textValue";
 		case "colour":
-			return "text_value";
+			return "textValue";
 		default:
-			return "text_value";
+			return "textValue";
 	}
 };
 
@@ -55,13 +55,13 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			const value = field.value as LinkValueT | undefined;
 			if (!value) {
 				return {
-					text_value: null,
-					json_value: null,
+					textValue: null,
+					jsonValue: null,
 				};
 			}
 			return {
-				text_value: value.url,
-				json_value: Formatter.stringifyJSON({
+				textValue: value.url,
+				jsonValue: Formatter.stringifyJSON({
 					target: value.target,
 					label: value.label,
 				}),
@@ -71,13 +71,13 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			const value = field.value as PageLinkValueT | undefined;
 			if (!value) {
 				return {
-					page_link_id: null,
-					json_value: null,
+					pageLinkId: null,
+					jsonValue: null,
 				};
 			}
 			return {
-				page_link_id: value.id,
-				json_value: Formatter.stringifyJSON({
+				pageLinkId: value.id,
+				jsonValue: Formatter.stringifyJSON({
 					target: value.target,
 					label: value.label,
 				}),
@@ -170,13 +170,23 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 					props.field?.media_key ?? "",
 				),
 				key: props.field?.media_key ?? undefined,
-				mime_type: props.field?.media_mime_type ?? undefined,
-				file_extension: props.field?.media_file_extension ?? undefined,
-				file_size: props.field?.media_file_size ?? undefined,
+				mimeType: props.field?.media_mime_type ?? undefined,
+				fileExtension: props.field?.media_file_extension ?? undefined,
+				fileSize: props.field?.media_file_size ?? undefined,
 				width: props.field?.media_width ?? undefined,
 				height: props.field?.media_height ?? undefined,
-				title_translations: props.field?.media_title_translations,
-				alt_translations: props.field?.media_alt_translations,
+				titleTranslations: props.field?.media_title_translations?.map(
+					(t) => ({
+						value: t.value,
+						languageId: t.language_id,
+					}),
+				),
+				altTranslations: props.field?.media_alt_translations?.map(
+					(t) => ({
+						value: t.value,
+						languageId: t.language_id,
+					}),
+				),
 				type: (props.field?.media_type as MediaTypeT) ?? undefined,
 			};
 			break;
@@ -245,18 +255,18 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 };
 
 interface FieldUpsertObjectResT {
-	fields_id?: number | undefined;
-	collection_brick_id: number;
+	fieldsId?: number | undefined;
+	collectionBrickId: number;
 	key: string;
 	type: FieldTypesT;
-	group_id?: number | null;
-	text_value: string | null;
-	int_value: number | null;
-	bool_value: 1 | 0 | null;
-	json_value: string | null;
-	page_link_id: number | null;
-	media_id: number | null;
-	language_id: number;
+	groupId?: number | null;
+	textValue: string | null;
+	intValue: number | null;
+	boolValue: 1 | 0 | null;
+	jsonValue: string | null;
+	pageLinkId: number | null;
+	mediaId: number | null;
+	languageId: number;
 }
 
 interface FormatUpsertFieldsT {
@@ -271,28 +281,28 @@ export const fieldUpsertPrep = (
 		props.brick.fields?.map((field) => {
 			let groupId = null;
 			const findGroup = props.groups.find(
-				(group) => group.ref === field.group_id,
+				(group) => group.ref === field.groupId,
 			);
 			if (findGroup === undefined) {
 				const findGroupBrick = props.groups.find(
-					(group) => group.group_id === field.group_id,
+					(group) => group.groupId === field.groupId,
 				);
-				groupId = findGroupBrick?.group_id ?? null;
-			} else groupId = findGroup.group_id;
+				groupId = findGroupBrick?.groupId ?? null;
+			} else groupId = findGroup.groupId;
 
 			return {
-				language_id: field.language_id,
-				fields_id: field.fields_id,
-				collection_brick_id: props.brick.id as number,
+				languageId: field.languageId,
+				fieldsId: field.fieldsId,
+				collectionBrickId: props.brick.id as number,
 				key: field.key,
 				type: field.type,
-				group_id: groupId,
-				text_value: null,
-				int_value: null,
-				bool_value: null,
-				json_value: null,
-				page_link_id: null,
-				media_id: null,
+				groupId: groupId,
+				textValue: null,
+				intValue: null,
+				boolValue: null,
+				jsonValue: null,
+				pageLinkId: null,
+				mediaId: null,
 				...fieldColumnValueMap(field),
 			};
 		}) || []

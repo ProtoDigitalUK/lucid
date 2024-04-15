@@ -20,8 +20,8 @@ const deleteSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				user_id: Number.parseInt(request.params.id),
-				current_user_id: request.auth.id,
+				userId: Number.parseInt(request.params.id),
+				currentUserId: request.auth.id,
 			},
 		);
 

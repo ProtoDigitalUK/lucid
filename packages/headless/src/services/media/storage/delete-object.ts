@@ -22,7 +22,7 @@ const deleteObject = async (
 		},
 	);
 
-	const newStorageUsed = (storageUsed.value_int || 0) - data.size;
+	const newStorageUsed = (storageUsed.valueInt || 0) - data.size;
 
 	await Promise.all([
 		mediaStategy.deleteSingle(data.key),

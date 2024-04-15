@@ -24,7 +24,7 @@ const getMultipleController: ControllerT<
 			},
 			{
 				query: request.query,
-				language_id: request.language.id,
+				languageId: request.language.id,
 			},
 		);
 
@@ -34,7 +34,7 @@ const getMultipleController: ControllerT<
 				pagination: {
 					count: media.count,
 					page: request.query.page,
-					perPage: request.query.per_page,
+					perPage: request.query.perPage,
 				},
 			}),
 		);
@@ -77,10 +77,10 @@ export default {
 					key: "key",
 				},
 				{
-					key: "mime_type",
+					key: "mimeType",
 				},
 				{
-					key: "file_extension",
+					key: "fileExtension",
 				},
 				{
 					key: "type",
@@ -90,14 +90,14 @@ export default {
 				},
 			],
 			sorts: [
-				"created_at",
-				"updated_at",
+				"createdAt",
+				"updatedAt",
 				"title",
-				"file_size",
+				"fileSize",
 				"width",
 				"height",
-				"mime_type",
-				"file_extension",
+				"mimeType",
+				"fileExtension",
 			],
 			page: true,
 			perPage: true,

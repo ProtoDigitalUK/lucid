@@ -23,8 +23,8 @@ const createSingleController: ControllerT<
 			},
 			{
 				code: request.body.code,
-				is_enabled: request.body.is_enabled,
-				is_default: request.body.is_default,
+				isEnabled: request.body.isEnabled,
+				isDefault: request.body.isDefault,
 			},
 		);
 
@@ -72,14 +72,14 @@ export default {
 				code: {
 					type: "string",
 				},
-				is_enabled: {
+				isEnabled: {
 					type: "number",
 				},
-				is_default: {
+				isDefault: {
 					type: "number",
 				},
 			},
-			required: ["code", "is_enabled", "is_default"],
+			required: ["code", "isEnabled", "isDefault"],
 		},
 		response: {
 			200: swaggerResponse({

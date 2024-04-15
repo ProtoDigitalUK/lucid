@@ -38,5 +38,5 @@ export default {
 	include: z.array(z.string()).optional(),
 	exclude: z.array(z.string()).optional(),
 	page: z.number(),
-	per_page: z.number(),
+	perPage: z.number(),
 };

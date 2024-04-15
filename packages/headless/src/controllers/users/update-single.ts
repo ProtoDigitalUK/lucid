@@ -17,10 +17,10 @@ const updateSingleController: ControllerT<
 				config: request.server.config,
 			},
 			{
-				user_id: Number.parseInt(request.params.id),
-				role_ids: request.body.role_ids,
-				super_admin: request.body.super_admin,
-				auth_super_admin: request.auth.super_admin,
+				userId: Number.parseInt(request.params.id),
+				roleIds: request.body.roleIds,
+				superAdmin: request.body.superAdmin,
+				authSuperAdmin: request.auth.superAdmin,
 			},
 		);
 

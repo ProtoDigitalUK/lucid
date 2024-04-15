@@ -122,7 +122,7 @@ export default class RolesRepo {
 					include: props.query.include,
 					exclude: props.query.exclude,
 					page: props.query.page,
-					per_page: props.query.per_page,
+					perPage: props.query.perPage,
 				},
 				meta: {
 					filters: [
@@ -132,7 +132,7 @@ export default class RolesRepo {
 							operator: props.config.db.fuzzOperator,
 						},
 						{
-							queryKey: "role_ids",
+							queryKey: "roleIds",
 							tableKey: "id",
 							operator: "=",
 						},
@@ -143,7 +143,7 @@ export default class RolesRepo {
 							tableKey: "name",
 						},
 						{
-							queryKey: "created_at",
+							queryKey: "createdAt",
 							tableKey: "created_at",
 						},
 					],

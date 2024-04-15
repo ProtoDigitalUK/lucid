@@ -1,18 +1,18 @@
-import z, { nullable } from "zod";
+import z from "zod";
 
 export const GroupSchema = z.object({
-	group_id: z.union([z.number(), z.string()]), // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
-	group_order: z.number(),
-	parent_group_id: z.union([z.number(), z.string(), z.null()]).optional(),
-	repeater_key: z.string(),
-	language_id: z.number(),
+	groupId: z.union([z.number(), z.string()]), // if prefixed with ref-, it needs creating - its just a placeholder id to marry up fields that reference it
+	groupOrder: z.number(),
+	parentGroupId: z.union([z.number(), z.string(), z.null()]).optional(),
+	repeaterKey: z.string(),
+	languageId: z.number(),
 });
 export type GroupSchemaT = z.infer<typeof GroupSchema>;
 
 export const swaggerGroupObj = {
 	type: "object",
 	properties: {
-		group_id: {
+		groupId: {
 			anyOf: [
 				{
 					type: "number",
@@ -22,10 +22,10 @@ export const swaggerGroupObj = {
 				},
 			],
 		},
-		group_order: {
+		groupOrder: {
 			type: "number",
 		},
-		parent_group_id: {
+		parentGroupId: {
 			anyOf: [
 				{
 					type: "number",
@@ -40,10 +40,10 @@ export const swaggerGroupObj = {
 				},
 			],
 		},
-		repeater_key: {
+		repeaterKey: {
 			type: "string",
 		},
-		language_id: {
+		languageId: {
 			type: "number",
 		},
 	},
