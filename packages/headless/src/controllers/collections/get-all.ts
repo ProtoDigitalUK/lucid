@@ -6,8 +6,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getAllController: ControllerT<
+const getAllController: RouteController<
 	typeof collectionsSchema.getAll.params,
 	typeof collectionsSchema.getAll.body,
 	typeof collectionsSchema.getAll.query

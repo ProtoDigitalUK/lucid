@@ -4,7 +4,7 @@ import z, { type ZodTypeAny } from "zod";
 import constants from "../constants.js";
 import { HeadlessAPIError } from "../utils/error-handler.js";
 
-export interface RequestQueryParsedT {
+export interface RequestQueryParsed {
 	filter: Record<string, string | Array<string>> | undefined;
 	sort:
 		| Array<{
@@ -40,7 +40,7 @@ const buildSort = (query: unknown) => {
 
 const buildFilter = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
-	const result: RequestQueryParsedT["filter"] = {};
+	const result: RequestQueryParsed["filter"] = {};
 
 	for (const [key, value] of Object.entries(queryObject)) {
 		if (key.includes("filter[")) {

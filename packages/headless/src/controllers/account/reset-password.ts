@@ -7,8 +7,9 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import account from "../../services/account/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const resetPasswordController: ControllerT<
+const resetPasswordController: RouteController<
 	typeof accountSchema.resetPassword.params,
 	typeof accountSchema.resetPassword.body,
 	typeof accountSchema.resetPassword.query

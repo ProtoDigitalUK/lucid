@@ -7,8 +7,9 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const updateSingleController: ControllerT<
+const updateSingleController: RouteController<
 	typeof mediaSchema.updateSingle.params,
 	typeof mediaSchema.updateSingle.body,
 	typeof mediaSchema.updateSingle.query

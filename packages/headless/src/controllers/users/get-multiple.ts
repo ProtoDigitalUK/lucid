@@ -9,8 +9,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getMultipleController: ControllerT<
+const getMultipleController: RouteController<
 	typeof usersSchema.getMultiple.params,
 	typeof usersSchema.getMultiple.body,
 	typeof usersSchema.getMultiple.query

@@ -1,6 +1,6 @@
 import type z from "zod";
 import { sql } from "kysely";
-import type { HeadlessRoles, Select } from "../db/types.js";
+import type { HeadlessRoles, Select, KyselyDB } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import type rolesSchema from "../../schemas/roles.js";
 import queryBuilder, {
@@ -11,7 +11,7 @@ import queryBuilder, {
 } from "../db/query-builder.js";
 
 export default class RolesRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	count = async () => {
 		return this.db

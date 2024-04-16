@@ -10,8 +10,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import CollectionDocumentsFormatter from "../../libs/formatters/collection-documents.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getMultipleController: ControllerT<
+const getMultipleController: RouteController<
 	typeof collectionDocumentsSchema.getMultiple.params,
 	typeof collectionDocumentsSchema.getMultiple.body,
 	typeof collectionDocumentsSchema.getMultiple.query

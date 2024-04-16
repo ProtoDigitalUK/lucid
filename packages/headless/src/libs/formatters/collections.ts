@@ -1,9 +1,9 @@
-import type { CollectionResT } from "../../types/response.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
+import type { CollectionResponse } from "../../types/response.js";
+import type CollectionBuilder from "../builders/collection-builder/index.js";
 
 export default class CollectionsFormatter {
 	formatMultiple = (props: {
-		collections: CollectionBuilderT[];
+		collections: CollectionBuilder[];
 		include?: {
 			bricks?: boolean;
 			fields?: boolean;
@@ -23,7 +23,7 @@ export default class CollectionsFormatter {
 		);
 	};
 	formatSingle = (props: {
-		collection: CollectionBuilderT;
+		collection: CollectionBuilder;
 		include?: {
 			bricks?: boolean;
 			fields?: boolean;
@@ -33,7 +33,7 @@ export default class CollectionsFormatter {
 			id?: number;
 			collection_key: string;
 		}>;
-	}): CollectionResT => {
+	}): CollectionResponse => {
 		const collectionData = props.collection.data;
 		const key = props.collection.key;
 

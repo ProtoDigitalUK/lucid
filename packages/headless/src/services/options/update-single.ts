@@ -1,18 +1,18 @@
-import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
-import type { OptionNameT } from "../../types/response.js";
+import type { OptionName } from "../../types/response.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
-	name: OptionNameT;
+	name: OptionName;
 	valueText?: string;
 	valueInt?: number;
 	valueBool?: BooleanInt;
 }
 
 const updateSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const OptionsRepo = Repository.get("options", serviceConfig.db);

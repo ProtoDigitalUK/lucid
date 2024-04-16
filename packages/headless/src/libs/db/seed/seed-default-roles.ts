@@ -5,8 +5,9 @@ import serviceWrapper from "../../../utils/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
 import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
-const seedDefaultRoles = async (serviceConfig: ServiceConfigT) => {
+const seedDefaultRoles = async (serviceConfig: ServiceConfig) => {
 	try {
 		const RolesRepo = Repository.get("roles", serviceConfig.db);
 

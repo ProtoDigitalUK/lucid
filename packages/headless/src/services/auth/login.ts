@@ -2,13 +2,14 @@ import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	usernameOrEmail: string;
 	password: string;
 }
 
-const login = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const login = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const user = await UsersRepo.selectSingleByEmailUsername({

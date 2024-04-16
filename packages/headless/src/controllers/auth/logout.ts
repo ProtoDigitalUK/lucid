@@ -6,8 +6,9 @@ import {
 } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const logoutController: ControllerT<
+const logoutController: RouteController<
 	typeof authSchema.logout.params,
 	typeof authSchema.logout.body,
 	typeof authSchema.logout.query

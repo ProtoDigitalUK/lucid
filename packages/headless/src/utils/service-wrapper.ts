@@ -1,3 +1,12 @@
+import type { Config } from "../types/config.js";
+import type { KyselyDB } from "../libs/db/types.js";
+
+export interface ServiceConfig {
+	db: KyselyDB;
+	config: Config;
+	inTransaction?: boolean; // If the function is within a transaction
+}
+
 /**
  * This module exports a higher-order function `serviceWrapper` which is used to
  * wrap all database related service functions in the application and is responsible
@@ -15,10 +24,10 @@
 
 const serviceWrapper =
 	<T extends unknown[], R>(
-		fn: (serviceConfig: ServiceConfigT, ...args: T) => Promise<R>,
+		fn: (serviceConfig: ServiceConfig, ...args: T) => Promise<R>,
 		transaction: boolean, // If the should be wrapped in a transaction
 	) =>
-	async (serviceConfig: ServiceConfigT, ...args: T): Promise<R> => {
+	async (serviceConfig: ServiceConfig, ...args: T): Promise<R> => {
 		// If its not a transaction or if the serviceConfig is already in a transaction
 		if (!transaction || serviceConfig.inTransaction === true) {
 			const result = await fn(serviceConfig, ...args);

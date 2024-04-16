@@ -1,16 +1,17 @@
-import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import type { GroupsResT } from "./upsert-multiple-groups.js";
+import type { BrickSchema } from "../../schemas/collection-bricks.js";
+import type { GroupsResponse } from "./upsert-multiple-groups.js";
 import { fieldUpsertPrep } from "../../utils/field-helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	documentId: number;
-	bricks: Array<BrickSchemaT>;
-	groups: Array<GroupsResT>;
+	bricks: Array<BrickSchema>;
+	groups: Array<GroupsResponse>;
 }
 
 const upsertMultipleFields = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	// format fields

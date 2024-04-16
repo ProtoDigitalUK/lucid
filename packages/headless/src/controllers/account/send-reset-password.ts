@@ -8,8 +8,9 @@ import buildResponse from "../../utils/build-response.js";
 import account from "../../services/account/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const sendResetPasswordController: ControllerT<
+const sendResetPasswordController: RouteController<
 	typeof accountSchema.sendResetPassword.params,
 	typeof accountSchema.sendResetPassword.body,
 	typeof accountSchema.sendResetPassword.query

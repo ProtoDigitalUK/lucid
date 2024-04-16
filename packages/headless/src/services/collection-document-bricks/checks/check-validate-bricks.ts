@@ -1,26 +1,28 @@
 import T from "../../../translations/index.js";
+import type z from "zod";
 import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import type { FieldErrors } from "../../../types/errors.js";
 import collectionsServices from "../../collections/index.js";
 import type {
-	ValidationPropsT,
-	MediaReferenceDataT,
-	LinkReferenceDataT,
-	FieldTypesT,
+	ValidationProps,
+	MediaReferenceData,
+	LinkReferenceData,
+	FieldTypes,
 } from "../../../libs/builders/field-builder/index.js";
-import type { PageLinkValueT, LinkValueT } from "../../../types/response.js";
-import type { CollectionBuilderT } from "../../../libs/builders/collection-builder/index.js";
-import type { BrickSchemaT } from "../../../schemas/collection-bricks.js";
-import type { FieldSchemaT } from "../../../schemas/collection-fields.js";
+import type { PageLinkValue, LinkValue } from "../../../types/response.js";
+import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
+import type { BrickSchema } from "../../../schemas/collection-bricks.js";
+import type { FieldSchema } from "../../../schemas/collection-fields.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
-	bricks: Array<BrickSchemaT>;
+	bricks: Array<BrickSchema>;
 	collectionKey: string;
 }
 
 const validateBricks = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const flatFields =
@@ -61,8 +63,8 @@ const validateBricks = async (
 };
 
 const validateBrickData = async (data: {
-	bricks: BrickSchemaT[];
-	collection: CollectionBuilderT;
+	bricks: BrickSchema[];
+	collection: CollectionBuilder;
 	media: Array<{
 		id: number;
 		file_extension: string;
@@ -112,19 +114,19 @@ const validateBrickData = async (data: {
 			if (field === undefined) continue;
 
 			// Set the secondary value
-			let referenceData: ValidationPropsT["referenceData"] = undefined;
+			let referenceData: ValidationProps["referenceData"] = undefined;
 
 			switch (field.type) {
 				case "link": {
-					const value = field.value as LinkValueT | undefined;
+					const value = field.value as LinkValue | undefined;
 					referenceData = {
 						target: value?.target,
 						label: value?.label,
-					} satisfies LinkReferenceDataT;
+					} satisfies LinkReferenceData;
 					break;
 				}
 				case "pagelink": {
-					const value = field.value as PageLinkValueT | undefined;
+					const value = field.value as PageLinkValue | undefined;
 					const document = data.documents.find(
 						(p) => p.id === value?.id,
 					);
@@ -132,7 +134,7 @@ const validateBrickData = async (data: {
 						referenceData = {
 							target: value?.target,
 							label: value?.label,
-						} satisfies LinkReferenceDataT;
+						} satisfies LinkReferenceData;
 					} else if (field.value) {
 						field.value.id = null;
 					}
@@ -146,7 +148,7 @@ const validateBrickData = async (data: {
 							width: media.width,
 							height: media.height,
 							type: media.type,
-						} satisfies MediaReferenceDataT;
+						} satisfies MediaReferenceData;
 					} else if (field.value) {
 						field.value = null;
 					}
@@ -178,7 +180,10 @@ const validateBrickData = async (data: {
 	return { errors, hasErrors };
 };
 
-const allFieldIdsOfType = <T>(fields: FieldSchemaT[], type: FieldTypesT) => {
+const allFieldIdsOfType = <T>(
+	fields: z.infer<typeof FieldSchema>[],
+	type: FieldTypes,
+) => {
 	return fields
 		.filter((field) => field.type === type)
 		.map((field) => {
@@ -192,8 +197,8 @@ const allFieldIdsOfType = <T>(fields: FieldSchemaT[], type: FieldTypesT) => {
 };
 
 const getAllMedia = async (
-	serviceConfig: ServiceConfigT,
-	fields: FieldSchemaT[],
+	serviceConfig: ServiceConfig,
+	fields: z.infer<typeof FieldSchema>[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
@@ -216,8 +221,8 @@ const getAllMedia = async (
 	}
 };
 const getAllDocuments = async (
-	serviceConfig: ServiceConfigT,
-	fields: FieldSchemaT[],
+	serviceConfig: ServiceConfig,
+	fields: z.infer<typeof FieldSchema>[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "pagelink");

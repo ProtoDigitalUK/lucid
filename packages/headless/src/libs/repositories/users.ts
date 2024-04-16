@@ -2,7 +2,12 @@ import type z from "zod";
 import { sql } from "kysely";
 import type { Config } from "../../types/config.js";
 import type usersSchema from "../../schemas/users.js";
-import type { BooleanInt, HeadlessUsers, Select } from "../db/types.js";
+import type {
+	BooleanInt,
+	HeadlessUsers,
+	Select,
+	KyselyDB,
+} from "../db/types.js";
 import queryBuilder, {
 	selectQB,
 	updateQB,
@@ -11,7 +16,7 @@ import queryBuilder, {
 } from "../db/query-builder.js";
 
 export default class UsersRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	count = async () => {
 		return this.db

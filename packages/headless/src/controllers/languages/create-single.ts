@@ -9,8 +9,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import LanguagesFormatter from "../../libs/formatters/languages.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const createSingleController: ControllerT<
+const createSingleController: RouteController<
 	typeof languageSchema.createSingle.params,
 	typeof languageSchema.createSingle.body,
 	typeof languageSchema.createSingle.query

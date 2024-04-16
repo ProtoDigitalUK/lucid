@@ -7,7 +7,6 @@ export const GroupSchema = z.object({
 	repeaterKey: z.string(),
 	languageId: z.number(),
 });
-export type GroupSchemaT = z.infer<typeof GroupSchema>;
 
 export const swaggerGroupObj = {
 	type: "object",

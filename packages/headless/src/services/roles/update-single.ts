@@ -3,6 +3,7 @@ import { HeadlessAPIError } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
@@ -12,7 +13,7 @@ export interface ServiceData {
 }
 
 const updateSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const RolesRepo = Repository.get("roles", serviceConfig.db);

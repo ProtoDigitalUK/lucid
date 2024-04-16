@@ -9,6 +9,9 @@
 		".": {
 			"import": "./dist/index.js",
 			"types": "./dist/index.d.ts"
+		},
+		"./types": {
+			"types": "./dist/types.d.ts"
 		}
 	},
 	"scripts": {
@@ -20,12 +23,7 @@
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
-	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**",
-		"assets/**"
-	],
+	"files": ["dist/**", "cms/**", "templates/**", "assets/**"],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",

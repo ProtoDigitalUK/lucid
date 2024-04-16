@@ -1,7 +1,8 @@
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
-const clearAll = async (serviceConfig: ServiceConfigT) => {
+const clearAll = async (serviceConfig: ServiceConfig) => {
 	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});

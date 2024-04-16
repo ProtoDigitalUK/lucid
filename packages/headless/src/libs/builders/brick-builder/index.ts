@@ -1,6 +1,6 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
-import type { RepeaterConfigT, TabConfigT } from "../field-builder/index.js";
+import type { RepeaterConfig, TabConfig } from "../field-builder/index.js";
 
 export interface BrickConfigPropsT {
 	title?: string;
@@ -28,7 +28,7 @@ class BrickBuilder extends FieldBuilder {
 		};
 	}
 	// Builder methods
-	public addFields(Builder: BrickBuilderT) {
+	public addFields(Builder: BrickBuilder) {
 		const fields = Array.from(Builder.fields.values());
 		for (const field of fields) {
 			this.fields.set(field.key, field);
@@ -73,14 +73,14 @@ class BrickBuilder extends FieldBuilder {
 
 		return this;
 	}
-	public addRepeater(config: RepeaterConfigT) {
+	public addRepeater(config: RepeaterConfig) {
 		this.meta.repeaterDepth[config.key] = this.repeaterStack.length;
 
 		this.addToFields("repeater", config);
 		this.repeaterStack.push(config.key);
 		return this;
 	}
-	public addTab(config: TabConfigT) {
+	public addTab(config: TabConfig) {
 		this.addToFields("tab", config);
 		return this;
 	}
@@ -95,5 +95,4 @@ export const BrickSchema = z.object({
 		.optional(),
 });
 
-export type BrickBuilderT = InstanceType<typeof BrickBuilder>;
 export default BrickBuilder;

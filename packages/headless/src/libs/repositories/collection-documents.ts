@@ -4,6 +4,7 @@ import type {
 	BooleanInt,
 	HeadlessCollectionDocuments,
 	Select,
+	KyselyDB,
 } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import queryBuilder, {
@@ -14,10 +15,10 @@ import queryBuilder, {
 } from "../db/query-builder.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import { collectionFilters } from "../../utils/field-helpers.js";
-import type { FieldFiltersT } from "../builders/collection-builder/index.js";
+import type { FieldFilters } from "../builders/collection-builder/index.js";
 
 export default class CollectionDocumentsRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// select
@@ -84,7 +85,7 @@ export default class CollectionDocumentsRepo {
 	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
-		allowedFieldFilters: FieldFiltersT;
+		allowedFieldFilters: FieldFilters;
 		allowedFieldIncludes: Array<string>;
 		languageId: number; // TODO: will be used for field joins
 		config: Config;

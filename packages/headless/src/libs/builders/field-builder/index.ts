@@ -2,90 +2,90 @@ import T from "../../../translations/index.js";
 import z from "zod";
 import sanitizeHtml from "sanitize-html";
 import type {
-	CustomFieldT,
-	FieldTypesT,
-	CheckboxConfigT,
-	ColourConfigT,
-	DateTimeConfigT,
-	JSONConfigT,
-	LinkConfigT,
-	MediaConfigT,
-	NumberConfigT,
-	PageLinkConfigT,
-	SelectConfigT,
-	TextConfigT,
-	TextareaConfigT,
-	WysiwygConfigT,
-	CustomFieldConfigsT,
-	DefaultFieldValuesT,
-	FieldBuilderMetaT,
-	ValidationPropsT,
-	MediaReferenceDataT,
-	LinkReferenceDataT,
-	ValidationResponseT,
+	CustomField,
+	FieldTypes,
+	CheckboxConfig,
+	ColourConfig,
+	DateTimeConfig,
+	JSONConfig,
+	LinkConfig,
+	MediaConfig,
+	NumberConfig,
+	PageLinkConfig,
+	SelectConfig,
+	TextConfig,
+	TextareaConfig,
+	WysiwygConfig,
+	CustomFieldConfigs,
+	DefaultFieldValues,
+	FieldBuilderMeta,
+	ValidationProps,
+	MediaReferenceData,
+	LinkReferenceData,
+	ValidationResponse,
 } from "./types.js";
 
 class FieldBuilder {
-	fields: Map<string, CustomFieldT> = new Map();
-	meta: FieldBuilderMetaT = {
+	fields: Map<string, CustomField> = new Map();
+	meta: FieldBuilderMeta = {
 		fieldKeys: [],
 		repeaterDepth: {},
 	};
 	// Custom Fields
-	public addText(config: TextConfigT) {
+	public addText(config: TextConfig) {
 		this.addToFields("text", config);
 		return this;
 	}
-	public addWysiwyg(config: WysiwygConfigT) {
+	public addWysiwyg(config: WysiwygConfig) {
 		this.addToFields("wysiwyg", config);
 		return this;
 	}
-	public addMedia(config: MediaConfigT) {
+	public addMedia(config: MediaConfig) {
 		this.addToFields("media", config);
 		return this;
 	}
-	public addNumber(config: NumberConfigT) {
+	public addNumber(config: NumberConfig) {
 		this.addToFields("number", config);
 		return this;
 	}
-	public addCheckbox(config: CheckboxConfigT) {
+	public addCheckbox(config: CheckboxConfig) {
 		this.addToFields("checkbox", config);
 		return this;
 	}
-	public addSelect(config: SelectConfigT) {
+	public addSelect(config: SelectConfig) {
 		this.addToFields("select", config);
 		return this;
 	}
-	public addTextarea(config: TextareaConfigT) {
+	public addTextarea(config: TextareaConfig) {
 		this.addToFields("textarea", config);
 		return this;
 	}
-	public addJSON(config: JSONConfigT) {
+	public addJSON(config: JSONConfig) {
 		this.addToFields("json", config);
 		return this;
 	}
-	public addColour(config: ColourConfigT) {
+	public addColour(config: ColourConfig) {
 		this.addToFields("colour", config);
 		return this;
 	}
-	public addDateTime(config: DateTimeConfigT) {
+	public addDateTime(config: DateTimeConfig) {
 		this.addToFields("datetime", config);
 		return this;
 	}
-	public addPageLink(config: PageLinkConfigT) {
+	public addPageLink(config: PageLinkConfig) {
 		this.addToFields("pagelink", config);
 		return this;
 	}
-	public addLink(config: LinkConfigT) {
+	public addLink(config: LinkConfig) {
 		this.addToFields("link", config);
 		return this;
 	}
 	// Getters
-	get fieldTree(): CustomFieldT[] {
+	get fieldTree(): CustomField[] {
 		const fields = Array.from(this.fields.values());
 
-		const result: Array<CustomFieldT> = [];
-		let currentTab: CustomFieldT | null = null;
+		const result: Array<CustomField> = [];
+		let currentTab: CustomField | null = null;
 
 		for (const item of fields) {
 			if (item.type === "tab") {
@@ -107,11 +107,11 @@ class FieldBuilder {
 
 		return result;
 	}
-	get flatFields(): CustomFieldT[] {
-		const fields: CustomFieldT[] = [];
+	get flatFields(): CustomField[] {
+		const fields: CustomField[] = [];
 
 		const fieldArray = Array.from(this.fields.values());
-		const getFields = (field: CustomFieldT) => {
+		const getFields = (field: CustomField) => {
 			fields.push(field);
 			if (field.type === "repeater") {
 				for (const item of field.fields || []) {
@@ -127,7 +127,7 @@ class FieldBuilder {
 		return fields;
 	}
 	//
-	protected addToFields(type: FieldTypesT, config: CustomFieldConfigsT) {
+	protected addToFields(type: FieldTypes, config: CustomFieldConfigs) {
 		this.meta.fieldKeys.push(config.key);
 		this.fields.set(config.key, {
 			...config,
@@ -147,42 +147,42 @@ class FieldBuilder {
 		return title;
 	}
 	#fieldDefaults(
-		type: FieldTypesT,
-		config: CustomFieldConfigsT,
-	): DefaultFieldValuesT {
+		type: FieldTypes,
+		config: CustomFieldConfigs,
+	): DefaultFieldValues {
 		switch (type) {
 			case "tab": {
 				break;
 			}
 			case "text": {
-				return (config as TextConfigT).default || "";
+				return (config as TextConfig).default || "";
 			}
 			case "wysiwyg": {
-				return (config as WysiwygConfigT).default || "";
+				return (config as WysiwygConfig).default || "";
 			}
 			case "media": {
 				return undefined;
 			}
 			case "number": {
-				return (config as NumberConfigT).default || null;
+				return (config as NumberConfig).default || null;
 			}
 			case "checkbox": {
-				return (config as CheckboxConfigT).default || false;
+				return (config as CheckboxConfig).default || false;
 			}
 			case "select": {
-				return (config as SelectConfigT).default || "";
+				return (config as SelectConfig).default || "";
 			}
 			case "textarea": {
-				return (config as TextareaConfigT).default || "";
+				return (config as TextareaConfig).default || "";
 			}
 			case "json": {
-				return (config as JSONConfigT).default || {};
+				return (config as JSONConfig).default || {};
 			}
 			case "colour": {
-				return (config as ColourConfigT).default || "";
+				return (config as ColourConfig).default || "";
 			}
 			case "datetime": {
-				return (config as DateTimeConfigT).default || "";
+				return (config as DateTimeConfig).default || "";
 			}
 			case "pagelink": {
 				return undefined;
@@ -201,7 +201,7 @@ class FieldBuilder {
 		value,
 		referenceData,
 		flatFieldConfig,
-	}: ValidationPropsT): ValidationResponseT {
+	}: ValidationProps): ValidationResponse {
 		try {
 			// Check if field exists in config
 			const field = flatFieldConfig.find((item) => item.key === key);
@@ -257,7 +257,7 @@ class FieldBuilder {
 				case "media": {
 					this.#validateMediaType(
 						field,
-						referenceData as MediaReferenceDataT,
+						referenceData as MediaReferenceData,
 						value as number | null,
 					);
 					break;
@@ -272,13 +272,13 @@ class FieldBuilder {
 				}
 				case "link": {
 					this.#validateLinkTarget(
-						referenceData as LinkReferenceDataT,
+						referenceData as LinkReferenceData,
 					);
 					break;
 				}
 				case "pagelink": {
 					this.#validateLinkTarget(
-						referenceData as LinkReferenceDataT,
+						referenceData as LinkReferenceData,
 					);
 					break;
 				}
@@ -295,7 +295,7 @@ class FieldBuilder {
 			};
 		}
 	}
-	#validateSelectType(field: CustomFieldT, value: string) {
+	#validateSelectType(field: CustomField, value: string) {
 		if (field.validation?.required !== true && !value) return;
 		if (field.options) {
 			const optionValues = field.options.map((option) => option.value);
@@ -304,7 +304,7 @@ class FieldBuilder {
 			}
 		}
 	}
-	#validateWysiwygType(field: CustomFieldT, value: string) {
+	#validateWysiwygType(field: CustomField, value: string) {
 		const sanitizedValue = sanitizeHtml(value, {
 			allowedTags: [],
 			allowedAttributes: {},
@@ -316,8 +316,8 @@ class FieldBuilder {
 		}
 	}
 	#validateMediaType(
-		field: CustomFieldT,
-		referenceData: MediaReferenceDataT,
+		field: CustomField,
+		referenceData: MediaReferenceData,
 		value: number | null = null,
 	) {
 		if (field.validation?.required !== true && !value) return;
@@ -402,7 +402,7 @@ class FieldBuilder {
 			}
 		}
 	}
-	#validateLinkTarget(referenceData: LinkReferenceDataT) {
+	#validateLinkTarget(referenceData: LinkReferenceData) {
 		if (!referenceData) return;
 
 		const allowedValues = ["_self", "_blank"];
@@ -522,6 +522,5 @@ export const FieldsSchema = z.object({
 		.optional(),
 });
 
-export type FieldBuilderT = InstanceType<typeof FieldBuilder>;
 export * from "./types.js";
 export default FieldBuilder;

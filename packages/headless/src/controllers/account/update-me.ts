@@ -7,8 +7,9 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import account from "../../services/account/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const updateMeController: ControllerT<
+const updateMeController: RouteController<
 	typeof accountSchema.updateMe.params,
 	typeof accountSchema.updateMe.body,
 	typeof accountSchema.updateMe.query

@@ -1,9 +1,10 @@
 import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
-import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
+import type { BrickSchema } from "../../schemas/collection-bricks.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
-export interface GroupsResT {
+export interface GroupsResponse {
 	groupId: number;
 	parentGroupId: number | null;
 	groupOrder: number;
@@ -14,11 +15,11 @@ export interface GroupsResT {
 
 export interface ServiceData {
 	documentId: number;
-	bricks: Array<BrickSchemaT>;
+	bricks: Array<BrickSchema>;
 }
 
 const upsertMultipleGroups = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const brickGroups = data.bricks.flatMap((brick) => brick.groups || []);
@@ -101,7 +102,7 @@ const upsertMultipleGroups = async (
 	}
 
 	// Create groups array from bricks and update groups by the group_id with their new parent_group_id
-	const groups: GroupsResT[] = data.bricks.flatMap((brick) => {
+	const groups: GroupsResponse[] = data.bricks.flatMap((brick) => {
 		if (!brick.groups) return [];
 
 		return brick.groups.map((group) => {

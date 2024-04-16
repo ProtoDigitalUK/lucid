@@ -6,8 +6,9 @@ import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getSingleController: ControllerT<
+const getSingleController: RouteController<
 	typeof mediaSchema.getSingle.params,
 	typeof mediaSchema.getSingle.body,
 	typeof mediaSchema.getSingle.query

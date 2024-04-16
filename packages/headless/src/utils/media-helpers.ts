@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import fs from "fs-extra";
 import type { Readable } from "node:stream";
-import type { MediaResT, MediaTypeT } from "../types/response.js";
+import type { MediaResponse, MediaType } from "../types/response.js";
 import { HeadlessAPIError } from "./error-handler.js";
 import { pipeline } from "node:stream/promises";
 import { join } from "node:path";
@@ -10,13 +10,13 @@ import sharp from "sharp";
 import slug from "slug";
 import { getMonth, getYear } from "date-fns";
 
-export interface MediaMetaDataT {
+export interface RouteMediaMetaData {
 	mimeType: string;
 	fileExtension: string;
 	size: number;
 	width: number | null;
 	height: number | null;
-	type: MediaResT["type"];
+	type: MediaResponse["type"];
 	key: string;
 	etag?: string;
 }
@@ -26,7 +26,7 @@ const getMetaData = async (data: {
 	filePath: string;
 	mimeType: string;
 	fileName: string;
-}): Promise<MediaMetaDataT> => {
+}): Promise<RouteMediaMetaData> => {
 	const file = streamTempFile(data.filePath);
 
 	const fileExtension = mime.extension(data.mimeType);
@@ -56,7 +56,7 @@ const getMetaData = async (data: {
 };
 
 // Workout media type
-const getMediaType = (mimeType: string): MediaTypeT => {
+const getMediaType = (mimeType: string): MediaType => {
 	const normalizedMimeType = mimeType.toLowerCase();
 
 	if (normalizedMimeType.includes("image")) return "image";

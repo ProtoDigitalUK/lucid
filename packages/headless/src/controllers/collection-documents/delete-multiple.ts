@@ -7,8 +7,9 @@ import {
 import collectionDocumentsServices from "../../services/collection-documents/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const deleteMultipleController: ControllerT<
+const deleteMultipleController: RouteController<
 	typeof collectionDocumentsSchema.deleteMultiple.params,
 	typeof collectionDocumentsSchema.deleteMultiple.body,
 	typeof collectionDocumentsSchema.deleteMultiple.query

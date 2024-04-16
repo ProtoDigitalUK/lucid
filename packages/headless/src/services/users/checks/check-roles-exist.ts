@@ -1,13 +1,14 @@
 import T from "../../../translations/index.js";
 import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	roleIds: number[];
 }
 
 const checkRolesExist = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	if (data.roleIds.length === 0) return;

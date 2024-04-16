@@ -1,5 +1,7 @@
+import type { KyselyDB } from "../db/types.js";
+
 export default class TranslationsRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// update / create

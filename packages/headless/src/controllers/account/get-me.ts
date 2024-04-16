@@ -6,8 +6,9 @@ import usersServices from "../../services/users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getMeController: ControllerT<
+const getMeController: RouteController<
 	typeof accountSchema.getMe.params,
 	typeof accountSchema.getMe.body,
 	typeof accountSchema.getMe.query

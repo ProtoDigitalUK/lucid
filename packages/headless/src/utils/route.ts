@@ -1,6 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type z from "zod";
-import type { PermissionT } from "../services/permissions.js";
+import type { Permission } from "../services/permissions.js";
+import type { RouteController } from "../types/types.js";
 import logRoute from "../middleware/log-route.js";
 import validateBody from "../middleware/validate-body.js";
 import validateParams from "../middleware/validate-params.js";
@@ -10,7 +11,7 @@ import validateCSRF from "../middleware/validate-csrf.js";
 import permissions from "../middleware/permissions.js";
 import contentLanguage from "../middleware/content-language.js";
 
-type RouteT = <
+type Route = <
 	ParamsT extends z.ZodTypeAny | undefined,
 	BodyT extends z.ZodTypeAny | undefined,
 	QueryT extends z.ZodTypeAny | undefined,
@@ -19,7 +20,7 @@ type RouteT = <
 	opts: {
 		method: "get" | "post" | "put" | "delete" | "patch";
 		url: string;
-		permissions?: PermissionT[];
+		permissions?: Permission[];
 		middleware?: {
 			authenticate?: boolean;
 			validateCSRF?: boolean;
@@ -54,7 +55,7 @@ type RouteT = <
 				required: string[];
 			};
 		};
-		controller: ControllerT<ParamsT, BodyT, QueryT>;
+		controller: RouteController<ParamsT, BodyT, QueryT>;
 	},
 ) => void;
 
@@ -62,7 +63,7 @@ type PreHookT = Array<
 	(request: FastifyRequest, reply: FastifyReply) => Promise<void>
 >;
 
-const route: RouteT = (fastify, opts) => {
+const route: Route = (fastify, opts) => {
 	const { method, url, controller, swaggerSchema, zodSchema, middleware } =
 		opts;
 

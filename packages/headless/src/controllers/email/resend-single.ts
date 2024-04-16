@@ -8,8 +8,9 @@ import emailServices from "../../services/email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const resendSingleController: ControllerT<
+const resendSingleController: RouteController<
 	typeof emailsSchema.resendSingle.params,
 	typeof emailsSchema.resendSingle.body,
 	typeof emailsSchema.resendSingle.query

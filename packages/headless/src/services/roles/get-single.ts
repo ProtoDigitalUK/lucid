@@ -2,12 +2,13 @@ import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
 }
 
-const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const RolesRepo = Repository.get("roles", serviceConfig.db);
 	const RolesFormatter = Formatter.get("roles");
 

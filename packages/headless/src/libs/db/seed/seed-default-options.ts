@@ -1,8 +1,9 @@
 import T from "../../../translations/index.js";
 import { HeadlessError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
-const seedDefaultOptions = async (serviceConfig: ServiceConfigT) => {
+const seedDefaultOptions = async (serviceConfig: ServiceConfig) => {
 	try {
 		const OptionsRepo = Repository.get("options", serviceConfig.db);
 

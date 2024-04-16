@@ -1,14 +1,18 @@
-import type { HeadlessCollectionDocumentBricks, Select } from "../db/types.js";
+import type {
+	HeadlessCollectionDocumentBricks,
+	Select,
+	KyselyDB,
+} from "../db/types.js";
 import {
 	deleteQB,
 	selectQB,
 	type QueryBuilderWhereT,
 } from "../db/query-builder.js";
 import type { Config } from "../../types/config.js";
-import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
+import type { BrickSchema } from "../../schemas/collection-bricks.js";
 
 export default class CollectionDocumentBricksRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// select
@@ -165,7 +169,7 @@ export default class CollectionDocumentBricksRepo {
 	upsertMultiple = async (props: {
 		items: Array<{
 			id?: number;
-			brickType: BrickSchemaT["type"];
+			brickType: BrickSchema["type"];
 			brickKey?: string;
 			brickOrder?: number;
 			collectionDocumentId: number;

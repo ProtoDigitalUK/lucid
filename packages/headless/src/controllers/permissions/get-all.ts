@@ -6,8 +6,9 @@ import { permissionGroups } from "../../services/permissions.js";
 import Formatter from "../../libs/formatters/index.js";
 import PermissionsFormatter from "../../libs/formatters/permissions.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getAllController: ControllerT<
+const getAllController: RouteController<
 	typeof permissionsSchema.getAll.params,
 	typeof permissionsSchema.getAll.body,
 	typeof permissionsSchema.getAll.query

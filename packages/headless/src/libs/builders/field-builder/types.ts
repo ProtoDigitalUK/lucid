@@ -1,16 +1,16 @@
 import type { ZodType } from "zod";
-import type { MediaTypeT } from "../../../types/response.js";
+import type { MediaType } from "../../../types/response.js";
 
-export interface CustomFieldT {
-	type: FieldTypesT;
+export interface CustomField {
+	type: FieldTypes;
 	key: string;
 	repeaterKey?: string;
 	title?: string;
 	description?: string;
 	placeholder?: string;
-	default?: DefaultFieldValuesT;
+	default?: DefaultFieldValues;
 
-	fields?: Array<CustomFieldT>;
+	fields?: Array<CustomField>;
 
 	presets?: string[];
 	copy?: {
@@ -25,7 +25,7 @@ export interface CustomFieldT {
 		zod?: ZodType<unknown>;
 		required?: boolean;
 		extensions?: string[];
-		type?: MediaTypeT;
+		type?: MediaType;
 		maxGroups?: number;
 		width?: {
 			min?: number;
@@ -38,7 +38,7 @@ export interface CustomFieldT {
 	};
 }
 
-export type FieldTypesT =
+export type FieldTypes =
 	| "tab"
 	| "text"
 	| "wysiwyg"
@@ -54,7 +54,7 @@ export type FieldTypesT =
 	| "pagelink"
 	| "link";
 
-export interface FieldBuilderMetaT {
+export interface FieldBuilderMeta {
 	fieldKeys: string[];
 	repeaterDepth: Record<string, number>;
 }
@@ -62,32 +62,32 @@ export interface FieldBuilderMetaT {
 // ----------------------------------------------
 // Custom Field Builder Config
 
-export interface CustomFieldConfigT {
+export interface CustomFieldConfig {
 	key: string;
 	title?: string;
 	description?: string;
 }
 
-export type CustomFieldConfigsT =
-	| TabConfigT
-	| TextConfigT
-	| WysiwygConfigT
-	| MediaConfigT
-	| NumberConfigT
-	| CheckboxConfigT
-	| SelectConfigT
-	| TextareaConfigT
-	| JSONConfigT
-	| ColourConfigT
-	| DateTimeConfigT
-	| PageLinkConfigT
-	| LinkConfigT
-	| RepeaterConfigT;
+export type CustomFieldConfigs =
+	| TabConfig
+	| TextConfig
+	| WysiwygConfig
+	| MediaConfig
+	| NumberConfig
+	| CheckboxConfig
+	| SelectConfig
+	| TextareaConfig
+	| JSONConfig
+	| ColourConfig
+	| DateTimeConfig
+	| PageLinkConfig
+	| LinkConfig
+	| RepeaterConfig;
 
-export interface TabConfigT extends CustomFieldConfigT {
+export interface TabConfig extends CustomFieldConfig {
 	title: string;
 }
-export interface TextConfigT extends CustomFieldConfigT {
+export interface TextConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
 	validation?: {
@@ -95,7 +95,7 @@ export interface TextConfigT extends CustomFieldConfigT {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface WysiwygConfigT extends CustomFieldConfigT {
+export interface WysiwygConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
 	validation?: {
@@ -103,7 +103,7 @@ export interface WysiwygConfigT extends CustomFieldConfigT {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface MediaConfigT extends CustomFieldConfigT {
+export interface MediaConfig extends CustomFieldConfig {
 	validation?: {
 		required?: boolean;
 		extensions?: string[];
@@ -118,12 +118,12 @@ export interface MediaConfigT extends CustomFieldConfigT {
 		};
 	};
 }
-export interface RepeaterConfigT extends CustomFieldConfigT {
+export interface RepeaterConfig extends CustomFieldConfig {
 	validation?: {
 		maxGroups?: number;
 	};
 }
-export interface NumberConfigT extends CustomFieldConfigT {
+export interface NumberConfig extends CustomFieldConfig {
 	default?: number | null;
 	placeholder?: string;
 	validation?: {
@@ -131,14 +131,14 @@ export interface NumberConfigT extends CustomFieldConfigT {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface CheckboxConfigT extends CustomFieldConfigT {
+export interface CheckboxConfig extends CustomFieldConfig {
 	default?: boolean;
 	copy?: {
 		true?: string;
 		false?: string;
 	};
 }
-export interface SelectConfigT extends CustomFieldConfigT {
+export interface SelectConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
 
@@ -147,7 +147,7 @@ export interface SelectConfigT extends CustomFieldConfigT {
 		required?: boolean;
 	};
 }
-export interface TextareaConfigT extends CustomFieldConfigT {
+export interface TextareaConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
 	validation?: {
@@ -155,7 +155,7 @@ export interface TextareaConfigT extends CustomFieldConfigT {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface JSONConfigT extends CustomFieldConfigT {
+export interface JSONConfig extends CustomFieldConfig {
 	default?: {
 		[key: string]: unknown;
 	};
@@ -165,26 +165,26 @@ export interface JSONConfigT extends CustomFieldConfigT {
 		zod?: ZodType<unknown>;
 	};
 }
-export interface ColourConfigT extends CustomFieldConfigT {
+export interface ColourConfig extends CustomFieldConfig {
 	default?: string;
 	presets?: string[];
 	validation?: {
 		required?: boolean;
 	};
 }
-export interface DateTimeConfigT extends CustomFieldConfigT {
+export interface DateTimeConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
 	validation?: {
 		required?: boolean;
 	};
 }
-export interface PageLinkConfigT extends CustomFieldConfigT {
+export interface PageLinkConfig extends CustomFieldConfig {
 	validation?: {
 		required?: boolean;
 	};
 }
-export interface LinkConfigT extends CustomFieldConfigT {
+export interface LinkConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
 	validation?: {
@@ -193,37 +193,37 @@ export interface LinkConfigT extends CustomFieldConfigT {
 }
 
 // Defaults
-export type DefaultFieldValuesT =
-	| TextConfigT["default"]
-	| WysiwygConfigT["default"]
-	| NumberConfigT["default"]
-	| CheckboxConfigT["default"]
-	| SelectConfigT["default"]
-	| TextareaConfigT["default"]
-	| JSONConfigT["default"]
-	| ColourConfigT["default"]
-	| DateTimeConfigT["default"]
-	| LinkConfigT["default"];
+export type DefaultFieldValues =
+	| TextConfig["default"]
+	| WysiwygConfig["default"]
+	| NumberConfig["default"]
+	| CheckboxConfig["default"]
+	| SelectConfig["default"]
+	| TextareaConfig["default"]
+	| JSONConfig["default"]
+	| ColourConfig["default"]
+	| DateTimeConfig["default"]
+	| LinkConfig["default"];
 
 // Validation
-export interface ValidationPropsT {
-	type: FieldTypesT;
+export interface ValidationProps {
+	type: FieldTypes;
 	key: string;
 	value: unknown;
-	referenceData?: MediaReferenceDataT | LinkReferenceDataT;
-	flatFieldConfig: CustomFieldT[];
+	referenceData?: MediaReferenceData | LinkReferenceData;
+	flatFieldConfig: CustomField[];
 }
-export interface ValidationResponseT {
+export interface ValidationResponse {
 	valid: boolean;
 	message?: string;
 }
 
-export interface LinkReferenceDataT {
+export interface LinkReferenceData {
 	target?: string | null;
 	label?: string | null;
 }
 
-export interface MediaReferenceDataT {
+export interface MediaReferenceData {
 	extension: string;
 	width: number | null;
 	height: number | null;

@@ -1,11 +1,12 @@
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	includeDocumentId?: boolean;
 }
 
-const getAll = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const getAll = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const collections = serviceConfig.config.collections ?? [];
 
 	const CollectionsFormatter = Formatter.get("collections");

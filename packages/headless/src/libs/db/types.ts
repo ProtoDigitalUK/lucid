@@ -1,6 +1,9 @@
+import type { Kysely } from "kysely";
 import type { Migration, Generated, ColumnType } from "kysely";
-import type { FieldTypesT } from "../builders/field-builder/types.js";
-import type { OptionNameT } from "../../types/response.js";
+import type { FieldTypes } from "../builders/field-builder/types.js";
+import type { OptionName } from "../../types/response.js";
+
+export type KyselyDB = Kysely<HeadlessDB>;
 
 export enum AdapterType {
 	SQLITE = 0,
@@ -55,7 +58,7 @@ export interface HeadlessTranslations {
 }
 
 export interface HeadlessOptions {
-	name: OptionNameT;
+	name: OptionName;
 	value_int: number | null;
 	value_text: string | null;
 	value_bool: BooleanInt | null;
@@ -191,7 +194,7 @@ export interface HeadlessCollectionDocumentFields {
 	group_id: number | null;
 	language_id: number;
 	key: string;
-	type: FieldTypesT;
+	type: FieldTypes;
 	text_value: string | null;
 	int_value: number | null;
 	bool_value: BooleanInt | null;

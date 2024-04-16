@@ -9,8 +9,9 @@ import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const uploadSingleController: ControllerT<
+const uploadSingleController: RouteController<
 	typeof mediaSchema.uploadSingle.params,
 	typeof mediaSchema.uploadSingle.body,
 	typeof mediaSchema.uploadSingle.query

@@ -1,14 +1,12 @@
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
 }
 
-const clearSingle = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
+const clearSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});

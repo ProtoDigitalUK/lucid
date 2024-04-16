@@ -9,8 +9,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getMultipleController: ControllerT<
+const getMultipleController: RouteController<
 	typeof rolesSchema.getMultiple.params,
 	typeof rolesSchema.getMultiple.body,
 	typeof rolesSchema.getMultiple.query

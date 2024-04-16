@@ -1,6 +1,7 @@
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	userId: number;
@@ -8,7 +9,7 @@ export interface ServiceData {
 }
 
 const updateMultipleRoles = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	if (data.roleIds === undefined) return;

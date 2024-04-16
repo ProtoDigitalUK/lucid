@@ -1,6 +1,6 @@
 import Formatter from "../libs/formatters/index.js";
 
-export type PermissionT =
+export type Permission =
 	| "create_user"
 	| "update_user"
 	| "delete_user"
@@ -34,7 +34,7 @@ export type PermissionT =
 
 export type PermissionGroup = {
 	key: string;
-	permissions: PermissionT[];
+	permissions: Permission[];
 };
 
 export type PermissionGroupKey =

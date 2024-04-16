@@ -6,8 +6,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import RolesFormatter from "../../libs/formatters/roles.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getSingleController: ControllerT<
+const getSingleController: RouteController<
 	typeof rolesSchema.getSingle.params,
 	typeof rolesSchema.getSingle.body,
 	typeof rolesSchema.getSingle.query

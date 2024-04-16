@@ -1,10 +1,10 @@
 import type z from "zod";
-import type { CollectionBuilderT } from "../libs/builders/collection-builder/index.js";
-import type { DatabaseAdapterT } from "../libs/db/adapter.js";
+import type CollectionBuilder from "../libs/builders/collection-builder/index.js";
+import type DatabaseAdapter from "../libs/db/adapter.js";
 import type ConfigSchema from "../libs/config/config-schema.js";
 import type { Readable } from "node:stream";
-import type { MediaMetaDataT } from "../utils/media-helpers.js";
-import type { HeadlessHook, AllHooks } from "./hooks.js";
+import type { RouteMediaMetaData } from "../utils/media-helpers.js";
+import type { AllHooks } from "./hooks.js";
 
 export type HeadlessPlugin = (config: Config) => Promise<{
 	key: string;
@@ -59,7 +59,7 @@ export type MediaStrategyStream = (key: string) => Promise<{
 export type MediaStrategyUploadSingle = (props: {
 	key: string;
 	data: Readable | Buffer;
-	meta: MediaMetaDataT;
+	meta: RouteMediaMetaData;
 }) => Promise<{
 	success: boolean;
 	message: string;
@@ -72,7 +72,7 @@ export type MediaStrategyUpdateSingle = (
 	props: {
 		key: string;
 		data: Readable | Buffer;
-		meta: MediaMetaDataT;
+		meta: RouteMediaMetaData;
 	},
 ) => Promise<{
 	success: boolean;
@@ -101,7 +101,7 @@ export type MediaStrategy = {
 // the version of config that is used in the headless.config.ts file
 export interface HeadlessConfig {
 	mode: "production" | "development";
-	db: DatabaseAdapterT;
+	db: DatabaseAdapter;
 	host: string;
 	keys: {
 		cookieSecret: string;
@@ -129,13 +129,13 @@ export interface HeadlessConfig {
 		stategy?: MediaStrategy;
 	};
 	hooks?: Array<AllHooks>;
-	collections?: CollectionBuilderT[];
+	collections?: CollectionBuilder[];
 	plugins?: HeadlessPlugin[];
 }
 
 export interface Config extends z.infer<typeof ConfigSchema> {
 	mode: "production" | "development";
-	db: DatabaseAdapterT;
+	db: DatabaseAdapter;
 	email?: {
 		from: {
 			email: string;
@@ -154,6 +154,6 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		stategy?: MediaStrategy;
 	};
 	hooks: Array<AllHooks>;
-	collections: CollectionBuilderT[];
+	collections: CollectionBuilder[];
 	plugins: Array<HeadlessPlugin>;
 }

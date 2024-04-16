@@ -1,5 +1,5 @@
-import type { PermissionT } from "../../services/permissions.js";
-import type { UserPermissionsResT } from "../../types/response.js";
+import type { Permission } from "../../services/permissions.js";
+import type { UserPermissionsResponse } from "../../types/response.js";
 
 interface UserPermissionRolesPropsT {
 	id: number;
@@ -13,7 +13,7 @@ interface UserPermissionRolesPropsT {
 export default class UserPermissionsFormatter {
 	formatMultiple = (props: {
 		roles: UserPermissionRolesPropsT[];
-	}): UserPermissionsResT => {
+	}): UserPermissionsResponse => {
 		if (!props.roles) {
 			return {
 				roles: [],
@@ -21,12 +21,12 @@ export default class UserPermissionsFormatter {
 			};
 		}
 
-		const permissionsSet: Set<PermissionT> = new Set();
+		const permissionsSet: Set<Permission> = new Set();
 
 		for (const role of props.roles) {
 			if (!role.permissions) continue;
 			for (const permission of role.permissions) {
-				permissionsSet.add(permission.permission as PermissionT);
+				permissionsSet.add(permission.permission as Permission);
 			}
 		}
 

@@ -1,4 +1,5 @@
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	documentId: number;
@@ -15,7 +16,7 @@ export interface ServiceData {
 }
 
 const deleteMultipleBricks = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const CollectionDocumentBricksRepo = Repository.get(

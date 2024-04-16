@@ -1,24 +1,25 @@
-import type { FieldSchemaT } from "../schemas/collection-fields.js";
+import type z from "zod";
+import type { FieldSchema } from "../schemas/collection-fields.js";
 import type {
-	MediaTypeT,
-	FieldResValueT,
-	PageLinkValueT,
-	LinkValueT,
-	FieldResMetaT,
+	MediaType,
+	FieldResponseValue,
+	PageLinkValue,
+	LinkValue,
+	FieldResponseMeta,
 } from "../types/response.js";
-import type { RequestQueryParsedT } from "../middleware/validate-query.js";
+import type { RequestQueryParsed } from "../middleware/validate-query.js";
 import type {
-	FieldTypesT,
-	CustomFieldT,
+	FieldTypes,
+	CustomField,
 } from "../libs/builders/field-builder/types.js";
-import type { FieldPropT } from "../libs/formatters/collection-document-fields.js";
-import type { FieldFiltersT } from "../libs/builders/collection-builder/index.js";
-import type { BrickSchemaT } from "../schemas/collection-bricks.js";
-import type { GroupsResT } from "../services/collection-document-bricks/upsert-multiple-groups.js";
+import type { FieldProp } from "../libs/formatters/collection-document-fields.js";
+import type { FieldFilters } from "../libs/builders/collection-builder/index.js";
+import type { BrickSchema } from "../schemas/collection-bricks.js";
+import type { GroupsResponse } from "../services/collection-document-bricks/upsert-multiple-groups.js";
 import Formatter from "../libs/formatters/index.js";
 import mediaHelpers from "./media-helpers.js";
 
-export const fieldTypeValueKey = (type: FieldTypesT) => {
+export const fieldTypeValueKey = (type: FieldTypes) => {
 	switch (type) {
 		case "text":
 			return "textValue";
@@ -49,10 +50,10 @@ export const fieldTypeValueKey = (type: FieldTypesT) => {
 	}
 };
 
-export const fieldColumnValueMap = (field: FieldSchemaT) => {
+export const fieldColumnValueMap = (field: z.infer<typeof FieldSchema>) => {
 	switch (field.type) {
 		case "link": {
-			const value = field.value as LinkValueT | undefined;
+			const value = field.value as LinkValue | undefined;
 			if (!value) {
 				return {
 					textValue: null,
@@ -68,7 +69,7 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 			};
 		}
 		case "pagelink": {
-			const value = field.value as PageLinkValueT | undefined;
+			const value = field.value as PageLinkValue | undefined;
 			if (!value) {
 				return {
 					pageLinkId: null,
@@ -91,19 +92,19 @@ export const fieldColumnValueMap = (field: FieldSchemaT) => {
 	}
 };
 
-export interface CollectionFiltersResT {
+export interface CollectionFiltersResponse {
 	key: string;
 	value: string | string[];
 	column: string;
 }
 export const collectionFilters = (
-	allowed_filters: FieldFiltersT,
-	filter: RequestQueryParsedT["filter"],
-): Array<CollectionFiltersResT> => {
+	allowed_filters: FieldFilters,
+	filter: RequestQueryParsed["filter"],
+): Array<CollectionFiltersResponse> => {
 	const values = typeof filter?.cf === "string" ? [filter?.cf] : filter?.cf;
 	if (!values) return [];
 
-	const filterKeyValues: Array<CollectionFiltersResT> = [];
+	const filterKeyValues: Array<CollectionFiltersResponse> = [];
 
 	for (const field of allowed_filters) {
 		const filterValue = values.filter((filter) =>
@@ -139,15 +140,15 @@ export const collectionFilters = (
 	return filterKeyValues;
 };
 
-interface FieldResponseValueFormatT {
-	type: FieldTypesT;
-	builder_field: CustomFieldT;
-	field: FieldPropT;
+interface FieldResponseValueFormat {
+	type: FieldTypes;
+	builder_field: CustomField;
+	field: FieldProp;
 	host: string;
 }
-export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
-	let value: FieldResValueT = null;
-	let meta: FieldResMetaT = null;
+export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
+	let value: FieldResponseValue = null;
+	let meta: FieldResponseMeta = null;
 
 	switch (props.type) {
 		case "tab": {
@@ -187,7 +188,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 						languageId: t.language_id,
 					}),
 				),
-				type: (props.field?.media_type as MediaTypeT) ?? undefined,
+				type: (props.field?.media_type as MediaType) ?? undefined,
 			};
 			break;
 		}
@@ -224,7 +225,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "pagelink": {
-			const jsonVal = Formatter.parseJSON<PageLinkValueT>(
+			const jsonVal = Formatter.parseJSON<PageLinkValue>(
 				props.field?.json_value,
 			);
 			value = {
@@ -236,7 +237,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 			break;
 		}
 		case "link": {
-			const jsonVal = Formatter.parseJSON<LinkValueT>(
+			const jsonVal = Formatter.parseJSON<LinkValue>(
 				props.field?.json_value,
 			);
 			value = {
@@ -254,11 +255,11 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormatT) => {
 	return { value, meta };
 };
 
-interface FieldUpsertObjectResT {
+interface FieldUpsertObjectResponse {
 	fieldsId?: number | undefined;
 	collectionBrickId: number;
 	key: string;
-	type: FieldTypesT;
+	type: FieldTypes;
 	groupId?: number | null;
 	textValue: string | null;
 	intValue: number | null;
@@ -269,14 +270,14 @@ interface FieldUpsertObjectResT {
 	languageId: number;
 }
 
-interface FormatUpsertFieldsT {
-	brick: BrickSchemaT;
-	groups: Array<GroupsResT>;
+interface FormatUpsertFields {
+	brick: BrickSchema;
+	groups: Array<GroupsResponse>;
 }
 
 export const fieldUpsertPrep = (
-	props: FormatUpsertFieldsT,
-): Array<FieldUpsertObjectResT> => {
+	props: FormatUpsertFields,
+): Array<FieldUpsertObjectResponse> => {
 	return (
 		props.brick.fields?.map((field) => {
 			let groupId = null;

@@ -35,7 +35,7 @@ export const FieldSchemaCollection = z.object({
 	languageId: z.number(),
 	fieldsId: z.number().optional(),
 });
-export type FieldCollectionSchemaT = z.infer<typeof FieldSchemaCollection>;
+export type FieldCollectionSchema = z.infer<typeof FieldSchemaCollection>;
 
 export const FieldSchema = FieldSchemaCollection.extend({
 	type: z.union([
@@ -55,7 +55,6 @@ export const FieldSchema = FieldSchemaCollection.extend({
 	]),
 	groupId: z.union([z.number(), z.string()]).optional(),
 });
-export type FieldSchemaT = z.infer<typeof FieldSchema>;
 
 export const swaggerFieldObj = {
 	type: "object",

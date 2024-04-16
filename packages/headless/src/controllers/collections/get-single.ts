@@ -6,8 +6,9 @@ import buildResponse from "../../utils/build-response.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import CollectionsFormatter from "../../libs/formatters/collections.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getSingleController: ControllerT<
+const getSingleController: RouteController<
 	typeof collectionsSchema.getSingle.params,
 	typeof collectionsSchema.getSingle.body,
 	typeof collectionsSchema.getSingle.query

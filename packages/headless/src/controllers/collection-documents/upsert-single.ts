@@ -10,8 +10,9 @@ import { swaggerBodyBricksObj } from "../../schemas/collection-bricks.js";
 import { swaggerFieldObj } from "../../schemas/collection-fields.js";
 import buildResponse from "../../utils/build-response.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const upsertSingleController: ControllerT<
+const upsertSingleController: RouteController<
 	typeof collectionDocumentsSchema.upsertSingle.params,
 	typeof collectionDocumentsSchema.upsertSingle.body,
 	typeof collectionDocumentsSchema.upsertSingle.query

@@ -11,9 +11,6 @@ import SQLLiteAdapter from "./libs/db/adapters/sqllite/index.js";
 import { HeadlessAPIError, HeadlessError } from "./utils/error-handler.js";
 import headlessLogger from "./libs/logging/index.js";
 
-export * from "./types/config.js";
-export * from "./types/response.js";
-
 export {
 	// Core
 	headless,

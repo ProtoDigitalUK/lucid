@@ -6,6 +6,7 @@ import mediaHelpers from "../../../utils/media-helpers.js";
 import mediaServices from "../index.js";
 import optionsServices from "../../options/index.js";
 import processedImagesServices from "../../processed-images/index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	fileData: MultipartFile | undefined;
@@ -14,7 +15,7 @@ export interface ServiceData {
 }
 
 const updateObject = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	let tempFilePath = undefined;

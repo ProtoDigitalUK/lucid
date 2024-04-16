@@ -2,6 +2,7 @@ import T from "../../../translations/index.js";
 import { HeadlessAPIError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	size: number;
@@ -9,7 +10,7 @@ export interface ServiceData {
 }
 
 const checkCanStoreMedia = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const maxFileSize = serviceConfig.config.media.maxSize;

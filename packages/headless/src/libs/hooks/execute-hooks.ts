@@ -1,6 +1,6 @@
 import type { Config } from "../../types/config.js";
 import type { HookServiceHandlers, ArgumentsType } from "../../types/hooks.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
+import type CollectionBuilder from "../builders/collection-builder/index.js";
 import merge from "lodash.merge";
 
 const executeHooks = async <
@@ -14,7 +14,7 @@ const executeHooks = async <
 		service: S;
 		event: E;
 		config: Config;
-		collectionInstance?: CollectionBuilderT;
+		collectionInstance?: CollectionBuilder;
 	},
 	...args: HandlerArgs
 ): Promise<Result> => {

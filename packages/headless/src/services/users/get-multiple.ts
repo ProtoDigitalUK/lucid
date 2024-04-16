@@ -2,15 +2,13 @@ import type z from "zod";
 import type usersSchema from "../../schemas/users.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	query: z.infer<typeof usersSchema.getMultiple.query>;
 }
 
-const getMultiple = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
+const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 	const UsersFormatter = Formatter.get("users");
 

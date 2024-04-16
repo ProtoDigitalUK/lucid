@@ -6,8 +6,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import SettingsFormatter from "../../libs/formatters/settings.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getSettingsController: ControllerT<
+const getSettingsController: RouteController<
 	typeof settingsSchema.getSettings.params,
 	typeof settingsSchema.getSettings.body,
 	typeof settingsSchema.getSettings.query

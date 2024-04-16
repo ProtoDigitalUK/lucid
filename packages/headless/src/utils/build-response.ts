@@ -1,4 +1,5 @@
 import type { FastifyRequest } from "fastify";
+import type { ResponseBody } from "../types/response.js";
 // Services
 import getConfig from "../libs/config/get-config.js";
 
@@ -13,10 +14,10 @@ interface BuildResponseParams {
 	};
 }
 
-type BuildResponseT = (
+type BuildResponse = (
 	request: FastifyRequest,
 	params: BuildResponseParams,
-) => Promise<ResponseBodyT>;
+) => Promise<ResponseBody>;
 
 // --------------------------------------------------
 // Helpers
@@ -31,8 +32,8 @@ const getPath = async (request: FastifyRequest) => {
 const buildMetaLinks = (
 	request: FastifyRequest,
 	params: BuildResponseParams,
-): ResponseBodyT["meta"]["links"] => {
-	const links: ResponseBodyT["meta"]["links"] = [];
+): ResponseBody["meta"]["links"] => {
+	const links: ResponseBody["meta"]["links"] = [];
 	if (!params.pagination) return links;
 
 	const { page, perPage, count } = params.pagination;
@@ -58,7 +59,7 @@ const buildMetaLinks = (
 const buildLinks = (
 	request: FastifyRequest,
 	params: BuildResponseParams,
-): ResponseBodyT["links"] => {
+): ResponseBody["links"] => {
 	if (!params.pagination) return undefined;
 
 	const { page, perPage, count } = params.pagination;
@@ -68,7 +69,7 @@ const buildLinks = (
 		`${request.protocol}://${request.hostname}${request.originalUrl}`,
 	);
 
-	const links: ResponseBodyT["links"] = {
+	const links: ResponseBody["links"] = {
 		first: null,
 		last: null,
 		next: null,
@@ -104,7 +105,7 @@ const buildLinks = (
 
 // --------------------------------------------------
 // Main
-const buildResponse: BuildResponseT = async (request, params) => {
+const buildResponse: BuildResponse = async (request, params) => {
 	let lastPage = null;
 	if (params.pagination) {
 		if (params.pagination.perPage === -1) {
@@ -116,7 +117,7 @@ const buildResponse: BuildResponseT = async (request, params) => {
 		}
 	}
 
-	const meta: ResponseBodyT["meta"] = {
+	const meta: ResponseBody["meta"] = {
 		path: await getPath(request),
 		links: buildMetaLinks(request, params),
 		currentPage: params.pagination?.page ?? null,

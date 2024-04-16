@@ -7,8 +7,9 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import processedImagesServices from "../../services/processed-images/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const clearSingleProcessedController: ControllerT<
+const clearSingleProcessedController: RouteController<
 	typeof mediaSchema.clearSingleProcessed.params,
 	typeof mediaSchema.clearSingleProcessed.body,
 	typeof mediaSchema.clearSingleProcessed.query

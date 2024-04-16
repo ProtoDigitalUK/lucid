@@ -7,8 +7,9 @@ import {
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const deleteSingleController: ControllerT<
+const deleteSingleController: RouteController<
 	typeof rolesSchema.deleteSingle.params,
 	typeof rolesSchema.deleteSingle.body,
 	typeof rolesSchema.deleteSingle.query
