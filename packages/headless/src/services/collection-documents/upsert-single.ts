@@ -6,20 +6,21 @@ import collectionDocumentBricksServices from "../collection-document-bricks/inde
 import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 import merge from "lodash.merge";
-import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
+import type { BrickSchema } from "../../schemas/collection-bricks.js";
+import type { FieldCollectionSchema } from "../../schemas/collection-fields.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	collectionKey: string;
 	userId: number;
 
 	documentId?: number;
-	bricks?: Array<BrickSchemaT>;
-	fields?: Array<FieldCollectionSchemaT>;
+	bricks?: Array<BrickSchema>;
+	fields?: Array<FieldCollectionSchema>;
 }
 
 const upsertSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const collectionInstance =

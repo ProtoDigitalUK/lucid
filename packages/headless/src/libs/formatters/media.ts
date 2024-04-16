@@ -1,4 +1,4 @@
-import type { MediaResT, MediaTypeT } from "../../types/response.js";
+import type { MediaResponse, MediaType } from "../../types/response.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import Formatter from "./index.js";
 
@@ -43,7 +43,7 @@ export default class MediaFormatter {
 	formatSingle = (props: {
 		media: MediaPropsT;
 		host: string;
-	}): MediaResT => {
+	}): MediaResponse => {
 		return {
 			id: props.media.id,
 			key: props.media.key,
@@ -58,7 +58,7 @@ export default class MediaFormatter {
 					value: t.value,
 					languageId: t.language_id,
 				})) ?? [],
-			type: props.media.type as MediaTypeT,
+			type: props.media.type as MediaType,
 			meta: {
 				mimeType: props.media.mime_type,
 				fileExtension: props.media.file_extension,

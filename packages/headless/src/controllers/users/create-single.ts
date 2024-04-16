@@ -6,8 +6,9 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
 import UsersFormatter from "../../libs/formatters/users.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const createSingleController: ControllerT<
+const createSingleController: RouteController<
 	typeof usersSchema.createSingle.params,
 	typeof usersSchema.createSingle.body,
 	typeof usersSchema.createSingle.query

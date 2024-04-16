@@ -4,8 +4,9 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
 import buildResponse from "../../utils/build-response.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getCSRFController: ControllerT<
+const getCSRFController: RouteController<
 	typeof authSchema.getCSRF.params,
 	typeof authSchema.getCSRF.body,
 	typeof authSchema.getCSRF.query

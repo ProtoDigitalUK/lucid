@@ -3,6 +3,7 @@ import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
@@ -11,7 +12,7 @@ export interface ServiceData {
 }
 
 const deleteSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const collectionInstance =

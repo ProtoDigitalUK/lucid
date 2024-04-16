@@ -1,9 +1,10 @@
 import { sql } from "kysely";
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
 import values from "../db/kysely/values.js";
+import type { KyselyDB } from "../db/types.js";
 
 export default class CollectionDocumentGroupsRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// upsert

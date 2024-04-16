@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import crypto from "node:crypto";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	userId: number;
@@ -10,7 +11,7 @@ export interface ServiceData {
 }
 
 const createSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);

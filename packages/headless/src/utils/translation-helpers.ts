@@ -1,9 +1,9 @@
-export interface TranslationsObjT {
+export interface TranslationsObj {
 	languageId: number;
 	value: string | null;
 }
 
-export const removeDuplicates = (translations: TranslationsObjT[]) =>
+export const removeDuplicates = (translations: TranslationsObj[]) =>
 	translations.filter(
 		(translation, index, self) =>
 			index ===
@@ -12,7 +12,7 @@ export const removeDuplicates = (translations: TranslationsObjT[]) =>
 
 export const mergeTranslationGroups = <K>(
 	items: Array<{
-		translations: TranslationsObjT[];
+		translations: TranslationsObj[];
 		key: K;
 	}>,
 ) => {
@@ -33,11 +33,11 @@ export const mergeTranslationGroups = <K>(
 	return translations;
 };
 
-export const getUniqueLanguageIDs = (items: Array<TranslationsObjT[]>) => {
+export const getUniqueLanguageIDs = (items: Array<TranslationsObj[]>) => {
 	const languageIds = items.flatMap((t) => t.map((t) => t.languageId));
 	return Array.from(new Set(languageIds));
 };
 
 export const shouldUpdateTranslations = (
-	item: Array<TranslationsObjT[] | undefined>,
+	item: Array<TranslationsObj[] | undefined>,
 ) => item.some((t) => t !== undefined && t.length > 0);

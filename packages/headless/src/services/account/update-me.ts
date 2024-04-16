@@ -4,6 +4,7 @@ import { HeadlessAPIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	auth: FastifyRequest["auth"];
@@ -14,7 +15,7 @@ export interface ServiceData {
 	roleIds?: number[];
 }
 
-const updateMe = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
 
 	const getUser = await UsersRepo.selectSingle({

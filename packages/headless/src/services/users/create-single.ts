@@ -5,6 +5,7 @@ import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	email: string;
@@ -19,7 +20,7 @@ export interface ServiceData {
 }
 
 const createSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);

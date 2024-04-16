@@ -2,8 +2,9 @@ import T from "../translations/index.js";
 import cron from "node-cron";
 import { HeadlessError } from "../utils/error-handler.js";
 import Repository from "../libs/repositories/index.js";
+import type { ServiceConfig } from "../utils/service-wrapper.js";
 
-const clearExpiredTokens = async (serviceConfig: ServiceConfigT) => {
+const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
 	try {
 		const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
 
@@ -23,7 +24,7 @@ const clearExpiredTokens = async (serviceConfig: ServiceConfigT) => {
 	}
 };
 
-const registerCronJobs = async (serviceConfig: ServiceConfigT) => {
+const registerCronJobs = async (serviceConfig: ServiceConfig) => {
 	cron.schedule("0 0 * * *", async () => {
 		await clearExpiredTokens(serviceConfig);
 	});

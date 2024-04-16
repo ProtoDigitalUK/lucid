@@ -1,10 +1,10 @@
 import type { HeadlessOptions, Select } from "../db/types.js";
-import type { OptionsResT } from "../../types/response.js";
+import type { OptionsResponse } from "../../types/response.js";
 
 export default class OptionsFormatter {
 	formatSingle = (props: {
 		option: Select<HeadlessOptions>;
-	}): OptionsResT => {
+	}): OptionsResponse => {
 		return {
 			name: props.option.name,
 			valueText: props.option.value_text,

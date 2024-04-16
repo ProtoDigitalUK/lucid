@@ -2,14 +2,15 @@ import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
 import type { ErrorResult } from "../../types/errors.js";
-import type { PermissionT } from "../../services/permissions.js";
+import type { Permission } from "../../services/permissions.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	permissions: string[];
 }
 
 const validatePermissions = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	if (data.permissions.length === 0) return [];
@@ -21,11 +22,11 @@ const validatePermissions = async (
 		error: ErrorResult;
 	}> = [];
 	const validPerms: Array<{
-		permission: PermissionT;
+		permission: Permission;
 	}> = [];
 
 	for (let i = 0; i < data.permissions.length; i++) {
-		const permission = data.permissions[i] as PermissionT;
+		const permission = data.permissions[i] as Permission;
 
 		if (!permissions.includes(permission)) {
 			const findError = permErrors.find((e) => e.key === permission);

@@ -7,6 +7,7 @@ import mediaHelpers from "../../utils/media-helpers.js";
 import processedImageServices from "../processed-images/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../media/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
@@ -15,7 +16,7 @@ export interface ServiceData {
 }
 
 const streamMedia = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ): Promise<{
 	key: string;

@@ -3,6 +3,7 @@ import type collectionDocumentsSchema from "../../schemas/collection-documents.j
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	collectionKey: string;
@@ -10,10 +11,7 @@ export interface ServiceData {
 	languageId: number;
 }
 
-const getMultiple = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
+const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const collectionInstance = await collectionsServices.getSingleInstance({
 		key: data.collectionKey,
 	});

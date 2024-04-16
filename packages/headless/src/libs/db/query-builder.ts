@@ -1,4 +1,4 @@
-import type { RequestQueryParsedT } from "../../middleware/validate-query.js";
+import type { RequestQueryParsed } from "../../middleware/validate-query.js";
 import type {
 	SelectQueryBuilder,
 	ReferenceExpression,
@@ -7,11 +7,11 @@ import type {
 	OperandValueExpressionOrList,
 	UpdateQueryBuilder,
 } from "kysely";
-import type { CollectionFiltersResT } from "../../utils/field-helpers.js";
+import type { CollectionFiltersResponse } from "../../utils/field-helpers.js";
 import type { HeadlessDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
-	requestQuery: RequestQueryParsedT;
+	requestQuery: RequestQueryParsed;
 	meta: {
 		filters: {
 			queryKey: string; // e.g. "filter[status]" - the object key for the specific filter
@@ -22,7 +22,7 @@ export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 			queryKey: string;
 			tableKey: ReferenceExpression<DB, Table>;
 		}[];
-		collectionFilters?: CollectionFiltersResT[];
+		collectionFilters?: CollectionFiltersResponse[];
 	};
 }
 

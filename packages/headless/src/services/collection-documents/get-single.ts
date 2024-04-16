@@ -7,13 +7,14 @@ import collectionsServices from "../collections/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
 	query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
 }
 
-const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,

@@ -4,20 +4,21 @@ import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
 	getUniqueLanguageIDs,
-	type TranslationsObjT,
+	type TranslationsObj,
 } from "../../utils/translation-helpers.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData<K extends string> {
 	keys: Record<K, number | null>;
 	items: Array<{
-		translations: TranslationsObjT[];
+		translations: TranslationsObj[];
 		key: K;
 	}>;
 }
 
 const upsertMultiple = async <K extends string>(
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData<K>,
 ) => {
 	if (shouldUpdateTranslations(data.items.map((item) => item.translations))) {

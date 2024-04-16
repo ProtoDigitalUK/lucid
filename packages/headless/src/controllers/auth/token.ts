@@ -6,8 +6,9 @@ import {
 } from "../../utils/swagger-helpers.js";
 import auth from "../../services/auth/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const tokenController: ControllerT<
+const tokenController: RouteController<
 	typeof authSchema.token.params,
 	typeof authSchema.token.body,
 	typeof authSchema.token.query

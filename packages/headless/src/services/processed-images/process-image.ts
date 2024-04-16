@@ -7,6 +7,7 @@ import processedImageServices from "./index.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import mediaServices from "../media/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
@@ -15,7 +16,7 @@ export interface ServiceData {
 }
 
 const processImage = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ): Promise<{
 	key: string;

@@ -1,11 +1,11 @@
-import type { BrickResT, FieldResT } from "../../types/response.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
-import type { BrickBuilderT } from "../builders/brick-builder/index.js";
+import type { BrickResponse, FieldResponse } from "../../types/response.js";
+import type CollectionBuilder from "../builders/collection-builder/index.js";
+import type BrickBuilder from "../builders/brick-builder/index.js";
 import CollectionDocumentGroupsFormatter, {
 	type GroupPropT,
 } from "./collection-document-groups.js";
 import CollectionDocumentFieldsFormatter, {
-	type FieldPropT,
+	type FieldProp,
 } from "./collection-document-fields.js";
 
 interface BrickPropT {
@@ -15,17 +15,17 @@ interface BrickPropT {
 	brick_type: string;
 	collection_document_id: number;
 	groups: Array<GroupPropT>;
-	fields: Array<FieldPropT>;
+	fields: Array<FieldProp>;
 }
 
 export default class CollectionDocumentBricksFormatter {
 	formatMultiple = (props: {
 		bricks: BrickPropT[];
-		collection: CollectionBuilderT;
+		collection: CollectionBuilder;
 		host: string;
 	}): {
-		bricks: BrickResT[];
-		fields: FieldResT[] | null;
+		bricks: BrickResponse[];
+		fields: FieldResponse[] | null;
 	} => {
 		const bricks = props.bricks
 			.filter((brick) => {
@@ -40,7 +40,7 @@ export default class CollectionDocumentBricksFormatter {
 			.map((brick) => {
 				const builder = props.collection.brickInstances.find((b) => {
 					return b.key === brick.brick_key;
-				}) as BrickBuilderT;
+				}) as BrickBuilder;
 
 				return {
 					id: brick.id,

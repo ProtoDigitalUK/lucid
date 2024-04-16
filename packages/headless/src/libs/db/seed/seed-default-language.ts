@@ -4,8 +4,9 @@ import { HeadlessError } from "../../../utils/error-handler.js";
 import Formatter from "../../formatters/index.js";
 import Repository from "../../repositories/index.js";
 import type { BooleanInt } from "../types.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
-const seedDefaultLanguages = async (serviceConfig: ServiceConfigT) => {
+const seedDefaultLanguages = async (serviceConfig: ServiceConfig) => {
 	try {
 		const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 

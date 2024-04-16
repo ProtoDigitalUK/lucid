@@ -1,17 +1,17 @@
 import z from "zod";
 import FieldBuilder, {
-	type FieldTypesT,
-	type CustomFieldT,
+	type FieldTypes,
+	type CustomField,
 } from "../field-builder/index.js";
-import type { BrickBuilderT } from "../brick-builder/index.js";
+import type BrickBuilder from "../brick-builder/index.js";
 import type {
-	CollectionTextConfigT,
-	FieldCollectionConfigT,
-	CollectionNumberConfigT,
-	CollectionCheckboxConfigT,
-	CollectionSelectConfigT,
-	CollectionTextareaConfigT,
-	CollectionDateTimeConfigT,
+	CollectionTextConfig,
+	FieldCollectionConfig,
+	CollectionNumberConfig,
+	CollectionCheckboxConfig,
+	CollectionSelectConfig,
+	CollectionTextareaConfig,
+	CollectionDateTimeConfig,
 } from "./types.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
@@ -19,7 +19,7 @@ export default class CollectionBuilder extends FieldBuilder {
 	key: string;
 	config: CollectionConfigSchemaT;
 	includeFieldKeys: string[] = [];
-	filterableFieldKeys: FieldFiltersT = [];
+	filterableFieldKeys: FieldFilters = [];
 	constructor(key: string, config: CollectionConfigSchemaT) {
 		super();
 		this.key = key;
@@ -38,39 +38,39 @@ export default class CollectionBuilder extends FieldBuilder {
 	}
 	// ------------------------------------
 	// Builder Methods
-	addText(config: CollectionTextConfigT) {
+	addText(config: CollectionTextConfig) {
 		this.#fieldCollectionHelper(config.key, "text", config.collection);
 		super.addText(config);
 		return this;
 	}
-	addNumber(config: CollectionNumberConfigT) {
+	addNumber(config: CollectionNumberConfig) {
 		this.#fieldCollectionHelper(config.key, "number", config.collection);
 		super.addNumber(config);
 		return this;
 	}
-	addCheckbox(config: CollectionCheckboxConfigT) {
+	addCheckbox(config: CollectionCheckboxConfig) {
 		this.#fieldCollectionHelper(config.key, "checkbox", config.collection);
 		super.addCheckbox(config);
 		return this;
 	}
-	addSelect(config: CollectionSelectConfigT) {
+	addSelect(config: CollectionSelectConfig) {
 		this.#fieldCollectionHelper(config.key, "select", config.collection);
 		super.addSelect(config);
 		return this;
 	}
-	addTextarea(config: CollectionTextareaConfigT) {
+	addTextarea(config: CollectionTextareaConfig) {
 		this.#fieldCollectionHelper(config.key, "textarea", config.collection);
 		super.addTextarea(config);
 		return this;
 	}
-	addDateTime(config: CollectionDateTimeConfigT) {
+	addDateTime(config: CollectionDateTimeConfig) {
 		this.#fieldCollectionHelper(config.key, "datetime", config.collection);
 		super.addDateTime(config);
 		return this;
 	}
 	// ------------------------------------
 	// Private Methods
-	#removeDuplicateBricks = (bricks?: Array<BrickBuilderT>) => {
+	#removeDuplicateBricks = (bricks?: Array<BrickBuilder>) => {
 		if (!bricks) return undefined;
 
 		return bricks.filter(
@@ -80,8 +80,8 @@ export default class CollectionBuilder extends FieldBuilder {
 	};
 	#fieldCollectionHelper = (
 		key: string,
-		type: FieldTypesT,
-		config?: FieldCollectionConfigT,
+		type: FieldTypes,
+		config?: FieldCollectionConfig,
 	) => {
 		if (config?.list) this.includeFieldKeys.push(key);
 		if (config?.filterable)
@@ -128,7 +128,7 @@ export default class CollectionBuilder extends FieldBuilder {
 			})) ?? []
 		);
 	}
-	get brickInstances(): Array<BrickBuilderT> {
+	get brickInstances(): Array<BrickBuilder> {
 		return [
 			...(this.config.bricks?.builder || []),
 			...(this.config.bricks?.fixed || []),
@@ -163,8 +163,8 @@ interface CollectionConfigSchemaT
 	extends z.infer<typeof CollectionConfigSchema> {
 	hooks?: CollectionDocumentBuilderHooks[];
 	bricks?: {
-		fixed?: Array<BrickBuilderT>;
-		builder?: Array<BrickBuilderT>;
+		fixed?: Array<BrickBuilder>;
+		builder?: Array<BrickBuilder>;
 	};
 }
 
@@ -177,22 +177,20 @@ export type CollectionDataT = {
 	config: {
 		translations: boolean;
 		fields: {
-			filter: FieldFiltersT;
+			filter: FieldFilters;
 			include: string[];
 		};
 	};
 };
 
-export type FieldFiltersT = Array<{
+export type FieldFilters = Array<{
 	key: string;
-	type: FieldTypesT;
+	type: FieldTypes;
 }>;
 
 export interface CollectionBrickConfigT {
-	key: BrickBuilderT["key"];
-	title: BrickBuilderT["config"]["title"];
-	preview: BrickBuilderT["config"]["preview"];
-	fields: CustomFieldT[];
+	key: BrickBuilder["key"];
+	title: BrickBuilder["config"]["title"];
+	preview: BrickBuilder["config"]["preview"];
+	fields: CustomField[];
 }
-
-export type CollectionBuilderT = InstanceType<typeof CollectionBuilder>;

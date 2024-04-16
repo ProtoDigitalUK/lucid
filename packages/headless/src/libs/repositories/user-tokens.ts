@@ -1,4 +1,4 @@
-import type { HeadlessUserTokens, Select } from "../db/types.js";
+import type { HeadlessUserTokens, Select, KyselyDB } from "../db/types.js";
 import {
 	deleteQB,
 	selectQB,
@@ -6,7 +6,7 @@ import {
 } from "../db/query-builder.js";
 
 export default class UserTokensRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// selects

@@ -1,14 +1,6 @@
 import z from "zod";
-import {
-	FieldSchema,
-	type FieldSchemaT,
-	swaggerFieldObj,
-} from "./collection-fields.js";
-import {
-	GroupSchema,
-	type GroupSchemaT,
-	swaggerGroupObj,
-} from "./collection-groups.js";
+import { FieldSchema, swaggerFieldObj } from "./collection-fields.js";
+import { GroupSchema, swaggerGroupObj } from "./collection-groups.js";
 
 export const BrickSchema = z.object({
 	id: z.union([z.number(), z.string()]).optional(),
@@ -19,13 +11,13 @@ export const BrickSchema = z.object({
 	groups: z.array(GroupSchema).optional(),
 	fields: z.array(FieldSchema).optional(),
 });
-export interface BrickSchemaT {
+export interface BrickSchema {
 	id?: number | string;
 	key?: string;
 	order?: number;
 	type: "builder" | "fixed" | "collection-fields";
-	groups?: GroupSchemaT[];
-	fields?: FieldSchemaT[];
+	groups?: z.infer<typeof GroupSchema>[];
+	fields?: z.infer<typeof FieldSchema>[];
 }
 
 export const swaggerBodyBricksObj = {

@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import { HeadlessAPIError } from "../utils/error-handler.js";
-import type { PermissionT } from "../services/permissions.js";
+import type { Permission } from "../services/permissions.js";
 
 const throwPermissionError = () => {
 	throw new HeadlessAPIError({
@@ -15,7 +15,7 @@ const throwPermissionError = () => {
 };
 
 const permissions =
-	(permissions: PermissionT[]) => async (request: FastifyRequest) => {
+	(permissions: Permission[]) => async (request: FastifyRequest) => {
 		const payloadPermissions = request.auth.permissions;
 
 		if (request.auth.superAdmin) return;

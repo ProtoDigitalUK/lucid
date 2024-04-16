@@ -1,6 +1,6 @@
 import ISO6391 from "iso-639-1";
 import Formatter from "./index.js";
-import type { LanguageResT } from "../../types/response.js";
+import type { LanguageResponse } from "../../types/response.js";
 import type { HeadlessLanguages, Select } from "../db/types.js";
 
 export default class LanguagesFormatter {
@@ -15,7 +15,7 @@ export default class LanguagesFormatter {
 	};
 	formatSingle = (props: {
 		language: Select<HeadlessLanguages>;
-	}): LanguageResT => {
+	}): LanguageResponse => {
 		const iso6391Code = props.language.code.split("-")[0];
 
 		return {

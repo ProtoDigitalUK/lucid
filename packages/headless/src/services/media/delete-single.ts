@@ -4,13 +4,14 @@ import mediaServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import translationsServices from "../translations/index.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
 }
 
 const deleteSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({

@@ -7,8 +7,9 @@ import {
 import languages from "../../services/languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const deleteSingleController: ControllerT<
+const deleteSingleController: RouteController<
 	typeof languageSchema.deleteSingle.params,
 	typeof languageSchema.deleteSingle.body,
 	typeof languageSchema.deleteSingle.query

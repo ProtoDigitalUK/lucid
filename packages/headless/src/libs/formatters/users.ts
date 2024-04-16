@@ -1,5 +1,5 @@
 import type { BooleanInt } from "../db/types.js";
-import type { UserResT } from "../../types/response.js";
+import type { UserResponse } from "../../types/response.js";
 import UserPermissionsFormatter from "./user-permissions.js";
 import Formatter from "./index.js";
 
@@ -34,7 +34,7 @@ export default class UsersFormatter {
 	};
 	formatSingle = (props: {
 		user: UserPropT;
-	}): UserResT => {
+	}): UserResponse => {
 		const { roles, permissions } =
 			new UserPermissionsFormatter().formatMultiple({
 				roles: props.user.roles || [],

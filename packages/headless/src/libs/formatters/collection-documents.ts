@@ -1,12 +1,12 @@
 import type {
-	BrickResT,
-	FieldResT,
-	CollectionDocumentResT,
+	BrickResponse,
+	FieldResponse,
+	CollectionDocumentResponse,
 } from "../../types/response.js";
 import CollectionDocumentFieldsFormatter, {
-	type FieldPropT,
+	type FieldProp,
 } from "./collection-document-fields.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
+import type CollectionBuilder from "../builders/collection-builder/index.js";
 import Formatter from "./index.js";
 import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
 
@@ -21,13 +21,13 @@ interface DocumentPropT {
 	author_first_name: string | null;
 	author_last_name: string | null;
 	author_username: string | null;
-	fields?: FieldPropT[];
+	fields?: FieldProp[];
 }
 
 export default class CollectionDocumentsFormatter {
 	formatMultiple = (props: {
 		documents: DocumentPropT[];
-		collection: CollectionBuilderT;
+		collection: CollectionBuilder;
 		host: string;
 	}) => {
 		return props.documents.map((d) =>
@@ -40,12 +40,12 @@ export default class CollectionDocumentsFormatter {
 	};
 	formatSingle = (props: {
 		document: DocumentPropT;
-		collection: CollectionBuilderT;
-		bricks?: BrickResT[];
-		fields?: FieldResT[] | null;
+		collection: CollectionBuilder;
+		bricks?: BrickResponse[];
+		fields?: FieldResponse[] | null;
 		host: string;
-	}): CollectionDocumentResT => {
-		let fields: FieldResT[] | null = null;
+	}): CollectionDocumentResponse => {
+		let fields: FieldResponse[] | null = null;
 		if (props.fields) {
 			fields = props.fields;
 		} else if (props.document.fields) {
@@ -56,7 +56,7 @@ export default class CollectionDocumentsFormatter {
 			});
 		}
 
-		const res: CollectionDocumentResT = {
+		const res: CollectionDocumentResponse = {
 			id: props.document.id,
 			collectionKey: props.document.collection_key,
 			bricks: props.bricks || [],

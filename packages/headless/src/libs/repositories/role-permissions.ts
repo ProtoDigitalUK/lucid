@@ -1,15 +1,16 @@
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
-import type { PermissionT } from "../../services/permissions.js";
+import type { Permission } from "../../services/permissions.js";
+import type { KyselyDB } from "../db/types.js";
 
 export default class RolePermissionsRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// create
 	createMultiple = async (props: {
 		items: Array<{
 			roleId: number;
-			permission: PermissionT;
+			permission: Permission;
 		}>;
 	}) => {
 		return this.db

@@ -1,4 +1,4 @@
-import type { HeadlessOptions, Select } from "../db/types.js";
+import type { HeadlessOptions, Select, KyselyDB } from "../db/types.js";
 import {
 	selectQB,
 	updateQB,
@@ -6,7 +6,7 @@ import {
 } from "../db/query-builder.js";
 
 export default class OptionsRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// select

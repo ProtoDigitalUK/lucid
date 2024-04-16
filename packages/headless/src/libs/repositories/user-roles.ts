@@ -1,7 +1,8 @@
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
+import type { KyselyDB } from "../db/types.js";
 
 export default class UserRolesRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// create

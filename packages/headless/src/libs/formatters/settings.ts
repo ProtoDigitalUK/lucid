@@ -1,4 +1,4 @@
-import type { SettingsResT } from "../../types/response.js";
+import type { SettingsResponse } from "../../types/response.js";
 import type { Config } from "../../types/config.js";
 
 interface SettingsPropsT {
@@ -10,7 +10,7 @@ export default class SettingsFormatter {
 	formatSingle = (props: {
 		settings: SettingsPropsT;
 		config: Config;
-	}): SettingsResT => {
+	}): SettingsResponse => {
 		return {
 			email: {
 				enabled: props.config.email !== undefined,

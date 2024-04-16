@@ -1,16 +1,14 @@
 import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	documentId: number;
 	collectionKey: string;
 }
 
-const getMultiple = async (
-	serviceConfig: ServiceConfigT,
-	data: ServiceData,
-) => {
+const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const CollectionDocumentBricksRepo = Repository.get(
 		"collection-document-bricks",
 		serviceConfig.db,

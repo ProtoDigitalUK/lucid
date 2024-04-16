@@ -5,13 +5,14 @@ import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	email: string;
 }
 
 const sendResetPassword = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);

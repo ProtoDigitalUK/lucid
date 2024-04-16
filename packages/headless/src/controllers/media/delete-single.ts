@@ -7,8 +7,9 @@ import {
 import serviceWrapper from "../../utils/service-wrapper.js";
 import mediaServices from "../../services/media/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const deleteSingleController: ControllerT<
+const deleteSingleController: RouteController<
 	typeof mediaSchema.deleteSingle.params,
 	typeof mediaSchema.deleteSingle.body,
 	typeof mediaSchema.deleteSingle.query

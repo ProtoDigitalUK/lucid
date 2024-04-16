@@ -1,8 +1,9 @@
 import cdnSchema from "../../schemas/cdn.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import cdnServices from "../../services/cdn/index.js";
+import type { RouteController } from "../../types/types.js";
 
-const streamSingleController: ControllerT<
+const streamSingleController: RouteController<
 	typeof cdnSchema.streamSingle.params,
 	typeof cdnSchema.streamSingle.body,
 	typeof cdnSchema.streamSingle.query

@@ -1,5 +1,5 @@
 import type z from "zod";
-import type { HeadlessEmails, Select } from "../db/types.js";
+import type { HeadlessEmails, Select, KyselyDB } from "../db/types.js";
 import type { Config } from "../../types/config.js";
 import { sql } from "kysely";
 import queryBuilder, {
@@ -11,7 +11,7 @@ import queryBuilder, {
 import type emailsSchema from "../../schemas/email.js";
 
 export default class EmailsRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// selects

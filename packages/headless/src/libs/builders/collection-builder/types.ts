@@ -1,32 +1,32 @@
 import type {
-	TextConfigT,
-	NumberConfigT,
-	CheckboxConfigT,
-	SelectConfigT,
-	TextareaConfigT,
-	DateTimeConfigT,
+	TextConfig,
+	NumberConfig,
+	CheckboxConfig,
+	SelectConfig,
+	TextareaConfig,
+	DateTimeConfig,
 } from "../field-builder/index.js";
 
-export interface FieldCollectionConfigT {
+export interface FieldCollectionConfig {
 	list?: true;
 	filterable?: true;
 }
 
-export interface CollectionTextConfigT extends TextConfigT {
-	collection?: FieldCollectionConfigT;
+export interface CollectionTextConfig extends TextConfig {
+	collection?: FieldCollectionConfig;
 }
-export interface CollectionNumberConfigT extends NumberConfigT {
-	collection?: FieldCollectionConfigT;
+export interface CollectionNumberConfig extends NumberConfig {
+	collection?: FieldCollectionConfig;
 }
-export interface CollectionCheckboxConfigT extends CheckboxConfigT {
-	collection?: FieldCollectionConfigT;
+export interface CollectionCheckboxConfig extends CheckboxConfig {
+	collection?: FieldCollectionConfig;
 }
-export interface CollectionSelectConfigT extends SelectConfigT {
-	collection?: FieldCollectionConfigT;
+export interface CollectionSelectConfig extends SelectConfig {
+	collection?: FieldCollectionConfig;
 }
-export interface CollectionTextareaConfigT extends TextareaConfigT {
-	collection?: FieldCollectionConfigT;
+export interface CollectionTextareaConfig extends TextareaConfig {
+	collection?: FieldCollectionConfig;
 }
-export interface CollectionDateTimeConfigT extends DateTimeConfigT {
-	collection?: FieldCollectionConfigT;
+export interface CollectionDateTimeConfig extends DateTimeConfig {
+	collection?: FieldCollectionConfig;
 }

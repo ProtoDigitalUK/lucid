@@ -3,6 +3,7 @@ import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	code: string;
@@ -11,7 +12,7 @@ export interface ServiceData {
 }
 
 const createSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	// If is default, it has to be enabled

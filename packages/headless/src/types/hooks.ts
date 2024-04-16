@@ -1,5 +1,5 @@
-import type { BrickSchemaT } from "../schemas/collection-bricks.js";
-import type { FieldCollectionSchemaT } from "../schemas/collection-fields.js";
+import type { BrickSchema } from "../schemas/collection-bricks.js";
+import type { FieldCollectionSchema } from "../schemas/collection-fields.js";
 
 // --------------------------------------------------
 // types
@@ -36,14 +36,14 @@ export type HookServiceHandlers = {
 			};
 			data: {
 				documentId?: number;
-				bricks?: Array<BrickSchemaT>;
-				fields?: Array<FieldCollectionSchemaT>;
+				bricks?: Array<BrickSchema>;
+				fields?: Array<FieldCollectionSchema>;
 			};
 		}) =>
 			| Promise<{
 					documentId?: number;
-					bricks?: Array<BrickSchemaT>;
-					fields?: Array<FieldCollectionSchemaT>;
+					bricks?: Array<BrickSchema>;
+					fields?: Array<FieldCollectionSchema>;
 			  }>
 			| Promise<void>;
 		afterUpsert: (props: {
@@ -53,8 +53,8 @@ export type HookServiceHandlers = {
 			};
 			data: {
 				documentId?: number;
-				bricks?: Array<BrickSchemaT>;
-				fields?: Array<FieldCollectionSchemaT>;
+				bricks?: Array<BrickSchema>;
+				fields?: Array<FieldCollectionSchema>;
 			};
 		}) => Promise<void>;
 		beforeDelete: (props: {

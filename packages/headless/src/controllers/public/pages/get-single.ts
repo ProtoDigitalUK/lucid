@@ -3,8 +3,9 @@ import {
 	swaggerResponse,
 	swaggerQueryString,
 } from "../../../utils/swagger-helpers.js";
+import type { RouteController } from "../../../types/types.js";
 
-const getSingleController: ControllerT<
+const getSingleController: RouteController<
 	typeof publicPagesSchema.getSingle.params,
 	typeof publicPagesSchema.getSingle.body,
 	typeof publicPagesSchema.getSingle.query

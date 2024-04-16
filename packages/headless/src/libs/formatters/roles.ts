@@ -1,5 +1,5 @@
-import type { PermissionT } from "../../services/permissions.js";
-import type { RoleResT } from "../../types/response.js";
+import type { Permission } from "../../services/permissions.js";
+import type { RoleResponse } from "../../types/response.js";
 import Formatter from "./index.js";
 
 interface RolePropsT {
@@ -27,7 +27,7 @@ export default class RolesFormatter {
 	};
 	formatSingle = (props: {
 		role: RolePropsT;
-	}): RoleResT => {
+	}): RoleResponse => {
 		return {
 			id: props.role.id,
 			name: props.role.name,
@@ -35,7 +35,7 @@ export default class RolesFormatter {
 			permissions: props.role.permissions?.map((p) => {
 				return {
 					id: p.id,
-					permission: p.permission as PermissionT,
+					permission: p.permission as Permission,
 				};
 			}),
 			createdAt: Formatter.formatDate(props.role.created_at),

@@ -2,6 +2,7 @@ import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
@@ -12,7 +13,7 @@ export interface ServiceData {
 	};
 }
 
-const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const collection = serviceConfig.config.collections?.find(
 		(c) => c.key === data.key,
 	);

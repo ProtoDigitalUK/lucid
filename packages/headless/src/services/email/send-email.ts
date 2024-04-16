@@ -4,6 +4,7 @@ import { getEmailHash } from "../../utils/helpers.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	type: "internal" | "external";
@@ -16,7 +17,7 @@ export interface ServiceData {
 	data: Record<string, unknown>;
 }
 
-const sendEmail = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const sendEmail = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const EmailsRepo = Repository.get("emails", serviceConfig.db);
 	const EmailsFormatter = Formatter.get("emails");
 

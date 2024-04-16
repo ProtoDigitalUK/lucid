@@ -1,13 +1,14 @@
 import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	tokenType: "password_reset";
 	token: string;
 }
 
-const getSingle = async (serviceConfig: ServiceConfigT, data: ServiceData) => {
+const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const UserTokensRepo = Repository.get("user-tokens", serviceConfig.db);
 
 	const userToken = await UserTokensRepo.selectSingle({

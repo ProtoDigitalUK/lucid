@@ -1,6 +1,6 @@
-import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData<K extends string> {
 	keys: K[];
@@ -12,7 +12,7 @@ export interface ServiceData<K extends string> {
 }
 
 const createMultiple = async <K extends string>(
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData<K>,
 ) => {
 	if (data.keys.length === 0) {

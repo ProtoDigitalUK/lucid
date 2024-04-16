@@ -1,6 +1,7 @@
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import optionsServices from "../../options/index.js";
 import mediaServices from "../index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	key: string;
@@ -8,7 +9,7 @@ export interface ServiceData {
 }
 
 const deleteObject = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({

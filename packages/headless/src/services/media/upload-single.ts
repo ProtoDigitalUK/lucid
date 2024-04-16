@@ -1,4 +1,3 @@
-import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import languagesServices from "../languages/index.js";
@@ -11,6 +10,7 @@ import {
 } from "../../utils/translation-helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	fileData: MultipartFile | undefined;
@@ -26,7 +26,7 @@ export interface ServiceData {
 }
 
 const uploadSingle = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	let objectStored = false;

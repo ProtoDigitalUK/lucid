@@ -2,6 +2,7 @@ import type z from "zod";
 import type cdnSchema from "../../schemas/cdn.js";
 import sharp from "sharp";
 import mime from "mime-types";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	buffer: Buffer;
@@ -22,7 +23,7 @@ export interface ProcessImageSuccessRes {
 }
 
 const optimiseImage = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ): Promise<ProcessImageSuccessRes> => {
 	try {

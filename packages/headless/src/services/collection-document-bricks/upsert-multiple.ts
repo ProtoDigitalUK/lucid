@@ -1,20 +1,21 @@
 import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
-import type { BrickSchemaT } from "../../schemas/collection-bricks.js";
-import type { FieldCollectionSchemaT } from "../../schemas/collection-fields.js";
+import type { BrickSchema } from "../../schemas/collection-bricks.js";
+import type { FieldCollectionSchema } from "../../schemas/collection-fields.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	documentId: number;
-	bricks?: Array<BrickSchemaT>;
-	fields?: Array<FieldCollectionSchemaT>;
+	bricks?: Array<BrickSchema>;
+	fields?: Array<FieldCollectionSchema>;
 	collectionKey: string;
 }
 
 const upsertMultiple = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const CollectionDocumentBricksRepo = Repository.get(
@@ -91,18 +92,18 @@ const upsertMultiple = async (
 	]);
 };
 
-const upsertCollectionSudoBrick = (fields?: Array<FieldCollectionSchemaT>) => {
+const upsertCollectionSudoBrick = (fields?: Array<FieldCollectionSchema>) => {
 	// TODO: update to support groups
 	if (fields === undefined) return false;
 	return true;
 };
 
 const addCollectionSudoBrick = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	data: {
-		fields?: Array<FieldCollectionSchemaT>;
+		fields?: Array<FieldCollectionSchema>;
 		document_id: number;
-		bricks: Array<BrickSchemaT>;
+		bricks: Array<BrickSchema>;
 	},
 ) => {
 	if (!upsertCollectionSudoBrick(data.fields)) return data.bricks;
@@ -147,7 +148,7 @@ const addCollectionSudoBrick = async (
 };
 
 const assignBrickIdsFromUpsert = (
-	bricks: Array<BrickSchemaT>,
+	bricks: Array<BrickSchema>,
 	upsertedBricks: Array<{
 		id: number;
 		brick_type: "builder" | "fixed" | "collection-fields";

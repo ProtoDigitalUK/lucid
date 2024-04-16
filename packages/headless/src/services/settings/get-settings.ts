@@ -2,11 +2,12 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import optionsServices from "../../services/options/index.js";
 import processedImagesServices from "../../services/processed-images/index.js";
 import Formatter from "../../libs/formatters/index.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 // export interface ServiceData {}
 
 const getSettings = async (
-	serviceConfig: ServiceConfigT,
+	serviceConfig: ServiceConfig,
 	// data: ServiceData,
 ) => {
 	const [mediaStorageUsed, processedImageCount] = await Promise.all([

@@ -4,8 +4,9 @@ import constants from "../../../constants.js";
 import { HeadlessError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 import Formatter from "../../formatters/index.js";
+import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
-const seedDefaultUser = async (serviceConfig: ServiceConfigT) => {
+const seedDefaultUser = async (serviceConfig: ServiceConfig) => {
 	try {
 		const UsersRepo = Repository.get("users", serviceConfig.db);
 

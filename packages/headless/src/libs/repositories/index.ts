@@ -1,5 +1,6 @@
 import T from "../../translations/index.js";
 import { HeadlessError } from "../../utils/error-handler.js";
+import type { KyselyDB } from "../db/types.js";
 // Repositories
 import UserTokensRepo from "./user-tokens.js";
 import CollectionDocumentBricksRepo from "./collection-document-bricks.js";
@@ -22,7 +23,7 @@ import UsersRepo from "./users.js";
 class Repository {
 	static get<T extends keyof RepositoryClassMap>(
 		repository: T,
-		db: DB,
+		db: KyselyDB,
 	): RepositoryReturnType<T> {
 		switch (repository) {
 			case "user-tokens":

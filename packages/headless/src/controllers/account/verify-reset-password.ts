@@ -4,8 +4,9 @@ import { swaggerResponse } from "../../utils/swagger-helpers.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import userTokens from "../../services/user-tokens/index.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const verifyResetPasswordController: ControllerT<
+const verifyResetPasswordController: RouteController<
 	typeof accountSchema.verifyResetPassword.params,
 	typeof accountSchema.verifyResetPassword.body,
 	typeof accountSchema.verifyResetPassword.query

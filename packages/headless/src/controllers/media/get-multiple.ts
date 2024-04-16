@@ -10,8 +10,9 @@ import mediaServices from "../../services/media/index.js";
 import buildResponse from "../../utils/build-response.js";
 import MediaFormatter from "../../libs/formatters/media.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const getMultipleController: ControllerT<
+const getMultipleController: RouteController<
 	typeof mediaSchema.getMultiple.params,
 	typeof mediaSchema.getMultiple.body,
 	typeof mediaSchema.getMultiple.query

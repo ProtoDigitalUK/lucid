@@ -1,5 +1,5 @@
 import Formatter from "./index.js";
-import type { EmailResT } from "../../types/response.js";
+import type { EmailResponse } from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
 
 interface EmailPropT {
@@ -36,7 +36,7 @@ export default class EmailsFormatter {
 	formatSingle = (props: {
 		email: EmailPropT;
 		html?: string;
-	}): EmailResT => {
+	}): EmailResponse => {
 		return {
 			id: props.email.id,
 			emailHash: props.email.email_hash,

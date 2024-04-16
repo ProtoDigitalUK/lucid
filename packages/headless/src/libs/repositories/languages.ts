@@ -1,7 +1,12 @@
 import type z from "zod";
 import { sql } from "kysely";
 import type languagesSchema from "../../schemas/languages.js";
-import type { HeadlessLanguages, Select, BooleanInt } from "../db/types.js";
+import type {
+	HeadlessLanguages,
+	Select,
+	BooleanInt,
+	KyselyDB,
+} from "../db/types.js";
 import queryBuilder, {
 	deleteQB,
 	selectQB,
@@ -10,7 +15,7 @@ import queryBuilder, {
 } from "../db/query-builder.js";
 
 export default class LanguagesRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	count = async () => {
 		return this.db

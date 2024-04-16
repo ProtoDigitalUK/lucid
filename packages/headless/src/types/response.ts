@@ -1,12 +1,12 @@
-import type { PermissionT } from "../services/permissions.js";
+import type { Permission } from "../services/permissions.js";
 import type { BooleanInt } from "../libs/db/types.js";
 import type {
-	CustomFieldT,
-	FieldTypesT,
+	CustomField,
+	FieldTypes,
 } from "../libs/builders/field-builder/types.js";
 import type { CollectionBrickConfigT } from "../libs/builders/collection-builder/index.js";
 
-export interface UserResT {
+export interface UserResponse {
 	id: number;
 	superAdmin?: BooleanInt;
 	email: string;
@@ -14,22 +14,22 @@ export interface UserResT {
 	firstName: string | null;
 	lastName: string | null;
 
-	roles?: UserPermissionsResT["roles"];
-	permissions?: UserPermissionsResT["permissions"];
+	roles?: UserPermissionsResponse["roles"];
+	permissions?: UserPermissionsResponse["permissions"];
 
 	createdAt: string | null;
 	updatedAt?: string | null;
 }
 
-export interface UserPermissionsResT {
+export interface UserPermissionsResponse {
 	roles: Array<{
 		id: number;
 		name: string;
 	}>;
-	permissions: PermissionT[];
+	permissions: Permission[];
 }
 
-export interface SettingsResT {
+export interface SettingsResponse {
 	email: {
 		enabled: boolean;
 		from: {
@@ -52,30 +52,30 @@ export interface SettingsResT {
 	};
 }
 
-export interface RoleResT {
+export interface RoleResponse {
 	id: number;
 	name: string;
 	description: string | null;
 
 	permissions?: {
 		id: number;
-		permission: PermissionT;
+		permission: Permission;
 	}[];
 
 	createdAt: string | null;
 	updatedAt: string | null;
 }
 
-export type OptionNameT = "media_storage_used";
+export type OptionName = "media_storage_used";
 
-export interface OptionsResT {
-	name: OptionNameT;
+export interface OptionsResponse {
+	name: OptionName;
 	valueText: string | null;
 	valueInt: number | null;
 	valueBool: BooleanInt | null;
 }
 
-export type MediaTypeT =
+export type MediaType =
 	| "image"
 	| "video"
 	| "audio"
@@ -83,7 +83,7 @@ export type MediaTypeT =
 	| "archive"
 	| "unknown";
 
-export interface MediaResT {
+export interface MediaResponse {
 	id: number;
 	key: string;
 	url: string;
@@ -95,7 +95,7 @@ export interface MediaResT {
 		languageId: number | null;
 		value: string | null;
 	}[];
-	type: MediaTypeT;
+	type: MediaType;
 	meta: {
 		mimeType: string;
 		fileExtension: string;
@@ -107,7 +107,7 @@ export interface MediaResT {
 	updatedAt: string | null;
 }
 
-export interface LanguageResT {
+export interface LanguageResponse {
 	id: number;
 	code: string;
 	name: string | null;
@@ -118,7 +118,7 @@ export interface LanguageResT {
 	updatedAt: string | null;
 }
 
-export interface EmailResT {
+export interface EmailResponse {
 	id: number;
 	mailDetails: {
 		from: {
@@ -145,7 +145,7 @@ export interface EmailResT {
 	lastAttemptAt: string | null;
 }
 
-export interface CollectionResT {
+export interface CollectionResponse {
 	key: string;
 	mode: "single" | "multiple";
 	title: string;
@@ -155,63 +155,63 @@ export interface CollectionResT {
 	translations: boolean;
 	fixedBricks: Array<CollectionBrickConfigT>;
 	builderBricks: Array<CollectionBrickConfigT>;
-	fields: Array<CustomFieldT>;
+	fields: Array<CustomField>;
 }
 
-export interface BrickResT {
+export interface BrickResponse {
 	id: number;
 	key: string;
 	order: number;
 	type: "builder" | "fixed";
-	groups: Array<GroupResT>;
-	fields: Array<FieldResT>;
+	groups: Array<GroupResponse>;
+	fields: Array<FieldResponse>;
 }
 
-export interface FieldResT {
+export interface FieldResponse {
 	fieldsId: number;
 	key: string;
-	type: FieldTypesT;
+	type: FieldTypes;
 	groupId?: number | null;
-	value?: FieldResValueT;
-	meta?: FieldResMetaT;
+	value?: FieldResponseValue;
+	meta?: FieldResponseMeta;
 	languageId: number;
 }
 
-export type FieldResValueT =
+export type FieldResponseValue =
 	| string
 	| number
 	| boolean
 	| null
 	| undefined
 	| Record<string, unknown>
-	| LinkValueT
-	| MediaValueT
-	| PageLinkValueT;
+	| LinkValue
+	| MediaValue
+	| PageLinkValue;
 
-export type FieldResMetaT = null | undefined | MediaMetaT | PageLinkMetaT;
+export type FieldResponseMeta = null | undefined | MediaMeta | PageLinkMeta;
 
-export interface PageLinkValueT {
+export interface PageLinkValue {
 	id: number | null;
 	target?: string | null;
 	label?: string | null;
 }
 
-export interface PageLinkMetaT {
+export interface PageLinkMeta {
 	titleTranslations?: Array<{
 		value: string | null;
 		languageId: number | null;
 	}>;
 }
 
-export interface LinkValueT {
+export interface LinkValue {
 	url: string | null;
 	target?: string | null;
 	label?: string | null;
 }
 
-export type MediaValueT = number;
+export type MediaValue = number;
 
-export interface MediaMetaT {
+export interface MediaMeta {
 	id?: number;
 	url?: string;
 	key?: string;
@@ -228,10 +228,10 @@ export interface MediaMetaT {
 		value: string | null;
 		languageId: number | null;
 	}>;
-	type?: MediaTypeT;
+	type?: MediaType;
 }
 
-export interface GroupResT {
+export interface GroupResponse {
 	groupId: number;
 	groupOrder: number;
 	parentGroupId: number | null;
@@ -239,7 +239,7 @@ export interface GroupResT {
 	languageId: number;
 }
 
-export interface CollectionDocumentResT {
+export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;
 
@@ -255,6 +255,30 @@ export interface CollectionDocumentResT {
 		username: string | null;
 	} | null;
 
-	bricks?: Array<BrickResT> | null;
-	fields?: Array<FieldResT> | null;
+	bricks?: Array<BrickResponse> | null;
+	fields?: Array<FieldResponse> | null;
+}
+
+export interface ResponseBody {
+	data: unknown;
+	links?: {
+		first: string | null;
+		last: string | null;
+		next: string | null;
+		prev: string | null;
+	};
+	meta: {
+		links?: Array<{
+			active: boolean;
+			label: string;
+			url: string | null;
+			page: number;
+		}>;
+		path: string;
+
+		currentPage?: number | null;
+		lastPage?: number | null;
+		perPage?: number | null;
+		total?: number | null;
+	};
 }

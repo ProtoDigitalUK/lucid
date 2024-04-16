@@ -1,11 +1,11 @@
-import type { FieldResT } from "../../types/response.js";
+import type { FieldResponse } from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
-import type { CollectionBuilderT } from "../builders/collection-builder/index.js";
-import type { BrickBuilderT } from "../builders/brick-builder/index.js";
-import type { FieldTypesT } from "../builders/field-builder/index.js";
+import type CollectionBuilder from "../builders/collection-builder/index.js";
+import type BrickBuilder from "../builders/brick-builder/index.js";
+import type { FieldTypes } from "../builders/field-builder/index.js";
 import { fieldResponseValueFormat } from "../../utils/field-helpers.js";
 
-export interface FieldPropT {
+export interface FieldProp {
 	fields_id: number;
 	collection_brick_id: number | null;
 	collection_document_id: number;
@@ -39,12 +39,12 @@ export interface FieldPropT {
 
 export default class CollectionDocumentFieldsFormatter {
 	formatMultiple = (props: {
-		fields: FieldPropT[];
+		fields: FieldProp[];
 		host: string;
-		builder: BrickBuilderT | CollectionBuilderT;
-	}): FieldResT[] => {
+		builder: BrickBuilder | CollectionBuilder;
+	}): FieldResponse[] => {
 		if (props.fields.length === 0) return [];
-		const fieldsRes: FieldResT[] = [];
+		const fieldsRes: FieldResponse[] = [];
 
 		const instanceFields = props.builder?.flatFields;
 		if (!instanceFields) return fieldsRes;
@@ -66,10 +66,10 @@ export default class CollectionDocumentFieldsFormatter {
 				if (field.type === "repeater") continue;
 
 				if (field) {
-					const fieldsData: FieldResT = {
+					const fieldsData: FieldResponse = {
 						fieldsId: field.fields_id,
 						key: field.key,
-						type: field.type as FieldTypesT,
+						type: field.type as FieldTypes,
 						languageId: field.language_id,
 					};
 					if (field.group_id) fieldsData.groupId = field.group_id;

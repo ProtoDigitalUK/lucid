@@ -1,5 +1,10 @@
 import type z from "zod";
-import type { BooleanInt, HeadlessMedia, Select } from "../db/types.js";
+import type {
+	BooleanInt,
+	HeadlessMedia,
+	Select,
+	KyselyDB,
+} from "../db/types.js";
 import { sql } from "kysely";
 import type mediaSchema from "../../schemas/media.js";
 import type { Config } from "../../types/config.js";
@@ -11,7 +16,7 @@ import queryBuilder, {
 } from "../db/query-builder.js";
 
 export default class MediaRepo {
-	constructor(private db: DB) {}
+	constructor(private db: KyselyDB) {}
 
 	// ----------------------------------------
 	// select

@@ -12,6 +12,7 @@ import serviceWrapper from "../../utils/service-wrapper.js";
 import headlessLogger from "../logging/index.js";
 import type { AdapterType, HeadlessDB } from "./types.js";
 import type { Config } from "../../types/config.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 // Seeds
 import seedDefaultOptions from "./seed/seed-default-options.js";
 import seedDefaultUser from "./seed/seed-default-user.js";
@@ -70,7 +71,7 @@ export default class DatabaseAdapter {
 		}
 	}
 	async seed(config: Config) {
-		const seedData = async (serviceConfig: ServiceConfigT) => {
+		const seedData = async (serviceConfig: ServiceConfig) => {
 			await Promise.allSettled([
 				seedDefaultOptions(serviceConfig),
 				seedDefaultUser(serviceConfig),
@@ -125,5 +126,3 @@ export default class DatabaseAdapter {
 		});
 	}
 }
-
-export type DatabaseAdapterT = InstanceType<typeof DatabaseAdapter>;

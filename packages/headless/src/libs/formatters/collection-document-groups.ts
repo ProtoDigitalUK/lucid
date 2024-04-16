@@ -1,4 +1,4 @@
-import type { GroupResT } from "../../types/response.js";
+import type { GroupResponse } from "../../types/response.js";
 
 export interface GroupPropT {
 	group_id: number;
@@ -23,7 +23,7 @@ export default class CollectionDocumentGroupsFormatter {
 	};
 	formatSingle = (props: {
 		group: GroupPropT;
-	}): GroupResT => {
+	}): GroupResponse => {
 		return {
 			groupId: props.group.group_id,
 			groupOrder: props.group.group_order,

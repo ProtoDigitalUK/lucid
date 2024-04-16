@@ -7,8 +7,9 @@ import {
 import rolesServices from "../../services/roles/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const updateSingleController: ControllerT<
+const updateSingleController: RouteController<
 	typeof rolesSchema.updateSingle.params,
 	typeof rolesSchema.updateSingle.body,
 	typeof rolesSchema.updateSingle.query

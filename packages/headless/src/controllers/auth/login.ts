@@ -7,8 +7,9 @@ import {
 import auth from "../../services/auth/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
+import type { RouteController } from "../../types/types.js";
 
-const loginController: ControllerT<
+const loginController: RouteController<
 	typeof authSchema.login.params,
 	typeof authSchema.login.body,
 	typeof authSchema.login.query
