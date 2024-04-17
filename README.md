@@ -27,19 +27,18 @@ npm install @protoheadless/headless
 ## headless.config.ts/js
 
 ```ts
-import { headlessConfig, LibsqlAdapter } from "@protoheadless/headless";
-
-import NodemailerPlugin from "@protoheadless/plugin-nodemailer";
-import LocalStoragePlugin from "@protoheadless/plugin-local-storage";
-import FormsPlugin from "@protoheadless/plugin-forms";
-import CookieConsentPlugin from "@protoheadless/plugin-cookie-consent";
-
+import headless, { LibsqlAdapter } from "@protoheadless/headless";
+// Plugins
+import HeadlessNodemailer from "@protoheadless/plugin-nodemailer";
+import HeadlessS3 from "@protoheadless/plugin-s3";
+import HeadlessLocalStorage from "@protoheadless/plugin-local-storage";
+// Collections
 import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
 import SettingsCollection from "./src/headless/collections/settings.js";
 import FormsCollection from "./src/headless/collections/forms.js";
 
-export default headlessConfig({
+export default headless.config({
   host: "http://localhost:8393",
   db: new LibsqlAdapter({
     url: "libsql://localhost:8080?tls=0",
@@ -49,6 +48,13 @@ export default headlessConfig({
     refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
     accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
   },
+  hooks: [
+    {
+      service: "collection-documents",
+      event: "beforeUpsert",
+      handler: async (props) => {},
+    },
+  ],
   collections: [
     PageCollection,
     BlogCollection,
@@ -56,16 +62,16 @@ export default headlessConfig({
     FormsCollection,
   ],
   plugins: [
-    NodemailerPlugin({
+    HeadlessNodemailer({
       from: {
         email: "admin@protoheadless.com",
         name: "Protoheadless",
       },
       transporter: transporter,
     }),
-    LocalStoragePlugin({}),
-    FormsPlugin,
-    CookieConsentPlugin,
+    HeadlessLocalStorage({
+      uploadDir: "uploads",
+    }),
   ],
 });
 ```
