@@ -21,7 +21,7 @@ import serviceWrapper from "./utils/service-wrapper.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const headless = async (fastify: FastifyInstance) => {
+const headlessPlugin = async (fastify: FastifyInstance) => {
 	try {
 		const config = await getConfig();
 
@@ -151,7 +151,7 @@ const headless = async (fastify: FastifyInstance) => {
 	}
 };
 
-export default fp(headless, {
+export default fp(headlessPlugin, {
 	name: "headless",
 	fastify: "4.x",
 });

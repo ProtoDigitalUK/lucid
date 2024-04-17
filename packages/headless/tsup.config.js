@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-	entry: ["src/index.ts", "src/types.ts"],
+	entry: ["src/index.ts", "src/types.ts", "src/server.ts"],
 	dts: true,
 	format: "esm",
 	shims: false,

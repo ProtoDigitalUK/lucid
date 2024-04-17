@@ -1,8 +1,4 @@
-import {
-	headlessConfig,
-	SQLLiteAdapter,
-	CollectionBuilder,
-} from "../../../index.js";
+import headless, { SQLLiteAdapter, CollectionBuilder } from "../../../index.js";
 import Database from "better-sqlite3";
 
 const collection = new CollectionBuilder("page", {
@@ -17,7 +13,7 @@ const collection = new CollectionBuilder("page", {
 		key: "title",
 	});
 
-export default headlessConfig({
+export default headless.config({
 	mode: "development",
 	host: "http://localhost:8393",
 	db: new SQLLiteAdapter({

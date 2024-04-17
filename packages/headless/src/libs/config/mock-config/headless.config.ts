@@ -1,7 +1,7 @@
-import { headlessConfig, SQLLiteAdapter } from "../../../index.js";
+import headless, { SQLLiteAdapter } from "../../../index.js";
 import Database from "better-sqlite3";
 
-export default headlessConfig({
+export default headless.config({
 	mode: "development",
 	host: "http://localhost:8393",
 	db: new SQLLiteAdapter({

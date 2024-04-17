@@ -1,5 +1,4 @@
-import {
-	headlessConfig,
+import headless, {
 	// LibSQLAdapter,
 	SQLLiteAdapter,
 	// PostgresAdapter,
@@ -16,7 +15,7 @@ import BlogCollection from "./src/headless/collections/blogs.js";
 import SettingsCollection from "./src/headless/collections/settings.js";
 import FormsCollection from "./src/headless/collections/forms.js";
 
-export default headlessConfig({
+export default headless.config({
 	mode: "development",
 	host: "http://localhost:8393",
 	db: new SQLLiteAdapter({
