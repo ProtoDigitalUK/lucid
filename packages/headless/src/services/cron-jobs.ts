@@ -24,9 +24,41 @@ const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
 	}
 };
 
+const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
+	try {
+		const MediaRepo = Repository.get("media", serviceConfig.db);
+		const OptionsRepo = Repository.get("options", serviceConfig.db);
+
+		const mediaItems = await MediaRepo.selectMultiple({
+			select: ["file_size"],
+			where: [],
+		});
+
+		await OptionsRepo.updateSingle({
+			where: [
+				{
+					key: "name",
+					operator: "=",
+					value: "media_storage_used",
+				},
+			],
+			data: {
+				valueInt: mediaItems.reduce((acc, item) => {
+					return acc + item.file_size;
+				}, 0),
+			},
+		});
+	} catch (error) {
+		throw new HeadlessError({
+			message: T("an_error_occurred_updating_media_storage"),
+		});
+	}
+};
+
 const registerCronJobs = async (serviceConfig: ServiceConfig) => {
 	cron.schedule("0 0 * * *", async () => {
-		await clearExpiredTokens(serviceConfig);
+		clearExpiredTokens(serviceConfig);
+		updateMediaStorage(serviceConfig);
 	});
 };
 
