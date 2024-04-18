@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-local-storage",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "The official Local Storage plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -19,7 +19,9 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
@@ -43,7 +45,7 @@
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protoheadless/core": "^0.0.1"
+		"@protoheadless/core": "^0.1.0"
 	},
 	"dependencies": {
 		"fs-extra": "^11.2.0",

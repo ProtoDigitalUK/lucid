@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-nested-documents",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
 	"description": "The official Nested Documents plugin for Proto Digital Headless",
 	"type": "module",
@@ -20,7 +20,9 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@protoheadless/config": "*",
@@ -31,7 +33,7 @@
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protoheadless/core": "^0.0.1"
+		"@protoheadless/core": "^0.1.0"
 	},
 	"dependencies": {},
 	"volta": {
