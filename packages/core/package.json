@@ -76,5 +76,5 @@
 	"volta": {
 		"node": "21.6.2"
 	},
-	"license": "UNLICENSED"
+	"license": "MIT"
 }
