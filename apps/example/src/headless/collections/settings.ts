@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protoheadless/headless";
+import { CollectionBuilder } from "@protoheadless/core";
 // Bricks
 import DefaultMetaBrick from "../bricks/default-meta.js";
 

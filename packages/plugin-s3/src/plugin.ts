@@ -1,4 +1,4 @@
-import type { HeadlessPluginOptions } from "@protoheadless/headless/types";
+import type { HeadlessPluginOptions } from "@protoheadless/core/types";
 import type { PluginOptions } from "./types/types.js";
 import getS3Client from "./clients/s3-client.js";
 import stream from "./services/steam.js";

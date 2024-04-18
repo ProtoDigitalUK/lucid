@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-resend",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
 	"description": "The official Resend plugin for Proto Digital Headless",
 	"type": "module",
@@ -20,22 +20,24 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@protoheadless/config": "*",
-		"@protoheadless/headless": "*",
+		"@protoheadless/core": "*",
 		"@types/node": "^20.2.1",
 		"@biomejs/biome": "^1.6.4",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protoheadless/headless": "^0.0.1"
+		"@protoheadless/core": "^0.1.0"
 	},
 	"dependencies": {},
 	"volta": {
 		"node": "21.6.2"
 	},
-	"license": "UNLICENSED"
+	"license": "MIT"
 }

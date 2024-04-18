@@ -9,7 +9,7 @@ export default defineConfig({
 	},
 	build: {
 		target: "esnext",
-		outDir: "../../packages/headless/cms",
+		outDir: "../../packages/core/cms",
 	},
 	resolve: {
 		alias: {

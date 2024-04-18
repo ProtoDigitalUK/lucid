@@ -1,6 +1,6 @@
 import T from "./translations/index.js";
 import verifyTransporter from "./utils/verify-transporter.js";
-import type { HeadlessPluginOptions } from "@protoheadless/headless/types";
+import type { HeadlessPluginOptions } from "@protoheadless/core/types";
 import type { PluginOptions } from "./types/types.js";
 import { PLUGIN_KEY, HEADLESS_VERSION } from "./constants.js";
 

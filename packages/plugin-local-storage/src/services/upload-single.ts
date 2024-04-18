@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import fs from "fs-extra";
 import { keyPaths } from "../utils/helpers.js";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyUploadSingle } from "@protoheadless/headless/types";
+import type { MediaStrategyUploadSingle } from "@protoheadless/core/types";
 
 export default (pluginOptions: PluginOptions) => {
 	const uploadSingle: MediaStrategyUploadSingle = async (props) => {

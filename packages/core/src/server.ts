@@ -1,7 +1,8 @@
 import Fastify from "fastify";
 import headlessPlugin from "./headless-plugin.js";
-import headlessLogger from "./libs/logging/index.js";
+import serverStartLog from "./libs/logging/server-start-log.js";
 
+const startTime = process.hrtime();
 const fastify = Fastify();
 
 fastify.register(headlessPlugin);
@@ -18,9 +19,7 @@ const start = async () => {
 				process.exit(1);
 			}
 
-			headlessLogger("info", {
-				message: `API started at: ${address}`,
-			});
+			serverStartLog(address, startTime);
 		},
 	);
 };

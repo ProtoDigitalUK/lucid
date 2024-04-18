@@ -1,6 +1,5 @@
 import("dotenv/config.js");
 import { start, fastify } from "./server.js";
-import headlessPlugin from "./headless-plugin.js";
 import config from "./libs/config/headless-config.js";
 import BrickBuilder from "./libs/builders/brick-builder/index.js";
 import CollectionBuilder from "./libs/builders/collection-builder/index.js";
@@ -25,8 +24,6 @@ export {
 	LibSQLAdapter,
 	SQLLiteAdapter,
 	PostgresAdapter,
-	// Misc
-	headlessPlugin, // sets up fastify and headless routes, not needed unless you want you own implementation of start
 	// Errors
 	HeadlessError,
 	HeadlessAPIError,
