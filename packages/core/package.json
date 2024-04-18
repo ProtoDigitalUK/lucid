@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/core",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -24,10 +24,10 @@
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
 	"files": [
-		"dist/**",
-		"cms/**",
-		"templates/**",
-		"assets/**"
+		"dist",
+		"cms",
+		"templates",
+		"assets"
 	],
 	"author": "Proto Digital",
 	"devDependencies": {

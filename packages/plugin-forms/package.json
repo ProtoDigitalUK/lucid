@@ -1,6 +1,5 @@
 {
 	"name": "@protoheadless/plugin-forms",
-	"version": "1.0.0",
 	"private": true,
 	"description": "The official Forms plugin for Proto Digital Headless",
 	"type": "module",
@@ -20,9 +19,7 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": [
-		"dist/**"
-	],
+	"files": ["dist/**"],
 	"author": "Proto Digital",
 	"devDependencies": {
 		"@protoheadless/config": "*",
