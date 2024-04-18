@@ -9,7 +9,7 @@
 		"dev": "nodemon"
 	},
 	"dependencies": {
-		"@protoheadless/headless": "*",
+		"@protoheadless/core": "*",
 		"@protoheadless/plugin-local-storage": "*",
 		"@protoheadless/plugin-nodemailer": "*",
 		"@protoheadless/plugin-s3": "*",

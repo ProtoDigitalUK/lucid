@@ -1,5 +1,5 @@
 {
-	"name": "@protoheadless/headless",
+	"name": "@protoheadless/core",
 	"version": "0.0.1",
 	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
 	"type": "module",

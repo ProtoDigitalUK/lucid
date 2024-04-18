@@ -6,7 +6,7 @@
 ## Installation
 
 ```bash
-npm install @protoheadless/headless
+npm install @protoheadless/core
 ```
 
 ## Builders
@@ -27,7 +27,7 @@ npm install @protoheadless/headless
 ## headless.config.ts/js
 
 ```ts
-import headless, { LibsqlAdapter } from "@protoheadless/headless";
+import headless, { LibsqlAdapter } from "@protoheadless/core";
 // Plugins
 import HeadlessNodemailer from "@protoheadless/plugin-nodemailer";
 import HeadlessS3 from "@protoheadless/plugin-s3";

@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { headlessLogger } from "@protoheadless/headless";
+import { headlessLogger } from "@protoheadless/core";
 import type { Transporter } from "nodemailer";
 import { PLUGIN_KEY } from "../constants.js";
 

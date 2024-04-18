@@ -1,4 +1,4 @@
-import { BrickBuilder } from "@protoheadless/headless";
+import { BrickBuilder } from "@protoheadless/core";
 
 const TestingBrick = new BrickBuilder("testing", {
 	preview: {

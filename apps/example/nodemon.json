@@ -1,9 +1,5 @@
 {
 	"ext": "ts",
-	"watch": [
-		"src",
-		"./headless.config.ts",
-		"../../packages/headless/restart.txt"
-	],
+	"watch": ["src", "./headless.config.ts", "../../packages/core/restart.txt"],
 	"exec": "npm run start"
 }

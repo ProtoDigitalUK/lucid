@@ -2,7 +2,7 @@ import headless, {
 	// LibSQLAdapter,
 	SQLLiteAdapter,
 	// PostgresAdapter,
-} from "@protoheadless/headless";
+} from "@protoheadless/core";
 import Database from "better-sqlite3";
 import transporter from "./src/headless/email-transporter.js";
 // Plugins

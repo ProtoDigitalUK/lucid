@@ -37,13 +37,13 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
 		"@protoheadless/config": "*",
-		"@protoheadless/headless": "*",
+		"@protoheadless/core": "*",
 		"@types/node": "^20.2.1",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protoheadless/headless": "^0.0.1"
+		"@protoheadless/core": "^0.0.1"
 	},
 	"dependencies": {
 		"fs-extra": "^11.2.0",

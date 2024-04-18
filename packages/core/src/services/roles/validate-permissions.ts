@@ -2,7 +2,7 @@ import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
 import type { ErrorResult } from "../../types/errors.js";
-import type { Permission } from "../../services/permissions.js";
+import type { Permission } from "../permissions.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {

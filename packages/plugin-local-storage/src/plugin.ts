@@ -1,4 +1,4 @@
-import type { HeadlessPluginOptions } from "@protoheadless/headless/types";
+import type { HeadlessPluginOptions } from "@protoheadless/core/types";
 import type { PluginOptions } from "./types/types.js";
 import stream from "./services/steam.js";
 import deletSingle from "./services/delete-single.js";

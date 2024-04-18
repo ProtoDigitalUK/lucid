@@ -1,4 +1,4 @@
-import type { Config } from "@protoheadless/headless/types";
+import type { Config } from "@protoheadless/core/types";
 import type { PluginOptions } from "./types/types.js";
 import plugin from "./plugin.js";
 

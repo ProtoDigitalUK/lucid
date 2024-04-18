@@ -1,4 +1,4 @@
-import headless, { sendEmail } from "@protoheadless/headless";
+import headless, { sendEmail } from "@protoheadless/core";
 
 headless.fastify.post("/send-email", async (request, reply) => {
 	const res = await sendEmail({
