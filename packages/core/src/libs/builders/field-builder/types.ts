@@ -12,6 +12,9 @@ export interface CustomField {
 
 	fields?: Array<CustomField>;
 
+	hidden?: boolean;
+	disabled?: boolean;
+
 	presets?: string[];
 	copy?: {
 		true?: string;
@@ -90,6 +93,8 @@ export interface TabConfig extends CustomFieldConfig {
 export interface TextConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 		zod?: ZodType<unknown>;
@@ -98,12 +103,16 @@ export interface TextConfig extends CustomFieldConfig {
 export interface WysiwygConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 		zod?: ZodType<unknown>;
 	};
 }
 export interface MediaConfig extends CustomFieldConfig {
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 		extensions?: string[];
@@ -126,6 +135,8 @@ export interface RepeaterConfig extends CustomFieldConfig {
 export interface NumberConfig extends CustomFieldConfig {
 	default?: number | null;
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 		zod?: ZodType<unknown>;
@@ -133,6 +144,8 @@ export interface NumberConfig extends CustomFieldConfig {
 }
 export interface CheckboxConfig extends CustomFieldConfig {
 	default?: boolean;
+	hidden?: boolean;
+	disabled?: boolean;
 	copy?: {
 		true?: string;
 		false?: string;
@@ -141,7 +154,8 @@ export interface CheckboxConfig extends CustomFieldConfig {
 export interface SelectConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
-
+	hidden?: boolean;
+	disabled?: boolean;
 	options: Array<{ label: string; value: string }>;
 	validation?: {
 		required?: boolean;
@@ -150,6 +164,8 @@ export interface SelectConfig extends CustomFieldConfig {
 export interface TextareaConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 		zod?: ZodType<unknown>;
@@ -160,6 +176,8 @@ export interface JSONConfig extends CustomFieldConfig {
 		[key: string]: unknown;
 	};
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 		zod?: ZodType<unknown>;
@@ -168,6 +186,8 @@ export interface JSONConfig extends CustomFieldConfig {
 export interface ColourConfig extends CustomFieldConfig {
 	default?: string;
 	presets?: string[];
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 	};
@@ -175,11 +195,15 @@ export interface ColourConfig extends CustomFieldConfig {
 export interface DateTimeConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 	};
 }
 export interface PageLinkConfig extends CustomFieldConfig {
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 	};
@@ -187,6 +211,8 @@ export interface PageLinkConfig extends CustomFieldConfig {
 export interface LinkConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
+	hidden?: boolean;
+	disabled?: boolean;
 	validation?: {
 		required?: boolean;
 	};

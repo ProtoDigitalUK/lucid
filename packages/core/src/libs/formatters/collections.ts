@@ -88,6 +88,14 @@ export default class CollectionsFormatter {
 			description: {
 				type: "string",
 			},
+			hidden: {
+				type: "boolean",
+				nullable: true,
+			},
+			disabled: {
+				type: "boolean",
+				nullable: true,
+			},
 			fields: {
 				type: "array",
 				items: {

@@ -48,6 +48,8 @@ const PageCollection = new CollectionBuilder("page", {
 })
 	.addText({
 		key: "page_title",
+		hidden: true,
+		disabled: true,
 		collection: {
 			list: true,
 			filterable: true,
