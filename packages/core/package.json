@@ -25,6 +25,23 @@
 	},
 	"files": ["dist", "cms", "templates", "assets"],
 	"author": "Proto Digital",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ProtoDigitalUK/proto_headless.git",
+		"directory": "packages/core"
+	},
+	"keywords": [
+		"CMS",
+		"Headless",
+		"Node.js",
+		"Typescript",
+		"ESM",
+		"Fastify",
+		"Postgres",
+		"SQLlite",
+		"LibSQL",
+		"Kysely"
+	],
 	"devDependencies": {
 		"@biomejs/biome": "^1.6.4",
 		"@protoheadless/config": "*",
