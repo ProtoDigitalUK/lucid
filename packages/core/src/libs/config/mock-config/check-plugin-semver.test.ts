@@ -5,6 +5,7 @@ import getConfig from "../get-config.js";
 import logger from "../../logging/logger.js";
 import { messageFormat } from "../../logging/index.js";
 import packageJson from "../../../../package.json";
+import semver from "semver";
 
 test("should throw headless version support error", async () => {
 	const consoleLogSpy = vi
@@ -19,11 +20,13 @@ test("should throw headless version support error", async () => {
 
 	await getConfig(path.resolve(__dirname, "./check-plugin-semver.ts"));
 
+	const version = semver.coerce(packageJson.version) ?? packageJson.version;
+
 	expect(consoleLogSpy).toHaveBeenCalledWith(
 		messageFormat({
 			scope: "plugin-testing",
 			message: T("plugin_version_not_supported", {
-				version: packageJson.version,
+				version: version as string,
 				supportedVersions: "100.0.0",
 			}),
 		}),
