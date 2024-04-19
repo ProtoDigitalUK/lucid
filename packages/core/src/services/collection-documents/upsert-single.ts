@@ -84,6 +84,7 @@ const upsertSingle = async (
 			collectionInstance: collectionInstance,
 		},
 		{
+			db: serviceConfig.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -127,6 +128,7 @@ const upsertSingle = async (
 			collectionInstance: collectionInstance,
 		},
 		{
+			db: serviceConfig.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

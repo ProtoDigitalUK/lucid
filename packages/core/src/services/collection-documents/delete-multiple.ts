@@ -79,6 +79,7 @@ const deleteMultiple = async (
 			collectionInstance: collectionInstance,
 		},
 		{
+			db: serviceConfig.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -119,6 +120,7 @@ const deleteMultiple = async (
 			collectionInstance: collectionInstance,
 		},
 		{
+			db: serviceConfig.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,

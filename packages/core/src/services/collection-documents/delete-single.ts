@@ -67,6 +67,7 @@ const deleteSingle = async (
 			collectionInstance: collectionInstance,
 		},
 		{
+			db: serviceConfig.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
@@ -107,6 +108,7 @@ const deleteSingle = async (
 			collectionInstance: collectionInstance,
 		},
 		{
+			db: serviceConfig.db,
 			meta: {
 				collectionKey: data.collectionKey,
 				userId: data.userId,
