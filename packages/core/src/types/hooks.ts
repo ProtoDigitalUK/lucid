@@ -1,5 +1,6 @@
 import type { BrickSchema } from "../schemas/collection-bricks.js";
 import type { FieldCollectionSchema } from "../schemas/collection-fields.js";
+import type { KyselyDB } from "../libs/db/types.js";
 
 // --------------------------------------------------
 // types
@@ -30,6 +31,7 @@ export type ArgumentsType<T> = T extends (...args: infer U) => unknown
 export type HookServiceHandlers = {
 	"collection-documents": {
 		beforeUpsert: (props: {
+			db: KyselyDB;
 			meta: {
 				collectionKey: string;
 				userId: number;
@@ -47,6 +49,7 @@ export type HookServiceHandlers = {
 			  }>
 			| Promise<void>;
 		afterUpsert: (props: {
+			db: KyselyDB;
 			meta: {
 				collectionKey: string;
 				userId: number;
@@ -58,6 +61,7 @@ export type HookServiceHandlers = {
 			};
 		}) => Promise<void>;
 		beforeDelete: (props: {
+			db: KyselyDB;
 			meta: {
 				collectionKey: string;
 				userId: number;
@@ -67,6 +71,7 @@ export type HookServiceHandlers = {
 			};
 		}) => Promise<void>;
 		afterDelete: (props: {
+			db: KyselyDB;
 			meta: {
 				collectionKey: string;
 				userId: number;
