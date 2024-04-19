@@ -108,6 +108,7 @@ export interface HeadlessConfig {
 		accessTokenSecret: string;
 		refreshTokenSecret: string;
 	};
+	disableSwagger?: boolean;
 	paths?: {
 		emailTemplates?: string;
 	};
@@ -143,6 +144,7 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		};
 		strategy: EmailStrategy;
 	};
+	disableSwagger: boolean;
 	media: {
 		storage: number;
 		maxSize: number;

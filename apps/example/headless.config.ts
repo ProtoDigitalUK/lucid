@@ -37,6 +37,7 @@ export default headless.config({
 		refreshTokenSecret: process.env.HEADLESS_REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.HEADLESS_ACCESS_TOKEN_SECRET as string,
 	},
+	disableSwagger: true,
 	media: {
 		processed: {
 			store: true,

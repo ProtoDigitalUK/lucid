@@ -30,7 +30,7 @@ const headlessPlugin = async (fastify: FastifyInstance) => {
 
 		// ------------------------------------
 		// Swagger
-		await fastify.register(fastifySwagger, {
+		fastify.register(fastifySwagger, {
 			swagger: {
 				info: {
 					title: "Headless API",
@@ -45,9 +45,11 @@ const headlessPlugin = async (fastify: FastifyInstance) => {
 				produces: ["application/json"],
 			},
 		});
-		await fastify.register(fastifySwaggerUi, {
-			routePrefix: "/documentation",
-		});
+		if (config.disableSwagger === false) {
+			fastify.register(fastifySwaggerUi, {
+				routePrefix: "/documentation",
+			});
+		}
 
 		// ------------------------------------
 		// Server wide middleware

@@ -6,6 +6,7 @@ export const defaultConfig: Partial<HeadlessConfig> = {
 		emailTemplates: "./templates",
 	},
 	email: undefined,
+	disableSwagger: false,
 	media: {
 		storage: 5368709120,
 		maxSize: 16777216,
