@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-s3",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"private": false,
 	"description": "The official S3 plugin for Proto Headless",
 	"type": "module",
@@ -20,9 +20,7 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
@@ -47,7 +45,7 @@
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protoheadless/core": "^0.1.0"
+		"@protoheadless/core": "^0.1.1"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.550.0"

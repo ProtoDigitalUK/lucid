@@ -1,5 +1,11 @@
 # @protoheadless/plugin-s3
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated HEADLESS_VERSION constant to support any core version pre 1.0.0
+
 ## 1.0.0
 
 ### Minor Changes

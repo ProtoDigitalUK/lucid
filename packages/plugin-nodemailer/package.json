@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/plugin-nodemailer",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "The official Nodemailer plugin for Proto Headless",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -19,9 +19,7 @@
 		"lint": "biome lint ./src",
 		"lint:fix": "biome lint --apply ./src"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
@@ -46,7 +44,7 @@
 		"typescript": "^5.4.4"
 	},
 	"peerDependencies": {
-		"@protoheadless/core": "^0.1.0"
+		"@protoheadless/core": "^0.1.1"
 	},
 	"dependencies": {
 		"nodemailer": "^6.9.13"
