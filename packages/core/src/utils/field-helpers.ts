@@ -19,33 +19,46 @@ import type { GroupsResponse } from "../services/collection-document-bricks/upse
 import Formatter from "../libs/formatters/index.js";
 import mediaHelpers from "./media-helpers.js";
 
-export const fieldTypeValueKey = (type: FieldTypes) => {
+export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 	switch (type) {
 		case "text":
+			if (columns) return "text_value";
 			return "textValue";
 		case "wysiwyg":
+			if (columns) return "text_value";
 			return "textValue";
 		case "media":
+			if (columns) return "media_id";
 			return "mediaId";
 		case "number":
+			if (columns) return "int_value";
 			return "intValue";
 		case "checkbox":
+			if (columns) return "bool_value";
 			return "boolValue";
 		case "select":
+			if (columns) return "text_value";
 			return "textValue";
 		case "textarea":
+			if (columns) return "text_value";
 			return "textValue";
 		case "json":
+			if (columns) return "json_value";
 			return "jsonValue";
 		case "pagelink":
+			if (columns) return "page_link_id";
 			return "pageLinkId";
 		case "link":
+			if (columns) return "text_value";
 			return "textValue";
 		case "datetime":
+			if (columns) return "text_value";
 			return "textValue";
 		case "colour":
+			if (columns) return "text_value";
 			return "textValue";
 		default:
+			if (columns) return "text_value";
 			return "textValue";
 	}
 };
@@ -97,47 +110,24 @@ export interface CollectionFiltersResponse {
 	value: string | string[];
 	column: string;
 }
-export const collectionFilters = (
-	allowed_filters: FieldFilters,
-	filter: RequestQueryParsed["filter"],
-): Array<CollectionFiltersResponse> => {
-	const values = typeof filter?.cf === "string" ? [filter?.cf] : filter?.cf;
-	if (!values) return [];
+export const collectionDocFilters = (
+	allowedFilters: FieldFilters,
+	filters: RequestQueryParsed["filter"],
+): CollectionFiltersResponse[] => {
+	if (!filters) return [];
 
-	const filterKeyValues: Array<CollectionFiltersResponse> = [];
+	return allowedFilters.reduce<CollectionFiltersResponse[]>((acc, field) => {
+		const filterValue = filters[field.key];
+		if (filterValue === undefined) return acc;
 
-	for (const field of allowed_filters) {
-		const filterValue = values.filter((filter) =>
-			filter.startsWith(`${field.key}=`),
-		);
+		acc.push({
+			key: field.key,
+			value: filterValue,
+			column: fieldTypeValueKey(field.type, true),
+		});
 
-		if (filterValue) {
-			const keyValues = filterValue
-				.map((filter) => filter.split("=")[1])
-				.filter((v) => v !== "")
-				.filter((v) => v !== undefined) as string[];
-
-			if (keyValues.length === 0) continue;
-
-			if (keyValues.length > 1) {
-				filterKeyValues.push({
-					key: field.key,
-					value: keyValues,
-					column: fieldTypeValueKey(field.type),
-				});
-			} else {
-				const firstValue = keyValues[0];
-				if (!firstValue) continue;
-				filterKeyValues.push({
-					key: field.key,
-					value: firstValue,
-					column: fieldTypeValueKey(field.type),
-				});
-			}
-		}
-	}
-
-	return filterKeyValues;
+		return acc;
+	}, []);
 };
 
 interface FieldResponseValueFormat {

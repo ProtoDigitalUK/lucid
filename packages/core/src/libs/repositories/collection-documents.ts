@@ -14,7 +14,7 @@ import queryBuilder, {
 	type QueryBuilderWhereT,
 } from "../db/query-builder.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
-import { collectionFilters } from "../../utils/field-helpers.js";
+import { collectionDocFilters } from "../../utils/field-helpers.js";
 import type { FieldFilters } from "../builders/collection-builder/index.js";
 
 export default class CollectionDocumentsRepo {
@@ -124,7 +124,7 @@ export default class CollectionDocumentsRepo {
 			)
 			.where("headless_collection_documents.is_deleted", "=", 0);
 
-		const collectionFiltersRes = collectionFilters(
+		const collectionDocFiltersRes = collectionDocFilters(
 			props.allowedFieldFilters,
 			props.query.filter,
 		);
@@ -170,10 +170,7 @@ export default class CollectionDocumentsRepo {
 					),
 				);
 
-			if (
-				props.allowedFieldFilters.length &&
-				collectionFiltersRes.length > 0
-			) {
+			if (collectionDocFiltersRes.length > 0) {
 				pagesCountQuery = pagesCountQuery.leftJoin(
 					"headless_collection_document_fields",
 					(join) =>
@@ -200,6 +197,7 @@ export default class CollectionDocumentsRepo {
 					page: props.query.page,
 					perPage: props.query.perPage,
 				},
+				collectionDocumentFilters: collectionDocFiltersRes,
 				meta: {
 					filters: [],
 					sorts: [
@@ -212,10 +210,6 @@ export default class CollectionDocumentsRepo {
 							tableKey: "updated_at",
 						},
 					],
-					collectionFilters:
-						props.allowedFieldIncludes.length > 0
-							? collectionFiltersRes
-							: undefined,
 				},
 			},
 		);

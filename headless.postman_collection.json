@@ -677,13 +677,8 @@
 											"disabled": true
 										},
 										{
-											"key": "filter[cf]",
-											"value": "page_title=Homepage",
-											"disabled": true
-										},
-										{
-											"key": "filter[cf]",
-											"value": "page_title=Homepage,page_title=Homdsd,page_excerpt=te",
+											"key": "filter[page_title]",
+											"value": "Homepage - Modified",
 											"disabled": true
 										}
 									]

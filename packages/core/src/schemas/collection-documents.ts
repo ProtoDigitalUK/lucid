@@ -5,9 +5,7 @@ import defaultQuery from "./default-query.js";
 
 const getMultipleQuerySchema = z.object({
 	filter: z
-		.object({
-			cf: z.union([z.string(), z.array(z.string())]).optional(),
-		})
+		.record(z.string(), z.union([z.string(), z.array(z.string())]))
 		.optional(),
 	sort: z
 		.array(

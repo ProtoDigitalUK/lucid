@@ -12,6 +12,7 @@ import type { HeadlessDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsed;
+	collectionDocumentFilters?: CollectionFiltersResponse[];
 	meta: {
 		filters: {
 			queryKey: string; // e.g. "filter[status]" - the object key for the specific filter
@@ -22,7 +23,6 @@ export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 			queryKey: string;
 			tableKey: ReferenceExpression<DB, Table>;
 		}[];
-		collectionFilters?: CollectionFiltersResponse[];
 	};
 }
 
@@ -79,10 +79,10 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 
 	// collection filters
 	if (
-		config.meta.collectionFilters &&
-		config.meta.collectionFilters.length > 0
+		config.collectionDocumentFilters &&
+		config.collectionDocumentFilters.length > 0
 	) {
-		for (const { key, value, column } of config.meta.collectionFilters) {
+		for (const { key, value, column } of config.collectionDocumentFilters) {
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
 					// @ts-expect-error
