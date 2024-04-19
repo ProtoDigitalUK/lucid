@@ -8,13 +8,14 @@ const checkPluginVersion = (data: {
 	requiredVersions: string;
 	headlessVersion?: string;
 }) => {
-	const headlessVersion = data.headlessVersion ?? packageJson.version;
+	const useVersion = data.headlessVersion ?? packageJson.version;
+	const headlessVersion = semver.coerce(useVersion) ?? useVersion;
 
 	if (!semver.satisfies(headlessVersion, data.requiredVersions)) {
 		throw new HeadlessError({
 			scope: data.key,
 			message: T("plugin_version_not_supported", {
-				version: headlessVersion,
+				version: headlessVersion as string,
 				supportedVersions: data.requiredVersions,
 			}),
 		});

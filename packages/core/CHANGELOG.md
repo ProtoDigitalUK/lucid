@@ -1,13 +1,19 @@
 # @protoheadless/core
 
-## 0.1.1
-
-### Patch Changes
-
-- Built package and CMS
-
-## 0.1.0
+## 0.2.0-alpha.0
 
 ### Minor Changes
 
-- Core first release
+- Collection document filter rework, config changes and plugin semver tweak
+
+## 0.1.1-alpha.0
+
+### Patch Changes
+
+- Added missing core build
+
+## 0.1.0-alpha.0
+
+### Minor Changes
+
+- First alpha release
