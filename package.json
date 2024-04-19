@@ -13,14 +13,16 @@
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@changesets/cli": "^2.27.1",
 		"husky": "^9.0.11",
 		"turbo": "^1.12.5",
 		"vitest": "^1.5.0"
 	},
 	"name": "headless",
 	"packageManager": "npm@10.2.4",
-	"workspaces": ["apps/*", "packages/*"],
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
 	"volta": {
 		"node": "21.6.2"
 	}
