@@ -65,4 +65,5 @@ export default {
 	refreshTokenExpiration: 604800, // 7 days in seconds
 	accessTokenExpiration: 300, // 5 minutes in seconds
 	passwordResetTokenExpirationMinutes: 15,
+	documentation: "https://protoheadless.com/getting-started",
 };
