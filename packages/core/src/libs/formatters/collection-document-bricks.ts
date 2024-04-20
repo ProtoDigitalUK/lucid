@@ -1,4 +1,8 @@
-import type { BrickResponse, FieldResponse } from "../../types/response.js";
+import type {
+	BrickResponse,
+	FieldResponse,
+	GroupResponse,
+} from "../../types/response.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
 import CollectionDocumentGroupsFormatter, {
@@ -26,6 +30,7 @@ export default class CollectionDocumentBricksFormatter {
 	}): {
 		bricks: BrickResponse[];
 		fields: FieldResponse[] | null;
+		groups: GroupResponse[] | null;
 	} => {
 		const bricks = props.bricks
 			.filter((brick) => {
@@ -62,25 +67,37 @@ export default class CollectionDocumentBricksFormatter {
 				};
 			});
 
-		const collectionFields = props.bricks
+		const collectionSudoBrickFilter = props.bricks
 			.filter((brick) => {
 				if (brick.brick_type !== "collection-fields") return false;
 				return true;
 			})
-			.map((brick) =>
-				new CollectionDocumentFieldsFormatter().formatMultiple({
-					fields: brick.fields,
-					host: props.host,
-					builder: props.collection,
-				}),
-			);
+			.map((brick) => {
+				return {
+					fields: new CollectionDocumentFieldsFormatter().formatMultiple(
+						{
+							fields: brick.fields,
+							host: props.host,
+							builder: props.collection,
+						},
+					),
+					groups: new CollectionDocumentGroupsFormatter().formatMultiple(
+						{
+							groups: brick.groups,
+						},
+					),
+				};
+			});
+
+		const collectionSudoBrick =
+			collectionSudoBrickFilter.length && collectionSudoBrickFilter[0]
+				? collectionSudoBrickFilter[0]
+				: null;
 
 		return {
 			bricks,
-			fields:
-				collectionFields.length && collectionFields[0]
-					? collectionFields[0]
-					: null,
+			fields: collectionSudoBrick?.fields ?? null,
+			groups: collectionSudoBrick?.groups ?? null,
 		};
 	};
 	static swagger = {

@@ -8,6 +8,8 @@ export const GroupSchema = z.object({
 	languageId: z.number(),
 });
 
+export type GroupSchemaType = z.infer<typeof GroupSchema>;
+
 export const swaggerGroupObj = {
 	type: "object",
 	properties: {

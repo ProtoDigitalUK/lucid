@@ -130,6 +130,7 @@ export default class CollectionDocumentsRepo {
 		);
 
 		if (props.allowedFieldIncludes.length > 0) {
+			// TODO: include groupId
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
