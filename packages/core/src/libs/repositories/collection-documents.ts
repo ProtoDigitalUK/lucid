@@ -130,7 +130,6 @@ export default class CollectionDocumentsRepo {
 		);
 
 		if (props.allowedFieldIncludes.length > 0) {
-			// TODO: include groupId
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -149,6 +148,7 @@ export default class CollectionDocumentsRepo {
 									"headless_collection_document_fields.key",
 									"headless_collection_document_fields.collection_brick_id",
 									"headless_collection_document_fields.collection_document_id",
+									"headless_collection_document_fields.group_id",
 								])
 								.whereRef(
 									"headless_collection_document_fields.collection_document_id",
