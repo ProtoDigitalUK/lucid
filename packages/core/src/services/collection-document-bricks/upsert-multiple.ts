@@ -1,16 +1,18 @@
 import T from "../../translations/index.js";
 import { HeadlessAPIError } from "../../utils/error-handler.js";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
-import type { FieldCollectionSchema } from "../../schemas/collection-fields.js";
+import type { GroupSchemaType } from "../../schemas/collection-groups.js";
+import type { FieldSchemaType } from "../../schemas/collection-fields.js";
+import type { ServiceConfig } from "../../utils/service-wrapper.js";
 import collectionBricksServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
-import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	documentId: number;
 	bricks?: Array<BrickSchema>;
-	fields?: Array<FieldCollectionSchema>;
+	fields?: Array<FieldSchemaType>;
+	groups?: Array<GroupSchemaType>;
 	collectionKey: string;
 }
 
@@ -28,7 +30,8 @@ const upsertMultiple = async (
 
 	bricks = await addCollectionSudoBrick(serviceConfig, {
 		fields: data.fields,
-		document_id: data.documentId,
+		groups: data.groups,
+		documentId: data.documentId,
 		bricks: bricks,
 	});
 
@@ -83,7 +86,10 @@ const upsertMultiple = async (
 				bricks: bricksRes,
 				apply: {
 					bricks: data.bricks !== undefined,
-					collectionFields: upsertCollectionSudoBrick(data.fields),
+					collectionFields: upsertCollectionSudoBrick(
+						data.fields,
+						data.groups,
+					),
 				},
 			},
 		),
@@ -92,17 +98,20 @@ const upsertMultiple = async (
 	]);
 };
 
-const upsertCollectionSudoBrick = (fields?: Array<FieldCollectionSchema>) => {
-	// TODO: update to support groups
-	if (fields === undefined) return false;
+const upsertCollectionSudoBrick = (
+	fields?: Array<FieldSchemaType>,
+	groups?: Array<GroupSchemaType>,
+) => {
+	if (fields === undefined && groups === undefined) return false;
 	return true;
 };
 
 const addCollectionSudoBrick = async (
 	serviceConfig: ServiceConfig,
 	data: {
-		fields?: Array<FieldCollectionSchema>;
-		document_id: number;
+		fields?: Array<FieldSchemaType>;
+		groups?: Array<GroupSchemaType>;
+		documentId: number;
 		bricks: Array<BrickSchema>;
 	},
 ) => {
@@ -119,7 +128,7 @@ const addCollectionSudoBrick = async (
 				{
 					key: "collection_document_id",
 					operator: "=",
-					value: data.document_id,
+					value: data.documentId,
 				},
 				{
 					key: "brick_type",
@@ -133,13 +142,13 @@ const addCollectionSudoBrick = async (
 		data.bricks.push({
 			id: collectionContentBrick?.id,
 			type: "collection-fields",
-			groups: [], // TODO: add support for collection fields groups
+			groups: data.groups,
 			fields: data.fields,
 		});
 	} else {
 		data.bricks.push({
 			type: "collection-fields",
-			groups: [], // TODO: add support for collection fields groups
+			groups: data.groups,
 			fields: data.fields,
 		});
 	}

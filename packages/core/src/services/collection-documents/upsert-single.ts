@@ -7,7 +7,8 @@ import Repository from "../../libs/repositories/index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
 import merge from "lodash.merge";
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
-import type { FieldCollectionSchema } from "../../schemas/collection-fields.js";
+import type { FieldSchemaType } from "../../schemas/collection-fields.js";
+import type { GroupSchemaType } from "../../schemas/collection-groups.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
@@ -16,7 +17,8 @@ export interface ServiceData {
 
 	documentId?: number;
 	bricks?: Array<BrickSchema>;
-	fields?: Array<FieldCollectionSchema>;
+	fields?: Array<FieldSchemaType>;
+	groups?: Array<GroupSchemaType>;
 }
 
 const upsertSingle = async (
@@ -60,6 +62,17 @@ const upsertSingle = async (
 					name: T("document"),
 				}),
 				status: 404,
+			});
+		}
+
+		if (collectionInstance.config.locked === true) {
+			throw new HeadlessAPIError({
+				type: "basic",
+				name: T("error_locked_collection_name"),
+				message: T("error_locked_collection_message", {
+					name: collectionInstance.data.title,
+				}),
+				status: 400,
 			});
 		}
 	}
@@ -117,6 +130,7 @@ const upsertSingle = async (
 		documentId: document.id,
 		bricks: bodyData.bricks,
 		fields: bodyData.fields,
+		groups: bodyData.groups,
 		collectionKey: data.collectionKey,
 	});
 

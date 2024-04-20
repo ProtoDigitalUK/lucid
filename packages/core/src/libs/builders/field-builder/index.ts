@@ -16,6 +16,7 @@ import type {
 	TextConfig,
 	TextareaConfig,
 	WysiwygConfig,
+	RepeaterConfig,
 	CustomFieldConfigs,
 	DefaultFieldValues,
 	FieldBuilderMeta,
@@ -27,11 +28,56 @@ import type {
 
 class FieldBuilder {
 	fields: Map<string, CustomField> = new Map();
+	repeaterStack: string[] = [];
 	meta: FieldBuilderMeta = {
 		fieldKeys: [],
 		repeaterDepth: {},
 	};
 	// Custom Fields
+	public endRepeater() {
+		const key = this.repeaterStack.pop();
+		if (!key) return this;
+
+		const fields = Array.from(this.fields.values());
+		let selectedRepeaterIndex = 0;
+		let repeaterKey = "";
+
+		// find the selected repeater
+		for (let i = 0; i < fields.length; i++) {
+			const field = fields[i];
+			if (!field) continue;
+			if (field.type === "repeater" && field.key === key) {
+				selectedRepeaterIndex = i;
+				repeaterKey = field.key;
+				break;
+			}
+		}
+
+		if (!repeaterKey) return this;
+
+		const fieldsAfterSelectedRepeater = fields.slice(
+			selectedRepeaterIndex + 1,
+		);
+		const repeater = this.fields.get(repeaterKey);
+		if (repeater) {
+			// filter out tab fields
+			repeater.fields = fieldsAfterSelectedRepeater.filter(
+				(field) => field.type !== "tab",
+			);
+			fieldsAfterSelectedRepeater.map((field) => {
+				this.fields.delete(field.key);
+			});
+		}
+
+		return this;
+	}
+	public addRepeater(config: RepeaterConfig) {
+		this.meta.repeaterDepth[config.key] = this.repeaterStack.length;
+
+		this.addToFields("repeater", config);
+		this.repeaterStack.push(config.key);
+		return this;
+	}
 	public addText(config: TextConfig) {
 		this.addToFields("text", config);
 		return this;

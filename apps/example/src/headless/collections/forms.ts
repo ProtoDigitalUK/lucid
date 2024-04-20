@@ -1,5 +1,7 @@
 import { CollectionBuilder } from "@protoheadless/core";
 
+// TODO: replace with form builder plugin to better abstract this and provide additional services (form submissions, reCaptcha, validation, honeypots etc.)
+
 const FormsCollection = new CollectionBuilder("forms", {
 	mode: "multiple",
 	title: "Forms",

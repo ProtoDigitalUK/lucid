@@ -1,5 +1,6 @@
 import type { BrickSchema } from "../schemas/collection-bricks.js";
-import type { FieldCollectionSchema } from "../schemas/collection-fields.js";
+import type { FieldSchemaType } from "../schemas/collection-fields.js";
+import type { GroupSchemaType } from "../schemas/collection-groups.js";
 import type { KyselyDB } from "../libs/db/types.js";
 
 // --------------------------------------------------
@@ -39,13 +40,15 @@ export type HookServiceHandlers = {
 			data: {
 				documentId?: number;
 				bricks?: Array<BrickSchema>;
-				fields?: Array<FieldCollectionSchema>;
+				fields?: Array<FieldSchemaType>;
+				groups?: Array<GroupSchemaType>;
 			};
 		}) =>
 			| Promise<{
 					documentId?: number;
 					bricks?: Array<BrickSchema>;
-					fields?: Array<FieldCollectionSchema>;
+					fields?: Array<FieldSchemaType>;
+					groups?: Array<GroupSchemaType>;
 			  }>
 			| Promise<void>;
 		afterUpsert: (props: {
@@ -57,7 +60,8 @@ export type HookServiceHandlers = {
 			data: {
 				documentId?: number;
 				bricks?: Array<BrickSchema>;
-				fields?: Array<FieldCollectionSchema>;
+				fields?: Array<FieldSchemaType>;
+				groups?: Array<GroupSchemaType>;
 			};
 		}) => Promise<void>;
 		beforeDelete: (props: {

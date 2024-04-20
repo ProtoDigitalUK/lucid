@@ -61,6 +61,20 @@ const PageCollection = new CollectionBuilder("page", {
 			list: true,
 			filterable: true,
 		},
-	});
+	})
+	.addRepeater({
+		key: "authors",
+		validation: {
+			maxGroups: 3,
+		},
+	})
+	.addText({
+		key: "author_name",
+		collection: {
+			list: true,
+			filterable: true,
+		},
+	})
+	.endRepeater();
 
 export default PageCollection;

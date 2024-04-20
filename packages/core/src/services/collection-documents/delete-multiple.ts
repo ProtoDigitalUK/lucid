@@ -22,6 +22,17 @@ const deleteMultiple = async (
 			key: data.collectionKey,
 		});
 
+	if (collectionInstance.config.locked === true) {
+		throw new HeadlessAPIError({
+			type: "basic",
+			name: T("error_locked_collection_name"),
+			message: T("error_locked_collection_message_delete", {
+				name: collectionInstance.data.title,
+			}),
+			status: 400,
+		});
+	}
+
 	const CollectionDocumentsRepo = Repository.get(
 		"collection-documents",
 		serviceConfig.db,

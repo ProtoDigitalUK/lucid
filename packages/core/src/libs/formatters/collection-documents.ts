@@ -1,6 +1,7 @@
 import type {
 	BrickResponse,
 	FieldResponse,
+	GroupResponse,
 	CollectionDocumentResponse,
 } from "../../types/response.js";
 import CollectionDocumentFieldsFormatter, {
@@ -9,6 +10,7 @@ import CollectionDocumentFieldsFormatter, {
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import Formatter from "./index.js";
 import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
+import CollectionDocumentGroupsFormatter from "./collection-document-groups.js";
 
 interface DocumentPropT {
 	id: number;
@@ -43,9 +45,11 @@ export default class CollectionDocumentsFormatter {
 		collection: CollectionBuilder;
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
+		groups?: GroupResponse[] | null;
 		host: string;
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
+
 		if (props.fields) {
 			fields = props.fields;
 		} else if (props.document.fields) {
@@ -59,8 +63,9 @@ export default class CollectionDocumentsFormatter {
 		const res: CollectionDocumentResponse = {
 			id: props.document.id,
 			collectionKey: props.document.collection_key,
-			bricks: props.bricks || [],
+			bricks: props.bricks ?? null,
 			fields: fields,
+			groups: props.groups ?? null,
 			createdBy: props.document.created_by,
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
@@ -118,11 +123,17 @@ export default class CollectionDocumentsFormatter {
 			bricks: {
 				type: "array",
 				items: CollectionDocumentBricksFormatter.swagger,
+				nullable: true,
 			},
 			fields: {
 				type: "array",
 				nullable: true,
 				items: CollectionDocumentFieldsFormatter.swagger,
+			},
+			groups: {
+				type: "array",
+				nullable: true,
+				items: CollectionDocumentGroupsFormatter.swagger,
 			},
 			createdBy: {
 				type: "number",

@@ -257,6 +257,7 @@ export interface CollectionDocumentResponse {
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;
+	groups?: Array<GroupResponse> | null;
 }
 
 export interface ResponseBody {

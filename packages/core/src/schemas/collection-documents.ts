@@ -1,7 +1,8 @@
 import z from "zod";
 import { BrickSchema } from "./collection-bricks.js";
-import { FieldSchemaCollection } from "./collection-fields.js";
+import { FieldSchema } from "./collection-fields.js";
 import defaultQuery from "./default-query.js";
+import { GroupSchema } from "./collection-groups.js";
 
 const getMultipleQuerySchema = z.object({
 	filter: z
@@ -26,7 +27,8 @@ export default {
 		body: z.object({
 			documentId: z.number().optional(),
 			bricks: z.array(BrickSchema).optional(),
-			fields: z.array(FieldSchemaCollection).optional(),
+			fields: z.array(FieldSchema).optional(),
+			groups: z.array(GroupSchema).optional(),
 		}),
 		query: undefined,
 		params: z.object({
