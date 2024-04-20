@@ -99,6 +99,7 @@ export default class CollectionBuilder extends FieldBuilder {
 			title: this.config.title,
 			singular: this.config.singular,
 			description: this.config.description ?? null,
+			locked: this.config.locked ?? false,
 			config: {
 				translations: this.config?.translations ?? false,
 				fields: {
@@ -143,6 +144,7 @@ export const CollectionConfigSchema = z.object({
 	singular: z.string(),
 	description: z.string().optional(),
 	translations: z.boolean().default(false).optional(),
+	locked: z.boolean().default(false).optional(),
 	hooks: z
 		.array(
 			z.object({
@@ -174,6 +176,7 @@ export type CollectionDataT = {
 	title: CollectionConfigSchemaT["title"];
 	singular: CollectionConfigSchemaT["singular"];
 	description: string | null;
+	locked: boolean;
 	config: {
 		translations: boolean;
 		fields: {

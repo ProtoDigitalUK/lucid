@@ -64,6 +64,17 @@ const upsertSingle = async (
 				status: 404,
 			});
 		}
+
+		if (collectionInstance.config.locked === true) {
+			throw new HeadlessAPIError({
+				type: "basic",
+				name: T("error_locked_collection_name"),
+				message: T("error_locked_collection_message", {
+					name: collectionInstance.data.title,
+				}),
+				status: 400,
+			});
+		}
 	}
 
 	await Promise.all([
