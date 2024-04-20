@@ -247,14 +247,6 @@ export interface CollectionDocumentResponse {
 	createdAt: string | null;
 	updatedAt: string | null;
 
-	author: {
-		id: number | null;
-		email: string | null;
-		firstName: string | null;
-		lastName: string | null;
-		username: string | null;
-	} | null;
-
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;
 	groups?: Array<GroupResponse> | null;

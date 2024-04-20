@@ -18,9 +18,6 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("collection_key", "text", (col) => col.notNull())
 				.addColumn("is_deleted", "integer", (col) => col.defaultTo(0))
 				.addColumn("is_deleted_at", "timestamp")
-				.addColumn("author_id", "integer", (col) =>
-					col.references("headless_users.id").onDelete("set null"),
-				)
 				.addColumn("deleted_by", "integer", (col) =>
 					col.references("headless_users.id").onDelete("set null"),
 				)

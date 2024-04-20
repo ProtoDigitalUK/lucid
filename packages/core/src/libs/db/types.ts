@@ -160,7 +160,6 @@ export interface HeadlessCollectionDocuments {
 	collection_key: string;
 	is_deleted: ColumnType<BooleanInt, BooleanInt | undefined, BooleanInt>;
 	is_deleted_at: TimestampMutateable;
-	author_id: number | null;
 	deleted_by: number | null;
 	created_by: number | null;
 	updated_by: number | null;

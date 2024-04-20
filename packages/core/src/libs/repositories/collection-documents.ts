@@ -56,13 +56,6 @@ export default class CollectionDocumentsRepo {
 				"headless_users.id",
 				"headless_collection_documents.created_by",
 			)
-			.select([
-				"headless_users.id as author_id",
-				"headless_users.email as author_email",
-				"headless_users.first_name as author_first_name",
-				"headless_users.last_name as author_last_name",
-				"headless_users.username as author_username",
-			])
 			.where("headless_collection_documents.id", "=", props.id)
 			.where("headless_collection_documents.is_deleted", "=", 0)
 			.executeTakeFirst();
@@ -104,13 +97,6 @@ export default class CollectionDocumentsRepo {
 				"headless_users.id",
 				"headless_collection_documents.created_by",
 			)
-			.select([
-				"headless_users.id as author_id",
-				"headless_users.email as author_email",
-				"headless_users.first_name as author_first_name",
-				"headless_users.last_name as author_last_name",
-				"headless_users.username as author_username",
-			])
 			.where("headless_collection_documents.is_deleted", "=", 0)
 			.groupBy(["headless_collection_documents.id", "headless_users.id"]);
 
@@ -225,7 +211,6 @@ export default class CollectionDocumentsRepo {
 	upsertSingle = async (props: {
 		id?: number;
 		collectionKey: string;
-		authorId: number;
 		createdBy: number;
 		updatedBy: number;
 		isDeleted: BooleanInt;
@@ -235,14 +220,12 @@ export default class CollectionDocumentsRepo {
 			.values({
 				id: props.id,
 				collection_key: props.collectionKey,
-				author_id: props.authorId,
 				created_by: props.createdBy,
 				updated_by: props.updatedBy,
 				is_deleted: props.isDeleted,
 			})
 			.onConflict((oc) =>
 				oc.column("id").doUpdateSet({
-					author_id: props.authorId,
 					created_by: props.createdBy,
 					updated_by: props.updatedBy,
 					is_deleted: props.isDeleted,
