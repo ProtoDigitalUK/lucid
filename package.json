@@ -17,12 +17,12 @@
 		"turbo": "^1.12.5",
 		"vitest": "^1.5.0"
 	},
+	"optionalDependencies": {
+		"@rollup/rollup-linux-x64-gnu": "4.6.1"
+	},
 	"name": "headless",
 	"packageManager": "npm@10.2.4",
-	"workspaces": [
-		"apps/*",
-		"packages/*"
-	],
+	"workspaces": ["apps/*", "packages/*"],
 	"volta": {
 		"node": "20.12.2"
 	}
