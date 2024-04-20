@@ -1,6 +1,6 @@
 import z from "zod";
 import FieldBuilder from "../field-builder/index.js";
-import type { RepeaterConfig, TabConfig } from "../field-builder/index.js";
+import type { TabConfig } from "../field-builder/index.js";
 
 export interface BrickConfigPropsT {
 	title?: string;
@@ -18,7 +18,6 @@ export interface BrickConfigT {
 class BrickBuilder extends FieldBuilder {
 	key: string;
 	config: BrickConfigT;
-	repeaterStack: string[] = [];
 	constructor(key: string, config?: BrickConfigPropsT) {
 		super();
 		this.key = key;
@@ -34,50 +33,6 @@ class BrickBuilder extends FieldBuilder {
 			this.fields.set(field.key, field);
 			this.meta.fieldKeys.push(field.key);
 		}
-		return this;
-	}
-	public endRepeater() {
-		const key = this.repeaterStack.pop();
-		if (!key) return this;
-
-		const fields = Array.from(this.fields.values());
-		let selectedRepeaterIndex = 0;
-		let repeaterKey = "";
-
-		// find the selected repeater
-		for (let i = 0; i < fields.length; i++) {
-			const field = fields[i];
-			if (!field) continue;
-			if (field.type === "repeater" && field.key === key) {
-				selectedRepeaterIndex = i;
-				repeaterKey = field.key;
-				break;
-			}
-		}
-
-		if (!repeaterKey) return this;
-
-		const fieldsAfterSelectedRepeater = fields.slice(
-			selectedRepeaterIndex + 1,
-		);
-		const repeater = this.fields.get(repeaterKey);
-		if (repeater) {
-			// filter out tab fields
-			repeater.fields = fieldsAfterSelectedRepeater.filter(
-				(field) => field.type !== "tab",
-			);
-			fieldsAfterSelectedRepeater.map((field) => {
-				this.fields.delete(field.key);
-			});
-		}
-
-		return this;
-	}
-	public addRepeater(config: RepeaterConfig) {
-		this.meta.repeaterDepth[config.key] = this.repeaterStack.length;
-
-		this.addToFields("repeater", config);
-		this.repeaterStack.push(config.key);
 		return this;
 	}
 	public addTab(config: TabConfig) {
