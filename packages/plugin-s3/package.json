@@ -51,7 +51,7 @@
 		"@aws-sdk/client-s3": "^3.550.0"
 	},
 	"volta": {
-		"node": "21.6.2"
+		"node": "20.12.2"
 	},
 	"license": "MIT"
 }
