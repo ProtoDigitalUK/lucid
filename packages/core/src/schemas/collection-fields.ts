@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const FieldSchema = z.object({
+export const FieldBaseSchema = z.object({
 	key: z.string(),
 	type: z.union([
 		z.literal("text"),
@@ -15,33 +15,41 @@ export const FieldSchema = z.object({
 		z.literal("datetime"),
 		z.literal("pagelink"),
 		z.literal("link"),
-		// z.literal("repeater"), // is this needed?
+		z.literal("repeater"),
 		z.literal("user"),
 	]),
-	value: z.union([
-		z.string(),
-		z.number(),
-		z.object({
-			id: z.number().nullable(),
-			target: z.string().nullable().optional(),
-			label: z.string().nullable().optional(),
-		}),
-		z.object({
-			url: z.string().nullable(),
-			target: z.string().nullable().optional(),
-			label: z.string().nullable().optional(),
-		}),
-		z.null(),
-		z.any(),
-	]),
+	value: z
+		.union([
+			z.string(),
+			z.number(),
+			z.object({
+				id: z.number().nullable(),
+				target: z.string().nullable().optional(),
+				label: z.string().nullable().optional(),
+			}),
+			z.object({
+				url: z.string().nullable(),
+				target: z.string().nullable().optional(),
+				label: z.string().nullable().optional(),
+			}),
+			z.null(),
+			z.any(),
+		])
+		.optional(),
 	languageId: z.number(),
-	groupId: z.union([z.number(), z.string()]).optional(),
 });
 
-export type FieldSchemaType = z.infer<typeof FieldSchema>;
+export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({
+	groups: z.lazy(() => z.array(z.array(FieldSchema))).optional(),
+});
+
+export type FieldSchemaType = z.infer<typeof FieldBaseSchema> & {
+	groups?: FieldSchemaType[][];
+};
 
 export const swaggerFieldObj = {
 	type: "object",
+	additionalProperties: true,
 	properties: {
 		key: {
 			type: "string",
@@ -71,21 +79,10 @@ export const swaggerFieldObj = {
 		},
 		languageId: {
 			type: "number",
+			nullable: true,
 		},
-		groupId: {
-			anyOf: [
-				{
-					type: "number",
-					nullable: true,
-				},
-				{
-					type: "string",
-					nullable: true,
-				},
-				{
-					type: "null",
-				},
-			],
+		groups: {
+			type: "array",
 		},
 	},
 };

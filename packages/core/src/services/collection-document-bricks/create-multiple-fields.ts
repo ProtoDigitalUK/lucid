@@ -1,27 +1,17 @@
-import type { BrickSchema } from "../../schemas/collection-bricks.js";
-import type { GroupsResponse } from "./create-multiple-groups.js";
-import { fieldCreatePrep } from "../../utils/field-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
+import type formatInsertFields from "./helpers/format-insert-fields.js";
 
 export interface ServiceData {
 	documentId: number;
-	bricks: Array<BrickSchema>;
-	groups: Array<GroupsResponse>;
+	fields: ReturnType<typeof formatInsertFields>;
 }
 
 const createMultipleFields = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
-	const fields = data.bricks.flatMap((brick) =>
-		fieldCreatePrep({
-			brick: brick,
-			groups: data.groups,
-		}),
-	);
-
-	if (fields.length === 0) {
+	if (data.fields.length === 0) {
 		return;
 	}
 
@@ -31,7 +21,7 @@ const createMultipleFields = async (
 	);
 
 	await CollectionDocumentFieldsRepo.createMultiple({
-		items: fields.map((field) => {
+		items: data.fields.map((field) => {
 			return {
 				collectionDocumentId: data.documentId,
 				collectionBrickId: field.collectionBrickId,

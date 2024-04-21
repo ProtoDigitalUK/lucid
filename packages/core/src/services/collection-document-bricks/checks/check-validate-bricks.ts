@@ -12,13 +12,13 @@ import type {
 } from "../../../libs/builders/field-builder/index.js";
 import type { PageLinkValue, LinkValue } from "../../../types/response.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
-import type { BrickSchema } from "../../../schemas/collection-bricks.js";
 import type { FieldSchema } from "../../../schemas/collection-fields.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
+import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
 import Repository from "../../../libs/repositories/index.js";
 
 export interface ServiceData {
-	bricks: Array<BrickSchema>;
+	bricks: Array<BrickInsertItem>;
 	collectionKey: string;
 }
 
@@ -66,7 +66,7 @@ const validateBricks = async (
 };
 
 const validateBrickData = async (data: {
-	bricks: BrickSchema[];
+	bricks: BrickInsertItem[];
 	collection: CollectionBuilder;
 	media: Array<{
 		id: number;

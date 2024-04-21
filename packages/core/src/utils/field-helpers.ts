@@ -14,8 +14,6 @@ import type {
 } from "../libs/builders/field-builder/types.js";
 import type { FieldProp } from "../libs/formatters/collection-document-fields.js";
 import type { FieldFilters } from "../libs/builders/collection-builder/index.js";
-import type { BrickSchema } from "../schemas/collection-bricks.js";
-import type { GroupsResponse } from "../services/collection-document-bricks/create-multiple-groups.js";
 import Formatter from "../libs/formatters/index.js";
 import mediaHelpers from "./media-helpers.js";
 
@@ -256,59 +254,4 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 	}
 
 	return { value, meta };
-};
-
-interface FieldCreateObjectResponse {
-	collectionBrickId: number;
-	key: string;
-	type: FieldTypes;
-	groupId?: number | null;
-	textValue: string | null;
-	intValue: number | null;
-	boolValue: 1 | 0 | null;
-	jsonValue: string | null;
-	pageLinkId: number | null;
-	mediaId: number | null;
-	userId: number | null;
-	languageId: number;
-}
-
-interface FormatCreateFields {
-	brick: BrickSchema;
-	groups: Array<GroupsResponse>;
-}
-
-export const fieldCreatePrep = (
-	props: FormatCreateFields,
-): Array<FieldCreateObjectResponse> => {
-	return (
-		props.brick.fields?.map((field) => {
-			let groupId = null;
-			const findGroup = props.groups.find(
-				(group) => group.ref === field.groupId,
-			);
-			if (findGroup === undefined) {
-				const findGroupBrick = props.groups.find(
-					(group) => group.groupId === field.groupId,
-				);
-				groupId = findGroupBrick?.groupId ?? null;
-			} else groupId = findGroup.groupId;
-
-			return {
-				languageId: field.languageId,
-				collectionBrickId: props.brick.id as number,
-				key: field.key,
-				type: field.type,
-				groupId: groupId,
-				textValue: null,
-				intValue: null,
-				boolValue: null,
-				jsonValue: null,
-				pageLinkId: null,
-				mediaId: null,
-				userId: null,
-				...fieldColumnValueMap(field),
-			};
-		}) || []
-	);
 };

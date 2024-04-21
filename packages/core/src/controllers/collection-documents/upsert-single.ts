@@ -32,7 +32,6 @@ const upsertSingleController: RouteController<
 				documentId: request.body.documentId,
 				bricks: request.body.bricks,
 				fields: request.body.fields,
-				groups: request.body.groups,
 			},
 		);
 

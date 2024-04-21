@@ -585,7 +585,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"documentId\": 1,\n    // \"published\": 1,\n    \"bricks\": [\n        {\n            \"id\": 99,\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    // \"fieldsId\": 1,\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"languageId\": 1\n                },\n                {\n                    // \"fieldsId\": 1,\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"languageId\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            \"fieldsId\": 95,\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"languageId\": 1\n        }\n    ]\n}",
+									"raw": "{\n    \"documentId\": 1,\n    // \"published\": 1,\n    \"bricks\": [\n        {\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"languageId\": 1\n                },\n                {\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"languageId\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"languageId\": 1\n        },\n        {\n            \"key\": \"author\",\n            \"type\": \"user\",\n            \"value\": 1,\n            \"languageId\": 1\n        },\n        {\n            \"key\": \"notifications\",\n            \"type\": \"repeater\",\n            \"languageId\": 1,\n            \"groups\": [\n                [\n                    {\n                        \"key\": \"notification_title\",\n                        \"type\": \"text\",\n                        \"value\": \"John Smith\",\n                        \"languageId\": 1\n                    }\n                ],\n                [\n                    {\n                        \"key\": \"notification_title\",\n                        \"type\": \"text\",\n                        \"value\": \"Sarah Smith\",\n                        \"languageId\": 1\n                    }\n                ]\n            ]\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -679,6 +679,11 @@
 										{
 											"key": "filter[page_title]",
 											"value": "Homepage - Modified",
+											"disabled": true
+										},
+										{
+											"key": "filter[author_name]",
+											"value": "John Smith",
 											"disabled": true
 										}
 									]

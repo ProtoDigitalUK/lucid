@@ -61,6 +61,7 @@
 		"@types/sanitize-html": "^2.9.0",
 		"@types/semver": "^7.5.8",
 		"@types/slug": "^5.0.7",
+		"@types/uuid": "^9.0.8",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.4"
 	},
@@ -92,6 +93,7 @@
 		"semver": "^7.6.0",
 		"sharp": "^0.33.3",
 		"slug": "^8.2.3",
+		"uuid": "^9.0.1",
 		"winston": "^3.13.0",
 		"zod": "^3.22.4"
 	},
