@@ -3,12 +3,6 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	documentId: number;
-	bricks: {
-		id: number;
-		brick_key: string | null;
-		brick_order: number | null;
-		brick_type: string;
-	}[];
 	apply: {
 		bricks: boolean;
 		collectionFields: boolean;
@@ -24,15 +18,6 @@ const deleteMultipleBricks = async (
 		serviceConfig.db,
 	);
 
-	// get all ids based on brick type
-	const collectionFieldsBricksIds = data.bricks
-		.filter((brick) => brick.brick_type === "collection-fields")
-		.map((brick) => brick.id);
-
-	const builderBricksIds = data.bricks
-		.filter((brick) => brick.brick_type !== "collection-fields")
-		.map((brick) => brick.id);
-
 	if (data.apply.collectionFields) {
 		await CollectionDocumentBricksRepo.deleteMultiple({
 			where: [
@@ -45,11 +30,6 @@ const deleteMultipleBricks = async (
 					key: "brick_type",
 					operator: "=",
 					value: "collection-fields",
-				},
-				{
-					key: "id",
-					operator: "not in",
-					value: collectionFieldsBricksIds,
 				},
 			],
 		});
@@ -66,11 +46,6 @@ const deleteMultipleBricks = async (
 					key: "brick_type",
 					operator: "!=",
 					value: "collection-fields",
-				},
-				{
-					key: "id",
-					operator: "not in",
-					value: builderBricksIds,
 				},
 			],
 		});

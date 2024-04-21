@@ -123,7 +123,7 @@ const upsertSingle = async (
 	}
 
 	await serviceWrapper(
-		collectionDocumentBricksServices.upsertMultiple,
+		collectionDocumentBricksServices.createMultiple,
 		false,
 	)(serviceConfig, {
 		documentId: document.id,

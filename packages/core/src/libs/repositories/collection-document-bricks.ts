@@ -179,8 +179,8 @@ export default class CollectionDocumentBricksRepo {
 			.execute();
 	};
 	// ----------------------------------------
-	// upsert
-	upsertMultiple = async (props: {
+	// create
+	createMultiple = async (props: {
 		items: Array<{
 			id?: number;
 			brickType: BrickSchema["type"];
@@ -201,11 +201,6 @@ export default class CollectionDocumentBricksRepo {
 						collection_document_id: b.collectionDocumentId,
 					};
 				}),
-			)
-			.onConflict((oc) =>
-				oc.column("id").doUpdateSet((eb) => ({
-					brick_order: eb.ref("excluded.brick_order"),
-				})),
 			)
 			.returning(["id", "brick_order", "brick_key", "brick_type"])
 			.execute();

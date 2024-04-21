@@ -3,7 +3,6 @@ import { FieldSchema, swaggerFieldObj } from "./collection-fields.js";
 import { GroupSchema, swaggerGroupObj } from "./collection-groups.js";
 
 export const BrickSchema = z.object({
-	id: z.union([z.number(), z.string()]).optional(),
 	key: z.string(),
 	order: z.number(),
 	type: z.union([z.literal("builder"), z.literal("fixed")]),

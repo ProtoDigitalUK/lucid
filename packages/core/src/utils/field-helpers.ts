@@ -15,7 +15,7 @@ import type {
 import type { FieldProp } from "../libs/formatters/collection-document-fields.js";
 import type { FieldFilters } from "../libs/builders/collection-builder/index.js";
 import type { BrickSchema } from "../schemas/collection-bricks.js";
-import type { GroupsResponse } from "../services/collection-document-bricks/upsert-multiple-groups.js";
+import type { GroupsResponse } from "../services/collection-document-bricks/create-multiple-groups.js";
 import Formatter from "../libs/formatters/index.js";
 import mediaHelpers from "./media-helpers.js";
 
@@ -258,8 +258,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 	return { value, meta };
 };
 
-interface FieldUpsertObjectResponse {
-	fieldsId?: number | undefined;
+interface FieldCreateObjectResponse {
 	collectionBrickId: number;
 	key: string;
 	type: FieldTypes;
@@ -274,14 +273,14 @@ interface FieldUpsertObjectResponse {
 	languageId: number;
 }
 
-interface FormatUpsertFields {
+interface FormatCreateFields {
 	brick: BrickSchema;
 	groups: Array<GroupsResponse>;
 }
 
-export const fieldUpsertPrep = (
-	props: FormatUpsertFields,
-): Array<FieldUpsertObjectResponse> => {
+export const fieldCreatePrep = (
+	props: FormatCreateFields,
+): Array<FieldCreateObjectResponse> => {
 	return (
 		props.brick.fields?.map((field) => {
 			let groupId = null;
@@ -297,7 +296,6 @@ export const fieldUpsertPrep = (
 
 			return {
 				languageId: field.languageId,
-				fieldsId: field.fieldsId,
 				collectionBrickId: props.brick.id as number,
 				key: field.key,
 				type: field.type,

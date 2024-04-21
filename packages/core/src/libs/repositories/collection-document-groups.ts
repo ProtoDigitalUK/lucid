@@ -8,9 +8,8 @@ export default class CollectionDocumentGroupsRepo {
 
 	// ----------------------------------------
 	// upsert
-	upsertMultiple = async (props: {
+	createMultiple = async (props: {
 		items: Array<{
-			groupId?: number;
 			parentGroupId?: number | null;
 			collectionDocumentId: number;
 			collectionBrickId: number;
@@ -24,7 +23,6 @@ export default class CollectionDocumentGroupsRepo {
 			.insertInto("headless_collection_document_groups")
 			.values(
 				props.items.flatMap((g) => ({
-					group_id: g.groupId,
 					parent_group_id: g.parentGroupId,
 					collection_document_id: g.collectionDocumentId,
 					collection_brick_id: g.collectionBrickId,
@@ -32,12 +30,6 @@ export default class CollectionDocumentGroupsRepo {
 					repeater_key: g.repeaterKey,
 					language_id: g.languageId,
 					ref: g.ref,
-				})),
-			)
-			.onConflict((oc) =>
-				oc.column("group_id").doUpdateSet((eb) => ({
-					group_order: eb.ref("excluded.group_order"),
-					parent_group_id: eb.ref("excluded.parent_group_id"),
 				})),
 			)
 			.returning(["group_id", "ref"])

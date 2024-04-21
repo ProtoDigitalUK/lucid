@@ -16,7 +16,7 @@ export interface ServiceData {
 	collectionKey: string;
 }
 
-const upsertMultiple = async (
+const createMultiple = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
@@ -28,7 +28,7 @@ const upsertMultiple = async (
 	// set bricks
 	let bricks = data.bricks || [];
 
-	bricks = await addCollectionSudoBrick(serviceConfig, {
+	bricks = addCollectionSudoBrick({
 		fields: data.fields,
 		groups: data.groups,
 		documentId: data.documentId,
@@ -44,10 +44,24 @@ const upsertMultiple = async (
 		bricks: bricks,
 	});
 
-	// upsert bricks and return all the ids, order and key
-	const bricksRes = await CollectionDocumentBricksRepo.upsertMultiple({
+	// delete all bricks
+	await serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
+		serviceConfig,
+		{
+			documentId: data.documentId,
+			apply: {
+				bricks: data.bricks !== undefined,
+				collectionFields: upsertCollectionSudoBrick(
+					data.fields,
+					data.groups,
+				),
+			},
+		},
+	);
+
+	// create bricks and return all the ids, order and key
+	const bricksRes = await CollectionDocumentBricksRepo.createMultiple({
 		items: bricks.map((b) => ({
-			id: typeof b.id === "string" ? undefined : b.id,
 			brickType: b.type,
 			brickKey: b.key,
 			brickOrder: b.order,
@@ -58,44 +72,24 @@ const upsertMultiple = async (
 	// assign the ids to the bricks
 	bricks = assignBrickIdsFromUpsert(bricks, bricksRes);
 
-	// upsert groups
-	// TODO: take a look at this function and how it mutates bricks
-	const groupsRes = await serviceWrapper(
-		collectionBricksServices.upsertMultipleGroups,
+	// create groups
+	const groups = await serviceWrapper(
+		collectionBricksServices.createMultipleGroups,
 		false,
 	)(serviceConfig, {
 		documentId: data.documentId,
 		bricks: bricks,
 	});
 
-	await Promise.all([
-		// upsert fields
-		serviceWrapper(collectionBricksServices.upsertMultipleFields, false)(
-			serviceConfig,
-			{
-				documentId: data.documentId,
-				bricks: bricks,
-				groups: groupsRes.groups,
-			},
-		),
-		// delete multiple bricks
-		serviceWrapper(collectionBricksServices.deleteMultipleBricks, false)(
-			serviceConfig,
-			{
-				documentId: data.documentId,
-				bricks: bricksRes,
-				apply: {
-					bricks: data.bricks !== undefined,
-					collectionFields: upsertCollectionSudoBrick(
-						data.fields,
-						data.groups,
-					),
-				},
-			},
-		),
-		// group delete, parent update
-		...groupsRes.promises,
-	]);
+	// create fields
+	await serviceWrapper(collectionBricksServices.createMultipleFields, false)(
+		serviceConfig,
+		{
+			documentId: data.documentId,
+			bricks: bricks,
+			groups: groups,
+		},
+	);
 };
 
 const upsertCollectionSudoBrick = (
@@ -106,67 +100,34 @@ const upsertCollectionSudoBrick = (
 	return true;
 };
 
-const addCollectionSudoBrick = async (
-	serviceConfig: ServiceConfig,
-	data: {
-		fields?: Array<FieldSchemaType>;
-		groups?: Array<GroupSchemaType>;
-		documentId: number;
-		bricks: Array<BrickSchema>;
-	},
-) => {
+const addCollectionSudoBrick = (data: {
+	fields?: Array<FieldSchemaType>;
+	groups?: Array<GroupSchemaType>;
+	documentId: number;
+	bricks: Array<BrickSchema>;
+}) => {
 	if (!upsertCollectionSudoBrick(data.fields)) return data.bricks;
 
-	const CollectionDocumentBricksRepo = Repository.get(
-		"collection-document-bricks",
-		serviceConfig.db,
-	);
-	const collectionContentBrick =
-		await CollectionDocumentBricksRepo.selectSingle({
-			select: ["id"],
-			where: [
-				{
-					key: "collection_document_id",
-					operator: "=",
-					value: data.documentId,
-				},
-				{
-					key: "brick_type",
-					operator: "=",
-					value: "collection-fields",
-				},
-			],
-		});
-
-	if (collectionContentBrick !== undefined) {
-		data.bricks.push({
-			id: collectionContentBrick?.id,
-			type: "collection-fields",
-			groups: data.groups,
-			fields: data.fields,
-		});
-	} else {
-		data.bricks.push({
-			type: "collection-fields",
-			groups: data.groups,
-			fields: data.fields,
-		});
-	}
+	data.bricks.push({
+		type: "collection-fields",
+		groups: data.groups,
+		fields: data.fields,
+	});
 
 	return data.bricks;
 };
 
 const assignBrickIdsFromUpsert = (
 	bricks: Array<BrickSchema>,
-	upsertedBricks: Array<{
+	insertedBricks: Array<{
 		id: number;
 		brick_type: "builder" | "fixed" | "collection-fields";
 		brick_key: string | null;
 		brick_order: number | null;
 	}>,
-) => {
-	return bricks.map((brick) => {
-		const foundBrick = upsertedBricks.find(
+) =>
+	bricks.map((brick) => {
+		const foundBrick = insertedBricks.find(
 			(res) =>
 				res.brick_key === (brick.key ?? null) &&
 				res.brick_order === (brick.order ?? null) &&
@@ -191,6 +152,5 @@ const assignBrickIdsFromUpsert = (
 			fields: brick.fields,
 		};
 	});
-};
 
-export default upsertMultiple;
+export default createMultiple;

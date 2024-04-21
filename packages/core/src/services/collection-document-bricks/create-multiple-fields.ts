@@ -1,6 +1,6 @@
 import type { BrickSchema } from "../../schemas/collection-bricks.js";
-import type { GroupsResponse } from "./upsert-multiple-groups.js";
-import { fieldUpsertPrep } from "../../utils/field-helpers.js";
+import type { GroupsResponse } from "./create-multiple-groups.js";
+import { fieldCreatePrep } from "../../utils/field-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
@@ -10,13 +10,12 @@ export interface ServiceData {
 	groups: Array<GroupsResponse>;
 }
 
-const upsertMultipleFields = async (
+const createMultipleFields = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
-	// format fields
 	const fields = data.bricks.flatMap((brick) =>
-		fieldUpsertPrep({
+		fieldCreatePrep({
 			brick: brick,
 			groups: data.groups,
 		}),
@@ -31,11 +30,9 @@ const upsertMultipleFields = async (
 		serviceConfig.db,
 	);
 
-	// upsert fields
-	const fieldsRes = await CollectionDocumentFieldsRepo.upsertMultiple({
+	await CollectionDocumentFieldsRepo.createMultiple({
 		items: fields.map((field) => {
 			return {
-				fieldsId: field.fieldsId ?? undefined,
 				collectionDocumentId: data.documentId,
 				collectionBrickId: field.collectionBrickId,
 				key: field.key,
@@ -52,22 +49,6 @@ const upsertMultipleFields = async (
 			};
 		}),
 	});
-
-	// delete fields not in fieldsRes
-	await CollectionDocumentFieldsRepo.deleteMultiple({
-		where: [
-			{
-				key: "collection_brick_id",
-				operator: "in",
-				value: fields.map((f) => f.collectionBrickId),
-			},
-			{
-				key: "fields_id",
-				operator: "not in",
-				value: fieldsRes.map((f) => f.fields_id),
-			},
-		],
-	});
 };
 
-export default upsertMultipleFields;
+export default createMultipleFields;

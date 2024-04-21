@@ -35,7 +35,6 @@ export const FieldSchema = z.object({
 		z.any(),
 	]),
 	languageId: z.number(),
-	fieldsId: z.number().optional(),
 	groupId: z.union([z.number(), z.string()]).optional(),
 });
 
@@ -71,9 +70,6 @@ export const swaggerFieldObj = {
 			],
 		},
 		languageId: {
-			type: "number",
-		},
-		fieldsId: {
 			type: "number",
 		},
 		groupId: {

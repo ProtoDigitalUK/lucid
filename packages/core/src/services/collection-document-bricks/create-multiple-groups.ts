@@ -18,12 +18,14 @@ export interface ServiceData {
 	bricks: Array<BrickSchema>;
 }
 
-const upsertMultipleGroups = async (
+// TODO: take a look at this function and how it mutates bricks
+
+const createMultipleGroups = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
 	const brickGroups = data.bricks.flatMap((brick) => brick.groups || []);
-	if (brickGroups.length === 0) return { groups: [], promises: [] };
+	if (brickGroups.length === 0) return [];
 
 	const CollectionDocumentGroupsRepo = Repository.get(
 		"collection-document-groups",
@@ -31,7 +33,7 @@ const upsertMultipleGroups = async (
 	);
 
 	// Update groups, on id conflict, update group_order, parent_group_id
-	const groupsRes = await CollectionDocumentGroupsRepo.upsertMultiple({
+	const groupsRes = await CollectionDocumentGroupsRepo.createMultiple({
 		items: data.bricks.flatMap((brick) => {
 			if (!brick.groups) return [];
 
@@ -153,32 +155,13 @@ const upsertMultipleGroups = async (
 		});
 	});
 
-	return {
-		groups,
-		promises: [
-			// Delete groups not in groupsRes
-			CollectionDocumentGroupsRepo.deleteMultiple({
-				where: [
-					{
-						key: "collection_brick_id",
-						operator: "in",
-						value: data.bricks.map((b) => b.id),
-					},
-					{
-						key: "group_id",
-						operator: "not in",
-						value: groups.map((g) => g.groupId),
-					},
-				],
-			}),
-			// Update groups with their new parent_group_id
-			updateGroupParentIds.length > 0
-				? CollectionDocumentGroupsRepo.updateMultipleParentIds({
-						items: updateGroupParentIds,
-					})
-				: undefined,
-		],
-	};
+	if (updateGroupParentIds.length > 0) {
+		await CollectionDocumentGroupsRepo.updateMultipleParentIds({
+			items: updateGroupParentIds,
+		});
+	}
+
+	return groups;
 };
 
-export default upsertMultipleGroups;
+export default createMultipleGroups;

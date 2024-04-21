@@ -72,7 +72,6 @@ export default class CollectionDocumentFieldsFormatter {
 
 				if (field) {
 					const fieldsData: FieldResponse = {
-						fieldsId: field.fields_id,
 						key: field.key,
 						type: field.type as FieldTypes,
 						languageId: field.language_id,
@@ -92,9 +91,6 @@ export default class CollectionDocumentFieldsFormatter {
 		type: "object",
 		additionalProperties: true,
 		properties: {
-			fieldsId: {
-				type: "number",
-			},
 			key: {
 				type: "string",
 			},

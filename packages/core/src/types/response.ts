@@ -159,7 +159,6 @@ export interface CollectionResponse {
 }
 
 export interface BrickResponse {
-	id: number;
 	key: string;
 	order: number;
 	type: "builder" | "fixed";
@@ -168,7 +167,6 @@ export interface BrickResponse {
 }
 
 export interface FieldResponse {
-	fieldsId: number;
 	key: string;
 	type: FieldTypes;
 	groupId?: number | null;
