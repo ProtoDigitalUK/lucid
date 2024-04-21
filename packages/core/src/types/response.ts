@@ -162,17 +162,16 @@ export interface BrickResponse {
 	key: string;
 	order: number;
 	type: "builder" | "fixed";
-	groups: Array<GroupResponse>;
 	fields: Array<FieldResponse>;
 }
 
 export interface FieldResponse {
 	key: string;
 	type: FieldTypes;
-	groupId?: number | null;
 	value?: FieldResponseValue;
 	meta?: FieldResponseMeta;
 	languageId: number;
+	groups?: Array<Array<FieldResponse>>;
 }
 
 export type FieldResponseValue =
@@ -241,13 +240,6 @@ export interface UserMeta {
 	lastName: string | null;
 }
 
-export interface GroupResponse {
-	groupId: number;
-	groupOrder: number;
-	parentGroupId: number | null;
-	repeaterKey: string;
-}
-
 export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;
@@ -258,7 +250,6 @@ export interface CollectionDocumentResponse {
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;
-	groups?: Array<GroupResponse> | null;
 }
 
 export interface ResponseBody {

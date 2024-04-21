@@ -57,7 +57,6 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			collection: collectionInstance,
 			bricks: bricksRes.bricks,
 			fields: bricksRes.fields,
-			groups: bricksRes.groups,
 			host: serviceConfig.config.host,
 		});
 	}

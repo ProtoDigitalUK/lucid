@@ -27,11 +27,18 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		}),
 	]);
 
-	return CollectionDocumentBricksFormatter.formatMultiple({
-		bricks: bricks,
-		collection: collection,
-		host: serviceConfig.config.host,
-	});
+	return {
+		bricks: CollectionDocumentBricksFormatter.formatMultiple({
+			bricks: bricks,
+			collection: collection,
+			host: serviceConfig.config.host,
+		}),
+		fields: CollectionDocumentBricksFormatter.formatCollectionSudoBrick({
+			bricks: bricks,
+			collection: collection,
+			host: serviceConfig.config.host,
+		}),
+	};
 };
 
 export default getMultiple;

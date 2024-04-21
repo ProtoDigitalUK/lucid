@@ -62,7 +62,7 @@ export default class CollectionDocumentFieldsFormatter {
 			for (const field of fieldData) {
 				const { value, meta } = fieldResponseValueFormat({
 					type: instanceField.type,
-					builderField: instanceField,
+					customField: instanceField,
 					field,
 					host: props.host,
 				});
@@ -76,7 +76,7 @@ export default class CollectionDocumentFieldsFormatter {
 						type: field.type as FieldTypes,
 						languageId: field.language_id,
 					};
-					if (field.group_id) fieldsData.groupId = field.group_id;
+					// if (field.group_id) fieldsData.groupId = field.group_id;
 					if (meta) fieldsData.meta = meta;
 					fieldsData.value = value;
 

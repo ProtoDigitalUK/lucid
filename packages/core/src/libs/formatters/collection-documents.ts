@@ -1,16 +1,12 @@
 import type {
 	BrickResponse,
 	FieldResponse,
-	GroupResponse,
 	CollectionDocumentResponse,
 } from "../../types/response.js";
-import CollectionDocumentFieldsFormatter, {
-	type FieldProp,
-} from "./collection-document-fields.js";
+import CollectionDocumentFieldsFormatter, { type FieldProp } from "./fields.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import Formatter from "./index.js";
-import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
-import CollectionDocumentGroupsFormatter from "./collection-document-groups.js";
+import CollectionDocumentBricksFormatter from "./bricks.js";
 
 interface DocumentPropT {
 	id: number;
@@ -40,7 +36,6 @@ export default class CollectionDocumentsFormatter {
 		collection: CollectionBuilder;
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
-		groups?: GroupResponse[] | null;
 		host: string;
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
@@ -48,9 +43,12 @@ export default class CollectionDocumentsFormatter {
 		if (props.fields) {
 			fields = props.fields;
 		} else if (props.document.fields) {
+			// ** This is only used on get multiple documents, in this case we dont request groups and so should
+			// ** return fields in a flat format instead of nesting them if repeaters are present
 			fields = new CollectionDocumentFieldsFormatter().formatMultiple({
 				fields: props.document.fields,
 				host: props.host,
+				groups: [], // TODO: make sure works without groups, if not may need a flat format method
 				builder: props.collection,
 			});
 		}
@@ -60,7 +58,6 @@ export default class CollectionDocumentsFormatter {
 			collectionKey: props.document.collection_key,
 			bricks: props.bricks ?? null,
 			fields: fields,
-			groups: props.groups ?? null,
 			createdBy: props.document.created_by,
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
@@ -70,6 +67,7 @@ export default class CollectionDocumentsFormatter {
 	};
 	static swagger = {
 		type: "object",
+		additionalProperties: true, // TODO: temp until bricks & fields swagger is added back
 		properties: {
 			id: {
 				type: "number",
@@ -80,18 +78,13 @@ export default class CollectionDocumentsFormatter {
 			},
 			bricks: {
 				type: "array",
-				items: CollectionDocumentBricksFormatter.swagger,
+				// items: CollectionDocumentBricksFormatter.swagger,
 				nullable: true,
 			},
 			fields: {
 				type: "array",
 				nullable: true,
-				items: CollectionDocumentFieldsFormatter.swagger,
-			},
-			groups: {
-				type: "array",
-				nullable: true,
-				items: CollectionDocumentGroupsFormatter.swagger,
+				// items: CollectionDocumentFieldsFormatter.swagger,
 			},
 			createdBy: {
 				type: "number",

@@ -133,7 +133,7 @@ export const collectionDocFilters = (
 
 interface FieldResponseValueFormat {
 	type: FieldTypes;
-	builderField: CustomField;
+	customField: CustomField;
 	field: FieldProp;
 	host: string;
 }
@@ -146,11 +146,11 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			break;
 		}
 		case "text": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "wysiwyg": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "media": {
@@ -184,35 +184,35 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			break;
 		}
 		case "number": {
-			value = props.field?.int_value ?? props.builderField?.default;
+			value = props.field?.int_value ?? props.customField?.default;
 			break;
 		}
 		case "checkbox": {
 			value =
-				props.field?.bool_value ?? props.builderField?.default ? 1 : 0;
+				props.field?.bool_value ?? props.customField?.default ? 1 : 0;
 			break;
 		}
 		case "select": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "textarea": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "json": {
 			value =
 				Formatter.parseJSON<Record<string, unknown>>(
 					props.field?.json_value,
-				) ?? props.builderField?.default;
+				) ?? props.customField?.default;
 			break;
 		}
 		case "colour": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "datetime": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "user": {
@@ -243,9 +243,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			);
 			value = {
 				url:
-					props.field?.text_value ??
-					props.builderField?.default ??
-					"",
+					props.field?.text_value ?? props.customField?.default ?? "",
 				target: jsonVal?.target ?? "_self",
 				label: jsonVal?.label ?? null,
 			};

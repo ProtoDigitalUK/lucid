@@ -178,6 +178,15 @@ class FieldBuilder {
 
 		return fields;
 	}
+	get fieldTreeNoTab() {
+		const fieldArray = Array.from(this.fields.values());
+		for (const field of fieldArray) {
+			if (field.type === "tab") {
+				fieldArray.splice(fieldArray.indexOf(field), 1);
+			}
+		}
+		return fieldArray;
+	}
 	//
 	protected addToFields(type: FieldTypes, config: CustomFieldConfigs) {
 		this.meta.fieldKeys.push(config.key);
