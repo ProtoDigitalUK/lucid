@@ -12,6 +12,7 @@ import type {
 	CollectionSelectConfig,
 	CollectionTextareaConfig,
 	CollectionDateTimeConfig,
+	CollectionUserConfig,
 } from "./types.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
@@ -66,6 +67,11 @@ export default class CollectionBuilder extends FieldBuilder {
 	addDateTime(config: CollectionDateTimeConfig) {
 		this.#fieldCollectionHelper(config.key, "datetime", config.collection);
 		super.addDateTime(config);
+		return this;
+	}
+	addUser(config: CollectionUserConfig) {
+		this.#fieldCollectionHelper(config.key, "user", config.collection);
+		super.addUser(config);
 		return this;
 	}
 	// ------------------------------------

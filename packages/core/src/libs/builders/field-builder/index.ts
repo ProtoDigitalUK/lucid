@@ -9,6 +9,7 @@ import type {
 	DateTimeConfig,
 	JSONConfig,
 	LinkConfig,
+	UserConfig,
 	MediaConfig,
 	NumberConfig,
 	PageLinkConfig,
@@ -22,6 +23,7 @@ import type {
 	FieldBuilderMeta,
 	ValidationProps,
 	MediaReferenceData,
+	UserReferenceData,
 	LinkReferenceData,
 	ValidationResponse,
 } from "./types.js";
@@ -124,6 +126,10 @@ class FieldBuilder {
 	}
 	public addLink(config: LinkConfig) {
 		this.addToFields("link", config);
+		return this;
+	}
+	public addUser(config: UserConfig) {
+		this.addToFields("user", config);
 		return this;
 	}
 	// Getters
@@ -230,6 +236,9 @@ class FieldBuilder {
 			case "datetime": {
 				return (config as DateTimeConfig).default || "";
 			}
+			case "user": {
+				return undefined;
+			}
 			case "pagelink": {
 				return undefined;
 			}
@@ -308,6 +317,14 @@ class FieldBuilder {
 					);
 					break;
 				}
+				case "user": {
+					this.#validateUserType(
+						field,
+						referenceData as UserReferenceData,
+						value as number | null,
+					);
+					break;
+				}
 				case "datetime": {
 					if (!value) break;
 					const date = new Date(value as string);
@@ -359,6 +376,17 @@ class FieldBuilder {
 		// run zod validation
 		if (field.validation?.zod) {
 			this.#validateZodSchema(field.validation.zod, sanitizedValue);
+		}
+	}
+	#validateUserType(
+		field: CustomField,
+		referenceData: UserReferenceData,
+		value: number | null,
+	) {
+		if (field.validation?.required !== true && !value) return;
+
+		if (referenceData === undefined) {
+			throw new Error("We couldn't find the user you selected.");
 		}
 	}
 	#validateMediaType(
@@ -519,6 +547,14 @@ class FieldBuilder {
 		checkbox: {
 			type: "boolean",
 			nullable: false,
+		},
+		media: {
+			type: "number",
+			nullable: true,
+		},
+		user: {
+			type: "number",
+			nullable: true,
 		},
 	};
 }

@@ -55,7 +55,8 @@ export type FieldTypes =
 	| "colour"
 	| "datetime"
 	| "pagelink"
-	| "link";
+	| "link"
+	| "user";
 
 export interface FieldBuilderMeta {
 	fieldKeys: string[];
@@ -85,7 +86,8 @@ export type CustomFieldConfigs =
 	| DateTimeConfig
 	| PageLinkConfig
 	| LinkConfig
-	| RepeaterConfig;
+	| RepeaterConfig
+	| UserConfig;
 
 export interface TabConfig extends CustomFieldConfig {
 	title: string;
@@ -218,6 +220,14 @@ export interface LinkConfig extends CustomFieldConfig {
 	};
 }
 
+export interface UserConfig extends CustomFieldConfig {
+	hidden?: boolean;
+	disabled?: boolean;
+	validation?: {
+		required?: boolean;
+	};
+}
+
 // Defaults
 export type DefaultFieldValues =
 	| TextConfig["default"]
@@ -254,4 +264,12 @@ export interface MediaReferenceData {
 	width: number | null;
 	height: number | null;
 	type: string;
+}
+
+export interface UserReferenceData {
+	id: string;
+	username: string;
+	firstName: string;
+	lastName: string;
+	email: string;
 }
