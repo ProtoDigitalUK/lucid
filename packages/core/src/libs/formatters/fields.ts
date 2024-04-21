@@ -67,6 +67,21 @@ export default class CollectionDocumentFieldsFormatter {
 	}): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
 		for (const cf of props.customFields) {
+			// if the field is a repeater, call buildFieldTree recursively on its fields
+			if (cf.type === "repeater") {
+				fieldsRes.push({
+					key: cf.key,
+					type: cf.type,
+					groups: this.buildGroups({
+						repeater: cf,
+						fields: props.fields,
+						groups: props.groups,
+						host: props.host,
+					}),
+				});
+				continue;
+			}
+
 			const field = props.fields.find((f) => f.key === cf.key);
 			if (!field) continue;
 
@@ -76,22 +91,6 @@ export default class CollectionDocumentFieldsFormatter {
 				field: field,
 				host: props.host,
 			});
-
-			// if the field is a repeater, call buildFieldTree recursively on its fields
-			if (field.type === "repeater") {
-				fieldsRes.push({
-					key: field.key,
-					type: field.type,
-					languageId: field.language_id,
-					groups: this.buildGroups({
-						fields: props.fields,
-						customFields: cf.fields || [],
-						groups: props.groups,
-						host: props.host,
-					}),
-				});
-				continue;
-			}
 
 			fieldsRes.push({
 				key: field.key,
@@ -106,12 +105,39 @@ export default class CollectionDocumentFieldsFormatter {
 	};
 	private buildGroups = (props: {
 		fields: FieldProp[];
-		customFields: CustomField[];
+		repeater: CustomField;
 		groups: BrickPropT["groups"];
 		host: string;
 	}): FieldResponse[][] => {
+		// get all group_id values from props.groups for the current repeater
+		// for each group_id value, find the fields that belong to that group
+		// and call buildFields on those fields
+
 		const groups: FieldResponse[][] = [];
-		console.log(props.customFields);
+
+		const repeaterFields = props.repeater.fields;
+		if (!repeaterFields) return groups;
+
+		const repeaterGroups = props.groups.filter(
+			(g) => g.repeater_key === props.repeater.key,
+		);
+
+		for (const group of repeaterGroups) {
+			const groupFields = props.fields.filter(
+				(f) => f.group_id === group.group_id,
+			);
+			// TODO: fix bug with nested repeaters
+			// ** as we filter down fields to only the current group, the next repeater wont have access to required fields
+			groups.push(
+				this.buildFields({
+					fields: groupFields,
+					groups: props.groups,
+					host: props.host,
+					customFields: repeaterFields,
+				}),
+			);
+		}
+
 		return groups;
 	};
 	// Add swagger

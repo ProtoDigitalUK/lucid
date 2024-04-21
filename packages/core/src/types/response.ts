@@ -170,7 +170,7 @@ export interface FieldResponse {
 	type: FieldTypes;
 	value?: FieldResponseValue;
 	meta?: FieldResponseMeta;
-	languageId: number;
+	languageId?: number;
 	groups?: Array<Array<FieldResponse>>;
 }
 

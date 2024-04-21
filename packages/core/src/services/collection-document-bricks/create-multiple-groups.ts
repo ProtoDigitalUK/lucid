@@ -1,8 +1,5 @@
-import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
-import type formatPostInsertBricks from "./helpers/format-post-insert-bricks.js";
 import type { GroupInsertItem } from "./helpers/flatten-fields.js";
 
 export interface GroupsResponse {
@@ -86,6 +83,7 @@ const createMultipleGroups = async (
 	}
 
 	if (updateGroupParentIds.length > 0) {
+		// TODO: look into bug here stopping from update
 		await CollectionDocumentGroupsRepo.updateMultipleParentIds({
 			items: updateGroupParentIds,
 		});
