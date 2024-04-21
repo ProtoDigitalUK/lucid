@@ -5,12 +5,21 @@ import CollectionDocumentFieldsFormatter, {
 	type FieldProp,
 } from "./collection-document-fields.js";
 
-interface BrickPropT {
+export interface BrickPropT {
 	id: number;
 	brick_key: string | null;
 	brick_order: number | null;
 	brick_type: string;
 	collection_document_id: number;
+	groups: Array<{
+		group_id: number;
+		parent_group_id: number | null;
+		collection_brick_id: number | null;
+		repeater_key: string;
+		group_order: number;
+		ref: string | null;
+		collection_document_id: number;
+	}>;
 	fields: Array<FieldProp>;
 }
 
@@ -19,13 +28,11 @@ export default class CollectionDocumentBricksFormatter {
 		bricks: BrickPropT[];
 		collection: CollectionBuilder;
 		host: string;
-	}): {
-		bricks: BrickResponse[];
-		fields: FieldResponse[] | null;
-	} => {
-		const bricks = props.bricks
+	}): BrickResponse[] => {
+		return props.bricks
 			.filter((brick) => {
 				if (brick.brick_type === "collection-fields") return false;
+
 				const builder = props.collection.brickInstances.find((b) => {
 					return b.key === brick.brick_key;
 				});
@@ -45,47 +52,37 @@ export default class CollectionDocumentBricksFormatter {
 					fields: new CollectionDocumentFieldsFormatter().formatMultiple(
 						{
 							fields: brick.fields,
+							groups: brick.groups,
 							host: props.host,
 							builder: builder,
 						},
 					),
 				};
 			});
-
-		const collectionSudoBrickFilter = props.bricks
+	};
+	formatCollectionSudoBrick = (props: {
+		bricks: BrickPropT[];
+		collection: CollectionBuilder;
+		host: string;
+	}): FieldResponse[] => {
+		return props.bricks
 			.filter((brick) => {
 				if (brick.brick_type !== "collection-fields") return false;
 				return true;
 			})
-			.map((brick) => {
-				return {
-					fields: new CollectionDocumentFieldsFormatter().formatMultiple(
-						{
-							fields: brick.fields,
-							host: props.host,
-							builder: props.collection,
-						},
-					),
-				};
-			});
-
-		const collectionSudoBrick =
-			collectionSudoBrickFilter.length && collectionSudoBrickFilter[0]
-				? collectionSudoBrickFilter[0]
-				: null;
-
-		return {
-			bricks,
-			fields: collectionSudoBrick?.fields ?? null,
-		};
+			.flatMap((brick) =>
+				new CollectionDocumentFieldsFormatter().formatMultiple({
+					fields: brick.fields,
+					groups: brick.groups,
+					host: props.host,
+					builder: props.collection,
+				}),
+			);
 	};
 	static swagger = {
 		type: "object",
 		additionalProperties: true,
 		properties: {
-			collectionDocumentId: {
-				type: "number",
-			},
 			key: {
 				type: "string",
 			},

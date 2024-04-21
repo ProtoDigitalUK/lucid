@@ -11,9 +11,9 @@ import MediaFormatter from "./media.js";
 import LanguagesFormatter from "./languages.js";
 import EmailsFormatter from "./emails.js";
 import CollectionsFormatter from "./collections.js";
-import CollectionDocumentFieldsFormatter from "./fields.js";
+import CollectionDocumentFieldsFormatter from "./collection-document-fields.js";
 import CollectionDocumentsFormatter from "./collection-documents.js";
-import CollectionDocumentBricksFormatter from "./bricks.js";
+import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 class Formatter {

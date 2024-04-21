@@ -168,6 +168,7 @@ export interface BrickResponse {
 export interface FieldResponse {
 	key: string;
 	type: FieldTypes;
+	groupId?: number;
 	value?: FieldResponseValue;
 	meta?: FieldResponseMeta;
 	languageId?: number;

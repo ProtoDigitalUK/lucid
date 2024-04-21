@@ -3,6 +3,8 @@ import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
 import type { FieldTypes } from "../builders/field-builder/index.js";
+import type { BrickPropT } from "./collection-document-bricks.js";
+import type { CustomField } from "../builders/field-builder/index.js";
 import { fieldResponseValueFormat } from "../../utils/field-helpers.js";
 
 export interface FieldProp {
@@ -45,47 +47,139 @@ export interface FieldProp {
 export default class CollectionDocumentFieldsFormatter {
 	formatMultiple = (props: {
 		fields: FieldProp[];
+		groups: BrickPropT["groups"];
+		host: string;
+		builder: BrickBuilder | CollectionBuilder;
+	}): FieldResponse[] => {
+		const fieldTree = props.builder.fieldTreeNoTab;
+		return this.buildFields({
+			fields: props.fields,
+			groups: props.groups,
+			host: props.host,
+			customFields: fieldTree,
+			groupId: null,
+			parentGroupId: null,
+		});
+	};
+	formatMultipleFlat = (props: {
+		fields: FieldProp[];
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
 	}): FieldResponse[] => {
 		if (props.fields.length === 0) return [];
 		const fieldsRes: FieldResponse[] = [];
+		const flatFields = props.builder.flatFields;
 
-		const instanceFields = props.builder?.flatFields;
-		if (!instanceFields) return fieldsRes;
-
-		for (const instanceField of instanceFields) {
-			const fieldData = props.fields.filter(
-				(f) => f.key === instanceField.key,
-			);
+		for (const cf of flatFields) {
+			const fieldData = props.fields.filter((f) => f.key === cf.key);
 
 			for (const field of fieldData) {
 				const { value, meta } = fieldResponseValueFormat({
-					type: instanceField.type,
-					customField: instanceField,
-					field,
+					type: cf.type,
+					customField: cf,
+					field: field,
 					host: props.host,
 				});
 
 				if (field.type === "tab") continue;
 				if (field.type === "repeater") continue;
 
-				if (field) {
-					const fieldsData: FieldResponse = {
-						key: field.key,
-						type: field.type as FieldTypes,
-						languageId: field.language_id,
-					};
-					// if (field.group_id) fieldsData.groupId = field.group_id;
-					if (meta) fieldsData.meta = meta;
-					fieldsData.value = value;
-
-					fieldsRes.push(fieldsData);
-				}
+				fieldsRes.push({
+					key: field.key,
+					type: field.type as FieldTypes,
+					languageId: field.language_id,
+					groupId: field.group_id ?? undefined,
+					value: value,
+					meta: meta,
+				});
 			}
 		}
 
 		return fieldsRes;
+	};
+	private buildFields = (props: {
+		fields: FieldProp[];
+		groups: BrickPropT["groups"];
+		host: string;
+		customFields: CustomField[];
+		groupId: number | null;
+		parentGroupId: number | null;
+	}): FieldResponse[] => {
+		const fieldsRes: FieldResponse[] = [];
+		for (const cf of props.customFields) {
+			// if the field is a repeater, call buildFieldTree recursively on its fields
+			if (cf.type === "repeater") {
+				fieldsRes.push({
+					key: cf.key,
+					type: cf.type,
+					groups: this.buildGroups({
+						repeater: cf,
+						fields: props.fields,
+						groups: props.groups,
+						host: props.host,
+						parentGroupId: props.groupId,
+					}),
+				});
+				continue;
+			}
+
+			const fields = props.fields.filter(
+				(f) => f.key === cf.key && f.group_id === props.groupId,
+			);
+			if (!fields) continue;
+
+			for (const field of fields) {
+				const { value, meta } = fieldResponseValueFormat({
+					type: cf.type,
+					customField: cf,
+					field: field,
+					host: props.host,
+				});
+
+				fieldsRes.push({
+					key: field.key,
+					type: field.type as FieldTypes,
+					languageId: field.language_id,
+					value: value,
+					meta: meta,
+				});
+			}
+		}
+
+		return fieldsRes;
+	};
+	private buildGroups = (props: {
+		fields: FieldProp[];
+		repeater: CustomField;
+		groups: BrickPropT["groups"];
+		host: string;
+		parentGroupId: number | null;
+	}): FieldResponse[][] => {
+		const groups: FieldResponse[][] = [];
+
+		const repeaterFields = props.repeater.fields;
+		if (!repeaterFields) return groups;
+
+		const repeaterGroups = props.groups.filter(
+			(g) =>
+				g.repeater_key === props.repeater.key &&
+				g.parent_group_id === props.parentGroupId,
+		);
+
+		for (const group of repeaterGroups) {
+			groups.push(
+				this.buildFields({
+					fields: props.fields,
+					groups: props.groups,
+					host: props.host,
+					customFields: repeaterFields,
+					groupId: group.group_id,
+					parentGroupId: group.parent_group_id,
+				}),
+			);
+		}
+
+		return groups;
 	};
 	static swagger = {
 		type: "object",
@@ -110,6 +204,8 @@ export default class CollectionDocumentFieldsFormatter {
 					"datetime",
 					"pagelink",
 					"link",
+					"repeater",
+					"user",
 				],
 			},
 			groupId: {
@@ -122,6 +218,7 @@ export default class CollectionDocumentFieldsFormatter {
 			meta: {
 				type: "object",
 				additionalProperties: true,
+				nullable: true,
 				properties: {
 					id: {
 						type: "number",
@@ -211,6 +308,9 @@ export default class CollectionDocumentFieldsFormatter {
 						nullable: true,
 					},
 				},
+			},
+			groups: {
+				type: "array",
 			},
 		},
 	};

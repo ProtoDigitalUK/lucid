@@ -3,10 +3,12 @@ import type {
 	FieldResponse,
 	CollectionDocumentResponse,
 } from "../../types/response.js";
-import CollectionDocumentFieldsFormatter, { type FieldProp } from "./fields.js";
+import CollectionDocumentFieldsFormatter, {
+	type FieldProp,
+} from "./collection-document-fields.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import Formatter from "./index.js";
-import CollectionDocumentBricksFormatter from "./bricks.js";
+import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
 
 interface DocumentPropT {
 	id: number;
@@ -45,12 +47,13 @@ export default class CollectionDocumentsFormatter {
 		} else if (props.document.fields) {
 			// ** This is only used on get multiple documents, in this case we dont request groups and so should
 			// ** return fields in a flat format instead of nesting them if repeaters are present
-			fields = new CollectionDocumentFieldsFormatter().formatMultiple({
-				fields: props.document.fields,
-				host: props.host,
-				groups: [], // TODO: make sure works without groups, if not may need a flat format method
-				builder: props.collection,
-			});
+			fields = new CollectionDocumentFieldsFormatter().formatMultipleFlat(
+				{
+					fields: props.document.fields,
+					host: props.host,
+					builder: props.collection,
+				},
+			);
 		}
 
 		const res: CollectionDocumentResponse = {
@@ -67,7 +70,6 @@ export default class CollectionDocumentsFormatter {
 	};
 	static swagger = {
 		type: "object",
-		additionalProperties: true, // TODO: temp until bricks & fields swagger is added back
 		properties: {
 			id: {
 				type: "number",
@@ -78,13 +80,13 @@ export default class CollectionDocumentsFormatter {
 			},
 			bricks: {
 				type: "array",
-				// items: CollectionDocumentBricksFormatter.swagger,
+				items: CollectionDocumentBricksFormatter.swagger,
 				nullable: true,
 			},
 			fields: {
 				type: "array",
 				nullable: true,
-				// items: CollectionDocumentFieldsFormatter.swagger,
+				items: CollectionDocumentFieldsFormatter.swagger,
 			},
 			createdBy: {
 				type: "number",
