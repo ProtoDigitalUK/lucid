@@ -188,7 +188,12 @@ export type FieldResponseValue =
 	| MediaValue
 	| PageLinkValue;
 
-export type FieldResponseMeta = null | undefined | MediaMeta | PageLinkMeta;
+export type FieldResponseMeta =
+	| null
+	| undefined
+	| MediaMeta
+	| PageLinkMeta
+	| UserMeta;
 
 export interface PageLinkValue {
 	id: number | null;
@@ -229,6 +234,14 @@ export interface MediaMeta {
 		languageId: number | null;
 	}>;
 	type?: MediaType;
+}
+
+export interface UserMeta {
+	id?: number;
+	username?: string;
+	email?: string;
+	firstName?: string | null;
+	lastName?: string | null;
 }
 
 export interface GroupResponse {

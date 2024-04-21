@@ -116,6 +116,7 @@ export default class CollectionDocumentsRepo {
 		);
 
 		if (props.allowedFieldIncludes.length > 0) {
+			// TODO: add join for user, media, pagelink, etc.
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db

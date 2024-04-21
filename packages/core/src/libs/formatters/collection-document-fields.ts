@@ -18,6 +18,11 @@ export interface FieldProp {
 	bool_value: 1 | 0 | null;
 	json_value?: JSONString | null;
 	page_link_id?: number | null;
+	user_id?: number | null;
+	user_email?: string | null;
+	user_first_name?: string | null;
+	user_last_name?: string | null;
+	user_username?: string | null;
 	media_id?: number | null;
 	page_id?: number | null;
 	media_key?: string | null;
@@ -192,6 +197,22 @@ export default class CollectionDocumentFieldsFormatter {
 						type: "string",
 						nullable: true,
 						enum: ["image", "video", "audio", "document"],
+					},
+					email: {
+						type: "string",
+						nullable: true,
+					},
+					username: {
+						type: "string",
+						nullable: true,
+					},
+					firstName: {
+						type: "string",
+						nullable: true,
+					},
+					lastName: {
+						type: "string",
+						nullable: true,
 					},
 				},
 			},

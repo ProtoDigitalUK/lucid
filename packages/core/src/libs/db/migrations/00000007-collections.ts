@@ -151,6 +151,9 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("media_id", "integer", (col) =>
 					col.references("headless_media.id").onDelete("set null"),
 				)
+				.addColumn("user_id", "integer", (col) =>
+					col.references("headless_users.id").onDelete("set null"),
+				)
 				.execute();
 
 			await db.schema

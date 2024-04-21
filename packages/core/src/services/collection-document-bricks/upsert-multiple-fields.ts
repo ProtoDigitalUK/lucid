@@ -47,6 +47,7 @@ const upsertMultipleFields = async (
 				jsonValue: field.jsonValue,
 				pageLinkId: field.pageLinkId,
 				mediaId: field.mediaId,
+				userId: field.userId,
 				languageId: field.languageId,
 			};
 		}),

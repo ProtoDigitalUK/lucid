@@ -48,6 +48,9 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 		case "pagelink":
 			if (columns) return "page_link_id";
 			return "pageLinkId";
+		case "user":
+			if (columns) return "user_id";
+			return "userId";
 		case "link":
 			if (columns) return "text_value";
 			return "textValue";
@@ -214,6 +217,17 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			value = props.field?.text_value ?? props.builder_field?.default;
 			break;
 		}
+		case "user": {
+			value = props.field?.user_id ?? undefined;
+			meta = {
+				id: props.field?.user_id ?? undefined,
+				email: props.field?.user_email ?? undefined,
+				username: props.field?.user_username ?? undefined,
+				firstName: props.field?.user_first_name ?? undefined,
+				lastName: props.field?.user_last_name ?? undefined,
+			};
+			break;
+		}
 		case "pagelink": {
 			const jsonVal = Formatter.parseJSON<PageLinkValue>(
 				props.field?.json_value,
@@ -257,6 +271,7 @@ interface FieldUpsertObjectResponse {
 	jsonValue: string | null;
 	pageLinkId: number | null;
 	mediaId: number | null;
+	userId: number | null;
 	languageId: number;
 }
 
@@ -294,6 +309,7 @@ export const fieldUpsertPrep = (
 				jsonValue: null,
 				pageLinkId: null,
 				mediaId: null,
+				userId: null,
 				...fieldColumnValueMap(field),
 			};
 		}) || []
