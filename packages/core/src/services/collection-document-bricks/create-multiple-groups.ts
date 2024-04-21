@@ -31,7 +31,7 @@ const createMultipleGroups = async (
 		serviceConfig.db,
 	);
 
-	// Update groups, on id conflict, update group_order, parent_group_id
+	// create groups
 	const groupsRes = await CollectionDocumentGroupsRepo.createMultiple({
 		items: data.bricks.flatMap((brick) => {
 			if (!brick.groups) return [];

@@ -10,6 +10,7 @@ export default class CollectionDocumentGroupsRepo {
 	// upsert
 	createMultiple = async (props: {
 		items: Array<{
+			groupId?: number;
 			parentGroupId?: number | null;
 			collectionDocumentId: number;
 			collectionBrickId: number;
@@ -22,6 +23,7 @@ export default class CollectionDocumentGroupsRepo {
 			.insertInto("headless_collection_document_groups")
 			.values(
 				props.items.flatMap((g) => ({
+					group_id: g.groupId,
 					parent_group_id: g.parentGroupId,
 					collection_document_id: g.collectionDocumentId,
 					collection_brick_id: g.collectionBrickId,
