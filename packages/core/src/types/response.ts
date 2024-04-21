@@ -197,8 +197,8 @@ export type FieldResponseMeta =
 
 export interface PageLinkValue {
 	id: number | null;
-	target?: string | null;
-	label?: string | null;
+	target: string | null;
+	label: string | null;
 }
 
 export interface PageLinkMeta {
@@ -210,21 +210,21 @@ export interface PageLinkMeta {
 
 export interface LinkValue {
 	url: string | null;
-	target?: string | null;
-	label?: string | null;
+	target: string | null;
+	label: string | null;
 }
 
 export type MediaValue = number;
 
 export interface MediaMeta {
-	id?: number;
-	url?: string;
-	key?: string;
-	mimeType?: string;
-	fileExtension?: string;
-	fileSize?: number;
-	width?: number;
-	height?: number;
+	id: number | null;
+	url: string | null;
+	key: string | null;
+	mimeType: string | null;
+	fileExtension: string | null;
+	fileSize: number | null;
+	width: number | null;
+	height: number | null;
 	titleTranslations?: Array<{
 		value: string | null;
 		languageId: number | null;
@@ -233,15 +233,14 @@ export interface MediaMeta {
 		value: string | null;
 		languageId: number | null;
 	}>;
-	type?: MediaType;
+	type: MediaType | null;
 }
 
 export interface UserMeta {
-	id?: number;
-	username?: string;
-	email?: string;
-	firstName?: string | null;
-	lastName?: string | null;
+	username: string | null;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
 }
 
 export interface GroupResponse {

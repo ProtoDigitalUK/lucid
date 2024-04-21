@@ -62,7 +62,7 @@ export default class CollectionDocumentFieldsFormatter {
 			for (const field of fieldData) {
 				const { value, meta } = fieldResponseValueFormat({
 					type: instanceField.type,
-					builder_field: instanceField,
+					builderField: instanceField,
 					field,
 					host: props.host,
 				});
