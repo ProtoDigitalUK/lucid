@@ -110,7 +110,6 @@ const upsertSingle = async (
 	const document = await CollectionDocumentsRepo.upsertSingle({
 		id: data.documentId,
 		collectionKey: data.collectionKey,
-		authorId: data.userId,
 		createdBy: data.userId,
 		updatedBy: data.userId,
 		isDeleted: 0,

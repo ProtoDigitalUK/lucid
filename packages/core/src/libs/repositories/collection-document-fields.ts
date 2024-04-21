@@ -20,6 +20,7 @@ export default class CollectionDocumentFieldsRepo {
 			boolValue: BooleanInt | null;
 			jsonValue: string | null;
 			pageLinkId: number | null;
+			userId: number | null;
 			mediaId: number | null;
 			languageId: number;
 		}>;
@@ -40,6 +41,7 @@ export default class CollectionDocumentFieldsRepo {
 						bool_value: f.boolValue,
 						json_value: f.jsonValue,
 						page_link_id: f.pageLinkId,
+						user_id: f.userId,
 						media_id: f.mediaId,
 						language_id: f.languageId,
 					};
@@ -52,6 +54,7 @@ export default class CollectionDocumentFieldsRepo {
 					bool_value: eb.ref("excluded.bool_value"),
 					json_value: eb.ref("excluded.json_value"),
 					page_link_id: eb.ref("excluded.page_link_id"),
+					user_id: eb.ref("excluded.user_id"),
 					media_id: eb.ref("excluded.media_id"),
 					group_id: eb.ref("excluded.group_id"),
 				})),

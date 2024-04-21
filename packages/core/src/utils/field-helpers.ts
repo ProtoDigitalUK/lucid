@@ -48,6 +48,9 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 		case "pagelink":
 			if (columns) return "page_link_id";
 			return "pageLinkId";
+		case "user":
+			if (columns) return "user_id";
+			return "userId";
 		case "link":
 			if (columns) return "text_value";
 			return "textValue";
@@ -132,7 +135,7 @@ export const collectionDocFilters = (
 
 interface FieldResponseValueFormat {
 	type: FieldTypes;
-	builder_field: CustomField;
+	builderField: CustomField;
 	field: FieldProp;
 	host: string;
 }
@@ -145,27 +148,27 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			break;
 		}
 		case "text": {
-			value = props.field?.text_value ?? props.builder_field?.default;
+			value = props.field?.text_value ?? props.builderField?.default;
 			break;
 		}
 		case "wysiwyg": {
-			value = props.field?.text_value ?? props.builder_field?.default;
+			value = props.field?.text_value ?? props.builderField?.default;
 			break;
 		}
 		case "media": {
-			value = props.field?.media_id ?? undefined;
+			value = props.field?.media_id ?? null;
 			meta = {
-				id: props.field?.media_id ?? undefined,
+				id: props.field?.media_id ?? null,
 				url: mediaHelpers.createURL(
 					props.host,
 					props.field?.media_key ?? "",
 				),
-				key: props.field?.media_key ?? undefined,
-				mimeType: props.field?.media_mime_type ?? undefined,
-				fileExtension: props.field?.media_file_extension ?? undefined,
-				fileSize: props.field?.media_file_size ?? undefined,
-				width: props.field?.media_width ?? undefined,
-				height: props.field?.media_height ?? undefined,
+				key: props.field?.media_key ?? null,
+				mimeType: props.field?.media_mime_type ?? null,
+				fileExtension: props.field?.media_file_extension ?? null,
+				fileSize: props.field?.media_file_size ?? null,
+				width: props.field?.media_width ?? null,
+				height: props.field?.media_height ?? null,
 				titleTranslations: props.field?.media_title_translations?.map(
 					(t) => ({
 						value: t.value,
@@ -178,40 +181,50 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 						languageId: t.language_id,
 					}),
 				),
-				type: (props.field?.media_type as MediaType) ?? undefined,
+				type: (props.field?.media_type as MediaType) ?? null,
 			};
 			break;
 		}
 		case "number": {
-			value = props.field?.int_value ?? props.builder_field?.default;
+			value = props.field?.int_value ?? props.builderField?.default;
 			break;
 		}
 		case "checkbox": {
 			value =
-				props.field?.bool_value ?? props.builder_field?.default ? 1 : 0;
+				props.field?.bool_value ?? props.builderField?.default ? 1 : 0;
 			break;
 		}
 		case "select": {
-			value = props.field?.text_value ?? props.builder_field?.default;
+			value = props.field?.text_value ?? props.builderField?.default;
 			break;
 		}
 		case "textarea": {
-			value = props.field?.text_value ?? props.builder_field?.default;
+			value = props.field?.text_value ?? props.builderField?.default;
 			break;
 		}
 		case "json": {
 			value =
 				Formatter.parseJSON<Record<string, unknown>>(
 					props.field?.json_value,
-				) ?? props.builder_field?.default;
+				) ?? props.builderField?.default;
 			break;
 		}
 		case "colour": {
-			value = props.field?.text_value ?? props.builder_field?.default;
+			value = props.field?.text_value ?? props.builderField?.default;
 			break;
 		}
 		case "datetime": {
-			value = props.field?.text_value ?? props.builder_field?.default;
+			value = props.field?.text_value ?? props.builderField?.default;
+			break;
+		}
+		case "user": {
+			value = props.field?.user_id ?? null;
+			meta = {
+				email: props.field?.user_email ?? null,
+				username: props.field?.user_username ?? null,
+				firstName: props.field?.user_first_name ?? null,
+				lastName: props.field?.user_last_name ?? null,
+			};
 			break;
 		}
 		case "pagelink": {
@@ -219,7 +232,7 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 				props.field?.json_value,
 			);
 			value = {
-				id: props.field?.page_link_id ?? undefined,
+				id: props.field?.page_link_id ?? null,
 				target: jsonVal?.target || "_self",
 				label: jsonVal?.label || "",
 			};
@@ -233,10 +246,10 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			value = {
 				url:
 					props.field?.text_value ??
-					props.builder_field?.default ??
+					props.builderField?.default ??
 					"",
 				target: jsonVal?.target ?? "_self",
-				label: jsonVal?.label ?? undefined,
+				label: jsonVal?.label ?? null,
 			};
 			break;
 		}
@@ -257,6 +270,7 @@ interface FieldUpsertObjectResponse {
 	jsonValue: string | null;
 	pageLinkId: number | null;
 	mediaId: number | null;
+	userId: number | null;
 	languageId: number;
 }
 
@@ -294,6 +308,7 @@ export const fieldUpsertPrep = (
 				jsonValue: null,
 				pageLinkId: null,
 				mediaId: null,
+				userId: null,
 				...fieldColumnValueMap(field),
 			};
 		}) || []

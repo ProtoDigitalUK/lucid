@@ -188,12 +188,17 @@ export type FieldResponseValue =
 	| MediaValue
 	| PageLinkValue;
 
-export type FieldResponseMeta = null | undefined | MediaMeta | PageLinkMeta;
+export type FieldResponseMeta =
+	| null
+	| undefined
+	| MediaMeta
+	| PageLinkMeta
+	| UserMeta;
 
 export interface PageLinkValue {
 	id: number | null;
-	target?: string | null;
-	label?: string | null;
+	target: string | null;
+	label: string | null;
 }
 
 export interface PageLinkMeta {
@@ -205,21 +210,21 @@ export interface PageLinkMeta {
 
 export interface LinkValue {
 	url: string | null;
-	target?: string | null;
-	label?: string | null;
+	target: string | null;
+	label: string | null;
 }
 
 export type MediaValue = number;
 
 export interface MediaMeta {
-	id?: number;
-	url?: string;
-	key?: string;
-	mimeType?: string;
-	fileExtension?: string;
-	fileSize?: number;
-	width?: number;
-	height?: number;
+	id: number | null;
+	url: string | null;
+	key: string | null;
+	mimeType: string | null;
+	fileExtension: string | null;
+	fileSize: number | null;
+	width: number | null;
+	height: number | null;
 	titleTranslations?: Array<{
 		value: string | null;
 		languageId: number | null;
@@ -228,7 +233,14 @@ export interface MediaMeta {
 		value: string | null;
 		languageId: number | null;
 	}>;
-	type?: MediaType;
+	type: MediaType | null;
+}
+
+export interface UserMeta {
+	username: string | null;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
 }
 
 export interface GroupResponse {
@@ -246,14 +258,6 @@ export interface CollectionDocumentResponse {
 	createdBy: number | null;
 	createdAt: string | null;
 	updatedAt: string | null;
-
-	author: {
-		id: number | null;
-		email: string | null;
-		firstName: string | null;
-		lastName: string | null;
-		username: string | null;
-	} | null;
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;

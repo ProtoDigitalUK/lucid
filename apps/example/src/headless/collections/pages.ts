@@ -62,14 +62,21 @@ const PageCollection = new CollectionBuilder("page", {
 			filterable: true,
 		},
 	})
+	.addUser({
+		key: "author",
+		collection: {
+			list: true,
+			filterable: true,
+		},
+	})
 	.addRepeater({
-		key: "authors",
+		key: "notifications",
 		validation: {
 			maxGroups: 3,
 		},
 	})
 	.addText({
-		key: "author_name",
+		key: "notification_title",
 		collection: {
 			list: true,
 			filterable: true,

@@ -18,11 +18,6 @@ interface DocumentPropT {
 	created_by: number | null;
 	created_at: Date | string | null;
 	updated_at: Date | string | null;
-	author_id: number | null;
-	author_email: string | null;
-	author_first_name: string | null;
-	author_last_name: string | null;
-	author_username: string | null;
 	fields?: FieldProp[];
 }
 
@@ -69,18 +64,7 @@ export default class CollectionDocumentsFormatter {
 			createdBy: props.document.created_by,
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
-			author: null,
 		};
-
-		if (props.document.author_id) {
-			res.author = {
-				id: props.document.author_id,
-				email: props.document.author_email,
-				firstName: props.document.author_first_name,
-				lastName: props.document.author_last_name,
-				username: props.document.author_username,
-			};
-		}
 
 		return res;
 	};
@@ -92,32 +76,6 @@ export default class CollectionDocumentsFormatter {
 			},
 			collectionKey: {
 				type: "string",
-				nullable: true,
-			},
-			author: {
-				type: "object",
-				properties: {
-					id: {
-						type: "number",
-						nullable: true,
-					},
-					email: {
-						type: "string",
-						nullable: true,
-					},
-					firstName: {
-						type: "string",
-						nullable: true,
-					},
-					lastName: {
-						type: "string",
-						nullable: true,
-					},
-					username: {
-						type: "string",
-						nullable: true,
-					},
-				},
 				nullable: true,
 			},
 			bricks: {

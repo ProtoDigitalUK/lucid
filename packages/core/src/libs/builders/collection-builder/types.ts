@@ -5,6 +5,7 @@ import type {
 	SelectConfig,
 	TextareaConfig,
 	DateTimeConfig,
+	UserConfig,
 } from "../field-builder/index.js";
 
 export interface FieldCollectionConfig {
@@ -28,5 +29,9 @@ export interface CollectionTextareaConfig extends TextareaConfig {
 	collection?: FieldCollectionConfig;
 }
 export interface CollectionDateTimeConfig extends DateTimeConfig {
+	collection?: FieldCollectionConfig;
+}
+
+export interface CollectionUserConfig extends UserConfig {
 	collection?: FieldCollectionConfig;
 }

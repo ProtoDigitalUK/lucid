@@ -15,7 +15,8 @@ export const FieldSchema = z.object({
 		z.literal("datetime"),
 		z.literal("pagelink"),
 		z.literal("link"),
-		z.literal("repeater"), // is this needed?
+		// z.literal("repeater"), // is this needed?
+		z.literal("user"),
 	]),
 	value: z.union([
 		z.string(),
