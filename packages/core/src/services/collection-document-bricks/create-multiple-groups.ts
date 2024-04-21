@@ -9,7 +9,6 @@ export interface GroupsResponse {
 	parentGroupId: number | null;
 	groupOrder: number;
 	repeaterKey: string;
-	languageId: number;
 	ref: string;
 }
 
@@ -51,7 +50,6 @@ const createMultipleGroups = async (
 					collectionBrickId: brick.id as number,
 					groupOrder: group.groupOrder,
 					repeaterKey: group.repeaterKey,
-					languageId: group.languageId,
 					ref:
 						typeof group.groupId === "string"
 							? group.groupId
@@ -149,7 +147,6 @@ const createMultipleGroups = async (
 				parentGroupId: group.parentGroupId as number | null,
 				groupOrder: group.groupOrder,
 				repeaterKey: group.repeaterKey,
-				languageId: group.languageId,
 				ref: ref as string,
 			};
 		});

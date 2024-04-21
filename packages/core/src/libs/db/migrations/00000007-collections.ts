@@ -77,21 +77,9 @@ const Migration00000007: MigrationFn = (adapter) => {
 						)
 						.onDelete("cascade"),
 				)
-				.addColumn("language_id", "integer", (col) =>
-					col
-						.references("headless_languages.id")
-						.onDelete("cascade")
-						.notNull(),
-				)
 				.addColumn("repeater_key", "text", (col) => col.notNull())
 				.addColumn("group_order", "integer", (col) => col.notNull())
 				.addColumn("ref", "text")
-				.execute();
-
-			await db.schema
-				.createIndex("idx_headless_groups_language_id")
-				.on("headless_collection_document_groups")
-				.column("language_id")
 				.execute();
 
 			await db.schema

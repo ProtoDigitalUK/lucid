@@ -180,7 +180,6 @@ export interface HeadlessCollectionDocumentGroups {
 	collection_document_id: number;
 	collection_brick_id: number;
 	parent_group_id: number | null;
-	language_id: number;
 	repeater_key: string;
 	group_order: number;
 	ref: string | null;

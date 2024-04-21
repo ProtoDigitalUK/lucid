@@ -4,7 +4,6 @@ export interface GroupPropT {
 	group_id: number;
 	parent_group_id: number | null;
 	collection_brick_id: number | null;
-	language_id: number;
 	repeater_key: string;
 	group_order: number;
 	ref: string | null;
@@ -29,7 +28,6 @@ export default class CollectionDocumentGroupsFormatter {
 			groupOrder: props.group.group_order,
 			repeaterKey: props.group.repeater_key,
 			parentGroupId: props.group.parent_group_id,
-			languageId: props.group.language_id,
 		};
 	};
 	static swagger = {
@@ -51,9 +49,6 @@ export default class CollectionDocumentGroupsFormatter {
 			},
 			repeaterKey: {
 				type: "string",
-			},
-			languageId: {
-				type: "number",
 			},
 		},
 	};

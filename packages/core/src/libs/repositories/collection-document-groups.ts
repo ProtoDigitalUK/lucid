@@ -15,7 +15,6 @@ export default class CollectionDocumentGroupsRepo {
 			collectionBrickId: number;
 			groupOrder: number;
 			repeaterKey: string;
-			languageId: number;
 			ref?: string;
 		}>;
 	}) => {
@@ -28,7 +27,6 @@ export default class CollectionDocumentGroupsRepo {
 					collection_brick_id: g.collectionBrickId,
 					group_order: g.groupOrder,
 					repeater_key: g.repeaterKey,
-					language_id: g.languageId,
 					ref: g.ref,
 				})),
 			)

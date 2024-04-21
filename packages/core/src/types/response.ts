@@ -246,7 +246,6 @@ export interface GroupResponse {
 	groupOrder: number;
 	parentGroupId: number | null;
 	repeaterKey: string;
-	languageId: number;
 }
 
 export interface CollectionDocumentResponse {

@@ -5,7 +5,6 @@ export const GroupSchema = z.object({
 	groupOrder: z.number(),
 	parentGroupId: z.union([z.number(), z.string(), z.null()]).optional(),
 	repeaterKey: z.string(),
-	languageId: z.number(),
 });
 
 export type GroupSchemaType = z.infer<typeof GroupSchema>;
@@ -43,9 +42,6 @@ export const swaggerGroupObj = {
 		},
 		repeaterKey: {
 			type: "string",
-		},
-		languageId: {
-			type: "number",
 		},
 	},
 };

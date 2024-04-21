@@ -53,7 +53,6 @@ export default class CollectionDocumentBricksRepo {
 								"headless_collection_document_groups.collection_document_id",
 								"headless_collection_document_groups.collection_brick_id",
 								"headless_collection_document_groups.parent_group_id",
-								"headless_collection_document_groups.language_id",
 								"headless_collection_document_groups.repeater_key",
 								"headless_collection_document_groups.group_order",
 								"headless_collection_document_groups.ref",
