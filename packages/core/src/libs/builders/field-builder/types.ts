@@ -246,7 +246,7 @@ export interface ValidationProps {
 	type: FieldTypes;
 	key: string;
 	value: unknown;
-	referenceData?: MediaReferenceData | LinkReferenceData;
+	referenceData?: MediaReferenceData | LinkReferenceData | UserReferenceData;
 	flatFieldConfig: CustomField[];
 }
 export interface ValidationResponse {
@@ -267,9 +267,8 @@ export interface MediaReferenceData {
 }
 
 export interface UserReferenceData {
-	id: string;
 	username: string;
-	firstName: string;
-	lastName: string;
+	firstName: string | null;
+	lastName: string | null;
 	email: string;
 }

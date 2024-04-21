@@ -7,6 +7,7 @@ import type {
 	ValidationProps,
 	MediaReferenceData,
 	LinkReferenceData,
+	UserReferenceData,
 	FieldTypes,
 } from "../../../libs/builders/field-builder/index.js";
 import type { PageLinkValue, LinkValue } from "../../../types/response.js";
@@ -30,12 +31,13 @@ const validateBricks = async (
 			return brick.fields || [];
 		}) || [];
 
-	const [collection, media, documents] = await Promise.all([
+	const [collection, media, documents, users] = await Promise.all([
 		collectionsServices.getSingleInstance({
 			key: data.collectionKey,
 		}),
 		getAllMedia(serviceConfig, flatFields),
 		getAllDocuments(serviceConfig, flatFields),
+		getAllUsers(serviceConfig, flatFields),
 	]);
 
 	// validate bricks
@@ -44,6 +46,7 @@ const validateBricks = async (
 		collection: collection,
 		media: media,
 		documents: documents,
+		users: users,
 	});
 
 	// If there are errors, throw them
@@ -74,6 +77,13 @@ const validateBrickData = async (data: {
 	}>;
 	documents: {
 		id: number;
+	}[];
+	users: {
+		id: number;
+		username: string;
+		email: string;
+		first_name: string | null;
+		last_name: string | null;
 	}[];
 }) => {
 	const errors: FieldErrors[] = [];
@@ -149,6 +159,20 @@ const validateBrickData = async (data: {
 							height: media.height,
 							type: media.type,
 						} satisfies MediaReferenceData;
+					} else if (field.value) {
+						field.value = null;
+					}
+					break;
+				}
+				case "user": {
+					const user = data.users.find((u) => u.id === field.value);
+					if (user) {
+						referenceData = {
+							username: user.username,
+							email: user.email,
+							firstName: user.first_name,
+							lastName: user.last_name,
+						} satisfies UserReferenceData;
 					} else if (field.value) {
 						field.value = null;
 					}
@@ -235,6 +259,30 @@ const getAllDocuments = async (
 
 		return await CollectionDocumentsRepo.selectMultiple({
 			select: ["id"],
+			where: [
+				{
+					key: "id",
+					operator: "in",
+					value: ids,
+				},
+			],
+		});
+	} catch (err) {
+		return [];
+	}
+};
+const getAllUsers = async (
+	serviceConfig: ServiceConfig,
+	fields: z.infer<typeof FieldSchema>[],
+) => {
+	try {
+		const ids = allFieldIdsOfType<number>(fields, "user");
+		if (ids.length === 0) return [];
+
+		const UsersRepo = Repository.get("users", serviceConfig.db);
+
+		return await UsersRepo.selectMultiple({
+			select: ["id", "username", "email", "first_name", "last_name"],
 			where: [
 				{
 					key: "id",
