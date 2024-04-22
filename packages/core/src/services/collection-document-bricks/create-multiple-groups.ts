@@ -51,8 +51,13 @@ const createMultipleGroups = async (
 	// -------------------------------------------------------------------------------
 	// update groups with their new parent_group_id
 	const updateGroupParentIds: {
-		parent_group_id: number | null;
-		group_id: number;
+		parentGroupId: number | null;
+		groupId: number;
+		collectionDocumentId: number;
+		collectionBrickId: number;
+		groupOrder: number;
+		repeaterKey: string;
+		ref: string;
 	}[] = [];
 	for (const bg of data.brickGroups) {
 		for (const group of bg.groups || []) {
@@ -76,14 +81,18 @@ const createMultipleGroups = async (
 			parentGroupId = findParentGroup.group_id;
 
 			updateGroupParentIds.push({
-				parent_group_id: parentGroupId,
-				group_id: targetGroupId,
+				parentGroupId: parentGroupId,
+				groupId: targetGroupId,
+				collectionDocumentId: data.documentId,
+				collectionBrickId: bg.brickId,
+				groupOrder: group.order,
+				repeaterKey: group.repeater,
+				ref: group.ref,
 			});
 		}
 	}
 
 	if (updateGroupParentIds.length > 0) {
-		// TODO: look into bug here stopping from update
 		await CollectionDocumentGroupsRepo.updateMultipleParentIds({
 			items: updateGroupParentIds,
 		});

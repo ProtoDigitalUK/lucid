@@ -35,20 +35,34 @@ export default class CollectionDocumentGroupsRepo {
 	// update
 	updateMultipleParentIds = async (props: {
 		items: Array<{
-			parent_group_id: number | null;
-			group_id: number;
+			parentGroupId: number | null;
+			groupId: number;
+			collectionDocumentId: number;
+			collectionBrickId: number;
+			groupOrder: number;
+			repeaterKey: string;
+			ref: string;
 		}>;
 	}) => {
 		return this.db
-			.updateTable("headless_collection_document_groups")
-			.from(values(props.items, "c"))
-			.set({
-				parent_group_id: sql`c.parent_group_id::int`,
-			})
-			.whereRef(
-				"headless_collection_document_groups.group_id",
-				"=",
-				sql`c.group_id::int`,
+			.insertInto("headless_collection_document_groups")
+			.values(
+				props.items.map((g) => {
+					return {
+						parent_group_id: g.parentGroupId,
+						group_id: g.groupId,
+						collection_document_id: g.collectionDocumentId,
+						collection_brick_id: g.collectionBrickId,
+						group_order: g.groupOrder,
+						repeater_key: g.repeaterKey,
+						ref: g.ref,
+					};
+				}),
+			)
+			.onConflict((oc) =>
+				oc.column("group_id").doUpdateSet((eb) => ({
+					parent_group_id: eb.ref("excluded.parent_group_id"),
+				})),
 			)
 			.execute();
 	};
