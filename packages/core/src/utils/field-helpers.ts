@@ -3,7 +3,6 @@ import type { FieldSchema } from "../schemas/collection-fields.js";
 import type {
 	MediaType,
 	FieldResponseValue,
-	PageLinkValue,
 	LinkValue,
 	FieldResponseMeta,
 } from "../types/response.js";
@@ -43,9 +42,6 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 		case "json":
 			if (columns) return "json_value";
 			return "jsonValue";
-		case "pagelink":
-			if (columns) return "page_link_id";
-			return "pageLinkId";
 		case "user":
 			if (columns) return "user_id";
 			return "userId";
@@ -76,22 +72,6 @@ export const fieldColumnValueMap = (field: z.infer<typeof FieldSchema>) => {
 			}
 			return {
 				textValue: value.url,
-				jsonValue: Formatter.stringifyJSON({
-					target: value.target,
-					label: value.label,
-				}),
-			};
-		}
-		case "pagelink": {
-			const value = field.value as PageLinkValue | undefined;
-			if (!value) {
-				return {
-					pageLinkId: null,
-					jsonValue: null,
-				};
-			}
-			return {
-				pageLinkId: value.id,
 				jsonValue: Formatter.stringifyJSON({
 					target: value.target,
 					label: value.label,
@@ -223,18 +203,6 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 				firstName: props.field?.user_first_name ?? null,
 				lastName: props.field?.user_last_name ?? null,
 			};
-			break;
-		}
-		case "pagelink": {
-			const jsonVal = Formatter.parseJSON<PageLinkValue>(
-				props.field?.json_value,
-			);
-			value = {
-				id: props.field?.page_link_id ?? null,
-				target: jsonVal?.target || "_self",
-				label: jsonVal?.label || "",
-			};
-			// meta = {};
 			break;
 		}
 		case "link": {

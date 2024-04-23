@@ -19,14 +19,12 @@ export interface FieldProp {
 	int_value: number | null;
 	bool_value: 1 | 0 | null;
 	json_value?: JSONString | null;
-	page_link_id?: number | null;
 	user_id?: number | null;
 	user_email?: string | null;
 	user_first_name?: string | null;
 	user_last_name?: string | null;
 	user_username?: string | null;
 	media_id?: number | null;
-	page_id?: number | null;
 	media_key?: string | null;
 	media_mime_type?: string | null;
 	media_file_extension?: string | null;
@@ -205,7 +203,6 @@ export default class CollectionDocumentFieldsFormatter {
 					"json",
 					"colour",
 					"datetime",
-					"pagelink",
 					"link",
 					"repeater",
 					"user",

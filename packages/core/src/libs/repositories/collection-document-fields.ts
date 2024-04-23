@@ -18,7 +18,6 @@ export default class CollectionDocumentFieldsRepo {
 			intValue: number | null;
 			boolValue: BooleanInt | null;
 			jsonValue: string | null;
-			pageLinkId: number | null;
 			userId: number | null;
 			mediaId: number | null;
 			languageId: number;
@@ -38,7 +37,6 @@ export default class CollectionDocumentFieldsRepo {
 						int_value: f.intValue,
 						bool_value: f.boolValue,
 						json_value: f.jsonValue,
-						page_link_id: f.pageLinkId,
 						user_id: f.userId,
 						media_id: f.mediaId,
 						language_id: f.languageId,

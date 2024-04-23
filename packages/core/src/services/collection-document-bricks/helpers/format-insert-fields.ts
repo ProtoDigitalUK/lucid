@@ -20,7 +20,6 @@ const formatInsertFields = (props: {
 			intValue: null,
 			boolValue: null,
 			jsonValue: null,
-			pageLinkId: null,
 			mediaId: null,
 			userId: null,
 			...fieldColumnValueMap(field),

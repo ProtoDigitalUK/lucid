@@ -12,7 +12,6 @@ import type {
 	UserConfig,
 	MediaConfig,
 	NumberConfig,
-	PageLinkConfig,
 	SelectConfig,
 	TextConfig,
 	TextareaConfig,
@@ -118,10 +117,6 @@ class FieldBuilder {
 	}
 	public addDateTime(config: DateTimeConfig) {
 		this.addToFields("datetime", config);
-		return this;
-	}
-	public addPageLink(config: PageLinkConfig) {
-		this.addToFields("pagelink", config);
 		return this;
 	}
 	public addLink(config: LinkConfig) {
@@ -248,9 +243,6 @@ class FieldBuilder {
 			case "user": {
 				return undefined;
 			}
-			case "pagelink": {
-				return undefined;
-			}
 			case "link": {
 				return undefined;
 			}
@@ -343,12 +335,6 @@ class FieldBuilder {
 					break;
 				}
 				case "link": {
-					this.#validateLinkTarget(
-						referenceData as LinkReferenceData,
-					);
-					break;
-				}
-				case "pagelink": {
 					this.#validateLinkTarget(
 						referenceData as LinkReferenceData,
 					);
@@ -548,10 +534,6 @@ class FieldBuilder {
 		number: {
 			type: "number",
 			nullable: true,
-		},
-		pagelink: {
-			type: "object",
-			nullable: false,
 		},
 		checkbox: {
 			type: "boolean",

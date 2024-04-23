@@ -54,7 +54,6 @@ export type FieldTypes =
 	| "json"
 	| "colour"
 	| "datetime"
-	| "pagelink"
 	| "link"
 	| "user";
 
@@ -84,7 +83,6 @@ export type CustomFieldConfigs =
 	| JSONConfig
 	| ColourConfig
 	| DateTimeConfig
-	| PageLinkConfig
 	| LinkConfig
 	| RepeaterConfig
 	| UserConfig;
@@ -197,13 +195,6 @@ export interface ColourConfig extends CustomFieldConfig {
 export interface DateTimeConfig extends CustomFieldConfig {
 	default?: string;
 	placeholder?: string;
-	hidden?: boolean;
-	disabled?: boolean;
-	validation?: {
-		required?: boolean;
-	};
-}
-export interface PageLinkConfig extends CustomFieldConfig {
 	hidden?: boolean;
 	disabled?: boolean;
 	validation?: {

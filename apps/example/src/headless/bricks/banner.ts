@@ -19,9 +19,6 @@ const BannerBrick = new BrickBuilder("banner", {
 	.addWysiwyg({
 		key: "intro",
 	})
-	.addPageLink({
-		key: "page-link",
-	})
 	.addRepeater({
 		key: "social_links",
 		validation: {

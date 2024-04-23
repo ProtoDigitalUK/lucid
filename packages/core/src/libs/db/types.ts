@@ -197,7 +197,6 @@ export interface HeadlessCollectionDocumentFields {
 	int_value: number | null;
 	bool_value: BooleanInt | null;
 	json_value: JSONString | null;
-	page_link_id: number | null;
 	user_id: number | null;
 	media_id: number | null;
 }

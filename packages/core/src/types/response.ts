@@ -183,28 +183,9 @@ export type FieldResponseValue =
 	| undefined
 	| Record<string, unknown>
 	| LinkValue
-	| MediaValue
-	| PageLinkValue;
+	| MediaValue;
 
-export type FieldResponseMeta =
-	| null
-	| undefined
-	| MediaMeta
-	| PageLinkMeta
-	| UserMeta;
-
-export interface PageLinkValue {
-	id: number | null;
-	target: string | null;
-	label: string | null;
-}
-
-export interface PageLinkMeta {
-	titleTranslations?: Array<{
-		value: string | null;
-		languageId: number | null;
-	}>;
-}
+export type FieldResponseMeta = null | undefined | MediaMeta | UserMeta;
 
 export interface LinkValue {
 	url: string | null;

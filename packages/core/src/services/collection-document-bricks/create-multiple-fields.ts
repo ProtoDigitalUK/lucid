@@ -32,7 +32,6 @@ const createMultipleFields = async (
 				intValue: field.intValue,
 				boolValue: field.boolValue,
 				jsonValue: field.jsonValue,
-				pageLinkId: field.pageLinkId,
 				mediaId: field.mediaId,
 				userId: field.userId,
 				languageId: field.languageId,

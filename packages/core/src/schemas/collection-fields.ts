@@ -13,7 +13,6 @@ export const FieldBaseSchema = z.object({
 		z.literal("json"),
 		z.literal("colour"),
 		z.literal("datetime"),
-		z.literal("pagelink"),
 		z.literal("link"),
 		z.literal("repeater"),
 		z.literal("user"),

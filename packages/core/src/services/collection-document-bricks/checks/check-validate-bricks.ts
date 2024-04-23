@@ -10,7 +10,7 @@ import type {
 	UserReferenceData,
 	FieldTypes,
 } from "../../../libs/builders/field-builder/index.js";
-import type { PageLinkValue, LinkValue } from "../../../types/response.js";
+import type { LinkValue } from "../../../types/response.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
 import type { FieldSchema } from "../../../schemas/collection-fields.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
@@ -31,12 +31,11 @@ const validateBricks = async (
 			return brick.fields || [];
 		}) || [];
 
-	const [collection, media, documents, users] = await Promise.all([
+	const [collection, media, users] = await Promise.all([
 		collectionsServices.getSingleInstance({
 			key: data.collectionKey,
 		}),
 		getAllMedia(serviceConfig, flatFields),
-		getAllDocuments(serviceConfig, flatFields),
 		getAllUsers(serviceConfig, flatFields),
 	]);
 
@@ -45,7 +44,6 @@ const validateBricks = async (
 		bricks: data.bricks,
 		collection: collection,
 		media: media,
-		documents: documents,
 		users: users,
 	});
 
@@ -75,9 +73,6 @@ const validateBrickData = async (data: {
 		height: number | null;
 		type: string;
 	}>;
-	documents: {
-		id: number;
-	}[];
 	users: {
 		id: number;
 		username: string;
@@ -133,21 +128,6 @@ const validateBrickData = async (data: {
 						target: value?.target,
 						label: value?.label,
 					} satisfies LinkReferenceData;
-					break;
-				}
-				case "pagelink": {
-					const value = field.value as PageLinkValue | undefined;
-					const document = data.documents.find(
-						(p) => p.id === value?.id,
-					);
-					if (document) {
-						referenceData = {
-							target: value?.target,
-							label: value?.label,
-						} satisfies LinkReferenceData;
-					} else if (field.value) {
-						field.value.id = null;
-					}
 					break;
 				}
 				case "media": {
@@ -211,9 +191,6 @@ const allFieldIdsOfType = <T>(
 	return fields
 		.filter((field) => field.type === type)
 		.map((field) => {
-			if (field.type === "pagelink") {
-				return field.value?.id;
-			}
 			return field.value as T;
 		})
 		.filter((value) => value !== undefined)
@@ -232,33 +209,6 @@ const getAllMedia = async (
 
 		return MediaRepo.selectMultiple({
 			select: ["id", "file_extension", "width", "height", "type"],
-			where: [
-				{
-					key: "id",
-					operator: "in",
-					value: ids,
-				},
-			],
-		});
-	} catch (err) {
-		return [];
-	}
-};
-const getAllDocuments = async (
-	serviceConfig: ServiceConfig,
-	fields: z.infer<typeof FieldSchema>[],
-) => {
-	try {
-		const ids = allFieldIdsOfType<number>(fields, "pagelink");
-		if (ids.length === 0) return [];
-
-		const CollectionDocumentsRepo = Repository.get(
-			"collection-documents",
-			serviceConfig.db,
-		);
-
-		return await CollectionDocumentsRepo.selectMultiple({
-			select: ["id"],
 			where: [
 				{
 					key: "id",

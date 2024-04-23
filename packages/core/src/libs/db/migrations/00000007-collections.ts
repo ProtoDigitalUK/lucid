@@ -131,11 +131,6 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("int_value", "integer")
 				.addColumn("bool_value", "integer")
 				.addColumn("json_value", "text")
-				.addColumn("page_link_id", "integer", (col) =>
-					col
-						.references("headless_collection_documents.id")
-						.onDelete("set null"),
-				)
 				.addColumn("media_id", "integer", (col) =>
 					col.references("headless_media.id").onDelete("set null"),
 				)

@@ -68,13 +68,6 @@ export default class CollectionDocumentBricksRepo {
 					.jsonArrayFrom(
 						eb
 							.selectFrom("headless_collection_document_fields")
-							.leftJoin("headless_collection_documents", (join) =>
-								join.onRef(
-									"headless_collection_documents.id",
-									"=",
-									"headless_collection_document_fields.page_link_id",
-								),
-							)
 							.leftJoin("headless_media", (join) =>
 								join.onRef(
 									"headless_media.id",
@@ -100,11 +93,8 @@ export default class CollectionDocumentBricksRepo {
 								"headless_collection_document_fields.int_value",
 								"headless_collection_document_fields.bool_value",
 								"headless_collection_document_fields.json_value",
-								"headless_collection_document_fields.page_link_id",
 								"headless_collection_document_fields.media_id",
 								"headless_collection_document_fields.collection_document_id",
-								// Page fields
-								"headless_collection_documents.id as page_id",
 								// User fields
 								"headless_users.id as user_id",
 								"headless_users.email as user_email",
