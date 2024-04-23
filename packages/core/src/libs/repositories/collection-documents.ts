@@ -116,7 +116,6 @@ export default class CollectionDocumentsRepo {
 		);
 
 		if (props.allowedFieldIncludes.length > 0) {
-			// TODO: add join for user, media, pagelink, etc.
 			pagesQuery = pagesQuery
 				.select((eb) => [
 					props.config.db
@@ -125,7 +124,21 @@ export default class CollectionDocumentsRepo {
 								.selectFrom(
 									"headless_collection_document_fields",
 								)
-								.select([
+								.leftJoin("headless_media", (join) =>
+									join.onRef(
+										"headless_media.id",
+										"=",
+										"headless_collection_document_fields.media_id",
+									),
+								)
+								.leftJoin("headless_users", (join) =>
+									join.onRef(
+										"headless_users.id",
+										"=",
+										"headless_collection_document_fields.user_id",
+									),
+								)
+								.select((eb) => [
 									"headless_collection_document_fields.fields_id",
 									"headless_collection_document_fields.text_value",
 									"headless_collection_document_fields.int_value",
@@ -139,6 +152,65 @@ export default class CollectionDocumentsRepo {
 									"headless_collection_document_fields.collection_brick_id",
 									"headless_collection_document_fields.collection_document_id",
 									"headless_collection_document_fields.group_id",
+									// User fields
+									"headless_users.id as user_id",
+									"headless_users.email as user_email",
+									"headless_users.first_name as user_first_name",
+									"headless_users.last_name as user_last_name",
+									"headless_users.email as user_email",
+									"headless_users.username as user_username",
+									// Media fields
+									"headless_media.key as media_key",
+									"headless_media.mime_type as media_mime_type",
+									"headless_media.file_extension as media_file_extension",
+									"headless_media.file_size as media_file_size",
+									"headless_media.width as media_width",
+									"headless_media.height as media_height",
+									"headless_media.type as media_type",
+									props.config.db
+										.jsonArrayFrom(
+											eb
+												.selectFrom(
+													"headless_translations",
+												)
+												.select([
+													"headless_translations.value",
+													"headless_translations.language_id",
+												])
+												.where(
+													"headless_translations.value",
+													"is not",
+													null,
+												)
+												.whereRef(
+													"headless_translations.translation_key_id",
+													"=",
+													"headless_media.title_translation_key_id",
+												),
+										)
+										.as("media_title_translations"),
+									props.config.db
+										.jsonArrayFrom(
+											eb
+												.selectFrom(
+													"headless_translations",
+												)
+												.select([
+													"headless_translations.value",
+													"headless_translations.language_id",
+												])
+												.where(
+													"headless_translations.value",
+													"is not",
+													null,
+												)
+												.whereRef(
+													"headless_translations.translation_key_id",
+													"=",
+													"headless_media.alt_translation_key_id",
+												),
+										)
+										.as("media_alt_translations"),
 								])
 								.whereRef(
 									"headless_collection_document_fields.collection_document_id",
