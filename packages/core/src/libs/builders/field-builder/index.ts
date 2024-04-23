@@ -12,7 +12,6 @@ import type {
 	UserConfig,
 	MediaConfig,
 	NumberConfig,
-	PageLinkConfig,
 	SelectConfig,
 	TextConfig,
 	TextareaConfig,
@@ -120,10 +119,6 @@ class FieldBuilder {
 		this.addToFields("datetime", config);
 		return this;
 	}
-	public addPageLink(config: PageLinkConfig) {
-		this.addToFields("pagelink", config);
-		return this;
-	}
 	public addLink(config: LinkConfig) {
 		this.addToFields("link", config);
 		return this;
@@ -177,6 +172,15 @@ class FieldBuilder {
 		}
 
 		return fields;
+	}
+	get fieldTreeNoTab() {
+		const fieldArray = Array.from(this.fields.values());
+		for (const field of fieldArray) {
+			if (field.type === "tab") {
+				fieldArray.splice(fieldArray.indexOf(field), 1);
+			}
+		}
+		return fieldArray;
 	}
 	//
 	protected addToFields(type: FieldTypes, config: CustomFieldConfigs) {
@@ -237,9 +241,6 @@ class FieldBuilder {
 				return (config as DateTimeConfig).default || "";
 			}
 			case "user": {
-				return undefined;
-			}
-			case "pagelink": {
 				return undefined;
 			}
 			case "link": {
@@ -334,12 +335,6 @@ class FieldBuilder {
 					break;
 				}
 				case "link": {
-					this.#validateLinkTarget(
-						referenceData as LinkReferenceData,
-					);
-					break;
-				}
-				case "pagelink": {
 					this.#validateLinkTarget(
 						referenceData as LinkReferenceData,
 					);
@@ -539,10 +534,6 @@ class FieldBuilder {
 		number: {
 			type: "number",
 			nullable: true,
-		},
-		pagelink: {
-			type: "object",
-			nullable: false,
 		},
 		checkbox: {
 			type: "boolean",

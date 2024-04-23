@@ -1,7 +1,6 @@
 import type {
 	BrickResponse,
 	FieldResponse,
-	GroupResponse,
 	CollectionDocumentResponse,
 } from "../../types/response.js";
 import CollectionDocumentFieldsFormatter, {
@@ -10,7 +9,6 @@ import CollectionDocumentFieldsFormatter, {
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import Formatter from "./index.js";
 import CollectionDocumentBricksFormatter from "./collection-document-bricks.js";
-import CollectionDocumentGroupsFormatter from "./collection-document-groups.js";
 
 interface DocumentPropT {
 	id: number;
@@ -40,7 +38,6 @@ export default class CollectionDocumentsFormatter {
 		collection: CollectionBuilder;
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
-		groups?: GroupResponse[] | null;
 		host: string;
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
@@ -48,11 +45,15 @@ export default class CollectionDocumentsFormatter {
 		if (props.fields) {
 			fields = props.fields;
 		} else if (props.document.fields) {
-			fields = new CollectionDocumentFieldsFormatter().formatMultiple({
-				fields: props.document.fields,
-				host: props.host,
-				builder: props.collection,
-			});
+			// ** This is only used on get multiple documents, in this case we dont request groups and so should
+			// ** return fields in a flat format instead of nesting them if repeaters are present
+			fields = new CollectionDocumentFieldsFormatter().formatMultipleFlat(
+				{
+					fields: props.document.fields,
+					host: props.host,
+					builder: props.collection,
+				},
+			);
 		}
 
 		const res: CollectionDocumentResponse = {
@@ -60,7 +61,6 @@ export default class CollectionDocumentsFormatter {
 			collectionKey: props.document.collection_key,
 			bricks: props.bricks ?? null,
 			fields: fields,
-			groups: props.groups ?? null,
 			createdBy: props.document.created_by,
 			createdAt: Formatter.formatDate(props.document.created_at),
 			updatedAt: Formatter.formatDate(props.document.updated_at),
@@ -87,11 +87,6 @@ export default class CollectionDocumentsFormatter {
 				type: "array",
 				nullable: true,
 				items: CollectionDocumentFieldsFormatter.swagger,
-			},
-			groups: {
-				type: "array",
-				nullable: true,
-				items: CollectionDocumentGroupsFormatter.swagger,
 			},
 			createdBy: {
 				type: "number",

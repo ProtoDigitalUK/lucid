@@ -87,9 +87,6 @@ const TestingBrick = new BrickBuilder("testing", {
 	.addDateTime({
 		key: "datetime-key",
 	})
-	.addPageLink({
-		key: "page-link-key",
-	})
 	.addLink({
 		key: "link-key",
 	});

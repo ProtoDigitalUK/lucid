@@ -3,7 +3,6 @@ import type { FieldSchema } from "../schemas/collection-fields.js";
 import type {
 	MediaType,
 	FieldResponseValue,
-	PageLinkValue,
 	LinkValue,
 	FieldResponseMeta,
 } from "../types/response.js";
@@ -14,8 +13,6 @@ import type {
 } from "../libs/builders/field-builder/types.js";
 import type { FieldProp } from "../libs/formatters/collection-document-fields.js";
 import type { FieldFilters } from "../libs/builders/collection-builder/index.js";
-import type { BrickSchema } from "../schemas/collection-bricks.js";
-import type { GroupsResponse } from "../services/collection-document-bricks/upsert-multiple-groups.js";
 import Formatter from "../libs/formatters/index.js";
 import mediaHelpers from "./media-helpers.js";
 
@@ -45,9 +42,6 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 		case "json":
 			if (columns) return "json_value";
 			return "jsonValue";
-		case "pagelink":
-			if (columns) return "page_link_id";
-			return "pageLinkId";
 		case "user":
 			if (columns) return "user_id";
 			return "userId";
@@ -78,22 +72,6 @@ export const fieldColumnValueMap = (field: z.infer<typeof FieldSchema>) => {
 			}
 			return {
 				textValue: value.url,
-				jsonValue: Formatter.stringifyJSON({
-					target: value.target,
-					label: value.label,
-				}),
-			};
-		}
-		case "pagelink": {
-			const value = field.value as PageLinkValue | undefined;
-			if (!value) {
-				return {
-					pageLinkId: null,
-					jsonValue: null,
-				};
-			}
-			return {
-				pageLinkId: value.id,
 				jsonValue: Formatter.stringifyJSON({
 					target: value.target,
 					label: value.label,
@@ -135,7 +113,7 @@ export const collectionDocFilters = (
 
 interface FieldResponseValueFormat {
 	type: FieldTypes;
-	builderField: CustomField;
+	customField: CustomField;
 	field: FieldProp;
 	host: string;
 }
@@ -148,11 +126,11 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			break;
 		}
 		case "text": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "wysiwyg": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "media": {
@@ -186,35 +164,35 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			break;
 		}
 		case "number": {
-			value = props.field?.int_value ?? props.builderField?.default;
+			value = props.field?.int_value ?? props.customField?.default;
 			break;
 		}
 		case "checkbox": {
 			value =
-				props.field?.bool_value ?? props.builderField?.default ? 1 : 0;
+				props.field?.bool_value ?? props.customField?.default ? 1 : 0;
 			break;
 		}
 		case "select": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "textarea": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "json": {
 			value =
 				Formatter.parseJSON<Record<string, unknown>>(
 					props.field?.json_value,
-				) ?? props.builderField?.default;
+				) ?? props.customField?.default;
 			break;
 		}
 		case "colour": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "datetime": {
-			value = props.field?.text_value ?? props.builderField?.default;
+			value = props.field?.text_value ?? props.customField?.default;
 			break;
 		}
 		case "user": {
@@ -227,27 +205,13 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 			};
 			break;
 		}
-		case "pagelink": {
-			const jsonVal = Formatter.parseJSON<PageLinkValue>(
-				props.field?.json_value,
-			);
-			value = {
-				id: props.field?.page_link_id ?? null,
-				target: jsonVal?.target || "_self",
-				label: jsonVal?.label || "",
-			};
-			// meta = {};
-			break;
-		}
 		case "link": {
 			const jsonVal = Formatter.parseJSON<LinkValue>(
 				props.field?.json_value,
 			);
 			value = {
 				url:
-					props.field?.text_value ??
-					props.builderField?.default ??
-					"",
+					props.field?.text_value ?? props.customField?.default ?? "",
 				target: jsonVal?.target ?? "_self",
 				label: jsonVal?.label ?? null,
 			};
@@ -256,61 +220,4 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 	}
 
 	return { value, meta };
-};
-
-interface FieldUpsertObjectResponse {
-	fieldsId?: number | undefined;
-	collectionBrickId: number;
-	key: string;
-	type: FieldTypes;
-	groupId?: number | null;
-	textValue: string | null;
-	intValue: number | null;
-	boolValue: 1 | 0 | null;
-	jsonValue: string | null;
-	pageLinkId: number | null;
-	mediaId: number | null;
-	userId: number | null;
-	languageId: number;
-}
-
-interface FormatUpsertFields {
-	brick: BrickSchema;
-	groups: Array<GroupsResponse>;
-}
-
-export const fieldUpsertPrep = (
-	props: FormatUpsertFields,
-): Array<FieldUpsertObjectResponse> => {
-	return (
-		props.brick.fields?.map((field) => {
-			let groupId = null;
-			const findGroup = props.groups.find(
-				(group) => group.ref === field.groupId,
-			);
-			if (findGroup === undefined) {
-				const findGroupBrick = props.groups.find(
-					(group) => group.groupId === field.groupId,
-				);
-				groupId = findGroupBrick?.groupId ?? null;
-			} else groupId = findGroup.groupId;
-
-			return {
-				languageId: field.languageId,
-				fieldsId: field.fieldsId,
-				collectionBrickId: props.brick.id as number,
-				key: field.key,
-				type: field.type,
-				groupId: groupId,
-				textValue: null,
-				intValue: null,
-				boolValue: null,
-				jsonValue: null,
-				pageLinkId: null,
-				mediaId: null,
-				userId: null,
-				...fieldColumnValueMap(field),
-			};
-		}) || []
-	);
 };

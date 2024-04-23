@@ -53,7 +53,6 @@ export default class CollectionDocumentBricksRepo {
 								"headless_collection_document_groups.collection_document_id",
 								"headless_collection_document_groups.collection_brick_id",
 								"headless_collection_document_groups.parent_group_id",
-								"headless_collection_document_groups.language_id",
 								"headless_collection_document_groups.repeater_key",
 								"headless_collection_document_groups.group_order",
 								"headless_collection_document_groups.ref",
@@ -69,13 +68,6 @@ export default class CollectionDocumentBricksRepo {
 					.jsonArrayFrom(
 						eb
 							.selectFrom("headless_collection_document_fields")
-							.leftJoin("headless_collection_documents", (join) =>
-								join.onRef(
-									"headless_collection_documents.id",
-									"=",
-									"headless_collection_document_fields.page_link_id",
-								),
-							)
 							.leftJoin("headless_media", (join) =>
 								join.onRef(
 									"headless_media.id",
@@ -101,11 +93,15 @@ export default class CollectionDocumentBricksRepo {
 								"headless_collection_document_fields.int_value",
 								"headless_collection_document_fields.bool_value",
 								"headless_collection_document_fields.json_value",
-								"headless_collection_document_fields.page_link_id",
 								"headless_collection_document_fields.media_id",
 								"headless_collection_document_fields.collection_document_id",
-								// Page fields
-								"headless_collection_documents.id as page_id",
+								// User fields
+								"headless_users.id as user_id",
+								"headless_users.email as user_email",
+								"headless_users.first_name as user_first_name",
+								"headless_users.last_name as user_last_name",
+								"headless_users.email as user_email",
+								"headless_users.username as user_username",
 								// Media fields
 								"headless_media.key as media_key",
 								"headless_media.mime_type as media_mime_type",
@@ -114,13 +110,6 @@ export default class CollectionDocumentBricksRepo {
 								"headless_media.width as media_width",
 								"headless_media.height as media_height",
 								"headless_media.type as media_type",
-								// User fields
-								"headless_users.id as user_id",
-								"headless_users.email as user_email",
-								"headless_users.first_name as user_first_name",
-								"headless_users.last_name as user_last_name",
-								"headless_users.email as user_email",
-								"headless_users.username as user_username",
 								props.config.db
 									.jsonArrayFrom(
 										eb
@@ -179,8 +168,8 @@ export default class CollectionDocumentBricksRepo {
 			.execute();
 	};
 	// ----------------------------------------
-	// upsert
-	upsertMultiple = async (props: {
+	// create
+	createMultiple = async (props: {
 		items: Array<{
 			id?: number;
 			brickType: BrickSchema["type"];
@@ -201,11 +190,6 @@ export default class CollectionDocumentBricksRepo {
 						collection_document_id: b.collectionDocumentId,
 					};
 				}),
-			)
-			.onConflict((oc) =>
-				oc.column("id").doUpdateSet((eb) => ({
-					brick_order: eb.ref("excluded.brick_order"),
-				})),
 			)
 			.returning(["id", "brick_order", "brick_key", "brick_type"])
 			.execute();

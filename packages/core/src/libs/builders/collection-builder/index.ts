@@ -13,6 +13,7 @@ import type {
 	CollectionTextareaConfig,
 	CollectionDateTimeConfig,
 	CollectionUserConfig,
+	CollectionMediaConfig,
 } from "./types.js";
 import type { CollectionDocumentBuilderHooks } from "../../../types/hooks.js";
 
@@ -72,6 +73,11 @@ export default class CollectionBuilder extends FieldBuilder {
 	addUser(config: CollectionUserConfig) {
 		this.#fieldCollectionHelper(config.key, "user", config.collection);
 		super.addUser(config);
+		return this;
+	}
+	addMedia(config: CollectionMediaConfig) {
+		this.#fieldCollectionHelper(config.key, "media", config.collection);
+		super.addMedia(config);
 		return this;
 	}
 	// ------------------------------------

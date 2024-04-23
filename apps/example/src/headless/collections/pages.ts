@@ -82,6 +82,16 @@ const PageCollection = new CollectionBuilder("page", {
 			filterable: true,
 		},
 	})
+	.addRepeater({
+		key: "notification_reason",
+		validation: {
+			maxGroups: 3,
+		},
+	})
+	.addText({
+		key: "notification_reason_title",
+	})
+	.endRepeater()
 	.endRepeater();
 
 export default PageCollection;

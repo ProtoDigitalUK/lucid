@@ -159,22 +159,20 @@ export interface CollectionResponse {
 }
 
 export interface BrickResponse {
-	id: number;
 	key: string;
 	order: number;
 	type: "builder" | "fixed";
-	groups: Array<GroupResponse>;
 	fields: Array<FieldResponse>;
 }
 
 export interface FieldResponse {
-	fieldsId: number;
 	key: string;
 	type: FieldTypes;
-	groupId?: number | null;
+	groupId?: number;
 	value?: FieldResponseValue;
 	meta?: FieldResponseMeta;
-	languageId: number;
+	languageId?: number;
+	groups?: Array<Array<FieldResponse>>;
 }
 
 export type FieldResponseValue =
@@ -185,28 +183,9 @@ export type FieldResponseValue =
 	| undefined
 	| Record<string, unknown>
 	| LinkValue
-	| MediaValue
-	| PageLinkValue;
+	| MediaValue;
 
-export type FieldResponseMeta =
-	| null
-	| undefined
-	| MediaMeta
-	| PageLinkMeta
-	| UserMeta;
-
-export interface PageLinkValue {
-	id: number | null;
-	target: string | null;
-	label: string | null;
-}
-
-export interface PageLinkMeta {
-	titleTranslations?: Array<{
-		value: string | null;
-		languageId: number | null;
-	}>;
-}
+export type FieldResponseMeta = null | undefined | MediaMeta | UserMeta;
 
 export interface LinkValue {
 	url: string | null;
@@ -243,14 +222,6 @@ export interface UserMeta {
 	lastName: string | null;
 }
 
-export interface GroupResponse {
-	groupId: number;
-	groupOrder: number;
-	parentGroupId: number | null;
-	repeaterKey: string;
-	languageId: number;
-}
-
 export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;
@@ -261,7 +232,6 @@ export interface CollectionDocumentResponse {
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;
-	groups?: Array<GroupResponse> | null;
 }
 
 export interface ResponseBody {

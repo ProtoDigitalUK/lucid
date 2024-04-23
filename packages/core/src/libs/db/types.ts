@@ -180,7 +180,6 @@ export interface HeadlessCollectionDocumentGroups {
 	collection_document_id: number;
 	collection_brick_id: number;
 	parent_group_id: number | null;
-	language_id: number;
 	repeater_key: string;
 	group_order: number;
 	ref: string | null;
@@ -198,7 +197,6 @@ export interface HeadlessCollectionDocumentFields {
 	int_value: number | null;
 	bool_value: BooleanInt | null;
 	json_value: JSONString | null;
-	page_link_id: number | null;
 	user_id: number | null;
 	media_id: number | null;
 }
