@@ -1,6 +1,6 @@
 {
 	"name": "@protoheadless/core",
-	"version": "0.2.0-alpha.0",
+	"version": "0.3.0-alpha.0",
 	"description": "The core of the Headless CMS. Its responsible for spinning up the API and serving the CMS.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -23,12 +23,7 @@
 		"lint:fix": "biome lint --apply ./src",
 		"clear-db:postgres": "node ./scripts/clear-db-pg.js"
 	},
-	"files": [
-		"dist",
-		"cms",
-		"templates",
-		"assets"
-	],
+	"files": ["dist", "cms", "templates", "assets"],
 	"author": "Proto Digital",
 	"repository": {
 		"type": "git",
