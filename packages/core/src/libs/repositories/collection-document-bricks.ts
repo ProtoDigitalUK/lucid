@@ -105,6 +105,13 @@ export default class CollectionDocumentBricksRepo {
 								"headless_collection_document_fields.collection_document_id",
 								// Page fields
 								"headless_collection_documents.id as page_id",
+								// User fields
+								"headless_users.id as user_id",
+								"headless_users.email as user_email",
+								"headless_users.first_name as user_first_name",
+								"headless_users.last_name as user_last_name",
+								"headless_users.email as user_email",
+								"headless_users.username as user_username",
 								// Media fields
 								"headless_media.key as media_key",
 								"headless_media.mime_type as media_mime_type",
@@ -113,13 +120,6 @@ export default class CollectionDocumentBricksRepo {
 								"headless_media.width as media_width",
 								"headless_media.height as media_height",
 								"headless_media.type as media_type",
-								// User fields
-								"headless_users.id as user_id",
-								"headless_users.email as user_email",
-								"headless_users.first_name as user_first_name",
-								"headless_users.last_name as user_last_name",
-								"headless_users.email as user_email",
-								"headless_users.username as user_username",
 								props.config.db
 									.jsonArrayFrom(
 										eb
