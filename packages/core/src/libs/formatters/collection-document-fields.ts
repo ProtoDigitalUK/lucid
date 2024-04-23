@@ -52,9 +52,12 @@ export default class CollectionDocumentFieldsFormatter {
 		builder: BrickBuilder | CollectionBuilder;
 	}): FieldResponse[] => {
 		const fieldTree = props.builder.fieldTreeNoTab;
+		const sortedGroups = props.groups.sort(
+			(a, b) => a.group_order - b.group_order,
+		);
 		return this.buildFields({
 			fields: props.fields,
-			groups: props.groups,
+			groups: sortedGroups,
 			host: props.host,
 			customFields: fieldTree,
 			groupId: null,
