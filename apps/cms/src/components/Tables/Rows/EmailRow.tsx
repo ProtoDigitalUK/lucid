@@ -4,7 +4,7 @@ import type { Component } from "solid-js";
 import type useRowTarget from "@/hooks/useRowTarget";
 // Types
 import type { TableRowProps } from "@/types/components";
-import type { EmailResT } from "@headless/types/src/email";
+import type { EmailResponse } from "@protoheadless/core/types";
 // Stores
 import userStore from "@/store/userStore";
 // Components
@@ -14,7 +14,7 @@ import DateCol from "@/components/Tables/Columns/DateCol";
 import PillCol from "@/components/Tables/Columns/PillCol";
 
 interface EmailRowProps extends TableRowProps {
-	email: EmailResT;
+	email: EmailResponse;
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"preview" | "resend" | "delete">>;
 }
@@ -60,39 +60,39 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 			]}
 		>
 			<PillCol
-				text={props.email.delivery_status}
+				text={props.email.deliveryStatus}
 				theme={
-					props.email.delivery_status === "sent"
+					props.email.deliveryStatus === "sent"
 						? "green"
-						: props.email.delivery_status === "failed"
+						: props.email.deliveryStatus === "failed"
 							? "red"
 							: "grey"
 				}
 				options={{ include: props?.include[0] }}
 			/>
 			<TextCol
-				text={props.email.mail_details.subject}
+				text={props.email.mailDetails.subject}
 				options={{ include: props?.include[1], maxLines: 2 }}
 			/>
 			<PillCol
-				text={props.email.mail_details.template}
+				text={props.email.mailDetails.template}
 				options={{ include: props?.include[2] }}
 			/>
 			<TextCol
-				text={props.email.mail_details.to}
+				text={props.email.mailDetails.to}
 				options={{ include: props?.include[3], maxLines: 1 }}
 			/>
 			<TextCol
-				text={props.email.mail_details.from.address}
+				text={props.email.mailDetails.from.address}
 				options={{ include: props?.include[4], maxLines: 1 }}
 			/>
 			<PillCol
-				text={props.email.sent_count || 0}
+				text={props.email.sentCount || 0}
 				theme={"green"}
 				options={{ include: props?.include[5] }}
 			/>
 			<PillCol
-				text={props.email.error_count || 0}
+				text={props.email.errorCount || 0}
 				theme={"red"}
 				options={{ include: props?.include[6] }}
 			/>
@@ -102,15 +102,15 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 				options={{ include: props?.include[7] }}
 			/>
 			<DateCol
-				date={props.email.created_at}
+				date={props.email.createdAt}
 				options={{ include: props?.include[8] }}
 			/>
 			<DateCol
-				date={props.email.last_attempt_at}
+				date={props.email.lastAttemptAt}
 				options={{ include: props?.include[9] }}
 			/>
 			<DateCol
-				date={props.email.last_success_at}
+				date={props.email.lastSuccessAt}
 				options={{ include: props?.include[10] }}
 			/>
 		</Table.Tr>

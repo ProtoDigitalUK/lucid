@@ -4,8 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { SettingsResT } from "@headless/types/src/settings";
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody, SettingsResponse } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
@@ -23,7 +22,7 @@ const useGetSettings = (params?: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["settings.getSettings", queryKey(), params?.key?.()],
 		queryFn: () =>
-			request<APIResponse<SettingsResT>>({
+			request<ResponseBody<SettingsResponse>>({
 				url: "/api/v1/settings",
 				config: {
 					method: "GET",

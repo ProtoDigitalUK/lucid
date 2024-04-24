@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
 
 interface QueryParams {
@@ -39,7 +39,7 @@ const useGetValidParents = (params: QueryHook<QueryParams>) => {
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<APIResponse<MultipleBuilderResT[]>>({
+			request<ResponseBody<MultipleBuilderResT[]>>({
 				url: `/api/v1/collections/multiple-builder/${
 					queryParams().location?.id
 				}/valid-parents`,

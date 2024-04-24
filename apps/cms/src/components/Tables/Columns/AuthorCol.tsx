@@ -1,6 +1,6 @@
 import { type Component, Switch, Match } from "solid-js";
 // Types
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
 // Components
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";

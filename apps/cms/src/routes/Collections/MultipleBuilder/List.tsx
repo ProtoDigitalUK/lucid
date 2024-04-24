@@ -6,7 +6,7 @@ import api from "@/services/api";
 // Store
 import userStore from "@/store/userStore";
 // Types
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns
@@ -145,14 +145,14 @@ const CollectionsMultipleBuilderListRoute: Component = () => {
 		>
 			<PagesTable
 				searchParams={searchParams}
-				collection={collection.data?.data as CollectionResT}
+				collection={collection.data?.data as CollectionResponse}
 			/>
 			<CreateUpdatePagePanel
 				state={{
 					open: getOpenCreatePanel(),
 					setOpen: setOpenCreatePanel,
 				}}
-				collection={collection.data?.data as CollectionResT}
+				collection={collection.data?.data as CollectionResponse}
 			/>
 		</Layout.PageLayout>
 	);

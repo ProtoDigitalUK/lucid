@@ -10,10 +10,10 @@ import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 // Types
-import type { SettingsResT } from "@headless/types/src/settings";
+import type { SettingsResponse } from "@protoheadless/core/types";
 
 interface GeneralSettingsRouteProps {
-	settings?: SettingsResT;
+	settings?: SettingsResponse;
 }
 
 const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
@@ -25,10 +25,10 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 	// ----------------------------------------
 	// Memos
 	const percentUsed = createMemo(() => {
-		if (props.settings?.media.storage_remaining === null) return 0;
-		if (props.settings?.media.storage_used === 0) return 0;
-		const total = props.settings?.media.storage_limit || 0;
-		const remaining = props.settings?.media.storage_remaining || 0;
+		if (props.settings?.media.storage.remaining === null) return 0;
+		if (props.settings?.media.storage.used === 0) return 0;
+		const total = props.settings?.media.storage.limit || 0;
+		const remaining = props.settings?.media.storage.remaining || 0;
 
 		return Math.floor(((total - remaining) / total) * 100);
 	});
@@ -40,9 +40,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 			<InfoRow.Root
 				title={T("processed_images")}
 				description={T("processed_images_setting_message", {
-					limit:
-						props.settings?.media.processed_images
-							.per_image_limit || 0,
+					limit: props.settings?.media.processed.imageLimit || 0,
 				})}
 			>
 				<InfoRow.Content
@@ -63,9 +61,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 						}
 					>
 						{T("clear_all_processed_images_button", {
-							count:
-								props.settings?.media.processed_images.total ||
-								0,
+							count: props.settings?.media.processed.total || 0,
 						})}
 					</Button>
 				</InfoRow.Content>
@@ -77,7 +73,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 				<InfoRow.Content
 					title={T("storage_remaining_title", {
 						storage: helpers.bytesToSize(
-							props.settings?.media.storage_remaining,
+							props.settings?.media.storage.remaining,
 						),
 					})}
 				>
@@ -86,10 +82,10 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 						type="usage"
 						labels={{
 							start: helpers.bytesToSize(
-								props.settings?.media.storage_used,
+								props.settings?.media.storage.used,
 							),
 							end: helpers.bytesToSize(
-								props.settings?.media.storage_limit,
+								props.settings?.media.storage.limit,
 							),
 						}}
 					/>

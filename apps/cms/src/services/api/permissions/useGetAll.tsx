@@ -4,8 +4,8 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { PermissionGroup } from "@headless/types/src/permissions";
-import type { APIResponse } from "@/types/api";
+import type { PermissionGroup } from "@headless/types/src/permissions"; // TODO: remove
+import type { ResponseBody } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
@@ -23,7 +23,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["permissions.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<PermissionGroup[]>>({
+			request<ResponseBody<PermissionGroup[]>>({
 				url: "/api/v1/permissions",
 				query: queryParams(),
 				config: {

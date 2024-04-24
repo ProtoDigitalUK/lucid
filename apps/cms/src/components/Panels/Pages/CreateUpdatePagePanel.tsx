@@ -13,9 +13,9 @@ import helpers from "@/utils/helpers";
 // Stores
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { CollectionResT } from "@headless/types/src/collections";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Components
 import Panel from "@/components/Groups/Panel";
 import PageFieldGroup, {
@@ -24,7 +24,7 @@ import PageFieldGroup, {
 
 interface CreateUpdatePagePanelProps {
 	id?: Accessor<number | undefined>;
-	collection: CollectionResT;
+	collection: CollectionResponse;
 	state: {
 		open: boolean;
 		setOpen: (_state: boolean) => void;
@@ -180,9 +180,9 @@ const CreateUpdatePagePanel: Component<CreateUpdatePagePanelProps> = (
 
 	const hasTranslationErrors = createMemo(() => {
 		const titleErrors =
-			mutateErrors()?.errors?.body?.title_translations.children;
+			mutateErrors()?.errors?.body?.titleTranslations.children;
 		const excerptErrors =
-			mutateErrors()?.errors?.body?.excerpt_translations.children;
+			mutateErrors()?.errors?.body?.excerptTranslations.children;
 		if (titleErrors) return titleErrors.length > 0;
 		if (excerptErrors) return excerptErrors.length > 0;
 		return false;

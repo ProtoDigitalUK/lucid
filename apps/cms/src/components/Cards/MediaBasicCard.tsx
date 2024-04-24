@@ -2,13 +2,13 @@ import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
+import type { MediaResponse } from "@protoheadless/core/types";
 // Components
 import AspectRatio from "@/components/Partials/AspectRatio";
 import MediaPreview from "@/components/Partials/MediaPreview";
 
 interface MediaBasicCardProps {
-	media: MediaResT;
+	media: MediaResponse;
 	selected: boolean;
 	contentLanguage?: number;
 	onClick?: () => void;
@@ -34,13 +34,13 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 	// ----------------------------------
 	// Memos
 	const titleTranslations = createMemo(() => {
-		return props.media.title_translations.find(
-			(translation) => translation.language_id === props.contentLanguage,
+		return props.media.titleTranslations.find(
+			(translation) => translation.languageId === props.contentLanguage,
 		);
 	});
 	const altTranslations = createMemo(() => {
-		return props.media.alt_translations.find(
-			(translation) => translation.language_id === props.contentLanguage,
+		return props.media.altTranslations.find(
+			(translation) => translation.languageId === props.contentLanguage,
 		);
 	});
 

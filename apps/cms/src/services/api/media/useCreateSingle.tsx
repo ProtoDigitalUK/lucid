@@ -3,8 +3,7 @@ import request from "@/utils/request";
 import objectToFormData from "@/utils/object-to-formdata";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { MediaResT } from "@headless/types/src/media";
+import type { ResponseBody, MediaResponse } from "@protoheadless/core/types";
 
 interface Params {
 	file: File;
@@ -18,7 +17,7 @@ interface Params {
 	}>;
 }
 interface Response {
-	id: MediaResT["id"];
+	id: MediaResponse["id"];
 }
 
 export const createSingleReq = (params: Params) => {
@@ -27,7 +26,7 @@ export const createSingleReq = (params: Params) => {
 		alt_translations: params.alt_translations,
 	});
 
-	return request<APIResponse<Response>>({
+	return request<ResponseBody<Response>>({
 		url: `/api/v1/media?body=${bodyQueryParam}`,
 		csrf: true,
 		config: {
@@ -40,14 +39,14 @@ export const createSingleReq = (params: Params) => {
 };
 
 interface UseCreateSingleProps {
-	onSuccess?: (_data: APIResponse<Response>) => void;
+	onSuccess?: (_data: ResponseBody<Response>) => void;
 	onError?: () => void;
 }
 
 const useCreateSingle = (props?: UseCreateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<Response>>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<Response>>({
 		mutationFn: createSingleReq,
 		invalidates: ["media.getMultiple"],
 		onSuccess: props?.onSuccess,

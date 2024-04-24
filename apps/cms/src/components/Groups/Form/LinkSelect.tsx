@@ -3,12 +3,12 @@ import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
 import { FaSolidPen } from "solid-icons/fa";
 // Types
+import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks"; // TODO: we've removed this CF
 import type {
-	PageLinkValueT,
-	LinkValueT,
-	PageLinkMetaT,
-} from "@headless/types/src/bricks";
-import type { ErrorResult, FieldError } from "@/types/api";
+	ErrorResult,
+	FieldErrors,
+	LinkValue,
+} from "@protoheadless/core/types";
 // Store
 import linkFieldStore from "@/store/linkFieldStore";
 // Components
@@ -18,9 +18,9 @@ import Form from "@/components/Groups/Form";
 interface LinkSelectProps {
 	id: string;
 	type: "pagelink" | "link";
-	value: PageLinkValueT | LinkValueT | undefined | null;
+	value: PageLinkValueT | LinkValue | undefined | null;
 	onChange: (
-		_value: PageLinkValueT | LinkValueT | null,
+		_value: PageLinkValueT | LinkValue | null,
 		_meta?: PageLinkMetaT | null,
 	) => void;
 	meta: PageLinkMetaT | null;
@@ -30,7 +30,7 @@ interface LinkSelectProps {
 	};
 	noMargin?: boolean;
 	required?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 }
 
 export const LinkSelect: Component<LinkSelectProps> = (props) => {
@@ -48,7 +48,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 					? (props.value as PageLinkValueT)
 					: null,
 			selectedLink:
-				props.type === "link" ? (props.value as LinkValueT) : null,
+				props.type === "link" ? (props.value as LinkValue) : null,
 			selectedMeta: props.meta,
 		});
 	};
@@ -59,7 +59,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 		if (props.type === "pagelink") {
 			return props.value?.label;
 		}
-		const value = props.value as LinkValueT;
+		const value = props.value as LinkValue;
 		return value?.label || value?.url;
 	};
 

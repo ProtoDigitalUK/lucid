@@ -1,10 +1,10 @@
 import { createStore } from "solid-js/store";
 // Types
-import type { UserResT } from "@headless/types/src/users";
-import type { PermissionT } from "@headless/types/src/permissions";
+import type { PermissionT } from "@headless/types/src/permissions"; // TODO: remove
+import type { UserResponse } from "@protoheadless/core/types";
 
 type UserStoreT = {
-	user: UserResT | null;
+	user: UserResponse | null;
 	reset: () => void;
 
 	hasPermission: (_perm: PermissionT[]) => {

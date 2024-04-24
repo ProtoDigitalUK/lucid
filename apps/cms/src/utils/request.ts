@@ -2,7 +2,7 @@
 import queryBuilder, { type QueryBuilderProps } from "@/utils/query-builder";
 import { HeadlessError, handleSiteErrors } from "@/utils/error-handling";
 // Types
-import type { APIErrorResponse } from "@/types/api";
+import type { ErrorResponse } from "@protoheadless/core/types";
 // Services
 import { csrfReq } from "@/services/api/auth/useCsrf";
 
@@ -66,7 +66,7 @@ const request = async <Response, Data = unknown>(
 
 	const data = await fetchRes.json();
 	if (!fetchRes.ok) {
-		const errorObj = data as APIErrorResponse;
+		const errorObj = data as ErrorResponse;
 		handleSiteErrors(errorObj);
 		throw new HeadlessError(errorObj.message, errorObj);
 	}

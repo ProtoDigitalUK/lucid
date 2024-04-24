@@ -2,8 +2,8 @@ import T from "@/translations/index";
 import { type Component, createMemo, createSignal } from "solid-js";
 import { FaSolidRobot } from "solid-icons/fa";
 // Types
-import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { BrickConfigT } from "@headless/types/src/bricks"; // TODO: remove
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Components
 import Button from "@/components/Partials/Button";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
@@ -11,7 +11,7 @@ import AddBrick from "@/components/Modals/Bricks/AddBrick";
 interface TopBarProps {
 	state: {
 		brickConfig?: BrickConfigT[];
-		collection?: CollectionResT;
+		collection?: CollectionResponse;
 	};
 }
 
@@ -23,9 +23,7 @@ export const TopBar: Component<TopBarProps> = (props) => {
 	// ------------------------------
 	// Memos
 	const hasBuilderBricks = createMemo(() => {
-		return props.state.collection?.bricks?.some(
-			(brick) => brick.type === "builder",
-		);
+		return props.state.collection?.builderBricks !== undefined;
 	});
 
 	// ----------------------------------

@@ -1,11 +1,11 @@
 import T from "@/translations";
 import spawnToast from "@/utils/spawn-toast";
 // Types
-import type { APIErrorResponse } from "@/types/api";
+import type { ErrorResponse } from "@protoheadless/core/types";
 
 export class HeadlessError extends Error {
-	errorRes: APIErrorResponse;
-	constructor(message: string, errorRes: APIErrorResponse) {
+	errorRes: ErrorResponse;
+	constructor(message: string, errorRes: ErrorResponse) {
 		super(message);
 		this.name = this.constructor.name;
 		// Error.captureStackTrace(this, this.constructor);
@@ -26,7 +26,7 @@ export const validateSetError = (error: unknown) => {
 	};
 };
 
-export const handleSiteErrors = (error: APIErrorResponse) => {
+export const handleSiteErrors = (error: ErrorResponse) => {
 	spawnToast({
 		title: error.name,
 		message: error.message,

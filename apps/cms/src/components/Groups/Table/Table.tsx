@@ -11,7 +11,7 @@ import {
 	Match,
 } from "solid-js";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 // Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
 // Assets
@@ -30,7 +30,7 @@ interface TableRootProps {
 	key: string;
 	rows: number;
 	permission?: boolean;
-	meta?: APIResponse<unknown>["meta"];
+	meta?: ResponseBody<unknown>["meta"];
 	caption?: string;
 	searchParams: ReturnType<typeof useSearchParams>;
 

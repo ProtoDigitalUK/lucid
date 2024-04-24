@@ -4,7 +4,7 @@ import { useNavigate } from "@solidjs/router";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
 	token: string;
@@ -14,7 +14,7 @@ interface Params {
 
 export const resetPasswordReq = async (params: Params) => {
 	return request<
-		APIResponse<{
+		ResponseBody<{
 			message: string;
 		}>
 	>({
@@ -42,7 +42,7 @@ const useResetPassword = (props?: UseResetPasswordProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
 		Params,
-		APIResponse<{
+		ResponseBody<{
 			message: string;
 		}>
 	>({

@@ -1,10 +1,10 @@
+import classNames from "classnames";
 import { type Component, Match, Switch } from "solid-js";
 // Types
-import type { FieldTypesT } from "@headless/types/src/bricks";
-import classNames from "classnames";
+import type { FieldTypes } from "@protoheadless/core/types";
 
 interface FieldTypeIconProps {
-	type: FieldTypesT;
+	type: FieldTypes;
 }
 
 const FieldTypeIcon: Component<FieldTypeIconProps> = (props) => {

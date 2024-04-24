@@ -3,7 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse, APIErrorResponse } from "@/types/api";
+import type { ResponseBody, ErrorResponse } from "@protoheadless/core/types";
 import type { BrickDataT } from "@/store/builderStore";
 
 interface Params {
@@ -28,7 +28,7 @@ interface Params {
 }
 
 export const updateSingleReq = (params: Params) => {
-	return request<APIResponse<null>>({
+	return request<ResponseBody<null>>({
 		url: `/api/v1/collections/multiple-builder/${params.id}`,
 		csrf: true,
 		config: {
@@ -40,14 +40,14 @@ export const updateSingleReq = (params: Params) => {
 
 interface UseUpdateSingleProps {
 	onSuccess?: () => void;
-	onError?: (_errors: APIErrorResponse | undefined) => void;
+	onError?: (_errors: ErrorResponse | undefined) => void;
 	collectionName: string;
 }
 
 const useUpdateSingle = (props: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: updateSingleReq,
 		successToast: {
 			title: T("update_toast_title", {

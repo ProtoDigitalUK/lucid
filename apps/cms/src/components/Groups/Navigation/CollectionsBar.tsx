@@ -2,12 +2,12 @@ import T from "@/translations";
 import { type Component, Show, For, createMemo, Switch, Match } from "solid-js";
 import { useParams, useLocation } from "@solidjs/router";
 // Types
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Components
 import Navigation from "@/components/Groups/Navigation";
 
 interface CollectionsBarProps {
-	collections: CollectionResT[];
+	collections: CollectionResponse[];
 	state: {
 		isLoading: boolean;
 		isError: boolean;

@@ -1,7 +1,6 @@
 import { type Component, createSignal, createEffect } from "solid-js";
 // Types
-import type { CustomFieldT } from "@headless/types/src/bricks";
-import type { FieldError } from "@/types/api";
+import type { FieldErrors, CustomField } from "@protoheadless/core/types";
 // Store
 import builderStore, { type BrickStoreFieldT } from "@/store/builderStore";
 // Utils
@@ -12,11 +11,11 @@ import Form from "@/components/Groups/Form";
 interface JSONFieldProps {
 	state: {
 		brickIndex: number;
-		key: CustomFieldT["key"];
-		field: CustomFieldT;
+		key: CustomField["key"];
+		field: CustomField;
 		groupId?: BrickStoreFieldT["group_id"];
 
-		fieldError: FieldError | undefined;
+		fieldError: FieldErrors | undefined;
 		contentLanguage?: number | undefined;
 	};
 }

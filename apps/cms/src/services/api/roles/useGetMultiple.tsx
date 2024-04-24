@@ -4,8 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { RoleResT } from "@headless/types/src/roles";
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody, RoleResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
@@ -30,7 +29,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["roles.getMultiple", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<RoleResT[]>>({
+			request<ResponseBody<RoleResponse[]>>({
 				url: "/api/v1/roles",
 				query: queryParams(),
 				config: {

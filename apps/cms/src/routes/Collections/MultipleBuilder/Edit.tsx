@@ -21,8 +21,8 @@ import builderStore from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { CollectionResT } from "@headless/types/src/collections";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";
@@ -192,9 +192,9 @@ const CollectionsMultipleBuilderEditRoute: Component = () => {
 	});
 	const pageTranslationErrors = createMemo(() => {
 		const titleErrors =
-			mutateErrors()?.errors?.body?.title_translations?.children;
+			mutateErrors()?.errors?.body?.titleTranslations?.children;
 		const excerptErrors =
-			mutateErrors()?.errors?.body?.excerpt_translations?.children;
+			mutateErrors()?.errors?.body?.excerptTranslations?.children;
 		if (titleErrors) return titleErrors.length > 0;
 		if (excerptErrors) return excerptErrors.length > 0;
 		return false;
@@ -326,7 +326,7 @@ const CollectionsMultipleBuilderEditRoute: Component = () => {
 								brickConfig: brickConfig.data?.data || [],
 								pageId: pageId(),
 								collection: collection.data
-									?.data as CollectionResT,
+									?.data as CollectionResponse,
 								categories: categories.data?.data || [],
 								mutateErrors: mutateErrors,
 								getTitleTranslations,
@@ -383,7 +383,7 @@ const CollectionsMultipleBuilderEditRoute: Component = () => {
 							open: getDeleteOpen(),
 							setOpen: setDeleteOpen,
 						}}
-						collection={collection.data?.data as CollectionResT}
+						collection={collection.data?.data as CollectionResponse}
 						callbacks={{
 							onSuccess: () => {
 								navigate(

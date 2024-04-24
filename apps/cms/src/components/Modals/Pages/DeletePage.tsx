@@ -3,13 +3,13 @@ import type { Component, Accessor } from "solid-js";
 // Components
 import Modal from "@/components/Groups/Modal";
 // Types
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Services
 import api from "@/services/api";
 
 interface DeletePageProps {
 	id: Accessor<number | undefined> | number | undefined;
-	collection: CollectionResT;
+	collection: CollectionResponse;
 	state: {
 		open: boolean;
 		setOpen: (_open: boolean) => void;

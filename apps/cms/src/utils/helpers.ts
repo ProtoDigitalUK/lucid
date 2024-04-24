@@ -1,8 +1,7 @@
 import type { Accessor, Setter } from "solid-js";
 import equal from "fast-deep-equal/es6";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
-import type { UserResT } from "@headless/types/src/users";
+import type { UserResponse, MediaResponse } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type GenericObject = Record<string, any>;
@@ -93,7 +92,7 @@ const bytesToSize = (bytes?: number | null): string => {
 
 // ---------------------------------------------
 // Get media type from mime type
-const getMediaType = (mimeType?: string): MediaResT["type"] => {
+const getMediaType = (mimeType?: string): MediaResponse["type"] => {
 	if (!mimeType) return "unknown";
 	const normalizedMimeType = mimeType.toLowerCase();
 
@@ -117,15 +116,15 @@ const getMediaType = (mimeType?: string): MediaResT["type"] => {
 // ---------------------------------------------
 // Format user name
 const formatUserName = (user: {
-	username: UserResT["username"];
-	first_name?: UserResT["first_name"];
-	last_name?: UserResT["last_name"];
+	username: UserResponse["username"];
+	firstName?: UserResponse["firstName"];
+	lastName?: UserResponse["lastName"];
 }): string => {
-	if (user.first_name && user.last_name) {
-		return `${user.first_name} ${user.last_name} - (${user.username})`;
+	if (user.firstName && user.lastName) {
+		return `${user.firstName} ${user.lastName} - (${user.username})`;
 	}
-	if (user.first_name) {
-		return `${user.first_name} - (${user.username})`;
+	if (user.firstName) {
+		return `${user.firstName} - (${user.username})`;
 	}
 
 	return user.username;
@@ -134,15 +133,15 @@ const formatUserName = (user: {
 // ---------------------------------------------
 // Format User Initials
 const formatUserInitials = (user: {
-	first_name?: UserResT["first_name"];
-	last_name?: UserResT["last_name"];
-	username: UserResT["username"];
+	firstName?: UserResponse["firstName"];
+	lastName?: UserResponse["lastName"];
+	username: UserResponse["username"];
 }): string => {
-	if (user.first_name && user.last_name) {
-		return `${user.first_name[0]}${user.last_name[0]}`;
+	if (user.firstName && user.lastName) {
+		return `${user.firstName[0]}${user.lastName[0]}`;
 	}
-	if (user.first_name) {
-		return `${user.first_name[0]}${user.first_name[1]}`;
+	if (user.firstName) {
+		return `${user.firstName[0]}${user.firstName[1]}`;
 	}
 	return `${user.username[0]}${user.username[1]}`;
 };
@@ -152,23 +151,23 @@ const formatUserInitials = (user: {
 const updateTranslation = (
 	setter: Setter<
 		{
-			language_id: number | null;
+			languageId: number | null;
 			value: string | null;
 		}[]
 	>,
 	translation: {
-		language_id: number | null;
+		languageId: number | null;
 		value: string | null;
 	},
 ) => {
 	setter((prev) => {
 		const index = prev.findIndex(
-			(t) => t.language_id === translation.language_id,
+			(t) => t.languageId === translation.languageId,
 		);
 		if (index === -1) return [...prev, translation];
 
 		return prev.map((item) =>
-			item.language_id === translation.language_id ? translation : item,
+			item.languageId === translation.languageId ? translation : item,
 		);
 	});
 };

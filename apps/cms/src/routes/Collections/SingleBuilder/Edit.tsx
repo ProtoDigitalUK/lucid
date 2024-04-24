@@ -15,7 +15,7 @@ import api from "@/services/api";
 import builderStore from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";
@@ -200,7 +200,7 @@ const CollectionsSingleBuilderEditRoute: Component = () => {
 							state={{
 								brickConfig: brickConfig.data?.data || [],
 								collection: collection.data
-									?.data as CollectionResT,
+									?.data as CollectionResponse,
 								mutateErrors: mutateErrors,
 							}}
 						/>

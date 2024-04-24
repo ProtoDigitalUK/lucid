@@ -2,9 +2,12 @@ import T from "@/translations";
 import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { ErrorResult, FieldError } from "@/types/api";
-import type { MediaResT } from "@headless/types/src/media";
-import type { MediaMetaT } from "@headless/types/src/bricks";
+import type {
+	ErrorResult,
+	FieldErrors,
+	MediaResponse,
+	MediaMeta,
+} from "@protoheadless/core/types";
 // Store
 import mediaSelectStore from "@/store/mediaSelectStore";
 // Components
@@ -16,8 +19,8 @@ import MediaPreview from "@/components/Partials/MediaPreview";
 interface MediaSelectProps {
 	id: string;
 	value: number | undefined;
-	meta: MediaMetaT | undefined;
-	onChange: (_value: number | null, _meta: MediaMetaT | null) => void;
+	meta: MediaMeta | undefined;
+	onChange: (_value: number | null, _meta: MediaMeta | null) => void;
 	extensions?: string[];
 	type?: string;
 	copy?: {
@@ -26,7 +29,7 @@ interface MediaSelectProps {
 	};
 	noMargin?: boolean;
 	required?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 }
 
 export const MediaSelect: Component<MediaSelectProps> = (props) => {
@@ -42,19 +45,19 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 	};
 	const openMediaSelectModal = () => {
 		mediaSelectStore.set({
-			onSelectCallback: (media: MediaResT) => {
+			onSelectCallback: (media: MediaResponse) => {
 				props.onChange(media.id, {
 					id: media.id,
 					url: media.url,
 					key: media.key,
-					mime_type: media.meta.mime_type,
-					file_extension: media.meta.file_extension,
-					file_size: media.meta.file_size,
+					mimeType: media.meta.mimeType,
+					fileExtension: media.meta.fileExtension,
+					fileSize: media.meta.fileSize,
 					type: media.type,
-					width: media.meta.width || undefined,
-					height: media.meta.height || undefined,
-					title_translations: media.title_translations,
-					alt_translations: media.alt_translations,
+					width: media.meta.width ?? null,
+					height: media.meta.height ?? null,
+					titleTranslations: media.titleTranslations,
+					altTranslations: media.altTranslations,
 				});
 			},
 			open: true,
@@ -104,9 +107,9 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 										}}
 										alt={
 											// TODO: fix to use some translation helper with current lang
-											props.meta?.alt_translations?.[0]
+											props.meta?.altTranslations?.[0]
 												.value ||
-											props.meta?.title_translations?.[0]
+											props.meta?.titleTranslations?.[0]
 												.value ||
 											""
 										}

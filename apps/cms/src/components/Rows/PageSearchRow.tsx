@@ -1,7 +1,7 @@
 import { type Component, createMemo, Show } from "solid-js";
 import { FaSolidCheck } from "solid-icons/fa";
 // Types
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
 
 interface PageSearchRowProps {
 	page: MultipleBuilderResT;

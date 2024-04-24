@@ -1,11 +1,11 @@
 import { createStore } from "solid-js/store";
 // Types
-import type { LanguageResT } from "@headless/types/src/language";
+import type { LanguageResponse } from "@protoheadless/core/types";
 
 type ContentLangStoreT = {
 	contentLanguage: number | undefined;
-	languages: LanguageResT[];
-	syncContentLanguage: (_languages: LanguageResT[]) => void;
+	languages: LanguageResponse[];
+	syncContentLanguage: (_languages: LanguageResponse[]) => void;
 	setContentLanguage: (_contentLanguage?: number) => void;
 };
 
@@ -21,7 +21,7 @@ const [get, set] = createStore<ContentLangStoreT>({
 	contentLanguage: getInitialContentLanguage(),
 	languages: [],
 
-	syncContentLanguage(languages: LanguageResT[]) {
+	syncContentLanguage(languages: LanguageResponse[]) {
 		if (languages.length === 0) {
 			set("contentLanguage", undefined);
 			return;

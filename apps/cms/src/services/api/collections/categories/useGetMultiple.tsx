@@ -1,10 +1,12 @@
+// TODO: remove service
+
 import { createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 import type { CategoryResT } from "@headless/types/src/categories";
 
 interface QueryParams {
@@ -33,7 +35,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<APIResponse<CategoryResT[]>>({
+			request<ResponseBody<CategoryResT[]>>({
 				url: "/api/v1/collections/categories",
 				query: queryParams(),
 				config: {

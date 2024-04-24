@@ -9,7 +9,7 @@ import {
 } from "solid-js";
 import classnames from "classnames";
 // Types
-import type { ErrorResult } from "@/types/api";
+import type { ErrorResult } from "@protoheadless/core/types";
 // Components
 import { FaSolidCheck, FaSolidXmark, FaSolidSort } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";

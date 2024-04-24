@@ -4,8 +4,8 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { BrickConfigT } from "@headless/types/src/bricks";
+import type { ResponseBody } from "@protoheadless/core/types";
+import type { BrickConfigT } from "@headless/types/src/bricks"; // TODO: remvoe
 
 interface QueryParams {
 	include: Record<"fields", boolean>;
@@ -27,7 +27,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["brickConfig.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<BrickConfigT[]>>({
+			request<ResponseBody<BrickConfigT[]>>({
 				url: "/api/v1/bricks/config",
 				query: queryParams(),
 				config: {

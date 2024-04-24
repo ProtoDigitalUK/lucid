@@ -1,7 +1,10 @@
 import { type Component, createSignal, createEffect } from "solid-js";
 // Types
-import type { FieldError } from "@/types/api";
-import type { CustomFieldT, LinkValueT } from "@headless/types/src/bricks";
+import type {
+	FieldErrors,
+	CustomField,
+	LinkValue,
+} from "@protoheadless/core/types";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store
@@ -12,11 +15,11 @@ import Form from "@/components/Groups/Form";
 interface LinkFieldProps {
 	state: {
 		brickIndex: number;
-		key: CustomFieldT["key"];
-		field: CustomFieldT;
+		key: CustomField["key"];
+		field: CustomField;
 		groupId?: BrickStoreFieldT["group_id"];
 
-		fieldError: FieldError | undefined;
+		fieldError: FieldErrors | undefined;
 		contentLanguage?: number | undefined;
 	};
 }
@@ -24,7 +27,7 @@ interface LinkFieldProps {
 export const LinkField: Component<LinkFieldProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getValue, setValue] = createSignal<LinkValueT | undefined | null>();
+	const [getValue, setValue] = createSignal<LinkValue | undefined | null>();
 
 	// -------------------------------
 	// Effects
@@ -36,7 +39,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 			key: props.state.key,
 			contentLanguage: props.state.contentLanguage,
 		});
-		const value = field?.value as LinkValueT | undefined | null;
+		const value = field?.value as LinkValue | undefined | null;
 		setValue(value);
 	});
 

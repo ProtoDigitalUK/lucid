@@ -4,7 +4,7 @@ import classNames from "classnames";
 // Stores
 import userStore from "@/store/userStore";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
+import type { MediaResponse } from "@protoheadless/core/types";
 // Hooks
 import type useRowTarget from "@/hooks/useRowTarget";
 // Utils
@@ -17,7 +17,7 @@ import ActionDropdown from "@/components/Partials/ActionDropdown";
 import MediaPreview from "@/components/Partials/MediaPreview";
 
 interface MediaCardProps {
-	media: MediaResT;
+	media: MediaResponse;
 	rowTarget: ReturnType<typeof useRowTarget<"clear" | "delete" | "update">>;
 	contentLanguage?: number;
 }
@@ -46,13 +46,13 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 	});
 
 	const titleTranslation = createMemo(() => {
-		return props.media.title_translations.find(
-			(translation) => translation.language_id === props.contentLanguage,
+		return props.media.titleTranslations.find(
+			(translation) => translation.languageId === props.contentLanguage,
 		);
 	});
 	const altTranslation = createMemo(() => {
-		return props.media.alt_translations.find(
-			(translation) => translation.language_id === props.contentLanguage,
+		return props.media.altTranslations.find(
+			(translation) => translation.languageId === props.contentLanguage,
 		);
 	});
 
@@ -127,10 +127,10 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 				/>
 				<span class="inset-0 top-auto absolute flex gap-1 p-15">
 					<Pill theme="primary">
-						{helpers.bytesToSize(props.media.meta.file_size)}
+						{helpers.bytesToSize(props.media.meta.fileSize)}
 					</Pill>
 					<Pill theme="primary">
-						{props.media.meta.file_extension}
+						{props.media.meta.fileExtension}
 					</Pill>
 				</span>
 			</AspectRatio>

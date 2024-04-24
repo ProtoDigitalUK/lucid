@@ -1,7 +1,7 @@
 import { type Component, Show, createSignal } from "solid-js";
 import classnames from "classnames";
 // Types
-import type { ErrorResult, FieldError } from "@/types/api";
+import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -20,7 +20,7 @@ interface JSONTextareaProps {
 	onKeyUp?: (_e: KeyboardEvent) => void;
 	required?: boolean;
 	disabled?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
 	theme?: "basic";
 }

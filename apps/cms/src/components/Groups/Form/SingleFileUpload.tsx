@@ -19,8 +19,7 @@ import {
 // Utils
 import helpers from "@/utils/helpers";
 // Types
-import type { ErrorResult } from "@/types/api";
-import type { MediaResT } from "@headless/types/src/media";
+import type { ErrorResult, MediaResponse } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -34,7 +33,7 @@ export interface SingleFileUploadProps {
 		setRemovedCurrent: (_value: boolean) => void;
 	};
 	currentFile?: {
-		type?: MediaResT["type"];
+		type?: MediaResponse["type"];
 		url?: string;
 		name?: string;
 	};
@@ -242,7 +241,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 							data={{
 								url: props.currentFile?.url as string,
 								type: props.currentFile
-									?.type as MediaResT["type"],
+									?.type as MediaResponse["type"],
 								name: props.currentFile?.name as string,
 							}}
 							actions={{
@@ -268,7 +267,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 interface FilePreviewScreenProps {
 	data: {
 		url: string;
-		type: MediaResT["type"];
+		type: MediaResponse["type"];
 		name: string;
 	};
 	actions: {

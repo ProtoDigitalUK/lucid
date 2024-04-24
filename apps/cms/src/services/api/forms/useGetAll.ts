@@ -1,3 +1,4 @@
+// TODO:Remove service
 import { createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 // Utils
@@ -5,7 +6,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
 import type { FormResT } from "@headless/types/src/forms";
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface QueryParams {
 	include: Record<"fields", boolean>;
@@ -24,7 +25,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["forms.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<FormResT[]>>({
+			request<ResponseBody<FormResT[]>>({
 				url: "/api/v1/forms",
 				query: queryParams(),
 				config: {

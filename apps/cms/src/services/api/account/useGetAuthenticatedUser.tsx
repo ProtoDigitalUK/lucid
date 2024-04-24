@@ -8,8 +8,7 @@ import serviceHelpers from "@/utils/service-helpers";
 // Services
 import api from "@/services/api";
 // Types
-import type { UserResT } from "@headless/types/src/users";
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}
@@ -27,7 +26,7 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 	const query = createQuery(() => ({
 		queryKey: ["users.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<UserResT>>({
+			request<ResponseBody<UserResponse>>({
 				url: "/api/v1/account",
 				config: {
 					method: "GET",

@@ -1,7 +1,7 @@
 import { type Component, createSignal, For, Show } from "solid-js";
 import classnames from "classnames";
 // Types
-import type { ErrorResult, FieldError } from "@/types/api";
+import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -17,7 +17,7 @@ interface ColourProps {
 	presets?: string[];
 	required?: boolean;
 	disabled?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 }
 
 export const Colour: Component<ColourProps> = (props) => {

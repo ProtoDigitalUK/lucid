@@ -134,13 +134,13 @@ const headlessPlugin = async (fastify: FastifyInstance) => {
 
 			const response = Object.fromEntries(
 				Object.entries({
-					code,
 					status,
 					name,
 					message,
-					errorResponse,
+					errors: errorResponse,
 				}).filter(([_, value]) => value !== null),
 			);
+
 			reply.status(status ?? 500).send(response);
 		});
 	} catch (error) {

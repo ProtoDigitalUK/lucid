@@ -15,7 +15,7 @@ import { FaSolidArrowLeft } from "solid-icons/fa";
 // Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Types
-import type { APIErrorResponse } from "@/types/api";
+import type { ErrorResponse } from "@protoheadless/core/types";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Components
@@ -46,7 +46,7 @@ interface PanelProps {
 		isLoading?: boolean;
 		isError?: boolean;
 		isDisabled?: boolean;
-		errors: APIErrorResponse | undefined;
+		errors: ErrorResponse | undefined;
 	};
 	content: {
 		title: string;

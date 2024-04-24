@@ -4,7 +4,7 @@ import { type Component, For, Switch, Match, createMemo, Show } from "solid-js";
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components
@@ -13,7 +13,7 @@ import PageBuilder from "@/components/Groups/PageBuilder";
 interface BuilderProps {
 	state: {
 		brickConfig: BrickConfigT[];
-		collection?: CollectionResT;
+		collection?: CollectionResponse;
 	};
 }
 
@@ -41,9 +41,7 @@ export const Builder: Component<BuilderProps> = (props) => {
 		fixedBricks().filter((brick) => brick.position === "bottom"),
 	);
 	const hasBuilderBricks = createMemo(() => {
-		return props.state.collection?.bricks?.some(
-			(brick) => brick.type === "builder",
-		);
+		return props.state.collection?.builderBricks !== undefined;
 	});
 
 	// ------------------------------

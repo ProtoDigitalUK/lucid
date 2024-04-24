@@ -1,14 +1,14 @@
 import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 import classNames from "classnames";
 // Components
 import Form from "@/components/Groups/Form";
 
 interface EnvCollectionCardProps {
-	collection: CollectionResT;
+	collection: CollectionResponse;
 	selectedCollections: string[];
-	setSelected: (_collection: CollectionResT) => void;
+	setSelected: (_collection: CollectionResponse) => void;
 }
 
 const EnvCollectionCard: Component<EnvCollectionCardProps> = (props) => {

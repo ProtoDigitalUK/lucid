@@ -1,7 +1,7 @@
 import { type Component, For, Match, Switch, Show, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { CustomFieldT } from "@headless/types/src/bricks";
+import type { CustomField } from "@protoheadless/core/types";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, {
@@ -15,7 +15,7 @@ import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
 interface DynamicFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomFieldT;
+		field: CustomField;
 		activeTab?: string;
 		groupId?: BrickStoreFieldT["group_id"];
 

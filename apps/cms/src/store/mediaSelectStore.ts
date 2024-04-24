@@ -1,8 +1,8 @@
 import { createStore } from "solid-js/store";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
+import type { MediaResponse } from "@protoheadless/core/types";
 
-type SelectCallbackT = (_media: MediaResT) => void;
+type SelectCallbackT = (_media: MediaResponse) => void;
 
 type MediaSelectStoreT = {
 	open: boolean;
@@ -10,7 +10,7 @@ type MediaSelectStoreT = {
 
 	extensions?: string;
 	type?: string;
-	selected?: MediaResT["id"];
+	selected?: MediaResponse["id"];
 };
 
 const [get, set] = createStore<MediaSelectStoreT>({

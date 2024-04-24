@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 import type { SingleBuilderResT } from "@headless/types/src/multiple-builder";
 
 interface QueryParams {
@@ -30,7 +30,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<APIResponse<SingleBuilderResT>>({
+			request<ResponseBody<SingleBuilderResT>>({
 				url: `/api/v1/collections/single-builder/${
 					queryParams().location?.collection_key
 				}`,

@@ -4,7 +4,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
 	id: number;
@@ -12,7 +12,7 @@ interface Params {
 
 export const resendSingleReq = (params: Params) => {
 	return request<
-		APIResponse<{
+		ResponseBody<{
 			success: boolean;
 			message: string;
 		}>
@@ -35,7 +35,7 @@ const useResendSingle = (props: UseResendSingleProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
 		Params,
-		APIResponse<{
+		ResponseBody<{
 			success: boolean;
 			message: string;
 		}>

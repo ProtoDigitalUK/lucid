@@ -1,7 +1,10 @@
 import { type Component, createSignal, createEffect } from "solid-js";
 // Types
-import type { CustomFieldT, MediaMetaT } from "@headless/types/src/bricks";
-import type { FieldError } from "@/types/api";
+import type {
+	FieldErrors,
+	CustomField,
+	MediaMeta,
+} from "@protoheadless/core/types";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store
@@ -12,11 +15,11 @@ import Form from "@/components/Groups/Form";
 interface MediaFieldProps {
 	state: {
 		brickIndex: number;
-		key: CustomFieldT["key"];
-		field: CustomFieldT;
+		key: CustomField["key"];
+		field: CustomField;
 		groupId?: BrickStoreFieldT["group_id"];
 
-		fieldError: FieldError | undefined;
+		fieldError: FieldErrors | undefined;
 		contentLanguage?: number | undefined;
 	};
 }
@@ -25,7 +28,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	// -------------------------------
 	// State
 	const [getValue, setValue] = createSignal<number | undefined>();
-	const [getMeta, setMeta] = createSignal<MediaMetaT | undefined>();
+	const [getMeta, setMeta] = createSignal<MediaMeta | undefined>();
 
 	// -------------------------------
 	// Effects
@@ -38,7 +41,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 			contentLanguage: props.state.contentLanguage,
 		});
 		const value = field?.value as number | undefined;
-		const meta = field?.meta as MediaMetaT | undefined;
+		const meta = field?.meta as MediaMeta | undefined;
 		setValue(value);
 		setMeta(meta);
 	});

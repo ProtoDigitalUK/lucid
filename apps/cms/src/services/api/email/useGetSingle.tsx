@@ -4,8 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { EmailResT } from "@headless/types/src/email";
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody, EmailResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
@@ -26,7 +25,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["email.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<EmailResT>>({
+			request<ResponseBody<EmailResponse>>({
 				url: `/api/v1/emails/${queryParams().location?.email_id}`,
 				config: {
 					method: "GET",

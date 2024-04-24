@@ -8,7 +8,7 @@ import {
 } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 // Types
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Services
 import api from "@/services/api";
 // Store
@@ -23,7 +23,7 @@ import DeletePage from "@/components/Modals/Pages/DeletePage";
 import CreateUpdatePagePanel from "../Panels/Pages/CreateUpdatePagePanel";
 
 interface PagesTableProps {
-	collection: CollectionResT;
+	collection: CollectionResponse;
 	searchParams: ReturnType<typeof useSearchParams>;
 }
 

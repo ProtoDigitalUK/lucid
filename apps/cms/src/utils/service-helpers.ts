@@ -6,7 +6,7 @@ import helpers from "@/utils/helpers";
 import { validateSetError } from "@/utils/error-handling";
 import spawnToast from "@/utils/spawn-toast";
 // Types
-import type { APIErrorResponse } from "@/types/api";
+import type { ErrorResponse } from "@protoheadless/core/types";
 import type { QueryBuilderProps } from "@/utils/query-builder";
 
 type QueryParamsValueT = Accessor<unknown> | unknown;
@@ -26,7 +26,7 @@ interface MutationWrapperProps<Params, Response> {
 	errorToast?: { title: string; message: string };
 	invalidates?: string[];
 	onSuccess?: (_data: Response) => void;
-	onError?: (_errors: APIErrorResponse | undefined) => void;
+	onError?: (_errors: ErrorResponse | undefined) => void;
 }
 
 // -------------------------------------------------
@@ -77,7 +77,7 @@ const useMutationWrapper = <Params, Response>({
 	onSuccess,
 	onError,
 }: MutationWrapperProps<Params, Response>) => {
-	const [errors, setErrors] = createSignal<APIErrorResponse>();
+	const [errors, setErrors] = createSignal<ErrorResponse>();
 	const queryClient = useQueryClient();
 
 	const mutation = createMutation(() => ({

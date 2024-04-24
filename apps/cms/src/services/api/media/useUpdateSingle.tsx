@@ -4,7 +4,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import objectToFormData from "@/utils/object-to-formdata";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
 	id: number;
@@ -27,7 +27,7 @@ export const updateSingleReq = (params: Params) => {
 		alt_translations: params.body.alt_translations,
 	});
 
-	return request<APIResponse<null>>({
+	return request<ResponseBody<null>>({
 		url: `/api/v1/media/${params.id}?body=${bodyQueryParam}`,
 		csrf: true,
 		config: {
@@ -45,7 +45,7 @@ interface UseUpdateSingleProps {
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: updateSingleReq,
 		successToast: {
 			title: T("media_update_toast_title"),

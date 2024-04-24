@@ -4,8 +4,10 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { CollectionResT } from "@headless/types/src/collections";
+import type {
+	ResponseBody,
+	CollectionResponse,
+} from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
@@ -26,7 +28,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["collections.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<CollectionResT>>({
+			request<ResponseBody<CollectionResponse>>({
 				url: `/api/v1/collections/${
 					queryParams().location?.collection_key
 				}`,

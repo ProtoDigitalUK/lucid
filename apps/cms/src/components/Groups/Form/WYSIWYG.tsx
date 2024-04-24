@@ -3,7 +3,7 @@ import classnames from "classnames";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 // Types
-import type { ErrorResult, FieldError } from "@/types/api";
+import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -17,7 +17,7 @@ interface WYSIWYGProps {
 		describedBy?: string;
 	};
 	required?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
 }
 

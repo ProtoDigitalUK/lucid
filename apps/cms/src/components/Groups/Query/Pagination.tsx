@@ -10,7 +10,7 @@ import {
 } from "solid-js";
 import { FaSolidChevronLeft, FaSolidChevronRight } from "solid-icons/fa";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 // Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
 // Components
@@ -18,7 +18,7 @@ import Layout from "@/components/Groups/Layout";
 import { Pagination as KobPagination } from "@kobalte/core";
 
 interface PaginationProps {
-	meta?: APIResponse<unknown>["meta"];
+	meta?: ResponseBody<unknown>["meta"];
 	searchParams: ReturnType<typeof useSearchParams>;
 	mode: "page" | "modal";
 }
@@ -30,19 +30,19 @@ export const Pagination: Component<PaginationProps> = (props) => {
 	// Memos
 	const textData = createMemo(() => {
 		return {
-			page: props.meta?.current_page || 1,
-			lastPage: props.meta?.last_page || 1,
-			total: props.meta?.total || 0,
+			page: props.meta?.currentPage ?? 1,
+			lastPage: props.meta?.lastPage ?? 1,
+			total: props.meta?.total ?? 0,
 		};
 	});
 	const lastPage = createMemo(() => {
-		return props.meta?.last_page || 1;
+		return props.meta?.lastPage ?? 1;
 	});
 
 	// -------------------------------------
 	// Effects
 	createEffect(() => {
-		setPage(props.meta?.current_page || 1);
+		setPage(props.meta?.currentPage ?? 1);
 	});
 
 	// -------------------------------------
@@ -71,7 +71,7 @@ export const Pagination: Component<PaginationProps> = (props) => {
 						props.searchParams.setParams({
 							pagination: {
 								page: page,
-								per_page: props.meta?.per_page || undefined,
+								per_page: props.meta?.perPage || undefined,
 							},
 						});
 						setPage(page);

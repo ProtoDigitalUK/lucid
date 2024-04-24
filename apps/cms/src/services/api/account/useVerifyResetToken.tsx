@@ -4,7 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
@@ -26,7 +26,7 @@ const useVerifyResetToken = (params: QueryHook<QueryParams>) => {
 		queryKey: ["account.verifyResetToken", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<
-				APIResponse<{
+				ResponseBody<{
 					message: string;
 				}>
 			>({

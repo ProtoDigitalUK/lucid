@@ -3,7 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
 	email: string;
@@ -11,7 +11,7 @@ interface Params {
 
 export const sendPasswordResetReq = (params: Params) => {
 	return request<
-		APIResponse<{
+		ResponseBody<{
 			message: string;
 		}>,
 		Params
@@ -35,7 +35,7 @@ const useForgotPassword = (props: UseForgotPasswordProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
 		Params,
-		APIResponse<{
+		ResponseBody<{
 			message: string;
 		}>
 	>({

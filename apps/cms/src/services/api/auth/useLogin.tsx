@@ -4,8 +4,7 @@ import { useNavigate } from "@solidjs/router";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { UserResT } from "@headless/types/src/users";
+import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 
 interface Params {
 	username_or_email: string;
@@ -13,7 +12,7 @@ interface Params {
 }
 
 export const loginReq = (params: Params) => {
-	return request<APIResponse<UserResT>>({
+	return request<ResponseBody<UserResponse>>({
 		url: "/api/v1/auth/login",
 		csrf: true,
 		config: {
@@ -33,7 +32,7 @@ const useLogin = (props?: UseLoginProps) => {
 
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<UserResT>>({
 		mutationFn: loginReq,
 		successToast: {
 			title: T("login_success_toast_title"),

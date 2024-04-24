@@ -24,6 +24,7 @@ export default class SettingsFormatter {
 						props.config.media.storage -
 						props.settings.mediaStorageUsed,
 					used: props.settings.mediaStorageUsed,
+					limit: props.config.media.storage,
 				},
 				processed: {
 					stored: props.config.media.processed.store,

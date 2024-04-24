@@ -5,6 +5,7 @@ import type {
 	FieldTypes,
 } from "../libs/builders/field-builder/types.js";
 import type { CollectionBrickConfigT } from "../libs/builders/collection-builder/index.js";
+import type { ErrorResult } from "./errors.js";
 
 export interface UserResponse {
 	id: number;
@@ -43,6 +44,7 @@ export interface SettingsResponse {
 			total: number;
 			remaining: number | null;
 			used: number | null;
+			limit: number;
 		};
 		processed: {
 			stored: boolean;
@@ -234,8 +236,8 @@ export interface CollectionDocumentResponse {
 	fields?: Array<FieldResponse> | null;
 }
 
-export interface ResponseBody {
-	data: unknown;
+export interface ResponseBody<D = unknown> {
+	data: D;
 	links?: {
 		first: string | null;
 		last: string | null;
@@ -243,7 +245,7 @@ export interface ResponseBody {
 		prev: string | null;
 	};
 	meta: {
-		links?: Array<{
+		links: Array<{
 			active: boolean;
 			label: string;
 			url: string | null;
@@ -251,9 +253,16 @@ export interface ResponseBody {
 		}>;
 		path: string;
 
-		currentPage?: number | null;
-		lastPage?: number | null;
-		perPage?: number | null;
-		total?: number | null;
+		currentPage: number | null;
+		lastPage: number | null;
+		perPage: number | null;
+		total: number | null;
 	};
+}
+
+export interface ErrorResponse {
+	status: number;
+	name: string;
+	message: string;
+	errors?: ErrorResult;
 }

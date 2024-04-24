@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { type Component, Show, Switch, Match, type JSXElement } from "solid-js";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 // Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
 // Assets
@@ -23,7 +23,7 @@ interface ModalGridProps {
 	};
 	searchParams?: ReturnType<typeof useSearchParams>;
 	permission?: boolean;
-	meta?: APIResponse<unknown>["meta"];
+	meta?: ResponseBody<unknown>["meta"];
 	loadingCard?: JSXElement;
 	children: JSXElement;
 }

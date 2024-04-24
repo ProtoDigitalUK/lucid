@@ -3,15 +3,14 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { EmailResT } from "@headless/types/src/email";
+import type { ResponseBody, EmailResponse } from "@protoheadless/core/types";
 
 interface Params {
 	id: number;
 }
 
 export const deleteSingleReq = (params: Params) => {
-	return request<APIResponse<EmailResT>>({
+	return request<ResponseBody<EmailResponse>>({
 		url: `/api/v1/emails/${params.id}`,
 		csrf: true,
 		config: {
@@ -28,7 +27,10 @@ interface UseDeleteProps {
 const useDeleteSingle = (props: UseDeleteProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<EmailResT>>({
+	return serviceHelpers.useMutationWrapper<
+		Params,
+		ResponseBody<EmailResponse>
+	>({
 		mutationFn: deleteSingleReq,
 		successToast: {
 			title: T("email_deleted_toast_title"),

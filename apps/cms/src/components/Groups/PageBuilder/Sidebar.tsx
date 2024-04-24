@@ -10,12 +10,14 @@ import {
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore from "@/store/builderStore";
 // Types
-import type { APIErrorResponse } from "@/types/api";
+import type {
+	ErrorResponse,
+	CollectionResponse,
+} from "@protoheadless/core/types";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
-import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResT } from "@headless/types/src/collections";
-import type { CategoryResT } from "@headless/types/src/categories";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
+import type { BrickConfigT } from "@headless/types/src/bricks"; // TODO: remove
+import type { CategoryResT } from "@headless/types/src/categories"; // TODO: remove
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import PageFieldGroup from "@/components/FieldGroups/Page";
@@ -26,9 +28,9 @@ interface SidebarProps {
 	state: {
 		brickConfig: BrickConfigT[];
 		pageId?: number;
-		collection: CollectionResT;
+		collection: CollectionResponse;
 		categories?: CategoryResT[];
-		mutateErrors: Accessor<APIErrorResponse | undefined>;
+		mutateErrors: Accessor<ErrorResponse | undefined>;
 		getTitleTranslations?: Accessor<
 			MultipleBuilderResT["title_translations"]
 		>;

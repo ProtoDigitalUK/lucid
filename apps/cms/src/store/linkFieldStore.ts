@@ -1,13 +1,10 @@
 import { createStore } from "solid-js/store";
 // Types
-import type {
-	PageLinkValueT,
-	LinkValueT,
-	PageLinkMetaT,
-} from "@headless/types/src/bricks";
+import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks"; // TODO: remove
+import type { LinkValue } from "@protoheadless/core/types";
 
 type SelectCallbackT = (
-	_link: PageLinkValueT | LinkValueT | null,
+	_link: PageLinkValueT | LinkValue | null,
 	_meta?: PageLinkMetaT | null,
 ) => void;
 
@@ -16,7 +13,7 @@ type LinkFieldStoreT = {
 	type: "pagelink" | "link";
 	onSelectCallback: SelectCallbackT;
 	selectedPageLink: PageLinkValueT | null;
-	selectedLink: LinkValueT | null;
+	selectedLink: LinkValue | null;
 	selectedMeta: PageLinkMetaT | null;
 };
 

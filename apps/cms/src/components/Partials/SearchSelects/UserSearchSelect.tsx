@@ -5,7 +5,7 @@ import api from "@/services/api";
 import helpers from "@/utils/helpers";
 // Types
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
-import type { ErrorResult } from "@/types/api";
+import type { ErrorResult } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 

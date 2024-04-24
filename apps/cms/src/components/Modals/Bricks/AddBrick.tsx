@@ -3,7 +3,8 @@ import { FaSolidMagnifyingGlass, FaSolidXmark } from "solid-icons/fa";
 import classNames from "classnames";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResT } from "@headless/types/src/collections";
+import type { CollectionResponse } from "@protoheadless/core/types";
+// Assets
 import brickIcon from "@/assets/svgs/default-brick-icon.svg";
 // Store
 import builderStore from "@/store/builderStore";
@@ -17,7 +18,7 @@ interface AddBrickProps {
 		setOpen: (_open: boolean) => void;
 	};
 	data: {
-		collection?: CollectionResT;
+		collection?: CollectionResponse;
 		brickConfig: BrickConfigT[];
 	};
 }

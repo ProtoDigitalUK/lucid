@@ -3,10 +3,10 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 export const deleteAllProcessedImagesReq = () => {
-	return request<APIResponse<null>>({
+	return request<ResponseBody<null>>({
 		url: "/api/v1/media/processed",
 		csrf: true,
 		config: {
@@ -25,7 +25,7 @@ const useDeleteAllProcessedImages = (
 ) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<unknown, APIResponse<null>>({
+	return serviceHelpers.useMutationWrapper<unknown, ResponseBody<null>>({
 		mutationFn: deleteAllProcessedImagesReq,
 		successToast: {
 			title: T("delete_processed_images_toast_title"),

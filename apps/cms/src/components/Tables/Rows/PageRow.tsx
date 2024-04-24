@@ -4,8 +4,8 @@ import { type Component, createMemo } from "solid-js";
 import type useRowTarget from "@/hooks/useRowTarget";
 // Types
 import type { TableRowProps } from "@/types/components";
-import type { CollectionResT } from "@headless/types/src/collections";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
+import type { CollectionResponse } from "@protoheadless/core/types";
 // Stores
 import userStore from "@/store/userStore";
 // Components
@@ -17,7 +17,7 @@ import AuthorCol from "@/components/Tables/Columns/AuthorCol";
 
 interface PageRowProps extends TableRowProps {
 	page: MultipleBuilderResT;
-	collection: CollectionResT;
+	collection: CollectionResponse;
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"delete" | "update">>;
 	contentLanguage?: number;

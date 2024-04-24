@@ -4,7 +4,7 @@ import type { Component } from "solid-js";
 import type useRowTarget from "@/hooks/useRowTarget";
 // Types
 import type { TableRowProps } from "@/types/components";
-import type { RoleResT } from "@headless/types/src/roles";
+import type { RoleResponse } from "@protoheadless/core/types";
 // Store
 import userStore from "@/store/userStore";
 // Components
@@ -13,7 +13,7 @@ import TextCol from "@/components/Tables/Columns/TextCol";
 import DateCol from "../Columns/DateCol";
 
 interface RoleRowProps extends TableRowProps {
-	role: RoleResT;
+	role: RoleResponse;
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"update" | "delete">>;
 }
@@ -55,11 +55,11 @@ const RoleRow: Component<RoleRowProps> = (props) => {
 				options={{ include: props?.include[0] }}
 			/>
 			<DateCol
-				date={props.role.created_at}
+				date={props.role.createdAt}
 				options={{ include: props?.include[1] }}
 			/>
 			<DateCol
-				date={props.role.updated_at}
+				date={props.role.updatedAt}
 				options={{ include: props?.include[2] }}
 			/>
 		</Table.Tr>

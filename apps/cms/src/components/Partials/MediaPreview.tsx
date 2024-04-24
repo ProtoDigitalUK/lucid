@@ -7,13 +7,13 @@ import {
 	FaSolidFileLines,
 } from "solid-icons/fa";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
+import type { MediaResponse } from "@protoheadless/core/types";
 // Components
 import Image from "@/components/Partials/Image";
 
 interface MediaPreviewProps {
 	media: {
-		type: MediaResT["type"];
+		type: MediaResponse["type"];
 		url: string;
 	};
 	alt: string | null;

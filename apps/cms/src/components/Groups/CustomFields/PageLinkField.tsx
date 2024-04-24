@@ -1,11 +1,9 @@
+// TODO: remove this
 import { type Component, createSignal, createEffect } from "solid-js";
 // Types
-import type { FieldError } from "@/types/api";
-import type {
-	CustomFieldT,
-	PageLinkValueT,
-	PageLinkMetaT,
-} from "@headless/types/src/bricks";
+import type { FieldErrors } from "@protoheadless/core/types";
+import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks";
+import type { CustomField } from "@protoheadless/core/types";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store
@@ -16,11 +14,11 @@ import Form from "@/components/Groups/Form";
 interface PageLinkFieldProps {
 	state: {
 		brickIndex: number;
-		key: CustomFieldT["key"];
-		field: CustomFieldT;
+		key: CustomField["key"];
+		field: CustomField;
 		groupId?: BrickStoreFieldT["group_id"];
 
-		fieldError: FieldError | undefined;
+		fieldError: FieldErrors | undefined;
 		contentLanguage?: number | undefined;
 	};
 }

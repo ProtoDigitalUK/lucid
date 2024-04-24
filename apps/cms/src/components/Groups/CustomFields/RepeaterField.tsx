@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { type Component, For, createMemo, Show, Switch, Match } from "solid-js";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 // Types
-import type { CustomFieldT } from "@headless/types/src/bricks";
+import type { CustomField } from "@protoheadless/core/types";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, { type BrickStoreGroupT } from "@/store/builderStore";
@@ -15,7 +15,7 @@ import DragDrop from "@/components/Partials/DragDrop";
 interface RepeaterFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomFieldT;
+		field: CustomField;
 		repeater: {
 			parentGroupId: BrickStoreGroupT["parent_group_id"];
 			repeaterDepth: number;

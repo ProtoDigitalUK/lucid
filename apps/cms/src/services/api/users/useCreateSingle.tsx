@@ -3,8 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { UserResT } from "@headless/types/src/users";
+import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 
 interface Params {
 	body: {
@@ -20,7 +19,7 @@ interface Params {
 }
 
 export const createSingleReq = (params: Params) => {
-	return request<APIResponse<UserResT>>({
+	return request<ResponseBody<UserResponse>>({
 		url: "/api/v1/users",
 		csrf: true,
 		config: {
@@ -38,7 +37,10 @@ interface UseUpdateSingleProps {
 const useCreateSingle = (props?: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<UserResT>>({
+	return serviceHelpers.useMutationWrapper<
+		Params,
+		ResponseBody<UserResponse>
+	>({
 		mutationFn: createSingleReq,
 		successToast: {
 			title: T("user_create_toast_title"),

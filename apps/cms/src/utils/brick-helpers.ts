@@ -1,13 +1,13 @@
 // Store
 import builderStore, { type BrickStoreFieldT } from "@/store/builderStore";
 // Types
-import type { CustomFieldT } from "@headless/types/src/bricks";
+import type { CustomField } from "@protoheadless/core/types";
 
 // --------------------------------------------
 // Get field value from store
 const getField = (params: {
 	brickIndex: number;
-	field: CustomFieldT;
+	field: CustomField;
 	groupId?: BrickStoreFieldT["group_id"];
 	key: string;
 	contentLanguage: number | undefined;

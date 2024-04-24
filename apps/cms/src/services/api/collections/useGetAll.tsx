@@ -4,8 +4,10 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { CollectionResT } from "@headless/types/src/collections";
+import type {
+	ResponseBody,
+	CollectionResponse,
+} from "@protoheadless/core/types";
 
 interface QueryParams {
 	include: Record<"bricks", boolean>;
@@ -27,7 +29,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["collections.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<CollectionResT[]>>({
+			request<ResponseBody<CollectionResponse[]>>({
 				url: "/api/v1/collections",
 				query: queryParams(),
 				config: {

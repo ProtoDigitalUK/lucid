@@ -13,12 +13,14 @@ import slugify from "slugify";
 // Stores
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { LanguageResT } from "@headless/types/src/language";
-import type { APIErrorResponse } from "@/types/api";
+import type {
+	ErrorResponse,
+	LanguageResponse,
+	CollectionResponse,
+} from "@protoheadless/core/types";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
-import type { CollectionResT } from "@headless/types/src/collections";
-import type { CategoryResT } from "@headless/types/src/categories";
+import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
+import type { CategoryResT } from "@headless/types/src/categories"; // TODO: remove
 // Utils
 import helpers from "@/utils/helpers";
 // Components
@@ -35,8 +37,8 @@ interface PageFieldGroupProps {
 	state: {
 		pageId?: Accessor<number | undefined>;
 		contentLanguage?: Accessor<number | undefined>;
-		mutateErrors: Accessor<APIErrorResponse | undefined>;
-		collection: CollectionResT;
+		mutateErrors: Accessor<ErrorResponse | undefined>;
+		collection: CollectionResponse;
 		categories: CategoryResT[];
 		// Page Details
 		getTitleTranslations: Accessor<
@@ -296,7 +298,7 @@ const PageFieldGroup: Component<PageFieldGroupProps> = (props) => {
 
 export const setDefualtTranslations = (data: {
 	translations: MultipleBuilderResT["title_translations"];
-	languages: LanguageResT[];
+	languages: LanguageResponse[];
 }) => {
 	const translationsValues = JSON.parse(
 		JSON.stringify(data.translations),

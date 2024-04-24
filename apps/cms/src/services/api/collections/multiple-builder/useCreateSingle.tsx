@@ -3,7 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
 	body: {
@@ -25,7 +25,7 @@ interface Params {
 }
 
 export const createSingleReq = (params: Params) => {
-	return request<APIResponse<null>>({
+	return request<ResponseBody<null>>({
 		url: "/api/v1/collections/multiple-builder",
 		csrf: true,
 		config: {
@@ -44,7 +44,7 @@ interface UseCreateSingleProps {
 const useCreateSingle = (props: UseCreateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<null>>({
+	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: createSingleReq,
 		successToast: {
 			title: T("create_toast_title", {

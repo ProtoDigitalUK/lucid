@@ -13,7 +13,7 @@ import api from "@/services/api";
 // Hooks
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
+import type { MediaResponse } from "@protoheadless/core/types";
 // Utils
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
@@ -56,10 +56,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	const [getUpdateDataLock, setUpdateDataLock] = createSignal(false);
 	const [getUpdateFileLock, setUpdateFileLock] = createSignal(false);
 	const [getTitleTranslations, setTitleTranslations] = createSignal<
-		MediaResT["title_translations"]
+		MediaResponse["titleTranslations"]
 	>([]);
 	const [getAltTranslations, setAltTranslations] = createSignal<
-		MediaResT["alt_translations"]
+		MediaResponse["altTranslations"]
 	>([]);
 
 	// ---------------------------------
@@ -107,9 +107,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	});
 	const hasTranslationErrors = createMemo(() => {
 		const titleErrors =
-			updateSingle.errors()?.errors?.body?.title_translations.children;
+			updateSingle.errors()?.errors?.body?.titleTranslations.children;
 		const altErrors =
-			updateSingle.errors()?.errors?.body?.alt_translations.children;
+			updateSingle.errors()?.errors?.body?.altTranslations.children;
 		if (titleErrors) return titleErrors.length > 0;
 		if (altErrors) return altErrors.length > 0;
 		return false;
@@ -127,8 +127,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		);
 
 		let resData: {
-			title_translations?: MediaResT["title_translations"];
-			alt_translations?: MediaResT["alt_translations"];
+			title_translations?: MediaResponse["titleTranslations"];
+			alt_translations?: MediaResponse["altTranslations"];
 			file?: File;
 		} = data;
 		let resChanged = changed;
@@ -272,15 +272,14 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									value={
 										getTitleTranslations().find(
 											(item) =>
-												item.language_id ===
-												language.id,
+												item.languageId === language.id,
 										)?.value || ""
 									}
 									onChange={(val) => {
 										helpers.updateTranslation(
 											setTitleTranslations,
 											{
-												language_id: language.id,
+												languageId: language.id,
 												value: val,
 											},
 										);
@@ -306,7 +305,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 											helpers.updateTranslation(
 												setAltTranslations,
 												{
-													language_id: language.id,
+													languageId: language.id,
 													value: val,
 												},
 											);

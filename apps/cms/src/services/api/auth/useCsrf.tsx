@@ -2,7 +2,7 @@
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 export const csrfReq = async () => {
 	const csrfToken = sessionStorage.getItem("_csrf");
@@ -11,7 +11,7 @@ export const csrfReq = async () => {
 	}
 
 	const res = await request<
-		APIResponse<{
+		ResponseBody<{
 			_csrf: string;
 		}>
 	>({

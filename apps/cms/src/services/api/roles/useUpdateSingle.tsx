@@ -4,8 +4,7 @@ import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { RoleResT } from "@headless/types/src/roles";
+import type { ResponseBody, RoleResponse } from "@protoheadless/core/types";
 
 interface Params {
 	id: number;
@@ -16,7 +15,7 @@ interface Params {
 }
 
 export const updateSingleReq = (params: Params) => {
-	return request<APIResponse<RoleResT>>({
+	return request<ResponseBody<RoleResponse>>({
 		url: `/api/v1/roles/${params.id}`,
 		csrf: true,
 		config: {
@@ -34,7 +33,10 @@ interface UseUpdateSingleProps {
 const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, APIResponse<RoleResT>>({
+	return serviceHelpers.useMutationWrapper<
+		Params,
+		ResponseBody<RoleResponse>
+	>({
 		mutationFn: updateSingleReq,
 		invalidates: [
 			"roles.getMultiple",

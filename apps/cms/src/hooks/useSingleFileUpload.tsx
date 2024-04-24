@@ -1,7 +1,7 @@
 import { type Accessor, createSignal } from "solid-js";
 // Types
 import type { SingleFileUploadProps } from "@/components/Groups/Form/SingleFileUpload";
-import type { APIErrorResponse } from "@/types/api";
+import type { ErrorResponse } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -14,7 +14,7 @@ interface UseSingleFileUploadProps {
 	accept?: SingleFileUploadProps["accept"];
 	required?: SingleFileUploadProps["required"];
 	disabled?: SingleFileUploadProps["disabled"];
-	errors?: Accessor<APIErrorResponse | undefined>;
+	errors?: Accessor<ErrorResponse | undefined>;
 	noMargin?: SingleFileUploadProps["noMargin"];
 }
 

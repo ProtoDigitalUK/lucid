@@ -6,8 +6,7 @@ import serviceHelpers from "@/utils/service-helpers";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { APIResponse } from "@/types/api";
-import type { LanguageResT } from "@headless/types/src/language";
+import type { ResponseBody, LanguageResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string> | string;
@@ -25,7 +24,7 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	const query = createQuery(() => ({
 		queryKey: ["languages.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<LanguageResT[]>>({
+			request<ResponseBody<LanguageResponse[]>>({
 				url: "/api/v1/languages",
 				config: {
 					method: "GET",

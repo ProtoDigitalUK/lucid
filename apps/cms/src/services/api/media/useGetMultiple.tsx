@@ -4,8 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { MediaResT } from "@headless/types/src/media";
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody, MediaResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
@@ -35,7 +34,7 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	return createQuery(() => ({
 		queryKey: ["media.getMultiple", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<APIResponse<MediaResT[]>>({
+			request<ResponseBody<MediaResponse[]>>({
 				url: "/api/v1/media",
 				query: queryParams(),
 				config: {

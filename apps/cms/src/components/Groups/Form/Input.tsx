@@ -2,7 +2,7 @@ import { type Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
 import { FaSolidEye, FaSolidEyeSlash } from "solid-icons/fa";
 // Types
-import type { ErrorResult, FieldError } from "@/types/api";
+import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -24,7 +24,7 @@ interface InputProps {
 	autoComplete?: string;
 	required?: boolean;
 	disabled?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
 
 	theme?: "basic";

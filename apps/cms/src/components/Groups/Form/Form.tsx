@@ -8,7 +8,7 @@ import ErrorBlock from "@/components/Partials/ErrorBlock";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 // Types
-import type { APIErrorResponse } from "@/types/api";
+import type { ErrorResponse } from "@protoheadless/core/types";
 
 interface FormProps {
 	type: "standard" | "page-layout";
@@ -18,7 +18,7 @@ interface FormProps {
 	state: {
 		isLoading: boolean;
 		isDisabled?: boolean;
-		errors: APIErrorResponse | undefined;
+		errors: ErrorResponse | undefined;
 	};
 	content: {
 		submit: string;

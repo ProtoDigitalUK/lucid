@@ -7,11 +7,11 @@ import { clearCookie } from "@/utils/cookie";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { APIResponse } from "@/types/api";
+import type { ResponseBody } from "@protoheadless/core/types";
 
 export const logoutReq = () => {
 	return request<
-		APIResponse<{
+		ResponseBody<{
 			message: string;
 		}>
 	>({
@@ -34,7 +34,7 @@ const useLogout = (props?: UseLogoutProps) => {
 	// Mutation
 	return serviceHelpers.useMutationWrapper<
 		unknown,
-		APIResponse<{
+		ResponseBody<{
 			message: string;
 		}>
 	>({

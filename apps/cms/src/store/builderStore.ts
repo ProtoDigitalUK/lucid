@@ -3,21 +3,21 @@ import shortUUID from "short-uuid";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Types
-import type { FieldTypes } from "@headless/types/src/multiple-builder";
 import type {
-	BrickFieldValueT,
-	CustomFieldT,
-	BrickFieldMetaT,
-} from "@headless/types/src/bricks";
-import type { CollectionResT } from "@headless/types/src/collections";
-import type { FieldError } from "@/types/api";
+	FieldErrors,
+	CustomField,
+	FieldResponseValue,
+	FieldResponseMeta,
+	BrickResponse,
+	FieldTypes,
+} from "@protoheadless/core/types";
 
 export interface BrickStoreFieldT {
 	fields_id?: number;
 	key: string;
 	type: FieldTypes;
-	value?: BrickFieldValueT;
-	meta?: BrickFieldMetaT;
+	value?: FieldResponseValue;
+	meta?: FieldResponseMeta;
 	group_id?: string | number | null;
 	language_id: number;
 }
@@ -42,7 +42,7 @@ export interface BrickDataT {
 
 type BuilderStoreT = {
 	bricks: Array<BrickDataT>;
-	fieldsErrors: Array<FieldError>;
+	fieldsErrors: Array<FieldErrors>;
 	// functions
 	reset: () => void;
 	addBrick: (_props: {
@@ -57,9 +57,7 @@ type BuilderStoreT = {
 	}) => void;
 	removeBrick: (_props: { id: number | string }) => void;
 	sortOrder: (_props: { from: number | string; to: number | string }) => void;
-	addMissingFixedBricks: (
-		_collectionBricks: CollectionResT["bricks"],
-	) => void;
+	addMissingFixedBricks: (_collectionBricks: BrickResponse) => void;
 	findFieldIndex: (_props: {
 		fields: BrickStoreFieldT[];
 		key: string;
@@ -68,21 +66,21 @@ type BuilderStoreT = {
 	}) => number;
 	addField: (_props: {
 		brickIndex: number;
-		field: CustomFieldT;
+		field: CustomField;
 		groupId?: BrickStoreFieldT["group_id"];
 		contentLanguage: number | undefined;
 	}) => void;
 	updateFieldValue: (_props: {
 		brickIndex: number;
 		key: string;
-		value: BrickFieldValueT;
+		value: FieldResponseValue;
 		groupId?: BrickStoreFieldT["group_id"];
 		contentLanguage: number | undefined;
-		meta?: BrickFieldMetaT;
+		meta?: FieldResponseMeta;
 	}) => void;
 	addGroup: (_props: {
 		brickIndex: number;
-		fields: CustomFieldT[];
+		fields: CustomField[];
 		repeaterKey: string;
 		parentGroupId: BrickStoreGroupT["parent_group_id"];
 		order: number;

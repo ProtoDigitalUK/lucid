@@ -12,7 +12,7 @@ import {
 import classNames from "classnames";
 import { debounce } from "@solid-primitives/scheduled";
 // Types
-import type { ErrorResult, FieldError } from "@/types/api";
+import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
 // Components
 import { FaSolidCheck, FaSolidSort, FaSolidXmark } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
@@ -42,7 +42,7 @@ export interface SelectProps {
 	autoFoucs?: boolean;
 	required?: boolean;
 	disabled?: boolean;
-	errors?: ErrorResult | FieldError;
+	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
 	noClear?: boolean;
 	hasError?: boolean;
