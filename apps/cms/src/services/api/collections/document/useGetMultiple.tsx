@@ -5,16 +5,19 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody } from "@protoheadless/core/types";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type {
+	ResponseBody,
+	CollectionDocumentResponse,
+} from "@protoheadless/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
-	filters?: {
-		collection_key?: Accessor<string | undefined> | string;
-		title?: Accessor<string | undefined> | string;
-		slug?: Accessor<string | undefined> | string;
-		category_id?: Accessor<string[] | undefined> | string[];
+	filters?: Record<
+		string,
+		Accessor<string | string[] | undefined> | string | string[]
+	>;
+	location: {
+		collectionKey: Accessor<string | undefined> | string;
 	};
 	headers: {
 		"headless-content-lang": Accessor<number | undefined> | number;
@@ -34,13 +37,15 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"collections.multipleBuilder.getMultiple",
+			"collections.document.getMultiple",
 			queryKey(),
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<ResponseBody<MultipleBuilderResT[]>>({
-				url: "/api/v1/collections/multiple-builder",
+			request<ResponseBody<CollectionDocumentResponse[]>>({
+				url: `/api/v1/collections/documents/${
+					queryParams().location?.collectionKey
+				}`,
 				query: queryParams(),
 				config: {
 					method: "GET",

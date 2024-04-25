@@ -7,11 +7,12 @@ import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
 	id: number;
+	collectionKey: string;
 }
 
 export const deleteSingleReq = (params: Params) => {
 	return request<ResponseBody<null>>({
-		url: `/api/v1/collections/multiple-builder/${params.id}`,
+		url: `/api/v1/collections/documents/${params.collectionKey}/${params.id}`,
 		csrf: true,
 		config: {
 			method: "DELETE",
@@ -41,7 +42,7 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 				},
 			}),
 		},
-		invalidates: ["collections.multipleBuilder.getMultiple"],
+		invalidates: ["collections.document.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,
 	});

@@ -4,11 +4,14 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody } from "@protoheadless/core/types";
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder";
+import type {
+	ResponseBody,
+	CollectionDocumentResponse,
+} from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
+		collectionKey?: Accessor<string | undefined> | string;
 		id?: Accessor<number | undefined> | number;
 	};
 	include: {
@@ -28,15 +31,15 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 	// Query
 	return createQuery(() => ({
 		queryKey: [
-			"collections.multipleBuilder.getSingle",
+			"collections.document.getSingle",
 			queryKey(),
 			params.key?.(),
 		],
 		queryFn: () =>
-			request<ResponseBody<MultipleBuilderResT>>({
-				url: `/api/v1/collections/multiple-builder/${
-					queryParams().location?.id
-				}`,
+			request<ResponseBody<CollectionDocumentResponse>>({
+				url: `/api/v1/collections/documents/
+                ${queryParams().location?.collectionKey}/
+                ${queryParams().location?.id}`,
 				query: queryParams(),
 				config: {
 					method: "GET",

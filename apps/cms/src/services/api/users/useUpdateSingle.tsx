@@ -9,7 +9,7 @@ interface Params {
 	id: number;
 	body: {
 		roleIds?: number[];
-		superAdmin?: boolean;
+		superAdmin?: 1 | 0;
 	};
 }
 

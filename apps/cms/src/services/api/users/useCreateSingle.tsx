@@ -13,7 +13,7 @@ interface Params {
 		passwordConfirmation: string;
 		firstName?: string;
 		lastName?: string;
-		superAdmin?: boolean;
+		superAdmin?: 1 | 0;
 		roleIds: number[];
 	};
 }

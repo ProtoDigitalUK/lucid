@@ -3,36 +3,46 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody, ErrorResponse } from "@protoheadless/core/types";
-import type { BrickDataT } from "@/store/builderStore";
+import type {
+	ResponseBody,
+	ErrorResponse,
+	FieldResponseMeta,
+	FieldResponseValue,
+	FieldTypes,
+} from "@protoheadless/core/types";
+
+interface FieldDataT {
+	key: string;
+	type: FieldTypes;
+	languageId: 1;
+	value?: FieldResponseValue;
+	meta?: FieldResponseMeta;
+	groups: Array<Array<FieldDataT>>;
+}
+
+interface BrickDataT {
+	key: string;
+	order: number;
+	type: "builder" | "fixed";
+	fields?: Array<FieldDataT>;
+}
 
 interface Params {
-	id: number;
+	collectionKey: string;
 	body: {
-		homepage?: boolean;
-		published?: boolean;
-		parent_id?: number | null;
-		category_ids?: number[];
-		author_id?: number | null;
-		slug?: string | null;
-		title_translations?: {
-			value: string | null;
-			language_id: number | null;
-		}[];
-		excerpt_translations?: {
-			value: string | null;
-			language_id: number | null;
-		}[];
+		documentId?: number;
+		published?: 1 | 0;
 		bricks?: Array<BrickDataT>;
+		fields?: Array<FieldDataT>;
 	};
 }
 
-export const updateSingleReq = (params: Params) => {
+export const upsertSingleReq = (params: Params) => {
 	return request<ResponseBody<null>>({
-		url: `/api/v1/collections/multiple-builder/${params.id}`,
+		url: `/api/v1/collections/documents/${params.collectionKey}`,
 		csrf: true,
 		config: {
-			method: "PATCH",
+			method: "POST",
 			body: params.body,
 		},
 	});
@@ -44,11 +54,11 @@ interface UseUpdateSingleProps {
 	collectionName: string;
 }
 
-const useUpdateSingle = (props: UseUpdateSingleProps) => {
+const useUpsertSingle = (props: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
-		mutationFn: updateSingleReq,
+		mutationFn: upsertSingleReq,
 		successToast: {
 			title: T("update_toast_title", {
 				name: props.collectionName || "Content",
@@ -61,12 +71,12 @@ const useUpdateSingle = (props: UseUpdateSingleProps) => {
 			}),
 		},
 		invalidates: [
-			"collections.multipleBuilder.getMultiple",
-			"collections.multipleBuilder.getSingle",
+			"collections.document.getMultiple",
+			"collections.document.getSingle",
 		],
 		onSuccess: props?.onSuccess,
 		onError: props?.onError,
 	});
 };
 
-export default useUpdateSingle;
+export default useUpsertSingle;

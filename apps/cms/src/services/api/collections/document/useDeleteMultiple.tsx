@@ -6,6 +6,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import type { ResponseBody } from "@protoheadless/core/types";
 
 interface Params {
+	collectionKey: string;
 	body: {
 		ids: number[];
 	};
@@ -13,7 +14,7 @@ interface Params {
 
 export const deleteMultipleReq = (params: Params) => {
 	return request<ResponseBody<null>>({
-		url: "/api/v1/collections/multiple-builder",
+		url: `/api/v1/collections/documents/${params.collectionKey}`,
 		csrf: true,
 		config: {
 			method: "DELETE",
@@ -44,7 +45,7 @@ const useDeleteMultiple = (props: UseDeleteMultipleProps) => {
 				},
 			}),
 		},
-		invalidates: ["collections.multipleBuilder.getMultiple"],
+		invalidates: ["collections.document.getMultiple"],
 		onSuccess: props.onSuccess,
 		onError: props.onError,
 	});
