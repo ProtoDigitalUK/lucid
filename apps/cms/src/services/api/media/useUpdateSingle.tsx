@@ -10,12 +10,12 @@ interface Params {
 	id: number;
 	body: {
 		file: File;
-		title_translations: Array<{
-			language_id: number | null;
+		titleTranslations: Array<{
+			languageId: number | null;
 			value: string | null;
 		}>;
-		alt_translations: Array<{
-			language_id: number | null;
+		altTranslations: Array<{
+			languageId: number | null;
 			value: string | null;
 		}>;
 	};
@@ -23,8 +23,8 @@ interface Params {
 
 export const updateSingleReq = (params: Params) => {
 	const bodyQueryParam = JSON.stringify({
-		title_translations: params.body.title_translations,
-		alt_translations: params.body.alt_translations,
+		title_translations: params.body.titleTranslations,
+		alt_translations: params.body.altTranslations,
 	});
 
 	return request<ResponseBody<null>>({

@@ -11,8 +11,8 @@ interface QueryParams {
 	filters?: {
 		name?: Accessor<string>;
 		key?: Accessor<string>;
-		mime_type?: Accessor<string>;
-		file_extension?: Accessor<string>;
+		mimeType?: Accessor<string>;
+		fileExtension?: Accessor<string>;
 		type?: Accessor<string | string[]>;
 	};
 	perPage?: number;

@@ -11,7 +11,7 @@ import type {
 
 interface QueryParams {
 	location: {
-		collection_key?: Accessor<string | undefined> | string;
+		collectionKey: Accessor<string | undefined> | string;
 	};
 }
 
@@ -30,7 +30,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		queryFn: () =>
 			request<ResponseBody<CollectionResponse>>({
 				url: `/api/v1/collections/${
-					queryParams().location?.collection_key
+					queryParams().location?.collectionKey
 				}`,
 				config: {
 					method: "GET",

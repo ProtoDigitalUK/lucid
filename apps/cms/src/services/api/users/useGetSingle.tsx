@@ -8,7 +8,7 @@ import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
-		user_id: Accessor<number | undefined>;
+		userId: Accessor<number | undefined>;
 	};
 }
 
@@ -26,7 +26,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		queryKey: ["users.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<ResponseBody<UserResponse>>({
-				url: `/api/v1/users/${queryParams().location?.user_id}`,
+				url: `/api/v1/users/${queryParams().location?.userId}`,
 				config: {
 					method: "GET",
 				},

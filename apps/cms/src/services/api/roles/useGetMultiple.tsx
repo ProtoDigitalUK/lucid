@@ -10,7 +10,7 @@ interface QueryParams {
 	queryString?: Accessor<string>;
 	include: Record<"permissions", boolean>;
 	filters?: {
-		role_ids?: Accessor<number>;
+		roleIds?: Accessor<number>;
 		name?: Accessor<string>;
 	};
 	perPage?: number;

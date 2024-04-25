@@ -9,8 +9,8 @@ import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 interface QueryParams {
 	queryString?: Accessor<string>;
 	filters?: {
-		first_name?: Accessor<string>;
-		last_name?: Accessor<string>;
+		firstName?: Accessor<string>;
+		lastName?: Accessor<string>;
 		email?: Accessor<string>;
 		username?: Accessor<string>;
 	};

@@ -8,8 +8,8 @@ import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 interface Params {
 	id: number;
 	body: {
-		role_ids?: number[];
-		super_admin?: boolean;
+		roleIds?: number[];
+		superAdmin?: boolean;
 	};
 }
 

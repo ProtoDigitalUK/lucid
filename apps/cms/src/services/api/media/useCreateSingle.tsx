@@ -7,12 +7,12 @@ import type { ResponseBody, MediaResponse } from "@protoheadless/core/types";
 
 interface Params {
 	file: File;
-	title_translations: Array<{
-		language_id: number | null;
+	titleTranslations: Array<{
+		languageId: number | null;
 		value: string | null;
 	}>;
-	alt_translations: Array<{
-		language_id: number | null;
+	altTranslations: Array<{
+		languageId: number | null;
 		value: string | null;
 	}>;
 }
@@ -22,8 +22,8 @@ interface Response {
 
 export const createSingleReq = (params: Params) => {
 	const bodyQueryParam = JSON.stringify({
-		title_translations: params.title_translations,
-		alt_translations: params.alt_translations,
+		titleTranslations: params.titleTranslations,
+		altTranslations: params.altTranslations,
 	});
 
 	return request<ResponseBody<Response>>({

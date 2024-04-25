@@ -8,7 +8,7 @@ import type { ResponseBody, RoleResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
-		role_id: Accessor<number | undefined>;
+		roleId: Accessor<number | undefined>;
 	};
 }
 
@@ -26,7 +26,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		queryKey: ["roles.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<ResponseBody<RoleResponse>>({
-				url: `/api/v1/roles/${queryParams().location?.role_id}`,
+				url: `/api/v1/roles/${queryParams().location?.roleId}`,
 				config: {
 					method: "GET",
 				},

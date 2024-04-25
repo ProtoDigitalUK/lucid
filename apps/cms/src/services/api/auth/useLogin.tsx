@@ -7,7 +7,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 
 interface Params {
-	username_or_email: string;
+	usernameOrEmail: string;
 	password: string;
 }
 
@@ -32,7 +32,10 @@ const useLogin = (props?: UseLoginProps) => {
 
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, ResponseBody<UserResT>>({
+	return serviceHelpers.useMutationWrapper<
+		Params,
+		ResponseBody<UserResponse>
+	>({
 		mutationFn: loginReq,
 		successToast: {
 			title: T("login_success_toast_title"),

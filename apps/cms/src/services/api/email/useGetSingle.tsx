@@ -8,7 +8,7 @@ import type { ResponseBody, EmailResponse } from "@protoheadless/core/types";
 
 interface QueryParams {
 	location: {
-		email_id: Accessor<number | undefined>;
+		emailId: Accessor<number | undefined>;
 	};
 }
 
@@ -26,7 +26,7 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		queryKey: ["email.getSingle", queryKey(), params.key?.()],
 		queryFn: () =>
 			request<ResponseBody<EmailResponse>>({
-				url: `/api/v1/emails/${queryParams().location?.email_id}`,
+				url: `/api/v1/emails/${queryParams().location?.emailId}`,
 				config: {
 					method: "GET",
 				},

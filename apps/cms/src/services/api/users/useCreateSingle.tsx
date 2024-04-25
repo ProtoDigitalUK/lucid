@@ -10,11 +10,11 @@ interface Params {
 		email: string;
 		username: string;
 		password: string;
-		password_confirmation: string;
-		first_name?: string;
-		last_name?: string;
-		super_admin?: boolean;
-		role_ids: number[];
+		passwordConfirmation: string;
+		firstName?: string;
+		lastName?: string;
+		superAdmin?: boolean;
+		roleIds: number[];
 	};
 }
 

@@ -9,12 +9,8 @@ import type {
 	CollectionResponse,
 } from "@protoheadless/core/types";
 
-interface QueryParams {
-	include: Record<"bricks", boolean>;
-	filters?: {
-		type?: Accessor<string | undefined>;
-	};
-}
+// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+interface QueryParams {}
 
 const useGetAll = (params: QueryHook<QueryParams>) => {
 	const queryParams = createMemo(() =>

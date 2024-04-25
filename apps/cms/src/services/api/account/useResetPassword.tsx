@@ -9,7 +9,7 @@ import type { ResponseBody } from "@protoheadless/core/types";
 interface Params {
 	token: string;
 	password: string;
-	password_confirmation: string;
+	passwordConfirmation: string;
 }
 
 export const resetPasswordReq = async (params: Params) => {
@@ -24,7 +24,7 @@ export const resetPasswordReq = async (params: Params) => {
 			method: "PATCH",
 			body: {
 				password: params.password,
-				password_confirmation: params.password_confirmation,
+				password_confirmation: params.passwordConfirmation,
 			},
 		},
 	});

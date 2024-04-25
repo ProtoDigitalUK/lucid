@@ -9,9 +9,9 @@ import type { ResponseBody, EmailResponse } from "@protoheadless/core/types";
 interface QueryParams {
 	queryString?: Accessor<string>;
 	filters?: {
-		to_address?: Accessor<number>;
+		toAddress?: Accessor<number>;
 		subject?: Accessor<string>;
-		delivery_status?: Accessor<string[]>;
+		deliveryStatus?: Accessor<string[]>;
 		type?: Accessor<string[]>;
 		template?: Accessor<string>;
 	};
