@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
-// Services
 import api from "@/services/api";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface LoginFormProps {
@@ -34,14 +32,14 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 			}}
 			onSubmit={() => {
 				login.action.mutate({
-					username_or_email: usernameOrEmail(),
+					usernameOrEmail: usernameOrEmail(),
 					password: password(),
 				});
 			}}
 		>
 			<Form.Input
-				id="username_or_email"
-				name="username_or_email"
+				id="usernameOrEmail"
+				name="usernameOrEmail"
 				type="text"
 				value={usernameOrEmail()}
 				onChange={setUsernameOrEmail}
@@ -51,7 +49,9 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				required={true}
 				autoFoucs={true}
 				autoComplete="username"
-				errors={login.errors()?.errors?.body?.username}
+				errors={
+					login.errors()?.errors?.body?.usernameOrEmail | undefined
+				}
 			/>
 			<Form.Input
 				id="password"

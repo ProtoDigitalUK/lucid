@@ -16,6 +16,7 @@ export interface ErrorResult {
 	message?: string;
 	children?: Array<undefined | ErrorResult | null>;
 
+	// TODO: should this ever be string, null, array?
 	[key: string]:
 		| Array<undefined | ErrorResult | null>
 		| string
@@ -23,6 +24,7 @@ export interface ErrorResult {
 		| ErrorResult
 		| null
 		| FieldErrors[];
+	body?: ErrorResult | undefined;
 }
 
 export interface FieldErrors {
