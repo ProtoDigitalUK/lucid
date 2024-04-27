@@ -1,13 +1,12 @@
 import { createStore } from "solid-js/store";
 // Types
-import type { PermissionT } from "@headless/types/src/permissions"; // TODO: remove
-import type { UserResponse } from "@protoheadless/core/types";
+import type { UserResponse, Permission } from "@protoheadless/core/types";
 
 type UserStoreT = {
 	user: UserResponse | null;
 	reset: () => void;
 
-	hasPermission: (_perm: PermissionT[]) => {
+	hasPermission: (_perm: Permission[]) => {
 		all: boolean;
 		some: boolean;
 	};
@@ -21,8 +20,8 @@ const [get, set] = createStore<UserStoreT>({
 
 	// -----------------
 	// Permissions
-	hasPermission(perm: PermissionT[]) {
-		if (this.user?.super_admin) return { all: true, some: true };
+	hasPermission(perm: Permission[]) {
+		if (this.user?.superAdmin) return { all: true, some: true };
 
 		const userPerms = this.user?.permissions;
 		if (!userPerms) return { all: false, some: false };

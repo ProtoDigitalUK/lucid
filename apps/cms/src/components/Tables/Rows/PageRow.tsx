@@ -87,7 +87,7 @@ const PageRow: Component<PageRowProps> = (props) => {
 				options={{ include: props?.include[2] }}
 			/>
 			<DateCol
-				date={props.page.created_at}
+				date={props.page.createdAt}
 				options={{ include: props?.include[3] }}
 			/>
 			<DateCol

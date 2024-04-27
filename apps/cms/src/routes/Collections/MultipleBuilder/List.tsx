@@ -40,7 +40,7 @@ const CollectionsMultipleBuilderListRoute: Component = () => {
 				},
 			},
 			sorts: {
-				created_at: "desc",
+				createdAt: "desc",
 			},
 		},
 		{
@@ -136,7 +136,7 @@ const CollectionsMultipleBuilderListRoute: Component = () => {
 					sorts={[
 						{
 							label: T("created_at"),
-							key: "created_at",
+							key: "createdAt",
 						},
 					]}
 					perPage={[]}

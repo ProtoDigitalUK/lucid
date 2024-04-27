@@ -23,7 +23,7 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 	const email = api.email.useGetSingle({
 		queryParams: {
 			location: {
-				email_id: props.id,
+				emailId: props.id,
 			},
 		},
 		enabled: () => !!props.id(),
@@ -54,44 +54,44 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 							{
 								label: T("subject"),
 								value:
-									email.data?.data.mail_details.subject ||
+									email.data?.data.mailDetails.subject ??
 									undefined,
 							},
 							{
 								label: T("template"),
 								value:
-									email.data?.data.mail_details.template ||
+									email.data?.data.mailDetails.template ??
 									undefined,
 							},
 							{
 								label: T("to"),
 								value:
-									email.data?.data.mail_details.to ||
+									email.data?.data.mailDetails.to ??
 									undefined,
 							},
 							{
 								label: T("from"),
 								value:
-									email.data?.data.mail_details.from
-										.address || undefined,
+									email.data?.data.mailDetails.from.address ??
+									undefined,
 							},
 							{
 								label: T("status"),
 								value:
-									email.data?.data.delivery_status ||
+									email.data?.data.deliveryStatus ??
 									undefined,
 							},
 							{
 								label: T("sent_count"),
-								value: email.data?.data.sent_count || 0,
+								value: email.data?.data.sentCount ?? 0,
 							},
 							{
 								label: T("failed_count"),
-								value: email.data?.data.error_count || 0,
+								value: email.data?.data.errorCount ?? 0,
 							},
 							{
 								label: T("type"),
-								value: email.data?.data.type || undefined,
+								value: email.data?.data.type ?? undefined,
 							},
 						]}
 					/>

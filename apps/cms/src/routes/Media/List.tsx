@@ -44,7 +44,7 @@ const MediaListRoute: Component = () => {
 				height: undefined,
 				mime_type: undefined,
 				file_extension: undefined,
-				created_at: undefined,
+				createdAt: undefined,
 				updated_at: "desc",
 			},
 			pagination: {
@@ -147,7 +147,7 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T("created_at"),
-							key: "created_at",
+							key: "createdAt",
 						},
 						{
 							label: T("updated_at"),

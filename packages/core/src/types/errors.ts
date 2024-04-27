@@ -11,21 +11,21 @@ export interface HeadlessAPIErrorData {
 	errorResponse?: ErrorResult;
 }
 
-export interface ErrorResult {
+type ErrorResultValue =
+	| ErrorResultObj
+	| ErrorResultObj[]
+	| FieldErrors[]
+	| string
+	| undefined;
+
+export interface ErrorResultObj {
 	code?: string;
 	message?: string;
-	children?: Array<undefined | ErrorResult | null>;
-
-	// TODO: should this ever be string, null, array?
-	[key: string]:
-		| Array<undefined | ErrorResult | null>
-		| string
-		| undefined
-		| ErrorResult
-		| null
-		| FieldErrors[];
-	body?: ErrorResult | undefined;
+	children?: ErrorResultObj[];
+	[key: string]: ErrorResultValue;
 }
+
+export type ErrorResult = Record<string, ErrorResultValue>;
 
 export interface FieldErrors {
 	brickId: string | number | undefined;

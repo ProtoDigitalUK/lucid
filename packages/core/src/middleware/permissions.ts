@@ -1,7 +1,7 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import { HeadlessAPIError } from "../utils/error-handler.js";
-import type { Permission } from "../services/permissions.js";
+import type { Permission } from "../types/response.js";
 
 const throwPermissionError = () => {
 	throw new HeadlessAPIError({

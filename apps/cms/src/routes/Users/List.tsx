@@ -34,7 +34,7 @@ const UsersListRoute: Component = () => {
 				},
 			},
 			sorts: {
-				created_at: undefined,
+				createdAt: undefined,
 			},
 		},
 		{
@@ -88,7 +88,7 @@ const UsersListRoute: Component = () => {
 					sorts={[
 						{
 							label: T("created_at"),
-							key: "created_at",
+							key: "createdAt",
 						},
 					]}
 					perPage={[]}

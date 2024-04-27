@@ -126,7 +126,7 @@ export class HeadlessAPIError extends Error {
 			current.message = item.message;
 		}
 
-		return result ?? null;
+		return result ?? undefined;
 	}
 }
 

@@ -73,7 +73,7 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 					},
 					{
 						label: T("created_at"),
-						key: "created_at",
+						key: "createdAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},

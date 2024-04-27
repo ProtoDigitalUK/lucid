@@ -1,5 +1,4 @@
-import type { Permission } from "../../services/permissions.js";
-import type { RoleResponse } from "../../types/response.js";
+import type { RoleResponse, Permission } from "../../types/response.js";
 import Formatter from "./index.js";
 
 interface RolePropsT {

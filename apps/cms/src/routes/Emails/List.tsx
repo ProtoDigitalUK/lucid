@@ -13,7 +13,7 @@ const EmailListRoute: Component = () => {
 	const searchParams = useSearchParams(
 		{
 			filters: {
-				to_address: {
+				toAddress: {
 					value: "",
 					type: "text",
 				},
@@ -25,7 +25,7 @@ const EmailListRoute: Component = () => {
 					value: "",
 					type: "text",
 				},
-				delivery_status: {
+				deliveryStatus: {
 					value: "",
 					type: "array",
 				},
@@ -35,11 +35,11 @@ const EmailListRoute: Component = () => {
 				},
 			},
 			sorts: {
-				sent_count: undefined,
-				error_count: undefined,
-				created_at: undefined,
-				last_attempt_at: "desc",
-				last_success_at: undefined,
+				sentCount: undefined,
+				errorCount: undefined,
+				createdAt: undefined,
+				lastAttemptAt: "desc",
+				lastSuccessAt: undefined,
 			},
 		},
 		{
@@ -62,7 +62,7 @@ const EmailListRoute: Component = () => {
 					filters={[
 						{
 							label: T("to"),
-							key: "to_address",
+							key: "toAddress",
 							type: "text",
 						},
 						{
@@ -77,7 +77,7 @@ const EmailListRoute: Component = () => {
 						},
 						{
 							label: T("status"),
-							key: "delivery_status",
+							key: "deliveryStatus",
 							type: "multi-select",
 							options: [
 								{
@@ -113,23 +113,23 @@ const EmailListRoute: Component = () => {
 					sorts={[
 						{
 							label: T("sent_count"),
-							key: "sent_count",
+							key: "sentCount",
 						},
 						{
 							label: T("failed_count"),
-							key: "error_count",
+							key: "errorCount",
 						},
 						{
 							label: T("last_attempt_at"),
-							key: "last_attempt_at",
+							key: "lastAttemptAt",
 						},
 						{
 							label: T("last_success_at"),
-							key: "last_success_at",
+							key: "lastSuccessAt",
 						},
 						{
 							label: T("created_at"),
-							key: "created_at",
+							key: "createdAt",
 						},
 					]}
 					perPage={[]}

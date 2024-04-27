@@ -23,7 +23,7 @@ const RolesListRoute: Component = () => {
 			},
 			sorts: {
 				name: undefined,
-				created_at: undefined,
+				createdAt: undefined,
 			},
 		},
 		{
@@ -66,7 +66,7 @@ const RolesListRoute: Component = () => {
 						},
 						{
 							label: T("created_at"),
-							key: "created_at",
+							key: "createdAt",
 						},
 					]}
 					perPage={[]}

@@ -66,7 +66,7 @@ const SelectMediaContent: Component = () => {
 				name: undefined,
 				width: undefined,
 				height: undefined,
-				created_at: undefined,
+				createdAt: undefined,
 				updated_at: "desc",
 			},
 			pagination: {
@@ -182,7 +182,7 @@ const SelectMediaContent: Component = () => {
 							},
 							{
 								label: T("created_at"),
-								key: "created_at",
+								key: "createdAt",
 							},
 							{
 								label: T("updated_at"),

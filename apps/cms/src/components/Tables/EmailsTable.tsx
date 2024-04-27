@@ -79,13 +79,13 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
 					},
 					{
 						label: T("sent_count"),
-						key: "sent_count",
+						key: "sentCount",
 						icon: <FaSolidPaperPlane />,
 						sortable: true,
 					},
 					{
 						label: T("failed_count"),
-						key: "error_count",
+						key: "errorCount",
 						icon: <FaSolidPaperPlane />,
 						sortable: true,
 					},
@@ -96,19 +96,19 @@ const EmailsTable: Component<EmailsTableProps> = (props) => {
 					},
 					{
 						label: T("first_attempt"),
-						key: "created_at",
+						key: "createdAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
 					{
 						label: T("last_attempt"),
-						key: "last_attempt_at",
+						key: "lastAttemptAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
 					{
 						label: T("last_success_at"),
-						key: "last_success_at",
+						key: "lastSuccessAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},

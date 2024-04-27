@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import type z from "zod";
-import type { Permission } from "../services/permissions.js";
+import type { Permission } from "../types/response.js";
 import type { RouteController } from "../types/types.js";
 import logRoute from "../middleware/log-route.js";
 import validateBody from "../middleware/validate-body.js";

@@ -1,5 +1,5 @@
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
-import type { Permission } from "../../services/permissions.js";
+import type { Permission } from "../../types/response.js";
 import type { KyselyDB } from "../db/types.js";
 
 export default class RolePermissionsRepo {

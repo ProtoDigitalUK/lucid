@@ -348,7 +348,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								{
 									label: T("created_at"),
 									value: dateHelpers.formatDate(
-										media.data?.data.created_at,
+										media.data?.data.createdAt,
 									),
 								},
 								{

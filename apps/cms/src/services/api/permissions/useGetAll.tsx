@@ -4,8 +4,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { PermissionGroup } from "@headless/types/src/permissions"; // TODO: remove
-import type { ResponseBody } from "@protoheadless/core/types";
+import type { ResponseBody, PermissionGroup } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}

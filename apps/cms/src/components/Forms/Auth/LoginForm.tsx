@@ -3,6 +3,7 @@ import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
 import api from "@/services/api";
 import Form from "@/components/Groups/Form";
+import { getBodyError } from "@/utils/error-helpers";
 
 interface LoginFormProps {
 	showForgotPassword?: boolean;
@@ -49,9 +50,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				required={true}
 				autoFoucs={true}
 				autoComplete="username"
-				errors={
-					login.errors()?.errors?.body?.usernameOrEmail | undefined
-				}
+				errors={getBodyError("usernameOrEmail", login.errors)}
 			/>
 			<Form.Input
 				id="password"
@@ -64,7 +63,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				}}
 				required={true}
 				autoComplete="current-password"
-				errors={login.errors()?.errors?.body?.password}
+				errors={getBodyError("password", login.errors)}
 			/>
 			<Show when={props.showForgotPassword}>
 				<Link
