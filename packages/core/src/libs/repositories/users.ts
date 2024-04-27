@@ -168,7 +168,7 @@ export default class UsersRepo {
 
 		const usersCountQuery = this.db
 			.selectFrom("headless_users")
-			.select(sql`count(*)`.as("count"))
+			.select(sql`count(distinct headless_users.id)`.as("count"))
 			.leftJoin("headless_user_roles", (join) =>
 				join.onRef(
 					"headless_user_roles.user_id",
@@ -176,8 +176,7 @@ export default class UsersRepo {
 					"headless_users.id",
 				),
 			)
-			.where("is_deleted", "=", 0)
-			.groupBy("headless_users.id");
+			.where("headless_users.is_deleted", "=", 0);
 
 		const { main, count } = queryBuilder(
 			{
@@ -197,22 +196,22 @@ export default class UsersRepo {
 					filters: [
 						{
 							queryKey: "firstName",
-							tableKey: "first_name",
+							tableKey: "headless_users.first_name",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "lastName",
-							tableKey: "last_name",
+							tableKey: "headless_users.last_name",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "email",
-							tableKey: "email",
+							tableKey: "headless_users.email",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "username",
-							tableKey: "username",
+							tableKey: "headless_users.username",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
