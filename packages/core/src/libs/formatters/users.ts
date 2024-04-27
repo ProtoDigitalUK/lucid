@@ -60,7 +60,7 @@ export default class UsersFormatter {
 			superAdmin: { type: "number", example: 1 },
 			email: { type: "string", example: "admin@headless.com" },
 			username: { type: "string", example: "admin" },
-			firstAame: { type: "string", example: "Admin" },
+			firstName: { type: "string", example: "Admin" },
 			lastName: { type: "string", example: "User" },
 			roles: UserPermissionsFormatter.swaggerRoles,
 			permissions: UserPermissionsFormatter.swaggerPermissions,

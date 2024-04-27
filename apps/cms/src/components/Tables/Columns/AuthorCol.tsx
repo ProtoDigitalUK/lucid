@@ -26,8 +26,8 @@ const AuthorCol: Component<AuthorColProps> = (props) => {
 					<UserDisplay
 						user={{
 							username: props.author?.username || "",
-							first_name: props.author?.first_name,
-							last_name: props.author?.last_name,
+							firstName: props.author?.firstName,
+							lastName: props.author?.lastName,
 							thumbnail: undefined,
 						}}
 						mode="short"

@@ -163,7 +163,8 @@ export default class UsersRepo {
 					"headless_users.id",
 				),
 			)
-			.where("headless_users.is_deleted", "=", 0);
+			.where("headless_users.is_deleted", "=", 0)
+			.groupBy("headless_users.id");
 
 		const usersCountQuery = this.db
 			.selectFrom("headless_users")
@@ -175,7 +176,8 @@ export default class UsersRepo {
 					"headless_users.id",
 				),
 			)
-			.where("is_deleted", "=", 0);
+			.where("is_deleted", "=", 0)
+			.groupBy("headless_users.id");
 
 		const { main, count } = queryBuilder(
 			{
@@ -222,27 +224,27 @@ export default class UsersRepo {
 					sorts: [
 						{
 							queryKey: "createdAt",
-							tableKey: "created_at",
+							tableKey: "headless_users.created_at",
 						},
 						{
 							queryKey: "updatedAt",
-							tableKey: "updated_at",
+							tableKey: "headless_users.updated_at",
 						},
 						{
 							queryKey: "firstName",
-							tableKey: "first_name",
+							tableKey: "headless_users.first_name",
 						},
 						{
 							queryKey: "lastName",
-							tableKey: "last_name",
+							tableKey: "headless_users.last_name",
 						},
 						{
 							queryKey: "email",
-							tableKey: "email",
+							tableKey: "headless_users.email",
 						},
 						{
 							queryKey: "username",
-							tableKey: "username",
+							tableKey: "headless_users.username",
 						},
 					],
 				},

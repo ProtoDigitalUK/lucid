@@ -1,12 +1,9 @@
 import T from "@/translations";
 import { type Component, Show, createMemo, createSignal } from "solid-js";
-// Store
-import userStore from "@/store/userStore";
-// Services
-import api from "@/services/api";
-// Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-// Components
+import userStore from "@/store/userStore";
+import api from "@/services/api";
+import { getBodyError } from "@/utils/error-helpers";
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 import InputGrid from "@/components/Containers/InputGrid";
@@ -31,7 +28,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 	const [getPassword, setPassword] = createSignal<string>("");
 	const [getPasswordConfirmation, setPasswordConfirmation] =
 		createSignal<string>("");
-	const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<boolean>(false);
+	const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<1 | 0>(0);
 
 	// ---------------------------------
 	// Queries
@@ -76,14 +73,14 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 					body: {
 						email: getEmail(),
 						password: getPassword(),
-						password_confirmation: getPasswordConfirmation(),
+						passwordConfirmation: getPasswordConfirmation(),
 						username: getUsername(),
-						first_name: getFirstName() || undefined,
-						last_name: getLastName() || undefined,
-						super_admin: userStore.get.user?.super_admin
+						firstName: getFirstName() || undefined,
+						lastName: getLastName() || undefined,
+						superAdmin: userStore.get.user?.superAdmin
 							? getIsSuperAdmin()
 							: undefined,
-						role_ids: getSelectedRoles().map(
+						roleIds: getSelectedRoles().map(
 							(role) => role.value,
 						) as number[],
 					},
@@ -96,7 +93,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 				setLastName("");
 				setEmail("");
 				setPassword("");
-				setIsSuperAdmin(false);
+				setIsSuperAdmin(0);
 				setSelectedRoles([]);
 			}}
 			fetchState={{
@@ -125,36 +122,35 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							label: T("username"),
 						}}
 						required={true}
-						errors={createUser.errors()?.errors?.body?.username}
+						errors={getBodyError("username", createUser.errors)}
 					/>
 					<InputGrid columns={2}>
 						<Form.Input
-							id="first_name"
+							id="firstName"
 							value={getFirstName()}
 							onChange={setFirstName}
-							name={"first_name"}
+							name={"firstName"}
 							type="text"
 							copy={{
 								label: T("first_name"),
 							}}
 							noMargin={true}
-							errors={
-								createUser.errors()?.errors?.body?.first_name
-							}
+							errors={getBodyError(
+								"firstName",
+								createUser.errors,
+							)}
 						/>
 						<Form.Input
-							id="last_name"
+							id="lastName"
 							value={getLastName()}
 							onChange={setLastName}
-							name={"last_name"}
+							name={"lastName"}
 							type="text"
 							copy={{
 								label: T("last_name"),
 							}}
 							noMargin={true}
-							errors={
-								createUser.errors()?.errors?.body?.last_name
-							}
+							errors={getBodyError("lastName", createUser.errors)}
 						/>
 					</InputGrid>
 					<InputGrid columns={1}>
@@ -169,7 +165,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							}}
 							noMargin={true}
 							required={true}
-							errors={createUser.errors()?.errors?.body?.email}
+							errors={getBodyError("email", createUser.errors)}
 						/>
 						<Form.Input
 							id="password"
@@ -182,13 +178,13 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							}}
 							noMargin={true}
 							required={true}
-							errors={createUser.errors()?.errors?.body?.password}
+							errors={getBodyError("password", createUser.errors)}
 						/>
 						<Form.Input
-							id="password_confirmation"
+							id="passwordConfirmation"
 							value={getPasswordConfirmation()}
 							onChange={setPasswordConfirmation}
-							name={"password_confirmation"}
+							name={"passwordConfirmation"}
 							type="password"
 							copy={{
 								label: T("password_confirmation"),
@@ -196,17 +192,17 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							}}
 							noMargin={true}
 							required={true}
-							errors={
-								createUser.errors()?.errors?.body
-									?.password_confirmation
-							}
+							errors={getBodyError(
+								"passwordConfirmation",
+								createUser.errors,
+							)}
 						/>
 					</InputGrid>
 					<Form.SelectMultiple
-						id="role_ids"
+						id="roleIds"
 						values={getSelectedRoles()}
 						onChange={setSelectedRoles}
-						name={"role_ids"}
+						name={"roleIds"}
 						copy={{
 							label: T("roles"),
 						}}
@@ -218,20 +214,21 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 								};
 							}) || []
 						}
-						errors={createUser.errors()?.errors?.body?.role_ids}
+						errors={getBodyError("roleIds", createUser.errors)}
 					/>
-					<Show when={userStore.get.user?.super_admin}>
+					<Show when={userStore.get.user?.superAdmin}>
 						<Form.Checkbox
-							id="super_admin"
-							value={getIsSuperAdmin()}
-							onChange={setIsSuperAdmin}
-							name={"super_admin"}
+							id="superAdmin"
+							value={getIsSuperAdmin() === 1}
+							onChange={(value) => setIsSuperAdmin(value ? 1 : 0)}
+							name={"superAdmin"}
 							copy={{
 								label: T("is_super_admin"),
 							}}
-							errors={
-								createUser.errors()?.errors?.body?.super_admin
-							}
+							errors={getBodyError(
+								"superAdmin",
+								createUser.errors,
+							)}
 						/>
 					</Show>
 				</>

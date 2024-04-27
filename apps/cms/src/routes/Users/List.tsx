@@ -1,10 +1,7 @@
 import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
-// Store
 import userStore from "@/store/userStore";
-// Hooks
 import useSearchParams from "@/hooks/useSearchParams";
-// Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import UsersTable from "@/components/Tables/UsersTable";
@@ -16,11 +13,11 @@ const UsersListRoute: Component = () => {
 	const searchParams = useSearchParams(
 		{
 			filters: {
-				first_name: {
+				firstName: {
 					value: "",
 					type: "text",
 				},
-				last_name: {
+				lastName: {
 					value: "",
 					type: "text",
 				},
@@ -66,12 +63,12 @@ const UsersListRoute: Component = () => {
 					filters={[
 						{
 							label: T("first_name"),
-							key: "first_name",
+							key: "firstName",
 							type: "text",
 						},
 						{
 							label: T("last_name"),
-							key: "last_name",
+							key: "lastName",
 							type: "text",
 						},
 						{

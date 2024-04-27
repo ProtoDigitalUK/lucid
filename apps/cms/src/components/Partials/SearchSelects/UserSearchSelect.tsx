@@ -28,8 +28,8 @@ const UserSearchSelect: Component<UserSearchSelectProps> = (props) => {
 		queryParams: {
 			filters: {
 				username: getSearchQuery,
-				first_name: getSearchQuery,
-				last_name: getSearchQuery,
+				firstName: getSearchQuery,
+				lastName: getSearchQuery,
 			},
 		},
 	});

@@ -1,13 +1,9 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-// Types
 import type { TableRowProps } from "@/types/components";
 import type { UserResponse } from "@protoheadless/core/types";
-// Store
 import userStore from "@/store/userStore";
-// Hooks
 import type useRowTarget from "@/hooks/useRowTarget";
-// Components
 import Table from "@/components/Groups/Table";
 import TextCol from "@/components/Tables/Columns/TextCol";
 import DateCol from "../Columns/DateCol";

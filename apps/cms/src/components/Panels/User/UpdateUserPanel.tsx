@@ -7,15 +7,11 @@ import {
 	createEffect,
 	Show,
 } from "solid-js";
-// Services
-import api from "@/services/api";
-// Store
-import userStore from "@/store/userStore";
-// Hooks
-import helpers from "@/utils/helpers";
-// Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
-// Components
+import api from "@/services/api";
+import { getBodyError } from "@/utils/error-helpers";
+import userStore from "@/store/userStore";
+import helpers from "@/utils/helpers";
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 
@@ -33,7 +29,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 	const [getSelectedRoles, setSelectedRoles] = createSignal<
 		SelectMultipleValueT[]
 	>([]);
-	const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<boolean>(false);
+	const [getIsSuperAdmin, setIsSuperAdmin] = createSignal<1 | 0>(0);
 
 	// ---------------------------------
 	// Queries
@@ -49,7 +45,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 	const user = api.users.useGetSingle({
 		queryParams: {
 			location: {
-				user_id: props.id,
+				userId: props.id,
 			},
 		},
 		enabled: () => !!props.id(),
@@ -75,7 +71,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 					};
 				}) || [],
 			);
-			setIsSuperAdmin(user.data?.data.super_admin || false);
+			setIsSuperAdmin(user.data?.data.superAdmin || 0);
 		}
 	});
 
@@ -90,14 +86,14 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 	const updateData = createMemo(() => {
 		return helpers.updateData(
 			{
-				role_ids: user.data?.data.roles?.map((role) => role.id),
-				super_admin: user.data?.data.super_admin,
+				roleIds: user.data?.data.roles?.map((role) => role.id),
+				superAdmin: user.data?.data.superAdmin,
 			},
 			{
-				role_ids: getSelectedRoles().map(
+				roleIds: getSelectedRoles().map(
 					(role) => role.value,
 				) as number[],
-				super_admin: getIsSuperAdmin(),
+				superAdmin: getIsSuperAdmin(),
 			},
 		);
 	});
@@ -150,20 +146,21 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 								};
 							}) || []
 						}
-						errors={updateUser.errors()?.errors?.body?.role_ids}
+						errors={getBodyError("roleIds", updateUser.errors)}
 					/>
-					<Show when={userStore.get.user?.super_admin}>
+					<Show when={userStore.get.user?.superAdmin}>
 						<Form.Checkbox
-							id="super_admin"
-							value={getIsSuperAdmin()}
-							onChange={setIsSuperAdmin}
-							name={"super_admin"}
+							id="superAdmin"
+							value={getIsSuperAdmin() === 1}
+							onChange={(value) => setIsSuperAdmin(value ? 1 : 0)}
+							name={"superAdmin"}
 							copy={{
 								label: T("is_super_admin"),
 							}}
-							errors={
-								updateUser.errors()?.errors?.body?.super_admin
-							}
+							errors={getBodyError(
+								"superAdmin",
+								updateUser.errors,
+							)}
 						/>
 					</Show>
 				</>
