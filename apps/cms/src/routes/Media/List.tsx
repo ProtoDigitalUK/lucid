@@ -20,7 +20,7 @@ const MediaListRoute: Component = () => {
 					value: "",
 					type: "text",
 				},
-				file_extension: {
+				fileExtension: {
 					value: "",
 					type: "text",
 				},
@@ -28,7 +28,7 @@ const MediaListRoute: Component = () => {
 					value: "",
 					type: "array",
 				},
-				mime_type: {
+				mimeType: {
 					value: "",
 					type: "text",
 				},
@@ -38,17 +38,17 @@ const MediaListRoute: Component = () => {
 				},
 			},
 			sorts: {
-				file_size: undefined,
+				fileSize: undefined,
 				title: undefined,
 				width: undefined,
 				height: undefined,
-				mime_type: undefined,
-				file_extension: undefined,
+				mimeType: undefined,
+				fileExtension: undefined,
 				createdAt: undefined,
-				updated_at: "desc",
+				updatedAt: "desc",
 			},
 			pagination: {
-				per_page: 20,
+				perPage: 20,
 			},
 		},
 		{
@@ -75,7 +75,7 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T("mime_type"),
-							key: "mime_type",
+							key: "mimeType",
 							type: "text",
 						},
 						{
@@ -116,7 +116,7 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T("file_extension"),
-							key: "file_extension",
+							key: "fileExtension",
 							type: "text",
 						},
 					]}
@@ -127,15 +127,15 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T("file_size"),
-							key: "file_size",
+							key: "fileSize",
 						},
 						{
 							label: T("mime_type"),
-							key: "mime_type",
+							key: "mimeType",
 						},
 						{
 							label: T("file_extension"),
-							key: "file_extension",
+							key: "fileExtension",
 						},
 						{
 							label: T("width"),
@@ -151,7 +151,7 @@ const MediaListRoute: Component = () => {
 						},
 						{
 							label: T("updated_at"),
-							key: "updated_at",
+							key: "updatedAt",
 						},
 					]}
 					perPage={[10, 20, 40]}

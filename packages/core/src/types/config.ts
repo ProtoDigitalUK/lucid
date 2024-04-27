@@ -127,7 +127,7 @@ export interface HeadlessConfig {
 			store?: boolean;
 		};
 		fallbackImage?: string | boolean | undefined;
-		stategy?: MediaStrategy;
+		strategy?: MediaStrategy;
 	};
 	hooks?: Array<AllHooks>;
 	collections?: CollectionBuilder[];
@@ -153,7 +153,7 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 			store: boolean;
 		};
 		fallbackImage: string | boolean | undefined;
-		stategy?: MediaStrategy;
+		strategy?: MediaStrategy;
 	};
 	hooks: Array<AllHooks>;
 	collections: CollectionBuilder[];

@@ -12,7 +12,7 @@ interface SearchParamsSchema {
 		{ value: FilterValues; type: "text" | "number" | "boolean" | "array" }
 	>;
 	sorts?: Record<string, "asc" | "desc" | undefined>;
-	pagination?: { page?: number; per_page?: number };
+	pagination?: { page?: number; perPage?: number };
 }
 
 interface SearchParamsConfig {
@@ -39,7 +39,7 @@ const useSearchParams = (
 	const [getSorts, setSorts] = createSignal<SortMap>(new Map());
 	const [getPagination, setPagination] = createSignal({
 		page: DEFAULT_PAGE,
-		per_page: DEFAULT_PER_PAGE,
+		perPage: DEFAULT_PER_PAGE,
 	});
 
 	const filterValueToString = (value?: FilterValues) => {
@@ -166,13 +166,13 @@ const useSearchParams = (
 			} else {
 				searchParams.delete("page");
 			}
-			if (params.pagination.per_page) {
+			if (params.pagination.perPage) {
 				searchParams.set(
-					"per_page",
-					params.pagination.per_page.toString(),
+					"perPage",
+					params.pagination.perPage.toString(),
 				);
 			} else {
-				searchParams.delete("per_page");
+				searchParams.delete("perPage");
 			}
 		}
 
@@ -262,16 +262,16 @@ const useSearchParams = (
 		// --------------------
 		// Set pagination
 		const page = searchParams.get("page");
-		const perPage = searchParams.get("per_page");
+		const perPage = searchParams.get("perPage");
 		if (page) {
 			setPagination((prev) => ({ ...prev, page: Number(page) }));
 		} else {
 			setPagination((prev) => ({ ...prev, page: DEFAULT_PAGE }));
 		}
 		if (perPage) {
-			setPagination((prev) => ({ ...prev, per_page: Number(perPage) }));
+			setPagination((prev) => ({ ...prev, perPage: Number(perPage) }));
 		} else {
-			setPagination((prev) => ({ ...prev, per_page: DEFAULT_PER_PAGE }));
+			setPagination((prev) => ({ ...prev, perPage: DEFAULT_PER_PAGE }));
 		}
 
 		// --------------------
@@ -312,8 +312,8 @@ const useSearchParams = (
 		if (pagination.page) {
 			searchParams.set("page", pagination.page.toString());
 		}
-		if (pagination.per_page) {
-			searchParams.set("per_page", pagination.per_page.toString());
+		if (pagination.perPage) {
+			searchParams.set("perPage", pagination.perPage.toString());
 		}
 
 		setPrevQueryString(getQueryString());
@@ -345,7 +345,7 @@ const useSearchParams = (
 
 		let hasPagination = false;
 		if (schema.pagination) {
-			if (searchParams.has("page") || searchParams.has("per_page")) {
+			if (searchParams.has("page") || searchParams.has("perPage")) {
 				hasPagination = true;
 			}
 		}

@@ -36,7 +36,7 @@ const updateObject = async (
 			});
 		}
 
-		const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+		const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 			config: serviceConfig.config,
 		});
 
@@ -63,7 +63,7 @@ const updateObject = async (
 		});
 
 		// Save file to storage
-		const updateObjectRes = await mediaStategy.updateSingle(data.key, {
+		const updateObjectRes = await mediaStrategy.updateSingle(data.key, {
 			key: metaData.key,
 			data: mediaHelpers.streamTempFile(tempFilePath),
 			meta: metaData,

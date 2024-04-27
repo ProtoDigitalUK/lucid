@@ -19,8 +19,8 @@ const DashboardRoute: Component = () => {
 	return (
 		<Layout.PageLayout
 			title={T("dashboard_route_title", {
-				name: userStore.get.user?.first_name
-					? `, ${userStore.get.user?.first_name}`
+				name: userStore.get.user?.firstName
+					? `, ${userStore.get.user?.firstName}`
 					: "",
 			})}
 			description={T("dashboard_route_description")}

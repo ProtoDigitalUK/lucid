@@ -80,7 +80,7 @@
 	"cannot_find_formatter": "Cannot find the formatter for the {{name}}.",
 	"config_error_name": "Configuration Error",
 	"email_not_configured_message": "Email functionality is disabled because the email configuration is missing. Please provide the necessary email settings in the 'headless.config.ts/js' file to enable email features.",
-	"media_strategy_not_configured_message": "Media functionality is disabled because the media stategy configuration is missing.",
+	"media_strategy_not_configured_message": "Media functionality is disabled because the media strategy configuration is missing.",
 	"db_migration_failed": "Database migration failed.",
 	"duplicate_field_keys_message": "Duplicate field keys found ({{keys}}) in {{type}}: {{typeKey}}.",
 	"repeater_depth_message": "Repeater depth is too high in {{type}}: {{typeKey}} with key: {{repeaterKey}}. Please reduce the depth from {{depth}} to {{maxRepeaterDepth}}.",

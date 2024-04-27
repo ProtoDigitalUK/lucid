@@ -24,11 +24,11 @@ const processImage = async (
 	contentType: string | undefined;
 	body: Readable;
 }> => {
-	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
 
-	const res = await mediaStategy.stream(data.key);
+	const res = await mediaStrategy.stream(data.key);
 
 	// If there is no response
 	if (!res.success || !res.response) {
@@ -102,7 +102,7 @@ const processImage = async (
 				key: data.processKey,
 				mediaKey: data.key,
 			}),
-			mediaStategy.uploadSingle({
+			mediaStrategy.uploadSingle({
 				key: data.processKey,
 				data: imageRes.data.buffer,
 				meta: {

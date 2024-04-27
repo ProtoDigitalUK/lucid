@@ -11,7 +11,7 @@ export interface HeadlessAPIErrorData {
 	errorResponse?: ErrorResult;
 }
 
-type ErrorResultValue =
+export type ErrorResultValue =
 	| ErrorResultObj
 	| ErrorResultObj[]
 	| FieldErrors[]

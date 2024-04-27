@@ -14,7 +14,7 @@ const deleteSingle = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
-	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
 
@@ -76,7 +76,7 @@ const deleteSingle = async (
 	}
 
 	await Promise.all([
-		mediaStategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
+		mediaStrategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
 		serviceWrapper(mediaServices.storage.deleteObject, false)(
 			serviceConfig,
 			{

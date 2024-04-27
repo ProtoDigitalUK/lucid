@@ -3,7 +3,7 @@ import mediaServices from "../media/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 const clearAll = async (serviceConfig: ServiceConfig) => {
-	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
 
@@ -20,7 +20,7 @@ const clearAll = async (serviceConfig: ServiceConfig) => {
 	if (allProcessedImages.length === 0) return;
 
 	await Promise.all([
-		mediaStategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
+		mediaStrategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
 		ProcessedImagesRepo.deleteMultiple({
 			where: [],
 		}),

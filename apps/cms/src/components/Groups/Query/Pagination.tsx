@@ -71,7 +71,7 @@ export const Pagination: Component<PaginationProps> = (props) => {
 						props.searchParams.setParams({
 							pagination: {
 								page: page,
-								per_page: props.meta?.perPage || undefined,
+								perPage: props.meta?.perPage || undefined,
 							},
 						});
 						setPage(page);

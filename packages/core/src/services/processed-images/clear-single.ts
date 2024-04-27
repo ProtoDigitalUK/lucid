@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const clearSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
-	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
 
@@ -30,7 +30,7 @@ const clearSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	if (allProcessedImages.length === 0) return;
 
 	await Promise.all([
-		mediaStategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
+		mediaStrategy.deleteMultiple(allProcessedImages.map((i) => i.key)),
 		ProcessedImagesRepo.deleteMultiple({
 			where: [
 				{

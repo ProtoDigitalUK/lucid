@@ -8,18 +8,13 @@ import {
 	createEffect,
 	type Accessor,
 } from "solid-js";
-// Services
 import api from "@/services/api";
-// Hooks
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
-// Types
 import type { MediaResponse } from "@protoheadless/core/types";
-// Utils
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
-// Store
+import { getBodyError, getErrorObject } from "@/utils/error-helpers";
 import contentLanguageStore from "@/store/contentLanguageStore";
-// Components
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
@@ -106,10 +101,14 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 		return updateSingle.errors() || createSingle.errors();
 	});
 	const hasTranslationErrors = createMemo(() => {
-		const titleErrors =
-			updateSingle.errors()?.errors?.body?.titleTranslations.children;
-		const altErrors =
-			updateSingle.errors()?.errors?.body?.altTranslations.children;
+		const titleErrors = getBodyError(
+			"titleTranslations",
+			updateSingle.errors,
+		)?.children;
+		const altErrors = getBodyError(
+			"altTranslations",
+			updateSingle.errors,
+		)?.children;
 		if (titleErrors) return titleErrors.length > 0;
 		if (altErrors) return altErrors.length > 0;
 		return false;
@@ -117,18 +116,18 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	const updateData = createMemo(() => {
 		const { changed, data } = helpers.updateData(
 			{
-				title_translations: media.data?.data.title_translations || [],
-				alt_translations: media.data?.data.alt_translations || [],
+				titleTranslations: media.data?.data.titleTranslations || [],
+				altTranslations: media.data?.data.altTranslations || [],
 			},
 			{
-				title_translations: getTitleTranslations(),
-				alt_translations: getAltTranslations(),
+				titleTranslations: getTitleTranslations(),
+				altTranslations: getAltTranslations(),
 			},
 		);
 
 		let resData: {
-			title_translations?: MediaResponse["titleTranslations"];
-			alt_translations?: MediaResponse["altTranslations"];
+			titleTranslations?: MediaResponse["titleTranslations"];
+			altTranslations?: MediaResponse["altTranslations"];
 			file?: File;
 		} = data;
 		let resChanged = changed;
@@ -180,7 +179,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	// ---------------------------------
 	// Functions
 	const inputError = (index: number) => {
-		const errors = mutateErrors()?.errors?.body?.translations.children;
+		const errors = getBodyError("translations", mutateErrors)?.children;
 		if (errors) return errors[index];
 		return undefined;
 	};
@@ -190,8 +189,8 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	createEffect(() => {
 		if (media.isSuccess && panelMode() === "update") {
 			if (!getUpdateDataLock()) {
-				setTitleTranslations(media.data?.data.title_translations || []);
-				setAltTranslations(media.data?.data.alt_translations || []);
+				setTitleTranslations(media.data?.data.titleTranslations || []);
+				setAltTranslations(media.data?.data.altTranslations || []);
 				setUpdateDataLock(true);
 			}
 			if (!getUpdateFileLock()) {
@@ -218,16 +217,16 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				if (!props.id) {
 					createSingle.action.mutate({
 						file: MediaFile.getFile() as File,
-						title_translations: getTitleTranslations(),
-						alt_translations: getAltTranslations(),
+						titleTranslations: getTitleTranslations(),
+						altTranslations: getAltTranslations(),
 					});
 				} else {
 					updateSingle.action.mutate({
 						id: props.id() as number,
 						body: {
 							file: MediaFile.getFile() as File,
-							title_translations: getTitleTranslations(),
-							alt_translations: getAltTranslations(),
+							titleTranslations: getTitleTranslations(),
+							altTranslations: getAltTranslations(),
 						},
 					});
 				}
@@ -289,7 +288,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									copy={{
 										label: T("name"),
 									}}
-									errors={inputError(index())?.name}
+									errors={getErrorObject(
+										inputError(index())?.name,
+									)}
 								/>
 								<Show when={showAltInput()}>
 									<Form.Input
@@ -297,7 +298,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										value={
 											getAltTranslations().find(
 												(item) =>
-													item.language_id ===
+													item.languageId ===
 													language.id,
 											)?.value || ""
 										}
@@ -315,7 +316,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										copy={{
 											label: T("alt"),
 										}}
-										errors={inputError(index())?.alt}
+										errors={getErrorObject(
+											inputError(index())?.alt,
+										)}
 									/>
 								</Show>
 							</Show>
@@ -329,7 +332,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								{
 									label: T("file_size"),
 									value: helpers.bytesToSize(
-										media.data?.data.meta.file_size || 0,
+										media.data?.data.meta.fileSize ?? 0,
 									),
 								},
 								{
@@ -339,11 +342,11 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								},
 								{
 									label: T("extension"),
-									value: media.data?.data.meta.file_extension,
+									value: media.data?.data.meta.fileExtension,
 								},
 								{
 									label: T("mime_type"),
-									value: media.data?.data.meta.mime_type,
+									value: media.data?.data.meta.mimeType,
 								},
 								{
 									label: T("created_at"),
@@ -354,7 +357,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								{
 									label: T("updated_at"),
 									value: dateHelpers.formatDate(
-										media.data?.data.updated_at,
+										media.data?.data.updatedAt,
 									),
 								},
 							]}

@@ -15,7 +15,7 @@ export const defaultConfig: Partial<HeadlessConfig> = {
 			store: false,
 		},
 		fallbackImage: undefined,
-		stategy: undefined,
+		strategy: undefined,
 	},
 	hooks: [],
 	collections: [],

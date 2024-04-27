@@ -12,7 +12,7 @@ const deleteObject = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
-	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
 
@@ -26,7 +26,7 @@ const deleteObject = async (
 	const newStorageUsed = (storageUsed.valueInt || 0) - data.size;
 
 	await Promise.all([
-		mediaStategy.deleteSingle(data.key),
+		mediaStrategy.deleteSingle(data.key),
 		serviceWrapper(optionsServices.updateSingle, false)(serviceConfig, {
 			name: "media_storage_used",
 			valueInt: newStorageUsed < 0 ? 0 : newStorageUsed,

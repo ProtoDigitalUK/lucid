@@ -2,7 +2,11 @@ import { type Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
 import { FaSolidEye, FaSolidEyeSlash } from "solid-icons/fa";
 // Types
-import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
+import type {
+	ErrorResult,
+	ErrorResultObj,
+	FieldErrors,
+} from "@protoheadless/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 

@@ -52,7 +52,7 @@ const SelectMediaContent: Component = () => {
 					value: "",
 					type: "text",
 				},
-				file_extension: {
+				fileExtension: {
 					value: mediaSelectStore.get.extensions || "",
 					type: "text",
 				},
@@ -62,15 +62,15 @@ const SelectMediaContent: Component = () => {
 				},
 			},
 			sorts: {
-				file_size: undefined,
+				fileSize: undefined,
 				name: undefined,
 				width: undefined,
 				height: undefined,
 				createdAt: undefined,
-				updated_at: "desc",
+				updatedAt: "desc",
 			},
 			pagination: {
-				per_page: 20,
+				perPage: 20,
 			},
 		},
 		{
@@ -156,7 +156,7 @@ const SelectMediaContent: Component = () => {
 							},
 							{
 								label: T("file_extension"),
-								key: "file_extension",
+								key: "fileExtension",
 								type: "text",
 							},
 						]}
@@ -170,7 +170,7 @@ const SelectMediaContent: Component = () => {
 							},
 							{
 								label: T("file_size"),
-								key: "file_size",
+								key: "fileSize",
 							},
 							{
 								label: T("width"),
@@ -186,7 +186,7 @@ const SelectMediaContent: Component = () => {
 							},
 							{
 								label: T("updated_at"),
-								key: "updated_at",
+								key: "updatedAt",
 							},
 						]}
 						searchParams={searchParams}

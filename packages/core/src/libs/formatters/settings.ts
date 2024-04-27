@@ -17,7 +17,7 @@ export default class SettingsFormatter {
 				from: props.config.email?.from ?? null,
 			},
 			media: {
-				enabled: props.config.media?.stategy !== undefined,
+				enabled: props.config.media?.strategy !== undefined,
 				storage: {
 					total: props.config.media.storage,
 					remaining:
@@ -61,6 +61,7 @@ export default class SettingsFormatter {
 							total: { type: "number" },
 							remaining: { type: "number", nullable: true },
 							used: { type: "number", nullable: true },
+							limit: { type: "number", nullable: true },
 						},
 					},
 					processed: {

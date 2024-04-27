@@ -16,7 +16,7 @@ const plugin: HeadlessPluginOptions<PluginOptions> = async (
 
 	config.media = {
 		...config.media,
-		stategy: {
+		strategy: {
 			stream: stream(client, pluginOptions),
 			uploadSingle: uploadSingle(client, pluginOptions),
 			updateSingle: updateSingle(client, pluginOptions),

@@ -23,8 +23,8 @@ interface Params {
 
 export const updateSingleReq = (params: Params) => {
 	const bodyQueryParam = JSON.stringify({
-		title_translations: params.body.titleTranslations,
-		alt_translations: params.body.altTranslations,
+		titleTranslations: params.body.titleTranslations,
+		altTranslations: params.body.altTranslations,
 	});
 
 	return request<ResponseBody<null>>({

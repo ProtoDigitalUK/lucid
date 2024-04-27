@@ -26,7 +26,7 @@ const streamMedia = async (
 }> => {
 	const format = mediaHelpers.chooseFormat(data.accept, data.query.format);
 
-	const mediaStategy = mediaServices.checks.checkHasMediaStrategy({
+	const mediaStrategy = mediaServices.checks.checkHasMediaStrategy({
 		config: serviceConfig.config,
 	});
 
@@ -38,7 +38,7 @@ const streamMedia = async (
 		data.query?.height === undefined &&
 		data.query?.quality === undefined
 	) {
-		const res = await mediaStategy.stream(data.key);
+		const res = await mediaStrategy.stream(data.key);
 
 		if (!res.success || !res.response) {
 			throw new HeadlessAPIError({
@@ -73,7 +73,7 @@ const streamMedia = async (
 	});
 
 	// Try and stream the processed media (may already exist)
-	const res = await mediaStategy.stream(processKey);
+	const res = await mediaStrategy.stream(processKey);
 
 	if (res.success && res.response) {
 		return {

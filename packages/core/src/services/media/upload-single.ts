@@ -100,7 +100,7 @@ const uploadSingle = async (
 		return mediaRes.id;
 	} catch (e) {
 		if (objectStored && objectKey !== undefined) {
-			serviceConfig.config.media?.stategy?.deleteSingle(objectKey);
+			serviceConfig.config.media?.strategy?.deleteSingle(objectKey);
 		}
 		throw e;
 	}

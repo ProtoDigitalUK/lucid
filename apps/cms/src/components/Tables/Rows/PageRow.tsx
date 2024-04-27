@@ -91,7 +91,7 @@ const PageRow: Component<PageRowProps> = (props) => {
 				options={{ include: props?.include[3] }}
 			/>
 			<DateCol
-				date={props.page.updated_at}
+				date={props.page.updatedAt}
 				options={{ include: props?.include[4] }}
 			/>
 		</Table.Tr>

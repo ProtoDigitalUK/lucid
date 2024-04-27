@@ -100,7 +100,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 					},
 					{
 						label: T("updated_at"),
-						key: "updated_at",
+						key: "updatedAt",
 						icon: <FaSolidCalendar />,
 					},
 				]}

@@ -1,5 +1,9 @@
 import type { Accessor } from "solid-js";
-import type { ErrorResponse, ErrorResultObj } from "@protoheadless/core/types";
+import type {
+	ErrorResponse,
+	ErrorResultObj,
+	ErrorResultValue,
+} from "@protoheadless/core/types";
 
 export const getBodyError = (
 	key: string,
@@ -11,4 +15,14 @@ export const getBodyError = (
 
 	// @ts-expect-error
 	return errors()?.errors?.body[key] as ErrorResultObj | undefined;
+};
+
+export const getErrorObject = (
+	error: ErrorResultValue,
+): ErrorResultObj | undefined => {
+	if (error === undefined) return undefined;
+	if (typeof error === "string") return undefined;
+	if (Array.isArray(error)) return undefined;
+
+	return error;
 };

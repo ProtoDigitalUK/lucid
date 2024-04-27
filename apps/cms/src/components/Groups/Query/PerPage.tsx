@@ -21,7 +21,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 	});
 
 	const currentPerPage = createMemo(() => {
-		return props.searchParams.getPagination().per_page;
+		return props.searchParams.getPagination().perPage;
 	});
 
 	// ----------------------------------
@@ -60,7 +60,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 								onClick={() => {
 									props.searchParams.setParams({
 										pagination: {
-											per_page: perpage,
+											perPage: perpage,
 										},
 									});
 								}}

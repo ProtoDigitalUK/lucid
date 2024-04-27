@@ -7,7 +7,7 @@ export interface ServiceData {
 }
 
 const checkHasMediaStrategy = (data: ServiceData) => {
-	if (data.config.media?.stategy === undefined) {
+	if (data.config.media?.strategy === undefined) {
 		throw new HeadlessAPIError({
 			type: "basic",
 			name: T("config_error_name"),
@@ -16,7 +16,7 @@ const checkHasMediaStrategy = (data: ServiceData) => {
 		});
 	}
 
-	return data.config.media.stategy;
+	return data.config.media.strategy;
 };
 
 export default checkHasMediaStrategy;
