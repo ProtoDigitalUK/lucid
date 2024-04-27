@@ -28,25 +28,7 @@ export const permissionGroups: Record<PermissionGroupKey, PermissionGroup> = {
 	},
 	content: {
 		key: "content_permissions",
-		permissions: [
-			"create_content",
-			"update_content",
-			"delete_content",
-			"publish_content",
-			"unpublish_content",
-		],
-	},
-	menu: {
-		key: "menu_permissions",
-		permissions: ["create_menu", "update_menu", "delete_menu"],
-	},
-	form_submissions: {
-		key: "form_submissions_permissions",
-		permissions: [
-			"read_form_submissions",
-			"delete_form_submissions",
-			"update_form_submissions",
-		],
+		permissions: ["create_content", "update_content", "delete_content"],
 	},
 };
 

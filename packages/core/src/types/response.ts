@@ -286,17 +286,9 @@ export type Permission =
 	| "create_content"
 	| "update_content"
 	| "delete_content"
-	| "publish_content"
-	| "unpublish_content"
-	| "create_menu"
-	| "update_menu"
-	| "delete_menu"
 	| "delete_collection"
 	| "create_collection"
-	| "update_collection"
-	| "read_form_submissions"
-	| "delete_form_submissions"
-	| "update_form_submissions";
+	| "update_collection";
 
 export type PermissionGroup = {
 	key: string;
@@ -310,6 +302,4 @@ export type PermissionGroupKey =
 	| "settings"
 	| "languages"
 	| "emails"
-	| "content"
-	| "menu"
-	| "form_submissions";
+	| "content";
