@@ -1,7 +1,8 @@
+import classNames from "classnames";
 import { type Component, type JSXElement, Show } from "solid-js";
 
 interface InfoRowProps {
-	title: string;
+	title?: string;
 	description?: string;
 	permission?: boolean;
 
@@ -31,11 +32,19 @@ const InfoRowContent: Component<InfoRowProps> = (props) => {
 	// Render
 	return (
 		<div class="md:col-span-2 lg:col-span-3 bg-container p-15 rounded-md border border-border">
-			<h3 class="text-base mb-1">{props.title}</h3>
+			<Show when={props.title}>
+				<h3 class="text-base mb-1">{props.title}</h3>
+			</Show>
 			<Show when={props.description}>
 				<p class="text-sm">{props.description}</p>
 			</Show>
-			<div class="mt-15">{props.children}</div>
+			<div
+				class={classNames({
+					"mt-15": props.title || props.description,
+				})}
+			>
+				{props.children}
+			</div>
 		</div>
 	);
 };

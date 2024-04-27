@@ -1,16 +1,13 @@
 import T from "@/translations";
 import { type Component, createMemo, createSignal } from "solid-js";
-// Utils
+import type { SettingsResponse } from "@protoheadless/core/types";
 import helpers from "@/utils/helpers";
-// Store
 import userStore from "@/store/userStore";
-// Components
 import InfoRow from "@/components/Blocks/InfoRow";
 import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
-// Types
-import type { SettingsResponse } from "@protoheadless/core/types";
+import DetailsList from "@/components/Partials/DetailsList";
 
 interface GeneralSettingsRouteProps {
 	settings?: SettingsResponse;
@@ -88,6 +85,30 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 								props.settings?.media.storage.limit,
 							),
 						}}
+					/>
+				</InfoRow.Content>
+			</InfoRow.Root>
+			<InfoRow.Root
+				title={T("supported_features")}
+				description={T("supported_features_setting_message")}
+			>
+				<InfoRow.Content>
+					<DetailsList
+						type="pill"
+						items={[
+							{
+								label: T("media_enabled"),
+								value: props.settings?.media.enabled
+									? T("yes")
+									: T("no"),
+							},
+							{
+								label: T("email_enabled"),
+								value: props.settings?.email.enabled
+									? T("yes")
+									: T("no"),
+							},
+						]}
 					/>
 				</InfoRow.Content>
 			</InfoRow.Root>

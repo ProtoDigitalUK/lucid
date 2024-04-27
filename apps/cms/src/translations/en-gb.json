@@ -334,5 +334,9 @@
 	"email_route_title": "Emails",
 	"email_route_description": "Preview and manage every email sent from the CMS.",
 	"edit_page_route_title": "Edit Page",
-	"edit_page_route_title_singular": "Edit {{title}}"
+	"edit_page_route_title_singular": "Edit {{title}}",
+	"supported_features": "Supported Features",
+	"supported_features_setting_message": "These are the features that are currently turned on and available for use",
+	"media_enabled": "Media Enabled",
+	"email_enabled": "Emails Enabled"
 }
