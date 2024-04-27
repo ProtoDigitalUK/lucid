@@ -7,11 +7,9 @@ import {
 	createSignal,
 	For,
 } from "solid-js";
-// Services
 import api from "@/services/api";
-// Utils
 import helpers from "@/utils/helpers";
-// Components
+import { getBodyError } from "@/utils/error-helpers";
 import Panel from "@/components/Groups/Panel";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import Form from "@/components/Groups/Form";
@@ -38,7 +36,7 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 	const role = api.roles.useGetSingle({
 		queryParams: {
 			location: {
-				role_id: props.id as Accessor<number | undefined>,
+				roleId: props.id as Accessor<number | undefined>,
 			},
 		},
 		key: () => props.state.open,
@@ -203,12 +201,11 @@ const UpsertRolePanel: Component<UpsertRolePanelProps> = (props) => {
 								label: T("name"),
 							}}
 							required={true}
-							errors={errors()?.errors?.body?.name}
+							errors={getBodyError("name", errors)}
 							noMargin={true}
 						/>
 					</InputGrid>
 					{/* Global perms */}
-
 					<div class="w-full mb-30 last:mb-0">
 						<SectionHeading
 							title={T("permissions")}
