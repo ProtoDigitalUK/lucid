@@ -8,9 +8,7 @@ import {
 	Match,
 } from "solid-js";
 import classNames from "classnames";
-// Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
-// Components
 import type { PageHeadingProps } from "@/components/Groups/Layout/PageHeading";
 import Layout from "@/components/Groups/Layout";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
@@ -27,6 +25,10 @@ interface PageWrapperProps {
 	actions?: PageHeadingProps["actions"];
 	children: JSXElement;
 	headingChildren?: JSXElement;
+	breadcrumbs?: {
+		link: string;
+		label: string;
+	}[];
 	options?: {
 		noBorder?: boolean;
 	};
@@ -56,6 +58,7 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
 					options={{
 						noBorder: props.options?.noBorder,
 					}}
+					breadcrumbs={props.breadcrumbs}
 				>
 					{props.headingChildren}
 				</Layout.PageHeading>

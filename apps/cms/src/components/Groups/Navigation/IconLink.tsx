@@ -40,11 +40,11 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 		<Show when={props.permission !== false}>
 			<li class="mb-2.5 last:mb-0">
 				<Tooltip.Root placement={"left"}>
-					<Tooltip.Trigger>
+					<Tooltip.Trigger tabIndex={-1}>
 						<Link
 							href={props.href}
 							class={classNames(
-								"w-10 h-10 focus:outline-none focus:!border-primary focus:ring-0 flex items-center justify-center bg-container rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary",
+								"w-10 h-10 focus:outline-none focus:!border-secondary focus:ring-0 flex items-center justify-center bg-container rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary",
 								{
 									"!border-primary": props.active,
 								},

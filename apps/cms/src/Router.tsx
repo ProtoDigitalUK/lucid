@@ -31,6 +31,7 @@ import EmailListRoute from "@/routes/Emails/List";
 
 // collections
 import CollectionsListRoute from "@/routes/Collections/List";
+import CollectionsDocumentsListRoute from "./routes/Collections/Documents/List";
 // import CollectionsMultipleBuildereListRoute from "@/routes/Collections/MultipleBuilder/List";
 // import CollectionsMultipleBuilderEditRoute from "@/routes/Collections/MultipleBuilder/Edit";
 // import CollectionsSingleBuilderEditRoute from "./routes/Collections/SingleBuilder/Edit";
@@ -47,6 +48,10 @@ const AppRouter: Component = () => {
 					<Route
 						path="/collections"
 						element={<CollectionsListRoute />}
+					/>
+					<Route
+						path="/collections/:collectionKey"
+						element={<CollectionsDocumentsListRoute />}
 					/>
 					{/* <Route
 						path="/collection/:collectionKey/multiple-builder"

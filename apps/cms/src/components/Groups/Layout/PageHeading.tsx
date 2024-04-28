@@ -6,17 +6,22 @@ import {
 	Match,
 	Show,
 	type JSXElement,
+	For,
 } from "solid-js";
-import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
+import { FaSolidPlus, FaSolidTrash, FaSolidCaretRight } from "solid-icons/fa";
 import classNames from "classnames";
-// Components
 import Button from "@/components/Partials/Button";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import { Link } from "@solidjs/router";
 
 export interface PageHeadingProps {
 	title: string;
 	description?: string;
 	children?: JSXElement;
+	breadcrumbs?: {
+		link: string;
+		label: string;
+	}[];
 	state?: {
 		isLoading?: boolean;
 	};
@@ -78,6 +83,32 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 				"border-b": !props.options?.noBorder,
 			})}
 		>
+			<Show when={props.breadcrumbs}>
+				<nav class="px-15 md:px-30 py-15 border-b border-border">
+					<ul class="flex items-center">
+						<For each={props.breadcrumbs}>
+							{(breadcrumb, i) => (
+								<li class="flex items-center">
+									<Link
+										href={breadcrumb.link}
+										class="flex items-center text-primary hover:text-primaryDark text-sm"
+									>
+										{breadcrumb.label}
+									</Link>
+									<Show
+										when={
+											props.breadcrumbs &&
+											i() < props.breadcrumbs.length - 1
+										}
+									>
+										<FaSolidCaretRight class="mx-2.5 text-sm" />
+									</Show>
+								</li>
+							)}
+						</For>
+					</ul>
+				</nav>
+			</Show>
 			<div
 				class={
 					"p-15 md:p-30 flex md:justify-between md:flex-row flex-col-reverse items-start"

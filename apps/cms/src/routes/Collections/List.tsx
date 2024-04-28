@@ -4,7 +4,7 @@ import useSearchParams from "@/hooks/useSearchParams";
 import Layout from "@/components/Groups/Layout";
 import CollectionGrid from "@/components/Grids/CollectionGrid";
 
-const EmailListRoute: Component = () => {
+const CollectionsListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
 	const searchParams = useSearchParams();
@@ -21,4 +21,4 @@ const EmailListRoute: Component = () => {
 	);
 };
 
-export default EmailListRoute;
+export default CollectionsListRoute;

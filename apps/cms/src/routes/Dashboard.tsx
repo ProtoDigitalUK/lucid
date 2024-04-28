@@ -1,10 +1,7 @@
-import type { Component } from "solid-js";
 import T from "@/translations";
-// Services
+import type { Component } from "solid-js";
 import api from "@/services/api";
-// Store
 import userStore from "@/store/userStore";
-// Components
 import Button from "@/components/Partials/Button";
 import Layout from "@/components/Groups/Layout";
 import StartingPoints from "@/components/Blocks/StartingPoints";
