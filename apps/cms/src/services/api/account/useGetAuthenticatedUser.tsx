@@ -1,13 +1,8 @@
 import { createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
-// Store
 import userStore from "@/store/userStore";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Services
-import api from "@/services/api";
-// Types
 import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
@@ -20,8 +15,6 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 	const queryKey = createMemo(() =>
 		serviceHelpers.getQueryKey(queryParams()),
 	);
-
-	const logout = api.auth.useLogout();
 
 	const query = createQuery(() => ({
 		queryKey: ["users.getSingle", queryKey(), params.key?.()],
@@ -40,9 +33,6 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 	createEffect(() => {
 		if (query.isSuccess) {
 			userStore.set("user", query.data.data);
-		}
-		if (query.isError) {
-			logout.action.mutate({});
 		}
 	});
 

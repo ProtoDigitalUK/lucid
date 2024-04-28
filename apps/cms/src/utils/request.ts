@@ -1,12 +1,10 @@
-// Utils
 import queryBuilder, { type QueryBuilderProps } from "@/utils/query-builder";
 import { HeadlessError, handleSiteErrors } from "@/utils/error-handling";
-// Types
 import type { ErrorResponse } from "@protoheadless/core/types";
-// Services
 import { csrfReq } from "@/services/api/auth/useCsrf";
+import useRefreshToken from "@/services/api/auth/useRefreshToken";
 
-interface RequestParams<Data> {
+export interface RequestParams<Data> {
 	url: string;
 	query?: QueryBuilderProps;
 	csrf?: boolean;
@@ -19,13 +17,17 @@ interface RequestConfig<Data> {
 	headers?: Record<string, string>;
 }
 
+export const getFetchURL = (url: string) => {
+	if (!import.meta.env.PROD) {
+		return `${import.meta.env.VITE_API_DEV_URL}${url}`;
+	}
+	return url;
+};
+
 const request = async <Response, Data = unknown>(
 	params: RequestParams<Data>,
 ): Promise<Response> => {
-	let fetchURL = params.url;
-	if (!import.meta.env.PROD) {
-		fetchURL = `${import.meta.env.VITE_API_DEV_URL}${params.url}`;
-	}
+	let fetchURL = getFetchURL(params.url);
 
 	if (params.query) {
 		const queryString = queryBuilder(params.query);
@@ -35,9 +37,7 @@ const request = async <Response, Data = unknown>(
 	}
 
 	let csrfToken: string | null = null;
-	if (params.csrf) {
-		csrfToken = await csrfReq();
-	}
+	if (params.csrf) csrfToken = await csrfReq();
 
 	let body: string | undefined | FormData = undefined;
 	if (params.config?.body !== undefined) {
@@ -52,9 +52,7 @@ const request = async <Response, Data = unknown>(
 	if (typeof body === "string") {
 		headers["Content-Type"] = "application/json";
 	}
-	if (csrfToken) {
-		headers._csrf = csrfToken;
-	}
+	if (csrfToken) headers._csrf = csrfToken;
 
 	const fetchRes = await fetch(fetchURL, {
 		method: params.config?.method,
@@ -62,6 +60,10 @@ const request = async <Response, Data = unknown>(
 		credentials: "include",
 		headers: headers,
 	});
+
+	if (fetchRes.status === 401) {
+		return await useRefreshToken(params);
+	}
 	if (fetchRes.status === 204) return {} as Response;
 
 	const data = await fetchRes.json();

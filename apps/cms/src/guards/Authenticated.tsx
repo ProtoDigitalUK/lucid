@@ -9,13 +9,14 @@ interface AuthenticatedProps {
 const Authenticated: Component<AuthenticatedProps> = () => {
 	// ----------------------------------------
 	// Render
-	return (
-		<Switch fallback={<Outlet />}>
-			<Match when={!getCookie("auth")}>
-				<Navigate href="/login" />
-			</Match>
-		</Switch>
-	);
+	return <Outlet />;
+	// return (
+	// <Switch fallback={<Outlet />}>
+	// 	<Match when={!getCookie("auth")}>
+	// 		{/* <Navigate href="/login" /> */}
+	// 	</Match>
+	// </Switch>
+	// );
 };
 
 export default Authenticated;

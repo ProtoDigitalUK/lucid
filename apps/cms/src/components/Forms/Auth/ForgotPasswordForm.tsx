@@ -1,9 +1,8 @@
 import T from "@/translations";
 import { type Component, createSignal, Show } from "solid-js";
 import { Link } from "@solidjs/router";
-// Services
+import { getBodyError } from "@/utils/error-helpers";
 import api from "@/services/api";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface ForgotPasswordFormProps {
@@ -50,7 +49,7 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 				}}
 				required={true}
 				autoFoucs={true}
-				errors={forgotPassword.errors()?.errors?.body?.email}
+				errors={getBodyError("email", forgotPassword.errors)}
 			/>
 			<Show when={props.showBackToLogin}>
 				<Link

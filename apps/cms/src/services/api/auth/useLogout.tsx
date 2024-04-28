@@ -16,6 +16,7 @@ export const logoutReq = () => {
 		}>
 	>({
 		url: "/api/v1/auth/logout",
+		csrf: true,
 		config: {
 			method: "POST",
 		},
