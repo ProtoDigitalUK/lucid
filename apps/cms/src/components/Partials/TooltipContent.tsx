@@ -1,5 +1,4 @@
 import type { Component } from "solid-js";
-// Components
 import { Tooltip } from "@kobalte/core";
 
 interface TooltipContentProps {

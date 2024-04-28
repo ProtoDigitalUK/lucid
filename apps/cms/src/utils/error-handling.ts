@@ -1,6 +1,5 @@
 import T from "@/translations";
 import spawnToast from "@/utils/spawn-toast";
-// Types
 import type { ErrorResponse } from "@protoheadless/core/types";
 
 export class HeadlessError extends Error {

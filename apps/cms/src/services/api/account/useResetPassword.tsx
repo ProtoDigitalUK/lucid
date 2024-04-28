@@ -24,7 +24,7 @@ export const resetPasswordReq = async (params: Params) => {
 			method: "PATCH",
 			body: {
 				password: params.password,
-				password_confirmation: params.passwordConfirmation,
+				passwordConfirmation: params.passwordConfirmation,
 			},
 		},
 	});

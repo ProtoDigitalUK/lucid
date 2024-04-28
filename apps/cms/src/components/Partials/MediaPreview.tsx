@@ -6,9 +6,7 @@ import {
 	FaSolidFile,
 	FaSolidFileLines,
 } from "solid-icons/fa";
-// Types
 import type { MediaResponse } from "@protoheadless/core/types";
-// Components
 import Image from "@/components/Partials/Image";
 
 interface MediaPreviewProps {

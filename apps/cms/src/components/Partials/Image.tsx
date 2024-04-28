@@ -1,8 +1,6 @@
 import type { Component } from "solid-js";
-// Components
 import { Image as KImage } from "@kobalte/core";
 import classNames from "classnames";
-// Assets
 
 interface ImageProps {
 	src: string;

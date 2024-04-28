@@ -1,6 +1,5 @@
 import type { Accessor, Setter } from "solid-js";
 import equal from "fast-deep-equal/es6";
-// Types
 import type { UserResponse, MediaResponse } from "@protoheadless/core/types";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

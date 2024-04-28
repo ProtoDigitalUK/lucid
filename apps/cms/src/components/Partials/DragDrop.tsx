@@ -86,8 +86,6 @@ const DragDrop: Component<DragDropProps> = (props) => {
 		e.dataTransfer?.setDragImage(new Image(), 0, 0);
 		e.stopPropagation();
 
-		console.log("drag start");
-
 		setDragging(item);
 		setDraggingTarget(item);
 		setIsDragging(true);

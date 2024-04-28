@@ -1,5 +1,4 @@
 import { type Component, For, Match, Show, Switch } from "solid-js";
-// Components
 import Pill from "@/components/Partials/Pill";
 import classNames from "classnames";
 

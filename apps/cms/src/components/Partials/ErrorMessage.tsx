@@ -1,6 +1,5 @@
 import { type Component, Show } from "solid-js";
 import classNames from "classnames";
-// Components
 import { Alert } from "@kobalte/core";
 
 interface ErrorMessageProps {

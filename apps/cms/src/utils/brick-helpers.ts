@@ -1,6 +1,4 @@
-// Store
 import builderStore, { type BrickStoreFieldT } from "@/store/builderStore";
-// Types
 import type { CustomField } from "@protoheadless/core/types";
 
 // --------------------------------------------

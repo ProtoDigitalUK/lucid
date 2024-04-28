@@ -1,12 +1,8 @@
 import { type Component, For, createMemo } from "solid-js";
-// Services
 import api from "@/services/api";
-// Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 import type useSearchParams from "@/hooks/useSearchParams";
-// Store
 import contentLanguageStore from "@/store/contentLanguageStore";
-// Components
 import Grid from "@/components/Groups/Grid";
 import MediaCard, { MediaCardLoading } from "@/components/Cards/MediaCard";
 import CreateUpdateMediaPanel from "@/components/Panels/Media/CreateUpdateMediaPanel";

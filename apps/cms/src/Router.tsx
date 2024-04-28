@@ -1,6 +1,5 @@
 import type { Component } from "solid-js";
 import { Router, Routes, Route } from "@solidjs/router";
-// Layouts
 import AuthRoutes from "@/layouts/AuthRoutes";
 import MainLayout from "@/layouts/Main";
 

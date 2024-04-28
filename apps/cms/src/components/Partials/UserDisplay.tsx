@@ -1,5 +1,4 @@
 import { type Component, Switch, Match } from "solid-js";
-// Utils
 import helpers from "@/utils/helpers";
 
 interface UserDisplayProps {

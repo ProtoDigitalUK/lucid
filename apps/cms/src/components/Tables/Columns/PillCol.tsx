@@ -1,5 +1,4 @@
 import { type Component, Match, Switch } from "solid-js";
-// Components
 import Table from "@/components/Groups/Table";
 import Pill, { type PillProps } from "@/components/Partials/Pill";
 

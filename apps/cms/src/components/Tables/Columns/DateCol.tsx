@@ -1,7 +1,5 @@
 import { type Component, createMemo } from "solid-js";
-// Utils
 import dateHelpers from "@/utils/date-helpers";
-// Components
 import Table from "@/components/Groups/Table";
 
 interface TextColProps {

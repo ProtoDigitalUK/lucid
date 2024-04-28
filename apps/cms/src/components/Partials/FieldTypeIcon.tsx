@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import { type Component, Match, Switch } from "solid-js";
-// Types
 import type { FieldTypes } from "@protoheadless/core/types";
 
 interface FieldTypeIconProps {
@@ -25,11 +24,11 @@ const FieldTypeIcon: Component<FieldTypeIconProps> = (props) => {
 						props.type === "datetime" ||
 						props.type === "checkbox",
 					"bg-[#E8962A] border-[#E8962A]": props.type === "repeater",
-					"bg-[#CF40C9] border-[#CF40C9]":
-						props.type === "pagelink" || props.type === "link",
+					"bg-[#CF40C9] border-[#CF40C9]": props.type === "link",
 					"bg-[#D64F8C] border-[#D64F8C]": props.type === "json",
 					"bg-[#5955DB] border-[#5955DB]": props.type === "media",
 					"bg-[#2FDBBB] border-[#2FDBBB]": props.type === "colour",
+					"bg-[#3e3e3e] border-[#373737]": props.type === "user",
 				},
 			)}
 		>
@@ -42,7 +41,7 @@ const FieldTypeIcon: Component<FieldTypeIconProps> = (props) => {
 				<Match when={props.type === "datetime"}>D</Match>
 				<Match when={props.type === "checkbox"}>C</Match>
 				<Match when={props.type === "repeater"}>R</Match>
-				<Match when={props.type === "pagelink"}>P</Match>
+				<Match when={props.type === "user"}>Ur</Match>
 				<Match when={props.type === "link"}>L</Match>
 				<Match when={props.type === "json"}>J</Match>
 				<Match when={props.type === "media"}>M</Match>

@@ -1,5 +1,4 @@
 import { type Component, Switch, Match } from "solid-js";
-// Components
 import ActionDropdown, {
 	type ActionDropdownProps,
 } from "@/components/Partials/ActionDropdown";

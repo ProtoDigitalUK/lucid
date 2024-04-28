@@ -1,12 +1,9 @@
 import T from "@/translations";
 import { type Component, Index } from "solid-js";
 import { FaSolidT, FaSolidCalendar } from "solid-icons/fa";
-// Services
 import api from "@/services/api";
-// Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import Table from "@/components/Groups/Table";
 import RoleRow from "@/components/Tables/Rows/RoleRow";
 import UpsertRolePanel from "@/components/Panels/Role/UpsertRolePanel";

@@ -1,8 +1,7 @@
 import { type Accessor, createSignal } from "solid-js";
-// Types
 import type { SingleFileUploadProps } from "@/components/Groups/Form/SingleFileUpload";
 import type { ErrorResponse } from "@protoheadless/core/types";
-// Components
+import { getBodyError } from "@/utils/error-helpers";
 import Form from "@/components/Groups/Form";
 
 interface UseSingleFileUploadProps {
@@ -60,7 +59,7 @@ const useSingleFileUpload = (data: UseSingleFileUploadProps) => {
 				disabled={data.disabled}
 				errors={
 					data.errors
-						? data.errors()?.errors?.body[data.name]
+						? getBodyError(data.name, data.errors)
 						: undefined
 				}
 				noMargin={data.noMargin}

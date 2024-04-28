@@ -1,6 +1,5 @@
 import type { Component, JSXElement, ValidComponent } from "solid-js";
 import classNames from "classnames";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 
 interface DropdownContentProps {

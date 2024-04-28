@@ -1,7 +1,6 @@
 import T from "@/translations";
 import { type Component, Show } from "solid-js";
 import { FaSolidHouse } from "solid-icons/fa";
-// Components
 import Table from "@/components/Groups/Table";
 
 interface PageTitleColProps {

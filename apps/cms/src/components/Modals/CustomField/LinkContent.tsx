@@ -5,9 +5,7 @@ import {
 	createSignal,
 	createEffect,
 } from "solid-js";
-// Store
 import linkFieldStore from "@/store/linkFieldStore";
-// Components
 import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";
 

@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { type Component, Switch, Match } from "solid-js";
 import { Outlet } from "@solidjs/router";
-// Services
 import api from "@/services/api";
-// Components
 import Layout from "@/components/Groups/Layout";
 
 const MainLayout: Component = () => {

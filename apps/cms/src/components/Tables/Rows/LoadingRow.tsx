@@ -1,5 +1,4 @@
 import { type Component, Index, Show } from "solid-js";
-// Components
 import Table from "@/components/Groups/Table";
 
 interface LoadingRowProps {

@@ -1,12 +1,8 @@
 import { type Component, createSignal } from "solid-js";
-// Services
 import api from "@/services/api";
-// Utils
 import helpers from "@/utils/helpers";
-// Types
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
 import type { ErrorResult } from "@protoheadless/core/types";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface UserSearchSelectProps {

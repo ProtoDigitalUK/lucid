@@ -1,9 +1,6 @@
 import T from "@/translations";
 import type { Component, Accessor } from "solid-js";
-// Services
 import api from "@/services/api";
-// Utils
-// Components
 import Panel from "@/components/Groups/Panel";
 import SectionHeading from "@/components/Blocks/SectionHeading";
 import DetailsList from "@/components/Partials/DetailsList";

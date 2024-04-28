@@ -1,7 +1,5 @@
 import { type Component, Match, Switch, createMemo } from "solid-js";
-// Store
 import contentLanguageStore from "@/store/contentLanguageStore";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface ContentLanguageSelectProps {
@@ -46,7 +44,7 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 								language.name
 									? `${language.name} (${language.code})`
 									: language.code
-							} ${language.is_default ? "(Default)" : ""}`,
+							} ${language.isDefault ? "(Default)" : ""}`,
 						})) || []
 					}
 					noMargin={true}
@@ -70,7 +68,7 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 								language.name
 									? `${language.name} (${language.code})`
 									: language.code
-							} ${language.is_default ? "(Default)" : ""}`,
+							} ${language.isDefault ? "(Default)" : ""}`,
 						})) || []
 					}
 					noMargin={true}

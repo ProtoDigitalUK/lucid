@@ -1,5 +1,4 @@
 import { type Component, Switch, Match } from "solid-js";
-// Components
 import Table from "@/components/Groups/Table";
 import Form from "@/components/Groups/Form";
 

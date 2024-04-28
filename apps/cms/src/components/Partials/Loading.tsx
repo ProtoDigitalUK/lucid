@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import type { Component } from "solid-js";
-// Components
 import Spinner from "@/components/Partials/Spinner";
 
 interface LoadingProps {

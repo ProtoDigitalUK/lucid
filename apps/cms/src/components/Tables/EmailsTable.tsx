@@ -6,12 +6,9 @@ import {
 	FaSolidPaperPlane,
 	FaSolidEnvelope,
 } from "solid-icons/fa";
-// Services
 import api from "@/services/api";
-// Hooks
 import useRowTarget from "@/hooks/useRowTarget";
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import Table from "@/components/Groups/Table";
 import EmailRow from "@/components/Tables/Rows/EmailRow";
 import PreviewEmailPanel from "../Panels/Email/PreviewEmailPanel";

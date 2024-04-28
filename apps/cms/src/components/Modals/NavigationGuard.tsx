@@ -1,7 +1,6 @@
 import T from "@/translations";
 import { type Component, createSignal, onCleanup, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-// Components
 import Modal from "@/components/Groups/Modal";
 
 interface NavigationGuardProps {

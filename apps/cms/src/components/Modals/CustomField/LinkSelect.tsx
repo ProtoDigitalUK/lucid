@@ -1,7 +1,5 @@
 import { type Component, Switch, createMemo, Match } from "solid-js";
-// Store
 import linkFieldStore from "@/store/linkFieldStore";
-// Components
 import Modal from "@/components/Groups/Modal";
 import PageLinkContent from "./PageLinkContent";
 import LinkContent from "./LinkContent";

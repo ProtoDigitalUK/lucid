@@ -1,9 +1,8 @@
 import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
-// Components
 import Form from "@/components/Groups/Form";
-// Services
 import api from "@/services/api";
+import { getBodyError } from "@/utils/error-helpers";
 
 interface ResetPasswordFormProps {
 	token: string;
@@ -35,7 +34,7 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 				resetPassword.action.mutate({
 					token: props.token,
 					password: password(),
-					password_confirmation: passwordConfirmation(),
+					passwordConfirmation: passwordConfirmation(),
 				});
 			}}
 		>
@@ -50,11 +49,11 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 				}}
 				required={true}
 				autoFoucs={true}
-				errors={resetPassword.errors()?.errors?.body?.password}
+				errors={getBodyError("password", resetPassword.errors)}
 			/>
 			<Form.Input
-				id="password_confirmation"
-				name="password_confirmation"
+				id="passwordConfirmation"
+				name="passwordConfirmation"
 				type="password"
 				value={passwordConfirmation()}
 				onChange={setPasswordConfirmation}
@@ -62,9 +61,10 @@ const ResetPasswordForm: Component<ResetPasswordFormProps> = (props) => {
 					label: T("confirm_password"),
 				}}
 				required={true}
-				errors={
-					resetPassword.errors()?.errors?.body?.password_confirmation
-				}
+				errors={getBodyError(
+					"passwordConfirmation",
+					resetPassword.errors,
+				)}
 			/>
 		</Form.Root>
 	);

@@ -1,14 +1,10 @@
 import T from "@/translations";
 import { type Component, createMemo, For, onCleanup } from "solid-js";
 import { useNavigate, useLocation } from "@solidjs/router";
-// Hooks
 import useSearchParams from "@/hooks/useSearchParams";
-// Store
 import mediaSelectStore from "@/store/mediaSelectStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
-// Services
 import api from "@/services/api";
-// Components
 import Query from "@/components/Groups/Query";
 import Modal from "@/components/Groups/Modal";
 import Grid from "@/components/Groups/Grid";

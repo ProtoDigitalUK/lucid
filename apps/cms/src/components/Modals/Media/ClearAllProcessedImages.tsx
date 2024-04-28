@@ -1,8 +1,6 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-// Components
 import Modal from "@/components/Groups/Modal";
-// Services
 import api from "@/services/api";
 
 interface ClearAllProcessedImagesProps {

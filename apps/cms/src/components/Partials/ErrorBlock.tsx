@@ -1,6 +1,5 @@
 import { type Component, type JSXElement, Show } from "solid-js";
 import classNames from "classnames";
-// Components
 import Link from "@/components/Partials/Link";
 
 interface ErrorBlockProps {
