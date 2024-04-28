@@ -206,7 +206,7 @@ export default class MediaRepo {
 
 		const mediasCountQuery = this.db
 			.selectFrom("headless_media")
-			.select(sql`count(*)`.as("count"))
+			.select(sql`count(distinct headless_media.id)`.as("count"))
 			.leftJoin("headless_translations as title_translations", (join) =>
 				join
 					.onRef(
@@ -232,11 +232,6 @@ export default class MediaRepo {
 			.select([
 				"title_translations.value as title_translation_value",
 				"alt_translations.value as alt_translation_value",
-			])
-			.groupBy([
-				"headless_media.id",
-				"title_translations.value",
-				"alt_translations.value",
 			])
 			.where("visible", "=", 1);
 
