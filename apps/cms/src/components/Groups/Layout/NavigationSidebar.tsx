@@ -1,37 +1,10 @@
 import T from "@/translations";
-import { type Component, createMemo } from "solid-js";
-// Assets
+import type { Component } from "solid-js";
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
-// Store
 import userStore from "@/store/userStore";
-// Services
-import api from "@/services/api";
-// Components
 import Navigation from "@/components/Groups/Navigation";
 
 export const NavigationSidebar: Component = () => {
-	// ----------------------------------
-	// Mutations & Queries
-	const collections = api.collections.useGetAll({
-		queryParams: {
-			include: {
-				bricks: false,
-			},
-		},
-	});
-
-	// ----------------------------------
-	// Effects
-
-	// ----------------------------------
-	// Memos
-	const envBarIsLoading = createMemo(() => {
-		return collections.isLoading;
-	});
-	const envBarIsError = createMemo(() => {
-		return collections.isError;
-	});
-
 	// ----------------------------------
 	// Render
 	return (
@@ -52,7 +25,7 @@ export const NavigationSidebar: Component = () => {
 						title={T("home")}
 					/>
 					<Navigation.IconLink
-						href="/collection/page/multiple-builder" // TODO: update so collectionKey is dynamic - first collection?
+						href="/collections"
 						icon="collection"
 						title={T("collections")}
 					/>
@@ -107,14 +80,6 @@ export const NavigationSidebar: Component = () => {
 					/>
 				</ul>
 			</nav>
-			{/* Sidebar */}
-			<Navigation.CollectionsBar
-				collections={collections.data?.data || []}
-				state={{
-					isLoading: envBarIsLoading(),
-					isError: envBarIsError(),
-				}}
-			/>
 		</div>
 	);
 };

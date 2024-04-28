@@ -23,8 +23,8 @@ type FilterMap = Map<string, FilterValues>;
 type SortMap = Map<string, "asc" | "desc" | undefined>;
 
 const useSearchParams = (
-	schema: SearchParamsSchema,
-	options: SearchParamsConfig,
+	schema?: SearchParamsSchema,
+	options?: SearchParamsConfig,
 ) => {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -80,7 +80,7 @@ const useSearchParams = (
 				raw: string;
 			}[] = [];
 
-			if (options.singleSort) {
+			if (options?.singleSort) {
 				// first sort from params.sort
 				const key = Object.keys(params.sorts)[0];
 				const sort = params.sorts[key];
@@ -103,8 +103,8 @@ const useSearchParams = (
 							? sort.slice(1)
 							: sort;
 						if (
-							schema.sorts &&
-							schema.sorts[sortKey] !== undefined
+							schema?.sorts &&
+							schema?.sorts[sortKey] !== undefined
 						) {
 							if (sort.startsWith("-")) {
 								sorts.push({
@@ -187,12 +187,12 @@ const useSearchParams = (
 
 		// --------------------
 		// Set maps
-		if (schema.filters) {
+		if (schema?.filters) {
 			for (const [key] of Object.entries(schema.filters)) {
 				filters.set(key, undefined);
 			}
 		}
-		if (schema.sorts) {
+		if (schema?.sorts) {
 			for (const [key] of Object.entries(schema.sorts)) {
 				sorts.set(key, undefined);
 			}
@@ -206,7 +206,7 @@ const useSearchParams = (
 
 				// If schema filter value is boolean, convert to boolean
 				if (
-					schema.filters &&
+					schema?.filters &&
 					schema.filters[filterKey].type === "boolean"
 				) {
 					if (value === "1") filters.set(filterKey, true);
@@ -215,7 +215,7 @@ const useSearchParams = (
 				}
 				// if schema filter value type is array, convert to array
 				else if (
-					schema.filters &&
+					schema?.filters &&
 					schema.filters[filterKey].type === "array"
 				) {
 					const asArray = value.split(",");
@@ -226,12 +226,12 @@ const useSearchParams = (
 					});
 					filters.set(filterKey, asNumber);
 				} else if (
-					schema.filters &&
+					schema?.filters &&
 					schema.filters[filterKey].type === "text"
 				) {
 					filters.set(filterKey, value);
 				} else if (
-					schema.filters &&
+					schema?.filters &&
 					schema.filters[filterKey].type === "number"
 				) {
 					const singleValue = Number.isNaN(Number(value))
@@ -327,7 +327,7 @@ const useSearchParams = (
 		const searchParams = new URLSearchParams(location.search);
 
 		let hasFilters = false;
-		if (schema.filters) {
+		if (schema?.filters) {
 			for (const [key] of Object.entries(schema.filters)) {
 				if (searchParams.has(`filter[${key}]`)) {
 					hasFilters = true;
@@ -337,14 +337,14 @@ const useSearchParams = (
 		}
 
 		let hasSorts = false;
-		if (schema.sorts) {
+		if (schema?.sorts) {
 			if (searchParams.has("sort")) {
 				hasSorts = true;
 			}
 		}
 
 		let hasPagination = false;
-		if (schema.pagination) {
+		if (schema?.pagination) {
 			if (searchParams.has("page") || searchParams.has("perPage")) {
 				hasPagination = true;
 			}
@@ -355,14 +355,14 @@ const useSearchParams = (
 
 		// convert schema filters to object of values;
 		const filters: Record<string, FilterValues> = {};
-		if (schema.filters) {
+		if (schema?.filters) {
 			for (const [key, value] of Object.entries(schema.filters)) {
 				filters[`${key}`] = value.value;
 			}
 		}
 
 		// Find first sort with value
-		const sorts = Object.entries(schema.sorts || {}).reduce(
+		const sorts = Object.entries(schema?.sorts || {}).reduce(
 			(acc, [key, value]) => {
 				if (value) {
 					acc[key] = value;
@@ -375,7 +375,7 @@ const useSearchParams = (
 		setLocation({
 			filters: !hasFilters ? filters : undefined,
 			sorts: !hasSorts ? sorts : undefined,
-			pagination: !hasPagination ? schema.pagination : undefined,
+			pagination: !hasPagination ? schema?.pagination : undefined,
 		});
 	};
 

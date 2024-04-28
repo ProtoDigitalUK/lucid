@@ -331,5 +331,7 @@
 	"supported_features": "Supported Features",
 	"supported_features_setting_message": "These are the features that are currently turned on and available for use",
 	"media_enabled": "Media Enabled",
-	"email_enabled": "Emails Enabled"
+	"email_enabled": "Emails Enabled",
+	"collection_route_title": "Collections",
+	"collection_route_description": "View and manage your collections"
 }

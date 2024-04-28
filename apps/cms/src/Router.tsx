@@ -30,9 +30,10 @@ import SettingsListRoute from "@/routes/Settings/List";
 import EmailListRoute from "@/routes/Emails/List";
 
 // collections
-import CollectionsMultipleBuildereListRoute from "@/routes/Collections/MultipleBuilder/List";
-import CollectionsMultipleBuilderEditRoute from "@/routes/Collections/MultipleBuilder/Edit";
-import CollectionsSingleBuilderEditRoute from "./routes/Collections/SingleBuilder/Edit";
+import CollectionsListRoute from "@/routes/Collections/List";
+// import CollectionsMultipleBuildereListRoute from "@/routes/Collections/MultipleBuilder/List";
+// import CollectionsMultipleBuilderEditRoute from "@/routes/Collections/MultipleBuilder/Edit";
+// import CollectionsSingleBuilderEditRoute from "./routes/Collections/SingleBuilder/Edit";
 
 const AppRouter: Component = () => {
 	return (
@@ -44,6 +45,10 @@ const AppRouter: Component = () => {
 					<Route path="/test" element={<TestRoute />} />
 					{/* Collections */}
 					<Route
+						path="/collections"
+						element={<CollectionsListRoute />}
+					/>
+					{/* <Route
 						path="/collection/:collectionKey/multiple-builder"
 						element={<CollectionsMultipleBuildereListRoute />}
 					/>
@@ -54,7 +59,7 @@ const AppRouter: Component = () => {
 					<Route
 						path={"/collection/:collectionKey/single-builder"}
 						element={<CollectionsSingleBuilderEditRoute />}
-					/>
+					/> */}
 					{/* Media */}
 					<Route path="/media" element={<MediaListRoute />} />
 					{/* Users */}
