@@ -78,6 +78,7 @@ export default class CollectionDocumentsRepo {
 	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
+		collectionKey: string;
 		allowedFieldFilters: FieldFilters;
 		allowedFieldIncludes: Array<string>;
 		languageId: number; // TODO: will be used for field joins
@@ -98,6 +99,11 @@ export default class CollectionDocumentsRepo {
 				"headless_collection_documents.created_by",
 			)
 			.where("headless_collection_documents.is_deleted", "=", 0)
+			.where(
+				"headless_collection_documents.collection_key",
+				"=",
+				props.collectionKey,
+			)
 			.groupBy(["headless_collection_documents.id", "headless_users.id"]);
 
 		let pagesCountQuery = this.db
@@ -107,6 +113,11 @@ export default class CollectionDocumentsRepo {
 				"headless_users",
 				"headless_users.id",
 				"headless_collection_documents.created_by",
+			)
+			.where(
+				"headless_collection_documents.collection_key",
+				"=",
+				props.collectionKey,
 			)
 			.where("headless_collection_documents.is_deleted", "=", 0);
 

@@ -22,7 +22,7 @@ export const SelectAction: Component<SelectActionProps> = (props) => {
 				<p class="text-sm">
 					<span class="font-bold">
 						{props.data.selected > 1
-							? `${props.data.selected} ${T("items")}}`
+							? `${props.data.selected} ${T("items")}`
 							: `1 ${T("item")}`}
 					</span>{" "}
 					{T("selected")}

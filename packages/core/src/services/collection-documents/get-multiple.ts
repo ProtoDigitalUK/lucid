@@ -26,6 +26,7 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		await CollectionDocumentsRepo.selectMultipleFiltered({
 			query: data.query,
 			languageId: data.languageId,
+			collectionKey: data.collectionKey,
 			allowedFieldFilters: collectionInstance.data.config.fields.filter,
 			allowedFieldIncludes: collectionInstance.data.config.fields.include,
 			config: serviceConfig.config,

@@ -5,6 +5,7 @@ import api from "@/services/api";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import type useSearchParams from "@/hooks/useSearchParams";
 import Table from "@/components/Groups/Table";
+import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 
 interface DocumentsTableProps {
 	collection: CollectionResponse;
@@ -81,7 +82,23 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 			>
 				{({ include, isSelectable, selected, setSelected }) => (
 					<Index each={documents.data?.data || []}>
-						{(_, i) => <li>{i}</li>}
+						{(doc, i) => (
+							<DocumentRow
+								index={i}
+								document={doc()}
+								collection={props.collection}
+								include={include}
+								contentLanguage={contentLanguage()}
+								selected={selected[i]}
+								// rowTarget={rowTarget}
+								options={{
+									isSelectable,
+								}}
+								callbacks={{
+									setSelected: setSelected,
+								}}
+							/>
+						)}
 					</Index>
 				)}
 			</Table.Root>
