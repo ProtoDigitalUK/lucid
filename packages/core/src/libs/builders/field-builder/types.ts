@@ -39,6 +39,10 @@ export interface CustomField {
 			max?: number;
 		};
 	};
+	collection?: {
+		list: true;
+		filterable: true;
+	};
 }
 
 export type FieldTypes =

@@ -1,12 +1,10 @@
 import { type Component, Switch, Match } from "solid-js";
-// Types
-import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
-// Components
+import type { UserMeta } from "@protoheadless/core/types";
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";
 
 interface AuthorColProps {
-	author: MultipleBuilderResT["author"];
+	user: UserMeta;
 	options?: {
 		include?: boolean;
 	};
@@ -22,18 +20,18 @@ const AuthorCol: Component<AuthorColProps> = (props) => {
 			}}
 		>
 			<Switch>
-				<Match when={props.author}>
+				<Match when={props.user}>
 					<UserDisplay
 						user={{
-							username: props.author?.username || "",
-							firstName: props.author?.firstName,
-							lastName: props.author?.lastName,
+							username: props.user?.username || "",
+							firstName: props.user?.firstName,
+							lastName: props.user?.lastName,
 							thumbnail: undefined,
 						}}
 						mode="short"
 					/>
 				</Match>
-				<Match when={!props.author}>-</Match>
+				<Match when={!props.user}>-</Match>
 			</Switch>
 		</Table.Td>
 	);
