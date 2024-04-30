@@ -1,11 +1,5 @@
 import T from "@/translations";
-import {
-	type Component,
-	Index,
-	createMemo,
-	type Accessor,
-	createEffect,
-} from "solid-js";
+import { type Component, type Accessor, Index, createMemo } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 import type {
@@ -13,10 +7,12 @@ import type {
 	CustomField,
 } from "@protoheadless/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
+import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import Table from "@/components/Groups/Table";
 import DocumentRow from "@/components/Tables/Rows/DocumentRow";
+import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
 
 interface DocumentsTableProps {
 	collection: CollectionResponse;
@@ -28,6 +24,11 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	// ----------------------------------
 	// State & Hooks
 	const params = useParams();
+	const rowTarget = useRowTarget({
+		triggers: {
+			delete: false,
+		},
+	});
 
 	// ----------------------------------
 	// Memos
@@ -129,7 +130,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 								include={include}
 								contentLanguage={contentLanguage()}
 								selected={selected[i]}
-								// rowTarget={rowTarget}
+								rowTarget={rowTarget}
 								options={{
 									isSelectable,
 								}}
@@ -141,6 +142,16 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 					</Index>
 				)}
 			</Table.Root>
+			<DeleteDocument
+				id={rowTarget.getTargetId}
+				state={{
+					open: rowTarget.getTriggers().delete,
+					setOpen: (state: boolean) => {
+						rowTarget.setTrigger("delete", state);
+					},
+				}}
+				collection={props.collection}
+			/>
 		</>
 	);
 };

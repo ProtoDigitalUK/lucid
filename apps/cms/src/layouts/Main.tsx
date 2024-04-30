@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { type Component, Switch, Match } from "solid-js";
+import { type Component, Switch, Match, createMemo } from "solid-js";
 import { Outlet } from "@solidjs/router";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
@@ -10,11 +10,20 @@ const MainLayout: Component = () => {
 	const authenticatedUser = api.account.useGetAuthenticatedUser({
 		queryParams: {},
 	});
-	api.languages.useGetMultiple({
+	const languages = api.languages.useGetMultiple({
 		queryParams: {
 			queryString: "?sort=code",
 			perPage: -1,
 		},
+	});
+
+	// ----------------------------------
+	// Memos
+	const isLoading = createMemo(() => {
+		return authenticatedUser.isLoading || languages.isLoading;
+	});
+	const isSuccess = createMemo(() => {
+		return authenticatedUser.isSuccess && languages.isSuccess;
 	});
 
 	// ------------------------------------------------------
@@ -24,10 +33,10 @@ const MainLayout: Component = () => {
 			<Layout.NavigationSidebar />
 			<main class="overflow-y-auto">
 				<Switch>
-					<Match when={authenticatedUser.isSuccess}>
+					<Match when={isSuccess()}>
 						<Outlet />
 					</Match>
-					<Match when={authenticatedUser.isLoading}>
+					<Match when={isLoading()}>
 						<div class="fixed inset-0 z-50 bg-primary flex items-center justify-center">
 							<div class="absolute inset-0 z-20 flex-col flex items-center justify-center">
 								<h1 class="text-2xl font-bold text-primaryText mt-5">

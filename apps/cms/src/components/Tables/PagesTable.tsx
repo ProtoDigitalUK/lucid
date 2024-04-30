@@ -19,7 +19,7 @@ import type useSearchParams from "@/hooks/useSearchParams";
 // Components
 import Table from "@/components/Groups/Table";
 import PageRow from "@/components/Tables/Rows/PageRow";
-import DeletePage from "@/components/Modals/Pages/DeletePage";
+import DeletePage from "@/components/Modals/Documents/DeleteDocument";
 import CreateUpdatePagePanel from "../Panels/Pages/CreateUpdatePagePanel";
 
 interface PagesTableProps {

@@ -26,7 +26,7 @@ import type { CollectionResponse } from "@protoheadless/core/types";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";
-import DeletePage from "@/components/Modals/Pages/DeletePage";
+import DeletePage from "@/components/Modals/Documents/DeleteDocument";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 import NavigationGuard, {
 	navGuardHook,

@@ -19,10 +19,6 @@ export const CollectionCardLoading: Component = () => {
 };
 
 const CollectionCard: Component<CollectionCardProps> = (props) => {
-	// {props.collection.mode}
-	// {props.collection.key}
-	// {props.collection.documentId}
-
 	// ----------------------------------------
 	// Memos
 	const collectionLink = createMemo(() => {

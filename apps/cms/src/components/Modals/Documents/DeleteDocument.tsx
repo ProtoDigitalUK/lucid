@@ -1,13 +1,10 @@
 import T from "@/translations";
 import type { Component, Accessor } from "solid-js";
-// Components
 import Modal from "@/components/Groups/Modal";
-// Types
 import type { CollectionResponse } from "@protoheadless/core/types";
-// Services
 import api from "@/services/api";
 
-interface DeletePageProps {
+interface DeleteDocumentProps {
 	id: Accessor<number | undefined> | number | undefined;
 	collection: CollectionResponse;
 	state: {
@@ -19,10 +16,10 @@ interface DeletePageProps {
 	};
 }
 
-const DeletePage: Component<DeletePageProps> = (props) => {
+const DeleteDocument: Component<DeleteDocumentProps> = (props) => {
 	// ----------------------------------------
 	// Mutations
-	const deletePage = api.collections.multipleBuilder.useDeleteSingle({
+	const deleteDocument = api.collections.document.useDeleteSingle({
 		onSuccess: () => {
 			props.state.setOpen(false);
 			if (props.callbacks?.onSuccess) props.callbacks.onSuccess();
@@ -37,35 +34,36 @@ const DeletePage: Component<DeletePageProps> = (props) => {
 			state={{
 				open: props.state.open,
 				setOpen: props.state.setOpen,
-				isLoading: deletePage.action.isPending,
-				isError: deletePage.action.isError,
+				isLoading: deleteDocument.action.isPending,
+				isError: deleteDocument.action.isError,
 			}}
 			content={{
-				title: T("delete_page_modal_title", {
+				title: T("delete_document_modal_title", {
 					name: props.collection.singular,
 				}),
-				description: T("delete_page_modal_description", {
+				description: T("delete_document_modal_description", {
 					name: {
 						value: props.collection.singular,
 						toLowerCase: true,
 					},
 				}),
-				error: deletePage.errors()?.message,
+				error: deleteDocument.errors()?.message,
 			}}
 			onConfirm={() => {
 				const id =
 					typeof props.id === "function" ? props.id() : props.id;
 				if (!id) return console.error("No id provided");
-				deletePage.action.mutate({
+				deleteDocument.action.mutate({
 					id: id,
+					collectionKey: props.collection.key,
 				});
 			}}
 			onCancel={() => {
 				props.state.setOpen(false);
-				deletePage.reset();
+				deleteDocument.reset();
 			}}
 		/>
 	);
 };
 
-export default DeletePage;
+export default DeleteDocument;
