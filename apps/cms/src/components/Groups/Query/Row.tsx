@@ -22,6 +22,7 @@ export const QueryRow: Component<QueryRowProps> = (props) => {
 					<Query.Filter
 						filters={props.filters as FilterProps["filters"]}
 						searchParams={props.searchParams}
+						disabled={props.filters?.length === 0}
 					/>
 				</Show>
 				<Show when={props.sorts !== undefined}>

@@ -1,5 +1,11 @@
 import T from "@/translations";
-import { type Component, Index, createMemo } from "solid-js";
+import {
+	type Component,
+	Index,
+	createMemo,
+	type Accessor,
+	createEffect,
+} from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 import type {
@@ -14,6 +20,7 @@ import DocumentRow from "@/components/Tables/Rows/DocumentRow";
 
 interface DocumentsTableProps {
 	collection: CollectionResponse;
+	fieldIncludes: Accessor<CustomField[]>;
 	searchParams: ReturnType<typeof useSearchParams>;
 }
 
@@ -28,26 +35,8 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 	const contentLanguage = createMemo(
 		() => contentLanguageStore.get.contentLanguage,
 	);
-	const collectionFieldInclude = createMemo(() => {
-		const fieldsRes: CustomField[] = [];
-
-		const fieldRecursive = (fields: CustomField[]) => {
-			for (const field of fields) {
-				if (field.type === "repeater" && field.fields) {
-					fieldRecursive(field.fields);
-					return;
-				}
-				if (field.collection?.list !== true) return;
-
-				fieldsRes.push(field);
-			}
-		};
-		fieldRecursive(props.collection.fields);
-
-		return fieldsRes;
-	});
 	const tableHeadColumns = createMemo(() => {
-		return collectionFieldInclude().map((field) => {
+		return props.fieldIncludes().map((field) => {
 			switch (field.type) {
 				case "user":
 					return {
@@ -135,7 +124,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 							<DocumentRow
 								index={i}
 								document={doc()}
-								fieldInclude={collectionFieldInclude()}
+								fieldInclude={props.fieldIncludes()}
 								collection={props.collection}
 								include={include}
 								contentLanguage={contentLanguage()}

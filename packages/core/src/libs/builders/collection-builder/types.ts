@@ -34,9 +34,9 @@ export interface CollectionDateTimeConfig extends DateTimeConfig {
 }
 
 export interface CollectionUserConfig extends UserConfig {
-	collection?: FieldCollectionConfig;
+	collection?: Omit<FieldCollectionConfig, "filterable">;
 }
 
 export interface CollectionMediaConfig extends MediaConfig {
-	collection?: FieldCollectionConfig;
+	collection?: Omit<FieldCollectionConfig, "filterable">;
 }

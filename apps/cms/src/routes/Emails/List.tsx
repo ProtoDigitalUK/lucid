@@ -1,8 +1,6 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-// Hooks
 import useSearchParams from "@/hooks/useSearchParams";
-// Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import EmailsTable from "@/components/Tables/EmailsTable";

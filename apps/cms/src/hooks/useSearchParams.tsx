@@ -6,28 +6,33 @@ const DEFAULT_PER_PAGE = 10;
 
 type FilterValues = string | number | (string | number)[] | boolean | undefined;
 
+export type FilterSchema = Record<
+	string,
+	{ value: FilterValues; type: "text" | "number" | "boolean" | "array" }
+>;
+
 interface SearchParamsSchema {
-	filters?: Record<
-		string,
-		{ value: FilterValues; type: "text" | "number" | "boolean" | "array" }
-	>;
+	filters?: FilterSchema;
 	sorts?: Record<string, "asc" | "desc" | undefined>;
 	pagination?: { page?: number; perPage?: number };
 }
 
 interface SearchParamsConfig {
 	singleSort?: boolean;
+	manualSettled?: boolean;
 }
 
 type FilterMap = Map<string, FilterValues>;
 type SortMap = Map<string, "asc" | "desc" | undefined>;
 
 const useSearchParams = (
-	schema?: SearchParamsSchema,
+	schemaDefaults?: SearchParamsSchema,
 	options?: SearchParamsConfig,
 ) => {
 	const location = useLocation();
 	const navigate = useNavigate();
+
+	const [getSchema, setSchema] = createSignal(schemaDefaults);
 
 	const [getSettled, setSettled] = createSignal(false);
 	const [getSettledTimeout, setSettledTimeout] =
@@ -58,6 +63,7 @@ const useSearchParams = (
 		pagination?: SearchParamsSchema["pagination"];
 	}) => {
 		const searchParams = new URLSearchParams(location.search);
+		const schema = getSchema();
 
 		// Merge filters into search params
 		if (params.filters) {
@@ -184,6 +190,7 @@ const useSearchParams = (
 		// on location change - update filters and sorts based on search params
 		const filters = new Map<string, FilterValues>();
 		const sorts = new Map<string, "asc" | "desc" | undefined>();
+		const schema = getSchema();
 
 		// --------------------
 		// Set maps
@@ -325,6 +332,7 @@ const useSearchParams = (
 		setInitialParams(true);
 
 		const searchParams = new URLSearchParams(location.search);
+		const schema = getSchema();
 
 		let hasFilters = false;
 		if (schema?.filters) {
@@ -392,7 +400,7 @@ const useSearchParams = (
 
 	// sync filters, sort by location and build query string
 	createEffect(() => {
-		setSettled(false);
+		if (options?.manualSettled !== true) setSettled(false);
 		setDefaultParams();
 
 		const searchParams = new URLSearchParams(location.search);
@@ -406,6 +414,8 @@ const useSearchParams = (
 		const currentQueryString = getQueryString();
 
 		if (currentQueryString !== getPrevQueryString()) {
+			if (options?.manualSettled) return;
+
 			if (getSettledTimeout()) {
 				clearTimeout(getSettledTimeout());
 			}
@@ -435,6 +445,12 @@ const useSearchParams = (
 		getSettled,
 		getQueryString,
 		setParams: setLocation,
+		setFilterSchema: (filters: SearchParamsSchema["filters"]) => {
+			setSchema((prev) => ({ ...prev, filters }));
+			setTimeout(() => {
+				setSettled(true);
+			}, 1);
+		},
 
 		hasFiltersApplied,
 		resetFilters,

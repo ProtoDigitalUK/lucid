@@ -34,6 +34,7 @@ interface FilterItemProps {
 export interface FilterProps {
 	filters: Array<FilterItemProps["filter"]>;
 	searchParams: ReturnType<typeof useSearchParams>;
+	disabled?: boolean;
 }
 
 const FilterItem: Component<FilterItemProps> = (props) => {
@@ -55,8 +56,15 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 		const filters = props.searchParams.getFilters();
 		const filter = filters.get(props.filter.key);
 
+		console.log("filter", filter);
+
 		if (typeof filter === "string" || typeof filter === "number") {
 			setValue(filter.toString());
+			if (filter === "1") {
+				setBoolValue(true);
+			} else if (filter === "0") {
+				setBoolValue(false);
+			}
 		} else if (Array.isArray(filter)) {
 			setMultiValue(
 				filter.map((v) => {
@@ -250,7 +258,10 @@ export const Filter: Component<FilterProps> = (props) => {
 	// Render
 	return (
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-base font-display">
+			<DropdownMenu.Trigger
+				class="dropdown-trigger text-title fill-title flex items-center text-base font-display disabled:cursor-not-allowed disabled:text-gray-400 disabled:fill-gray-400"
+				disabled={props.disabled}
+			>
 				<DropdownMenu.Icon>
 					<FaSolidFilter />
 				</DropdownMenu.Icon>

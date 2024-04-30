@@ -62,11 +62,17 @@ const PageCollection = new CollectionBuilder("page", {
 			filterable: true,
 		},
 	})
+	.addCheckbox({
+		key: "page_featured",
+		collection: {
+			list: true,
+			filterable: true,
+		},
+	})
 	.addUser({
 		key: "author",
 		collection: {
 			list: true,
-			filterable: true,
 		},
 	})
 	.addRepeater({

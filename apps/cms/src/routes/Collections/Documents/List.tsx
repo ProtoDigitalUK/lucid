@@ -1,17 +1,28 @@
 import T from "@/translations";
 import { useParams } from "@solidjs/router";
-import { type Component, createMemo } from "solid-js";
-import type { CollectionResponse } from "@protoheadless/core/types";
+import {
+	type Component,
+	createMemo,
+	createEffect,
+	createSignal,
+} from "solid-js";
+import type {
+	CollectionResponse,
+	CustomField,
+} from "@protoheadless/core/types";
 import api from "@/services/api";
-import useSearchParams from "@/hooks/useSearchParams";
+import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
 import Layout from "@/components/Groups/Layout";
 import DocumentsTable from "@/components/Tables/DocumentsTable";
+import Query from "@/components/Groups/Query";
 
 const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
 	const params = useParams();
-	const searchParams = useSearchParams();
+	const searchParams = useSearchParams(undefined, {
+		manualSettled: true,
+	});
 
 	// ----------------------------------
 	// Memos
@@ -26,6 +37,67 @@ const CollectionsDocumentsListRoute: Component = () => {
 			},
 		},
 		enabled: () => !!collectionKey(),
+	});
+
+	// ----------------------------------
+	// Memos
+	const collectionFieldInclude = createMemo(() => {
+		const fieldsRes: CustomField[] = [];
+
+		const fieldRecursive = (fields?: CustomField[]) => {
+			if (!fields) return;
+			for (const field of fields) {
+				if (field.type === "repeater" && field.fields) {
+					fieldRecursive(field.fields);
+					return;
+				}
+				if (field.collection?.list !== true) return;
+
+				fieldsRes.push(field);
+			}
+		};
+		fieldRecursive(collection.data?.data.fields);
+
+		return fieldsRes;
+	});
+	const collectionFieldFilter = createMemo(() => {
+		const fieldsRes: CustomField[] = [];
+
+		const fieldRecursive = (fields?: CustomField[]) => {
+			if (!fields) return;
+			for (const field of fields) {
+				if (field.type === "repeater" && field.fields) {
+					fieldRecursive(field.fields);
+					return;
+				}
+				if (field.collection?.filterable !== true) return;
+
+				fieldsRes.push(field);
+			}
+		};
+		fieldRecursive(collection.data?.data.fields);
+
+		return fieldsRes;
+	});
+
+	// ----------------------------------
+	// Effects
+	createEffect(() => {
+		if (collection.isSuccess) {
+			const filterConfig: FilterSchema = {};
+			for (const field of collectionFieldInclude()) {
+				switch (field.type) {
+					default: {
+						filterConfig[field.key] = {
+							type: "text",
+							value: "",
+						};
+						break;
+					}
+				}
+			}
+			searchParams.setFilterSchema(filterConfig);
+		}
 	});
 
 	// ----------------------------------
@@ -55,10 +127,46 @@ const CollectionsDocumentsListRoute: Component = () => {
 					label: collection.data?.data.title || T("documents"),
 				},
 			]}
+			headingChildren={
+				<Query.Row
+					searchParams={searchParams}
+					filters={collectionFieldFilter().map((field) => {
+						switch (field.type) {
+							case "checkbox": {
+								return {
+									label: field.title || field.key,
+									key: field.key,
+									type: "boolean",
+								};
+							}
+							case "select": {
+								return {
+									label: field.title || field.key,
+									key: field.key,
+									type: "select",
+									options: field.options?.map((option) => ({
+										value: option.value,
+										label: option.label,
+									})),
+								};
+							}
+							default: {
+								return {
+									label: field.title || field.key,
+									key: field.key,
+									type: "text",
+								};
+							}
+						}
+					})}
+					perPage={[]}
+				/>
+			}
 		>
 			<DocumentsTable
 				searchParams={searchParams}
 				collection={collection.data?.data as CollectionResponse}
+				fieldIncludes={collectionFieldInclude}
 			/>
 		</Layout.PageLayout>
 	);
