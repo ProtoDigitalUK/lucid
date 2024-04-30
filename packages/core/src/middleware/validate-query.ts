@@ -71,7 +71,7 @@ const buildPage = (query: unknown) => {
 
 const buildPerPage = (query: unknown) => {
 	const queryObject = query as Record<string, string>;
-	const perPage = queryObject.per_page;
+	const perPage = queryObject.perPage;
 	if (!perPage) return constants.query.perPage;
 
 	return Number.parseInt(perPage);
