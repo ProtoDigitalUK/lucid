@@ -60,11 +60,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 
 		return CollectionsFormatter.formatSingle({
 			collection: collection,
-			include: {
-				bricks: false,
-				fields: false,
-				document_id: true,
-			},
+			include: data.include,
 			documents: [
 				{
 					id: document?.id,

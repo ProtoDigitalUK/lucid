@@ -10,6 +10,9 @@ const SettingsCollection = new CollectionBuilder("settings", {
 	bricks: {
 		fixed: [DefaultMetaBrick],
 	},
+}).addText({
+	key: "site_title",
+	title: "Site Title",
 });
 
 export default SettingsCollection;
