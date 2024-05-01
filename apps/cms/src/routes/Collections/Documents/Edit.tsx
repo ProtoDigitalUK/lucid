@@ -1,6 +1,7 @@
 import T from "@/translations";
-import { useParams } from "@solidjs/router";
+import { useParams, useNavigate } from "@solidjs/router";
 import { type Component, createMemo, createSignal, Show } from "solid-js";
+import type { CollectionResponse } from "@protoheadless/core/types";
 import api from "@/services/api";
 import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
@@ -8,6 +9,7 @@ import Button from "@/components/Partials/Button";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 import DetailsList from "@/components/Partials/DetailsList";
 import DateText from "@/components/Partials/DateText";
+import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -19,6 +21,7 @@ const CollectionsDocumentsEditRoute: Component<
 	// ----------------------------------
 	// Hooks & State
 	const params = useParams();
+	const navigate = useNavigate();
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
 	// ----------------------------------
@@ -172,6 +175,20 @@ const CollectionsDocumentsEditRoute: Component<
 					/>
 				</div>
 			</aside>
+			{/* Modals */}
+			<DeleteDocument
+				id={document.data?.data.id}
+				state={{
+					open: getDeleteOpen(),
+					setOpen: setDeleteOpen,
+				}}
+				collection={collection.data?.data as CollectionResponse}
+				callbacks={{
+					onSuccess: () => {
+						navigate(`/collections/${collection.data?.data.key}`);
+					},
+				}}
+			/>
 		</>
 	);
 };
