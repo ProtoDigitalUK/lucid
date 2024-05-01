@@ -32,6 +32,7 @@
 	"add_brick": "Add Brick",
 	"create": "Create",
 	"error_title": "Something went wrong",
+	"collection": "Collection",
 	"error_message": "An error has occurred. Please try again later.",
 	"no_results": "No results found",
 	"no_results_message": "Try adjusting your filters to find what you're looking for.",
@@ -89,6 +90,8 @@
 	"items": "items",
 	"remove": "Remove",
 	"remove_all": "Remove All",
+	"created_by": "Created By",
+	"collection_key": "Collection Key",
 	"name": "Name",
 	"file_extension": "File Extension",
 	"username_or_email": "Username or Email",
@@ -335,5 +338,6 @@
 	"media_enabled": "Media Enabled",
 	"email_enabled": "Emails Enabled",
 	"collection_route_title": "Collections",
-	"collection_route_description": "View and manage your collections"
+	"collection_route_description": "View and manage your collections",
+	"document_route_title": "{{mode}} {{name}}"
 }

@@ -28,7 +28,7 @@ const Button: Component<ButtonProps> = (props) => {
 	// Memos
 	const classes = createMemo(() => {
 		return classnames(
-			"flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80 font-medium",
+			"flex items-center justify-center min-w-max text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80 font-medium",
 			{
 				"bg-primary hover:bg-primaryH text-primaryText hover:text-white fill-primaryText hover:fill-white ring-secondary":
 					props.theme === "primary",
@@ -51,7 +51,7 @@ const Button: Component<ButtonProps> = (props) => {
 				"px-5 py-2.5 h-10 text-base": props.size === "small",
 				"px-5 py-3.5 text-base": props.size === "medium",
 				"px-10 py-4 text-base": props.size === "large",
-				"w-10 h-10 p-0 min-w-[40px]": props.size === "icon",
+				"w-10 h-10 p-0 !min-w-[40px]": props.size === "icon",
 				"p-1": props.size === "auto",
 				"opacity-80 cursor-not-allowed": props.permission === false,
 			},

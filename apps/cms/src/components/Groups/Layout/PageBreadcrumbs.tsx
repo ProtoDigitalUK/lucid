@@ -10,6 +10,7 @@ export interface PageBreadcrumbsProps {
 	}[];
 	options?: {
 		noBorder?: boolean;
+		background?: "white";
 	};
 }
 
@@ -21,6 +22,7 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 			<nav
 				class={classNames("px-15 md:px-30 py-15", {
 					"border-b border-border": props.options?.noBorder !== true,
+					"bg-white": props.options?.background === "white",
 				})}
 			>
 				<ul class="flex items-center">

@@ -1,26 +1,15 @@
-import { type Component, createMemo } from "solid-js";
-import dateHelpers from "@/utils/date-helpers";
+import type { Component } from "solid-js";
 import Table from "@/components/Groups/Table";
+import DateText from "@/components/Partials/DateText";
 
-interface TextColProps {
+interface DateColProps {
 	date?: string | null;
 	options?: {
 		include?: boolean;
 	};
 }
 
-const DateCol: Component<TextColProps> = (props) => {
-	// ----------------------------------
-	// Memos
-	const date = createMemo(() => {
-		if (!props.date) return null;
-		return dateHelpers.formatDate(props.date);
-	});
-	const fullDate = createMemo(() => {
-		if (!props.date) return null;
-		return dateHelpers.formatFullDate(props.date);
-	});
-
+const DateCol: Component<DateColProps> = (props) => {
 	// ----------------------------------
 	// Render
 	return (
@@ -29,9 +18,7 @@ const DateCol: Component<TextColProps> = (props) => {
 				include: props?.options?.include,
 			}}
 		>
-			<span class="whitespace-nowrap" title={fullDate() || ""}>
-				{date() || "-"}
-			</span>
+			<DateText date={props.date} />
 		</Table.Td>
 	);
 };

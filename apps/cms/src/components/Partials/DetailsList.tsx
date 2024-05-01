@@ -1,12 +1,19 @@
-import { type Component, For, Match, Show, Switch } from "solid-js";
-import Pill from "@/components/Partials/Pill";
+import {
+	type Component,
+	For,
+	Match,
+	Show,
+	Switch,
+	type JSXElement,
+} from "solid-js";
 import classNames from "classnames";
+import Pill from "@/components/Partials/Pill";
 
 interface DetailsListProps {
 	type: "text" | "pill";
 	items: Array<{
 		label: string;
-		value?: string | number;
+		value?: string | number | null | JSXElement;
 		show?: boolean;
 	}>;
 }
