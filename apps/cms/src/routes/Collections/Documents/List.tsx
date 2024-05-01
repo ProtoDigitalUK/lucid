@@ -1,11 +1,6 @@
 import T from "@/translations";
-import { useParams } from "@solidjs/router";
-import {
-	type Component,
-	createMemo,
-	createEffect,
-	createSignal,
-} from "solid-js";
+import { useParams, useNavigate } from "@solidjs/router";
+import { type Component, createMemo, createEffect } from "solid-js";
 import type {
 	CollectionResponse,
 	CustomField,
@@ -20,6 +15,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 	// ----------------------------------
 	// Hooks & State
 	const params = useParams();
+	const navigate = useNavigate();
 	const searchParams = useSearchParams(undefined, {
 		manualSettled: true,
 	});
@@ -82,6 +78,14 @@ const CollectionsDocumentsListRoute: Component = () => {
 
 	// ----------------------------------
 	// Effects
+	createEffect(() => {
+		if (collection.isSuccess) {
+			if (collection.data.data.mode === "single") {
+				navigate("/collections");
+			}
+		}
+	});
+
 	createEffect(() => {
 		if (collection.isSuccess) {
 			const filterConfig: FilterSchema = {};

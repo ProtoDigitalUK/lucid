@@ -7,6 +7,7 @@ export interface PageBreadcrumbsProps {
 	breadcrumbs?: {
 		link: string;
 		label: string;
+		include?: boolean;
 	}[];
 	options?: {
 		noBorder?: boolean;
@@ -28,22 +29,24 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 				<ul class="flex items-center">
 					<For each={props.breadcrumbs}>
 						{(breadcrumb, i) => (
-							<li class="flex items-center">
-								<Link
-									href={breadcrumb.link}
-									class="flex items-center text-primary hover:text-primaryDark text-sm"
-								>
-									{breadcrumb.label}
-								</Link>
-								<Show
-									when={
-										props.breadcrumbs &&
-										i() < props.breadcrumbs.length - 1
-									}
-								>
-									<FaSolidCaretRight class="mx-2.5 text-sm" />
-								</Show>
-							</li>
+							<Show when={breadcrumb.include !== false}>
+								<li class="flex items-center">
+									<Link
+										href={breadcrumb.link}
+										class="flex items-center text-primary hover:text-primaryDark text-sm"
+									>
+										{breadcrumb.label}
+									</Link>
+									<Show
+										when={
+											props.breadcrumbs &&
+											i() < props.breadcrumbs.length - 1
+										}
+									>
+										<FaSolidCaretRight class="mx-2.5 text-sm" />
+									</Show>
+								</li>
+							</Show>
 						)}
 					</For>
 				</ul>

@@ -68,6 +68,7 @@ const CollectionsDocumentsEditRoute: Component<
 					{
 						link: `/collections/${collectionKey()}`,
 						label: collection.data?.data.title || "",
+						include: collection.data?.data.mode === "multiple",
 					},
 					{
 						link: `/collections/${collectionKey()}/${
@@ -88,17 +89,16 @@ const CollectionsDocumentsEditRoute: Component<
 					<div class="p-15 md:p-30 flex items-center justify-between flex-wrap-reverse md:flex-nowrap gap-15">
 						<h1 class="w-full">
 							{T("document_route_title", {
-								mode:
-									props.mode === "create"
-										? T("create")
-										: T("edit"),
+								mode: T("edit"),
 								name:
 									collection.data?.data.singular ??
 									T("document"),
 							})}
-							<span class="text-unfocused ml-2.5">
-								#{document.data?.data.id}
-							</span>
+							<Show when={props.mode === "edit"}>
+								<span class="text-unfocused ml-2.5">
+									#{document.data?.data.id}
+								</span>
+							</Show>
 						</h1>
 						<div class="w-full md:w-auto flex items-center gap-2.5">
 							<Show when={collection.data?.data.translations}>
@@ -118,15 +118,17 @@ const CollectionsDocumentsEditRoute: Component<
 										collection.data?.data.singular || "",
 								})}
 							</Button>
-							<Button
-								theme="danger"
-								size="icon"
-								type="button"
-								onClick={() => setDeleteOpen(true)}
-							>
-								<span class="sr-only">{T("delete")}</span>
-								<FaSolidTrash />
-							</Button>
+							<Show when={props.mode === "edit"}>
+								<Button
+									theme="danger"
+									size="icon"
+									type="button"
+									onClick={() => setDeleteOpen(true)}
+								>
+									<span class="sr-only">{T("delete")}</span>
+									<FaSolidTrash />
+								</Button>
+							</Show>
 						</div>
 					</div>
 				</header>
@@ -146,6 +148,7 @@ const CollectionsDocumentsEditRoute: Component<
 							{
 								label: T("created_by"),
 								value: document.data?.data.createdBy,
+								show: props.mode === "edit",
 							},
 							{
 								label: T("created_at"),
@@ -154,6 +157,7 @@ const CollectionsDocumentsEditRoute: Component<
 										date={document.data?.data.createdAt}
 									/>
 								),
+								show: props.mode === "edit",
 							},
 							{
 								label: T("updated_at"),
@@ -162,6 +166,7 @@ const CollectionsDocumentsEditRoute: Component<
 										date={document.data?.data.updatedAt}
 									/>
 								),
+								show: props.mode === "edit",
 							},
 						]}
 					/>
