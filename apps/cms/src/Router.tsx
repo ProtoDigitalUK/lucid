@@ -31,6 +31,7 @@ import EmailListRoute from "@/routes/Emails/List";
 // collections
 import CollectionsListRoute from "@/routes/Collections/List";
 import CollectionsDocumentsListRoute from "./routes/Collections/Documents/List";
+import CollectionsDocumentsEditRoute from "./routes/Collections/Documents/Edit";
 // import CollectionsMultipleBuildereListRoute from "@/routes/Collections/MultipleBuilder/List";
 // import CollectionsMultipleBuilderEditRoute from "@/routes/Collections/MultipleBuilder/Edit";
 // import CollectionsSingleBuilderEditRoute from "./routes/Collections/SingleBuilder/Edit";
@@ -52,18 +53,16 @@ const AppRouter: Component = () => {
 						path="/collections/:collectionKey"
 						element={<CollectionsDocumentsListRoute />}
 					/>
-					{/* <Route
-						path="/collection/:collectionKey/multiple-builder"
-						element={<CollectionsMultipleBuildereListRoute />}
+					<Route
+						path="/collections/:collectionKey/create"
+						element={
+							<CollectionsDocumentsEditRoute mode="create" />
+						}
 					/>
 					<Route
-						path="/collection/:collectionKey/multiple-builder/:id"
-						element={<CollectionsMultipleBuilderEditRoute />}
+						path="/collections/:collectionKey/:documentId"
+						element={<CollectionsDocumentsEditRoute mode="edit" />}
 					/>
-					<Route
-						path={"/collection/:collectionKey/single-builder"}
-						element={<CollectionsSingleBuilderEditRoute />}
-					/> */}
 					{/* Media */}
 					<Route path="/media" element={<MediaListRoute />} />
 					{/* Users */}
