@@ -1,19 +1,44 @@
-import { type Component, For, Match, Switch, Show, createMemo } from "solid-js";
+import {
+	type Component,
+	For,
+	Match,
+	Switch,
+	Show,
+	createMemo,
+	createSignal,
+	type Accessor,
+	type Setter,
+} from "solid-js";
 import classNames from "classnames";
 import type { CustomField, FieldResponse } from "@protoheadless/core/types";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, {} from "@/store/builderStore";
-// import CustomFields from "@/components/Groups/CustomFields";
+import CustomFields from "@/components/Groups/Builder/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
 
 interface DynamicFieldProps {
 	state: {
+		brickIndex: number;
 		field: CustomField;
 		activeTab?: string;
+		groupIndex?: number;
+		getFieldPath?: Accessor<string[]>;
+		setFieldPath?: Setter<string[]>;
+		getGroupIndexes?: Accessor<number[]>;
+		setGroupIndexes?: Setter<number[]>;
 	};
 }
 
 export const DynamicField: Component<DynamicFieldProps> = (props) => {
+	// -------------------------------
+	// State
+	const [getFieldPath, setFieldPath] = createSignal<string[]>(
+		props.state.getFieldPath?.() || [],
+	);
+	const [getGroupIndexes, setGroupIndexes] = createSignal<number[]>(
+		props.state.getGroupIndexes?.() || [],
+	);
+
 	// -------------------------------
 	// Memos
 	const contentLanguage = createMemo(
@@ -21,6 +46,12 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	);
 
 	const fieldError = createMemo(() => {});
+
+	setFieldPath((prev) => [...prev, props.state.field.key]);
+	setGroupIndexes((prev) => {
+		if (props.state.groupIndex === undefined) return prev;
+		return [...prev, props.state.groupIndex];
+	});
 
 	// -------------------------------
 	// Render
@@ -34,9 +65,65 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 					"pl-[38px]": props.state.field.type !== "tab",
 				})}
 			>
-				<Switch fallback={props.state.field.type}>
+				<For each={getGroupIndexes()}>
+					{(groupIndex) => <span>{groupIndex}</span>}
+				</For>
+				<Switch
+					fallback={
+						<>
+							({props.state.field.key} -{" "}
+							{props.state.field.repeaterKey})
+						</>
+					}
+				>
 					<Match when={props.state.field.type === "text"}>
-						{props.state.field.type}
+						<CustomFields.InputField
+							type="text"
+							state={{
+								brickIndex: props.state.brickIndex,
+								field: props.state.field,
+								groupIndex: props.state.groupIndex,
+								getFieldPath: getFieldPath,
+								getGroupIndexes: getGroupIndexes,
+							}}
+						/>
+					</Match>
+					<Match when={props.state.field.type === "number"}>
+						<CustomFields.InputField
+							type="number"
+							state={{
+								brickIndex: props.state.brickIndex,
+								field: props.state.field,
+								groupIndex: props.state.groupIndex,
+								getFieldPath: getFieldPath,
+								getGroupIndexes: getGroupIndexes,
+							}}
+						/>
+					</Match>
+					<Match when={props.state.field.type === "datetime"}>
+						<CustomFields.InputField
+							type="datetime-local"
+							state={{
+								brickIndex: props.state.brickIndex,
+								field: props.state.field,
+								groupIndex: props.state.groupIndex,
+								getFieldPath: getFieldPath,
+								getGroupIndexes: getGroupIndexes,
+							}}
+						/>
+					</Match>
+					<Match when={props.state.field.type === "repeater"}>
+						<CustomFields.RepeaterField
+							state={{
+								brickIndex: props.state.brickIndex,
+								field: props.state.field,
+								groupIndex: props.state.groupIndex,
+								getFieldPath,
+								setFieldPath,
+								getGroupIndexes,
+								setGroupIndexes,
+							}}
+						/>
 					</Match>
 				</Switch>
 			</div>

@@ -46,6 +46,7 @@ export default class CollectionDocumentBricksFormatter {
 				}) as BrickBuilder;
 
 				return {
+					id: brick.id,
 					key: brick.brick_key as string,
 					order: brick.brick_order as number,
 					type: brick.brick_type as "builder" | "fixed",
@@ -83,6 +84,9 @@ export default class CollectionDocumentBricksFormatter {
 		type: "object",
 		additionalProperties: true,
 		properties: {
+			id: {
+				type: "number",
+			},
 			key: {
 				type: "string",
 			},

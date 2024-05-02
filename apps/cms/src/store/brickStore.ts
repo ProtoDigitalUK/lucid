@@ -1,14 +1,14 @@
 import { createStore, produce } from "solid-js/store";
+import shortUUID from "short-uuid";
 import type {
 	FieldErrors,
 	FieldResponse,
-	CollectionBrickConfigT,
-	CustomField,
 	CollectionDocumentResponse,
 	CollectionResponse,
 } from "@protoheadless/core/types";
 
 export interface BrickData {
+	id: string | number;
 	key: string;
 	order: number;
 	type: "builder" | "fixed" | "collection-fields";
@@ -40,6 +40,7 @@ const [get, set] = createStore<BrickStoreT>({
 			produce((draft) => {
 				// Set with data from document respponse
 				draft.push({
+					id: "collection-sudo-brick",
 					key: "collection-sudo-brick",
 					order: -1,
 					type: "collection-fields",
@@ -58,6 +59,7 @@ const [get, set] = createStore<BrickStoreT>({
 					if (brickIndex !== -1) continue;
 
 					draft.push({
+						id: `ref-${shortUUID.generate()}}`,
 						key: brick.key,
 						fields: [],
 						type: "fixed",

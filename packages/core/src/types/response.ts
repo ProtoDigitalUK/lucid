@@ -160,6 +160,7 @@ export interface CollectionResponse {
 }
 
 export interface BrickResponse {
+	id: number;
 	key: string;
 	order: number;
 	type: "builder" | "fixed";

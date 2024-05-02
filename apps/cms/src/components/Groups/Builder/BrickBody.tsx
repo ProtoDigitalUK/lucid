@@ -1,6 +1,6 @@
-import { type Component, For } from "solid-js";
+import { type Component, For, createMemo } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
-import type { BrickData } from "@/store/brickStore";
+import brickStore, { type BrickData } from "@/store/brickStore";
 import CustomFields from "./CustomFields";
 
 interface BrickProps {
@@ -12,12 +12,21 @@ interface BrickProps {
 
 export const BrickBody: Component<BrickProps> = (props) => {
 	// ----------------------------------
+	// Memos
+	const brickIndex = createMemo(() => {
+		return brickStore.get.bricks.findIndex(
+			(brick) => brick.id === props.state.brick.id,
+		);
+	});
+
+	// ----------------------------------
 	// Render
 	return (
 		<For each={props.state.configFields}>
 			{(field) => (
 				<CustomFields.DynamicField
 					state={{
+						brickIndex: brickIndex(),
 						field: field,
 					}}
 				/>
