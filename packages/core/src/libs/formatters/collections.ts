@@ -55,7 +55,7 @@ export default class CollectionsFormatter {
 				? props.collection.builderBricks ?? []
 				: [],
 			fields: props.include?.fields
-				? props.collection.flatFields ?? []
+				? props.collection.fieldTree ?? []
 				: [],
 		};
 	};
