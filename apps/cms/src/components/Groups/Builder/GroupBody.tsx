@@ -1,8 +1,9 @@
 import T from "@/translations/index";
 import classNames from "classnames";
 import { type Component, type Accessor, type Setter, For } from "solid-js";
-import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 import type { CustomField } from "@protoheadless/core/types";
+import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
+import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 
 interface GroupBodyProps {
@@ -20,7 +21,14 @@ interface GroupBodyProps {
 export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
 	// Functions
-	const removeGroup = (groupIndex: number) => {};
+	const removeGroup = (groupIndex: number) => {
+		brickStore.get.removeRepeaterGroup({
+			brickIndex: props.state.brickIndex,
+			fieldPath: props.state.getFieldPath(),
+			groupIndexes: props.state.getGroupIndexes(),
+			groupIndex: groupIndex,
+		});
+	};
 
 	// -------------------------------
 	// Render

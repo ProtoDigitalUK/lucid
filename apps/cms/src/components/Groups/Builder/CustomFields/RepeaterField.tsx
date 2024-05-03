@@ -11,6 +11,8 @@ import {
 	Match,
 } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
+import contentLanguageStore from "@/store/contentLanguageStore";
+import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
@@ -38,12 +40,27 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 		}),
 	);
 	const canAddGroup = createMemo(() => {
-		return true; // TODO: Implement this
+		if (!props.state.field.validation?.maxGroups) return true;
+		const groupCount = fieldData()?.groups?.length ?? 0;
+		return groupCount < props.state.field.validation?.maxGroups;
 	});
+	const contentLanguage = createMemo(
+		() => contentLanguageStore.get.contentLanguage,
+	);
 
 	// -------------------------------
 	// Functions
-	const addGroup = () => {};
+	const addGroup = () => {
+		if (!props.state.field.fields) return;
+
+		brickStore.get.addRepeaterGroup({
+			brickIndex: props.state.brickIndex,
+			fieldPath: props.state.getFieldPath(),
+			groupIndexes: props.state.getGroupIndexes(),
+			fields: props.state.field.fields,
+			contentLanguage: contentLanguage(),
+		});
+	};
 
 	// -------------------------------
 	// Render
@@ -105,7 +122,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 							},
 						)}
 					>
-						{fieldData()?.groups?.length}
+						{fieldData()?.groups?.length ?? 0}
 						{"/"}
 						{props.state.field.validation?.maxGroups}
 					</span>

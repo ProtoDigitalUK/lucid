@@ -8,6 +8,7 @@ import type {
 	CollectionResponse,
 	FieldResponseValue,
 	FieldResponseMeta,
+	CustomField,
 } from "@protoheadless/core/types";
 
 export interface BrickData {
@@ -33,6 +34,19 @@ type BrickStoreT = {
 		groupIndexes: number[];
 		value: FieldResponseValue;
 		meta?: FieldResponseMeta;
+	}) => void;
+	addRepeaterGroup: (props: {
+		brickIndex: number;
+		fieldPath: string[];
+		groupIndexes: number[];
+		fields: CustomField[];
+		contentLanguage?: number;
+	}) => void;
+	removeRepeaterGroup: (props: {
+		brickIndex: number;
+		fieldPath: string[];
+		groupIndexes: number[];
+		groupIndex: number;
 	}) => void;
 };
 
@@ -97,6 +111,54 @@ const [get, set] = createStore<BrickStoreT>({
 
 				field.value = params.value;
 				field.meta = params.meta || undefined;
+			}),
+		);
+	},
+	// Groups
+	addRepeaterGroup(params) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const field = brickHelpers.getBrickFieldRecursive({
+					fields: draft[params.brickIndex].fields,
+					fieldPath: params.fieldPath,
+					groupIndexes: params.groupIndexes,
+				});
+
+				if (!field) return;
+				if (field.type !== "repeater") return;
+				if (field.groups === undefined) field.groups = [];
+
+				const newGroup: FieldResponse[] = [];
+
+				for (const field of params.fields) {
+					newGroup.push({
+						key: field.key,
+						type: field.type,
+						value: field.default,
+						languageId: params.contentLanguage,
+					});
+				}
+
+				field.groups.push(newGroup);
+			}),
+		);
+	},
+	removeRepeaterGroup(params) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const field = brickHelpers.getBrickFieldRecursive({
+					fields: draft[params.brickIndex].fields,
+					fieldPath: params.fieldPath,
+					groupIndexes: params.groupIndexes,
+				});
+
+				if (!field) return;
+				if (field.type !== "repeater") return;
+				if (field.groups === undefined) return;
+
+				field.groups.splice(params.groupIndex, 1);
 			}),
 		);
 	},
