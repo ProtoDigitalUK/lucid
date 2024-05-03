@@ -2,13 +2,11 @@ import T from "@/translations";
 import { useParams, useNavigate } from "@solidjs/router";
 import {
 	type Component,
-	type Accessor,
 	createMemo,
 	createSignal,
 	Show,
 	Switch,
 	Match,
-	For,
 	createEffect,
 	onCleanup,
 } from "solid-js";
