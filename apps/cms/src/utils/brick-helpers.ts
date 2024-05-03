@@ -99,6 +99,7 @@ const brickHelpers = {
 	getField,
 	getNextBrickOrder,
 	getBrickField,
+	getBrickFieldRecursive,
 };
 
 export default brickHelpers;

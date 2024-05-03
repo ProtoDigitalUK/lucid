@@ -5,6 +5,7 @@ import {
 	createEffect,
 } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
+import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
@@ -54,18 +55,14 @@ export const InputField: Component<InputFieldProps> = (props) => {
 		<Form.Input
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupIndex}`}
 			value={getValue()}
-			onChange={
-				(value) => {
-					console.log(value);
-				}
-				// builderStore.get.updateFieldValue({
-				// 	brickIndex: props.state.brickIndex,
-				// 	key: props.state.key,
-				// 	groupId: props.state.groupId,
-				// 	contentLanguage: props.state.contentLanguage,
-				// 	value: props.type === "number" ? Number(value) : value,
-				// })
-			}
+			onChange={(value) => {
+				brickStore.get.setFieldValue({
+					brickIndex: props.state.brickIndex,
+					fieldPath: props.state.getFieldPath(),
+					groupIndexes: props.state.getGroupIndexes(),
+					value: props.type === "number" ? Number(value) : value,
+				});
+			}}
 			name={props.state.field.key}
 			type={props.type}
 			copy={{

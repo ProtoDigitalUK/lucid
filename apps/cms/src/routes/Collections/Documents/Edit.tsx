@@ -39,6 +39,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const params = useParams();
 	const navigate = useNavigate();
 	const navGuard = navGuardHook();
+	const [getSetDataLock, setSetDataLock] = createSignal(false);
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
 	// ----------------------------------
@@ -69,6 +70,7 @@ const CollectionsDocumentsEditRoute: Component<
 			},
 		},
 		enabled: () => !!collectionKey() && !!documentId(),
+		refetchOnWindowFocus: false,
 	});
 
 	// ----------------------------------
@@ -85,12 +87,16 @@ const CollectionsDocumentsEditRoute: Component<
 
 	// ---------------------------------
 	// Functions
-	const upsertDocument = async () => {};
+	const upsertDocument = async () => {
+		console.log(brickStore.get.bricks);
+		setSetDataLock(false);
+	};
 
 	// ---------------------------------
 	// Effects
 	createEffect(() => {
-		if (isSuccess()) {
+		if (isSuccess() && props.mode === "edit" && !getSetDataLock()) {
+			setSetDataLock(true);
 			brickStore.get.reset();
 
 			brickStore.get.setBricks(
