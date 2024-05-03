@@ -1,6 +1,5 @@
 import {
 	type Component,
-	For,
 	Match,
 	Switch,
 	Show,
@@ -10,9 +9,7 @@ import {
 	type Setter,
 } from "solid-js";
 import classNames from "classnames";
-import type { CustomField, FieldResponse } from "@protoheadless/core/types";
-import contentLanguageStore from "@/store/contentLanguageStore";
-import builderStore, {} from "@/store/builderStore";
+import type { CustomField } from "@protoheadless/core/types";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
 
@@ -41,10 +38,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 
 	// -------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
-	);
-
 	const fieldError = createMemo(() => {});
 
 	setFieldPath((prev) => [...prev, props.state.field.key]);
@@ -65,9 +58,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 					"pl-[38px]": props.state.field.type !== "tab",
 				})}
 			>
-				<For each={getGroupIndexes()}>
-					{(groupIndex) => <span>{groupIndex}</span>}
-				</For>
 				<Switch
 					fallback={
 						<>
