@@ -29,21 +29,28 @@ type BrickStoreT = {
 		document?: CollectionDocumentResponse,
 		collection?: CollectionResponse,
 	) => void;
-	setFieldValue: (props: {
+	setFieldValue: (params: {
 		brickIndex: number;
 		fieldPath: string[];
 		groupPath: Array<number | string>;
 		value: FieldResponseValue;
 		meta?: FieldResponseMeta;
 	}) => void;
-	addRepeaterGroup: (props: {
+	addField: (params: {
+		brickIndex: number;
+		fieldPath: string[];
+		groupPath?: Array<number | string>;
+		field: CustomField;
+		contentLanguage: number | undefined;
+	}) => FieldResponse;
+	addRepeaterGroup: (params: {
 		brickIndex: number;
 		fieldPath: string[];
 		groupPath: Array<number | string>;
 		fields: CustomField[];
 		contentLanguage?: number;
 	}) => void;
-	removeRepeaterGroup: (props: {
+	removeRepeaterGroup: (params: {
 		brickIndex: number;
 		fieldPath: string[];
 		groupPath: Array<number | string>;
@@ -114,6 +121,39 @@ const [get, set] = createStore<BrickStoreT>({
 				field.meta = params.meta || undefined;
 			}),
 		);
+	},
+	addField(params) {
+		const newField: FieldResponse = {
+			key: params.field.key,
+			type: params.field.type,
+			value: params.field.default,
+			languageId: params.contentLanguage,
+		};
+
+		brickStore.set(
+			"bricks",
+			produce((draft) => {
+				const brick = draft[params.brickIndex];
+				if (!brick) return;
+
+				// Field belongs on the brick level
+				if (params.fieldPath.length === 1) {
+					brick.fields.push(newField);
+					return;
+				}
+
+				// Field belongs to a group
+				const group = brickHelpers.getBrickFieldGroupRecursive({
+					fields: brick.fields,
+					fieldPath: params.fieldPath,
+					groupPath: params.groupPath || [],
+				});
+				if (!group) return;
+				group.fields.push(newField);
+			}),
+		);
+
+		return newField;
 	},
 	// Groups
 	addRepeaterGroup(params) {

@@ -9,8 +9,7 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
-interface InputFieldProps {
-	type: "number" | "text" | "datetime-local";
+interface CheckboxFieldProps {
 	state: {
 		brickIndex: number;
 		field: CustomField;
@@ -22,10 +21,10 @@ interface InputFieldProps {
 	};
 }
 
-export const InputField: Component<InputFieldProps> = (props) => {
+export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getValue, setValue] = createSignal("");
+	const [getValue, setValue] = createSignal(0);
 
 	// -------------------------------
 	// Effects
@@ -38,40 +37,30 @@ export const InputField: Component<InputFieldProps> = (props) => {
 			contentLanguage: props.state.contentLanguage,
 		});
 
-		switch (props.type) {
-			case "number": {
-				const value = field?.value as number | undefined;
-				setValue(typeof value !== "number" ? "" : value.toString());
-				break;
-			}
-			default: {
-				const value = (field?.value as string | undefined) || "";
-				setValue(value);
-				break;
-			}
-		}
+		const value = field?.value as 1 | 0 | undefined;
+		setValue(value || 0);
 	});
 
 	// -------------------------------
 	// Render
 	return (
-		<Form.Input
+		<Form.Switch
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
-			value={getValue()}
+			value={getValue() === 1}
 			onChange={(value) => {
 				brickStore.get.setFieldValue({
 					brickIndex: props.state.brickIndex,
 					fieldPath: props.state.getFieldPath(),
 					groupPath: props.state.getGroupPath(),
-					value: props.type === "number" ? Number(value) : value,
+					value: value ? 1 : 0,
 				});
 			}}
 			name={props.state.field.key}
-			type={props.type}
 			copy={{
 				label: props.state.field.title,
-				placeholder: props.state.field.placeholder,
 				describedBy: props.state.field.description,
+				true: props.state.field?.copy?.true,
+				false: props.state.field?.copy?.false,
 			}}
 			// errors={props.state.fieldError}
 			required={props.state.field.validation?.required || false}

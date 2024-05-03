@@ -93,7 +93,7 @@ const CollectionsDocumentsEditRoute: Component<
 	// ---------------------------------
 	// Effects
 	createEffect(() => {
-		if (isSuccess() && props.mode === "edit" && !getSetDataLock()) {
+		if (isSuccess() && !getSetDataLock()) {
 			setSetDataLock(true);
 			brickStore.get.reset();
 

@@ -9,8 +9,7 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
-interface InputFieldProps {
-	type: "number" | "text" | "datetime-local";
+interface TextareaFieldProps {
 	state: {
 		brickIndex: number;
 		field: CustomField;
@@ -22,7 +21,7 @@ interface InputFieldProps {
 	};
 }
 
-export const InputField: Component<InputFieldProps> = (props) => {
+export const TextareaField: Component<TextareaFieldProps> = (props) => {
 	// -------------------------------
 	// State
 	const [getValue, setValue] = createSignal("");
@@ -38,36 +37,25 @@ export const InputField: Component<InputFieldProps> = (props) => {
 			contentLanguage: props.state.contentLanguage,
 		});
 
-		switch (props.type) {
-			case "number": {
-				const value = field?.value as number | undefined;
-				setValue(typeof value !== "number" ? "" : value.toString());
-				break;
-			}
-			default: {
-				const value = (field?.value as string | undefined) || "";
-				setValue(value);
-				break;
-			}
-		}
+		const value = (field?.value as string | undefined) || "";
+		setValue(value);
 	});
 
 	// -------------------------------
 	// Render
 	return (
-		<Form.Input
+		<Form.Textarea
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue()}
-			onChange={(value) => {
+			onChange={(value) =>
 				brickStore.get.setFieldValue({
 					brickIndex: props.state.brickIndex,
 					fieldPath: props.state.getFieldPath(),
 					groupPath: props.state.getGroupPath(),
-					value: props.type === "number" ? Number(value) : value,
-				});
-			}}
+					value: value,
+				})
+			}
 			name={props.state.field.key}
-			type={props.type}
 			copy={{
 				label: props.state.field.title,
 				placeholder: props.state.field.placeholder,

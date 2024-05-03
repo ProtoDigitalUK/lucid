@@ -32,11 +32,16 @@ interface RepeaterFieldProps {
 export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
+	const contentLanguage = createMemo(
+		() => contentLanguageStore.get.contentLanguage,
+	);
 	const fieldData = createMemo(() =>
 		brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
 			groupPath: props.state.getGroupPath(),
+			field: props.state.field,
+			contentLanguage: contentLanguage(),
 		}),
 	);
 	const canAddGroup = createMemo(() => {
@@ -44,9 +49,6 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 		const groupCount = fieldData()?.groups?.length ?? 0;
 		return groupCount < props.state.field.validation?.maxGroups;
 	});
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
-	);
 
 	// -------------------------------
 	// Functions

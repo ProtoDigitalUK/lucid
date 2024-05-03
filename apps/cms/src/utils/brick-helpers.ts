@@ -1,6 +1,10 @@
 import builderStore, { type BrickStoreFieldT } from "@/store/builderStore";
 import brickStore from "@/store/brickStore";
-import type { CustomField, FieldResponse } from "@protoheadless/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldGroupResponse,
+} from "@protoheadless/core/types";
 
 // --------------------------------------------
 // Get field value from store
@@ -47,14 +51,22 @@ const getBrickField = (params: {
 	brickIndex: number;
 	fieldPath: string[];
 	groupPath?: Array<number | string>;
+	field: CustomField;
+	contentLanguage: number | undefined;
 }) => {
 	const brick = brickStore.get.bricks[params.brickIndex];
 
-	return getBrickFieldRecursive({
+	const field = getBrickFieldRecursive({
 		fields: brick.fields,
 		fieldPath: params.fieldPath,
 		groupPath: params.groupPath || [],
 	});
+
+	if (!field) {
+		return brickStore.get.addField(params);
+	}
+
+	return field;
 };
 
 const getBrickFieldRecursive = (params: {
@@ -86,6 +98,40 @@ const getBrickFieldRecursive = (params: {
 
 	return field;
 };
+const getBrickFieldGroupRecursive = (params: {
+	fields: FieldResponse[];
+	fieldPath: string[];
+	groupPath: Array<number | string>;
+	field?: FieldResponse;
+	currentIndex?: number;
+}): FieldGroupResponse | undefined => {
+	const currentIndex = params.currentIndex ?? 0;
+	if (currentIndex >= params.fieldPath.length) return undefined;
+
+	const key = params.fieldPath[currentIndex];
+	const field = params.fields.find((f) => f.key === key);
+
+	if (
+		field?.type === "repeater" &&
+		currentIndex < params.fieldPath.length - 1
+	) {
+		const groupId = params.groupPath[currentIndex];
+		const group = field.groups?.find((g) => g.id === groupId);
+		if (!group) return undefined;
+
+		if (currentIndex < params.fieldPath.length - 1) {
+			return getBrickFieldGroupRecursive({
+				fields: group.fields,
+				fieldPath: params.fieldPath,
+				groupPath: params.groupPath,
+				currentIndex: currentIndex + 1,
+			});
+		}
+		return group;
+	}
+
+	return undefined;
+};
 
 // ---------------------------------------------
 // Exports
@@ -94,6 +140,7 @@ const brickHelpers = {
 	getNextBrickOrder,
 	getBrickField,
 	getBrickFieldRecursive,
+	getBrickFieldGroupRecursive,
 };
 
 export default brickHelpers;
