@@ -2,7 +2,8 @@ import {
 	type Component,
 	type Accessor,
 	createSignal,
-	createEffect,
+	onMount,
+	batch,
 } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
 import brickStore from "@/store/brickStore";
@@ -28,7 +29,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 
 	// -------------------------------
 	// Effects
-	createEffect(() => {
+	onMount(() => {
 		const field = brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
@@ -48,11 +49,14 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue() === 1}
 			onChange={(value) => {
-				brickStore.get.setFieldValue({
-					brickIndex: props.state.brickIndex,
-					fieldPath: props.state.getFieldPath(),
-					groupPath: props.state.getGroupPath(),
-					value: value ? 1 : 0,
+				batch(() => {
+					brickStore.get.setFieldValue({
+						brickIndex: props.state.brickIndex,
+						fieldPath: props.state.getFieldPath(),
+						groupPath: props.state.getGroupPath(),
+						value: value ? 1 : 0,
+					});
+					setValue(value ? 1 : 0);
 				});
 			}}
 			name={props.state.field.key}

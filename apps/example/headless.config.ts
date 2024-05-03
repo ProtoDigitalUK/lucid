@@ -14,6 +14,7 @@ import PageCollection from "./src/headless/collections/pages.js";
 import BlogCollection from "./src/headless/collections/blogs.js";
 import SettingsCollection from "./src/headless/collections/settings.js";
 import FormsCollection from "./src/headless/collections/forms.js";
+import HeaderMenuCollection from "./src/headless/collections/header-menu.js";
 
 export default headless.config({
 	mode: "development",
@@ -57,6 +58,7 @@ export default headless.config({
 		BlogCollection,
 		SettingsCollection,
 		FormsCollection,
+		HeaderMenuCollection,
 	],
 	plugins: [
 		HeadlessNodemailer({

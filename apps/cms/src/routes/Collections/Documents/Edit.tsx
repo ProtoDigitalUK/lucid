@@ -87,7 +87,7 @@ const CollectionsDocumentsEditRoute: Component<
 	// Functions
 	const upsertDocument = async () => {
 		console.log(brickStore.get.bricks);
-		setSetDataLock(false);
+		// setSetDataLock(false);
 	};
 
 	// ---------------------------------

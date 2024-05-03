@@ -2,7 +2,8 @@ import {
 	type Component,
 	type Accessor,
 	createSignal,
-	createEffect,
+	onMount,
+	batch,
 } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
 import brickStore from "@/store/brickStore";
@@ -24,11 +25,11 @@ interface SelectFieldProps {
 export const SelectField: Component<SelectFieldProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getValue, setValue] = createSignal<string | null>(null);
+	const [getValue, setValue] = createSignal<string | number | null>(null);
 
 	// -------------------------------
 	// Effects
-	createEffect(() => {
+	onMount(() => {
 		const field = brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
@@ -47,14 +48,17 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue() || undefined}
 			options={props.state.field.options || []}
-			onChange={(value) =>
-				brickStore.get.setFieldValue({
-					brickIndex: props.state.brickIndex,
-					fieldPath: props.state.getFieldPath(),
-					groupPath: props.state.getGroupPath(),
-					value: value || null,
-				})
-			}
+			onChange={(value) => {
+				batch(() => {
+					brickStore.get.setFieldValue({
+						brickIndex: props.state.brickIndex,
+						fieldPath: props.state.getFieldPath(),
+						groupPath: props.state.getGroupPath(),
+						value: value || null,
+					});
+					setValue(value || null);
+				});
+			}}
 			name={props.state.field.key}
 			copy={{
 				label: props.state.field.title,

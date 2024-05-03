@@ -1,6 +1,12 @@
 import T from "@/translations/index";
 import classNames from "classnames";
-import { type Component, type Accessor, type Setter, For } from "solid-js";
+import {
+	type Component,
+	type Accessor,
+	type Setter,
+	For,
+	createMemo,
+} from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
@@ -20,10 +26,16 @@ interface GroupBodyProps {
 
 export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
+	// Memos
+	const groupId = createMemo(() => props.state.groupId);
+	const brickIndex = createMemo(() => props.state.brickIndex);
+	const fields = createMemo(() => props.state.field.fields);
+
+	// -------------------------------
 	// Functions
 	const removeGroup = (groupId: number | string) => {
 		brickStore.get.removeRepeaterGroup({
-			brickIndex: props.state.brickIndex,
+			brickIndex: brickIndex(),
 			fieldPath: props.state.getFieldPath(),
 			groupPath: props.state.getGroupPath(),
 			groupId: groupId,
@@ -47,13 +59,13 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					<FaSolidGripLines class="fill-title w-3" />
 				</div>
 				<div class="p-15 w-full">
-					<For each={props.state.field.fields}>
+					<For each={fields()}>
 						{(field) => (
 							<CustomFields.DynamicField
 								state={{
-									brickIndex: props.state.brickIndex,
+									brickIndex: brickIndex(),
 									field: field,
-									groupId: props.state.groupId,
+									groupId: groupId(),
 									getFieldPath: props.state.getFieldPath,
 									setFieldPath: props.state.setFieldPath,
 									getGroupPath: props.state.getGroupPath,
@@ -70,7 +82,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					type="button"
 					class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
 					onClick={() => {
-						removeGroup(props.state.groupId);
+						removeGroup(groupId());
 					}}
 					aria-label={T("remove_entry")}
 				>

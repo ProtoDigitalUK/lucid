@@ -2,7 +2,8 @@ import {
 	type Component,
 	type Accessor,
 	createSignal,
-	createEffect,
+	onMount,
+	batch,
 } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
 import brickStore from "@/store/brickStore";
@@ -28,7 +29,7 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 
 	// -------------------------------
 	// Effects
-	createEffect(() => {
+	onMount(() => {
 		const field = brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
@@ -47,14 +48,17 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 		<Form.Textarea
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue()}
-			onChange={(value) =>
-				brickStore.get.setFieldValue({
-					brickIndex: props.state.brickIndex,
-					fieldPath: props.state.getFieldPath(),
-					groupPath: props.state.getGroupPath(),
-					value: value,
-				})
-			}
+			onChange={(value) => {
+				batch(() => {
+					brickStore.get.setFieldValue({
+						brickIndex: props.state.brickIndex,
+						fieldPath: props.state.getFieldPath(),
+						groupPath: props.state.getGroupPath(),
+						value: value,
+					});
+					setValue(value);
+				});
+			}}
 			name={props.state.field.key}
 			copy={{
 				label: props.state.field.title,

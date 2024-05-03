@@ -35,31 +35,35 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	const contentLanguage = createMemo(
 		() => contentLanguageStore.get.contentLanguage,
 	);
+	const field = createMemo(() => props.state.field);
+	const brickIndex = createMemo(() => props.state.brickIndex);
 	const fieldData = createMemo(() =>
 		brickHelpers.getBrickField({
-			brickIndex: props.state.brickIndex,
+			brickIndex: brickIndex(),
 			fieldPath: props.state.getFieldPath(),
 			groupPath: props.state.getGroupPath(),
-			field: props.state.field,
+			field: field(),
 			contentLanguage: contentLanguage(),
 		}),
 	);
+	const fieldGroupIds = createMemo(
+		() => fieldData()?.groups?.map((g) => g.id) ?? [],
+	);
 	const canAddGroup = createMemo(() => {
-		if (!props.state.field.validation?.maxGroups) return true;
-		const groupCount = fieldData()?.groups?.length ?? 0;
-		return groupCount < props.state.field.validation?.maxGroups;
+		if (!field().validation?.maxGroups) return true;
+		return fieldGroupIds().length < (field().validation?.maxGroups || 0);
 	});
 
 	// -------------------------------
 	// Functions
 	const addGroup = () => {
-		if (!props.state.field.fields) return;
+		if (!field().fields) return;
 
 		brickStore.get.addRepeaterGroup({
-			brickIndex: props.state.brickIndex,
+			brickIndex: brickIndex(),
 			fieldPath: props.state.getFieldPath(),
 			groupPath: props.state.getGroupPath(),
-			fields: props.state.field.fields,
+			fields: field().fields || [],
 			contentLanguage: contentLanguage(),
 		});
 	};
@@ -71,18 +75,18 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	return (
 		<div class="mb-2.5 last:mb-0 w-full">
 			<h3 class="text-sm text-body font-body font-normal mb-2.5">
-				{props.state.field.title}
+				{field().title}
 			</h3>
 			{/* Repeater Body */}
 			<Switch>
-				<Match when={(fieldData()?.groups?.length ?? 0) > 0}>
-					<For each={fieldData()?.groups}>
-						{(group) => (
+				<Match when={fieldGroupIds().length > 0}>
+					<For each={fieldGroupIds()}>
+						{(groupId) => (
 							<Builder.GroupBody
 								state={{
-									brickIndex: props.state.brickIndex,
-									field: props.state.field,
-									groupId: group.id,
+									brickIndex: brickIndex(),
+									field: field(),
+									groupId: groupId,
 									getFieldPath: props.state.getFieldPath,
 									setFieldPath: props.state.setFieldPath,
 									getGroupPath: props.state.getGroupPath,
@@ -92,7 +96,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 						)}
 					</For>
 				</Match>
-				<Match when={(fieldData()?.groups?.length ?? 0) === 0}>
+				<Match when={fieldGroupIds().length === 0}>
 					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md bg-container flex items-center flex-col justify-center text-center">
 						<span class="text-sm text-unfocused">
 							{T("no_entries")}
@@ -111,9 +115,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 				>
 					{T("add_entry")}
 				</Button>
-				<Show
-					when={props.state.field.validation?.maxGroups !== undefined}
-				>
+				<Show when={field().validation?.maxGroups !== undefined}>
 					<span
 						class={classNames(
 							"text-body text-sm font-body font-normal mr-[25px]",
@@ -122,9 +124,9 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 							},
 						)}
 					>
-						{fieldData()?.groups?.length ?? 0}
+						{fieldGroupIds().length}
 						{"/"}
-						{props.state.field.validation?.maxGroups}
+						{field().validation?.maxGroups}
 					</span>
 				</Show>
 			</div>

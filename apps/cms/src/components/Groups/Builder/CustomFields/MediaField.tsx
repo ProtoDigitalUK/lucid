@@ -2,7 +2,8 @@ import {
 	type Component,
 	type Accessor,
 	createSignal,
-	createEffect,
+	onMount,
+	batch,
 } from "solid-js";
 import type { CustomField, MediaMeta } from "@protoheadless/core/types";
 import brickStore from "@/store/brickStore";
@@ -29,7 +30,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 
 	// -------------------------------
 	// Effects
-	createEffect(() => {
+	onMount(() => {
 		const field = brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
@@ -52,15 +53,19 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 				id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 				value={getValue()}
 				meta={getMeta()}
-				onChange={(value, meta) =>
-					brickStore.get.setFieldValue({
-						brickIndex: props.state.brickIndex,
-						fieldPath: props.state.getFieldPath(),
-						groupPath: props.state.getGroupPath(),
-						value: value,
-						meta: meta,
-					})
-				}
+				onChange={(value, meta) => {
+					batch(() => {
+						brickStore.get.setFieldValue({
+							brickIndex: props.state.brickIndex,
+							fieldPath: props.state.getFieldPath(),
+							groupPath: props.state.getGroupPath(),
+							value: value,
+							meta: meta,
+						});
+						setValue(value ?? undefined);
+						setMeta(meta ?? undefined);
+					});
+				}}
 				copy={{
 					label: props.state.field.title,
 					describedBy: props.state.field.description,

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { Toaster } from "solid-toast";
 import { HeadlessError } from "./utils/error-handling";
 import Router from "@/Router";
+import "solid-devtools";
 
 const App: Component = () => {
 	const queryClient = new QueryClient({

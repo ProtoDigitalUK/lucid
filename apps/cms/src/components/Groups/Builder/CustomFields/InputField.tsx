@@ -2,7 +2,8 @@ import {
 	type Component,
 	type Accessor,
 	createSignal,
-	createEffect,
+	onMount,
+	batch,
 } from "solid-js";
 import type { CustomField } from "@protoheadless/core/types";
 import brickStore from "@/store/brickStore";
@@ -29,7 +30,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 
 	// -------------------------------
 	// Effects
-	createEffect(() => {
+	onMount(() => {
 		const field = brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
@@ -59,11 +60,14 @@ export const InputField: Component<InputFieldProps> = (props) => {
 			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue()}
 			onChange={(value) => {
-				brickStore.get.setFieldValue({
-					brickIndex: props.state.brickIndex,
-					fieldPath: props.state.getFieldPath(),
-					groupPath: props.state.getGroupPath(),
-					value: props.type === "number" ? Number(value) : value,
+				batch(() => {
+					brickStore.get.setFieldValue({
+						brickIndex: props.state.brickIndex,
+						fieldPath: props.state.getFieldPath(),
+						groupPath: props.state.getGroupPath(),
+						value: props.type === "number" ? Number(value) : value,
+					});
+					setValue(value);
 				});
 			}}
 			name={props.state.field.key}
