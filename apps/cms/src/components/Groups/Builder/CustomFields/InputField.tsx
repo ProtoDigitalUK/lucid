@@ -14,10 +14,10 @@ interface InputFieldProps {
 	state: {
 		brickIndex: number;
 		field: CustomField;
-		groupIndex?: number;
+		groupId?: number | string;
 
 		getFieldPath: Accessor<string[]>;
-		getGroupIndexes: Accessor<number[]>;
+		getGroupPath: Accessor<Array<string | number>>;
 	};
 }
 
@@ -32,7 +32,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 		const field = brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
-			groupIndexes: props.state.getGroupIndexes(),
+			groupPath: props.state.getGroupPath(),
 		});
 
 		switch (props.type) {
@@ -53,13 +53,13 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	// Render
 	return (
 		<Form.Input
-			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupIndex}`}
+			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue()}
 			onChange={(value) => {
 				brickStore.get.setFieldValue({
 					brickIndex: props.state.brickIndex,
 					fieldPath: props.state.getFieldPath(),
-					groupIndexes: props.state.getGroupIndexes(),
+					groupPath: props.state.getGroupPath(),
 					value: props.type === "number" ? Number(value) : value,
 				});
 			}}

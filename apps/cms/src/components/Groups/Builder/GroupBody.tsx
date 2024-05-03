@@ -10,23 +10,23 @@ interface GroupBodyProps {
 	state: {
 		brickIndex: number;
 		field: CustomField;
-		groupIndex: number;
+		groupId: number | string;
 		getFieldPath: Accessor<string[]>;
 		setFieldPath: Setter<string[]>;
-		getGroupIndexes: Accessor<number[]>;
-		setGroupIndexes: Setter<number[]>;
+		getGroupPath: Accessor<Array<string | number>>;
+		setGroupPath: Setter<Array<string | number>>;
 	};
 }
 
 export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
 	// Functions
-	const removeGroup = (groupIndex: number) => {
+	const removeGroup = (groupId: number | string) => {
 		brickStore.get.removeRepeaterGroup({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
-			groupIndexes: props.state.getGroupIndexes(),
-			groupIndex: groupIndex,
+			groupPath: props.state.getGroupPath(),
+			groupId: groupId,
 		});
 	};
 
@@ -39,8 +39,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 				class={classNames(
 					"bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
 					{
-						"bg-white":
-							props.state.getGroupIndexes().length % 2 !== 0,
+						"bg-white": props.state.getGroupPath().length % 2 !== 0,
 					},
 				)}
 			>
@@ -54,13 +53,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 								state={{
 									brickIndex: props.state.brickIndex,
 									field: field,
-									groupIndex: props.state.groupIndex,
+									groupId: props.state.groupId,
 									getFieldPath: props.state.getFieldPath,
 									setFieldPath: props.state.setFieldPath,
-									getGroupIndexes:
-										props.state.getGroupIndexes,
-									setGroupIndexes:
-										props.state.setGroupIndexes,
+									getGroupPath: props.state.getGroupPath,
+									setGroupPath: props.state.setGroupPath,
 								}}
 							/>
 						)}
@@ -73,7 +70,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					type="button"
 					class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
 					onClick={() => {
-						removeGroup(props.state.groupIndex);
+						removeGroup(props.state.groupId);
 					}}
 					aria-label={T("remove_entry")}
 				>

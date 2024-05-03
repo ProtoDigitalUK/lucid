@@ -46,47 +46,41 @@ const getNextBrickOrder = (type: "fixed" | "builder") => {
 const getBrickField = (params: {
 	brickIndex: number;
 	fieldPath: string[];
-	groupIndexes?: number[];
+	groupPath?: Array<number | string>;
 }) => {
 	const brick = brickStore.get.bricks[params.brickIndex];
 
 	return getBrickFieldRecursive({
 		fields: brick.fields,
 		fieldPath: params.fieldPath,
-		groupIndexes: params.groupIndexes || [],
+		groupPath: params.groupPath || [],
 	});
 };
 
 const getBrickFieldRecursive = (params: {
 	fields: FieldResponse[];
 	fieldPath: string[];
-	groupIndexes: number[];
+	groupPath: Array<number | string>;
 	field?: FieldResponse;
 	currentIndex?: number;
-	curretGroupIndex?: number;
 }): FieldResponse | undefined => {
 	const currentIndex = params.currentIndex ?? 0;
-	const curretGroupIndex = params.curretGroupIndex ?? 0;
-
-	if (currentIndex >= params.fieldPath.length) {
-		return params.field;
-	}
+	if (currentIndex >= params.fieldPath.length) return params.field;
 
 	const key = params.fieldPath[currentIndex];
-	const groupIndex = params.groupIndexes[curretGroupIndex] ?? 0;
-
 	const field = params.fields.find((f) => f.key === key);
 
-	if (!field) return undefined;
+	if (field?.type === "repeater") {
+		const groupdId = params.groupPath[currentIndex] ?? 0;
+		const group = field.groups?.find((g) => g.id === groupdId);
+		if (!group) return field;
 
-	if (field.type === "repeater" && field.groups) {
 		return getBrickFieldRecursive({
-			fields: field.groups[groupIndex] || [],
+			fields: group.fields,
 			field: field,
 			fieldPath: params.fieldPath,
-			groupIndexes: params.groupIndexes,
+			groupPath: params.groupPath,
 			currentIndex: currentIndex + 1,
-			curretGroupIndex: curretGroupIndex + 1,
 		});
 	}
 

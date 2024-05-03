@@ -18,11 +18,11 @@ interface DynamicFieldProps {
 		brickIndex: number;
 		field: CustomField;
 		activeTab?: string;
-		groupIndex?: number;
+		groupId?: number | string;
 		getFieldPath?: Accessor<string[]>;
 		setFieldPath?: Setter<string[]>;
-		getGroupIndexes?: Accessor<number[]>;
-		setGroupIndexes?: Setter<number[]>;
+		getGroupPath: Accessor<Array<string | number>>;
+		setGroupPath: Setter<Array<string | number>>;
 	};
 }
 
@@ -32,8 +32,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	const [getFieldPath, setFieldPath] = createSignal<string[]>(
 		props.state.getFieldPath?.() || [],
 	);
-	const [getGroupIndexes, setGroupIndexes] = createSignal<number[]>(
-		props.state.getGroupIndexes?.() || [],
+	const [getGroupPath, setGroupPath] = createSignal<Array<string | number>>(
+		props.state.getGroupPath?.() || [],
 	);
 
 	// -------------------------------
@@ -41,9 +41,9 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	const fieldError = createMemo(() => {});
 
 	setFieldPath((prev) => [...prev, props.state.field.key]);
-	setGroupIndexes((prev) => {
-		if (props.state.groupIndex === undefined) return prev;
-		return [...prev, props.state.groupIndex];
+	setGroupPath((prev) => {
+		if (props.state.groupId === undefined) return prev;
+		return [...prev, props.state.groupId];
 	});
 
 	// -------------------------------
@@ -72,9 +72,9 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							state={{
 								brickIndex: props.state.brickIndex,
 								field: props.state.field,
-								groupIndex: props.state.groupIndex,
-								getFieldPath: getFieldPath,
-								getGroupIndexes: getGroupIndexes,
+								groupId: props.state.groupId,
+								getFieldPath,
+								getGroupPath,
 							}}
 						/>
 					</Match>
@@ -84,9 +84,9 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							state={{
 								brickIndex: props.state.brickIndex,
 								field: props.state.field,
-								groupIndex: props.state.groupIndex,
-								getFieldPath: getFieldPath,
-								getGroupIndexes: getGroupIndexes,
+								groupId: props.state.groupId,
+								getFieldPath,
+								getGroupPath,
 							}}
 						/>
 					</Match>
@@ -96,9 +96,9 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							state={{
 								brickIndex: props.state.brickIndex,
 								field: props.state.field,
-								groupIndex: props.state.groupIndex,
-								getFieldPath: getFieldPath,
-								getGroupIndexes: getGroupIndexes,
+								groupId: props.state.groupId,
+								getFieldPath,
+								getGroupPath,
 							}}
 						/>
 					</Match>
@@ -107,11 +107,11 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							state={{
 								brickIndex: props.state.brickIndex,
 								field: props.state.field,
-								groupIndex: props.state.groupIndex,
+								groupId: props.state.groupId,
 								getFieldPath,
 								setFieldPath,
-								getGroupIndexes,
-								setGroupIndexes,
+								getGroupPath,
+								setGroupPath,
 							}}
 						/>
 					</Match>

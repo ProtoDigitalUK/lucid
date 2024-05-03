@@ -177,7 +177,7 @@ export interface FieldResponse {
 	groups?: Array<FieldGroupResponse>;
 }
 export interface FieldGroupResponse {
-	id: number;
+	id: number | string;
 	fields: Array<FieldResponse>;
 }
 

@@ -21,11 +21,11 @@ interface RepeaterFieldProps {
 	state: {
 		brickIndex: number;
 		field: CustomField;
-		groupIndex?: number;
+		groupId?: number | string;
 		getFieldPath: Accessor<string[]>;
 		setFieldPath: Setter<string[]>;
-		getGroupIndexes: Accessor<number[]>;
-		setGroupIndexes: Setter<number[]>;
+		getGroupPath: Accessor<Array<string | number>>;
+		setGroupPath: Setter<Array<string | number>>;
 	};
 }
 
@@ -36,7 +36,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 		brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
-			groupIndexes: props.state.getGroupIndexes(),
+			groupPath: props.state.getGroupPath(),
 		}),
 	);
 	const canAddGroup = createMemo(() => {
@@ -56,7 +56,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 		brickStore.get.addRepeaterGroup({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
-			groupIndexes: props.state.getGroupIndexes(),
+			groupPath: props.state.getGroupPath(),
 			fields: props.state.field.fields,
 			contentLanguage: contentLanguage(),
 		});
@@ -75,18 +75,16 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			<Switch>
 				<Match when={(fieldData()?.groups?.length ?? 0) > 0}>
 					<For each={fieldData()?.groups}>
-						{(_, groupIndex) => (
+						{(group) => (
 							<Builder.GroupBody
 								state={{
 									brickIndex: props.state.brickIndex,
 									field: props.state.field,
-									groupIndex: groupIndex(),
+									groupId: group.id,
 									getFieldPath: props.state.getFieldPath,
 									setFieldPath: props.state.setFieldPath,
-									getGroupIndexes:
-										props.state.getGroupIndexes,
-									setGroupIndexes:
-										props.state.setGroupIndexes,
+									getGroupPath: props.state.getGroupPath,
+									setGroupPath: props.state.setGroupPath,
 								}}
 							/>
 						)}
