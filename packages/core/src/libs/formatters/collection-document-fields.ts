@@ -1,4 +1,7 @@
-import type { FieldResponse } from "../../types/response.js";
+import type {
+	FieldResponse,
+	FieldGroupResponse,
+} from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
 import type BrickBuilder from "../builders/brick-builder/index.js";
@@ -155,8 +158,8 @@ export default class CollectionDocumentFieldsFormatter {
 		groups: BrickPropT["groups"];
 		host: string;
 		parentGroupId: number | null;
-	}): FieldResponse[][] => {
-		const groups: FieldResponse[][] = [];
+	}): FieldGroupResponse[] => {
+		const groups: FieldGroupResponse[] = [];
 
 		const repeaterFields = props.repeater.fields;
 		if (!repeaterFields) return groups;
@@ -168,8 +171,9 @@ export default class CollectionDocumentFieldsFormatter {
 		);
 
 		for (const group of repeaterGroups) {
-			groups.push(
-				this.buildFields({
+			groups.push({
+				id: group.group_id,
+				fields: this.buildFields({
 					fields: props.fields,
 					groups: props.groups,
 					host: props.host,
@@ -177,7 +181,7 @@ export default class CollectionDocumentFieldsFormatter {
 					groupId: group.group_id,
 					parentGroupId: group.parent_group_id,
 				}),
-			);
+			});
 		}
 
 		return groups;
@@ -311,6 +315,22 @@ export default class CollectionDocumentFieldsFormatter {
 			},
 			groups: {
 				type: "array",
+				items: {
+					type: "object",
+					additionalProperties: true,
+					properties: {
+						id: {
+							type: "number",
+						},
+						fields: {
+							type: "array",
+							items: {
+								type: "object",
+								additionalProperties: true,
+							},
+						},
+					},
+				},
 			},
 		},
 	};

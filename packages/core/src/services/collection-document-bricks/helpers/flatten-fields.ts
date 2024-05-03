@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
-import type { FieldSchemaType } from "../../../schemas/collection-fields.js";
+import type {
+	FieldSchemaType,
+	FieldSchemaSimpleType,
+} from "../../../schemas/collection-fields.js";
 
 export interface FieldInsertItem {
 	key: FieldSchemaType["key"];
@@ -21,13 +24,15 @@ interface FlatFieldsResposne {
 	groups: Array<GroupInsertItem>;
 }
 
-const flattenFields = (fields: FieldSchemaType[]): FlatFieldsResposne => {
+const flattenFields = (
+	fields: FieldSchemaType[] | FieldSchemaSimpleType[],
+): FlatFieldsResposne => {
 	const fieldsRes: Array<FieldInsertItem> = [];
 	const groupsRes: Array<GroupInsertItem> = [];
 
 	// recursive function to parse fields
 	const parseFields = (
-		fields: FieldSchemaType[],
+		fields: FieldSchemaType[] | FieldSchemaSimpleType[],
 		groupMeta?: {
 			ref?: string;
 			repeaterKey?: string;
@@ -56,7 +61,15 @@ const flattenFields = (fields: FieldSchemaType[]): FlatFieldsResposne => {
 						parentGroupRef: groupMeta?.ref,
 					});
 
-					parseFields(groupFields, {
+					if (Array.isArray(groupFields)) {
+						parseFields(groupFields, {
+							ref: groupRef,
+							repeaterKey,
+						});
+						continue;
+					}
+
+					parseFields(groupFields.fields, {
 						ref: groupRef,
 						repeaterKey,
 					});

@@ -39,10 +39,25 @@ export const FieldBaseSchema = z.object({
 });
 
 export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({
-	groups: z.lazy(() => z.array(z.array(FieldSchema))).optional(),
+	groups: z
+		.lazy(() =>
+			z.array(
+				z.object({
+					id: z.union([z.string(), z.number()]),
+					fields: z.array(FieldSchema),
+				}),
+			),
+		)
+		.optional(),
 });
 
 export type FieldSchemaType = z.infer<typeof FieldBaseSchema> & {
+	groups?: {
+		id: string | number;
+		fields: FieldSchemaType[];
+	}[];
+};
+export type FieldSchemaSimpleType = z.infer<typeof FieldBaseSchema> & {
 	groups?: FieldSchemaType[][];
 };
 
@@ -82,6 +97,29 @@ export const swaggerFieldObj = {
 		},
 		groups: {
 			type: "array",
+			items: {
+				type: "object",
+				additionalProperties: true,
+				properties: {
+					id: {
+						anyOf: [
+							{
+								type: "string",
+							},
+							{
+								type: "number",
+							},
+						],
+					},
+					fields: {
+						type: "array",
+						items: {
+							type: "object",
+							additionalProperties: true,
+						},
+					},
+				},
+			},
 		},
 	},
 };

@@ -174,7 +174,11 @@ export interface FieldResponse {
 	value?: FieldResponseValue;
 	meta?: FieldResponseMeta;
 	languageId?: number;
-	groups?: Array<Array<FieldResponse>>;
+	groups?: Array<FieldGroupResponse>;
+}
+export interface FieldGroupResponse {
+	id: number;
+	fields: Array<FieldResponse>;
 }
 
 export type FieldResponseValue =
