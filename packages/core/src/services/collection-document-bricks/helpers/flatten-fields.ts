@@ -54,14 +54,14 @@ const flattenFields = (
 					if (groupFields === undefined) continue;
 
 					const groupRef = uuidv4();
-					groupsRes.push({
-						ref: groupRef,
-						order: j,
-						repeater: repeaterKey,
-						parentGroupRef: groupMeta?.ref,
-					});
 
 					if (Array.isArray(groupFields)) {
+						groupsRes.push({
+							ref: groupRef,
+							order: j,
+							repeater: repeaterKey,
+							parentGroupRef: groupMeta?.ref,
+						});
 						parseFields(groupFields, {
 							ref: groupRef,
 							repeaterKey,
@@ -69,6 +69,12 @@ const flattenFields = (
 						continue;
 					}
 
+					groupsRes.push({
+						ref: groupRef,
+						order: groupFields.order || j,
+						repeater: repeaterKey,
+						parentGroupRef: groupMeta?.ref,
+					});
 					parseFields(groupFields.fields, {
 						ref: groupRef,
 						repeaterKey,

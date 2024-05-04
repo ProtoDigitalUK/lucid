@@ -56,6 +56,14 @@ type BrickStoreT = {
 		groupPath: Array<number | string>;
 		groupId: number | string;
 	}) => void;
+	swapGroupOrder: (_props: {
+		brickIndex: number;
+		fieldPath: string[];
+		groupPath: Array<number | string>;
+
+		groupId: number | string;
+		targetGroupId: number | string;
+	}) => void;
 };
 
 const [get, set] = createStore<BrickStoreT>({
@@ -181,8 +189,24 @@ const [get, set] = createStore<BrickStoreT>({
 					});
 				}
 
+				if (field.groups.length === 0) {
+					field.groups = [
+						{
+							id: `ref-${shortUUID.generate()}`,
+							order: 0,
+							fields: groupFields,
+						},
+					];
+					return;
+				}
+
+				const largestOrder = field.groups?.reduce((prev, current) => {
+					return prev.order > current.order ? prev : current;
+				});
+
 				field.groups.push({
 					id: `ref-${shortUUID.generate()}`,
+					order: largestOrder.order + 1,
 					fields: groupFields,
 				});
 			}),
@@ -208,6 +232,37 @@ const [get, set] = createStore<BrickStoreT>({
 				if (groupIndex === -1) return;
 
 				field.groups.splice(groupIndex, 1);
+			}),
+		);
+	},
+	swapGroupOrder(params) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const field = brickHelpers.getBrickFieldRecursive({
+					fields: draft[params.brickIndex].fields,
+					fieldPath: params.fieldPath,
+					groupPath: params.groupPath,
+				});
+
+				if (!field) return;
+				if (field.type !== "repeater") return;
+				if (field.groups === undefined) field.groups = [];
+
+				const groupIndex = field.groups.findIndex(
+					(group) => group.id === params.groupId,
+				);
+				const targetGroupIndex = field.groups.findIndex(
+					(group) => group.id === params.targetGroupId,
+				);
+
+				if (groupIndex === -1 || targetGroupIndex === -1) return;
+
+				const groupOrder = field.groups[groupIndex].order;
+
+				field.groups[groupIndex].order =
+					field.groups[targetGroupIndex].order;
+				field.groups[targetGroupIndex].order = groupOrder;
 			}),
 		);
 	},

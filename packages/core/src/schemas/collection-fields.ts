@@ -44,6 +44,7 @@ export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({
 			z.array(
 				z.object({
 					id: z.union([z.string(), z.number()]),
+					order: z.number().optional(),
 					fields: z.array(FieldSchema),
 				}),
 			),
@@ -54,6 +55,7 @@ export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({
 export type FieldSchemaType = z.infer<typeof FieldBaseSchema> & {
 	groups?: {
 		id: string | number;
+		order?: number;
 		fields: FieldSchemaType[];
 	}[];
 };

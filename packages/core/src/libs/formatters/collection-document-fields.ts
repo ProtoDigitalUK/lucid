@@ -173,6 +173,7 @@ export default class CollectionDocumentFieldsFormatter {
 		for (const group of repeaterGroups) {
 			groups.push({
 				id: group.group_id,
+				order: group.group_order,
 				fields: this.buildFields({
 					fields: props.fields,
 					groups: props.groups,
@@ -320,6 +321,9 @@ export default class CollectionDocumentFieldsFormatter {
 					additionalProperties: true,
 					properties: {
 						id: {
+							type: "number",
+						},
+						order: {
 							type: "number",
 						},
 						fields: {

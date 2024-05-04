@@ -7,6 +7,7 @@ import {
 	For,
 	createMemo,
 } from "solid-js";
+import type { DragDropCBT } from "@/components/Partials/DragDrop";
 import type { CustomField } from "@protoheadless/core/types";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
@@ -17,6 +18,8 @@ interface GroupBodyProps {
 		brickIndex: number;
 		field: CustomField;
 		groupId: number | string;
+		dragDrop: DragDropCBT;
+		repeaterKey: string;
 		getFieldPath: Accessor<string[]>;
 		setFieldPath: Setter<string[]>;
 		getGroupPath: Accessor<Array<string | number>>;
@@ -45,7 +48,27 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<div class={classNames("w-full flex", {})}>
+		<div
+			data-dragkey={props.state.repeaterKey}
+			class={classNames("w-full flex", {
+				"opacity-60":
+					props.state.dragDrop.getDragging()?.index === groupId(),
+			})}
+			onDragStart={(e) =>
+				props.state.dragDrop.onDragStart(e, {
+					index: groupId(),
+					key: props.state.repeaterKey,
+				})
+			}
+			onDragEnd={(e) => props.state.dragDrop.onDragEnd(e)}
+			onDragEnter={(e) =>
+				props.state.dragDrop.onDragEnter(e, {
+					index: groupId(),
+					key: props.state.repeaterKey,
+				})
+			}
+			onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
+		>
 			{/* Group Items */}
 			<div
 				class={classNames(
@@ -55,7 +78,24 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					},
 				)}
 			>
-				<div class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab">
+				<div
+					class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
+					onDragStart={(e) =>
+						props.state.dragDrop.onDragStart(e, {
+							index: groupId(),
+							key: props.state.repeaterKey,
+						})
+					}
+					onDragEnd={(e) => props.state.dragDrop.onDragEnd(e)}
+					onDragEnter={(e) =>
+						props.state.dragDrop.onDragEnter(e, {
+							index: groupId(),
+							key: props.state.repeaterKey,
+						})
+					}
+					onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
+					draggable={true}
+				>
 					<FaSolidGripLines class="text-title w-3" />
 				</div>
 				<div class="p-15 w-full">

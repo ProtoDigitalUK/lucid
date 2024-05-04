@@ -16,6 +16,7 @@ import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
+import DragDrop from "@/components/Partials/DragDrop";
 
 interface RepeaterFieldProps {
 	state: {
@@ -46,12 +47,26 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			contentLanguage: contentLanguage(),
 		}),
 	);
-	const fieldGroupIds = createMemo(
-		() => fieldData()?.groups?.map((g) => g.id) ?? [],
-	);
+	const fieldGroupIds = createMemo(() => {
+		const groupOrder = fieldData()
+			?.groups?.map((g) => {
+				return {
+					id: g.id,
+					order: g.order,
+				};
+			})
+			.sort((a, b) => a.order - b.order);
+
+		return groupOrder?.map((g) => g.id) || [];
+	});
 	const canAddGroup = createMemo(() => {
 		if (!field().validation?.maxGroups) return true;
 		return fieldGroupIds().length < (field().validation?.maxGroups || 0);
+	});
+	const repeaterKey = createMemo(() => {
+		return `${props.state.field.key}-${
+			props.state.getGroupPath().length
+		}-${props.state.getGroupPath().join("-")}`;
 	});
 
 	// -------------------------------
@@ -80,21 +95,41 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			{/* Repeater Body */}
 			<Switch>
 				<Match when={fieldGroupIds().length > 0}>
-					<For each={fieldGroupIds()}>
-						{(groupId) => (
-							<Builder.GroupBody
-								state={{
-									brickIndex: brickIndex(),
-									field: field(),
-									groupId: groupId,
-									getFieldPath: props.state.getFieldPath,
-									setFieldPath: props.state.setFieldPath,
-									getGroupPath: props.state.getGroupPath,
-									setGroupPath: props.state.setGroupPath,
-								}}
-							/>
+					<DragDrop
+						sortOrder={(index, targetindex) => {
+							brickStore.get.swapGroupOrder({
+								brickIndex: props.state.brickIndex,
+								fieldPath: props.state.getFieldPath(),
+								groupPath: props.state.getGroupPath(),
+								groupId: index,
+								targetGroupId: targetindex,
+							});
+						}}
+					>
+						{({ dragDrop }) => (
+							<For each={fieldGroupIds()}>
+								{(groupId) => (
+									<Builder.GroupBody
+										state={{
+											brickIndex: brickIndex(),
+											field: field(),
+											groupId: groupId,
+											dragDrop: dragDrop,
+											repeaterKey: repeaterKey(),
+											getFieldPath:
+												props.state.getFieldPath,
+											setFieldPath:
+												props.state.setFieldPath,
+											getGroupPath:
+												props.state.getGroupPath,
+											setGroupPath:
+												props.state.setGroupPath,
+										}}
+									/>
+								)}
+							</For>
 						)}
-					</For>
+					</DragDrop>
 				</Match>
 				<Match when={fieldGroupIds().length === 0}>
 					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md bg-container flex items-center flex-col justify-center text-center">

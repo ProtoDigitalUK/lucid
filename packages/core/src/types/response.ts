@@ -178,6 +178,7 @@ export interface FieldResponse {
 }
 export interface FieldGroupResponse {
 	id: number | string;
+	order: number;
 	fields: Array<FieldResponse>;
 }
 
