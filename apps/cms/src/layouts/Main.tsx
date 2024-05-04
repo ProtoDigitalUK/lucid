@@ -1,10 +1,19 @@
 import T from "@/translations";
-import { type Component, Switch, Match, createMemo } from "solid-js";
-import { Outlet } from "@solidjs/router";
+import {
+	type Component,
+	Switch,
+	Match,
+	createMemo,
+	type JSXElement,
+} from "solid-js";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 
-const MainLayout: Component = () => {
+interface MainLayoutProps {
+	children?: JSXElement;
+}
+
+const MainLayout: Component<MainLayoutProps> = (props) => {
 	// ----------------------------------
 	// Mutations & Queries
 	const authenticatedUser = api.account.useGetAuthenticatedUser({
@@ -33,9 +42,7 @@ const MainLayout: Component = () => {
 			<Layout.NavigationSidebar />
 			<main class="overflow-y-auto">
 				<Switch>
-					<Match when={isSuccess()}>
-						<Outlet />
-					</Match>
+					<Match when={isSuccess()}>{props.children}</Match>
 					<Match when={isLoading()}>
 						<div class="fixed inset-0 z-50 bg-primary flex items-center justify-center">
 							<div class="absolute inset-0 z-20 flex-col flex items-center justify-center">

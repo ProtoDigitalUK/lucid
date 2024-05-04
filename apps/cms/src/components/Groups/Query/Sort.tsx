@@ -77,13 +77,13 @@ const SortItem: Component<SortItemProps> = (props) => {
 					<Switch>
 						<Match when={sort() === "desc" || sort() === "asc"}>
 							<FaSolidCaretUp
-								class={classNames("w-3 h-3 fill-primaryText", {
+								class={classNames("w-3 h-3 text-primaryText", {
 									"transform rotate-180": sort() === "desc",
 								})}
 							/>
 						</Match>
 						<Match when={sort() === undefined}>
-							<FaSolidMinus class="w-3 h-3 fill-title" />
+							<FaSolidMinus class="w-3 h-3 text-title" />
 						</Match>
 					</Switch>
 				</div>

@@ -1,6 +1,6 @@
 import { Show, createMemo, type Component } from "solid-js";
 import type { CollectionResponse } from "@protoheadless/core/types";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { FaSolidBox, FaSolidBoxesStacked } from "solid-icons/fa";
 
 interface CollectionCardProps {
@@ -34,7 +34,7 @@ const CollectionCard: Component<CollectionCardProps> = (props) => {
 	// Render
 	return (
 		<li class={""}>
-			<Link
+			<A
 				class="border-border border h-full w-full p-15 rounded-md bg-container overflow-hidden cursor-pointer hover:border-secondary transition-colors duration-200 flex flex-col"
 				href={collectionLink()}
 			>
@@ -53,7 +53,7 @@ const CollectionCard: Component<CollectionCardProps> = (props) => {
 						{props.collection.description}
 					</p>
 				)}
-			</Link>
+			</A>
 		</li>
 	);
 };

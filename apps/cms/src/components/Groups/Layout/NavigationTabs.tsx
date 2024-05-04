@@ -1,5 +1,5 @@
 import { type Component, For } from "solid-js";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 // Components
 
 interface NavigationTabsProps {
@@ -19,7 +19,7 @@ export const NavigationTabs: Component<NavigationTabsProps> = (props) => {
 				<For each={props.tabs}>
 					{(tab) => (
 						<li class="mr-15">
-							<Link
+							<A
 								class="flex pb-2.5 font-medium text-body border-b-2 border-transparent hover:border-secondary transition-colors duration-200"
 								activeClass="!border-secondary text-title"
 								href={tab.href || "#"}
@@ -27,7 +27,7 @@ export const NavigationTabs: Component<NavigationTabsProps> = (props) => {
 								end
 							>
 								{tab.label}
-							</Link>
+							</A>
 						</li>
 					)}
 				</For>

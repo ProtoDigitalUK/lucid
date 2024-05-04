@@ -115,7 +115,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						<div class="flex flex-wrap gap-1">
 							<For each={props.values}>
 								{(value) => (
-									<span class="bg-primary hover:bg-primaryH duration-200 transition-colors rounded-md text-primaryText fill-primaryText hover:fill-error px-2 py-0.5 flex items-center text-sm focus:outline-none">
+									<span class="bg-primary hover:bg-primaryH duration-200 transition-colors rounded-md text-primaryText hover:text-error px-2 py-0.5 flex items-center text-sm focus:outline-none">
 										{value.label}
 										<button
 											type="button"
@@ -146,7 +146,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 							<Show when={props.values.length > 0}>
 								<button
 									type="button"
-									class="bg-primary pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 fill-primaryText hover:bg-error hover:fill-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error focus:fill-error"
+									class="bg-primary pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 text-primaryText hover:bg-error hover:text-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error focus:text-error"
 									onClick={() => {
 										setValues([]);
 									}}
@@ -167,7 +167,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 									</span>
 								</button>
 							</Show>
-							<FaSolidSort size={16} class="fill-title ml-1" />
+							<FaSolidSort size={16} class="text-title ml-1" />
 						</div>
 					</div>
 					{/* Trigger */}
@@ -206,7 +206,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 											>
 												<FaSolidCheck
 													size={14}
-													class="fill-primaryText mr-2"
+													class="text-primaryText mr-2"
 												/>
 											</Show>
 										</DropdownMenu.Item>

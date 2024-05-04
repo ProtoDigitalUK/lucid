@@ -190,7 +190,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 					</Match>
 					<Match when={showState() === "no-file"}>
 						<div class="w-full h-full flex justify-center items-center flex-col p-15 md:p-30">
-							<FaSolidArrowUpFromBracket class="w-7 h-7 mx-auto fill-unfocused mb-5" />
+							<FaSolidArrowUpFromBracket class="w-7 h-7 mx-auto text-unfocused mb-5" />
 							<p class="text-center text-base font-medium text-title">
 								{T("drag_and_drop_file_or")}{" "}
 								<button
@@ -291,7 +291,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 			<Switch
 				fallback={
 					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-backgroundAccent flex flex-col justify-center items-center">
-						<FaSolidFile class="w-10 h-10 mx-auto fill-unfocused mb-5" />
+						<FaSolidFile class="w-10 h-10 mx-auto text-unfocused mb-5" />
 						<Show when={props.data.name}>
 							<p class="text-center text-sm font-medium text-title">
 								{props.data.name}
@@ -356,7 +356,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 								props.actions.downloadFile();
 						}}
 					>
-						<FaSolidMagnifyingGlass class="block md:mr-2 fill-primaryText" />
+						<FaSolidMagnifyingGlass class="block md:mr-2 text-primaryText" />
 						<span class="hidden md:inline">{T("preview")}</span>
 					</button>
 				</Show>
@@ -367,7 +367,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 						props.actions.uploadFile();
 					}}
 				>
-					<FaSolidArrowUpFromBracket class="block md:mr-2 fill-primaryText" />
+					<FaSolidArrowUpFromBracket class="block md:mr-2 text-primaryText" />
 					<span class="hidden md:inline">{T("choose_file")}</span>
 				</button>
 				<Show when={props.actions.clearFile !== undefined}>
@@ -379,7 +379,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 								props.actions.clearFile();
 						}}
 					>
-						<FaSolidXmark class="block md:mr-2 fill-primaryText" />
+						<FaSolidXmark class="block md:mr-2 text-primaryText" />
 						<span class="hidden md:inline">{T("remove")}</span>
 					</button>
 				</Show>

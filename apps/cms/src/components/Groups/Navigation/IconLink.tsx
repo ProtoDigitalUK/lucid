@@ -10,7 +10,7 @@ import {
 	FaSolidBox,
 } from "solid-icons/fa";
 // Components
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { Tooltip } from "@kobalte/core";
 import TooltipContent from "@/components/Partials/TooltipContent";
 
@@ -32,7 +32,7 @@ interface IconLinkProps {
 export const IconLink: Component<IconLinkProps> = (props) => {
 	// ----------------------------------
 	// Classes
-	const iconClasses = classNames("w-5 h-5 text-white");
+	const iconClasses = classNames("w-5 h-5 text-primary");
 
 	// ----------------------------------
 	// Render
@@ -41,7 +41,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 			<li class="mb-2.5 last:mb-0">
 				<Tooltip.Root placement={"left"}>
 					<Tooltip.Trigger tabIndex={-1}>
-						<Link
+						<A
 							href={props.href}
 							class={classNames(
 								"w-10 h-10 focus:outline-none focus:!border-secondary focus:ring-0 flex items-center justify-center bg-container rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary",
@@ -75,7 +75,7 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 									<FaSolidEnvelope class={iconClasses} />
 								</Match>
 							</Switch>
-						</Link>
+						</A>
 					</Tooltip.Trigger>
 					<Tooltip.Portal>
 						<TooltipContent text={props.title} />

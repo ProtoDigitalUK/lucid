@@ -77,16 +77,16 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 				>
 					<Switch>
 						<Match when={props.type === "success"}>
-							<FaSolidCheck class="fill-white w-3 h-3 m-auto" />
+							<FaSolidCheck class="text-white w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "error"}>
-							<FaSolidExclamation class="fill-white w-3 h-3 m-auto" />
+							<FaSolidExclamation class="text-white w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "warning"}>
-							<FaSolidTriangleExclamation class="fill-body w-3 h-3 m-auto" />
+							<FaSolidTriangleExclamation class="text-body w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "info"}>
-							<FaSolidInfo class="fill-white w-3 h-3 m-auto" />
+							<FaSolidInfo class="text-white w-3 h-3 m-auto" />
 						</Match>
 					</Switch>
 				</span>

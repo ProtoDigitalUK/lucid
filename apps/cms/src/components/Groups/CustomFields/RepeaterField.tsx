@@ -171,7 +171,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 												}
 												draggable={true}
 											>
-												<FaSolidGripLines class="fill-title w-3" />
+												<FaSolidGripLines class="text-title w-3" />
 											</div>
 											<div class="p-15 w-full">
 												<For

@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { Router, Routes, Route } from "@solidjs/router";
+import { Router, Route } from "@solidjs/router";
 import AuthRoutes from "@/layouts/AuthRoutes";
 import MainLayout from "@/layouts/Main";
 
@@ -39,58 +39,52 @@ import CollectionsDocumentsEditRoute from "./routes/Collections/Documents/Edit";
 const AppRouter: Component = () => {
 	return (
 		<Router>
-			<Routes>
-				{/* Authenticated */}
-				<Route path="/" element={<MainLayout />}>
-					<Route path="/" element={<DashboardRoute />} />
-					<Route path="/test" element={<TestRoute />} />
-					{/* Collections */}
-					<Route
-						path="/collections"
-						element={<CollectionsListRoute />}
-					/>
-					<Route
-						path="/collections/:collectionKey"
-						element={<CollectionsDocumentsListRoute />}
-					/>
-					<Route
-						path="/collections/:collectionKey/create"
-						element={
-							<CollectionsDocumentsEditRoute mode="create" />
-						}
-					/>
-					<Route
-						path="/collections/:collectionKey/:documentId"
-						element={<CollectionsDocumentsEditRoute mode="edit" />}
-					/>
-					{/* Media */}
-					<Route path="/media" element={<MediaListRoute />} />
-					{/* Users */}
-					<Route path="/users" element={<UsersListRoute />} />
-					{/* Roles */}
-					<Route path="/roles" element={<RolesListRoute />} />
-					{/* Emails */}
-					<Route path="/emails" element={<EmailListRoute />} />
-					{/* Settings */}
-					<Route path="/settings" element={<SettingsListRoute />} />
-					<Route
-						path="/settings/integrations"
-						element={<SettingsListRoute />}
-					/>
-				</Route>
-				{/* Non authenticated */}
-				<Route path="/" component={AuthRoutes}>
-					<Route path="/login" component={LoginRoute} />
-					<Route
-						path="/forgot-password"
-						component={ForgotPasswordRoute}
-					/>
-					<Route
-						path="/reset-password"
-						component={ResetPasswordRoute}
-					/>
-				</Route>
-			</Routes>
+			{/* Authenticated */}
+			<Route path="/" component={MainLayout}>
+				<Route path="/" component={DashboardRoute} />
+				<Route path="/test" component={TestRoute} />
+				{/* Collections */}
+				<Route path="/collections" component={CollectionsListRoute} />
+				<Route
+					path="/collections/:collectionKey"
+					component={CollectionsDocumentsListRoute}
+				/>
+				<Route
+					path="/collections/:collectionKey/create"
+					component={() => (
+						<CollectionsDocumentsEditRoute mode="create" />
+					)}
+				/>
+				<Route
+					path="/collections/:collectionKey/:documentId"
+					component={() => (
+						<CollectionsDocumentsEditRoute mode="edit" />
+					)}
+				/>
+				{/* Media */}
+				<Route path="/media" component={MediaListRoute} />
+				{/* Users */}
+				<Route path="/users" component={UsersListRoute} />
+				{/* Roles */}
+				<Route path="/roles" component={RolesListRoute} />
+				{/* Emails */}
+				<Route path="/emails" component={EmailListRoute} />
+				{/* Settings */}
+				<Route path="/settings" component={SettingsListRoute} />
+				<Route
+					path="/settings/integrations"
+					component={SettingsListRoute}
+				/>
+			</Route>
+			{/* Non authenticated */}
+			<Route path="/" component={AuthRoutes}>
+				<Route path="/login" component={LoginRoute} />
+				<Route
+					path="/forgot-password"
+					component={ForgotPasswordRoute}
+				/>
+				<Route path="/reset-password" component={ResetPasswordRoute} />
+			</Route>
 		</Router>
 	);
 };

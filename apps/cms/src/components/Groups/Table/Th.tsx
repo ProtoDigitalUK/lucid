@@ -119,7 +119,7 @@ export const Th: Component<ThProps> = (props) => {
 										<FaSolidCaretUp
 											aria-hidden="true"
 											class={classNames(
-												"w-3 h-3 ml-2 fill-title",
+												"w-3 h-3 ml-2 text-title",
 												{
 													"transform rotate-180":
 														sort() === "desc",
@@ -130,7 +130,7 @@ export const Th: Component<ThProps> = (props) => {
 									<Match when={sort() === undefined}>
 										<FaSolidMinus
 											aria-hidden="true"
-											class="w-3 h-3 fill-title ml-2"
+											class="w-3 h-3 text-title ml-2"
 										/>
 									</Match>
 								</Switch>

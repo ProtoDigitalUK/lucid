@@ -122,10 +122,10 @@ export const Input: Component<InputProps> = (props) => {
 						}}
 					>
 						<Show when={passwordVisible()}>
-							<FaSolidEyeSlash size={18} class="fill-unfocused" />
+							<FaSolidEyeSlash size={18} class="text-unfocused" />
 						</Show>
 						<Show when={!passwordVisible()}>
-							<FaSolidEye size={18} class="fill-unfocused" />
+							<FaSolidEye size={18} class="text-unfocused" />
 						</Show>
 					</button>
 				</Show>

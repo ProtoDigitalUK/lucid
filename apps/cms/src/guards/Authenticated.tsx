@@ -1,15 +1,16 @@
-import { type Component, Switch, Match } from "solid-js";
-import { Navigate, Outlet } from "@solidjs/router";
+import { type Component, Switch, Match, type JSXElement } from "solid-js";
+import { Navigate } from "@solidjs/router";
 import { getCookie } from "@/utils/cookie";
 
 interface AuthenticatedProps {
 	requiredState?: boolean;
+	children: JSXElement;
 }
 
-const Authenticated: Component<AuthenticatedProps> = () => {
+const Authenticated: Component<AuthenticatedProps> = (props) => {
 	// ----------------------------------------
 	// Render
-	return <Outlet />;
+	return props.children;
 	// return (
 	// <Switch fallback={<Outlet />}>
 	// 	<Match when={!getCookie("auth")}>

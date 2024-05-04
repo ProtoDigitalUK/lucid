@@ -56,7 +56,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 				)}
 			>
 				<div class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab">
-					<FaSolidGripLines class="fill-title w-3" />
+					<FaSolidGripLines class="text-title w-3" />
 				</div>
 				<div class="p-15 w-full">
 					<For each={fields()}>
@@ -80,7 +80,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			<div class={"ml-2.5 transition-opacity duration-200"}>
 				<button
 					type="button"
-					class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
+					class="text-primary hover:text-errorH bg-transparent transition-colors duration-200 cursor-pointer"
 					onClick={() => {
 						removeGroup(groupId());
 					}}

@@ -156,7 +156,7 @@ export const Select: Component<SelectProps> = (props) => {
 								{T("nothing_selected")}
 							</span>
 						)}
-						<FaSolidSort size={16} class="fill-title ml-1" />
+						<FaSolidSort size={16} class="text-title ml-1" />
 					</DropdownMenu.Trigger>
 				</div>
 				<DropdownContent
@@ -253,7 +253,7 @@ export const Select: Component<SelectProps> = (props) => {
 											>
 												<FaSolidCheck
 													size={14}
-													class="fill-primaryText mr-2"
+													class="text-primaryText mr-2"
 												/>
 											</Show>
 										</li>

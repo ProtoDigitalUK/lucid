@@ -38,7 +38,7 @@ const PageSearchRow: Component<PageSearchRowProps> = (props) => {
 			{titleTranslation()?.value}
 			<Show when={props.selectedId === props.page.id}>
 				<span>
-					<FaSolidCheck size={12} class="fill-current" />
+					<FaSolidCheck size={12} class="text-current" />
 				</span>
 			</Show>
 		</li>

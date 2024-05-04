@@ -36,7 +36,7 @@ const MediaPreview: Component<MediaPreviewProps> = (props) => {
 				<div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
 					<FaSolidFileZipper
 						size={40}
-						class="fill-primary opacity-40"
+						class="text-primary opacity-40"
 					/>
 				</div>
 			</Match>
@@ -44,7 +44,7 @@ const MediaPreview: Component<MediaPreviewProps> = (props) => {
 				<div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
 					<FaSolidFileAudio
 						size={40}
-						class="fill-primary opacity-40"
+						class="text-primary opacity-40"
 					/>
 				</div>
 			</Match>
@@ -52,7 +52,7 @@ const MediaPreview: Component<MediaPreviewProps> = (props) => {
 				<div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
 					<FaSolidFileVideo
 						size={40}
-						class="fill-primary opacity-40"
+						class="text-primary opacity-40"
 					/>
 				</div>
 			</Match>
@@ -60,13 +60,13 @@ const MediaPreview: Component<MediaPreviewProps> = (props) => {
 				<div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
 					<FaSolidFileLines
 						size={40}
-						class="fill-primary opacity-40"
+						class="text-primary opacity-40"
 					/>
 				</div>
 			</Match>
 			<Match when={props.media.type === "unknown"}>
 				<div class="w-full h-full bg-backgroundAccent flex justify-center items-center group-hover:scale-110 transition duration-100">
-					<FaSolidFile size={40} class="fill-primary opacity-40" />
+					<FaSolidFile size={40} class="text-primary opacity-40" />
 				</div>
 			</Match>
 		</Switch>

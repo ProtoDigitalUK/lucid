@@ -1,6 +1,6 @@
 import { type Component, onMount, Show, For } from "solid-js";
 import { FaSolidCaretRight } from "solid-icons/fa";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import classNames from "classnames";
 
 export interface PageBreadcrumbsProps {
@@ -31,12 +31,12 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 						{(breadcrumb, i) => (
 							<Show when={breadcrumb.include !== false}>
 								<li class="flex items-center">
-									<Link
+									<A
 										href={breadcrumb.link}
 										class="flex items-center text-primary hover:text-primaryDark text-sm"
 									>
 										{breadcrumb.label}
-									</Link>
+									</A>
 									<Show
 										when={
 											props.breadcrumbs &&

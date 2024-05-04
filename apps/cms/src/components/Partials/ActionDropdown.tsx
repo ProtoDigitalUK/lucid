@@ -4,7 +4,7 @@ import { FaSolidEllipsisVertical, FaSolidChevronRight } from "solid-icons/fa";
 import classNames from "classnames";
 import spawnToast from "@/utils/spawn-toast";
 import { DropdownMenu } from "@kobalte/core";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import DropdownContent from "@/components/Partials/DropdownContent";
 
 export interface ActionDropdownProps {
@@ -45,7 +45,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 			>
 				<span class="sr-only">{T("show_options")}</span>
 				<DropdownMenu.Icon>
-					<FaSolidEllipsisVertical class="fill-body pointer-events-none" />
+					<FaSolidEllipsisVertical class="text-body pointer-events-none" />
 				</DropdownMenu.Icon>
 			</DropdownMenu.Trigger>
 
@@ -67,7 +67,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 								>
 									<Switch>
 										<Match when={action.type === "link"}>
-											<Link
+											<A
 												href={action.href || "/"}
 												class={classNames(
 													liItemClasses,
@@ -102,7 +102,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 												<FaSolidChevronRight
 													size={14}
 												/>
-											</Link>
+											</A>
 										</Match>
 										<Match when={action.type === "button"}>
 											<button

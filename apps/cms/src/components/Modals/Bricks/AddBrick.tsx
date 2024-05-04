@@ -82,7 +82,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 			{/* Search */}
 			<div class="h-14 w-full relative">
 				<div class="absolute top-0 left-15 h-full flex items-center justify-center pointer-events-none">
-					<FaSolidMagnifyingGlass class="w-15 fill-unfocused" />
+					<FaSolidMagnifyingGlass class="w-15 text-unfocused" />
 				</div>
 				<input
 					class="h-full w-full border-b border-border px-10 focus:outline-none text-title placeholder:text-unfocused"
@@ -98,7 +98,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 						}}
 						type="button"
 					>
-						<FaSolidXmark class="w-15 fill-error" />
+						<FaSolidXmark class="w-15 text-error" />
 					</button>
 				</Show>
 			</div>

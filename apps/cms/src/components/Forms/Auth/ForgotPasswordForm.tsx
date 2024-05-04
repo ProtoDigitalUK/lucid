@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, createSignal, Show } from "solid-js";
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { getBodyError } from "@/utils/error-helpers";
 import api from "@/services/api";
 import Form from "@/components/Groups/Form";
@@ -52,13 +52,13 @@ const ForgotPasswordForm: Component<ForgotPasswordFormProps> = (props) => {
 				errors={getBodyError("email", forgotPassword.errors)}
 			/>
 			<Show when={props.showBackToLogin}>
-				<Link
+				<A
 					class="block text-sm mt-1 hover:text-secondaryH duration-200 transition-colors"
 					type="button"
 					href="/login"
 				>
 					{T("back_to_login")}
-				</Link>
+				</A>
 			</Show>
 		</Form.Root>
 	);

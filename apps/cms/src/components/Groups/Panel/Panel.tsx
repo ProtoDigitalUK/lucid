@@ -89,7 +89,7 @@ export const Panel: Component<PanelProps> = (props) => {
 		if (!props.langauge?.useDefaultContentLanguage)
 			return contentLanguageStore.get.contentLanguage;
 		const defaultLanguage = contentLanguageStore.get.languages.find(
-			(language) => language.is_default,
+			(language) => language.isDefault,
 		);
 		if (defaultLanguage) return defaultLanguage.id;
 		return contentLanguageStore.get.contentLanguage;
@@ -151,7 +151,7 @@ export const Panel: Component<PanelProps> = (props) => {
 						>
 							<div class="w-full mb-2.5">
 								<Dialog.CloseButton class="flex items-center text-sm text-title">
-									<FaSolidArrowLeft class="fill-title mr-2" />
+									<FaSolidArrowLeft class="text-title mr-2" />
 									back
 								</Dialog.CloseButton>
 							</div>

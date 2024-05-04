@@ -2,7 +2,7 @@ import { type Component, Switch, Match } from "solid-js";
 import classNames from "classnames";
 import { FaSolidFile } from "solid-icons/fa";
 // Components
-import { Link } from "@solidjs/router";
+import { A } from "@solidjs/router";
 
 interface NavigationLinkProps {
 	title: string;
@@ -16,13 +16,13 @@ export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 
 	// ----------------------------------
 	// Classes
-	const iconClasses = classNames("w-5 h-5 text-white");
+	const iconClasses = classNames("w-5 h-5 text-primary");
 
 	// ----------------------------------
 	// Render
 	return (
 		<li class="mb-1 last:mb-0">
-			<Link
+			<A
 				title={props.title}
 				href={props.href}
 				class={classNames(
@@ -41,7 +41,7 @@ export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 				<span class="ml-2.5 block text-sm font-medium">
 					{props.title}
 				</span>
-			</Link>
+			</A>
 		</li>
 	);
 };

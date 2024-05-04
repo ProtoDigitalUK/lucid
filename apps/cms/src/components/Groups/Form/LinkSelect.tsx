@@ -98,7 +98,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						>
 							<span class="line-clamp-1">{linkLabel()}</span>
 							<span class="ml-2.5 flex items-center border-l border-current pl-2.5">
-								<FaSolidPen size={12} class="fill-current" />
+								<FaSolidPen size={12} class="text-current" />
 							</span>
 						</button>
 						<button

@@ -56,8 +56,6 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 		const filters = props.searchParams.getFilters();
 		const filter = filters.get(props.filter.key);
 
-		console.log("filter", filter);
-
 		if (typeof filter === "string" || typeof filter === "number") {
 			setValue(filter.toString());
 			if (filter === "1") {
@@ -160,7 +158,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 						}}
 						type="button"
 					>
-						<FaSolidXmark class="w-3.5 h-3.5 fill-error" />
+						<FaSolidXmark class="w-3.5 h-3.5 text-error" />
 					</button>
 				</Show>
 			</label>

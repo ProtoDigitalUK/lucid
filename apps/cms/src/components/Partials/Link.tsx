@@ -1,7 +1,7 @@
 import T from "@/translations";
 import { type Component, type JSX, createMemo } from "solid-js";
 import classnames from "classnames";
-import { Link as RouterLink } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import spawnToast from "@/utils/spawn-toast";
 
 interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
@@ -50,7 +50,7 @@ const Link: Component<LinkProps> = (props) => {
 	// ----------------------------------------
 	// Render
 	return (
-		<RouterLink
+		<A
 			class={classnames(classes(), props.classes)}
 			href={props.href || ""}
 			replace={props.replace}
@@ -68,7 +68,7 @@ const Link: Component<LinkProps> = (props) => {
 			}}
 		>
 			{props.children}
-		</RouterLink>
+		</A>
 	);
 };
 
