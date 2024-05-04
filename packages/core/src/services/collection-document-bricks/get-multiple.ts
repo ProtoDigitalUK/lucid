@@ -6,6 +6,7 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 export interface ServiceData {
 	documentId: number;
 	collectionKey: string;
+	languageId: number;
 }
 
 const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
@@ -20,6 +21,7 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const [bricks, collection] = await Promise.all([
 		CollectionDocumentBricksRepo.selectMultipleByDocumentId({
 			documentId: data.documentId,
+			languageId: data.languageId,
 			config: serviceConfig.config,
 		}),
 		collectionsServices.getSingleInstance({

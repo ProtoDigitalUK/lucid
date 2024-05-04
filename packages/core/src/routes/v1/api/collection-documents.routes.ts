@@ -21,6 +21,7 @@ const collectionDocumentsRoutes = async (fastify: FastifyInstance) => {
 		url: "/:collectionKey/:id",
 		middleware: {
 			authenticate: true,
+			contentLanguage: true,
 		},
 		swaggerSchema: collectionDocuments.getSingle.swaggerSchema,
 		zodSchema: collectionDocuments.getSingle.zodSchema,

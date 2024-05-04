@@ -81,7 +81,7 @@ export default class CollectionDocumentsRepo {
 		collectionKey: string;
 		allowedFieldFilters: FieldFilters;
 		allowedFieldIncludes: Array<string>;
-		languageId: number; // TODO: will be used for field joins
+		languageId: number;
 		config: Config;
 	}) => {
 		let pagesQuery = this.db
@@ -226,6 +226,11 @@ export default class CollectionDocumentsRepo {
 									"headless_collection_document_fields.collection_document_id",
 									"=",
 									"headless_collection_documents.id",
+								)
+								.where(
+									"headless_collection_document_fields.language_id",
+									"=",
+									props.languageId,
 								)
 								.where(
 									"headless_collection_document_fields.key",

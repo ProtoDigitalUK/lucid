@@ -28,6 +28,7 @@ const getSingleController: RouteController<
 			{
 				id: Number.parseInt(request.params.id),
 				query: request.query,
+				languageId: request.language.id,
 			},
 		);
 
