@@ -1,12 +1,13 @@
 import {
 	type Component,
+	type Accessor,
+	type Setter,
 	Match,
 	Switch,
 	Show,
 	createMemo,
 	createSignal,
-	type Accessor,
-	type Setter,
+	For,
 } from "solid-js";
 import classNames from "classnames";
 import type { CustomField } from "@protoheadless/core/types";
@@ -22,8 +23,8 @@ interface DynamicFieldProps {
 		groupId?: number | string;
 		getFieldPath?: Accessor<string[]>;
 		setFieldPath?: Setter<string[]>;
-		getGroupPath: Accessor<Array<string | number>>;
-		setGroupPath: Setter<Array<string | number>>;
+		getGroupPath?: Accessor<Array<string | number>>;
+		setGroupPath?: Setter<Array<string | number>>;
 	};
 }
 
@@ -65,14 +66,29 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 					"pl-[38px]": props.state.field.type !== "tab",
 				})}
 			>
-				<Switch
-					fallback={
-						<>
-							({props.state.field.key} -{" "}
-							{props.state.field.repeaterKey})
-						</>
-					}
-				>
+				<Switch>
+					<Match when={props.state.field.type === "tab"}>
+						<Show
+							when={
+								props.state.activeTab === props.state.field.key
+							}
+						>
+							<For each={props.state.field.fields}>
+								{(field) => (
+									<DynamicField
+										state={{
+											brickIndex: props.state.brickIndex,
+											field: field,
+											getFieldPath,
+											setFieldPath,
+											getGroupPath,
+											setGroupPath,
+										}}
+									/>
+								)}
+							</For>
+						</Show>
+					</Match>
 					<Match when={props.state.field.type === "text"}>
 						<CustomFields.InputField
 							type="text"
@@ -85,6 +101,10 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 								contentLanguage: contentLanguage(),
 							}}
 						/>
+					</Match>
+					<Match when={props.state.field.type === "user"}>
+						TODO: ({props.state.field.key} -{" "}
+						{props.state.field.repeaterKey})
 					</Match>
 					<Match when={props.state.field.type === "number"}>
 						<CustomFields.InputField
