@@ -5,16 +5,16 @@ import starlight from "@astrojs/starlight";
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: "Headless",
+			title: "Lucid",
 			social: {
-				github: "https://github.com/ProtoDigitalUK/proto_headless",
+				github: "https://github.com/ProtoDigitalUK/lucid",
 			},
 			sidebar: [
 				{
 					label: "Start Here",
 					items: [
 						{ label: "Getting Started", link: "/getting-started/" },
-						{ label: "Why Headless", link: "/why-headless/" },
+						{ label: "Why Lucid", link: "/why-lucid/" },
 					],
 				},
 				// {
@@ -25,8 +25,8 @@ export default defineConfig({
 					label: "Configuration",
 					items: [
 						{
-							label: "The Headless Config File",
-							link: "/guides/configuring-headless/",
+							label: "The Lucid Config File",
+							link: "/guides/configuring-lucid/",
 						},
 						{ label: "Collections", link: "/guides/collections/" },
 						{ label: "Bricks", link: "/guides/bricks/" },

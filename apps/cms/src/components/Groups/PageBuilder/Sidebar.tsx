@@ -10,10 +10,7 @@ import {
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore from "@/store/builderStore";
 // Types
-import type {
-	ErrorResponse,
-	CollectionResponse,
-} from "@protoheadless/core/types";
+import type { ErrorResponse, CollectionResponse } from "@lucidcms/core/types";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
 import type { BrickConfigT } from "@headless/types/src/bricks"; // TODO: remove

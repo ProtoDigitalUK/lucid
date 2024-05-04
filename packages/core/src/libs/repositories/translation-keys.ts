@@ -7,9 +7,9 @@ export default class TranslationKeysRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_translation_keys">;
+		where: QueryBuilderWhereT<"lucid_translation_keys">;
 	}) => {
-		let query = this.db.deleteFrom("headless_translation_keys");
+		let query = this.db.deleteFrom("lucid_translation_keys");
 
 		query = deleteQB(query, props.where);
 
@@ -23,7 +23,7 @@ export default class TranslationKeysRepo {
 		}[],
 	) => {
 		return this.db
-			.insertInto("headless_translation_keys")
+			.insertInto("lucid_translation_keys")
 			.values(props.map((d) => ({ created_at: d.createdAt })))
 			.returning("id")
 			.execute();

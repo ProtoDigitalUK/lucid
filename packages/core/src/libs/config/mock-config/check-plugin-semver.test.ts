@@ -7,7 +7,7 @@ import { messageFormat } from "../../logging/index.js";
 import packageJson from "../../../../package.json";
 import semver from "semver";
 
-test("should throw headless version support error", async () => {
+test("should throw lucid version support error", async () => {
 	const consoleLogSpy = vi
 		.spyOn(logger, "error")
 		// @ts-expect-error

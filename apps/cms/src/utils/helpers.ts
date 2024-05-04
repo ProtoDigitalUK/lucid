@@ -1,6 +1,6 @@
 import type { Accessor, Setter } from "solid-js";
 import equal from "fast-deep-equal/es6";
-import type { UserResponse, MediaResponse } from "@protoheadless/core/types";
+import type { UserResponse, MediaResponse } from "@lucidcms/core/types";
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type GenericObject = Record<string, any>;

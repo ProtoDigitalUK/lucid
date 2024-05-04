@@ -1,9 +1,9 @@
 // TODO: remove this
 import { type Component, createSignal, createEffect } from "solid-js";
 // Types
-import type { FieldErrors } from "@protoheadless/core/types";
+import type { FieldErrors } from "@lucidcms/core/types";
 import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks";
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store

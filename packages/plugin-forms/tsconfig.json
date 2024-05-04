@@ -1,5 +1,5 @@
 {
-    "extends": "@protoheadless/config/tsconfig.base.json",
+    "extends": "@lucidcms/config/tsconfig.base.json",
     "compilerOptions": {
         "rootDir": "./src",
         "outDir": "./dist",

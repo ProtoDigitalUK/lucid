@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import emailServices from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
@@ -23,7 +23,7 @@ const resendSingle = async (
 	});
 
 	if (email === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("email"),

@@ -1,5 +1,5 @@
 import { Show, createMemo, type Component } from "solid-js";
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 import { A } from "@solidjs/router";
 import { FaSolidBox, FaSolidBoxesStacked } from "solid-icons/fa";
 

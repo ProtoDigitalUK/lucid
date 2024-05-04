@@ -3,7 +3,7 @@ import { createQuery } from "@tanstack/solid-query";
 import userStore from "@/store/userStore";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-import type { ResponseBody, UserResponse } from "@protoheadless/core/types";
+import type { ResponseBody, UserResponse } from "@lucidcms/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface QueryParams {}

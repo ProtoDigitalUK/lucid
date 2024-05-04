@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import Formatter from "../../libs/formatters/index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
@@ -18,7 +18,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (!user) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("user"),

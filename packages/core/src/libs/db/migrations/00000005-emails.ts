@@ -10,7 +10,7 @@ const Migration00000005: MigrationFn = (adapter) => {
 	return {
 		async up(db: Kysely<unknown>) {
 			await db.schema
-				.createTable("headless_emails")
+				.createTable("lucid_emails")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)

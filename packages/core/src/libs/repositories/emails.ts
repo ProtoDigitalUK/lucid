@@ -17,9 +17,9 @@ export default class EmailsRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessEmails>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_emails">;
+		where: QueryBuilderWhereT<"lucid_emails">;
 	}) => {
-		let query = this.db.selectFrom("headless_emails").select(props.select);
+		let query = this.db.selectFrom("lucid_emails").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -31,7 +31,7 @@ export default class EmailsRepo {
 		id: number;
 	}) => {
 		return this.db
-			.selectFrom("headless_emails")
+			.selectFrom("lucid_emails")
 			.selectAll()
 			.where("id", "=", props.id)
 			.executeTakeFirst();
@@ -41,7 +41,7 @@ export default class EmailsRepo {
 		config: Config;
 	}) => {
 		const emailsQuery = this.db
-			.selectFrom("headless_emails")
+			.selectFrom("lucid_emails")
 			.select([
 				"id",
 				"email_hash",
@@ -63,7 +63,7 @@ export default class EmailsRepo {
 			]);
 
 		const emailsCountQuery = this.db
-			.selectFrom("headless_emails")
+			.selectFrom("lucid_emails")
 			.select(sql`count(*)`.as("count"));
 
 		const { main, count } = queryBuilder(
@@ -159,7 +159,7 @@ export default class EmailsRepo {
 		lastSuccessAt?: string;
 	}) => {
 		return this.db
-			.insertInto("headless_emails")
+			.insertInto("lucid_emails")
 			.values({
 				email_hash: props.emailHash,
 				from_address: props.fromAddress,
@@ -183,7 +183,7 @@ export default class EmailsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_emails">;
+		where: QueryBuilderWhereT<"lucid_emails">;
 		data: {
 			deliveryStatus?: HeadlessEmails["delivery_status"];
 			lastErrorMessage?: string;
@@ -194,7 +194,7 @@ export default class EmailsRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_emails")
+			.updateTable("lucid_emails")
 			.set({
 				delivery_status: props.data.deliveryStatus,
 				last_error_message: props.data.lastErrorMessage,
@@ -212,9 +212,9 @@ export default class EmailsRepo {
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_emails">;
+		where: QueryBuilderWhereT<"lucid_emails">;
 	}) => {
-		let query = this.db.deleteFrom("headless_emails").returning("id");
+		let query = this.db.deleteFrom("lucid_emails").returning("id");
 
 		query = deleteQB(query, props.where);
 

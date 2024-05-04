@@ -7,7 +7,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import type {
 	ResponseBody,
 	CollectionDocumentResponse,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 
 interface QueryParams {
 	location: {

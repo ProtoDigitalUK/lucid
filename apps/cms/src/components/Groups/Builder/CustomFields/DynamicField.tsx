@@ -10,7 +10,7 @@ import {
 	For,
 } from "solid-js";
 import classNames from "classnames";
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";

@@ -1,10 +1,10 @@
-# @protoheadless/plugin-local-storage
+# @lucidcms/plugin-local-storage
 
 ## 1.0.1
 
 ### Patch Changes
 
-- Updated HEADLESS_VERSION constant to support any core version pre 1.0.0
+- Updated LUCID_VERSION constant to support any core version pre 1.0.0
 
 ## 1.0.0
 
@@ -15,10 +15,10 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @protoheadless/core@0.1.0
+  - @lucidcms/core@0.1.0
 
 ## 0.1.0
 
 ### Minor Changes
 
-- Updated response type and added support for headless version checking
+- Updated response type and added support for lucid version checking

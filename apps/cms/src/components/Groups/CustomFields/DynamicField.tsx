@@ -1,7 +1,7 @@
 import { type Component, For, Match, Switch, Show, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 import builderStore, {

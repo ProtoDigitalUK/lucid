@@ -15,7 +15,7 @@ export default class RolesRepo {
 
 	count = async () => {
 		return this.db
-			.selectFrom("headless_roles")
+			.selectFrom("lucid_roles")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
@@ -23,9 +23,9 @@ export default class RolesRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessRoles>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_roles">;
+		where: QueryBuilderWhereT<"lucid_roles">;
 	}) => {
-		let query = this.db.selectFrom("headless_roles").select(props.select);
+		let query = this.db.selectFrom("lucid_roles").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -38,7 +38,7 @@ export default class RolesRepo {
 		config: Config;
 	}) => {
 		return this.db
-			.selectFrom("headless_roles")
+			.selectFrom("lucid_roles")
 			.select((eb) => [
 				"id",
 				"name",
@@ -48,16 +48,16 @@ export default class RolesRepo {
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_role_permissions")
+							.selectFrom("lucid_role_permissions")
 							.select([
-								"headless_role_permissions.id",
-								"headless_role_permissions.permission",
-								"headless_role_permissions.role_id",
+								"lucid_role_permissions.id",
+								"lucid_role_permissions.permission",
+								"lucid_role_permissions.role_id",
 							])
 							.whereRef(
-								"headless_role_permissions.role_id",
+								"lucid_role_permissions.role_id",
 								"=",
-								"headless_roles.id",
+								"lucid_roles.id",
 							),
 					)
 					.as("permissions"),
@@ -67,9 +67,9 @@ export default class RolesRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessRoles>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_roles">;
+		where: QueryBuilderWhereT<"lucid_roles">;
 	}) => {
-		let query = this.db.selectFrom("headless_roles").select(props.select);
+		let query = this.db.selectFrom("lucid_roles").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -82,7 +82,7 @@ export default class RolesRepo {
 		config: Config;
 	}) => {
 		let rolesQuery = this.db
-			.selectFrom("headless_roles")
+			.selectFrom("lucid_roles")
 			.select(["id", "name", "created_at", "updated_at", "description"]);
 
 		if (props.query.include?.includes("permissions")) {
@@ -90,16 +90,16 @@ export default class RolesRepo {
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_role_permissions")
+							.selectFrom("lucid_role_permissions")
 							.select([
-								"headless_role_permissions.id",
-								"headless_role_permissions.permission",
-								"headless_role_permissions.role_id",
+								"lucid_role_permissions.id",
+								"lucid_role_permissions.permission",
+								"lucid_role_permissions.role_id",
 							])
 							.whereRef(
-								"headless_role_permissions.role_id",
+								"lucid_role_permissions.role_id",
 								"=",
-								"headless_roles.id",
+								"lucid_roles.id",
 							),
 					)
 					.as("permissions"),
@@ -107,7 +107,7 @@ export default class RolesRepo {
 		}
 
 		const rolesCountQuery = this.db
-			.selectFrom("headless_roles")
+			.selectFrom("lucid_roles")
 			.select(sql`count(*)`.as("count"));
 
 		const { main, count } = queryBuilder(
@@ -159,9 +159,9 @@ export default class RolesRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_roles">;
+		where: QueryBuilderWhereT<"lucid_roles">;
 	}) => {
-		let query = this.db.deleteFrom("headless_roles").returning("id");
+		let query = this.db.deleteFrom("lucid_roles").returning("id");
 
 		query = deleteQB(query, props.where);
 
@@ -170,7 +170,7 @@ export default class RolesRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_roles">;
+		where: QueryBuilderWhereT<"lucid_roles">;
 		data: {
 			name?: string;
 			description?: string;
@@ -178,7 +178,7 @@ export default class RolesRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_roles")
+			.updateTable("lucid_roles")
 			.set({
 				name: props.data.name,
 				description: props.data.description,
@@ -197,7 +197,7 @@ export default class RolesRepo {
 		description?: string;
 	}) => {
 		return this.db
-			.insertInto("headless_roles")
+			.insertInto("lucid_roles")
 			.values({
 				name: props.name,
 				description: props.description,

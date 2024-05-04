@@ -4,7 +4,7 @@ import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import objectToFormData from "@/utils/object-to-formdata";
 // Types
-import type { ResponseBody } from "@protoheadless/core/types";
+import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
 	id: number;

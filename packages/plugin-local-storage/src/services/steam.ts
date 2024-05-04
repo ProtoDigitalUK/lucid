@@ -4,7 +4,7 @@ import path from "node:path";
 import mime from "mime-types";
 import { keyPaths } from "../utils/helpers.js";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyStream } from "@protoheadless/core/types";
+import type { MediaStrategyStream } from "@lucidcms/core/types";
 
 export default (pluginOptions: PluginOptions) => {
 	const stream: MediaStrategyStream = async (key) => {

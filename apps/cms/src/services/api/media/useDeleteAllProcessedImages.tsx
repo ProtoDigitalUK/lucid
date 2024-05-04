@@ -3,7 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody } from "@protoheadless/core/types";
+import type { ResponseBody } from "@lucidcms/core/types";
 
 export const deleteAllProcessedImagesReq = () => {
 	return request<ResponseBody<null>>({

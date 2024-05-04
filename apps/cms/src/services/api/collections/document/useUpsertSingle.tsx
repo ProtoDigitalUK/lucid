@@ -9,7 +9,7 @@ import type {
 	FieldResponseMeta,
 	FieldResponseValue,
 	FieldTypes,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 
 interface FieldDataT {
 	key: string;

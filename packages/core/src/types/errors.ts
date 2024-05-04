@@ -1,6 +1,6 @@
 import type z from "zod";
 
-export interface HeadlessAPIErrorData {
+export interface LucidAPIErrorData {
 	type: "validation" | "basic" | "forbidden" | "authorisation";
 
 	name?: string;

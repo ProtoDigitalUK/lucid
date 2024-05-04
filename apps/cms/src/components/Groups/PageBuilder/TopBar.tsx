@@ -3,7 +3,7 @@ import { type Component, createMemo, createSignal } from "solid-js";
 import { FaSolidRobot } from "solid-icons/fa";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks"; // TODO: remove
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Components
 import Button from "@/components/Partials/Button";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";

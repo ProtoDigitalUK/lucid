@@ -20,7 +20,7 @@ export default class UsersRepo {
 
 	count = async () => {
 		return this.db
-			.selectFrom("headless_users")
+			.selectFrom("lucid_users")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
@@ -28,9 +28,9 @@ export default class UsersRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_users">;
+		where: QueryBuilderWhereT<"lucid_users">;
 	}) => {
-		let query = this.db.selectFrom("headless_users").select(props.select);
+		let query = this.db.selectFrom("lucid_users").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -43,7 +43,7 @@ export default class UsersRepo {
 		config: Config;
 	}) => {
 		return this.db
-			.selectFrom("headless_users")
+			.selectFrom("lucid_users")
 			.select((eb) => [
 				"email",
 				"first_name",
@@ -56,32 +56,32 @@ export default class UsersRepo {
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_user_roles")
+							.selectFrom("lucid_user_roles")
 							.innerJoin(
-								"headless_roles",
-								"headless_roles.id",
-								"headless_user_roles.role_id",
+								"lucid_roles",
+								"lucid_roles.id",
+								"lucid_user_roles.role_id",
 							)
 							.select((eb) => [
-								"headless_roles.id",
-								"headless_roles.name",
-								"headless_roles.description",
+								"lucid_roles.id",
+								"lucid_roles.name",
+								"lucid_roles.description",
 								props.config.db
 									.jsonArrayFrom(
 										eb
 											.selectFrom(
-												"headless_role_permissions",
+												"lucid_role_permissions",
 											)
 											.select(["permission"])
 											.whereRef(
 												"role_id",
 												"=",
-												"headless_roles.id",
+												"lucid_roles.id",
 											),
 									)
 									.as("permissions"),
 							])
-							.whereRef("user_id", "=", "headless_users.id"),
+							.whereRef("user_id", "=", "lucid_users.id"),
 					)
 					.as("roles"),
 			])
@@ -99,7 +99,7 @@ export default class UsersRepo {
 		};
 	}) => {
 		return this.db
-			.selectFrom("headless_users")
+			.selectFrom("lucid_users")
 			.select(props.select)
 			.where((eb) =>
 				eb.or([
@@ -113,9 +113,9 @@ export default class UsersRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessUsers>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_users">;
+		where: QueryBuilderWhereT<"lucid_users">;
 	}) => {
-		let query = this.db.selectFrom("headless_users").select(props.select);
+		let query = this.db.selectFrom("lucid_users").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -128,55 +128,47 @@ export default class UsersRepo {
 		config: Config;
 	}) => {
 		const usersQuery = this.db
-			.selectFrom("headless_users")
+			.selectFrom("lucid_users")
 			.select((eb) => [
-				"headless_users.email",
-				"headless_users.first_name",
-				"headless_users.last_name",
-				"headless_users.id",
-				"headless_users.created_at",
-				"headless_users.updated_at",
-				"headless_users.username",
-				"headless_users.super_admin",
+				"lucid_users.email",
+				"lucid_users.first_name",
+				"lucid_users.last_name",
+				"lucid_users.id",
+				"lucid_users.created_at",
+				"lucid_users.updated_at",
+				"lucid_users.username",
+				"lucid_users.super_admin",
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_user_roles")
+							.selectFrom("lucid_user_roles")
 							.innerJoin(
-								"headless_roles",
-								"headless_roles.id",
-								"headless_user_roles.role_id",
+								"lucid_roles",
+								"lucid_roles.id",
+								"lucid_user_roles.role_id",
 							)
 							.select([
-								"headless_roles.id",
-								"headless_roles.name",
-								"headless_roles.description",
+								"lucid_roles.id",
+								"lucid_roles.name",
+								"lucid_roles.description",
 							])
-							.whereRef("user_id", "=", "headless_users.id"),
+							.whereRef("user_id", "=", "lucid_users.id"),
 					)
 					.as("roles"),
 			])
-			.leftJoin("headless_user_roles", (join) =>
-				join.onRef(
-					"headless_user_roles.user_id",
-					"=",
-					"headless_users.id",
-				),
+			.leftJoin("lucid_user_roles", (join) =>
+				join.onRef("lucid_user_roles.user_id", "=", "lucid_users.id"),
 			)
-			.where("headless_users.is_deleted", "=", 0)
-			.groupBy("headless_users.id");
+			.where("lucid_users.is_deleted", "=", 0)
+			.groupBy("lucid_users.id");
 
 		const usersCountQuery = this.db
-			.selectFrom("headless_users")
-			.select(sql`count(distinct headless_users.id)`.as("count"))
-			.leftJoin("headless_user_roles", (join) =>
-				join.onRef(
-					"headless_user_roles.user_id",
-					"=",
-					"headless_users.id",
-				),
+			.selectFrom("lucid_users")
+			.select(sql`count(distinct lucid_users.id)`.as("count"))
+			.leftJoin("lucid_user_roles", (join) =>
+				join.onRef("lucid_user_roles.user_id", "=", "lucid_users.id"),
 			)
-			.where("headless_users.is_deleted", "=", 0);
+			.where("lucid_users.is_deleted", "=", 0);
 
 		const { main, count } = queryBuilder(
 			{
@@ -196,54 +188,54 @@ export default class UsersRepo {
 					filters: [
 						{
 							queryKey: "firstName",
-							tableKey: "headless_users.first_name",
+							tableKey: "lucid_users.first_name",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "lastName",
-							tableKey: "headless_users.last_name",
+							tableKey: "lucid_users.last_name",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "email",
-							tableKey: "headless_users.email",
+							tableKey: "lucid_users.email",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "username",
-							tableKey: "headless_users.username",
+							tableKey: "lucid_users.username",
 							operator: props.config.db.fuzzOperator,
 						},
 						{
 							queryKey: "roleIds",
-							tableKey: "headless_user_roles.role_id",
+							tableKey: "lucid_user_roles.role_id",
 							operator: "=",
 						},
 					],
 					sorts: [
 						{
 							queryKey: "createdAt",
-							tableKey: "headless_users.created_at",
+							tableKey: "lucid_users.created_at",
 						},
 						{
 							queryKey: "updatedAt",
-							tableKey: "headless_users.updated_at",
+							tableKey: "lucid_users.updated_at",
 						},
 						{
 							queryKey: "firstName",
-							tableKey: "headless_users.first_name",
+							tableKey: "lucid_users.first_name",
 						},
 						{
 							queryKey: "lastName",
-							tableKey: "headless_users.last_name",
+							tableKey: "lucid_users.last_name",
 						},
 						{
 							queryKey: "email",
-							tableKey: "headless_users.email",
+							tableKey: "lucid_users.email",
 						},
 						{
 							queryKey: "username",
-							tableKey: "headless_users.username",
+							tableKey: "lucid_users.username",
 						},
 					],
 				},
@@ -258,9 +250,9 @@ export default class UsersRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_users">;
+		where: QueryBuilderWhereT<"lucid_users">;
 	}) => {
-		let query = this.db.deleteFrom("headless_users").returning("id");
+		let query = this.db.deleteFrom("lucid_users").returning("id");
 
 		query = deleteQB(query, props.where);
 
@@ -269,7 +261,7 @@ export default class UsersRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_users">;
+		where: QueryBuilderWhereT<"lucid_users">;
 		data: {
 			password?: string;
 			updatedAt?: string;
@@ -284,7 +276,7 @@ export default class UsersRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_users")
+			.updateTable("lucid_users")
 			.set({
 				first_name: props.data.firstName,
 				last_name: props.data.lastName,
@@ -314,7 +306,7 @@ export default class UsersRepo {
 		password: string;
 	}) => {
 		return this.db
-			.insertInto("headless_users")
+			.insertInto("lucid_users")
 			.returning("id")
 			.values({
 				super_admin: props.superAdmin,

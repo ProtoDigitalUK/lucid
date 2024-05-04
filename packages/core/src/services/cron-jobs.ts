@@ -1,6 +1,6 @@
 import T from "../translations/index.js";
 import cron from "node-cron";
-import { HeadlessError } from "../utils/error-handler.js";
+import { LucidError } from "../utils/error-handler.js";
 import Repository from "../libs/repositories/index.js";
 import type { ServiceConfig } from "../utils/service-wrapper.js";
 
@@ -18,7 +18,7 @@ const clearExpiredTokens = async (serviceConfig: ServiceConfig) => {
 			],
 		});
 	} catch (error) {
-		throw new HeadlessError({
+		throw new LucidError({
 			message: T("an_error_occurred_clearing_expired_tokens"),
 		});
 	}
@@ -49,7 +49,7 @@ const updateMediaStorage = async (serviceConfig: ServiceConfig) => {
 			},
 		});
 	} catch (error) {
-		throw new HeadlessError({
+		throw new LucidError({
 			message: T("an_error_occurred_updating_media_storage"),
 		});
 	}

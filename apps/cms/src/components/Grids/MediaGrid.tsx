@@ -36,7 +36,7 @@ const MediaGrid: Component<MediaGridProps> = (props) => {
 		queryParams: {
 			queryString: props.searchParams.getQueryString,
 			headers: {
-				"headless-content-lang": contentLanguage,
+				"lucid-content-lang": contentLanguage,
 			},
 		},
 		enabled: () => props.searchParams.getSettled(),

@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import collectionDocumentsServices from "./index.js";
 import executeHooks from "../../libs/hooks/execute-hooks.js";
@@ -21,7 +21,7 @@ const deleteSingle = async (
 		});
 
 	if (collectionInstance.config.locked === true) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_locked_collection_name"),
 			message: T("error_locked_collection_message_delete", {
@@ -58,7 +58,7 @@ const deleteSingle = async (
 	});
 
 	if (getDocument === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("document"),
@@ -105,7 +105,7 @@ const deleteSingle = async (
 	});
 
 	if (deletePage === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 		});

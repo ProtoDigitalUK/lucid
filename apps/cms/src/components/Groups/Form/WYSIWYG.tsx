@@ -3,7 +3,7 @@ import classnames from "classnames";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 // Types
-import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
+import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 

@@ -15,7 +15,7 @@ import api from "@/services/api";
 import builderStore from "@/store/builderStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";

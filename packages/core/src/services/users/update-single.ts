@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -43,7 +43,7 @@ const updateSingle = async (
 	});
 
 	if (!user) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("user"),
@@ -83,7 +83,7 @@ const updateSingle = async (
 	]);
 
 	if (data.email !== undefined && emailExists !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 			errorResponse: {
@@ -97,7 +97,7 @@ const updateSingle = async (
 		});
 	}
 	if (data.username !== undefined && usernameExists !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 			errorResponse: {
@@ -146,7 +146,7 @@ const updateSingle = async (
 	]);
 
 	if (updateUser === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 		});

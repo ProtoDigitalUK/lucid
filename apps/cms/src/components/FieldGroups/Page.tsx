@@ -17,7 +17,7 @@ import type {
 	ErrorResponse,
 	LanguageResponse,
 	CollectionResponse,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
 import type { CategoryResT } from "@headless/types/src/categories"; // TODO: remove

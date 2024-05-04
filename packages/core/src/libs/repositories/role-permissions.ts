@@ -14,7 +14,7 @@ export default class RolePermissionsRepo {
 		}>;
 	}) => {
 		return this.db
-			.insertInto("headless_role_permissions")
+			.insertInto("lucid_role_permissions")
 			.values(
 				props.items.map((i) => ({
 					role_id: i.roleId,
@@ -26,10 +26,10 @@ export default class RolePermissionsRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_role_permissions">;
+		where: QueryBuilderWhereT<"lucid_role_permissions">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_role_permissions")
+			.deleteFrom("lucid_role_permissions")
 			.returning("id");
 
 		query = deleteQB(query, props.where);

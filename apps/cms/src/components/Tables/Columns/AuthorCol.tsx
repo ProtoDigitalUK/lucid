@@ -1,5 +1,5 @@
 import { type Component, Switch, Match } from "solid-js";
-import type { UserMeta } from "@protoheadless/core/types";
+import type { UserMeta } from "@lucidcms/core/types";
 import Table from "@/components/Groups/Table";
 import UserDisplay from "@/components/Partials/UserDisplay";
 

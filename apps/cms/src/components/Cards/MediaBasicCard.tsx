@@ -2,7 +2,7 @@ import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
 // Types
-import type { MediaResponse } from "@protoheadless/core/types";
+import type { MediaResponse } from "@lucidcms/core/types";
 // Components
 import AspectRatio from "@/components/Partials/AspectRatio";
 import MediaPreview from "@/components/Partials/MediaPreview";

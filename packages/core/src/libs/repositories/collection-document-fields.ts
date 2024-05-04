@@ -24,7 +24,7 @@ export default class CollectionDocumentFieldsRepo {
 		}>;
 	}) => {
 		return this.db
-			.insertInto("headless_collection_document_fields")
+			.insertInto("lucid_collection_document_fields")
 			.values(
 				props.items.map((f) => {
 					return {
@@ -49,10 +49,10 @@ export default class CollectionDocumentFieldsRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_collection_document_fields">;
+		where: QueryBuilderWhereT<"lucid_collection_document_fields">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_collection_document_fields")
+			.deleteFrom("lucid_collection_document_fields")
 			.returning(["fields_id"]);
 
 		query = deleteQB(query, props.where);

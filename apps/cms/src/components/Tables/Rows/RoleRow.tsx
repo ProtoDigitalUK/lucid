@@ -2,7 +2,7 @@ import T from "@/translations";
 import type { Component } from "solid-js";
 import type useRowTarget from "@/hooks/useRowTarget";
 import type { TableRowProps } from "@/types/components";
-import type { RoleResponse } from "@protoheadless/core/types";
+import type { RoleResponse } from "@lucidcms/core/types";
 import userStore from "@/store/userStore";
 import Table from "@/components/Groups/Table";
 import TextCol from "@/components/Tables/Columns/TextCol";

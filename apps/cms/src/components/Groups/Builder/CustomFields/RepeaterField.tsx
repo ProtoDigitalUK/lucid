@@ -10,7 +10,7 @@ import {
 	Switch,
 	Match,
 } from "solid-js";
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";

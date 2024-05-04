@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessError } from "../../utils/error-handler.js";
+import { LucidError } from "../../utils/error-handler.js";
 import type { KyselyDB } from "../db/types.js";
 // Repositories
 import UserTokensRepo from "./user-tokens.js";
@@ -67,7 +67,7 @@ class Repository {
 			case "users":
 				return new UsersRepo(db) as RepositoryReturnType<T>;
 			default:
-				throw new HeadlessError({
+				throw new LucidError({
 					message: T("cannot_find_repository", {
 						name: repository,
 					}),

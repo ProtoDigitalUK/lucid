@@ -15,7 +15,7 @@ import { FaSolidArrowLeft } from "solid-icons/fa";
 // Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
 // Types
-import type { ErrorResponse } from "@protoheadless/core/types";
+import type { ErrorResponse } from "@lucidcms/core/types";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Components

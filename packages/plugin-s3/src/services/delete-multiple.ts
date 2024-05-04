@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import { type S3Client, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import type { NodeJsClient } from "@smithy/types";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyDeleteMultiple } from "@protoheadless/core/types";
+import type { MediaStrategyDeleteMultiple } from "@lucidcms/core/types";
 
 export default (
 	client: NodeJsClient<S3Client>,

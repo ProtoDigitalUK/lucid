@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import getConfig from "../../libs/config/get-config.js";
 
 export interface ServiceData {
@@ -12,7 +12,7 @@ const getSingleInstance = async (data: ServiceData) => {
 	const collection = config.collections?.find((c) => c.key === data.key);
 
 	if (collection === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("collection"),

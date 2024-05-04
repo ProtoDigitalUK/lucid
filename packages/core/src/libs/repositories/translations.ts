@@ -13,7 +13,7 @@ export default class TranslationsRepo {
 		}[],
 	) => {
 		return this.db
-			.insertInto("headless_translations")
+			.insertInto("lucid_translations")
 			.values(
 				props.map((t) => ({
 					value: t.value,

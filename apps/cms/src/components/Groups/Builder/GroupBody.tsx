@@ -10,7 +10,7 @@ import {
 	Show,
 } from "solid-js";
 import type { DragDropCBT } from "@/components/Partials/DragDrop";
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";

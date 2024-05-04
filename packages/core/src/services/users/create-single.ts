@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import argon2 from "argon2";
 import usersServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -42,7 +42,7 @@ const createSingle = async (
 	]);
 
 	if (userExists !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 			errorResponse: {
@@ -78,7 +78,7 @@ const createSingle = async (
 	});
 
 	if (newUser === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 		});

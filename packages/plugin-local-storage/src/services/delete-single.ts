@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import fs from "fs-extra";
 import { keyPaths } from "../utils/helpers.js";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyDeleteSingle } from "@protoheadless/core/types";
+import type { MediaStrategyDeleteSingle } from "@lucidcms/core/types";
 
 export default (pluginOptions: PluginOptions) => {
 	const deletSingle: MediaStrategyDeleteSingle = async (key) => {

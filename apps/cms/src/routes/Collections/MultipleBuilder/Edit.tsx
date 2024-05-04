@@ -22,7 +22,7 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
 import type { SelectMultipleValueT } from "@/components/Groups/Form/SelectMultiple";
 import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Components
 import PageBuilder from "@/components/Groups/PageBuilder";
 import Button from "@/components/Partials/Button";

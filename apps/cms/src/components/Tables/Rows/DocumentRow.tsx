@@ -7,7 +7,7 @@ import type {
 	CollectionResponse,
 	CustomField,
 	UserMeta,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 import userStore from "@/store/userStore";
 import Table from "@/components/Groups/Table";
 import DateCol from "@/components/Tables/Columns/DateCol";

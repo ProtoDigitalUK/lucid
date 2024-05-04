@@ -1,6 +1,6 @@
-import headless, { sendEmail } from "@protoheadless/core";
+import lucid, { sendEmail } from "@lucidcms/core";
 
-headless.fastify.post("/send-email", async (request, reply) => {
+lucid.fastify.post("/send-email", async (request, reply) => {
 	const res = await sendEmail({
 		to: "hello@williamyallop.com",
 		subject: "Hello",
@@ -13,4 +13,4 @@ headless.fastify.post("/send-email", async (request, reply) => {
 	reply.send(res);
 });
 
-headless.start();
+lucid.start();

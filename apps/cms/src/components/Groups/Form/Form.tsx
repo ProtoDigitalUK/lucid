@@ -8,7 +8,7 @@ import ErrorBlock from "@/components/Partials/ErrorBlock";
 // Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 // Types
-import type { ErrorResponse } from "@protoheadless/core/types";
+import type { ErrorResponse } from "@lucidcms/core/types";
 
 interface FormProps {
 	type: "standard" | "page-layout";

@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessAPIError } from "../../../utils/error-handler.js";
+import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { BrickInsertItem } from "./format-insert-bricks.js";
 
 const formatPostInsertBricks = (
@@ -20,7 +20,7 @@ const formatPostInsertBricks = (
 		);
 
 		if (!foundBrick) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				name: T("error_saving_bricks"),
 				message: T("there_was_an_error_updating_bricks"),

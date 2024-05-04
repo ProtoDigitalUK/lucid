@@ -1,1 +1,1 @@
-# @protoheadless/plugin-nested-documents
+# @lucidcms/plugin-nested-documents

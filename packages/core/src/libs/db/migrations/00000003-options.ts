@@ -5,7 +5,7 @@ const Migration00000003: MigrationFn = (adapter) => {
 	return {
 		async up(db: Kysely<unknown>) {
 			await db.schema
-				.createTable("headless_options")
+				.createTable("lucid_options")
 				.addColumn("name", "text", (col) =>
 					col.unique().notNull().primaryKey(),
 				)

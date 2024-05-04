@@ -19,7 +19,7 @@ export default class LanguagesRepo {
 
 	count = async () => {
 		return this.db
-			.selectFrom("headless_languages")
+			.selectFrom("lucid_languages")
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
@@ -27,10 +27,10 @@ export default class LanguagesRepo {
 	// select
 	selectSingle = async <K extends keyof Select<HeadlessLanguages>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_languages">;
+		where: QueryBuilderWhereT<"lucid_languages">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_languages")
+			.selectFrom("lucid_languages")
 			.select<K>(props.select);
 
 		query = selectQB(query, props.where);
@@ -41,10 +41,10 @@ export default class LanguagesRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessLanguages>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_languages">;
+		where: QueryBuilderWhereT<"lucid_languages">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_languages")
+			.selectFrom("lucid_languages")
 			.select<K>(props.select);
 
 		query = selectQB(query, props.where);
@@ -57,11 +57,11 @@ export default class LanguagesRepo {
 		query: z.infer<typeof languagesSchema.getMultiple.query>;
 	}) => {
 		const languagesQuery = this.db
-			.selectFrom("headless_languages")
+			.selectFrom("lucid_languages")
 			.selectAll();
 
 		const languagesCountQuery = this.db
-			.selectFrom("headless_languages")
+			.selectFrom("lucid_languages")
 			.select(sql`count(*)`.as("count"));
 
 		const { main, count } = queryBuilder(
@@ -111,7 +111,7 @@ export default class LanguagesRepo {
 		isEnabled: BooleanInt;
 	}) => {
 		return this.db
-			.insertInto("headless_languages")
+			.insertInto("lucid_languages")
 			.values({
 				code: props.code,
 				is_default: props.isDefault,
@@ -123,7 +123,7 @@ export default class LanguagesRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_languages">;
+		where: QueryBuilderWhereT<"lucid_languages">;
 		data: {
 			code?: HeadlessLanguages["code"];
 			isDefault?: HeadlessLanguages["is_default"];
@@ -132,7 +132,7 @@ export default class LanguagesRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_languages")
+			.updateTable("lucid_languages")
 			.set({
 				code: props.data.code,
 				is_default: props.data.isDefault,
@@ -147,9 +147,9 @@ export default class LanguagesRepo {
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_languages">;
+		where: QueryBuilderWhereT<"lucid_languages">;
 	}) => {
-		let query = this.db.deleteFrom("headless_languages").returning("id");
+		let query = this.db.deleteFrom("lucid_languages").returning("id");
 
 		query = deleteQB(query, props.where);
 

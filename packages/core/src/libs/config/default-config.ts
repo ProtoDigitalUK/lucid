@@ -1,6 +1,6 @@
-import type { HeadlessConfig } from "../../types/config.js";
+import type { LucidConfig } from "../../types/config.js";
 
-export const defaultConfig: Partial<HeadlessConfig> = {
+export const defaultConfig: Partial<LucidConfig> = {
 	mode: "development",
 	paths: {
 		emailTemplates: "./templates",

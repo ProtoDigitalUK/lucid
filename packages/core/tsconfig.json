@@ -1,5 +1,5 @@
 {
-    "extends": "@protoheadless/config/tsconfig.base.json",
+    "extends": "@lucidcms/config/tsconfig.base.json",
     "exclude": [
         "./coverage",
         "./dist",

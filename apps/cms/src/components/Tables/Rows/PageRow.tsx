@@ -5,7 +5,7 @@ import type useRowTarget from "@/hooks/useRowTarget";
 // Types
 import type { TableRowProps } from "@/types/components";
 import type { MultipleBuilderResT } from "@headless/types/src/multiple-builder"; // TODO: remove
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Stores
 import userStore from "@/store/userStore";
 // Components

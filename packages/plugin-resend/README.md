@@ -1,1 +1,1 @@
-# @protoheadless/plugin-resend
+# @lucidcms/plugin-resend

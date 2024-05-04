@@ -6,7 +6,7 @@ import api from "@/services/api";
 // Store
 import userStore from "@/store/userStore";
 // Types
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Hooks
 import useSearchParams from "@/hooks/useSearchParams";
 // Componetns

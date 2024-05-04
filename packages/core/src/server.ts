@@ -1,11 +1,11 @@
 import Fastify from "fastify";
-import headlessPlugin from "./headless-plugin.js";
+import lucidPlugin from "./lucid-plugin.js";
 import serverStartLog from "./libs/logging/server-start-log.js";
 
 const startTime = process.hrtime();
 const fastify = Fastify();
 
-fastify.register(headlessPlugin);
+fastify.register(lucidPlugin);
 
 const start = async () => {
 	fastify.listen(

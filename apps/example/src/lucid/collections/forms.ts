@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protoheadless/core";
+import { CollectionBuilder } from "@lucidcms/core";
 
 // TODO: replace with form builder plugin to better abstract this and provide additional services (form submissions, reCaptcha, validation, honeypots etc.)
 

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import type z from "zod";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type collectionDocumentsSchema from "../../schemas/collection-documents.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
 import collectionsServices from "../collections/index.js";
@@ -28,7 +28,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (document === undefined || document.collection_key === null) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("document"),

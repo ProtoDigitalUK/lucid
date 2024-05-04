@@ -1,5 +1,5 @@
 {
-	"name": "@protoheadless/config",
+	"name": "@lucidcms/config",
 	"private": true,
 	"license": "UNLICENSED",
 	"publishConfig": {

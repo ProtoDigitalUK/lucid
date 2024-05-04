@@ -3,7 +3,7 @@ import serviceWrapper from "../utils/service-wrapper.js";
 import languagesServices from "../services/languages/index.js";
 
 const contentLanguage = async (request: FastifyRequest) => {
-	const contentLang = request.headers["headless-content-lang"];
+	const contentLang = request.headers["lucid-content-lang"];
 
 	const language = await serviceWrapper(
 		languagesServices.getSingleFallback,

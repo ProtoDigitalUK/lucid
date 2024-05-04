@@ -1,5 +1,5 @@
 import T from "../translations/index.js";
-import { headlessLogger } from "@protoheadless/core";
+import { lucidLogger } from "@lucidcms/core";
 import type { Transporter } from "nodemailer";
 import { PLUGIN_KEY } from "../constants.js";
 
@@ -8,14 +8,14 @@ const verifyTransporter = async (transporter: Transporter) => {
 		await transporter.verify();
 	} catch (error) {
 		if (error instanceof Error) {
-			headlessLogger("warn", {
+			lucidLogger("warn", {
 				message: error.message,
 				scope: PLUGIN_KEY,
 			});
 			return;
 		}
 
-		headlessLogger("warn", {
+		lucidLogger("warn", {
 			message: T("email_transporter_not_ready"),
 			scope: PLUGIN_KEY,
 		});

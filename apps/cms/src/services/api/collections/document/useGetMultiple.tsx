@@ -5,7 +5,7 @@ import serviceHelpers from "@/utils/service-helpers";
 import type {
 	ResponseBody,
 	CollectionDocumentResponse,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string>;
@@ -17,7 +17,7 @@ interface QueryParams {
 		collectionKey: Accessor<string | undefined> | string;
 	};
 	headers: {
-		"headless-content-lang": Accessor<number | undefined> | number;
+		"lucid-content-lang": Accessor<number | undefined> | number;
 	};
 	perPage?: Accessor<number> | number;
 }

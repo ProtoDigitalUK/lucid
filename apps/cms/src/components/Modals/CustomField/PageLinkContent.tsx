@@ -50,7 +50,7 @@ const PageLinkContent: Component = () => {
 				title: getSearchQuery,
 			},
 			headers: {
-				"headless-content-lang": contentLanguage,
+				"lucid-content-lang": contentLanguage,
 			},
 			perPage: 10,
 		},

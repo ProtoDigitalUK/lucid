@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import rolesServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
@@ -37,7 +37,7 @@ const createSingle = async (
 	]);
 
 	if (checkNameIsUnique !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("not_unique_error_message"),
 			status: 400,
@@ -58,7 +58,7 @@ const createSingle = async (
 	});
 
 	if (newRoles === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 		});

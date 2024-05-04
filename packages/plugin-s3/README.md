@@ -1,24 +1,24 @@
-# Proto Headless - S3 Plugin
+# Lucid - S3 Plugin
 
-> The official S3 plugin for Proto Headless
+> The official S3 plugin for Lucid
 
 This plugin registers the required media strategy functions to stream, upload, update and delete media from any S3 compatible storage solution.
 
 ## Installation
 
 ```bash
-npm install @protoheadless/plugin-s3
+npm install @lucidcms/plugin-s3
 ```
 
-## headless.config.ts/js
+## lucid.config.ts/js
 
 ```typescript
-import HeadlessS3 from "@protoheadless/plugin-s3";
+import LucidS3 from "@lucidcms/plugin-s3";
 
-export default headlessConfig({
+export default lucidConfig({
   // ...other config
   plugins: [
-    HeadlessS3({
+    LucidS3({
       clientConfig: {
         endpoint: `https://${process.env.HEADLESS_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
         region: "auto",

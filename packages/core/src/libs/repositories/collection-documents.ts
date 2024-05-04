@@ -26,10 +26,10 @@ export default class CollectionDocumentsRepo {
 		K extends keyof Select<HeadlessCollectionDocuments>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_collection_documents">;
+		where: QueryBuilderWhereT<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_collection_documents")
+			.selectFrom("lucid_collection_documents")
 			.select(props.select);
 
 		query = selectQB(query, props.where);
@@ -43,31 +43,31 @@ export default class CollectionDocumentsRepo {
 		config: Config;
 	}) => {
 		return this.db
-			.selectFrom("headless_collection_documents")
+			.selectFrom("lucid_collection_documents")
 			.select([
-				"headless_collection_documents.id",
-				"headless_collection_documents.collection_key",
-				"headless_collection_documents.created_by",
-				"headless_collection_documents.created_at",
-				"headless_collection_documents.updated_at",
+				"lucid_collection_documents.id",
+				"lucid_collection_documents.collection_key",
+				"lucid_collection_documents.created_by",
+				"lucid_collection_documents.created_at",
+				"lucid_collection_documents.updated_at",
 			])
 			.innerJoin(
-				"headless_users",
-				"headless_users.id",
-				"headless_collection_documents.created_by",
+				"lucid_users",
+				"lucid_users.id",
+				"lucid_collection_documents.created_by",
 			)
-			.where("headless_collection_documents.id", "=", props.id)
-			.where("headless_collection_documents.is_deleted", "=", 0)
+			.where("lucid_collection_documents.id", "=", props.id)
+			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.executeTakeFirst();
 	};
 	selectMultiple = async <
 		K extends keyof Select<HeadlessCollectionDocuments>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_collection_documents">;
+		where: QueryBuilderWhereT<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_collection_documents")
+			.selectFrom("lucid_collection_documents")
 			.select(props.select);
 
 		query = selectQB(query, props.where);
@@ -85,41 +85,41 @@ export default class CollectionDocumentsRepo {
 		config: Config;
 	}) => {
 		let pagesQuery = this.db
-			.selectFrom("headless_collection_documents")
+			.selectFrom("lucid_collection_documents")
 			.select([
-				"headless_collection_documents.id",
-				"headless_collection_documents.collection_key",
-				"headless_collection_documents.created_by",
-				"headless_collection_documents.created_at",
-				"headless_collection_documents.updated_at",
+				"lucid_collection_documents.id",
+				"lucid_collection_documents.collection_key",
+				"lucid_collection_documents.created_by",
+				"lucid_collection_documents.created_at",
+				"lucid_collection_documents.updated_at",
 			])
 			.leftJoin(
-				"headless_users",
-				"headless_users.id",
-				"headless_collection_documents.created_by",
+				"lucid_users",
+				"lucid_users.id",
+				"lucid_collection_documents.created_by",
 			)
-			.where("headless_collection_documents.is_deleted", "=", 0)
+			.where("lucid_collection_documents.is_deleted", "=", 0)
 			.where(
-				"headless_collection_documents.collection_key",
+				"lucid_collection_documents.collection_key",
 				"=",
 				props.collectionKey,
 			)
-			.groupBy(["headless_collection_documents.id", "headless_users.id"]);
+			.groupBy(["lucid_collection_documents.id", "lucid_users.id"]);
 
 		let pagesCountQuery = this.db
-			.selectFrom("headless_collection_documents")
+			.selectFrom("lucid_collection_documents")
 			.select(sql`count(*)`.as("count"))
 			.leftJoin(
-				"headless_users",
-				"headless_users.id",
-				"headless_collection_documents.created_by",
+				"lucid_users",
+				"lucid_users.id",
+				"lucid_collection_documents.created_by",
 			)
 			.where(
-				"headless_collection_documents.collection_key",
+				"lucid_collection_documents.collection_key",
 				"=",
 				props.collectionKey,
 			)
-			.where("headless_collection_documents.is_deleted", "=", 0);
+			.where("lucid_collection_documents.is_deleted", "=", 0);
 
 		const collectionDocFiltersRes = collectionDocFilters(
 			props.allowedFieldFilters,
@@ -132,70 +132,68 @@ export default class CollectionDocumentsRepo {
 					props.config.db
 						.jsonArrayFrom(
 							eb
-								.selectFrom(
-									"headless_collection_document_fields",
-								)
-								.leftJoin("headless_media", (join) =>
+								.selectFrom("lucid_collection_document_fields")
+								.leftJoin("lucid_media", (join) =>
 									join.onRef(
-										"headless_media.id",
+										"lucid_media.id",
 										"=",
-										"headless_collection_document_fields.media_id",
+										"lucid_collection_document_fields.media_id",
 									),
 								)
-								.leftJoin("headless_users", (join) =>
+								.leftJoin("lucid_users", (join) =>
 									join.onRef(
-										"headless_users.id",
+										"lucid_users.id",
 										"=",
-										"headless_collection_document_fields.user_id",
+										"lucid_collection_document_fields.user_id",
 									),
 								)
 								.select((eb) => [
-									"headless_collection_document_fields.fields_id",
-									"headless_collection_document_fields.text_value",
-									"headless_collection_document_fields.int_value",
-									"headless_collection_document_fields.bool_value",
-									"headless_collection_document_fields.language_id",
-									"headless_collection_document_fields.media_id",
-									"headless_collection_document_fields.user_id",
-									"headless_collection_document_fields.type",
-									"headless_collection_document_fields.key",
-									"headless_collection_document_fields.collection_brick_id",
-									"headless_collection_document_fields.collection_document_id",
-									"headless_collection_document_fields.group_id",
+									"lucid_collection_document_fields.fields_id",
+									"lucid_collection_document_fields.text_value",
+									"lucid_collection_document_fields.int_value",
+									"lucid_collection_document_fields.bool_value",
+									"lucid_collection_document_fields.language_id",
+									"lucid_collection_document_fields.media_id",
+									"lucid_collection_document_fields.user_id",
+									"lucid_collection_document_fields.type",
+									"lucid_collection_document_fields.key",
+									"lucid_collection_document_fields.collection_brick_id",
+									"lucid_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.group_id",
 									// User fields
-									"headless_users.id as user_id",
-									"headless_users.email as user_email",
-									"headless_users.first_name as user_first_name",
-									"headless_users.last_name as user_last_name",
-									"headless_users.email as user_email",
-									"headless_users.username as user_username",
+									"lucid_users.id as user_id",
+									"lucid_users.email as user_email",
+									"lucid_users.first_name as user_first_name",
+									"lucid_users.last_name as user_last_name",
+									"lucid_users.email as user_email",
+									"lucid_users.username as user_username",
 									// Media fields
-									"headless_media.key as media_key",
-									"headless_media.mime_type as media_mime_type",
-									"headless_media.file_extension as media_file_extension",
-									"headless_media.file_size as media_file_size",
-									"headless_media.width as media_width",
-									"headless_media.height as media_height",
-									"headless_media.type as media_type",
+									"lucid_media.key as media_key",
+									"lucid_media.mime_type as media_mime_type",
+									"lucid_media.file_extension as media_file_extension",
+									"lucid_media.file_size as media_file_size",
+									"lucid_media.width as media_width",
+									"lucid_media.height as media_height",
+									"lucid_media.type as media_type",
 									props.config.db
 										.jsonArrayFrom(
 											eb
 												.selectFrom(
-													"headless_translations",
+													"lucid_translations",
 												)
 												.select([
-													"headless_translations.value",
-													"headless_translations.language_id",
+													"lucid_translations.value",
+													"lucid_translations.language_id",
 												])
 												.where(
-													"headless_translations.value",
+													"lucid_translations.value",
 													"is not",
 													null,
 												)
 												.whereRef(
-													"headless_translations.translation_key_id",
+													"lucid_translations.translation_key_id",
 													"=",
-													"headless_media.title_translation_key_id",
+													"lucid_media.title_translation_key_id",
 												),
 										)
 										.as("media_title_translations"),
@@ -203,59 +201,59 @@ export default class CollectionDocumentsRepo {
 										.jsonArrayFrom(
 											eb
 												.selectFrom(
-													"headless_translations",
+													"lucid_translations",
 												)
 												.select([
-													"headless_translations.value",
-													"headless_translations.language_id",
+													"lucid_translations.value",
+													"lucid_translations.language_id",
 												])
 												.where(
-													"headless_translations.value",
+													"lucid_translations.value",
 													"is not",
 													null,
 												)
 												.whereRef(
-													"headless_translations.translation_key_id",
+													"lucid_translations.translation_key_id",
 													"=",
-													"headless_media.alt_translation_key_id",
+													"lucid_media.alt_translation_key_id",
 												),
 										)
 										.as("media_alt_translations"),
 								])
 								.whereRef(
-									"headless_collection_document_fields.collection_document_id",
+									"lucid_collection_document_fields.collection_document_id",
 									"=",
-									"headless_collection_documents.id",
+									"lucid_collection_documents.id",
 								)
 								.where(
-									"headless_collection_document_fields.language_id",
+									"lucid_collection_document_fields.language_id",
 									"=",
 									props.languageId,
 								)
 								.where(
-									"headless_collection_document_fields.key",
+									"lucid_collection_document_fields.key",
 									"in",
 									props.allowedFieldIncludes,
 								),
 						)
 						.as("fields"),
 				])
-				.leftJoin("headless_collection_document_fields", (join) =>
+				.leftJoin("lucid_collection_document_fields", (join) =>
 					join.onRef(
-						"headless_collection_document_fields.collection_document_id",
+						"lucid_collection_document_fields.collection_document_id",
 						"=",
-						"headless_collection_documents.id",
+						"lucid_collection_documents.id",
 					),
 				);
 
 			if (collectionDocFiltersRes.length > 0) {
 				pagesCountQuery = pagesCountQuery.leftJoin(
-					"headless_collection_document_fields",
+					"lucid_collection_document_fields",
 					(join) =>
 						join.onRef(
-							"headless_collection_document_fields.collection_document_id",
+							"lucid_collection_document_fields.collection_document_id",
 							"=",
-							"headless_collection_documents.id",
+							"lucid_collection_documents.id",
 						),
 				);
 			}
@@ -307,7 +305,7 @@ export default class CollectionDocumentsRepo {
 		isDeleted: BooleanInt;
 	}) => {
 		return this.db
-			.insertInto("headless_collection_documents")
+			.insertInto("lucid_collection_documents")
 			.values({
 				id: props.id,
 				collection_key: props.collectionKey,
@@ -328,7 +326,7 @@ export default class CollectionDocumentsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_collection_documents">;
+		where: QueryBuilderWhereT<"lucid_collection_documents">;
 		data: {
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
@@ -336,7 +334,7 @@ export default class CollectionDocumentsRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_collection_documents")
+			.updateTable("lucid_collection_documents")
 			.set({
 				is_deleted: props.data.isDeleted,
 				is_deleted_at: props.data.isDeletedAt,
@@ -349,7 +347,7 @@ export default class CollectionDocumentsRepo {
 		return query.executeTakeFirst();
 	};
 	updateMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_collection_documents">;
+		where: QueryBuilderWhereT<"lucid_collection_documents">;
 		data: {
 			isDeleted?: BooleanInt;
 			isDeletedAt?: string;
@@ -357,7 +355,7 @@ export default class CollectionDocumentsRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_collection_documents")
+			.updateTable("lucid_collection_documents")
 			.set({
 				is_deleted: props.data.isDeleted,
 				is_deleted_at: props.data.isDeletedAt,
@@ -372,10 +370,10 @@ export default class CollectionDocumentsRepo {
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_collection_documents">;
+		where: QueryBuilderWhereT<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_collection_documents")
+			.deleteFrom("lucid_collection_documents")
 			.returning(["id"]);
 
 		query = deleteQB(query, props.where);
@@ -383,10 +381,10 @@ export default class CollectionDocumentsRepo {
 		return query.executeTakeFirst();
 	};
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_collection_documents">;
+		where: QueryBuilderWhereT<"lucid_collection_documents">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_collection_documents")
+			.deleteFrom("lucid_collection_documents")
 			.returning(["id"]);
 
 		query = deleteQB(query, props.where);

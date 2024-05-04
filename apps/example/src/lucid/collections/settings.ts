@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protoheadless/core";
+import { CollectionBuilder } from "@lucidcms/core";
 // Bricks
 import DefaultMetaBrick from "../bricks/default-meta.js";
 

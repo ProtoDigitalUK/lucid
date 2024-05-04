@@ -7,7 +7,7 @@ import type {
 	FieldErrors,
 	MediaResponse,
 	MediaMeta,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 // Store
 import mediaSelectStore from "@/store/mediaSelectStore";
 // Components

@@ -4,7 +4,7 @@ import { useNavigate } from "@solidjs/router";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody } from "@protoheadless/core/types";
+import type { ResponseBody } from "@lucidcms/core/types";
 
 interface Params {
 	token: string;

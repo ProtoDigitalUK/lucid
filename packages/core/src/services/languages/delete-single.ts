@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
@@ -15,7 +15,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const count = Formatter.parseCount(languagesCountQuery?.count);
 
 	if (count === 1) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_min_entries_name", {
 				name: T("language"),
@@ -38,7 +38,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (deleteLanguage === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 404,
 		});
@@ -61,7 +61,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			where: [],
 		});
 		if (firstLanguage === undefined) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				status: 500,
 			});

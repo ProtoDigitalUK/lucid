@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protoheadless/core";
+import { CollectionBuilder } from "@lucidcms/core";
 // Bricks
 import BannerBrick from "../bricks/banner.js";
 import IntroBrick from "../bricks/intro.js";

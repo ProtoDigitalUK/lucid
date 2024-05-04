@@ -6,7 +6,7 @@ import serviceHelpers from "@/utils/service-helpers";
 // Store
 import contentLanguageStore from "@/store/contentLanguageStore";
 // Types
-import type { ResponseBody, LanguageResponse } from "@protoheadless/core/types";
+import type { ResponseBody, LanguageResponse } from "@lucidcms/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string> | string;

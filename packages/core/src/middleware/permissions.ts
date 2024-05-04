@@ -1,10 +1,10 @@
 import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { HeadlessAPIError } from "../utils/error-handler.js";
+import { LucidAPIError } from "../utils/error-handler.js";
 import type { Permission } from "../types/response.js";
 
 const throwPermissionError = () => {
-	throw new HeadlessAPIError({
+	throw new LucidAPIError({
 		type: "basic",
 		name: T("dynamic_error_name", {
 			name: T("permission"),

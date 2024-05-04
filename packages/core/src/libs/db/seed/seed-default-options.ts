@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessError } from "../../../utils/error-handler.js";
+import { LucidError } from "../../../utils/error-handler.js";
 import Repository from "../../repositories/index.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
@@ -25,7 +25,7 @@ const seedDefaultOptions = async (serviceConfig: ServiceConfig) => {
 			});
 		}
 	} catch (error) {
-		throw new HeadlessError({
+		throw new LucidError({
 			message: T("dynamic_an_error_occurred_saving_default", {
 				name: T("option").toLowerCase(),
 			}),

@@ -9,7 +9,7 @@ const Migration00000002: MigrationFn = (adapter) => {
 	return {
 		async up(db: Kysely<unknown>) {
 			await db.schema
-				.createTable("headless_translation_keys")
+				.createTable("lucid_translation_keys")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
@@ -17,34 +17,34 @@ const Migration00000002: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createTable("headless_translations")
+				.createTable("lucid_translations")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("translation_key_id", "integer", (col) =>
 					col
-						.references("headless_translation_keys.id")
+						.references("lucid_translation_keys.id")
 						.notNull()
 						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
 				.addColumn("language_id", "integer", (col) =>
 					col
-						.references("headless_languages.id")
+						.references("lucid_languages.id")
 						.notNull()
 						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
 				.addColumn("value", "text")
 				.addUniqueConstraint(
-					"headless_translations_translation_key_id_language_id_unique",
+					"lucid_translations_translation_key_id_language_id_unique",
 					["translation_key_id", "language_id"],
 				)
 				.execute();
 
 			await db.schema
 				.createIndex("idx_translation_key_language")
-				.on("headless_translations")
+				.on("lucid_translations")
 				.columns(["translation_key_id", "language_id"])
 				.execute();
 		},

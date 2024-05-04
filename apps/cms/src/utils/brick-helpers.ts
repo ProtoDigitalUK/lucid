@@ -4,7 +4,7 @@ import type {
 	CustomField,
 	FieldResponse,
 	FieldGroupResponse,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 
 // --------------------------------------------
 // Get field value from store

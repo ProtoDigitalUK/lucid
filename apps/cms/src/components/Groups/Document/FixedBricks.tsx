@@ -1,5 +1,5 @@
 import { type Component, createMemo, For } from "solid-js";
-import type { CollectionBrickConfigT } from "@protoheadless/core/types";
+import type { CollectionBrickConfigT } from "@lucidcms/core/types";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 

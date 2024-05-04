@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessAPIError } from "../../../utils/error-handler.js";
+import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import mediaHelpers from "../../../utils/media-helpers.js";
@@ -22,7 +22,7 @@ const updateObject = async (
 
 	try {
 		if (data.fileData === undefined) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				status: 400,
 				errorResponse: {
@@ -70,7 +70,7 @@ const updateObject = async (
 		});
 
 		if (updateObjectRes.success === false) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				message: updateObjectRes.message,
 				status: 500,

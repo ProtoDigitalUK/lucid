@@ -10,7 +10,7 @@ import {
 	createEffect,
 	onCleanup,
 } from "solid-js";
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
 import { FaSolidTrash } from "solid-icons/fa";

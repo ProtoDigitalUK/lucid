@@ -4,11 +4,7 @@ import classNames from "classnames";
 import { FaSolidPen } from "solid-icons/fa";
 // Types
 import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks"; // TODO: we've removed this CF
-import type {
-	ErrorResult,
-	FieldErrors,
-	LinkValue,
-} from "@protoheadless/core/types";
+import type { ErrorResult, FieldErrors, LinkValue } from "@lucidcms/core/types";
 // Store
 import linkFieldStore from "@/store/linkFieldStore";
 // Components

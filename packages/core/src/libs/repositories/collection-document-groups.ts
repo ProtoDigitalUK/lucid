@@ -18,7 +18,7 @@ export default class CollectionDocumentGroupsRepo {
 		}>;
 	}) => {
 		return this.db
-			.insertInto("headless_collection_document_groups")
+			.insertInto("lucid_collection_document_groups")
 			.values(
 				props.items.flatMap((g) => ({
 					collection_document_id: g.collectionDocumentId,
@@ -45,7 +45,7 @@ export default class CollectionDocumentGroupsRepo {
 		}>;
 	}) => {
 		return this.db
-			.insertInto("headless_collection_document_groups")
+			.insertInto("lucid_collection_document_groups")
 			.values(
 				props.items.map((g) => {
 					return {
@@ -69,10 +69,10 @@ export default class CollectionDocumentGroupsRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_collection_document_groups">;
+		where: QueryBuilderWhereT<"lucid_collection_document_groups">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_collection_document_groups")
+			.deleteFrom("lucid_collection_document_groups")
 			.returning(["group_id"]);
 
 		query = deleteQB(query, props.where);

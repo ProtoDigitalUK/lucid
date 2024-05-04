@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import auth from "./index.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
@@ -21,7 +21,7 @@ const login = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (!user || !user.password) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),
@@ -30,7 +30,7 @@ const login = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	}
 
 	if (user !== undefined && user.is_deleted === 1) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_suspended_error_message"),
@@ -44,7 +44,7 @@ const login = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (!passwordValid) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "authorisation",
 			name: T("login_error_name"),
 			message: T("login_error_message"),

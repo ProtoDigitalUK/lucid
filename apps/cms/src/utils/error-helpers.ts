@@ -3,7 +3,7 @@ import type {
 	ErrorResponse,
 	ErrorResultObj,
 	ErrorResultValue,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 
 export const getBodyError = (
 	key: string,

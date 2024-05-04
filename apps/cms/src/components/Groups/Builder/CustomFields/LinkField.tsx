@@ -5,7 +5,7 @@ import {
 	onMount,
 	batch,
 } from "solid-js";
-import type { CustomField, LinkValue } from "@protoheadless/core/types";
+import type { CustomField, LinkValue } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";

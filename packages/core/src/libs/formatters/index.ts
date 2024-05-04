@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessError } from "../../utils/error-handler.js";
+import { LucidError } from "../../utils/error-handler.js";
 // Formatters
 import UsersFormatter from "./users.js";
 import UserPermissionsFormatter from "./user-permissions.js";
@@ -48,7 +48,7 @@ class Formatter {
 			case "collection-document-fields":
 				return new CollectionDocumentFieldsFormatter() as FormatterReturnType<T>;
 			default:
-				throw new HeadlessError({
+				throw new LucidError({
 					message: T("cannot_find_formatter", {
 						name: format,
 					}),

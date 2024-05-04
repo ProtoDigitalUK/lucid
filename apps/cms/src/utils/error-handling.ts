@@ -1,8 +1,8 @@
 import T from "@/translations";
 import spawnToast from "@/utils/spawn-toast";
-import type { ErrorResponse } from "@protoheadless/core/types";
+import type { ErrorResponse } from "@lucidcms/core/types";
 
-export class HeadlessError extends Error {
+export class LucidError extends Error {
 	errorRes: ErrorResponse;
 	constructor(message: string, errorRes: ErrorResponse) {
 		super(message);
@@ -14,7 +14,7 @@ export class HeadlessError extends Error {
 
 export const validateSetError = (error: unknown) => {
 	console.error(error);
-	if (error instanceof HeadlessError) {
+	if (error instanceof LucidError) {
 		return error.errorRes;
 	}
 	return {

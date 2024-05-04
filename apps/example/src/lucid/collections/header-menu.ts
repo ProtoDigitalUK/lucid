@@ -1,4 +1,4 @@
-import { CollectionBuilder } from "@protoheadless/core";
+import { CollectionBuilder } from "@lucidcms/core";
 
 const HeaderMenuCollection = new CollectionBuilder("header-menu", {
 	mode: "single",

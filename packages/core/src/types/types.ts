@@ -3,13 +3,13 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import type { Config } from "./config.js";
 
 import type { UserPermissionsResponse, LanguageResponse } from "./response.js";
-import type { HeadlessDB, BooleanInt } from "../libs/db/types.js";
-import type headlessLogger from "../libs/logging/index.js";
+import type { BooleanInt } from "../libs/db/types.js";
+import type lucidLogger from "../libs/logging/index.js";
 
 declare module "fastify" {
 	interface FastifyInstance {
 		config: Config;
-		logger: typeof headlessLogger;
+		logger: typeof lucidLogger;
 	}
 
 	interface FastifyRequest {

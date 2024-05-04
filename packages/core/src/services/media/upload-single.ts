@@ -1,4 +1,4 @@
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { MultipartFile } from "@fastify/multipart";
 import languagesServices from "../languages/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
@@ -91,7 +91,7 @@ const uploadSingle = async (
 		});
 
 		if (mediaRes === undefined) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				status: 500,
 			});

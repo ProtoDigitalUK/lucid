@@ -4,7 +4,7 @@ import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody, RoleResponse } from "@protoheadless/core/types";
+import type { ResponseBody, RoleResponse } from "@lucidcms/core/types";
 
 interface Params {
 	id: number;

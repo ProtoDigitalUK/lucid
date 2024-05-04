@@ -2,9 +2,9 @@ import { expect, test } from "vitest";
 import path from "node:path";
 import getConfig from "./get-config.js";
 
-test("should return headless config object", async () => {
+test("should return lucid config object", async () => {
 	const config = await getConfig(
-		path.resolve(__dirname, "./mock-config/headless.config.ts"),
+		path.resolve(__dirname, "./mock-config/lucid.config.ts"),
 	);
 
 	expect(typeof config).toBe("object");

@@ -1,29 +1,29 @@
 import T from "../translations/index.js";
 import type z from "zod";
-import type { ErrorResult, HeadlessAPIErrorData } from "../types/errors.js";
-import headlessLogger from "../libs/logging/index.js";
+import type { ErrorResult, LucidAPIErrorData } from "../types/errors.js";
+import lucidLogger from "../libs/logging/index.js";
 
 /**
- * The HeadlessAPIError class should be used to throw errors within the API request lifecycle. This will be caught by Fastify's error handler and will return a formatted error response. If the error is a Zod error, it will be formatted into a more readable format.
+ * The LucidAPIError class should be used to throw errors within the API request lifecycle. This will be caught by Fastify's error handler and will return a formatted error response. If the error is a Zod error, it will be formatted into a more readable format.
  * @class
  * @extends Error
- * @param {HeadlessAPIErrorData["type"]} data.type - The type of error
+ * @param {LucidAPIErrorData["type"]} data.type - The type of error
  * @param {string} [data.name] - The error name
  * @param {string} [data.message] - The error message
  * @param {number} [data.status] - The HTTP status code
- * @param {HeadlessAPIErrorData["code"]} [data.code] - The error code
+ * @param {LucidAPIErrorData["code"]} [data.code] - The error code
  * @param {z.ZodError} [data.zod] - The Zod error object - this is formatted and stored in the errors property
  * @param {ErrorResult} [data.errors] - The error result object - this is returned in the response
  * @returns {void}
  * @example
- * throw new HeadlessAPIError({
+ * throw new LucidAPIError({
  *    type: "basic",
  *    name: "Fetch User Error",
  *    message: "Error while fetching user data",
  *    status: 500,
  * });
  * @example
- * throw new HeadlessAPIError({
+ * throw new LucidAPIError({
  *    type: "validation",
  *    name: "Validation Error",
  *    message: "Validation error occurred",
@@ -38,12 +38,12 @@ import headlessLogger from "../libs/logging/index.js";
  *    },
  * });
  */
-export class HeadlessAPIError extends Error {
-	type: HeadlessAPIErrorData["type"] = "basic";
-	code: HeadlessAPIErrorData["code"];
-	errorResponse: HeadlessAPIErrorData["errorResponse"];
-	status: HeadlessAPIErrorData["status"];
-	constructor(data: HeadlessAPIErrorData) {
+export class LucidAPIError extends Error {
+	type: LucidAPIErrorData["type"] = "basic";
+	code: LucidAPIErrorData["code"];
+	errorResponse: LucidAPIErrorData["errorResponse"];
+	status: LucidAPIErrorData["status"];
+	constructor(data: LucidAPIErrorData) {
 		super(data.message);
 		this.type = data.type;
 		this.code = data.code;
@@ -52,7 +52,7 @@ export class HeadlessAPIError extends Error {
 		this.name = data.name ?? "";
 
 		if (data.zod !== undefined) {
-			this.errorResponse = HeadlessAPIError.formatZodErrors(
+			this.errorResponse = LucidAPIError.formatZodErrors(
 				data.zod?.issues || [],
 			);
 		}
@@ -81,7 +81,7 @@ export class HeadlessAPIError extends Error {
 		}
 	}
 	// public methods
-	setMissingValues(data: Partial<HeadlessAPIErrorData>) {
+	setMissingValues(data: Partial<LucidAPIErrorData>) {
 		if (
 			(this.name === undefined || this.name === "") &&
 			data.name !== undefined
@@ -131,7 +131,7 @@ export class HeadlessAPIError extends Error {
 }
 
 /**
- * The HeadlessError class should be used to throw errors in functions that sit outside of API request lifecycle. This class will log the error and optionally kill the process.
+ * The LucidError class should be used to throw errors in functions that sit outside of API request lifecycle. This class will log the error and optionally kill the process.
  * @class
  * @extends Error
  * @param {string} data.message - The error message
@@ -139,13 +139,13 @@ export class HeadlessAPIError extends Error {
  * @param {boolean} [data.kill] - If true, the process will exit with code 1
  * @returns {void}
  * @example
- * throw new HeadlessError({
+ * throw new LucidError({
  *     message: "Cannot set a value to a read-only property",
  *     scope: "plugin-name",
  *     kill: true,
  * });
  */
-export class HeadlessError extends Error {
+export class LucidError extends Error {
 	scope?: string;
 	kill?: boolean;
 	constructor(data: {
@@ -157,7 +157,7 @@ export class HeadlessError extends Error {
 		this.scope = data.scope;
 		this.kill = data.kill;
 
-		headlessLogger("error", {
+		lucidLogger("error", {
 			message: this.message,
 			scope: this.scope,
 		});

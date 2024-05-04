@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import collectionDocumentsServices from "./index.js";
 import collectionDocumentBricksServices from "../collection-document-bricks/index.js";
@@ -51,7 +51,7 @@ const upsertSingle = async (
 		});
 
 		if (existingDocument === undefined) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				name: T("error_not_found_name", {
 					name: T("document"),
@@ -64,7 +64,7 @@ const upsertSingle = async (
 		}
 
 		if (collectionInstance.config.locked === true) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				name: T("error_locked_collection_name"),
 				message: T("error_locked_collection_message", {
@@ -114,7 +114,7 @@ const upsertSingle = async (
 	});
 
 	if (document === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});

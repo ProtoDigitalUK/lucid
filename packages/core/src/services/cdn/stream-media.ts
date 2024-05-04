@@ -1,7 +1,7 @@
 import T from "../../translations/index.js";
 import type { z } from "zod";
 import type { Readable } from "node:stream";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type cdnSchema from "../../schemas/cdn.js";
 import mediaHelpers from "../../utils/media-helpers.js";
 import processedImageServices from "../processed-images/index.js";
@@ -41,7 +41,7 @@ const streamMedia = async (
 		const res = await mediaStrategy.stream(data.key);
 
 		if (!res.success || !res.response) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				name: T("error_not_found_name", {
 					name: T("media"),

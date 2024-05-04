@@ -1,6 +1,6 @@
 import queryBuilder, { type QueryBuilderProps } from "@/utils/query-builder";
-import { HeadlessError, handleSiteErrors } from "@/utils/error-handling";
-import type { ErrorResponse } from "@protoheadless/core/types";
+import { LucidError, handleSiteErrors } from "@/utils/error-handling";
+import type { ErrorResponse } from "@lucidcms/core/types";
 import { csrfReq } from "@/services/api/auth/useCsrf";
 import useRefreshToken from "@/services/api/auth/useRefreshToken";
 
@@ -70,7 +70,7 @@ const request = async <Response, Data = unknown>(
 	if (!fetchRes.ok) {
 		const errorObj = data as ErrorResponse;
 		handleSiteErrors(errorObj);
-		throw new HeadlessError(errorObj.message, errorObj);
+		throw new LucidError(errorObj.message, errorObj);
 	}
 
 	return data as Response;

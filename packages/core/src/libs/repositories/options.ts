@@ -12,9 +12,9 @@ export default class OptionsRepo {
 	// select
 	selectSingle = async <K extends keyof Select<HeadlessOptions>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_options">;
+		where: QueryBuilderWhereT<"lucid_options">;
 	}) => {
-		let query = this.db.selectFrom("headless_options").select(props.select);
+		let query = this.db.selectFrom("lucid_options").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -31,7 +31,7 @@ export default class OptionsRepo {
 		valueText?: HeadlessOptions["value_text"];
 	}) => {
 		return this.db
-			.insertInto("headless_options")
+			.insertInto("lucid_options")
 			.values({
 				name: props.name,
 				value_bool: props.valueBool,
@@ -43,7 +43,7 @@ export default class OptionsRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_options">;
+		where: QueryBuilderWhereT<"lucid_options">;
 		data: {
 			valueInt?: HeadlessOptions["value_int"];
 			valueBool?: HeadlessOptions["value_bool"];
@@ -51,7 +51,7 @@ export default class OptionsRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_options")
+			.updateTable("lucid_options")
 			.set({
 				value_text: props.data.valueText,
 				value_int: props.data.valueInt,

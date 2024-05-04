@@ -10,10 +10,10 @@ export default class ProcessedImagesRepo {
 	constructor(private db: KyselyDB) {}
 
 	count = async (props: {
-		where: QueryBuilderWhereT<"headless_processed_images">;
+		where: QueryBuilderWhereT<"lucid_processed_images">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_processed_images")
+			.selectFrom("lucid_processed_images")
 			.select(sql`count(*)`.as("count"));
 
 		query = selectQB(query, props.where);
@@ -28,10 +28,10 @@ export default class ProcessedImagesRepo {
 		K extends keyof Select<HeadlessProcessedImages>,
 	>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_processed_images">;
+		where: QueryBuilderWhereT<"lucid_processed_images">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_processed_images")
+			.selectFrom("lucid_processed_images")
 			.select(props.select);
 
 		query = selectQB(query, props.where);
@@ -47,7 +47,7 @@ export default class ProcessedImagesRepo {
 		mediaKey: string;
 	}) => {
 		return this.db
-			.insertInto("headless_processed_images")
+			.insertInto("lucid_processed_images")
 			.values({
 				key: props.key,
 				media_key: props.mediaKey,
@@ -59,10 +59,10 @@ export default class ProcessedImagesRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_processed_images">;
+		where: QueryBuilderWhereT<"lucid_processed_images">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_processed_images")
+			.deleteFrom("lucid_processed_images")
 			.returning("key");
 
 		query = deleteQB(query, props.where);

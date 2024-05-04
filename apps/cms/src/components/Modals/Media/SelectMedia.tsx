@@ -86,7 +86,7 @@ const SelectMediaContent: Component = () => {
 		queryParams: {
 			queryString: searchParams.getQueryString,
 			headers: {
-				"headless-content-lang": contentLanguage,
+				"lucid-content-lang": contentLanguage,
 			},
 		},
 		enabled: () => searchParams.getSettled(),

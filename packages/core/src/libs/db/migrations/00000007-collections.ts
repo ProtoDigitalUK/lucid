@@ -11,7 +11,7 @@ const Migration00000007: MigrationFn = (adapter) => {
 		async up(db: Kysely<unknown>) {
 			// Collection Documents
 			await db.schema
-				.createTable("headless_collection_documents")
+				.createTable("lucid_collection_documents")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
@@ -19,13 +19,13 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("is_deleted", "integer", (col) => col.defaultTo(0))
 				.addColumn("is_deleted_at", "timestamp")
 				.addColumn("deleted_by", "integer", (col) =>
-					col.references("headless_users.id").onDelete("set null"),
+					col.references("lucid_users.id").onDelete("set null"),
 				)
 				.addColumn("created_by", "integer", (col) =>
-					col.references("headless_users.id").onDelete("set null"),
+					col.references("lucid_users.id").onDelete("set null"),
 				)
 				.addColumn("updated_by", "integer", (col) =>
-					col.references("headless_users.id").onDelete("set null"),
+					col.references("lucid_users.id").onDelete("set null"),
 				)
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
@@ -37,13 +37,13 @@ const Migration00000007: MigrationFn = (adapter) => {
 
 			// Bricks
 			await db.schema
-				.createTable("headless_collection_document_bricks")
+				.createTable("lucid_collection_document_bricks")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("collection_document_id", "integer", (col) =>
 					col
-						.references("headless_collection_documents.id")
+						.references("lucid_collection_documents.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -54,27 +54,25 @@ const Migration00000007: MigrationFn = (adapter) => {
 
 			// Groups
 			await db.schema
-				.createTable("headless_collection_document_groups")
+				.createTable("lucid_collection_document_groups")
 				.addColumn("group_id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("collection_document_id", "integer", (col) =>
 					col
-						.references("headless_collection_documents.id")
+						.references("lucid_collection_documents.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
 				.addColumn("collection_brick_id", "integer", (col) =>
 					col
-						.references("headless_collection_document_bricks.id")
+						.references("lucid_collection_document_bricks.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
 				.addColumn("parent_group_id", "integer", (col) =>
 					col
-						.references(
-							"headless_collection_document_groups.group_id",
-						)
+						.references("lucid_collection_document_groups.group_id")
 						.onDelete("cascade"),
 				)
 				.addColumn("repeater_key", "text", (col) => col.notNull())
@@ -83,45 +81,43 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createIndex("idx_headless_groups_collection_brick_id")
-				.on("headless_collection_document_groups")
+				.createIndex("idx_lucid_groups_collection_brick_id")
+				.on("lucid_collection_document_groups")
 				.column("collection_brick_id")
 				.execute();
 
 			await db.schema
-				.createIndex("idx_headless_groups_parent_group_id")
-				.on("headless_collection_document_groups")
+				.createIndex("idx_lucid_groups_parent_group_id")
+				.on("lucid_collection_document_groups")
 				.column("parent_group_id")
 				.execute();
 
 			// Fields
 			await db.schema
-				.createTable("headless_collection_document_fields")
+				.createTable("lucid_collection_document_fields")
 				.addColumn("fields_id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("collection_document_id", "integer", (col) =>
 					col
-						.references("headless_collection_documents.id")
+						.references("lucid_collection_documents.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
 				.addColumn("collection_brick_id", "integer", (col) =>
 					col
-						.references("headless_collection_document_bricks.id")
+						.references("lucid_collection_document_bricks.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
 				.addColumn("group_id", "integer", (col) =>
 					col
-						.references(
-							"headless_collection_document_groups.group_id",
-						)
+						.references("lucid_collection_document_groups.group_id")
 						.onDelete("cascade"),
 				)
 				.addColumn("language_id", "integer", (col) =>
 					col
-						.references("headless_languages.id")
+						.references("lucid_languages.id")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -132,28 +128,28 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.addColumn("bool_value", "integer")
 				.addColumn("json_value", "text")
 				.addColumn("media_id", "integer", (col) =>
-					col.references("headless_media.id").onDelete("set null"),
+					col.references("lucid_media.id").onDelete("set null"),
 				)
 				.addColumn("user_id", "integer", (col) =>
-					col.references("headless_users.id").onDelete("set null"),
+					col.references("lucid_users.id").onDelete("set null"),
 				)
 				.execute();
 
 			await db.schema
-				.createIndex("idx_headless_fields_language_id")
-				.on("headless_collection_document_fields")
+				.createIndex("idx_lucid_fields_language_id")
+				.on("lucid_collection_document_fields")
 				.column("language_id")
 				.execute();
 
 			await db.schema
-				.createIndex("idx_headless_fields_collection_brick_id")
-				.on("headless_collection_document_fields")
+				.createIndex("idx_lucid_fields_collection_brick_id")
+				.on("lucid_collection_document_fields")
 				.column("collection_brick_id")
 				.execute();
 
 			await db.schema
-				.createIndex("idx_headless_fields_group_id")
-				.on("headless_collection_document_fields")
+				.createIndex("idx_lucid_fields_group_id")
+				.on("lucid_collection_document_fields")
 				.column("group_id")
 				.execute();
 		},

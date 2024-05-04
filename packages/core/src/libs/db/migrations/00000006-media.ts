@@ -10,7 +10,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 	return {
 		async up(db: Kysely<unknown>) {
 			await db.schema
-				.createTable("headless_media")
+				.createTable("lucid_media")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
@@ -27,13 +27,13 @@ const Migration00000006: MigrationFn = (adapter) => {
 				.addColumn("height", "integer")
 				.addColumn("title_translation_key_id", "integer", (col) =>
 					col
-						.references("headless_translation_keys.id")
+						.references("lucid_translation_keys.id")
 						.onDelete("set null")
 						.onUpdate("cascade"),
 				)
 				.addColumn("alt_translation_key_id", "integer", (col) =>
 					col
-						.references("headless_translation_keys.id")
+						.references("lucid_translation_keys.id")
 						.onDelete("set null")
 						.onUpdate("cascade"),
 				)
@@ -46,11 +46,11 @@ const Migration00000006: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createTable("headless_processed_images")
+				.createTable("lucid_processed_images")
 				.addColumn("key", "text", (col) => col.primaryKey())
 				.addColumn("media_key", "text", (col) =>
 					col
-						.references("headless_media.key")
+						.references("lucid_media.key")
 						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
@@ -58,7 +58,7 @@ const Migration00000006: MigrationFn = (adapter) => {
 
 			await db.schema
 				.createIndex("idx_media_key")
-				.on("headless_processed_images")
+				.on("lucid_processed_images")
 				.column("media_key")
 				.execute();
 		},

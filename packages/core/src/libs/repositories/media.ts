@@ -22,9 +22,9 @@ export default class MediaRepo {
 	// select
 	selectSingle = async <K extends keyof Select<HeadlessMedia>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_media">;
+		where: QueryBuilderWhereT<"lucid_media">;
 	}) => {
-		let query = this.db.selectFrom("headless_media").select(props.select);
+		let query = this.db.selectFrom("lucid_media").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -37,7 +37,7 @@ export default class MediaRepo {
 		config: Config;
 	}) => {
 		return this.db
-			.selectFrom("headless_media")
+			.selectFrom("lucid_media")
 			.select((eb) => [
 				"id",
 				"key",
@@ -55,40 +55,32 @@ export default class MediaRepo {
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_translations")
+							.selectFrom("lucid_translations")
 							.select([
-								"headless_translations.value",
-								"headless_translations.language_id",
+								"lucid_translations.value",
+								"lucid_translations.language_id",
 							])
-							.where(
-								"headless_translations.value",
-								"is not",
-								null,
-							)
+							.where("lucid_translations.value", "is not", null)
 							.whereRef(
-								"headless_translations.translation_key_id",
+								"lucid_translations.translation_key_id",
 								"=",
-								"headless_media.title_translation_key_id",
+								"lucid_media.title_translation_key_id",
 							),
 					)
 					.as("title_translations"),
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_translations")
+							.selectFrom("lucid_translations")
 							.select([
-								"headless_translations.value",
-								"headless_translations.language_id",
+								"lucid_translations.value",
+								"lucid_translations.language_id",
 							])
-							.where(
-								"headless_translations.value",
-								"is not",
-								null,
-							)
+							.where("lucid_translations.value", "is not", null)
 							.whereRef(
-								"headless_translations.translation_key_id",
+								"lucid_translations.translation_key_id",
 								"=",
-								"headless_media.alt_translation_key_id",
+								"lucid_media.alt_translation_key_id",
 							),
 					)
 					.as("alt_translations"),
@@ -99,9 +91,9 @@ export default class MediaRepo {
 	};
 	selectMultiple = async <K extends keyof Select<HeadlessMedia>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_media">;
+		where: QueryBuilderWhereT<"lucid_media">;
 	}) => {
-		let query = this.db.selectFrom("headless_media").select(props.select);
+		let query = this.db.selectFrom("lucid_media").select(props.select);
 
 		query = selectQB(query, props.where);
 
@@ -115,68 +107,60 @@ export default class MediaRepo {
 		config: Config;
 	}) => {
 		const mediasQuery = this.db
-			.selectFrom("headless_media")
+			.selectFrom("lucid_media")
 			.select((eb) => [
-				"headless_media.id",
-				"headless_media.key",
-				"headless_media.e_tag",
-				"headless_media.type",
-				"headless_media.mime_type",
-				"headless_media.file_extension",
-				"headless_media.file_size",
-				"headless_media.width",
-				"headless_media.height",
-				"headless_media.title_translation_key_id",
-				"headless_media.alt_translation_key_id",
-				"headless_media.created_at",
-				"headless_media.updated_at",
+				"lucid_media.id",
+				"lucid_media.key",
+				"lucid_media.e_tag",
+				"lucid_media.type",
+				"lucid_media.mime_type",
+				"lucid_media.file_extension",
+				"lucid_media.file_size",
+				"lucid_media.width",
+				"lucid_media.height",
+				"lucid_media.title_translation_key_id",
+				"lucid_media.alt_translation_key_id",
+				"lucid_media.created_at",
+				"lucid_media.updated_at",
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_translations")
+							.selectFrom("lucid_translations")
 							.select([
-								"headless_translations.value",
-								"headless_translations.language_id",
+								"lucid_translations.value",
+								"lucid_translations.language_id",
 							])
-							.where(
-								"headless_translations.value",
-								"is not",
-								null,
-							)
+							.where("lucid_translations.value", "is not", null)
 							.whereRef(
-								"headless_translations.translation_key_id",
+								"lucid_translations.translation_key_id",
 								"=",
-								"headless_media.title_translation_key_id",
+								"lucid_media.title_translation_key_id",
 							),
 					)
 					.as("title_translations"),
 				props.config.db
 					.jsonArrayFrom(
 						eb
-							.selectFrom("headless_translations")
+							.selectFrom("lucid_translations")
 							.select([
-								"headless_translations.value",
-								"headless_translations.language_id",
+								"lucid_translations.value",
+								"lucid_translations.language_id",
 							])
-							.where(
-								"headless_translations.value",
-								"is not",
-								null,
-							)
+							.where("lucid_translations.value", "is not", null)
 							.whereRef(
-								"headless_translations.translation_key_id",
+								"lucid_translations.translation_key_id",
 								"=",
-								"headless_media.alt_translation_key_id",
+								"lucid_media.alt_translation_key_id",
 							),
 					)
 					.as("alt_translations"),
 			])
-			.leftJoin("headless_translations as title_translations", (join) =>
+			.leftJoin("lucid_translations as title_translations", (join) =>
 				join
 					.onRef(
 						"title_translations.translation_key_id",
 						"=",
-						"headless_media.title_translation_key_id",
+						"lucid_media.title_translation_key_id",
 					)
 					.on(
 						"title_translations.language_id",
@@ -184,12 +168,12 @@ export default class MediaRepo {
 						props.languageId,
 					),
 			)
-			.leftJoin("headless_translations as alt_translations", (join) =>
+			.leftJoin("lucid_translations as alt_translations", (join) =>
 				join
 					.onRef(
 						"alt_translations.translation_key_id",
 						"=",
-						"headless_media.alt_translation_key_id",
+						"lucid_media.alt_translation_key_id",
 					)
 					.on("alt_translations.language_id", "=", props.languageId),
 			)
@@ -198,21 +182,21 @@ export default class MediaRepo {
 				"alt_translations.value as alt_translation_value",
 			])
 			.groupBy([
-				"headless_media.id",
+				"lucid_media.id",
 				"title_translations.value",
 				"alt_translations.value",
 			])
 			.where("visible", "=", 1);
 
 		const mediasCountQuery = this.db
-			.selectFrom("headless_media")
-			.select(sql`count(distinct headless_media.id)`.as("count"))
-			.leftJoin("headless_translations as title_translations", (join) =>
+			.selectFrom("lucid_media")
+			.select(sql`count(distinct lucid_media.id)`.as("count"))
+			.leftJoin("lucid_translations as title_translations", (join) =>
 				join
 					.onRef(
 						"title_translations.translation_key_id",
 						"=",
-						"headless_media.title_translation_key_id",
+						"lucid_media.title_translation_key_id",
 					)
 					.on(
 						"title_translations.language_id",
@@ -220,12 +204,12 @@ export default class MediaRepo {
 						props.languageId,
 					),
 			)
-			.leftJoin("headless_translations as alt_translations", (join) =>
+			.leftJoin("lucid_translations as alt_translations", (join) =>
 				join
 					.onRef(
 						"alt_translations.translation_key_id",
 						"=",
-						"headless_media.alt_translation_key_id",
+						"lucid_media.alt_translation_key_id",
 					)
 					.on("alt_translations.language_id", "=", props.languageId),
 			)
@@ -337,7 +321,7 @@ export default class MediaRepo {
 		altTranslationKeyId?: number;
 	}) => {
 		return this.db
-			.insertInto("headless_media")
+			.insertInto("lucid_media")
 			.values({
 				key: props.key,
 				e_tag: props.eTag,
@@ -357,7 +341,7 @@ export default class MediaRepo {
 	// ----------------------------------------
 	// update
 	updateSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_users">;
+		where: QueryBuilderWhereT<"lucid_users">;
 		data: {
 			key?: string;
 			eTag?: string;
@@ -371,7 +355,7 @@ export default class MediaRepo {
 		};
 	}) => {
 		let query = this.db
-			.updateTable("headless_media")
+			.updateTable("lucid_media")
 			.set({
 				key: props.data.key,
 				e_tag: props.data.eTag,
@@ -392,10 +376,10 @@ export default class MediaRepo {
 	// ----------------------------------------
 	// delete
 	deleteSingle = async (props: {
-		where: QueryBuilderWhereT<"headless_media">;
+		where: QueryBuilderWhereT<"lucid_media">;
 	}) => {
 		let query = this.db
-			.deleteFrom("headless_media")
+			.deleteFrom("lucid_media")
 			.returning([
 				"file_size",
 				"id",

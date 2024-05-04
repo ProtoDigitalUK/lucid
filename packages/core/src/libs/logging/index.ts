@@ -6,7 +6,7 @@ export enum LoggerScopes {
 	CONFIG = "config",
 }
 
-const headlessLogger = (
+const lucidLogger = (
 	level: LogLevel,
 	data: {
 		message: string;
@@ -48,4 +48,4 @@ export const messageFormat = (data: {
 	return data.message;
 };
 
-export default headlessLogger;
+export default lucidLogger;

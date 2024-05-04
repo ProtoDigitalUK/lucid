@@ -1,1 +1,1 @@
-# @protoheadless/plugin-cookie-consent
+# @lucidcms/plugin-cookie-consent

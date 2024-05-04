@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import type { Config, HeadlessConfig } from "../../types/config.js";
+import type { Config, LucidConfig } from "../../types/config.js";
 import checks from "./checks/index.js";
 import { ZodError } from "zod";
 import ConfigSchema from "./config-schema.js";
@@ -8,10 +8,10 @@ import defaultConfig from "./default-config.js";
 import { CollectionConfigSchema } from "../builders/collection-builder/index.js";
 import { BrickSchema } from "../builders/brick-builder/index.js";
 import { FieldsSchema } from "../builders/field-builder/index.js";
-import { HeadlessError } from "../../utils/error-handler.js";
-import headlessLogger, { LoggerScopes } from "../logging/index.js";
+import { LucidError } from "../../utils/error-handler.js";
+import lucidLogger, { LoggerScopes } from "../logging/index.js";
 
-const headlessConfig = async (config: HeadlessConfig) => {
+const lucidConfig = async (config: LucidConfig) => {
 	let configRes = mergeConfig(config, defaultConfig);
 	try {
 		// merge plugin config
@@ -22,7 +22,7 @@ const headlessConfig = async (config: HeadlessConfig) => {
 					const pluginRes = await plugin(configAfterPlugin);
 					checks.checkPluginVersion({
 						key: pluginRes.key,
-						requiredVersions: pluginRes.headless,
+						requiredVersions: pluginRes.lucid,
 					});
 					return pluginRes.config;
 				},
@@ -81,7 +81,7 @@ const headlessConfig = async (config: HeadlessConfig) => {
 	} catch (err) {
 		if (err instanceof ZodError) {
 			for (const error of err.errors) {
-				headlessLogger("error", {
+				lucidLogger("error", {
 					message: error.message,
 					scope: LoggerScopes.CONFIG,
 					data: {
@@ -89,23 +89,22 @@ const headlessConfig = async (config: HeadlessConfig) => {
 					},
 				});
 			}
-		} else if (err instanceof HeadlessError) {
+		} else if (err instanceof LucidError) {
 		} else if (err instanceof Error) {
-			headlessLogger("error", {
+			lucidLogger("error", {
 				scope: LoggerScopes.CONFIG,
 				message: err.message,
 			});
 		} else {
-			headlessLogger("error", {
+			lucidLogger("error", {
 				scope: LoggerScopes.CONFIG,
 				message: T("an_unknown_error_occurred"),
 			});
 		}
 
-		if (err instanceof HeadlessError && err.kill === false)
-			return configRes;
+		if (err instanceof LucidError && err.kill === false) return configRes;
 		process.exit(1);
 	}
 };
 
-export default headlessConfig;
+export default lucidConfig;

@@ -4,7 +4,7 @@ import { type Component, For, Switch, Match, createMemo, Show } from "solid-js";
 import missingContent from "@/assets/illustrations/missing-content.svg";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Stores
 import builderStore from "@/store/builderStore";
 // Components

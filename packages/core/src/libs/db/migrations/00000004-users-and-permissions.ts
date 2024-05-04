@@ -10,7 +10,7 @@ const Migration00000004: MigrationFn = (adapter) => {
 	return {
 		async up(db: Kysely<unknown>) {
 			await db.schema
-				.createTable("headless_users")
+				.createTable("lucid_users")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
@@ -25,7 +25,7 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.addColumn("is_deleted", "integer", (col) => col.defaultTo(0))
 				.addColumn("is_deleted_at", "timestamp")
 				.addColumn("deleted_by", "integer", (col) =>
-					col.references("headless_users.id").onDelete("set null"),
+					col.references("lucid_users.id").onDelete("set null"),
 				)
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
@@ -36,7 +36,7 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createTable("headless_roles")
+				.createTable("lucid_roles")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
@@ -51,12 +51,12 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createTable("headless_role_permissions")
+				.createTable("lucid_role_permissions")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("role_id", "integer", (col) =>
-					col.references("headless_roles.id").onDelete("cascade"),
+					col.references("lucid_roles.id").onDelete("cascade"),
 				)
 				.addColumn("permission", "text", (col) => col.notNull())
 				.addColumn("created_at", "timestamp", (col) =>
@@ -68,15 +68,15 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createTable("headless_user_roles")
+				.createTable("lucid_user_roles")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("user_id", "integer", (col) =>
-					col.references("headless_users.id").onDelete("cascade"),
+					col.references("lucid_users.id").onDelete("cascade"),
 				)
 				.addColumn("role_id", "integer", (col) =>
-					col.references("headless_roles.id").onDelete("cascade"),
+					col.references("lucid_roles.id").onDelete("cascade"),
 				)
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),
@@ -87,12 +87,12 @@ const Migration00000004: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createTable("headless_user_tokens")
+				.createTable("lucid_user_tokens")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)
 				.addColumn("user_id", "integer", (col) =>
-					col.references("headless_users.id").onDelete("cascade"),
+					col.references("lucid_users.id").onDelete("cascade"),
 				)
 				.addColumn("token_type", "varchar(255)")
 				.addColumn("token", "varchar(255)", (col) =>

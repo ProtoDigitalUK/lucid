@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import mediaServices from "./index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import translationsServices from "../translations/index.js";
@@ -36,7 +36,7 @@ const deleteSingle = async (
 	});
 
 	if (getMedia === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("media"),
@@ -69,7 +69,7 @@ const deleteSingle = async (
 	});
 
 	if (deleteMedia === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 		});

@@ -1,5 +1,5 @@
 {
-	"name": "@protoheadless/documentation",
+	"name": "@lucidcms/documentation",
 	"type": "module",
 	"private": true,
 	"scripts": {

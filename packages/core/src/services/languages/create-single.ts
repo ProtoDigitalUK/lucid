@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import ISO6391 from "iso-639-1";
 import Repository from "../../libs/repositories/index.js";
@@ -32,7 +32,7 @@ const createSingle = async (
 	});
 
 	if (codeUnique !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 			errorResponse: {
@@ -50,7 +50,7 @@ const createSingle = async (
 	const iso6391 = code[0];
 
 	if (iso6391 && !ISO6391.validate(iso6391)) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("error_invalid", {
 				type: T("language_iso_639_1"),
@@ -66,7 +66,7 @@ const createSingle = async (
 	});
 
 	if (language === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});

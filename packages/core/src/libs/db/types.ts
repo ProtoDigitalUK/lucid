@@ -3,7 +3,7 @@ import type { Migration, Generated, ColumnType } from "kysely";
 import type { FieldTypes } from "../builders/field-builder/types.js";
 import type { OptionName } from "../../types/response.js";
 
-export type KyselyDB = Kysely<HeadlessDB>;
+export type KyselyDB = Kysely<LucidDB>;
 
 export enum AdapterType {
 	SQLITE = 0,
@@ -204,21 +204,21 @@ export interface HeadlessCollectionDocumentFields {
 // ------------------------------------------------------------------------------
 // Database
 
-export interface HeadlessDB {
-	headless_languages: HeadlessLanguages;
-	headless_translation_keys: HeadlessTranslationKeys;
-	headless_translations: HeadlessTranslations;
-	headless_options: HeadlessOptions;
-	headless_users: HeadlessUsers;
-	headless_roles: HeadlessRoles;
-	headless_role_permissions: HeadlessRolePermissions;
-	headless_user_roles: HeadlessUserRoles;
-	headless_user_tokens: HeadlessUserTokens;
-	headless_emails: HeadlessEmails;
-	headless_media: HeadlessMedia;
-	headless_processed_images: HeadlessProcessedImages;
-	headless_collection_documents: HeadlessCollectionDocuments;
-	headless_collection_document_bricks: HeadlessCollectionDocumentBricks;
-	headless_collection_document_groups: HeadlessCollectionDocumentGroups;
-	headless_collection_document_fields: HeadlessCollectionDocumentFields;
+export interface LucidDB {
+	lucid_languages: HeadlessLanguages;
+	lucid_translation_keys: HeadlessTranslationKeys;
+	lucid_translations: HeadlessTranslations;
+	lucid_options: HeadlessOptions;
+	lucid_users: HeadlessUsers;
+	lucid_roles: HeadlessRoles;
+	lucid_role_permissions: HeadlessRolePermissions;
+	lucid_user_roles: HeadlessUserRoles;
+	lucid_user_tokens: HeadlessUserTokens;
+	lucid_emails: HeadlessEmails;
+	lucid_media: HeadlessMedia;
+	lucid_processed_images: HeadlessProcessedImages;
+	lucid_collection_documents: HeadlessCollectionDocuments;
+	lucid_collection_document_bricks: HeadlessCollectionDocumentBricks;
+	lucid_collection_document_groups: HeadlessCollectionDocumentGroups;
+	lucid_collection_document_fields: HeadlessCollectionDocumentFields;
 }

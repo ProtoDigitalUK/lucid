@@ -9,9 +9,9 @@ export default {
 			isEnabled: 1,
 		},
 		user: {
-			firstName: "Headless",
-			lastName: "Admin",
-			email: "admin@headless.com",
+			firstName: "Lucid",
+			lastName: "CMS",
+			email: "admin@lucidcms.io",
 			username: "admin",
 			password: "password",
 			superAdmin: 1,
@@ -62,5 +62,5 @@ export default {
 	refreshTokenExpiration: 604800, // 7 days in seconds
 	accessTokenExpiration: 300, // 5 minutes in seconds
 	passwordResetTokenExpirationMinutes: 15,
-	documentation: "https://protoheadless.com/getting-started",
+	documentation: "https://lucidcms.io/getting-started",
 };

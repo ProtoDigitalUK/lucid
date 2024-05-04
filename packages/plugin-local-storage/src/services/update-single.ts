@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import { keyPaths } from "../utils/helpers.js";
 import uploadSingle from "./upload-single.js";
 import type { PluginOptions } from "../types/types.js";
-import type { MediaStrategyUpdateSingle } from "@protoheadless/core/types";
+import type { MediaStrategyUpdateSingle } from "@lucidcms/core/types";
 
 export default (pluginOptions: PluginOptions) => {
 	const updateSingle: MediaStrategyUpdateSingle = async (oldKey, props) => {

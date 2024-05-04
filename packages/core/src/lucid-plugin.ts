@@ -16,25 +16,25 @@ import { getDirName } from "./utils/helpers.js";
 import getConfig from "./libs/config/get-config.js";
 import { decodeError } from "./utils/error-helpers.js";
 import registerCronJobs from "./services/cron-jobs.js";
-import headlessLogger from "./libs/logging/index.js";
+import lucidLogger from "./libs/logging/index.js";
 import serviceWrapper from "./utils/service-wrapper.js";
 
 const currentDir = getDirName(import.meta.url);
 
-const headlessPlugin = async (fastify: FastifyInstance) => {
+const lucidPlugin = async (fastify: FastifyInstance) => {
 	try {
 		const config = await getConfig();
 
 		fastify.decorate<Config>("config", config);
-		fastify.decorate("logger", headlessLogger);
+		fastify.decorate("logger", lucidLogger);
 
 		// ------------------------------------
 		// Swagger
 		fastify.register(fastifySwagger, {
 			swagger: {
 				info: {
-					title: "Headless API",
-					description: "Headless API",
+					title: "Lucid CMS API",
+					description: "Lucid CMS API",
 					version: "0.0.1",
 				},
 				host: config.host
@@ -62,7 +62,7 @@ const headlessPlugin = async (fastify: FastifyInstance) => {
 				"_csrf",
 				"_access",
 				"_refresh",
-				"headless-content-lang",
+				"lucid-content-lang",
 				"Content-Length",
 			],
 			credentials: true,
@@ -120,13 +120,13 @@ const headlessPlugin = async (fastify: FastifyInstance) => {
 			const { name, message, status, errorResponse, code } =
 				decodeError(error);
 
-			headlessLogger("error", {
+			lucidLogger("error", {
 				message: message,
 				scope: status?.toString() ?? "500",
 			});
 
 			if (reply.sent) {
-				headlessLogger("error", {
+				lucidLogger("error", {
 					message: T("headers_already_sent"),
 				});
 				return;
@@ -144,16 +144,14 @@ const headlessPlugin = async (fastify: FastifyInstance) => {
 			reply.status(status ?? 500).send(response);
 		});
 	} catch (error) {
-		// @ts-ignore
-		console.log(error.message);
-		headlessLogger("error", {
+		lucidLogger("error", {
 			message:
-				"An error occurred during the initialisation of the headless server",
+				"An error occurred during the initialisation of the lucid server",
 		});
 	}
 };
 
-export default fp(headlessPlugin, {
-	name: "headless",
+export default fp(lucidPlugin, {
+	name: "lucid",
 	fastify: "4.x",
 });

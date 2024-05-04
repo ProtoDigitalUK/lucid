@@ -1,11 +1,11 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import headlessLogger from "../libs/logging/index.js";
+import lucidLogger from "../libs/logging/index.js";
 
 const logRoute =
 	(hook: "prehandler" | "onResponse") =>
 	async (request: FastifyRequest, reply: FastifyReply) => {
 		if (hook === "prehandler") {
-			headlessLogger("info", {
+			lucidLogger("info", {
 				message: `Request - ${request.url}`,
 				scope: request.method,
 				data: {
@@ -16,7 +16,7 @@ const logRoute =
 			return;
 		}
 
-		headlessLogger("info", {
+		lucidLogger("info", {
 			message: `Response - ${request.url}`,
 			scope: request.method,
 			data: {

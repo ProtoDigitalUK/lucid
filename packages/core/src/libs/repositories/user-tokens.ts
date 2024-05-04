@@ -12,10 +12,10 @@ export default class UserTokensRepo {
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUserTokens>>(props: {
 		select: K[];
-		where: QueryBuilderWhereT<"headless_user_tokens">;
+		where: QueryBuilderWhereT<"lucid_user_tokens">;
 	}) => {
 		let query = this.db
-			.selectFrom("headless_user_tokens")
+			.selectFrom("lucid_user_tokens")
 			.select<K>(props.select);
 
 		query = selectQB(query, props.where);
@@ -27,9 +27,9 @@ export default class UserTokensRepo {
 	// ----------------------------------------
 	// delete
 	deleteMultiple = async (props: {
-		where: QueryBuilderWhereT<"headless_user_tokens">;
+		where: QueryBuilderWhereT<"lucid_user_tokens">;
 	}) => {
-		let query = this.db.deleteFrom("headless_user_tokens");
+		let query = this.db.deleteFrom("lucid_user_tokens");
 
 		query = deleteQB(query, props.where);
 
@@ -44,7 +44,7 @@ export default class UserTokensRepo {
 		token: string;
 	}) => {
 		return this.db
-			.insertInto("headless_user_tokens")
+			.insertInto("lucid_user_tokens")
 			.values({
 				user_id: props.userId,
 				token: props.token,

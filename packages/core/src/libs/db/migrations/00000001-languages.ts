@@ -14,7 +14,7 @@ const Migration00000001: MigrationFn = (adapter) => {
 			}
 
 			await db.schema
-				.createTable("headless_languages")
+				.createTable("lucid_languages")
 				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
 					primaryKeyColumn(col, adapter),
 				)

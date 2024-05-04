@@ -1,4 +1,4 @@
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { OptionName } from "../../types/response.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
@@ -33,7 +33,7 @@ const updateSingle = async (
 	});
 
 	if (updateOption === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});

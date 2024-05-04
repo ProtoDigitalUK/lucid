@@ -8,7 +8,7 @@ import type {
 	UpdateQueryBuilder,
 } from "kysely";
 import type { CollectionFiltersResponse } from "../../utils/field-helpers.js";
-import type { HeadlessDB } from "./types.js";
+import type { LucidDB } from "./types.js";
 
 export interface QueryBuilderConfigT<DB, Table extends keyof DB> {
 	requestQuery: RequestQueryParsed;
@@ -86,10 +86,10 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 			mainQuery = mainQuery.where(({ eb, and }) =>
 				and([
 					// @ts-expect-error
-					eb("headless_collection_document_fields.key", "=", key),
+					eb("lucid_collection_document_fields.key", "=", key),
 					eb(
 						// @ts-expect-error
-						`headless_collection_document_fields.${column}`,
+						`lucid_collection_document_fields.${column}`,
 						Array.isArray(value) ? "in" : "=",
 						value,
 					),
@@ -99,10 +99,10 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 				countQuery = countQuery.where(({ eb, and }) =>
 					and([
 						// @ts-expect-error
-						eb("headless_collection_document_fields.key", "=", key),
+						eb("lucid_collection_document_fields.key", "=", key),
 						eb(
 							// @ts-expect-error
-							`headless_collection_document_fields.${column}`,
+							`lucid_collection_document_fields.${column}`,
 							Array.isArray(value) ? "in" : "=",
 							value,
 						),
@@ -142,14 +142,14 @@ const queryBuilder = <DB, Table extends keyof DB, O, T>(
 	};
 };
 
-export type QueryBuilderWhereT<Table extends keyof HeadlessDB> = Array<{
-	key: ReferenceExpression<HeadlessDB, Table>;
+export type QueryBuilderWhereT<Table extends keyof LucidDB> = Array<{
+	key: ReferenceExpression<LucidDB, Table>;
 	operator: ComparisonOperatorExpression;
-	value: OperandValueExpressionOrList<HeadlessDB, Table, keyof Table>;
+	value: OperandValueExpressionOrList<LucidDB, Table, keyof Table>;
 }>;
 
-export const selectQB = <Table extends keyof HeadlessDB, O>(
-	query: SelectQueryBuilder<HeadlessDB, Table, O>,
+export const selectQB = <Table extends keyof LucidDB, O>(
+	query: SelectQueryBuilder<LucidDB, Table, O>,
 	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
@@ -161,8 +161,8 @@ export const selectQB = <Table extends keyof HeadlessDB, O>(
 	return kyselyQuery;
 };
 
-export const deleteQB = <Table extends keyof HeadlessDB, O>(
-	query: DeleteQueryBuilder<HeadlessDB, Table, O>,
+export const deleteQB = <Table extends keyof LucidDB, O>(
+	query: DeleteQueryBuilder<LucidDB, Table, O>,
 	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;
@@ -175,11 +175,11 @@ export const deleteQB = <Table extends keyof HeadlessDB, O>(
 };
 
 export const updateQB = <
-	UT extends keyof HeadlessDB,
-	Table extends keyof HeadlessDB,
+	UT extends keyof LucidDB,
+	Table extends keyof LucidDB,
 	O,
 >(
-	query: UpdateQueryBuilder<HeadlessDB, UT, Table, O>,
+	query: UpdateQueryBuilder<LucidDB, UT, Table, O>,
 	where: QueryBuilderWhereT<Table>,
 ) => {
 	let kyselyQuery = query;

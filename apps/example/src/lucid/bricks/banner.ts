@@ -1,4 +1,4 @@
-import { BrickBuilder } from "@protoheadless/core";
+import { BrickBuilder } from "@lucidcms/core";
 
 const BannerBrick = new BrickBuilder("banner", {
 	preview: {

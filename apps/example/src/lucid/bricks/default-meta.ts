@@ -1,6 +1,6 @@
-import { BrickBuilder } from "@protoheadless/core";
+import { BrickBuilder } from "@lucidcms/core";
 
-const PageMetaBrick = new BrickBuilder("page_meta")
+const DefaultMetaBrick = new BrickBuilder("default_meta")
 	.addText({
 		key: "meta_title",
 		title: "Meta Title",
@@ -10,4 +10,4 @@ const PageMetaBrick = new BrickBuilder("page_meta")
 		title: "Meta Description",
 	});
 
-export default PageMetaBrick;
+export default DefaultMetaBrick;

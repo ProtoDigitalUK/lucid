@@ -1,5 +1,5 @@
 import { type Component, createMemo, Show } from "solid-js";
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 

@@ -1,10 +1,6 @@
 import { type Component, createSignal, createEffect } from "solid-js";
 // Types
-import type {
-	FieldErrors,
-	CustomField,
-	LinkValue,
-} from "@protoheadless/core/types";
+import type { FieldErrors, CustomField, LinkValue } from "@lucidcms/core/types";
 // Utils
 import brickHelpers from "@/utils/brick-helpers";
 // Store

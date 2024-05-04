@@ -6,18 +6,18 @@ import type { Readable } from "node:stream";
 import type { RouteMediaMetaData } from "../utils/media-helpers.js";
 import type { AllHooks } from "./hooks.js";
 
-export type HeadlessPlugin = (config: Config) => Promise<{
+export type LucidPlugin = (config: Config) => Promise<{
 	key: string;
-	headless: string;
+	lucid: string;
 	config: Config;
 }>;
 
-export type HeadlessPluginOptions<T> = (
+export type LucidPluginOptions<T> = (
 	config: Config,
 	pluginOptions: T,
 ) => Promise<{
 	key: string;
-	headless: string;
+	lucid: string;
 	config: Config;
 }>;
 
@@ -98,8 +98,8 @@ export type MediaStrategy = {
 	deleteMultiple: MediaStrategyDeleteMultiple;
 };
 
-// the version of config that is used in the headless.config.ts file
-export interface HeadlessConfig {
+// the version of config that is used in the lucid.config.ts file
+export interface LucidConfig {
 	mode: "production" | "development";
 	db: DatabaseAdapter;
 	host: string;
@@ -131,7 +131,7 @@ export interface HeadlessConfig {
 	};
 	hooks?: Array<AllHooks>;
 	collections?: CollectionBuilder[];
-	plugins?: HeadlessPlugin[];
+	plugins?: LucidPlugin[];
 }
 
 export interface Config extends z.infer<typeof ConfigSchema> {
@@ -157,5 +157,5 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 	};
 	hooks: Array<AllHooks>;
 	collections: CollectionBuilder[];
-	plugins: Array<HeadlessPlugin>;
+	plugins: Array<LucidPlugin>;
 }

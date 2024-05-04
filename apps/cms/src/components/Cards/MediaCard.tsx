@@ -4,7 +4,7 @@ import classNames from "classnames";
 // Stores
 import userStore from "@/store/userStore";
 // Types
-import type { MediaResponse } from "@protoheadless/core/types";
+import type { MediaResponse } from "@lucidcms/core/types";
 // Hooks
 import type useRowTarget from "@/hooks/useRowTarget";
 // Utils

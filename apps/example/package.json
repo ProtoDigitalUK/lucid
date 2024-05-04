@@ -1,5 +1,5 @@
 {
-	"name": "@protoheadless/example",
+	"name": "@lucidcms/example",
 	"private": true,
 	"description": "",
 	"main": "src/index.ts",
@@ -9,10 +9,10 @@
 		"dev": "nodemon"
 	},
 	"dependencies": {
-		"@protoheadless/core": "*",
-		"@protoheadless/plugin-local-storage": "*",
-		"@protoheadless/plugin-nodemailer": "*",
-		"@protoheadless/plugin-s3": "*",
+		"@lucidcms/core": "*",
+		"@lucidcms/plugin-local-storage": "*",
+		"@lucidcms/plugin-nodemailer": "*",
+		"@lucidcms/plugin-s3": "*",
 		"better-sqlite3": "^9.4.3",
 		"console-log-colors": "^0.4.0",
 		"fastify": "^4.24.3",

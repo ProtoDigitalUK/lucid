@@ -1,12 +1,12 @@
-import type { HeadlessAPIErrorData } from "../types/errors.js";
-import { HeadlessAPIError } from "./error-handler.js";
+import type { LucidAPIErrorData } from "../types/errors.js";
+import { LucidAPIError } from "./error-handler.js";
 import constants from "../constants.js";
 
 export const ensureThrowAPIError = (
-	error: HeadlessAPIError | Error | unknown,
-	data: HeadlessAPIErrorData,
+	error: LucidAPIError | Error | unknown,
+	data: LucidAPIErrorData,
 ) => {
-	if (error instanceof HeadlessAPIError) {
+	if (error instanceof LucidAPIError) {
 		error.setMissingValues({
 			name: data.name,
 			message: data.message,
@@ -15,7 +15,7 @@ export const ensureThrowAPIError = (
 	}
 
 	if (error instanceof Error) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: data.type,
 			name: data.name,
 			message: error.message || data.message,
@@ -26,11 +26,11 @@ export const ensureThrowAPIError = (
 		});
 	}
 
-	throw new HeadlessAPIError(data);
+	throw new LucidAPIError(data);
 };
 
 export const decodeError = (error: Error) => {
-	if (error instanceof HeadlessAPIError) {
+	if (error instanceof LucidAPIError) {
 		return {
 			name: error.name,
 			message: error.message,

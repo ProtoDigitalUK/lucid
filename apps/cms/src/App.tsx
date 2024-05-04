@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { Toaster } from "solid-toast";
-import { HeadlessError } from "./utils/error-handling";
+import { LucidError } from "./utils/error-handling";
 import Router from "@/Router";
 import "solid-devtools";
 
@@ -10,7 +10,7 @@ const App: Component = () => {
 		defaultOptions: {
 			queries: {
 				retry: (_, error) => {
-					if (error instanceof HeadlessError) {
+					if (error instanceof LucidError) {
 						if (error.errorRes.status === 401) {
 							return false;
 						}

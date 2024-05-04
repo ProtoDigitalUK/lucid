@@ -20,7 +20,7 @@
 	"optionalDependencies": {
 		"@rollup/rollup-linux-x64-gnu": "4.6.1"
 	},
-	"name": "headless",
+	"name": "lucid",
 	"packageManager": "npm@10.2.4",
 	"workspaces": ["apps/*", "packages/*"],
 	"volta": {

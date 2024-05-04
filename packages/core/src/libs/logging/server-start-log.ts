@@ -14,7 +14,7 @@ const serverStartLog = async (address: string, start: [number, number]) => {
 
 	console.log("");
 	console.log(
-		`${bgYellow} PROTO HEADLESS ${reset} ${textYellow}v${projectPackage.version}${reset} ready in ${textGreen}${loadTime} ms\n${reset}`,
+		`${bgYellow} LUCID CMS ${reset} ${textYellow}v${projectPackage.version}${reset} ready in ${textGreen}${loadTime} ms\n${reset}`,
 	);
 
 	console.log(`┃ API              ${textBlue}${address}${reset}`);

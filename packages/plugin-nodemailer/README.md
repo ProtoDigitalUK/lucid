@@ -1,27 +1,27 @@
-# Proto Headless - Nodemailer Plugin
+# Lucid - Nodemailer Plugin
 
-> The official Nodemailer plugin for Proto Headless
+> The official Nodemailer plugin for Lucid
 
 This plugin registers the required email strategy config and uses Nodemailer to send emails.
 
 ## Installation
 
 ```bash
-npm install @protoheadless/plugin-nodemailer
+npm install @lucidcms/plugin-nodemailer
 ```
 
-## headless.config.ts/js
+## lucid.config.ts/js
 
 ```typescript
-import HeadlessNodemailer from "@protoheadless/plugin-nodemailer";
+import LucidNodemailer from "@lucidcms/plugin-nodemailer";
 
-export default headlessConfig({
+export default lucidConfig({
   // ...other config
   plugins: [
-    HeadlessNodemailer({
+    LucidNodemailer({
       from: {
-        email: "admin@protoheadless.com",
-        name: "Proto Headless",
+        email: "admin@lucidcms.io",
+        name: "Lucid",
       },
       transporter: transporter,
     }),

@@ -1,10 +1,7 @@
 import T from "@/translations";
 import { useParams, useNavigate } from "@solidjs/router";
 import { type Component, createMemo, createEffect } from "solid-js";
-import type {
-	CollectionResponse,
-	CustomField,
-} from "@protoheadless/core/types";
+import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
 import api from "@/services/api";
 import useSearchParams, { type FilterSchema } from "@/hooks/useSearchParams";
 import Layout from "@/components/Groups/Layout";

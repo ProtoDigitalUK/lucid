@@ -5,7 +5,7 @@ import type { KyselyDB } from "../libs/db/types.js";
 // --------------------------------------------------
 // types
 
-export interface HeadlessHook<
+export interface LucidHook<
 	S extends keyof HookServiceHandlers,
 	E extends keyof HookServiceHandlers[S],
 > {
@@ -14,7 +14,7 @@ export interface HeadlessHook<
 	handler: HookServiceHandlers[S][E];
 }
 
-export interface HeadlessHookCollection<
+export interface LucidHookCollection<
 	E extends keyof HookServiceHandlers["collection-documents"],
 > {
 	event: E;
@@ -88,16 +88,16 @@ export type HookServiceHandlers = {
 
 // used for collection builder hook config
 export type CollectionDocumentBuilderHooks =
-	| HeadlessHookCollection<"beforeUpsert">
-	| HeadlessHookCollection<"afterUpsert">
-	| HeadlessHookCollection<"beforeDelete">
-	| HeadlessHookCollection<"afterDelete">;
+	| LucidHookCollection<"beforeUpsert">
+	| LucidHookCollection<"afterUpsert">
+	| LucidHookCollection<"beforeDelete">
+	| LucidHookCollection<"afterDelete">;
 
 export type CollectionDocumentHooks =
-	| HeadlessHook<"collection-documents", "beforeUpsert">
-	| HeadlessHook<"collection-documents", "afterUpsert">
-	| HeadlessHook<"collection-documents", "beforeDelete">
-	| HeadlessHook<"collection-documents", "afterDelete">;
+	| LucidHook<"collection-documents", "beforeUpsert">
+	| LucidHook<"collection-documents", "afterUpsert">
+	| LucidHook<"collection-documents", "beforeDelete">
+	| LucidHook<"collection-documents", "afterDelete">;
 
 // add all hooks to this type
 export type AllHooks = CollectionDocumentHooks;

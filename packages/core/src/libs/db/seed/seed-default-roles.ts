@@ -1,6 +1,6 @@
 import T from "../../../translations/index.js";
 import constants from "../../../constants.js";
-import { HeadlessError } from "../../../utils/error-handler.js";
+import { LucidError } from "../../../utils/error-handler.js";
 import serviceWrapper from "../../../utils/service-wrapper.js";
 import rolesServices from "../../../services/roles/index.js";
 import Repository from "../../repositories/index.js";
@@ -29,7 +29,7 @@ const seedDefaultRoles = async (serviceConfig: ServiceConfig) => {
 		}
 		await Promise.all(rolePromises);
 	} catch (error) {
-		throw new HeadlessError({
+		throw new LucidError({
 			message: T("dynamic_an_error_occurred_saving_default", {
 				name: T("roles").toLowerCase(),
 			}),

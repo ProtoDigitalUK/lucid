@@ -58,7 +58,7 @@ export default class UsersFormatter {
 		properties: {
 			id: { type: "number", example: 1 },
 			superAdmin: { type: "number", example: 1 },
-			email: { type: "string", example: "admin@headless.com" },
+			email: { type: "string", example: "admin@lucidcms.io" },
 			username: { type: "string", example: "admin" },
 			firstName: { type: "string", example: "Admin" },
 			lastName: { type: "string", example: "User" },

@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import ISO6391 from "iso-639-1";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
@@ -22,7 +22,7 @@ const updateSingle = async (
 		data.isDefault === undefined &&
 		data.isEnabled === undefined
 	) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});
@@ -43,7 +43,7 @@ const updateSingle = async (
 		});
 
 		if (language !== undefined) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				status: 400,
 			});
@@ -53,7 +53,7 @@ const updateSingle = async (
 		const iso6391 = code[0];
 
 		if (iso6391 && !ISO6391.validate(iso6391)) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "basic",
 				message: T("error_invalid", {
 					type: T("language_iso_639_1"),
@@ -84,7 +84,7 @@ const updateSingle = async (
 	});
 
 	if (updateLanguage === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});

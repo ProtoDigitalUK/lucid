@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import getPermissions from "../permissions.js";
 import type { ErrorResult } from "../../types/errors.js";
 import type { Permission } from "../../types/response.js";
@@ -51,7 +51,7 @@ const validatePermissions = async (
 	}
 
 	if (permErrors.length > 0) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 500,
 			errorResponse: {

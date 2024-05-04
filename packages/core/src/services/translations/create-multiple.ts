@@ -1,4 +1,4 @@
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
@@ -16,7 +16,7 @@ const createMultiple = async <K extends string>(
 	data: ServiceData<K>,
 ) => {
 	if (data.keys.length === 0) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});
@@ -32,7 +32,7 @@ const createMultiple = async <K extends string>(
 	);
 
 	if (translationKeyEntries.length !== data.keys.length) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});

@@ -2,7 +2,7 @@ import { type Component, createSignal } from "solid-js";
 import api from "@/services/api";
 import helpers from "@/utils/helpers";
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
-import type { ErrorResult } from "@protoheadless/core/types";
+import type { ErrorResult } from "@lucidcms/core/types";
 import Form from "@/components/Groups/Form";
 
 interface UserSearchSelectProps {

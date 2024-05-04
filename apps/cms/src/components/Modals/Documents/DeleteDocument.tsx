@@ -1,7 +1,7 @@
 import T from "@/translations";
 import type { Component, Accessor } from "solid-js";
 import Modal from "@/components/Groups/Modal";
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 import api from "@/services/api";
 
 interface DeleteDocumentProps {

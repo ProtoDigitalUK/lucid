@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessAPIError } from "../../../utils/error-handler.js";
+import { LucidAPIError } from "../../../utils/error-handler.js";
 import Repository from "../../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
@@ -29,7 +29,7 @@ const checkLanguagesExist = async (
 	});
 
 	if (languages.length !== languageIds.length) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 			errorResponse: {

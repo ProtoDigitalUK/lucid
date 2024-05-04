@@ -3,7 +3,7 @@ import argon2 from "argon2";
 import userTokens from "../user-tokens/index.js";
 import email from "../email/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
@@ -44,7 +44,7 @@ const resetPassword = async (
 	});
 
 	if (user === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
 		});

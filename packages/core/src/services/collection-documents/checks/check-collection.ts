@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessAPIError } from "../../../utils/error-handler.js";
+import { LucidAPIError } from "../../../utils/error-handler.js";
 import getConfig from "../../../libs/config/get-config.js";
 
 export interface ServiceData {
@@ -14,7 +14,7 @@ const checkCollection = async (data: ServiceData) => {
 	);
 
 	if (!collectionInstance) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("error_not_found_message", {
 				name: T("collection"),

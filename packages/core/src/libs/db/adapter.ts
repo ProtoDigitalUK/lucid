@@ -7,10 +7,10 @@ import {
 	type KyselyPlugin,
 } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
-import { HeadlessError } from "../../utils/error-handler.js";
+import { LucidError } from "../../utils/error-handler.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
-import headlessLogger from "../logging/index.js";
-import type { AdapterType, HeadlessDB } from "./types.js";
+import lucidLogger from "../logging/index.js";
+import type { AdapterType, LucidDB } from "./types.js";
 import type { Config } from "../../types/config.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 // Seeds
@@ -28,7 +28,7 @@ import Migration00000006 from "./migrations/00000006-media.js";
 import Migration00000007 from "./migrations/00000007-collections.js";
 
 export default class DatabaseAdapter {
-	db: Kysely<HeadlessDB> | undefined;
+	db: Kysely<LucidDB> | undefined;
 	adapter: AdapterType;
 	constructor(config: {
 		adapter: AdapterType;
@@ -36,7 +36,7 @@ export default class DatabaseAdapter {
 		plugins?: Array<KyselyPlugin>;
 	}) {
 		this.adapter = config.adapter;
-		this.db = new Kysely<HeadlessDB>({
+		this.db = new Kysely<LucidDB>({
 			dialect: config.dialect,
 			plugins: config.plugins,
 		});
@@ -50,12 +50,12 @@ export default class DatabaseAdapter {
 		if (results) {
 			for (const it of results) {
 				if (it.status === "Success") {
-					headlessLogger("info", {
+					lucidLogger("info", {
 						message: `"${it.migrationName}" was executed successfully`,
 						scope: "migration",
 					});
 				} else if (it.status === "Error") {
-					headlessLogger("error", {
+					lucidLogger("error", {
 						message: `failed to execute migration "${it.migrationName}"`,
 						scope: "migration",
 					});
@@ -64,7 +64,7 @@ export default class DatabaseAdapter {
 		}
 
 		if (error) {
-			throw new HeadlessError({
+			throw new LucidError({
 				message: T("db_migration_failed"),
 				kill: true,
 			});
@@ -91,7 +91,7 @@ export default class DatabaseAdapter {
 	// getters
 	get client() {
 		if (!this.db) {
-			throw new HeadlessError({
+			throw new LucidError({
 				message: T("db_connection_error"),
 			});
 		}

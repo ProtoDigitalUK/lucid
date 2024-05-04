@@ -7,7 +7,7 @@ import {
 	Show,
 } from "solid-js";
 import classNames from "classnames";
-import type { CustomField } from "@protoheadless/core/types";
+import type { CustomField } from "@lucidcms/core/types";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import CustomFields from "./CustomFields";
 

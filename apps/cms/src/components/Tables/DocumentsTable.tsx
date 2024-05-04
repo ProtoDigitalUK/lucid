@@ -2,10 +2,7 @@ import T from "@/translations";
 import { type Component, type Accessor, Index, createMemo } from "solid-js";
 import { FaSolidT, FaSolidCalendar, FaSolidUser } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
-import type {
-	CollectionResponse,
-	CustomField,
-} from "@protoheadless/core/types";
+import type { CollectionResponse, CustomField } from "@lucidcms/core/types";
 import type useSearchParams from "@/hooks/useSearchParams";
 import useRowTarget from "@/hooks/useRowTarget";
 import api from "@/services/api";
@@ -65,7 +62,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 				collectionKey: collectionKey,
 			},
 			headers: {
-				"headless-content-lang": contentLanguage,
+				"lucid-content-lang": contentLanguage,
 			},
 		},
 		enabled: () => props.searchParams.getSettled(),

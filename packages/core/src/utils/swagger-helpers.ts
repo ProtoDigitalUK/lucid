@@ -135,7 +135,7 @@ export const swaggerHeaders = (headers: SwaggerHeaders) => {
 			type: string;
 			description: string;
 		};
-		"headless-content-lang"?: {
+		"lucid-content-lang"?: {
 			type: string;
 			description: string;
 		};
@@ -153,7 +153,7 @@ export const swaggerHeaders = (headers: SwaggerHeaders) => {
 	}
 
 	if (headers.contentLanguage !== undefined) {
-		propertise["headless-content-lang"] = {
+		propertise["lucid-content-lang"] = {
 			type: "string",
 			description: T("swagger_content_language_header_description"),
 		};

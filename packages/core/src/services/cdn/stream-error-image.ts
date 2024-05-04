@@ -1,5 +1,5 @@
 import T from "../../translations/index.js";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import { decodeError } from "../../utils/error-helpers.js";
 import getConfig from "../../libs/config/get-config.js";
 import path from "node:path";
@@ -23,7 +23,7 @@ const streamErrorImage = async (data: ServiceData) => {
 
 	const config = await getConfig();
 	if (config.media?.fallbackImage === false || data.fallback === "0") {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_not_found_name", {
 				name: T("media"),

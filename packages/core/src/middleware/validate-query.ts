@@ -2,7 +2,7 @@ import T from "../translations/index.js";
 import type { FastifyRequest } from "fastify";
 import z, { type ZodTypeAny } from "zod";
 import constants from "../constants.js";
-import { HeadlessAPIError } from "../utils/error-handler.js";
+import { LucidAPIError } from "../utils/error-handler.js";
 
 export interface RequestQueryParsed {
 	filter: Record<string, string | Array<string>> | undefined;
@@ -129,7 +129,7 @@ const validateQuery =
 		});
 
 		if (!validateResult.success) {
-			throw new HeadlessAPIError({
+			throw new LucidAPIError({
 				type: "validation",
 				message: T("validation_query_error_message"),
 				zod: validateResult.error,

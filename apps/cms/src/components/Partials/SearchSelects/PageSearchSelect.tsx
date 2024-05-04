@@ -6,7 +6,7 @@ import api from "@/services/api";
 import contentLanguage from "@/store/contentLanguageStore";
 // Types
 import type { ValueT, SelectProps } from "@/components/Groups/Form/Select";
-import type { ErrorResult } from "@protoheadless/core/types";
+import type { ErrorResult } from "@lucidcms/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 
@@ -34,7 +34,7 @@ const PageSearchSelect: Component<PageSearchSelectProps> = (props) => {
 				title: getSearchQuery,
 			},
 			headers: {
-				"headless-content-lang": language,
+				"lucid-content-lang": language,
 			},
 			perPage: 10,
 		},

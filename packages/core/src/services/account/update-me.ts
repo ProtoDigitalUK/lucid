@@ -1,6 +1,6 @@
 import T from "../../translations/index.js";
 import type { FastifyRequest } from "fastify";
-import { HeadlessAPIError } from "../../utils/error-handler.js";
+import { LucidAPIError } from "../../utils/error-handler.js";
 import usersService from "../users/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import Repository from "../../libs/repositories/index.js";
@@ -30,7 +30,7 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (getUser === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("error_not_found_message", {
 				name: T("account"),
@@ -85,14 +85,14 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	]);
 
 	if (data.email !== undefined && userWithEmail !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("this_email_is_already_in_use"),
 			status: 400,
 		});
 	}
 	if (data.username !== undefined && userWithUsername !== undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("this_username_is_already_in_use"),
 			status: 400,
@@ -117,7 +117,7 @@ const updateMe = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	});
 
 	if (updateMe === undefined) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			message: T("update_error_message", {
 				name: T("your_account"),

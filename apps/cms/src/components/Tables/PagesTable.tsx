@@ -8,7 +8,7 @@ import {
 } from "solid-icons/fa";
 import { useParams } from "@solidjs/router";
 // Types
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Services
 import api from "@/services/api";
 // Store
@@ -54,7 +54,7 @@ const PagesTable: Component<PagesTableProps> = (props) => {
 				collection_key: collectionKey,
 			},
 			headers: {
-				"headless-content-lang": contentLanguage,
+				"lucid-content-lang": contentLanguage,
 			},
 		},
 		enabled: () => props.searchParams.getSettled(),

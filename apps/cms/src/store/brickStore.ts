@@ -10,7 +10,7 @@ import type {
 	FieldResponseMeta,
 	CustomField,
 	FieldGroupResponse,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 
 export interface BrickData {
 	id: string | number;

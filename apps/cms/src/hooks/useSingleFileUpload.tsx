@@ -1,6 +1,6 @@
 import { type Accessor, createSignal } from "solid-js";
 import type { SingleFileUploadProps } from "@/components/Groups/Form/SingleFileUpload";
-import type { ErrorResponse } from "@protoheadless/core/types";
+import type { ErrorResponse } from "@lucidcms/core/types";
 import { getBodyError } from "@/utils/error-helpers";
 import Form from "@/components/Groups/Form";
 

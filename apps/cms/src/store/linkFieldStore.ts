@@ -1,7 +1,7 @@
 import { createStore } from "solid-js/store";
 // Types
 import type { PageLinkValueT, PageLinkMetaT } from "@headless/types/src/bricks"; // TODO: remove
-import type { LinkValue } from "@protoheadless/core/types";
+import type { LinkValue } from "@lucidcms/core/types";
 
 type SelectCallbackT = (
 	_link: PageLinkValueT | LinkValue | null,

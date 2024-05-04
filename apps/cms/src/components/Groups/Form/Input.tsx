@@ -6,7 +6,7 @@ import type {
 	ErrorResult,
 	ErrorResultObj,
 	FieldErrors,
-} from "@protoheadless/core/types";
+} from "@lucidcms/core/types";
 // Components
 import Form from "@/components/Groups/Form";
 

@@ -3,7 +3,7 @@ import T from "@/translations";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody, RoleResponse } from "@protoheadless/core/types";
+import type { ResponseBody, RoleResponse } from "@lucidcms/core/types";
 
 interface Params {
 	name: string;

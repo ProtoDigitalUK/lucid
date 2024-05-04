@@ -5,7 +5,7 @@ import fs from "fs-extra";
 const getConfigPath = (cwd: string, filename?: string): string => {
 	let configPath: string | undefined = undefined;
 	const root = path.parse(cwd).root;
-	const configFileName = filename ?? "headless.config";
+	const configFileName = filename ?? "lucid.config";
 	const configExtensions = [".ts", ".js"];
 
 	const search = (cwd: string): void => {

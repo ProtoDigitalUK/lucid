@@ -2,7 +2,7 @@
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 // Types
-import type { ResponseBody } from "@protoheadless/core/types";
+import type { ResponseBody } from "@lucidcms/core/types";
 
 export const csrfReq = async () => {
 	const csrfToken = sessionStorage.getItem("_csrf");

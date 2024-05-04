@@ -10,7 +10,7 @@ import {
 } from "solid-js";
 import api from "@/services/api";
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
-import type { MediaResponse } from "@protoheadless/core/types";
+import type { MediaResponse } from "@lucidcms/core/types";
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
 import { getBodyError, getErrorObject } from "@/utils/error-helpers";

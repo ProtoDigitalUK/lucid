@@ -1,5 +1,5 @@
 import T from "../../../translations/index.js";
-import { HeadlessAPIError } from "../../../utils/error-handler.js";
+import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
 
 const checkDuplicateOrder = (bricks: Array<BrickInsertItem>) => {
@@ -12,7 +12,7 @@ const checkDuplicateOrder = (bricks: Array<BrickInsertItem>) => {
 	);
 
 	if (builderOrderDuplicates.length > 0) {
-		throw new HeadlessAPIError({
+		throw new LucidAPIError({
 			type: "basic",
 			name: T("error_saving_bricks"),
 			message: T("error_saving_page_duplicate_order", {

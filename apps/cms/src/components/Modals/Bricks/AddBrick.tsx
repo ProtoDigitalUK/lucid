@@ -3,7 +3,7 @@ import { FaSolidMagnifyingGlass, FaSolidXmark } from "solid-icons/fa";
 import classNames from "classnames";
 // Types
 import type { BrickConfigT } from "@headless/types/src/bricks";
-import type { CollectionResponse } from "@protoheadless/core/types";
+import type { CollectionResponse } from "@lucidcms/core/types";
 // Assets
 import brickIcon from "@/assets/svgs/default-brick-icon.svg";
 // Store

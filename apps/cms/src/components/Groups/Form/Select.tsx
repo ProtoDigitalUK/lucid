@@ -12,7 +12,7 @@ import {
 import classNames from "classnames";
 import { debounce } from "@solid-primitives/scheduled";
 // Types
-import type { ErrorResult, FieldErrors } from "@protoheadless/core/types";
+import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
 // Components
 import { FaSolidCheck, FaSolidSort, FaSolidXmark } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";

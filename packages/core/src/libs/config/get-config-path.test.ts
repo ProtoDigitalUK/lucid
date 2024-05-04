@@ -3,9 +3,9 @@ import T from "../../translations/index.js";
 import path from "node:path";
 import getConfigPath from "./get-config-path.js";
 
-test("finds headless.config.ts file", async () => {
+test("finds lucid.config.ts file", async () => {
 	const configPath = getConfigPath(path.resolve(__dirname, "./mock-config"));
-	expect(configPath).toContain("headless.config.ts");
+	expect(configPath).toContain("lucid.config.ts");
 });
 
 test("throws on missing file", async () => {

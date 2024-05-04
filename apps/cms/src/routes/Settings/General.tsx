@@ -1,6 +1,6 @@
 import T from "@/translations";
 import { type Component, createMemo, createSignal } from "solid-js";
-import type { SettingsResponse } from "@protoheadless/core/types";
+import type { SettingsResponse } from "@lucidcms/core/types";
 import helpers from "@/utils/helpers";
 import userStore from "@/store/userStore";
 import InfoRow from "@/components/Blocks/InfoRow";
