@@ -17,7 +17,7 @@ interface QueryRowProps {
 export const QueryRow: Component<QueryRowProps> = (props) => {
 	return (
 		<div class="w-full px-15 md:px-30 pb-15 flex justify-between">
-			<div class="flex gap-5">
+			<div class="flex gap-2.5">
 				<Show when={props.filters !== undefined}>
 					<Query.Filter
 						filters={props.filters as FilterProps["filters"]}

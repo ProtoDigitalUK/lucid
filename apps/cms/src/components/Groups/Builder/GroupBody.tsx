@@ -6,6 +6,8 @@ import {
 	type Setter,
 	For,
 	createMemo,
+	createSignal,
+	Show,
 } from "solid-js";
 import type { DragDropCBT } from "@/components/Partials/DragDrop";
 import type { CustomField } from "@protoheadless/core/types";
@@ -20,6 +22,7 @@ interface GroupBodyProps {
 		groupId: number | string;
 		dragDrop: DragDropCBT;
 		repeaterKey: string;
+		groupIndex: number;
 		getFieldPath: Accessor<string[]>;
 		setFieldPath: Setter<string[]>;
 		getGroupPath: Accessor<Array<string | number>>;
@@ -28,6 +31,10 @@ interface GroupBodyProps {
 }
 
 export const GroupBody: Component<GroupBodyProps> = (props) => {
+	// -------------------------------
+	// State
+	const [getGroupOpen, setGroupOpen] = createSignal(false);
+
 	// -------------------------------
 	// Memos
 	const groupId = createMemo(() => props.state.groupId);
@@ -50,9 +57,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	return (
 		<div
 			data-dragkey={props.state.repeaterKey}
-			class={classNames("w-full flex", {
+			class={classNames("w-full", {
 				"opacity-60":
 					props.state.dragDrop.getDragging()?.index === groupId(),
+				"mb-2.5": props.state.getGroupPath().length > 0,
+				"mb-15": props.state.getGroupPath().length === 0,
 			})}
 			onDragStart={(e) =>
 				props.state.dragDrop.onDragStart(e, {
@@ -69,36 +78,68 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			}
 			onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
 		>
-			{/* Group Items */}
+			{/* Group Header */}
 			<div
 				class={classNames(
-					"bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
+					"w-full bg-container-4 cursor-pointer rounded-md border border-border flex justify-between items-center",
 					{
-						"bg-white": props.state.getGroupPath().length % 2 !== 0,
+						"p-2": props.state.getGroupPath().length > 0,
+						"p-15": props.state.getGroupPath().length === 0,
+						"border-b-0 rounded-b-none": getGroupOpen(),
 					},
 				)}
+				onClick={() => setGroupOpen(!getGroupOpen())}
+				onKeyPress={() => setGroupOpen(!getGroupOpen())}
 			>
-				<div
-					class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
-					onDragStart={(e) =>
-						props.state.dragDrop.onDragStart(e, {
-							index: groupId(),
-							key: props.state.repeaterKey,
-						})
-					}
-					onDragEnd={(e) => props.state.dragDrop.onDragEnd(e)}
-					onDragEnter={(e) =>
-						props.state.dragDrop.onDragEnter(e, {
-							index: groupId(),
-							key: props.state.repeaterKey,
-						})
-					}
-					onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
-					draggable={true}
-				>
-					<FaSolidGripLines class="text-title w-3" />
+				<div class="flex items-center">
+					<button
+						type="button"
+						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer"
+						onDragStart={(e) =>
+							props.state.dragDrop.onDragStart(e, {
+								index: groupId(),
+								key: props.state.repeaterKey,
+							})
+						}
+						onDragEnd={(e) => props.state.dragDrop.onDragEnd(e)}
+						onDragEnter={(e) =>
+							props.state.dragDrop.onDragEnter(e, {
+								index: groupId(),
+								key: props.state.repeaterKey,
+							})
+						}
+						onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
+						draggable={true}
+						aria-label={T("change_order")}
+					>
+						<FaSolidGripLines class="w-4" />
+					</button>
+					<h3 class="text-sm text-body">
+						{props.state.field.title}-{props.state.groupIndex + 1}
+					</h3>
 				</div>
-				<div class="p-15 w-full">
+				<button
+					type="button"
+					class="text-icon-base hover:text-error-hover transition-colors duration-200 cursor-pointer"
+					onClick={() => {
+						removeGroup(groupId());
+					}}
+					aria-label={T("remove_entry")}
+				>
+					<FaSolidTrashCan class="w-4" />
+				</button>
+			</div>
+			{/* Group Body */}
+			<Show when={getGroupOpen()}>
+				<div
+					class={classNames(
+						"border-border p-15 border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-colors",
+						{
+							// "bg-container-3":
+							// 	props.state.getGroupPath().length % 2 !== 0,
+						},
+					)}
+				>
 					<For each={fields()}>
 						{(field) => (
 							<CustomFields.DynamicField
@@ -115,20 +156,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						)}
 					</For>
 				</div>
-			</div>
-			{/* Group Action Bar */}
-			<div class={"ml-2.5 transition-opacity duration-200"}>
-				<button
-					type="button"
-					class="text-primary hover:text-errorH bg-transparent transition-colors duration-200 cursor-pointer"
-					onClick={() => {
-						removeGroup(groupId());
-					}}
-					aria-label={T("remove_entry")}
-				>
-					<FaSolidTrashCan class="w-4" />
-				</button>
-			</div>
+			</Show>
 		</div>
 	);
 };

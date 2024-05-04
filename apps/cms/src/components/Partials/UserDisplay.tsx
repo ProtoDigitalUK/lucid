@@ -16,7 +16,7 @@ const UserDisplay: Component<UserDisplayProps> = (props) => {
 	// Render
 	return (
 		<div class="flex items-center">
-			<span class="h-8 w-8 min-w-[32px] rounded-full flex bg-primary text-primaryText justify-center items-center text-xs font-bold mr-2.5">
+			<span class="h-8 w-8 min-w-[32px] rounded-full flex bg-primary-base text-primary-contrast justify-center items-center text-xs font-bold mr-2.5">
 				{helpers.formatUserInitials({
 					firstName: props.user.firstName,
 					lastName: props.user.lastName,

@@ -7,42 +7,34 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				// -------------------------------------
-				// Accents
-
-				// black
-				primary: "#101010",
-				primaryH: "#1E1E1E",
-				primaryText: "#FFFFFF",
-				primaryA: "#414141",
-				primaryA2: "#343439",
-				// purple
-				secondary: "#6554FB",
-				secondaryH: "#594AE1",
-				secondaryText: "#FFFFFF",
-
-				backgroundAccent: "#E4E9EC",
-				backgroundAccentH: "#DDE2E5",
-
-				container: "#FFFFFF",
-
-				border: "#D7DDE4",
-
-				error: "#FC3636",
-				errorH: "#D92C2C",
-				errorText: "#FFFFFF",
-				success: "#32AD84",
-				warning: "#FFC107",
-
-				// -------------------------------------
-				// Backgrounds
-				background: "#F8F9FA",
-
-				// -------------------------------------
+				primary: {
+					base: "#C5F74E",
+					hover: "#B6E644",
+					contrast: "#000000",
+				},
+				container: {
+					1: "#070707", // navbar / header
+					2: "#1A1A1A", // banner / primary container
+					3: "#131313", // background
+					4: "#313131", // inputs / secondary container
+				},
+				icon: {
+					base: "#E3E3E3",
+					hover: "#E8E8E8",
+				},
+				error: {
+					base: "#FC3636",
+					hover: "#D92C2C",
+					contrast: "#FFFFFF",
+				},
+				warning: {
+					base: "#FFC107",
+				},
+				border: "#414141",
 				// Typography
-				title: "#16161A",
-				body: "#474D51",
-				unfocused: "#737B80",
+				title: "#F1F1F1",
+				body: "#C7C7C7",
+				unfocused: "#A0A0A0",
 			},
 			fontFamily: {
 				display: ["Archivo", "sans-serif"],

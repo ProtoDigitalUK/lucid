@@ -133,7 +133,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 		>
 			<label
 				for={`${props.filter.key}-${props.filter.type}`}
-				class="text-primaryText flex items-center justify-between text-sm mb-2"
+				class="text-body flex items-center justify-between text-sm mb-2"
 			>
 				<span>{props.filter.label}</span>
 				<Show when={showResetButton()}>
@@ -158,7 +158,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 						}}
 						type="button"
 					>
-						<FaSolidXmark class="w-3.5 h-3.5 text-error" />
+						<FaSolidXmark class="w-3.5 h-3.5 text-error-base" />
 					</button>
 				</Show>
 			</label>
@@ -257,7 +257,7 @@ export const Filter: Component<FilterProps> = (props) => {
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
-				class="dropdown-trigger text-title fill-title flex items-center text-base font-display disabled:cursor-not-allowed disabled:text-gray-400 disabled:fill-gray-400"
+				class="dropdown-trigger px-15 py-2 border border-border hover:border-primary-base rounded-md text-title flex items-center text-base font-display disabled:cursor-not-allowed disabled:text-unfocused disabled:fill-unfocused"
 				disabled={props.disabled}
 			>
 				<DropdownMenu.Icon>

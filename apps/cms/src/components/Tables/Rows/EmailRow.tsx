@@ -59,7 +59,7 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 				text={props.email.deliveryStatus}
 				theme={
 					props.email.deliveryStatus === "sent"
-						? "green"
+						? "primary"
 						: props.email.deliveryStatus === "failed"
 							? "red"
 							: "grey"
@@ -84,7 +84,7 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 			/>
 			<PillCol
 				text={props.email.sentCount || 0}
-				theme={"green"}
+				theme={"primary"}
 				options={{ include: props?.include[5] }}
 			/>
 			<PillCol

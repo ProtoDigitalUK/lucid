@@ -84,18 +84,18 @@
     @apply text-base font-normal tracking-wide leading-relaxed text-body font-body;
   }
   a {
-    @apply hover:text-secondaryH duration-200 transition-colors ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary;
+    @apply hover:text-primary-hover duration-200 transition-colors ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-base;
   }
 
   /* Other */
   body {
-    @apply bg-background text-body font-body;
+    @apply bg-container-3 text-body font-body;
   }
   ::-moz-selection {
-    @apply bg-secondary text-white;
+    @apply bg-primary-base text-primary-contrast;
   }
   ::selection {
-    @apply bg-secondary text-white;
+    @apply bg-primary-base text-primary-contrast;
   }
 
   [data-overflowing="true"] .row-actions-td {
@@ -103,10 +103,10 @@
   }
 
   .dropdown-trigger {
-    @apply duration-200 transition-colors focus:outline outline-secondary outline-1;
+    @apply duration-200 transition-colors focus:outline outline-primary-base outline-1;
   }
   .skeleton {
-    @apply bg-backgroundAccent rounded-md animate-pulse;
+    @apply bg-container-4 rounded-md animate-pulse;
   }
 
   .hide-scrollbar::-webkit-scrollbar {
@@ -130,26 +130,11 @@
   .ql-toolbar {
     @apply !border-border !rounded-t-md;
   }
-  .ql-container {
+  .ql-container.ql-snow {
     @apply !border-border !rounded-b-md;
   }
-
-  /* Brick Pattern */
-  @keyframes BrickScrollRight {
-    0% {
-      background-position: 0px 0;
-    }
-    100% {
-      background-position: 627px 0;
-    }
-  }
-
-  .brick-pattern::after {
-    @apply absolute inset-0 z-[2] opacity-5;
-    content: "";
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='627' height='642' viewBox='0 0 627 642'%3E%3Cg id='Group_191' data-name='Group 191' transform='translate(-12452 879)'%3E%3Crect id='Rectangle_205' data-name='Rectangle 205' width='627' height='642' transform='translate(12452 -879)' fill='none'/%3E%3Cg id='Group_192' data-name='Group 192' transform='translate(1 -2)'%3E%3Cg id='Group_189' data-name='Group 189' transform='translate(12451 -869)'%3E%3Cg id='Rectangle_201' data-name='Rectangle 201' transform='translate(30)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='144' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='143' rx='4.5' fill='none'/%3E%3C/g%3E%3Cg id='Rectangle_204' data-name='Rectangle 204' transform='translate(0 160)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='145' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='144' rx='4.5' fill='none'/%3E%3C/g%3E%3Cg id='Rectangle_202' data-name='Rectangle 202' transform='translate(336)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='144' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='143' rx='4.5' fill='none'/%3E%3C/g%3E%3Cg id='Rectangle_203' data-name='Rectangle 203' transform='translate(306 160)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='145' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='144' rx='4.5' fill='none'/%3E%3C/g%3E%3C/g%3E%3Cg id='Group_190' data-name='Group 190' transform='translate(12451 -548.147)'%3E%3Cg id='Rectangle_201-2' data-name='Rectangle 201' transform='translate(30 0.147)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='144' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='143' rx='4.5' fill='none'/%3E%3C/g%3E%3Cg id='Rectangle_204-2' data-name='Rectangle 204' transform='translate(0 160.147)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='145' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='144' rx='4.5' fill='none'/%3E%3C/g%3E%3Cg id='Rectangle_202-2' data-name='Rectangle 202' transform='translate(336 0.147)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='144' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='143' rx='4.5' fill='none'/%3E%3C/g%3E%3Cg id='Rectangle_203-2' data-name='Rectangle 203' transform='translate(306 160.147)' fill='none' stroke='%23fff' stroke-width='1'%3E%3Crect width='291' height='145' rx='5' stroke='none'/%3E%3Crect x='0.5' y='0.5' width='290' height='144' rx='4.5' fill='none'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
-    opacity: 0.1;
-    animation: BrickScrollRight 10s linear infinite;
+  .ql-container-1 {
+    @apply !border-border !rounded-b-md;
   }
 
   /* Animations */

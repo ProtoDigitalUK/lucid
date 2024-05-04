@@ -43,7 +43,7 @@ export const TopBar: Component<TopBarProps> = (props) => {
 					{T("add_brick")}
 				</Button>
 				<button
-					class="h-10 w-10 rounded-full ml-2.5 bg-secondary flex items-center justify-center fill-white text-xl hover:bg-secondaryH duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+					class="h-10 w-10 rounded-full ml-2.5 bg-primary-base flex items-center justify-center fill-white text-xl hover:bg-primary-hover duration-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
 					disabled
 					type="button"
 				>

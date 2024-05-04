@@ -13,7 +13,7 @@ export const getBodyError = (
 		return undefined;
 	}
 
-	// @ts-expect-error
+	// @ts-expect-error-base
 	return errors()?.errors?.body[key] as ErrorResultObj | undefined;
 };
 

@@ -6,7 +6,6 @@ import spawnToast from "@/utils/spawn-toast";
 interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
 	theme:
 		| "primary"
-		| "primary-outline"
 		| "container-outline"
 		| "danger"
 		| "basic"
@@ -30,20 +29,18 @@ const Button: Component<ButtonProps> = (props) => {
 		return classnames(
 			"flex items-center justify-center min-w-max text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative disabled:cursor-not-allowed disabled:opacity-80 font-medium",
 			{
-				"bg-primary hover:bg-primaryH text-primaryText hover:text-white fill-primaryText hover:fill-white ring-secondary":
+				"bg-primary-base hover:bg-primary-hover text-primary-contrast fill-primary-contrast hover:fill-white ring-primary-base":
 					props.theme === "primary",
-				"bg-transparent border border-primaryA hover:bg-primaryH fill-primaryText text-primaryText hover:text-primaryText":
-					props.theme === "primary-outline",
-				"bg-container border border-primary hover:bg-primaryH fill-primaryText text-title hover:text-primaryText ring-secondary":
+				"bg-transparent border border-primary-base hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast ring-primary-base":
 					props.theme === "container-outline",
-				"bg-error hover:bg-errorH text-errorText ring-secondary fill-errorText":
+				"bg-error-base hover:bg-error-hover text-error-contrast ring-primary-base fill-error-contrast":
 					props.theme === "danger",
 
 				// Toggles
-				"ring-secondary": props.theme === "secondary-toggle",
-				"bg-primary text-primaryText fill-primaryText hover:bg-primaryH border-primaryA border":
+				"ring-primary-base": props.theme === "secondary-toggle",
+				"bg-transparent text-body fill-body hover:bg-primary-hover hover:text-primary-contrast hover:fill-primary-contrast border-border border":
 					props.theme === "secondary-toggle" && !props.active,
-				"bg-secondary text-secondaryText fill-secondaryText hover:bg-secondaryH border-secondary border":
+				"bg-primary-base text-primary-contrast fill-primary-contrast hover:bg-primary-hover border-primary-base border":
 					props.theme === "secondary-toggle" && props.active,
 
 				// Sizes
@@ -88,7 +85,7 @@ const Button: Component<ButtonProps> = (props) => {
 			<Show when={props.loading !== undefined && props.loading}>
 				<div
 					class={
-						"flex items-center justify-center absolute inset-0 z-10 rounded-md bg-primary bg-opacity-40"
+						"flex items-center justify-center absolute inset-0 z-10 rounded-md bg-primary-base bg-opacity-40"
 					}
 				>
 					<div class="w-4 h-4 border-2 border-white rounded-full animate-spin" />

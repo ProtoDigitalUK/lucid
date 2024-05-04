@@ -14,15 +14,15 @@ const ErrorMessage: Component<ErrorMessageProps> = (props) => {
 		<Show when={props.message}>
 			<Alert.Root
 				class={classNames("", {
-					"bg-container rounded-r-md border-l-4 border-l-error p-2.5 border border-border mb-5 last:mb-0":
+					"bg-container-1 rounded-r-md border-l-4 border-l-error-base p-2.5 border border-border mb-5 last:mb-0":
 						props.theme === "background", // on background colour
-					"bg-backgroundAccent rounded-r-md border-l-4 border-l-error p-2.5 bg-opacity-40 border-border border mb-5 last:mb-0":
+					"bg-container-4 rounded-r-md border-l-4 border-l-error-base p-2.5 bg-opacity-40 border-border border mb-5 last:mb-0":
 						props.theme === "container", // on container colour
 				})}
 			>
 				<p
 					class={classNames({
-						"text-errorH": props.theme === "basic", // on basic colour
+						"text-error-hover": props.theme === "basic", // on basic colour
 					})}
 				>
 					{props.message}

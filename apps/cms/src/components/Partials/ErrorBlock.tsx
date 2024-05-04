@@ -20,7 +20,7 @@ const ErrorBlock: Component<ErrorBlockProps> = (props) => {
 	return (
 		<div
 			class={classNames(
-				"flex items-center justify-center bg-background",
+				"flex items-center justify-center bg-container-3",
 				{
 					"inset-0 absolute z-50": props.type === "fill",
 					"page-layout-full-body": props.type === "page-layout",

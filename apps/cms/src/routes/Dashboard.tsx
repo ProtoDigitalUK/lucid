@@ -4,7 +4,6 @@ import api from "@/services/api";
 import userStore from "@/store/userStore";
 import Button from "@/components/Partials/Button";
 import Layout from "@/components/Groups/Layout";
-import StartingPoints from "@/components/Blocks/StartingPoints";
 
 const DashboardRoute: Component = () => {
 	// ----------------------------------------
@@ -23,7 +22,6 @@ const DashboardRoute: Component = () => {
 			description={T("dashboard_route_description")}
 		>
 			<Layout.PageContent>
-				<StartingPoints />
 				<Button
 					type="submit"
 					theme="primary"

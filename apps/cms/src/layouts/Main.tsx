@@ -1,4 +1,3 @@
-import T from "@/translations";
 import {
 	type Component,
 	Switch,
@@ -6,6 +5,7 @@ import {
 	createMemo,
 	type JSXElement,
 } from "solid-js";
+import LogoIcon from "@/assets/svgs/logo-icon.svg";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 
@@ -44,29 +44,14 @@ const MainLayout: Component<MainLayoutProps> = (props) => {
 				<Switch>
 					<Match when={isSuccess()}>{props.children}</Match>
 					<Match when={isLoading()}>
-						<div class="fixed inset-0 z-50 bg-primary flex items-center justify-center">
+						<div class="fixed inset-0 z-50 bg-container-1 flex items-center justify-center">
 							<div class="absolute inset-0 z-20 flex-col flex items-center justify-center">
-								<h1 class="text-2xl font-bold text-primaryText mt-5">
-									{T("loading")}
-								</h1>
+								<img
+									src={LogoIcon}
+									alt="logo"
+									class="size-6 animate-spin"
+								/>
 							</div>
-							{/* shapes */}
-							<span
-								class="animate-spin absolute inset-0 flex items-center z-10"
-								style={{
-									"animation-duration": "5s",
-								}}
-							>
-								<span class="block  border border-border opacity-80 w-full after:pb-[100%] after:block rotate-45 translate-x-1/2" />
-							</span>
-							<span
-								class="animate-spin absolute inset-0 flex items-center z-10"
-								style={{
-									"animation-duration": "5s",
-								}}
-							>
-								<span class="block  border border-border opacity-50 w-full after:pb-[100%] after:block rotate-45 translate-x-1/3" />
-							</span>
 						</div>
 					</Match>
 				</Switch>

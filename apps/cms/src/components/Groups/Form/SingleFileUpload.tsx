@@ -150,7 +150,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 					"w-full border-border border h-80 rounded-md relative overflow-hidden",
 					{
 						"border-dashed border-2": showState() === "no-file",
-						"border-secondary": getDragOver(),
+						"border-primary-base": getDragOver(),
 					},
 				)}
 				onDragOver={(e) => {
@@ -196,7 +196,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 								<button
 									type="button"
 									onClick={openFileBrowser}
-									class="text-secondary font-medium font-display"
+									class="text-primary-base font-medium font-display"
 								>
 									{T("upload_here")}
 								</button>
@@ -281,7 +281,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 	// ------------------------------------
 	// Classes
 	const actionButtonClasses = classNames(
-		"bg-primary text-primaryText h-10 flex justify-center items-center font-display font-medium text-sm py-2 px-5 rounded-md transition-all duration-200 hover:bg-primaryH focus:outline-none focus:ring-2 focus:ring-secondary",
+		"bg-primary-base text-primary-contrast h-10 flex justify-center items-center font-display font-medium text-sm py-2 px-5 rounded-md transition-all duration-200 hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary-base",
 	);
 
 	// ------------------------------------
@@ -290,7 +290,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 		<div class="relative w-full h-full flex justify-center items-center flex-col">
 			<Switch
 				fallback={
-					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-backgroundAccent flex flex-col justify-center items-center">
+					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-container-4 flex flex-col justify-center items-center">
 						<FaSolidFile class="w-10 h-10 mx-auto text-unfocused mb-5" />
 						<Show when={props.data.name}>
 							<p class="text-center text-sm font-medium text-title">
@@ -317,7 +317,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 					/>
 				</Match>
 				<Match when={props.data.type === "video"}>
-					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-backgroundAccent">
+					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-container-4">
 						{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
 						<video
 							src={props.data.url}
@@ -328,7 +328,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 					</div>
 				</Match>
 				<Match when={props.data.type === "audio"}>
-					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-backgroundAccent flex justify-center items-center">
+					<div class="w-full h-[calc(100%-60px)] relative z-10 bg-container-4 flex justify-center items-center">
 						{/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
 						<audio src={props.data.url} class="w-2/3" controls />
 					</div>
@@ -336,7 +336,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 			</Switch>
 			<div
 				class={classNames(
-					"h-[60px] w-full z-10 relative grid gap-1 p-2.5 bg-backgroundAccentH border-t border-border",
+					"h-[60px] w-full z-10 relative grid gap-1 p-2.5 bg-container-3 border-t border-border",
 					{
 						"grid-cols-2":
 							props.actions.downloadFile === undefined ||
@@ -356,7 +356,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 								props.actions.downloadFile();
 						}}
 					>
-						<FaSolidMagnifyingGlass class="block md:mr-2 text-primaryText" />
+						<FaSolidMagnifyingGlass class="block md:mr-2 text-primary-contrast" />
 						<span class="hidden md:inline">{T("preview")}</span>
 					</button>
 				</Show>
@@ -367,7 +367,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 						props.actions.uploadFile();
 					}}
 				>
-					<FaSolidArrowUpFromBracket class="block md:mr-2 text-primaryText" />
+					<FaSolidArrowUpFromBracket class="block md:mr-2 text-primary-contrast" />
 					<span class="hidden md:inline">{T("choose_file")}</span>
 				</button>
 				<Show when={props.actions.clearFile !== undefined}>
@@ -379,7 +379,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 								props.actions.clearFile();
 						}}
 					>
-						<FaSolidXmark class="block md:mr-2 text-primaryText" />
+						<FaSolidXmark class="block md:mr-2 text-primary-contrast" />
 						<span class="hidden md:inline">{T("remove")}</span>
 					</button>
 				</Show>

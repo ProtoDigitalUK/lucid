@@ -39,7 +39,7 @@ export const PageFooter: Component<PageLayoutFooterProps> = (props) => {
 	return (
 		<footer
 			ref={footerEle}
-			class="absolute bottom-0 left-0 right-0 border-t border-border p-15 md:p-30 bg-background"
+			class="absolute bottom-0 left-0 right-0 border-t border-border p-15 md:p-30 bg-container-3"
 		>
 			{props.children}
 		</footer>

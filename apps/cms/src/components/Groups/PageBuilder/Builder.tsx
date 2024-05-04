@@ -82,7 +82,7 @@ export const Builder: Component<BuilderProps> = (props) => {
 								hasBuilderBricks()
 							}
 						>
-							<div class="w-full flex items-center justify-center h-full border border-primaryA rounded-md flex-grow p-10">
+							<div class="w-full flex items-center justify-center h-full border border-primary-a1 rounded-md flex-grow p-10">
 								<div class="max-w-lg mx-auto w-full text-center">
 									<img
 										src={missingContent}

@@ -24,7 +24,7 @@ const PageSearchRow: Component<PageSearchRowProps> = (props) => {
 	return (
 		<li
 			class={
-				"flex text-sm items-center justify-between even:bg-backgroundAccent even:bg-opacity-60 px-2.5 py-1 hover:bg-backgroundAccentH cursor-pointer transition-colors duration-200 ease-in-out"
+				"flex text-sm items-center justify-between even:bg-container-4 even:bg-opacity-60 px-2.5 py-1 hover:bg-container-3 cursor-pointer transition-colors duration-200 ease-in-out"
 			}
 			onClick={() => {
 				props.onClick({

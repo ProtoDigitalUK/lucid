@@ -26,7 +26,7 @@ export const MediaCardLoading: Component = () => {
 	// ----------------------------------
 	// Return
 	return (
-		<li class={"bg-container border-border border rounded-md"}>
+		<li class={"bg-container-2 border-border border rounded-md"}>
 			<AspectRatio ratio="16:9">
 				<span class="skeleton block w-full h-full rounded-b-none" />
 			</AspectRatio>
@@ -61,7 +61,7 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 	return (
 		<li
 			class={classNames(
-				"bg-container border-border border rounded-md group overflow-hidden relative",
+				"bg-container-2 border-border border rounded-md group overflow-hidden relative",
 				{
 					"cursor-pointer": hasUpdatePermission(),
 				},

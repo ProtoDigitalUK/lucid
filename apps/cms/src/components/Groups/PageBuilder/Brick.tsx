@@ -112,7 +112,7 @@ export const Brick: Component<BrickProps> = (props) => {
 	// Render
 	return (
 		<Show when={config() !== undefined}>
-			<li class="w-full mb-15 last:mb-0 bg-container rounded-md border border-border">
+			<li class="w-full mb-15 last:mb-0 bg-container-1 rounded-md border border-border">
 				<div
 					id={`accordion-${props.state.brick.id}`}
 					class={classNames(
@@ -132,7 +132,7 @@ export const Brick: Component<BrickProps> = (props) => {
 					}}
 				>
 					<div class="flex items-center">
-						<span class="w-7 h-7 rounded-md bg-secondary flex items-center justify-center mr-2.5 fill-white">
+						<span class="w-7 h-7 rounded-md bg-primary-base flex items-center justify-center mr-2.5 fill-white">
 							<Switch>
 								<Match when={isFixed() === false}>
 									<img
@@ -154,7 +154,7 @@ export const Brick: Component<BrickProps> = (props) => {
 						<Show when={isFixed() === false}>
 							<button
 								type="button"
-								class="h-7 w-7 flex items-center justify-center bg-backgroundAccent hover:bg-errorH hover:border-errorH fill-black hover:fill-errorText border border-border rounded-full duration-200 transition-colors"
+								class="h-7 w-7 flex items-center justify-center bg-container-4 hover:bg-error-hover hover:border-error-hover fill-black hover:fill-error-contrast border border-border rounded-full duration-200 transition-colors"
 								onClick={(e) => {
 									e.stopPropagation();
 									removeBrick();
@@ -166,11 +166,11 @@ export const Brick: Component<BrickProps> = (props) => {
 						<Show when={props.state.alwaysOpen !== true}>
 							<button
 								class={classNames(
-									"h-7 w-7 flex items-center justify-center hover:bg-primaryH hover:fill-primaryText hover:border-primaryH rounded-full border transition-all duration-200",
+									"h-7 w-7 flex items-center justify-center hover:bg-primary-hover hover:fill-primary-contrast hover:border-primary-hover rounded-full border transition-all duration-200",
 									{
-										"rotate-180 bg-primaryH fill-primaryText border-primaryH":
+										"rotate-180 bg-primary-hover fill-primary-contrast border-primary-hover":
 											getAccordionOpen(),
-										"bg-backgroundAccent fill-black border-border":
+										"bg-container-4 fill-black border-border":
 											!getAccordionOpen(),
 									},
 								)}

@@ -36,7 +36,7 @@ const SortItem: Component<SortItemProps> = (props) => {
 		<li class="mb-2 last-of-type:mb-0">
 			<button
 				tabIndex={0}
-				class="w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-secondary"
+				class="w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-primary-base"
 				onClick={() => {
 					let sortValue: "asc" | "desc" | undefined;
 					if (sort() === undefined) {
@@ -57,7 +57,7 @@ const SortItem: Component<SortItemProps> = (props) => {
 			>
 				<label
 					for={`${props.sort.key}`}
-					class="text-primaryText flex items-center justify-between text-sm mr-2"
+					class="text-body flex items-center justify-between text-sm mr-2"
 				>
 					<span class="line-clamp-1 text-left">
 						{props.sort.label}
@@ -67,9 +67,9 @@ const SortItem: Component<SortItemProps> = (props) => {
 					class={classNames(
 						"w-5 h-5 min-w-[20px] rounded-md flex items-center justify-center transition-colors duration-200",
 						{
-							"bg-secondary group-hover:bg-secondaryH":
+							"bg-primary-base group-hover:bg-primary-hover":
 								sort() === "desc" || sort() === "asc",
-							"bg-container group-hover:bg-backgroundAccent":
+							"bg-container-2 group-hover:bg-container-4":
 								sort() === undefined,
 						},
 					)}
@@ -77,9 +77,13 @@ const SortItem: Component<SortItemProps> = (props) => {
 					<Switch>
 						<Match when={sort() === "desc" || sort() === "asc"}>
 							<FaSolidCaretUp
-								class={classNames("w-3 h-3 text-primaryText", {
-									"transform rotate-180": sort() === "desc",
-								})}
+								class={classNames(
+									"w-3 h-3 text-primary-contrast",
+									{
+										"transform rotate-180":
+											sort() === "desc",
+									},
+								)}
 							/>
 						</Match>
 						<Match when={sort() === undefined}>
@@ -97,7 +101,7 @@ export const Sort: Component<SortProps> = (props) => {
 	// Render
 	return (
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-base font-display">
+			<DropdownMenu.Trigger class="dropdown-trigger px-15 py-2 border border-border hover:border-primary-base rounded-md text-title fill-title flex items-center text-base font-display">
 				<DropdownMenu.Icon>
 					<FaSolidSort />
 				</DropdownMenu.Icon>

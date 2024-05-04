@@ -145,114 +145,127 @@ const CollectionsDocumentsEditRoute: Component<
 									: T("edit"),
 						},
 					]}
-					options={{
-						background: "white",
-					}}
 				/>
-				{/* Main */}
-				<div class="w-full lg:pr-[350px]">
-					{/* Header */}
-					<div class="bg-white border-b border-border">
-						<header class="p-15 md:p-30 flex items-center justify-between flex-wrap-reverse md:flex-nowrap gap-15">
-							<h1 class="w-full">
-								{T("document_route_title", {
-									mode: T("edit"),
-									name:
-										collection.data?.data.singular ??
-										T("document"),
-								})}
-								<Show when={props.mode === "edit"}>
-									<span class="text-unfocused ml-2.5">
-										#{document.data?.data.id}
-									</span>
-								</Show>
-							</h1>
-							<div class="w-full md:w-auto flex items-center gap-2.5">
-								<Show when={collection.data?.data.translations}>
-									<div class="w-full md:w-auto md:min-w-[250px]">
-										{/* TODO: update hasError with memo that detects translations errors */}
-										<ContentLanguageSelect
-											hasError={false}
-										/>
-									</div>
-								</Show>
-								<Button
-									type="button"
-									theme="primary"
-									size="small"
-									onClick={upsertDocument}
-								>
-									{T("save", {
-										singular:
-											collection.data?.data.singular ||
-											"",
+				<div class="flex flex-col lg:flex-row min-h-[calc(100vh-51px)]">
+					{/* Main */}
+					<div class="w-full">
+						{/* Header */}
+						<div class="bg-container-2 border-b border-border">
+							<header class="p-15 md:p-30 flex items-center justify-between flex-wrap-reverse md:flex-nowrap gap-15">
+								<h1 class="w-full">
+									{T("document_route_title", {
+										mode: T("edit"),
+										name:
+											collection.data?.data.singular ??
+											T("document"),
 									})}
-								</Button>
-								<Show when={props.mode === "edit"}>
-									<Button
-										theme="danger"
-										size="icon"
-										type="button"
-										onClick={() => setDeleteOpen(true)}
-									>
-										<span class="sr-only">
-											{T("delete")}
+									<Show when={props.mode === "edit"}>
+										<span class="text-unfocused ml-2.5">
+											#{document.data?.data.id}
 										</span>
-										<FaSolidTrash />
+									</Show>
+								</h1>
+								<div class="w-full md:w-auto flex items-center gap-2.5">
+									<Show
+										when={
+											collection.data?.data.translations
+										}
+									>
+										<div class="w-full md:w-auto md:min-w-[250px]">
+											{/* TODO: update hasError with memo that detects translations errors */}
+											<ContentLanguageSelect
+												hasError={false}
+											/>
+										</div>
+									</Show>
+									<Button
+										type="button"
+										theme="primary"
+										size="small"
+										onClick={upsertDocument}
+									>
+										{T("save", {
+											singular:
+												collection.data?.data
+													.singular || "",
+										})}
 									</Button>
-								</Show>
-							</div>
-						</header>
-						<Document.CollectionSudoBrick
-							fields={collection.data?.data.fields || []}
+									<Show when={props.mode === "edit"}>
+										<Button
+											theme="danger"
+											size="icon"
+											type="button"
+											onClick={() => setDeleteOpen(true)}
+										>
+											<span class="sr-only">
+												{T("delete")}
+											</span>
+											<FaSolidTrash />
+										</Button>
+									</Show>
+								</div>
+							</header>
+							<Document.CollectionSudoBrick
+								fields={collection.data?.data.fields || []}
+							/>
+						</div>
+						{/* content */}
+						<Document.FixedBricks
+							brickConfig={
+								collection.data?.data.fixedBricks || []
+							}
+						/>
+						<Document.BuilderBricks
+							brickConfig={
+								collection.data?.data.builderBricks || []
+							}
 						/>
 					</div>
-					{/* content */}
-					<Document.FixedBricks
-						brickConfig={collection.data?.data.fixedBricks || []}
-					/>
-					<Document.BuilderBricks
-						brickConfig={collection.data?.data.builderBricks || []}
-					/>
+					{/* Sidebar */}
+					<aside class="w-full lg:max-w-[300px] lg:overflow-scroll bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
+						<div class="p-15 md:p-30">
+							<h2 class="mb-15">{T("document")}</h2>
+							<DetailsList
+								type="text"
+								items={[
+									{
+										label: T("collection"),
+										value: collection.data?.data.title,
+									},
+									{
+										label: T("created_by"),
+										value: document.data?.data.createdBy,
+										show: props.mode === "edit",
+									},
+									{
+										label: T("created_at"),
+										value: (
+											<DateText
+												date={
+													document.data?.data
+														.createdAt
+												}
+											/>
+										),
+										show: props.mode === "edit",
+									},
+									{
+										label: T("updated_at"),
+										value: (
+											<DateText
+												date={
+													document.data?.data
+														.updatedAt
+												}
+											/>
+										),
+										show: props.mode === "edit",
+									},
+								]}
+							/>
+						</div>
+					</aside>
 				</div>
-				{/* Sidebar */}
-				<aside class="w-full lg:w-[350px] lg:overflow-scroll bg-white border-b lg:border-b-0 lg:border-l border-border lg:fixed lg:top-[51px] lg:right-0 lg:bottom-0">
-					<div class="p-15 md:p-30">
-						<h2 class="mb-15">{T("document")}</h2>
-						<DetailsList
-							type="text"
-							items={[
-								{
-									label: T("collection"),
-									value: collection.data?.data.title,
-								},
-								{
-									label: T("created_by"),
-									value: document.data?.data.createdBy,
-									show: props.mode === "edit",
-								},
-								{
-									label: T("created_at"),
-									value: (
-										<DateText
-											date={document.data?.data.createdAt}
-										/>
-									),
-									show: props.mode === "edit",
-								},
-								{
-									label: T("updated_at"),
-									value: (
-										<DateText
-											date={document.data?.data.updatedAt}
-										/>
-									),
-									show: props.mode === "edit",
-								},
-							]}
-						/>
-					</div>
-				</aside>
 				{/* Modals */}
 				<NavigationGuard
 					state={{

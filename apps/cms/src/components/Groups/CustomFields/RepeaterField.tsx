@@ -135,14 +135,14 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 										{/* Group Items */}
 										<div
 											class={classNames(
-												"bg-background border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
+												"bg-container-2 border-border border mb-2.5 flex last:mb-0 rounded-md w-full duration-200 transition-colors",
 												{
-													"bg-white":
+													"bg-container-1":
 														props.state.repeater
 															.repeaterDepth %
 															2 !==
 														0,
-													"border-secondary":
+													"border-primary-base":
 														dragDrop.getDraggingTarget()
 															?.index ===
 														group.group_id,
@@ -150,7 +150,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 											)}
 										>
 											<div
-												class="w-5 h-full bg-backgroundAccent hover:bg-backgroundAccentH transition-colors duration-200 flex items-center justify-center cursor-grab"
+												class="w-5 h-full bg-container-4 hover:bg-container-3 transition-colors duration-200 flex items-center justify-center cursor-grab"
 												onDragStart={(e) =>
 													dragDrop.onDragStart(e, {
 														index: group.group_id,
@@ -214,7 +214,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 										>
 											<button
 												type="button"
-												class="fill-primary hover:fill-errorH bg-transparent transition-colors duration-200 cursor-pointer"
+												class="text-icon-base hover:fill-error-hover bg-transparent transition-colors duration-200 cursor-pointer"
 												onClick={() => {
 													removeGroup(group.group_id);
 												}}
@@ -230,7 +230,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					</DragDrop>
 				</Match>
 				<Match when={repeaterGroups().length === 0}>
-					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md bg-container flex items-center flex-col justify-center text-center">
+					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md bg-container-1 flex items-center flex-col justify-center text-center">
 						<span class="text-sm text-unfocused">
 							{T("no_entries")}
 						</span>
@@ -254,7 +254,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 						class={classNames(
 							"text-body text-sm font-body font-normal mr-[25px]",
 							{
-								"text-error": !canAddGroup(),
+								"text-error-base": !canAddGroup(),
 							},
 						)}
 					>

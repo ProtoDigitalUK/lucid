@@ -14,7 +14,7 @@ export const ErrorMessage: Component<ErrorMessageProps> = (props) => {
 			<a class="mt-2.5 flex items-start text-sm" href={`#${props.id}`}>
 				<FaSolidTriangleExclamation
 					size={16}
-					class="text-error mt-[3px] mr-2"
+					class="text-error-base mt-[3px] mr-2"
 				/>
 				{props.errors?.message}
 			</a>

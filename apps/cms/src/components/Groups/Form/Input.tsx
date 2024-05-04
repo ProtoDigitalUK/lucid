@@ -59,10 +59,11 @@ export const Input: Component<InputProps> = (props) => {
 				class={classnames(
 					"flex flex-col transition-colors duration-200 ease-in-out relative",
 					{
-						"border-secondary bg-backgroundAccentH":
+						"border-primary-base bg-container-3":
 							inputFocus() && props.theme !== "basic",
-						"border-error": props.errors?.message !== undefined,
-						"bg-backgroundAccent rounded-md border":
+						"border-error-base":
+							props.errors?.message !== undefined,
+						"bg-container-4 rounded-md border border-border":
 							props.theme !== "basic",
 					},
 				)}
@@ -80,7 +81,7 @@ export const Input: Component<InputProps> = (props) => {
 						{
 							"pr-[38px]": props.type === "password",
 							"pt-2": props.copy?.label === undefined,
-							"bg-container border border-border h-10 rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
+							"bg-container-4 border border-border h-10 rounded-md mt-1 focus:border-primary-base duration-200 transition-colors":
 								props.theme === "basic",
 							"bg-transparent pb-2 pt-1 rounded-b-md":
 								props.theme !== "basic",
@@ -116,7 +117,7 @@ export const Input: Component<InputProps> = (props) => {
 				<Show when={props.type === "password"}>
 					<button
 						type="button"
-						class="absolute right-2.5 top-1/2 -translate-y-1/2 text-secondaryH hover:text-secondary duration-200 transition-colors"
+						class="absolute right-2.5 top-1/2 -translate-y-1/2 text-primary-hover hover:text-primary-base duration-200 transition-colors"
 						onClick={() => {
 							setPasswordVisible(!passwordVisible());
 						}}

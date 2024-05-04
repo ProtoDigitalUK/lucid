@@ -31,7 +31,7 @@ const ClickToCopy: Component<ClickToCopyProps> = (props) => {
 				<button
 					type="button"
 					onClick={copyToClipboard}
-					class="duration-200 cursor-copy transition-colors flex items-center max-w-full text-title fill-title whitespace-nowrap text-base hover:text-secondaryH hover:fill-secondaryH"
+					class="duration-200 cursor-copy transition-colors flex items-center max-w-full text-title fill-title whitespace-nowrap text-base hover:text-primary-hover hover:fill-primary-hover"
 				>
 					<FaSolidCopy class="mr-2" />
 					<span class="text-ellipsis overflow-hidden">

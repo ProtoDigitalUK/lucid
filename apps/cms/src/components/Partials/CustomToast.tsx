@@ -56,7 +56,7 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 	return (
 		<div
 			class={classNames(
-				"bg-container rounded-md p-3 drop-shadow-md w-[400px] relative overflow-hidden",
+				"bg-container-1 rounded-md p-3 drop-shadow-md w-[400px] relative overflow-hidden",
 				{
 					"animate-enter": props.toast.visible,
 					"animate-leave": !props.toast.visible,
@@ -68,16 +68,17 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 					class={classNames(
 						"w-6 h-6 flex items-center justify-center rounded-full min-w-[24px]",
 						{
-							"bg-success": props.type === "success",
-							"bg-error": props.type === "error",
-							"bg-warning": props.type === "warning",
-							"bg-secondary": props.type === "info",
+							"bg-primary-base text-primary-contrast":
+								props.type === "success" ||
+								props.type === "info",
+							"bg-error-base": props.type === "error",
+							"bg-warning-base": props.type === "warning",
 						},
 					)}
 				>
 					<Switch>
 						<Match when={props.type === "success"}>
-							<FaSolidCheck class="text-white w-3 h-3 m-auto" />
+							<FaSolidCheck class="text-primary-contrast w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "error"}>
 							<FaSolidExclamation class="text-white w-3 h-3 m-auto" />
@@ -99,7 +100,7 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 			</div>
 			<button
 				data-panel-ignore
-				class="bg-backgroundAccent hover:bg-backgroundAccentH flex justify-center top-1/2 -translate-y-1/2 items-center w-6 h-6 right-2.5 absolute rounded-full z-20 hover:text-error duration-200 transition-all shadow-md"
+				class="bg-container-4 hover:bg-container-3 flex justify-center top-1/2 -translate-y-1/2 items-center w-6 h-6 right-2.5 absolute rounded-full z-20 hover:text-error-base duration-200 transition-all shadow-md"
 				onClick={() => toast.dismiss(props.toast.id)}
 				type="button"
 			>

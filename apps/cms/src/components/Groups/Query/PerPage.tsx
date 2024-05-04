@@ -28,7 +28,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 	// Render
 	return (
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="dropdown-trigger text-title fill-title flex items-center text-base font-display">
+			<DropdownMenu.Trigger class="dropdown-trigger px-15 py-2 border border-border hover:border-primary-base rounded-md text-title fill-title flex items-center text-base font-display">
 				<span class="mr-2">
 					{T("per_page", {
 						count: currentPerPage(),
@@ -51,9 +51,9 @@ export const PerPage: Component<PerPageProps> = (props) => {
 							<button
 								tabIndex={0}
 								class={classNames(
-									"w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-secondary px-1.5 py-1 rounded-md",
+									"w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-primary-base px-1.5 py-1 rounded-md",
 									{
-										"bg-secondary text-secondaryText":
+										"bg-container-2 text-body":
 											currentPerPage() === perpage,
 									},
 								)}
@@ -68,7 +68,7 @@ export const PerPage: Component<PerPageProps> = (props) => {
 							>
 								<label
 									for={`${perpage}`}
-									class="text-primaryText text-sm"
+									class="text-body text-sm"
 								>
 									<span class="line-clamp-1 text-left">
 										{perpage}

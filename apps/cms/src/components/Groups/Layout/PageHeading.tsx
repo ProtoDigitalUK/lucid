@@ -108,14 +108,14 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 				</div>
 				{/* Actions */}
 				<Show when={props.actions}>
-					<div class="flex items-center justify-end md:ml-5 mb-5 md:mb-0 w-full">
+					<div class="flex items-center justify-end md:ml-5 mb-5 md:mb-0 w-full space-x-2.5">
 						<Show
 							when={
 								props.actions?.contentLanguage !== undefined &&
 								props.actions.contentLanguage !== false
 							}
 						>
-							<div class="w-full md:max-w-[240px] mr-2.5">
+							<div class="w-full md:max-w-[240px]">
 								<ContentLanguageSelect />
 							</div>
 						</Show>
@@ -161,7 +161,6 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 					</div>
 				</Show>
 			</div>
-
 			<div class="w-full">{props.children}</div>
 		</header>
 	);

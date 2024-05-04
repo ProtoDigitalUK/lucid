@@ -10,13 +10,9 @@ export const NavigationSidebar: Component = () => {
 	return (
 		<div class="h-full flex ">
 			{/* Mainbar */}
-			<nav class="bg-container w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
+			<nav class="bg-container-1 w-[70px] h-full flex items-center flex-col border-r border-border overflow-y-auto max-h-screen">
 				<div class="h-[60px] min-h-[70px] flex items-center justify-center">
-					<img
-						src={LogoIcon}
-						alt="logo"
-						class="h-10 w-10 rounded-full"
-					/>
+					<img src={LogoIcon} alt="logo" class="size-6" />
 				</div>
 				<ul class="pb-15">
 					<Navigation.IconLink

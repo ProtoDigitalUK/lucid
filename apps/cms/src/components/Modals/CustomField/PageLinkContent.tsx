@@ -122,7 +122,7 @@ const PageLinkContent: Component = () => {
 				<div class=" mt-2.5">
 					<Switch>
 						<Match when={pages.data?.data.length === 0}>
-							<div class="text-center text-sm text-error border border-border p-15 rounded-md">
+							<div class="text-center text-sm text-error-base border border-border p-15 rounded-md">
 								{T("no_results")}
 							</div>
 						</Match>

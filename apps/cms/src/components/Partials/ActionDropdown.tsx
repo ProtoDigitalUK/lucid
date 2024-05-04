@@ -26,7 +26,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 	// ----------------------------------------
 	// Classes
 	const liItemClasses =
-		"flex justify-between my-1 items-center px-2.5 rounded-md hover:bg-primaryH w-full text-sm hover:text-primaryText text-left py-1 text-primaryText fill-primaryText";
+		"flex justify-between my-1 items-center px-2.5 rounded-md hover:bg-container-2 w-full text-sm text-left py-1 text-body fill-primary-contrast";
 
 	// ----------------------------------------
 	// Render
@@ -37,7 +37,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 					e.stopPropagation();
 				}}
 				class={classNames(
-					"dropdown-trigger pointer-events-auto w-7 h-7 bg-background rounded-md flex justify-center items-center hover:bg-backgroundAccent",
+					"dropdown-trigger pointer-events-auto w-7 h-7 bg-container-3 rounded-md flex justify-center items-center hover:bg-container-4",
 					{
 						"border border-border": props.options?.border,
 					},
@@ -55,7 +55,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 					rounded: true,
 				}}
 			>
-				<ul class="divide-primaryA divide-y">
+				<ul class="divide-container-2 divide-y">
 					<For each={props.actions}>
 						{(action) => (
 							<Show when={action.hide !== true}>

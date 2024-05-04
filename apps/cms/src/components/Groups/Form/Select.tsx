@@ -115,12 +115,12 @@ export const Select: Component<SelectProps> = (props) => {
 					class={classNames(
 						"flex flex-col transition-colors duration-200 ease-in-out relative",
 						{
-							"border-secondary bg-backgroundAccentH":
+							"border-primary-base bg-container-3":
 								inputFocus() && props.theme !== "basic",
-							"border-error":
+							"border-error-base":
 								props.errors?.message !== undefined ||
 								props.hasError,
-							"bg-backgroundAccent rounded-md border":
+							"bg-container-4 rounded-md border border-border":
 								props.theme !== "basic",
 						},
 					)}
@@ -140,7 +140,7 @@ export const Select: Component<SelectProps> = (props) => {
 							{
 								"pt-2 h-10 flex items-center":
 									props.copy?.label === undefined,
-								"bg-container border border-border flex items-center h-10 rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
+								"bg-container-1 border border-border flex items-center h-10 rounded-md mt-1 focus:border-primary-base duration-200 transition-colors":
 									props.theme === "basic",
 								"bg-transparent pb-2 pt-1 rounded-b-md":
 									props.theme !== "basic",
@@ -152,7 +152,7 @@ export const Select: Component<SelectProps> = (props) => {
 						{selectedLabel() ? (
 							<span class="truncate">{selectedLabel()}</span>
 						) : (
-							<span class="text-placeholder">
+							<span class="text-body">
 								{T("nothing_selected")}
 							</span>
 						)}
@@ -176,7 +176,7 @@ export const Select: Component<SelectProps> = (props) => {
 							<div class="relative">
 								<input
 									type="text"
-									class="bg-container px-2.5 rounded-md w-full border border-border text-sm text-title font-medium h-10 focus:outline-none focus:border-secondary"
+									class="bg-container-1 px-2.5 rounded-md w-full border border-border text-sm text-title font-medium h-10 focus:outline-none focus:border-primary-base"
 									placeholder={T("search")}
 									value={props.search?.value || ""}
 									onKeyDown={(e) => {
@@ -197,7 +197,7 @@ export const Select: Component<SelectProps> = (props) => {
 										<div class="absolute right-2.5 top-0 bottom-0 flex items-center">
 											<button
 												type="button"
-												class="bg-primary pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 fill-primaryText hover:bg-error hover:fill-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error focus:fill-error"
+												class="bg-primary-base pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 fill-primary-contrast hover:bg-error-base hover:fill-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base"
 												onClick={() => {
 													setDebouncedValue("");
 												}}
@@ -229,7 +229,7 @@ export const Select: Component<SelectProps> = (props) => {
 								<For each={selectOptions()}>
 									{(option) => (
 										<li
-											class="flex items-center justify-between text-sm text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
+											class="flex items-center justify-between text-sm text-body hover:bg-primary-hover hover:text-primary-contrast px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-primary-hover focus:text-primary-contrast"
 											onClick={() => {
 												props.onChange(option.value);
 												setDebouncedValue("");
@@ -253,7 +253,7 @@ export const Select: Component<SelectProps> = (props) => {
 											>
 												<FaSolidCheck
 													size={14}
-													class="text-primaryText mr-2"
+													class="text-current mr-2"
 												/>
 											</Show>
 										</li>
@@ -267,12 +267,12 @@ export const Select: Component<SelectProps> = (props) => {
 								props.search?.value
 							}
 						>
-							<span class="text-primaryText w-full block px-2.5 py-1 text-sm">
+							<span class="text-primary-contrast w-full block px-2.5 py-1 text-sm">
 								{T("no_results_found")}
 							</span>
 						</Match>
 						<Match when={props.options.length === 0}>
-							<span class="text-primaryText w-full block px-2.5 py-1 text-sm">
+							<span class="text-primary-contrast w-full block px-2.5 py-1 text-sm">
 								{T("no_options_available")}
 							</span>
 						</Match>

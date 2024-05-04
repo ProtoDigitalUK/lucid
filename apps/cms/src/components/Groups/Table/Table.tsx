@@ -225,7 +225,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 					<div class="w-full overflow-x-auto" ref={overflowRef}>
 						<table class="w-full table h-auto border-collapse">
 							<Show when={props?.caption}>
-								<caption class="caption-bottom border-t-primary border-t-2 border-b border-b-border bg-backgroundAccent text-title  py-2 text-sm">
+								<caption class="caption-bottom border-t-primary-base border-t-2 border-b border-b-border bg-container-4 text-title  py-2 text-sm">
 									{props?.caption}
 								</caption>
 							</Show>
@@ -257,7 +257,7 @@ export const TableRoot: Component<TableRootProps> = (props) => {
 									</Index>
 									<Table.Th
 										classes={
-											"text-right right-0 hover:bg-background"
+											"text-right right-0 hover:bg-container-3"
 										}
 									>
 										<Table.ColumnToggle

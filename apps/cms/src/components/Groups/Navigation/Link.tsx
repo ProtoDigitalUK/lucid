@@ -16,7 +16,7 @@ export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 
 	// ----------------------------------
 	// Classes
-	const iconClasses = classNames("w-5 h-5 text-primary");
+	const iconClasses = classNames("w-5 h-5 text-primary-base");
 
 	// ----------------------------------
 	// Render
@@ -26,10 +26,10 @@ export const NavigationLink: Component<NavigationLinkProps> = (props) => {
 				title={props.title}
 				href={props.href}
 				class={classNames(
-					"h-10 w-full flex bg-container text-body fill-body hover:text-body hover:bg-backgroundAccent transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md",
+					"h-10 w-full flex bg-container-1 text-body fill-body hover:text-body hover:bg-container-4 transition-colors duration-200 ease-in-out items-center px-2.5 rounded-md",
 				)}
 				activeClass={classNames(
-					"!bg-backgroundAccent !text-title !fill-title",
+					"!bg-container-4 !text-title !fill-title",
 				)}
 				end
 			>

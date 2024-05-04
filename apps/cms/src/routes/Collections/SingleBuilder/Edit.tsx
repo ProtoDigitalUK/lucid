@@ -155,7 +155,7 @@ const CollectionsSingleBuilderEditRoute: Component = () => {
 	// Render
 	return (
 		<>
-			<header class="h-[60px] w-full bg-container border-b border-border px-15 flex items-center justify-between">
+			<header class="h-[60px] w-full bg-container-1 border-b border-border px-15 flex items-center justify-between">
 				<h1 class="text-xl">
 					{T("edit_page_route_title_singular", {
 						title: collection.data?.data.title || "",
@@ -212,7 +212,7 @@ const CollectionsSingleBuilderEditRoute: Component = () => {
 									collection: collection.data?.data,
 								}}
 							/>
-							<div class="w-full h-[calc(100%-55px)] bg-primary rounded-md brick-pattern relative">
+							<div class="w-full h-[calc(100%-55px)] bg-primary-base rounded-md brick-pattern relative">
 								<div class="absolute inset-0 overflow-y-scroll z-10 right-[175px] p-15 hide-scrollbar">
 									<PageBuilder.Builder
 										state={{

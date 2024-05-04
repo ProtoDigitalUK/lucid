@@ -37,9 +37,9 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 		],
 		queryFn: () =>
 			request<ResponseBody<CollectionDocumentResponse>>({
-				url: `/api/v1/collections/documents/
-                ${queryParams().location?.collectionKey}/
-                ${queryParams().location?.id}`,
+				url: `/api/v1/collections/documents/${
+					queryParams().location?.collectionKey
+				}/${queryParams().location?.id}`,
 				query: queryParams(),
 				config: {
 					method: "GET",

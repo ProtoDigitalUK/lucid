@@ -80,10 +80,11 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 					class={classnames(
 						"flex flex-col transition-colors duration-200 ease-in-out relative",
 						{
-							"border-secondary bg-backgroundAccentH":
+							"border-primary-base bg-container-3":
 								inputFocus() && props.theme !== "basic",
-							"border-error": props.errors?.message !== undefined,
-							"bg-backgroundAccent rounded-md border":
+							"border-error-base":
+								props.errors?.message !== undefined,
+							"bg-container-4 rounded-md border border-border":
 								props.theme !== "basic",
 						},
 					)}
@@ -104,7 +105,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 									props.copy?.label === undefined,
 								"min-h-[32px] mt-1":
 									props.copy?.label !== undefined,
-								"bg-container border border-border flex items-center min-h-[40px] rounded-md mt-1 focus:border-secondary duration-200 transition-colors":
+								"bg-container-1 border border-border flex items-center min-h-[40px] rounded-md mt-1 focus:border-primary-base duration-200 transition-colors":
 									props.theme === "basic",
 								"bg-transparent pb-2 rounded-b-md":
 									props.theme !== "basic",
@@ -115,11 +116,11 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						<div class="flex flex-wrap gap-1">
 							<For each={props.values}>
 								{(value) => (
-									<span class="bg-primary hover:bg-primaryH duration-200 transition-colors rounded-md text-primaryText hover:text-error px-2 py-0.5 flex items-center text-sm focus:outline-none">
+									<span class="bg-primary-base hover:bg-primary-hover duration-200 transition-colors rounded-md text-primary-contrast hover:text-error-base px-2 py-0.5 flex items-center text-sm focus:outline-none">
 										{value.label}
 										<button
 											type="button"
-											class="ml-1 pointer-events-auto duration-200 transition-colors rounded-full focus:outline-none focus:ring-1 ring-error focus:fill-error"
+											class="ml-1 pointer-events-auto duration-200 transition-colors rounded-full focus:outline-none focus:ring-1 ring-error-base focus:fill-error-base"
 											onClick={(e) => {
 												e.stopPropagation();
 												e.preventDefault();
@@ -146,7 +147,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 							<Show when={props.values.length > 0}>
 								<button
 									type="button"
-									class="bg-primary pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 text-primaryText hover:bg-error hover:text-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error focus:text-error"
+									class="bg-primary-base pointer-events-auto h-5 w-5 flex items-center justify-center rounded-full mr-1 text-primary-contrast hover:bg-error-base hover:text-white duration-200 transition-colors focus:outline-none focus:ring-1 ring-error-base focus:text-error-base"
 									onClick={() => {
 										setValues([]);
 									}}
@@ -190,7 +191,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 								<For each={props.options}>
 									{(option) => (
 										<DropdownMenu.Item
-											class="flex items-center justify-between text-sm text-primaryText hover:bg-secondaryH hover:text-secondaryText px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-secondaryH focus:text-secondaryText"
+											class="flex items-center justify-between text-sm text-body hover:bg-primary-hover hover:text-primary-contrast px-2.5 py-1 rounded-md cursor-pointer focus:outline-none focus:bg-primary-hover focus:text-primary-contrast"
 											onSelect={() => {
 												toggleValue(option);
 											}}
@@ -206,7 +207,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 											>
 												<FaSolidCheck
 													size={14}
-													class="text-primaryText mr-2"
+													class="text-primary-contrast mr-2"
 												/>
 											</Show>
 										</DropdownMenu.Item>
@@ -215,7 +216,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 							</ul>
 						</Match>
 						<Match when={props.options.length === 0}>
-							<span class="text-primaryText w-full block px-2.5 py-1 text-sm">
+							<span class="text-primary-contrast w-full block px-2.5 py-1 text-sm">
 								{T("no_options_available")}
 							</span>
 						</Match>

@@ -173,7 +173,7 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
 					"opacity-60":
 						props.callbacks?.dragDrop?.getDragging()?.index ===
 						props.data.brickId,
-					"!border-secondary":
+					"!border-primary-base":
 						props.callbacks?.dragDrop?.getDraggingTarget()
 							?.index === props.data.brickId,
 					"cursor-grab": props.type === "builder",
@@ -207,7 +207,7 @@ const PreviewBarItem: Component<PreviewBarItemProps> = (props) => {
 					brick: brickConfig(),
 				}}
 			/>
-			<div class="bg-primaryA2 px-2.5 py-1 text-center">
+			<div class="bg-primary-a2 px-2.5 py-1 text-center">
 				<h3 class="text-sm text-white">{brickConfig()?.title}</h3>
 			</div>
 		</li>

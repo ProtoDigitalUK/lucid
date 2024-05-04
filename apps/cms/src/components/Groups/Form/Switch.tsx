@@ -57,7 +57,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 			/>
 			<button
 				type="button"
-				class="bg-backgroundAccent rounded-md flex border border-border mt-1 relative h-10 focus:border-secondary group"
+				class="bg-container-4 rounded-md flex border border-border mt-1 relative h-10 focus:border-primary-base group"
 				onClick={() => {
 					checkboxRef?.click();
 				}}
@@ -72,7 +72,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 					class={classnames(
 						"w-1/2 px-15 py-1 flex items-center text-center z-10 relative duration-200 transition-colors text-sm h-full",
 						{
-							"text-secondaryText": !props.value,
+							"text-primary-contrast": !props.value,
 							"text-title": props.value,
 						},
 					)}
@@ -83,7 +83,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 					class={classnames(
 						"w-1/2 px-15 py-1 flex items-center text-center z-10 relative duration-200 transition-colors text-sm h-full",
 						{
-							"text-secondaryText": props.value,
+							"text-primary-contrast": props.value,
 							"text-title": !props.value,
 						},
 					)}
@@ -92,7 +92,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 				</span>
 				<span
 					class={classnames(
-						"w-1/2 bg-secondary absolute top-0 bottom-0 transition-all duration-200 rounded-md z-0 group-hover:bg-secondaryH",
+						"w-1/2 bg-primary-base absolute top-0 bottom-0 transition-all duration-200 rounded-md z-0 group-hover:bg-primary-hover",
 						{
 							"left-1/2": props.value,
 							"left-0": !props.value,

@@ -5,12 +5,7 @@ import { A } from "@solidjs/router";
 import spawnToast from "@/utils/spawn-toast";
 
 interface LinkProps extends JSX.HTMLAttributes<HTMLAnchorElement> {
-	theme:
-		| "primary"
-		| "primary-outline"
-		| "container-outline"
-		| "danger"
-		| "basic";
+	theme: "primary" | "container-outline" | "danger" | "basic";
 	size: "x-small" | "small" | "medium" | "large" | "icon" | "auto";
 	children: JSX.Element;
 
@@ -27,13 +22,11 @@ const Link: Component<LinkProps> = (props) => {
 		return classnames(
 			"flex items-center justify-center text-center focus:outline-none focus:ring-2 duration-200 transition-colors rounded-md font-display relative font-medium",
 			{
-				"bg-primary hover:bg-primaryH text-primaryText hover:text-white fill-primaryText hover:fill-white ring-secondary":
+				"bg-primary-base hover:bg-primary-hover text-primary-contrast hover:text-white fill-primary-contrast hover:fill-white ring-primary-base":
 					props.theme === "primary",
-				"bg-transparent border border-primaryA hover:bg-primaryH fill-primaryText text-primaryText hover:text-primaryText":
-					props.theme === "primary-outline",
-				"bg-container border border-primary hover:bg-primaryH fill-primaryText text-title hover:text-primaryText":
+				"bg-container-1 border border-primary-base hover:bg-primary-hover fill-primary-contrast text-title hover:text-primary-contrast":
 					props.theme === "container-outline",
-				"bg-error hover:bg-errorH text-errorText ring-secondary fill-errorText":
+				"bg-error-base hover:bg-error-hover text-error-contrast ring-primary-base fill-error-contrast":
 					props.theme === "danger",
 				// Sizes
 				"px-2.5 py-2 text-sm": props.size === "x-small",

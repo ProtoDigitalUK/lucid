@@ -88,10 +88,11 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	if (fieldData() === undefined) return null;
 
 	return (
-		<div class="mb-2.5 last:mb-0 w-full">
-			<h3 class="text-sm text-body font-body font-normal mb-2.5">
-				{field().title}
-			</h3>
+		<div
+			class={classNames("mb-2.5 last:mb-0 w-full", {
+				"mt-5": props.state.getGroupPath().length > 0,
+			})}
+		>
 			{/* Repeater Body */}
 			<Switch>
 				<Match when={fieldGroupIds().length > 0}>
@@ -108,7 +109,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					>
 						{({ dragDrop }) => (
 							<For each={fieldGroupIds()}>
-								{(groupId) => (
+								{(groupId, i) => (
 									<Builder.GroupBody
 										state={{
 											brickIndex: brickIndex(),
@@ -116,6 +117,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 											groupId: groupId,
 											dragDrop: dragDrop,
 											repeaterKey: repeaterKey(),
+											groupIndex: i(),
 											getFieldPath:
 												props.state.getFieldPath,
 											setFieldPath:
@@ -132,7 +134,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					</DragDrop>
 				</Match>
 				<Match when={fieldGroupIds().length === 0}>
-					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md bg-container flex items-center flex-col justify-center text-center">
+					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md flex items-center flex-col justify-center text-center">
 						<span class="text-sm text-unfocused">
 							{T("no_entries")}
 						</span>
@@ -155,7 +157,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 						class={classNames(
 							"text-body text-sm font-body font-normal mr-[25px]",
 							{
-								"text-error": !canAddGroup(),
+								"text-error-base": !canAddGroup(),
 							},
 						)}
 					>

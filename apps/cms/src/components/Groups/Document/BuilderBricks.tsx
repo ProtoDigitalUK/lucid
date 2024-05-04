@@ -25,7 +25,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 					<h2>Builder Area:</h2>
 					<button type="button">Add Brick</button>
 				</div>
-				<ul class="bg-backgroundAccent p-15 rounded-md border border-border">
+				<ol class="">
 					<For each={builderBricks()}>
 						{(brick) => (
 							<BuilderBrickRow
@@ -34,7 +34,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 							/>
 						)}
 					</For>
-				</ul>
+				</ol>
 			</div>
 		</Show>
 	);
@@ -53,7 +53,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	});
 
 	return (
-		<li class="w-full bg-white border border-border p-15">
+		<li class="w-full bg-container-2 border border-border p-15 rounded-md">
 			<div class="flex justify-between mb-15">
 				<h3>{config()?.title}</h3>
 				<button type="button">^</button>

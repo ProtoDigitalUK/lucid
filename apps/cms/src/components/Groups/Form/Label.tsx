@@ -18,7 +18,7 @@ export const Label: Component<LabelProps> = (props) => {
 				class={classnames(
 					"block text-sm transition-colors duration-200 ease-in-out",
 					{
-						"text-secondaryH": props.focused,
+						"text-primary-hover": props.focused,
 						"pt-2 px-2.5":
 							props.noPadding !== true && props.theme !== "basic",
 						"mb-2": props.noPadding === true,
@@ -27,7 +27,7 @@ export const Label: Component<LabelProps> = (props) => {
 			>
 				{props?.label}
 				<Show when={props.required}>
-					<span class="text-error ml-1 inline">*</span>
+					<span class="text-error-base ml-1 inline">*</span>
 				</Show>
 			</label>
 		</Show>

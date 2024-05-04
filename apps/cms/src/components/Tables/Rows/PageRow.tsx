@@ -78,7 +78,7 @@ const PageRow: Component<PageRowProps> = (props) => {
 				options={{ include: props?.include[0] }}
 			/>
 			<PillCol
-				theme={props.page.published ? "secondary" : "warning"}
+				theme={props.page.published ? "primary" : "warning"}
 				text={props.page.published ? T("published") : T("draft")}
 				options={{ include: props?.include[1] }}
 			/>

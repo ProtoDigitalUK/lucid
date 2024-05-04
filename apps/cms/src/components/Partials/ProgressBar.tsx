@@ -26,7 +26,7 @@ const ProgressBar: Component<ProgressBarProps> = (props) => {
 	return (
 		<>
 			<div
-				class="w-full bg-backgroundAccent h-3 rounded-md overflow-hidden"
+				class="w-full bg-container-4 h-3 rounded-md overflow-hidden"
 				role="progressbar"
 				aria-valuenow={getProgress()}
 				aria-valuemin="0"
@@ -38,14 +38,14 @@ const ProgressBar: Component<ProgressBarProps> = (props) => {
 						"h-full rounded-md duration-200 transition-all",
 						{
 							// usage
-							"bg-error":
+							"bg-error-base":
 								props.type === "usage" && getProgress() > 90,
-							"bg-secondary":
+							"bg-white":
 								props.type === "usage" && getProgress() <= 90,
 							// target
-							"bg-primary ":
+							"bg-primary-base":
 								props.type === "target" && getProgress() > 90,
-							"bg-secondary ":
+							"bg-primary-base ":
 								props.type === "target" && getProgress() <= 90,
 						},
 					)}

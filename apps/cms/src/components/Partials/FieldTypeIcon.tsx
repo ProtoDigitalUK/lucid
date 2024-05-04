@@ -12,23 +12,23 @@ const FieldTypeIcon: Component<FieldTypeIconProps> = (props) => {
 	return (
 		<div
 			class={classNames(
-				"absolute top-0 left-0 w-7 h-7 min-w-[28px] mr-2.5 flex items-center justify-center bg-opacity-30 border-opacity-40 rounded-md text-black text-opacity-50 text-sm",
+				"absolute top-0 left-0 w-7 h-7 min-w-[28px] mr-2.5 flex items-center justify-center  border-opacity-40 rounded-md text-black text-opacity-50 text-sm",
 				{
-					"bg-[#4DD64D] border-[#4DD64D]":
+					"bg-[#75f175] border-[#6ae06a]":
 						props.type === "text" ||
 						props.type === "wysiwyg" ||
 						props.type === "textarea",
-					"bg-[#4E93E3] border-[#4E93E3]":
+					"bg-[#87b6ec] border-[#7aa6d9]":
 						props.type === "number" ||
 						props.type === "select" ||
 						props.type === "datetime" ||
 						props.type === "checkbox",
-					"bg-[#E8962A] border-[#E8962A]": props.type === "repeater",
-					"bg-[#CF40C9] border-[#CF40C9]": props.type === "link",
-					"bg-[#D64F8C] border-[#D64F8C]": props.type === "json",
-					"bg-[#5955DB] border-[#5955DB]": props.type === "media",
-					"bg-[#2FDBBB] border-[#2FDBBB]": props.type === "colour",
-					"bg-[#3e3e3e] border-[#373737]": props.type === "user",
+					"bg-[#e9bc81] border-[#d8ad74]": props.type === "repeater",
+					"bg-[#f080ea] border-[#dd72d8]": props.type === "link",
+					"bg-[#f88bbc] border-[#e17ba9]": props.type === "json",
+					"bg-[#9693f8] border-[#8481e0]": props.type === "media",
+					"bg-[#84f0dc] border-[#78dbc9]": props.type === "colour",
+					"bg-[#dae095] border-[#ccd289]": props.type === "user",
 				},
 			)}
 		>

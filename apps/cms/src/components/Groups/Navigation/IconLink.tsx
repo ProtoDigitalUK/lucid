@@ -9,7 +9,6 @@ import {
 	FaSolidEnvelope,
 	FaSolidBox,
 } from "solid-icons/fa";
-// Components
 import { A } from "@solidjs/router";
 import { Tooltip } from "@kobalte/core";
 import TooltipContent from "@/components/Partials/TooltipContent";
@@ -32,7 +31,9 @@ interface IconLinkProps {
 export const IconLink: Component<IconLinkProps> = (props) => {
 	// ----------------------------------
 	// Classes
-	const iconClasses = classNames("w-5 h-5 text-primary");
+	const iconClasses = classNames(
+		"w-5 h-5 text-icon-base hover:text-icon-hover",
+	);
 
 	// ----------------------------------
 	// Render
@@ -44,12 +45,14 @@ export const IconLink: Component<IconLinkProps> = (props) => {
 						<A
 							href={props.href}
 							class={classNames(
-								"w-10 h-10 focus:outline-none focus:!border-secondary focus:ring-0 flex items-center justify-center bg-container rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-primary",
+								"w-10 h-10 focus:outline-none focus:!border-primary-base focus:ring-0 flex items-center justify-center bg-container-1 rounded-lg border border-transparent transition-colors duration-200 ease-in-out hover:border-container-4",
 								{
-									"!border-primary": props.active,
+									"!border-container-4": props.active,
 								},
 							)}
-							activeClass={!props.active ? "!border-primary" : ""}
+							activeClass={
+								!props.active ? "!border-container-4" : ""
+							}
 							end={props.href === "/"}
 						>
 							<Switch>

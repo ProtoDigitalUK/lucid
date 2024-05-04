@@ -11,7 +11,6 @@ export interface PageBreadcrumbsProps {
 	}[];
 	options?: {
 		noBorder?: boolean;
-		background?: "white";
 	};
 }
 
@@ -21,9 +20,8 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 	return (
 		<Show when={props.breadcrumbs}>
 			<nav
-				class={classNames("px-15 md:px-30 py-15", {
+				class={classNames("px-15 md:px-30 py-15 bg-container-1", {
 					"border-b border-border": props.options?.noBorder !== true,
-					"bg-white": props.options?.background === "white",
 				})}
 			>
 				<ul class="flex items-center">
@@ -33,7 +31,7 @@ export const PageBreadcrumbs: Component<PageBreadcrumbsProps> = (props) => {
 								<li class="flex items-center">
 									<A
 										href={breadcrumb.link}
-										class="flex items-center text-primary hover:text-primaryDark text-sm"
+										class="flex items-center text-title hover:text-primaryDark text-sm"
 									>
 										{breadcrumb.label}
 									</A>

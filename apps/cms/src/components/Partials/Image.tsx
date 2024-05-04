@@ -26,7 +26,7 @@ const Image: Component<ImageProps> = (props) => {
 			/>
 			<KImage.Fallback
 				class={classNames(
-					"bg-backgroundAccent w-full h-full block",
+					"bg-container-4 w-full h-full block",
 					props.classes,
 				)}
 			/>

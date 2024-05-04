@@ -84,7 +84,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 		>
 			<ul>
 				<Show when={props.mode === "multiple"}>
-					<li class="w-full p-15 bg-container border border-border rounded-md mb-15">
+					<li class="w-full p-15 bg-container-1 border border-border rounded-md mb-15">
 						<PageFieldGroup
 							mode={"update"}
 							showTitles={false}

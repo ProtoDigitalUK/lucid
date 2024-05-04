@@ -49,7 +49,7 @@ export const Tr: Component<TrProps> = (props) => {
 	return (
 		<tr
 			class={classNames(
-				"bg-background hover:bg-backgroundAccent duration-200 transition-colors",
+				"bg-container-3 hover:bg-container-4 duration-200 transition-colors",
 				{
 					"cursor-pointer": firstPermittedAction() !== undefined,
 				},

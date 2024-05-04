@@ -62,7 +62,7 @@ export const BrickBody: Component<BrickBodyProps> = (props) => {
 								class={classNames(
 									"border-b border-border -mb-px text-sm font-medium py-1 px-2 first:pl-0",
 									{
-										"border-secondary":
+										"border-primary-base":
 											getActiveTab() === tab.key,
 									},
 								)}

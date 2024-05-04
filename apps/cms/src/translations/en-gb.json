@@ -25,6 +25,7 @@
 	"remove_entry": "Remove entry",
 	"failed_count": "Failed Count",
 	"last_success_at": "Last Success At",
+	"change_order": "Change Order",
 	"details_lang": "Details ({{code}})",
 	"assign_forms_description": "Select the forms the environment should have access to.",
 	"update": "Update",

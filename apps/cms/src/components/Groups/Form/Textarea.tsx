@@ -41,10 +41,11 @@ export const Textarea: Component<TextareaProps> = (props) => {
 				class={classnames(
 					"flex flex-col transition-colors duration-200 ease-in-out relative",
 					{
-						"border-secondary bg-backgroundAccentH":
+						"border-primary-base bg-container-3":
 							inputFocus() && props.theme !== "basic",
-						"border-error": props.errors?.message !== undefined,
-						"bg-backgroundAccent rounded-md border":
+						"border-error-base":
+							props.errors?.message !== undefined,
+						"bg-container-4 rounded-md border":
 							props.theme !== "basic",
 					},
 				)}
@@ -61,7 +62,7 @@ export const Textarea: Component<TextareaProps> = (props) => {
 						"focus:outline-none text-sm text-title font-medium resize-none w-full h-40 block",
 						{
 							"pt-2": props.copy?.label === undefined,
-							"bg-container border border-border rounded-md mt-1 p-2.5 focus:border-secondary duration-200 transition-colors":
+							"bg-container-4 border border-border rounded-md mt-1 p-2.5 focus:border-primary-base duration-200 transition-colors":
 								props.theme === "basic",
 							"bg-transparent pb-2 px-2.5 pt-1 rounded-b-md":
 								props.theme !== "basic",

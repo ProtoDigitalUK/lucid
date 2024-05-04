@@ -94,7 +94,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						<button
 							type="button"
 							onClick={openLinkModal}
-							class="flex cursor-pointer font-semibold items-center py-2 px-2.5 border-primary text-primary border text-sm rounded-md hover:bg-primaryH hover:text-primaryText transition-colors duration-200 ease-in-out"
+							class="flex cursor-pointer font-semibold items-center py-2 px-2.5 border-primary-base text-primary-base border text-sm rounded-md hover:bg-primary-hover hover:text-primary-contrast transition-colors duration-200 ease-in-out"
 						>
 							<span class="line-clamp-1">{linkLabel()}</span>
 							<span class="ml-2.5 flex items-center border-l border-current pl-2.5">
@@ -103,7 +103,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						</button>
 						<button
 							type="button"
-							class="hover:text-error text-primary flex items-center text-sm lowercase"
+							class="hover:text-error-base text-primary-base flex items-center text-sm lowercase"
 							onClick={() => {
 								props.onChange(null, null);
 							}}

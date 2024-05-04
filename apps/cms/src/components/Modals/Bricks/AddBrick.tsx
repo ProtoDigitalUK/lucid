@@ -98,7 +98,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 						}}
 						type="button"
 					>
-						<FaSolidXmark class="w-15 text-error" />
+						<FaSolidXmark class="w-15 text-error-base" />
 					</button>
 				</Show>
 			</div>
@@ -114,10 +114,10 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 										class={classNames(
 											"flex items-center font-medium w-full p-2.5 rounded-md transition-colors duration-200",
 											{
-												"bg-backgroundAccent":
+												"bg-container-4":
 													brickConfig.key ===
 													getHighlightedBrick(),
-												"bg-container":
+												"bg-container-1":
 													brickConfig.key !==
 													getHighlightedBrick(),
 											},
@@ -155,7 +155,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 				</div>
 				{/* Preview */}
 				<div class="w-[60%] p-15 h-full pl-0">
-					<div class="bg-backgroundAccent h-full rounded-md flex items-center justify-center">
+					<div class="bg-container-4 h-full rounded-md flex items-center justify-center">
 						<div class="w-[80%]">
 							<BrickPreview
 								data={{
