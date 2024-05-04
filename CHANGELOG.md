@@ -1,5 +1,25 @@
 # @lucidcms/core
 
+## v0.4.0-alpha.0
+
+### Features:
+
+- CMS frontend collection document rework.
+- New supported features section on frontend settings page. ([2956ad6](https://github.com/ProtoDigitalUK/lucid/commit/2956ad6a6d3ad3adf5f2538cbf5855dc67b0e95f))
+
+### Breaking changes:
+
+- Group format on collection document request and response requires a group object which includes an id instead of being Fields[][]. Required for frontend to target group in a safer way. ([6ee503e](https://github.com/ProtoDigitalUK/lucid/commit/6ee503ed4642adaaabf33a35cd5fbafd72952059))
+
+### Bug Fixes:
+
+- Fixed type and casing errors across the frontend.
+- Fixed issue where get multiple users endpoint would return duplicate user entries. ([52c6f1c](https://github.com/ProtoDigitalUK/lucid/commit/52c6f1c91851ee0a1e171a6784d34c43954330f8))
+- Fixed count issue on selectMultipleFiltered in users repo. ([7a87468](https://github.com/ProtoDigitalUK/lucid/commit/7a874688e17fce5e8dda2fba5d8416afbf816a9a))
+- Fixed count issue on selectMultipleFiltered in media repo. ([ef138f5](https://github.com/ProtoDigitalUK/lucid/commits/master/?before=ef4d6cf01ee0e8bcb92ddabc8138a38658273f04+35))
+- Fixed perPage query param issue where we were still looking for the previous casing version. ([eb60f9b](https://github.com/ProtoDigitalUK/lucid/commit/eb60f9b7cc07d841459cd2b1f90ad1ac1f0c696a))
+- Fixed use of flatFields in collection formatter. Now returns fieldTree like the fixed and builder bricks do. ([b77f892](https://github.com/ProtoDigitalUK/lucid/commit/b77f892df556735216f0425367ec979d20f2cbed))
+
 ## v0.3.0-alpha.0
 
 ### Features

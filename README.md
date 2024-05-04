@@ -1,4 +1,4 @@
-![Lucid](https://github.com/ProtoDigitalUK/lucid/blob/master/banner.png?raw=true)
+![Lucid](https://github.com/ProtoDigitalUK/lucid/blob/master/banner.jpg?raw=true)
 
 > [!CAUTION]
 > Under heavy construction - Not suitable for production
