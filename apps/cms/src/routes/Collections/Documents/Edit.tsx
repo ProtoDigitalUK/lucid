@@ -13,6 +13,7 @@ import {
 import type { CollectionResponse } from "@lucidcms/core/types";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
@@ -46,6 +47,12 @@ const CollectionsDocumentsEditRoute: Component<
 	const documentId = createMemo(
 		() => Number.parseInt(params.documentId) || undefined,
 	);
+	const contentLanguage = createMemo(
+		() => contentLanguageStore.get.contentLanguage,
+	);
+	const canFetchDocument = createMemo(() => {
+		return contentLanguage() !== undefined && documentId() !== undefined;
+	});
 
 	// ----------------------------------
 	// Queries
@@ -66,8 +73,11 @@ const CollectionsDocumentsEditRoute: Component<
 			include: {
 				bricks: true,
 			},
+			headers: {
+				"lucid-content-lang": contentLanguage,
+			},
 		},
-		enabled: () => !!collectionKey() && !!documentId(),
+		enabled: () => canFetchDocument(),
 		refetchOnWindowFocus: false,
 	});
 
@@ -93,8 +103,7 @@ const CollectionsDocumentsEditRoute: Component<
 	// ---------------------------------
 	// Effects
 	createEffect(() => {
-		if (isSuccess() && !getSetDataLock()) {
-			setSetDataLock(true);
+		if (isSuccess()) {
 			brickStore.get.reset();
 
 			brickStore.get.setBricks(

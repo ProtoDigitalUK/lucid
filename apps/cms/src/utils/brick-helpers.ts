@@ -48,6 +48,7 @@ const getNextBrickOrder = (type: "fixed" | "builder") => {
 // ---------------------------------------------
 // Get field new
 const getBrickField = (params: {
+	// fields: FieldResponse[];
 	brickIndex: number;
 	fieldPath: string[];
 	groupPath?: Array<number | string>;
@@ -67,6 +68,17 @@ const getBrickField = (params: {
 	}
 
 	return field;
+	// const field = getBrickFieldRecursive({
+	// 	fields: params.fields,
+	// 	fieldPath: params.fieldPath,
+	// 	groupPath: params.groupPath || [],
+	// });
+
+	// if (!field) {
+	// 	return brickStore.get.addField(params);
+	// }
+
+	// return field;
 };
 
 const getBrickFieldRecursive = (params: {

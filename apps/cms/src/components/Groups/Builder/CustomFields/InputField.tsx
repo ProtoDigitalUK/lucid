@@ -2,8 +2,9 @@ import {
 	type Component,
 	type Accessor,
 	createSignal,
-	onMount,
 	batch,
+	createMemo,
+	createEffect,
 } from "solid-js";
 import type { CustomField } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
@@ -29,15 +30,22 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	const [getValue, setValue] = createSignal("");
 
 	// -------------------------------
-	// Effects
-	onMount(() => {
-		const field = brickHelpers.getBrickField({
+	// Memos
+	const fieldData = createMemo(() => {
+		console.log("fieldData");
+		return brickHelpers.getBrickField({
 			brickIndex: props.state.brickIndex,
 			fieldPath: props.state.getFieldPath(),
 			groupPath: props.state.getGroupPath(),
 			field: props.state.field,
 			contentLanguage: props.state.contentLanguage,
 		});
+	});
+
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		const field = fieldData();
 
 		switch (props.type) {
 			case "number": {
