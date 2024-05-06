@@ -3,7 +3,7 @@ import type {
 	CustomField,
 	FieldTypes,
 } from "../libs/builders/field-builder/types.js";
-import type { CollectionBrickConfigT } from "../libs/builders/collection-builder/index.js";
+import type { CollectionBrickConfig } from "../libs/builders/collection-builder/index.js";
 import type { ErrorResult } from "./errors.js";
 
 export interface UserResponse {
@@ -154,8 +154,8 @@ export interface CollectionResponse {
 	description: string | null;
 	documentId?: number | null;
 	translations: boolean;
-	fixedBricks: Array<CollectionBrickConfigT>;
-	builderBricks: Array<CollectionBrickConfigT>;
+	fixedBricks: Array<CollectionBrickConfig>;
+	builderBricks: Array<CollectionBrickConfig>;
 	fields: Array<CustomField>;
 }
 

@@ -1,11 +1,11 @@
 import { type Component, createMemo, For, createSignal, Show } from "solid-js";
-import type { CollectionBrickConfigT } from "@lucidcms/core/types";
+import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 
 interface FixedBricksProps {
-	brickConfig: CollectionBrickConfigT[];
+	brickConfig: CollectionBrickConfig[];
 }
 
 export const FixedBricks: Component<FixedBricksProps> = (props) => {
@@ -35,7 +35,7 @@ export const FixedBricks: Component<FixedBricksProps> = (props) => {
 
 interface FixedBrickRowProps {
 	brick: BrickData;
-	brickConfig: CollectionBrickConfigT[];
+	brickConfig: CollectionBrickConfig[];
 }
 
 const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {

@@ -1,14 +1,21 @@
+import T from "@/translations";
 import { type Component, createMemo, For, Show, createSignal } from "solid-js";
-import type { CollectionBrickConfigT } from "@lucidcms/core/types";
+import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
+import Button from "@/components/Partials/Button";
+import AddBrick from "@/components/Modals/Bricks/AddBrick";
 
 interface BuilderBricksProps {
-	brickConfig: CollectionBrickConfigT[];
+	brickConfig: CollectionBrickConfig[];
 }
 
 export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
+	// ------------------------------
+	// State
+	const [getSelectBrickOpen, setSelectBrickOpen] = createSignal(false);
+
 	// ------------------------------
 	// Memos
 	const builderBricks = createMemo(() =>
@@ -24,7 +31,16 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 			<div class="p-15 md:p-30">
 				<div class="flex justify-between mb-15">
 					<h2>Builder Area:</h2>
-					<button type="button">Add Brick</button>
+					<Button
+						type="button"
+						theme="primary"
+						size="x-small"
+						onClick={() => {
+							setSelectBrickOpen(true);
+						}}
+					>
+						{T("add_brick")}
+					</Button>
 				</div>
 				<ol class="">
 					<For each={builderBricks()}>
@@ -37,13 +53,23 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 					</For>
 				</ol>
 			</div>
+
+			<AddBrick
+				state={{
+					open: getSelectBrickOpen(),
+					setOpen: setSelectBrickOpen,
+				}}
+				data={{
+					brickConfig: props.brickConfig,
+				}}
+			/>
 		</Show>
 	);
 };
 
 interface BuilderBrickRowProps {
 	brick: BrickData;
-	brickConfig: CollectionBrickConfigT[];
+	brickConfig: CollectionBrickConfig[];
 }
 
 const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
@@ -67,11 +93,14 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<li class="w-full bg-container-2 border border-border p-15 rounded-md">
+		<li class="w-full bg-container-2 border border-border px-15 py-2.5 rounded-md mb-15 last:mb-0">
 			<div
-				class={classNames("flex justify-between cursor-pointer", {
-					"mb-15": getBrickOpen(),
-				})}
+				class={classNames(
+					"flex items-center justify-between cursor-pointer",
+					{
+						"mb-15": getBrickOpen(),
+					},
+				)}
 				onClick={toggleDropdown}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {

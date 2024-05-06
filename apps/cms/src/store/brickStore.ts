@@ -9,6 +9,7 @@ import type {
 	FieldResponseValue,
 	FieldResponseMeta,
 	CustomField,
+	CollectionBrickConfig,
 } from "@lucidcms/core/types";
 
 export interface BrickData {
@@ -29,6 +30,9 @@ type BrickStoreT = {
 		document?: CollectionDocumentResponse,
 		collection?: CollectionResponse,
 	) => void;
+	addBrick: (props: {
+		brickConfig: CollectionBrickConfig;
+	}) => void;
 	setFieldValue: (params: {
 		brickIndex: number;
 		key: string;
@@ -112,6 +116,25 @@ const [get, set] = createStore<BrickStoreT>({
 		);
 
 		// set empty brick data if collection fields (sudo brick) is empty
+	},
+	addBrick(props) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const largestOrder = draft?.reduce((prev, current) => {
+					return prev.order > current.order ? prev : current;
+				});
+
+				draft.push({
+					id: `ref-${shortUUID.generate()}`,
+					key: props.brickConfig.key,
+					order: largestOrder ? largestOrder.order + 1 : 0,
+					type: "builder",
+					open: 0,
+					fields: [],
+				});
+			}),
+		);
 	},
 	// Fields
 	setFieldValue(params) {
