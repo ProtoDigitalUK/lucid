@@ -1,16 +1,7 @@
-import {
-	type Component,
-	type Accessor,
-	type Setter,
-	Match,
-	Switch,
-	Show,
-	createMemo,
-	createSignal,
-	For,
-} from "solid-js";
+import { type Component, Match, Switch, Show, createMemo, For } from "solid-js";
 import classNames from "classnames";
-import type { CustomField } from "@lucidcms/core/types";
+import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import brickStore from "@/store/brickStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
@@ -18,226 +9,228 @@ import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
 interface DynamicFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomField;
+		fieldConfig: CustomField;
+		fields: FieldResponse[];
 		activeTab?: string;
+
 		groupId?: number | string;
-		getFieldPath?: Accessor<string[]>;
-		setFieldPath?: Setter<string[]>;
-		getGroupPath?: Accessor<Array<string | number>>;
-		setGroupPath?: Setter<Array<string | number>>;
+		repeaterKey?: string;
+		repeaterDepth?: number;
 	};
 }
 
 export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	// -------------------------------
-	// State
-	const [getFieldPath, setFieldPath] = createSignal<string[]>(
-		props.state.getFieldPath?.() || [],
-	);
-	const [getGroupPath, setGroupPath] = createSignal<Array<string | number>>(
-		props.state.getGroupPath?.() || [],
-	);
-
-	// -------------------------------
 	// Memos
 	const contentLanguage = createMemo(
 		() => contentLanguageStore.get.contentLanguage,
 	);
+	const fieldData = createMemo(() => {
+		const field = props.state.fields?.find(
+			(f) => f.key === props.state.fieldConfig.key,
+		);
+
+		if (!field) {
+			return brickStore.get.addField({
+				brickIndex: props.state.brickIndex,
+				fieldConfig: props.state.fieldConfig,
+				groupId: props.state.groupId,
+				repeaterKey: props.state.repeaterKey,
+				contentLanguage: contentLanguage(),
+			});
+		}
+		return field;
+	});
+	// TODO: all fields need error handling support
 	const fieldError = createMemo(() => {});
 
 	// -------------------------------
-	// Effects
-	setFieldPath((prev) => [...prev, props.state.field.key]);
-	setGroupPath((prev) => {
-		if (props.state.groupId === undefined) return prev;
-		return [...prev, props.state.groupId];
-	});
-
-	// -------------------------------
 	// Render
-	// TODO: all fields need error handling support
 	return (
 		<div class="w-full mb-2.5 last:mb-0 relative">
-			<Show when={props.state.field.type !== "tab"}>
-				<FieldTypeIcon type={props.state.field.type} />
+			<Show when={props.state.fieldConfig.type !== "tab"}>
+				<FieldTypeIcon type={props.state.fieldConfig.type} />
 			</Show>
 			<div
 				class={classNames("w-full h-full", {
-					"pl-[38px]": props.state.field.type !== "tab",
+					"pl-[38px]": props.state.fieldConfig.type !== "tab",
 				})}
 			>
 				<Switch>
-					<Match when={props.state.field.type === "tab"}>
+					<Match when={props.state.fieldConfig.type === "tab"}>
 						<Show
 							when={
-								props.state.activeTab === props.state.field.key
+								props.state.activeTab ===
+								props.state.fieldConfig.key
 							}
 						>
-							<For each={props.state.field.fields}>
-								{(field) => (
+							<For each={props.state.fieldConfig.fields}>
+								{(config) => (
 									<DynamicField
 										state={{
 											brickIndex: props.state.brickIndex,
-											field: field,
-											getFieldPath,
-											setFieldPath,
-											getGroupPath,
-											setGroupPath,
+											fieldConfig: config,
+											fields: props.state.fields,
+											activeTab: props.state.activeTab,
+											groupId: props.state.groupId,
+											repeaterKey:
+												props.state.repeaterKey,
+											repeaterDepth:
+												props.state.repeaterDepth,
 										}}
 									/>
 								)}
 							</For>
 						</Show>
 					</Match>
-					<Match when={props.state.field.type === "text"}>
+					<Match when={props.state.fieldConfig.type === "text"}>
 						<CustomFields.InputField
 							type="text"
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig, // update key to fieldConfig
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "user"}>
-						TODO: ({props.state.field.key} -{" "}
-						{props.state.field.repeaterKey})
+					<Match when={props.state.fieldConfig.type === "user"}>
+						TODO: ({props.state.fieldConfig.key} -{" "}
+						{props.state.fieldConfig.repeaterKey})
 					</Match>
-					<Match when={props.state.field.type === "number"}>
+					<Match when={props.state.fieldConfig.type === "number"}>
 						<CustomFields.InputField
 							type="number"
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "datetime"}>
+					<Match when={props.state.fieldConfig.type === "datetime"}>
 						<CustomFields.InputField
 							type="datetime-local"
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "checkbox"}>
+					<Match when={props.state.fieldConfig.type === "checkbox"}>
 						<CustomFields.CheckboxField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "colour"}>
+					<Match when={props.state.fieldConfig.type === "colour"}>
 						<CustomFields.ColourField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "json"}>
+					<Match when={props.state.fieldConfig.type === "json"}>
 						<CustomFields.JSONField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "link"}>
+					<Match when={props.state.fieldConfig.type === "link"}>
 						<CustomFields.LinkField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "media"}>
+					<Match when={props.state.fieldConfig.type === "media"}>
 						<CustomFields.MediaField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "select"}>
+					<Match when={props.state.fieldConfig.type === "select"}>
 						<CustomFields.SelectField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "textarea"}>
+					<Match when={props.state.fieldConfig.type === "textarea"}>
 						<CustomFields.TextareaField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "wysiwyg"}>
+					<Match when={props.state.fieldConfig.type === "wysiwyg"}>
 						<CustomFields.WYSIWYGField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								getGroupPath,
+								repeaterKey: props.state.repeaterKey,
 								contentLanguage: contentLanguage(),
 							}}
 						/>
 					</Match>
-					<Match when={props.state.field.type === "repeater"}>
+					<Match when={props.state.fieldConfig.type === "repeater"}>
 						<CustomFields.RepeaterField
 							state={{
 								brickIndex: props.state.brickIndex,
-								field: props.state.field,
+								fieldConfig: props.state.fieldConfig,
+								fieldData: fieldData(),
 								groupId: props.state.groupId,
-								getFieldPath,
-								setFieldPath,
-								getGroupPath,
-								setGroupPath,
+								parentRepeaterKey: props.state.repeaterKey,
+								repeaterDepth: props.state.repeaterDepth ?? 0,
 							}}
 						/>
 					</Match>

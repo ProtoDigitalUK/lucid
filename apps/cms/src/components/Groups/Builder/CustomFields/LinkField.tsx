@@ -1,24 +1,26 @@
 import {
 	type Component,
-	type Accessor,
 	createSignal,
-	onMount,
+	createMemo,
 	batch,
+	createEffect,
 } from "solid-js";
-import type { CustomField, LinkValue } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	LinkValue,
+	FieldResponse,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
-import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
 interface LinkFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomField;
+		fieldConfig: CustomField;
+		fieldData?: FieldResponse;
 		groupId?: number | string;
+		repeaterKey?: string;
 		contentLanguage?: number;
-
-		getFieldPath: Accessor<string[]>;
-		getGroupPath: Accessor<Array<string | number>>;
 	};
 }
 
@@ -28,16 +30,15 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 	const [getValue, setValue] = createSignal<LinkValue | undefined | null>();
 
 	// -------------------------------
+	// Memos
+	const fieldData = createMemo(() => {
+		return props.state.fieldData;
+	});
+
+	// -------------------------------
 	// Effects
-	onMount(() => {
-		const field = brickHelpers.getBrickField({
-			brickIndex: props.state.brickIndex,
-			fieldPath: props.state.getFieldPath(),
-			groupPath: props.state.getGroupPath(),
-			field: props.state.field,
-			contentLanguage: props.state.contentLanguage,
-		});
-		const value = field?.value as LinkValue | undefined | null;
+	createEffect(() => {
+		const value = fieldData()?.value as LinkValue | undefined | null;
 		setValue(value);
 	});
 
@@ -46,15 +47,16 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 	return (
 		<>
 			<Form.LinkSelect
-				id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
+				id={`field-${props.state.fieldConfig.key}-${props.state.brickIndex}-${props.state.groupId}`}
 				type={"link"}
 				value={getValue()}
 				onChange={(value) => {
 					batch(() => {
 						brickStore.get.setFieldValue({
 							brickIndex: props.state.brickIndex,
-							fieldPath: props.state.getFieldPath(),
-							groupPath: props.state.getGroupPath(),
+							key: props.state.fieldConfig.key,
+							groupId: props.state.groupId,
+							repeaterKey: props.state.repeaterKey,
 							value: value,
 						});
 						setValue(value);
@@ -62,11 +64,11 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 				}}
 				meta={null}
 				copy={{
-					label: props.state.field.title,
-					describedBy: props.state.field.description,
+					label: props.state.fieldConfig.title,
+					describedBy: props.state.fieldConfig.description,
 				}}
 				// errors={props.state.fieldError}
-				required={props.state.field.validation?.required || false}
+				required={props.state.fieldConfig.validation?.required || false}
 			/>
 		</>
 	);

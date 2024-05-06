@@ -1,24 +1,26 @@
 import {
 	type Component,
-	type Accessor,
 	createSignal,
-	onMount,
+	createMemo,
 	batch,
+	createEffect,
 } from "solid-js";
-import type { CustomField, MediaMeta } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	MediaMeta,
+	FieldResponse,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
-import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
 interface MediaFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomField;
+		fieldConfig: CustomField;
+		fieldData?: FieldResponse;
 		groupId?: number | string;
+		repeaterKey?: string;
 		contentLanguage?: number;
-
-		getFieldPath: Accessor<string[]>;
-		getGroupPath: Accessor<Array<string | number>>;
 	};
 }
 
@@ -29,18 +31,16 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	const [getMeta, setMeta] = createSignal<MediaMeta | undefined>();
 
 	// -------------------------------
-	// Effects
-	onMount(() => {
-		const field = brickHelpers.getBrickField({
-			brickIndex: props.state.brickIndex,
-			fieldPath: props.state.getFieldPath(),
-			groupPath: props.state.getGroupPath(),
-			field: props.state.field,
-			contentLanguage: props.state.contentLanguage,
-		});
+	// Memos
+	const fieldData = createMemo(() => {
+		return props.state.fieldData;
+	});
 
-		const value = field?.value as number | undefined;
-		const meta = field?.meta as MediaMeta | undefined;
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		const value = fieldData()?.value as number | undefined;
+		const meta = fieldData()?.meta as MediaMeta | undefined;
 		setValue(value);
 		setMeta(meta);
 	});
@@ -50,15 +50,16 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	return (
 		<>
 			<Form.MediaSelect
-				id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
+				id={`field-${props.state.fieldConfig.key}-${props.state.brickIndex}-${props.state.groupId}`}
 				value={getValue()}
 				meta={getMeta()}
 				onChange={(value, meta) => {
 					batch(() => {
 						brickStore.get.setFieldValue({
 							brickIndex: props.state.brickIndex,
-							fieldPath: props.state.getFieldPath(),
-							groupPath: props.state.getGroupPath(),
+							key: props.state.fieldConfig.key,
+							groupId: props.state.groupId,
+							repeaterKey: props.state.repeaterKey,
 							value: value,
 							meta: meta,
 						});
@@ -67,13 +68,13 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 					});
 				}}
 				copy={{
-					label: props.state.field.title,
-					describedBy: props.state.field.description,
+					label: props.state.fieldConfig.title,
+					describedBy: props.state.fieldConfig.description,
 				}}
-				extensions={props.state.field.validation?.extensions}
-				type={props.state.field.validation?.type}
+				extensions={props.state.fieldConfig.validation?.extensions}
+				type={props.state.fieldConfig.validation?.type}
 				// errors={props.state.fieldError}
-				required={props.state.field.validation?.required || false}
+				required={props.state.fieldConfig.validation?.required || false}
 			/>
 		</>
 	);

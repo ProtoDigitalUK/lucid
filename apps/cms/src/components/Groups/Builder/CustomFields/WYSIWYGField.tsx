@@ -1,23 +1,22 @@
 import {
 	type Component,
-	type Accessor,
 	createSignal,
-	onMount,
+	createMemo,
 	batch,
+	createEffect,
 } from "solid-js";
-import type { CustomField } from "@lucidcms/core/types";
+import type { CustomField, FieldResponse } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
-import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
+
 interface WYSIWYGFieldProps {
 	state: {
 		brickIndex: number;
-		field: CustomField;
+		fieldConfig: CustomField;
+		fieldData?: FieldResponse;
 		groupId?: number | string;
+		repeaterKey?: string;
 		contentLanguage?: number;
-
-		getFieldPath: Accessor<string[]>;
-		getGroupPath: Accessor<Array<string | number>>;
 	};
 }
 
@@ -27,17 +26,15 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 	const [getValue, setValue] = createSignal("");
 
 	// -------------------------------
-	// Effects
-	onMount(() => {
-		const field = brickHelpers.getBrickField({
-			brickIndex: props.state.brickIndex,
-			fieldPath: props.state.getFieldPath(),
-			groupPath: props.state.getGroupPath(),
-			field: props.state.field,
-			contentLanguage: props.state.contentLanguage,
-		});
+	// Memos
+	const fieldData = createMemo(() => {
+		return props.state.fieldData;
+	});
 
-		const value = (field?.value as string | undefined) || "";
+	// -------------------------------
+	// Effects
+	createEffect(() => {
+		const value = (fieldData()?.value as string | undefined) || "";
 		setValue(value);
 	});
 
@@ -45,26 +42,27 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 	// Render
 	return (
 		<Form.WYSIWYG
-			id={`field-${props.state.field.key}-${props.state.brickIndex}-${props.state.groupId}`}
+			id={`field-${props.state.fieldConfig.key}-${props.state.brickIndex}-${props.state.groupId}`}
 			value={getValue()}
 			onChange={(value) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
 						brickIndex: props.state.brickIndex,
-						fieldPath: props.state.getFieldPath(),
-						groupPath: props.state.getGroupPath(),
+						key: props.state.fieldConfig.key,
+						groupId: props.state.groupId,
+						repeaterKey: props.state.repeaterKey,
 						value: value,
 					});
 					setValue(value);
 				});
 			}}
 			copy={{
-				label: props.state.field.title,
-				placeholder: props.state.field.placeholder,
-				describedBy: props.state.field.description,
+				label: props.state.fieldConfig.title,
+				placeholder: props.state.fieldConfig.placeholder,
+				describedBy: props.state.fieldConfig.description,
 			}}
 			// errors={props.state.fieldError}
-			required={props.state.field.validation?.required || false}
+			required={props.state.fieldConfig.validation?.required || false}
 		/>
 	);
 };

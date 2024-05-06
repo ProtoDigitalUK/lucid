@@ -73,11 +73,12 @@ export const BrickBody: Component<BrickProps> = (props) => {
 
 			{/* Body */}
 			<For each={props.state.configFields}>
-				{(field) => (
+				{(config) => (
 					<CustomFields.DynamicField
 						state={{
+							fields: props.state.brick.fields,
 							brickIndex: brickIndex(),
-							field: field,
+							fieldConfig: config,
 							activeTab: getActiveTab(),
 						}}
 					/>

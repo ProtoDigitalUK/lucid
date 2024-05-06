@@ -9,7 +9,6 @@ import type {
 	FieldResponseValue,
 	FieldResponseMeta,
 	CustomField,
-	FieldGroupResponse,
 } from "@lucidcms/core/types";
 
 export interface BrickData {
@@ -31,36 +30,35 @@ type BrickStoreT = {
 	) => void;
 	setFieldValue: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
+		key: string;
+		repeaterKey?: string;
+		groupId?: number | string;
 		value: FieldResponseValue;
 		meta?: FieldResponseMeta;
 	}) => void;
 	addField: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath?: Array<number | string>;
-		field: CustomField;
+		fieldConfig: CustomField;
+		groupId?: number | string;
+		repeaterKey?: string;
 		contentLanguage: number | undefined;
 	}) => FieldResponse;
 	addRepeaterGroup: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
-		fields: CustomField[];
+		fieldConfig: CustomField[];
+		key: string;
+		groupId?: number | string;
+		parentRepeaterKey?: string;
 		contentLanguage?: number;
 	}) => void;
 	removeRepeaterGroup: (params: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
+		repeaterKey: string;
 		groupId: number | string;
 	}) => void;
 	swapGroupOrder: (_props: {
 		brickIndex: number;
-		fieldPath: string[];
-		groupPath: Array<number | string>;
-
+		repeaterKey: string;
 		groupId: number | string;
 		targetGroupId: number | string;
 	}) => void;
@@ -117,10 +115,11 @@ const [get, set] = createStore<BrickStoreT>({
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.key,
+					groupId: params.groupId,
+					repeaterKey: params.repeaterKey,
 				});
 
 				if (!field) return;
@@ -132,9 +131,9 @@ const [get, set] = createStore<BrickStoreT>({
 	},
 	addField(params) {
 		const newField: FieldResponse = {
-			key: params.field.key,
-			type: params.field.type,
-			value: params.field.default,
+			key: params.fieldConfig.key,
+			type: params.fieldConfig.type,
+			value: params.fieldConfig.default,
 			languageId: params.contentLanguage,
 		};
 
@@ -145,19 +144,20 @@ const [get, set] = createStore<BrickStoreT>({
 				if (!brick) return;
 
 				// Field belongs on the brick level
-				if (params.fieldPath.length === 1) {
+				if (params.groupId === undefined) {
 					brick.fields.push(newField);
 					return;
 				}
 
 				// Field belongs to a group
-				const group = brickHelpers.getBrickFieldGroupRecursive({
-					fields: brick.fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath || [],
-				});
-				if (!group) return;
-				group.fields.push(newField);
+				// TODO: add back in - might not be needed
+				// const group = brickHelpers.getBrickFieldGroupRecursive({
+				// 	fields: brick.fields,
+				// 	fieldPath: params.fieldPath,
+				// 	groupPath: params.groupPath || [],
+				// });
+				// if (!group) return;
+				// group.fields.push(newField);
 			}),
 		);
 
@@ -168,10 +168,11 @@ const [get, set] = createStore<BrickStoreT>({
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.key,
+					groupId: params.groupId,
+					repeaterKey: params.parentRepeaterKey,
 				});
 
 				if (!field) return;
@@ -180,7 +181,7 @@ const [get, set] = createStore<BrickStoreT>({
 
 				const groupFields: FieldResponse[] = [];
 
-				for (const field of params.fields) {
+				for (const field of params.fieldConfig) {
 					groupFields.push({
 						key: field.key,
 						type: field.type,
@@ -216,10 +217,9 @@ const [get, set] = createStore<BrickStoreT>({
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.repeaterKey,
 				});
 
 				if (!field) return;
@@ -239,10 +239,9 @@ const [get, set] = createStore<BrickStoreT>({
 		set(
 			"bricks",
 			produce((draft) => {
-				const field = brickHelpers.getBrickFieldRecursive({
+				const field = brickHelpers.findFieldRecursive({
 					fields: draft[params.brickIndex].fields,
-					fieldPath: params.fieldPath,
-					groupPath: params.groupPath,
+					targetKey: params.repeaterKey,
 				});
 
 				if (!field) return;
@@ -263,6 +262,8 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups[groupIndex].order =
 					field.groups[targetGroupIndex].order;
 				field.groups[targetGroupIndex].order = groupOrder;
+
+				field.groups.sort((a, b) => a.order - b.order);
 			}),
 		);
 	},
