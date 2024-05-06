@@ -29,6 +29,7 @@ const formatInsertBricks = (props: {
 				key: brick.key,
 				order: brick.order,
 				type: brick.type,
+				open: brick.open,
 				fields: flat.fields,
 				groups: flat.groups,
 			});

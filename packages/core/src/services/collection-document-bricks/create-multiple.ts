@@ -61,6 +61,7 @@ const createMultiple = async (
 			brickType: b.type,
 			brickKey: b.key,
 			brickOrder: b.order,
+			brickOpen: b.open,
 			collectionDocumentId: data.documentId,
 		})),
 	});

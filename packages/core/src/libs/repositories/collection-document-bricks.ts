@@ -2,6 +2,7 @@ import type {
 	HeadlessCollectionDocumentBricks,
 	Select,
 	KyselyDB,
+	BooleanInt,
 } from "../db/types.js";
 import {
 	deleteQB,
@@ -45,6 +46,7 @@ export default class CollectionDocumentBricksRepo {
 				"lucid_collection_document_bricks.brick_key",
 				"lucid_collection_document_bricks.collection_document_id",
 				"lucid_collection_document_bricks.brick_order",
+				"lucid_collection_document_bricks.brick_open",
 				props.config.db
 					.jsonArrayFrom(
 						eb
@@ -56,6 +58,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_groups.parent_group_id",
 								"lucid_collection_document_groups.repeater_key",
 								"lucid_collection_document_groups.group_order",
+								"lucid_collection_document_groups.group_open",
 								"lucid_collection_document_groups.ref",
 							])
 							.whereRef(
@@ -181,6 +184,7 @@ export default class CollectionDocumentBricksRepo {
 			brickType: BrickSchema["type"];
 			brickKey?: string;
 			brickOrder?: number;
+			brickOpen?: BooleanInt;
 			collectionDocumentId: number;
 		}>;
 	}) => {
@@ -193,6 +197,7 @@ export default class CollectionDocumentBricksRepo {
 						brick_type: b.brickType,
 						brick_key: b.brickKey,
 						brick_order: b.brickOrder,
+						brick_open: b.brickOpen,
 						collection_document_id: b.collectionDocumentId,
 					};
 				}),

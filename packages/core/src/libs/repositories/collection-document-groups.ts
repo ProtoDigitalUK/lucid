@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 import { deleteQB, type QueryBuilderWhereT } from "../db/query-builder.js";
 import values from "../db/kysely/values.js";
-import type { KyselyDB } from "../db/types.js";
+import type { BooleanInt, KyselyDB } from "../db/types.js";
 
 export default class CollectionDocumentGroupsRepo {
 	constructor(private db: KyselyDB) {}
@@ -14,6 +14,7 @@ export default class CollectionDocumentGroupsRepo {
 			collectionBrickId: number;
 			groupOrder: number;
 			repeaterKey: string;
+			groupOpen: BooleanInt;
 			ref: string;
 		}>;
 	}) => {
@@ -25,6 +26,7 @@ export default class CollectionDocumentGroupsRepo {
 					collection_brick_id: g.collectionBrickId,
 					group_order: g.groupOrder,
 					repeater_key: g.repeaterKey,
+					group_open: g.groupOpen,
 					ref: g.ref,
 				})),
 			)
@@ -41,6 +43,7 @@ export default class CollectionDocumentGroupsRepo {
 			collectionBrickId: number;
 			groupOrder: number;
 			repeaterKey: string;
+			groupOpen: BooleanInt;
 			ref: string;
 		}>;
 	}) => {
@@ -56,6 +59,7 @@ export default class CollectionDocumentGroupsRepo {
 						group_order: g.groupOrder,
 						repeater_key: g.repeaterKey,
 						ref: g.ref,
+						group_open: g.groupOpen,
 					};
 				}),
 			)

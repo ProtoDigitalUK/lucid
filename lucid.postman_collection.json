@@ -63,7 +63,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "794c83e5-bd16-4f9b-b5ba-6941c97ac5a9"
+								"uuid": "d2261bc1-8bd3-4767-b4a9-4733dc3dc8a7"
 							}
 						],
 						"body": {
@@ -99,7 +99,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "7a7185c5-27b6-4b11-8495-787b2401d614"
+								"uuid": "be3fa5ca-27dc-4e0d-ba4f-c45e47ce2cc5"
 							}
 						],
 						"body": {
@@ -135,7 +135,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "ea79e19a-b87c-4dfd-810e-638a77dab534"
+								"uuid": "7f5ad163-63e8-4218-81aa-65cf9bf244f0"
 							}
 						],
 						"body": {
@@ -200,7 +200,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "0858b182-9a30-4117-8f85-fe067b0c8b35"
+								"uuid": "5d221fdb-505e-42ee-9584-0728758d11f0"
 							}
 						],
 						"body": {
@@ -307,7 +307,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "f3a73dfd-a4e1-402f-bafa-3912039cf52d"
+								"uuid": "ba990e2e-2f53-402f-8ba0-f393f46372d2"
 							}
 						],
 						"body": {
@@ -344,7 +344,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "f8a009f3-c029-4f2d-9ebe-d808467d6b21"
+								"uuid": "a82ff647-a036-4dd5-8b19-6ab9f2a78055"
 							}
 						],
 						"body": {
@@ -385,7 +385,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "ba8bda99-ddb2-4659-94cf-6f270a47a318"
+								"uuid": "342d04b1-94b0-47d4-bada-9cc8dada80bf"
 							}
 						],
 						"body": {
@@ -421,7 +421,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "cb69bb26-f2f7-4507-b621-7079b670d90e"
+								"uuid": "3666679b-6532-42d6-88a4-6a26a5005057"
 							}
 						],
 						"body": {
@@ -543,7 +543,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "1b4351bc-a246-4582-98b7-10eefd01859e"
+								"uuid": "c590be18-74b1-4c2f-acb0-64f4bafac001"
 							}
 						],
 						"body": {
@@ -587,13 +587,12 @@
 									{
 										"key": "_csrf",
 										"value": "{{CSRF}}",
-										"type": "text",
-										"uuid": "3fdbf870-1850-4cc5-b83d-f31c1576b87e"
+										"uuid": "8a93179d-3fe7-4a19-a4be-c4eeb3e73a9f"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"documentId\": 3,\n    \"bricks\": [\n        {\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"fields\": [\n                {\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"languageId\": 1\n                },\n                {\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"languageId\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"languageId\": 1\n        },\n        {\n            \"key\": \"author\",\n            \"type\": \"user\",\n            \"value\": 1,\n            \"languageId\": 1\n        },\n        {\n            \"key\": \"notifications\",\n            \"type\": \"repeater\",\n            \"languageId\": 1,\n            \"groups\": [\n                {\n                    \"id\": \"ref-group1\",\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"value\": \"John Smith\",\n                            \"languageId\": 1\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"languageId\": 1,\n                            \"groups\": [\n                                {\n                                    \"id\": \"ref-group11\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 1\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group12\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 2\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"ref-group2\",\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Sarah Smith\",\n                            \"languageId\": 1\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"languageId\": 1,\n                            \"groups\": [\n                                {\n                                    \"id\":\"ref-group21\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 3\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group22\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 4\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"ref-group3\",\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Don Smith\",\n                            \"languageId\": 1\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"languageId\": 1,\n                            \"groups\": [\n                                {\n                                    \"id\": \"ref-group31\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 5\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group32\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 6\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group33\",\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 7\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+									"raw": "{\n    // \"documentId\": 1,\n    \"bricks\": [\n        {\n            \"key\": \"intro\",\n            \"order\": 0,\n            \"type\": \"builder\",\n            \"open\": 1,\n            \"fields\": [\n                {\n                    \"key\": \"title\",\n                    \"type\": \"text\",\n                    \"value\": \"Title Value\",\n                    \"languageId\": 1\n                },\n                {\n                    \"key\": \"intro\",\n                    \"type\": \"wysiwyg\",\n                    \"value\": \"<p>Hello</p>\",\n                    \"languageId\": 1\n                }\n            ]\n        }\n    ],\n    \"fields\": [\n        {\n            \"key\": \"page_title\",\n            \"type\": \"text\",\n            \"value\": \"Homepage\",\n            \"languageId\": 1\n        },\n        {\n            \"key\": \"author\",\n            \"type\": \"user\",\n            \"value\": 1,\n            \"languageId\": 1\n        },\n        {\n            \"key\": \"notifications\",\n            \"type\": \"repeater\",\n            \"languageId\": 1,\n            \"groups\": [\n                {\n                    \"id\": \"ref-group1\",\n                    \"open\": 1,\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"value\": \"John Smith\",\n                            \"languageId\": 1\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"languageId\": 1,\n                            \"groups\": [\n                                {\n                                    \"id\": \"ref-group11\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 1\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group12\",\n                                    \"open\": 1,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 2\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"ref-group2\",\n                    \"open\": 0,\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Sarah Smith\",\n                            \"languageId\": 1\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"languageId\": 1,\n                            \"groups\": [\n                                {\n                                    \"id\":\"ref-group21\",\n                                    \"open\": 1,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 3\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group22\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 4\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                {\n                    \"id\": \"ref-group3\",\n                    \"open\": 1,\n                    \"fields\": [\n                        {\n                            \"key\": \"notification_title\",\n                            \"type\": \"text\",\n                            \"value\": \"Don Smith\",\n                            \"languageId\": 1\n                        },\n                        {\n                            \"key\": \"notification_reason\",\n                            \"type\": \"repeater\",\n                            \"languageId\": 1,\n                            \"groups\": [\n                                {\n                                    \"id\": \"ref-group31\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 5\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group32\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 6\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": \"ref-group33\",\n                                    \"open\": 0,\n                                    \"fields\": [\n                                        {\n                                            \"key\": \"notification_reason_title\",\n                                            \"type\": \"text\",\n                                            \"value\": \"Reason 7\",\n                                            \"languageId\": 1\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -624,18 +623,18 @@
 									{
 										"key": "lucid-content-lang",
 										"value": "{{LUCID_CONTENT_LANG}}",
-										"uuid": "01d4c746-5586-43c4-8a81-85b0a5000dc8",
+										"uuid": "c828f369-2c2a-4084-b540-a6f4f0723494",
 										"disabled": true
 									},
 									{
 										"key": "lucid-content-lang",
 										"value": "2",
-										"uuid": "01d4c746-5586-43c4-8a81-85b0a5000dc8",
+										"uuid": "c828f369-2c2a-4084-b540-a6f4f0723494",
 										"disabled": true
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/3?include=bricks",
+									"raw": "{{BASE_URL}}/api/v1/collections/documents/page/1?include=bricks",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -645,7 +644,7 @@
 										"collections",
 										"documents",
 										"page",
-										"3"
+										"1"
 									],
 									"query": [
 										{
@@ -665,13 +664,13 @@
 									{
 										"key": "lucid-content-lang",
 										"value": "{{LUCID_CONTENT_LANG}}",
-										"uuid": "23274f7f-8f81-43c0-b043-0c9075a928e8",
+										"uuid": "a192cdfd-3a25-43fc-a840-6525575ead84",
 										"disabled": true
 									},
 									{
 										"key": "lucid-content-lang",
 										"value": "2",
-										"uuid": "23274f7f-8f81-43c0-b043-0c9075a928e8",
+										"uuid": "a192cdfd-3a25-43fc-a840-6525575ead84",
 										"disabled": true
 									}
 								],
@@ -727,7 +726,7 @@
 										"key": "_csrf",
 										"value": "{{CSRF}}",
 										"type": "text",
-										"uuid": "3bdadc94-da08-4856-8162-7c6b4176a8d0"
+										"uuid": "783fe18e-2c04-4474-bdf1-6c686d0e67b0"
 									}
 								],
 								"body": {
@@ -765,7 +764,7 @@
 										"key": "_csrf",
 										"value": "{{CSRF}}",
 										"type": "text",
-										"uuid": "4886c290-e553-4801-bb69-520c2d6260e9"
+										"uuid": "936804bb-2f24-454c-aca6-16677da7a364"
 									}
 								],
 								"body": {
@@ -887,7 +886,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "a0c9b7a3-25e6-4a04-aab7-1c5dc673a37b"
+								"uuid": "97d1dcd4-bd7a-45b0-8031-fc6d397c4670"
 							}
 						],
 						"body": {
@@ -923,7 +922,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "b9ee42d7-58cb-4792-ab6c-75e0f20d507f"
+								"uuid": "2c273d41-dd80-4c00-9822-8d1b30f4fbc1"
 							}
 						],
 						"body": {
@@ -959,7 +958,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "a0d6aadc-7b09-4393-99e5-fe7c9642a71f"
+								"uuid": "bb1ae070-2c54-4dc4-a97c-18af0f060048"
 							}
 						],
 						"body": {
@@ -999,7 +998,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "bfe8d290-3fb8-4529-a8dc-0dd222e776b3"
+								"uuid": "09b57405-6fd3-4f38-b404-c1f5236fd9b3"
 							}
 						],
 						"body": {
@@ -1101,7 +1100,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "17485e03-8693-4b09-ba35-f14d7b3f6167"
+								"uuid": "d0199da9-97b8-4b45-a36c-6c6a452c4691"
 							}
 						],
 						"body": {
@@ -1137,7 +1136,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "6e7cf14f-193e-470a-830d-30bd6f15af77"
+								"uuid": "a3c09f0d-f2c9-487d-b69a-649addc62811"
 							}
 						],
 						"body": {
@@ -1174,7 +1173,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "f101c7ac-dc6f-4dfa-a834-3cbc307cc9e4"
+								"uuid": "011b778b-8aeb-4ea3-806e-01cf08d9e6bb"
 							}
 						],
 						"body": {
@@ -1316,7 +1315,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "09ae6a0a-f6b3-4af7-8854-5b076cf5c2ee"
+								"uuid": "fb19381f-8356-4764-a1f9-e28b8e7e211d"
 							}
 						],
 						"body": {
@@ -1352,7 +1351,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "0758f844-6e1b-483b-a5de-03b1a8e9c0ca"
+								"uuid": "f75339ce-db20-4ecb-b103-de2faa7d7e5b"
 							}
 						],
 						"body": {
@@ -1410,7 +1409,7 @@
 							{
 								"key": "_csrf",
 								"value": "{{CSRF}}",
-								"uuid": "9f9795f9-c109-4ab1-a993-e2efff6780a5"
+								"uuid": "375771d6-00b2-4cfd-84f9-f385d17df784"
 							}
 						],
 						"body": {
@@ -1452,7 +1451,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "8e1210f1-be07-4a44-835f-748d0f1387be"
+								"uuid": "e7ed37b9-a942-42ff-9300-0db0cb1b053e"
 							}
 						],
 						"body": {
@@ -1538,7 +1537,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "15ac1288-7f93-46e6-8d2c-a2c770ddaf83"
+								"uuid": "5720febf-30fc-4f3b-affa-5b19c1cb4b8e"
 							}
 						],
 						"body": {
@@ -1576,7 +1575,7 @@
 							{
 								"key": "lucid-content-lang",
 								"value": "{{LUCID_CONTENT_LANG}}",
-								"uuid": "eac3c98c-75e5-452a-afb2-06e5b73aaf1b"
+								"uuid": "bca30d33-d4a1-4d22-bf58-f80d808fd49d"
 							}
 						],
 						"body": {
@@ -1648,7 +1647,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "55b4084d-ad70-4667-b35b-3475eeca4edd"
+								"uuid": "d9edba65-7fab-420a-a345-75e246784412"
 							}
 						],
 						"body": {
@@ -1685,7 +1684,7 @@
 								"key": "_csrf",
 								"value": "{{CSRF}}",
 								"type": "text",
-								"uuid": "b1f04c09-e0da-4d71-b1a6-a0a66f7d0119"
+								"uuid": "db689b6c-451f-4bde-9d4e-fadddd0efe84"
 							}
 						],
 						"body": {
@@ -1763,7 +1762,7 @@
 								"value": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept AVIF Example",
 								"type": "text",
-								"uuid": "b03d71ef-563e-4dee-a1c3-cdd89bfc0f96",
+								"uuid": "ff842e98-259f-4f72-b97c-c56d655b7e7a",
 								"disabled": true
 							},
 							{
@@ -1771,7 +1770,7 @@
 								"value": "image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept WebP Example",
 								"type": "text",
-								"uuid": "b03d71ef-563e-4dee-a1c3-cdd89bfc0f96",
+								"uuid": "ff842e98-259f-4f72-b97c-c56d655b7e7a",
 								"disabled": true
 							},
 							{
@@ -1779,7 +1778,7 @@
 								"value": "image/apng,image/svg+xml,image/*,*/*;q=0.8",
 								"description": "Accept no new formats",
 								"type": "text",
-								"uuid": "b03d71ef-563e-4dee-a1c3-cdd89bfc0f96",
+								"uuid": "ff842e98-259f-4f72-b97c-c56d655b7e7a",
 								"disabled": true
 							}
 						],

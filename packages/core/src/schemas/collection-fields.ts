@@ -1,4 +1,5 @@
 import z from "zod";
+import type { BooleanInt } from "../libs/db/types.js";
 
 export const FieldBaseSchema = z.object({
 	key: z.string(),
@@ -45,6 +46,7 @@ export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({
 				z.object({
 					id: z.union([z.string(), z.number()]),
 					order: z.number().optional(),
+					open: z.union([z.literal(1), z.literal(0)]).optional(),
 					fields: z.array(FieldSchema),
 				}),
 			),
@@ -56,6 +58,7 @@ export type FieldSchemaType = z.infer<typeof FieldBaseSchema> & {
 	groups?: {
 		id: string | number;
 		order?: number;
+		open?: BooleanInt;
 		fields: FieldSchemaType[];
 	}[];
 };
@@ -112,6 +115,10 @@ export const swaggerFieldObj = {
 								type: "number",
 							},
 						],
+					},
+					order: {
+						type: "number",
+						nullable: true,
 					},
 					fields: {
 						type: "array",

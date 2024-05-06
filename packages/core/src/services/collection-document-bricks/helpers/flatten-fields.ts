@@ -3,6 +3,7 @@ import type {
 	FieldSchemaType,
 	FieldSchemaSimpleType,
 } from "../../../schemas/collection-fields.js";
+import type { BooleanInt } from "../../../libs/db/types.js";
 
 export interface FieldInsertItem {
 	key: FieldSchemaType["key"];
@@ -16,6 +17,7 @@ export interface GroupInsertItem {
 	ref: string;
 	order: number;
 	repeater: string;
+	open: BooleanInt;
 	parentGroupRef?: string;
 }
 
@@ -60,6 +62,7 @@ const flattenFields = (
 							ref: groupRef,
 							order: j,
 							repeater: repeaterKey,
+							open: 0,
 							parentGroupRef: groupMeta?.ref,
 						});
 						parseFields(groupFields, {
@@ -72,6 +75,7 @@ const flattenFields = (
 					groupsRes.push({
 						ref: groupRef,
 						order: groupFields.order || j,
+						open: groupFields.open || 0,
 						repeater: repeaterKey,
 						parentGroupRef: groupMeta?.ref,
 					});

@@ -173,6 +173,7 @@ export interface HeadlessCollectionDocumentBricks {
 	brick_type: "builder" | "fixed" | "collection-fields";
 	brick_key: string | null;
 	brick_order: number | null;
+	brick_open: BooleanInt | null;
 }
 
 export interface HeadlessCollectionDocumentGroups {
@@ -182,6 +183,7 @@ export interface HeadlessCollectionDocumentGroups {
 	parent_group_id: number | null;
 	repeater_key: string;
 	group_order: number;
+	group_open: BooleanInt | null;
 	ref: string | null;
 }
 

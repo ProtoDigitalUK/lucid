@@ -163,6 +163,7 @@ export interface BrickResponse {
 	id: number;
 	key: string;
 	order: number;
+	open: BooleanInt | null;
 	type: "builder" | "fixed";
 	fields: Array<FieldResponse>;
 }
@@ -179,6 +180,7 @@ export interface FieldResponse {
 export interface FieldGroupResponse {
 	id: number | string;
 	order: number;
+	open: BooleanInt | null;
 	fields: Array<FieldResponse>;
 }
 

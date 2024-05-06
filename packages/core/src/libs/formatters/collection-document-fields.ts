@@ -174,6 +174,7 @@ export default class CollectionDocumentFieldsFormatter {
 			groups.push({
 				id: group.group_id,
 				order: group.group_order,
+				open: group.group_open,
 				fields: this.buildFields({
 					fields: props.fields,
 					groups: props.groups,
@@ -325,6 +326,10 @@ export default class CollectionDocumentFieldsFormatter {
 						},
 						order: {
 							type: "number",
+						},
+						open: {
+							type: "number",
+							nullable: true,
 						},
 						fields: {
 							type: "array",

@@ -1,3 +1,4 @@
+import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 import type { GroupInsertItem } from "./helpers/flatten-fields.js";
@@ -42,6 +43,7 @@ const createMultipleGroups = async (
 					collectionBrickId: bg.brickId,
 					groupOrder: group.order,
 					repeaterKey: group.repeater,
+					groupOpen: group.open,
 					ref: group.ref,
 				};
 			});
@@ -58,6 +60,7 @@ const createMultipleGroups = async (
 		groupOrder: number;
 		repeaterKey: string;
 		ref: string;
+		groupOpen: BooleanInt;
 	}[] = [];
 	for (const bg of data.brickGroups) {
 		for (const group of bg.groups || []) {
@@ -88,6 +91,7 @@ const createMultipleGroups = async (
 				groupOrder: group.order,
 				repeaterKey: group.repeater,
 				ref: group.ref,
+				groupOpen: group.open,
 			});
 		}
 	}
