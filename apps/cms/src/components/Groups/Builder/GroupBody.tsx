@@ -13,6 +13,7 @@ interface GroupBodyProps {
 		fields: FieldResponse[];
 		fieldConfig: CustomField;
 		groupId: number | string;
+		groupOpen: 1 | 0 | null;
 		dragDrop: DragDropCBT;
 		repeaterKey: string;
 		dragDropKey: string;
@@ -24,7 +25,7 @@ interface GroupBodyProps {
 export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getGroupOpen, setGroupOpen] = createSignal(false);
+	const [getGroupOpen, setGroupOpen] = createSignal(!!props.state.groupOpen);
 
 	// -------------------------------
 	// Memos
@@ -40,6 +41,10 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 
 	// -------------------------------
 	// Functions
+	const toggleDropdown = () => {
+		setGroupOpen(!getGroupOpen());
+		// TODO: sync with group store item
+	};
 	const removeGroup = (groupId: number | string) => {
 		brickStore.get.removeRepeaterGroup({
 			brickIndex: brickIndex(),
@@ -84,8 +89,12 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						"border-b-0 rounded-b-none": getGroupOpen(),
 					},
 				)}
-				onClick={() => setGroupOpen(!getGroupOpen())}
-				onKeyPress={() => setGroupOpen(!getGroupOpen())}
+				onClick={toggleDropdown}
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						toggleDropdown();
+					}
+				}}
 			>
 				<div class="flex items-center">
 					<button

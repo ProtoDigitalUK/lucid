@@ -16,6 +16,7 @@ export interface BrickData {
 	key: string;
 	order: number;
 	type: "builder" | "fixed" | "collection-fields";
+	open: 1 | 0 | null;
 	fields: Array<FieldResponse>;
 }
 
@@ -83,6 +84,7 @@ const [get, set] = createStore<BrickStoreT>({
 					key: "collection-sudo-brick",
 					order: -1,
 					type: "collection-fields",
+					open: 0,
 					fields: document?.fields || [],
 				});
 
@@ -102,6 +104,7 @@ const [get, set] = createStore<BrickStoreT>({
 						key: brick.key,
 						fields: [],
 						type: "fixed",
+						open: 0,
 						order: -1,
 					});
 				}
@@ -195,6 +198,7 @@ const [get, set] = createStore<BrickStoreT>({
 						{
 							id: `ref-${shortUUID.generate()}`,
 							order: 0,
+							open: 0,
 							fields: groupFields,
 						},
 					];
@@ -208,6 +212,7 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups.push({
 					id: `ref-${shortUUID.generate()}`,
 					order: largestOrder.order + 1,
+					open: 0,
 					fields: groupFields,
 				});
 			}),

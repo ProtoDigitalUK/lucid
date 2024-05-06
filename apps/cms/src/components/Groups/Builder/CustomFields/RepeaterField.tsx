@@ -83,6 +83,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 											dragDropKey: dragDropKey(),
 											fields: g.fields,
 											groupId: g.id,
+											groupOpen: g.open,
 											dragDrop: dragDrop,
 											repeaterKey: fieldConfig().key,
 											groupIndex: i(),

@@ -1,5 +1,6 @@
-import { type Component, createMemo, For, Show } from "solid-js";
+import { type Component, createMemo, For, Show, createSignal } from "solid-js";
 import type { CollectionBrickConfigT } from "@lucidcms/core/types";
+import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 
@@ -46,24 +47,56 @@ interface BuilderBrickRowProps {
 }
 
 const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
+	// -------------------------------
+	// State
+	const [getBrickOpen, setBrickOpen] = createSignal(!!props.brick.open);
+
 	// ------------------------------
 	// Memos
 	const config = createMemo(() => {
 		return props.brickConfig.find((brick) => brick.key === props.brick.key);
 	});
 
+	// -------------------------------
+	// Functions
+	const toggleDropdown = () => {
+		setBrickOpen(!getBrickOpen());
+		// TODO: sync with brick store item
+	};
+
+	// -------------------------------
+	// Render
 	return (
 		<li class="w-full bg-container-2 border border-border p-15 rounded-md">
-			<div class="flex justify-between mb-15">
-				<h3>{config()?.title}</h3>
-				<button type="button">^</button>
-			</div>
-			<Builder.BrickBody
-				state={{
-					brick: props.brick,
-					configFields: config()?.fields || [],
+			<div
+				class={classNames("flex justify-between cursor-pointer", {
+					"mb-15": getBrickOpen(),
+				})}
+				onClick={toggleDropdown}
+				onKeyDown={(e) => {
+					if (e.key === "Enter") {
+						toggleDropdown();
+					}
 				}}
-			/>
+			>
+				<h3>{config()?.title}</h3>
+				<button
+					type="button"
+					class={classNames("text-2xl", {
+						"transform rotate-180": getBrickOpen(),
+					})}
+				>
+					^
+				</button>
+			</div>
+			<Show when={getBrickOpen()}>
+				<Builder.BrickBody
+					state={{
+						brick: props.brick,
+						configFields: config()?.fields || [],
+					}}
+				/>
+			</Show>
 		</li>
 	);
 };
