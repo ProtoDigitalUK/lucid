@@ -71,6 +71,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 					label: props.state.fieldConfig.title,
 					describedBy: props.state.fieldConfig.description,
 				}}
+				disabled={props.state.fieldConfig.disabled}
 				extensions={props.state.fieldConfig.validation?.extensions}
 				type={props.state.fieldConfig.validation?.type}
 				// errors={props.state.fieldError}

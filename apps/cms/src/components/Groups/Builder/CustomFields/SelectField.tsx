@@ -63,6 +63,7 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 				describedBy: props.state.fieldConfig.description,
 			}}
 			noClear={props.state.fieldConfig.validation?.required || false}
+			disabled={props.state.fieldConfig.disabled}
 			// errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

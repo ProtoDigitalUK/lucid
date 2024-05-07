@@ -18,6 +18,7 @@ interface SwitchProps {
 		false?: string;
 		tooltip?: string;
 	};
+	disabled?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
@@ -54,10 +55,11 @@ export const Switch: Component<SwitchProps> = (props) => {
 					props.onChange(e.currentTarget.checked);
 				}}
 				class="hidden"
+				disabled={props.disabled}
 			/>
 			<button
 				type="button"
-				class="bg-container-4 rounded-md flex border border-border mt-1 relative h-10 focus:border-primary-base group"
+				class="bg-container-4 disabled:cursor-not-allowed disabled:opacity-50 rounded-md flex border border-border mt-1 relative h-10 focus:border-primary-base group"
 				onClick={() => {
 					checkboxRef?.click();
 				}}
@@ -67,6 +69,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 				onBlur={() => {
 					setInputFocus(false);
 				}}
+				disabled={props.disabled}
 			>
 				<span
 					class={classnames(

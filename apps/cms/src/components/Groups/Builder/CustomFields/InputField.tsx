@@ -75,6 +75,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 				describedBy: props.state.fieldConfig.description,
 			}}
 			// errors={props.state.fieldError}
+			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}
 		/>

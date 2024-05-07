@@ -63,6 +63,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 				true: props.state.fieldConfig?.copy?.true,
 				false: props.state.fieldConfig?.copy?.false,
 			}}
+			disabled={props.state.fieldConfig.disabled}
 			// errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

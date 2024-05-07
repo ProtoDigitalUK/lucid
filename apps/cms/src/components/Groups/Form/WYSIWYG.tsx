@@ -17,6 +17,7 @@ interface WYSIWYGProps {
 		describedBy?: string;
 	};
 	required?: boolean;
+	disabled?: boolean;
 	errors?: ErrorResult | FieldErrors;
 	noMargin?: boolean;
 }
@@ -47,6 +48,7 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 			},
 		});
 		quill.on("text-change", () => {
+			if (props.disabled) return;
 			const value = quill.root.innerHTML;
 			props.onChange(value);
 		});
@@ -78,7 +80,12 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 				required={props.required}
 				theme={"basic"}
 			/>
-			<div class="mt-1">
+			<div
+				class={classnames("mt-1", {
+					"cursor-not-allowed opacity-80 pointer-events-none":
+						props.disabled,
+				})}
+			>
 				<div
 					ref={quillElement}
 					onFocus={() => setInputFocus(true)}

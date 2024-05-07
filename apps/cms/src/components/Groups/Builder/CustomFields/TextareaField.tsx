@@ -62,6 +62,7 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 				placeholder: props.state.fieldConfig.placeholder,
 				describedBy: props.state.fieldConfig.description,
 			}}
+			disabled={props.state.fieldConfig.disabled}
 			// errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

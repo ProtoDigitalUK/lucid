@@ -48,7 +48,6 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 		<>
 			<Form.LinkSelect
 				id={`field-${props.state.fieldConfig.key}-${props.state.brickIndex}-${props.state.groupId}`}
-				type={"link"}
 				value={getValue()}
 				onChange={(value) => {
 					batch(() => {
@@ -62,11 +61,11 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 						setValue(value);
 					});
 				}}
-				meta={null}
 				copy={{
 					label: props.state.fieldConfig.title,
 					describedBy: props.state.fieldConfig.description,
 				}}
+				disabled={props.state.fieldConfig.disabled}
 				// errors={props.state.fieldError}
 				required={props.state.fieldConfig.validation?.required || false}
 			/>

@@ -40,7 +40,7 @@ export const Colour: Component<ColourProps> = (props) => {
 			/>
 			<input
 				class={classnames(
-					"focus:outline-none text-sm text-title font-medium p-1 bg-container-4 border border-border h-10 w-full rounded-md mt-1 focus:border-primary-base duration-200 transition-colors",
+					"focus:outline-none disabled:cursor-not-allowed disabled:opacity-80 text-sm text-title font-medium p-1 bg-container-4 border border-border h-10 w-full rounded-md mt-1 focus:border-primary-base duration-200 transition-colors",
 				)}
 				onKeyDown={(e) => {
 					e.stopPropagation();

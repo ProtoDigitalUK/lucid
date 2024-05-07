@@ -63,6 +63,7 @@ export const ColourField: Component<ColourFieldProps> = (props) => {
 					describedBy: props.state.fieldConfig.description,
 				}}
 				presets={props.state.fieldConfig.presets}
+				disabled={props.state.fieldConfig.disabled}
 				// errors={props.state.fieldError}
 				required={props.state.fieldConfig.validation?.required || false}
 			/>

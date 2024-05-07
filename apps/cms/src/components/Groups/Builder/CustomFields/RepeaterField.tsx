@@ -111,7 +111,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					theme="container-outline"
 					size="x-small"
 					onClick={addGroup}
-					disabled={!canAddGroup()}
+					disabled={!canAddGroup() || fieldConfig().disabled}
 				>
 					{T("add_entry")}
 				</Button>

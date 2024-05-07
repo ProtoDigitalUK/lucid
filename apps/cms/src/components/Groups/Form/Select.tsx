@@ -136,7 +136,7 @@ export const Select: Component<SelectProps> = (props) => {
 					{/* Trigger */}
 					<DropdownMenu.Trigger
 						class={classNames(
-							"focus:outline-none px-2.5 text-sm text-title font-medium w-full flex justify-between",
+							"focus:outline-none px-2.5 text-sm text-title font-medium w-full flex justify-between disabled:cursor-not-allowed disabled:opacity-80",
 							{
 								"pt-2 h-10 flex items-center":
 									props.copy?.label === undefined,
@@ -148,6 +148,7 @@ export const Select: Component<SelectProps> = (props) => {
 						)}
 						onFocus={() => setInputFocus(true)}
 						onBlur={() => setInputFocus(false)}
+						disabled={props.disabled}
 					>
 						{selectedLabel() ? (
 							<span class="truncate">{selectedLabel()}</span>

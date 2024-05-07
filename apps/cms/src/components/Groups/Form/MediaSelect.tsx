@@ -27,6 +27,7 @@ interface MediaSelectProps {
 		label?: string;
 		describedBy?: string;
 	};
+	disabled?: boolean;
 	noMargin?: boolean;
 	required?: boolean;
 	errors?: ErrorResult | FieldErrors;
@@ -90,6 +91,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 							theme="container-outline"
 							size="x-small"
 							onClick={openMediaSelectModal}
+							disabled={props.disabled}
 						>
 							{T("select_media", {
 								type: props.type || "media",
@@ -123,6 +125,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								theme="container-outline"
 								size="x-small"
 								onClick={openMediaSelectModal}
+								disabled={props.disabled}
 							>
 								{T("select_new_media", {
 									type: props.type || "media",
@@ -135,6 +138,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								onClick={() => {
 									props.onChange(null, null);
 								}}
+								disabled={props.disabled}
 							>
 								{T("remove_media", {
 									type: props.type || "media",

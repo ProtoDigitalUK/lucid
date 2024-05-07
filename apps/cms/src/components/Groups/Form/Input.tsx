@@ -77,7 +77,7 @@ export const Input: Component<InputProps> = (props) => {
 				/>
 				<input
 					class={classnames(
-						"focus:outline-none px-2.5 text-sm text-title font-medium",
+						"focus:outline-none px-2.5 text-sm text-title font-medium disabled:cursor-not-allowed disabled:opacity-80",
 						{
 							"pr-[38px]": props.type === "password",
 							"pt-2": props.copy?.label === undefined,
@@ -85,7 +85,6 @@ export const Input: Component<InputProps> = (props) => {
 								props.theme === "basic",
 							"bg-transparent pb-2 pt-1 rounded-b-md":
 								props.theme !== "basic",
-							"opacity-80 cursor-not-allowed": props.disabled,
 						},
 					)}
 					onKeyDown={(e) => {
