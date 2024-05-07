@@ -7,7 +7,8 @@ interface NavigationGuardProps {
 	state: {
 		open: boolean;
 		setOpen: (_open: boolean) => void;
-		targetElement: HTMLLinkElement | null;
+		targetElement?: HTMLLinkElement | null;
+		targetCallback?: () => void;
 	};
 }
 
@@ -33,6 +34,10 @@ const NavigationGuard: Component<NavigationGuardProps> = (props) => {
 					const href = props.state.targetElement.getAttribute("href");
 					if (href) navigate(href);
 				}
+				if (props.state.targetCallback) {
+					props.state.targetCallback();
+					props.state.setOpen(false);
+				}
 			}}
 			onCancel={() => {
 				props.state.setOpen(false);
@@ -44,6 +49,9 @@ const NavigationGuard: Component<NavigationGuardProps> = (props) => {
 export const navGuardHook = () => {
 	const [getTargetElement, setTargetElement] =
 		createSignal<HTMLLinkElement | null>(null);
+	const [getTargetCallback, setTargetCallback] = createSignal<() => void>(
+		() => {},
+	);
 	const [getModalOpen, setModalOpen] = createSignal<boolean>(false);
 
 	const clickEvent = (e: MouseEvent) => {
@@ -78,6 +86,8 @@ export const navGuardHook = () => {
 		setTargetElement,
 		getModalOpen,
 		setModalOpen,
+		getTargetCallback,
+		setTargetCallback,
 	};
 };
 

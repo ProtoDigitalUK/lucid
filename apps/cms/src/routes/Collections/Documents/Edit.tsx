@@ -38,7 +38,6 @@ const CollectionsDocumentsEditRoute: Component<
 	const params = useParams();
 	const navigate = useNavigate();
 	const navGuard = navGuardHook();
-	const [getSetDataLock, setSetDataLock] = createSignal(false);
 	const [getDeleteOpen, setDeleteOpen] = createSignal(false);
 
 	// ----------------------------------
@@ -98,6 +97,9 @@ const CollectionsDocumentsEditRoute: Component<
 	const upsertDocument = async () => {
 		console.log(brickStore.get.bricks);
 		// setSetDataLock(false);
+	};
+	const setLanguageCallback = (val: number | undefined) => {
+		contentLanguageStore.get.setContentLanguage(val);
 	};
 
 	// ---------------------------------
@@ -181,9 +183,23 @@ const CollectionsDocumentsEditRoute: Component<
 										}
 									>
 										<div class="w-full md:w-auto md:min-w-[250px]">
-											{/* TODO: update hasError with memo that detects translations errors */}
 											<ContentLanguageSelect
-												hasError={false}
+												value={contentLanguage()}
+												setValue={(v) => {
+													if (v === undefined) return;
+													if (v === contentLanguage())
+														return;
+
+													navGuard.setTargetCallback(
+														(prev) => () => {
+															setLanguageCallback(
+																v,
+															);
+														},
+													);
+													navGuard.setModalOpen(true);
+												}}
+												hasError={false} // TODO: update
 											/>
 										</div>
 									</Show>
@@ -281,6 +297,7 @@ const CollectionsDocumentsEditRoute: Component<
 						open: navGuard.getModalOpen(),
 						setOpen: navGuard.setModalOpen,
 						targetElement: navGuard.getTargetElement(),
+						targetCallback: navGuard.getTargetCallback(),
 					}}
 				/>
 				<DeleteDocument

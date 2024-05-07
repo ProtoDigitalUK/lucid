@@ -1,4 +1,10 @@
-import { type Component, Match, Switch, createMemo } from "solid-js";
+import {
+	type Component,
+	Match,
+	Switch,
+	createMemo,
+	type Accessor,
+} from "solid-js";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import Form from "@/components/Groups/Form";
 

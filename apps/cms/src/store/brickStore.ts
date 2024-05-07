@@ -72,7 +72,6 @@ type BrickStoreT = {
 const [get, set] = createStore<BrickStoreT>({
 	bricks: [],
 	fieldsErrors: [],
-
 	reset() {
 		set("bricks", []);
 		set("fieldsErrors", []);
@@ -114,8 +113,6 @@ const [get, set] = createStore<BrickStoreT>({
 				}
 			}),
 		);
-
-		// set empty brick data if collection fields (sudo brick) is empty
 	},
 	addBrick(props) {
 		set(
@@ -186,7 +183,6 @@ const [get, set] = createStore<BrickStoreT>({
 				// group.fields.push(newField);
 			}),
 		);
-
 		return newField;
 	},
 	// Groups
