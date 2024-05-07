@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { type Component, For, createMemo, createSignal, Show } from "solid-js";
 import type { DragDropCBT } from "@/components/Partials/DragDrop";
 import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import { debounce } from "@solid-primitives/scheduled";
 import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
@@ -26,6 +27,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
 	// State
 	const [getGroupOpen, setGroupOpen] = createSignal(!!props.state.groupOpen);
+	const [getConfirmRemove, setConfirmRemove] = createSignal<0 | 1>(0);
 
 	// -------------------------------
 	// Memos
@@ -52,6 +54,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			groupId: groupId,
 		});
 	};
+	const revertConfigDelete = debounce(() => {
+		setConfirmRemove(0);
+	}, 4000);
 
 	// -------------------------------
 	// Render
@@ -126,11 +131,27 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 				</div>
 				<button
 					type="button"
-					class="text-icon-base hover:text-error-hover transition-colors duration-200 cursor-pointer"
-					onClick={() => {
-						removeGroup(groupId());
+					class={classNames(
+						"opacity-60 hover:opacity-100 transition-all duration-200 cursor-pointer",
+						{
+							"text-icon-base": getConfirmRemove() === 0,
+							"text-error-hover animate-pulse opacity-100":
+								getConfirmRemove() === 1,
+						},
+					)}
+					onClick={(e) => {
+						e.stopPropagation();
+						if (getConfirmRemove() === 1) {
+							removeGroup(groupId());
+						}
+						setConfirmRemove(1);
+						revertConfigDelete();
 					}}
-					aria-label={T("remove_entry")}
+					aria-label={
+						getConfirmRemove() === 1
+							? T("confirm_delete")
+							: T("delete")
+					}
 				>
 					<FaSolidTrashCan class="w-4" />
 				</button>
