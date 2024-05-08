@@ -172,15 +172,22 @@ const [get, set] = createStore<BrickStoreT>({
 					return;
 				}
 
-				// Field belongs to a group
-				// TODO: add back in - might not be needed
-				// const group = brickHelpers.getBrickFieldGroupRecursive({
-				// 	fields: brick.fields,
-				// 	fieldPath: params.fieldPath,
-				// 	groupPath: params.groupPath || [],
-				// });
-				// if (!group) return;
-				// group.fields.push(newField);
+				if (params.repeaterKey === undefined) return;
+
+				const repeaterField = brickHelpers.findFieldRecursive({
+					fields: brick.fields,
+					targetKey: params.repeaterKey,
+					groupId: params.groupId,
+				});
+				if (!repeaterField) return;
+				if (repeaterField.type !== "repeater") return;
+
+				const group = repeaterField.groups?.find(
+					(g) => g.id === params.groupId,
+				);
+				if (!group) return;
+
+				group.fields.push(newField);
 			}),
 		);
 		return newField;
