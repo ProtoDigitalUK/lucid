@@ -1,3 +1,4 @@
+import brickStore from "@/store/brickStore";
 import type { FieldResponse } from "@lucidcms/core/types";
 
 const findFieldRecursive = (props: {
@@ -63,10 +64,22 @@ const findFieldRecursive = (props: {
 	return null;
 };
 
+const getCollectionSudoBrickFields = () => {
+	const sudoBrick = brickStore.get.bricks.find(
+		(b) => b.type === "collection-fields",
+	);
+	if (!sudoBrick) return [];
+	return sudoBrick.fields;
+};
+const getUpsertBricks = () =>
+	brickStore.get.bricks.filter((b) => b.type !== "collection-fields");
+
 // ---------------------------------------------
 // Exports
 const brickHelpers = {
 	findFieldRecursive,
+	getCollectionSudoBrickFields,
+	getUpsertBricks,
 };
 
 export default brickHelpers;

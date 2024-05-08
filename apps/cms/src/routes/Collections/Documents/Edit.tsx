@@ -10,9 +10,11 @@ import {
 	createEffect,
 	onCleanup,
 } from "solid-js";
-import type { CollectionResponse } from "@lucidcms/core/types";
+import type { CollectionResponse, FieldErrors } from "@lucidcms/core/types";
 import api from "@/services/api";
 import brickStore from "@/store/brickStore";
+import brickHelpers from "@/utils/brick-helpers";
+import { getBodyError } from "@/utils/error-helpers";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
@@ -81,6 +83,24 @@ const CollectionsDocumentsEditRoute: Component<
 	});
 
 	// ----------------------------------
+	// Mutations
+	const upsertDocument = api.collections.document.useUpsertSingle({
+		onSuccess: (data) => {
+			brickStore.set("fieldsErrors", []);
+			if (props.mode === "create") {
+				navigate(`/collections/${collectionKey()}/${data.data.id}`);
+			}
+		},
+		onError: (errors) => {
+			brickStore.set(
+				"fieldsErrors",
+				getBodyError<FieldErrors[]>("fields", errors) || [],
+			);
+		},
+		collectionName: collection.data?.data.singular || "",
+	});
+
+	// ----------------------------------
 	// Memos
 	const isLoading = createMemo(() => {
 		return collection.isLoading || document.isLoading;
@@ -91,12 +111,24 @@ const CollectionsDocumentsEditRoute: Component<
 		}
 		return collection.isSuccess && document.isSuccess;
 	});
+	const isSaving = createMemo(() => {
+		return upsertDocument.action.isPending;
+	});
+	const mutateErrors = createMemo(() => {
+		return upsertDocument.errors();
+	});
 
 	// ---------------------------------
 	// Functions
-	const upsertDocument = async () => {
-		console.log(brickStore.get.bricks);
-		// setSetDataLock(false);
+	const upsertDocumentAction = async () => {
+		upsertDocument.action.mutate({
+			collectionKey: collectionKey(),
+			body: {
+				documentId: documentId(),
+				bricks: brickHelpers.getUpsertBricks(),
+				fields: brickHelpers.getCollectionSudoBrickFields(),
+			},
+		});
 	};
 	const setLanguageCallback = (val: number | undefined) => {
 		contentLanguageStore.get.setContentLanguage(val);
@@ -207,7 +239,7 @@ const CollectionsDocumentsEditRoute: Component<
 										type="button"
 										theme="primary"
 										size="small"
-										onClick={upsertDocument}
+										onClick={upsertDocumentAction}
 									>
 										{T("save", {
 											singular:
@@ -315,6 +347,9 @@ const CollectionsDocumentsEditRoute: Component<
 						},
 					}}
 				/>
+				<Show when={isSaving()}>
+					<div class="fixed inset-0 bg-white bg-opacity-40 animate-pulse z-50" />
+				</Show>
 			</Match>
 		</Switch>
 	);

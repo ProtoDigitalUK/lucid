@@ -116,6 +116,7 @@ export default class CollectionDocumentFieldsFormatter {
 				fieldsRes.push({
 					key: cf.key,
 					type: cf.type,
+					languageId: -1,
 					groups: this.buildGroups({
 						repeater: cf,
 						fields: props.fields,

@@ -1,44 +1,28 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
+import type { BrickData } from "@/store/brickStore";
 import type {
 	ResponseBody,
 	ErrorResponse,
-	FieldResponseMeta,
-	FieldResponseValue,
-	FieldTypes,
+	FieldResponse,
 } from "@lucidcms/core/types";
-
-interface FieldDataT {
-	key: string;
-	type: FieldTypes;
-	languageId: 1;
-	value?: FieldResponseValue;
-	meta?: FieldResponseMeta;
-	groups: Array<Array<FieldDataT>>;
-}
-
-interface BrickDataT {
-	key: string;
-	order: number;
-	type: "builder" | "fixed";
-	fields?: Array<FieldDataT>;
-}
 
 interface Params {
 	collectionKey: string;
 	body: {
 		documentId?: number;
-		published?: 1 | 0;
-		bricks?: Array<BrickDataT>;
-		fields?: Array<FieldDataT>;
+		bricks?: Array<BrickData>;
+		fields?: Array<FieldResponse>;
 	};
 }
 
 export const upsertSingleReq = (params: Params) => {
-	return request<ResponseBody<null>>({
+	return request<
+		ResponseBody<{
+			id: number;
+		}>
+	>({
 		url: `/api/v1/collections/documents/${params.collectionKey}`,
 		csrf: true,
 		config: {
@@ -49,7 +33,11 @@ export const upsertSingleReq = (params: Params) => {
 };
 
 interface UseUpdateSingleProps {
-	onSuccess?: () => void;
+	onSuccess?: (
+		_data: ResponseBody<{
+			id: number;
+		}>,
+	) => void;
 	onError?: (_errors: ErrorResponse | undefined) => void;
 	collectionName: string;
 }
@@ -57,7 +45,12 @@ interface UseUpdateSingleProps {
 const useUpsertSingle = (props: UseUpdateSingleProps) => {
 	// -----------------------------
 	// Mutation
-	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
+	return serviceHelpers.useMutationWrapper<
+		Params,
+		ResponseBody<{
+			id: number;
+		}>
+	>({
 		mutationFn: upsertSingleReq,
 		successToast: {
 			title: T("update_toast_title", {

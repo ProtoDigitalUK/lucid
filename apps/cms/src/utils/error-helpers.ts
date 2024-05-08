@@ -5,16 +5,24 @@ import type {
 	ErrorResultValue,
 } from "@lucidcms/core/types";
 
-export const getBodyError = (
+export const getBodyError = <T = ErrorResultObj>(
 	key: string,
-	errors: Accessor<ErrorResponse | undefined>,
+	errors: Accessor<ErrorResponse | undefined> | undefined | ErrorResponse,
 ) => {
-	if (!errors()) {
-		return undefined;
+	if (typeof errors === "function") {
+		if (!errors()) {
+			return undefined;
+		}
+
+		// @ts-expect-error-base
+		return errors()?.errors?.body[key] as T | undefined;
 	}
 
+	if (!errors) {
+		return undefined;
+	}
 	// @ts-expect-error-base
-	return errors()?.errors?.body[key] as ErrorResultObj | undefined;
+	return errors.errors.body[key] as T | undefined;
 };
 
 export const getErrorObject = (

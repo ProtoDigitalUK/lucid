@@ -26,6 +26,8 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		() => contentLanguageStore.get.contentLanguage,
 	);
 	const fieldData = createMemo(() => {
+		if (props.state.fieldConfig.type === "tab") return;
+
 		const field = props.state.fields?.find(
 			(f) => f.key === props.state.fieldConfig.key,
 		);
