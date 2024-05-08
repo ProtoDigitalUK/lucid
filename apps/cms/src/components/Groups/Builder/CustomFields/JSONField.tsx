@@ -6,9 +6,12 @@ import {
 	createMemo,
 	batch,
 } from "solid-js";
-import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldErrors,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
-import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
 interface JSONFieldProps {
@@ -19,6 +22,7 @@ interface JSONFieldProps {
 		groupId?: number | string;
 		repeaterKey?: string;
 		contentLanguage?: number;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -65,7 +69,7 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 				describedBy: props.state.fieldConfig.description,
 			}}
 			disabled={props.state.fieldConfig.disabled}
-			// errors={props.state.fieldError}
+			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}
 		/>

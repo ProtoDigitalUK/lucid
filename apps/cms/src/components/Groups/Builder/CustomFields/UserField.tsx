@@ -5,7 +5,11 @@ import {
 	createMemo,
 	createEffect,
 } from "solid-js";
-import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldErrors,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import Form from "@/components/Groups/Form";
 
@@ -17,6 +21,7 @@ interface UserFieldProps {
 		groupId?: number | string;
 		repeaterKey?: string;
 		contentLanguage?: number;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -34,8 +39,8 @@ export const UserField: Component<UserFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.value as number | undefined;
-		setValue(typeof value !== "number" ? "" : value.toString());
+		const value = fieldData()?.value as string | undefined;
+		setValue(value ?? "");
 	});
 
 	// -------------------------------
@@ -52,7 +57,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
-						value: Number(value),
+						value: value, // Number(value),
 					});
 					setValue(value);
 				});
@@ -64,7 +69,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 				placeholder: props.state.fieldConfig.placeholder,
 				describedBy: props.state.fieldConfig.description,
 			}}
-			// errors={props.state.fieldError}
+			errors={props.state.fieldError}
 			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

@@ -9,6 +9,7 @@ import type {
 	CustomField,
 	MediaMeta,
 	FieldResponse,
+	FieldErrors,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import Form from "@/components/Groups/Form";
@@ -21,6 +22,7 @@ interface MediaFieldProps {
 		groupId?: number | string;
 		repeaterKey?: string;
 		contentLanguage?: number;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -74,7 +76,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 				disabled={props.state.fieldConfig.disabled}
 				extensions={props.state.fieldConfig.validation?.extensions}
 				type={props.state.fieldConfig.validation?.type}
-				// errors={props.state.fieldError}
+				errors={props.state.fieldError}
 				required={props.state.fieldConfig.validation?.required || false}
 			/>
 		</>

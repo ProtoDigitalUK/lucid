@@ -43,8 +43,15 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		}
 		return field;
 	});
-	// TODO: all fields need error handling support
-	const fieldError = createMemo(() => {});
+	const fieldError = createMemo(() => {
+		return brickStore.get.fieldsErrors.find((f) => {
+			return (
+				f.key === props.state.fieldConfig.key &&
+				f.languageId === contentLanguage() &&
+				f.groupId === props.state.groupId
+			);
+		});
+	});
 
 	// -------------------------------
 	// Render
@@ -98,6 +105,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -110,6 +118,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -123,6 +132,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -138,6 +148,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -152,6 +163,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -164,6 +176,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -176,6 +189,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -188,6 +202,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -200,6 +215,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -212,6 +228,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -226,6 +243,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>
@@ -240,6 +258,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
 									contentLanguage: contentLanguage(),
+									fieldError: fieldError(),
 								}}
 							/>
 						</Match>

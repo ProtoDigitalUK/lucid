@@ -9,6 +9,7 @@ import type {
 	CustomField,
 	LinkValue,
 	FieldResponse,
+	FieldErrors,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import Form from "@/components/Groups/Form";
@@ -21,6 +22,7 @@ interface LinkFieldProps {
 		groupId?: number | string;
 		repeaterKey?: string;
 		contentLanguage?: number;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -66,7 +68,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 					describedBy: props.state.fieldConfig.description,
 				}}
 				disabled={props.state.fieldConfig.disabled}
-				// errors={props.state.fieldError}
+				errors={props.state.fieldError}
 				required={props.state.fieldConfig.validation?.required || false}
 			/>
 		</>

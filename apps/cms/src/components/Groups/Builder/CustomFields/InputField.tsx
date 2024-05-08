@@ -5,7 +5,11 @@ import {
 	createMemo,
 	createEffect,
 } from "solid-js";
-import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldErrors,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import Form from "@/components/Groups/Form";
 
@@ -18,6 +22,7 @@ interface InputFieldProps {
 		groupId?: number | string;
 		repeaterKey?: string;
 		contentLanguage?: number;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -74,7 +79,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 				placeholder: props.state.fieldConfig.placeholder,
 				describedBy: props.state.fieldConfig.description,
 			}}
-			// errors={props.state.fieldError}
+			errors={props.state.fieldError}
 			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}

@@ -5,7 +5,11 @@ import {
 	batch,
 	createEffect,
 } from "solid-js";
-import type { CustomField, FieldResponse } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldErrors,
+} from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
 import Form from "@/components/Groups/Form";
 
@@ -17,6 +21,7 @@ interface CheckboxFieldProps {
 		groupId?: number | string;
 		repeaterKey?: string;
 		contentLanguage?: number;
+		fieldError: FieldErrors | undefined;
 	};
 }
 
@@ -64,7 +69,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 				false: props.state.fieldConfig?.copy?.false,
 			}}
 			disabled={props.state.fieldConfig.disabled}
-			// errors={props.state.fieldError}
+			errors={props.state.fieldError}
 			required={props.state.fieldConfig.validation?.required || false}
 			theme={"basic"}
 		/>
