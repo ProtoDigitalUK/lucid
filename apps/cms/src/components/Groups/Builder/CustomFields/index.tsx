@@ -9,6 +9,7 @@ import { MediaField } from "./MediaField";
 import { SelectField } from "./SelectField";
 import { TextareaField } from "./TextareaField";
 import { WYSIWYGField } from "./WYSIWYGField";
+import { UserField } from "./UserField";
 
 const CustomFields = {
 	DynamicField,
@@ -22,6 +23,7 @@ const CustomFields = {
 	SelectField,
 	TextareaField,
 	WYSIWYGField,
+	UserField,
 };
 
 export default CustomFields;

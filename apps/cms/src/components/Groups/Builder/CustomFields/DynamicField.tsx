@@ -102,8 +102,16 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 							/>
 						</Match>
 						<Match when={props.state.fieldConfig.type === "user"}>
-							TODO: ({props.state.fieldConfig.key} -{" "}
-							{props.state.fieldConfig.repeaterKey})
+							<CustomFields.UserField
+								state={{
+									brickIndex: props.state.brickIndex,
+									fieldConfig: props.state.fieldConfig,
+									fieldData: fieldData(),
+									groupId: props.state.groupId,
+									repeaterKey: props.state.repeaterKey,
+									contentLanguage: contentLanguage(),
+								}}
+							/>
 						</Match>
 						<Match when={props.state.fieldConfig.type === "number"}>
 							<CustomFields.InputField

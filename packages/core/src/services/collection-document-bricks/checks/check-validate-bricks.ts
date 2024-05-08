@@ -139,7 +139,7 @@ const validateBrickData = async (data: {
 							height: media.height,
 							type: media.type,
 						} satisfies MediaReferenceData;
-					} else if (field.value) {
+					} else if (field.value !== undefined) {
 						field.value = null;
 					}
 					break;
@@ -153,7 +153,7 @@ const validateBrickData = async (data: {
 							firstName: user.first_name,
 							lastName: user.last_name,
 						} satisfies UserReferenceData;
-					} else if (field.value) {
+					} else if (field.value !== undefined) {
 						field.value = null;
 					}
 					break;
