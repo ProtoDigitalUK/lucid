@@ -1,4 +1,5 @@
 import { CollectionBuilder } from "@lucidcms/core";
+import z from "zod";
 // Bricks
 import BannerBrick from "../bricks/banner.js";
 import IntroBrick from "../bricks/intro.js";
@@ -19,7 +20,7 @@ const PageCollection = new CollectionBuilder("page", {
 				return {
 					document_id: props.data.documentId,
 					fields: props.data.fields?.map((field) => {
-						if (field.key === "page_title") {
+						if (field.key === "page_title" && field.value) {
 							field.value = `${field.value} - Modified`;
 						}
 						return field;
@@ -48,8 +49,8 @@ const PageCollection = new CollectionBuilder("page", {
 })
 	.addText({
 		key: "page_title",
-		hidden: true,
-		disabled: true,
+		hidden: false,
+		disabled: false,
 		collection: {
 			list: true,
 			filterable: true,
@@ -96,6 +97,10 @@ const PageCollection = new CollectionBuilder("page", {
 	})
 	.addText({
 		key: "notification_reason_title",
+		validation: {
+			required: true,
+			zod: z.string().min(3).max(100),
+		},
 	})
 	.endRepeater()
 	.endRepeater();

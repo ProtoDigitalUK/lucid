@@ -11,7 +11,7 @@ export interface FieldInsertItem {
 	value: FieldSchemaType["value"];
 	languageId: FieldSchemaType["languageId"];
 	groupRef?: string;
-	groupId?: number;
+	groupId?: number | string;
 }
 export interface GroupInsertItem {
 	ref: string;
@@ -36,6 +36,7 @@ const flattenFields = (
 	const parseFields = (
 		fields: FieldSchemaType[] | FieldSchemaSimpleType[],
 		groupMeta?: {
+			id?: number | string;
 			ref?: string;
 			repeaterKey?: string;
 		},
@@ -80,6 +81,7 @@ const flattenFields = (
 						parentGroupRef: groupMeta?.ref,
 					});
 					parseFields(groupFields.fields, {
+						id: groupFields.id,
 						ref: groupRef,
 						repeaterKey,
 					});
@@ -93,6 +95,7 @@ const flattenFields = (
 				type: field.type,
 				value: field.value,
 				languageId: field.languageId,
+				groupId: groupMeta?.id,
 				groupRef: groupMeta?.ref,
 			});
 		}

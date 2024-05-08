@@ -290,7 +290,11 @@ class FieldBuilder {
 			// Use the map to do the data type validation
 			const dataType = this.fieldTypeToDataType[field.type];
 			if (dataType) {
-				if (dataType.nullable && value !== null) {
+				if (
+					dataType.nullable &&
+					value !== null &&
+					value !== undefined
+				) {
 					// biome-ignore lint/suspicious/useValidTypeof: <explanation>
 					if (typeof value !== dataType.type) {
 						throw new Error(
