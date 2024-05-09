@@ -22,7 +22,7 @@ interface MediaFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -42,7 +42,9 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.value as number | undefined;
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as number | undefined;
 		const meta = fieldData()?.meta as MediaMeta | undefined;
 		setValue(value);
 		setMeta(meta);
@@ -69,6 +71,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 							repeaterKey: props.state.repeaterKey,
 							value: value,
 							meta: meta,
+							contentLanguage: props.state.contentLanguage,
 						});
 						setValue(value ?? undefined);
 						setMeta(meta ?? undefined);

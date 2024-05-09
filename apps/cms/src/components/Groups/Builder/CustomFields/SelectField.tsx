@@ -21,7 +21,7 @@ interface SelectFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -40,7 +40,9 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.value as string | undefined;
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as string | undefined;
 		setValue(value || null);
 	});
 
@@ -63,6 +65,7 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value || null,
+						contentLanguage: props.state.contentLanguage,
 					});
 					setValue(value || null);
 				});

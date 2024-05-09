@@ -22,7 +22,7 @@ interface LinkFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -41,7 +41,9 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.value as LinkValue | undefined | null;
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as LinkValue | undefined | null;
 		setValue(value);
 	});
 
@@ -64,6 +66,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 							groupId: props.state.groupId,
 							repeaterKey: props.state.repeaterKey,
 							value: value,
+							contentLanguage: props.state.contentLanguage,
 						});
 						setValue(value);
 					});

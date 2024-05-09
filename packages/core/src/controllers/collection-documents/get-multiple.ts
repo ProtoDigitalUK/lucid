@@ -29,7 +29,6 @@ const getMultipleController: RouteController<
 			{
 				collectionKey: request.params.collectionKey,
 				query: request.query,
-				languageId: request.language.id,
 			},
 		);
 

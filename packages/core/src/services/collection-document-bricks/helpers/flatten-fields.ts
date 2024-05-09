@@ -93,9 +93,13 @@ const flattenFields = (
 			}
 
 			if (field.translations) {
-				for (const [key, value] of Object.entries(field.translations)) {
-					const language = languages.find((l) => l.code === key);
+				for (let [key, value] of Object.entries(field.translations)) {
+					const language = languages.find(
+						(l) => l.code === key || l.id === Number(key),
+					);
 					if (language === undefined) continue;
+
+					if (typeof value === "boolean") value = value ? 1 : 0;
 
 					fieldsRes.push({
 						key: field.key,

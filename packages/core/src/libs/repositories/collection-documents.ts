@@ -81,7 +81,6 @@ export default class CollectionDocumentsRepo {
 		collectionKey: string;
 		allowedFieldFilters: FieldFilters;
 		allowedFieldIncludes: Array<string>;
-		languageId: number;
 		config: Config;
 	}) => {
 		let pagesQuery = this.db
@@ -224,11 +223,6 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.collection_document_id",
 									"=",
 									"lucid_collection_documents.id",
-								)
-								.where(
-									"lucid_collection_document_fields.language_id",
-									"=",
-									props.languageId,
 								)
 								.where(
 									"lucid_collection_document_fields.key",

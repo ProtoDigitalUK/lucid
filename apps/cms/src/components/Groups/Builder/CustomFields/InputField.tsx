@@ -22,7 +22,7 @@ interface InputFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -41,15 +41,15 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
+		const value = fieldData()?.translations?.[props.state.contentLanguage];
+
 		switch (props.type) {
 			case "number": {
-				const value = fieldData()?.value as number | undefined;
 				setValue(typeof value !== "number" ? "" : value.toString());
 				break;
 			}
 			default: {
-				const value = (fieldData()?.value as string | undefined) || "";
-				setValue(value);
+				setValue(typeof value !== "string" ? "" : value);
 				break;
 			}
 		}
@@ -73,6 +73,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: props.type === "number" ? Number(value) : value,
+						contentLanguage: props.state.contentLanguage,
 					});
 					setValue(value);
 				});

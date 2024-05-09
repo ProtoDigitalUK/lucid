@@ -8,7 +8,6 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 export interface ServiceData {
 	collectionKey: string;
 	query: z.infer<typeof collectionDocumentsSchema.getMultiple.query>;
-	languageId: number;
 }
 
 const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
@@ -25,7 +24,6 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const [documents, documentCount] =
 		await CollectionDocumentsRepo.selectMultipleFiltered({
 			query: data.query,
-			languageId: data.languageId,
 			collectionKey: data.collectionKey,
 			allowedFieldFilters: collectionInstance.data.config.fields.filter,
 			allowedFieldIncludes: collectionInstance.data.config.fields.include,

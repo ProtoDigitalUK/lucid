@@ -40,13 +40,14 @@ type BrickStoreT = {
 		groupId?: number | string;
 		value: FieldResponseValue;
 		meta?: FieldResponseMeta;
+		contentLanguage: number;
 	}) => void;
 	addField: (params: {
 		brickIndex: number;
 		fieldConfig: CustomField;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: number | undefined;
+		contentLanguage: number;
 	}) => FieldResponse;
 	addRepeaterGroup: (params: {
 		brickIndex: number;
@@ -54,7 +55,7 @@ type BrickStoreT = {
 		key: string;
 		groupId?: number | string;
 		parentRepeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 	}) => void;
 	removeRepeaterGroup: (params: {
 		brickIndex: number;
@@ -146,8 +147,9 @@ const [get, set] = createStore<BrickStoreT>({
 				});
 
 				if (!field) return;
+				if (!field.translations) field.translations = {};
 
-				field.value = params.value;
+				field.translations[params.contentLanguage] = params.value;
 				field.meta = params.meta || undefined;
 			}),
 		);
@@ -156,8 +158,9 @@ const [get, set] = createStore<BrickStoreT>({
 		const newField: FieldResponse = {
 			key: params.fieldConfig.key,
 			type: params.fieldConfig.type,
-			value: params.fieldConfig.default,
-			languageId: params.contentLanguage,
+			translations: {
+				[params.contentLanguage]: params.fieldConfig.default,
+			},
 		};
 
 		brickStore.set(
@@ -214,8 +217,9 @@ const [get, set] = createStore<BrickStoreT>({
 					groupFields.push({
 						key: field.key,
 						type: field.type,
-						value: field.default,
-						languageId: params.contentLanguage,
+						translations: {
+							[params.contentLanguage]: field.default,
+						},
 					});
 				}
 

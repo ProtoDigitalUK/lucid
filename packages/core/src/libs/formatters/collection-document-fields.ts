@@ -8,7 +8,10 @@ import type BrickBuilder from "../builders/brick-builder/index.js";
 import type { FieldTypes } from "../builders/field-builder/index.js";
 import type { BrickPropT } from "./collection-document-bricks.js";
 import type { CustomField } from "../builders/field-builder/index.js";
-import { fieldResponseValueFormat } from "../../utils/field-helpers.js";
+import {
+	fieldResponseValueFormat,
+	fieldResponseMetaFormat,
+} from "../../utils/field-helpers.js";
 
 export interface FieldProp {
 	fields_id: number;
@@ -75,30 +78,24 @@ export default class CollectionDocumentFieldsFormatter {
 		const flatFields = props.builder.flatFields;
 
 		for (const cf of flatFields) {
-			const fieldData = props.fields.filter((f) => f.key === cf.key);
+			const fieldData = props.fields
+				.filter((f) => f.key === cf.key)
+				.filter((f) => {
+					if (f.type === "repeater") return false;
+					if (f.type === "tab") return false;
+					return true;
+				});
 
-			for (const field of fieldData) {
-				const { value, meta } = fieldResponseValueFormat({
-					type: cf.type,
-					customField: cf,
-					field: field,
+			if (fieldData.length === 0) continue;
+
+			fieldsRes.push(
+				this.reduceField({
+					fields: fieldData,
+					cf: cf,
 					host: props.host,
-				});
-
-				if (field.type === "tab") continue;
-				if (field.type === "repeater") continue;
-
-				// TODO: group all fields of the same key, group_id then add one entry to fieldsRes for the field.
-				// Translations object should contain the values for each language.
-				fieldsRes.push({
-					key: field.key,
-					type: field.type as FieldTypes,
-					languageId: field.language_id,
-					groupId: field.group_id ?? undefined,
-					value: value,
-					meta: meta,
-				});
-			}
+					includeGroupId: true,
+				}),
+			);
 		}
 
 		return fieldsRes;
@@ -118,7 +115,6 @@ export default class CollectionDocumentFieldsFormatter {
 				fieldsRes.push({
 					key: cf.key,
 					type: cf.type,
-					languageId: -1,
 					groups: this.buildGroups({
 						repeater: cf,
 						fields: props.fields,
@@ -134,25 +130,16 @@ export default class CollectionDocumentFieldsFormatter {
 				(f) => f.key === cf.key && f.group_id === props.groupId,
 			);
 			if (!fields) continue;
+			if (fields.length === 0) continue;
 
-			// TODO: group all fields of the same key, group_id then add one entry to fieldsRes for the field.
-			// Translations object should contain the values for each language.
-			for (const field of fields) {
-				const { value, meta } = fieldResponseValueFormat({
-					type: cf.type,
-					customField: cf,
-					field: field,
+			fieldsRes.push(
+				this.reduceField({
+					fields: fields,
+					cf: cf,
 					host: props.host,
-				});
-
-				fieldsRes.push({
-					key: field.key,
-					type: field.type as FieldTypes,
-					// languageId: field.language_id,
-					// value: value,
-					meta: meta,
-				});
-			}
+					includeGroupId: false,
+				}),
+			);
 		}
 
 		return fieldsRes;
@@ -193,6 +180,46 @@ export default class CollectionDocumentFieldsFormatter {
 
 		return groups;
 	};
+	private reduceField = (props: {
+		fields: FieldProp[];
+		cf: CustomField;
+		host: string;
+		includeGroupId?: boolean;
+	}): FieldResponse => {
+		// ** Reduce same fields into one entry with translations object containing values for each language
+		return props.fields.reduce<FieldResponse>(
+			(acc, field) => {
+				if (acc.translations === undefined) acc.translations = {};
+
+				if (props.includeGroupId)
+					acc.groupId = field.group_id ?? undefined;
+
+				const value = fieldResponseValueFormat({
+					type: props.cf.type,
+					customField: props.cf,
+					field: field,
+					host: props.host,
+				});
+
+				acc.translations[field.language_id] = value;
+
+				if (acc.meta === null)
+					acc.meta = fieldResponseMetaFormat({
+						type: props.cf.type,
+						customField: props.cf,
+						field: field,
+						host: props.host,
+					});
+
+				return acc;
+			},
+			{
+				key: props.cf.key,
+				type: props.cf.type as FieldTypes,
+				meta: null,
+			},
+		);
+	};
 	static swagger = {
 		type: "object",
 		additionalProperties: true,
@@ -225,6 +252,10 @@ export default class CollectionDocumentFieldsFormatter {
 			},
 			collectionDocumentId: {
 				type: "number",
+			},
+			translations: {
+				type: "object",
+				additionalProperties: true,
 			},
 			meta: {
 				type: "object",

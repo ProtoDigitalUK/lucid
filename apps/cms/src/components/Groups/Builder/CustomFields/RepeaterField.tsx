@@ -23,7 +23,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
 	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+		() => contentLanguageStore.get.contentLanguage ?? 1,
 	);
 	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const brickIndex = createMemo(() => props.state.brickIndex);

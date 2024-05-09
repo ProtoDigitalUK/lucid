@@ -61,9 +61,6 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 			location: {
 				collectionKey: collectionKey,
 			},
-			headers: {
-				"lucid-content-lang": contentLanguage,
-			},
 		},
 		enabled: () => props.searchParams.getSettled(),
 	});

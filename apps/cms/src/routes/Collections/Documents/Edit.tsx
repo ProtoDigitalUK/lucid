@@ -74,9 +74,6 @@ const CollectionsDocumentsEditRoute: Component<
 			include: {
 				bricks: true,
 			},
-			headers: {
-				"lucid-content-lang": contentLanguage,
-			},
 		},
 		enabled: () => canFetchDocument(),
 		refetchOnWindowFocus: false,
@@ -129,9 +126,6 @@ const CollectionsDocumentsEditRoute: Component<
 				fields: brickHelpers.getCollectionSudoBrickFields(),
 			},
 		});
-	};
-	const setLanguageCallback = (val: number | undefined) => {
-		contentLanguageStore.get.setContentLanguage(val);
 	};
 
 	// ---------------------------------
@@ -216,21 +210,6 @@ const CollectionsDocumentsEditRoute: Component<
 									>
 										<div class="w-full md:w-auto md:min-w-[250px]">
 											<ContentLanguageSelect
-												value={contentLanguage()}
-												setValue={(v) => {
-													if (v === undefined) return;
-													if (v === contentLanguage())
-														return;
-
-													navGuard.setTargetCallback(
-														(prev) => () => {
-															setLanguageCallback(
-																v,
-															);
-														},
-													);
-													navGuard.setModalOpen(true);
-												}}
 												hasError={false} // TODO: update
 											/>
 										</div>

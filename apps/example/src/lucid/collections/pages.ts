@@ -17,16 +17,16 @@ const PageCollection = new CollectionBuilder("page", {
 		{
 			event: "beforeUpsert",
 			handler: async (props) => {
-				return {
-					document_id: props.data.documentId,
-					fields: props.data.fields?.map((field) => {
-						if (field.key === "page_title" && field.value) {
-							field.value = `${field.value} - Modified`;
-						}
-						return field;
-					}),
-					bricks: props.data.bricks,
-				};
+				// return {
+				// 	document_id: props.data.documentId,
+				// 	fields: props.data.fields?.map((field) => {
+				// 		if (field.key === "page_title" && field.value) {
+				// 			field.value = `${field.value} - Modified`;
+				// 		}
+				// 		return field;
+				// 	}),
+				// 	bricks: props.data.bricks,
+				// };
 			},
 		},
 		{

@@ -21,7 +21,7 @@ interface CheckboxFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -40,7 +40,9 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.value as 1 | 0 | undefined;
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as 1 | 0 | undefined;
 		setValue(value || 0);
 	});
 
@@ -62,6 +64,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value ? 1 : 0,
+						contentLanguage: props.state.contentLanguage,
 					});
 					setValue(value ? 1 : 0);
 				});

@@ -17,9 +17,6 @@ interface QueryParams {
 	include: {
 		bricks: Accessor<boolean | undefined> | boolean;
 	};
-	headers: {
-		"lucid-content-lang": Accessor<number | undefined> | number;
-	};
 }
 
 const useGetSingle = (params: QueryHook<QueryParams>) => {
@@ -46,7 +43,6 @@ const useGetSingle = (params: QueryHook<QueryParams>) => {
 				query: queryParams(),
 				config: {
 					method: "GET",
-					headers: queryParams().headers,
 				},
 			}),
 		get enabled() {

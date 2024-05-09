@@ -11,7 +11,6 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	id: number;
-	languageId: number;
 	query: z.infer<typeof collectionDocumentsSchema.getSingle.query>;
 }
 
@@ -50,7 +49,6 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			false,
 		)(serviceConfig, {
 			documentId: data.id,
-			languageId: data.languageId,
 			collectionKey: document.collection_key,
 		});
 

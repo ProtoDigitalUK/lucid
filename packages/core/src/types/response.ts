@@ -174,7 +174,6 @@ export interface FieldResponse {
 	groupId?: number;
 	translations?: Record<string, FieldResponseValue>;
 	meta?: FieldResponseMeta;
-	// languageId?: number;
 	groups?: Array<FieldGroupResponse>;
 }
 export interface FieldGroupResponse {

@@ -35,7 +35,6 @@ export default class CollectionDocumentBricksRepo {
 	};
 	selectMultipleByDocumentId = async (props: {
 		documentId: number;
-		languageId: number;
 		config: Config;
 	}) => {
 		return this.db
@@ -159,11 +158,6 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.collection_brick_id",
 								"=",
 								"lucid_collection_document_bricks.id",
-							)
-							.where(
-								"lucid_collection_document_fields.language_id",
-								"=",
-								props.languageId,
 							),
 					)
 					.as("fields"),

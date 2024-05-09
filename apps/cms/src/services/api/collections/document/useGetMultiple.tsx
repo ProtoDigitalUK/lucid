@@ -16,9 +16,6 @@ interface QueryParams {
 	location: {
 		collectionKey: Accessor<string | undefined> | string;
 	};
-	headers: {
-		"lucid-content-lang": Accessor<number | undefined> | number;
-	};
 	perPage?: Accessor<number> | number;
 }
 
@@ -46,7 +43,6 @@ const useGetMultiple = (params: QueryHook<QueryParams>) => {
 				query: queryParams(),
 				config: {
 					method: "GET",
-					headers: queryParams().headers,
 				},
 			}),
 		get enabled() {

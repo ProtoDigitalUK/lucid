@@ -23,7 +23,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
 	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+		() => contentLanguageStore.get.contentLanguage ?? 1,
 	);
 	const fieldData = createMemo(() => {
 		if (props.state.fieldConfig.type === "tab") return;
@@ -47,7 +47,6 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		return brickStore.get.fieldsErrors.find((f) => {
 			return (
 				f.key === props.state.fieldConfig.key &&
-				f.languageId === contentLanguage() &&
 				f.groupId === props.state.groupId
 			);
 		});

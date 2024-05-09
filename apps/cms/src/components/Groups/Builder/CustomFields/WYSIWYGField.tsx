@@ -21,7 +21,7 @@ interface WYSIWYGFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -40,8 +40,10 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = (fieldData()?.value as string | undefined) || "";
-		setValue(value);
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as string | undefined;
+		setValue(value || "");
 	});
 
 	// -------------------------------
@@ -62,6 +64,7 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value,
+						contentLanguage: props.state.contentLanguage,
 					});
 					setValue(value);
 				});

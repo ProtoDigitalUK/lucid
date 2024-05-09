@@ -21,7 +21,7 @@ interface UserFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -40,8 +40,10 @@ export const UserField: Component<UserFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.value as string | undefined;
-		setValue(value ?? "");
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as string | undefined;
+		setValue(value || "");
 	});
 
 	// -------------------------------
@@ -63,6 +65,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value, // Number(value),
+						contentLanguage: props.state.contentLanguage,
 					});
 					setValue(value);
 				});

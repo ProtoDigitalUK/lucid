@@ -22,7 +22,7 @@ interface JSONFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage?: number;
+		contentLanguage: number;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -41,8 +41,10 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = (fieldData()?.value as string | undefined) || "";
-		setValue(JSON.stringify(value, null, 4));
+		const value = fieldData()?.translations?.[
+			props.state.contentLanguage
+		] as string | undefined;
+		setValue(JSON.stringify(value ?? "", null, 4));
 	});
 
 	// -------------------------------
@@ -63,6 +65,7 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: JSON.parse(value),
+						contentLanguage: props.state.contentLanguage,
 					});
 					setValue(value);
 				});
