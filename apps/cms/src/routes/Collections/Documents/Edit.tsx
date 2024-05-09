@@ -114,6 +114,11 @@ const CollectionsDocumentsEditRoute: Component<
 	const mutateErrors = createMemo(() => {
 		return upsertDocument.errors();
 	});
+	const brickTranslationErrors = createMemo(() => {
+		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
+		if (errors === undefined) return false;
+		return errors.some((field) => field.languageId !== contentLanguage());
+	});
 
 	// ---------------------------------
 	// Functions
@@ -210,7 +215,7 @@ const CollectionsDocumentsEditRoute: Component<
 									>
 										<div class="w-full md:w-auto md:min-w-[250px]">
 											<ContentLanguageSelect
-												hasError={false} // TODO: update
+												hasError={brickTranslationErrors()}
 											/>
 										</div>
 									</Show>

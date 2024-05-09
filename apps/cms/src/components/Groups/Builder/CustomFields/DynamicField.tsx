@@ -47,6 +47,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		return brickStore.get.fieldsErrors.find((f) => {
 			return (
 				f.key === props.state.fieldConfig.key &&
+				f.languageId === contentLanguage() &&
 				f.groupId === props.state.groupId
 			);
 		});
