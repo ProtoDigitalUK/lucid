@@ -2,14 +2,16 @@ import { v4 as uuidv4 } from "uuid";
 import type {
 	FieldSchemaType,
 	FieldSchemaSimpleType,
+	FieldValueSchemaType,
 } from "../../../schemas/collection-fields.js";
 import type { BooleanInt } from "../../../libs/db/types.js";
+import { fi } from "date-fns/locale";
 
 export interface FieldInsertItem {
 	key: FieldSchemaType["key"];
 	type: FieldSchemaType["type"];
-	value: FieldSchemaType["value"];
-	languageId: FieldSchemaType["languageId"];
+	value: FieldValueSchemaType;
+	languageId: number;
 	groupRef?: string;
 	groupId?: number | string;
 }
@@ -28,6 +30,7 @@ interface FlatFieldsResposne {
 
 const flattenFields = (
 	fields: FieldSchemaType[] | FieldSchemaSimpleType[],
+	languages: Array<{ id: number; code: string; is_default: BooleanInt }>,
 ): FlatFieldsResposne => {
 	const fieldsRes: Array<FieldInsertItem> = [];
 	const groupsRes: Array<GroupInsertItem> = [];
@@ -90,14 +93,21 @@ const flattenFields = (
 				continue;
 			}
 
-			fieldsRes.push({
-				key: field.key,
-				type: field.type,
-				value: field.value,
-				languageId: field.languageId,
-				groupId: groupMeta?.id,
-				groupRef: groupMeta?.ref,
-			});
+			if (field.translations) {
+				for (const [key, value] of Object.entries(field.translations)) {
+					const language = languages.find((l) => l.code === key);
+					if (language === undefined) continue;
+
+					fieldsRes.push({
+						key: field.key,
+						type: field.type,
+						value: value,
+						languageId: language.id,
+						groupId: groupMeta?.id,
+						groupRef: groupMeta?.ref,
+					});
+				}
+			}
 		}
 	};
 	parseFields(fields);

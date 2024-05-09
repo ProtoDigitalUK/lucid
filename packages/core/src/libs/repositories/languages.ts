@@ -53,6 +53,14 @@ export default class LanguagesRepo {
 			Array<Pick<Select<HeadlessLanguages>, K>>
 		>;
 	};
+	selectAll = async <K extends keyof Select<HeadlessLanguages>>(props: {
+		select: K[];
+	}) => {
+		return this.db
+			.selectFrom("lucid_languages")
+			.select<K>(props.select)
+			.execute() as Promise<Array<Pick<Select<HeadlessLanguages>, K>>>;
+	};
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof languagesSchema.getMultiple.query>;
 	}) => {

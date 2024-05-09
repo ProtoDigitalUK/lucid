@@ -1,6 +1,26 @@
 import z from "zod";
 import type { BooleanInt } from "../libs/db/types.js";
 
+const FieldValueSchema = z
+	.union([
+		z.string(),
+		z.number(),
+		z.object({
+			id: z.number().nullable(),
+			target: z.string().nullable().optional(),
+			label: z.string().nullable().optional(),
+		}),
+		z.object({
+			url: z.string().nullable(),
+			target: z.string().nullable().optional(),
+			label: z.string().nullable().optional(),
+		}),
+		z.null(),
+		z.any(),
+	])
+	.optional();
+export type FieldValueSchemaType = z.infer<typeof FieldValueSchema>;
+
 export const FieldBaseSchema = z.object({
 	key: z.string(),
 	type: z.union([
@@ -18,25 +38,7 @@ export const FieldBaseSchema = z.object({
 		z.literal("repeater"),
 		z.literal("user"),
 	]),
-	value: z
-		.union([
-			z.string(),
-			z.number(),
-			z.object({
-				id: z.number().nullable(),
-				target: z.string().nullable().optional(),
-				label: z.string().nullable().optional(),
-			}),
-			z.object({
-				url: z.string().nullable(),
-				target: z.string().nullable().optional(),
-				label: z.string().nullable().optional(),
-			}),
-			z.null(),
-			z.any(),
-		])
-		.optional(),
-	languageId: z.number(),
+	translations: z.record(FieldValueSchema).optional(),
 });
 
 export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({

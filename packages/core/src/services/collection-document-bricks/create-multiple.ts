@@ -15,21 +15,6 @@ export interface ServiceData {
 	collectionKey: string;
 }
 
-/*
-    TODO: Currently if you send an update that only contains one set of translations, all other translations are deleted.
-
-    * There are two options to fix this: *
-    
-    - Bricks need to not delete all and just delete the ones not specified in the bricks array
-    - Bricks createMultiple needs to be changed to an upsert
-    - Fields need to delete all that are of the same collection_document_id and language_id
-    - Groups need to delete all that are of the same collection_document_id and language_id (language_id is not implemented yet)
-
-    or 
-
-    - Frontend needs to fetch all translations and send them to the upsert at the same time instead of being seperate
-*/
-
 const createMultiple = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
@@ -38,6 +23,11 @@ const createMultiple = async (
 		"collection-document-bricks",
 		serviceConfig.db,
 	);
+	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
+
+	const languages = await LanguagesRepo.selectAll({
+		select: ["id", "code", "is_default"],
+	});
 
 	// -------------------------------------------------------------------------------
 	// set bricks
@@ -45,6 +35,7 @@ const createMultiple = async (
 		bricks: data.bricks,
 		fields: data.fields,
 		documentId: data.documentId,
+		languages: languages,
 	});
 	if (bricks.length === 0) return;
 
