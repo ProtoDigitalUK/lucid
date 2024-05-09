@@ -1,5 +1,3 @@
-import type z from "zod";
-import type { FieldSchema } from "../schemas/collection-fields.js";
 import type {
 	MediaType,
 	FieldResponseValue,
@@ -11,6 +9,7 @@ import type {
 	FieldTypes,
 	CustomField,
 } from "../libs/builders/field-builder/types.js";
+import type { FieldInsertItem } from "../services/collection-document-bricks/helpers/flatten-fields.js";
 import type { FieldProp } from "../libs/formatters/collection-document-fields.js";
 import type { FieldFilters } from "../libs/builders/collection-builder/index.js";
 import Formatter from "../libs/formatters/index.js";
@@ -60,7 +59,7 @@ export const fieldTypeValueKey = (type: FieldTypes, columns?: boolean) => {
 	}
 };
 
-export const fieldColumnValueMap = (field: z.infer<typeof FieldSchema>) => {
+export const fieldColumnValueMap = (field: FieldInsertItem) => {
 	switch (field.type) {
 		case "link": {
 			const value = field.value as LinkValue | undefined;

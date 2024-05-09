@@ -88,6 +88,8 @@ export default class CollectionDocumentFieldsFormatter {
 				if (field.type === "tab") continue;
 				if (field.type === "repeater") continue;
 
+				// TODO: group all fields of the same key, group_id then add one entry to fieldsRes for the field.
+				// Translations object should contain the values for each language.
 				fieldsRes.push({
 					key: field.key,
 					type: field.type as FieldTypes,
@@ -133,6 +135,8 @@ export default class CollectionDocumentFieldsFormatter {
 			);
 			if (!fields) continue;
 
+			// TODO: group all fields of the same key, group_id then add one entry to fieldsRes for the field.
+			// Translations object should contain the values for each language.
 			for (const field of fields) {
 				const { value, meta } = fieldResponseValueFormat({
 					type: cf.type,
@@ -144,8 +148,8 @@ export default class CollectionDocumentFieldsFormatter {
 				fieldsRes.push({
 					key: field.key,
 					type: field.type as FieldTypes,
-					languageId: field.language_id,
-					value: value,
+					// languageId: field.language_id,
+					// value: value,
 					meta: meta,
 				});
 			}

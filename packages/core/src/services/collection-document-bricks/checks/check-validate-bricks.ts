@@ -1,5 +1,4 @@
 import T from "../../../translations/index.js";
-import type z from "zod";
 import { LucidAPIError } from "../../../utils/error-handler.js";
 import type { FieldErrors } from "../../../types/errors.js";
 import collectionsServices from "../../collections/index.js";
@@ -10,9 +9,9 @@ import type {
 	UserReferenceData,
 	FieldTypes,
 } from "../../../libs/builders/field-builder/index.js";
+import type { FieldInsertItem } from "../helpers/flatten-fields.js";
 import type { LinkValue } from "../../../types/response.js";
 import type CollectionBuilder from "../../../libs/builders/collection-builder/index.js";
-import type { FieldSchema } from "../../../schemas/collection-fields.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 import type { BrickInsertItem } from "../helpers/format-insert-bricks.js";
 import Repository from "../../../libs/repositories/index.js";
@@ -184,10 +183,7 @@ const validateBrickData = async (data: {
 	return { errors, hasErrors };
 };
 
-const allFieldIdsOfType = <T>(
-	fields: z.infer<typeof FieldSchema>[],
-	type: FieldTypes,
-) => {
+const allFieldIdsOfType = <T>(fields: FieldInsertItem[], type: FieldTypes) => {
 	return fields
 		.filter((field) => field.type === type)
 		.map((field) => {
@@ -199,7 +195,7 @@ const allFieldIdsOfType = <T>(
 
 const getAllMedia = async (
 	serviceConfig: ServiceConfig,
-	fields: z.infer<typeof FieldSchema>[],
+	fields: FieldInsertItem[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "media");
@@ -223,7 +219,7 @@ const getAllMedia = async (
 };
 const getAllUsers = async (
 	serviceConfig: ServiceConfig,
-	fields: z.infer<typeof FieldSchema>[],
+	fields: FieldInsertItem[],
 ) => {
 	try {
 		const ids = allFieldIdsOfType<number>(fields, "user");

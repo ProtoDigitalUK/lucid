@@ -5,7 +5,6 @@ import type {
 	FieldValueSchemaType,
 } from "../../../schemas/collection-fields.js";
 import type { BooleanInt } from "../../../libs/db/types.js";
-import { fi } from "date-fns/locale";
 
 export interface FieldInsertItem {
 	key: FieldSchemaType["key"];

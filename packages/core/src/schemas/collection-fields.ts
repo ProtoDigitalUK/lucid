@@ -78,25 +78,10 @@ export const swaggerFieldObj = {
 		type: {
 			type: "string",
 		},
-		value: {
-			anyOf: [
-				{
-					type: "number",
-					nullable: true,
-				},
-				{
-					type: "string",
-					nullable: true,
-				},
-				{
-					type: "object",
-					additionalProperties: true,
-					nullable: true,
-				},
-				{
-					type: "null",
-				},
-			],
+		translations: {
+			type: "object",
+			additionalProperties: true,
+			nullable: true,
 		},
 		languageId: {
 			type: "number",
