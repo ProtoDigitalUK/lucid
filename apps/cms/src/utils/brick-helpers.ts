@@ -71,8 +71,20 @@ const getCollectionSudoBrickFields = () => {
 	if (!sudoBrick) return [];
 	return sudoBrick.fields;
 };
+
 const getUpsertBricks = () =>
 	brickStore.get.bricks.filter((b) => b.type !== "collection-fields");
+
+const customFieldId = (props: {
+	key: string;
+	brickIndex: number;
+	groupId?: number | string;
+}): string => {
+	if (props.groupId === undefined) {
+		return `field-${props.key}-${props.brickIndex}`;
+	}
+	return `field-${props.key}-${props.brickIndex}-${props.groupId}`;
+};
 
 // ---------------------------------------------
 // Exports
@@ -80,6 +92,7 @@ const brickHelpers = {
 	findFieldRecursive,
 	getCollectionSudoBrickFields,
 	getUpsertBricks,
+	customFieldId,
 };
 
 export default brickHelpers;

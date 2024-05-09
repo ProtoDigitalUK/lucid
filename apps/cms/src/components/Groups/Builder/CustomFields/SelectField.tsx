@@ -11,6 +11,7 @@ import type {
 	FieldErrors,
 } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
+import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
 
 interface SelectFieldProps {
@@ -47,7 +48,11 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 	// Render
 	return (
 		<Form.Select
-			id={`field-${props.state.fieldConfig.key}-${props.state.brickIndex}-${props.state.groupId}`}
+			id={brickHelpers.customFieldId({
+				key: props.state.fieldConfig.key,
+				brickIndex: props.state.brickIndex,
+				groupId: props.state.groupId,
+			})}
 			value={getValue() || undefined}
 			options={props.state.fieldConfig.options || []}
 			onChange={(value) => {
