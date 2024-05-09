@@ -1,5 +1,5 @@
 import T from "@/translations";
-import { type Component, For, Switch, Match } from "solid-js";
+import { type Component, For, Switch, Match, createMemo } from "solid-js";
 import type useRowTarget from "@/hooks/useRowTarget";
 import type { TableRowProps } from "@/types/components";
 import type {
@@ -9,6 +9,7 @@ import type {
 	UserMeta,
 } from "@lucidcms/core/types";
 import userStore from "@/store/userStore";
+import contentLanguageStore from "@/store/contentLanguageStore";
 import Table from "@/components/Groups/Table";
 import DateCol from "@/components/Tables/Columns/DateCol";
 import AuthorCol from "@/components/Tables/Columns/AuthorCol";
@@ -53,57 +54,81 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 			]}
 		>
 			<For each={props.fieldInclude}>
-				{(field, i) => {
-					const documentField = props.document.fields?.find(
-						(f) => f.key === field.key,
-					);
-
-					return (
-						<Switch
-							fallback={
-								<TextCol
-									text={"~"}
-									options={{ include: props?.include[i()] }}
-								/>
-							}
-						>
-							<Match when={documentField?.type === "text"}>
-								<TextCol
-									text={
-										documentField?.value as
-											| string
-											| undefined
-											| null
-									}
-									options={{ include: props?.include[i()] }}
-								/>
-							</Match>
-							<Match when={documentField?.type === "textarea"}>
-								<TextCol
-									text={
-										documentField?.value as
-											| string
-											| undefined
-											| null
-									}
-									options={{ include: props?.include[i()] }}
-								/>
-							</Match>
-							<Match when={documentField?.type === "user"}>
-								<AuthorCol
-									user={documentField?.meta as UserMeta}
-									options={{ include: props?.include[i()] }}
-								/>
-							</Match>
-						</Switch>
-					);
-				}}
+				{(field, i) => (
+					<DocumentDynamicColumns
+						field={field}
+						document={props.document}
+						include={props.include}
+						index={i()}
+					/>
+				)}
 			</For>
 			<DateCol
 				date={props.document.updatedAt}
 				options={{ include: props?.include[props.fieldInclude.length] }}
 			/>
 		</Table.Tr>
+	);
+};
+
+const DocumentDynamicColumns: Component<{
+	field: CustomField;
+	document: CollectionDocumentResponse;
+	include: boolean[];
+	index: number;
+}> = (props) => {
+	// ----------------------------------
+	// Memos
+	const contentLanguage = createMemo(
+		() => contentLanguageStore.get.contentLanguage ?? 1,
+	);
+	const fieldData = createMemo(() => {
+		return props.document.fields?.find((f) => f.key === props.field.key);
+	});
+	const translationValue = createMemo(() => {
+		return fieldData()?.translations?.[contentLanguage()];
+	});
+
+	// ----------------------------------
+	// Render
+	return (
+		<Switch
+			fallback={
+				<TextCol
+					text={"~"}
+					options={{ include: props?.include[props.index] }}
+				/>
+			}
+		>
+			<Match when={fieldData()?.type === "text"}>
+				<TextCol
+					text={translationValue() as string | undefined | null}
+					options={{ include: props?.include[props.index] }}
+				/>
+			</Match>
+			<Match when={fieldData()?.type === "textarea"}>
+				<TextCol
+					text={translationValue() as string | undefined | null}
+					options={{ include: props?.include[props.index] }}
+				/>
+			</Match>
+			<Match when={fieldData()?.type === "checkbox"}>
+				<TextCol
+					text={
+						(translationValue() as 1 | 0 | undefined | null) === 1
+							? "✅"
+							: "❌"
+					}
+					options={{ include: props?.include[props.index] }}
+				/>
+			</Match>
+			<Match when={fieldData()?.type === "user"}>
+				<AuthorCol
+					user={fieldData()?.meta as UserMeta}
+					options={{ include: props?.include[props.index] }}
+				/>
+			</Match>
+		</Switch>
 	);
 };
 
