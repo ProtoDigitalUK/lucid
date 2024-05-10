@@ -82,12 +82,17 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	const config = createMemo(() => {
 		return props.brickConfig.find((brick) => brick.key === props.brick.key);
 	});
+	const brickIndex = createMemo(() => {
+		return brickStore.get.bricks.findIndex(
+			(brick) => brick.id === props.brick.id,
+		);
+	});
 
 	// -------------------------------
 	// Functions
 	const toggleDropdown = () => {
 		setBrickOpen(!getBrickOpen());
-		// TODO: sync with brick store item
+		brickStore.get.toggleBrickOpen(brickIndex());
 	};
 
 	// -------------------------------
@@ -127,6 +132,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 				state={{
 					open: getBrickOpen(),
 					brick: props.brick,
+					brickIndex: brickIndex(),
 					configFields: config()?.fields || [],
 					labelledby: `builder-brick-${props.brick.key}`,
 				}}

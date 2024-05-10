@@ -18,6 +18,11 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 		);
 		return bricks.length > 0 ? bricks[0] : undefined;
 	});
+	const brickIndex = createMemo(() => {
+		return brickStore.get.bricks.findIndex(
+			(brick) => brick.id === collectionSudoBrick()?.id,
+		);
+	});
 
 	// ----------------------------------
 	// Render
@@ -28,6 +33,7 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 					state={{
 						open: true,
 						brick: collectionSudoBrick() as BrickData,
+						brickIndex: brickIndex(),
 						configFields: props.fields,
 					}}
 				/>

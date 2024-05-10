@@ -48,12 +48,17 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 	const config = createMemo(() => {
 		return props.brickConfig.find((brick) => brick.key === props.brick.key);
 	});
+	const brickIndex = createMemo(() => {
+		return brickStore.get.bricks.findIndex(
+			(brick) => brick.id === props.brick.id,
+		);
+	});
 
 	// -------------------------------
 	// Functions
 	const toggleDropdown = () => {
 		setBrickOpen(!getBrickOpen());
-		// TODO: sync with brick store item
+		brickStore.get.toggleBrickOpen(brickIndex());
 	};
 
 	return (
@@ -88,6 +93,7 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 				state={{
 					open: getBrickOpen(),
 					brick: props.brick,
+					brickIndex: brickIndex(),
 					configFields: config()?.fields || [],
 					labelledby: `fixed-brick-${props.brick.key}`,
 				}}

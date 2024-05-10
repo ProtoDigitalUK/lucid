@@ -45,7 +45,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// Functions
 	const toggleDropdown = () => {
 		setGroupOpen(!getGroupOpen());
-		// TODO: sync with group store item
+		brickStore.get.toggleGroupOpen(
+			props.state.brickIndex,
+			props.state.repeaterKey,
+			groupId(),
+		);
 	};
 	const removeGroup = (groupId: number | string) => {
 		brickStore.get.removeRepeaterGroup({

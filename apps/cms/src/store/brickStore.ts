@@ -33,6 +33,8 @@ type BrickStoreT = {
 	addBrick: (props: {
 		brickConfig: CollectionBrickConfig;
 	}) => void;
+	toggleBrickOpen: (brickIndex: number) => void;
+
 	setFieldValue: (params: {
 		brickIndex: number;
 		key: string;
@@ -68,6 +70,11 @@ type BrickStoreT = {
 		groupId: number | string;
 		targetGroupId: number | string;
 	}) => void;
+	toggleGroupOpen: (
+		brickIndex: number,
+		repeaterKey: string,
+		groupId: number | string,
+	) => void;
 };
 
 const [get, set] = createStore<BrickStoreT>({
@@ -131,6 +138,14 @@ const [get, set] = createStore<BrickStoreT>({
 					open: 0,
 					fields: [],
 				});
+			}),
+		);
+	},
+	toggleBrickOpen(brickIndex) {
+		set(
+			"bricks",
+			produce((draft) => {
+				draft[brickIndex].open = draft[brickIndex].open === 1 ? 0 : 1;
 			}),
 		);
 	},
@@ -299,6 +314,24 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups[targetGroupIndex].order = groupOrder;
 
 				field.groups.sort((a, b) => a.order - b.order);
+			}),
+		);
+	},
+	toggleGroupOpen: (brickIndex, repeaterKey, groupId) => {
+		set(
+			"bricks",
+			produce((draft) => {
+				const field = brickHelpers.findFieldRecursive({
+					fields: draft[brickIndex].fields,
+					targetKey: repeaterKey,
+				});
+
+				if (!field || !field.groups) return;
+
+				const group = field.groups.find((g) => g.id === groupId);
+				if (!group) return;
+
+				group.open = group.open === 1 ? 0 : 1;
 			}),
 		);
 	},

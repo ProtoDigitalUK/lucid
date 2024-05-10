@@ -15,6 +15,7 @@ interface BrickProps {
 	state: {
 		open: boolean;
 		brick: BrickData;
+		brickIndex: number;
 		configFields: CustomField[];
 		labelledby?: string;
 	};
@@ -27,11 +28,7 @@ export const BrickBody: Component<BrickProps> = (props) => {
 
 	// ----------------------------------
 	// Memos
-	const brickIndex = createMemo(() => {
-		return brickStore.get.bricks.findIndex(
-			(brick) => brick.id === props.state.brick.id,
-		);
-	});
+
 	const allTabs = createMemo(
 		() =>
 			props.state.configFields?.filter((field) => field.type === "tab") ||
@@ -88,7 +85,7 @@ export const BrickBody: Component<BrickProps> = (props) => {
 					<CustomFields.DynamicField
 						state={{
 							fields: props.state.brick.fields,
-							brickIndex: brickIndex(),
+							brickIndex: props.state.brickIndex,
 							fieldConfig: config,
 							activeTab: getActiveTab(),
 						}}
