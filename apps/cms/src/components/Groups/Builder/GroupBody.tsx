@@ -63,11 +63,9 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	return (
 		<div
 			data-dragkey={props.state.dragDropKey}
-			class={classNames("w-full", {
+			class={classNames("w-full mb-2.5", {
 				"opacity-60":
 					props.state.dragDrop.getDragging()?.index === groupId(),
-				"mb-2.5": props.state.repeaterDepth > 0,
-				"mb-15": props.state.repeaterDepth === 0,
 			})}
 			onDragStart={(e) =>
 				props.state.dragDrop.onDragStart(e, {

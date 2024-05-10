@@ -57,7 +57,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	// Render
 	return (
 		<Show when={props.state.fieldConfig.hidden !== true}>
-			<div class="w-full mb-2.5 last:mb-0 relative">
+			<div class="w-full mb-15 last:mb-0 relative">
 				<Show when={props.state.fieldConfig.type !== "tab"}>
 					<FieldTypeIcon type={props.state.fieldConfig.type} />
 				</Show>
