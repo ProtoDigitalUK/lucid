@@ -171,6 +171,19 @@ const updateTranslation = (
 	});
 };
 
+const getTranslation = (
+	translations?: {
+		value: string | null;
+		languageId: number | null;
+	}[],
+	contentLanguage?: number,
+) => {
+	const translation = translations?.find(
+		(t) => t.languageId === contentLanguage,
+	);
+	return translation?.value ?? null;
+};
+
 // ---------------------------------------------
 // Exports
 const helpers = {
@@ -183,6 +196,7 @@ const helpers = {
 	formatUserName,
 	formatUserInitials,
 	updateTranslation,
+	getTranslation,
 };
 
 export default helpers;

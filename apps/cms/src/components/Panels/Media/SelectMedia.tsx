@@ -6,32 +6,39 @@ import mediaSelectStore from "@/store/mediaSelectStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import api from "@/services/api";
 import Query from "@/components/Groups/Query";
-import Modal from "@/components/Groups/Modal";
+import Panel from "@/components/Groups/Panel";
 import Grid from "@/components/Groups/Grid";
 import MediaBasicCard, {
 	MediaBasicCardLoading,
 } from "@/components/Cards/MediaBasicCard";
 
-const SelectMedia: Component = () => {
-	// ------------------------------
-	// Memos
+const SelectMediaPanel: Component = () => {
 	const open = createMemo(() => mediaSelectStore.get.open);
 
-	// ------------------------------
+	// ---------------------------------
 	// Render
 	return (
-		<Modal.Root
-			state={{
-				open: open(),
-				setOpen: () => mediaSelectStore.set("open", false),
-			}}
-			options={{
-				noPadding: true,
-				size: "large",
+		<Panel.Root
+			open={open()}
+			setOpen={() => mediaSelectStore.set("open", false)}
+			// fetchState={{
+			// 	isLoading: media.isLoading,
+			// 	isError: media.isError,
+			// }}
+			reset={() => {}}
+			content={{
+				title: T("select_media", {
+					type: "Media",
+				}),
+				description: T("select_media_description"),
 			}}
 		>
-			<SelectMediaContent />
-		</Modal.Root>
+			{(lang) => (
+				<>
+					<SelectMediaContent />
+				</>
+			)}
+		</Panel.Root>
 	);
 };
 
@@ -101,15 +108,7 @@ const SelectMediaContent: Component = () => {
 	// ----------------------------------
 	// Render
 	return (
-		<div class="p-15">
-			<div class="mb-15">
-				<h2>
-					{T("select_media", {
-						type: "Media",
-					})}
-				</h2>
-				<p>{T("select_media_description")}</p>
-			</div>
+		<>
 			<div class="w-full flex justify-between mb-15 pb-15 border-b border-border">
 				<div class="flex gap-5">
 					<Query.Filter
@@ -195,7 +194,7 @@ const SelectMediaContent: Component = () => {
 					/>
 				</div>
 			</div>
-			<div class="relative w-full min-h-[600px] flex flex-col justify-between">
+			<div class="relative w-full flex flex-grow h-full flex-col justify-between">
 				<Grid.Modal
 					items={media.data?.data.length || 0}
 					state={{
@@ -224,8 +223,8 @@ const SelectMediaContent: Component = () => {
 					</For>
 				</Grid.Modal>
 			</div>
-		</div>
+		</>
 	);
 };
 
-export default SelectMedia;
+export default SelectMediaPanel;

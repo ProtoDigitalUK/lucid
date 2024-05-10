@@ -27,7 +27,7 @@ import NavigationGuard, {
 	navGuardHook,
 } from "@/components/Modals/NavigationGuard";
 import Document from "@/components/Groups/Document";
-import SelectMediaModal from "@/components/Modals/Media/SelectMedia";
+import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 
 interface CollectionsDocumentsEditRouteProps {
@@ -318,7 +318,7 @@ const CollectionsDocumentsEditRoute: Component<
 						targetCallback: navGuard.getTargetCallback(),
 					}}
 				/>
-				<SelectMediaModal />
+				<SelectMediaPanel />
 				<LinkSelect />
 				<DeleteDocument
 					id={document.data?.data.id}

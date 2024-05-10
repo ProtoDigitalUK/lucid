@@ -80,7 +80,7 @@ export const ModalGrid: Component<ModalGridProps> = (props) => {
 					</ErrorBlock>
 				</Match>
 				<Match when={props.state.isSuccess || props.state.isLoading}>
-					<ul class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-15">
+					<ul class="grid grid-cols-2 md:grid-cols-3 gap-15">
 						<Switch>
 							<Match when={props.state.isLoading}>
 								<Switch>

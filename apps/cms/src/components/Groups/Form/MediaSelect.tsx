@@ -1,16 +1,15 @@
 import T from "@/translations";
-import { type Component, Match, Switch } from "solid-js";
+import { type Component, Match, Switch, createMemo } from "solid-js";
 import classNames from "classnames";
-// Types
 import type {
 	ErrorResult,
 	FieldErrors,
 	MediaResponse,
 	MediaMeta,
 } from "@lucidcms/core/types";
-// Store
+import contentLanguageStore from "@/store/contentLanguageStore";
 import mediaSelectStore from "@/store/mediaSelectStore";
-// Components
+import helpers from "@/utils/helpers";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
 import AspectRatio from "@/components/Partials/AspectRatio";
@@ -69,6 +68,12 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 	};
 
 	// -------------------------------
+	// Memos
+	const contentLanguage = createMemo(
+		() => contentLanguageStore.get.contentLanguage,
+	);
+
+	// -------------------------------
 	// Render
 	return (
 		<div
@@ -107,14 +112,10 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 											url: props.meta?.url || "",
 											type: props.meta?.type || "image",
 										}}
-										alt={
-											// TODO: fix to use some translation helper with current lang
-											props.meta?.altTranslations?.[0]
-												.value ||
-											props.meta?.titleTranslations?.[0]
-												.value ||
-											""
-										}
+										alt={helpers.getTranslation(
+											props.meta?.altTranslations,
+											contentLanguage(),
+										)}
 									/>
 								</AspectRatio>
 							</div>

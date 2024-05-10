@@ -194,7 +194,7 @@ export const Panel: Component<PanelProps> = (props) => {
 							}}
 						>
 							<div
-								class="p-15 md:p-30 relative"
+								class="p-15 md:p-30 relative flex flex-col"
 								style={{
 									"min-height": `calc(100vh - ${getBodyMinHeight()}px)`,
 								}}
