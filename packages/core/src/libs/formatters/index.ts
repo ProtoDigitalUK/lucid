@@ -63,6 +63,7 @@ class Formatter {
 		return date ? date.toISOString() : null;
 	};
 	static parseJSON = <T>(json: string | null | undefined): T | null => {
+		if (typeof json === "object") return json;
 		if (!json) return null;
 		try {
 			return JSON.parse(json);

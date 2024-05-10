@@ -82,7 +82,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 						</button>
 						<button
 							type="button"
-							class="hover:text-error-base disabled:cursor-not-allowed disabled:opacity-80 text-primary-base flex items-center text-sm lowercase"
+							class="hover:text-error-base disabled:cursor-not-allowed disabled:opacity-80 text-body flex items-center text-sm lowercase"
 							onClick={() => {
 								props.onChange(null);
 							}}

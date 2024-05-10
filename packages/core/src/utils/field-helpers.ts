@@ -77,6 +77,20 @@ export const fieldColumnValueMap = (field: FieldInsertItem) => {
 				}),
 			};
 		}
+		case "checkbox": {
+			if (field.value === 1 || field.value === 0)
+				return {
+					boolValue: field.value,
+				};
+			return {
+				boolValue: field.value ? 1 : 0,
+			};
+		}
+		case "json": {
+			return {
+				jsonValue: Formatter.stringifyJSON(field.value),
+			};
+		}
 		default: {
 			return {
 				[fieldTypeValueKey(field.type)]: field.value,
