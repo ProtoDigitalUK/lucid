@@ -26,6 +26,7 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 			<div class="px-15 md:px-30 pb-15 md:pb-30">
 				<Builder.BrickBody
 					state={{
+						open: true,
 						brick: collectionSudoBrick() as BrickData,
 						configFields: props.fields,
 					}}

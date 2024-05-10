@@ -1,4 +1,4 @@
-import { type Component, createMemo, For, createSignal, Show } from "solid-js";
+import { type Component, createMemo, For, createSignal } from "solid-js";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
@@ -68,6 +68,11 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 						toggleDropdown();
 					}
 				}}
+				id={`fixed-brick-${props.brick.key}`}
+				aria-expanded={getBrickOpen()}
+				aria-controls={`fixed-brick-content-${props.brick.key}`}
+				role="button"
+				tabIndex="0"
 			>
 				<h2>{config()?.title}:</h2>
 				<button
@@ -79,14 +84,14 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 					^
 				</button>
 			</div>
-			<Show when={getBrickOpen()}>
-				<Builder.BrickBody
-					state={{
-						brick: props.brick,
-						configFields: config()?.fields || [],
-					}}
-				/>
-			</Show>
+			<Builder.BrickBody
+				state={{
+					open: getBrickOpen(),
+					brick: props.brick,
+					configFields: config()?.fields || [],
+					labelledby: `fixed-brick-${props.brick.key}`,
+				}}
+			/>
 		</li>
 	);
 };

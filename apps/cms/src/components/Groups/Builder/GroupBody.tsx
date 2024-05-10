@@ -85,10 +85,8 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			{/* Group Header */}
 			<div
 				class={classNames(
-					"w-full bg-container-4 cursor-pointer rounded-md border border-border flex justify-between items-center",
+					"w-full bg-container-4 cursor-pointer p-2.5 rounded-md border border-border flex justify-between items-center",
 					{
-						"p-2": props.state.repeaterDepth > 0,
-						"p-15": props.state.repeaterDepth === 0,
 						"border-b-0 rounded-b-none": getGroupOpen(),
 					},
 				)}
@@ -98,6 +96,11 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						toggleDropdown();
 					}
 				}}
+				id={`accordion-header-${groupId()}`}
+				aria-expanded={getGroupOpen()}
+				aria-controls={`accordion-content-${groupId()}`}
+				role="button"
+				tabIndex="0"
 			>
 				<div class="flex items-center">
 					<button
@@ -155,32 +158,33 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 				</button>
 			</div>
 			{/* Group Body */}
-			<Show when={getGroupOpen()}>
-				<div
-					class={classNames(
-						"border-border p-15 border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-colors",
-						{
-							"bg-container-3":
-								props.state.repeaterDepth % 2 !== 0,
-						},
+			<div
+				class={classNames(
+					"border-border transform-gpu origin-top border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-transform",
+					{
+						"bg-container-3": props.state.repeaterDepth % 2 !== 0,
+						"scale-y-100 h-auto p-15": getGroupOpen(),
+						"scale-y-0 h-0 p-0": !getGroupOpen(),
+					},
+				)}
+				role="region"
+				aria-labelledby={`accordion-header-${groupId()}`}
+			>
+				<For each={configChildrenFields()}>
+					{(config) => (
+						<CustomFields.DynamicField
+							state={{
+								brickIndex: brickIndex(),
+								fieldConfig: config,
+								fields: groupFields(),
+								groupId: groupId(),
+								repeaterKey: props.state.repeaterKey,
+								repeaterDepth: nextRepeaterDepth(),
+							}}
+						/>
 					)}
-				>
-					<For each={configChildrenFields()}>
-						{(config) => (
-							<CustomFields.DynamicField
-								state={{
-									brickIndex: brickIndex(),
-									fieldConfig: config,
-									fields: groupFields(),
-									groupId: groupId(),
-									repeaterKey: props.state.repeaterKey,
-									repeaterDepth: nextRepeaterDepth(),
-								}}
-							/>
-						)}
-					</For>
-				</div>
-			</Show>
+				</For>
+			</div>
 		</div>
 	);
 };

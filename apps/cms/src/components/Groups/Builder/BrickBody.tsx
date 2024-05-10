@@ -13,8 +13,10 @@ import CustomFields from "./CustomFields";
 
 interface BrickProps {
 	state: {
+		open: boolean;
 		brick: BrickData;
 		configFields: CustomField[];
+		labelledby?: string;
 	};
 }
 
@@ -47,7 +49,17 @@ export const BrickBody: Component<BrickProps> = (props) => {
 	// ----------------------------------
 	// Render
 	return (
-		<>
+		<div
+			class={classNames(
+				"transform-gpu origin-top duration-200 transition-transform overflow-hidden",
+				{
+					"scale-y-100 h-auto": props.state.open,
+					"scale-y-0 h-0": !props.state.open,
+				},
+			)}
+			role="region"
+			aria-labelledby={props.state.labelledby}
+		>
 			{/* Tabs */}
 			<Show when={allTabs().length > 0}>
 				<div class="border-b border-border mb-15 flex flex-wrap">
@@ -70,7 +82,6 @@ export const BrickBody: Component<BrickProps> = (props) => {
 					</For>
 				</div>
 			</Show>
-
 			{/* Body */}
 			<For each={props.state.configFields}>
 				{(config) => (
@@ -84,6 +95,6 @@ export const BrickBody: Component<BrickProps> = (props) => {
 					/>
 				)}
 			</For>
-		</>
+		</div>
 	);
 };

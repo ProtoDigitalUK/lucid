@@ -107,6 +107,11 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						toggleDropdown();
 					}
 				}}
+				id={`builder-brick-${props.brick.key}`}
+				aria-expanded={getBrickOpen()}
+				aria-controls={`bulder-brick-content-${props.brick.key}`}
+				role="button"
+				tabIndex="0"
 			>
 				<h3>{config()?.title}</h3>
 				<button
@@ -118,14 +123,14 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					^
 				</button>
 			</div>
-			<Show when={getBrickOpen()}>
-				<Builder.BrickBody
-					state={{
-						brick: props.brick,
-						configFields: config()?.fields || [],
-					}}
-				/>
-			</Show>
+			<Builder.BrickBody
+				state={{
+					open: getBrickOpen(),
+					brick: props.brick,
+					configFields: config()?.fields || [],
+					labelledby: `builder-brick-${props.brick.key}`,
+				}}
+			/>
 		</li>
 	);
 };
