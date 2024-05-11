@@ -48,11 +48,10 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 				<ol class="">
 					<DragDrop
 						sortOrder={(index, targetindex) => {
-							console.log("here", index, targetindex);
-							// brickStore.get.swapBrickOrder({
-							// 	brickIndex: Number(index),
-							// 	targetBrickIndex: Number(targetindex),
-							// });
+							brickStore.get.swapBrickOrder({
+								brickIndex: Number(index),
+								targetBrickIndex: Number(targetindex),
+							});
 						}}
 					>
 						{({ dragDrop }) => (
@@ -89,6 +88,8 @@ interface BuilderBrickRowProps {
 	dragDrop: DragDropCBT;
 }
 
+const DRAG_DROP_KEY = "builder-bricks-zone";
+
 const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	// -------------------------------
 	// State
@@ -104,9 +105,6 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 			(brick) => brick.id === props.brick.id,
 		);
 	});
-	const dragDropKey = createMemo(() => {
-		return `builder-brick-${props.brick.key}`;
-	});
 
 	// -------------------------------
 	// Functions
@@ -119,25 +117,25 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	// Render
 	return (
 		<li
-			data-dragkey={dragDropKey()}
+			data-dragkey={DRAG_DROP_KEY}
 			class={classNames(
 				"w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0",
 				{
 					"opacity-60":
-						props.dragDrop.getDragging()?.index === props.brick.id,
+						props.dragDrop.getDragging()?.index === brickIndex(),
 				},
 			)}
 			onDragStart={(e) =>
 				props.dragDrop.onDragStart(e, {
-					index: props.brick.id,
-					key: dragDropKey(),
+					index: brickIndex(),
+					key: DRAG_DROP_KEY,
 				})
 			}
 			onDragEnd={(e) => props.dragDrop.onDragEnd(e)}
 			onDragEnter={(e) =>
 				props.dragDrop.onDragEnter(e, {
-					index: props.brick.id,
-					key: dragDropKey(),
+					index: brickIndex(),
+					key: DRAG_DROP_KEY,
 				})
 			}
 			onDragOver={(e) => props.dragDrop.onDragOver(e)}
@@ -156,7 +154,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						toggleDropdown();
 					}
 				}}
-				id={dragDropKey()}
+				id={DRAG_DROP_KEY}
 				aria-expanded={getBrickOpen()}
 				aria-controls={`bulder-brick-content-${props.brick.key}`}
 				role="button"
@@ -168,15 +166,15 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base"
 						onDragStart={(e) =>
 							props.dragDrop.onDragStart(e, {
-								index: props.brick.id,
-								key: dragDropKey(),
+								index: brickIndex(),
+								key: DRAG_DROP_KEY,
 							})
 						}
 						onDragEnd={(e) => props.dragDrop.onDragEnd(e)}
 						onDragEnter={(e) =>
 							props.dragDrop.onDragEnter(e, {
-								index: props.brick.id,
-								key: dragDropKey(),
+								index: brickIndex(),
+								key: DRAG_DROP_KEY,
 							})
 						}
 						onDragOver={(e) => props.dragDrop.onDragOver(e)}

@@ -94,7 +94,6 @@ const DragDrop: Component<DragDropProps> = (props) => {
 	const onDragEnd = (e: DragEvent) => {
 		e.preventDefault();
 		const target = e.target as HTMLElement;
-		console.log(getDragging(), getDraggingTarget());
 		updateSortOrder(false, target);
 
 		setDragging(undefined);
@@ -111,9 +110,6 @@ const DragDrop: Component<DragDropProps> = (props) => {
 
 	const onDragOver = (e: DragEvent) => {
 		e.preventDefault();
-
-		// const target = e.target as HTMLElement;
-		// updateSortOrder(true, target);
 	};
 
 	// ----------------------------------
