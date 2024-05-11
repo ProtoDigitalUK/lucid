@@ -35,7 +35,10 @@ type BrickStoreT = {
 	}) => void;
 	removeBrick: (brickIndex: number) => void;
 	toggleBrickOpen: (brickIndex: number) => void;
-
+	swapBrickOrder: (props: {
+		brickIndex: number;
+		targetBrickIndex: number;
+	}) => void;
 	setFieldValue: (params: {
 		brickIndex: number;
 		key: string;
@@ -156,6 +159,21 @@ const [get, set] = createStore<BrickStoreT>({
 			"bricks",
 			produce((draft) => {
 				draft[brickIndex].open = draft[brickIndex].open === 1 ? 0 : 1;
+			}),
+		);
+	},
+	swapBrickOrder(props) {
+		set(
+			"bricks",
+			produce((draft) => {
+				const brick = draft[props.brickIndex];
+				const targetBrick = draft[props.targetBrickIndex];
+
+				const order = brick.order;
+				brick.order = targetBrick.order;
+				targetBrick.order = order;
+
+				draft.sort((a, b) => a.order - b.order);
 			}),
 		);
 	},

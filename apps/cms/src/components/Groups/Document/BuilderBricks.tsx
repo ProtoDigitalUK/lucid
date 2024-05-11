@@ -1,13 +1,14 @@
 import T from "@/translations";
 import { type Component, createMemo, For, Show, createSignal } from "solid-js";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
-import { FaSolidCircleChevronUp } from "solid-icons/fa";
+import { FaSolidCircleChevronUp, FaSolidGripLines } from "solid-icons/fa";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
 import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
+import DragDrop, { type DragDropCBT } from "@/components/Partials/DragDrop";
 
 interface BuilderBricksProps {
 	brickConfig: CollectionBrickConfig[];
@@ -45,14 +46,27 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 					</Button>
 				</div>
 				<ol class="">
-					<For each={builderBricks()}>
-						{(brick) => (
-							<BuilderBrickRow
-								brick={brick}
-								brickConfig={props.brickConfig}
-							/>
+					<DragDrop
+						sortOrder={(index, targetindex) => {
+							console.log("here", index, targetindex);
+							// brickStore.get.swapBrickOrder({
+							// 	brickIndex: Number(index),
+							// 	targetBrickIndex: Number(targetindex),
+							// });
+						}}
+					>
+						{({ dragDrop }) => (
+							<For each={builderBricks()}>
+								{(brick) => (
+									<BuilderBrickRow
+										brick={brick}
+										brickConfig={props.brickConfig}
+										dragDrop={dragDrop}
+									/>
+								)}
+							</For>
 						)}
-					</For>
+					</DragDrop>
 				</ol>
 			</div>
 
@@ -72,6 +86,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 interface BuilderBrickRowProps {
 	brick: BrickData;
 	brickConfig: CollectionBrickConfig[];
+	dragDrop: DragDropCBT;
 }
 
 const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
@@ -89,6 +104,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 			(brick) => brick.id === props.brick.id,
 		);
 	});
+	const dragDropKey = createMemo(() => {
+		return `builder-brick-${props.brick.key}`;
+	});
 
 	// -------------------------------
 	// Functions
@@ -100,7 +118,31 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<li class="w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0">
+		<li
+			data-dragkey={dragDropKey()}
+			class={classNames(
+				"w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0",
+				{
+					"opacity-60":
+						props.dragDrop.getDragging()?.index === props.brick.id,
+				},
+			)}
+			onDragStart={(e) =>
+				props.dragDrop.onDragStart(e, {
+					index: props.brick.id,
+					key: dragDropKey(),
+				})
+			}
+			onDragEnd={(e) => props.dragDrop.onDragEnd(e)}
+			onDragEnter={(e) =>
+				props.dragDrop.onDragEnter(e, {
+					index: props.brick.id,
+					key: dragDropKey(),
+				})
+			}
+			onDragOver={(e) => props.dragDrop.onDragOver(e)}
+		>
+			{/* Header */}
 			<div
 				class={classNames(
 					"flex items-center justify-between cursor-pointer px-15 py-2.5 focus:outline-none focus:ring-1 rounded-md ring-inset ring-primary-base",
@@ -114,13 +156,37 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						toggleDropdown();
 					}
 				}}
-				id={`builder-brick-${props.brick.key}`}
+				id={dragDropKey()}
 				aria-expanded={getBrickOpen()}
 				aria-controls={`bulder-brick-content-${props.brick.key}`}
 				role="button"
 				tabIndex="0"
 			>
-				<h3>{config()?.title}</h3>
+				<div class="flex items-center">
+					<button
+						type="button"
+						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base"
+						onDragStart={(e) =>
+							props.dragDrop.onDragStart(e, {
+								index: props.brick.id,
+								key: dragDropKey(),
+							})
+						}
+						onDragEnd={(e) => props.dragDrop.onDragEnd(e)}
+						onDragEnter={(e) =>
+							props.dragDrop.onDragEnter(e, {
+								index: props.brick.id,
+								key: dragDropKey(),
+							})
+						}
+						onDragOver={(e) => props.dragDrop.onDragOver(e)}
+						draggable={true}
+						aria-label={T("change_order")}
+					>
+						<FaSolidGripLines class="w-4" />
+					</button>
+					<h3>{config()?.title}</h3>
+				</div>
 				<div class="flex gap-2">
 					<DeleteDebounceButton
 						callback={() => {
@@ -141,6 +207,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					</button>
 				</div>
 			</div>
+			{/* Body */}
 			<Builder.BrickBody
 				state={{
 					open: getBrickOpen(),

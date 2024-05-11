@@ -64,6 +64,7 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 
 	return (
 		<li class="w-full border-b border-border">
+			{/* Header */}
 			<div
 				class={
 					"flex justify-between cursor-pointer p-15 md:p-30 focus:outline-none focus:ring-1 ring-inset ring-primary-base"
@@ -94,6 +95,7 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 					<FaSolidCircleChevronUp size={16} />
 				</button>
 			</div>
+			{/* Body */}
 			<Builder.BrickBody
 				state={{
 					open: getBrickOpen(),

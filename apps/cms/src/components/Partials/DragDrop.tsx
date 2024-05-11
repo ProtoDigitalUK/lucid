@@ -68,7 +68,7 @@ const DragDrop: Component<DragDropProps> = (props) => {
 
 		// recursively check parent nodes for valid drop target via data-zoneId attribute
 		const checkParentNodes = (node: HTMLElement) => {
-			if (node.dataset.dragkey === dragTarget?.key) {
+			if (node.dataset?.dragkey === dragTarget?.key) {
 				valid = true;
 				return;
 			}
@@ -94,6 +94,7 @@ const DragDrop: Component<DragDropProps> = (props) => {
 	const onDragEnd = (e: DragEvent) => {
 		e.preventDefault();
 		const target = e.target as HTMLElement;
+		console.log(getDragging(), getDraggingTarget());
 		updateSortOrder(false, target);
 
 		setDragging(undefined);
