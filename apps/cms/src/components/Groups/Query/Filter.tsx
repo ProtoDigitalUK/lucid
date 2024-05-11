@@ -10,9 +10,7 @@ import {
 	Show,
 } from "solid-js";
 import { FaSolidFilter, FaSolidXmark } from "solid-icons/fa";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import Form from "@/components/Groups/Form";

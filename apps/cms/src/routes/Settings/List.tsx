@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { type Component, Match, Switch, createMemo } from "solid-js";
 import { useLocation } from "@solidjs/router";
-// Services
 import api from "@/services/api";
-// Componetns
 import Layout from "@/components/Groups/Layout";
 import GeneralSettingsRoute from "@/routes/Settings/General";
 

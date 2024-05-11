@@ -1,13 +1,7 @@
 import { type Component, Show, createSignal, createMemo } from "solid-js";
 import classnames from "classnames";
 import { FaSolidEye, FaSolidEyeSlash } from "solid-icons/fa";
-// Types
-import type {
-	ErrorResult,
-	ErrorResultObj,
-	FieldErrors,
-} from "@lucidcms/core/types";
-// Components
+import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
 import Form from "@/components/Groups/Form";
 
 interface InputProps {

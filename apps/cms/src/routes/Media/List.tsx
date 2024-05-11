@@ -1,10 +1,7 @@
 import T from "@/translations";
 import { type Component, createSignal } from "solid-js";
-// Hooks
 import useSearchParams from "@/hooks/useSearchParams";
-// Store
 import userStore from "@/store/userStore";
-// Componetns
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import MediaGrid from "@/components/Grids/MediaGrid";

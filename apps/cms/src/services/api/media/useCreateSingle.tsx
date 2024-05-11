@@ -1,8 +1,6 @@
-// Utils
 import request from "@/utils/request";
 import objectToFormData from "@/utils/object-to-formdata";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, MediaResponse } from "@lucidcms/core/types";
 
 interface Params {

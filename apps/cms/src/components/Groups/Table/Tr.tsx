@@ -1,8 +1,6 @@
 import { type Component, type JSXElement, Show, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-// Types
 import type { TableRowProps } from "@/types/components";
-// Components
 import SelectCol from "@/components/Tables/Columns/SelectCol";
 import ActionMenuCol from "@/components/Tables/Columns/ActionMenuCol";
 import type { ActionDropdownProps } from "@/components/Partials/ActionDropdown";

@@ -1,14 +1,10 @@
 import T from "@/translations";
 import { type Component, Show, Switch, Match, type JSXElement } from "solid-js";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
-// Components
 import Query from "@/components/Groups/Query";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";

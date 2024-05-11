@@ -1,9 +1,7 @@
 import T from "@/translations";
-// Utils
 import spawnToast from "@/utils/spawn-toast";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, RoleResponse } from "@lucidcms/core/types";
 
 interface Params {

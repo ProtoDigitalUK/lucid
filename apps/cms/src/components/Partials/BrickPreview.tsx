@@ -1,16 +1,13 @@
 import type { Component } from "solid-js";
-// Assets
 import brickPlaceholder from "@/assets/images/brick-placeholder.jpg";
-// Types
-import type { BrickConfigT } from "@headless/types/src/bricks";
-// Components
+import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import { Image } from "@kobalte/core";
 import AspectRatio from "@/components/Partials/AspectRatio";
 import classNames from "classnames";
 
 interface BrickPreviewProps {
 	data: {
-		brick: BrickConfigT | undefined;
+		brick: CollectionBrickConfig | undefined;
 	};
 	options?: {
 		rounded?: boolean;

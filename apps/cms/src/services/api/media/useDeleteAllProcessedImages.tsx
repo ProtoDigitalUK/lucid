@@ -1,8 +1,6 @@
 import T from "@/translations";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 export const deleteAllProcessedImagesReq = () => {

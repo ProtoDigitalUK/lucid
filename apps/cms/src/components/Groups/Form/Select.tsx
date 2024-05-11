@@ -11,13 +11,10 @@ import {
 } from "solid-js";
 import classNames from "classnames";
 import { debounce } from "@solid-primitives/scheduled";
-// Types
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
-// Components
 import { FaSolidCheck, FaSolidSort, FaSolidXmark } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
-// Components
 import Form from "@/components/Groups/Form";
 import Spinner from "@/components/Partials/Spinner";
 

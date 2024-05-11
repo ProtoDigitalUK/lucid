@@ -16,11 +16,8 @@ import {
 	FaSolidXmark,
 	FaSolidFile,
 } from "solid-icons/fa";
-// Utils
 import helpers from "@/utils/helpers";
-// Types
 import type { ErrorResult, MediaResponse } from "@lucidcms/core/types";
-// Components
 import Form from "@/components/Groups/Form";
 
 export interface SingleFileUploadProps {

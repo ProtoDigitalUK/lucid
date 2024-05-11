@@ -1,12 +1,9 @@
 import T from "@/translations";
 import { useNavigate } from "@solidjs/router";
-// Store
 import userStore from "@/store/userStore";
-// Utils
 import { clearCookie } from "@/utils/cookie";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
 
 export const logoutReq = () => {

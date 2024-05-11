@@ -12,13 +12,9 @@ import {
 	type Accessor,
 } from "solid-js";
 import { FaSolidArrowLeft } from "solid-icons/fa";
-// Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
-// Types
 import type { ErrorResponse } from "@lucidcms/core/types";
-// Store
 import contentLanguageStore from "@/store/contentLanguageStore";
-// Components
 import { Dialog } from "@kobalte/core";
 import Loading from "@/components/Partials/Loading";
 import ErrorBlock from "@/components/Partials/ErrorBlock";

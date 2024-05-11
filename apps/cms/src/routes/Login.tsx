@@ -1,6 +1,5 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-// Components
 import LoginForm from "@/components/Forms/Auth/LoginForm";
 
 const LoginRoute: Component = () => {

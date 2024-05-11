@@ -1,6 +1,5 @@
 import { type Component, Show } from "solid-js";
 import { FaSolidTriangleExclamation } from "solid-icons/fa";
-// Types
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
 
 interface ErrorMessageProps {
@@ -16,6 +15,7 @@ export const ErrorMessage: Component<ErrorMessageProps> = (props) => {
 					size={16}
 					class="text-error-base mt-[3px] mr-2"
 				/>
+				{/* TODO: fix typing here */}
 				{props.errors?.message}
 			</a>
 		</Show>

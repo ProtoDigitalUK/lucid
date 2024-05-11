@@ -1,11 +1,8 @@
 import T from "@/translations";
 import { type Component, Switch, Match } from "solid-js";
 import { useLocation, useNavigate } from "@solidjs/router";
-// Services
 import api from "@/services/api";
-// Assets
 import notifyIllustration from "@/assets/illustrations/notify.svg";
-// Components
 import ResetPasswordForm from "@/components/Forms/Auth/ResetPasswordForm";
 import Loading from "@/components/Partials/Loading";
 import ErrorBlock from "@/components/Partials/ErrorBlock";

@@ -1,7 +1,6 @@
 import T from "@/translations";
 import { type Component, createSignal, createEffect, Show } from "solid-js";
 import { debounce } from "@solid-primitives/scheduled";
-// Components
 import Spinner from "@/components/Partials/Spinner";
 
 interface SearchProps {

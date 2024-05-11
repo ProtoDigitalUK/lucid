@@ -10,15 +10,11 @@ import {
 	Switch,
 	Match,
 } from "solid-js";
-// Types
 import type { ResponseBody } from "@lucidcms/core/types";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Assets
 import notifySvg from "@/assets/illustrations/notify.svg";
 import emptySvg from "@/assets/illustrations/empty.svg";
 import noPermission from "@/assets/illustrations/no-permission.svg";
-// Components
 import Table from "@/components/Groups/Table";
 import Query from "@/components/Groups/Query";
 import SelectCol from "@/components/Tables/Columns/SelectCol";

@@ -8,13 +8,10 @@ import {
 	Match,
 } from "solid-js";
 import classnames from "classnames";
-// Types
 import type { ErrorResult } from "@lucidcms/core/types";
-// Components
 import { FaSolidCheck, FaSolidXmark, FaSolidSort } from "solid-icons/fa";
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
-// Components
 import Form from "@/components/Groups/Form";
 
 export type SelectMultipleValueT = {

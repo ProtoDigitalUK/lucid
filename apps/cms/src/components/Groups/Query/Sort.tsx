@@ -1,9 +1,7 @@
 import T from "@/translations";
 import { type Component, For, Switch, createMemo, Match } from "solid-js";
 import { FaSolidSort, FaSolidCaretUp, FaSolidMinus } from "solid-icons/fa";
-// Hooks
 import type useSearchParams from "@/hooks/useSearchParams";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 import DropdownContent from "@/components/Partials/DropdownContent";
 import classNames from "classnames";

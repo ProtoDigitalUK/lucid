@@ -1,6 +1,5 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-// Components
 import Button from "@/components/Partials/Button";
 
 interface SelectActionProps {

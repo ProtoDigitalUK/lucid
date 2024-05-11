@@ -1,11 +1,8 @@
 import { createEffect, createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Store
 import contentLanguageStore from "@/store/contentLanguageStore";
-// Types
 import type { ResponseBody, LanguageResponse } from "@lucidcms/core/types";
 
 interface QueryParams {

@@ -1,9 +1,7 @@
 import { createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
-// Utils
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-// Types
 import type { ResponseBody, PermissionGroup } from "@lucidcms/core/types";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>

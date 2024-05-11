@@ -1,8 +1,6 @@
 import { type Component, createSignal, For, Show } from "solid-js";
 import classnames from "classnames";
-// Types
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface ColourProps {

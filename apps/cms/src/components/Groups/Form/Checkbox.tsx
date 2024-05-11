@@ -2,9 +2,7 @@ import { type Component, createSignal } from "solid-js";
 import classnames from "classnames";
 import { FaSolidCheck } from "solid-icons/fa";
 import { Checkbox } from "@kobalte/core";
-// Types
 import type { ErrorResult, FieldErrors } from "@lucidcms/core/types";
-// Components
 import Form from "@/components/Groups/Form";
 
 interface CheckboxInputProps {

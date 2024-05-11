@@ -1,7 +1,5 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-
-// Components
 import ForgotPasswordForm from "@/components/Forms/Auth/ForgotPasswordForm";
 
 const ForgotPasswordRoute: Component = () => {

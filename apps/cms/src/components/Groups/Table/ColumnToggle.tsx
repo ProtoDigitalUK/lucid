@@ -1,7 +1,6 @@
 import T from "@/translations";
 import { type Component, For } from "solid-js";
 import { FaSolidTable } from "solid-icons/fa";
-// Components
 import { DropdownMenu } from "@kobalte/core";
 import Form from "@/components/Groups/Form";
 import DropdownContent from "@/components/Partials/DropdownContent";

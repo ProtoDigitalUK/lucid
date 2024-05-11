@@ -1,15 +1,10 @@
 import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
-// Stores
 import userStore from "@/store/userStore";
-// Types
 import type { MediaResponse } from "@lucidcms/core/types";
-// Hooks
 import type useRowTarget from "@/hooks/useRowTarget";
-// Utils
 import helpers from "@/utils/helpers";
-// Components
 import AspectRatio from "@/components/Partials/AspectRatio";
 import Pill from "@/components/Partials/Pill";
 import ClickToCopy from "@/components/Partials/ClickToCopy";

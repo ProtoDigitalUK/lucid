@@ -1,5 +1,4 @@
 import { createStore } from "solid-js/store";
-// Types
 import type { LanguageResponse } from "@lucidcms/core/types";
 
 type ContentLangStoreT = {
