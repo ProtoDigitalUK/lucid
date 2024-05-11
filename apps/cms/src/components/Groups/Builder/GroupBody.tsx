@@ -1,16 +1,12 @@
 import T from "@/translations/index";
 import classNames from "classnames";
-import { type Component, For, createMemo, createSignal, Show } from "solid-js";
+import { type Component, For, createMemo, createSignal } from "solid-js";
 import type { DragDropCBT } from "@/components/Partials/DragDrop";
 import type { CustomField, FieldResponse } from "@lucidcms/core/types";
-import { debounce } from "@solid-primitives/scheduled";
-import {
-	FaSolidGripLines,
-	FaSolidTrashCan,
-	FaSolidCircleChevronUp,
-} from "solid-icons/fa";
+import { FaSolidGripLines, FaSolidCircleChevronUp } from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
+import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
 
 interface GroupBodyProps {
 	state: {
@@ -31,7 +27,6 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 	// -------------------------------
 	// State
 	const [getGroupOpen, setGroupOpen] = createSignal(!!props.state.groupOpen);
-	const [getConfirmRemove, setConfirmRemove] = createSignal<0 | 1>(0);
 
 	// -------------------------------
 	// Memos
@@ -55,16 +50,6 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			groupId(),
 		);
 	};
-	const removeGroup = (groupId: number | string) => {
-		brickStore.get.removeRepeaterGroup({
-			brickIndex: brickIndex(),
-			repeaterKey: props.state.repeaterKey,
-			groupId: groupId,
-		});
-	};
-	const revertConfigDelete = debounce(() => {
-		setConfirmRemove(0);
-	}, 4000);
 
 	// -------------------------------
 	// Render
@@ -139,33 +124,15 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 					</h3>
 				</div>
 				<div class="flex gap-2">
-					<button
-						type="button"
-						class={classNames(
-							"transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base",
-							{
-								"text-icon-base hover:text-error-base":
-									getConfirmRemove() === 0,
-								"text-error-hover animate-pulse":
-									getConfirmRemove() === 1,
-							},
-						)}
-						onClick={(e) => {
-							e.stopPropagation();
-							if (getConfirmRemove() === 1) {
-								removeGroup(groupId());
-							}
-							setConfirmRemove(1);
-							revertConfigDelete();
+					<DeleteDebounceButton
+						callback={() => {
+							brickStore.get.removeRepeaterGroup({
+								brickIndex: brickIndex(),
+								repeaterKey: props.state.repeaterKey,
+								groupId: groupId(),
+							});
 						}}
-						aria-label={
-							getConfirmRemove() === 1
-								? T("confirm_delete")
-								: T("delete")
-						}
-					>
-						<FaSolidTrashCan class="w-4" />
-					</button>
+					/>
 					<button
 						type="button"
 						class={classNames(

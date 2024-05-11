@@ -7,6 +7,7 @@ import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
 import AddBrick from "@/components/Modals/Bricks/AddBrick";
+import DeleteDebounceButton from "@/components/Partials/DeleteDebounceButton";
 
 interface BuilderBricksProps {
 	brickConfig: CollectionBrickConfig[];
@@ -120,18 +121,25 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 				tabIndex="0"
 			>
 				<h3>{config()?.title}</h3>
-				<button
-					type="button"
-					tabIndex="-1"
-					class={classNames(
-						"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
-						{
-							"transform rotate-180": getBrickOpen(),
-						},
-					)}
-				>
-					<FaSolidCircleChevronUp size={16} />
-				</button>
+				<div class="flex gap-2">
+					<DeleteDebounceButton
+						callback={() => {
+							brickStore.get.removeBrick(brickIndex());
+						}}
+					/>
+					<button
+						type="button"
+						tabIndex="-1"
+						class={classNames(
+							"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
+							{
+								"transform rotate-180": getBrickOpen(),
+							},
+						)}
+					>
+						<FaSolidCircleChevronUp size={16} />
+					</button>
+				</div>
 			</div>
 			<Builder.BrickBody
 				state={{

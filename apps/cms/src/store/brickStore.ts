@@ -33,6 +33,7 @@ type BrickStoreT = {
 	addBrick: (props: {
 		brickConfig: CollectionBrickConfig;
 	}) => void;
+	removeBrick: (brickIndex: number) => void;
 	toggleBrickOpen: (brickIndex: number) => void;
 
 	setFieldValue: (params: {
@@ -138,6 +139,15 @@ const [get, set] = createStore<BrickStoreT>({
 					open: 0,
 					fields: [],
 				});
+			}),
+		);
+	},
+	removeBrick(brickIndex) {
+		set(
+			"bricks",
+			produce((draft) => {
+				if (draft[brickIndex].type !== "builder") return;
+				draft.splice(brickIndex, 1);
 			}),
 		);
 	},
