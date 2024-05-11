@@ -36,7 +36,7 @@ const SortItem: Component<SortItemProps> = (props) => {
 		<li class="mb-2 last-of-type:mb-0">
 			<button
 				tabIndex={0}
-				class="w-full flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-primary-base"
+				class="w-full flex items-center justify-between group focus:outline-none focus:ring-1 focus:ring-primary-base"
 				onClick={() => {
 					let sortValue: "asc" | "desc" | undefined;
 					if (sort() === undefined) {

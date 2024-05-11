@@ -1,6 +1,7 @@
 import T from "@/translations";
 import { type Component, createMemo, For, Show, createSignal } from "solid-js";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
+import { FaSolidCircleChevronUp } from "solid-icons/fa";
 import classNames from "classnames";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
@@ -98,10 +99,10 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		<li class="w-full bg-container-2 border border-border px-15 py-2.5 rounded-md mb-15 last:mb-0">
+		<li class="w-full bg-container-2 border border-border rounded-md mb-15 last:mb-0">
 			<div
 				class={classNames(
-					"flex items-center justify-between cursor-pointer",
+					"flex items-center justify-between cursor-pointer px-15 py-2.5 focus:outline-none focus:ring-1 rounded-md ring-inset ring-primary-base",
 					{
 						"mb-15": getBrickOpen(),
 					},
@@ -121,11 +122,15 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 				<h3>{config()?.title}</h3>
 				<button
 					type="button"
-					class={classNames("text-2xl", {
-						"transform rotate-180": getBrickOpen(),
-					})}
+					tabIndex="-1"
+					class={classNames(
+						"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
+						{
+							"transform rotate-180": getBrickOpen(),
+						},
+					)}
 				>
-					^
+					<FaSolidCircleChevronUp size={16} />
 				</button>
 			</div>
 			<Builder.BrickBody
@@ -135,6 +140,9 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					brickIndex: brickIndex(),
 					configFields: config()?.fields || [],
 					labelledby: `builder-brick-${props.brick.key}`,
+				}}
+				options={{
+					padding: "15",
 				}}
 			/>
 		</li>

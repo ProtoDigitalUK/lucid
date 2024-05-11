@@ -68,7 +68,7 @@ export const Colour: Component<ColourProps> = (props) => {
 						{(preset) => (
 							<li class="inline-block">
 								<button
-									class="focus:outline-none focus:ring-2 focus:ring-primary-base focus:ring-opacity-50 rounded-md h-6 w-6 mr-1 border border-border"
+									class="focus:outline-none focus:ring-1 focus:ring-primary-base focus:ring-opacity-50 rounded-md h-6 w-6 mr-1 border border-border"
 									style={{
 										"background-color": preset,
 									}}

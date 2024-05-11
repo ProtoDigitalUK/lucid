@@ -59,7 +59,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 			/>
 			<button
 				type="button"
-				class="bg-container-4 disabled:cursor-not-allowed disabled:opacity-50 rounded-md flex border border-border mt-1 relative h-10 focus:border-primary-base group"
+				class="bg-container-4 disabled:cursor-not-allowed disabled:opacity-50 rounded-md flex border border-border mt-1 relative h-10 focus:border-primary-base focus:outline-none focus:ring-1 ring-inset ring-primary-base group"
 				onClick={() => {
 					checkboxRef?.click();
 				}}

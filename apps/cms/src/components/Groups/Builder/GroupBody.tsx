@@ -4,7 +4,11 @@ import { type Component, For, createMemo, createSignal, Show } from "solid-js";
 import type { DragDropCBT } from "@/components/Partials/DragDrop";
 import type { CustomField, FieldResponse } from "@lucidcms/core/types";
 import { debounce } from "@solid-primitives/scheduled";
-import { FaSolidGripLines, FaSolidTrashCan } from "solid-icons/fa";
+import {
+	FaSolidGripLines,
+	FaSolidTrashCan,
+	FaSolidCircleChevronUp,
+} from "solid-icons/fa";
 import brickStore from "@/store/brickStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 
@@ -89,7 +93,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 			{/* Group Header */}
 			<div
 				class={classNames(
-					"w-full bg-container-4 cursor-pointer p-2.5 rounded-md border border-border flex justify-between items-center",
+					"w-full bg-container-4 focus:outline-none focus:ring-1 ring-inset ring-primary-base cursor-pointer p-2.5 rounded-md border border-border flex justify-between items-center",
 					{
 						"border-b-0 rounded-b-none": getGroupOpen(),
 					},
@@ -109,7 +113,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 				<div class="flex items-center">
 					<button
 						type="button"
-						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer"
+						class="text-icon-base mr-2 hover:text-primary-hover transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base"
 						onDragStart={(e) =>
 							props.state.dragDrop.onDragStart(e, {
 								index: groupId(),
@@ -134,60 +138,78 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						{props.state.groupIndex + 1}
 					</h3>
 				</div>
-				<button
-					type="button"
-					class={classNames(
-						"opacity-60 hover:opacity-100 transition-all duration-200 cursor-pointer",
-						{
-							"text-icon-base": getConfirmRemove() === 0,
-							"text-error-hover animate-pulse opacity-100":
-								getConfirmRemove() === 1,
-						},
-					)}
-					onClick={(e) => {
-						e.stopPropagation();
-						if (getConfirmRemove() === 1) {
-							removeGroup(groupId());
+				<div class="flex gap-2">
+					<button
+						type="button"
+						class={classNames(
+							"transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 ring-primary-base",
+							{
+								"text-icon-base hover:text-error-base":
+									getConfirmRemove() === 0,
+								"text-error-hover animate-pulse":
+									getConfirmRemove() === 1,
+							},
+						)}
+						onClick={(e) => {
+							e.stopPropagation();
+							if (getConfirmRemove() === 1) {
+								removeGroup(groupId());
+							}
+							setConfirmRemove(1);
+							revertConfigDelete();
+						}}
+						aria-label={
+							getConfirmRemove() === 1
+								? T("confirm_delete")
+								: T("delete")
 						}
-						setConfirmRemove(1);
-						revertConfigDelete();
-					}}
-					aria-label={
-						getConfirmRemove() === 1
-							? T("confirm_delete")
-							: T("delete")
-					}
-				>
-					<FaSolidTrashCan class="w-4" />
-				</button>
+					>
+						<FaSolidTrashCan class="w-4" />
+					</button>
+					<button
+						type="button"
+						class={classNames(
+							"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
+							{
+								"transform rotate-180": getGroupOpen(),
+							},
+						)}
+						tabIndex="-1"
+					>
+						<FaSolidCircleChevronUp size={16} />
+					</button>
+				</div>
 			</div>
 			{/* Group Body */}
 			<div
 				class={classNames(
-					"border-border transform-gpu origin-top border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-transform",
+					"border-border transform-gpu origin-top border-x border-b mb-2.5 last:mb-0 rounded-b-md overflow-hidden w-full duration-200 transition-all",
 					{
 						"bg-container-3": props.state.repeaterDepth % 2 !== 0,
-						"scale-y-100 h-auto p-15": getGroupOpen(),
-						"scale-y-0 h-0 p-0": !getGroupOpen(),
+						"scale-y-100 h-auto opacity-100 visible":
+							getGroupOpen(),
+						"scale-y-0 h-0 opacity-0 invisible": !getGroupOpen(),
 					},
 				)}
 				role="region"
 				aria-labelledby={`accordion-header-${groupId()}`}
 			>
-				<For each={configChildrenFields()}>
-					{(config) => (
-						<CustomFields.DynamicField
-							state={{
-								brickIndex: brickIndex(),
-								fieldConfig: config,
-								fields: groupFields(),
-								groupId: groupId(),
-								repeaterKey: props.state.repeaterKey,
-								repeaterDepth: nextRepeaterDepth(),
-							}}
-						/>
-					)}
-				</For>
+				<div class="p-15">
+					<For each={configChildrenFields()}>
+						{(config) => (
+							<CustomFields.DynamicField
+								state={{
+									brickIndex: brickIndex(),
+									fieldConfig: config,
+									fields: groupFields(),
+									groupId: groupId(),
+									repeaterKey: props.state.repeaterKey,
+									repeaterDepth: nextRepeaterDepth(),
+								}}
+							/>
+						)}
+					</For>
+				</div>
 			</div>
 		</div>
 	);

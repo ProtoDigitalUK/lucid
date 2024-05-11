@@ -36,6 +36,7 @@ export const CollectionSudoBrick: Component<CollectionSudoBrickProps> = (
 						brickIndex: brickIndex(),
 						configFields: props.fields,
 					}}
+					options={{}}
 				/>
 			</div>
 		</Show>

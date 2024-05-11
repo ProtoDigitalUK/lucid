@@ -1,6 +1,7 @@
 import { type Component, createMemo, For, createSignal } from "solid-js";
 import type { CollectionBrickConfig } from "@lucidcms/core/types";
 import classNames from "classnames";
+import { FaSolidCircleChevronUp } from "solid-icons/fa";
 import brickStore, { type BrickData } from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 
@@ -62,11 +63,11 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 	};
 
 	return (
-		<li class="w-full border-b border-border p-15 md:p-30">
+		<li class="w-full border-b border-border">
 			<div
-				class={classNames("flex justify-between cursor-pointer", {
-					"mb-15": getBrickOpen(),
-				})}
+				class={
+					"flex justify-between cursor-pointer p-15 md:p-30 focus:outline-none focus:ring-1 ring-inset ring-primary-base"
+				}
 				onClick={toggleDropdown}
 				onKeyDown={(e) => {
 					if (e.key === "Enter") {
@@ -82,11 +83,15 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 				<h2>{config()?.title}:</h2>
 				<button
 					type="button"
-					class={classNames("text-2xl", {
-						"transform rotate-180": getBrickOpen(),
-					})}
+					tabIndex="-1"
+					class={classNames(
+						"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
+						{
+							"transform rotate-180": getBrickOpen(),
+						},
+					)}
 				>
-					^
+					<FaSolidCircleChevronUp size={16} />
 				</button>
 			</div>
 			<Builder.BrickBody
@@ -96,6 +101,10 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 					brickIndex: brickIndex(),
 					configFields: config()?.fields || [],
 					labelledby: `fixed-brick-${props.brick.key}`,
+				}}
+				options={{
+					padding: "30",
+					bleedTop: true,
 				}}
 			/>
 		</li>
