@@ -96,6 +96,10 @@ export default class CollectionsFormatter {
 				type: "boolean",
 				nullable: true,
 			},
+			translations: {
+				type: "boolean",
+				nullable: true,
+			},
 			fields: {
 				type: "array",
 				items: {

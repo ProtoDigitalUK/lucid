@@ -32,11 +32,9 @@ export interface CollectionTextareaConfig extends TextareaConfig {
 export interface CollectionDateTimeConfig extends DateTimeConfig {
 	collection?: FieldCollectionConfig;
 }
-
 export interface CollectionUserConfig extends UserConfig {
 	collection?: Omit<FieldCollectionConfig, "filterable">;
 }
-
 export interface CollectionMediaConfig extends MediaConfig {
 	collection?: Omit<FieldCollectionConfig, "filterable">;
 }

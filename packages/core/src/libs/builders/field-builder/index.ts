@@ -185,11 +185,14 @@ class FieldBuilder {
 	//
 	protected addToFields(type: FieldTypes, config: CustomFieldConfigs) {
 		this.meta.fieldKeys.push(config.key);
+
+		// TODO: return to this, probably need a better solution to setting default configs for each custom field.
 		this.fields.set(config.key, {
 			...config,
 			type: type,
 			title: config.title || this.keyToTitle(config.key),
 			default: this.#fieldDefaults(type, config),
+			translations: this.#fieldTranslations(type, config),
 		});
 	}
 	protected keyToTitle(key: string) {
@@ -202,6 +205,7 @@ class FieldBuilder {
 
 		return title;
 	}
+	// TODO: remove this
 	#fieldDefaults(
 		type: FieldTypes,
 		config: CustomFieldConfigs,
@@ -248,6 +252,53 @@ class FieldBuilder {
 			}
 		}
 	}
+	#fieldTranslations(
+		type: FieldTypes,
+		config: CustomFieldConfigs,
+	): boolean | undefined {
+		switch (type) {
+			case "tab": {
+				return undefined;
+			}
+			case "text": {
+				return (config as TextConfig).translations || true;
+			}
+			case "wysiwyg": {
+				return (config as WysiwygConfig).translations || true;
+			}
+			case "media": {
+				return (config as MediaConfig).translations || false;
+			}
+			case "number": {
+				return (config as NumberConfig).translations || false;
+			}
+			case "checkbox": {
+				return (config as CheckboxConfig).translations || false;
+			}
+			case "select": {
+				return (config as SelectConfig).translations || false;
+			}
+			case "textarea": {
+				return (config as TextareaConfig).translations || true;
+			}
+			case "json": {
+				return (config as JSONConfig).translations || false;
+			}
+			case "colour": {
+				return (config as ColourConfig).translations || false;
+			}
+			case "datetime": {
+				return (config as DateTimeConfig).translations || false;
+			}
+			case "user": {
+				return (config as UserConfig).translations || false;
+			}
+			case "link": {
+				return (config as LinkConfig).translations || false;
+			}
+		}
+	}
+
 	// -----------------------------------------
 	// Validation
 	// ------------------------------------
