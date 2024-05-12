@@ -121,6 +121,9 @@ const CollectionsDocumentsEditRoute: Component<
 		if (errors === undefined) return false;
 		return errors.some((field) => field.languageId !== contentLanguage());
 	});
+	const canSaveDocument = createMemo(() => {
+		return !brickStore.get.documentMutated && !isSaving();
+	});
 
 	// ---------------------------------
 	// Functions
@@ -133,6 +136,7 @@ const CollectionsDocumentsEditRoute: Component<
 				fields: brickHelpers.getCollectionSudoBrickFields(),
 			},
 		});
+		brickStore.set("documentMutated", false);
 	};
 
 	// ---------------------------------
@@ -226,6 +230,7 @@ const CollectionsDocumentsEditRoute: Component<
 										theme="primary"
 										size="small"
 										onClick={upsertDocumentAction}
+										disabled={canSaveDocument()}
 									>
 										{T("save", {
 											singular:

@@ -24,6 +24,7 @@ export interface BrickData {
 type BrickStoreT = {
 	bricks: Array<BrickData>;
 	fieldsErrors: Array<FieldErrors>;
+	documentMutated: boolean;
 	// functions
 	reset: () => void;
 	setBricks: (
@@ -84,6 +85,7 @@ type BrickStoreT = {
 const [get, set] = createStore<BrickStoreT>({
 	bricks: [],
 	fieldsErrors: [],
+	documentMutated: false,
 	reset() {
 		set("bricks", []);
 		set("fieldsErrors", []);
@@ -144,6 +146,7 @@ const [get, set] = createStore<BrickStoreT>({
 				});
 			}),
 		);
+		set("documentMutated", true);
 	},
 	removeBrick(brickIndex) {
 		set(
@@ -153,6 +156,7 @@ const [get, set] = createStore<BrickStoreT>({
 				draft.splice(brickIndex, 1);
 			}),
 		);
+		set("documentMutated", true);
 	},
 	toggleBrickOpen(brickIndex) {
 		set(
@@ -161,6 +165,7 @@ const [get, set] = createStore<BrickStoreT>({
 				draft[brickIndex].open = draft[brickIndex].open === 1 ? 0 : 1;
 			}),
 		);
+		set("documentMutated", true);
 	},
 	swapBrickOrder(props) {
 		set(
@@ -176,6 +181,7 @@ const [get, set] = createStore<BrickStoreT>({
 				draft.sort((a, b) => a.order - b.order);
 			}),
 		);
+		set("documentMutated", true);
 	},
 	// Fields
 	setFieldValue(params) {
@@ -196,6 +202,7 @@ const [get, set] = createStore<BrickStoreT>({
 				field.meta = params.meta || undefined;
 			}),
 		);
+		set("documentMutated", true);
 	},
 	addField(params) {
 		const newField: FieldResponse = {
@@ -290,6 +297,7 @@ const [get, set] = createStore<BrickStoreT>({
 				});
 			}),
 		);
+		set("documentMutated", true);
 	},
 	removeRepeaterGroup(params) {
 		set(
@@ -312,6 +320,7 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups.splice(groupIndex, 1);
 			}),
 		);
+		set("documentMutated", true);
 	},
 	swapGroupOrder(params) {
 		set(
@@ -344,6 +353,7 @@ const [get, set] = createStore<BrickStoreT>({
 				field.groups.sort((a, b) => a.order - b.order);
 			}),
 		);
+		set("documentMutated", true);
 	},
 	toggleGroupOpen: (brickIndex, repeaterKey, groupId) => {
 		set(
@@ -362,6 +372,7 @@ const [get, set] = createStore<BrickStoreT>({
 				group.open = group.open === 1 ? 0 : 1;
 			}),
 		);
+		set("documentMutated", true);
 	},
 });
 

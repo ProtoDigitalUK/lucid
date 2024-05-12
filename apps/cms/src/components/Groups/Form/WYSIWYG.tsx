@@ -47,8 +47,8 @@ export const WYSIWYG: Component<WYSIWYGProps> = (props) => {
 		});
 		quill.on("text-change", () => {
 			if (props.disabled) return;
-			const value = quill.root.innerHTML;
-			props.onChange(value);
+			if (props.value === quill.root.innerHTML) return;
+			props.onChange(quill.root.innerHTML);
 		});
 
 		quill.root.innerHTML = props.value;
