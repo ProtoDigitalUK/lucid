@@ -19,7 +19,6 @@ export default class LanguagesFormatter {
 		const iso6391Code = props.language.code.split("-")[0];
 
 		return {
-			id: props.language.id,
 			code: props.language.code,
 			name: (iso6391Code && ISO6391.getName(iso6391Code)) || null,
 			nativeName:
@@ -33,7 +32,6 @@ export default class LanguagesFormatter {
 	static swagger = {
 		type: "object",
 		properties: {
-			id: { type: "number", example: 1 },
 			code: { type: "string", example: "en" },
 			name: { type: "string", example: "English" },
 			nativeName: { type: "string", example: "English" },

@@ -25,7 +25,7 @@ const getMultipleController: RouteController<
 			},
 			{
 				query: request.query,
-				languageId: request.language.id,
+				languageCode: request.language.code,
 			},
 		);
 

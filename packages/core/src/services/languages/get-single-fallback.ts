@@ -4,7 +4,7 @@ import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
-	id?: number;
+	code?: string;
 }
 
 const getSingleFallback = async (
@@ -13,14 +13,14 @@ const getSingleFallback = async (
 ) => {
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
-	if (data.id !== undefined) {
+	if (data.code !== undefined) {
 		const language = await LanguagesRepo.selectSingle({
-			select: ["id", "code"],
+			select: ["code"],
 			where: [
 				{
-					key: "id",
+					key: "code",
 					operator: "=",
-					value: data.id,
+					value: data.code,
 				},
 			],
 		});
@@ -39,13 +39,12 @@ const getSingleFallback = async (
 		}
 
 		return {
-			id: language.id,
 			code: language.code,
 		};
 	}
 
 	const defaultLanguage = await LanguagesRepo.selectSingle({
-		select: ["id", "code"],
+		select: ["code"],
 		where: [
 			{
 				key: "is_default",
@@ -69,7 +68,6 @@ const getSingleFallback = async (
 	}
 
 	return {
-		id: defaultLanguage.id,
 		code: defaultLanguage.code,
 	};
 };

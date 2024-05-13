@@ -163,13 +163,13 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 				titleTranslations: props.field?.media_title_translations?.map(
 					(t) => ({
 						value: t.value,
-						languageId: t.language_id,
+						languageCode: t.language_code,
 					}),
 				),
 				altTranslations: props.field?.media_alt_translations?.map(
 					(t) => ({
 						value: t.value,
-						languageId: t.language_id,
+						languageCode: t.language_code,
 					}),
 				),
 				type: (props.field?.media_type as MediaType) ?? null,

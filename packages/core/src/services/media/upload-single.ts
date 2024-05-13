@@ -6,7 +6,7 @@ import mediaServices from "./index.js";
 import translationsServices from "../translations/index.js";
 import {
 	mergeTranslationGroups,
-	getUniqueLanguageIDs,
+	getUniqueLanguageCodes,
 } from "../../utils/translation-helpers.js";
 import type { BooleanInt } from "../../libs/db/types.js";
 import Repository from "../../libs/repositories/index.js";
@@ -15,11 +15,11 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 export interface ServiceData {
 	fileData: MultipartFile | undefined;
 	titleTranslations?: {
-		languageId: number;
+		languageCode: string;
 		value: string | null;
 	}[];
 	altTranslations?: {
-		languageId: number;
+		languageCode: string;
 		value: string | null;
 	}[];
 	visible?: BooleanInt;
@@ -39,7 +39,7 @@ const uploadSingle = async (
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs([
+			languageCodes: getUniqueLanguageCodes([
 				data.titleTranslations || [],
 				data.altTranslations || [],
 			]),

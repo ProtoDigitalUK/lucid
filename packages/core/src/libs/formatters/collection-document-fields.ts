@@ -16,7 +16,7 @@ export interface FieldProp {
 	collection_brick_id: number | null;
 	collection_document_id: number;
 	group_id?: number | null;
-	language_id: number;
+	language_code: string;
 	key: string;
 	type: string;
 	text_value: string | null;
@@ -38,11 +38,11 @@ export interface FieldProp {
 	media_type?: string | null;
 	media_title_translations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		language_code: string | null;
 	}>;
 	media_alt_translations?: Array<{
 		value: string | null;
-		language_id: number | null;
+		language_code: string | null;
 	}>;
 }
 
@@ -52,7 +52,7 @@ export default class CollectionDocumentFieldsFormatter {
 		groups: BrickPropT["groups"];
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
-		defaultLanguageId: number | undefined;
+		defaultLanguageCode: string | undefined;
 	}): FieldResponse[] => {
 		const fieldTree = props.builder.fieldTreeNoTab;
 		const sortedGroups = props.groups.sort(
@@ -65,14 +65,14 @@ export default class CollectionDocumentFieldsFormatter {
 			customFields: fieldTree,
 			groupId: null,
 			parentGroupId: null,
-			defaultLanguageId: props.defaultLanguageId,
+			defaultLanguageCode: props.defaultLanguageCode,
 		});
 	};
 	formatMultipleFlat = (props: {
 		fields: FieldProp[];
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
-		defaultLanguageId: number | undefined;
+		defaultLanguageCode: string | undefined;
 	}): FieldResponse[] => {
 		if (props.fields.length === 0) return [];
 		const fieldsRes: FieldResponse[] = [];
@@ -94,7 +94,7 @@ export default class CollectionDocumentFieldsFormatter {
 				cf: cf,
 				host: props.host,
 				includeGroupId: true,
-				defaultLanguageId: props.defaultLanguageId,
+				defaultLanguageCode: props.defaultLanguageCode,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -108,7 +108,7 @@ export default class CollectionDocumentFieldsFormatter {
 		customFields: CustomField[];
 		groupId: number | null;
 		parentGroupId: number | null;
-		defaultLanguageId: number | undefined;
+		defaultLanguageCode: string | undefined;
 	}): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
 		for (const cf of props.customFields) {
@@ -123,7 +123,7 @@ export default class CollectionDocumentFieldsFormatter {
 						groups: props.groups,
 						host: props.host,
 						parentGroupId: props.groupId,
-						defaultLanguageId: props.defaultLanguageId,
+						defaultLanguageCode: props.defaultLanguageCode,
 					}),
 				});
 				continue;
@@ -140,7 +140,7 @@ export default class CollectionDocumentFieldsFormatter {
 				cf: cf,
 				host: props.host,
 				includeGroupId: true,
-				defaultLanguageId: props.defaultLanguageId,
+				defaultLanguageCode: props.defaultLanguageCode,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -153,7 +153,7 @@ export default class CollectionDocumentFieldsFormatter {
 		groups: BrickPropT["groups"];
 		host: string;
 		parentGroupId: number | null;
-		defaultLanguageId: number | undefined;
+		defaultLanguageCode: string | undefined;
 	}): FieldGroupResponse[] => {
 		const groups: FieldGroupResponse[] = [];
 
@@ -178,7 +178,7 @@ export default class CollectionDocumentFieldsFormatter {
 					customFields: repeaterFields,
 					groupId: group.group_id,
 					parentGroupId: group.parent_group_id,
-					defaultLanguageId: props.defaultLanguageId,
+					defaultLanguageCode: props.defaultLanguageCode,
 				}),
 			});
 		}
@@ -190,7 +190,7 @@ export default class CollectionDocumentFieldsFormatter {
 		cf: CustomField;
 		host: string;
 		includeGroupId?: boolean;
-		defaultLanguageId?: number;
+		defaultLanguageCode?: string;
 	}): FieldResponse | null => {
 		if (props.cf.translations === true) {
 			return this.reduceFieldLanguages({
@@ -201,7 +201,7 @@ export default class CollectionDocumentFieldsFormatter {
 			});
 		}
 		const defaultField = props.fields.find(
-			(f) => f.language_id === props.defaultLanguageId,
+			(f) => f.language_code === props.defaultLanguageCode,
 		);
 		if (!defaultField) return null;
 
@@ -243,9 +243,9 @@ export default class CollectionDocumentFieldsFormatter {
 					host: props.host,
 				});
 
-				acc.translations[field.language_id] = value;
+				acc.translations[field.language_code] = value;
 				(acc.meta as Record<string, FieldResponseMeta>)[
-					field.language_id
+					field.language_code
 				] = meta;
 
 				return acc;
@@ -341,8 +341,8 @@ export default class CollectionDocumentFieldsFormatter {
 									type: "string",
 									nullable: true,
 								},
-								languageId: {
-									type: "number",
+								languageCode: {
+									type: "string",
 									nullable: true,
 								},
 							},
@@ -358,8 +358,8 @@ export default class CollectionDocumentFieldsFormatter {
 									type: "string",
 									nullable: true,
 								},
-								languageId: {
-									type: "number",
+								languageCode: {
+									type: "string",
 									nullable: true,
 								},
 							},

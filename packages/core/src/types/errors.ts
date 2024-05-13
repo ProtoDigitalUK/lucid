@@ -31,6 +31,6 @@ export interface FieldErrors {
 	brickId: string | number | undefined;
 	groupId: string | number | undefined;
 	key: string;
-	languageId?: number;
+	languageCode?: string;
 	message: string;
 }

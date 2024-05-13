@@ -117,9 +117,9 @@ const Migration00000007: MigrationFn = (adapter) => {
 						.references("lucid_collection_document_groups.group_id")
 						.onDelete("cascade"),
 				)
-				.addColumn("language_id", "integer", (col) =>
+				.addColumn("language_code", "text", (col) =>
 					col
-						.references("lucid_languages.id")
+						.references("lucid_languages.code")
 						.onDelete("cascade")
 						.notNull(),
 				)
@@ -138,9 +138,9 @@ const Migration00000007: MigrationFn = (adapter) => {
 				.execute();
 
 			await db.schema
-				.createIndex("idx_lucid_fields_language_id")
+				.createIndex("idx_lucid_fields_language_code")
 				.on("lucid_collection_document_fields")
-				.column("language_id")
+				.column("language_code")
 				.execute();
 
 			await db.schema

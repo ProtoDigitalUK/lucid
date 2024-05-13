@@ -14,7 +14,7 @@ const contentLanguage = async (request: FastifyRequest) => {
 			config: request.server.config,
 		},
 		{
-			id: contentLang !== undefined ? Number(contentLang) : undefined,
+			code: Array.isArray(contentLang) ? contentLang[0] : contentLang,
 		},
 	);
 

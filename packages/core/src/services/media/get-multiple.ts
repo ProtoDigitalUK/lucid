@@ -6,7 +6,7 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 
 export interface ServiceData {
 	query: z.infer<typeof mediaSchema.getMultiple.query>;
-	languageId: number;
+	languageCode: string;
 }
 
 const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
@@ -14,7 +14,7 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const MediaFormatter = Formatter.get("media");
 
 	const [medias, mediasCount] = await MediaRepo.selectMultipleFiltered({
-		languageId: data.languageId,
+		languageCode: data.languageCode,
 		query: data.query,
 		config: serviceConfig.config,
 	});

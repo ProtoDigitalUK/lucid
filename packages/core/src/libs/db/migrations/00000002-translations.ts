@@ -28,24 +28,24 @@ const Migration00000002: MigrationFn = (adapter) => {
 						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
-				.addColumn("language_id", "integer", (col) =>
+				.addColumn("language_code", "text", (col) =>
 					col
-						.references("lucid_languages.id")
+						.references("lucid_languages.code")
 						.notNull()
 						.onDelete("cascade")
 						.onUpdate("cascade"),
 				)
 				.addColumn("value", "text")
 				.addUniqueConstraint(
-					"lucid_translations_translation_key_id_language_id_unique",
-					["translation_key_id", "language_id"],
+					"lucid_translations_translation_key_id_language_code_unique",
+					["translation_key_id", "language_code"],
 				)
 				.execute();
 
 			await db.schema
 				.createIndex("idx_translation_key_language")
 				.on("lucid_translations")
-				.columns(["translation_key_id", "language_id"])
+				.columns(["translation_key_id", "language_code"])
 				.execute();
 		},
 		async down(db: Kysely<unknown>) {},

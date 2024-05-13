@@ -89,11 +89,11 @@ export interface MediaResponse {
 	key: string;
 	url: string;
 	titleTranslations: {
-		languageId: number | null;
+		languageCode: string | null;
 		value: string | null;
 	}[];
 	altTranslations: {
-		languageId: number | null;
+		languageCode: string | null;
 		value: string | null;
 	}[];
 	type: MediaType;
@@ -109,7 +109,6 @@ export interface MediaResponse {
 }
 
 export interface LanguageResponse {
-	id: number;
 	code: string;
 	name: string | null;
 	nativeName: string | null;
@@ -215,11 +214,11 @@ export interface MediaMeta {
 	height: number | null;
 	titleTranslations?: Array<{
 		value: string | null;
-		languageId: number | null;
+		languageCode: string | null;
 	}>;
 	altTranslations?: Array<{
 		value: string | null;
-		languageId: number | null;
+		languageCode: string | null;
 	}>;
 	type: MediaType | null;
 }

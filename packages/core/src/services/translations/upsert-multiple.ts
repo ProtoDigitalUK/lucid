@@ -3,8 +3,8 @@ import languagesServices from "../languages/index.js";
 import {
 	shouldUpdateTranslations,
 	mergeTranslationGroups,
-	getUniqueLanguageIDs,
 	type TranslationsObj,
+	getUniqueLanguageCodes,
 } from "../../utils/translation-helpers.js";
 import Repository from "../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
@@ -26,7 +26,7 @@ const upsertMultiple = async <K extends string>(
 			languagesServices.checks.checkLanguagesExist,
 			false,
 		)(serviceConfig, {
-			languageIds: getUniqueLanguageIDs(
+			languageCodes: getUniqueLanguageCodes(
 				data.items.map((item) => item.translations || []),
 			),
 		});
@@ -35,7 +35,7 @@ const upsertMultiple = async <K extends string>(
 			.map((translation) => {
 				return {
 					value: translation.value ?? "",
-					languageId: translation.languageId,
+					languageCode: translation.languageCode,
 					translationKeyId: data.keys[translation.key] ?? null,
 				};
 			})
@@ -43,7 +43,7 @@ const upsertMultiple = async <K extends string>(
 				(translation) => translation.translationKeyId !== null,
 			) as Array<{
 			value: string;
-			languageId: number;
+			languageCode: string;
 			translationKeyId: number;
 		}>;
 

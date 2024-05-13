@@ -89,7 +89,7 @@ export default class CollectionDocumentBricksRepo {
 								"lucid_collection_document_fields.fields_id",
 								"lucid_collection_document_fields.collection_brick_id",
 								"lucid_collection_document_fields.group_id",
-								"lucid_collection_document_fields.language_id",
+								"lucid_collection_document_fields.language_code",
 								"lucid_collection_document_fields.key",
 								"lucid_collection_document_fields.type",
 								"lucid_collection_document_fields.text_value",
@@ -119,7 +119,7 @@ export default class CollectionDocumentBricksRepo {
 											.selectFrom("lucid_translations")
 											.select([
 												"lucid_translations.value",
-												"lucid_translations.language_id",
+												"lucid_translations.language_code",
 											])
 											.where(
 												"lucid_translations.value",
@@ -139,7 +139,7 @@ export default class CollectionDocumentBricksRepo {
 											.selectFrom("lucid_translations")
 											.select([
 												"lucid_translations.value",
-												"lucid_translations.language_id",
+												"lucid_translations.language_code",
 											])
 											.where(
 												"lucid_translations.value",

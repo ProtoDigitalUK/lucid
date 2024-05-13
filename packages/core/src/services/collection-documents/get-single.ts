@@ -45,7 +45,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			key: document.collection_key,
 		}),
 		LanguagesRepo.selectSingle({
-			select: ["id"],
+			select: ["code"],
 			where: [
 				{
 					key: "is_default",
@@ -71,7 +71,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			bricks: bricksRes.bricks,
 			fields: bricksRes.fields,
 			host: serviceConfig.config.host,
-			defaultLanguageId: defaultLanguage?.id,
+			defaultLanguageCode: defaultLanguage?.code,
 		});
 	}
 
@@ -81,7 +81,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		bricks: [],
 		fields: [],
 		host: serviceConfig.config.host,
-		defaultLanguageId: defaultLanguage?.id,
+		defaultLanguageCode: defaultLanguage?.code,
 	});
 };
 

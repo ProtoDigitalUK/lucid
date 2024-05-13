@@ -32,7 +32,7 @@ const updateSingle = async (
 
 	if (data.code) {
 		const language = await LanguagesRepo.selectSingle({
-			select: ["id"],
+			select: ["code"],
 			where: [
 				{
 					key: "code",
@@ -97,9 +97,9 @@ const updateSingle = async (
 			},
 			where: [
 				{
-					key: "id",
+					key: "code",
 					operator: "!=",
-					value: updateLanguage.id,
+					value: updateLanguage.code,
 				},
 			],
 		});

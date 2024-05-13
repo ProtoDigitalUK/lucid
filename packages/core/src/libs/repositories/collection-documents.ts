@@ -151,7 +151,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.text_value",
 									"lucid_collection_document_fields.int_value",
 									"lucid_collection_document_fields.bool_value",
-									"lucid_collection_document_fields.language_id",
+									"lucid_collection_document_fields.language_code",
 									"lucid_collection_document_fields.media_id",
 									"lucid_collection_document_fields.user_id",
 									"lucid_collection_document_fields.type",
@@ -182,7 +182,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"lucid_translations.value",
-													"lucid_translations.language_id",
+													"lucid_translations.language_code",
 												])
 												.where(
 													"lucid_translations.value",
@@ -204,7 +204,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"lucid_translations.value",
-													"lucid_translations.language_id",
+													"lucid_translations.language_code",
 												])
 												.where(
 													"lucid_translations.value",

@@ -2,7 +2,6 @@ import collectionsServices from "../collections/index.js";
 import Repository from "../../libs/repositories/index.js";
 import Formatter from "../../libs/formatters/index.js";
 import type { ServiceConfig } from "../../utils/service-wrapper.js";
-import LanguagesRepo from "../../libs/repositories/languages.js";
 
 export interface ServiceData {
 	documentId: number;
@@ -29,7 +28,7 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			key: data.collectionKey,
 		}),
 		LanguagesRepo.selectSingle({
-			select: ["id"],
+			select: ["code"],
 			where: [
 				{
 					key: "is_default",
@@ -45,13 +44,13 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			bricks: bricks,
 			collection: collection,
 			host: serviceConfig.config.host,
-			defaultLanguageId: defaultLanguage?.id,
+			defaultLanguageCode: defaultLanguage?.code,
 		}),
 		fields: CollectionDocumentBricksFormatter.formatCollectionSudoBrick({
 			bricks: bricks,
 			collection: collection,
 			host: serviceConfig.config.host,
-			defaultLanguageId: defaultLanguage?.id,
+			defaultLanguageCode: defaultLanguage?.code,
 		}),
 	};
 };

@@ -15,7 +15,6 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const language = await LanguagesRepo.selectSingle({
 		select: [
 			"code",
-			"id",
 			"created_at",
 			"is_default",
 			"is_enabled",

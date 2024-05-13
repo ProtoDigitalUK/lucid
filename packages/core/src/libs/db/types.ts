@@ -37,7 +37,6 @@ export type JSONString = string;
 // Tables
 
 export interface HeadlessLanguages {
-	id: Generated<number>;
 	code: string;
 	is_default: BooleanInt;
 	is_enabled: BooleanInt;
@@ -53,7 +52,7 @@ export interface HeadlessTranslationKeys {
 export interface HeadlessTranslations {
 	id: Generated<number>;
 	translation_key_id: number;
-	language_id: number;
+	language_code: string;
 	value: string | null;
 }
 
@@ -192,7 +191,7 @@ export interface HeadlessCollectionDocumentFields {
 	collection_document_id: number;
 	collection_brick_id: number;
 	group_id: number | null;
-	language_id: number;
+	language_code: string;
 	key: string;
 	type: FieldTypes;
 	text_value: string | null;

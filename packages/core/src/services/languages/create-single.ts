@@ -21,7 +21,7 @@ const createSingle = async (
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	const codeUnique = await LanguagesRepo.selectSingle({
-		select: ["id"],
+		select: ["code"],
 		where: [
 			{
 				key: "code",
@@ -79,9 +79,9 @@ const createSingle = async (
 			},
 			where: [
 				{
-					key: "id",
+					key: "code",
 					operator: "!=",
-					value: language.id,
+					value: language.code,
 				},
 			],
 		});

@@ -10,7 +10,7 @@ export interface FieldInsertItem {
 	key: FieldSchemaType["key"];
 	type: FieldSchemaType["type"];
 	value: FieldValueSchemaType;
-	languageId: number;
+	languageCode: string;
 	groupRef?: string;
 	groupId?: number | string;
 }
@@ -29,7 +29,7 @@ interface FlatFieldsResposne {
 
 const flattenFields = (
 	fields: FieldSchemaType[] | FieldSchemaSimpleType[],
-	languages: Array<{ id: number; code: string; is_default: BooleanInt }>,
+	languages: Array<{ code: string; is_default: BooleanInt }>,
 ): FlatFieldsResposne => {
 	const fieldsRes: Array<FieldInsertItem> = [];
 	const groupsRes: Array<GroupInsertItem> = [];
@@ -94,27 +94,26 @@ const flattenFields = (
 
 			if (field.translations) {
 				for (const [key, value] of Object.entries(field.translations)) {
-					const language = languages.find(
-						(l) => l.code === key || l.id === Number(key),
-					);
+					const language = languages.find((l) => l.code === key);
 					if (language === undefined) continue;
 
 					fieldsRes.push({
 						key: field.key,
 						type: field.type,
 						value: value,
-						languageId: language.id,
+						languageCode: language.code,
 						groupId: groupMeta?.id,
 						groupRef: groupMeta?.ref,
 					});
 				}
 			} else if (field.value) {
+				const code = languages.find((l) => l.is_default === 1)?.code;
+				if (!code) return;
 				fieldsRes.push({
 					key: field.key,
 					type: field.type,
 					value: field.value,
-					languageId:
-						languages.find((l) => l.is_default === 1)?.id || 1,
+					languageCode: code,
 					groupId: groupMeta?.id,
 					groupRef: groupMeta?.ref,
 				});

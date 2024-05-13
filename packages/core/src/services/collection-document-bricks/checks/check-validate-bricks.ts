@@ -171,7 +171,7 @@ const validateBrickData = async (data: {
 				errors.push({
 					key: field.key,
 					brickId: brick.id,
-					languageId: field.languageId,
+					languageCode: field.languageCode,
 					groupId: field.groupId,
 					message: err.message || T("invalid_value"),
 				});

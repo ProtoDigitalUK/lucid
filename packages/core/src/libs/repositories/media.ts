@@ -58,7 +58,7 @@ export default class MediaRepo {
 							.selectFrom("lucid_translations")
 							.select([
 								"lucid_translations.value",
-								"lucid_translations.language_id",
+								"lucid_translations.language_code",
 							])
 							.where("lucid_translations.value", "is not", null)
 							.whereRef(
@@ -74,7 +74,7 @@ export default class MediaRepo {
 							.selectFrom("lucid_translations")
 							.select([
 								"lucid_translations.value",
-								"lucid_translations.language_id",
+								"lucid_translations.language_code",
 							])
 							.where("lucid_translations.value", "is not", null)
 							.whereRef(
@@ -102,7 +102,7 @@ export default class MediaRepo {
 		>;
 	};
 	selectMultipleFiltered = async (props: {
-		languageId: number;
+		languageCode: string;
 		query: z.infer<typeof mediaSchema.getMultiple.query>;
 		config: Config;
 	}) => {
@@ -128,7 +128,7 @@ export default class MediaRepo {
 							.selectFrom("lucid_translations")
 							.select([
 								"lucid_translations.value",
-								"lucid_translations.language_id",
+								"lucid_translations.language_code",
 							])
 							.where("lucid_translations.value", "is not", null)
 							.whereRef(
@@ -144,7 +144,7 @@ export default class MediaRepo {
 							.selectFrom("lucid_translations")
 							.select([
 								"lucid_translations.value",
-								"lucid_translations.language_id",
+								"lucid_translations.language_code",
 							])
 							.where("lucid_translations.value", "is not", null)
 							.whereRef(
@@ -163,9 +163,9 @@ export default class MediaRepo {
 						"lucid_media.title_translation_key_id",
 					)
 					.on(
-						"title_translations.language_id",
+						"title_translations.language_code",
 						"=",
-						props.languageId,
+						props.languageCode,
 					),
 			)
 			.leftJoin("lucid_translations as alt_translations", (join) =>
@@ -175,7 +175,11 @@ export default class MediaRepo {
 						"=",
 						"lucid_media.alt_translation_key_id",
 					)
-					.on("alt_translations.language_id", "=", props.languageId),
+					.on(
+						"alt_translations.language_code",
+						"=",
+						props.languageCode,
+					),
 			)
 			.select([
 				"title_translations.value as title_translation_value",
@@ -199,9 +203,9 @@ export default class MediaRepo {
 						"lucid_media.title_translation_key_id",
 					)
 					.on(
-						"title_translations.language_id",
+						"title_translations.language_code",
 						"=",
-						props.languageId,
+						props.languageCode,
 					),
 			)
 			.leftJoin("lucid_translations as alt_translations", (join) =>
@@ -211,7 +215,11 @@ export default class MediaRepo {
 						"=",
 						"lucid_media.alt_translation_key_id",
 					)
-					.on("alt_translations.language_id", "=", props.languageId),
+					.on(
+						"alt_translations.language_code",
+						"=",
+						props.languageCode,
+					),
 			)
 			.select([
 				"title_translations.value as title_translation_value",

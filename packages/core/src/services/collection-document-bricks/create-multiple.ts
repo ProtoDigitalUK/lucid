@@ -26,7 +26,7 @@ const createMultiple = async (
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	const languages = await LanguagesRepo.selectAll({
-		select: ["id", "code", "is_default"],
+		select: ["code", "is_default"],
 	});
 
 	// -------------------------------------------------------------------------------

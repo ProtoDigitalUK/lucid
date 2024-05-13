@@ -125,7 +125,7 @@ export default class LanguagesRepo {
 				is_default: props.isDefault,
 				is_enabled: props.isEnabled,
 			})
-			.returning(["id", "code"])
+			.returning(["code"])
 			.executeTakeFirst();
 	};
 	// ----------------------------------------
@@ -146,7 +146,7 @@ export default class LanguagesRepo {
 				is_default: props.data.isDefault,
 				is_enabled: props.data.isEnabled,
 			})
-			.returning("id");
+			.returning("code");
 
 		query = updateQB(query, props.where);
 
@@ -157,7 +157,7 @@ export default class LanguagesRepo {
 	deleteSingle = async (props: {
 		where: QueryBuilderWhereT<"lucid_languages">;
 	}) => {
-		let query = this.db.deleteFrom("lucid_languages").returning("id");
+		let query = this.db.deleteFrom("lucid_languages").returning("code");
 
 		query = deleteQB(query, props.where);
 

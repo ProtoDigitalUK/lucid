@@ -16,7 +16,7 @@ const formatInsertBricks = (props: {
 	bricks?: Array<BrickSchema>;
 	fields?: Array<FieldSchemaType>;
 	documentId: number;
-	languages: Array<{ id: number; code: string; is_default: BooleanInt }>;
+	languages: Array<{ code: string; is_default: BooleanInt }>;
 }): Array<BrickInsertItem> => {
 	const bricksRes: Array<BrickInsertItem> = [];
 

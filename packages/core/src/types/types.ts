@@ -21,7 +21,6 @@ declare module "fastify" {
 			permissions: UserPermissionsResponse["permissions"] | undefined;
 		};
 		language: {
-			id: LanguageResponse["id"];
 			code: LanguageResponse["code"];
 		};
 		server: FastifyInstance;

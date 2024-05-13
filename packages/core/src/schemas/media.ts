@@ -61,7 +61,7 @@ export default {
 			titleTranslations: z
 				.array(
 					z.object({
-						languageId: z.number(),
+						languageCode: z.string(),
 						value: z.string().nullable(),
 					}),
 				)
@@ -69,7 +69,7 @@ export default {
 			altTranslations: z
 				.array(
 					z.object({
-						languageId: z.number(),
+						languageCode: z.string(),
 						value: z.string().nullable(),
 					}),
 				)
@@ -83,7 +83,7 @@ export default {
 			titleTranslations: z
 				.array(
 					z.object({
-						languageId: z.number(),
+						languageCode: z.string(),
 						value: z.string().nullable(),
 					}),
 				)
@@ -91,7 +91,7 @@ export default {
 			altTranslations: z
 				.array(
 					z.object({
-						languageId: z.number(),
+						languageCode: z.string(),
 						value: z.string().nullable(),
 					}),
 				)

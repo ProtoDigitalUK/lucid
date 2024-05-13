@@ -1,10 +1,6 @@
 import { sql, type Kysely } from "kysely";
 import { AdapterType, type MigrationFn } from "../types.js";
-import {
-	defaultTimestamp,
-	primaryKeyColumnType,
-	primaryKeyColumn,
-} from "../kysely/column-helpers.js";
+import { defaultTimestamp } from "../kysely/column-helpers.js";
 
 const Migration00000001: MigrationFn = (adapter) => {
 	return {
@@ -15,10 +11,7 @@ const Migration00000001: MigrationFn = (adapter) => {
 
 			await db.schema
 				.createTable("lucid_languages")
-				.addColumn("id", primaryKeyColumnType(adapter), (col) =>
-					primaryKeyColumn(col, adapter),
-				)
-				.addColumn("code", "text", (col) => col.notNull().unique())
+				.addColumn("code", "text", (col) => col.primaryKey())
 				.addColumn("is_default", "integer", (col) =>
 					col.notNull().defaultTo(0),
 				)

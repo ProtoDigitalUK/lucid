@@ -45,7 +45,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	}
 
 	const defaultLanguages = await LanguagesRepo.selectMultiple({
-		select: ["id"],
+		select: ["code"],
 		where: [
 			{
 				key: "is_default",
@@ -57,7 +57,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 
 	if (defaultLanguages.length === 0) {
 		const firstLanguage = await LanguagesRepo.selectSingle({
-			select: ["id"],
+			select: ["code"],
 			where: [],
 		});
 		if (firstLanguage === undefined) {
@@ -75,9 +75,9 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 				},
 				where: [
 					{
-						key: "id",
+						key: "code",
 						operator: "=",
-						value: firstLanguage.id,
+						value: firstLanguage.code,
 					},
 				],
 			});

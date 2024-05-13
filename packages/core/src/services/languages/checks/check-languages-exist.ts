@@ -4,31 +4,31 @@ import Repository from "../../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
 export interface ServiceData {
-	languageIds: number[];
+	languageCodes: string[];
 }
 
 const checkLanguagesExist = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
-	const languageIds = Array.from(new Set(data.languageIds));
+	const languageCodes = Array.from(new Set(data.languageCodes));
 
-	if (languageIds.length === 0) return;
+	if (languageCodes.length === 0) return;
 
 	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 
 	const languages = await LanguagesRepo.selectMultiple({
-		select: ["id"],
+		select: ["code"],
 		where: [
 			{
-				key: "id",
+				key: "code",
 				operator: "in",
-				value: languageIds,
+				value: languageCodes,
 			},
 		],
 	});
 
-	if (languages.length !== languageIds.length) {
+	if (languages.length !== languageCodes.length) {
 		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
