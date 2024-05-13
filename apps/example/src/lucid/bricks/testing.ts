@@ -19,6 +19,7 @@ const TestingBrick = new BrickBuilder("testing", {
 	})
 	.addMedia({
 		key: "media-key",
+		translations: true,
 		validation: {
 			extensions: ["png"],
 			type: "image",

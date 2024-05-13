@@ -108,6 +108,16 @@ const flattenFields = (
 						groupRef: groupMeta?.ref,
 					});
 				}
+			} else if (field.value) {
+				fieldsRes.push({
+					key: field.key,
+					type: field.type,
+					value: field.value,
+					languageId:
+						languages.find((l) => l.is_default === 1)?.id || 1,
+					groupId: groupMeta?.id,
+					groupRef: groupMeta?.ref,
+				});
 			}
 		}
 	};

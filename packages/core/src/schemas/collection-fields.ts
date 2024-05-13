@@ -39,6 +39,7 @@ export const FieldBaseSchema = z.object({
 		z.literal("user"),
 	]),
 	translations: z.record(FieldValueSchema).optional(),
+	value: FieldValueSchema.optional(),
 });
 
 export const FieldSchema: z.ZodType<FieldSchemaType> = FieldBaseSchema.extend({

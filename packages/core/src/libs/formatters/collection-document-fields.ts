@@ -1,6 +1,7 @@
 import type {
 	FieldResponse,
 	FieldGroupResponse,
+	FieldResponseMeta,
 } from "../../types/response.js";
 import type { JSONString } from "../db/types.js";
 import type CollectionBuilder from "../builders/collection-builder/index.js";
@@ -230,16 +231,22 @@ export default class CollectionDocumentFieldsFormatter {
 		return props.fields.reduce<FieldResponse>(
 			(acc, field) => {
 				if (acc.translations === undefined) acc.translations = {};
+				if (acc.meta === undefined || acc.meta === null) acc.meta = {};
 
 				if (props.includeGroupId)
 					acc.groupId = field.group_id ?? undefined;
 
-				acc.translations[field.language_id] = fieldResponseValueFormat({
+				const { value, meta } = fieldResponseValueFormat({
 					type: props.cf.type,
 					customField: props.cf,
 					field: field,
 					host: props.host,
 				});
+
+				acc.translations[field.language_id] = value;
+				(acc.meta as Record<string, FieldResponseMeta>)[
+					field.language_id
+				] = meta;
 
 				return acc;
 			},
@@ -286,6 +293,7 @@ export default class CollectionDocumentFieldsFormatter {
 				type: "object",
 				additionalProperties: true,
 			},
+			value: {},
 			meta: {
 				type: "object",
 				additionalProperties: true,
