@@ -8,6 +8,7 @@ import type {
 	CustomField,
 	UserMeta,
 } from "@lucidcms/core/types";
+import brickHelpers from "@/utils/brick-helpers";
 import userStore from "@/store/userStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import Table from "@/components/Groups/Table";
@@ -80,13 +81,24 @@ const DocumentDynamicColumns: Component<{
 	// ----------------------------------
 	// Memos
 	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage ?? 1,
+		() => contentLanguageStore.get.contentLanguage ?? "",
 	);
 	const fieldData = createMemo(() => {
 		return props.document.fields?.find((f) => f.key === props.field.key);
 	});
-	const translationValue = createMemo(() => {
-		return fieldData()?.translations?.[contentLanguage()];
+	const fieldValue = createMemo(() => {
+		return brickHelpers.getFieldValue({
+			fieldData: fieldData(),
+			fieldConfig: props.field,
+			contentLanguage: contentLanguage(),
+		});
+	});
+	const fieldMeta = createMemo(() => {
+		return brickHelpers.getFieldMeta({
+			fieldData: fieldData(),
+			fieldConfig: props.field,
+			contentLanguage: contentLanguage(),
+		});
 	});
 
 	// ----------------------------------
@@ -102,20 +114,20 @@ const DocumentDynamicColumns: Component<{
 		>
 			<Match when={fieldData()?.type === "text"}>
 				<TextCol
-					text={translationValue() as string | undefined | null}
+					text={fieldValue() as string | undefined | null}
 					options={{ include: props?.include[props.index] }}
 				/>
 			</Match>
 			<Match when={fieldData()?.type === "textarea"}>
 				<TextCol
-					text={translationValue() as string | undefined | null}
+					text={fieldValue() as string | undefined | null}
 					options={{ include: props?.include[props.index] }}
 				/>
 			</Match>
 			<Match when={fieldData()?.type === "checkbox"}>
 				<TextCol
 					text={
-						(translationValue() as 1 | 0 | undefined | null) === 1
+						(fieldValue() as 1 | 0 | undefined | null) === 1
 							? "✅"
 							: "❌"
 					}
@@ -124,7 +136,7 @@ const DocumentDynamicColumns: Component<{
 			</Match>
 			<Match when={fieldData()?.type === "user"}>
 				<AuthorCol
-					user={fieldData()?.meta as UserMeta}
+					user={fieldMeta() as UserMeta}
 					options={{ include: props?.include[props.index] }}
 				/>
 			</Match>

@@ -43,6 +43,7 @@ type BrickStoreT = {
 	setFieldValue: (params: {
 		brickIndex: number;
 		key: string;
+		fieldConfig: CustomField;
 		repeaterKey?: string;
 		groupId?: number | string;
 		value: FieldResponseValue;
@@ -196,10 +197,19 @@ const [get, set] = createStore<BrickStoreT>({
 				});
 
 				if (!field) return;
-				if (!field.translations) field.translations = {};
 
-				field.translations[params.contentLanguage] = params.value;
-				field.meta = params.meta || undefined;
+				if (params.fieldConfig.translations === true) {
+					if (!field.translations) field.translations = {};
+					if (!field.meta) field.meta = {};
+
+					field.translations[params.contentLanguage] = params.value;
+					(field.meta as Record<string, FieldResponseMeta>)[
+						params.contentLanguage
+					] = params.meta || undefined;
+				} else {
+					field.value = params.value;
+					field.meta = params.meta || undefined;
+				}
 			}),
 		);
 		set("documentMutated", true);
@@ -208,10 +218,15 @@ const [get, set] = createStore<BrickStoreT>({
 		const newField: FieldResponse = {
 			key: params.fieldConfig.key,
 			type: params.fieldConfig.type,
-			translations: {
-				[params.contentLanguage]: params.fieldConfig.default,
-			},
 		};
+
+		if (params.fieldConfig.translations === true) {
+			newField.translations = {
+				[params.contentLanguage]: params.fieldConfig.default,
+			};
+		} else {
+			newField.value = params.fieldConfig.default;
+		}
 
 		brickStore.set(
 			"bricks",

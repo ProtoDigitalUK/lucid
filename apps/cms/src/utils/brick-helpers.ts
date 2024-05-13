@@ -1,5 +1,9 @@
 import brickStore from "@/store/brickStore";
-import type { FieldResponse } from "@lucidcms/core/types";
+import type {
+	CustomField,
+	FieldResponse,
+	FieldResponseMeta,
+} from "@lucidcms/core/types";
 
 const findFieldRecursive = (props: {
 	fields: FieldResponse[];
@@ -86,6 +90,34 @@ const customFieldId = (props: {
 	return `field-${props.key}-${props.brickIndex}-${props.groupId}`;
 };
 
+const getFieldValue = <T>(props: {
+	fieldConfig: CustomField;
+	fieldData?: FieldResponse;
+	contentLanguage: string;
+}) => {
+	if (!props.fieldData) return undefined;
+
+	if (props.fieldConfig.translations === true) {
+		return props.fieldData.translations?.[props.contentLanguage] as T;
+	}
+	return props.fieldData.value as T;
+};
+
+const getFieldMeta = <T extends FieldResponseMeta>(props: {
+	fieldConfig: CustomField;
+	fieldData?: FieldResponse;
+	contentLanguage: string;
+}) => {
+	if (!props.fieldData) return undefined;
+
+	if (props.fieldConfig.translations === true) {
+		return (props.fieldData.meta as Record<string, T>)?.[
+			props.contentLanguage
+		];
+	}
+	return props.fieldData.meta as T;
+};
+
 // ---------------------------------------------
 // Exports
 const brickHelpers = {
@@ -93,6 +125,8 @@ const brickHelpers = {
 	getCollectionSudoBrickFields,
 	getUpsertBricks,
 	customFieldId,
+	getFieldValue,
+	getFieldMeta,
 };
 
 export default brickHelpers;

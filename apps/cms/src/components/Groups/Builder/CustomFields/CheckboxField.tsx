@@ -40,9 +40,11 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.translations?.[
-			props.state.contentLanguage
-		] as 1 | 0 | undefined;
+		const value = brickHelpers.getFieldValue<1 | 0>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLanguage: props.state.contentLanguage,
+		});
 		setValue(value || 0);
 	});
 
@@ -60,6 +62,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
 						brickIndex: props.state.brickIndex,
+						fieldConfig: props.state.fieldConfig,
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,

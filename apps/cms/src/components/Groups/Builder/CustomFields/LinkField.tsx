@@ -41,9 +41,11 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.translations?.[
-			props.state.contentLanguage
-		] as LinkValue | undefined | null;
+		const value = brickHelpers.getFieldValue<LinkValue | null>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLanguage: props.state.contentLanguage,
+		});
 		setValue(value);
 	});
 
@@ -62,6 +64,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 					batch(() => {
 						brickStore.get.setFieldValue({
 							brickIndex: props.state.brickIndex,
+							fieldConfig: props.state.fieldConfig,
 							key: props.state.fieldConfig.key,
 							groupId: props.state.groupId,
 							repeaterKey: props.state.repeaterKey,

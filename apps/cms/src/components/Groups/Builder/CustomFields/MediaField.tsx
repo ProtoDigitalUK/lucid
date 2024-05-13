@@ -42,10 +42,17 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.translations?.[
-			props.state.contentLanguage
-		] as number | undefined;
-		const meta = fieldData()?.meta as MediaMeta | undefined;
+		const value = brickHelpers.getFieldValue<number>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLanguage: props.state.contentLanguage,
+		});
+		const meta = brickHelpers.getFieldMeta<MediaMeta>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLanguage: props.state.contentLanguage,
+		});
+
 		setValue(value);
 		setMeta(meta);
 	});
@@ -66,6 +73,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 					batch(() => {
 						brickStore.get.setFieldValue({
 							brickIndex: props.state.brickIndex,
+							fieldConfig: props.state.fieldConfig,
 							key: props.state.fieldConfig.key,
 							groupId: props.state.groupId,
 							repeaterKey: props.state.repeaterKey,

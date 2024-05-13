@@ -41,7 +41,11 @@ export const InputField: Component<InputFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.translations?.[props.state.contentLanguage];
+		const value = brickHelpers.getFieldValue<string | number>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLanguage: props.state.contentLanguage,
+		});
 
 		switch (props.type) {
 			case "number": {
@@ -69,6 +73,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
 						brickIndex: props.state.brickIndex,
+						fieldConfig: props.state.fieldConfig,
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,

@@ -40,9 +40,12 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = fieldData()?.translations?.[
-			props.state.contentLanguage
-		] as string | undefined;
+		const value = brickHelpers.getFieldValue<string>({
+			fieldData: fieldData(),
+			fieldConfig: props.state.fieldConfig,
+			contentLanguage: props.state.contentLanguage,
+		});
+
 		setValue(value || "");
 	});
 
@@ -60,6 +63,7 @@ export const TextareaField: Component<TextareaFieldProps> = (props) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
 						brickIndex: props.state.brickIndex,
+						fieldConfig: props.state.fieldConfig,
 						key: props.state.fieldConfig.key,
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
