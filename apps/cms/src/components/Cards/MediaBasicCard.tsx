@@ -8,7 +8,7 @@ import MediaPreview from "@/components/Partials/MediaPreview";
 interface MediaBasicCardProps {
 	media: MediaResponse;
 	selected: boolean;
-	contentLanguage?: number;
+	contentLanguage?: string;
 	onClick?: () => void;
 }
 
@@ -33,12 +33,12 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 	// Memos
 	const titleTranslations = createMemo(() => {
 		return props.media.titleTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.languageCode === props.contentLanguage,
 		);
 	});
 	const altTranslations = createMemo(() => {
 		return props.media.altTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.languageCode === props.contentLanguage,
 		);
 	});
 

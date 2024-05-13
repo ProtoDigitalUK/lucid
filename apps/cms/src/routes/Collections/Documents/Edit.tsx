@@ -119,7 +119,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const brickTranslationErrors = createMemo(() => {
 		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
 		if (errors === undefined) return false;
-		return errors.some((field) => field.languageId !== contentLanguage());
+		return errors.some((field) => field.languageCode !== contentLanguage());
 	});
 	const canSaveDocument = createMemo(() => {
 		return !brickStore.get.documentMutated && !isSaving();

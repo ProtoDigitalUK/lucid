@@ -6,11 +6,11 @@ import type { ResponseBody, MediaResponse } from "@lucidcms/core/types";
 interface Params {
 	file: File;
 	titleTranslations: Array<{
-		languageId: number | null;
+		languageCode: string | null;
 		value: string | null;
 	}>;
 	altTranslations: Array<{
-		languageId: number | null;
+		languageCode: string | null;
 		value: string | null;
 	}>;
 }

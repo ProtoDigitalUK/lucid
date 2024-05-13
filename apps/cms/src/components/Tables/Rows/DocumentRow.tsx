@@ -21,7 +21,7 @@ interface DocumentRowProps extends TableRowProps {
 	fieldInclude: CustomField[];
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"delete">>;
-	contentLanguage?: number;
+	contentLanguage?: string;
 }
 
 const DocumentRow: Component<DocumentRowProps> = (props) => {

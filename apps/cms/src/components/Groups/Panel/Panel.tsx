@@ -51,8 +51,8 @@ interface PanelProps {
 		submit?: string;
 	};
 	children: (_props?: {
-		contentLanguage: Accessor<number | undefined>;
-		setContentLanguage: (_value: number) => void;
+		contentLanguage: Accessor<string | undefined>;
+		setContentLanguage: (_value: string) => void;
 	}) => JSXElement;
 }
 
@@ -61,7 +61,7 @@ export const Panel: Component<PanelProps> = (props) => {
 	// State
 	const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
 	const [contentLanguage, setContentLanguage] = createSignal<
-		number | undefined
+		string | undefined
 	>(undefined);
 
 	// ------------------------------
@@ -87,7 +87,7 @@ export const Panel: Component<PanelProps> = (props) => {
 		const defaultLanguage = contentLanguageStore.get.languages.find(
 			(language) => language.isDefault,
 		);
-		if (defaultLanguage) return defaultLanguage.id;
+		if (defaultLanguage) return defaultLanguage.code;
 		return contentLanguageStore.get.contentLanguage;
 	};
 

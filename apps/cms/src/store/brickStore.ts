@@ -47,14 +47,14 @@ type BrickStoreT = {
 		groupId?: number | string;
 		value: FieldResponseValue;
 		meta?: FieldResponseMeta;
-		contentLanguage: number;
+		contentLanguage: string;
 	}) => void;
 	addField: (params: {
 		brickIndex: number;
 		fieldConfig: CustomField;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: number;
+		contentLanguage: string;
 	}) => FieldResponse;
 	addRepeaterGroup: (params: {
 		brickIndex: number;
@@ -62,7 +62,7 @@ type BrickStoreT = {
 		key: string;
 		groupId?: number | string;
 		parentRepeaterKey?: string;
-		contentLanguage: number;
+		contentLanguage: string;
 	}) => void;
 	removeRepeaterGroup: (params: {
 		brickIndex: number;

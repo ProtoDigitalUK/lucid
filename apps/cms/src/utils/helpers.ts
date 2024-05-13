@@ -150,23 +150,23 @@ const formatUserInitials = (user: {
 const updateTranslation = (
 	setter: Setter<
 		{
-			languageId: number | null;
+			languageCode: string | null;
 			value: string | null;
 		}[]
 	>,
 	translation: {
-		languageId: number | null;
+		languageCode: string | null;
 		value: string | null;
 	},
 ) => {
 	setter((prev) => {
 		const index = prev.findIndex(
-			(t) => t.languageId === translation.languageId,
+			(t) => t.languageCode === translation.languageCode,
 		);
 		if (index === -1) return [...prev, translation];
 
 		return prev.map((item) =>
-			item.languageId === translation.languageId ? translation : item,
+			item.languageCode === translation.languageCode ? translation : item,
 		);
 	});
 };
@@ -174,12 +174,12 @@ const updateTranslation = (
 const getTranslation = (
 	translations?: {
 		value: string | null;
-		languageId: number | null;
+		languageCode: string | null;
 	}[],
-	contentLanguage?: number,
+	contentLanguage?: string,
 ) => {
 	const translation = translations?.find(
-		(t) => t.languageId === contentLanguage,
+		(t) => t.languageCode === contentLanguage,
 	);
 	return translation?.value ?? null;
 };

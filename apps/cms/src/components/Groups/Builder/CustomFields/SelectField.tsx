@@ -21,7 +21,7 @@ interface SelectFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: number;
+		contentLanguage: string;
 		fieldError: FieldErrors | undefined;
 	};
 }

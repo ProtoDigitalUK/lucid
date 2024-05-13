@@ -9,8 +9,8 @@ import contentLanguageStore from "@/store/contentLanguageStore";
 import Form from "@/components/Groups/Form";
 
 interface ContentLanguageSelectProps {
-	value?: number | undefined;
-	setValue?: (_value: number | undefined) => void;
+	value?: string | undefined;
+	setValue?: (_value: string | undefined) => void;
 	hasError?: boolean;
 }
 
@@ -39,13 +39,13 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 							);
 						else
 							contentLanguageStore.get.setContentLanguage(
-								Number(value),
+								value.toString(),
 							);
 					}}
 					name={"content-language"}
 					options={
 						languages().map((language) => ({
-							value: language.id,
+							value: language.code,
 							label: `${
 								language.name
 									? `${language.name} (${language.code})`
@@ -64,12 +64,12 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 					value={props.value}
 					onChange={(value) => {
 						if (!value) props.setValue?.(undefined);
-						else props.setValue?.(Number(value));
+						else props.setValue?.(value.toString());
 					}}
 					name={"content-language"}
 					options={
 						languages().map((language) => ({
-							value: language.id,
+							value: language.code,
 							label: `${
 								language.name
 									? `${language.name} (${language.code})`

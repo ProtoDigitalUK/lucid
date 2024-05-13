@@ -14,7 +14,7 @@ import MediaPreview from "@/components/Partials/MediaPreview";
 interface MediaCardProps {
 	media: MediaResponse;
 	rowTarget: ReturnType<typeof useRowTarget<"clear" | "delete" | "update">>;
-	contentLanguage?: number;
+	contentLanguage?: string;
 }
 
 export const MediaCardLoading: Component = () => {
@@ -42,12 +42,12 @@ const MediaCard: Component<MediaCardProps> = (props) => {
 
 	const titleTranslation = createMemo(() => {
 		return props.media.titleTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.languageCode === props.contentLanguage,
 		);
 	});
 	const altTranslation = createMemo(() => {
 		return props.media.altTranslations.find(
-			(translation) => translation.languageId === props.contentLanguage,
+			(translation) => translation.languageCode === props.contentLanguage,
 		);
 	});
 

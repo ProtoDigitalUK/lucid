@@ -259,7 +259,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 					<For each={languages()}>
 						{(language, index) => (
 							<Show
-								when={language.id === lang?.contentLanguage()}
+								when={language.code === lang?.contentLanguage()}
 							>
 								<SectionHeading
 									title={T("details_lang", {
@@ -267,23 +267,24 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									})}
 								/>
 								<Form.Input
-									id={`name-${language.id}`}
+									id={`name-${language.code}`}
 									value={
 										getTitleTranslations().find(
 											(item) =>
-												item.languageId === language.id,
+												item.languageCode ===
+												language.code,
 										)?.value || ""
 									}
 									onChange={(val) => {
 										helpers.updateTranslation(
 											setTitleTranslations,
 											{
-												languageId: language.id,
+												languageCode: language.code,
 												value: val,
 											},
 										);
 									}}
-									name={`name-${language.id}`}
+									name={`name-${language.code}`}
 									type="text"
 									copy={{
 										label: T("name"),
@@ -294,24 +295,24 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								/>
 								<Show when={showAltInput()}>
 									<Form.Input
-										id={`alt-${language.id}`}
+										id={`alt-${language.code}`}
 										value={
 											getAltTranslations().find(
 												(item) =>
-													item.languageId ===
-													language.id,
+													item.languageCode ===
+													language.code,
 											)?.value || ""
 										}
 										onChange={(val) => {
 											helpers.updateTranslation(
 												setAltTranslations,
 												{
-													languageId: language.id,
+													languageCode: language.code,
 													value: val,
 												},
 											);
 										}}
-										name={`alt-${language.id}`}
+										name={`alt-${language.code}`}
 										type="text"
 										copy={{
 											label: T("alt"),

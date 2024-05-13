@@ -2,16 +2,16 @@ import { createStore } from "solid-js/store";
 import type { LanguageResponse } from "@lucidcms/core/types";
 
 type ContentLangStoreT = {
-	contentLanguage: number | undefined;
+	contentLanguage: string | undefined;
 	languages: LanguageResponse[];
 	syncContentLanguage: (_languages: LanguageResponse[]) => void;
-	setContentLanguage: (_contentLanguage?: number) => void;
+	setContentLanguage: (_contentLanguage?: string) => void;
 };
 
 const getInitialContentLanguage = () => {
 	const contentLang = localStorage.getItem("lucid_content_language");
 	if (contentLang) {
-		return Number(contentLang);
+		return contentLang;
 	}
 	return undefined;
 };
@@ -29,16 +29,16 @@ const [get, set] = createStore<ContentLangStoreT>({
 		const contentLangLs = localStorage.getItem("lucid_content_language");
 		if (contentLangLs) {
 			const languageExists = languages.find(
-				(lang) => lang.id === Number(contentLangLs),
+				(lang) => lang.code === contentLangLs,
 			);
 			if (languageExists !== undefined) {
-				set("contentLanguage", Number(contentLangLs));
+				set("contentLanguage", contentLangLs);
 				return;
 			}
 		}
-		set("contentLanguage", languages[0]?.id || undefined);
+		set("contentLanguage", languages[0]?.code || undefined);
 	},
-	setContentLanguage(contentLanguage?: number) {
+	setContentLanguage(contentLanguage?: string) {
 		if (contentLanguage === undefined)
 			localStorage.removeItem("lucid_content_language");
 		else

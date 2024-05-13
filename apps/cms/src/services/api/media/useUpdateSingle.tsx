@@ -9,11 +9,11 @@ interface Params {
 	body: {
 		file: File;
 		titleTranslations: Array<{
-			languageId: number | null;
+			languageCode: string | null;
 			value: string | null;
 		}>;
 		altTranslations: Array<{
-			languageId: number | null;
+			languageCode: string | null;
 			value: string | null;
 		}>;
 	};
