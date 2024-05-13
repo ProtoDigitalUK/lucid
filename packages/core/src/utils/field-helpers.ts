@@ -132,6 +132,7 @@ interface FieldResponseValueFormat {
 }
 export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 	let value: FieldResponseValue = null;
+	let meta: FieldResponseMeta = null;
 
 	switch (props.type) {
 		case "tab": {
@@ -147,6 +148,32 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 		}
 		case "media": {
 			value = props.field?.media_id ?? null;
+			meta = {
+				id: props.field?.media_id ?? null,
+				url: mediaHelpers.createURL(
+					props.host,
+					props.field?.media_key ?? "",
+				),
+				key: props.field?.media_key ?? null,
+				mimeType: props.field?.media_mime_type ?? null,
+				fileExtension: props.field?.media_file_extension ?? null,
+				fileSize: props.field?.media_file_size ?? null,
+				width: props.field?.media_width ?? null,
+				height: props.field?.media_height ?? null,
+				titleTranslations: props.field?.media_title_translations?.map(
+					(t) => ({
+						value: t.value,
+						languageId: t.language_id,
+					}),
+				),
+				altTranslations: props.field?.media_alt_translations?.map(
+					(t) => ({
+						value: t.value,
+						languageId: t.language_id,
+					}),
+				),
+				type: (props.field?.media_type as MediaType) ?? null,
+			};
 			break;
 		}
 		case "number": {
@@ -183,6 +210,12 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 		}
 		case "user": {
 			value = props.field?.user_id ?? null;
+			meta = {
+				email: props.field?.user_email ?? null,
+				username: props.field?.user_username ?? null,
+				firstName: props.field?.user_first_name ?? null,
+				lastName: props.field?.user_last_name ?? null,
+			};
 			break;
 		}
 		case "link": {
@@ -199,57 +232,8 @@ export const fieldResponseValueFormat = (props: FieldResponseValueFormat) => {
 		}
 	}
 
-	return value;
-};
-
-export const fieldResponseMetaFormat = (
-	props: FieldResponseValueFormat,
-): FieldResponseMeta => {
-	let meta: FieldResponseMeta = null;
-
-	switch (props.type) {
-		case "media": {
-			meta = {
-				id: props.field?.media_id ?? null,
-				url: mediaHelpers.createURL(
-					props.host,
-					props.field?.media_key ?? "",
-				),
-				key: props.field?.media_key ?? null,
-				mimeType: props.field?.media_mime_type ?? null,
-				fileExtension: props.field?.media_file_extension ?? null,
-				fileSize: props.field?.media_file_size ?? null,
-				width: props.field?.media_width ?? null,
-				height: props.field?.media_height ?? null,
-				titleTranslations: props.field?.media_title_translations?.map(
-					(t) => ({
-						value: t.value,
-						languageId: t.language_id,
-					}),
-				),
-				altTranslations: props.field?.media_alt_translations?.map(
-					(t) => ({
-						value: t.value,
-						languageId: t.language_id,
-					}),
-				),
-				type: (props.field?.media_type as MediaType) ?? null,
-			};
-			break;
-		}
-		case "user": {
-			meta = {
-				email: props.field?.user_email ?? null,
-				username: props.field?.user_username ?? null,
-				firstName: props.field?.user_first_name ?? null,
-				lastName: props.field?.user_last_name ?? null,
-			};
-			break;
-		}
-		default: {
-			break;
-		}
-	}
-
-	return meta;
+	return {
+		value,
+		meta,
+	};
 };

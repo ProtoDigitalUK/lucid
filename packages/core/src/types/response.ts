@@ -172,7 +172,14 @@ export interface FieldResponse {
 	key: string;
 	type: FieldTypes;
 	groupId?: number;
-	translations?: Record<string, FieldResponseValue>;
+	translations?: Record<
+		string,
+		{
+			value: FieldResponseValue;
+			meta?: FieldResponseMeta;
+		}
+	>;
+	value?: FieldResponseValue;
 	meta?: FieldResponseMeta;
 	groups?: Array<FieldGroupResponse>;
 }
