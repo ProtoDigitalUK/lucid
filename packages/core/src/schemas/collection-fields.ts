@@ -84,10 +84,7 @@ export const swaggerFieldObj = {
 			additionalProperties: true,
 			nullable: true,
 		},
-		languageId: {
-			type: "number",
-			nullable: true,
-		},
+		value: {},
 		groups: {
 			type: "array",
 			items: {
