@@ -5,7 +5,7 @@ import {
 	createSignal,
 	createEffect,
 } from "solid-js";
-import linkFieldStore from "@/store/linkFieldStore";
+import linkFieldStore from "@/store/forms/linkFieldStore";
 import Modal from "@/components/Groups/Modal";
 import Form from "@/components/Groups/Form";
 import Button from "@/components/Partials/Button";

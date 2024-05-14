@@ -8,7 +8,7 @@ import type {
 	MediaMeta,
 } from "@lucidcms/core/types";
 import contentLanguageStore from "@/store/contentLanguageStore";
-import mediaSelectStore from "@/store/mediaSelectStore";
+import mediaSelectStore from "@/store/forms/mediaSelectStore";
 import helpers from "@/utils/helpers";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";

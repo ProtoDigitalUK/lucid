@@ -13,6 +13,7 @@ import type {
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import Form from "@/components/Groups/Form";
+import UserSearchSelect from "@/components/Partials/SearchSelects/UserSearchSelect";
 
 interface UserFieldProps {
 	state: {
@@ -29,7 +30,7 @@ interface UserFieldProps {
 export const UserField: Component<UserFieldProps> = (props) => {
 	// -------------------------------
 	// State
-	const [getValue, setValue] = createSignal("");
+	const [getValue, setValue] = createSignal<number>();
 
 	// -------------------------------
 	// Memos
@@ -40,27 +41,27 @@ export const UserField: Component<UserFieldProps> = (props) => {
 	// -------------------------------
 	// Effects
 	createEffect(() => {
-		const value = brickHelpers.getFieldValue<string>({
+		const value = brickHelpers.getFieldValue<number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
 			contentLanguage: props.state.contentLanguage,
 		});
 
-		setValue(value || "");
+		setValue(value);
 	});
 
 	// -------------------------------
 	// Render
 	return (
 		// TODO: update to user user select modal or select field
-		<Form.Input
+		<UserSearchSelect
 			id={brickHelpers.customFieldId({
 				key: props.state.fieldConfig.key,
 				brickIndex: props.state.brickIndex,
 				groupId: props.state.groupId,
 			})}
 			value={getValue()}
-			onChange={(value) => {
+			setValue={(value) => {
 				batch(() => {
 					brickStore.get.setFieldValue({
 						brickIndex: props.state.brickIndex,
@@ -71,16 +72,10 @@ export const UserField: Component<UserFieldProps> = (props) => {
 						value: value, // Number(value),
 						contentLanguage: props.state.contentLanguage,
 					});
-					setValue(value);
+					setValue(value as number);
 				});
 			}}
 			name={props.state.fieldConfig.key}
-			type={"text"}
-			copy={{
-				label: props.state.fieldConfig.title,
-				placeholder: props.state.fieldConfig.placeholder,
-				describedBy: props.state.fieldConfig.description,
-			}}
 			errors={props.state.fieldError}
 			disabled={props.state.fieldConfig.disabled}
 			required={props.state.fieldConfig.validation?.required || false}

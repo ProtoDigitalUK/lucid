@@ -213,7 +213,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 							</ul>
 						</Match>
 						<Match when={props.options.length === 0}>
-							<span class="text-primary-contrast w-full block px-2.5 py-1 text-sm">
+							<span class="text-body w-full block px-2.5 py-1 text-sm">
 								{T("no_options_available")}
 							</span>
 						</Match>

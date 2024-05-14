@@ -2,7 +2,7 @@ import T from "@/translations";
 import { type Component, createMemo, For, onCleanup } from "solid-js";
 import { useNavigate, useLocation } from "@solidjs/router";
 import useSearchParams from "@/hooks/useSearchParams";
-import mediaSelectStore from "@/store/mediaSelectStore";
+import mediaSelectStore from "@/store/forms/mediaSelectStore";
 import contentLanguageStore from "@/store/contentLanguageStore";
 import api from "@/services/api";
 import Query from "@/components/Groups/Query";

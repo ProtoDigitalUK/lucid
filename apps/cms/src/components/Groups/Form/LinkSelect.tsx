@@ -3,7 +3,7 @@ import { type Component, Match, Switch } from "solid-js";
 import classNames from "classnames";
 import { FaSolidPen } from "solid-icons/fa";
 import type { ErrorResult, FieldErrors, LinkValue } from "@lucidcms/core/types";
-import linkFieldStore from "@/store/linkFieldStore";
+import linkFieldStore from "@/store/forms/linkFieldStore";
 import Button from "@/components/Partials/Button";
 import Form from "@/components/Groups/Form";
 
