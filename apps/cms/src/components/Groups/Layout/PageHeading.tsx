@@ -9,6 +9,7 @@ import {
 } from "solid-js";
 import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
 import classNames from "classnames";
+import Link from "@/components/Partials/Link";
 import Button from "@/components/Partials/Button";
 import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
 import Layout from "@/components/Groups/Layout";
@@ -35,6 +36,11 @@ export interface PageHeadingProps {
 			setOpen: (_open: boolean) => void;
 			permission?: boolean;
 			label?: string;
+		};
+		createLink?: {
+			link: string;
+			label: string;
+			permission?: boolean;
 		};
 		contentLanguage?: boolean;
 	};
@@ -139,6 +145,24 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 										T("create")}
 								</span>
 							</Button>
+						</Show>
+						<Show
+							when={
+								props.actions?.createLink !== undefined &&
+								props.actions.createLink.permission !== false
+							}
+						>
+							<Link
+								theme="primary"
+								size="icon"
+								href={props.actions?.createLink?.link}
+							>
+								<FaSolidPlus />
+								<span class="sr-only">
+									{props.actions?.createLink?.label ??
+										T("create")}
+								</span>
+							</Link>
 						</Show>
 						<Show
 							when={
