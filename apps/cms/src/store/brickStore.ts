@@ -55,7 +55,7 @@ type BrickStoreT = {
 		fieldConfig: CustomField;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		languages: string[];
 	}) => FieldResponse;
 	addRepeaterGroup: (params: {
 		brickIndex: number;
@@ -221,9 +221,11 @@ const [get, set] = createStore<BrickStoreT>({
 		};
 
 		if (params.fieldConfig.translations === true) {
-			newField.translations = {
-				[params.contentLanguage]: params.fieldConfig.default,
-			};
+			for (const language of params.languages) {
+				newField.translations = {
+					[language]: params.fieldConfig.default,
+				};
+			}
 		} else {
 			newField.value = params.fieldConfig.default;
 		}

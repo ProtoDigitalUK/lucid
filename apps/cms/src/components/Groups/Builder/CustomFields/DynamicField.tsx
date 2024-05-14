@@ -25,6 +25,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	const contentLanguage = createMemo(
 		() => contentLanguageStore.get.contentLanguage ?? "",
 	);
+	const languages = createMemo(() => contentLanguageStore.get.languages);
 	const fieldData = createMemo(() => {
 		if (props.state.fieldConfig.type === "tab") return;
 
@@ -38,7 +39,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 				fieldConfig: props.state.fieldConfig,
 				groupId: props.state.groupId,
 				repeaterKey: props.state.repeaterKey,
-				contentLanguage: contentLanguage(),
+				languages: languages().map((l) => l.code),
 			});
 		}
 		return field;
