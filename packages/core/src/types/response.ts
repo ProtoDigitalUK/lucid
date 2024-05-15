@@ -234,9 +234,22 @@ export interface CollectionDocumentResponse {
 	id: number;
 	collectionKey: string | null;
 
-	createdBy: number | null;
+	createdBy: {
+		id: number;
+		email: string | null;
+		firstName: string | null;
+		lastName: string | null;
+		username: string | null;
+	} | null;
 	createdAt: string | null;
 	updatedAt: string | null;
+	updatedBy: {
+		id: number;
+		email: string | null;
+		firstName: string | null;
+		lastName: string | null;
+		username: string | null;
+	} | null;
 
 	bricks?: Array<BrickResponse> | null;
 	fields?: Array<FieldResponse> | null;

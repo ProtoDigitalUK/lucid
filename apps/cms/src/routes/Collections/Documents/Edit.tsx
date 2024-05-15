@@ -29,6 +29,7 @@ import NavigationGuard, {
 import Document from "@/components/Groups/Document";
 import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
+import UserDisplay from "@/components/Partials/UserDisplay";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -282,7 +283,27 @@ const CollectionsDocumentsEditRoute: Component<
 									},
 									{
 										label: T("created_by"),
-										value: document.data?.data.createdBy,
+										value: (
+											<UserDisplay
+												user={{
+													username:
+														document.data?.data
+															.createdBy
+															?.username,
+													firstName:
+														document.data?.data
+															.createdBy
+															?.firstName,
+													lastName:
+														document.data?.data
+															.createdBy
+															?.lastName,
+													thumbnail: undefined,
+												}}
+												mode="long"
+											/>
+										),
+										stacked: true,
 										show: props.mode === "edit",
 									},
 									{
@@ -295,6 +316,31 @@ const CollectionsDocumentsEditRoute: Component<
 												}
 											/>
 										),
+										show: props.mode === "edit",
+									},
+									{
+										label: T("updated_by"),
+										value: (
+											<UserDisplay
+												user={{
+													username:
+														document.data?.data
+															.updatedBy
+															?.username,
+													firstName:
+														document.data?.data
+															.updatedBy
+															?.firstName,
+													lastName:
+														document.data?.data
+															.updatedBy
+															?.lastName,
+													thumbnail: undefined,
+												}}
+												mode="long"
+											/>
+										),
+										stacked: true,
 										show: props.mode === "edit",
 									},
 									{

@@ -15,6 +15,7 @@ interface DetailsListProps {
 		label: string;
 		value?: string | number | null | JSXElement;
 		show?: boolean;
+		stacked?: boolean;
 	}>;
 }
 
@@ -27,11 +28,12 @@ const DetailsList: Component<DetailsListProps> = (props) => {
 				{(item) => (
 					<Show when={item.show !== false}>
 						<li
-							class={classNames("flex mb-2 last:mb-0", {
-								"flex-col items-start lg:flex-row lg:items-center lg:justify-between border-b border-border pb-2 last:border-b-0":
+							class={classNames("flex mb-2 last:mb-0 gap-2", {
+								"flex-col items-start lg:justify-between border-b border-border pb-2 last:border-b-0":
 									props.type === "text",
 								"justify-between items-center":
 									props.type === "pill",
+								"lg:flex-row lg:items-center": !item.stacked,
 							})}
 						>
 							<Switch>
