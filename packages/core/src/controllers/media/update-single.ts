@@ -75,7 +75,7 @@ export default {
 				body: {
 					type: "string",
 					description:
-						'Stringified JSON data containing tileTranslations and altTranslations for the media.<br><br>Example: <code>{"titleTranslations":[{"languageCode":"en","value":"title value"}],"altTranslations":[{"languageCode":"en","value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
+						'Stringified JSON data containing tileTranslations and altTranslations for the media.<br><br>Example: <code>{"titleTranslations":[{"localeCode":"en","value":"title value"}],"altTranslations":[{"localeCode":"en","value":"alt value"}]}</code>.<br><br>Translations dont have to be passed.',
 				},
 			},
 		},

@@ -1,20 +1,20 @@
 import T from "../../translations/index.js";
-import languageSchema from "../../schemas/languages.js";
+import localeSchema from "../../schemas/locales.js";
 import { swaggerResponse } from "../../utils/swagger-helpers.js";
-import languages from "../../services/languages/index.js";
+import locales from "../../services/locales/index.js";
 import serviceWrapper from "../../utils/service-wrapper.js";
 import buildResponse from "../../utils/build-response.js";
-import LanguagesFormatter from "../../libs/formatters/languages.js";
+import LocalesFormatter from "../../libs/formatters/locales.js";
 import { ensureThrowAPIError } from "../../utils/error-helpers.js";
 import type { RouteController } from "../../types/types.js";
 
 const getSingleController: RouteController<
-	typeof languageSchema.getSingle.params,
-	typeof languageSchema.getSingle.body,
-	typeof languageSchema.getSingle.query
+	typeof localeSchema.getSingle.params,
+	typeof localeSchema.getSingle.body,
+	typeof localeSchema.getSingle.query
 > = async (request, reply) => {
 	try {
-		const languageRes = await serviceWrapper(languages.getSingle, false)(
+		const localeRes = await serviceWrapper(locales.getSingle, false)(
 			{
 				db: request.server.config.db.client,
 				config: request.server.config,
@@ -26,14 +26,14 @@ const getSingleController: RouteController<
 
 		reply.status(200).send(
 			await buildResponse(request, {
-				data: languageRes,
+				data: localeRes,
 			}),
 		);
 	} catch (error) {
 		ensureThrowAPIError(error, {
 			type: "basic",
 			name: T("method_error_name", {
-				name: T("language"),
+				name: T("locale"),
 				method: T("fetch"),
 			}),
 			message: T("default_error_message"),
@@ -44,16 +44,15 @@ const getSingleController: RouteController<
 
 export default {
 	controller: getSingleController,
-	zodSchema: languageSchema.getSingle,
+	zodSchema: localeSchema.getSingle,
 	swaggerSchema: {
-		description:
-			"Returns a single language based on the code URL parameter.",
-		tags: ["languages"],
-		summary: "Get a single language",
+		description: "Returns a single locale based on the code URL parameter.",
+		tags: ["locales"],
+		summary: "Get a single locale",
 		response: {
 			200: swaggerResponse({
 				type: 200,
-				data: LanguagesFormatter.swagger,
+				data: LocalesFormatter.swagger,
 			}),
 		},
 	},

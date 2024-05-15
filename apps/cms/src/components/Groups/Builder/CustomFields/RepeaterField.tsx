@@ -2,7 +2,7 @@ import T from "@/translations/index";
 import classNames from "classnames";
 import { type Component, For, createMemo, Show, Switch, Match } from "solid-js";
 import type { CustomField, FieldResponse } from "@lucidcms/core/types";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import brickStore from "@/store/brickStore";
 import Builder from "@/components/Groups/Builder";
 import Button from "@/components/Partials/Button";
@@ -22,8 +22,8 @@ interface RepeaterFieldProps {
 export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage ?? "",
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
 	);
 	const fieldConfig = createMemo(() => props.state.fieldConfig);
 	const brickIndex = createMemo(() => props.state.brickIndex);
@@ -48,7 +48,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 			key: fieldConfig().key,
 			groupId: props.state.groupId,
 			parentRepeaterKey: props.state.parentRepeaterKey,
-			contentLanguage: contentLanguage(),
+			contentLocale: contentLocale(),
 		});
 	};
 

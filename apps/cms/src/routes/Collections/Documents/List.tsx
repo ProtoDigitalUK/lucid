@@ -117,7 +117,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 				isSuccess: collection.isSuccess,
 			}}
 			actions={{
-				contentLanguage: collection.data?.data.translations ?? false,
+				contentLocale: collection.data?.data.translations ?? false,
 				createLink: {
 					link: `/collections/${collectionKey()}/create`,
 					permission: userStore.get.hasPermission(["create_content"])

@@ -126,7 +126,7 @@ export const swaggerResponse = (params: SwaggerResponseParams) => {
 interface SwaggerHeaders {
 	// undefine means dont include in the schema, boolean means required or not
 	csrf?: boolean;
-	contentLanguage?: boolean;
+	contentLocale?: boolean;
 }
 
 export const swaggerHeaders = (headers: SwaggerHeaders) => {
@@ -135,7 +135,7 @@ export const swaggerHeaders = (headers: SwaggerHeaders) => {
 			type: string;
 			description: string;
 		};
-		"lucid-content-lang"?: {
+		"lucid-content-locale"?: {
 			type: string;
 			description: string;
 		};
@@ -152,10 +152,10 @@ export const swaggerHeaders = (headers: SwaggerHeaders) => {
 		}
 	}
 
-	if (headers.contentLanguage !== undefined) {
-		propertise["lucid-content-lang"] = {
+	if (headers.contentLocale !== undefined) {
+		propertise["lucid-content-locale"] = {
 			type: "string",
-			description: T("swagger_content_language_header_description"),
+			description: T("swagger_content_locale_header_description"),
 		};
 	}
 

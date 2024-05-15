@@ -5,24 +5,22 @@ import {
 	createMemo,
 	type Accessor,
 } from "solid-js";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Form from "@/components/Groups/Form";
 
-interface ContentLanguageSelectProps {
+interface contentLocaleSelectProps {
 	value?: string | undefined;
 	setValue?: (_value: string | undefined) => void;
 	hasError?: boolean;
 }
 
-const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
-	props,
-) => {
+const contentLocaleSelect: Component<contentLocaleSelectProps> = (props) => {
 	// ----------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
 	);
-	const languages = createMemo(() => contentLanguageStore.get.languages);
+	const languages = createMemo(() => contentLocaleStore.get.languages);
 
 	// ----------------------------------------
 	// Render
@@ -31,14 +29,12 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 			<Match when={props.value === undefined}>
 				<Form.Select
 					id={"content-language"}
-					value={contentLanguage()}
+					value={contentLocale()}
 					onChange={(value) => {
 						if (!value)
-							contentLanguageStore.get.setContentLanguage(
-								undefined,
-							);
+							contentLocaleStore.get.setcontentLocale(undefined);
 						else
-							contentLanguageStore.get.setContentLanguage(
+							contentLocaleStore.get.setcontentLocale(
 								value.toString(),
 							);
 					}}
@@ -86,4 +82,4 @@ const ContentLanguageSelect: Component<ContentLanguageSelectProps> = (
 	);
 };
 
-export default ContentLanguageSelect;
+export default contentLocaleSelect;

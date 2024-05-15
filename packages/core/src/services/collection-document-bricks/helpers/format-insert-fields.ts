@@ -11,7 +11,7 @@ const formatInsertFields = (props: {
 		const targetGroup = props.groups.find((g) => g.ref === field.groupRef);
 
 		return {
-			languageCode: field.languageCode,
+			localeCode: field.localeCode,
 			collectionBrickId: props.brickId,
 			key: field.key,
 			type: field.type,

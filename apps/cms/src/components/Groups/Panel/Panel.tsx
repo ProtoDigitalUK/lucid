@@ -14,13 +14,13 @@ import {
 import { FaSolidArrowLeft } from "solid-icons/fa";
 import notifyIllustration from "@/assets/illustrations/notify.svg";
 import type { ErrorResponse } from "@lucidcms/core/types";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import { Dialog } from "@kobalte/core";
 import Loading from "@/components/Partials/Loading";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
-import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import contentLocaleSelect from "@/components/Partials/contentLocaleSelect";
 
 interface PanelProps {
 	open: boolean;
@@ -29,9 +29,9 @@ interface PanelProps {
 	reset: () => void;
 	hideFooter?: boolean;
 	langauge?: {
-		contentLanguage?: boolean;
-		hasContentLanguageError?: boolean;
-		useDefaultContentLanguage?: boolean;
+		contentLocale?: boolean;
+		hascontentLocaleError?: boolean;
+		useDefaultcontentLocale?: boolean;
 	};
 
 	fetchState?: {
@@ -51,8 +51,8 @@ interface PanelProps {
 		submit?: string;
 	};
 	children: (_props?: {
-		contentLanguage: Accessor<string | undefined>;
-		setContentLanguage: (_value: string) => void;
+		contentLocale: Accessor<string | undefined>;
+		setcontentLocale: (_value: string) => void;
 	}) => JSXElement;
 }
 
@@ -60,9 +60,9 @@ export const Panel: Component<PanelProps> = (props) => {
 	// ------------------------------
 	// State
 	const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
-	const [contentLanguage, setContentLanguage] = createSignal<
-		string | undefined
-	>(undefined);
+	const [contentLocale, setcontentLocale] = createSignal<string | undefined>(
+		undefined,
+	);
 
 	// ------------------------------
 	// Refs
@@ -81,14 +81,14 @@ export const Panel: Component<PanelProps> = (props) => {
 			}
 		});
 	};
-	const getDefaultContentLanguage = () => {
-		if (!props.langauge?.useDefaultContentLanguage)
-			return contentLanguageStore.get.contentLanguage;
-		const defaultLanguage = contentLanguageStore.get.languages.find(
+	const getDefaultcontentLocale = () => {
+		if (!props.langauge?.useDefaultcontentLocale)
+			return contentLocaleStore.get.contentLocale;
+		const defaultLanguage = contentLocaleStore.get.languages.find(
 			(language) => language.isDefault,
 		);
 		if (defaultLanguage) return defaultLanguage.code;
-		return contentLanguageStore.get.contentLanguage;
+		return contentLocaleStore.get.contentLocale;
 	};
 
 	// ------------------------------
@@ -102,15 +102,15 @@ export const Panel: Component<PanelProps> = (props) => {
 	createEffect(() => {
 		if (props.open) {
 			props.reset();
-			setContentLanguage(getDefaultContentLanguage());
+			setcontentLocale(getDefaultcontentLocale());
 			setBodyHeightValue();
 		}
 	});
 
 	createEffect(() => {
-		const defaultLang = getDefaultContentLanguage();
-		if (contentLanguage() === undefined && defaultLang !== undefined)
-			setContentLanguage(defaultLang);
+		const defaultLang = getDefaultcontentLocale();
+		if (contentLocale() === undefined && defaultLang !== undefined)
+			setcontentLocale(defaultLang);
 	});
 
 	// ------------------------------
@@ -169,14 +169,14 @@ export const Panel: Component<PanelProps> = (props) => {
 									</Show>
 								</Match>
 							</Switch>
-							<Show when={props.langauge?.contentLanguage}>
+							<Show when={props.langauge?.contentLocale}>
 								<div class="mt-5">
-									<ContentLanguageSelect
-										value={contentLanguage()}
-										setValue={setContentLanguage}
+									<contentLocaleSelect
+										value={contentLocale()}
+										setValue={setcontentLocale}
 										hasError={
 											props.langauge
-												?.hasContentLanguageError
+												?.hascontentLocaleError
 										}
 									/>
 								</div>
@@ -197,8 +197,8 @@ export const Panel: Component<PanelProps> = (props) => {
 							>
 								<Switch
 									fallback={props.children({
-										contentLanguage: contentLanguage,
-										setContentLanguage: setContentLanguage,
+										contentLocale: contentLocale,
+										setcontentLocale: setcontentLocale,
 									})}
 								>
 									<Match when={isLoading()}>

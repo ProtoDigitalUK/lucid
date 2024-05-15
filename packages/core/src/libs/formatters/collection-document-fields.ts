@@ -16,7 +16,7 @@ export interface FieldProp {
 	collection_brick_id: number | null;
 	collection_document_id: number;
 	group_id?: number | null;
-	language_code: string;
+	locale_code: string;
 	key: string;
 	type: string;
 	text_value: string | null;
@@ -38,11 +38,11 @@ export interface FieldProp {
 	media_type?: string | null;
 	media_title_translations?: Array<{
 		value: string | null;
-		language_code: string | null;
+		locale_code: string | null;
 	}>;
 	media_alt_translations?: Array<{
 		value: string | null;
-		language_code: string | null;
+		locale_code: string | null;
 	}>;
 }
 
@@ -52,7 +52,7 @@ export default class CollectionDocumentFieldsFormatter {
 		groups: BrickPropT["groups"];
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
-		defaultLanguageCode: string | undefined;
+		defaultLocaleCode: string | undefined;
 	}): FieldResponse[] => {
 		const fieldTree = props.builder.fieldTreeNoTab;
 		const sortedGroups = props.groups.sort(
@@ -65,14 +65,14 @@ export default class CollectionDocumentFieldsFormatter {
 			customFields: fieldTree,
 			groupId: null,
 			parentGroupId: null,
-			defaultLanguageCode: props.defaultLanguageCode,
+			defaultLocaleCode: props.defaultLocaleCode,
 		});
 	};
 	formatMultipleFlat = (props: {
 		fields: FieldProp[];
 		host: string;
 		builder: BrickBuilder | CollectionBuilder;
-		defaultLanguageCode: string | undefined;
+		defaultLocaleCode: string | undefined;
 	}): FieldResponse[] => {
 		if (props.fields.length === 0) return [];
 		const fieldsRes: FieldResponse[] = [];
@@ -89,12 +89,12 @@ export default class CollectionDocumentFieldsFormatter {
 
 			if (fieldData.length === 0) continue;
 
-			const field = this.handleFieldLanguages({
+			const field = this.handleFieldLocales({
 				fields: fieldData,
 				cf: cf,
 				host: props.host,
 				includeGroupId: true,
-				defaultLanguageCode: props.defaultLanguageCode,
+				defaultLocaleCode: props.defaultLocaleCode,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -108,7 +108,7 @@ export default class CollectionDocumentFieldsFormatter {
 		customFields: CustomField[];
 		groupId: number | null;
 		parentGroupId: number | null;
-		defaultLanguageCode: string | undefined;
+		defaultLocaleCode: string | undefined;
 	}): FieldResponse[] => {
 		const fieldsRes: FieldResponse[] = [];
 		for (const cf of props.customFields) {
@@ -123,7 +123,7 @@ export default class CollectionDocumentFieldsFormatter {
 						groups: props.groups,
 						host: props.host,
 						parentGroupId: props.groupId,
-						defaultLanguageCode: props.defaultLanguageCode,
+						defaultLocaleCode: props.defaultLocaleCode,
 					}),
 				});
 				continue;
@@ -135,12 +135,12 @@ export default class CollectionDocumentFieldsFormatter {
 			if (!fields) continue;
 			if (fields.length === 0) continue;
 
-			const field = this.handleFieldLanguages({
+			const field = this.handleFieldLocales({
 				fields: fields,
 				cf: cf,
 				host: props.host,
 				includeGroupId: true,
-				defaultLanguageCode: props.defaultLanguageCode,
+				defaultLocaleCode: props.defaultLocaleCode,
 			});
 			if (field) fieldsRes.push(field);
 		}
@@ -153,7 +153,7 @@ export default class CollectionDocumentFieldsFormatter {
 		groups: BrickPropT["groups"];
 		host: string;
 		parentGroupId: number | null;
-		defaultLanguageCode: string | undefined;
+		defaultLocaleCode: string | undefined;
 	}): FieldGroupResponse[] => {
 		const groups: FieldGroupResponse[] = [];
 
@@ -178,22 +178,22 @@ export default class CollectionDocumentFieldsFormatter {
 					customFields: repeaterFields,
 					groupId: group.group_id,
 					parentGroupId: group.parent_group_id,
-					defaultLanguageCode: props.defaultLanguageCode,
+					defaultLocaleCode: props.defaultLocaleCode,
 				}),
 			});
 		}
 
 		return groups;
 	};
-	private handleFieldLanguages = (props: {
+	private handleFieldLocales = (props: {
 		fields: FieldProp[];
 		cf: CustomField;
 		host: string;
 		includeGroupId?: boolean;
-		defaultLanguageCode?: string;
+		defaultLocaleCode?: string;
 	}): FieldResponse | null => {
 		if (props.cf.translations === true) {
-			return this.reduceFieldLanguages({
+			return this.reduceFieldLocales({
 				fields: props.fields,
 				cf: props.cf,
 				host: props.host,
@@ -201,7 +201,7 @@ export default class CollectionDocumentFieldsFormatter {
 			});
 		}
 		const defaultField = props.fields.find(
-			(f) => f.language_code === props.defaultLanguageCode,
+			(f) => f.locale_code === props.defaultLocaleCode,
 		);
 		if (!defaultField) return null;
 
@@ -221,13 +221,14 @@ export default class CollectionDocumentFieldsFormatter {
 			meta: meta,
 		};
 	};
-	private reduceFieldLanguages = (props: {
+	private reduceFieldLocales = (props: {
 		fields: FieldProp[];
 		cf: CustomField;
 		host: string;
 		includeGroupId?: boolean;
 	}): FieldResponse => {
-		// ** Reduce same fields into one entry with translations object containing values for each language
+		// ** Reduce same fields into one entry with translations object containing values for each locale
+		// TODO: update this so it adds in empty values for locales that dont have a FieldProp value
 		return props.fields.reduce<FieldResponse>(
 			(acc, field) => {
 				if (acc.translations === undefined) acc.translations = {};
@@ -243,9 +244,9 @@ export default class CollectionDocumentFieldsFormatter {
 					host: props.host,
 				});
 
-				acc.translations[field.language_code] = value;
+				acc.translations[field.locale_code] = value;
 				(acc.meta as Record<string, FieldResponseMeta>)[
-					field.language_code
+					field.locale_code
 				] = meta;
 
 				return acc;
@@ -341,7 +342,7 @@ export default class CollectionDocumentFieldsFormatter {
 									type: "string",
 									nullable: true,
 								},
-								languageCode: {
+								localeCode: {
 									type: "string",
 									nullable: true,
 								},
@@ -358,7 +359,7 @@ export default class CollectionDocumentFieldsFormatter {
 									type: "string",
 									nullable: true,
 								},
-								languageCode: {
+								localeCode: {
 									type: "string",
 									nullable: true,
 								},

@@ -22,7 +22,7 @@ interface MediaFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -45,12 +45,12 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 		const meta = brickHelpers.getFieldMeta<MediaMeta>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 
 		setValue(value);
@@ -79,7 +79,7 @@ export const MediaField: Component<MediaFieldProps> = (props) => {
 							repeaterKey: props.state.repeaterKey,
 							value: value,
 							meta: meta,
-							contentLanguage: props.state.contentLanguage,
+							contentLocale: props.state.contentLocale,
 						});
 						setValue(value ?? undefined);
 						setMeta(meta ?? undefined);

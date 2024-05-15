@@ -15,11 +15,11 @@ import api from "@/services/api";
 import brickStore from "@/store/brickStore";
 import brickHelpers from "@/utils/brick-helpers";
 import { getBodyError } from "@/utils/error-helpers";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
-import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import contentLocaleSelect from "@/components/Partials/contentLocaleSelect";
 import DetailsList from "@/components/Partials/DetailsList";
 import DateText from "@/components/Partials/DateText";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
@@ -51,11 +51,11 @@ const CollectionsDocumentsEditRoute: Component<
 	const documentId = createMemo(
 		() => Number.parseInt(params.documentId) || undefined,
 	);
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
 	);
 	const canFetchDocument = createMemo(() => {
-		return contentLanguage() !== undefined && documentId() !== undefined;
+		return contentLocale() !== undefined && documentId() !== undefined;
 	});
 
 	// ----------------------------------
@@ -120,7 +120,7 @@ const CollectionsDocumentsEditRoute: Component<
 	const brickTranslationErrors = createMemo(() => {
 		const errors = getBodyError<FieldErrors[]>("fields", mutateErrors());
 		if (errors === undefined) return false;
-		return errors.some((field) => field.languageCode !== contentLanguage());
+		return errors.some((field) => field.localeCode !== contentLocale());
 	});
 	const canSaveDocument = createMemo(() => {
 		return !brickStore.get.documentMutated && !isSaving();
@@ -221,7 +221,7 @@ const CollectionsDocumentsEditRoute: Component<
 										}
 									>
 										<div class="w-full md:w-auto md:min-w-[250px]">
-											<ContentLanguageSelect
+											<contentLocaleSelect
 												hasError={brickTranslationErrors()}
 											/>
 										</div>

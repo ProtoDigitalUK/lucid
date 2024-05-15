@@ -16,10 +16,10 @@ import type { ServiceConfig } from "../../utils/service-wrapper.js";
 // Seeds
 import seedDefaultOptions from "./seed/seed-default-options.js";
 import seedDefaultUser from "./seed/seed-default-user.js";
-import seedDefaultLanguages from "./seed/seed-default-language.js";
+import seedLocales from "./seed/seed-locales.js";
 import seedDefaultRoles from "./seed/seed-default-roles.js";
 // Migrations
-import Migration00000001 from "./migrations/00000001-languages.js";
+import Migration00000001 from "./migrations/00000001-locales.js";
 import Migration00000002 from "./migrations/00000002-translations.js";
 import Migration00000003 from "./migrations/00000003-options.js";
 import Migration00000004 from "./migrations/00000004-users-and-permissions.js";
@@ -75,7 +75,7 @@ export default class DatabaseAdapter {
 			await Promise.allSettled([
 				seedDefaultOptions(serviceConfig),
 				seedDefaultUser(serviceConfig),
-				seedDefaultLanguages(serviceConfig),
+				seedLocales(serviceConfig),
 				seedDefaultRoles(serviceConfig),
 			]);
 		};
@@ -105,7 +105,7 @@ export default class DatabaseAdapter {
 	}
 	private get migrations(): Record<string, Migration> {
 		return {
-			"00000001-languages": Migration00000001(this.adapter),
+			"00000001-locales": Migration00000001(this.adapter),
 			"00000002-translations": Migration00000002(this.adapter),
 			"00000003-options": Migration00000003(this.adapter),
 			"00000004-users-and-permissions": Migration00000004(this.adapter),

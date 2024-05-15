@@ -1,6 +1,7 @@
 import type { BooleanInt } from "../../../libs/db/types.js";
 import type { BrickSchema } from "../../../schemas/collection-bricks.js";
 import type { FieldSchemaType } from "../../../schemas/collection-fields.js";
+import type { Config } from "../../../types.js";
 import flattenFields, {
 	type GroupInsertItem,
 	type FieldInsertItem,
@@ -16,7 +17,7 @@ const formatInsertBricks = (props: {
 	bricks?: Array<BrickSchema>;
 	fields?: Array<FieldSchemaType>;
 	documentId: number;
-	languages: Array<{ code: string; is_default: BooleanInt }>;
+	localisation: Config["localisation"];
 }): Array<BrickInsertItem> => {
 	const bricksRes: Array<BrickInsertItem> = [];
 
@@ -25,7 +26,7 @@ const formatInsertBricks = (props: {
 			const brick = props.bricks[i];
 			if (brick === undefined) continue;
 
-			const flat = flattenFields(brick.fields ?? [], props.languages);
+			const flat = flattenFields(brick.fields ?? [], props.localisation);
 
 			bricksRes.push({
 				key: brick.key,
@@ -39,7 +40,7 @@ const formatInsertBricks = (props: {
 	}
 
 	if (props.fields !== undefined) {
-		const flat = flattenFields(props.fields, props.languages);
+		const flat = flattenFields(props.fields, props.localisation);
 		bricksRes.push({
 			type: "collection-fields",
 			fields: flat.fields,

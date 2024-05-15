@@ -25,7 +25,7 @@ const getMultipleController: RouteController<
 			},
 			{
 				query: request.query,
-				languageCode: request.language.code,
+				localeCode: request.locale.code,
 			},
 		);
 
@@ -70,7 +70,7 @@ export default {
 			}),
 		},
 		headers: swaggerHeaders({
-			contentLanguage: true,
+			contentLocale: true,
 		}),
 		querystring: swaggerQueryString({
 			filters: [

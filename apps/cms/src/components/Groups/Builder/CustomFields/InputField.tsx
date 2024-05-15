@@ -22,7 +22,7 @@ interface InputFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -44,7 +44,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<string | number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 
 		switch (props.type) {
@@ -78,7 +78,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: props.type === "number" ? Number(value) : value,
-						contentLanguage: props.state.contentLanguage,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value);
 				});

@@ -23,11 +23,6 @@ const createMultiple = async (
 		"collection-document-bricks",
 		serviceConfig.db,
 	);
-	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
-
-	const languages = await LanguagesRepo.selectAll({
-		select: ["code", "is_default"],
-	});
 
 	// -------------------------------------------------------------------------------
 	// set bricks
@@ -35,7 +30,7 @@ const createMultiple = async (
 		bricks: data.bricks,
 		fields: data.fields,
 		documentId: data.documentId,
-		languages: languages,
+		localisation: serviceConfig.config.localisation,
 	});
 	if (bricks.length === 0) return;
 

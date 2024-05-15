@@ -8,7 +8,7 @@ export default class TranslationsRepo {
 	upsertMultiple = async (
 		props: {
 			value: string | null;
-			languageCode: string;
+			localeCode: string;
 			translationKeyId: number;
 		}[],
 	) => {
@@ -17,13 +17,13 @@ export default class TranslationsRepo {
 			.values(
 				props.map((t) => ({
 					value: t.value,
-					language_code: t.languageCode,
+					locale_code: t.localeCode,
 					translation_key_id: t.translationKeyId,
 				})),
 			)
 			.onConflict((oc) =>
 				oc
-					.columns(["translation_key_id", "language_code"])
+					.columns(["translation_key_id", "locale_code"])
 					.doUpdateSet((eb) => ({
 						value: eb.ref("excluded.value"),
 					})),

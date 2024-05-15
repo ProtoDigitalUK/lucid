@@ -10,13 +10,11 @@ const Migration00000001: MigrationFn = (adapter) => {
 			}
 
 			await db.schema
-				.createTable("lucid_languages")
+				.createTable("lucid_locales")
 				.addColumn("code", "text", (col) => col.primaryKey())
-				.addColumn("is_default", "integer", (col) =>
-					col.notNull().defaultTo(0),
-				)
-				.addColumn("is_enabled", "integer", (col) =>
-					col.notNull().defaultTo(1),
+				.addColumn("is_deleted", "integer", (col) => col.defaultTo(0))
+				.addColumn("is_deleted_at", "timestamp", (col) =>
+					col.defaultTo(null),
 				)
 				.addColumn("created_at", "timestamp", (col) =>
 					defaultTimestamp(col, adapter),

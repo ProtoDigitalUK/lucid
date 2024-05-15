@@ -2,13 +2,13 @@ import { createStore } from "solid-js/store";
 import type { LanguageResponse } from "@lucidcms/core/types";
 
 type ContentLangStoreT = {
-	contentLanguage: string | undefined;
+	contentLocale: string | undefined;
 	languages: LanguageResponse[];
-	syncContentLanguage: (_languages: LanguageResponse[]) => void;
-	setContentLanguage: (_contentLanguage?: string) => void;
+	synccontentLocale: (_languages: LanguageResponse[]) => void;
+	setcontentLocale: (_contentLocale?: string) => void;
 };
 
-const getInitialContentLanguage = () => {
+const getInitialcontentLocale = () => {
 	const contentLang = localStorage.getItem("lucid_content_language");
 	if (contentLang) {
 		return contentLang;
@@ -17,12 +17,12 @@ const getInitialContentLanguage = () => {
 };
 
 const [get, set] = createStore<ContentLangStoreT>({
-	contentLanguage: getInitialContentLanguage(),
+	contentLocale: getInitialcontentLocale(),
 	languages: [],
 
-	syncContentLanguage(languages: LanguageResponse[]) {
+	synccontentLocale(languages: LanguageResponse[]) {
 		if (languages.length === 0) {
-			set("contentLanguage", undefined);
+			set("contentLocale", undefined);
 			return;
 		}
 
@@ -32,27 +32,27 @@ const [get, set] = createStore<ContentLangStoreT>({
 				(lang) => lang.code === contentLangLs,
 			);
 			if (languageExists !== undefined) {
-				set("contentLanguage", contentLangLs);
+				set("contentLocale", contentLangLs);
 				return;
 			}
 		}
-		set("contentLanguage", languages[0]?.code || undefined);
+		set("contentLocale", languages[0]?.code || undefined);
 	},
-	setContentLanguage(contentLanguage?: string) {
-		if (contentLanguage === undefined)
+	setcontentLocale(contentLocale?: string) {
+		if (contentLocale === undefined)
 			localStorage.removeItem("lucid_content_language");
 		else
 			localStorage.setItem(
 				"lucid_content_language",
-				String(contentLanguage),
+				String(contentLocale),
 			);
-		set("contentLanguage", contentLanguage);
+		set("contentLocale", contentLocale);
 	},
 });
 
-const contentLanguageStore = {
+const contentLocaleStore = {
 	get,
 	set,
 };
 
-export default contentLanguageStore;
+export default contentLocaleStore;

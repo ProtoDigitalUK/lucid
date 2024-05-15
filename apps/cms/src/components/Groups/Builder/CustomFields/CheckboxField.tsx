@@ -21,7 +21,7 @@ interface CheckboxFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -43,7 +43,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<1 | 0>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 		setValue(value || 0);
 	});
@@ -67,7 +67,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value ? 1 : 0,
-						contentLanguage: props.state.contentLanguage,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value ? 1 : 0);
 				});

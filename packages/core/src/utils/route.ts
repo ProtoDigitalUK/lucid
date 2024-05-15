@@ -9,7 +9,7 @@ import validateQuery from "../middleware/validate-query.js";
 import authenticate from "../middleware/authenticate.js";
 import validateCSRF from "../middleware/validate-csrf.js";
 import permissions from "../middleware/permissions.js";
-import contentLanguage from "../middleware/content-language.js";
+import contentLocale from "../middleware/content-locale.js";
 
 type Route = <
 	ParamsT extends z.ZodTypeAny | undefined,
@@ -24,7 +24,7 @@ type Route = <
 		middleware?: {
 			authenticate?: boolean;
 			validateCSRF?: boolean;
-			contentLanguage?: boolean;
+			contentLocale?: boolean;
 		};
 		isMultipart?: boolean;
 		zodSchema?: {
@@ -72,7 +72,7 @@ const route: Route = (fastify, opts) => {
 
 	if (middleware?.authenticate) preHandler.push(authenticate);
 	if (middleware?.validateCSRF) preHandler.push(validateCSRF);
-	if (middleware?.contentLanguage) preHandler.push(contentLanguage);
+	if (middleware?.contentLocale) preHandler.push(contentLocale);
 
 	if (zodSchema?.body !== undefined)
 		preValidation.push(validateBody(zodSchema.body, opts.isMultipart));

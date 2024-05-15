@@ -21,7 +21,7 @@ interface WYSIWYGFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -43,7 +43,7 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 
 		setValue(value || "");
@@ -68,7 +68,7 @@ export const WYSIWYGField: Component<WYSIWYGFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value,
-						contentLanguage: props.state.contentLanguage,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value);
 				});

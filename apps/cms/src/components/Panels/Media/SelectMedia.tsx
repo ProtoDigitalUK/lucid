@@ -3,7 +3,7 @@ import { type Component, createMemo, For, onCleanup } from "solid-js";
 import { useNavigate, useLocation } from "@solidjs/router";
 import useSearchParams from "@/hooks/useSearchParams";
 import mediaSelectStore from "@/store/forms/mediaSelectStore";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import api from "@/services/api";
 import Query from "@/components/Groups/Query";
 import Panel from "@/components/Groups/Panel";
@@ -83,8 +83,8 @@ const SelectMediaContent: Component = () => {
 
 	// ----------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
 	);
 
 	// ----------------------------------
@@ -93,7 +93,7 @@ const SelectMediaContent: Component = () => {
 		queryParams: {
 			queryString: searchParams.getQueryString,
 			headers: {
-				"lucid-content-lang": contentLanguage,
+				"lucid-content-locale": contentLocale,
 			},
 		},
 		enabled: () => searchParams.getSettled(),
@@ -210,7 +210,7 @@ const SelectMediaContent: Component = () => {
 						{(item) => (
 							<MediaBasicCard
 								media={item}
-								contentLanguage={contentLanguage()}
+								contentLocale={contentLocale()}
 								selected={
 									item.id === mediaSelectStore.get.selected
 								}

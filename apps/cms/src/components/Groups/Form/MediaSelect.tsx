@@ -7,7 +7,7 @@ import type {
 	MediaResponse,
 	MediaMeta,
 } from "@lucidcms/core/types";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import mediaSelectStore from "@/store/forms/mediaSelectStore";
 import helpers from "@/utils/helpers";
 import Button from "@/components/Partials/Button";
@@ -69,8 +69,8 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 
 	// -------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage,
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale,
 	);
 
 	// -------------------------------
@@ -114,7 +114,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 										}}
 										alt={helpers.getTranslation(
 											props.meta?.altTranslations,
-											contentLanguage(),
+											contentLocale(),
 										)}
 									/>
 								</AspectRatio>

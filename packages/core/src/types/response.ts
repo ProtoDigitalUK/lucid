@@ -89,11 +89,11 @@ export interface MediaResponse {
 	key: string;
 	url: string;
 	titleTranslations: {
-		languageCode: string | null;
+		localeCode: string | null;
 		value: string | null;
 	}[];
 	altTranslations: {
-		languageCode: string | null;
+		localeCode: string | null;
 		value: string | null;
 	}[];
 	type: MediaType;
@@ -108,12 +108,10 @@ export interface MediaResponse {
 	updatedAt: string | null;
 }
 
-export interface LanguageResponse {
+export interface LocalesResponse {
 	code: string;
 	name: string | null;
-	nativeName: string | null;
 	isDefault: BooleanInt;
-	isEnabled: BooleanInt;
 	createdAt: string | null;
 	updatedAt: string | null;
 }
@@ -214,11 +212,11 @@ export interface MediaMeta {
 	height: number | null;
 	titleTranslations?: Array<{
 		value: string | null;
-		languageCode: string | null;
+		localeCode: string | null;
 	}>;
 	altTranslations?: Array<{
 		value: string | null;
-		languageCode: string | null;
+		localeCode: string | null;
 	}>;
 	type: MediaType | null;
 }
@@ -300,9 +298,6 @@ export type Permission =
 	| "read_email"
 	| "delete_email"
 	| "send_email"
-	| "create_language"
-	| "update_language"
-	| "delete_language"
 	| "create_content"
 	| "update_content"
 	| "delete_content"
@@ -320,6 +315,5 @@ export type PermissionGroupKey =
 	| "roles"
 	| "media"
 	| "settings"
-	| "languages"
 	| "emails"
 	| "content";

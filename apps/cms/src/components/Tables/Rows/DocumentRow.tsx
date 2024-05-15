@@ -10,7 +10,7 @@ import type {
 } from "@lucidcms/core/types";
 import brickHelpers from "@/utils/brick-helpers";
 import userStore from "@/store/userStore";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Table from "@/components/Groups/Table";
 import DateCol from "@/components/Tables/Columns/DateCol";
 import AuthorCol from "@/components/Tables/Columns/AuthorCol";
@@ -22,7 +22,7 @@ interface DocumentRowProps extends TableRowProps {
 	fieldInclude: CustomField[];
 	include: boolean[];
 	rowTarget: ReturnType<typeof useRowTarget<"delete">>;
-	contentLanguage?: string;
+	contentLocale?: string;
 }
 
 const DocumentRow: Component<DocumentRowProps> = (props) => {
@@ -80,8 +80,8 @@ const DocumentDynamicColumns: Component<{
 }> = (props) => {
 	// ----------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage ?? "",
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
 	);
 	const fieldData = createMemo(() => {
 		return props.document.fields?.find((f) => f.key === props.field.key);
@@ -90,14 +90,14 @@ const DocumentDynamicColumns: Component<{
 		return brickHelpers.getFieldValue({
 			fieldData: fieldData(),
 			fieldConfig: props.field,
-			contentLanguage: contentLanguage(),
+			contentLocale: contentLocale(),
 		});
 	});
 	const fieldMeta = createMemo(() => {
 		return brickHelpers.getFieldMeta({
 			fieldData: fieldData(),
 			fieldConfig: props.field,
-			contentLanguage: contentLanguage(),
+			contentLocale: contentLocale(),
 		});
 	});
 

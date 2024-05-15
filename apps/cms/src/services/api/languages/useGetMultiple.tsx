@@ -2,7 +2,7 @@ import { createEffect, createMemo, type Accessor } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import type { ResponseBody, LanguageResponse } from "@lucidcms/core/types";
 
 interface QueryParams {
@@ -35,8 +35,8 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	// Effects
 	createEffect(() => {
 		if (query.isSuccess) {
-			contentLanguageStore.get.syncContentLanguage(query.data?.data);
-			contentLanguageStore.set("languages", query.data?.data || []);
+			contentLocaleStore.get.synccontentLocale(query.data?.data);
+			contentLocaleStore.set("languages", query.data?.data || []);
 		}
 	});
 

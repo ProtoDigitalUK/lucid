@@ -4,7 +4,7 @@ import authRoutes from "./auth.routes.js";
 import permissionRoutes from "./permissions.routes.js";
 import roleRoutes from "./roles.routes.js";
 import accountRoutes from "./account.routes.js";
-import langaugeRoutes from "./languages.routes.js";
+import localeRoutes from "./locales.routes.js";
 import emailRoutes from "./emails.routes.js";
 import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
@@ -23,8 +23,8 @@ const routes = async (fastify: FastifyInstance) => {
 	fastify.register(permissionRoutes, {
 		prefix: "/permissions",
 	});
-	fastify.register(langaugeRoutes, {
-		prefix: "/languages",
+	fastify.register(localeRoutes, {
+		prefix: "/locales",
 	});
 	fastify.register(collectionRoutes, {
 		prefix: "/collections",

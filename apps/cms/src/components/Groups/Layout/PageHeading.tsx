@@ -11,7 +11,7 @@ import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
 import classNames from "classnames";
 import Link from "@/components/Partials/Link";
 import Button from "@/components/Partials/Button";
-import ContentLanguageSelect from "@/components/Partials/ContentLanguageSelect";
+import contentLocaleSelect from "@/components/Partials/contentLocaleSelect";
 import Layout from "@/components/Groups/Layout";
 
 export interface PageHeadingProps {
@@ -42,7 +42,7 @@ export interface PageHeadingProps {
 			label: string;
 			permission?: boolean;
 		};
-		contentLanguage?: boolean;
+		contentLocale?: boolean;
 	};
 	options?: {
 		noBorder?: boolean;
@@ -117,12 +117,12 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 					<div class="flex items-center justify-end md:ml-5 mb-5 md:mb-0 w-full space-x-2.5">
 						<Show
 							when={
-								props.actions?.contentLanguage !== undefined &&
-								props.actions.contentLanguage !== false
+								props.actions?.contentLocale !== undefined &&
+								props.actions.contentLocale !== false
 							}
 						>
 							<div class="w-full md:max-w-[240px]">
-								<ContentLanguageSelect />
+								<contentLocaleSelect />
 							</div>
 						</Show>
 						<Show

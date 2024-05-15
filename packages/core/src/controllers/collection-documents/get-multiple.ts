@@ -73,7 +73,7 @@ export default {
 			}),
 		},
 		headers: swaggerHeaders({
-			contentLanguage: true,
+			contentLocale: true,
 		}),
 		querystring: swaggerQueryString({
 			filters: [],

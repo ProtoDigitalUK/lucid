@@ -22,7 +22,7 @@ interface LinkFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -44,7 +44,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<LinkValue | null>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 		setValue(value);
 	});
@@ -69,7 +69,7 @@ export const LinkField: Component<LinkFieldProps> = (props) => {
 							groupId: props.state.groupId,
 							repeaterKey: props.state.repeaterKey,
 							value: value,
-							contentLanguage: props.state.contentLanguage,
+							contentLocale: props.state.contentLocale,
 						});
 						setValue(value);
 					});

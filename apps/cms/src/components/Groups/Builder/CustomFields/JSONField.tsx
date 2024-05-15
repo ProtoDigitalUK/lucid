@@ -22,7 +22,7 @@ interface JSONFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -44,7 +44,7 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 
 		setValue(JSON.stringify(value ?? "", null, 4));
@@ -69,7 +69,7 @@ export const JSONField: Component<JSONFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: JSON.parse(value),
-						contentLanguage: props.state.contentLanguage,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value);
 				});

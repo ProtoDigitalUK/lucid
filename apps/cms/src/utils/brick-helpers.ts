@@ -93,12 +93,12 @@ const customFieldId = (props: {
 const getFieldValue = <T>(props: {
 	fieldConfig: CustomField;
 	fieldData?: FieldResponse;
-	contentLanguage: string;
+	contentLocale: string;
 }) => {
 	if (!props.fieldData) return undefined;
 
 	if (props.fieldConfig.translations === true) {
-		return props.fieldData.translations?.[props.contentLanguage] as T;
+		return props.fieldData.translations?.[props.contentLocale] as T;
 	}
 	return props.fieldData.value as T;
 };
@@ -106,13 +106,13 @@ const getFieldValue = <T>(props: {
 const getFieldMeta = <T extends FieldResponseMeta>(props: {
 	fieldConfig: CustomField;
 	fieldData?: FieldResponse;
-	contentLanguage: string;
+	contentLocale: string;
 }) => {
 	if (!props.fieldData) return undefined;
 
 	if (props.fieldConfig.translations === true) {
 		return (props.fieldData.meta as Record<string, T>)?.[
-			props.contentLanguage
+			props.contentLocale
 		];
 	}
 	return props.fieldData.meta as T;

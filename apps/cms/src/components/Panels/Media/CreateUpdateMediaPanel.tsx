@@ -14,7 +14,7 @@ import type { MediaResponse } from "@lucidcms/core/types";
 import helpers from "@/utils/helpers";
 import dateHelpers from "@/utils/date-helpers";
 import { getBodyError, getErrorObject } from "@/utils/error-helpers";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import Panel from "@/components/Groups/Panel";
 import Form from "@/components/Groups/Form";
 import SectionHeading from "@/components/Blocks/SectionHeading";
@@ -93,7 +93,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			? false
 			: media.data?.data.type === "image";
 	});
-	const languages = createMemo(() => contentLanguageStore.get.languages);
+	const languages = createMemo(() => contentLocaleStore.get.languages);
 	const mutateIsLoading = createMemo(() => {
 		return updateSingle.action.isPending || createSingle.action.isPending;
 	});
@@ -248,9 +248,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			}}
 			content={panelContent()}
 			langauge={{
-				contentLanguage: true,
-				hasContentLanguageError: hasTranslationErrors(),
-				useDefaultContentLanguage: panelMode() === "create",
+				contentLocale: true,
+				hascontentLocaleError: hasTranslationErrors(),
+				useDefaultcontentLocale: panelMode() === "create",
 			}}
 		>
 			{(lang) => (
@@ -259,7 +259,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 					<For each={languages()}>
 						{(language, index) => (
 							<Show
-								when={language.code === lang?.contentLanguage()}
+								when={language.code === lang?.contentLocale()}
 							>
 								<SectionHeading
 									title={T("details_lang", {
@@ -271,7 +271,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									value={
 										getTitleTranslations().find(
 											(item) =>
-												item.languageCode ===
+												item.localeCode ===
 												language.code,
 										)?.value || ""
 									}
@@ -279,7 +279,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										helpers.updateTranslation(
 											setTitleTranslations,
 											{
-												languageCode: language.code,
+												localeCode: language.code,
 												value: val,
 											},
 										);
@@ -299,7 +299,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										value={
 											getAltTranslations().find(
 												(item) =>
-													item.languageCode ===
+													item.localeCode ===
 													language.code,
 											)?.value || ""
 										}
@@ -307,7 +307,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 											helpers.updateTranslation(
 												setAltTranslations,
 												{
-													languageCode: language.code,
+													localeCode: language.code,
 													value: val,
 												},
 											);

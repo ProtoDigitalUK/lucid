@@ -2,7 +2,7 @@ import { type Component, Match, Switch, Show, createMemo, For } from "solid-js";
 import classNames from "classnames";
 import type { CustomField, FieldResponse } from "@lucidcms/core/types";
 import brickStore from "@/store/brickStore";
-import contentLanguageStore from "@/store/contentLanguageStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import CustomFields from "@/components/Groups/Builder/CustomFields";
 import FieldTypeIcon from "@/components/Partials/FieldTypeIcon";
 
@@ -22,10 +22,10 @@ interface DynamicFieldProps {
 export const DynamicField: Component<DynamicFieldProps> = (props) => {
 	// -------------------------------
 	// Memos
-	const contentLanguage = createMemo(
-		() => contentLanguageStore.get.contentLanguage ?? "",
+	const contentLocale = createMemo(
+		() => contentLocaleStore.get.contentLocale ?? "",
 	);
-	const languages = createMemo(() => contentLanguageStore.get.languages);
+	const languages = createMemo(() => contentLocaleStore.get.languages);
 	const fieldData = createMemo(() => {
 		if (props.state.fieldConfig.type === "tab") return;
 
@@ -48,7 +48,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 		return brickStore.get.fieldsErrors.find((f) => {
 			return (
 				f.key === props.state.fieldConfig.key &&
-				f.languageCode === contentLanguage() &&
+				f.localeCode === contentLocale() &&
 				f.groupId === props.state.groupId
 			);
 		});
@@ -105,7 +105,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -118,7 +118,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -132,7 +132,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -148,7 +148,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -163,7 +163,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -176,7 +176,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -189,7 +189,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -202,7 +202,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -215,7 +215,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -228,7 +228,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -243,7 +243,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>
@@ -258,7 +258,7 @@ export const DynamicField: Component<DynamicFieldProps> = (props) => {
 									fieldData: fieldData(),
 									groupId: props.state.groupId,
 									repeaterKey: props.state.repeaterKey,
-									contentLanguage: contentLanguage(),
+									contentLocale: contentLocale(),
 									fieldError: fieldError(),
 								}}
 							/>

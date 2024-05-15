@@ -22,7 +22,7 @@ interface UserFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -44,7 +44,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<number>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 
 		setValue(value);
@@ -70,7 +70,7 @@ export const UserField: Component<UserFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value, // Number(value),
-						contentLanguage: props.state.contentLanguage,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value as number);
 				});

@@ -4,31 +4,36 @@ import Repository from "../../../libs/repositories/index.js";
 import type { ServiceConfig } from "../../../utils/service-wrapper.js";
 
 export interface ServiceData {
-	languageCodes: string[];
+	localeCodes: string[];
 }
 
-const checkLanguagesExist = async (
+const checkLocalesExist = async (
 	serviceConfig: ServiceConfig,
 	data: ServiceData,
 ) => {
-	const languageCodes = Array.from(new Set(data.languageCodes));
+	const localeCodes = Array.from(new Set(data.localeCodes));
 
-	if (languageCodes.length === 0) return;
+	if (localeCodes.length === 0) return;
 
-	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
+	const LocalesRepo = Repository.get("locales", serviceConfig.db);
 
-	const languages = await LanguagesRepo.selectMultiple({
+	const locales = await LocalesRepo.selectMultiple({
 		select: ["code"],
 		where: [
 			{
 				key: "code",
 				operator: "in",
-				value: languageCodes,
+				value: localeCodes,
+			},
+			{
+				key: "is_deleted",
+				operator: "!=",
+				value: 1,
 			},
 		],
 	});
 
-	if (languages.length !== languageCodes.length) {
+	if (locales.length !== localeCodes.length) {
 		throw new LucidAPIError({
 			type: "basic",
 			status: 400,
@@ -36,9 +41,7 @@ const checkLanguagesExist = async (
 				body: {
 					translations: {
 						code: "invalid",
-						message: T(
-							"make_sure_all_translations_languages_exist",
-						),
+						message: T("make_sure_all_translations_locales_exist"),
 					},
 				},
 			},
@@ -46,4 +49,4 @@ const checkLanguagesExist = async (
 	}
 };
 
-export default checkLanguagesExist;
+export default checkLocalesExist;

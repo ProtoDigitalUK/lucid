@@ -2,7 +2,7 @@ import type z from "zod";
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type { Config } from "./config.js";
 
-import type { UserPermissionsResponse, LanguageResponse } from "./response.js";
+import type { UserPermissionsResponse, LocalesResponse } from "./response.js";
 import type { BooleanInt } from "../libs/db/types.js";
 import type lucidLogger from "../libs/logging/index.js";
 
@@ -20,8 +20,8 @@ declare module "fastify" {
 			superAdmin: BooleanInt;
 			permissions: UserPermissionsResponse["permissions"] | undefined;
 		};
-		language: {
-			code: LanguageResponse["code"];
+		locale: {
+			code: LocalesResponse["code"];
 		};
 		server: FastifyInstance;
 	}

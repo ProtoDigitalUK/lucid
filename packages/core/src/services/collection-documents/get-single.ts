@@ -19,7 +19,6 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		"collection-documents",
 		serviceConfig.db,
 	);
-	const LanguagesRepo = Repository.get("languages", serviceConfig.db);
 	const CollectionDocumentsFormatter = Formatter.get("collection-documents");
 
 	const document = await CollectionDocumentsRepo.selectSingleById({
@@ -40,21 +39,9 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		});
 	}
 
-	const [collectionInstance, defaultLanguage] = await Promise.all([
-		collectionsServices.getSingleInstance({
-			key: document.collection_key,
-		}),
-		LanguagesRepo.selectSingle({
-			select: ["code"],
-			where: [
-				{
-					key: "is_default",
-					operator: "=",
-					value: 1,
-				},
-			],
-		}),
-	]);
+	const collectionInstance = await collectionsServices.getSingleInstance({
+		key: document.collection_key,
+	});
 
 	if (data.query.include?.includes("bricks")) {
 		const bricksRes = await serviceWrapper(
@@ -71,7 +58,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 			bricks: bricksRes.bricks,
 			fields: bricksRes.fields,
 			host: serviceConfig.config.host,
-			defaultLanguageCode: defaultLanguage?.code,
+			defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
 		});
 	}
 
@@ -81,7 +68,7 @@ const getSingle = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 		bricks: [],
 		fields: [],
 		host: serviceConfig.config.host,
-		defaultLanguageCode: defaultLanguage?.code,
+		defaultLocaleCode: serviceConfig.config.localisation.defaultLocale,
 	});
 };
 

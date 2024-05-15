@@ -53,7 +53,7 @@ export default class CollectionDocumentsFormatter {
 		bricks?: BrickResponse[];
 		fields?: FieldResponse[] | null;
 		host: string;
-		defaultLanguageCode?: string;
+		defaultLocaleCode?: string;
 	}): CollectionDocumentResponse => {
 		let fields: FieldResponse[] | null = null;
 
@@ -67,7 +67,7 @@ export default class CollectionDocumentsFormatter {
 					fields: props.document.fields,
 					host: props.host,
 					builder: props.collection,
-					defaultLanguageCode: props.defaultLanguageCode,
+					defaultLocaleCode: props.defaultLocaleCode,
 				},
 			);
 		}

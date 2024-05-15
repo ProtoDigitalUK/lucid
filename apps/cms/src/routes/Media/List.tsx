@@ -161,7 +161,7 @@ const MediaListRoute: Component = () => {
 					permission: userStore.get.hasPermission(["create_media"])
 						.all,
 				},
-				contentLanguage: true,
+				contentLocale: true,
 			}}
 		>
 			<MediaGrid searchParams={searchParams} />

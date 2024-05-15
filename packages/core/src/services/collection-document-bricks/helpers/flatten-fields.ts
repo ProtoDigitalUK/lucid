@@ -4,13 +4,14 @@ import type {
 	FieldSchemaSimpleType,
 	FieldValueSchemaType,
 } from "../../../schemas/collection-fields.js";
+import type { Config } from "../../../types.js";
 import type { BooleanInt } from "../../../libs/db/types.js";
 
 export interface FieldInsertItem {
 	key: FieldSchemaType["key"];
 	type: FieldSchemaType["type"];
 	value: FieldValueSchemaType;
-	languageCode: string;
+	localeCode: string;
 	groupRef?: string;
 	groupId?: number | string;
 }
@@ -29,7 +30,7 @@ interface FlatFieldsResposne {
 
 const flattenFields = (
 	fields: FieldSchemaType[] | FieldSchemaSimpleType[],
-	languages: Array<{ code: string; is_default: BooleanInt }>,
+	localisation: Config["localisation"],
 ): FlatFieldsResposne => {
 	const fieldsRes: Array<FieldInsertItem> = [];
 	const groupsRes: Array<GroupInsertItem> = [];
@@ -94,26 +95,31 @@ const flattenFields = (
 
 			if (field.translations) {
 				for (const [key, value] of Object.entries(field.translations)) {
-					const language = languages.find((l) => l.code === key);
-					if (language === undefined) continue;
+					const locale = localisation.locales.find(
+						(l) => l.code === key,
+					);
+					if (locale === undefined) continue;
 
 					fieldsRes.push({
 						key: field.key,
 						type: field.type,
 						value: value,
-						languageCode: language.code,
+						localeCode: locale.code,
 						groupId: groupMeta?.id,
 						groupRef: groupMeta?.ref,
 					});
 				}
 			} else if (field.value) {
-				const code = languages.find((l) => l.is_default === 1)?.code;
+				const code = localisation.locales.find(
+					(l) => l.code === localisation.defaultLocale,
+				)?.code;
 				if (!code) return;
+
 				fieldsRes.push({
 					key: field.key,
 					type: field.type,
 					value: field.value,
-					languageCode: code,
+					localeCode: code,
 					groupId: groupMeta?.id,
 					groupRef: groupMeta?.ref,
 				});

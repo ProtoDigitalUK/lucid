@@ -11,11 +11,11 @@ export interface ServiceData {
 	id: number;
 	fileData: MultipartFile | undefined;
 	titleTranslations?: {
-		languageCode: string;
+		localeCode: string;
 		value: string | null;
 	}[];
 	altTranslations?: {
-		languageCode: string;
+		localeCode: string;
 		value: string | null;
 	}[];
 }

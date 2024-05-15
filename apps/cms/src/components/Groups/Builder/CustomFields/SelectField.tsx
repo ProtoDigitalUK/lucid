@@ -21,7 +21,7 @@ interface SelectFieldProps {
 		fieldData?: FieldResponse;
 		groupId?: number | string;
 		repeaterKey?: string;
-		contentLanguage: string;
+		contentLocale: string;
 		fieldError: FieldErrors | undefined;
 	};
 }
@@ -43,7 +43,7 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 		const value = brickHelpers.getFieldValue<string>({
 			fieldData: fieldData(),
 			fieldConfig: props.state.fieldConfig,
-			contentLanguage: props.state.contentLanguage,
+			contentLocale: props.state.contentLocale,
 		});
 
 		setValue(value || null);
@@ -69,7 +69,7 @@ export const SelectField: Component<SelectFieldProps> = (props) => {
 						groupId: props.state.groupId,
 						repeaterKey: props.state.repeaterKey,
 						value: value || null,
-						contentLanguage: props.state.contentLanguage,
+						contentLocale: props.state.contentLocale,
 					});
 					setValue(value || null);
 				});

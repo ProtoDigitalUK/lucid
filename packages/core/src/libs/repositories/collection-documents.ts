@@ -109,6 +109,7 @@ export default class CollectionDocumentsRepo {
 				"lucid_collection_documents.created_by",
 				"lucid_collection_documents.created_at",
 				"lucid_collection_documents.updated_at",
+				"lucid_collection_documents.updated_by",
 			])
 			.leftJoin(
 				"lucid_users",
@@ -169,7 +170,7 @@ export default class CollectionDocumentsRepo {
 									"lucid_collection_document_fields.text_value",
 									"lucid_collection_document_fields.int_value",
 									"lucid_collection_document_fields.bool_value",
-									"lucid_collection_document_fields.language_code",
+									"lucid_collection_document_fields.locale_code",
 									"lucid_collection_document_fields.media_id",
 									"lucid_collection_document_fields.user_id",
 									"lucid_collection_document_fields.type",
@@ -200,7 +201,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"lucid_translations.value",
-													"lucid_translations.language_code",
+													"lucid_translations.locale_code",
 												])
 												.where(
 													"lucid_translations.value",
@@ -222,7 +223,7 @@ export default class CollectionDocumentsRepo {
 												)
 												.select([
 													"lucid_translations.value",
-													"lucid_translations.language_code",
+													"lucid_translations.locale_code",
 												])
 												.where(
 													"lucid_translations.value",
