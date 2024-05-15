@@ -15,6 +15,17 @@ const ConfigSchema = z.object({
 		})
 		.optional(),
 	disableSwagger: z.boolean(),
+	localisation: z
+		.object({
+			locales: z.array(
+				z.object({
+					label: z.string(),
+					code: z.string(),
+				}),
+			),
+			defaultLocale: z.string(),
+		})
+		.optional(),
 	email: z
 		.object({
 			from: z.object({

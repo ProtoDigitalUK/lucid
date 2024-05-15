@@ -7,6 +7,15 @@ export const defaultConfig: Partial<LucidConfig> = {
 	},
 	email: undefined,
 	disableSwagger: false,
+	localisation: {
+		locales: [
+			{
+				label: "English",
+				code: "en",
+			},
+		],
+		defaultLocale: "en",
+	},
 	media: {
 		storage: 5368709120,
 		maxSize: 16777216,

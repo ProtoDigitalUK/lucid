@@ -38,6 +38,19 @@ export default lucid.config({
 		refreshTokenSecret: process.env.LUCID_REFRESH_TOKEN_SECRET as string,
 		accessTokenSecret: process.env.LUCID_ACCESS_TOKEN_SECRET as string,
 	},
+	localisation: {
+		locales: [
+			{
+				label: "English",
+				code: "en",
+			},
+			{
+				label: "French",
+				code: "fr",
+			},
+		],
+		defaultLocale: "en",
+	},
 	disableSwagger: true,
 	media: {
 		processed: {

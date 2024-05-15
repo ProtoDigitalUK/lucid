@@ -109,6 +109,13 @@ export interface LucidConfig {
 		refreshTokenSecret: string;
 	};
 	disableSwagger?: boolean;
+	localisation?: {
+		locales: {
+			label: string;
+			code: string;
+		}[];
+		defaultLocale: string;
+	};
 	paths?: {
 		emailTemplates?: string;
 	};
@@ -145,6 +152,13 @@ export interface Config extends z.infer<typeof ConfigSchema> {
 		strategy: EmailStrategy;
 	};
 	disableSwagger: boolean;
+	localisation: {
+		locales: {
+			label: string;
+			code: string;
+		}[];
+		defaultLocale: string;
+	};
 	media: {
 		storage: number;
 		maxSize: number;
