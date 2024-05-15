@@ -20,7 +20,7 @@ import Loading from "@/components/Partials/Loading";
 import ErrorBlock from "@/components/Partials/ErrorBlock";
 import Button from "@/components/Partials/Button";
 import ErrorMessage from "@/components/Partials/ErrorMessage";
-import contentLocaleSelect from "@/components/Partials/contentLocaleSelect";
+import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 
 interface PanelProps {
 	open: boolean;
@@ -52,7 +52,7 @@ interface PanelProps {
 	};
 	children: (_props?: {
 		contentLocale: Accessor<string | undefined>;
-		setcontentLocale: (_value: string) => void;
+		setContentLocale: (_value: string) => void;
 	}) => JSXElement;
 }
 
@@ -60,7 +60,7 @@ export const Panel: Component<PanelProps> = (props) => {
 	// ------------------------------
 	// State
 	const [getBodyMinHeight, setBodyMinHeight] = createSignal(0);
-	const [contentLocale, setcontentLocale] = createSignal<string | undefined>(
+	const [contentLocale, setContentLocale] = createSignal<string | undefined>(
 		undefined,
 	);
 
@@ -81,13 +81,13 @@ export const Panel: Component<PanelProps> = (props) => {
 			}
 		});
 	};
-	const getDefaultcontentLocale = () => {
+	const getDefaultContentLocale = () => {
 		if (!props.langauge?.useDefaultcontentLocale)
 			return contentLocaleStore.get.contentLocale;
-		const defaultLanguage = contentLocaleStore.get.languages.find(
-			(language) => language.isDefault,
+		const defaultLocale = contentLocaleStore.get.locales.find(
+			(locale) => locale.isDefault,
 		);
-		if (defaultLanguage) return defaultLanguage.code;
+		if (defaultLocale) return defaultLocale.code;
 		return contentLocaleStore.get.contentLocale;
 	};
 
@@ -102,15 +102,15 @@ export const Panel: Component<PanelProps> = (props) => {
 	createEffect(() => {
 		if (props.open) {
 			props.reset();
-			setcontentLocale(getDefaultcontentLocale());
+			setContentLocale(getDefaultContentLocale());
 			setBodyHeightValue();
 		}
 	});
 
 	createEffect(() => {
-		const defaultLang = getDefaultcontentLocale();
+		const defaultLang = getDefaultContentLocale();
 		if (contentLocale() === undefined && defaultLang !== undefined)
-			setcontentLocale(defaultLang);
+			setContentLocale(defaultLang);
 	});
 
 	// ------------------------------
@@ -171,9 +171,9 @@ export const Panel: Component<PanelProps> = (props) => {
 							</Switch>
 							<Show when={props.langauge?.contentLocale}>
 								<div class="mt-5">
-									<contentLocaleSelect
+									<ContentLocaleSelect
 										value={contentLocale()}
-										setValue={setcontentLocale}
+										setValue={setContentLocale}
 										hasError={
 											props.langauge
 												?.hascontentLocaleError
@@ -198,7 +198,7 @@ export const Panel: Component<PanelProps> = (props) => {
 								<Switch
 									fallback={props.children({
 										contentLocale: contentLocale,
-										setcontentLocale: setcontentLocale,
+										setContentLocale: setContentLocale,
 									})}
 								>
 									<Match when={isLoading()}>

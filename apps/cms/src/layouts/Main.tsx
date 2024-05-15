@@ -19,20 +19,17 @@ const MainLayout: Component<MainLayoutProps> = (props) => {
 	const authenticatedUser = api.account.useGetAuthenticatedUser({
 		queryParams: {},
 	});
-	const languages = api.languages.useGetMultiple({
-		queryParams: {
-			queryString: "?sort=code",
-			perPage: -1,
-		},
+	const locales = api.locales.useGetMultiple({
+		queryParams: {},
 	});
 
 	// ----------------------------------
 	// Memos
 	const isLoading = createMemo(() => {
-		return authenticatedUser.isLoading || languages.isLoading;
+		return authenticatedUser.isLoading || locales.isLoading;
 	});
 	const isSuccess = createMemo(() => {
-		return authenticatedUser.isSuccess && languages.isSuccess;
+		return authenticatedUser.isSuccess && locales.isSuccess;
 	});
 
 	// ------------------------------------------------------

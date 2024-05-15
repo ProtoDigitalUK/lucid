@@ -93,7 +93,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			? false
 			: media.data?.data.type === "image";
 	});
-	const languages = createMemo(() => contentLocaleStore.get.languages);
+	const locales = createMemo(() => contentLocaleStore.get.locales);
 	const mutateIsLoading = createMemo(() => {
 		return updateSingle.action.isPending || createSingle.action.isPending;
 	});
@@ -256,35 +256,32 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 			{(lang) => (
 				<>
 					<MediaFile.Render />
-					<For each={languages()}>
-						{(language, index) => (
-							<Show
-								when={language.code === lang?.contentLocale()}
-							>
+					<For each={locales()}>
+						{(locale, index) => (
+							<Show when={locale.code === lang?.contentLocale()}>
 								<SectionHeading
 									title={T("details_lang", {
-										code: language.code,
+										code: locale.code,
 									})}
 								/>
 								<Form.Input
-									id={`name-${language.code}`}
+									id={`name-${locale.code}`}
 									value={
 										getTitleTranslations().find(
 											(item) =>
-												item.localeCode ===
-												language.code,
+												item.localeCode === locale.code,
 										)?.value || ""
 									}
 									onChange={(val) => {
 										helpers.updateTranslation(
 											setTitleTranslations,
 											{
-												localeCode: language.code,
+												localeCode: locale.code,
 												value: val,
 											},
 										);
 									}}
-									name={`name-${language.code}`}
+									name={`name-${locale.code}`}
 									type="text"
 									copy={{
 										label: T("name"),
@@ -295,24 +292,24 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								/>
 								<Show when={showAltInput()}>
 									<Form.Input
-										id={`alt-${language.code}`}
+										id={`alt-${locale.code}`}
 										value={
 											getAltTranslations().find(
 												(item) =>
 													item.localeCode ===
-													language.code,
+													locale.code,
 											)?.value || ""
 										}
 										onChange={(val) => {
 											helpers.updateTranslation(
 												setAltTranslations,
 												{
-													localeCode: language.code,
+													localeCode: locale.code,
 													value: val,
 												},
 											);
 										}}
-										name={`alt-${language.code}`}
+										name={`alt-${locale.code}`}
 										type="text"
 										copy={{
 											label: T("alt"),

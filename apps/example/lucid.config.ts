@@ -40,16 +40,16 @@ export default lucid.config({
 	},
 	localisation: {
 		locales: [
-			// {
-			// 	label: "English",
-			// 	code: "en",
-			// },
+			{
+				label: "English",
+				code: "en",
+			},
 			{
 				label: "French",
 				code: "fr",
 			},
 		],
-		defaultLocale: "fr",
+		defaultLocale: "en",
 	},
 	disableSwagger: true,
 	media: {

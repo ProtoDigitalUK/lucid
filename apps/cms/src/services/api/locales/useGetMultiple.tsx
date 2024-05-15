@@ -3,7 +3,7 @@ import { createQuery } from "@tanstack/solid-query";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
 import contentLocaleStore from "@/store/contentLocaleStore";
-import type { ResponseBody, LanguageResponse } from "@lucidcms/core/types";
+import type { ResponseBody, LocalesResponse } from "@lucidcms/core/types";
 
 interface QueryParams {
 	queryString?: Accessor<string> | string;
@@ -19,10 +19,10 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	);
 
 	const query = createQuery(() => ({
-		queryKey: ["languages.getAll", queryKey(), params.key?.()],
+		queryKey: ["locales.getAll", queryKey(), params.key?.()],
 		queryFn: () =>
-			request<ResponseBody<LanguageResponse[]>>({
-				url: "/api/v1/languages",
+			request<ResponseBody<LocalesResponse[]>>({
+				url: "/api/v1/locales",
 				config: {
 					method: "GET",
 				},
@@ -35,8 +35,8 @@ const useGetAll = (params: QueryHook<QueryParams>) => {
 	// Effects
 	createEffect(() => {
 		if (query.isSuccess) {
-			contentLocaleStore.get.synccontentLocale(query.data?.data);
-			contentLocaleStore.set("languages", query.data?.data || []);
+			contentLocaleStore.get.syncContentLocale(query.data?.data);
+			contentLocaleStore.set("locales", query.data?.data || []);
 		}
 	});
 

@@ -11,7 +11,7 @@ import { FaSolidPlus, FaSolidTrash } from "solid-icons/fa";
 import classNames from "classnames";
 import Link from "@/components/Partials/Link";
 import Button from "@/components/Partials/Button";
-import contentLocaleSelect from "@/components/Partials/contentLocaleSelect";
+import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 import Layout from "@/components/Groups/Layout";
 
 export interface PageHeadingProps {
@@ -122,7 +122,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 							}
 						>
 							<div class="w-full md:max-w-[240px]">
-								<contentLocaleSelect />
+								<ContentLocaleSelect />
 							</div>
 						</Show>
 						<Show

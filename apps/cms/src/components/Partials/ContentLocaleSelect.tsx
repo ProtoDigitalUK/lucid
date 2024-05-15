@@ -1,26 +1,20 @@
-import {
-	type Component,
-	Match,
-	Switch,
-	createMemo,
-	type Accessor,
-} from "solid-js";
+import { type Component, Match, Switch, createMemo } from "solid-js";
 import contentLocaleStore from "@/store/contentLocaleStore";
 import Form from "@/components/Groups/Form";
 
-interface contentLocaleSelectProps {
+interface ContentLocaleSelectProps {
 	value?: string | undefined;
 	setValue?: (_value: string | undefined) => void;
 	hasError?: boolean;
 }
 
-const contentLocaleSelect: Component<contentLocaleSelectProps> = (props) => {
+const ContentLocaleSelect: Component<ContentLocaleSelectProps> = (props) => {
 	// ----------------------------------
 	// Memos
 	const contentLocale = createMemo(
 		() => contentLocaleStore.get.contentLocale,
 	);
-	const languages = createMemo(() => contentLocaleStore.get.languages);
+	const locales = createMemo(() => contentLocaleStore.get.locales);
 
 	// ----------------------------------------
 	// Render
@@ -28,25 +22,23 @@ const contentLocaleSelect: Component<contentLocaleSelectProps> = (props) => {
 		<Switch>
 			<Match when={props.value === undefined}>
 				<Form.Select
-					id={"content-language"}
+					id={"content-locale"}
 					value={contentLocale()}
 					onChange={(value) => {
 						if (!value)
-							contentLocaleStore.get.setcontentLocale(undefined);
+							contentLocaleStore.get.setContentLocale(undefined);
 						else
-							contentLocaleStore.get.setcontentLocale(
+							contentLocaleStore.get.setContentLocale(
 								value.toString(),
 							);
 					}}
-					name={"content-language"}
+					name={"content-locale"}
 					options={
-						languages().map((language) => ({
-							value: language.code,
+						locales().map((l) => ({
+							value: l.code,
 							label: `${
-								language.name
-									? `${language.name} (${language.code})`
-									: language.code
-							} ${language.isDefault ? "(Default)" : ""}`,
+								l.name ? `${l.name} (${l.code})` : l.code
+							} ${l.isDefault ? "(Default)" : ""}`,
 						})) || []
 					}
 					noMargin={true}
@@ -56,21 +48,19 @@ const contentLocaleSelect: Component<contentLocaleSelectProps> = (props) => {
 			</Match>
 			<Match when={props.value !== undefined}>
 				<Form.Select
-					id={"content-language"}
+					id={"content-locale"}
 					value={props.value}
 					onChange={(value) => {
 						if (!value) props.setValue?.(undefined);
 						else props.setValue?.(value.toString());
 					}}
-					name={"content-language"}
+					name={"content-locale"}
 					options={
-						languages().map((language) => ({
-							value: language.code,
+						locales().map((l) => ({
+							value: l.code,
 							label: `${
-								language.name
-									? `${language.name} (${language.code})`
-									: language.code
-							} ${language.isDefault ? "(Default)" : ""}`,
+								l.name ? `${l.name} (${l.code})` : l.code
+							} ${l.isDefault ? "(Default)" : ""}`,
 						})) || []
 					}
 					noMargin={true}
@@ -82,4 +72,4 @@ const contentLocaleSelect: Component<contentLocaleSelectProps> = (props) => {
 	);
 };
 
-export default contentLocaleSelect;
+export default ContentLocaleSelect;

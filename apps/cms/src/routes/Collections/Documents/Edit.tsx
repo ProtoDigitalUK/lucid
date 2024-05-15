@@ -19,7 +19,7 @@ import contentLocaleStore from "@/store/contentLocaleStore";
 import { FaSolidTrash } from "solid-icons/fa";
 import Layout from "@/components/Groups/Layout";
 import Button from "@/components/Partials/Button";
-import contentLocaleSelect from "@/components/Partials/contentLocaleSelect";
+import ContentLocaleSelect from "@/components/Partials/ContentLocaleSelect";
 import DetailsList from "@/components/Partials/DetailsList";
 import DateText from "@/components/Partials/DateText";
 import DeleteDocument from "@/components/Modals/Documents/DeleteDocument";
@@ -221,7 +221,7 @@ const CollectionsDocumentsEditRoute: Component<
 										}
 									>
 										<div class="w-full md:w-auto md:min-w-[250px]">
-											<contentLocaleSelect
+											<ContentLocaleSelect
 												hasError={brickTranslationErrors()}
 											/>
 										</div>
