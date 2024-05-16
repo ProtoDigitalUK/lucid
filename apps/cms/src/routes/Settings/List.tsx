@@ -24,6 +24,9 @@ const SettingsListRoute: Component = () => {
 		if (path === "/settings/integrations") return "integrations";
 		return "";
 	});
+	const isLoading = createMemo(() => settingsData.isLoading);
+	const isError = createMemo(() => settingsData.isError);
+	const isSuccess = createMemo(() => settingsData.isSuccess);
 
 	// ----------------------------------
 	// Render
@@ -32,9 +35,9 @@ const SettingsListRoute: Component = () => {
 			title={T("settings_route_title")}
 			description={T("settings_route_description")}
 			state={{
-				isLoading: settingsData.isLoading,
-				isError: settingsData.isError,
-				isSuccess: settingsData.isSuccess,
+				isLoading: isLoading(),
+				isError: isError(),
+				isSuccess: isSuccess(),
 			}}
 			headingChildren={
 				<Layout.NavigationTabs

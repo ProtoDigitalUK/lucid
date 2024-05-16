@@ -3,6 +3,7 @@ import { type Component, createMemo, createSignal } from "solid-js";
 import type { SettingsResponse } from "@lucidcms/core/types";
 import helpers from "@/utils/helpers";
 import userStore from "@/store/userStore";
+import contentLocaleStore from "@/store/contentLocaleStore";
 import InfoRow from "@/components/Blocks/InfoRow";
 import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
@@ -29,6 +30,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 
 		return Math.floor(((total - remaining) / total) * 100);
 	});
+	const locales = createMemo(() => contentLocaleStore.get.locales);
 
 	// ----------------------------------------
 	// Render
@@ -63,6 +65,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 					</Button>
 				</InfoRow.Content>
 			</InfoRow.Root>
+
 			<InfoRow.Root
 				title={T("storage_breakdown")}
 				description={T("storage_breakdown_setting_message")}
@@ -88,6 +91,7 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 					/>
 				</InfoRow.Content>
 			</InfoRow.Root>
+
 			<InfoRow.Root
 				title={T("supported_features")}
 				description={T("supported_features_setting_message")}
@@ -109,6 +113,27 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 									: T("no"),
 							},
 						]}
+					/>
+				</InfoRow.Content>
+			</InfoRow.Root>
+
+			<InfoRow.Root
+				title={T("supported_locales")}
+				description={T("supported_locales_setting_message")}
+			>
+				<InfoRow.Content>
+					<DetailsList
+						type="text"
+						items={
+							locales().map((locale) => ({
+								label: locale.name || locale.code,
+								value: `${locale.code} ${
+									locale.isDefault === 1
+										? `(${T("default")})`
+										: ""
+								} `,
+							})) || []
+						}
 					/>
 				</InfoRow.Content>
 			</InfoRow.Root>
