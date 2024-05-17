@@ -208,6 +208,7 @@ export type FieldFilters = Array<{
 export interface CollectionBrickConfig {
 	key: BrickBuilder["key"];
 	title: BrickBuilder["config"]["title"];
+	description: BrickBuilder["config"]["description"];
 	preview: BrickBuilder["config"]["preview"];
 	fields: CustomField[];
 }

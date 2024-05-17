@@ -6,6 +6,7 @@ import brickIcon from "@/assets/svgs/default-brick-icon-white.svg";
 import brickStore from "@/store/brickStore";
 import Modal from "@/components/Groups/Modal";
 import BrickPreview from "@/components/Partials/BrickPreview";
+import Tooltip from "@/components/Partials/Tooltip";
 
 interface AddBrickProps {
 	state: {
@@ -134,7 +135,7 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 				</div>
 				{/* Preview */}
 				<div class="w-[60%] p-15 h-full pl-0">
-					<div class="bg-container-4 h-full rounded-md flex items-center justify-center">
+					<div class="bg-container-4 h-full rounded-md flex items-center justify-center relative">
 						<div class="w-[80%]">
 							<BrickPreview
 								data={{
@@ -145,6 +146,9 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 								}}
 							/>
 						</div>
+						<Show when={highlightedBrick()?.description}>
+							<Tooltip copy={highlightedBrick()?.description} />
+						</Show>
 					</div>
 				</div>
 			</div>
