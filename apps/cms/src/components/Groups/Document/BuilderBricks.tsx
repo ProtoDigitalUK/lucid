@@ -186,6 +186,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 					<h3>{config()?.title}</h3>
 				</div>
 				<div class="flex gap-2">
+					<Builder.BrickImagePreviewButton brickConfig={config()} />
 					<DeleteDebounceButton
 						callback={() => {
 							brickStore.get.removeBrick(brickIndex());

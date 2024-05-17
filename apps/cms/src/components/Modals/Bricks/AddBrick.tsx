@@ -139,7 +139,11 @@ const AddBrick: Component<AddBrickProps> = (props) => {
 						<div class="w-[80%]">
 							<BrickPreview
 								data={{
-									brick: highlightedBrick(),
+									brick: {
+										title: highlightedBrick()?.title || "",
+										image: highlightedBrick()?.preview
+											?.image,
+									},
 								}}
 								options={{
 									rounded: true,

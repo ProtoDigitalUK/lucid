@@ -30,6 +30,7 @@ import Document from "@/components/Groups/Document";
 import SelectMediaPanel from "@/components/Panels/Media/SelectMedia";
 import LinkSelect from "@/components/Modals/CustomField/LinkSelect";
 import UserDisplay from "@/components/Partials/UserDisplay";
+import BrickImagePreview from "@/components/Modals/Bricks/ImagePreview";
 
 interface CollectionsDocumentsEditRouteProps {
 	mode: "create" | "edit";
@@ -371,6 +372,7 @@ const CollectionsDocumentsEditRoute: Component<
 				/>
 				<SelectMediaPanel />
 				<LinkSelect />
+				<BrickImagePreview />
 				<DeleteDocument
 					id={document.data?.data.id}
 					state={{

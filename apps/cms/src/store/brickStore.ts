@@ -25,6 +25,16 @@ type BrickStoreT = {
 	bricks: Array<BrickData>;
 	fieldsErrors: Array<FieldErrors>;
 	documentMutated: boolean;
+	imagePreview: {
+		open: boolean;
+		data:
+			| {
+					title: string;
+					description?: string;
+					image?: string;
+			  }
+			| undefined;
+	};
 	// functions
 	reset: () => void;
 	setBricks: (
@@ -87,6 +97,10 @@ const [get, set] = createStore<BrickStoreT>({
 	bricks: [],
 	fieldsErrors: [],
 	documentMutated: false,
+	imagePreview: {
+		open: false,
+		data: undefined,
+	},
 	reset() {
 		set("bricks", []);
 		set("fieldsErrors", []);

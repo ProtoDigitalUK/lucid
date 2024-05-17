@@ -82,18 +82,21 @@ const FixedBrickRow: Component<FixedBrickRowProps> = (props) => {
 				tabIndex="0"
 			>
 				<h2>{config()?.title}:</h2>
-				<button
-					type="button"
-					tabIndex="-1"
-					class={classNames(
-						"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
-						{
-							"transform rotate-180": getBrickOpen(),
-						},
-					)}
-				>
-					<FaSolidCircleChevronUp size={16} />
-				</button>
+				<div class="flex gap-2">
+					<Builder.BrickImagePreviewButton brickConfig={config()} />
+					<button
+						type="button"
+						tabIndex="-1"
+						class={classNames(
+							"text-2xl text-icon-base hover:text-icon-hover transition-all duration-200",
+							{
+								"transform rotate-180": getBrickOpen(),
+							},
+						)}
+					>
+						<FaSolidCircleChevronUp size={16} />
+					</button>
+				</div>
 			</div>
 			{/* Body */}
 			<Builder.BrickBody
