@@ -93,7 +93,7 @@ export default lucid.config({
 
 ## Collection Example
 
-Collections in Lucid enable the definition and management of content types. These collections contain documents which may either be singular or multiple, depending on the `mode` setting. Collections provide the versatility to add various fields, as well as builder and fixed bricks. These enhancements ensure that the documents within these collections can be uniquely tailored through the document builder.
+Collections in Lucid allow you to define a type content. Within these collections exist documents. A collection can either contain multiple, or just a single document depending on the `mode` flag. Collections give you the flexibility to add fields, builder bricks and fixed bricks against them. The custom fields these contain will then be available on the document page builder.
 
 ```typescript
 import { CollectionBuilder } from "@lucidcms/core";
@@ -164,7 +164,7 @@ export const SettingsCollection = new CollectionBuilder("settings", {
 
 ## Brick Example
 
-Bricks are fundamental components comprising groups of custom fields and are utilised exclusively through collections. They provide structured templates for inserting custom content into collections. These should be though of as what would typically be bricks or components in other systems.
+Bricks at their core are just groups of custom fields. They can only be consumed through collections.
 
 ```typescript
 import { BrickBuilder } from "@lucidcms/core";
