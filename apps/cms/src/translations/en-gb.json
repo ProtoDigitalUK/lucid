@@ -341,5 +341,7 @@
 	"document_route_title": "{{mode}} {{name}}",
 	"default": "Default",
 	"supported_locales": "Locales",
-	"supported_locales_setting_message": "If you wish to support more locales, please contact an administrator"
+	"supported_locales_setting_message": "If you wish to support more locales, please contact an administrator",
+	"coming_soon_title": "Coming Soon!",
+	"coming_soon_description": "This feature is currently in development and will be available soon."
 }

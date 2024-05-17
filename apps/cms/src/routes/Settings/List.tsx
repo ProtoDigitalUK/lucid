@@ -4,6 +4,7 @@ import { useLocation } from "@solidjs/router";
 import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 import GeneralSettingsRoute from "@/routes/Settings/General";
+import ComingSoon from "@/components/Blocks/ComingSoon";
 
 const SettingsListRoute: Component = () => {
 	// ----------------------------------
@@ -62,7 +63,7 @@ const SettingsListRoute: Component = () => {
 						/>
 					</Match>
 					<Match when={currentTab() === "integrations"}>
-						integrations settings
+						<ComingSoon />
 					</Match>
 				</Switch>
 			</Layout.PageContent>
