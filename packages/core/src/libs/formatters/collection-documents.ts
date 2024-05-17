@@ -38,12 +38,14 @@ export default class CollectionDocumentsFormatter {
 		documents: DocumentPropT[];
 		collection: CollectionBuilder;
 		host: string;
+		defaultLocaleCode?: string;
 	}) => {
 		return props.documents.map((d) =>
 			this.formatSingle({
 				document: d,
 				collection: props.collection,
 				host: props.host,
+				defaultLocaleCode: props.defaultLocaleCode,
 			}),
 		);
 	};
