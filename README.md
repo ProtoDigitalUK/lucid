@@ -1,11 +1,8 @@
 ![Lucid](https://github.com/ProtoDigitalUK/lucid/blob/master/banner.jpg?raw=true)
 
-> [!CAUTION]
-> Under heavy construction - Not suitable for production
-
 [![Tests](https://github.com/ProtoDigitalUK/lucid/actions/workflows/tests.yml/badge.svg)](https://github.com/ProtoDigitalUK/lucid/actions/workflows/tests.yml)
 
-Lucid is a blazingly fast, state-of-the-art headless CMS with top-tier TypeScript support. Constructed using Fastify and SolidJS, it features sophisticated collection and brick builders, a wide range of plugins, and database adapters for PostgreSQL, LibSQL, and SQLite. It achieves the perfect balance of developer experience and an intuitive, easy-to-use interface for creators and end-users alike, without compromising on performance and flexibility.
+A TypeScript-first, fully extensible headless CMS. Constructed using Fastify and SolidJS, it features sophisticated collection and brick builders, a wide range of plugins, and database adapters for PostgreSQL, LibSQL, and SQLite. It achieves the perfect balance of developer experience and an intuitive, easy-to-use interface for creators and end-users alike, without compromising on performance and flexibility.
 
 Effortlessly configure Lucid to meet your content needs with our flexible configuration options, and an array of first-party plugins including LocalStorage, Resend, Nodemailer, S3, and more.
 
@@ -14,6 +11,18 @@ Effortlessly configure Lucid to meet your content needs with our flexible config
 ```bash
 npm install @lucidcms/core
 ```
+
+## Features
+
+- PostgreSQL, LibSQL and SQLlite DB adapters
+- Collection & Brick Builder w/ 15 Custom Fields
+- Media library w/ Custom Stategies
+- Emails w/ Custom Stategies
+- On Request Image Optimisation/Resizing
+- Users and Roles
+- Full Localisation Support
+- Plugin Support
+- Hook Support
 
 ## First Party Plugins
 
@@ -34,10 +43,7 @@ import LucidNodemailer from "@lucidcms/plugin-nodemailer";
 import LucidS3 from "@lucidcms/plugin-s3";
 import LucidLocalStorage from "@lucidcms/plugin-local-storage";
 // Collections
-import PageCollection from "./src/lucid/collections/pages.js";
-import BlogCollection from "./src/lucid/collections/blogs.js";
-import SettingsCollection from "./src/lucid/collections/settings.js";
-import FormsCollection from "./src/lucid/collections/forms.js";
+import { PageCollection, SettingsCollection } from "./collections.js";
 
 export default lucid.config({
   host: "http://localhost:8393",
@@ -69,12 +75,7 @@ export default lucid.config({
       handler: async (props) => {},
     },
   ],
-  collections: [
-    PageCollection,
-    BlogCollection,
-    SettingsCollection,
-    FormsCollection,
-  ],
+  collections: [PageCollection, SettingsCollection],
   plugins: [
     LucidNodemailer({
       from: {
@@ -89,3 +90,152 @@ export default lucid.config({
   ],
 });
 ```
+
+## Collection Example
+
+Collections in Lucid enable the definition and management of content types. These collections contain documents which may either be singular or multiple, depending on the `mode` setting. Collections provide the versatility to add various fields, as well as builder and fixed bricks. These enhancements ensure that the documents within these collections can be uniquely tailored through the document builder.
+
+```typescript
+import { CollectionBuilder } from "@lucidcms/core";
+// Bricks
+import Banner from "./bricks/banner.js";
+import SEO from "./bricks/seo.js";
+
+export const PageCollection = new CollectionBuilder("page", {
+  mode: "multiple",
+  title: "Pages",
+  singular: "Page",
+  description: "Pages are used to create static content on your website.",
+  translations: true,
+  hooks: [
+    {
+      event: "beforeUpsert",
+      handler: async (props) => {},
+    },
+  ],
+  bricks: {
+    fixed: [SEO],
+    builder: [Banner],
+  },
+})
+  .addText({
+    key: "page_title",
+    collection: {
+      list: true,
+      filterable: true,
+    },
+  })
+  .addTextarea({
+    key: "page_excerpt",
+    collection: {
+      list: true,
+      filterable: true,
+    },
+  })
+  .addCheckbox({
+    key: "page_featured",
+    translations: true,
+    collection: {
+      filterable: true,
+    },
+  })
+  .addUser({
+    key: "author",
+    collection: {
+      list: true,
+    },
+  });
+
+export const SettingsCollection = new CollectionBuilder("settings", {
+  mode: "single",
+  title: "Settings",
+  singular: "Setting",
+  description: "Set shared settings for your website.",
+  translations: false,
+  bricks: {
+    fixed: [],
+    builder: [],
+  },
+}).addMedia({
+  key: "site_logo",
+  title: "Logo",
+});
+```
+
+## Brick Example
+
+Bricks are fundamental components comprising groups of custom fields and are utilised exclusively through collections. They provide structured templates for inserting custom content into collections. These should be though of as what would typically be bricks or components in other systems.
+
+```typescript
+import { BrickBuilder } from "@lucidcms/core";
+
+const Banner = new BrickBuilder("banner", {
+  description: "A banner with a title and intro text",
+  preview: {
+    image: "https://placehold.co/600x400",
+  },
+})
+  .addTab({
+    title: "Content",
+    key: "content_tab",
+  })
+  .addText({
+    key: "title",
+    description: "The title of the banner",
+    validation: {
+      required: true,
+    },
+  })
+  .addWysiwyg({
+    key: "intro",
+  })
+  .addRepeater({
+    key: "cta",
+    validation: {
+      maxGroups: 3,
+    },
+  })
+  .addText({
+    key: "cta_title",
+  })
+  .addText({
+    key: "cta_url",
+  })
+  .endRepeater()
+  .addTab({
+    title: "Config",
+    key: "config_tab",
+  })
+  .addCheckbox({
+    key: "fullwidth",
+    description: "Make the banner full-width",
+  });
+
+export default Banner;
+```
+
+## Roadmap
+
+- Implement a collection document reference custom field type.
+- App integration system.
+- Public endpoints so collection documents etc can be called via the app auth.
+- Core library to export an API to programatically update content.
+- Endpoint caching with config support to swap out the stategy.
+- Customisable view document link support.
+- Collection document lock if a user is editing the document.
+- Collection level permission support.
+- Blur hash and average colour generation on media image upload.
+- Nested collection plugin (adds slugs and full slugs based on parent document relations).
+- Form builder plugin.
+- Menu builder plugin.
+- Cookie consent plugin.
+- Brick pattern support with a fixed and template mode. If its fixed values cant be mutated, if its template they can be.
+- Collection revision system so changes can be reverted.
+- Sitemap generation plugin.
+- SEO plugin.
+- Brick and document live previews.
+- Document search indexing w/ endpoint to search document content.
+- An AI document fill tool (takes in a prompt and context of available bricks and the collection to generate all of the content for a document).
+- An AI custom field fill tool.
+- An AI alt tag generation on media images.
+- Support to extend the CMS frontend to add new pages, swap out components add custom features etc.
