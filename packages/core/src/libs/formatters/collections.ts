@@ -119,6 +119,10 @@ export default class CollectionsFormatter {
 			title: {
 				type: "string",
 			},
+			description: {
+				type: "string",
+				nullable: true,
+			},
 			preview: {
 				type: "object",
 				additionalProperties: true,

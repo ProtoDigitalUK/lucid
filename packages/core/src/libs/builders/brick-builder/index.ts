@@ -4,12 +4,14 @@ import type { TabConfig } from "../field-builder/index.js";
 
 export interface BrickConfigPropsT {
 	title?: string;
+	description?: string;
 	preview?: {
 		image?: string;
 	};
 }
 export interface BrickConfigT {
 	title: string;
+	description?: string;
 	preview?: {
 		image?: string;
 	};
@@ -23,6 +25,7 @@ class BrickBuilder extends FieldBuilder {
 		this.key = key;
 		this.config = {
 			title: config?.title || super.keyToTitle(key),
+			description: config?.description,
 			preview: config?.preview || {},
 		};
 	}
@@ -43,6 +46,7 @@ class BrickBuilder extends FieldBuilder {
 
 export const BrickSchema = z.object({
 	title: z.string(),
+	description: z.string().optional(),
 	preview: z
 		.object({
 			image: z.string().optional(),
