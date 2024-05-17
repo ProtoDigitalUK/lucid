@@ -347,5 +347,17 @@
 	"content_locales": "Content Locales",
 	"content_locales_description": "These are the locales available to you when editing content such as collection documents or media etc. If you wish to support more locales, please contact your administrator.",
 	"cms_locale": "Current Locale",
-	"cms_locale_description": "Select the locale you wish to use."
+	"cms_locale_description": "Select the locale you wish to use.",
+	"starting_point_collections": "Collections",
+	"starting_point_collections_description": "View the available collections and click into them to manage their documents and content.",
+	"starting_point_media": "Media",
+	"starting_point_media_description": "View and curate your media library and upload new files.",
+	"starting_point_emails": "Emails",
+	"starting_point_emails_description": "Preview and manage all internal and external emails sent from the CMS.",
+	"starting_point_users": "Users",
+	"starting_point_users_description": "Manage users and their permissions.",
+	"starting_point_roles": "Roles",
+	"starting_point_roles_description": "Create and manage roles.",
+	"starting_point_settings": "Settings",
+	"starting_point_settings_description": "Manage your settings."
 }
