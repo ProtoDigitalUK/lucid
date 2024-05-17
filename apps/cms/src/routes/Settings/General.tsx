@@ -9,6 +9,13 @@ import Button from "@/components/Partials/Button";
 import ProgressBar from "@/components/Partials/ProgressBar";
 import ClearAllProcessedImages from "@/components/Modals/Media/ClearAllProcessedImages";
 import DetailsList from "@/components/Partials/DetailsList";
+import Form from "@/components/Groups/Form";
+import {
+	getLocale,
+	setLocale,
+	localesConfig,
+	type SupportedLocales,
+} from "@/translations";
 
 interface GeneralSettingsRouteProps {
 	settings?: SettingsResponse;
@@ -30,48 +37,63 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 
 		return Math.floor(((total - remaining) / total) * 100);
 	});
-	const locales = createMemo(() => contentLocaleStore.get.locales);
+	const contentLocales = createMemo(() => contentLocaleStore.get.locales);
 
 	// ----------------------------------------
 	// Render
 	return (
 		<>
+			{/* Locales */}
 			<InfoRow.Root
-				title={T("processed_images")}
-				description={T("processed_images_setting_message", {
-					limit: props.settings?.media.processed.imageLimit || 0,
-				})}
+				title={T()("locales")}
+				description={T()("locales_setting_message")}
 			>
 				<InfoRow.Content
-					title={T("clear_all")}
-					description={T(
-						"clear_all_processed_images_setting_message",
-					)}
+					title={T()("cms_locale")}
+					description={T()("cms_locale_description")}
 				>
-					<Button
-						size="small"
-						type="button"
-						theme="danger"
-						onClick={() => {
-							setOpenClearAllProcessedImages(true);
+					<Form.Select
+						id={"cms-locale"}
+						value={getLocale()}
+						options={localesConfig.map((locale) => ({
+							label: locale.name || locale.code,
+							value: locale.code,
+						}))}
+						onChange={(value) => {
+							setLocale(value as SupportedLocales);
 						}}
-						permission={
-							userStore.get.hasPermission(["update_media"]).all
+						name={"cms-locale"}
+						noClear={true}
+						theme={"basic"}
+					/>
+				</InfoRow.Content>
+				<InfoRow.Content
+					title={T()("content_locales")}
+					description={T()("content_locales_description")}
+				>
+					<DetailsList
+						type="text"
+						items={
+							contentLocales().map((locale) => ({
+								label: locale.name || locale.code,
+								value: `${locale.code} ${
+									locale.isDefault === 1
+										? `(${T()("default")})`
+										: ""
+								} `,
+							})) || []
 						}
-					>
-						{T("clear_all_processed_images_button", {
-							count: props.settings?.media.processed.total || 0,
-						})}
-					</Button>
+					/>
 				</InfoRow.Content>
 			</InfoRow.Root>
 
+			{/* Storage */}
 			<InfoRow.Root
-				title={T("storage_breakdown")}
-				description={T("storage_breakdown_setting_message")}
+				title={T()("storage_breakdown")}
+				description={T()("storage_breakdown_setting_message")}
 			>
 				<InfoRow.Content
-					title={T("storage_remaining_title", {
+					title={T()("storage_remaining_title", {
 						storage: helpers.bytesToSize(
 							props.settings?.media.storage.remaining,
 						),
@@ -92,48 +114,59 @@ const GeneralSettingsRoute: Component<GeneralSettingsRouteProps> = (props) => {
 				</InfoRow.Content>
 			</InfoRow.Root>
 
+			{/* Processed Images */}
 			<InfoRow.Root
-				title={T("supported_features")}
-				description={T("supported_features_setting_message")}
+				title={T()("processed_images")}
+				description={T()("processed_images_setting_message", {
+					limit: props.settings?.media.processed.imageLimit || 0,
+				})}
+			>
+				<InfoRow.Content
+					title={T()("clear_all")}
+					description={T()(
+						"clear_all_processed_images_setting_message",
+					)}
+				>
+					<Button
+						size="small"
+						type="button"
+						theme="danger"
+						onClick={() => {
+							setOpenClearAllProcessedImages(true);
+						}}
+						permission={
+							userStore.get.hasPermission(["update_media"]).all
+						}
+					>
+						{T()("clear_all_processed_images_button", {
+							count: props.settings?.media.processed.total || 0,
+						})}
+					</Button>
+				</InfoRow.Content>
+			</InfoRow.Root>
+
+			{/* Supported Features */}
+			<InfoRow.Root
+				title={T()("supported_features")}
+				description={T()("supported_features_setting_message")}
 			>
 				<InfoRow.Content>
 					<DetailsList
 						type="pill"
 						items={[
 							{
-								label: T("media_enabled"),
+								label: T()("media_enabled"),
 								value: props.settings?.media.enabled
-									? T("yes")
-									: T("no"),
+									? T()("yes")
+									: T()("no"),
 							},
 							{
-								label: T("email_enabled"),
+								label: T()("email_enabled"),
 								value: props.settings?.email.enabled
-									? T("yes")
-									: T("no"),
+									? T()("yes")
+									: T()("no"),
 							},
 						]}
-					/>
-				</InfoRow.Content>
-			</InfoRow.Root>
-
-			<InfoRow.Root
-				title={T("supported_locales")}
-				description={T("supported_locales_setting_message")}
-			>
-				<InfoRow.Content>
-					<DetailsList
-						type="text"
-						items={
-							locales().map((locale) => ({
-								label: locale.name || locale.code,
-								value: `${locale.code} ${
-									locale.isDefault === 1
-										? `(${T("default")})`
-										: ""
-								} `,
-							})) || []
-						}
 					/>
 				</InfoRow.Content>
 			</InfoRow.Root>

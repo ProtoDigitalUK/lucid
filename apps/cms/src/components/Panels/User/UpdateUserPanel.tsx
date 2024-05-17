@@ -123,9 +123,9 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 				errors: updateUser.errors(),
 			}}
 			content={{
-				title: T("update_user_panel_title"),
-				description: T("update_user_panel_description"),
-				submit: T("update"),
+				title: T()("update_user_panel_title"),
+				description: T()("update_user_panel_description"),
+				submit: T()("update"),
 			}}
 		>
 			{() => (
@@ -136,7 +136,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 						onChange={setSelectedRoles}
 						name={"roles"}
 						copy={{
-							label: T("roles"),
+							label: T()("roles"),
 						}}
 						options={
 							roles.data?.data.map((role) => {
@@ -155,7 +155,7 @@ const UpdateUserPanel: Component<UpdateUserPanelProps> = (props) => {
 							onChange={(value) => setIsSuperAdmin(value ? 1 : 0)}
 							name={"superAdmin"}
 							copy={{
-								label: T("is_super_admin"),
+								label: T()("is_super_admin"),
 							}}
 							errors={getBodyError(
 								"superAdmin",

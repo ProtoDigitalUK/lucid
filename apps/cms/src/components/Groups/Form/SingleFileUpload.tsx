@@ -189,13 +189,13 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 						<div class="w-full h-full flex justify-center items-center flex-col p-15 md:p-30">
 							<FaSolidArrowUpFromBracket class="w-7 h-7 mx-auto text-unfocused mb-5" />
 							<p class="text-center text-base font-medium text-title">
-								{T("drag_and_drop_file_or")}{" "}
+								{T()("drag_and_drop_file_or")}{" "}
 								<button
 									type="button"
 									onClick={openFileBrowser}
 									class="text-primary-base font-medium font-display"
 								>
-									{T("upload_here")}
+									{T()("upload_here")}
 								</button>
 							</p>
 							<Show when={props.currentFile !== undefined}>
@@ -206,7 +206,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 										}
 									>
 										<p class="text-sm">
-											{T(
+											{T()(
 												"if_left_blank_file_will_be_removed",
 											)}
 										</p>
@@ -225,7 +225,7 @@ export const SingleFileUpload: Component<SingleFileUploadProps> = (props) => {
 													true
 												}
 											>
-												{T("back_to_current_file")}
+												{T()("back_to_current_file")}
 											</Match>
 										</Switch>
 									</button>
@@ -354,7 +354,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 						}}
 					>
 						<FaSolidMagnifyingGlass class="block md:mr-2 text-primary-contrast" />
-						<span class="hidden md:inline">{T("preview")}</span>
+						<span class="hidden md:inline">{T()("preview")}</span>
 					</button>
 				</Show>
 				<button
@@ -365,7 +365,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 					}}
 				>
 					<FaSolidArrowUpFromBracket class="block md:mr-2 text-primary-contrast" />
-					<span class="hidden md:inline">{T("choose_file")}</span>
+					<span class="hidden md:inline">{T()("choose_file")}</span>
 				</button>
 				<Show when={props.actions.clearFile !== undefined}>
 					<button
@@ -377,7 +377,7 @@ const FilePreviewScreen: Component<FilePreviewScreenProps> = (props) => {
 						}}
 					>
 						<FaSolidXmark class="block md:mr-2 text-primary-contrast" />
-						<span class="hidden md:inline">{T("remove")}</span>
+						<span class="hidden md:inline">{T()("remove")}</span>
 					</button>
 				</Show>
 			</div>

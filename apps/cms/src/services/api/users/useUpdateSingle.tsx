@@ -36,8 +36,8 @@ const useUpdateSingle = (props?: UseUpdateSingleProps) => {
 	>({
 		mutationFn: updateSingleReq,
 		successToast: {
-			title: T("user_update_toast_title"),
-			message: T("user_update_toast_message"),
+			title: T()("user_update_toast_title"),
+			message: T()("user_update_toast_message"),
 		},
 		invalidates: ["users.getMultiple", "users.getSingle"],
 		onSuccess: props?.onSuccess,

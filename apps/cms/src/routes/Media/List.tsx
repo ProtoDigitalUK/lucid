@@ -59,95 +59,95 @@ const MediaListRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("media_route_title")}
-			description={T("media_route_description")}
+			title={T()("media_route_title")}
+			description={T()("media_route_description")}
 			headingChildren={
 				<Query.Row
 					searchParams={searchParams}
 					filters={[
 						{
-							label: T("title"),
+							label: T()("title"),
 							key: "title",
 							type: "text",
 						},
 						{
-							label: T("mime_type"),
+							label: T()("mime_type"),
 							key: "mimeType",
 							type: "text",
 						},
 						{
-							label: T("key"),
+							label: T()("key"),
 							key: "key",
 							type: "text",
 						},
 						{
-							label: T("type"),
+							label: T()("type"),
 							key: "type",
 							type: "multi-select",
 							options: [
 								{
-									label: T("image"),
+									label: T()("image"),
 									value: "image",
 								},
 								{
-									label: T("video"),
+									label: T()("video"),
 									value: "video",
 								},
 								{
-									label: T("audio"),
+									label: T()("audio"),
 									value: "audio",
 								},
 								{
-									label: T("document"),
+									label: T()("document"),
 									value: "document",
 								},
 								{
-									label: T("archive"),
+									label: T()("archive"),
 									value: "archive",
 								},
 								{
-									label: T("unknown"),
+									label: T()("unknown"),
 									value: "unknown",
 								},
 							],
 						},
 						{
-							label: T("file_extension"),
+							label: T()("file_extension"),
 							key: "fileExtension",
 							type: "text",
 						},
 					]}
 					sorts={[
 						{
-							label: T("title"),
+							label: T()("title"),
 							key: "title",
 						},
 						{
-							label: T("file_size"),
+							label: T()("file_size"),
 							key: "fileSize",
 						},
 						{
-							label: T("mime_type"),
+							label: T()("mime_type"),
 							key: "mimeType",
 						},
 						{
-							label: T("file_extension"),
+							label: T()("file_extension"),
 							key: "fileExtension",
 						},
 						{
-							label: T("width"),
+							label: T()("width"),
 							key: "width",
 						},
 						{
-							label: T("height"),
+							label: T()("height"),
 							key: "height",
 						},
 						{
-							label: T("created_at"),
+							label: T()("created_at"),
 							key: "createdAt",
 						},
 						{
-							label: T("updated_at"),
+							label: T()("updated_at"),
 							key: "updatedAt",
 						},
 					]}

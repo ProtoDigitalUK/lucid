@@ -30,10 +30,10 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 	return serviceHelpers.useMutationWrapper<Params, ResponseBody<null>>({
 		mutationFn: deleteSingleReq,
 		successToast: {
-			title: T("deleted_toast_title", {
+			title: T()("deleted_toast_title", {
 				name: props.collectionName,
 			}),
-			message: T("deleted_toast_message", {
+			message: T()("deleted_toast_message", {
 				name: {
 					value: props.collectionName,
 					toLowerCase: true,

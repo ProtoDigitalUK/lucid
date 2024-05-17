@@ -8,10 +8,10 @@ const ForgotPasswordRoute: Component = () => {
 	return (
 		<>
 			<h1 class="mb-2 text-center 3xl:text-left">
-				{T("forgot_password_route_title")}
+				{T()("forgot_password_route_title")}
 			</h1>
 			<p class="mb-10 text-center 3xl:text-left">
-				{T("forgot_password_route_description")}
+				{T()("forgot_password_route_description")}
 			</p>
 			<div class="mb-10">
 				<ForgotPasswordForm showBackToLogin={true} />

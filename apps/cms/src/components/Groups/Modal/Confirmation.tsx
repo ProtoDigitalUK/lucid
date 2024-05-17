@@ -70,7 +70,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
 									loading={props.state.isLoading}
 									onClick={props.onConfirm}
 								>
-									{T("confirm")}
+									{T()("confirm")}
 								</Button>
 								<Button
 									theme="container-outline"
@@ -80,7 +80,7 @@ export const Confirmation: Component<ConfirmationProps> = (props) => {
 									disabled={props.state.isLoading}
 									onClick={props.onCancel}
 								>
-									{T("cancel")}
+									{T()("cancel")}
 								</Button>
 							</div>
 						</div>

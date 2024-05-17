@@ -55,7 +55,7 @@ const LinkSelect: Component = () => {
 		>
 			<div class="p-15">
 				<div class="mb-15 pb-15 border-b border-border">
-					<h2>{T("set_page_link")}</h2>
+					<h2>{T()("set_page_link")}</h2>
 				</div>
 				<div class="mb-15 pb-15 border-b border-border">
 					<Form.Input
@@ -65,7 +65,7 @@ const LinkSelect: Component = () => {
 						name={"label"}
 						type="text"
 						copy={{
-							label: T("label"),
+							label: T()("label"),
 						}}
 						required={false}
 						theme={"basic"}
@@ -77,7 +77,7 @@ const LinkSelect: Component = () => {
 						name={"url"}
 						type="text"
 						copy={{
-							label: T("url"),
+							label: T()("url"),
 						}}
 						required={false}
 						theme={"basic"}
@@ -88,7 +88,7 @@ const LinkSelect: Component = () => {
 						onChange={(value) => setOpenInNewTab(value)}
 						name={"open_in_new_tab"}
 						copy={{
-							label: T("open_in_new_tab"),
+							label: T()("open_in_new_tab"),
 						}}
 						required={false}
 						theme={"basic"}
@@ -104,7 +104,7 @@ const LinkSelect: Component = () => {
 							linkFieldStore.set("open", false);
 						}}
 					>
-						{T("cancel")}
+						{T()("cancel")}
 					</Button>
 					<Button
 						type="button"
@@ -112,7 +112,7 @@ const LinkSelect: Component = () => {
 						size="x-small"
 						onClick={updateLink}
 					>
-						{T("update")}
+						{T()("update")}
 					</Button>
 				</div>
 			</div>

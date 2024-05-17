@@ -31,8 +31,8 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 	>({
 		mutationFn: deleteSingleReq,
 		successToast: {
-			title: T("media_deleted_toast_title"),
-			message: T("media_deleted_toast_message"),
+			title: T()("media_deleted_toast_title"),
+			message: T()("media_deleted_toast_message"),
 		},
 		invalidates: ["media.getMultiple"],
 		onSuccess: props.onSuccess,

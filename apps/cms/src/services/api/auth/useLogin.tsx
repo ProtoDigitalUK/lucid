@@ -36,8 +36,8 @@ const useLogin = (props?: UseLoginProps) => {
 	>({
 		mutationFn: loginReq,
 		successToast: {
-			title: T("login_success_toast_title"),
-			message: T("login_success_toast_message"),
+			title: T()("login_success_toast_title"),
+			message: T()("login_success_toast_message"),
 		},
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: () => {

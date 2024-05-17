@@ -209,7 +209,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 						>
 							{props.filter.options
 								? props.filter.options[0].label
-								: T("active")}
+								: T()("active")}
 						</Button>
 						<Button
 							theme="secondary-toggle"
@@ -227,7 +227,7 @@ const FilterItem: Component<FilterItemProps> = (props) => {
 						>
 							{props.filter.options
 								? props.filter.options[0].label
-								: T("inactive")}
+								: T()("inactive")}
 						</Button>
 					</div>
 				</Match>
@@ -261,7 +261,7 @@ export const Filter: Component<FilterProps> = (props) => {
 				<DropdownMenu.Icon>
 					<FaSolidFilter />
 				</DropdownMenu.Icon>
-				<span class="ml-2">{T("filter")}</span>
+				<span class="ml-2">{T()("filter")}</span>
 			</DropdownMenu.Trigger>
 			<DropdownContent
 				options={{

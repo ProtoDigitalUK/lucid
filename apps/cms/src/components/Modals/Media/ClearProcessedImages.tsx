@@ -31,8 +31,8 @@ const ClearProcessedImages: Component<ClearProcessedImagesProps> = (props) => {
 				isError: clearProcessed.action.isError,
 			}}
 			content={{
-				title: T("clear_processed_images_modal_title"),
-				description: T("clear_processed_images_modal_description"),
+				title: T()("clear_processed_images_modal_title"),
+				description: T()("clear_processed_images_modal_description"),
 				error: clearProcessed.errors()?.message,
 			}}
 			onConfirm={() => {

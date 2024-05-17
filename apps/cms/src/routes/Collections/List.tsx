@@ -13,8 +13,8 @@ const CollectionsListRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("collection_route_title")}
-			description={T("collection_route_description")}
+			title={T()("collection_route_title")}
+			description={T()("collection_route_description")}
 		>
 			<CollectionGrid searchParams={searchParams} />
 		</Layout.PageLayout>

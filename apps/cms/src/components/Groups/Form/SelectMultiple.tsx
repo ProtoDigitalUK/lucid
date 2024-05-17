@@ -132,7 +132,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 										>
 											<FaSolidXmark size={16} class="" />
 											<span class="sr-only">
-												{T("remove")}
+												{T()("remove")}
 											</span>
 										</button>
 									</span>
@@ -161,7 +161,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 								>
 									<FaSolidXmark size={14} />
 									<span class="sr-only">
-										{T("remove_all")}
+										{T()("remove_all")}
 									</span>
 								</button>
 							</Show>
@@ -214,7 +214,7 @@ export const SelectMultiple: Component<SelectMultipleProps> = (props) => {
 						</Match>
 						<Match when={props.options.length === 0}>
 							<span class="text-body w-full block px-2.5 py-1 text-sm">
-								{T("no_options_available")}
+								{T()("no_options_available")}
 							</span>
 						</Match>
 					</Switch>

@@ -213,11 +213,11 @@ export const Panel: Component<PanelProps> = (props) => {
 													title:
 														props.content
 															.fetchError ||
-														T("error_title"),
+														T()("error_title"),
 													description: props.content
 														.fetchError
 														? ""
-														: T("error_message"),
+														: T()("error_message"),
 												}}
 											/>
 										</div>
@@ -252,7 +252,7 @@ export const Panel: Component<PanelProps> = (props) => {
 											type="button"
 											onClick={() => props.setOpen(false)}
 										>
-											{T("close")}
+											{T()("close")}
 										</Button>
 										<Show when={props.content.submit}>
 											<Button

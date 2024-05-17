@@ -14,12 +14,12 @@ const DashboardRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("dashboard_route_title", {
+			title={T()("dashboard_route_title", {
 				name: userStore.get.user?.firstName
 					? `, ${userStore.get.user?.firstName}`
 					: "",
 			})}
-			description={T("dashboard_route_description")}
+			description={T()("dashboard_route_description")}
 		>
 			<Layout.PageContent>
 				<Button
@@ -29,7 +29,7 @@ const DashboardRoute: Component = () => {
 					loading={logout.action.isPending}
 					onClick={() => logout.action.mutate({})}
 				>
-					{T("logout")}
+					{T()("logout")}
 				</Button>
 			</Layout.PageContent>
 		</Layout.PageLayout>

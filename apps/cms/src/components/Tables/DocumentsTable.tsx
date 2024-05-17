@@ -83,7 +83,7 @@ const DocumentsTable: Component<DocumentsTableProps> = (props) => {
 				head={[
 					...tableHeadColumns(),
 					{
-						label: T("updated_at"),
+						label: T()("updated_at"),
 						key: "updated_at",
 						icon: <FaSolidCalendar />,
 					},

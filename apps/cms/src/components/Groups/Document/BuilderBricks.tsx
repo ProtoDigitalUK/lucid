@@ -42,7 +42,7 @@ export const BuilderBricks: Component<BuilderBricksProps> = (props) => {
 							setSelectBrickOpen(true);
 						}}
 					>
-						{T("add_brick")}
+						{T()("add_brick")}
 					</Button>
 				</div>
 				<ol class="">
@@ -179,7 +179,7 @@ const BuilderBrickRow: Component<BuilderBrickRowProps> = (props) => {
 						}
 						onDragOver={(e) => props.dragDrop.onDragOver(e)}
 						draggable={true}
-						aria-label={T("change_order")}
+						aria-label={T()("change_order")}
 					>
 						<FaSolidGripLines class="w-4" />
 					</button>

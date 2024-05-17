@@ -31,8 +31,8 @@ const useDeleteSingle = (props: UseDeleteProps) => {
 	>({
 		mutationFn: deleteSingleReq,
 		successToast: {
-			title: T("role_deleted_toast_title"),
-			message: T("role_deleted_toast_message"),
+			title: T()("role_deleted_toast_title"),
+			message: T()("role_deleted_toast_message"),
 		},
 		invalidates: ["roles.getMultiple", "roles.getSingle"],
 		onSuccess: props.onSuccess,

@@ -33,8 +33,8 @@ const SettingsListRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("settings_route_title")}
-			description={T("settings_route_description")}
+			title={T()("settings_route_title")}
+			description={T()("settings_route_description")}
 			state={{
 				isLoading: isLoading(),
 				isError: isError(),
@@ -44,11 +44,11 @@ const SettingsListRoute: Component = () => {
 				<Layout.NavigationTabs
 					tabs={[
 						{
-							label: T("general"),
+							label: T()("general"),
 							href: "/settings",
 						},
 						{
-							label: T("integrations"),
+							label: T()("integrations"),
 							href: "/settings/integrations",
 						},
 					]}

@@ -8,10 +8,10 @@ const LoginRoute: Component = () => {
 	return (
 		<>
 			<h1 class="mb-2 text-center 3xl:text-left">
-				{T("login_route_title")}
+				{T()("login_route_title")}
 			</h1>
 			<p class="mb-10 text-center 3xl:text-left">
-				{T("login_route_description")}
+				{T()("login_route_description")}
 			</p>
 			<div class="mb-10">
 				<LoginForm showForgotPassword={true} />

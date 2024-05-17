@@ -36,14 +36,14 @@ const DocumentRow: Component<DocumentRowProps> = (props) => {
 			callbacks={props.callbacks}
 			actions={[
 				{
-					label: T("edit"),
+					label: T()("edit"),
 					type: "link",
 					href: `/collections/${props.collection.key}/${props.document.id}`,
 					permission: userStore.get.hasPermission(["update_content"])
 						.all,
 				},
 				{
-					label: T("delete"),
+					label: T()("delete"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.document.id);

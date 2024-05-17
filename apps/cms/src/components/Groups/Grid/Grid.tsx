@@ -36,8 +36,8 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 						type="page-layout"
 						content={{
 							image: noPermission,
-							title: T("no_permission"),
-							description: T("no_permission_description"),
+							title: T()("no_permission"),
+							description: T()("no_permission_description"),
 						}}
 					/>
 				</Match>
@@ -46,8 +46,8 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 						type="page-layout"
 						content={{
 							image: notifySvg,
-							title: T("error_title"),
-							description: T("error_message"),
+							title: T()("error_title"),
+							description: T()("error_message"),
 						}}
 					/>
 				</Match>
@@ -58,8 +58,8 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 						type="page-layout"
 						content={{
 							image: emptySvg,
-							title: T("no_results"),
-							description: T("no_results_message"),
+							title: T()("no_results"),
+							description: T()("no_results_message"),
 						}}
 					>
 						<Show when={props.searchParams?.hasFiltersApplied()}>
@@ -71,7 +71,7 @@ export const GridRoot: Component<GridRootProps> = (props) => {
 									props.searchParams?.resetFilters();
 								}}
 							>
-								{T("reset_filters")}
+								{T()("reset_filters")}
 							</Button>
 						</Show>
 					</ErrorBlock>

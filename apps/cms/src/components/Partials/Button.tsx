@@ -60,8 +60,8 @@ const Button: Component<ButtonProps> = (props) => {
 	const buttonOnClick = (e: MouseEvent) => {
 		if (props.permission === false) {
 			spawnToast({
-				title: T("no_permission_toast_title"),
-				message: T("no_permission_toast_message"),
+				title: T()("no_permission_toast_title"),
+				message: T()("no_permission_toast_message"),
 				status: "warning",
 			});
 			e.preventDefault();

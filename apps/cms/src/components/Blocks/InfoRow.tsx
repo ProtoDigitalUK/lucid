@@ -21,7 +21,7 @@ const InfoRow: Component<InfoRowProps> = (props) => {
 						<p class="text-sm">{props.description}</p>
 					</Show>
 				</div>
-				{props.children}
+				<div class="md:col-span-2 lg:col-span-3">{props.children}</div>
 			</div>
 		</Show>
 	);
@@ -31,7 +31,7 @@ const InfoRowContent: Component<InfoRowProps> = (props) => {
 	// ----------------------------------------
 	// Render
 	return (
-		<div class="md:col-span-2 lg:col-span-3 bg-container-2 p-15 rounded-md border border-border">
+		<div class="bg-container-2 p-15 rounded-md border border-border mb-15 last:mb-0">
 			<Show when={props.title}>
 				<h3 class="text-base mb-1">{props.title}</h3>
 			</Show>

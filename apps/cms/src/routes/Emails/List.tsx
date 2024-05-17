@@ -49,8 +49,8 @@ const EmailListRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("email_route_title")}
-			description={T("email_route_description")}
+			title={T()("email_route_title")}
+			description={T()("email_route_description")}
 			options={{
 				noBorder: true,
 			}}
@@ -59,50 +59,50 @@ const EmailListRoute: Component = () => {
 					searchParams={searchParams}
 					filters={[
 						{
-							label: T("to"),
+							label: T()("to"),
 							key: "toAddress",
 							type: "text",
 						},
 						{
-							label: T("subject"),
+							label: T()("subject"),
 							key: "subject",
 							type: "text",
 						},
 						{
-							label: T("template"),
+							label: T()("template"),
 							key: "template",
 							type: "text",
 						},
 						{
-							label: T("status"),
+							label: T()("status"),
 							key: "deliveryStatus",
 							type: "multi-select",
 							options: [
 								{
-									label: T("delivered"),
+									label: T()("delivered"),
 									value: "delivered",
 								},
 								{
-									label: T("failed"),
+									label: T()("failed"),
 									value: "failed",
 								},
 								{
-									label: T("pending"),
+									label: T()("pending"),
 									value: "pending",
 								},
 							],
 						},
 						{
-							label: T("type"),
+							label: T()("type"),
 							key: "type",
 							type: "multi-select",
 							options: [
 								{
-									label: T("internal"),
+									label: T()("internal"),
 									value: "internal",
 								},
 								{
-									label: T("external"),
+									label: T()("external"),
 									value: "external",
 								},
 							],
@@ -110,23 +110,23 @@ const EmailListRoute: Component = () => {
 					]}
 					sorts={[
 						{
-							label: T("sent_count"),
+							label: T()("sent_count"),
 							key: "sentCount",
 						},
 						{
-							label: T("failed_count"),
+							label: T()("failed_count"),
 							key: "errorCount",
 						},
 						{
-							label: T("last_attempt_at"),
+							label: T()("last_attempt_at"),
 							key: "lastAttemptAt",
 						},
 						{
-							label: T("last_success_at"),
+							label: T()("last_success_at"),
 							key: "lastSuccessAt",
 						},
 						{
-							label: T("created_at"),
+							label: T()("created_at"),
 							key: "createdAt",
 						},
 					]}

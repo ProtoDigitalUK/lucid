@@ -27,10 +27,10 @@ const SelectMediaPanel: Component = () => {
 			// }}
 			reset={() => {}}
 			content={{
-				title: T("select_media", {
+				title: T()("select_media", {
 					type: "Media",
 				}),
-				description: T("select_media_description"),
+				description: T()("select_media_description"),
 			}}
 		>
 			{(lang) => (
@@ -114,43 +114,43 @@ const SelectMediaContent: Component = () => {
 					<Query.Filter
 						filters={[
 							{
-								label: T("name"),
+								label: T()("name"),
 								key: "name",
 								type: "text",
 							},
 							{
-								label: T("type"),
+								label: T()("type"),
 								key: "type",
 								type: "multi-select",
 								options: [
 									{
-										label: T("image"),
+										label: T()("image"),
 										value: "image",
 									},
 									{
-										label: T("video"),
+										label: T()("video"),
 										value: "video",
 									},
 									{
-										label: T("audio"),
+										label: T()("audio"),
 										value: "audio",
 									},
 									{
-										label: T("document"),
+										label: T()("document"),
 										value: "document",
 									},
 									{
-										label: T("archive"),
+										label: T()("archive"),
 										value: "archive",
 									},
 									{
-										label: T("unknown"),
+										label: T()("unknown"),
 										value: "unknown",
 									},
 								],
 							},
 							{
-								label: T("file_extension"),
+								label: T()("file_extension"),
 								key: "fileExtension",
 								type: "text",
 							},
@@ -160,27 +160,27 @@ const SelectMediaContent: Component = () => {
 					<Query.Sort
 						sorts={[
 							{
-								label: T("name"),
+								label: T()("name"),
 								key: "name",
 							},
 							{
-								label: T("file_size"),
+								label: T()("file_size"),
 								key: "fileSize",
 							},
 							{
-								label: T("width"),
+								label: T()("width"),
 								key: "width",
 							},
 							{
-								label: T("height"),
+								label: T()("height"),
 								key: "height",
 							},
 							{
-								label: T("created_at"),
+								label: T()("created_at"),
 								key: "createdAt",
 							},
 							{
-								label: T("updated_at"),
+								label: T()("updated_at"),
 								key: "updatedAt",
 							},
 						]}

@@ -33,8 +33,8 @@ const useCreateSingle = (props?: UseCreateSingleProps) => {
 	>({
 		mutationFn: createSingleReq,
 		successToast: {
-			title: T("role_created_toast_title"),
-			message: T("role_created_toast_message"),
+			title: T()("role_created_toast_title"),
+			message: T()("role_created_toast_message"),
 		},
 		invalidates: ["roles.getMultiple"],
 		onSuccess: props?.onSuccess,

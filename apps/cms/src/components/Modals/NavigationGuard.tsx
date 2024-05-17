@@ -26,8 +26,8 @@ const NavigationGuard: Component<NavigationGuardProps> = (props) => {
 				setOpen: props.state.setOpen,
 			}}
 			content={{
-				title: T("navigation_guard_modal_title"),
-				description: T("navigation_guard_modal_description"),
+				title: T()("navigation_guard_modal_title"),
+				description: T()("navigation_guard_modal_description"),
 			}}
 			onConfirm={() => {
 				if (props.state.targetElement) {

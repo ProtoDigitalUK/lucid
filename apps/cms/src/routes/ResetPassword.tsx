@@ -44,21 +44,21 @@ const ResetPasswordRoute: Component = () => {
 					type={"fill"}
 					content={{
 						image: notifyIllustration,
-						title: T("token_provided_invalid"),
-						description: T("token_provided_invalid_description"),
+						title: T()("token_provided_invalid"),
+						description: T()("token_provided_invalid_description"),
 					}}
 					link={{
-						text: T("back_to_login"),
+						text: T()("back_to_login"),
 						href: "/login",
 					}}
 				/>
 			</Match>
 			<Match when={checkToken.isSuccess}>
 				<h1 class="mb-2 text-center 3xl:text-left">
-					{T("reset_password_route_title")}
+					{T()("reset_password_route_title")}
 				</h1>
 				<p class="mb-10 text-center 3xl:text-left">
-					{T("reset_password_route_description")}
+					{T()("reset_password_route_description")}
 				</p>
 				<div class="mb-10">
 					<ResetPasswordForm token={token as string} />

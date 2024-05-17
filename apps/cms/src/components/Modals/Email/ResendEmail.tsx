@@ -32,8 +32,8 @@ const ResendEmail: Component<ResendEmailProps> = (props) => {
 				isError: resendEmail.action.isError,
 			}}
 			content={{
-				title: T("resend_email_modal_title"),
-				description: T("resend_email_modal_description"),
+				title: T()("resend_email_modal_title"),
+				description: T()("resend_email_modal_description"),
 				error: resendEmail.errors()?.message,
 			}}
 			onConfirm={() => {

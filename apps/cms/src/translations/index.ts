@@ -1,40 +1,42 @@
-// Translation files
-import enGb from "./en-gb.json";
+import i18next from "i18next";
+import { createMemo, createSignal } from "solid-js";
+// locales
+import en from "./en.json";
 
-const selectedLang = enGb;
+// TODO: selected locale needs to be persisted in local storage (fine for now as we only have 1 locale)
+// TODO: html lang attribute should be set based on selected locale
 
-interface TranslationDataT {
-	value: string | number;
-	toLowerCase?: boolean;
-	toUpperCase?: boolean;
-}
+const supportedLocales = ["en"] as const;
+export type SupportedLocales = (typeof supportedLocales)[number];
 
-type TranslationData = Record<string, TranslationDataT | string | number>;
+export const [getLocale, setLocale] = createSignal<SupportedLocales>("en");
 
-const T = (key: keyof typeof selectedLang, data?: TranslationData) => {
-	const translation = selectedLang[key as keyof typeof selectedLang];
-	if (!translation) {
-		return key;
-	}
-	if (!data) {
-		return translation;
-	}
+i18next.init<keyof typeof en>({
+	lng: getLocale(),
+	debug: true,
+	resources: {
+		en: {
+			translation: en,
+		},
+	},
+	fallbackLng: "en",
+});
 
-	return translation.replace(/\{\{(\w+)\}\}/g, (match, p1) => {
-		const value = data[p1 as keyof typeof data];
-		if (typeof value === "object") {
-			let valueToUse = String(value.value);
-			if (value.toLowerCase) {
-				valueToUse = valueToUse.toLowerCase();
-			}
-			if (value.toUpperCase) {
-				valueToUse = valueToUse.toUpperCase();
-			}
-			return valueToUse;
-		}
+const T = createMemo(() => {
+	i18next.changeLanguage(getLocale());
+	return i18next.t.bind(i18next);
+});
 
-		return String(value);
-	});
-};
+export const localesConfig: Array<{
+	code: SupportedLocales;
+	name: string;
+	default?: boolean;
+}> = [
+	{
+		code: "en",
+		name: "English",
+		default: true,
+	},
+];
 
 export default T;

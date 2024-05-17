@@ -33,8 +33,8 @@ const RolesListRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("roles_route_title")}
-			description={T("roles_route_description")}
+			title={T()("roles_route_title")}
+			description={T()("roles_route_description")}
 			options={{
 				noBorder: true,
 			}}
@@ -51,18 +51,18 @@ const RolesListRoute: Component = () => {
 					searchParams={searchParams}
 					filters={[
 						{
-							label: T("name"),
+							label: T()("name"),
 							key: "name",
 							type: "text",
 						},
 					]}
 					sorts={[
 						{
-							label: T("name"),
+							label: T()("name"),
 							key: "name",
 						},
 						{
-							label: T("created_at"),
+							label: T()("created_at"),
 							key: "createdAt",
 						},
 					]}

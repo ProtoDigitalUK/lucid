@@ -142,7 +142,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 								<FaSolidPlus />
 								<span class="sr-only">
 									{props.actions?.create?.label ??
-										T("create")}
+										T()("create")}
 								</span>
 							</Button>
 						</Show>
@@ -160,7 +160,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 								<FaSolidPlus />
 								<span class="sr-only">
 									{props.actions?.createLink?.label ??
-										T("create")}
+										T()("create")}
 								</span>
 							</Link>
 						</Show>
@@ -178,7 +178,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 									props.actions?.delete?.setOpen(true)
 								}
 							>
-								<span class="sr-only">{T("delete")}</span>
+								<span class="sr-only">{T()("delete")}</span>
 								<FaSolidTrash />
 							</Button>
 						</Show>

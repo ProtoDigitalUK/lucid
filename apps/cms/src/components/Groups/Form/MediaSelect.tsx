@@ -98,7 +98,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 							onClick={openMediaSelectModal}
 							disabled={props.disabled}
 						>
-							{T("select_media", {
+							{T()("select_media", {
 								type: props.type || "media",
 							})}
 						</Button>
@@ -128,7 +128,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								onClick={openMediaSelectModal}
 								disabled={props.disabled}
 							>
-								{T("select_new_media", {
+								{T()("select_new_media", {
 									type: props.type || "media",
 								})}
 							</Button>
@@ -141,7 +141,7 @@ export const MediaSelect: Component<MediaSelectProps> = (props) => {
 								}}
 								disabled={props.disabled}
 							>
-								{T("remove_media", {
+								{T()("remove_media", {
 									type: props.type || "media",
 								})}
 							</Button>

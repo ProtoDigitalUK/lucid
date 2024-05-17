@@ -43,32 +43,32 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 				searchParams={props.searchParams}
 				head={[
 					{
-						label: T("username"),
+						label: T()("username"),
 						key: "username",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("first_name"),
+						label: T()("first_name"),
 						key: "firstName",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("last_name"),
+						label: T()("last_name"),
 						key: "lastName",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("super_admin"),
+						label: T()("super_admin"),
 						key: "superAdmin",
 						icon: <FaSolidT />,
 					},
 					{
-						label: T("email"),
+						label: T()("email"),
 						key: "email",
 						icon: <FaSolidEnvelope />,
 					},
 					{
-						label: T("created_at"),
+						label: T()("created_at"),
 						key: "createdAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,

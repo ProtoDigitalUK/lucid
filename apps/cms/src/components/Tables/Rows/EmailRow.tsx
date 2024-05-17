@@ -26,7 +26,7 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 			callbacks={props.callbacks}
 			actions={[
 				{
-					label: T("preview"),
+					label: T()("preview"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.email.id);
@@ -35,7 +35,7 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 					permission: userStore.get.hasPermission(["read_email"]).all,
 				},
 				{
-					label: T("resend"),
+					label: T()("resend"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.email.id);
@@ -44,7 +44,7 @@ const EmailRow: Component<EmailRowProps> = (props) => {
 					permission: userStore.get.hasPermission(["send_email"]).all,
 				},
 				{
-					label: T("delete"),
+					label: T()("delete"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.email.id);

@@ -340,8 +340,12 @@
 	"collection_route_description": "View and manage your collections",
 	"document_route_title": "{{mode}} {{name}}",
 	"default": "Default",
-	"supported_locales": "Locales",
-	"supported_locales_setting_message": "If you wish to support more locales, please contact an administrator",
+	"locales": "Locales",
+	"locales_setting_message": "Configure the current locale and view the available content locales.",
 	"coming_soon_title": "Coming Soon!",
-	"coming_soon_description": "This feature is currently in development and will be available soon."
+	"coming_soon_description": "This feature is currently in development and will be available soon.",
+	"content_locales": "Content Locales",
+	"content_locales_description": "These are the locales available to you when editing content such as collection documents or media etc. If you wish to support more locales, please contact your administrator.",
+	"cms_locale": "Current Locale",
+	"cms_locale_description": "Select the locale you wish to use."
 }

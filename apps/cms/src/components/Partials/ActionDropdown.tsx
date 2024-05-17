@@ -43,7 +43,7 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 					},
 				)}
 			>
-				<span class="sr-only">{T("show_options")}</span>
+				<span class="sr-only">{T()("show_options")}</span>
 				<DropdownMenu.Icon>
 					<FaSolidEllipsisVertical class="text-body pointer-events-none" />
 				</DropdownMenu.Icon>
@@ -84,10 +84,10 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 														false
 													) {
 														spawnToast({
-															title: T(
+															title: T()(
 																"no_permission_toast_title",
 															),
-															message: T(
+															message: T()(
 																"no_permission_toast_message",
 															),
 															status: "warning",
@@ -114,10 +114,10 @@ const ActionDropdown: Component<ActionDropdownProps> = (props) => {
 														false
 													) {
 														spawnToast({
-															title: T(
+															title: T()(
 																"no_permission_toast_title",
 															),
-															message: T(
+															message: T()(
 																"no_permission_toast_message",
 															),
 															status: "warning",

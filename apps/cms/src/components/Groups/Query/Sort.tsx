@@ -103,7 +103,7 @@ export const Sort: Component<SortProps> = (props) => {
 				<DropdownMenu.Icon>
 					<FaSolidSort />
 				</DropdownMenu.Icon>
-				<span class="ml-2">{T("sort")}</span>
+				<span class="ml-2">{T()("sort")}</span>
 			</DropdownMenu.Trigger>
 			<DropdownContent
 				options={{

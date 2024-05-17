@@ -44,8 +44,8 @@ const UsersListRoute: Component = () => {
 	// Render
 	return (
 		<Layout.PageLayout
-			title={T("users_route_title")}
-			description={T("users_route_description")}
+			title={T()("users_route_title")}
+			description={T()("users_route_description")}
 			options={{
 				noBorder: true,
 			}}
@@ -62,29 +62,29 @@ const UsersListRoute: Component = () => {
 					searchParams={searchParams}
 					filters={[
 						{
-							label: T("first_name"),
+							label: T()("first_name"),
 							key: "firstName",
 							type: "text",
 						},
 						{
-							label: T("last_name"),
+							label: T()("last_name"),
 							key: "lastName",
 							type: "text",
 						},
 						{
-							label: T("email"),
+							label: T()("email"),
 							key: "email",
 							type: "text",
 						},
 						{
-							label: T("username"),
+							label: T()("username"),
 							key: "username",
 							type: "text",
 						},
 					]}
 					sorts={[
 						{
-							label: T("created_at"),
+							label: T()("created_at"),
 							key: "createdAt",
 						},
 					]}

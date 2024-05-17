@@ -105,9 +105,9 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 				errors: createUser.errors(),
 			}}
 			content={{
-				title: T("create_user_panel_title"),
-				description: T("create_user_panel_description"),
-				submit: T("create"),
+				title: T()("create_user_panel_title"),
+				description: T()("create_user_panel_description"),
+				submit: T()("create"),
 			}}
 		>
 			{() => (
@@ -119,7 +119,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 						name={"username"}
 						type="text"
 						copy={{
-							label: T("username"),
+							label: T()("username"),
 						}}
 						required={true}
 						errors={getBodyError("username", createUser.errors)}
@@ -132,7 +132,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							name={"firstName"}
 							type="text"
 							copy={{
-								label: T("first_name"),
+								label: T()("first_name"),
 							}}
 							noMargin={true}
 							errors={getBodyError(
@@ -147,7 +147,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							name={"lastName"}
 							type="text"
 							copy={{
-								label: T("last_name"),
+								label: T()("last_name"),
 							}}
 							noMargin={true}
 							errors={getBodyError("lastName", createUser.errors)}
@@ -161,7 +161,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							name={"email"}
 							type="text"
 							copy={{
-								label: T("email"),
+								label: T()("email"),
 							}}
 							noMargin={true}
 							required={true}
@@ -174,7 +174,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							name={"password"}
 							type="password"
 							copy={{
-								label: T("password"),
+								label: T()("password"),
 							}}
 							noMargin={true}
 							required={true}
@@ -187,8 +187,8 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							name={"passwordConfirmation"}
 							type="password"
 							copy={{
-								label: T("password_confirmation"),
-								describedBy: T("password_description"),
+								label: T()("password_confirmation"),
+								describedBy: T()("password_description"),
 							}}
 							noMargin={true}
 							required={true}
@@ -204,7 +204,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 						onChange={setSelectedRoles}
 						name={"roleIds"}
 						copy={{
-							label: T("roles"),
+							label: T()("roles"),
 						}}
 						options={
 							roles.data?.data.map((role) => {
@@ -223,7 +223,7 @@ const CreateUserPanel: Component<CreateUserPanelProps> = (props) => {
 							onChange={(value) => setIsSuperAdmin(value ? 1 : 0)}
 							name={"superAdmin"}
 							copy={{
-								label: T("is_super_admin"),
+								label: T()("is_super_admin"),
 							}}
 							errors={getBodyError(
 								"superAdmin",

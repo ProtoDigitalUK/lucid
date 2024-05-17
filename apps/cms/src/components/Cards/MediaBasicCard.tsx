@@ -75,7 +75,7 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 			{/* Content */}
 			<div class="p-2.5 border-t border-border">
 				<h3 class="line-clamp-1 text-sm">
-					{titleTranslations()?.value || T("no_translation")}
+					{titleTranslations()?.value || T()("no_translation")}
 				</h3>
 			</div>
 		</li>

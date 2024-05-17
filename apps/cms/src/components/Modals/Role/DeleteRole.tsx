@@ -31,8 +31,8 @@ const DeleteRole: Component<DeleteRoleProps> = (props) => {
 				isError: deleteRole.action.isError,
 			}}
 			content={{
-				title: T("delete_role_modal_title"),
-				description: T("delete_role_modal_description"),
+				title: T()("delete_role_modal_title"),
+				description: T()("delete_role_modal_description"),
 				error: deleteRole.errors()?.message,
 			}}
 			onConfirm={() => {

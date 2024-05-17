@@ -122,7 +122,7 @@ const CollectionsDocumentsListRoute: Component = () => {
 					link: `/collections/${collectionKey()}/create`,
 					permission: userStore.get.hasPermission(["create_content"])
 						.all,
-					label: T("create_dynamic", {
+					label: T()("create_dynamic", {
 						name: collection.data?.data.singular || "",
 					}),
 				},
@@ -130,11 +130,11 @@ const CollectionsDocumentsListRoute: Component = () => {
 			breadcrumbs={[
 				{
 					link: "/collections",
-					label: T("collections"),
+					label: T()("collections"),
 				},
 				{
 					link: `/collections/${collectionKey()}`,
-					label: collection.data?.data.title || T("documents"),
+					label: collection.data?.data.title || T()("documents"),
 				},
 			]}
 			headingChildren={

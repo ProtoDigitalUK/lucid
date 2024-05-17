@@ -78,7 +78,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 						},
 					)}
 				>
-					{props.copy?.false || T("false")}
+					{props.copy?.false || T()("false")}
 				</span>
 				<span
 					class={classnames(
@@ -89,7 +89,7 @@ export const Switch: Component<SwitchProps> = (props) => {
 						},
 					)}
 				>
-					{props.copy?.true || T("true")}
+					{props.copy?.true || T()("true")}
 				</span>
 				<span
 					class={classnames(

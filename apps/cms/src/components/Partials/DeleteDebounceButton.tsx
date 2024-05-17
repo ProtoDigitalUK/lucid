@@ -41,7 +41,7 @@ const DeleteDebounceButton: Component<DeleteButtonProps> = (props) => {
 				revertConfigDelete();
 			}}
 			aria-label={
-				getConfirmRemove() === 1 ? T("confirm_delete") : T("delete")
+				getConfirmRemove() === 1 ? T()("confirm_delete") : T()("delete")
 			}
 		>
 			<FaSolidTrashCan class="w-4" />

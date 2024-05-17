@@ -99,7 +99,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 				<Match when={groups().length === 0}>
 					<div class="w-full border-border border p-15 md:p-30 mb-15 rounded-md flex items-center flex-col justify-center text-center">
 						<span class="text-sm text-unfocused">
-							{T("no_entries")}
+							{T()("no_entries")}
 						</span>
 					</div>
 				</Match>
@@ -113,7 +113,7 @@ export const RepeaterField: Component<RepeaterFieldProps> = (props) => {
 					onClick={addGroup}
 					disabled={!canAddGroup() || fieldConfig().disabled}
 				>
-					{T("add_entry")}
+					{T()("add_entry")}
 				</Button>
 				<Show when={fieldConfig().validation?.maxGroups !== undefined}>
 					<span

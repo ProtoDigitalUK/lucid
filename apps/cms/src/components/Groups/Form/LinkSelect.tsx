@@ -65,7 +65,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 							size="x-small"
 							onClick={openLinkModal}
 						>
-							{T("select_link")}
+							{T()("select_link")}
 						</Button>
 					</Match>
 					<Match when={props.value}>
@@ -88,7 +88,7 @@ export const LinkSelect: Component<LinkSelectProps> = (props) => {
 							}}
 							disabled={props.disabled}
 						>
-							{T("clear")}
+							{T()("clear")}
 						</button>
 					</Match>
 				</Switch>

@@ -176,7 +176,7 @@ const CollectionsDocumentsEditRoute: Component<
 					breadcrumbs={[
 						{
 							link: "/collections",
-							label: T("collections"),
+							label: T()("collections"),
 						},
 						{
 							link: `/collections/${collectionKey()}`,
@@ -191,8 +191,8 @@ const CollectionsDocumentsEditRoute: Component<
 							}`,
 							label:
 								props.mode === "create"
-									? T("create")
-									: T("edit"),
+									? T()("create")
+									: T()("edit"),
 						},
 					]}
 				/>
@@ -203,11 +203,11 @@ const CollectionsDocumentsEditRoute: Component<
 						<div class="bg-container-2 border-b border-border">
 							<header class="p-15 md:p-30 flex items-center justify-between flex-wrap-reverse md:flex-nowrap gap-15">
 								<h1 class="w-full">
-									{T("document_route_title", {
-										mode: T("edit"),
+									{T()("document_route_title", {
+										mode: T()("edit"),
 										name:
 											collection.data?.data.singular ??
-											T("document"),
+											T()("document"),
 									})}
 									<Show when={props.mode === "edit"}>
 										<span class="text-unfocused ml-2.5">
@@ -234,7 +234,7 @@ const CollectionsDocumentsEditRoute: Component<
 										onClick={upsertDocumentAction}
 										disabled={canSaveDocument()}
 									>
-										{T("save", {
+										{T()("save", {
 											singular:
 												collection.data?.data
 													.singular || "",
@@ -248,7 +248,7 @@ const CollectionsDocumentsEditRoute: Component<
 											onClick={() => setDeleteOpen(true)}
 										>
 											<span class="sr-only">
-												{T("delete")}
+												{T()("delete")}
 											</span>
 											<FaSolidTrash />
 										</Button>
@@ -274,16 +274,16 @@ const CollectionsDocumentsEditRoute: Component<
 					{/* Sidebar */}
 					<aside class="w-full lg:max-w-[300px] lg:overflow-scroll bg-container-1 border-b lg:border-b-0 lg:border-l border-border ">
 						<div class="p-15 md:p-30">
-							<h2 class="mb-15">{T("document")}</h2>
+							<h2 class="mb-15">{T()("document")}</h2>
 							<DetailsList
 								type="text"
 								items={[
 									{
-										label: T("collection"),
+										label: T()("collection"),
 										value: collection.data?.data.title,
 									},
 									{
-										label: T("created_by"),
+										label: T()("created_by"),
 										value: (
 											<UserDisplay
 												user={{
@@ -308,7 +308,7 @@ const CollectionsDocumentsEditRoute: Component<
 										show: props.mode === "edit",
 									},
 									{
-										label: T("created_at"),
+										label: T()("created_at"),
 										value: (
 											<DateText
 												date={
@@ -320,7 +320,7 @@ const CollectionsDocumentsEditRoute: Component<
 										show: props.mode === "edit",
 									},
 									{
-										label: T("updated_by"),
+										label: T()("updated_by"),
 										value: (
 											<UserDisplay
 												user={{
@@ -345,7 +345,7 @@ const CollectionsDocumentsEditRoute: Component<
 										show: props.mode === "edit",
 									},
 									{
-										label: T("updated_at"),
+										label: T()("updated_at"),
 										value: (
 											<DateText
 												date={

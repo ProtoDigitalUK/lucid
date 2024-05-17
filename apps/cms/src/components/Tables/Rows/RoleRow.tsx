@@ -23,7 +23,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
 			selected={props.selected}
 			actions={[
 				{
-					label: T("edit"),
+					label: T()("edit"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.role.id);
@@ -33,7 +33,7 @@ const RoleRow: Component<RoleRowProps> = (props) => {
 						.all,
 				},
 				{
-					label: T("delete"),
+					label: T()("delete"),
 					type: "button",
 					onClick: () => {
 						props.rowTarget.setTargetId(props.role.id);

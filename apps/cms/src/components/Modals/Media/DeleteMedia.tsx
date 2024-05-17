@@ -31,8 +31,8 @@ const DeleteMedia: Component<DeleteMediaProps> = (props) => {
 				isError: deleteMedia.action.isError,
 			}}
 			content={{
-				title: T("delete_media_modal_title"),
-				description: T("delete_media_modal_description"),
+				title: T()("delete_media_modal_title"),
+				description: T()("delete_media_modal_description"),
 				error: deleteMedia.errors()?.message,
 			}}
 			onConfirm={() => {

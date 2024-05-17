@@ -49,10 +49,10 @@ export const Pagination: Component<PaginationProps> = (props) => {
 			<span class="text-sm text-body md:mb-0 mb-2">
 				<Switch>
 					<Match when={textData().total === 0}>
-						{T("pagination_empty")}
+						{T()("pagination_empty")}
 					</Match>
 					<Match when={textData().total > 0}>
-						{T("pagination_text", {
+						{T()("pagination_text", {
 							page: textData().page,
 							lastPage: textData().lastPage,
 							total: textData().total,

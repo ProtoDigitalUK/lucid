@@ -46,19 +46,19 @@ const RolesTable: Component<RolesTableProps> = (props) => {
 				searchParams={props.searchParams}
 				head={[
 					{
-						label: T("name"),
+						label: T()("name"),
 						key: "name",
 						icon: <FaSolidT />,
 						sortable: true,
 					},
 					{
-						label: T("created_at"),
+						label: T()("created_at"),
 						key: "createdAt",
 						icon: <FaSolidCalendar />,
 						sortable: true,
 					},
 					{
-						label: T("updated_at"),
+						label: T()("updated_at"),
 						key: "updatedAt",
 						icon: <FaSolidCalendar />,
 					},

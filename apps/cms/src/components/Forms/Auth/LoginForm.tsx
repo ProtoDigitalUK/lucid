@@ -45,7 +45,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				value={usernameOrEmail()}
 				onChange={setUsernameOrEmail}
 				copy={{
-					label: T("username_or_email"),
+					label: T()("username_or_email"),
 				}}
 				required={true}
 				autoFoucs={true}
@@ -59,7 +59,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 				value={password()}
 				onChange={setPassword}
 				copy={{
-					label: T("password"),
+					label: T()("password"),
 				}}
 				required={true}
 				autoComplete="current-password"
@@ -71,7 +71,7 @@ const LoginForm: Component<LoginFormProps> = (props) => {
 					type="button"
 					href="/forgot-password"
 				>
-					{T("forgot_password")}
+					{T()("forgot_password")}
 				</A>
 			</Show>
 		</Form.Root>

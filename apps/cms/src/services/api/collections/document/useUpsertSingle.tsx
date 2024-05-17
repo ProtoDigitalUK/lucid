@@ -53,10 +53,10 @@ const useUpsertSingle = (props: UseUpdateSingleProps) => {
 	>({
 		mutationFn: upsertSingleReq,
 		successToast: {
-			title: T("update_toast_title", {
+			title: T()("update_toast_title", {
 				name: props.collectionName || "Content",
 			}),
-			message: T("update_toast_message", {
+			message: T()("update_toast_message", {
 				name: {
 					value: props.collectionName || "Content",
 					toLowerCase: true,

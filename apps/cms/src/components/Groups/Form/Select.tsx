@@ -66,7 +66,7 @@ export const Select: Component<SelectProps> = (props) => {
 
 	createEffect(() => {
 		if (props.value === undefined) {
-			setSelectedLabel(T("nothing_selected"));
+			setSelectedLabel(T()("nothing_selected"));
 		}
 
 		const selectedOption = props.options.find(
@@ -85,7 +85,7 @@ export const Select: Component<SelectProps> = (props) => {
 		const options = JSON.parse(JSON.stringify(props.options));
 		options.unshift({
 			value: undefined,
-			label: T("clear"),
+			label: T()("clear"),
 		});
 		return options;
 	});
@@ -152,7 +152,7 @@ export const Select: Component<SelectProps> = (props) => {
 							<span class="truncate">{selectedLabel()}</span>
 						) : (
 							<span class="text-body">
-								{T("nothing_selected")}
+								{T()("nothing_selected")}
 							</span>
 						)}
 						<FaSolidSort size={16} class="text-title ml-1" />
@@ -176,7 +176,7 @@ export const Select: Component<SelectProps> = (props) => {
 								<input
 									type="text"
 									class="bg-container-1 px-2.5 rounded-md w-full border border-border text-sm text-title font-medium h-10 focus:outline-none focus:border-primary-base"
-									placeholder={T("search")}
+									placeholder={T()("search")}
 									value={props.search?.value || ""}
 									onKeyDown={(e) => {
 										e.stopPropagation();
@@ -213,7 +213,7 @@ export const Select: Component<SelectProps> = (props) => {
 											>
 												<FaSolidXmark size={14} />
 												<span class="sr-only">
-													{T("clear")}
+													{T()("clear")}
 												</span>
 											</button>
 										</div>
@@ -267,12 +267,12 @@ export const Select: Component<SelectProps> = (props) => {
 							}
 						>
 							<span class="text-body w-full block px-2.5 py-1 text-sm">
-								{T("no_results_found")}
+								{T()("no_results_found")}
 							</span>
 						</Match>
 						<Match when={props.options.length === 0}>
 							<span class="text-body w-full block px-2.5 py-1 text-sm">
-								{T("no_options_available")}
+								{T()("no_options_available")}
 							</span>
 						</Match>
 					</Switch>

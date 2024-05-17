@@ -41,8 +41,8 @@ const useCreateSingle = (props?: UseUpdateSingleProps) => {
 	>({
 		mutationFn: createSingleReq,
 		successToast: {
-			title: T("user_create_toast_title"),
-			message: T("user_create_toast_message"),
+			title: T()("user_create_toast_title"),
+			message: T()("user_create_toast_message"),
 		},
 		invalidates: ["users.getMultiple"],
 		onSuccess: props?.onSuccess,

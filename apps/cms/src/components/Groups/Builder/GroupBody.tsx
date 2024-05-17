@@ -114,7 +114,7 @@ export const GroupBody: Component<GroupBodyProps> = (props) => {
 						}
 						onDragOver={(e) => props.state.dragDrop.onDragOver(e)}
 						draggable={true}
-						aria-label={T("change_order")}
+						aria-label={T()("change_order")}
 					>
 						<FaSolidGripLines class="w-4" />
 					</button>

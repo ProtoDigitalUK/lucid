@@ -155,15 +155,15 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	const panelContent = createMemo(() => {
 		if (panelMode() === "create") {
 			return {
-				title: T("create_media_panel_title"),
-				description: T("create_media_panel_description"),
-				submit: T("create"),
+				title: T()("create_media_panel_title"),
+				description: T()("create_media_panel_description"),
+				submit: T()("create"),
 			};
 		}
 		return {
-			title: T("update_media_panel_title"),
-			description: T("update_media_panel_description"),
-			submit: T("update"),
+			title: T()("update_media_panel_title"),
+			description: T()("update_media_panel_description"),
+			submit: T()("update"),
 		};
 	});
 	const panelFetchState = createMemo(() => {
@@ -260,7 +260,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 						{(locale, index) => (
 							<Show when={locale.code === lang?.contentLocale()}>
 								<SectionHeading
-									title={T("details_lang", {
+									title={T()("details_lang", {
 										code: locale.code,
 									})}
 								/>
@@ -284,7 +284,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									name={`name-${locale.code}`}
 									type="text"
 									copy={{
-										label: T("name"),
+										label: T()("name"),
 									}}
 									errors={getErrorObject(
 										inputError(index())?.name,
@@ -312,7 +312,7 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 										name={`alt-${locale.code}`}
 										type="text"
 										copy={{
-											label: T("alt"),
+											label: T()("alt"),
 										}}
 										errors={getErrorObject(
 											inputError(index())?.alt,
@@ -323,37 +323,37 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 						)}
 					</For>
 					<Show when={props.id !== undefined}>
-						<SectionHeading title={T("meta")} />
+						<SectionHeading title={T()("meta")} />
 						<DetailsList
 							type="text"
 							items={[
 								{
-									label: T("file_size"),
+									label: T()("file_size"),
 									value: helpers.bytesToSize(
 										media.data?.data.meta.fileSize ?? 0,
 									),
 								},
 								{
-									label: T("dimensions"),
+									label: T()("dimensions"),
 									value: `${media.data?.data.meta.width} x ${media.data?.data.meta.height}`,
 									show: media.data?.data.type === "image",
 								},
 								{
-									label: T("extension"),
+									label: T()("extension"),
 									value: media.data?.data.meta.fileExtension,
 								},
 								{
-									label: T("mime_type"),
+									label: T()("mime_type"),
 									value: media.data?.data.meta.mimeType,
 								},
 								{
-									label: T("created_at"),
+									label: T()("created_at"),
 									value: dateHelpers.formatDate(
 										media.data?.data.createdAt,
 									),
 								},
 								{
-									label: T("updated_at"),
+									label: T()("updated_at"),
 									value: dateHelpers.formatDate(
 										media.data?.data.updatedAt,
 									),
