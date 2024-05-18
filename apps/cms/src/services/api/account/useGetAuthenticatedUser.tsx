@@ -1,5 +1,6 @@
 import { createEffect, createMemo } from "solid-js";
 import { createQuery } from "@tanstack/solid-query";
+import { useNavigate } from "@solidjs/router";
 import userStore from "@/store/userStore";
 import request from "@/utils/request";
 import serviceHelpers from "@/utils/service-helpers";
@@ -9,6 +10,7 @@ import type { ResponseBody, UserResponse } from "@lucidcms/core/types";
 interface QueryParams {}
 
 const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
+	const navigate = useNavigate();
 	const queryParams = createMemo(() =>
 		serviceHelpers.getQueryParams<QueryParams>(params.queryParams),
 	);
@@ -33,6 +35,9 @@ const useGetAuthenticatedUser = (params: QueryHook<QueryParams>) => {
 	createEffect(() => {
 		if (query.isSuccess) {
 			userStore.set("user", query.data.data);
+		}
+		if (query.isError) {
+			navigate("/login");
 		}
 	});
 
