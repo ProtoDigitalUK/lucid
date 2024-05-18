@@ -272,10 +272,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 								<Form.Input
 									id={`name-${locale.code}`}
 									value={
-										getTitleTranslations().find(
-											(item) =>
-												item.localeCode === locale.code,
-										)?.value || ""
+										helpers.getTranslation(
+											getTitleTranslations(),
+											locale.code,
+										) || ""
 									}
 									onChange={(val) => {
 										helpers.updateTranslation(
@@ -299,11 +299,10 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 									<Form.Input
 										id={`alt-${locale.code}`}
 										value={
-											getAltTranslations().find(
-												(item) =>
-													item.localeCode ===
-													locale.code,
-											)?.value || ""
+											helpers.getTranslation(
+												getAltTranslations(),
+												locale.code,
+											) || ""
 										}
 										onChange={(val) => {
 											helpers.updateTranslation(

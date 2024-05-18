@@ -2,6 +2,7 @@ import T from "@/translations";
 import { type Component, createMemo } from "solid-js";
 import classNames from "classnames";
 import type { MediaResponse } from "@lucidcms/core/types";
+import helpers from "@/utils/helpers";
 import AspectRatio from "@/components/Partials/AspectRatio";
 import MediaPreview from "@/components/Partials/MediaPreview";
 
@@ -32,13 +33,15 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 	// ----------------------------------
 	// Memos
 	const titleTranslations = createMemo(() => {
-		return props.media.titleTranslations.find(
-			(translation) => translation.localeCode === props.contentLocale,
+		return helpers.getTranslation(
+			props.media.titleTranslations,
+			props.contentLocale,
 		);
 	});
 	const altTranslations = createMemo(() => {
-		return props.media.altTranslations.find(
-			(translation) => translation.localeCode === props.contentLocale,
+		return helpers.getTranslation(
+			props.media.altTranslations,
+			props.contentLocale,
 		);
 	});
 
@@ -65,17 +68,13 @@ const MediaBasicCard: Component<MediaBasicCardProps> = (props) => {
 			<AspectRatio ratio="16:9" innerClass={"overflow-hidden"}>
 				<MediaPreview
 					media={props.media}
-					alt={
-						altTranslations()?.value ||
-						titleTranslations()?.value ||
-						""
-					}
+					alt={altTranslations() || titleTranslations() || ""}
 				/>
 			</AspectRatio>
 			{/* Content */}
 			<div class="p-2.5 border-t border-border">
 				<h3 class="line-clamp-1 text-sm">
-					{titleTranslations()?.value || T()("no_translation")}
+					{titleTranslations() || T()("no_translation")}
 				</h3>
 			</div>
 		</li>
