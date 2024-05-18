@@ -74,13 +74,13 @@ export default lucid.config({
 		HeaderMenuCollection,
 	],
 	plugins: [
-		LucidNodemailer({
-			from: {
-				email: "admin@lucidcms.io",
-				name: "Lucid",
-			},
-			transporter: transporter,
-		}),
+		// LucidNodemailer({
+		// 	from: {
+		// 		email: "admin@lucidcms.io",
+		// 		name: "Lucid",
+		// 	},
+		// 	transporter: transporter,
+		// }),
 		// LucidS3({
 		// 	clientConfig: {
 		// 		endpoint: `https://${process.env.LUCID_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
@@ -93,8 +93,8 @@ export default lucid.config({
 		// 	},
 		// 	bucket: "headless-cms",
 		// }),
-		LucidLocalStorage({
-			uploadDir: "uploads",
-		}),
+		// LucidLocalStorage({
+		// 	uploadDir: "uploads",
+		// }),
 	],
 });

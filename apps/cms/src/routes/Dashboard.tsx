@@ -3,9 +3,9 @@ import type { Component } from "solid-js";
 import userStore from "@/store/userStore";
 import { FaSolidCode } from "solid-icons/fa";
 import constants from "@/constants";
-import Button from "@/components/Partials/Button";
 import Layout from "@/components/Groups/Layout";
 import StartingPoints from "@/components/Blocks/StartingPoints";
+import Alert from "@/components/Blocks/Alert";
 
 const DashboardRoute: Component = () => {
 	// ----------------------------------------
@@ -28,6 +28,20 @@ const DashboardRoute: Component = () => {
 			}}
 		>
 			<Layout.PageContent>
+				<Alert
+					alerts={[
+						{
+							type: "warning",
+							message:
+								"Media support is currently disabled due to no config stategy being present. Please add one to allow media to work.",
+						},
+						{
+							type: "warning",
+							message:
+								"Email support is currently disabled due to no config stategy being present. Please add one to allow emails to work.",
+						},
+					]}
+				/>
 				<StartingPoints
 					links={[
 						{

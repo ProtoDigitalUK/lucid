@@ -71,23 +71,24 @@ const CustomToast: Component<CustomToastProps> = (props) => {
 							"bg-primary-base text-primary-contrast":
 								props.type === "success" ||
 								props.type === "info",
-							"bg-error-base": props.type === "error",
-							"bg-warning-base": props.type === "warning",
+							"bg-error-base text-white": props.type === "error",
+							"bg-warning-base text-primary-contrast":
+								props.type === "warning",
 						},
 					)}
 				>
 					<Switch>
 						<Match when={props.type === "success"}>
-							<FaSolidCheck class="text-primary-contrast w-3 h-3 m-auto" />
+							<FaSolidCheck class="w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "error"}>
-							<FaSolidExclamation class="text-white w-3 h-3 m-auto" />
+							<FaSolidExclamation class="w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "warning"}>
-							<FaSolidTriangleExclamation class="text-body w-3 h-3 m-auto" />
+							<FaSolidTriangleExclamation class="w-3 h-3 m-auto" />
 						</Match>
 						<Match when={props.type === "info"}>
-							<FaSolidInfo class="text-white w-3 h-3 m-auto" />
+							<FaSolidInfo class="w-3 h-3 m-auto" />
 						</Match>
 					</Switch>
 				</span>
