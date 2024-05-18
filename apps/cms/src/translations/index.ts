@@ -12,7 +12,7 @@ export const [getLocale, setLocale] = createSignal<SupportedLocales>("en");
 
 i18next.init<keyof typeof en>({
 	lng: getLocale(),
-	debug: true,
+	debug: false,
 	resources: {
 		en: {
 			translation: en,

@@ -8,6 +8,7 @@ import {
 	createEffect,
 	type Accessor,
 } from "solid-js";
+import { useQueryClient } from "@tanstack/solid-query";
 import api from "@/services/api";
 import useSingleFileUpload from "@/hooks/useSingleFileUpload";
 import type { MediaResponse } from "@lucidcms/core/types";
@@ -31,6 +32,7 @@ interface CreateUpdateMediaPanelProps {
 const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 	props,
 ) => {
+	const queryClient = useQueryClient();
 	const panelMode = createMemo(() => {
 		return props.id === undefined ? "create" : "update";
 	});
@@ -236,6 +238,9 @@ const CreateUpdateMediaPanel: Component<CreateUpdateMediaPanelProps> = (
 				createSingle.reset();
 				updateSingle.reset();
 				MediaFile.reset();
+				queryClient.invalidateQueries({
+					queryKey: ["media.getSingle"],
+				});
 				setTitleTranslations([]);
 				setAltTranslations([]);
 				setUpdateDataLock(false);
