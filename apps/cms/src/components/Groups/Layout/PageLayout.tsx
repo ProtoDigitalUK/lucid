@@ -32,6 +32,7 @@ interface PageWrapperProps {
 	options?: {
 		noBorder?: boolean;
 	};
+	topBar?: JSXElement;
 }
 
 export const PageLayout: Component<PageWrapperProps> = (props) => {
@@ -59,6 +60,7 @@ export const PageLayout: Component<PageWrapperProps> = (props) => {
 						noBorder: props.options?.noBorder,
 					}}
 					breadcrumbs={props.breadcrumbs}
+					topBar={props.topBar}
 				>
 					{props.headingChildren}
 				</Layout.PageHeading>

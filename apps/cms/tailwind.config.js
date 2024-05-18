@@ -29,6 +29,7 @@ export default {
 				},
 				warning: {
 					base: "#FFC107",
+					contrast: "#000000",
 				},
 				border: "#414141",
 				// Typography

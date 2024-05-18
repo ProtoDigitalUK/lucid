@@ -1,9 +1,11 @@
 import T from "@/translations";
-import type { Component } from "solid-js";
+import { type Component, Show } from "solid-js";
 import useSearchParams from "@/hooks/useSearchParams";
+import api from "@/services/api";
 import Layout from "@/components/Groups/Layout";
 import Query from "@/components/Groups/Query";
 import EmailsTable from "@/components/Tables/EmailsTable";
+import Alert from "@/components/Blocks/Alert";
 
 const EmailListRoute: Component = () => {
 	// ----------------------------------
@@ -44,6 +46,12 @@ const EmailListRoute: Component = () => {
 			singleSort: true,
 		},
 	);
+
+	// ----------------------------------------
+	// Queries / Mutations
+	const settings = api.settings.useGetSettings({
+		queryParams: {},
+	});
 
 	// ----------------------------------
 	// Render
@@ -132,6 +140,23 @@ const EmailListRoute: Component = () => {
 					]}
 					perPage={[]}
 				/>
+			}
+			topBar={
+				<Show when={settings.data?.data.media.enabled === false}>
+					<Alert
+						style="page-heading"
+						alerts={[
+							{
+								type: "warning",
+								message: T()(
+									"email_support_config_stategy_error",
+								),
+								show:
+									settings.data?.data.media.enabled === false,
+							},
+						]}
+					/>
+				</Show>
 			}
 		>
 			<EmailsTable searchParams={searchParams} />

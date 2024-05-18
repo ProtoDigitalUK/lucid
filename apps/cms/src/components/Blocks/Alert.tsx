@@ -1,4 +1,4 @@
-import { type Component, Switch, Match, For } from "solid-js";
+import { type Component, Switch, Match, For, createMemo, Show } from "solid-js";
 import classNames from "classnames";
 import {
 	FaSolidTriangleExclamation,
@@ -8,57 +8,106 @@ import {
 } from "solid-icons/fa";
 
 interface AlertProps {
+	style: "page-heading" | "block";
 	alerts: Array<{
 		type: "warning" | "success" | "info" | "error";
 		message: string;
+		show: boolean;
 	}>;
 }
 
 const Alert: Component<AlertProps> = (props) => {
 	// -------------------------------
+	// Memos
+	const showAlerts = createMemo(() => {
+		return props.alerts.some((alert) => alert.show);
+	});
+
+	// -------------------------------
 	// Render
 	return (
-		<div class="w-full mb-30 last:mb-0">
-			<For each={props.alerts}>
-				{({ type, message }) => (
-					<div
-						class={classNames(
-							"mb-15 last:mb-0 p-2.5 rounded-md flex items-center bg-container-3 border border-border space-x-15",
-						)}
-					>
-						<span
-							class={classNames(
-								"w-6 h-6 flex items-center justify-center rounded-full min-w-[24px]",
-								{
-									"bg-primary-base text-primary-contrast":
-										type === "success" || type === "info",
-									"bg-error-base text-white":
-										type === "error",
-									"bg-warning-base text-primary-contrast":
-										type === "warning",
-								},
-							)}
-						>
-							<Switch>
-								<Match when={type === "success"}>
-									<FaSolidCheck class="w-3 h-3 m-auto" />
-								</Match>
-								<Match when={type === "error"}>
-									<FaSolidExclamation class="w-3 h-3 m-auto" />
-								</Match>
-								<Match when={type === "warning"}>
-									<FaSolidTriangleExclamation class="w-3 h-3 m-auto" />
-								</Match>
-								<Match when={type === "info"}>
-									<FaSolidInfo class="w-3 h-3 m-auto" />
-								</Match>
-							</Switch>
-						</span>
-						<div>{message}</div>
-					</div>
-				)}
-			</For>
-		</div>
+		<Show when={showAlerts()}>
+			<div
+				class={classNames("w-full", {
+					"mb-15 last:mb-0": props.style === "block",
+				})}
+			>
+				<For each={props.alerts}>
+					{({ type, message, show }) => (
+						<Show when={show}>
+							<div
+								class={classNames(
+									"flex items-center border-border",
+									{
+										"mb-2 last:mb-0 bg-container-3 border rounded-md p-15":
+											props.style === "block",
+										"border-b md:px-30 px-15 py-15":
+											props.style === "page-heading",
+										"bg-warning-base text-warning-contrast":
+											type === "warning" &&
+											props.style === "page-heading",
+										"bg-error-base":
+											type === "error" &&
+											props.style === "page-heading",
+										"bg-primary-base text-primary-contrast":
+											(type === "success" ||
+												type === "info") &&
+											props.style === "page-heading",
+									},
+								)}
+							>
+								<span
+									class={classNames(
+										"w-6 h-6 flex items-center justify-center rounded-full min-w-[24px] mr-2.5",
+										{
+											"bg-primary-base text-primary-contrast":
+												(type === "success" ||
+													type === "info") &&
+												props.style === "block",
+											"bg-error-base text-white":
+												type === "error" &&
+												props.style === "block",
+											"bg-warning-base text-primary-contrast":
+												type === "warning" &&
+												props.style === "block",
+
+											"bg-primary-contrast text-primary-base":
+												(type === "success" ||
+													type === "info") &&
+												props.style === "page-heading",
+											"bg-error-contrast text-error-base":
+												type === "error" &&
+												props.style === "page-heading",
+											"bg-warning-contrast text-warning-base":
+												type === "warning" &&
+												props.style === "page-heading",
+										},
+									)}
+								>
+									<Switch>
+										<Match when={type === "success"}>
+											<FaSolidCheck size={10} />
+										</Match>
+										<Match when={type === "error"}>
+											<FaSolidExclamation size={10} />
+										</Match>
+										<Match when={type === "warning"}>
+											<FaSolidTriangleExclamation
+												size={10}
+											/>
+										</Match>
+										<Match when={type === "info"}>
+											<FaSolidInfo size={10} />
+										</Match>
+									</Switch>
+								</span>
+								<div>{message}</div>
+							</div>
+						</Show>
+					)}
+				</For>
+			</div>
+		</Show>
 	);
 };
 

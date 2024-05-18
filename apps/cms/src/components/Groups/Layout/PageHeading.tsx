@@ -18,6 +18,7 @@ export interface PageHeadingProps {
 	title: string;
 	description?: string;
 	children?: JSXElement;
+	topBar?: JSXElement;
 	breadcrumbs?: {
 		link: string;
 		label: string;
@@ -95,6 +96,7 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 				"border-b": !props.options?.noBorder,
 			})}
 		>
+			<Show when={props.topBar}>{props.topBar}</Show>
 			<Layout.PageBreadcrumbs breadcrumbs={props.breadcrumbs} />
 			<div
 				class={
