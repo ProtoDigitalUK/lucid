@@ -42,6 +42,13 @@ export interface PageHeadingProps {
 			label: string;
 			permission?: boolean;
 		};
+		link?: {
+			href: string;
+			label: string;
+			permission?: boolean;
+			icon: JSXElement;
+			newTab?: boolean;
+		};
 		contentLocale?: boolean;
 	};
 	options?: {
@@ -161,6 +168,28 @@ export const PageHeading: Component<PageHeadingProps> = (props) => {
 								<span class="sr-only">
 									{props.actions?.createLink?.label ??
 										T()("create")}
+								</span>
+							</Link>
+						</Show>
+						<Show
+							when={
+								props.actions?.link !== undefined &&
+								props.actions.link.permission !== false
+							}
+						>
+							<Link
+								theme="primary"
+								size="icon"
+								href={props.actions?.link?.href}
+								target={
+									props.actions?.link?.newTab
+										? "_blank"
+										: undefined
+								}
+							>
+								{props.actions?.link?.icon}
+								<span class="sr-only">
+									{props.actions?.link?.label}
 								</span>
 							</Link>
 						</Show>

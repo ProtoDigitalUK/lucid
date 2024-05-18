@@ -20,7 +20,7 @@ const TextCol: Component<TextColProps> = (props) => {
 			}}
 		>
 			<span
-				class={classNames({
+				class={classNames("text-base", {
 					"line-clamp-1": props?.options?.maxLines === 1,
 					"line-clamp-2": props?.options?.maxLines === 2,
 					"line-clamp-3": props?.options?.maxLines === 3,

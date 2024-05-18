@@ -1,16 +1,13 @@
 import T from "@/translations";
 import type { Component } from "solid-js";
-import api from "@/services/api";
 import userStore from "@/store/userStore";
+import { FaSolidCode } from "solid-icons/fa";
+import constants from "@/constants";
 import Button from "@/components/Partials/Button";
 import Layout from "@/components/Groups/Layout";
 import StartingPoints from "@/components/Blocks/StartingPoints";
 
 const DashboardRoute: Component = () => {
-	// ----------------------------------------
-	// Mutations
-	const logout = api.auth.useLogout();
-
 	// ----------------------------------------
 	// Render
 	return (
@@ -21,6 +18,14 @@ const DashboardRoute: Component = () => {
 					: "",
 			})}
 			description={T()("dashboard_route_description")}
+			actions={{
+				link: {
+					href: constants.documentationUrl,
+					label: T()("documentation"),
+					permission: true,
+					icon: <FaSolidCode />,
+				},
+			}}
 		>
 			<Layout.PageContent>
 				<StartingPoints
@@ -31,6 +36,7 @@ const DashboardRoute: Component = () => {
 								"starting_point_collections_description",
 							),
 							href: "/collections",
+							icon: "collection",
 						},
 						{
 							title: T()("starting_point_media"),
@@ -38,6 +44,7 @@ const DashboardRoute: Component = () => {
 								"starting_point_media_description",
 							),
 							href: "/media",
+							icon: "media",
 						},
 						{
 							title: T()("starting_point_emails"),
@@ -45,6 +52,7 @@ const DashboardRoute: Component = () => {
 								"starting_point_emails_description",
 							),
 							href: "/emails",
+							icon: "email",
 						},
 						{
 							title: T()("starting_point_users"),
@@ -52,6 +60,7 @@ const DashboardRoute: Component = () => {
 								"starting_point_users_description",
 							),
 							href: "/users",
+							icon: "users",
 						},
 						{
 							title: T()("starting_point_roles"),
@@ -59,6 +68,7 @@ const DashboardRoute: Component = () => {
 								"starting_point_roles_description",
 							),
 							href: "/roles",
+							icon: "roles",
 						},
 						{
 							title: T()("starting_point_settings"),
@@ -66,18 +76,10 @@ const DashboardRoute: Component = () => {
 								"starting_point_settings_description",
 							),
 							href: "/settings",
+							icon: "settings",
 						},
 					]}
 				/>
-				<Button
-					type="submit"
-					theme="primary"
-					size="medium"
-					loading={logout.action.isPending}
-					onClick={() => logout.action.mutate({})}
-				>
-					{T()("logout")}
-				</Button>
 			</Layout.PageContent>
 		</Layout.PageLayout>
 	);
