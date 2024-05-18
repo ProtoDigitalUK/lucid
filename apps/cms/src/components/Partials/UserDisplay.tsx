@@ -1,5 +1,6 @@
 import { type Component, Switch, Match } from "solid-js";
 import helpers from "@/utils/helpers";
+import classNames from "classnames";
 
 interface UserDisplayProps {
 	user: {
@@ -8,7 +9,7 @@ interface UserDisplayProps {
 		lastName?: string | null;
 		thumbnail?: string;
 	};
-	mode: "short" | "long";
+	mode: "short" | "long" | "icon";
 }
 
 const UserDisplay: Component<UserDisplayProps> = (props) => {
@@ -21,7 +22,15 @@ const UserDisplay: Component<UserDisplayProps> = (props) => {
 
 	return (
 		<div class="flex items-center">
-			<span class="h-8 w-8 min-w-[32px] rounded-full flex bg-primary-base text-primary-contrast justify-center items-center text-xs font-bold mr-2.5">
+			<span
+				class={classNames(
+					" rounded-full flex bg-primary-base text-primary-contrast justify-center items-center text-xs font-bold",
+					{
+						"h-10 w-10 min-w-10": props.mode === "icon",
+						"h-8 w-8 min-w-[32px] mr-2.5": props.mode !== "icon",
+					},
+				)}
+			>
 				{helpers.formatUserInitials({
 					firstName: props.user.firstName,
 					lastName: props.user.lastName,

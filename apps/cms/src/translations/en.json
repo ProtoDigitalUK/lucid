@@ -257,6 +257,8 @@
 	"create_page_panel_description": "Create a new page for the {{collection}} collection.",
 	"update_page_panel_title": "Update {{name}}",
 	"update_page_panel_description": "Update the {{collection}} collection page.",
+	"account_route_title": "Account",
+	"account_route_description": "Update your account details and password.",
 
 	"password_reset_toast_title": "Password reset email sent",
 	"password_reset_toast_message": "Please check your email for a password reset link",
