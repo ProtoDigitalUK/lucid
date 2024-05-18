@@ -138,7 +138,7 @@ export const Select: Component<SelectProps> = (props) => {
 								"pt-2 h-10 flex items-center":
 									props.copy?.label === undefined &&
 									props.theme !== "basic",
-								"bg-container-4 border border-border flex items-center h-10 rounded-md focus:border-primary-base duration-200 transition-colors":
+								"bg-container-4 border border-border flex items-center mt-1 h-10 rounded-md focus:border-primary-base duration-200 transition-colors":
 									props.theme === "basic",
 								"bg-transparent pb-2 pt-1 rounded-b-md":
 									props.theme !== "basic",

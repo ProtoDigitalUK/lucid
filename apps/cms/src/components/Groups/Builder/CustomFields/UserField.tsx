@@ -53,7 +53,6 @@ export const UserField: Component<UserFieldProps> = (props) => {
 	// -------------------------------
 	// Render
 	return (
-		// TODO: update to user user select modal or select field
 		<UserSearchSelect
 			id={brickHelpers.customFieldId({
 				key: props.state.fieldConfig.key,
@@ -74,6 +73,10 @@ export const UserField: Component<UserFieldProps> = (props) => {
 					});
 					setValue(value as number);
 				});
+			}}
+			copy={{
+				label: props.state.fieldConfig.title,
+				describedBy: props.state.fieldConfig.description,
 			}}
 			name={props.state.fieldConfig.key}
 			errors={props.state.fieldError}

@@ -1,5 +1,6 @@
-![Lucid](https://github.com/ProtoDigitalUK/lucid/blob/master/banner.jpg?raw=true)
+![Lucid CMS](https://github.com/ProtoDigitalUK/lucid/blob/master/banner.jpg?raw=true)
 
+[![NPM Version](https://img.shields.io/npm/v/@lucidcms/core/latest.svg)](https://www.npmjs.com/package/@lucidcms/core)
 [![Tests](https://github.com/ProtoDigitalUK/lucid/actions/workflows/tests.yml/badge.svg)](https://github.com/ProtoDigitalUK/lucid/actions/workflows/tests.yml)
 
 A TypeScript-first, fully extensible headless CMS. Constructed using Fastify and SolidJS, it features sophisticated collection and brick builders, a wide range of plugins, and database adapters for PostgreSQL, LibSQL, and SQLite. It achieves the perfect balance of developer experience and an intuitive, easy-to-use interface for creators and end-users alike, without compromising on performance and flexibility.
@@ -14,7 +15,7 @@ npm install @lucidcms/core
 
 ## Features
 
-- PostgreSQL, LibSQL and SQLlite DB adapters
+- PostgreSQL, LibSQL and SQLite DB adapters
 - Collection & Brick Builder w/ 15 Custom Fields
 - Media library w/ Custom Stategies
 - Emails w/ Custom Stategies
