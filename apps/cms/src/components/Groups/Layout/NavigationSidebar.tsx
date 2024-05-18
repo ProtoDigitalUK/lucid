@@ -1,11 +1,12 @@
 import T from "@/translations";
 import { createMemo, type Component, Show } from "solid-js";
 import api from "@/services/api";
+import packageJson from "../../../../../../packages/core/package.json";
+import { A } from "@solidjs/router";
 import LogoIcon from "@/assets/svgs/logo-icon.svg";
 import userStore from "@/store/userStore";
 import Navigation from "@/components/Groups/Navigation";
 import UserDisplay from "@/components/Partials/UserDisplay";
-import { A } from "@solidjs/router";
 
 export const NavigationSidebar: Component = () => {
 	// ----------------------------------------
@@ -90,33 +91,38 @@ export const NavigationSidebar: Component = () => {
 					/>
 				</ul>
 			</div>
-			<ul class="pb-15 space-y-15">
-				<Show when={user()}>
-					<li>
-						<A
-							href="/account"
-							class="flex items-center justify-center"
-						>
-							<UserDisplay
-								user={{
-									username: user()?.username || "",
-									firstName: user()?.firstName,
-									lastName: user()?.lastName,
-									thumbnail: undefined,
-								}}
-								mode="icon"
-							/>
-						</A>
-					</li>
-				</Show>
-				<Navigation.IconLink
-					type="button"
-					icon="logout"
-					loading={logout.action.isPending}
-					onClick={() => logout.action.mutate({})}
-					title={T()("logout")}
-				/>
-			</ul>
+			<div class="pb-15">
+				<ul class="flex flex-col items-center">
+					<Navigation.IconLink
+						type="button"
+						icon="logout"
+						loading={logout.action.isPending}
+						onClick={() => logout.action.mutate({})}
+						title={T()("logout")}
+					/>
+					<Show when={user()}>
+						<li>
+							<A
+								href="/account"
+								class="flex items-center justify-center"
+							>
+								<UserDisplay
+									user={{
+										username: user()?.username || "",
+										firstName: user()?.firstName,
+										lastName: user()?.lastName,
+										thumbnail: undefined,
+									}}
+									mode="icon"
+								/>
+							</A>
+						</li>
+					</Show>
+				</ul>
+				<small class="text-[6px] leading-none">
+					v{packageJson.version}
+				</small>
+			</div>
 		</nav>
 	);
 };
