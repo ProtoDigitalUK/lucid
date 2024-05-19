@@ -104,6 +104,8 @@
 	"config_default_locale_not_found": "Please ensure the defaultLocale exists in the locales array.",
 	"config_duplicate_locale": "Please ensure the locales array does not contain duplicate values.",
 	"error_cant_update_yourself": "You can't update yourself.",
+	"error_cant_delete_yourself": "You can't delete yourself.",
+	"error_cant_delete_last_user": "You can't delete the last user.",
 	"update": "Update",
 	"delete": "Delete",
 	"create": "Create",

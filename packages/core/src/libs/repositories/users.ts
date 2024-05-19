@@ -24,6 +24,13 @@ export default class UsersRepo {
 			.select(sql`count(*)`.as("count"))
 			.executeTakeFirst() as Promise<{ count: string } | undefined>;
 	};
+	activeCount = async () => {
+		return this.db
+			.selectFrom("lucid_users")
+			.select(sql`count(*)`.as("count"))
+			.where("is_deleted", "=", 0)
+			.executeTakeFirst() as Promise<{ count: string } | undefined>;
+	};
 	// ----------------------------------------
 	// selects
 	selectSingle = async <K extends keyof Select<HeadlessUsers>>(props: {
