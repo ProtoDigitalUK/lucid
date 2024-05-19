@@ -189,7 +189,12 @@ const MediaListRoute: Component = () => {
 				</Show>
 			}
 		>
-			<MediaGrid searchParams={searchParams} />
+			<MediaGrid
+				searchParams={searchParams}
+				state={{
+					setOpenCreateMediaPanel: setOpenCreateMediaPanel,
+				}}
+			/>
 			<CreateUpdateMediaPanel
 				state={{
 					open: getOpenCreateMediaPanel(),
