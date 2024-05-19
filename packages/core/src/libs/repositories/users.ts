@@ -126,8 +126,10 @@ export default class UsersRepo {
 	selectMultipleFiltered = async (props: {
 		query: z.infer<typeof usersSchema.getMultiple.query>;
 		config: Config;
-		exclude: number[];
+		authId: number;
 	}) => {
+		console.log(props.query);
+
 		const usersQuery = this.db
 			.selectFrom("lucid_users")
 			.select((eb) => [
@@ -161,7 +163,6 @@ export default class UsersRepo {
 				join.onRef("lucid_user_roles.user_id", "=", "lucid_users.id"),
 			)
 			.where("lucid_users.is_deleted", "=", 0)
-			.where("lucid_users.id", "not in", props.exclude)
 			.groupBy("lucid_users.id");
 
 		const usersCountQuery = this.db
@@ -170,8 +171,7 @@ export default class UsersRepo {
 			.leftJoin("lucid_user_roles", (join) =>
 				join.onRef("lucid_user_roles.user_id", "=", "lucid_users.id"),
 			)
-			.where("lucid_users.is_deleted", "=", 0)
-			.where("lucid_users.id", "not in", props.exclude);
+			.where("lucid_users.is_deleted", "=", 0);
 
 		const { main, count } = queryBuilder(
 			{
@@ -239,6 +239,14 @@ export default class UsersRepo {
 						{
 							queryKey: "username",
 							tableKey: "lucid_users.username",
+						},
+					],
+					exclude: [
+						{
+							queryKey: "current",
+							tableKey: "lucid_users.id",
+							value: props.authId,
+							operator: "<>",
 						},
 					],
 				},

@@ -18,7 +18,7 @@ const getMultiple = async (serviceConfig: ServiceConfig, data: ServiceData) => {
 	const [users, count] = await UsersRepo.selectMultipleFiltered({
 		query: data.query,
 		config: serviceConfig.config,
-		exclude: [data.auth.id],
+		authId: data.auth.id,
 	});
 
 	return {

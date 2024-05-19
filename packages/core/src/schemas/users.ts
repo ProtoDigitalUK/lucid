@@ -68,7 +68,7 @@ export default {
 				)
 				.optional(),
 			include: z.array(z.enum(["permissions"])).optional(),
-			exclude: defaultQuery.exclude,
+			exclude: z.array(z.enum(["current"])).optional(),
 			page: defaultQuery.page,
 			perPage: defaultQuery.perPage,
 		}),
