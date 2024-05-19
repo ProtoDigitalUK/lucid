@@ -75,8 +75,6 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 					copy={{
 						label: T()("first_name"),
 					}}
-					required={true}
-					autoFoucs={true}
 					errors={getBodyError("firstName", updateMe.errors)}
 				/>
 				<Form.Input
@@ -88,8 +86,6 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 					copy={{
 						label: T()("last_name"),
 					}}
-					required={true}
-					autoFoucs={true}
 					errors={getBodyError("lastName", updateMe.errors)}
 				/>
 			</div>
@@ -103,7 +99,6 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 					label: T()("username"),
 				}}
 				required={true}
-				autoFoucs={true}
 				errors={getBodyError("username", updateMe.errors)}
 			/>
 			<Form.Input
@@ -116,7 +111,6 @@ const UpdateAccountForm: Component<UpdateAccountFormProps> = (props) => {
 					label: T()("email"),
 				}}
 				required={true}
-				autoFoucs={true}
 				errors={getBodyError("email", updateMe.errors)}
 			/>
 		</Form.Root>
