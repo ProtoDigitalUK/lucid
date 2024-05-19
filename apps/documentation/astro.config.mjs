@@ -7,7 +7,8 @@ export default defineConfig({
 	site: "https://lucidcms.io",
 	integrations: [
 		starlight({
-			title: "Lucid",
+			title: "Lucid CMS",
+			favicon: "./favicon.svg",
 			social: {
 				github: "https://github.com/ProtoDigitalUK/lucid",
 			},
@@ -30,20 +31,20 @@ export default defineConfig({
 							link: "/getting-started/",
 						},
 						{
-							label: "Why Lucid",
+							label: "For Non-Techies",
+							link: "/non-techies/",
+						},
+						{
+							label: "Why Lucid?",
 							link: "/why-lucid/",
 						},
 					],
 				},
-				// {
-				// 	label: "Guides",
-				// 	items: [],
-				// },
 				{
 					label: "Configuration",
 					items: [
 						{
-							label: "The Lucid Config File",
+							label: "Configuring Lucid",
 							link: "/guides/configuring-lucid/",
 						},
 						{
@@ -59,22 +60,22 @@ export default defineConfig({
 				{
 					label: "Plugins",
 					items: [
-						{
-							label: "Forms",
-							link: "/plugins/forms/",
-						},
-						{
-							label: "Nested Documents",
-							link: "/plugins/nested-documents/",
-						},
-						{
-							label: "Cookie Consent",
-							link: "/plugins/cookie-consent/",
-						},
-						{
-							label: "Resend",
-							link: "/plugins/resend/",
-						},
+						// {
+						// 	label: "Forms",
+						// 	link: "/plugins/forms/",
+						// },
+						// {
+						// 	label: "Nested Documents",
+						// 	link: "/plugins/nested-documents/",
+						// },
+						// {
+						// 	label: "Cookie Consent",
+						// 	link: "/plugins/cookie-consent/",
+						// },
+						// {
+						// 	label: "Resend",
+						// 	link: "/plugins/resend/",
+						// },
 						{
 							label: "Nodemailer",
 							link: "/plugins/nodemailer/",

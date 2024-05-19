@@ -15,7 +15,7 @@ npm install @lucidcms/plugin-s3
 ```typescript
 import LucidS3 from "@lucidcms/plugin-s3";
 
-export default lucidConfig({
+export default lucid.config({
   // ...other config
   plugins: [
     LucidS3({
