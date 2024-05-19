@@ -100,9 +100,9 @@ const PreviewEmailPanel: Component<PreviewEmailPanelProps> = (props) => {
 							title="Preview"
 						/>
 					</div>
-					<SectionHeading title={T()("data")} />
+					<SectionHeading title={T()("template_data")} />
 					<JSONPreview
-						title={T()("view_data")}
+						title={T()("template_data")}
 						json={email.data?.data.data || {}}
 					/>
 				</>
