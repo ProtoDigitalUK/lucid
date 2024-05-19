@@ -28,6 +28,9 @@ const UsersTable: Component<UsersTableProps> = (props) => {
 	const users = api.users.useGetMultiple({
 		queryParams: {
 			queryString: props.searchParams.getQueryString,
+			exclude: {
+				current: true,
+			},
 		},
 		enabled: () => props.searchParams.getSettled(),
 	});

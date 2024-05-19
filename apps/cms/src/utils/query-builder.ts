@@ -7,6 +7,7 @@ export interface QueryBuilderProps {
 	sort?: Record<string, string>;
 	perPage?: number;
 	page?: number;
+	exclude?: Record<string, boolean>;
 	include?: Record<string, boolean>;
 }
 
@@ -24,6 +25,17 @@ const queryBuilder = (query: QueryBuilderProps) => {
 		}
 		includeString = includeString.slice(0, -1);
 		if (includeString.length > 0) params.append("include", includeString);
+	}
+	// Append exclude query
+	if (query.exclude !== undefined && Object.keys(query.exclude).length > 0) {
+		let excludeString = params.get("exclude") || "";
+		for (const key of Object.keys(query.exclude)) {
+			if (query.exclude?.[key]) {
+				excludeString += `${key},`;
+			}
+		}
+		excludeString = excludeString.slice(0, -1);
+		if (excludeString.length > 0) params.append("exclude", excludeString);
 	}
 
 	// Append filters query

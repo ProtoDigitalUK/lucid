@@ -12,6 +12,9 @@ interface QueryParams {
 		email?: Accessor<string>;
 		username?: Accessor<string>;
 	};
+	exclude?: {
+		current?: Accessor<boolean> | boolean;
+	};
 }
 
 const useGetMultiple = (params: QueryHook<QueryParams>) => {

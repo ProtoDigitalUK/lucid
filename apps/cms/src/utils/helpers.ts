@@ -114,11 +114,28 @@ const getMediaType = (mimeType?: string): MediaResponse["type"] => {
 
 // ---------------------------------------------
 // Format user name
-const formatUserName = (user: {
-	username: UserResponse["username"];
-	firstName?: UserResponse["firstName"];
-	lastName?: UserResponse["lastName"];
-}): string => {
+const formatUserName = (
+	user: {
+		username: UserResponse["username"];
+		firstName?: UserResponse["firstName"];
+		lastName?: UserResponse["lastName"];
+	},
+	pref?: "username",
+): string => {
+	// username (firstname lastname)
+	if (pref === "username") {
+		if (user.firstName && user.lastName) {
+			return `${user.username} (${user.firstName} ${user.lastName})`;
+		}
+
+		if (user.firstName) {
+			return `${user.username} (${user.firstName})`;
+		}
+
+		return user.username;
+	}
+
+	// firstname lastname - (username)
 	if (user.firstName && user.lastName) {
 		return `${user.firstName} ${user.lastName} - (${user.username})`;
 	}
