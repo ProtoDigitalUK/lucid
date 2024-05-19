@@ -17,7 +17,10 @@ export interface ServiceData {
 	roleIds?: number[];
 	superAdmin?: BooleanInt;
 
-	authSuperAdmin: BooleanInt;
+	auth: {
+		id: number;
+		superAdmin: BooleanInt;
+	};
 }
 
 const updateSingle = async (
@@ -25,6 +28,14 @@ const updateSingle = async (
 	data: ServiceData,
 ) => {
 	const UsersRepo = Repository.get("users", serviceConfig.db);
+
+	if (data.auth.id === data.userId) {
+		throw new LucidAPIError({
+			type: "basic",
+			message: T("error_cant_update_yourself"),
+			status: 400,
+		});
+	}
 
 	const user = await UsersRepo.selectSingle({
 		select: ["id"],
@@ -125,7 +136,7 @@ const updateSingle = async (
 				email: data.email,
 				password: hashedPassword,
 				superAdmin:
-					data.authSuperAdmin === 1 ? data.superAdmin : undefined,
+					data.auth.superAdmin === 1 ? data.superAdmin : undefined,
 				updatedAt: new Date().toISOString(),
 			},
 			where: [

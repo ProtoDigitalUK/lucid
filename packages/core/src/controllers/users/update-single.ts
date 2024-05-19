@@ -18,10 +18,13 @@ const updateSingleController: RouteController<
 				config: request.server.config,
 			},
 			{
+				auth: {
+					id: request.auth.id,
+					superAdmin: request.auth.superAdmin,
+				},
 				userId: Number.parseInt(request.params.id),
 				roleIds: request.body.roleIds,
 				superAdmin: request.body.superAdmin,
-				authSuperAdmin: request.auth.superAdmin,
 			},
 		);
 

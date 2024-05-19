@@ -103,6 +103,7 @@
 	"config_default_locale_undefined": "Please ensure the defaultLocale is defined.",
 	"config_default_locale_not_found": "Please ensure the defaultLocale exists in the locales array.",
 	"config_duplicate_locale": "Please ensure the locales array does not contain duplicate values.",
+	"error_cant_update_yourself": "You can't update yourself.",
 	"update": "Update",
 	"delete": "Delete",
 	"create": "Create",
